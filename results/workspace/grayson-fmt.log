@@ -1,0 +1,427 @@
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\defaults.rs:9:
+ }
+ 
+ pub fn default_options(is_mac: bool) -> Vec<(&'static str, V)> {
+[31m-    DEFAULTS.with(|defaults| defaults.iter().map(|(key, value)| {
+[0m[31m-        (*key, if *key == "rightClickSelectsWord" { V::Bool(is_mac) } else { value.clone() })
+[0m[31m-    }).collect())
+[0m[32m+    DEFAULTS.with(|defaults| {
+[0m[32m+        defaults
+[0m[32m+            .iter()
+[0m[32m+            .map(|(key, value)| {
+[0m[32m+                (
+[0m[32m+                    *key,
+[0m[32m+                    if *key == "rightClickSelectsWord" {
+[0m[32m+                        V::Bool(is_mac)
+[0m[32m+                    } else {
+[0m[32m+                        value.clone()
+[0m[32m+                    },
+[0m[32m+                )
+[0m[32m+            })
+[0m[32m+            .collect()
+[0m[32m+    })
+[0m }
+ 
+ fn build() -> Vec<(&'static str, V)> {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\defaults.rs:38:
+         ("logLevel", V::from("info")),
+         ("logger", V::Null),
+         ("scrollback", V::Number(1000.0)),
+[31m-        ("scrollbar", V::object(vec![("showScrollbar", V::Bool(true))])),
+[0m[32m+        (
+[0m[32m+            "scrollbar",
+[0m[32m+            V::object(vec![("showScrollbar", V::Bool(true))]),
+[0m[32m+        ),
+[0m         ("scrollOnEraseInDisplay", V::Bool(false)),
+         ("scrollOnUserInput", V::Bool(true)),
+         ("scrollSensitivity", V::Number(1.0)),
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\mod.rs:9:
+ mod validation;
+ mod value;
+ 
+[31m-pub use defaults::default_options;
+[0m[31m-pub use value::{OptionObject, OptionValue};
+[0m use crate::event::{EmitError, Emitter, Event};
+ use crate::lifecycle::{Disposable, DisposableHandle};
+[32m+pub use defaults::default_options;
+[0m use std::cell::RefCell;
+ use std::fmt;
+ use std::rc::Rc;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\mod.rs:19:
+[32m+pub use value::{OptionObject, OptionValue};
+[0m 
+ type Values = Vec<(&'static str, OptionValue)>;
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\mod.rs:46:
+ }
+ 
+ impl OptionsService {
+[31m-    pub fn new<K: AsRef<str>>(is_mac: bool, options: impl IntoIterator<Item = (K, OptionValue)>) -> Self {
+[0m[32m+    pub fn new<K: AsRef<str>>(
+[0m[32m+        is_mac: bool,
+[0m[32m+        options: impl IntoIterator<Item = (K, OptionValue)>,
+[0m[32m+    ) -> Self {
+[0m         let mut values = default_options(is_mac);
+         let mut diagnostics = Vec::new();
+         for (key, value) in options {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\mod.rs:57:
+                 }
+             }
+         }
+[31m-        Self { values: Rc::new(RefCell::new(values)), changes: Emitter::new(), diagnostics }
+[0m[32m+        Self {
+[0m[32m+            values: Rc::new(RefCell::new(values)),
+[0m[32m+            changes: Emitter::new(),
+[0m[32m+            diagnostics,
+[0m[32m+        }
+[0m     }
+ 
+[31m-    pub fn diagnostics(&self) -> &[OptionError] { &self.diagnostics }
+[0m[32m+    pub fn diagnostics(&self) -> &[OptionError] {
+[0m[32m+        &self.diagnostics
+[0m[32m+    }
+[0m 
+     /// Includes all defaults, in upstream Object.keys order.
+     pub fn keys(&self) -> Vec<&'static str> {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\mod.rs:68:
+     }
+ 
+     pub fn get(&self, key: &str) -> Result<OptionValue, OptionError> {
+[31m-        self.values.borrow().iter().find(|(k, _)| *k == key)
+[0m[31m-            .map(|(_, value)| value.clone()).ok_or_else(|| OptionError::UnknownKey(key.into()))
+[0m[32m+        self.values
+[0m[32m+            .borrow()
+[0m[32m+            .iter()
+[0m[32m+            .find(|(k, _)| *k == key)
+[0m[32m+            .map(|(_, value)| value.clone())
+[0m[32m+            .ok_or_else(|| OptionError::UnknownKey(key.into()))
+[0m     }
+ 
+     /// Sanitizes before comparing with JS strict equality. An unchanged value
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\mod.rs:80:
+         let changed = {
+             let mut values = self.values.borrow_mut();
+             // key() checked existence, and this service never removes keys.
+[31m-            let (_, current) = values.iter_mut().find(|(k, _)| *k == key)
+[0m[32m+            let (_, current) = values
+[0m[32m+                .iter_mut()
+[0m[32m+                .find(|(k, _)| *k == key)
+[0m                 .expect("validated option key remains present");
+[31m-            if *current == value { false } else { *current = value; true }
+[0m[32m+            if *current == value {
+[0m[32m+                false
+[0m[32m+            } else {
+[0m[32m+                *current = value;
+[0m[32m+                true
+[0m[32m+            }
+[0m         };
+[31m-        if changed { self.changes.fire(&key).map_err(OptionError::Dispatch)?; }
+[0m[32m+        if changed {
+[0m[32m+            self.changes.fire(&key).map_err(OptionError::Dispatch)?;
+[0m[32m+        }
+[0m         Ok(())
+     }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\mod.rs:91:
+     /// Internal equivalent of writing rawOptions, bypassing validation/events.
+     pub fn set_raw(&self, key: &str, value: OptionValue) -> Result<(), OptionError> {
+         let mut values = self.values.borrow_mut();
+[31m-        let (_, current) = values.iter_mut().find(|(k, _)| *k == key)
+[0m[32m+        let (_, current) = values
+[0m[32m+            .iter_mut()
+[0m[32m+            .find(|(k, _)| *k == key)
+[0m             .ok_or_else(|| OptionError::UnknownKey(key.into()))?;
+         *current = value;
+         Ok(())
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\mod.rs:98:
+     }
+ 
+[31m-    pub fn on_option_change(&self) -> Event<&'static str> { self.changes.event() }
+[0m[32m+    pub fn on_option_change(&self) -> Event<&'static str> {
+[0m[32m+        self.changes.event()
+[0m[32m+    }
+[0m 
+     pub fn on_specific_option_change(
+[31m-        &self, key: &str, listener: impl Fn(OptionValue) + 'static,
+[0m[32m+        &self,
+[0m[32m+        key: &str,
+[0m[32m+        listener: impl Fn(OptionValue) + 'static,
+[0m     ) -> Result<DisposableHandle, OptionError> {
+         let key = self.key(key)?;
+         let values = Rc::downgrade(&self.values);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\mod.rs:107:
+         Ok(self.changes.event().subscribe(move |changed| {
+             if *changed == key {
+                 if let Some(values) = values.upgrade() {
+[31m-                    let value = values.borrow().iter().find(|(k, _)| *k == key)
+[0m[32m+                    let value = values
+[0m[32m+                        .borrow()
+[0m[32m+                        .iter()
+[0m[32m+                        .find(|(k, _)| *k == key)
+[0m                         .map(|(_, value)| value.clone());
+[31m-                    if let Some(value) = value { listener(value); }
+[0m[32m+                    if let Some(value) = value {
+[0m[32m+                        listener(value);
+[0m[32m+                    }
+[0m                 }
+             }
+         }))
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\mod.rs:116:
+     }
+ 
+     pub fn on_multiple_option_change(
+[31m-        &self, keys: &[&str], listener: impl Fn() + 'static,
+[0m[32m+        &self,
+[0m[32m+        keys: &[&str],
+[0m[32m+        listener: impl Fn() + 'static,
+[0m     ) -> Result<DisposableHandle, OptionError> {
+[31m-        let keys: Vec<_> = keys.iter().map(|key| self.key(key)).collect::<Result<_, _>>()?;
+[0m[32m+        let keys: Vec<_> = keys
+[0m[32m+            .iter()
+[0m[32m+            .map(|key| self.key(key))
+[0m[32m+            .collect::<Result<_, _>>()?;
+[0m         Ok(self.changes.event().subscribe(move |changed| {
+[31m-            if keys.contains(changed) { listener(); }
+[0m[32m+            if keys.contains(changed) {
+[0m[32m+                listener();
+[0m[32m+            }
+[0m         }))
+     }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\mod.rs:127:
+     fn key(&self, key: &str) -> Result<&'static str, OptionError> {
+[31m-        self.values.borrow().iter().find(|(k, _)| *k == key)
+[0m[31m-            .map(|(key, _)| *key).ok_or_else(|| OptionError::UnknownKey(key.into()))
+[0m[32m+        self.values
+[0m[32m+            .borrow()
+[0m[32m+            .iter()
+[0m[32m+            .find(|(k, _)| *k == key)
+[0m[32m+            .map(|(key, _)| *key)
+[0m[32m+            .ok_or_else(|| OptionError::UnknownKey(key.into()))
+[0m     }
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\mod.rs:133:
+ impl Default for OptionsService {
+[31m-    fn default() -> Self { Self::new(false, std::iter::empty::<(&str, OptionValue)>()) }
+[0m[32m+    fn default() -> Self {
+[0m[32m+        Self::new(false, std::iter::empty::<(&str, OptionValue)>())
+[0m[32m+    }
+[0m }
+ 
+ impl Disposable for OptionsService {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\mod.rs:138:
+     fn dispose(&self) {
+         self.changes.dispose();
+         for (key, value) in self.values.borrow_mut().iter_mut() {
+[31m-            if matches!(*key, "linkHandler" | "documentOverride") { *value = OptionValue::Null; }
+[0m[32m+            if matches!(*key, "linkHandler" | "documentOverride") {
+[0m[32m+                *value = OptionValue::Null;
+[0m[32m+            }
+[0m         }
+     }
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\mod.rs:145:
+ impl Drop for OptionsService {
+[31m-    fn drop(&mut self) { self.dispose(); }
+[0m[32m+    fn drop(&mut self) {
+[0m[32m+        self.dispose();
+[0m[32m+    }
+[0m }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\validation.rs:5:
+ pub(super) fn sanitize(key: &'static str, mut value: V) -> Result<V, OptionError> {
+     match key {
+         "cursorStyle" => {
+[31m-            if !value.is_truthy() { value = V::from("block"); }
+[0m[31m-            if !["block", "underline", "bar"].iter().any(|s| value == V::from(*s)) {
+[0m[31m-                return Err(OptionError::Invalid(format!("\"{}\" is not a valid value for {key}", value.text())));
+[0m[32m+            if !value.is_truthy() {
+[0m[32m+                value = V::from("block");
+[0m             }
+[32m+            if !["block", "underline", "bar"]
+[0m[32m+                .iter()
+[0m[32m+                .any(|s| value == V::from(*s))
+[0m[32m+            {
+[0m[32m+                return Err(OptionError::Invalid(format!(
+[0m[32m+                    "\"{}\" is not a valid value for {key}",
+[0m[32m+                    value.text()
+[0m[32m+                )));
+[0m[32m+            }
+[0m         }
+         "wordSeparator" if !value.is_truthy() => value = V::from(" ()[]{}',\"`"),
+         "fontWeight" | "fontWeightBold" => {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\validation.rs:15:
+             let numeric = matches!(value, V::Number(n) if (1.0..=1000.0).contains(&n));
+[31m-            let keyword = ["normal", "bold", "100", "200", "300", "400", "500", "600", "700", "800", "900"]
+[0m[31m-                .iter().any(|s| value == V::from(*s));
+[0m[32m+            let keyword = [
+[0m[32m+                "normal", "bold", "100", "200", "300", "400", "500", "600", "700", "800", "900",
+[0m[32m+            ]
+[0m[32m+            .iter()
+[0m[32m+            .any(|s| value == V::from(*s));
+[0m             if !numeric && !keyword {
+[31m-                value = V::from(if key == "fontWeight" { "normal" } else { "bold" });
+[0m[32m+                value = V::from(if key == "fontWeight" {
+[0m[32m+                    "normal"
+[0m[32m+                } else {
+[0m[32m+                    "bold"
+[0m[32m+                });
+[0m             }
+         }
+         "blinkIntervalDuration" => {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\validation.rs:31:
+         "minimumContrastRatio" => {
+             let n = value.number() * 10.0;
+             // JS Math.round rounds ties toward +Infinity, unlike f64::round.
+[31m-            let rounded = if n.is_finite() { n.floor() + f64::from(n - n.floor() >= 0.5) } else { n };
+[0m[32m+            let rounded = if n.is_finite() {
+[0m[32m+                n.floor() + f64::from(n - n.floor() >= 0.5)
+[0m[32m+            } else {
+[0m[32m+                n
+[0m[32m+            };
+[0m             let rounded = rounded / 10.0;
+[31m-            value = V::Number(if rounded.is_nan() { f64::NAN } else { rounded.clamp(1.0, 21.0) });
+[0m[32m+            value = V::Number(if rounded.is_nan() {
+[0m[32m+                f64::NAN
+[0m[32m+            } else {
+[0m[32m+                rounded.clamp(1.0, 21.0)
+[0m[32m+            });
+[0m         }
+         "scrollback" => {
+             let n = value.number();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\validation.rs:40:
+             // Rust's min ignores NaN, whereas JS Math.min propagates it.
+[31m-            value = V::Number(if n.is_nan() { n } else { n.min(4_294_967_295.0) });
+[0m[32m+            value = V::Number(if n.is_nan() {
+[0m[32m+                n
+[0m[32m+            } else {
+[0m[32m+                n.min(4_294_967_295.0)
+[0m[32m+            });
+[0m             lower_bound(key, &value, 0.0, false)?;
+         }
+         "fastScrollSensitivity" | "scrollSensitivity" => lower_bound(key, &value, 0.0, true)?,
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\validation.rs:45:
+         "rows" | "cols" if !value.is_truthy() && value != V::Number(0.0) => {
+[31m-            return Err(OptionError::Invalid(format!("{key} must be numeric, value: {}", value.text())));
+[0m[32m+            return Err(OptionError::Invalid(format!(
+[0m[32m+                "{key} must be numeric, value: {}",
+[0m[32m+                value.text()
+[0m[32m+            )));
+[0m         }
+         "windowsPty" if matches!(value, V::Null | V::Undefined) => value = V::object(()),
+         _ => {}
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\validation.rs:54:
+ fn lower_bound(key: &str, value: &V, bound: f64, inclusive: bool) -> Result<(), OptionError> {
+     let number = value.number();
+     if number < bound || (inclusive && number == bound) {
+[31m-        let relation = if inclusive { "less than or equal to" } else { "less than" };
+[0m[31m-        return Err(OptionError::Invalid(format!("{key} cannot be {relation} {bound}, value: {}", value.text())));
+[0m[32m+        let relation = if inclusive {
+[0m[32m+            "less than or equal to"
+[0m[32m+        } else {
+[0m[32m+            "less than"
+[0m[32m+        };
+[0m[32m+        return Err(OptionError::Invalid(format!(
+[0m[32m+            "{key} cannot be {relation} {bound}, value: {}",
+[0m[32m+            value.text()
+[0m[32m+        )));
+[0m     }
+     Ok(())
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\value.rs:15:
+ 
+ impl OptionObject {
+     pub fn new<T: Any>(payload: T, to_primitive: impl Fn() -> OptionValue + 'static) -> Rc<Self> {
+[31m-        Rc::new(Self { payload: Box::new(payload), to_primitive: Box::new(to_primitive) })
+[0m[32m+        Rc::new(Self {
+[0m[32m+            payload: Box::new(payload),
+[0m[32m+            to_primitive: Box::new(to_primitive),
+[0m[32m+        })
+[0m     }
+ 
+     pub fn plain<T: Any>(payload: T) -> Rc<Self> {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\value.rs:60:
+ }
+ 
+ impl From<&str> for OptionValue {
+[31m-    fn from(value: &str) -> Self { Self::String(value.encode_utf16().collect()) }
+[0m[32m+    fn from(value: &str) -> Self {
+[0m[32m+        Self::String(value.encode_utf16().collect())
+[0m[32m+    }
+[0m }
+ impl From<f64> for OptionValue {
+[31m-    fn from(value: f64) -> Self { Self::Number(value) }
+[0m[32m+    fn from(value: f64) -> Self {
+[0m[32m+        Self::Number(value)
+[0m[32m+    }
+[0m }
+ impl From<bool> for OptionValue {
+[31m-    fn from(value: bool) -> Self { Self::Bool(value) }
+[0m[32m+    fn from(value: bool) -> Self {
+[0m[32m+        Self::Bool(value)
+[0m[32m+    }
+[0m }
+ 
+ impl OptionValue {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\value.rs:73:
+[31m-    pub fn object<T: Any>(value: T) -> Self { Self::Object(OptionObject::plain(value)) }
+[0m[32m+    pub fn object<T: Any>(value: T) -> Self {
+[0m[32m+        Self::Object(OptionObject::plain(value))
+[0m[32m+    }
+[0m 
+     pub fn is_truthy(&self) -> bool {
+         match self {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\value.rs:116:
+ }
+ 
+ fn parse_number(units: &[u16]) -> f64 {
+[31m-    let Ok(text) = String::from_utf16(units) else { return f64::NAN; };
+[0m[32m+    let Ok(text) = String::from_utf16(units) else {
+[0m[32m+        return f64::NAN;
+[0m[32m+    };
+[0m     // ECMAScript whitespace includes BOM, but excludes NEL, which Rust includes.
+[31m-    let text = text.trim_matches(|c: char| matches!(c,
+[0m[32m+    let text = text.trim_matches(|c: char| {
+[0m[32m+        matches!(c,
+[0m         '\u{9}'..='\u{d}' | ' ' | '\u{a0}' | '\u{1680}' |
+         '\u{2000}'..='\u{200a}' | '\u{2028}' | '\u{2029}' |
+[31m-        '\u{202f}' | '\u{205f}' | '\u{3000}' | '\u{feff}'));
+[0m[31m-    if text.is_empty() { return 0.0; }
+[0m[32m+        '\u{202f}' | '\u{205f}' | '\u{3000}' | '\u{feff}')
+[0m[32m+    });
+[0m[32m+    if text.is_empty() {
+[0m[32m+        return 0.0;
+[0m[32m+    }
+[0m     match text {
+         "Infinity" | "+Infinity" => return f64::INFINITY,
+         "-Infinity" => return f64::NEG_INFINITY,
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\value.rs:130:
+     }
+     for (prefixes, radix) in [(["0x", "0X"], 16), (["0o", "0O"], 8), (["0b", "0B"], 2)] {
+         if let Some(digits) = prefixes.iter().find_map(|prefix| text.strip_prefix(prefix)) {
+[31m-            if digits.is_empty() { return f64::NAN; }
+[0m[32m+            if digits.is_empty() {
+[0m[32m+                return f64::NAN;
+[0m[32m+            }
+[0m             let mut number = 0.0;
+             for digit in digits.chars() {
+[31m-                let Some(digit) = digit.to_digit(radix) else { return f64::NAN; };
+[0m[32m+                let Some(digit) = digit.to_digit(radix) else {
+[0m[32m+                    return f64::NAN;
+[0m[32m+                };
+[0m                 number = number * f64::from(radix) + f64::from(digit);
+             }
+             return number;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\value.rs:140:
+         }
+     }
+     // Rust accepts inf/NaN spellings outside the JS decimal grammar.
+[31m-    if text.chars().any(|c| !matches!(c, '0'..='9' | '+' | '-' | '.' | 'e' | 'E')) {
+[0m[32m+    if text
+[0m[32m+        .chars()
+[0m[32m+        .any(|c| !matches!(c, '0'..='9' | '+' | '-' | '.' | 'e' | 'E'))
+[0m[32m+    {
+[0m         return f64::NAN;
+     }
+     text.parse().unwrap_or(f64::NAN)
