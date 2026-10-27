@@ -1,0 +1,49 @@
+{
+  "scope": "StringBuilder and LimitedStringBuilder only; full terminal equivalence NOT PROVEN",
+  "platform": "Windows x64",
+  "node": "v24.15.0",
+  "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+  "seed": 5353501,
+  "checks": [
+    {
+      "command": "node --experimental-transform-types scripts/string-builder-oracle.mjs",
+      "exitCode": 0,
+      "discovered": 17,
+      "executed": 17,
+      "passed": 17,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0,
+      "evidence": "oracle.json"
+    },
+    {
+      "command": "cargo test -p xterm-core --test string_builder_upstream --test string_builder_differential",
+      "exitCode": 0,
+      "discovered": 21,
+      "executed": 21,
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0,
+      "evidence": "rust-tests.log",
+      "differentialTraces": 264,
+      "differentialOperations": 16480
+    },
+    {
+      "command": "rustfmt --edition 2021 --check crates/xterm-core/src/string_builder.rs crates/xterm-core/tests/string_builder_upstream.rs crates/xterm-core/tests/string_builder_differential.rs",
+      "exitCode": 0,
+      "evidence": "rustfmt.log"
+    },
+    {
+      "command": "cargo clippy -p xterm-core --lib --test string_builder_upstream --test string_builder_differential --all-features -- -D warnings",
+      "exitCode": 0,
+      "evidence": "clippy.log"
+    }
+  ],
+  "limits": [
+    "Utility-only validation, not complete terminal or browser behavior.",
+    "Only native Windows runtime observed; Linux and macOS not run.",
+    "Typed Rust limits exclude invalid or nonintegral JavaScript numbers.",
+    "Workspace was being edited concurrently; aggregate quality gates are owned separately."
+  ]
+}
