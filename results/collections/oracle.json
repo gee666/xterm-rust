@@ -36,14 +36,14 @@
     "seed": 5285869,
     "iterations": 5000,
     "map_cases": 1010,
-    "trace_operations": 7761,
-    "compared_results": 3861,
+    "trace_operations": 7038,
+    "compared_results": 3131,
     "failures": 0
   },
   "gaps": [
     "Real IdleTaskQueue scheduling is not executed.",
-    "Repeated deletion before a read can trigger upstream sparse-array or RangeError bugs not reproduced in Rust.",
-    "JavaScript inherited object keys and __proto__ mutation are intentionally not exposed by Rust maps.",
-    "getKeyIterator uses a Rust borrow and cannot mutate the list during iteration."
+    "JavaScript inherited object keys and __proto__ mutation are not yet represented by Rust maps.",
+    "getKeyIterator uses a Rust borrow and cannot mutate the list during iteration.",
+    "Task76 tracks mutable/NaN/undefined keys, identity-bearing randomized traces and complete four-key/f64-bit edge coverage."
   ]
 }

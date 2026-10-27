@@ -15,8 +15,8 @@ fn sorted_insert_maintains_values() {
         (1, vec![1, 2, 8, 10, 15]),
         (6, vec![1, 2, 6, 8, 10, 15]),
     ] {
-        list.insert(value);
-        assert_eq!(list.values().collect::<Vec<_>>(), expected);
+        list.insert(value).unwrap();
+        assert_eq!(list.values().unwrap().collect::<Vec<_>>(), expected);
     }
 }
 
@@ -31,8 +31,8 @@ fn sorted_insert_duplicate_keys() {
         (8, vec![5, 5, 5, 8, 8]),
         (6, vec![5, 5, 5, 6, 8, 8]),
     ] {
-        list.insert(value);
-        assert_eq!(list.values().collect::<Vec<_>>(), expected);
+        list.insert(value).unwrap();
+        assert_eq!(list.values().unwrap().collect::<Vec<_>>(), expected);
     }
 }
 
@@ -40,9 +40,9 @@ fn sorted_insert_duplicate_keys() {
 fn sorted_delete() {
     let mut list = SortedList::new(|e: &i32| f64::from(*e));
     for value in [1, 2, 4, 3, 5] {
-        list.insert(value);
+        list.insert(value).unwrap();
     }
-    assert_eq!(list.values().collect::<Vec<_>>(), [1, 2, 3, 4, 5]);
+    assert_eq!(list.values().unwrap().collect::<Vec<_>>(), [1, 2, 3, 4, 5]);
     for (value, expected) in [
         (1, vec![2, 3, 4, 5]),
         (3, vec![2, 4, 5]),
@@ -51,7 +51,7 @@ fn sorted_delete() {
         (2, vec![]),
     ] {
         list.delete(&value);
-        assert_eq!(list.values().collect::<Vec<_>>(), expected);
+        assert_eq!(list.values().unwrap().collect::<Vec<_>>(), expected);
     }
 }
 
@@ -59,9 +59,12 @@ fn sorted_delete() {
 fn sorted_key_iterator() {
     let mut list = SortedList::new(|e: &i32| f64::from(*e));
     for value in [5, 5, 8, 5, 8, 6] {
-        list.insert(value);
+        list.insert(value).unwrap();
     }
-    assert_eq!(list.values().collect::<Vec<_>>(), [5, 5, 5, 6, 8, 8]);
+    assert_eq!(
+        list.values().unwrap().collect::<Vec<_>>(),
+        [5, 5, 5, 6, 8, 8]
+    );
     for (key, expected) in [
         (1, vec![]),
         (5, vec![5, 5, 5]),
@@ -71,6 +74,7 @@ fn sorted_key_iterator() {
     ] {
         assert_eq!(
             list.get_key_iterator(f64::from(key))
+                .unwrap()
                 .copied()
                 .collect::<Vec<_>>(),
             expected
@@ -82,10 +86,10 @@ fn sorted_key_iterator() {
 fn sorted_clear() {
     let mut list = SortedList::new(|e: &i32| f64::from(*e));
     for value in [1, 2, 4, 3, 5] {
-        list.insert(value);
+        list.insert(value).unwrap();
     }
     list.clear();
-    assert_eq!(list.values().collect::<Vec<_>>(), []);
+    assert_eq!(list.values().unwrap().collect::<Vec<_>>(), []);
 }
 
 #[test]
@@ -96,10 +100,10 @@ fn sorted_custom_key() {
     }
     let mut list = SortedList::new(|e: &Entry| f64::from(e.key));
     for key in [5, 2, 10, 5, 6] {
-        list.insert(Entry { key });
+        list.insert(Entry { key }).unwrap();
     }
     assert_eq!(
-        list.values().collect::<Vec<_>>(),
+        list.values().unwrap().collect::<Vec<_>>(),
         [2, 5, 5, 6, 10].map(|key| Entry { key })
     );
 }
@@ -108,10 +112,10 @@ fn sorted_custom_key() {
 fn sorted_values_snapshot_survives_mutation() {
     let mut list = SortedList::new(|e: &i32| f64::from(*e));
     for value in [1, 2, 3, 4] {
-        list.insert(value);
+        list.insert(value).unwrap();
     }
     let mut visited = Vec::new();
-    for value in list.values() {
+    for value in list.values().unwrap() {
         visited.push(value);
         list.delete(&value);
     }
@@ -201,19 +205,25 @@ fn sorted_identity_and_batch_order() {
     let a = Rc::new((1, "a"));
     let b = Rc::new((1, "b"));
     let c = Rc::new((1, "c"));
-    list.insert(a.clone());
-    list.insert(b.clone());
-    assert_eq!(list.values().map(|v| v.1).collect::<Vec<_>>(), ["a", "b"]);
-    list.insert(c.clone());
+    list.insert(a.clone()).unwrap();
+    list.insert(b.clone()).unwrap();
     assert_eq!(
-        list.values().map(|v| v.1).collect::<Vec<_>>(),
+        list.values().unwrap().map(|v| v.1).collect::<Vec<_>>(),
+        ["a", "b"]
+    );
+    list.insert(c.clone()).unwrap();
+    assert_eq!(
+        list.values().unwrap().map(|v| v.1).collect::<Vec<_>>(),
         ["c", "a", "b"]
     );
     assert!(!list.delete_by(&Rc::new((1, "a")), Rc::ptr_eq));
     assert!(list.delete_by(&a, Rc::ptr_eq));
-    assert_eq!(list.values().map(|v| v.1).collect::<Vec<_>>(), ["c", "b"]);
+    assert_eq!(
+        list.values().unwrap().map(|v| v.1).collect::<Vec<_>>(),
+        ["c", "b"]
+    );
     let mut visited = Vec::new();
-    list.for_each_by_key(1.0, |v| visited.push(v.1));
+    list.for_each_by_key(1.0, |v| visited.push(v.1)).unwrap();
     assert_eq!(visited, ["c", "b"]);
     assert!(!list.delete_by(&a, Rc::ptr_eq));
 }
@@ -221,10 +231,10 @@ fn sorted_identity_and_batch_order() {
 #[test]
 fn sorted_clear_cancels_pending_deletes_and_inserts() {
     let mut list = SortedList::new(|e: &i32| f64::from(*e));
-    list.insert(1);
+    list.insert(1).unwrap();
     assert!(list.delete(&1));
     list.clear();
-    list.insert(2);
+    list.insert(2).unwrap();
     assert!(!list.delete(&3));
-    assert_eq!(list.values().collect::<Vec<_>>(), [2]);
+    assert_eq!(list.values().unwrap().collect::<Vec<_>>(), [2]);
 }

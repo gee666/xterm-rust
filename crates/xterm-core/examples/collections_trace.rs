@@ -15,18 +15,27 @@ fn main() -> Result<(), Box<dyn Error>> {
         let line = line?;
         let mut parts = line.split('\t');
         match parts.next().ok_or_else(missing)? {
-            "I" => list.insert(parts.next().ok_or_else(missing)?.parse()?),
+            "I" => {
+                if list
+                    .insert(parts.next().ok_or_else(missing)?.parse()?)
+                    .is_err()
+                {
+                    println!("\"RangeError\"");
+                }
+            }
             "D" => println!(
                 "{}",
                 list.delete(&parts.next().ok_or_else(missing)?.parse()?)
             ),
             "C" => list.clear(),
-            "V" => println!("{:?}", list.values().collect::<Vec<_>>()),
-            "K" => println!(
-                "{:?}",
-                list.get_key_iterator(parts.next().ok_or_else(missing)?.parse()?)
-                    .collect::<Vec<_>>()
-            ),
+            "V" => match list.values() {
+                Ok(values) => println!("{:?}", values.collect::<Vec<_>>()),
+                Err(_) => println!("\"RangeError\""),
+            },
+            "K" => match list.get_key_iterator(parts.next().ok_or_else(missing)?.parse()?) {
+                Ok(values) => println!("{:?}", values.collect::<Vec<_>>()),
+                Err(_) => println!("\"RangeError\""),
+            },
             "N" => {
                 let key: f64 = parts.next().ok_or_else(missing)?.parse()?;
                 map.set(key, "key", 1);

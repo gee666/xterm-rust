@@ -4,6 +4,19 @@
 //! Sorted, duplicate-preserving storage ported from `common/SortedList.ts`.
 
 use std::cmp::Ordering;
+use std::fmt;
+
+/// JavaScript's negative array-length RangeError during a deletion flush.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct InvalidArrayLength;
+
+impl fmt::Display for InvalidArrayLength {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str("Invalid array length")
+    }
+}
+
+impl std::error::Error for InvalidArrayLength {}
 
 /// A list with numeric keys and deferred insertion/deletion batches.
 ///
@@ -15,6 +28,7 @@ pub struct SortedList<T, F> {
     values: Vec<T>,
     inserted: Vec<T>,
     deleted: Vec<usize>,
+    deletion_flush_failed: bool,
     key: F,
 }
 
@@ -24,6 +38,7 @@ impl<T, F: Fn(&T) -> f64> SortedList<T, F> {
             values: Vec::new(),
             inserted: Vec::new(),
             deleted: Vec::new(),
+            deletion_flush_failed: false,
             key,
         }
     }
@@ -32,11 +47,13 @@ impl<T, F: Fn(&T) -> f64> SortedList<T, F> {
         self.values.clear();
         self.inserted.clear();
         self.deleted.clear();
+        self.deletion_flush_failed = false;
     }
 
-    pub fn insert(&mut self, value: T) {
-        self.flush_deleted();
+    pub fn insert(&mut self, value: T) -> Result<(), InvalidArrayLength> {
+        self.flush_deleted()?;
         self.inserted.push(value);
+        Ok(())
     }
 
     /// Delete the first matching value with the same numeric key.
@@ -70,34 +87,42 @@ impl<T, F: Fn(&T) -> f64> SortedList<T, F> {
 
     /// Iterate entries with exactly this key. Borrowing prevents concurrent
     /// list mutation; use [`Self::values`] for an independently owned snapshot.
-    pub fn get_key_iterator(&mut self, key: f64) -> impl Iterator<Item = &T> {
-        self.flush();
+    pub fn get_key_iterator(
+        &mut self,
+        key: f64,
+    ) -> Result<impl Iterator<Item = &T>, InvalidArrayLength> {
+        self.flush()?;
         let start = self.search(key);
         let get_key = &self.key;
-        self.values[start..]
+        Ok(self.values[start..]
             .iter()
-            .take_while(move |value| get_key(value) == key)
+            .take_while(move |value| get_key(value) == key))
     }
 
-    pub fn for_each_by_key(&mut self, key: f64, mut callback: impl FnMut(&T)) {
-        for value in self.get_key_iterator(key) {
+    pub fn for_each_by_key(
+        &mut self,
+        key: f64,
+        mut callback: impl FnMut(&T),
+    ) -> Result<(), InvalidArrayLength> {
+        for value in self.get_key_iterator(key)? {
             callback(value);
         }
+        Ok(())
     }
 
     /// Snapshot of the list, allowing mutation while visiting its values.
     /// Use reference-counted entries when cloning must preserve object identity.
-    pub fn values(&mut self) -> std::vec::IntoIter<T>
+    pub fn values(&mut self) -> Result<std::vec::IntoIter<T>, InvalidArrayLength>
     where
         T: Clone,
     {
-        self.flush();
-        self.values.clone().into_iter()
+        self.flush()?;
+        Ok(self.values.clone().into_iter())
     }
 
-    pub fn flush(&mut self) {
+    pub fn flush(&mut self) -> Result<(), InvalidArrayLength> {
         self.flush_inserted();
-        self.flush_deleted();
+        self.flush_deleted()
     }
 
     fn flush_inserted(&mut self) {
@@ -141,12 +166,20 @@ impl<T, F: Fn(&T) -> f64> SortedList<T, F> {
         self.values.extend(added);
     }
 
-    fn flush_deleted(&mut self) {
-        if self.deleted.is_empty() {
-            return;
+    fn flush_deleted(&mut self) -> Result<(), InvalidArrayLength> {
+        if self.deleted.is_empty() || self.deletion_flush_failed {
+            return Ok(());
         }
         self.deleted.sort_unstable();
-        self.deleted.dedup();
+        if self.deleted.len() > self.values.len() {
+            // Upstream sets _isFlushingDeleted before allocating. On error it
+            // stays set, suppressing later deletion flushes until clear().
+            self.deletion_flush_failed = true;
+            return Err(InvalidArrayLength);
+        }
+        // Do not deduplicate. A repeated index leaves the upstream deletion
+        // cursor behind and causes all subsequent requested removals to stay.
+
         let mut deleted = self.deleted.iter().copied().peekable();
         let mut index = 0;
         self.values.retain(|_| {
@@ -158,6 +191,7 @@ impl<T, F: Fn(&T) -> f64> SortedList<T, F> {
             !remove
         });
         self.deleted.clear();
+        Ok(())
     }
 
     fn search(&self, key: f64) -> usize {

@@ -7,10 +7,10 @@ These modules implement the common sorted-list and multi-key-map utilities, not 
 | Upstream | Rust | Contract |
 | --- | --- | --- |
 | `SortedList<T>` | `sorted_list::SortedList<T, F>` | `F: Fn(&T) -> f64`, key callbacks return a JavaScript-sized number. |
-| `clear`, `insert`, `delete` | `clear`, `insert`, `delete` | Scalar deletion uses `PartialEq`. |
+| `clear`, `insert`, `delete` | `clear`, `insert`, `delete` | Scalar deletion uses `PartialEq`; insertion returns `Result` for deferred deletion failure. |
 | strict reference equality during `delete` | `delete_by` | Pass `Rc::ptr_eq` for object identity; structural equality is not a substitute. |
 | `getKeyIterator`, `forEachByKey` | `get_key_iterator`, `for_each_by_key` | Borrowed entries, numeric equality, duplicate-preserving order. |
-| `values` | `values` | Owned snapshot requires `T: Clone`. Use reference-counted entries to preserve object identity. |
+| `values` | `values` | `Result` of an owned snapshot requires `T: Clone`. Use reference-counted entries to preserve object identity. |
 | internal idle tasks | `flush`, reads | Explicit/read-driven flushing, no native event-loop scheduler. |
 | `TwoKeyMap`, `FourKeyMap` | `multi_key_map::{TwoKeyMap, FourKeyMap}` | Key arguments accept `PropertyKey` conversions. |
 | map `set`, `get`, `clear` | `set`, `get`, `clear` | Missing entries return `None`, values are borrowed. |
@@ -25,21 +25,21 @@ Numeric map keys use `ryu-js` 1.0.3 for ECMAScript number formatting, including 
 Run with Node 24 and Cargo in PATH:
 
 ```sh
-cargo test -p xterm-core --test collections_upstream
+cargo test -p xterm-core --test collections_upstream --test collections_regression
 node scripts/collections-oracle.mjs
 cargo clippy -p xterm-core --lib --test collections_upstream --example collections_trace -- -D warnings
 ```
 
-The original test bodies run after TypeScript erasure in memory, with controlled deferred queue callbacks. No source test or assertion is rewritten. Cross-realm arrays are cloned into the same realm before strict comparison. The original suites contain 11 tests and 49 assertions. Rust retains all of these in 11 tests, with three additional identity, coercion and pending-change tests. `results/collections/oracle.json` records source hashes, commands, Node/Cargo versions, counts and seed `5285869`. The seeded run performs 5,000 collection iterations plus 1,010 numeric map coercion cases, totaling 7,761 trace operations and 3,861 compared results. Rust output comes from the built `collections_trace` example, not from JavaScript. That example is a verification protocol driver, not the requested interactive terminal demo.
+The original test bodies run after TypeScript erasure in memory, with controlled deferred queue callbacks. No source test or assertion is rewritten. Cross-realm arrays are cloned into the same realm before strict comparison. The original suites contain 11 tests and 49 assertions. Rust retains all of these in 11 tests, with three additional identity, coercion and pending-change tests and three retained deletion/error regressions. `results/collections/oracle.json` records source hashes, commands, Node/Cargo versions, counts and seed `5285869`. The seeded run performs 5,000 collection iterations plus 1,010 numeric map coercion cases, totaling 7,038 trace operations and 3,131 compared results. Unlike the initial oracle run, these traces do not force a read after deletion. They retain repeated-index and negative-array-length counterexamples with post-error state checks. Rust output comes from the built `collections_trace` example, not from JavaScript. That example is a verification protocol driver, not the requested interactive terminal demo.
 
 The observed platform is native Windows. Linux/macOS execution is not established by these results. Other terminal subsystems and browser integration need their own evidence.
 
 ## Remaining differences and checks
 
 - `IdleTaskQueue` timing is not executed. The oracle controls deferred callbacks and flushes on reads.
-- Repeated deletion before reading can trigger sparse-array or negative-array-length bugs upstream. Rust deduplicates removal indices and does not expose these JavaScript array failures. Differential traces flush after deletion; this missing adversarial equivalence is explicit rather than counted as passed.
+- Repeated pending deletion indices are deliberately not deduplicated. The original cursor can leave later requested removals intact. Negative-array-length failure maps to `Err(InvalidArrayLength)` from insertion, reads, key callbacks or explicit flush. Like the source, the failed deletion-flush guard stays set until `clear`, so subsequent reads retain old entries. Three regressions and differential traces verify this behavior.
 - JavaScript inherited object keys and `__proto__` can mutate or retrieve prototypes. Rust stores these as ordinary string keys and does not expose prototype mutation.
 - Key iterators and key callbacks cannot synchronously mutate the same borrowed Rust list. Mutation during `values` traversal is tested.
 - Non-total NaN sort order is implementation-defined in JavaScript and not asserted equivalent.
 
-These differences must remain visible in the full compatibility inventory. Passing these scoped checks does not discharge the full-port criterion.
+Task 76 owns the remaining adversarial collection gaps, including prototype behavior, reentrancy, key domains, random f64 bit patterns and all tuple positions. Task 83 owns real idle-scheduled batch behavior. The detailed criteria are 104 through 109, defined in `docs/collections-acceptance.md`. These differences must remain visible in the full compatibility inventory. Passing these scoped checks does not discharge the full-port criterion.

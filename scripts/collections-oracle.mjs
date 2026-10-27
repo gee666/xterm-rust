@@ -62,22 +62,26 @@ const trace = [];
 const expected = [];
 function operation(command, value) {
   trace.push(value === undefined ? command : `${command}\t${value}`);
-  if (command === 'I') list.insert(value);
-  if (command === 'D') expected.push(list.delete(value));
-  if (command === 'C') list.clear();
-  if (command === 'V') expected.push(Array.from(list.values()));
-  if (command === 'K') expected.push(Array.from(list.getKeyIterator(value)));
+  try {
+    if (command === 'I') list.insert(value);
+    if (command === 'D') expected.push(list.delete(value));
+    if (command === 'C') list.clear();
+    if (command === 'V') expected.push(Array.from(list.values()));
+    if (command === 'K') expected.push(Array.from(list.getKeyIterator(value)));
+  } catch (error) {
+    expected.push(error.name);
+  }
 }
+// Retain the independent review counterexample and failed-flush recovery.
+for (const [command, value] of [
+  ['I', 1], ['I', 2], ['I', 3], ['D', 1], ['D', 1], ['D', 2], ['V'],
+  ['C'], ['I', 1], ['D', 1], ['D', 1], ['V'], ['V'], ['I', 2], ['V'], ['C'], ['V'],
+]) operation(command, value);
 for (let i = 0; i < 5000; i++) {
   const value = random() % 31 - 15;
   switch (random() % 7) {
     case 0: case 1: case 2: operation('I', value); break;
-    case 3:
-      operation('D', value);
-      // Flush after deletion so the trace does not invoke upstream's duplicate
-      // pending-index bug. It remains an explicit gap in the result report.
-      operation('V');
-      break;
+    case 3: operation('D', value); break;
     case 4: operation('K', value); break;
     case 5: operation('V'); break;
     case 6: operation('C'); break;
@@ -121,7 +125,7 @@ const report = {
   source: Object.fromEntries(files.map(file => [file, createHash('sha256').update(sources[file]).digest('hex')])),
   upstream: { discovered: tests.length, executed: tests.length, passed: tests.length, failed: 0, skipped: 0, unrun: 0, assertions, names: tests.map(test => test.name) },
   differential: { seed, iterations: 5000, map_cases: numbers.length, trace_operations: trace.length, compared_results: expected.length, failures: 0 },
-  gaps: ['Real IdleTaskQueue scheduling is not executed.', 'Repeated deletion before a read can trigger upstream sparse-array or RangeError bugs not reproduced in Rust.', 'JavaScript inherited object keys and __proto__ mutation are intentionally not exposed by Rust maps.', 'getKeyIterator uses a Rust borrow and cannot mutate the list during iteration.']
+  gaps: ['Real IdleTaskQueue scheduling is not executed.', 'JavaScript inherited object keys and __proto__ mutation are not yet represented by Rust maps.', 'getKeyIterator uses a Rust borrow and cannot mutate the list during iteration.', 'Task76 tracks mutable/NaN/undefined keys, identity-bearing randomized traces and complete four-key/f64-bit edge coverage.']
 };
 writeFileSync(path.join(resultDir, 'oracle.json'), JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify(report, null, 2));
