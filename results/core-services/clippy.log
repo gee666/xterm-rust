@@ -1,0 +1,36 @@
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0599]: no variant or associated item named `Prefix` found for enum `parser::escape::IdentifierError` in the current scope
+  --> crates\xterm-core\src\parser\escape_handlers.rs:30:45
+   |
+30 |                 return Err(IdentifierError::Prefix);
+   |                                             ^^^^^^ variant or associated item not found in `IdentifierError`
+   |
+  ::: crates\xterm-core\src\parser\escape.rs:41:1
+   |
+41 | pub enum IdentifierError {
+   | ------------------------ variant or associated item `Prefix` not found for this enum
+
+error[E0599]: no variant or associated item named `Intermediates` found for enum `parser::escape::IdentifierError` in the current scope
+  --> crates\xterm-core\src\parser\escape_handlers.rs:37:45
+   |
+37 |                 return Err(IdentifierError::Intermediates);
+   |                                             ^^^^^^^^^^^^^ variant or associated item not found in `IdentifierError`
+   |
+  ::: crates\xterm-core\src\parser\escape.rs:41:1
+   |
+41 | pub enum IdentifierError {
+   | ------------------------ variant or associated item `Intermediates` not found for this enum
+
+error[E0599]: no variant or associated item named `Final` found for enum `parser::escape::IdentifierError` in the current scope
+  --> crates\xterm-core\src\parser\escape_handlers.rs:45:41
+   |
+45 |             return Err(IdentifierError::Final);
+   |                                         ^^^^^ variant or associated item not found in `IdentifierError`
+   |
+  ::: crates\xterm-core\src\parser\escape.rs:41:1
+   |
+41 | pub enum IdentifierError {
+   | ------------------------ variant or associated item `Final` not found for this enum
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `xterm-core` (lib) due to 3 previous errors

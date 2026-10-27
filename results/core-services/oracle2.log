@@ -1,0 +1,62 @@
+(node:26152) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/src/common/Lifecycle.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]:    Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0583]: file not found for module `buffer`
+ --> crates\xterm-core\src\serialize\mod.rs:5:1
+  |
+5 | mod buffer;
+  | ^^^^^^^^^^^
+  |
+  = help: to create the module `buffer`, create file "crates\xterm-core\src\serialize\buffer.rs" or "crates\xterm-core\src\serialize\buffer\mod.rs"
+  = note: if there is a `mod buffer` elsewhere in the crate already, import it with `use crate::...` instead
+
+warning: unused import: `lifecycle::Disposable`
+ --> crates\xterm-core\src\terminal\operations.rs:3:36
+  |
+3 | use crate::{buffer::AttributeData, lifecycle::Disposable};
+  |                                    ^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+error[E0308]: mismatched types
+  --> crates\xterm-core\src\terminal\register.rs:38:37
+   |
+38 |         parser.osc.register_handler(ident,Rc::new(RefCell::new(OscHandler::new(move |data:Vec<u16>| {
+   |                    ---------------- ^^^^^ expected `f64`, found integer
+   |                    |
+   |                    arguments to this method are incorrect
+   |
+note: method defined here
+  --> crates\xterm-core\src\parser\osc.rs:94:12
+   |
+94 |     pub fn register_handler(&mut self, id: f64, handler: HandlerHandle) -> DisposableHandle {
+   |            ^^^^^^^^^^^^^^^^            -------
+
+Some errors have detailed explanations: E0308, E0583.
+For more information about an error, try `rustc --explain E0308`.
+warning: `xterm-core` (lib) generated 1 warning
+error: could not compile `xterm-core` (lib) due to 2 previous errors; 1 warning emitted
+
+
+101 !== 0
+
+    at file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/scripts/check-core-services.mjs:156:44
+    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async node:internal/modules/esm/loader:639:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 101,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.15.0

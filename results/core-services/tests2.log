@@ -1,0 +1,44 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+warning: unused `Result` that must be used
+   --> crates\xterm-core\src\buffer\service.rs:180:17
+    |
+180 |                 buffer.lines.set(bottom, Some(clone_blank(&new_line)?));
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+    = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+    |
+180 |                 let _ = buffer.lines.set(bottom, Some(clone_blank(&new_line)?));
+    |                 +++++++
+
+warning: `xterm-core` (lib) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 1.87s
+     Running tests\core_service.rs (target\debug\deps\core_service-ec1c98d2f065c8cf.exe)
+
+running 9 tests
+test upstream_reset_preserves_cursor_initialized_both_values ... ok
+test disposing_owner_during_event_and_dropping_owner_clears_listeners ... ok
+test failures_stop_later_events_and_disposal_clears_all_emitters ... ok
+test upstream_cursor_initialization_defaults_and_option ... ok
+test defaults_reset_all_modes_and_independent_instances ... ok
+test option_truthiness_matches_js_conditions ... ok
+test reentrant_send_and_option_changes_preserve_entry_check ... ok
+test strings_and_lazy_code_units_are_exact_utf16 ... ok
+test all_disable_user_scroll_viewport_branches_and_live_updates ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\log_service.rs (target\debug\deps\log_service-47e0c0cb025bb8a5.exe)
+
+running 7 tests
+test raw_level_writes_do_not_emit_and_disposal_freezes_threshold ... ok
+test sink_may_reenter_change_levels_and_dispose_service ... ok
+test custom_logger_has_no_prefix_and_replacement_is_live ... ok
+test lazy_parameters_evaluate_once_left_to_right_and_can_replace_logger ... ok
+test every_level_threshold_and_console_route ... ok
+test invalid_logger_and_sink_errors_propagate_before_later_work ... ok
+test invalid_levels_suppress_and_adapter_property_conversion_is_observed ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

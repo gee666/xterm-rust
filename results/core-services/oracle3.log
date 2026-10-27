@@ -1,0 +1,71 @@
+(node:31272) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/src/common/Lifecycle.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]:     Blocking waiting for file lock on build directory
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0573]: expected type, found variant `InvalidArrayLength`
+  --> crates\xterm-core\src\decoration.rs:70:13
+   |
+70 |     Storage(InvalidArrayLength),
+   |             ^^^^^^^^^^^^^^^^^^
+   |             |
+   |             not a type
+   |             help: try using the variant's enum: `crate::sorted_list::SortedListError`
+
+error[E0573]: expected type, found variant `InvalidArrayLength`
+  --> crates\xterm-core\src\decoration.rs:86:11
+   |
+86 | impl From<InvalidArrayLength> for DecorationError {
+   |           ^^^^^^^^^^^^^^^^^^
+   |           |
+   |           not a type
+   |           help: try using the variant's enum: `crate::sorted_list::SortedListError`
+
+error[E0573]: expected type, found variant `InvalidArrayLength`
+  --> crates\xterm-core\src\decoration.rs:87:16
+   |
+87 |     fn from(e: InvalidArrayLength) -> Self {
+   |                ^^^^^^^^^^^^^^^^^^
+   |                |
+   |                not a type
+   |                help: try using the variant's enum: `crate::sorted_list::SortedListError`
+
+error[E0308]: mismatched types
+  --> crates\xterm-core\src\decoration_service.rs:82:24
+   |
+82 |                     if removed {
+   |                        ^^^^^^^ expected `bool`, found `Result<bool, SortedListError>`
+   |
+   = note: expected type `bool`
+              found enum `Result<bool, SortedListError>`
+help: consider using `Result::expect` to unwrap the `Result<bool, SortedListError>` value, panicking if the value is a `Result::Err`
+   |
+82 |                     if removed.expect("REASON") {
+   |                               +++++++++++++++++
+
+Some errors have detailed explanations: E0308, E0573.
+For more information about an error, try `rustc --explain E0308`.
+error: could not compile `xterm-core` (lib) due to 4 previous errors
+
+
+101 !== 0
+
+    at file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/scripts/check-core-services.mjs:156:44
+    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async node:internal/modules/esm/loader:639:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 101,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.15.0
