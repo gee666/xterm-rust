@@ -1,0 +1,176 @@
+
+
+  Buffer
+    constructor
+      ✔ should create a CircularList with max length equal to rows + scrollback, for its lines
+      ✔ should set the Buffer's scrollBottom value equal to the terminal's rows -1
+    fillViewportRows
+      ✔ should fill the buffer with blank lines based on the size of the viewport
+    getWrappedRangeForLine
+      non-wrapped
+        ✔ should return a single row for the first row
+        ✔ should return a single row for a middle row
+        ✔ should return a single row for the last row
+      wrapped
+        ✔ should return a range for the first row
+        ✔ should return a range for a middle row wrapping upwards
+        ✔ should return a range for a middle row wrapping downwards
+        ✔ should return a range for a middle row wrapping both ways
+        ✔ should return a range for the last row
+        ✔ should return a range for a row that wraps upward to first row
+        ✔ should return a range for a row that wraps downward to last row
+    resize
+      column size is reduced
+        ✔ should trim the data in the buffer
+      column size is increased
+        ✔ should add pad columns
+      row size reduced
+        ✔ should trim blank lines from the end
+        ✔ should move the viewport down when it's at the end
+        no scrollback
+          ✔ should trim from the top of the buffer when the cursor reaches the bottom
+      row size increased
+        empty buffer
+          ✔ should add blank lines to end
+        filled buffer
+          ✔ should show more of the buffer above
+          ✔ should show more of the buffer below when the viewport is at the top of the buffer
+        Windows ConPTY
+          ✔ should not adjust ybase or ydisp when growing rows
+      row and column increased
+        ✔ should resize properly
+      reflow
+        ✔ should not wrap empty lines
+        ✔ should shrink row length
+        ✔ should wrap and unwrap lines
+        ✔ should gate reflow on ConPTY buildNumber 21376
+        ✔ should unwrap lines on ConPTY builds with reflow support
+        ✔ should reflow wrapped lines containing the cursor when reflowCursorLine is enabled
+        ✔ should not reflow wrapped lines containing the cursor by default
+        ✔ should discard parts of wrapped lines that go out of the scrollback
+        ✔ should remove the correct amount of rows when reflowing larger
+        ✔ should transfer combined char data over to reflowed lines
+        ✔ should adjust markers when reflowing
+        ✔ should dispose markers whose rows are trimmed during a reflow
+        ✔ should correctly reflow wrapped lines that end in 0 space (via tab char)
+        ✔ should wrap wide characters correctly when reflowing larger
+        ✔ should correctly reflow wrapped lines that end in 0 space (via tab char)
+        ✔ should wrap wide characters correctly when reflowing smaller
+        reflowLarger cases
+          viewport not yet filled
+            ✔ should move the cursor up and add empty lines
+          viewport filled, scrollback remaining
+            ybase === 0
+              ✔ should move the cursor up and add empty lines
+            ybase !== 0
+              && ydisp === ybase
+                ✔ should adjust the viewport and keep ydisp = ybase
+              && ydisp !== ybase
+                ✔ should keep ydisp at the same value
+          viewport filled, no scrollback remaining
+            ybase !== 0
+              && ydisp === ybase
+                ✔ should trim lines and keep ydisp = ybase
+              && ydisp !== ybase
+                ✔ should trim lines and not change ydisp
+        reflowSmaller cases
+          viewport not yet filled
+            ✔ should move the cursor down
+          viewport filled, scrollback remaining
+            ybase === 0
+              ✔ should trim the top
+            ybase !== 0
+              && ydisp === ybase
+                ✔ should adjust the viewport and keep ydisp = ybase
+              && ydisp !== ybase
+                ✔ should keep ydisp at the same value
+          viewport filled, no scrollback remaining
+            ybase !== 0
+              && ydisp === ybase
+                ✔ should trim lines and keep ydisp = ybase
+              && ydisp !== ybase
+                ✔ should trim lines and not change ydisp
+    buffer marked to have no scrollback
+      ✔ should always have a scrollback of 0
+    addMarker
+      ✔ should adjust a marker line when the buffer is trimmed
+      ✔ should dispose of a marker if it is trimmed off the buffer
+      ✔ should call onDispose
+    translateBufferLineToString
+      ✔ should handle selecting a section of ascii text
+      ✔ should handle a cut-off double width character by including it
+      ✔ should handle a zero width character in the middle of the string by not including it
+      ✔ should handle single width emojis
+      ✔ should handle double width emojis
+    memory cleanup after shrinking
+      ✔ should realign memory from idle task execution (41ms)
+
+
+  61 passing (80ms)
+
+
+
+  BufferSet
+    constructor
+      ✔ should create two different buffers: alt and normal
+    activateNormalBuffer
+      ✔ should set the normal buffer as the currently active buffer
+    activateAltBuffer
+      ✔ should set the alt buffer as the currently active buffer
+    cursor handling when swapping buffers
+      ✔ should keep the cursor stationary when activating alt buffer
+      ✔ should keep the cursor stationary when activating normal buffer
+    markers
+      ✔ should clear the markers when the buffer is switched
+
+
+  6 passing (3ms)
+
+
+
+  BufferReflow
+    reflowSmallerGetNewLineLengths
+      ✔ should return correct line lengths for a small line with wide characters
+      ✔ should return correct line lengths for a large line with wide characters
+      ✔ should return correct line lengths for a string with wide and single characters
+      ✔ should return correct line lengths for a wrapped line with wide and single characters
+      ✔ should work on lines ending in null space
+    reflowLargerGetLinesToRemove
+      ✔ should skip reflow when the cursor is in a wrapped block and reflowCursorLine is false
+      ✔ should reflow wrapped blocks when the cursor is outside the block
+
+
+  7 passing (2ms)
+
+[
+  {
+    "source": "source_repo/src/common/buffer/Buffer.ts",
+    "tests": "source_repo/src/common/buffer/Buffer.test.ts",
+    "discovered": 61,
+    "executed": 61,
+    "passed": 61,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0
+  },
+  {
+    "source": "source_repo/src/common/buffer/BufferSet.ts",
+    "tests": "source_repo/src/common/buffer/BufferSet.test.ts",
+    "discovered": 6,
+    "executed": 6,
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0
+  },
+  {
+    "source": "source_repo/src/common/buffer/BufferReflow.ts",
+    "tests": "source_repo/src/common/buffer/BufferReflow.test.ts",
+    "discovered": 7,
+    "executed": 7,
+    "passed": 7,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0
+  }
+]

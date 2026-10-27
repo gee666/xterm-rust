@@ -1,0 +1,401 @@
+{
+  "node": "v24.15.0",
+  "platform": "win32",
+  "command": "node scripts/buffer-baseline.mjs",
+  "overallEquivalence": "NOT PROVEN",
+  "note": "Original JS baseline only. Rust assertion migration and differential execution are separate evidence.",
+  "suites": [
+    {
+      "source": "source_repo/src/common/buffer/Buffer.ts",
+      "tests": "source_repo/src/common/buffer/Buffer.test.ts",
+      "hashes": {
+        "source_repo/src/common/Lifecycle.ts": "e00016aae991e24137ab066778912414f4af959f2b26baecf47ec542ad313a83",
+        "source_repo/src/common/Event.ts": "aa374272c5ec5c0d6992d6072687211a94676b086a2505b0414ddd20cf57d641",
+        "source_repo/src/common/CircularList.ts": "558ae3c18862469de29c2f77e06c31c44c2cddaa25fd6e69059bf2176efc54f6",
+        "source_repo/src/common/TaskQueue.ts": "3a3c33a8d50aa767a7eaf355980ad6d53c1e9fc5acc287b14eabe0a72720142a",
+        "source_repo/src/common/buffer/Constants.ts": "0342c709b580e7a7c62fffb61bab359f93511b82529f5a155374797ca4799f21",
+        "source_repo/src/common/buffer/AttributeData.ts": "09a9dc9693200cd7c34a98af3c1fc97b47b4354828cb02a76ab561a03515748a",
+        "source_repo/src/common/input/TextDecoder.ts": "0368a7fddbb53502f86144b61d023f8d022f5ce973a1b01b59c552ec62631a1b",
+        "source_repo/src/common/buffer/CellData.ts": "d0dfcbf310a949d8bdf4172f9896a6f143d3abf4e0dc68b896dec6612b82d992",
+        "source_repo/src/common/buffer/BufferLine.ts": "409958425629c5592bd4813272b00b480e6a723985ea28f24125a7a72ef95bdf",
+        "source_repo/src/common/buffer/BufferReflow.ts": "d2fa77716bd3190c5f2fbe2510fbae7218da8cf14fc55a48143c450802ccefe3",
+        "source_repo/src/common/buffer/Marker.ts": "3a6dc8fe7e791de49b825faba6c47093d73427bddf80fa6dd4069b8a90aac88d",
+        "source_repo/src/common/data/Charsets.ts": "64fe88d37beb2cc7c60a18d23fb4033e24f19b56b7f481fc656f8e912faac725",
+        "source_repo/src/common/buffer/Buffer.ts": "b299d8dfdd75deee31807a94c9417093b0c0a0f1714e5553779052602b32e4af",
+        "source_repo/src/common/services/ServiceRegistry.ts": "a467a496d3f1f26130c55809c587e1a7aeaa56d91e22be60af4182db6bb89171",
+        "source_repo/src/common/services/Services.ts": "617002157a8f7946b2245db9d795e2808d5d843171e84bb6917a80c0fe6e9a4b",
+        "source_repo/src/common/services/UnicodeService.ts": "dae3733c0a07bfe55f264ea749e3df61b3b4505830e4e685183771497c292811",
+        "source_repo/src/common/Platform.ts": "be5ab9b1d1056e892b656732b375600178864e60281fc6a218480ac19c1f845a",
+        "source_repo/src/common/services/OptionsService.ts": "2cef872a29730441e2de5ef31a224872d9d1fb99be069d409febc8c9a7e41a09",
+        "source_repo/src/common/buffer/BufferSet.ts": "3a2cc96d786e65bbfd1c7dc0c60653ce0062eb9c6f58a0e89214b1660ba5722c",
+        "source_repo/src/common/input/UnicodeV6.ts": "526041b7d903ef88bf031825dde557a7f6d4b3e156be984fb524c66d02ac412e",
+        "source_repo/src/common/TestUtils.test.ts": "a1f20abc213a9a5f7611989c7eb74b1ad5f6810a733d5e491c29ff7f8b126034",
+        "source_repo/src/common/buffer/Buffer.test.ts": "c7972068ea9281a2e2a5bf2eaf5c42bcc555b31188dc6368ce790d504cc07dc2"
+      },
+      "discovered": 61,
+      "executed": 61,
+      "passed": 61,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0,
+      "outcomes": [
+        {
+          "name": "Buffer constructor should create a CircularList with max length equal to rows + scrollback, for its lines",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer constructor should set the Buffer's scrollBottom value equal to the terminal's rows -1",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer fillViewportRows should fill the buffer with blank lines based on the size of the viewport",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer getWrappedRangeForLine non-wrapped should return a single row for the first row",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer getWrappedRangeForLine non-wrapped should return a single row for a middle row",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer getWrappedRangeForLine non-wrapped should return a single row for the last row",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer getWrappedRangeForLine wrapped should return a range for the first row",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer getWrappedRangeForLine wrapped should return a range for a middle row wrapping upwards",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer getWrappedRangeForLine wrapped should return a range for a middle row wrapping downwards",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer getWrappedRangeForLine wrapped should return a range for a middle row wrapping both ways",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer getWrappedRangeForLine wrapped should return a range for the last row",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer getWrappedRangeForLine wrapped should return a range for a row that wraps upward to first row",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer getWrappedRangeForLine wrapped should return a range for a row that wraps downward to last row",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize column size is reduced should trim the data in the buffer",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize column size is increased should add pad columns",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize row size reduced should trim blank lines from the end",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize row size reduced should move the viewport down when it's at the end",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize row size reduced no scrollback should trim from the top of the buffer when the cursor reaches the bottom",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize row size increased empty buffer should add blank lines to end",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize row size increased filled buffer should show more of the buffer above",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize row size increased filled buffer should show more of the buffer below when the viewport is at the top of the buffer",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize row size increased Windows ConPTY should not adjust ybase or ydisp when growing rows",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize row and column increased should resize properly",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should not wrap empty lines",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should shrink row length",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should wrap and unwrap lines",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should gate reflow on ConPTY buildNumber 21376",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should unwrap lines on ConPTY builds with reflow support",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should reflow wrapped lines containing the cursor when reflowCursorLine is enabled",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should not reflow wrapped lines containing the cursor by default",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should discard parts of wrapped lines that go out of the scrollback",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should remove the correct amount of rows when reflowing larger",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should transfer combined char data over to reflowed lines",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should adjust markers when reflowing",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should dispose markers whose rows are trimmed during a reflow",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should correctly reflow wrapped lines that end in 0 space (via tab char)",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should wrap wide characters correctly when reflowing larger",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should correctly reflow wrapped lines that end in 0 space (via tab char)",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should wrap wide characters correctly when reflowing smaller",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowLarger cases viewport not yet filled should move the cursor up and add empty lines",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowLarger cases viewport filled, scrollback remaining ybase === 0 should move the cursor up and add empty lines",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowLarger cases viewport filled, scrollback remaining ybase !== 0 && ydisp === ybase should adjust the viewport and keep ydisp = ybase",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowLarger cases viewport filled, scrollback remaining ybase !== 0 && ydisp !== ybase should keep ydisp at the same value",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowLarger cases viewport filled, no scrollback remaining ybase !== 0 && ydisp === ybase should trim lines and keep ydisp = ybase",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowLarger cases viewport filled, no scrollback remaining ybase !== 0 && ydisp !== ybase should trim lines and not change ydisp",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowSmaller cases viewport not yet filled should move the cursor down",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowSmaller cases viewport filled, scrollback remaining ybase === 0 should trim the top",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowSmaller cases viewport filled, scrollback remaining ybase !== 0 && ydisp === ybase should adjust the viewport and keep ydisp = ybase",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowSmaller cases viewport filled, scrollback remaining ybase !== 0 && ydisp !== ybase should keep ydisp at the same value",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowSmaller cases viewport filled, no scrollback remaining ybase !== 0 && ydisp === ybase should trim lines and keep ydisp = ybase",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowSmaller cases viewport filled, no scrollback remaining ybase !== 0 && ydisp !== ybase should trim lines and not change ydisp",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer buffer marked to have no scrollback should always have a scrollback of 0",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer addMarker should adjust a marker line when the buffer is trimmed",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer addMarker should dispose of a marker if it is trimmed off the buffer",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer addMarker should call onDispose",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer translateBufferLineToString should handle selecting a section of ascii text",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer translateBufferLineToString should handle a cut-off double width character by including it",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer translateBufferLineToString should handle a zero width character in the middle of the string by not including it",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer translateBufferLineToString should handle single width emojis",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer translateBufferLineToString should handle double width emojis",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer memory cleanup after shrinking should realign memory from idle task execution",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/buffer/BufferSet.ts",
+      "tests": "source_repo/src/common/buffer/BufferSet.test.ts",
+      "hashes": {
+        "source_repo/src/common/Lifecycle.ts": "e00016aae991e24137ab066778912414f4af959f2b26baecf47ec542ad313a83",
+        "source_repo/src/common/Event.ts": "aa374272c5ec5c0d6992d6072687211a94676b086a2505b0414ddd20cf57d641",
+        "source_repo/src/common/CircularList.ts": "558ae3c18862469de29c2f77e06c31c44c2cddaa25fd6e69059bf2176efc54f6",
+        "source_repo/src/common/TaskQueue.ts": "3a3c33a8d50aa767a7eaf355980ad6d53c1e9fc5acc287b14eabe0a72720142a",
+        "source_repo/src/common/buffer/Constants.ts": "0342c709b580e7a7c62fffb61bab359f93511b82529f5a155374797ca4799f21",
+        "source_repo/src/common/buffer/AttributeData.ts": "09a9dc9693200cd7c34a98af3c1fc97b47b4354828cb02a76ab561a03515748a",
+        "source_repo/src/common/input/TextDecoder.ts": "0368a7fddbb53502f86144b61d023f8d022f5ce973a1b01b59c552ec62631a1b",
+        "source_repo/src/common/buffer/CellData.ts": "d0dfcbf310a949d8bdf4172f9896a6f143d3abf4e0dc68b896dec6612b82d992",
+        "source_repo/src/common/buffer/BufferLine.ts": "409958425629c5592bd4813272b00b480e6a723985ea28f24125a7a72ef95bdf",
+        "source_repo/src/common/buffer/BufferReflow.ts": "d2fa77716bd3190c5f2fbe2510fbae7218da8cf14fc55a48143c450802ccefe3",
+        "source_repo/src/common/buffer/Marker.ts": "3a6dc8fe7e791de49b825faba6c47093d73427bddf80fa6dd4069b8a90aac88d",
+        "source_repo/src/common/data/Charsets.ts": "64fe88d37beb2cc7c60a18d23fb4033e24f19b56b7f481fc656f8e912faac725",
+        "source_repo/src/common/buffer/Buffer.ts": "b299d8dfdd75deee31807a94c9417093b0c0a0f1714e5553779052602b32e4af",
+        "source_repo/src/common/buffer/BufferSet.ts": "3a2cc96d786e65bbfd1c7dc0c60653ce0062eb9c6f58a0e89214b1660ba5722c",
+        "source_repo/src/common/services/ServiceRegistry.ts": "a467a496d3f1f26130c55809c587e1a7aeaa56d91e22be60af4182db6bb89171",
+        "source_repo/src/common/services/Services.ts": "617002157a8f7946b2245db9d795e2808d5d843171e84bb6917a80c0fe6e9a4b",
+        "source_repo/src/common/services/UnicodeService.ts": "dae3733c0a07bfe55f264ea749e3df61b3b4505830e4e685183771497c292811",
+        "source_repo/src/common/Platform.ts": "be5ab9b1d1056e892b656732b375600178864e60281fc6a218480ac19c1f845a",
+        "source_repo/src/common/services/OptionsService.ts": "2cef872a29730441e2de5ef31a224872d9d1fb99be069d409febc8c9a7e41a09",
+        "source_repo/src/common/input/UnicodeV6.ts": "526041b7d903ef88bf031825dde557a7f6d4b3e156be984fb524c66d02ac412e",
+        "source_repo/src/common/TestUtils.test.ts": "a1f20abc213a9a5f7611989c7eb74b1ad5f6810a733d5e491c29ff7f8b126034",
+        "source_repo/src/common/buffer/BufferSet.test.ts": "4e1c4ac639118df08d96782401f4677956ba45e432e401d417ccaa5b1c6b2fd5"
+      },
+      "discovered": 6,
+      "executed": 6,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0,
+      "outcomes": [
+        {
+          "name": "BufferSet constructor should create two different buffers: alt and normal",
+          "status": "passed"
+        },
+        {
+          "name": "BufferSet activateNormalBuffer should set the normal buffer as the currently active buffer",
+          "status": "passed"
+        },
+        {
+          "name": "BufferSet activateAltBuffer should set the alt buffer as the currently active buffer",
+          "status": "passed"
+        },
+        {
+          "name": "BufferSet cursor handling when swapping buffers should keep the cursor stationary when activating alt buffer",
+          "status": "passed"
+        },
+        {
+          "name": "BufferSet cursor handling when swapping buffers should keep the cursor stationary when activating normal buffer",
+          "status": "passed"
+        },
+        {
+          "name": "BufferSet markers should clear the markers when the buffer is switched",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/buffer/BufferReflow.ts",
+      "tests": "source_repo/src/common/buffer/BufferReflow.test.ts",
+      "hashes": {
+        "source_repo/src/common/Lifecycle.ts": "e00016aae991e24137ab066778912414f4af959f2b26baecf47ec542ad313a83",
+        "source_repo/src/common/Event.ts": "aa374272c5ec5c0d6992d6072687211a94676b086a2505b0414ddd20cf57d641",
+        "source_repo/src/common/CircularList.ts": "558ae3c18862469de29c2f77e06c31c44c2cddaa25fd6e69059bf2176efc54f6",
+        "source_repo/src/common/buffer/Constants.ts": "0342c709b580e7a7c62fffb61bab359f93511b82529f5a155374797ca4799f21",
+        "source_repo/src/common/buffer/AttributeData.ts": "09a9dc9693200cd7c34a98af3c1fc97b47b4354828cb02a76ab561a03515748a",
+        "source_repo/src/common/input/TextDecoder.ts": "0368a7fddbb53502f86144b61d023f8d022f5ce973a1b01b59c552ec62631a1b",
+        "source_repo/src/common/buffer/CellData.ts": "d0dfcbf310a949d8bdf4172f9896a6f143d3abf4e0dc68b896dec6612b82d992",
+        "source_repo/src/common/buffer/BufferLine.ts": "409958425629c5592bd4813272b00b480e6a723985ea28f24125a7a72ef95bdf",
+        "source_repo/src/common/buffer/BufferReflow.ts": "d2fa77716bd3190c5f2fbe2510fbae7218da8cf14fc55a48143c450802ccefe3",
+        "source_repo/src/common/buffer/BufferReflow.test.ts": "2ed7469755f9be33c93aba7453a9f01aa27e6bf68b7ac671ca53d782f0cebd28"
+      },
+      "discovered": 7,
+      "executed": 7,
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0,
+      "outcomes": [
+        {
+          "name": "BufferReflow reflowSmallerGetNewLineLengths should return correct line lengths for a small line with wide characters",
+          "status": "passed"
+        },
+        {
+          "name": "BufferReflow reflowSmallerGetNewLineLengths should return correct line lengths for a large line with wide characters",
+          "status": "passed"
+        },
+        {
+          "name": "BufferReflow reflowSmallerGetNewLineLengths should return correct line lengths for a string with wide and single characters",
+          "status": "passed"
+        },
+        {
+          "name": "BufferReflow reflowSmallerGetNewLineLengths should return correct line lengths for a wrapped line with wide and single characters",
+          "status": "passed"
+        },
+        {
+          "name": "BufferReflow reflowSmallerGetNewLineLengths should work on lines ending in null space",
+          "status": "passed"
+        },
+        {
+          "name": "BufferReflow reflowLargerGetLinesToRemove should skip reflow when the cursor is in a wrapped block and reflowCursorLine is false",
+          "status": "passed"
+        },
+        {
+          "name": "BufferReflow reflowLargerGetLinesToRemove should reflow wrapped blocks when the cursor is outside the block",
+          "status": "passed"
+        }
+      ]
+    }
+  ]
+}

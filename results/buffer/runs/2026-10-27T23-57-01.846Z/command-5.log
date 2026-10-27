@@ -1,0 +1,1848 @@
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\lib.rs:6:
+ pub mod clipboard;
+ pub mod fit;
+ pub mod ligatures;
+[31m-pub mod web_fonts;
+[0m[32m+pub mod native_status;
+[0m[32m+pub mod native_utility;
+[0m pub mod program_status;
+ pub mod progress;
+ pub mod status_terminal;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\lib.rs:13:
+[31m-pub mod native_status;
+[0m[31m-pub mod native_utility;
+[0m[31m-pub mod web_links;
+[0m[32m+pub mod web_fonts;
+[0m pub mod web_link_provider;
+[32m+pub mod web_links;
+[0m 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\tests\status_live_terminal.rs:193:
+         TerminalError::Parse(ParseError::Dispatch(DispatchError::Callback(_)))
+     ));
+     let input_error = adapter.take_input_error().unwrap();
+[31m-    assert!(matches!(input_error.callback_ref::<xterm_core::core_service::CoreError>(),
+[0m[31m-        Some(xterm_core::core_service::CoreError::Dispatch(EmitError::ListenerArrayCleared))
+[0m[32m+    assert!(matches!(
+[0m[32m+        input_error.callback_ref::<xterm_core::core_service::CoreError>(),
+[0m[32m+        Some(xterm_core::core_service::CoreError::Dispatch(
+[0m[32m+            EmitError::ListenerArrayCleared
+[0m[32m+        ))
+[0m     ));
+     assert_eq!(text(&engine), "");
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\tests\status_live_terminal.rs:202:
+ #[test]
+ fn listener_failure_stops_before_following_text_without_rolling_back_record() {
+     let (engine, _adapter, addon) = setup();
+[31m-    addon.on_change().try_subscribe(|_| Err(EmitError::ListenerArrayCleared));
+[0m[32m+    addon
+[0m[32m+        .on_change()
+[0m[32m+        .try_subscribe(|_| Err(EmitError::ListenerArrayCleared));
+[0m     let error = engine
+         .borrow_mut()
+         .write("\x1b]7501;state=working\x07must-not-print")
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\tests\status_live_terminal.rs:209:
+         .unwrap_err();
+     assert!(matches!(
+         error,
+[31m-        TerminalError::Parse(ParseError::Dispatch(DispatchError::Callback(EmitError::ListenerArrayCleared)))
+[0m[32m+        TerminalError::Parse(ParseError::Dispatch(DispatchError::Callback(
+[0m[32m+            EmitError::ListenerArrayCleared
+[0m[32m+        )))
+[0m     ));
+     assert_eq!(addon.records().len(), 1);
+     assert_eq!(text(&engine), "");
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\line.rs:6:
+ };
+ use std::{cell::RefCell, collections::BTreeMap};
+ 
+[32m+#[cfg(test)]
+[0m[32m+#[path = "line_buffer_cleanup_tests.rs"]
+[0m[32m+mod buffer_cleanup_tests;
+[0m #[path = "line_edit.rs"]
+ mod edit;
+ #[cfg(test)]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\line.rs:12:
+ #[path = "line_storage_tests.rs"]
+ mod storage_tests;
+[31m-#[cfg(test)]
+[0m[31m-#[path = "line_buffer_cleanup_tests.rs"]
+[0m[31m-mod buffer_cleanup_tests;
+[0m #[path = "line_text.rs"]
+ mod text;
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\mod.rs:1:
+ //! Packed cells and attributes shared by buffers, renderers and terminal APIs.
+ mod attributes;
+ mod cell;
+[32m+pub mod cleanup;
+[0m pub mod constants;
+ mod extended;
+ mod line;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\mod.rs:7:
+[31m-pub mod reflow;
+[0m pub mod marker;
+ pub mod range;
+[32m+pub mod reflow;
+[0m pub mod screen;
+[31m-pub mod cleanup;
+[0m pub use cleanup::BufferCleanup;
+ pub mod buffer_set;
+ pub mod service;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\mod.rs:15:
+[31m-pub use screen::{Buffer, BufferDimensions, BufferError, LineRef};
+[0m pub use buffer_set::BufferSet;
+[32m+pub use screen::{Buffer, BufferDimensions, BufferError, LineRef};
+[0m pub use service::BufferService;
+ 
+ pub use attributes::AttributeData;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\circular_list\storage.rs:99:
+         // Reserve the actual populated copies before cloning. A size failure
+         // must not copy billions of entries before discovering the bad size.
+         let required = self.slots.keys().try_fold(0usize, |total, &physical| {
+[31m-            let Some(logical) = self.logical_index(physical) else { return Ok(total); };
+[0m[31m-            if logical >= limit { return Ok(total); }
+[0m[32m+            let Some(logical) = self.logical_index(physical) else {
+[0m[32m+                return Ok(total);
+[0m[32m+            };
+[0m[32m+            if logical >= limit {
+[0m[32m+                return Ok(total);
+[0m[32m+            }
+[0m             let copies = (limit - 1 - logical) / number(self.max_length) + 1;
+             let copies = usize::try_from(copies).map_err(|_| CircularListError::SizeOverflow)?;
+[31m-            total.checked_add(copies).ok_or(CircularListError::SizeOverflow)
+[0m[32m+            total
+[0m[32m+                .checked_add(copies)
+[0m[32m+                .ok_or(CircularListError::SizeOverflow)
+[0m         })?;
+         reserve_slots(&mut slots, required)?;
+         for (&physical, value) in &self.slots {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\circular_list\storage.rs:110:
+[31m-            let Some(mut logical) = self.logical_index(physical) else { continue; };
+[0m[32m+            let Some(mut logical) = self.logical_index(physical) else {
+[0m[32m+                continue;
+[0m[32m+            };
+[0m             while logical < limit {
+                 slots.insert(logical, value.clone());
+                 logical += number(self.max_length);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\circular_list\storage.rs:125:
+     }
+ }
+ 
+[31m-fn reserve_slots<T>(slots: &mut HashMap<i128, T>, additional: usize) -> Result<(), CircularListError> {
+[0m[31m-    slots.try_reserve(additional).map_err(|_| CircularListError::AllocationFailed)
+[0m[32m+fn reserve_slots<T>(
+[0m[32m+    slots: &mut HashMap<i128, T>,
+[0m[32m+    additional: usize,
+[0m[32m+) -> Result<(), CircularListError> {
+[0m[32m+    slots
+[0m[32m+        .try_reserve(additional)
+[0m[32m+        .map_err(|_| CircularListError::AllocationFailed)
+[0m }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\event.rs:5:
+ //! instead of JavaScript's `thisArgs`. Subscriptions require explicit disposal,
+ //! so discarding a handle does not unregister its listener.
+ 
+[31m-use crate::lifecycle::{
+[0m[31m-    to_disposable, Disposable, DisposableHandle, DisposableStore,
+[0m[31m-};
+[0m[32m+use crate::lifecycle::{to_disposable, Disposable, DisposableHandle, DisposableStore};
+[0m use std::cell::{Cell, RefCell};
+ use std::fmt;
+ use std::rc::Rc;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\event.rs:50:
+ impl fmt::Display for EmitError {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+         match self {
+[31m-            Self::ListenerArrayCleared => f.write_str("listener array cleared during event dispatch"),
+[0m[32m+            Self::ListenerArrayCleared => {
+[0m[32m+                f.write_str("listener array cleared during event dispatch")
+[0m[32m+            }
+[0m             Self::Callback(error) => error.fmt(f),
+         }
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\event.rs:233:
+         let listeners = Rc::clone(&self.state.listeners.borrow());
+         let length = listeners.borrow().len();
+         for index in 0..length {
+[31m-            let listener = listeners.borrow().get(index).cloned().ok_or(EmitError::ListenerArrayCleared)?;
+[0m[32m+            let listener = listeners
+[0m[32m+                .borrow()
+[0m[32m+                .get(index)
+[0m[32m+                .cloned()
+[0m[32m+                .ok_or(EmitError::ListenerArrayCleared)?;
+[0m             listener(value)?;
+         }
+         Ok(())
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\lifecycle.rs:114:
+     /// JavaScript's explicit-only lifetime: ignoring a returned registration
+     /// handle must not unsubscribe it. Stored Rust handles still drop normally.
+     pub fn new_explicit() -> Self {
+[31m-        Self { explicit_disposal: true, ..Self::default() }
+[0m[32m+        Self {
+[0m[32m+            explicit_disposal: true,
+[0m[32m+            ..Self::default()
+[0m[32m+        }
+[0m     }
+ 
+     pub fn is_disposed(&self) -> bool {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\parser\dcs.rs:34:
+     pub fn register_handler(&self, ident: i32, handler: HandlerHandle) -> Option<DisposableHandle> {
+         self.0.register(ident, handler)
+     }
+[31m-    pub fn clear_handler(&self, ident: i32) -> Option<()> { self.0.clear(&ident) }
+[0m[32m+    pub fn clear_handler(&self, ident: i32) -> Option<()> {
+[0m[32m+        self.0.clear(&ident)
+[0m[32m+    }
+[0m }
+ 
+ /// Typed replacement for the fallback's action string and untyped argument.
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\parser\dcs.rs:71:
+         self.handlers.register(ident, handler)
+     }
+ 
+[31m-    pub fn registrar(&self) -> DcsRegistrar { DcsRegistrar(self.handlers.registrar()) }
+[0m[32m+    pub fn registrar(&self) -> DcsRegistrar {
+[0m[32m+        DcsRegistrar(self.handlers.registrar())
+[0m[32m+    }
+[0m 
+     /// Remove future lookup without detaching an already active handler list.
+     pub fn clear_handler(&mut self, ident: i32) {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\parser\escape.rs:215:
+     /// Adapter event delivery after completed synchronous actions, before the
+     /// next codepoint. A pending action is delivered by the caller after parse
+     /// returns, so a delivery error cannot discard an owned future.
+[31m-    pub fn set_action_boundary_handler(&mut self, handler: impl FnMut() -> Result<(), ParseError> + 'static) {
+[0m[32m+    pub fn set_action_boundary_handler(
+[0m[32m+        &mut self,
+[0m[32m+        handler: impl FnMut() -> Result<(), ParseError> + 'static,
+[0m[32m+    ) {
+[0m         self.action_boundary = Some(Box::new(handler));
+     }
+     fn action_boundary(&mut self) -> Result<(), ParseError> {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\parser\escape.rs:222:
+[31m-        if let Some(handler) = &mut self.action_boundary { handler()?; }
+[0m[32m+        if let Some(handler) = &mut self.action_boundary {
+[0m[32m+            handler()?;
+[0m[32m+        }
+[0m         Ok(())
+     }
+     pub fn parse_stack_state(&self) -> ParseStackState {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\escape.rs:1:
+ // Copyright (c) 2014-2026 The xterm.js authors. All rights reserved. MIT license.
+[31m-use super::{TerminalError,TerminalEvent,TerminalState};
+[0m[32m+use super::{TerminalError, TerminalEvent, TerminalState};
+[0m impl TerminalState {
+     pub(crate) fn escape(&mut self, final_byte: &str) -> Result<(), TerminalError> {
+         match final_byte {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\mod.rs:4:
+ mod dispatch;
+ use dispatch::dispatch_events;
+ mod error;
+[31m-mod events;
+[0m mod escape;
+[32m+mod events;
+[0m mod kitty_modes;
+ mod mode_query;
+ mod modes;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\mod.rs:149:
+             attributes: Default::default(),
+             title: Vec::new(),
+             icon_name: Vec::new(),
+[31m-            title_stack: Vec::new(), icon_stack: Vec::new(),
+[0m[32m+            title_stack: Vec::new(),
+[0m[32m+            icon_stack: Vec::new(),
+[0m             events,
+             event_handler: Rc::new(RefCell::new(None)),
+             error: None,
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\mod.rs:291:
+             Ok(())
+         }
+     }
+[31m-    pub fn dispose(&mut self) -> Result<(),TerminalError> {
+[0m[32m+    pub fn dispose(&mut self) -> Result<(), TerminalError> {
+[0m         if self.disposed {
+             return Ok(());
+         }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\mod.rs:315:
+ impl Drop for CoreTerminal {
+     fn drop(&mut self) {
+         // Drop cannot return failures; retained state handles keep the cause inspectable.
+[31m-        if let Err(error)=self.dispose() {self.state.borrow_mut().error=Some(error);}
+[0m[32m+        if let Err(error) = self.dispose() {
+[0m[32m+            self.state.borrow_mut().error = Some(error);
+[0m[32m+        }
+[0m     }
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\state.rs:43:
+     }
+ }
+ impl TerminalState {
+[31m-    pub fn take_error(&mut self) -> Option<TerminalError> {self.error.take()}
+[0m[32m+    pub fn take_error(&mut self) -> Option<TerminalError> {
+[0m[32m+        self.error.take()
+[0m[32m+    }
+[0m     pub fn active_buffer(&self) -> Rc<RefCell<Buffer>> {
+         self.buffers.active()
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\cell_differential.rs:142:
+             "stale combined storage {index}"
+         );
+         assert_eq!(cell.extended.ext(), number(f[10]), "ext {index}");
+[31m-        assert_eq!(cell.extended.url_id(), u64::from(number(f[11])), "url {index}");
+[0m[32m+        assert_eq!(
+[0m[32m+            cell.extended.url_id(),
+[0m[32m+            u64::from(number(f[11])),
+[0m[32m+            "url {index}"
+[0m[32m+        );
+[0m     }
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\circular_list_edges.rs:228:
+ fn impossible_sparse_resize_reports_reserve_failure_atomically() {
+     let list = list(&[7]);
+     list.set_length(usize::MAX);
+[31m-    assert_eq!(list.set_max_length(usize::MAX), Err(CircularListError::AllocationFailed));
+[0m[32m+    assert_eq!(
+[0m[32m+        list.set_max_length(usize::MAX),
+[0m[32m+        Err(CircularListError::AllocationFailed)
+[0m[32m+    );
+[0m     assert_eq!(list.max_length(), 1);
+     assert_eq!(list.len(), usize::MAX);
+     assert_eq!(list.get(0), Some(7));
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\core_service.rs:234:
+ fn failures_stop_later_events_and_disposal_clears_all_emitters() {
+     let h = Harness::new([("logLevel", "trace".into())]);
+     h.position.set(BufferPosition { ybase: 1, ydisp: 0 });
+[31m-    let fail = h.core.on_user_input().try_subscribe(|_| Err(EmitError::ListenerArrayCleared));
+[0m[32m+    let fail = h
+[0m[32m+        .core
+[0m[32m+        .on_user_input()
+[0m[32m+        .try_subscribe(|_| Err(EmitError::ListenerArrayCleared));
+[0m     h.listen();
+     assert!(matches!(
+         h.core.trigger_data_event(&[], true),
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\core_service.rs:276:
+ fn callback_failure_retains_original_typed_cause() {
+     let h = Harness::new([]);
+     h.core.on_user_input().try_subscribe(|_| {
+[31m-        Err(EmitError::callback(std::io::Error::other("original callback failure")))
+[0m[32m+        Err(EmitError::callback(std::io::Error::other(
+[0m[32m+            "original callback failure",
+[0m[32m+        )))
+[0m     });
+     let error = h.core.trigger_data_event(&[], true).unwrap_err();
+[31m-    let CoreError::Dispatch(error) = error else { panic!("wrong failure category"); };
+[0m[31m-    assert_eq!(error.callback_ref::<std::io::Error>().unwrap().to_string(), "original callback failure");
+[0m[32m+    let CoreError::Dispatch(error) = error else {
+[0m[32m+        panic!("wrong failure category");
+[0m[32m+    };
+[0m[32m+    assert_eq!(
+[0m[32m+        error.callback_ref::<std::io::Error>().unwrap().to_string(),
+[0m[32m+        "original callback failure"
+[0m[32m+    );
+[0m }
+ 
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\dcs_cases\mutation.rs:94:
+ impl DcsHandlerTrait for RegisterDuringHook {
+     fn hook(&mut self, _: &Params) {
+         self.reports.borrow_mut().push("register:H".into());
+[31m-        self.registrar.register_handler(IDENT, Rc::clone(&self.target)).unwrap();
+[0m[32m+        self.registrar
+[0m[32m+            .register_handler(IDENT, Rc::clone(&self.target))
+[0m[32m+            .unwrap();
+[0m     }
+[31m-    fn put(&mut self, _: &[u32]) { self.reports.borrow_mut().push("register:P".into()); }
+[0m[32m+    fn put(&mut self, _: &[u32]) {
+[0m[32m+        self.reports.borrow_mut().push("register:P".into());
+[0m[32m+    }
+[0m     fn unhook(&mut self, success: bool) -> HandlerResult {
+[31m-        self.reports.borrow_mut().push(format!("register:U:{success}"));
+[0m[32m+        self.reports
+[0m[32m+            .borrow_mut()
+[0m[32m+            .push(format!("register:U:{success}"));
+[0m         HandlerResult::Ready(false)
+     }
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\dcs_cases\mutation.rs:108:
+     let (mut parser, reports) = parser();
+     let registrar = parser.registrar();
+     let target = handler(&reports, "new", true, false);
+[31m-    parser.register_handler(IDENT, Rc::new(RefCell::new(RegisterDuringHook {
+[0m[31m-        registrar: registrar.clone(), target, reports: Rc::clone(&reports),
+[0m[31m-    })));
+[0m[32m+    parser.register_handler(
+[0m[32m+        IDENT,
+[0m[32m+        Rc::new(RefCell::new(RegisterDuringHook {
+[0m[32m+            registrar: registrar.clone(),
+[0m[32m+            target,
+[0m[32m+            reports: Rc::clone(&reports),
+[0m[32m+        })),
+[0m[32m+    );
+[0m     parser.hook(IDENT, &params(&[1])).unwrap();
+     parser.put(&[65]).unwrap();
+     unhook(&mut parser, true);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\dcs_cases\mutation.rs:117:
+[31m-    assert_eq!(*reports.borrow(), ["register:H", "new:P:65", "register:P", "new:U:true", "register:U:false"]);
+[0m[32m+    assert_eq!(
+[0m[32m+        *reports.borrow(),
+[0m[32m+        [
+[0m[32m+            "register:H",
+[0m[32m+            "new:P:65",
+[0m[32m+            "register:P",
+[0m[32m+            "new:U:true",
+[0m[32m+            "register:U:false"
+[0m[32m+        ]
+[0m[32m+    );
+[0m     drop(parser);
+     assert_eq!(registrar.clear_handler(IDENT), None);
+[31m-    assert!(registrar.register_handler(IDENT, handler(&reports, "dropped", false, false)).is_none());
+[0m[32m+    assert!(registrar
+[0m[32m+        .register_handler(IDENT, handler(&reports, "dropped", false, false))
+[0m[32m+        .is_none());
+[0m }
+ 
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\escape_dcs.rs:201:
+     assert_eq!(resolve(pending), Ok(false));
+     parser.reset().unwrap();
+     assert!(parser.parse(&data, Some(false)).unwrap().is_none());
+[31m-    assert_eq!(*log.borrow(), [
+[0m[31m-        "H:q2:p0", "H:q1:p0", "H:q0:p0", "D:q2:41", "D:q1:41", "D:q0:41",
+[0m[31m-        "U:q2:1", "U:q1:1", "U:q0:0", "P:5a",
+[0m[31m-    ]);
+[0m[32m+    assert_eq!(
+[0m[32m+        *log.borrow(),
+[0m[32m+        [
+[0m[32m+            "H:q2:p0", "H:q1:p0", "H:q0:p0", "D:q2:41", "D:q1:41", "D:q0:41", "U:q2:1", "U:q1:1",
+[0m[32m+            "U:q0:0", "P:5a",
+[0m[32m+        ]
+[0m[32m+    );
+[0m }
+ 
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\escape_dcs.rs:213:
+     let printed: Rc<RefCell<Vec<u32>>> = Rc::default();
+     let output = Rc::clone(&printed);
+     parser.set_print_handler(move |data| output.borrow_mut().extend_from_slice(data));
+[31m-    parser.register_dcs_handler(FunctionIdentifier::new("q"), Rc::new(RefCell::new(DcsHandler::new(|_, _| {
+[0m[31m-        HandlerResult::PendingFallible(Box::pin(async { Err(DispatchError::CallbackFailed) }))
+[0m[31m-    })))).unwrap();
+[0m[32m+    parser
+[0m[32m+        .register_dcs_handler(
+[0m[32m+            FunctionIdentifier::new("q"),
+[0m[32m+            Rc::new(RefCell::new(DcsHandler::new(|_, _| {
+[0m[32m+                HandlerResult::PendingFallible(Box::pin(async {
+[0m[32m+                    Err(DispatchError::CallbackFailed)
+[0m[32m+                }))
+[0m[32m+            }))),
+[0m[32m+        )
+[0m[32m+        .unwrap();
+[0m     let data: Vec<u32> = "\x1bPqpayload\u{9c}SUFFIX".chars().map(u32::from).collect();
+     let pending = parser.parse(&data, None).unwrap().unwrap();
+     assert_eq!(resolve(pending), Err(DispatchError::CallbackFailed));
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\escape_dcs.rs:222:
+     assert!(printed.borrow().is_empty());
+     parser.reset().unwrap();
+[31m-    parser.clear_dcs_handler(FunctionIdentifier::new("q")).unwrap();
+[0m[32m+    parser
+[0m[32m+        .clear_dcs_handler(FunctionIdentifier::new("q"))
+[0m[32m+        .unwrap();
+[0m     assert_eq!(parse(&mut parser, &[65]), 0);
+     assert_eq!(*printed.borrow(), [65]);
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\escape_edges.rs:272:
+     let target = Rc::clone(&log);
+     parser.set_print_handler(move |_| target.borrow_mut().push("print".to_owned()));
+     let target = Rc::clone(&log);
+[31m-    parser.set_execute_handler(10, move |_| { target.borrow_mut().push("execute".to_owned()); true });
+[0m[32m+    parser.set_execute_handler(10, move |_| {
+[0m[32m+        target.borrow_mut().push("execute".to_owned());
+[0m[32m+        true
+[0m[32m+    });
+[0m     let target = Rc::clone(&log);
+[31m-    parser.register_csi_handler(FunctionIdentifier::new("m"), Rc::new(RefCell::new(move |_: &Params| { target.borrow_mut().push("csi".to_owned()); HandlerResult::Ready(true) }))).unwrap();
+[0m[32m+    parser
+[0m[32m+        .register_csi_handler(
+[0m[32m+            FunctionIdentifier::new("m"),
+[0m[32m+            Rc::new(RefCell::new(move |_: &Params| {
+[0m[32m+                target.borrow_mut().push("csi".to_owned());
+[0m[32m+                HandlerResult::Ready(true)
+[0m[32m+            })),
+[0m[32m+        )
+[0m[32m+        .unwrap();
+[0m     let target = Rc::clone(&log);
+[31m-    parser.set_action_boundary_handler(move || { target.borrow_mut().push("boundary".to_owned()); Ok(()) });
+[0m[32m+    parser.set_action_boundary_handler(move || {
+[0m[32m+        target.borrow_mut().push("boundary".to_owned());
+[0m[32m+        Ok(())
+[0m[32m+    });
+[0m     assert!(parser.parse(&data("A\n\x1b[mB"), None).unwrap().is_none());
+[31m-    assert_eq!(*log.borrow(), ["print", "boundary", "execute", "boundary", "csi", "boundary", "print", "boundary"]);
+[0m[31m-    parser.set_action_boundary_handler(||Err(ParseError::HandlerAborted));
+[0m[32m+    assert_eq!(
+[0m[32m+        *log.borrow(),
+[0m[32m+        ["print", "boundary", "execute", "boundary", "csi", "boundary", "print", "boundary"]
+[0m[32m+    );
+[0m[32m+    parser.set_action_boundary_handler(|| Err(ParseError::HandlerAborted));
+[0m     log.borrow_mut().clear();
+[31m-    assert!(matches!(parser.parse(&data("A\nB"), None), Err(ParseError::HandlerAborted)));
+[0m[32m+    assert!(matches!(
+[0m[32m+        parser.parse(&data("A\nB"), None),
+[0m[32m+        Err(ParseError::HandlerAborted)
+[0m[32m+    ));
+[0m     assert_eq!(*log.borrow(), ["print"]);
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\event_edges.rs:88:
+ #[test]
+ fn fallible_callbacks_and_panics_stop_dispatch_without_poisoning_borrows() {
+     let emitter = Emitter::<i32>::new();
+[31m-    let handle = emitter.event().try_subscribe(|_| Err(EmitError::ListenerArrayCleared));
+[0m[32m+    let handle = emitter
+[0m[32m+        .event()
+[0m[32m+        .try_subscribe(|_| Err(EmitError::ListenerArrayCleared));
+[0m     emitter
+         .event()
+         .subscribe(|_| panic!("later callback reached after error"));
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\handler_registry.rs:62:
+     drops: Rc<Cell<usize>>,
+ }
+ impl Drop for SelfToken {
+[31m-    fn drop(&mut self) { self.drops.set(self.drops.get() + 1); }
+[0m[32m+    fn drop(&mut self) {
+[0m[32m+        self.drops.set(self.drops.get() + 1);
+[0m[32m+    }
+[0m }
+ 
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\handler_registry.rs:69:
+ fn callback_can_own_its_token_without_a_strong_reference_cycle() {
+     let registry = HandlerRegistry::<u8, SelfToken>::new();
+     let drops = Rc::new(Cell::new(0));
+[31m-    let handler = Rc::new(RefCell::new(SelfToken { token: None, drops: Rc::clone(&drops) }));
+[0m[32m+    let handler = Rc::new(RefCell::new(SelfToken {
+[0m[32m+        token: None,
+[0m[32m+        drops: Rc::clone(&drops),
+[0m[32m+    }));
+[0m     let token = registry.register(1, Rc::clone(&handler));
+     handler.borrow_mut().token = Some(token);
+     drop(handler);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\lifecycle_explicit.rs:8:
+ fn native_default_and_explicit_store_have_different_drop_boundaries() {
+     let count = Rc::new(Cell::new(0));
+     for explicit in [false, true] {
+[31m-        let store = if explicit { DisposableStore::new_explicit() } else { DisposableStore::new() };
+[0m[32m+        let store = if explicit {
+[0m[32m+            DisposableStore::new_explicit()
+[0m[32m+        } else {
+[0m[32m+            DisposableStore::new()
+[0m[32m+        };
+[0m         let output = Rc::clone(&count);
+         store.add(to_disposable(move || output.set(output.get() + 1)));
+         drop(store);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\lifecycle_explicit.rs:23:
+     let handle = to_disposable(move || output.set(output.get() + 1));
+     let store = DisposableStore::new_explicit();
+     assert!(Rc::ptr_eq(&store.add(Rc::clone(&handle)), &handle));
+[31m-    store.add(handle); store.dispose(); store.dispose(); drop(store);
+[0m[32m+    store.add(handle);
+[0m[32m+    store.dispose();
+[0m[32m+    store.dispose();
+[0m[32m+    drop(store);
+[0m     assert_eq!(count.get(), 1);
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\dom_listener.rs:47:
+             options.set_capture(capture);
+             options.set_passive(passive);
+             target.add_event_listener_with_callback_and_add_event_listener_options(
+[31m-                event_type, callback.as_ref().unchecked_ref(), &options,
+[0m[32m+                event_type,
+[0m[32m+                callback.as_ref().unchecked_ref(),
+[0m[32m+                &options,
+[0m             )?;
+         } else {
+             target.add_event_listener_with_callback_and_bool(
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\dom_listener.rs:54:
+[31m-                event_type, callback.as_ref().unchecked_ref(), capture,
+[0m[32m+                event_type,
+[0m[32m+                callback.as_ref().unchecked_ref(),
+[0m[32m+                capture,
+[0m             )?;
+         }
+         Ok(Self {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\links\browser_linkifier.rs:1:
+ // Copyright (c) 2019-2026 The xterm.js authors. All rights reserved. MIT license.
+[31m-use super::{Decorations, HoverState, Link, LinkProviderService, Position, ProviderRegistration, ProviderReplies, UnderlineEvent};
+[0m[32m+use super::{
+[0m[32m+    Decorations, HoverState, Link, LinkProviderService, Position, ProviderRegistration,
+[0m[32m+    ProviderReplies, UnderlineEvent,
+[0m[32m+};
+[0m use crate::dom_listener::DomListener;
+[31m-use std::{cell::{Cell, RefCell}, collections::HashMap, rc::Rc};
+[0m[32m+use std::{
+[0m[32m+    cell::{Cell, RefCell},
+[0m[32m+    collections::HashMap,
+[0m[32m+    rc::Rc,
+[0m[32m+};
+[0m use wasm_bindgen::{JsCast, JsValue};
+ use web_sys::{HtmlElement, MouseEvent};
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\links\browser_linkifier.rs:53:
+     listeners: Vec<DomListener>,
+ }
+ impl BrowserLinkifier {
+[31m-    pub fn new(element: HtmlElement, cols: usize, scroll_offset: usize,
+[0m[31m-        coordinates: MouseCoordinates, underline: UnderlineCallback) -> Result<Self, JsValue> {
+[0m[31m-        let state=Rc::new(State { element:element.clone(), providers:LinkProviderService::default(),
+[0m[31m-            replies:RefCell::new(ProviderReplies::default()), handlers:RefCell::new(HashMap::new()),
+[0m[31m-            hover:RefCell::new(HoverState::new(cols,scroll_offset)), coordinates,underline,
+[0m[31m-            last_event:RefCell::new(None),last_cell:Cell::new(None),active_line:Cell::new(None),
+[0m[31m-            mouse_out:Cell::new(true),resized:Cell::new(false),disposed:Cell::new(false),cols:Cell::new(cols) });
+[0m[31m-        let mut listeners=Vec::new();
+[0m[31m-        for event_type in ["mousemove","mouseleave","mousedown","mouseup"] {
+[0m[31m-            let weak=Rc::downgrade(&state);
+[0m[31m-            listeners.push(DomListener::new(element.as_ref(),event_type,false,move |event| {
+[0m[31m-                let Some(state)=weak.upgrade().filter(|state| !state.disposed.get()) else { return };
+[0m[31m-                let result=match event_type {
+[0m[31m-                    "mousemove"=>event.dyn_into::<MouseEvent>().map_err(|_| JsValue::from_str("mousemove was not a MouseEvent")).and_then(|e| state.mouse_move(e)),
+[0m[31m-                    "mouseleave"=>{ state.mouse_out.set(true); state.clear_current() },
+[0m[31m-                    "mousedown"=>{ state.hover.borrow_mut().mouse_down(); Ok(()) },
+[0m[31m-                    "mouseup"=>event.dyn_into::<MouseEvent>().map_err(|_| JsValue::from_str("mouseup was not a MouseEvent")).and_then(|e| {
+[0m[31m-                        let effect=state.hover.borrow().mouse_up((state.coordinates)(&e));
+[0m[31m-                        state.apply(effect.into_iter().collect(),Some(&e))
+[0m[31m-                    }),
+[0m[31m-                    _=>unreachable!("fixed event type list"),
+[0m[31m-                };
+[0m[31m-                // DOM EventListener exceptions are reported, not swallowed. Native
+[0m[31m-                // caller methods below instead propagate recoverable exceptions.
+[0m[31m-                if let Err(error)=result { web_sys::console::error_1(&error); }
+[0m[31m-            })?);
+[0m[32m+    pub fn new(
+[0m[32m+        element: HtmlElement,
+[0m[32m+        cols: usize,
+[0m[32m+        scroll_offset: usize,
+[0m[32m+        coordinates: MouseCoordinates,
+[0m[32m+        underline: UnderlineCallback,
+[0m[32m+    ) -> Result<Self, JsValue> {
+[0m[32m+        let state = Rc::new(State {
+[0m[32m+            element: element.clone(),
+[0m[32m+            providers: LinkProviderService::default(),
+[0m[32m+            replies: RefCell::new(ProviderReplies::default()),
+[0m[32m+            handlers: RefCell::new(HashMap::new()),
+[0m[32m+            hover: RefCell::new(HoverState::new(cols, scroll_offset)),
+[0m[32m+            coordinates,
+[0m[32m+            underline,
+[0m[32m+            last_event: RefCell::new(None),
+[0m[32m+            last_cell: Cell::new(None),
+[0m[32m+            active_line: Cell::new(None),
+[0m[32m+            mouse_out: Cell::new(true),
+[0m[32m+            resized: Cell::new(false),
+[0m[32m+            disposed: Cell::new(false),
+[0m[32m+            cols: Cell::new(cols),
+[0m[32m+        });
+[0m[32m+        let mut listeners = Vec::new();
+[0m[32m+        for event_type in ["mousemove", "mouseleave", "mousedown", "mouseup"] {
+[0m[32m+            let weak = Rc::downgrade(&state);
+[0m[32m+            listeners.push(DomListener::new(
+[0m[32m+                element.as_ref(),
+[0m[32m+                event_type,
+[0m[32m+                false,
+[0m[32m+                move |event| {
+[0m[32m+                    let Some(state) = weak.upgrade().filter(|state| !state.disposed.get()) else {
+[0m[32m+                        return;
+[0m[32m+                    };
+[0m[32m+                    let result = match event_type {
+[0m[32m+                        "mousemove" => event
+[0m[32m+                            .dyn_into::<MouseEvent>()
+[0m[32m+                            .map_err(|_| JsValue::from_str("mousemove was not a MouseEvent"))
+[0m[32m+                            .and_then(|e| state.mouse_move(e)),
+[0m[32m+                        "mouseleave" => {
+[0m[32m+                            state.mouse_out.set(true);
+[0m[32m+                            state.clear_current()
+[0m[32m+                        }
+[0m[32m+                        "mousedown" => {
+[0m[32m+                            state.hover.borrow_mut().mouse_down();
+[0m[32m+                            Ok(())
+[0m[32m+                        }
+[0m[32m+                        "mouseup" => event
+[0m[32m+                            .dyn_into::<MouseEvent>()
+[0m[32m+                            .map_err(|_| JsValue::from_str("mouseup was not a MouseEvent"))
+[0m[32m+                            .and_then(|e| {
+[0m[32m+                                let effect = state.hover.borrow().mouse_up((state.coordinates)(&e));
+[0m[32m+                                state.apply(effect.into_iter().collect(), Some(&e))
+[0m[32m+                            }),
+[0m[32m+                        _ => unreachable!("fixed event type list"),
+[0m[32m+                    };
+[0m[32m+                    // DOM EventListener exceptions are reported, not swallowed. Native
+[0m[32m+                    // caller methods below instead propagate recoverable exceptions.
+[0m[32m+                    if let Err(error) = result {
+[0m[32m+                        web_sys::console::error_1(&error);
+[0m[32m+                    }
+[0m[32m+                },
+[0m[32m+            )?);
+[0m         }
+[31m-        Ok(Self{state,listeners})
+[0m[32m+        Ok(Self { state, listeners })
+[0m     }
+[31m-    pub fn register_provider(&self, provider: Rc<dyn BrowserLinkProvider>) -> ProviderRegistration<dyn BrowserLinkProvider> {
+[0m[32m+    pub fn register_provider(
+[0m[32m+        &self,
+[0m[32m+        provider: Rc<dyn BrowserLinkProvider>,
+[0m[32m+    ) -> ProviderRegistration<dyn BrowserLinkProvider> {
+[0m         self.state.providers.register(provider)
+     }
+[31m-    pub fn current_link(&self) -> Option<Rc<Link>> { self.state.hover.borrow().current().cloned() }
+[0m[31m-    pub fn resize(&self, cols:usize, scroll_offset:usize) -> Result<(),JsValue> {
+[0m[32m+    pub fn current_link(&self) -> Option<Rc<Link>> {
+[0m[32m+        self.state.hover.borrow().current().cloned()
+[0m[32m+    }
+[0m[32m+    pub fn resize(&self, cols: usize, scroll_offset: usize) -> Result<(), JsValue> {
+[0m         self.state.cols.set(cols);
+[31m-        self.state.hover.borrow_mut().set_geometry(cols,scroll_offset);
+[0m[32m+        self.state
+[0m[32m+            .hover
+[0m[32m+            .borrow_mut()
+[0m[32m+            .set_geometry(cols, scroll_offset);
+[0m         self.state.clear_current()?;
+         self.state.resized.set(true);
+         Ok(())
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\links\browser_linkifier.rs:95:
+     }
+[31m-    pub fn set_scroll_offset(&self, scroll_offset:usize) {
+[0m[31m-        self.state.hover.borrow_mut().set_geometry(self.state.cols.get(),scroll_offset);
+[0m[32m+    pub fn set_scroll_offset(&self, scroll_offset: usize) {
+[0m[32m+        self.state
+[0m[32m+            .hover
+[0m[32m+            .borrow_mut()
+[0m[32m+            .set_geometry(self.state.cols.get(), scroll_offset);
+[0m     }
+[31m-    pub fn on_render(&self,start:usize,end:usize) -> Result<(),JsValue> {
+[0m[31m-        let invalidated=self.state.hover.borrow().invalidated_by_render(start,end);
+[0m[32m+    pub fn on_render(&self, start: usize, end: usize) -> Result<(), JsValue> {
+[0m[32m+        let invalidated = self.state.hover.borrow().invalidated_by_render(start, end);
+[0m         if invalidated {
+             self.state.clear_current()?;
+[31m-            let event=self.state.last_event.borrow().clone();
+[0m[31m-            if let Some(position)=event.as_ref().and_then(|e| (self.state.coordinates)(e)) { self.state.ask(position,false)?; }
+[0m[32m+            let event = self.state.last_event.borrow().clone();
+[0m[32m+            if let Some(position) = event.as_ref().and_then(|e| (self.state.coordinates)(e)) {
+[0m[32m+                self.state.ask(position, false)?;
+[0m[32m+            }
+[0m         }
+         Ok(())
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\links\browser_linkifier.rs:108:
+[31m-    pub fn set_current_underline(&self,value:bool) -> Result<(),JsValue> {
+[0m[31m-        let effect=self.state.hover.borrow_mut().set_underline(value);
+[0m[31m-        self.state.apply(effect.into_iter().collect(),None)
+[0m[32m+    pub fn set_current_underline(&self, value: bool) -> Result<(), JsValue> {
+[0m[32m+        let effect = self.state.hover.borrow_mut().set_underline(value);
+[0m[32m+        self.state.apply(effect.into_iter().collect(), None)
+[0m     }
+[31m-    pub fn set_current_pointer_cursor(&self,value:bool) -> Result<(),JsValue> {
+[0m[31m-        let effect=self.state.hover.borrow_mut().set_pointer_cursor(value);
+[0m[31m-        self.state.apply(effect.into_iter().collect(),None)
+[0m[32m+    pub fn set_current_pointer_cursor(&self, value: bool) -> Result<(), JsValue> {
+[0m[32m+        let effect = self.state.hover.borrow_mut().set_pointer_cursor(value);
+[0m[32m+        self.state.apply(effect.into_iter().collect(), None)
+[0m     }
+[31m-    pub fn dispose(&mut self) -> Result<(),JsValue> {
+[0m[32m+    pub fn dispose(&mut self) -> Result<(), JsValue> {
+[0m         self.state.disposed.set(true);
+[31m-        for listener in &mut self.listeners { listener.dispose()?; }
+[0m[32m+        for listener in &mut self.listeners {
+[0m[32m+            listener.dispose()?;
+[0m[32m+        }
+[0m         self.state.last_event.borrow_mut().take();
+         self.state.replies.borrow_mut().clear();
+         self.state.handlers.borrow_mut().clear();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\links\browser_linkifier.rs:125:
+ }
+ impl Drop for BrowserLinkifier {
+     fn drop(&mut self) {
+[31m-        if let Err(error)=self.dispose() { web_sys::console::error_1(&error); }
+[0m[32m+        if let Err(error) = self.dispose() {
+[0m[32m+            web_sys::console::error_1(&error);
+[0m[32m+        }
+[0m     }
+ }
+ use xterm_core::lifecycle::Disposable;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\links\browser_linkifier_events.rs:6:
+ use web_sys::{Element, MouseEvent};
+ 
+ impl State {
+[31m-    pub(super) fn mouse_move(self:&Rc<Self>, event:MouseEvent)->Result<(),JsValue> {
+[0m[31m-        *self.last_event.borrow_mut()=Some(event.clone());
+[0m[31m-        let Some(position)=(self.coordinates)(&event) else { return Ok(()) };
+[0m[32m+    pub(super) fn mouse_move(self: &Rc<Self>, event: MouseEvent) -> Result<(), JsValue> {
+[0m[32m+        *self.last_event.borrow_mut() = Some(event.clone());
+[0m[32m+        let Some(position) = (self.coordinates)(&event) else {
+[0m[32m+            return Ok(());
+[0m[32m+        };
+[0m         self.mouse_out.set(false);
+         for target in event.composed_path().iter() {
+[31m-            let Some(element)=target.dyn_ref::<Element>() else { continue };
+[0m[31m-            if element.class_list().contains("xterm") { break; }
+[0m[31m-            if element.class_list().contains("xterm-hover") { return Ok(()); }
+[0m[32m+            let Some(element) = target.dyn_ref::<Element>() else {
+[0m[32m+                continue;
+[0m[32m+            };
+[0m[32m+            if element.class_list().contains("xterm") {
+[0m[32m+                break;
+[0m[32m+            }
+[0m[32m+            if element.class_list().contains("xterm-hover") {
+[0m[32m+                return Ok(());
+[0m[32m+            }
+[0m         }
+[31m-        if self.last_cell.get()==Some(position) { return Ok(()) }
+[0m[31m-        if self.active_line.get()!=Some(position.y) || self.resized.get() {
+[0m[32m+        if self.last_cell.get() == Some(position) {
+[0m[32m+            return Ok(());
+[0m[32m+        }
+[0m[32m+        if self.active_line.get() != Some(position.y) || self.resized.get() {
+[0m             self.clear_current()?;
+[31m-            self.ask(position,false)?;
+[0m[32m+            self.ask(position, false)?;
+[0m             self.resized.set(false);
+         } else if !self.hover.borrow().contains(position) {
+             self.clear_current()?;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\links\browser_linkifier_events.rs:25:
+[31m-            self.ask(position,true)?;
+[0m[32m+            self.ask(position, true)?;
+[0m         }
+         self.last_cell.set(Some(position));
+         Ok(())
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\links\browser_linkifier_events.rs:29:
+     }
+[31m-    pub(super) fn clear_current(&self)->Result<(),JsValue> {
+[0m[31m-        if self.last_event.borrow().is_none() { return Ok(()) }
+[0m[31m-        let effects=self.hover.borrow_mut().leave();
+[0m[31m-        self.apply(effects,None)
+[0m[32m+    pub(super) fn clear_current(&self) -> Result<(), JsValue> {
+[0m[32m+        if self.last_event.borrow().is_none() {
+[0m[32m+            return Ok(());
+[0m[32m+        }
+[0m[32m+        let effects = self.hover.borrow_mut().leave();
+[0m[32m+        self.apply(effects, None)
+[0m     }
+[31m-    pub(super) fn ask(self:&Rc<Self>, position:Position,use_cache:bool)->Result<(),JsValue> {
+[0m[32m+    pub(super) fn ask(self: &Rc<Self>, position: Position, use_cache: bool) -> Result<(), JsValue> {
+[0m         if !use_cache || self.active_line.get().is_none() {
+[31m-            let old=self.replies.borrow_mut().clear();
+[0m[32m+            let old = self.replies.borrow_mut().clear();
+[0m             for data in old {
+[31m-                let handler=self.handlers.borrow().get(&Rc::as_ptr(&data)).cloned();
+[0m[31m-                if let Some(dispose)=handler.and_then(|handler| handler.dispose.clone()) { dispose()?; }
+[0m[32m+                let handler = self.handlers.borrow().get(&Rc::as_ptr(&data)).cloned();
+[0m[32m+                if let Some(dispose) = handler.and_then(|handler| handler.dispose.clone()) {
+[0m[32m+                    dispose()?;
+[0m[32m+                }
+[0m             }
+             self.handlers.borrow_mut().clear();
+             self.active_line.set(Some(position.y));
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\links\browser_linkifier_events.rs:44:
+         }
+[31m-        let request=ProviderRequest::new(position);
+[0m[31m-        let mut index=0;
+[0m[31m-        while let Some(provider)=self.providers.get(index) {
+[0m[32m+        let request = ProviderRequest::new(position);
+[0m[32m+        let mut index = 0;
+[0m[32m+        while let Some(provider) = self.providers.get(index) {
+[0m             if use_cache {
+[31m-                let selected=self.replies.borrow().from_cache_index(index,&request,self.providers.len(),self.cols.get());
+[0m[31m-                if let Some(selected)=selected { self.select(selected)?; }
+[0m[32m+                let selected = self.replies.borrow().from_cache_index(
+[0m[32m+                    index,
+[0m[32m+                    &request,
+[0m[32m+                    self.providers.len(),
+[0m[32m+                    self.cols.get(),
+[0m[32m+                );
+[0m[32m+                if let Some(selected) = selected {
+[0m[32m+                    self.select(selected)?;
+[0m[32m+                }
+[0m             } else {
+[31m-                let weak=Rc::downgrade(self); let request=request.clone();
+[0m[31m-                provider.provide_links(position.y,Box::new(move |links| {
+[0m[31m-                    let Some(state)=weak.upgrade().filter(|s| !s.disposed.get() && !s.mouse_out.get()) else { return Ok(()) };
+[0m[31m-                    let data=links.map(|links| links.into_iter().map(|link| {
+[0m[31m-                        let data=link.data.clone();
+[0m[31m-                        state.handlers.borrow_mut().insert(Rc::as_ptr(&data),Rc::new(link));
+[0m[31m-                        data
+[0m[31m-                    }).collect());
+[0m[31m-                    let selected=state.replies.borrow_mut().receive_unfiltered(index,data,&request,state.providers.len(),state.cols.get());
+[0m[31m-                    if let Some(selected)=selected { state.select(selected)?; }
+[0m[31m-                    state.replies.borrow_mut().filter_complete(request.position.y,state.providers.len(),state.cols.get());
+[0m[31m-                    Ok(())
+[0m[31m-                }))?;
+[0m[32m+                let weak = Rc::downgrade(self);
+[0m[32m+                let request = request.clone();
+[0m[32m+                provider.provide_links(
+[0m[32m+                    position.y,
+[0m[32m+                    Box::new(move |links| {
+[0m[32m+                        let Some(state) = weak
+[0m[32m+                            .upgrade()
+[0m[32m+                            .filter(|s| !s.disposed.get() && !s.mouse_out.get())
+[0m[32m+                        else {
+[0m[32m+                            return Ok(());
+[0m[32m+                        };
+[0m[32m+                        let data = links.map(|links| {
+[0m[32m+                            links
+[0m[32m+                                .into_iter()
+[0m[32m+                                .map(|link| {
+[0m[32m+                                    let data = link.data.clone();
+[0m[32m+                                    state
+[0m[32m+                                        .handlers
+[0m[32m+                                        .borrow_mut()
+[0m[32m+                                        .insert(Rc::as_ptr(&data), Rc::new(link));
+[0m[32m+                                    data
+[0m[32m+                                })
+[0m[32m+                                .collect()
+[0m[32m+                        });
+[0m[32m+                        let selected = state.replies.borrow_mut().receive_unfiltered(
+[0m[32m+                            index,
+[0m[32m+                            data,
+[0m[32m+                            &request,
+[0m[32m+                            state.providers.len(),
+[0m[32m+                            state.cols.get(),
+[0m[32m+                        );
+[0m[32m+                        if let Some(selected) = selected {
+[0m[32m+                            state.select(selected)?;
+[0m[32m+                        }
+[0m[32m+                        state.replies.borrow_mut().filter_complete(
+[0m[32m+                            request.position.y,
+[0m[32m+                            state.providers.len(),
+[0m[32m+                            state.cols.get(),
+[0m[32m+                        );
+[0m[32m+                        Ok(())
+[0m[32m+                    }),
+[0m[32m+                )?;
+[0m             }
+[31m-            index+=1;
+[0m[32m+            index += 1;
+[0m         }
+         Ok(())
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\links\browser_linkifier_events.rs:70:
+[31m-    fn select(&self, data:Rc<Link>)->Result<(),JsValue> {
+[0m[31m-        let event=self.last_event.borrow().clone();
+[0m[31m-        let Some(position)=event.as_ref().and_then(|e| (self.coordinates)(e)) else { return Ok(()) };
+[0m[31m-        if data.range.contains(position,self.cols.get()) {
+[0m[31m-            let decorations=self.handlers.borrow().get(&Rc::as_ptr(&data)).and_then(|link| link.decorations);
+[0m[31m-            let effects=self.hover.borrow_mut().enter(data,decorations);
+[0m[31m-            self.apply(effects,None)?;
+[0m[32m+    fn select(&self, data: Rc<Link>) -> Result<(), JsValue> {
+[0m[32m+        let event = self.last_event.borrow().clone();
+[0m[32m+        let Some(position) = event.as_ref().and_then(|e| (self.coordinates)(e)) else {
+[0m[32m+            return Ok(());
+[0m[32m+        };
+[0m[32m+        if data.range.contains(position, self.cols.get()) {
+[0m[32m+            let decorations = self
+[0m[32m+                .handlers
+[0m[32m+                .borrow()
+[0m[32m+                .get(&Rc::as_ptr(&data))
+[0m[32m+                .and_then(|link| link.decorations);
+[0m[32m+            let effects = self.hover.borrow_mut().enter(data, decorations);
+[0m[32m+            self.apply(effects, None)?;
+[0m         }
+         Ok(())
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\links\browser_linkifier_events.rs:80:
+[31m-    pub(super) fn apply(&self,effects:Vec<HoverEffect>,event:Option<&MouseEvent>)->Result<(),JsValue> {
+[0m[32m+    pub(super) fn apply(
+[0m[32m+        &self,
+[0m[32m+        effects: Vec<HoverEffect>,
+[0m[32m+        event: Option<&MouseEvent>,
+[0m[32m+    ) -> Result<(), JsValue> {
+[0m         for effect in effects {
+             match &effect {
+[31m-                HoverEffect::Underline{show,event}=>(self.underline)(*show,*event)?,
+[0m[31m-                HoverEffect::Pointer(enabled)=>{ self.element.class_list().toggle_with_force("xterm-cursor-pointer",*enabled)?; },
+[0m[31m-                HoverEffect::Hover(data)|HoverEffect::Leave(data)|HoverEffect::Activate(data)=>{
+[0m[31m-                    let handler=self.handlers.borrow().get(&Rc::as_ptr(&data)).cloned()
+[0m[31m-                        .ok_or_else(||JsValue::from_str("link callback identity missing"))?;
+[0m[31m-                    let callback=match &effect {
+[0m[31m-                        HoverEffect::Hover(_)=>handler.hover.clone(),
+[0m[31m-                        HoverEffect::Leave(_)=>handler.leave.clone(),
+[0m[31m-                        HoverEffect::Activate(_)=>Some(handler.activate.clone()),
+[0m[31m-                        _=>unreachable!("link callback effects only"),
+[0m[32m+                HoverEffect::Underline { show, event } => (self.underline)(*show, *event)?,
+[0m[32m+                HoverEffect::Pointer(enabled) => {
+[0m[32m+                    self.element
+[0m[32m+                        .class_list()
+[0m[32m+                        .toggle_with_force("xterm-cursor-pointer", *enabled)?;
+[0m[32m+                }
+[0m[32m+                HoverEffect::Hover(data)
+[0m[32m+                | HoverEffect::Leave(data)
+[0m[32m+                | HoverEffect::Activate(data) => {
+[0m[32m+                    let handler = self
+[0m[32m+                        .handlers
+[0m[32m+                        .borrow()
+[0m[32m+                        .get(&Rc::as_ptr(&data))
+[0m[32m+                        .cloned()
+[0m[32m+                        .ok_or_else(|| JsValue::from_str("link callback identity missing"))?;
+[0m[32m+                    let callback = match &effect {
+[0m[32m+                        HoverEffect::Hover(_) => handler.hover.clone(),
+[0m[32m+                        HoverEffect::Leave(_) => handler.leave.clone(),
+[0m[32m+                        HoverEffect::Activate(_) => Some(handler.activate.clone()),
+[0m[32m+                        _ => unreachable!("link callback effects only"),
+[0m                     };
+[31m-                    let last=self.last_event.borrow().clone();
+[0m[31m-                    if let (Some(callback),Some(event))=(callback,event.or(last.as_ref())) { callback(event,data)?; }
+[0m[32m+                    let last = self.last_event.borrow().clone();
+[0m[32m+                    if let (Some(callback), Some(event)) = (callback, event.or(last.as_ref())) {
+[0m[32m+                        callback(event, data)?;
+[0m[32m+                    }
+[0m                 }
+             }
+         }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\links\mod.rs:3:
+ #[cfg(target_arch = "wasm32")]
+ pub mod browser;
+ #[cfg(target_arch = "wasm32")]
+[31m-pub mod browser_linkifier;
+[0m[31m-#[cfg(target_arch = "wasm32")]
+[0m pub mod browser_debounce;
+[32m+#[cfg(target_arch = "wasm32")]
+[0m[32m+pub mod browser_linkifier;
+[0m pub mod debounce;
+ mod hover;
+ mod osc;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\links\provider.rs:37:
+     pub fn get(&self, index: usize) -> Option<Rc<T>> {
+         self.providers.borrow().get(index).cloned()
+     }
+[31m-    pub fn len(&self) -> usize { self.providers.borrow().len() }
+[0m[31m-    pub fn is_empty(&self) -> bool { self.providers.borrow().is_empty() }
+[0m[32m+    pub fn len(&self) -> usize {
+[0m[32m+        self.providers.borrow().len()
+[0m[32m+    }
+[0m[32m+    pub fn is_empty(&self) -> bool {
+[0m[32m+        self.providers.borrow().is_empty()
+[0m[32m+    }
+[0m }
+ 
+ impl<T: ?Sized> Disposable for LinkProviderService<T> {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\links\replies.rs:54:
+     }
+ 
+     /// Browser hosts dispatch hover callbacks before overlap filtering.
+[31m-    pub fn receive_unfiltered(&mut self, index: usize, links: Option<Vec<Rc<Link>>>, request: &ProviderRequest, provider_count: usize, cols: usize) -> Option<Rc<Link>> {
+[0m[32m+    pub fn receive_unfiltered(
+[0m[32m+        &mut self,
+[0m[32m+        index: usize,
+[0m[32m+        links: Option<Vec<Rc<Link>>>,
+[0m[32m+        request: &ProviderRequest,
+[0m[32m+        provider_count: usize,
+[0m[32m+        cols: usize,
+[0m[32m+    ) -> Option<Rc<Link>> {
+[0m         self.replies.insert(index, links);
+         self.check(index, request, provider_count, cols)
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\links\replies.rs:61:
+     pub fn filter_complete(&mut self, y: usize, provider_count: usize, cols: usize) {
+[31m-        if self.replies.len() == provider_count { self.remove_intersections(y, cols); }
+[0m[32m+        if self.replies.len() == provider_count {
+[0m[32m+            self.remove_intersections(y, cols);
+[0m[32m+        }
+[0m     }
+[31m-    pub fn from_cache_index(&self, index: usize, request: &ProviderRequest, provider_count: usize, cols: usize) -> Option<Rc<Link>> {
+[0m[31m-        if !matches!(self.replies.get(&index), Some(Some(_))) { return None; }
+[0m[32m+    pub fn from_cache_index(
+[0m[32m+        &self,
+[0m[32m+        index: usize,
+[0m[32m+        request: &ProviderRequest,
+[0m[32m+        provider_count: usize,
+[0m[32m+        cols: usize,
+[0m[32m+    ) -> Option<Rc<Link>> {
+[0m[32m+        if !matches!(self.replies.get(&index), Some(Some(_))) {
+[0m[32m+            return None;
+[0m[32m+        }
+[0m         self.check(index, request, provider_count, cols)
+     }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\mod.rs:2:
+ //! from their browser adapters so exact source algorithms can be tested natively.
+ #[cfg(target_arch = "wasm32")]
+ pub mod canvas_width;
+[31m-pub mod width_cache;
+[0m pub mod row;
+[31m-pub mod row_types;
+[0m mod row_colors;
+ #[cfg(target_arch = "wasm32")]
+ pub mod row_dom;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\mod.rs:11:
+[32m+pub mod row_types;
+[0m[32m+pub mod width_cache;
+[0m 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row.rs:1:
+ // Copyright (c) 2018, 2023 The xterm.js authors. All rights reserved. MIT license.
+[31m-use super::{row_colors, row_types::*, width_cache::{WidthCache, WidthMeasurer}};
+[0m[32m+use super::{
+[0m[32m+    row_colors,
+[0m[32m+    row_types::*,
+[0m[32m+    width_cache::{WidthCache, WidthMeasurer},
+[0m[32m+};
+[0m use crate::theme::ColorSet;
+ use xterm_core::buffer::{AttributeData, BufferLine};
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row.rs:6:
+ pub struct RowContext<'a> {
+     pub options: &'a RowOptions,
+     pub colors: &'a ColorSet,
+[31m-    pub joined_ranges: &'a [[usize;2]],
+[0m[31m-    pub decorations: &'a dyn Fn(usize,usize)->Vec<RowDecoration>,
+[0m[32m+    pub joined_ranges: &'a [[usize; 2]],
+[0m[32m+    pub decorations: &'a dyn Fn(usize, usize) -> Vec<RowDecoration>,
+[0m }
+ #[derive(Default, Debug)]
+[31m-pub struct RenderedRow { pub spans:Vec<RowSpan>,pub has_blinking_cells:bool }
+[0m[32m+pub struct RenderedRow {
+[0m[32m+    pub spans: Vec<RowSpan>,
+[0m[32m+    pub has_blinking_cells: bool,
+[0m[32m+}
+[0m #[derive(Default)]
+[31m-pub struct RowFactory { pub selection:Selection }
+[0m[31m-struct MergeState { selected:bool,bg:u32,fg:u32,extended:u32,link:bool,spacing:f64 }
+[0m[32m+pub struct RowFactory {
+[0m[32m+    pub selection: Selection,
+[0m[32m+}
+[0m[32m+struct MergeState {
+[0m[32m+    selected: bool,
+[0m[32m+    bg: u32,
+[0m[32m+    fg: u32,
+[0m[32m+    extended: u32,
+[0m[32m+    link: bool,
+[0m[32m+    spacing: f64,
+[0m[32m+}
+[0m impl RowFactory {
+[31m-    pub fn create_row<M:WidthMeasurer>(&self,line:&BufferLine,context:RowContext<'_>,widths:&mut WidthCache<M>)->Result<RenderedRow,RowError<M::Error>> {
+[0m[31m-        let options=context.options;let colors=context.colors;
+[0m[31m-        let mut result=RenderedRow::default();
+[0m[31m-        let mut length=line.get_no_bg_trimmed_length();
+[0m[31m-        if options.cursor_row {length=length.max(options.cursor_x.saturating_add(1));}
+[0m[31m-        let mut x=0;let mut join_index=0;let mut skip_until=0;
+[0m[31m-        let mut old=None::<MergeState>;let mut mergeable=false;
+[0m[31m-        let mut classes=Vec::<String>::new();
+[0m[31m-        while x<length {
+[0m[31m-            let mut cell=RenderCell::from(line.get_cell(x).unwrap_or_default());
+[0m[31m-            if cell.width==0 {x+=1;continue;}
+[0m[31m-            let mut joined=false;let mut valid_join=x>=skip_until;let mut last_x=x;
+[0m[31m-            if context.joined_ranges.get(join_index).is_some_and(|range|range[0]==x) && valid_join {
+[0m[31m-                let range=context.joined_ranges[join_index];join_index+=1;
+[0m[31m-                if range[1]<=range[0] || range[1]>line.len() {return Err(RowError::JoinRange(range));}
+[0m[31m-                let selected=self.selection.contains(range[0],options.row);
+[0m[31m-                valid_join=(range[0]+1..range[1]).all(|col|self.selection.contains(col,options.row)==selected);
+[0m[31m-                valid_join &= !options.cursor_row || options.cursor_x<range[0] || options.cursor_x>=range[1];
+[0m[31m-                if !valid_join {skip_until=range[1];}
+[0m[31m-                else {
+[0m[31m-                    joined=true;last_x=range[1]-1;
+[0m[31m-                    cell.chars=line.translate_to_string(true,Some(range[0]),Some(range[1]),None);
+[0m[31m-                    cell.width=(range[1]-range[0]) as i32;cell.code=Some(0x1fffff);
+[0m[31m-                    cell.attrs=AttributeData{fg:cell.attrs.fg,bg:cell.attrs.bg,..AttributeData::default()};
+[0m[32m+    pub fn create_row<M: WidthMeasurer>(
+[0m[32m+        &self,
+[0m[32m+        line: &BufferLine,
+[0m[32m+        context: RowContext<'_>,
+[0m[32m+        widths: &mut WidthCache<M>,
+[0m[32m+    ) -> Result<RenderedRow, RowError<M::Error>> {
+[0m[32m+        let options = context.options;
+[0m[32m+        let colors = context.colors;
+[0m[32m+        let mut result = RenderedRow::default();
+[0m[32m+        let mut length = line.get_no_bg_trimmed_length();
+[0m[32m+        if options.cursor_row {
+[0m[32m+            length = length.max(options.cursor_x.saturating_add(1));
+[0m[32m+        }
+[0m[32m+        let mut x = 0;
+[0m[32m+        let mut join_index = 0;
+[0m[32m+        let mut skip_until = 0;
+[0m[32m+        let mut old = None::<MergeState>;
+[0m[32m+        let mut mergeable = false;
+[0m[32m+        let mut classes = Vec::<String>::new();
+[0m[32m+        while x < length {
+[0m[32m+            let mut cell = RenderCell::from(line.get_cell(x).unwrap_or_default());
+[0m[32m+            if cell.width == 0 {
+[0m[32m+                x += 1;
+[0m[32m+                continue;
+[0m[32m+            }
+[0m[32m+            let mut joined = false;
+[0m[32m+            let mut valid_join = x >= skip_until;
+[0m[32m+            let mut last_x = x;
+[0m[32m+            if context
+[0m[32m+                .joined_ranges
+[0m[32m+                .get(join_index)
+[0m[32m+                .is_some_and(|range| range[0] == x)
+[0m[32m+                && valid_join
+[0m[32m+            {
+[0m[32m+                let range = context.joined_ranges[join_index];
+[0m[32m+                join_index += 1;
+[0m[32m+                if range[1] <= range[0] || range[1] > line.len() {
+[0m[32m+                    return Err(RowError::JoinRange(range));
+[0m                 }
+[32m+                let selected = self.selection.contains(range[0], options.row);
+[0m[32m+                valid_join = (range[0] + 1..range[1])
+[0m[32m+                    .all(|col| self.selection.contains(col, options.row) == selected);
+[0m[32m+                valid_join &= !options.cursor_row
+[0m[32m+                    || options.cursor_x < range[0]
+[0m[32m+                    || options.cursor_x >= range[1];
+[0m[32m+                if !valid_join {
+[0m[32m+                    skip_until = range[1];
+[0m[32m+                } else {
+[0m[32m+                    joined = true;
+[0m[32m+                    last_x = range[1] - 1;
+[0m[32m+                    cell.chars =
+[0m[32m+                        line.translate_to_string(true, Some(range[0]), Some(range[1]), None);
+[0m[32m+                    cell.width = (range[1] - range[0]) as i32;
+[0m[32m+                    cell.code = Some(0x1fffff);
+[0m[32m+                    cell.attrs = AttributeData {
+[0m[32m+                        fg: cell.attrs.fg,
+[0m[32m+                        bg: cell.attrs.bg,
+[0m[32m+                        ..AttributeData::default()
+[0m[32m+                    };
+[0m[32m+                }
+[0m             }
+[31m-            let selected=self.selection.contains(x,options.row);
+[0m[31m-            let cursor=options.cursor_row && x==options.cursor_x;
+[0m[31m-            let link=options.link_range.is_some_and(|range|x>=range[0] && x<=range[1]);
+[0m[31m-            if cell.attrs.is_blink()!=0 {result.has_blinking_cells=true;if !options.blink_on {classes.push("xterm-blink-hidden".into());}}
+[0m[31m-            let decorations=(context.decorations)(x,options.row);
+[0m[31m-            let mut chars=if cell.chars.is_empty(){vec![32]}else{cell.chars.clone()};
+[0m[31m-            if chars==[32] && (cell.attrs.is_underline()!=0 || cell.attrs.is_overline()!=0) {chars[0]=160;}
+[0m[31m-            let spacing=f64::from(cell.width)*options.cell_width-widths.get(&chars,cell.attrs.is_bold()!=0,cell.attrs.is_italic()!=0)?;
+[0m[31m-            let can_merge=old.as_ref().is_some_and(|old|mergeable &&
+[0m[31m-                ((selected&&old.selected)||(!selected&&!old.selected&&cell.attrs.bg==old.bg)) &&
+[0m[31m-                ((selected&&old.selected&&colors.selection_foreground.is_some())||cell.attrs.fg==old.fg) &&
+[0m[31m-                cell.attrs.extended.ext()==old.extended && link==old.link && spacing==old.spacing && !cursor && !joined && decorations.is_empty() && valid_join);
+[0m[32m+            let selected = self.selection.contains(x, options.row);
+[0m[32m+            let cursor = options.cursor_row && x == options.cursor_x;
+[0m[32m+            let link = options
+[0m[32m+                .link_range
+[0m[32m+                .is_some_and(|range| x >= range[0] && x <= range[1]);
+[0m[32m+            if cell.attrs.is_blink() != 0 {
+[0m[32m+                result.has_blinking_cells = true;
+[0m[32m+                if !options.blink_on {
+[0m[32m+                    classes.push("xterm-blink-hidden".into());
+[0m[32m+                }
+[0m[32m+            }
+[0m[32m+            let decorations = (context.decorations)(x, options.row);
+[0m[32m+            let mut chars = if cell.chars.is_empty() {
+[0m[32m+                vec![32]
+[0m[32m+            } else {
+[0m[32m+                cell.chars.clone()
+[0m[32m+            };
+[0m[32m+            if chars == [32] && (cell.attrs.is_underline() != 0 || cell.attrs.is_overline() != 0) {
+[0m[32m+                chars[0] = 160;
+[0m[32m+            }
+[0m[32m+            let spacing = f64::from(cell.width) * options.cell_width
+[0m[32m+                - widths.get(
+[0m[32m+                    &chars,
+[0m[32m+                    cell.attrs.is_bold() != 0,
+[0m[32m+                    cell.attrs.is_italic() != 0,
+[0m[32m+                )?;
+[0m[32m+            let can_merge = old.as_ref().is_some_and(|old| {
+[0m[32m+                mergeable
+[0m[32m+                    && ((selected && old.selected)
+[0m[32m+                        || (!selected && !old.selected && cell.attrs.bg == old.bg))
+[0m[32m+                    && ((selected && old.selected && colors.selection_foreground.is_some())
+[0m[32m+                        || cell.attrs.fg == old.fg)
+[0m[32m+                    && cell.attrs.extended.ext() == old.extended
+[0m[32m+                    && link == old.link
+[0m[32m+                    && spacing == old.spacing
+[0m[32m+                    && !cursor
+[0m[32m+                    && !joined
+[0m[32m+                    && decorations.is_empty()
+[0m[32m+                    && valid_join
+[0m[32m+            });
+[0m             if can_merge {
+                 // A previous span exists whenever old/mergeable exist.
+[31m-                if let Some(span)=result.spans.last_mut() {if cell.attrs.is_invisible()!=0 {span.text.push(32);}else{span.text.extend(chars);}}
+[0m[31m-                x+=1;continue;
+[0m[32m+                if let Some(span) = result.spans.last_mut() {
+[0m[32m+                    if cell.attrs.is_invisible() != 0 {
+[0m[32m+                        span.text.push(32);
+[0m[32m+                    } else {
+[0m[32m+                        span.text.extend(chars);
+[0m[32m+                    }
+[0m[32m+                }
+[0m[32m+                x += 1;
+[0m[32m+                continue;
+[0m             }
+[31m-            old=Some(MergeState{selected,bg:cell.attrs.bg,fg:cell.attrs.fg,extended:cell.attrs.extended.ext(),link,spacing});
+[0m[31m-            let mut span=RowSpan::default();
+[0m[31m-            glyph_classes(&mut classes,&cell,options,cursor);
+[0m[31m-            span.text=if cell.attrs.is_invisible()!=0 {vec![32]}else if cell.chars.is_empty(){vec![32]}else{cell.chars.clone()};
+[0m[31m-            if cell.attrs.is_underline()!=0 {
+[0m[31m-                classes.push(format!("xterm-underline-{}",cell.attrs.extended.underline_style()));
+[0m[31m-                if span.text==[32] {span.text[0]=160;}
+[0m[32m+            old = Some(MergeState {
+[0m[32m+                selected,
+[0m[32m+                bg: cell.attrs.bg,
+[0m[32m+                fg: cell.attrs.fg,
+[0m[32m+                extended: cell.attrs.extended.ext(),
+[0m[32m+                link,
+[0m[32m+                spacing,
+[0m[32m+            });
+[0m[32m+            let mut span = RowSpan::default();
+[0m[32m+            glyph_classes(&mut classes, &cell, options, cursor);
+[0m[32m+            span.text = if cell.attrs.is_invisible() != 0 {
+[0m[32m+                vec![32]
+[0m[32m+            } else if cell.chars.is_empty() {
+[0m[32m+                vec![32]
+[0m[32m+            } else {
+[0m[32m+                cell.chars.clone()
+[0m[32m+            };
+[0m[32m+            if cell.attrs.is_underline() != 0 {
+[0m[32m+                classes.push(format!(
+[0m[32m+                    "xterm-underline-{}",
+[0m[32m+                    cell.attrs.extended.underline_style()
+[0m[32m+                ));
+[0m[32m+                if span.text == [32] {
+[0m[32m+                    span.text[0] = 160;
+[0m[32m+                }
+[0m                 if !cell.attrs.is_underline_color_default() {
+                     if cell.attrs.is_underline_color_rgb() {
+[31m-                        let [r,g,b]=AttributeData::to_color_rgb(cell.attrs.get_underline_color()as u32);
+[0m[31m-                        span.style("text-decoration-color",format!("rgb({r},{g},{b})"));
+[0m[32m+                        let [r, g, b] =
+[0m[32m+                            AttributeData::to_color_rgb(cell.attrs.get_underline_color() as u32);
+[0m[32m+                        span.style("text-decoration-color", format!("rgb({r},{g},{b})"));
+[0m                     } else {
+[31m-                        let mut index=cell.attrs.get_underline_color();
+[0m[31m-                        if options.bold_bright && cell.attrs.is_bold()!=0 && index<8 {index+=8;}
+[0m[31m-                        span.style("text-decoration-color",row_colors::palette::<M::Error>(colors,index)?.css);
+[0m[32m+                        let mut index = cell.attrs.get_underline_color();
+[0m[32m+                        if options.bold_bright && cell.attrs.is_bold() != 0 && index < 8 {
+[0m[32m+                            index += 8;
+[0m[32m+                        }
+[0m[32m+                        span.style(
+[0m[32m+                            "text-decoration-color",
+[0m[32m+                            row_colors::palette::<M::Error>(colors, index)?.css,
+[0m[32m+                        );
+[0m                     }
+                 }
+             }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row.rs:79:
+[31m-            if cell.attrs.is_overline()!=0 {classes.push("xterm-overline".into());if span.text==[32]{span.text[0]=160;}}
+[0m[31m-            if cell.attrs.is_strikethrough()!=0 {classes.push("xterm-strikethrough".into());}
+[0m[31m-            if link {span.style("text-decoration","underline".into());}
+[0m[32m+            if cell.attrs.is_overline() != 0 {
+[0m[32m+                classes.push("xterm-overline".into());
+[0m[32m+                if span.text == [32] {
+[0m[32m+                    span.text[0] = 160;
+[0m[32m+                }
+[0m[32m+            }
+[0m[32m+            if cell.attrs.is_strikethrough() != 0 {
+[0m[32m+                classes.push("xterm-strikethrough".into());
+[0m[32m+            }
+[0m[32m+            if link {
+[0m[32m+                span.style("text-decoration", "underline".into());
+[0m[32m+            }
+[0m             // Keep class order, including the source's pending blink classes from
+             // merged cells, before decoration and foreground/background classes.
+[31m-            span.classes=std::mem::take(&mut classes);
+[0m[31m-            row_colors::apply(&mut span,&cell,options,colors,&decorations,selected)?;
+[0m[31m-            mergeable=!cursor&&!joined&&decorations.is_empty()&&valid_join;
+[0m[31m-            if spacing!=options.default_spacing {span.style("letter-spacing",format!("{spacing}px"));}
+[0m[31m-            result.spans.push(span);x=last_x+1;
+[0m[32m+            span.classes = std::mem::take(&mut classes);
+[0m[32m+            row_colors::apply(&mut span, &cell, options, colors, &decorations, selected)?;
+[0m[32m+            mergeable = !cursor && !joined && decorations.is_empty() && valid_join;
+[0m[32m+            if spacing != options.default_spacing {
+[0m[32m+                span.style("letter-spacing", format!("{spacing}px"));
+[0m[32m+            }
+[0m[32m+            result.spans.push(span);
+[0m[32m+            x = last_x + 1;
+[0m         }
+         Ok(result)
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row.rs:92:
+ }
+[31m-fn glyph_classes(classes:&mut Vec<String>,cell:&RenderCell,options:&RowOptions,cursor:bool) {
+[0m[32m+fn glyph_classes(classes: &mut Vec<String>, cell: &RenderCell, options: &RowOptions, cursor: bool) {
+[0m     if !options.cursor_hidden && cursor && options.cursor_initialized {
+         classes.push("xterm-cursor".into());
+         if options.focused {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row.rs:97:
+[31m-            if options.cursor_blink {classes.push("xterm-cursor-blink".into());}
+[0m[31m-            let style=match options.cursor_style.as_str(){"bar"=>"bar","underline"=>"underline",_=>"block"};
+[0m[32m+            if options.cursor_blink {
+[0m[32m+                classes.push("xterm-cursor-blink".into());
+[0m[32m+            }
+[0m[32m+            let style = match options.cursor_style.as_str() {
+[0m[32m+                "bar" => "bar",
+[0m[32m+                "underline" => "underline",
+[0m[32m+                _ => "block",
+[0m[32m+            };
+[0m             classes.push(format!("xterm-cursor-{style}"));
+[31m-        } else if ["outline","block","bar","underline"].contains(&options.cursor_inactive_style.as_str()) {classes.push(format!("xterm-cursor-{}",options.cursor_inactive_style));}
+[0m[32m+        } else if ["outline", "block", "bar", "underline"]
+[0m[32m+            .contains(&options.cursor_inactive_style.as_str())
+[0m[32m+        {
+[0m[32m+            classes.push(format!("xterm-cursor-{}", options.cursor_inactive_style));
+[0m[32m+        }
+[0m     }
+[31m-    for (flag,class) in [(cell.attrs.is_bold(),"xterm-bold"),(cell.attrs.is_italic(),"xterm-italic"),(cell.attrs.is_dim(),"xterm-dim")] {if flag!=0{classes.push(class.into());}}
+[0m[32m+    for (flag, class) in [
+[0m[32m+        (cell.attrs.is_bold(), "xterm-bold"),
+[0m[32m+        (cell.attrs.is_italic(), "xterm-italic"),
+[0m[32m+        (cell.attrs.is_dim(), "xterm-dim"),
+[0m[32m+    ] {
+[0m[32m+        if flag != 0 {
+[0m[32m+            classes.push(class.into());
+[0m[32m+        }
+[0m[32m+    }
+[0m }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row_colors.rs:1:
+ // Copyright (c) 2018, 2023 The xterm.js authors. All rights reserved. MIT license.
+ use super::row_types::{RenderCell, RowDecoration, RowError, RowOptions, RowSpan};
+ use crate::theme::{ColorRef, ColorSet};
+[31m-use xterm_core::{buffer::constants::attributes as mode, color::{channels, value, Color}};
+[0m[32m+use xterm_core::{
+[0m[32m+    buffer::constants::attributes as mode,
+[0m[32m+    color::{channels, value, Color},
+[0m[32m+};
+[0m 
+ pub(super) fn palette<E>(colors: &ColorSet, index: i32) -> Result<Color, RowError<E>> {
+[31m-    usize::try_from(index).ok().and_then(|i|colors.ansi.get(i)).map(|color|color.borrow().clone()).ok_or(RowError::Palette(index))
+[0m[32m+    usize::try_from(index)
+[0m[32m+        .ok()
+[0m[32m+        .and_then(|i| colors.ansi.get(i))
+[0m[32m+        .map(|color| color.borrow().clone())
+[0m[32m+        .ok_or(RowError::Palette(index))
+[0m }
+[31m-pub(super) fn apply<E>(span:&mut RowSpan, cell:&RenderCell, options:&RowOptions, colors:&ColorSet, decorations:&[RowDecoration], selected:bool)->Result<(),RowError<E>> {
+[0m[31m-    let attrs=&cell.attrs;
+[0m[31m-    let (mut fg,mut fg_mode,mut bg,mut bg_mode)=(attrs.get_fg_color(),attrs.get_fg_color_mode(),attrs.get_bg_color(),attrs.get_bg_color_mode());
+[0m[31m-    let inverse=attrs.is_inverse()!=0;
+[0m[31m-    if inverse {std::mem::swap(&mut fg,&mut bg);std::mem::swap(&mut fg_mode,&mut bg_mode);}
+[0m[31m-    let (mut bg_override,mut fg_override)=(None,None);
+[0m[31m-    let mut top=false;
+[0m[32m+pub(super) fn apply<E>(
+[0m[32m+    span: &mut RowSpan,
+[0m[32m+    cell: &RenderCell,
+[0m[32m+    options: &RowOptions,
+[0m[32m+    colors: &ColorSet,
+[0m[32m+    decorations: &[RowDecoration],
+[0m[32m+    selected: bool,
+[0m[32m+) -> Result<(), RowError<E>> {
+[0m[32m+    let attrs = &cell.attrs;
+[0m[32m+    let (mut fg, mut fg_mode, mut bg, mut bg_mode) = (
+[0m[32m+        attrs.get_fg_color(),
+[0m[32m+        attrs.get_fg_color_mode(),
+[0m[32m+        attrs.get_bg_color(),
+[0m[32m+        attrs.get_bg_color_mode(),
+[0m[32m+    );
+[0m[32m+    let inverse = attrs.is_inverse() != 0;
+[0m[32m+    if inverse {
+[0m[32m+        std::mem::swap(&mut fg, &mut bg);
+[0m[32m+        std::mem::swap(&mut fg_mode, &mut bg_mode);
+[0m[32m+    }
+[0m[32m+    let (mut bg_override, mut fg_override) = (None, None);
+[0m[32m+    let mut top = false;
+[0m     for decoration in decorations {
+[31m-        if !decoration.top && top {continue;}
+[0m[31m-        if let Some(color)=&decoration.background {bg_mode=mode::CM_RGB;bg=(color.rgba>>8)as i32;bg_override=Some(color.clone());}
+[0m[31m-        if let Some(color)=&decoration.foreground {fg_mode=mode::CM_RGB;fg=(color.rgba>>8)as i32;fg_override=Some(color.clone());}
+[0m[31m-        top=decoration.top;
+[0m[32m+        if !decoration.top && top {
+[0m[32m+            continue;
+[0m[32m+        }
+[0m[32m+        if let Some(color) = &decoration.background {
+[0m[32m+            bg_mode = mode::CM_RGB;
+[0m[32m+            bg = (color.rgba >> 8) as i32;
+[0m[32m+            bg_override = Some(color.clone());
+[0m[32m+        }
+[0m[32m+        if let Some(color) = &decoration.foreground {
+[0m[32m+            fg_mode = mode::CM_RGB;
+[0m[32m+            fg = (color.rgba >> 8) as i32;
+[0m[32m+            fg_override = Some(color.clone());
+[0m[32m+        }
+[0m[32m+        top = decoration.top;
+[0m     }
+     if !top && selected {
+[31m-        let background=if options.focused {&colors.selection_background_opaque}else{&colors.selection_inactive_background_opaque};
+[0m[31m-        let color=background.borrow().clone();bg=(color.rgba>>8)as i32;bg_mode=mode::CM_RGB;bg_override=Some(color);top=true;
+[0m[31m-        if let Some(color)=&colors.selection_foreground {let color=color.borrow().clone();fg_mode=mode::CM_RGB;fg=(color.rgba>>8)as i32;fg_override=Some(color);}
+[0m[32m+        let background = if options.focused {
+[0m[32m+            &colors.selection_background_opaque
+[0m[32m+        } else {
+[0m[32m+            &colors.selection_inactive_background_opaque
+[0m[32m+        };
+[0m[32m+        let color = background.borrow().clone();
+[0m[32m+        bg = (color.rgba >> 8) as i32;
+[0m[32m+        bg_mode = mode::CM_RGB;
+[0m[32m+        bg_override = Some(color);
+[0m[32m+        top = true;
+[0m[32m+        if let Some(color) = &colors.selection_foreground {
+[0m[32m+            let color = color.borrow().clone();
+[0m[32m+            fg_mode = mode::CM_RGB;
+[0m[32m+            fg = (color.rgba >> 8) as i32;
+[0m[32m+            fg_override = Some(color);
+[0m[32m+        }
+[0m     }
+[31m-    if top {span.classes.push("xterm-decoration-top".into());}
+[0m[31m-    let resolved_bg=match bg_mode {
+[0m[31m-        mode::CM_P16|mode::CM_P256=>{span.classes.push(format!("xterm-bg-{bg}"));palette(colors,bg)?}
+[0m[31m-        mode::CM_RGB=>{span.style("background-color",format!("#{bg:06x}"));rgb_color(bg)}
+[0m[31m-        _=>if inverse {span.classes.push("xterm-bg-257".into());colors.foreground.borrow().clone()}else{colors.background.borrow().clone()},
+[0m[32m+    if top {
+[0m[32m+        span.classes.push("xterm-decoration-top".into());
+[0m[32m+    }
+[0m[32m+    let resolved_bg = match bg_mode {
+[0m[32m+        mode::CM_P16 | mode::CM_P256 => {
+[0m[32m+            span.classes.push(format!("xterm-bg-{bg}"));
+[0m[32m+            palette(colors, bg)?
+[0m[32m+        }
+[0m[32m+        mode::CM_RGB => {
+[0m[32m+            span.style("background-color", format!("#{bg:06x}"));
+[0m[32m+            rgb_color(bg)
+[0m[32m+        }
+[0m[32m+        _ => {
+[0m[32m+            if inverse {
+[0m[32m+                span.classes.push("xterm-bg-257".into());
+[0m[32m+                colors.foreground.borrow().clone()
+[0m[32m+            } else {
+[0m[32m+                colors.background.borrow().clone()
+[0m[32m+            }
+[0m[32m+        }
+[0m     };
+[31m-    if bg_override.is_none() && attrs.is_dim()!=0 {bg_override=Some(value::multiply_opacity(&resolved_bg,0.5));}
+[0m[32m+    if bg_override.is_none() && attrs.is_dim() != 0 {
+[0m[32m+        bg_override = Some(value::multiply_opacity(&resolved_bg, 0.5));
+[0m[32m+    }
+[0m     match fg_mode {
+[31m-        mode::CM_P16|mode::CM_P256=>{
+[0m[31m-            if attrs.is_bold()!=0 && fg<8 && options.bold_bright {fg+=8;}
+[0m[31m-            if !apply_contrast(span,cell,options,colors,ContrastInput{bg:&resolved_bg,fg:&palette::<E>(colors,fg)?,bg_override:bg_override.as_ref(),fg_override:None}) {span.classes.push(format!("xterm-fg-{fg}"));}
+[0m[32m+        mode::CM_P16 | mode::CM_P256 => {
+[0m[32m+            if attrs.is_bold() != 0 && fg < 8 && options.bold_bright {
+[0m[32m+                fg += 8;
+[0m[32m+            }
+[0m[32m+            if !apply_contrast(
+[0m[32m+                span,
+[0m[32m+                cell,
+[0m[32m+                options,
+[0m[32m+                colors,
+[0m[32m+                ContrastInput {
+[0m[32m+                    bg: &resolved_bg,
+[0m[32m+                    fg: &palette::<E>(colors, fg)?,
+[0m[32m+                    bg_override: bg_override.as_ref(),
+[0m[32m+                    fg_override: None,
+[0m[32m+                },
+[0m[32m+            ) {
+[0m[32m+                span.classes.push(format!("xterm-fg-{fg}"));
+[0m[32m+            }
+[0m         }
+[31m-        mode::CM_RGB=>{
+[0m[31m-            if !apply_contrast(span,cell,options,colors,ContrastInput{bg:&resolved_bg,fg:&rgb_color(fg),bg_override:bg_override.as_ref(),fg_override:fg_override.as_ref()}) {span.style("color",format!("#{fg:06x}"));}
+[0m[32m+        mode::CM_RGB => {
+[0m[32m+            if !apply_contrast(
+[0m[32m+                span,
+[0m[32m+                cell,
+[0m[32m+                options,
+[0m[32m+                colors,
+[0m[32m+                ContrastInput {
+[0m[32m+                    bg: &resolved_bg,
+[0m[32m+                    fg: &rgb_color(fg),
+[0m[32m+                    bg_override: bg_override.as_ref(),
+[0m[32m+                    fg_override: fg_override.as_ref(),
+[0m[32m+                },
+[0m[32m+            ) {
+[0m[32m+                span.style("color", format!("#{fg:06x}"));
+[0m[32m+            }
+[0m         }
+[31m-        _=>{
+[0m[31m-            if !apply_contrast(span,cell,options,colors,ContrastInput{bg:&resolved_bg,fg:&colors.foreground.borrow(),bg_override:bg_override.as_ref(),fg_override:fg_override.as_ref()}) && inverse {span.classes.push("xterm-fg-257".into());}
+[0m[32m+        _ => {
+[0m[32m+            if !apply_contrast(
+[0m[32m+                span,
+[0m[32m+                cell,
+[0m[32m+                options,
+[0m[32m+                colors,
+[0m[32m+                ContrastInput {
+[0m[32m+                    bg: &resolved_bg,
+[0m[32m+                    fg: &colors.foreground.borrow(),
+[0m[32m+                    bg_override: bg_override.as_ref(),
+[0m[32m+                    fg_override: fg_override.as_ref(),
+[0m[32m+                },
+[0m[32m+            ) && inverse
+[0m[32m+            {
+[0m[32m+                span.classes.push("xterm-fg-257".into());
+[0m[32m+            }
+[0m         }
+     }
+     Ok(())
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row_colors.rs:47:
+ }
+[31m-fn rgb_color(color:i32)->Color {channels::to_color(i64::from((color>>16)&255),i64::from((color>>8)&255),i64::from(color&255),None)}
+[0m[31m-fn background_glyph(code:Option<u32>)->bool {code.is_some_and(|code|(0xe0a4..=0xe0d6).contains(&code)||(0x2500..=0x259f).contains(&code))}
+[0m[31m-struct ContrastInput<'a> { bg:&'a Color, fg:&'a Color, bg_override:Option<&'a Color>, fg_override:Option<&'a Color> }
+[0m[31m-fn apply_contrast(span:&mut RowSpan,cell:&RenderCell,options:&RowOptions,colors:&ColorSet,input:ContrastInput<'_>)->bool {
+[0m[31m-    if options.minimum_contrast_ratio==1.0 || background_glyph(cell.code) {return false;}
+[0m[31m-    let cache=if cell.attrs.is_dim()!=0 {&colors.half_contrast_cache}else{&colors.contrast_cache};
+[0m[31m-    let mut adjusted=None;
+[0m[31m-    if input.bg_override.is_none() && input.fg_override.is_none() {adjusted=cache.borrow().get_color(input.bg.rgba,input.fg.rgba).cloned();}
+[0m[31m-    let result=match adjusted {
+[0m[31m-        Some(color)=>color,
+[0m[31m-        None=>{
+[0m[31m-            let ratio=options.minimum_contrast_ratio/if cell.attrs.is_dim()!=0 {2.0}else{1.0};
+[0m[31m-            let bg=input.bg_override.unwrap_or(input.bg);let fg=input.fg_override.unwrap_or(input.fg);
+[0m[31m-            let result=value::ensure_contrast_ratio(bg,fg,ratio).map(ColorRef::from);
+[0m[31m-            cache.borrow_mut().set_color(bg.rgba,fg.rgba,result.clone());result
+[0m[32m+fn rgb_color(color: i32) -> Color {
+[0m[32m+    channels::to_color(
+[0m[32m+        i64::from((color >> 16) & 255),
+[0m[32m+        i64::from((color >> 8) & 255),
+[0m[32m+        i64::from(color & 255),
+[0m[32m+        None,
+[0m[32m+    )
+[0m[32m+}
+[0m[32m+fn background_glyph(code: Option<u32>) -> bool {
+[0m[32m+    code.is_some_and(|code| (0xe0a4..=0xe0d6).contains(&code) || (0x2500..=0x259f).contains(&code))
+[0m[32m+}
+[0m[32m+struct ContrastInput<'a> {
+[0m[32m+    bg: &'a Color,
+[0m[32m+    fg: &'a Color,
+[0m[32m+    bg_override: Option<&'a Color>,
+[0m[32m+    fg_override: Option<&'a Color>,
+[0m[32m+}
+[0m[32m+fn apply_contrast(
+[0m[32m+    span: &mut RowSpan,
+[0m[32m+    cell: &RenderCell,
+[0m[32m+    options: &RowOptions,
+[0m[32m+    colors: &ColorSet,
+[0m[32m+    input: ContrastInput<'_>,
+[0m[32m+) -> bool {
+[0m[32m+    if options.minimum_contrast_ratio == 1.0 || background_glyph(cell.code) {
+[0m[32m+        return false;
+[0m[32m+    }
+[0m[32m+    let cache = if cell.attrs.is_dim() != 0 {
+[0m[32m+        &colors.half_contrast_cache
+[0m[32m+    } else {
+[0m[32m+        &colors.contrast_cache
+[0m[32m+    };
+[0m[32m+    let mut adjusted = None;
+[0m[32m+    if input.bg_override.is_none() && input.fg_override.is_none() {
+[0m[32m+        adjusted = cache
+[0m[32m+            .borrow()
+[0m[32m+            .get_color(input.bg.rgba, input.fg.rgba)
+[0m[32m+            .cloned();
+[0m[32m+    }
+[0m[32m+    let result = match adjusted {
+[0m[32m+        Some(color) => color,
+[0m[32m+        None => {
+[0m[32m+            let ratio =
+[0m[32m+                options.minimum_contrast_ratio / if cell.attrs.is_dim() != 0 { 2.0 } else { 1.0 };
+[0m[32m+            let bg = input.bg_override.unwrap_or(input.bg);
+[0m[32m+            let fg = input.fg_override.unwrap_or(input.fg);
+[0m[32m+            let result = value::ensure_contrast_ratio(bg, fg, ratio).map(ColorRef::from);
+[0m[32m+            cache
+[0m[32m+                .borrow_mut()
+[0m[32m+                .set_color(bg.rgba, fg.rgba, result.clone());
+[0m[32m+            result
+[0m         }
+     };
+[31m-    if let Some(color)=result {span.style("color",color.borrow().css.clone());true}else{false}
+[0m[32m+    if let Some(color) = result {
+[0m[32m+        span.style("color", color.borrow().css.clone());
+[0m[32m+        true
+[0m[32m+    } else {
+[0m[32m+        false
+[0m[32m+    }
+[0m }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row_dom.rs:5:
+ 
+ /// Preserve source CSS assignment and DOM attribute order, not merely computed
+ /// color equality: upstream row assertions compare serialized span HTML.
+[31m-pub fn create_spans(document:&Document,spans:&[RowSpan])->Result<Vec<HtmlElement>,JsValue> {
+[0m[31m-    spans.iter().map(|span| {
+[0m[31m-        let element:HtmlElement=document.create_element("span")?.dyn_into()?;
+[0m[31m-        js_sys::Reflect::set(element.as_ref(),&JsValue::from_str("textContent"),&crate::utf16::to_js_string(&span.text))?;
+[0m[31m-        for (property,value) in &span.styles {
+[0m[31m-            if property=="letter-spacing" {continue;}
+[0m[31m-            if property=="background-color" || property=="color" {
+[0m[31m-                let existing=element.get_attribute("style").unwrap_or_default();
+[0m[31m-                element.set_attribute("style",&format!("{existing}{property}:{value};"))?;
+[0m[31m-            } else {element.style().set_property(property,value)?;}
+[0m[31m-        }
+[0m[31m-        if !span.classes.is_empty() {element.set_class_name(&span.classes.join(" "));}
+[0m[31m-        if let Some((_,spacing))=span.styles.iter().find(|(property,_)|property=="letter-spacing") {element.style().set_property("letter-spacing",spacing)?;}
+[0m[31m-        Ok(element)
+[0m[31m-    }).collect()
+[0m[32m+pub fn create_spans(document: &Document, spans: &[RowSpan]) -> Result<Vec<HtmlElement>, JsValue> {
+[0m[32m+    spans
+[0m[32m+        .iter()
+[0m[32m+        .map(|span| {
+[0m[32m+            let element: HtmlElement = document.create_element("span")?.dyn_into()?;
+[0m[32m+            js_sys::Reflect::set(
+[0m[32m+                element.as_ref(),
+[0m[32m+                &JsValue::from_str("textContent"),
+[0m[32m+                &crate::utf16::to_js_string(&span.text),
+[0m[32m+            )?;
+[0m[32m+            for (property, value) in &span.styles {
+[0m[32m+                if property == "letter-spacing" {
+[0m[32m+                    continue;
+[0m[32m+                }
+[0m[32m+                if property == "background-color" || property == "color" {
+[0m[32m+                    let existing = element.get_attribute("style").unwrap_or_default();
+[0m[32m+                    element.set_attribute("style", &format!("{existing}{property}:{value};"))?;
+[0m[32m+                } else {
+[0m[32m+                    element.style().set_property(property, value)?;
+[0m[32m+                }
+[0m[32m+            }
+[0m[32m+            if !span.classes.is_empty() {
+[0m[32m+                element.set_class_name(&span.classes.join(" "));
+[0m[32m+            }
+[0m[32m+            if let Some((_, spacing)) = span
+[0m[32m+                .styles
+[0m[32m+                .iter()
+[0m[32m+                .find(|(property, _)| property == "letter-spacing")
+[0m[32m+            {
+[0m[32m+                element.style().set_property("letter-spacing", spacing)?;
+[0m[32m+            }
+[0m[32m+            Ok(element)
+[0m[32m+        })
+[0m[32m+        .collect()
+[0m }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row_types.rs:1:
+ // Copyright (c) 2018, 2023 The xterm.js authors. All rights reserved. MIT license.
+ use super::width_cache::WidthError;
+[31m-use xterm_core::{buffer::{AttributeData, CellData}, color::Color};
+[0m[32m+use xterm_core::{
+[0m[32m+    buffer::{AttributeData, CellData},
+[0m[32m+    color::Color,
+[0m[32m+};
+[0m 
+ #[derive(Clone, Debug, Default, PartialEq)]
+ pub struct RowSpan {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row_types.rs:10:
+ }
+ impl RowSpan {
+     pub fn style(&mut self, property: &str, value: String) {
+[31m-        if let Some((_, old)) = self.styles.iter_mut().find(|(key, _)| key == property) { *old = value; }
+[0m[31m-        else { self.styles.push((property.into(), value)); }
+[0m[32m+        if let Some((_, old)) = self.styles.iter_mut().find(|(key, _)| key == property) {
+[0m[32m+            *old = value;
+[0m[32m+        } else {
+[0m[32m+            self.styles.push((property.into(), value));
+[0m[32m+        }
+[0m     }
+ }
+ #[derive(Clone, Debug, Default)]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row_types.rs:40:
+ }
+ impl Default for RowOptions {
+     fn default() -> Self {
+[31m-        Self { row:0, cursor_row:false, cursor_x:0, cursor_style:"block".into(), cursor_inactive_style:"outline".into(), cursor_blink:false, cursor_hidden:false, cursor_initialized:true, focused:true, blink_on:true, cell_width:10.0, default_spacing:0.0, link_range:None, bold_bright:true, minimum_contrast_ratio:1.0 }
+[0m[32m+        Self {
+[0m[32m+            row: 0,
+[0m[32m+            cursor_row: false,
+[0m[32m+            cursor_x: 0,
+[0m[32m+            cursor_style: "block".into(),
+[0m[32m+            cursor_inactive_style: "outline".into(),
+[0m[32m+            cursor_blink: false,
+[0m[32m+            cursor_hidden: false,
+[0m[32m+            cursor_initialized: true,
+[0m[32m+            focused: true,
+[0m[32m+            blink_on: true,
+[0m[32m+            cell_width: 10.0,
+[0m[32m+            default_spacing: 0.0,
+[0m[32m+            link_range: None,
+[0m[32m+            bold_bright: true,
+[0m[32m+            minimum_contrast_ratio: 1.0,
+[0m[32m+        }
+[0m     }
+ }
+ #[derive(Clone, Copy, Debug, Default)]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row_types.rs:51:
+ }
+ impl Selection {
+     pub fn contains(&self, x: usize, y: usize) -> bool {
+[31m-        let (Some(start),Some(end))=(self.start,self.end) else {return false;};
+[0m[32m+        let (Some(start), Some(end)) = (self.start, self.end) else {
+[0m[32m+            return false;
+[0m[32m+        };
+[0m         if self.column {
+[31m-            let (left,right) = if start[0]<=end[0] {(start[0],end[0])} else {(end[0],start[0])};
+[0m[31m-            return x>=left && x<right && y>=start[1] && y<=end[1];
+[0m[32m+            let (left, right) = if start[0] <= end[0] {
+[0m[32m+                (start[0], end[0])
+[0m[32m+            } else {
+[0m[32m+                (end[0], start[0])
+[0m[32m+            };
+[0m[32m+            return x >= left && x < right && y >= start[1] && y <= end[1];
+[0m         }
+[31m-        (y>start[1] && y<end[1]) || (start[1]==end[1] && y==start[1] && x>=start[0] && x<end[0]) ||
+[0m[31m-        (start[1]<end[1] && y==end[1] && x<end[0]) || (start[1]<end[1] && y==start[1] && x>=start[0])
+[0m[32m+        (y > start[1] && y < end[1])
+[0m[32m+            || (start[1] == end[1] && y == start[1] && x >= start[0] && x < end[0])
+[0m[32m+            || (start[1] < end[1] && y == end[1] && x < end[0])
+[0m[32m+            || (start[1] < end[1] && y == start[1] && x >= start[0])
+[0m     }
+ }
+ #[derive(Debug)]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row_types.rs:64:
+[31m-pub enum RowError<E> { Width(WidthError<E>), Palette(i32), JoinRange([usize; 2]) }
+[0m[31m-impl<E> From<WidthError<E>> for RowError<E> { fn from(error:WidthError<E>)->Self{Self::Width(error)} }
+[0m[32m+pub enum RowError<E> {
+[0m[32m+    Width(WidthError<E>),
+[0m[32m+    Palette(i32),
+[0m[32m+    JoinRange([usize; 2]),
+[0m[32m+}
+[0m[32m+impl<E> From<WidthError<E>> for RowError<E> {
+[0m[32m+    fn from(error: WidthError<E>) -> Self {
+[0m[32m+        Self::Width(error)
+[0m[32m+    }
+[0m[32m+}
+[0m pub(super) struct RenderCell {
+     pub attrs: AttributeData,
+     pub chars: Vec<u16>,
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row_types.rs:70:
+     pub code: Option<u32>,
+ }
+ impl From<CellData> for RenderCell {
+[31m-    fn from(cell:CellData)->Self { Self {chars:cell.get_chars(),width:cell.get_width(),code:cell.get_code(),attrs:cell.attributes} }
+[0m[32m+    fn from(cell: CellData) -> Self {
+[0m[32m+        Self {
+[0m[32m+            chars: cell.get_chars(),
+[0m[32m+            width: cell.get_width(),
+[0m[32m+            code: cell.get_code(),
+[0m[32m+            attrs: cell.attributes,
+[0m[32m+        }
+[0m[32m+    }
+[0m }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\osc_links_differential.rs:63:
+                     .iter()
+                     .map(|link| {
+                         let text = link.text.iter().fold(String::new(), |mut text, unit| {
+[31m-                            write!(text, "{:02x}", u8::try_from(*unit).expect("ASCII fixture URI")).unwrap();
+[0m[32m+                            write!(
+[0m[32m+                                text,
+[0m[32m+                                "{:02x}",
+[0m[32m+                                u8::try_from(*unit).expect("ASCII fixture URI")
+[0m[32m+                            )
+[0m[32m+                            .unwrap();
+[0m                             text
+                         });
+                         format!(
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\wasm_input.rs:40:
+     );
+     setup.dom.element.dispatch_event(&copy).unwrap();
+     assert!(copy.default_prevented());
+[31m-    let copied = copy.dyn_ref::<web_sys::ClipboardEvent>().unwrap().clipboard_data().unwrap();
+[0m[32m+    let copied = copy
+[0m[32m+        .dyn_ref::<web_sys::ClipboardEvent>()
+[0m[32m+        .unwrap()
+[0m[32m+        .clipboard_data()
+[0m[32m+        .unwrap();
+[0m     assert_eq!(copied.get_data("text/plain").unwrap(), "selected 😀");
+     clipboard.set_data("text/plain", "one\ntwo").unwrap();
+     let paste = event(

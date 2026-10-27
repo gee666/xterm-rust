@@ -1,0 +1,33 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0624]: method `alignment_pattern` is private
+   --> crates\xterm-core\src\terminal\register.rs:114:26
+    |
+114 |         command(|s, _| s.alignment_pattern(), Rc::clone(state)),
+    |                          ^^^^^^^^^^^^^^^^^ private method
+    |
+   ::: crates\xterm-core\src\terminal\escape.rs:48:5
+    |
+48  |     fn alignment_pattern(&mut self) -> Result<(), TerminalError> {
+    |     ------------------------------------------------------------ private method defined here
+
+error[E0509]: cannot move out of type `DisposableStore`, which implements the `Drop` trait
+   --> crates\xterm-core\src\lifecycle.rs:117:9
+    |
+117 |         Self { explicit_disposal: true, ..Self::default() }
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |         |
+    |         cannot move out of here
+    |         move occurs because value has type `std::cell::RefCell<StoreResources>`, which does not implement the `Copy` trait
+
+error[E0509]: cannot move out of type `DisposableStore`, which implements the `Drop` trait
+   --> crates\xterm-core\src\lifecycle.rs:117:9
+    |
+117 |         Self { explicit_disposal: true, ..Self::default() }
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |         |
+    |         cannot move out of here
+    |         move occurs because value has type `std::cell::Cell<bool>`, which does not implement the `Copy` trait
+
+Some errors have detailed explanations: E0509, E0624.
+For more information about an error, try `rustc --explain E0509`.
+error: could not compile `xterm-core` (lib test) due to 3 previous errors
