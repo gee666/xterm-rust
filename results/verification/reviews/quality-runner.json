@@ -1,0 +1,46 @@
+{
+  "reviewer": "Aaliyah",
+  "scope": "Quality runner code review, not native full-workspace acceptance",
+  "platform": "native Windows x64",
+  "node": "v24.15.0",
+  "inspected": [
+    "scripts/quality-process.mjs",
+    "scripts/quality-policy.mjs",
+    "scripts/quality-gates.mjs",
+    "scripts/quality-snapshot.mjs",
+    "scripts/quality-process.test.mjs",
+    "scripts/quality-policy.test.mjs",
+    ".github/workflows/rust.yml"
+  ],
+  "commands": [
+    {
+      "command": "node --test scripts/quality-process.test.mjs",
+      "result": "4 passed, 0 failed",
+      "log": "quality-runner-tests.log"
+    },
+    {
+      "command": "node --test scripts/quality-process.test.mjs scripts/quality-policy.test.mjs",
+      "result": "8 passed, 0 failed",
+      "log": "quality-runner-run2.log"
+    }
+  ],
+  "findings": [
+    {
+      "status": "changes requested; owner Kassa acknowledged",
+      "finding": "Snapshot hashes only rs/toml, omitting include_str TSV/txt fixtures, scripts, config and workflow. Such mutations may incorrectly retain sourceStable=true."
+    },
+    {
+      "status": "changes requested; owner Kassa acknowledged",
+      "finding": "Default output directory overwrites previous failed attempts; reject nonempty destinations or assign unique runs."
+    },
+    {
+      "status": "changes requested; owner Kassa acknowledged",
+      "finding": "GITHUB_ACTIONS=true does not prove a GitHub-hosted runner; self-hosted executions must be labeled accurately."
+    },
+    {
+      "status": "new resumed requirement",
+      "finding": "Integrate disk free-space preflight/monitor, preserve705104c dev/test settings and shared target directory. Avoid another disk exhaustion."
+    }
+  ],
+  "result": "Not accepted pending fixes, retained negative tests and independent rerun. No Linux/macOS or browser result inferred from workflow."
+}

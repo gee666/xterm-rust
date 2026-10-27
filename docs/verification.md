@@ -2,6 +2,16 @@
 
 Overall equivalence is **NOT PROVEN**. This is an in-progress evidence report, not a completion certificate. Common utilities have focused passing results, but the initial full-workspace gates failed. Terminal integration, complete API/addon coverage, native Linux/macOS execution and Rust-backed browser end-to-end results are not established here.
 
+## Resume after disk exhaustion
+
+Main reported that the P: drive reached about 7 MB free, interrupting the swarm with SQLite `cannot rollback - no transaction is active`. Main's database quick check passed. The original 45-worker run resumed; no second swarm was launched. Main removed only generated Cargo artifacts, recovering about 3 GiB, and committed `.cargo/config.toml` as `705104c`. See `docs/resume-run2.md` for the preserved scope and resource policy.
+
+Aaliyah independently read the resumed brief and configuration and observed about 2.9 GiB free with `df -h .`. Development/test debug information and incremental caches remain disabled; assertions and release profiles are unchanged. Large builds must check available space, use the shared target directory and report low space before exhaustion. The Node-only evidence/runner tests do not create a second Cargo target directory.
+
+The interruption exposed a stale-success hazard. Sargon reported that a prior `results/dcs/verification.json` still said success while the latest Rust log showed disk exhaustion. The verifier owner is correcting report initialization and retaining the failed attempt. Treat every receipt as a dated/source-bound observation; a successful JSON summary without its matching current logs is not enough. This resource interruption does not excuse missing engine/browser/addon implementation or establish an external blocker for that work.
+
+`.gitattributes` disables line-ending conversion for retained manifests, raw results and oracle fixtures so checkout cannot silently rewrite hashed evidence. This does not modify `source_repo` or user-owned startup files.
+
 Detailed acceptance checks are in [verification-acceptance.md](verification-acceptance.md). The [compatibility inventory](compatibility.md) is maintained separately and must map every source contract and suite. It is not permissible to infer implemented or passed behavior from a task's title or a file's existence.
 
 ## Reference provenance and integrity
