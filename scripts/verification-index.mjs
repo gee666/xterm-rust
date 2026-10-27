@@ -74,10 +74,40 @@ export async function buildIndex(projectRoot) {
   };
 }
 
+export async function checkIndex(projectRoot) {
+  const saved = JSON.parse(await readFile(path.join(projectRoot, 'results/verification/index.json'), 'utf8'));
+  if (!Array.isArray(saved.evidence) || !saved.reference) throw new Error('Invalid saved evidence index');
+  for (const record of saved.evidence) {
+    if (typeof record.path !== 'string' || !record.path.startsWith('results/') || record.path === 'results/verification/index.json') {
+      throw new Error('Saved evidence paths must stay under results and exclude the index');
+    }
+  }
+  const current = await buildIndex(projectRoot);
+  const files = await verifyReference(projectRoot, saved.evidence);
+  const previous = new Set(saved.evidence.map(record => record.path));
+  const added = current.evidence.filter(record => !previous.has(record.path)).map(record => record.path);
+  const manifestMatched = saved.reference.manifestSha256 === current.reference.manifestSha256;
+  return {
+    scope: 'Snapshot freshness only, not passing test or equivalence certification',
+    command: 'node scripts/verification-index.mjs --check',
+    snapshotGeneratedAt: saved.generatedAt ?? null,
+    ...files, added, manifestMatched, reference: current.reference,
+    matched: files.matched && added.length === 0 && manifestMatched && current.reference.matched
+  };
+}
+
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const index = await buildIndex(root);
-  await mkdir(path.join(root, 'results/verification'), { recursive: true });
-  await writeFile(path.join(root, 'results/verification/index.json'), `${JSON.stringify(index, null, 2)}\n`);
-  console.log(JSON.stringify({ evidenceFiles: index.evidence.length, reference: index.reference }, null, 2));
-  if (!index.reference.matched) process.exitCode = 1;
+  const args = process.argv.slice(2);
+  if (args.length > 1 || (args.length === 1 && args[0] !== '--check')) throw new Error('Usage: node scripts/verification-index.mjs [--check]');
+  if (args[0] === '--check') {
+    const report = await checkIndex(root);
+    console.log(JSON.stringify(report, null, 2));
+    if (!report.matched) process.exitCode = 1;
+  } else {
+    const index = await buildIndex(root);
+    await mkdir(path.join(root, 'results/verification'), { recursive: true });
+    await writeFile(path.join(root, 'results/verification/index.json'), `${JSON.stringify(index, null, 2)}\n`);
+    console.log(JSON.stringify({ evidenceFiles: index.evidence.length, reference: index.reference }, null, 2));
+    if (!index.reference.matched) process.exitCode = 1;
+  }
 }

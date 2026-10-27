@@ -1,0 +1,40 @@
+{
+  "reviewer": "Aaliyah",
+  "task": 49,
+  "platform": "native Windows x64",
+  "node": "v24.15.0",
+  "inspected": [
+    "scripts/count-loc.mjs",
+    "scripts/count-loc.test.mjs",
+    "scripts/loc-rules.json",
+    "docs/loc.md",
+    "docs/comparison.md"
+  ],
+  "commands": [
+    {
+      "command": "node --test scripts/count-loc.test.mjs",
+      "result": "11 passed,0 failed after BOM correction",
+      "log": "loc-bom-tests.log"
+    },
+    {
+      "command": "node scripts/count-loc.mjs --check-baseline --output tmp/review-aaliyah/loc-corrected",
+      "result": "exact396 files,96130 physical,87026 nonblank,3962777 bytes",
+      "log": "loc-bom-snapshot.log"
+    }
+  ],
+  "findings": [
+    {
+      "status": "fixed and independently rerun",
+      "finding": "TextDecoder originally removed BOM-only .rs content, changing physical count1 to0. ignoreBOM:true plus BOM-only/BOM+LF inventory regression corrects it."
+    },
+    {
+      "status": "accepted scoped method and partial snapshot",
+      "finding": "Inspected category precedence, mixed/generated data distinction, nested exclusions, binary/unknown handling, deterministic hashes and negative controls."
+    },
+    {
+      "status": "final refresh pending task98",
+      "finding": "A changing partial working tree cannot support a full equivalent-functionality code reduction claim."
+    }
+  ],
+  "verdict": "accept task49 method/current partial snapshot; not final port comparison"
+}

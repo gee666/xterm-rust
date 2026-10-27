@@ -1,11 +1,11 @@
 // Copyright (c) 2026 xterm-rust contributors. Licensed under MIT.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { mkdtemp, mkdir, writeFile, readFile, rm } from 'node:fs/promises';
+import { mkdtemp, mkdir, writeFile, readFile, rm, symlink } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { digest, inventory, verifyReference, buildIndex } from './verification-index.mjs';
+import { digest, inventory, verifyReference, buildIndex, checkIndex } from './verification-index.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 async function fixture(callback) {
@@ -22,6 +22,13 @@ test('inventory hashes exact bytes and sorts nested paths', async () => fixture(
     { path: 'a/b.txt', bytes: 4, sha256: digest(Buffer.from('😀')) },
     { path: 'z.txt', bytes: 6, sha256: digest(Buffer.from('line\r\n')) }
   ]);
+}));
+
+test('inventory rejects symlinks and Windows junctions instead of following them', async () => fixture(async directory => {
+  await mkdir(path.join(directory, 'target'));
+  await writeFile(path.join(directory, 'target/file.log'), 'outside evidence');
+  await symlink(path.join(directory, 'target'), path.join(directory, 'linked'), process.platform === 'win32' ? 'junction' : 'dir');
+  await assert.rejects(inventory(directory), /Evidence must be a regular file or directory: linked/);
 }));
 
 test('reference checker retains changed and missing records', async () => fixture(async directory => {
@@ -58,6 +65,30 @@ test('CLI retains failed integrity reports and exits nonzero', async () => fixtu
     assert.equal(result.reference.matched, false);
     assert.equal(changed ? result.reference.changed.length : result.reference.missing.length, 1);
   }
+}));
+
+test('saved snapshots detect changed, missing, added files and changed manifest bytes', async () => fixture(async directory => {
+  for (const name of ['source_repo', 'docs/baseline', 'results/verification']) await mkdir(path.join(directory, name), { recursive: true });
+  await writeFile(path.join(directory, 'source_repo/source.ts'), 'source');
+  const manifest = [{ path: 'source.ts', bytes: 6, sha256: digest(Buffer.from('source')) }];
+  await writeFile(path.join(directory, 'docs/baseline/source-manifest.json'), JSON.stringify(manifest));
+  await writeFile(path.join(directory, 'results/change.log'), 'old');
+  await writeFile(path.join(directory, 'results/remove.log'), 'old');
+  const saved = JSON.stringify(await buildIndex(directory));
+  const savedPath = path.join(directory, 'results/verification/index.json');
+  await writeFile(savedPath, saved);
+  assert.equal((await checkIndex(directory)).matched, true);
+  await writeFile(path.join(directory, 'results/change.log'), 'new');
+  await rm(path.join(directory, 'results/remove.log'));
+  await writeFile(path.join(directory, 'results/added.log'), 'new');
+  await writeFile(path.join(directory, 'docs/baseline/source-manifest.json'), JSON.stringify(manifest, null, 2));
+  const checked = await checkIndex(directory);
+  assert.equal(checked.matched, false);
+  assert.deepEqual(checked.changed.map(record => record.path), ['results/change.log']);
+  assert.deepEqual(checked.missing, ['results/remove.log']);
+  assert.deepEqual(checked.added, ['results/added.log']);
+  assert.equal(checked.manifestMatched, false);
+  assert.equal(await readFile(savedPath, 'utf8'), saved, 'checking must not replace the prior snapshot');
 }));
 
 test('index excludes itself and never infers success from retained evidence', async () => fixture(async directory => {

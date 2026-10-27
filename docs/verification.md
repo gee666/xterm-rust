@@ -25,9 +25,10 @@ Run from the repository root with Node 24 or later:
 ```sh
 node --test scripts/verification-index.test.mjs
 node scripts/verification-index.mjs
+node scripts/verification-index.mjs --check
 ```
 
-The index records every retained regular file under `results/`, its byte length and SHA-256, excluding itself. It reports listed reference mismatches separately and exits nonzero for changed or missing files. Invalid paths, duplicates and unhandled I/O errors fail rather than being ignored. Its tests cover byte hashing, ordering, changed/missing files, invalid paths, CLI failure status and index self-exclusion.
+The index records every retained regular file under `results/`, its byte length and SHA-256, excluding itself. `--check` leaves that snapshot intact and reports changed, missing and newly added evidence, altered manifest bytes and current reference mismatches. It exits nonzero when the snapshot is stale. Seven Node tests include symlink/junction refusal, changed/missing/added files and a manifest-only formatting change, and assert that checking never rewrites the prior index. It reports listed reference mismatches separately and exits nonzero for changed or missing files. Invalid paths, duplicates and unhandled I/O errors fail rather than being ignored. Its tests cover byte hashing, ordering, changed/missing files, invalid paths, CLI failure status and index self-exclusion.
 
 `results/verification/index.json` is a file snapshot, not a test runner. Regenerate it after all report/result edits. Do not redirect its stdout to a file under `results/` during generation, because that would hash a log before its final contents are written. Concurrent agent writes can make any file inventory stale; final release checks must use an immutable committed snapshot.
 
@@ -83,6 +84,9 @@ The source scan found no unsafe candidates in that snapshot. This was a lexical 
 - Bradley found five malformed CSS parseInt discrepancies after the original Color suite and its first random corpus were green. `results/reviews/color-bradley.json` retains the inputs and expected/actual packed results. That receipt requests changes, so it is not a passing Color review. A later fix requires its own regression evidence and acceptance.
 - APC uses shared OSC dispatch. Viesturs found that callbacks deleting active registrations can make upstream access a missing array element and throw, while the first Rust version silently skipped it. Task #17 received changes requested. The owners are adding explicit Result errors and retained mutation cases. Do not declare that discrepancy fixed from an API signature change alone.
 - Tecuichpo reported CircularList capacity behavior needing a sparse representation instead of eager Vec allocation for large source-supported capacities. This remains a reported finding until its retained boundary tests and review demonstrate the correction.
+- The LoC decoder originally stripped a BOM-only source file, counting zero physical lines instead of one. Aaliyah retained the counterexample, Octavia fixed `ignoreBOM`, and independent reruns passed all eleven counting tests plus the exact legacy baseline. Task #49 accepts the method and partial snapshot only. Task #98 owns the final post-integration refresh. See `results/verification/reviews/loc-review.json`.
+- Options object coercion initially used one infallible conversion callback for both numeric comparison and string error formatting. Aaliyah identified the missing JS hint/error paths. Athena is adding fallible Number/String hints and tests; live migration compile failures remain failed attempts, not passing Options evidence.
+- The first original-unit baseline wrapper reused fixed log/report paths. Aaliyah requested changes to task #92 so isolated attempts and upfront incomplete status prevent overwritten failures or stale successful summaries after interruption. Existing original results are not proof that this wrapper defect is fixed.
 
 The review list changes as fixes land. Module acceptance never establishes browser wiring, platform behavior or complete terminal equivalence. Reviewers must inspect actual code and execute checks; a swarm lifecycle state is not a test result.
 

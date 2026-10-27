@@ -1,0 +1,124 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0599]: no method named `text` found for reference `&OptionValue` in the current scope
+  --> crates\xterm-core\src\log_service.rs:28:21
+   |
+28 |         match value.text().as_str() {
+   |                     ^^^^ method not found in `&OptionValue`
+
+error[E0599]: no method named `floor` found for enum `Result` in the current scope
+  --> crates\xterm-core\src\options\validation.rs:39:46
+   |
+39 |             value = V::Number(value.number().floor());
+   |                                              ^^^^^ method not found in `Result<f64, CoercionError>`
+   |
+note: the method `floor` exists on the type `f64`
+  --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\std\src\f64.rs:51:5
+help: use the `?` operator to extract the `f64` value, propagating a `Result::Err` value to the caller
+   |
+39 |             value = V::Number(value.number()?.floor());
+   |                                             +
+
+error[E0599]: no method named `floor` found for enum `Result` in the current scope
+  --> crates\xterm-core\src\options\validation.rs:43:46
+   |
+43 |             value = V::Number(value.number().floor());
+   |                                              ^^^^^ method not found in `Result<f64, CoercionError>`
+   |
+note: the method `floor` exists on the type `f64`
+  --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\std\src\f64.rs:51:5
+help: use the `?` operator to extract the `f64` value, propagating a `Result::Err` value to the caller
+   |
+43 |             value = V::Number(value.number()?.floor());
+   |                                             +
+
+error[E0369]: cannot multiply `Result<f64, CoercionError>` by `{float}`
+  --> crates\xterm-core\src\options\validation.rs:48:36
+   |
+48 |             let n = value.number() * 10.0;
+   |                     -------------- ^ ---- {float}
+   |                     |
+   |                     Result<f64, CoercionError>
+   |
+note: the foreign item type `Result<f64, CoercionError>` doesn't implement `Mul<{float}>`
+  --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\core\src\result.rs:528:1
+   |
+   = note: not implement `Mul<{float}>`
+
+error[E0599]: no method named `is_nan` found for enum `Result` in the current scope
+  --> crates\xterm-core\src\options\validation.rs:65:36
+   |
+65 |             value = V::Number(if n.is_nan() {
+   |                                    ^^^^^^ method not found in `Result<f64, CoercionError>`
+   |
+note: the method `is_nan` exists on the type `f64`
+  --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\core\src\num\f64.rs:523:5
+help: use the `?` operator to extract the `f64` value, propagating a `Result::Err` value to the caller
+   |
+65 |             value = V::Number(if n?.is_nan() {
+   |                                   +
+
+error[E0308]: mismatched types
+  --> crates\xterm-core\src\options\validation.rs:66:17
+   |
+66 |                 n
+   |                 ^ expected `f64`, found `Result<f64, CoercionError>`
+   |
+   = note: expected type `f64`
+              found enum `Result<f64, CoercionError>`
+help: use the `?` operator to extract the `Result<f64, CoercionError>` value, propagating a `Result::Err` value to the caller
+   |
+66 |                 n?
+   |                  +
+
+error[E0599]: no method named `min` found for enum `Result<f64, CoercionError>` in the current scope
+  --> crates\xterm-core\src\options\validation.rs:68:19
+   |
+68 |                 n.min(4_294_967_295.0)
+   |                   ^^^ `Result<f64, CoercionError>` is not an iterator
+   |
+help: call `.into_iter()` first
+   |
+68 |                 n.into_iter().min(4_294_967_295.0)
+   |                   ++++++++++++
+
+error[E0369]: binary operation `<` cannot be applied to type `Result<f64, CoercionError>`
+  --> crates\xterm-core\src\options\validation.rs:90:15
+   |
+90 |     if number < bound || (inclusive && number == bound) {
+   |        ------ ^ ----- f64
+   |        |
+   |        Result<f64, CoercionError>
+   |
+note: the foreign item type `Result<f64, CoercionError>` doesn't implement `PartialOrd<f64>`
+  --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\core\src\result.rs:528:1
+   |
+   = note: not implement `PartialOrd<f64>`
+
+error[E0308]: mismatched types
+  --> crates\xterm-core\src\options\validation.rs:90:50
+   |
+90 |     if number < bound || (inclusive && number == bound) {
+   |                                        ------    ^^^^^ expected `Result<f64, CoercionError>`, found `f64`
+   |                                        |
+   |                                        expected because this is `Result<f64, CoercionError>`
+   |
+   = note: expected enum `Result<f64, CoercionError>`
+              found type `f64`
+help: try wrapping the expression in `Ok`
+   |
+90 |     if number < bound || (inclusive && number == Ok(bound)) {
+   |                                                  +++     +
+
+error[E0277]: the trait bound `Vec<u16>: Extend<Vec<u16>>` is not satisfied
+  --> crates\xterm-core\src\options\mod.rs:59:17
+   |
+59 |         message.extend(value.text_utf16());
+   |                 ^^^^^^ the trait `Extend<Vec<u16>>` is not implemented for `Vec<u16>`
+   |
+   = help: the following other types implement trait `Extend<A>`:
+             `Vec<T, A>` implements `Extend<&T>`
+             `Vec<T, A>` implements `Extend<T>`
+
+Some errors have detailed explanations: E0277, E0308, E0369, E0599.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `xterm-core` (lib) due to 10 previous errors
