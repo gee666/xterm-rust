@@ -1,0 +1,48 @@
+{
+  "scope": "Task 37 ANSI serialization and native buffer reader only",
+  "overallEquivalence": "NOT PROVEN",
+  "platform": "native Windows",
+  "toolchain": {
+    "rustc": "1.85.1 (4eb161250 2025-03-15)",
+    "cargo": "1.85.1 (d73d2caf9 2024-12-31)",
+    "node": "v24.15.0"
+  },
+  "commands": [
+    {
+      "command": "cargo test -p xterm-core --test serialize_ansi --test serialize_native",
+      "exitCode": 0,
+      "tests": 17,
+      "passed": 17,
+      "failed": 0,
+      "ignored": 0,
+      "log": "results/serialize/focused-tests.log"
+    },
+    {
+      "command": "cargo test -p xterm-core --release --test serialize_ansi --test serialize_native",
+      "exitCode": 0,
+      "tests": 17,
+      "passed": 17,
+      "failed": 0,
+      "ignored": 0,
+      "log": "results/serialize/focused-release.log"
+    },
+    {
+      "command": "cargo clippy -p xterm-core --test serialize_ansi --test serialize_native -- -D warnings",
+      "exitCode": 0,
+      "log": "results/serialize/focused-clippy.log"
+    },
+    {
+      "command": "rustfmt --edition 2021 --check crates/xterm-core/src/serialize/{mod,ansi,style,terminal,buffer}.rs crates/xterm-core/tests/{serialize_ansi,serialize_native}.rs",
+      "exitCode": 0,
+      "log": "results/serialize/focused-fmt.log"
+    }
+  ],
+  "independentOracle": "Task 87 owns source hashes, 44 unchanged source tests, assertion counts, seeds, generated fixtures and exact Rust comparisons. See results/serialize/oracle.json and task evidence, not this focused-test count.",
+  "remaining": [
+    "HTML implementation and tests are separate task 103",
+    "Live terminal/WASM addon integration and same-size Rust round-trips are separate task 88",
+    "Constructed buffer comparisons do not prove parser integration or browser behavior",
+    "Native Linux/macOS runtime not executed here",
+    "Whole workspace and browser quality gates are separate tasks"
+  ]
+}
