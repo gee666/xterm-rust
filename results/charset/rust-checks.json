@@ -1,0 +1,51 @@
+{
+  "platform": "win32",
+  "arch": "x64",
+  "rustc": "1.85.1 (4eb161250 2025-03-15)",
+  "cargo": "1.85.1 (d73d2caf9 2024-12-31)",
+  "component": {
+    "command": "cargo test -p xterm-core --test charset",
+    "passed": 10,
+    "failed": 0,
+    "ignored": 0,
+    "log": "results/charset/rust-tests.log",
+    "jsMappingRows": 2176,
+    "jsStateOperations": 4107,
+    "seed": 206185959
+  },
+  "checks": [
+    {
+      "command": "cargo clippy -p xterm-core --lib --test charset -- -D warnings",
+      "status": "passed",
+      "log": "results/charset/rust-clippy.log"
+    },
+    {
+      "command": "rustfmt --check --edition 2021 crates/xterm-core/src/charset.rs crates/xterm-core/src/charset_tables.rs crates/xterm-core/tests/charset.rs",
+      "status": "passed",
+      "log": "results/charset/rustfmt.log"
+    },
+    {
+      "command": "cargo fmt --all -- --check",
+      "status": "failed",
+      "reason": "Other in-flight modules had formatting differences; no charset differences",
+      "log": "results/charset/workspace-fmt.log"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+      "status": "passed",
+      "log": "results/charset/workspace-clippy.log"
+    },
+    {
+      "command": "cargo test --workspace --all-targets --all-features",
+      "status": "passed",
+      "totals": {
+        "passed": 246,
+        "failed": 0,
+        "ignored": 0,
+        "binaries": 29
+      },
+      "log": "results/charset/workspace-tests.log"
+    }
+  ],
+  "scope": "Snapshot of the shared in-progress workspace. Not full terminal equivalence; no Linux/macOS or browser execution established."
+}

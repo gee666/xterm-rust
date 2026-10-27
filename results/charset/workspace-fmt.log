@@ -1,0 +1,318 @@
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\circular_list_trace.rs:11:
+ 
+ fn values(list: &CircularList<i32>) -> String {
+     (0..list.max_length() * 2 + 2)
+[31m-        .map(|index| list.get(index).map_or_else(|| "_".into(), |value| value.to_string()))
+[0m[31m-        .collect::<Vec<_>>().join(",")
+[0m[32m+        .map(|index| {
+[0m[32m+            list.get(index)
+[0m[32m+                .map_or_else(|| "_".into(), |value| value.to_string())
+[0m[32m+        })
+[0m[32m+        .collect::<Vec<_>>()
+[0m[32m+        .join(",")
+[0m }
+ 
+ fn make_list(capacity: usize, events: &Events) -> Result<List, Box<dyn Error>> {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\circular_list_trace.rs:21:
+     let output = Rc::clone(events);
+     list.on_delete_emitter.event().subscribe(move |change| {
+         if let Some(list) = target.upgrade() {
+[31m-            output.borrow_mut().push(format!("D,{},{},{},{}", change.index, change.amount, list.len(), values(&list)));
+[0m[32m+            output.borrow_mut().push(format!(
+[0m[32m+                "D,{},{},{},{}",
+[0m[32m+                change.index,
+[0m[32m+                change.amount,
+[0m[32m+                list.len(),
+[0m[32m+                values(&list)
+[0m[32m+            ));
+[0m         }
+     });
+     let target = Rc::downgrade(&list);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\circular_list_trace.rs:28:
+     let output = Rc::clone(events);
+     list.on_insert_emitter.event().subscribe(move |change| {
+         if let Some(list) = target.upgrade() {
+[31m-            output.borrow_mut().push(format!("I,{},{},{},{}", change.index, change.amount, list.len(), values(&list)));
+[0m[32m+            output.borrow_mut().push(format!(
+[0m[32m+                "I,{},{},{},{}",
+[0m[32m+                change.index,
+[0m[32m+                change.amount,
+[0m[32m+                list.len(),
+[0m[32m+                values(&list)
+[0m[32m+            ));
+[0m         }
+     });
+     let target = Rc::downgrade(&list);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\circular_list_trace.rs:35:
+     let output = Rc::clone(events);
+     list.on_trim_emitter.event().subscribe(move |amount| {
+         if let Some(list) = target.upgrade() {
+[31m-            output.borrow_mut().push(format!("T,{amount},{},{}", list.len(), values(&list)));
+[0m[32m+            output
+[0m[32m+                .borrow_mut()
+[0m[32m+                .push(format!("T,{amount},{},{}", list.len(), values(&list)));
+[0m         }
+     });
+     Ok(list)
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\circular_list_trace.rs:50:
+         let integer = |index: usize| -> Result<usize, Box<dyn Error>> {
+             Ok(fields.get(index).ok_or("missing protocol field")?.parse()?)
+         };
+[31m-        let optional = |value: Option<i32>| value.map_or_else(|| "_".into(), |value| value.to_string());
+[0m[32m+        let optional =
+[0m[32m+            |value: Option<i32>| value.map_or_else(|| "_".into(), |value| value.to_string());
+[0m         let mut result = "ok".to_string();
+         match fields[0] {
+             "N" => list = make_list(integer(1)?, &events)?,
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\circular_list_trace.rs:57:
+             "P" => list.push(fields[1].parse()?)?,
+[31m-            "S" => list.set(integer(1)?, if fields[2] == "_" { None } else { Some(fields[2].parse()?) }),
+[0m[32m+            "S" => list.set(
+[0m[32m+                integer(1)?,
+[0m[32m+                if fields[2] == "_" {
+[0m[32m+                    None
+[0m[32m+                } else {
+[0m[32m+                    Some(fields[2].parse()?)
+[0m[32m+                },
+[0m[32m+            ),
+[0m             "L" => list.set_length(integer(1)?),
+             "M" => list.set_max_length(integer(1)?)?,
+             "O" => result = optional(list.pop()?),
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\circular_list_trace.rs:62:
+[31m-            "R" => result = match list.recycle() { Ok(value) => optional(value), Err(error) => error.to_string() },
+[0m[31m-            "D" => list.splice(integer(1)?, integer(2)?, &fields[3..].iter().map(|value| value.parse()).collect::<Result<Vec<i32>, _>>()?)?,
+[0m[32m+            "R" => {
+[0m[32m+                result = match list.recycle() {
+[0m[32m+                    Ok(value) => optional(value),
+[0m[32m+                    Err(error) => error.to_string(),
+[0m[32m+                }
+[0m[32m+            }
+[0m[32m+            "D" => list.splice(
+[0m[32m+                integer(1)?,
+[0m[32m+                integer(2)?,
+[0m[32m+                &fields[3..]
+[0m[32m+                    .iter()
+[0m[32m+                    .map(|value| value.parse())
+[0m[32m+                    .collect::<Result<Vec<i32>, _>>()?,
+[0m[32m+            )?,
+[0m             "T" => list.trim_start(integer(1)?)?,
+[31m-            "H" => if let Err(error) = list.shift_elements(fields[1].parse()?, integer(2)?, fields[3].parse()?) { result = error.to_string(); },
+[0m[32m+            "H" => {
+[0m[32m+                if let Err(error) =
+[0m[32m+                    list.shift_elements(fields[1].parse()?, integer(2)?, fields[3].parse()?)
+[0m[32m+                {
+[0m[32m+                    result = error.to_string();
+[0m[32m+                }
+[0m[32m+            }
+[0m             "X" => list.dispose(),
+             command => return Err(format!("unknown protocol command {command}").into()),
+         }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\circular_list_trace.rs:69:
+[31m-        println!("{}|{}|{}|{}|{}|{}", list.len(), list.max_length(), list.is_full(), result, values(&list), events.borrow().join(";"));
+[0m[32m+        println!(
+[0m[32m+            "{}|{}|{}|{}|{}|{}",
+[0m[32m+            list.len(),
+[0m[32m+            list.max_length(),
+[0m[32m+            list.is_full(),
+[0m[32m+            result,
+[0m[32m+            values(&list),
+[0m[32m+            events.borrow().join(";")
+[0m[32m+        );
+[0m         events.borrow_mut().clear();
+     }
+     Ok(())
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\event_trace.rs:11:
+ type Log = Rc<RefCell<Vec<String>>>;
+ 
+ #[derive(Clone, Copy)]
+[31m-enum Action { Normal, Remove(u32), Add(u32), Nested, Dispose }
+[0m[32m+enum Action {
+[0m[32m+    Normal,
+[0m[32m+    Remove(u32),
+[0m[32m+    Add(u32),
+[0m[32m+    Nested,
+[0m[32m+    Dispose,
+[0m[32m+}
+[0m 
+ fn subscribe(emitter: &Rc<Emitter<i32>>, handles: &Handles, log: &Log, id: u32, action: Action) {
+     let weak_emitter = Rc::downgrade(emitter);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\event_trace.rs:21:
+         output.borrow_mut().push(format!("{id}:{value}"));
+         if let (Some(emitter), Some(handles)) = (weak_emitter.upgrade(), weak_handles.upgrade()) {
+             match action {
+[31m-                Action::Normal => {},
+[0m[32m+                Action::Normal => {}
+[0m                 Action::Remove(target) => {
+                     let handle = handles.borrow().get(&target).cloned();
+[31m-                    if let Some(handle) = handle { handle.dispose(); }
+[0m[31m-                },
+[0m[31m-                Action::Add(target) => subscribe(&emitter, &handles, &output, target, Action::Normal),
+[0m[32m+                    if let Some(handle) = handle {
+[0m[32m+                        handle.dispose();
+[0m[32m+                    }
+[0m[32m+                }
+[0m[32m+                Action::Add(target) => {
+[0m[32m+                    subscribe(&emitter, &handles, &output, target, Action::Normal)
+[0m[32m+                }
+[0m                 Action::Nested if *value == 1 => emitter.fire(&2)?,
+[31m-                Action::Nested => {},
+[0m[32m+                Action::Nested => {}
+[0m                 Action::Dispose => emitter.dispose(),
+             }
+         }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\event_trace.rs:46:
+         let fields: Vec<_> = line.split('\t').collect();
+         let mut result = "ok";
+         match fields[0] {
+[31m-            "N" => { emitter = Rc::new(Emitter::new()); handles.borrow_mut().clear(); },
+[0m[32m+            "N" => {
+[0m[32m+                emitter = Rc::new(Emitter::new());
+[0m[32m+                handles.borrow_mut().clear();
+[0m[32m+            }
+[0m             "A" => {
+                 let id = fields[1].parse()?;
+                 let action = match fields[2] {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\event_trace.rs:58:
+                     action => return Err(format!("unknown action {action}").into()),
+                 };
+                 subscribe(&emitter, &handles, &log, id, action);
+[31m-            },
+[0m[32m+            }
+[0m             "K" => {
+                 let id: u32 = fields[1].parse()?;
+                 let handle = handles.borrow().get(&id).cloned();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\event_trace.rs:65:
+[31m-                if let Some(handle) = handle { handle.dispose(); }
+[0m[31m-            },
+[0m[31m-            "F" => { if emitter.fire(&fields[1].parse()?).is_err() { result = "error"; } },
+[0m[32m+                if let Some(handle) = handle {
+[0m[32m+                    handle.dispose();
+[0m[32m+                }
+[0m[32m+            }
+[0m[32m+            "F" => {
+[0m[32m+                if emitter.fire(&fields[1].parse()?).is_err() {
+[0m[32m+                    result = "error";
+[0m[32m+                }
+[0m[32m+            }
+[0m             "X" => emitter.dispose(),
+             command => return Err(format!("unknown command {command}").into()),
+         }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\extended.rs:21:
+ 
+ impl ExtendedAttrs {
+     pub fn new(ext: u32, url_id: u32) -> Self {
+[31m-        Self { data: Rc::new(RefCell::new(Data { raw: ext, url_id, payload: None })) }
+[0m[32m+        Self {
+[0m[32m+            data: Rc::new(RefCell::new(Data {
+[0m[32m+                raw: ext,
+[0m[32m+                url_id,
+[0m[32m+                payload: None,
+[0m[32m+            })),
+[0m[32m+        }
+[0m     }
+ 
+     /// Share the same mutable object rather than invoking upstream `clone()`.
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\extended.rs:28:
+     pub fn share(&self) -> Self {
+[31m-        Self { data: Rc::clone(&self.data) }
+[0m[32m+        Self {
+[0m[32m+            data: Rc::clone(&self.data),
+[0m[32m+        }
+[0m     }
+ 
+     pub fn same_identity(&self, other: &Self) -> bool {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\extended.rs:33:
+         Rc::ptr_eq(&self.data, &other.data)
+     }
+ 
+[31m-    pub fn url_id(&self) -> u32 { self.data.borrow().url_id }
+[0m[31m-    pub fn set_url_id(&mut self, value: u32) { self.data.borrow_mut().url_id = value; }
+[0m[31m-    pub fn payload(&self) -> Option<Rc<dyn Any>> { self.data.borrow().payload.clone() }
+[0m[31m-    pub fn set_payload(&mut self, value: Option<Rc<dyn Any>>) { self.data.borrow_mut().payload = value; }
+[0m[32m+    pub fn url_id(&self) -> u32 {
+[0m[32m+        self.data.borrow().url_id
+[0m[32m+    }
+[0m[32m+    pub fn set_url_id(&mut self, value: u32) {
+[0m[32m+        self.data.borrow_mut().url_id = value;
+[0m[32m+    }
+[0m[32m+    pub fn payload(&self) -> Option<Rc<dyn Any>> {
+[0m[32m+        self.data.borrow().payload.clone()
+[0m[32m+    }
+[0m[32m+    pub fn set_payload(&mut self, value: Option<Rc<dyn Any>>) {
+[0m[32m+        self.data.borrow_mut().payload = value;
+[0m[32m+    }
+[0m 
+     pub fn ext(&self) -> u32 {
+         let data = self.data.borrow();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\extended.rs:43:
+         if data.url_id != 0 {
+             (data.raw & !ext_flags::UNDERLINE_STYLE) | (underline_style::DASHED << 26)
+[31m-        } else { data.raw }
+[0m[32m+        } else {
+[0m[32m+            data.raw
+[0m[32m+        }
+[0m     }
+ 
+[31m-    pub fn set_ext(&mut self, value: u32) { self.data.borrow_mut().raw = value; }
+[0m[32m+    pub fn set_ext(&mut self, value: u32) {
+[0m[32m+        self.data.borrow_mut().raw = value;
+[0m[32m+    }
+[0m 
+     pub fn underline_style(&self) -> u32 {
+         let data = self.data.borrow();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\extended.rs:52:
+[31m-        if data.url_id != 0 { underline_style::DASHED }
+[0m[31m-        else { (data.raw & ext_flags::UNDERLINE_STYLE) >> 26 }
+[0m[32m+        if data.url_id != 0 {
+[0m[32m+            underline_style::DASHED
+[0m[32m+        } else {
+[0m[32m+            (data.raw & ext_flags::UNDERLINE_STYLE) >> 26
+[0m[32m+        }
+[0m     }
+ 
+     pub fn set_underline_style(&mut self, value: u32) {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\extended.rs:57:
+         let mut data = self.data.borrow_mut();
+[31m-        data.raw = (data.raw & !ext_flags::UNDERLINE_STYLE)
+[0m[31m-            | ((value << 26) & ext_flags::UNDERLINE_STYLE);
+[0m[32m+        data.raw =
+[0m[32m+            (data.raw & !ext_flags::UNDERLINE_STYLE) | ((value << 26) & ext_flags::UNDERLINE_STYLE);
+[0m     }
+ 
+     pub fn underline_color(&self) -> u32 {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\extended.rs:76:
+ 
+     pub fn set_underline_variant_offset(&mut self, value: u32) {
+         let mut data = self.data.borrow_mut();
+[31m-        data.raw = (data.raw & !ext_flags::VARIANT_OFFSET)
+[0m[31m-            | ((value << 29) & ext_flags::VARIANT_OFFSET);
+[0m[32m+        data.raw =
+[0m[32m+            (data.raw & !ext_flags::VARIANT_OFFSET) | ((value << 29) & ext_flags::VARIANT_OFFSET);
+[0m     }
+ 
+     pub fn is_empty(&self) -> bool {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\extended.rs:97:
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+         let data = self.data.borrow();
+         f.debug_struct("ExtendedAttrs")
+[31m-            .field("raw", &data.raw).field("url_id", &data.url_id)
+[0m[31m-            .field("has_payload", &data.payload.is_some()).finish()
+[0m[32m+            .field("raw", &data.raw)
+[0m[32m+            .field("url_id", &data.url_id)
+[0m[32m+            .field("has_payload", &data.payload.is_some())
+[0m[32m+            .finish()
+[0m     }
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\cell_differential.rs:163:
+     shared.set_underline_variant_offset(6);
+     assert_eq!(original.url_id(), 13);
+     assert_eq!(original.underline_variant_offset(), 6);
+[31m-    assert!(Rc::ptr_eq(&original.payload().unwrap(), &shared.payload().unwrap()));
+[0m[32m+    assert!(Rc::ptr_eq(
+[0m[32m+        &original.payload().unwrap(),
+[0m[32m+        &shared.payload().unwrap()
+[0m[32m+    ));
+[0m     let mut copied = original.clone();
+     assert!(!original.same_identity(&copied));
+     assert!(copied.payload().is_none());
