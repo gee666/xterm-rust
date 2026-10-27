@@ -24,12 +24,15 @@ Callbacks have no returned error, matching `IDisposable.dispose(): void`. A user
 With Rust 1.85 or later and Node 24 or later:
 
 ```text
-cargo test -p xterm-core --test lifecycle
+cargo test -p xterm-core --test lifecycle --test lifecycle_edges
 node scripts/check-lifecycle.mjs
+node scripts/check-lifecycle-failures.mjs
 ```
 
-The Rust integration suite currently has nine tests. It checks callback repetition, helper return identity, ordered combined disposals, store deduplication, reuse after clear, permanent disposal, callbacks registering resources during traversal, mutable replacement visibility, disposal visibility and Rust drop cleanup.
+The Rust integration suites have thirteen tests, nine direct contract tests and four failure/ownership boundary tests. It checks callback repetition, helper return identity, ordered combined disposals, store deduplication, reuse after clear, permanent disposal, callbacks registering resources during traversal, mutable replacement visibility, disposal visibility and Rust drop cleanup.
 
 The TypeScript checker imports the unchanged reference directly with Node's built-in type stripping. It and the Rust test `same_trace_as_typescript_oracle` assert the same 16-callback fixture, `crates/xterm-core/tests/fixtures/lifecycle-trace.txt`. This is one deterministic trace, not randomized terminal-state equivalence. It retains a nested-clear counterexample found during independent review. The first Vec-index implementation skipped a resource added after a nested clear; tombstones now preserve live Set iterator positions. Node emits a module-type warning for the upstream package; the checker does not edit its package metadata to suppress that warning.
+
+The failure checker and `callback_failures_match_unchanged_typescript_state_and_order` share an additional 18-callback fixture with six deliberate callback failures. It checks helper/group short-circuiting, clear retry, disposal staying closed, mutable replacement retry and hidden-value disposal retry. Only the injected panic/throw is caught. Additional Rust-only tests verify bare-handle drop, equal-behavior identity and reentrant destruction of removed resources without borrowed state. Detailed requirements are in `docs/acceptance/lifecycle.md`, criteria 161 through 165.
 
 Native Windows execution is recorded in `results/lifecycle/`. Linux and macOS runtime checks remain unrun. The lifecycle checks do not establish complete terminal or browser equivalence.
