@@ -4,7 +4,8 @@
 
 ```sh
 node scripts/charset-oracle.mjs
-cargo test -p xterm-core --test charset
+node scripts/check-charset-oracle.mjs
+cargo test -p xterm-core --test charset --test charset_edges
 ```
 
 The Node script writes temporary import-resolved modules under `tmp/charset-oracle/`. It removes interface-only import lines from copies of the two source modules. It does not change implementation statements. The original test body keeps every assertion. Only its imports change to use the temporary source copies and Node's equivalent strict assertions instead of Chai. The harness implements this suite's synchronous `describe`, `beforeEach`, and `it` hooks. It does not claim to run unrelated upstream suites.
@@ -37,3 +38,9 @@ Canonical identity uses the lexicographically smallest designator pointing to th
 There are 4,107 operations. Eleven directed operations cover inactive designation, invocation, active replacement, aliasing, sparse designation, undefined designation, and reset. Another 4,096 operations use xorshift32 with seed `0x0c4a25e7`, decimal 206185959. G levels range from 0 through 16. This is service-state evidence only, not terminal integration or a claim of full xterm.js equivalence.
 
 Regenerate fixtures from the script. Do not hand-edit expected values to accommodate a Rust mismatch.
+
+## Negative controls and directed edges
+
+`scripts/check-charset-oracle.mjs` regenerates both fixtures twice and checks byte-identical SHA-256 hashes. It then compiles the same Rust component and all sixteen tests under `tmp/charset-negative-controls/`, with one source mutation at a time. Wrong map contents, lost alias identity, wrong active level, wrong slot length and wrong designated value must each trigger test assertion failures. Compile errors and process failures do not count as successful detection. The unchanged component must still pass all sixteen tests, including the six directed edge cases. Exact subprocess results are retained in `results/charset/oracle-controls.json`. This small std-only check reuses one temporary build location and removes executables and libraries after completion.
+
+`tests/charset_edges.rs` adds six directed tests for complete pairwise map identity, non-ASCII unknown designators, initial/G0-G3 behavior, sparse overwrite, direct public/array edits, repeated reset/reuse, complete raw UTF-16 replacement boundaries and multi-slot allocation-failure recovery. These complement the original ten tests. See [acceptance/charset.md](acceptance/charset.md) for the full checklist and the separate, still-required live terminal/browser integration gate.
