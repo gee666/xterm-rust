@@ -1,0 +1,375 @@
+{
+  "schemaVersion": 1,
+  "modules": [
+    {
+      "source": "source_repo/src/common/Lifecycle.ts",
+      "implementation": [
+        "crates/xterm-core/src/lifecycle.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/lifecycle.rs"
+      ],
+      "evidence": [
+        "docs/lifecycle.md",
+        "results/lifecycle/oracle.json"
+      ],
+      "command": "node scripts/check-lifecycle.mjs; cargo test -p xterm-core --test lifecycle",
+      "binding": "IDisposable -> Disposable trait; Rc handles, DisposableOwner embedding; explicit dispose plus Rust drop cleanup.",
+      "gap": "Rust drop adds cleanup; callback panics and JS exception semantics differ; terminal integration unimplemented."
+    },
+    {
+      "source": "source_repo/src/common/Color.ts",
+      "implementation": [
+        "crates/xterm-core/src/color/mod.rs",
+        "crates/xterm-core/src/color/css.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/color_upstream.rs",
+        "crates/xterm-core/tests/color_edges.rs"
+      ],
+      "evidence": [
+        "results/color/original.json",
+        "results/color/differential.json",
+        "docs/color.md"
+      ],
+      "command": "node tools/check_color.mjs; cargo test -p xterm-core --test color_upstream --test color_edges",
+      "binding": "Namespaces map to Rust modules and Color values.",
+      "gap": "Whole terminal theme/browser integration and native Linux/macOS evidence missing."
+    },
+    {
+      "source": "source_repo/src/common/SortedList.ts",
+      "implementation": [
+        "crates/xterm-core/src/sorted_list.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/collections_upstream.rs"
+      ],
+      "evidence": [
+        "results/collections/oracle.json",
+        "docs/collections.md"
+      ],
+      "command": "node scripts/collections-oracle.mjs; cargo test -p xterm-core --test collections_upstream",
+      "binding": "SortedList uses typed Rust methods and borrowed iterators.",
+      "gap": "Read-driven/explicit idle flushing differs; same-list callback mutation, adversarial pending deletion errors and NaN order remain gaps. See docs/collections.md."
+    },
+    {
+      "source": "source_repo/src/common/MultiKeyMap.ts",
+      "implementation": [
+        "crates/xterm-core/src/multi_key_map.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/collections_upstream.rs"
+      ],
+      "evidence": [
+        "results/collections/oracle.json",
+        "docs/collections.md"
+      ],
+      "command": "node scripts/collections-oracle.mjs; cargo test -p xterm-core --test collections_upstream",
+      "binding": "TwoKeyMap/FourKeyMap use explicit typed key representations.",
+      "gap": "Inherited/prototype and __proto__ behavior differs; typed numeric conversions need explicit JS-number mapping. See docs/collections.md."
+    },
+    {
+      "source": "source_repo/src/common/input/TextDecoder.ts",
+      "implementation": [
+        "crates/xterm-core/src/input/text_decoder.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/text_decoder.rs"
+      ],
+      "evidence": [
+        "docs/text-decoder.md",
+        "results/text-decoder/oracle.json"
+      ],
+      "command": "node scripts/text-decoder-oracle.mjs; cargo test -p xterm-core --test text_decoder",
+      "binding": "Streaming decoders use UTF-16/u32 buffers to preserve lone surrogates.",
+      "gap": "WriteBuffer/parser/Terminal streaming integration not implemented."
+    },
+    {
+      "source": "source_repo/src/common/input/UnicodeV6.ts",
+      "implementation": [
+        "crates/xterm-core/src/unicode_v6.rs",
+        "crates/xterm-core/src/unicode_v6_tables.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/unicode_v6.rs"
+      ],
+      "evidence": [
+        "docs/unicode-v6.md",
+        "results/unicode-v6/oracle.json"
+      ],
+      "command": "node scripts/unicode-v6-oracle.mjs; cargo test -p xterm-core --test unicode_v6",
+      "binding": "UnicodeV6 provider accepts u32, including lone surrogates; OnceLock initializes BMP widths.",
+      "gap": "Fractional/negative JS numeric codepoints outside typed contract; UnicodeService integration pending."
+    },
+    {
+      "source": "source_repo/src/common/parser/Params.ts",
+      "implementation": [
+        "crates/xterm-core/src/parser/params.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/params.rs",
+        "crates/xterm-core/tests/params_differential.rs"
+      ],
+      "evidence": [
+        "docs/params.md",
+        "results/params/original.json",
+        "results/params/oracle.json"
+      ],
+      "command": "node scripts/check-params.mjs; cargo test -p xterm-core --test params --test params_differential",
+      "binding": "Params::with_capacities -> Result; ParamValue enum, borrowed values and snake_case methods.",
+      "gap": "Fractional/NaN/Infinity and zero-capacity resetZdm differ explicitly; see docs/params.md."
+    },
+    {
+      "source": "source_repo/src/common/input/XParseColor.ts",
+      "implementation": [
+        "crates/xterm-core/src/input/xparse_color.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/xparse_color.rs"
+      ],
+      "evidence": [
+        "docs/xparse-color.md",
+        "results/xparse-color/summary.json"
+      ],
+      "command": "node scripts/check-xparse-color.mjs; cargo test -p xterm-core --test xparse_color",
+      "binding": "parse_color, to_rgb_string and typed RGB component storage.",
+      "gap": "OSC/theme integration and native Linux/macOS execution missing."
+    },
+    {
+      "source": "source_repo/src/common/StringBuilder.ts",
+      "implementation": [
+        "crates/xterm-core/src/string_builder.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/string_builder_upstream.rs",
+        "crates/xterm-core/tests/string_builder_differential.rs"
+      ],
+      "evidence": [
+        "docs/string-builder.md",
+        "results/string-builder/verification.json"
+      ],
+      "command": "node --experimental-transform-types scripts/string-builder-oracle.mjs; cargo test -p xterm-core --test string_builder_upstream --test string_builder_differential",
+      "binding": "UTF-16 builder and byte/UTF-32 builders retain typed payloads.",
+      "gap": "Consumers and arbitrary JS type coercion outside this helper mapping."
+    },
+    {
+      "source": "source_repo/src/common/input/Win32InputMode.ts",
+      "implementation": [
+        "crates/xterm-core/src/input/win32_input_mode.rs",
+        "crates/xterm-core/src/input/win32_key_codes.rs"
+      ],
+      "tests": [],
+      "evidence": [
+        "results/win32-input/verification.json"
+      ],
+      "command": "node scripts/verify-win32-input.mjs; cargo test -p xterm-core win32",
+      "binding": "Typed keyboard input to Win32 protocol encoding; assertions in inline Rust module.",
+      "gap": "Browser keyboard adapter and complete Terminal input integration missing."
+    },
+    {
+      "source": "source_repo/src/common/buffer/CellData.ts",
+      "implementation": [
+        "crates/xterm-core/src/buffer/cell.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/cell_upstream.rs",
+        "crates/xterm-core/tests/cell_differential.rs"
+      ],
+      "evidence": [
+        "results/cell/oracle.json",
+        "docs/cell.md"
+      ],
+      "command": "node scripts/cell-oracle.mjs; cargo test -p xterm-core --test cell_upstream --test cell_differential",
+      "binding": "CellData/CharData use UTF-16 Vec<u16>, packed content u32, shared extended attributes.",
+      "gap": "Public IBufferCell binding and complete BufferLine/terminal integration missing."
+    },
+    {
+      "source": "source_repo/src/common/buffer/AttributeData.ts",
+      "implementation": [
+        "crates/xterm-core/src/buffer/attributes.rs",
+        "crates/xterm-core/src/buffer/extended.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/cell_upstream.rs",
+        "crates/xterm-core/tests/cell_differential.rs"
+      ],
+      "evidence": [
+        "results/cell/oracle.json",
+        "docs/cell.md"
+      ],
+      "command": "node scripts/cell-oracle.mjs; cargo test -p xterm-core --test cell_upstream --test cell_differential",
+      "binding": "Packed u32 flags and ExtendedAttrs preserve shared JS object identity with Rc.",
+      "gap": "Public buffer APIs/SGR integration missing; full JS numeric coercion outside typed interface."
+    },
+    {
+      "source": "source_repo/src/common/buffer/Constants.ts",
+      "implementation": [
+        "crates/xterm-core/src/buffer/constants.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/cell_upstream.rs"
+      ],
+      "evidence": [
+        "results/cell/oracle.json",
+        "docs/cell.md"
+      ],
+      "command": "cargo test -p xterm-core --test cell_upstream",
+      "binding": "Protocol bit constants use Rust u32 values.",
+      "gap": "Constants only; associated BufferLine/rendering consumers not yet mapped."
+    },
+    {
+      "source": "source_repo/src/common/Event.ts",
+      "implementation": [
+        "crates/xterm-core/src/event.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/event.rs"
+      ],
+      "evidence": [
+        "results/events-circular-list/verification.json"
+      ],
+      "command": "node scripts/check-events-and-circular-list.mjs; cargo test -p xterm-core --test event",
+      "binding": "Emitter<T> snapshots listeners; errors use Result; Rust closures replace JS thisArg.",
+      "gap": "Complete terminal event wiring and native Linux/macOS execution not established."
+    },
+    {
+      "source": "source_repo/src/common/CircularList.ts",
+      "implementation": [
+        "crates/xterm-core/src/circular_list.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/circular_list.rs"
+      ],
+      "evidence": [
+        "results/events-circular-list/verification.json"
+      ],
+      "command": "node scripts/check-events-and-circular-list.mjs; cargo test -p xterm-core --test circular_list",
+      "binding": "Typed ring slots and Result boundaries; ordered event callbacks.",
+      "gap": "Terminal Buffer consumers and all extreme JS numeric/allocation boundaries need separate integration checks."
+    },
+    {
+      "source": "source_repo/src/common/input/Keyboard.ts",
+      "implementation": [
+        "crates/xterm-core/src/input/keyboard.rs",
+        "crates/xterm-core/src/input/keyboard_lowercase.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/keyboard_upstream.rs",
+        "crates/xterm-core/tests/keyboard_edges.rs"
+      ],
+      "evidence": [
+        "docs/keyboard.md",
+        "results/keyboard/verification.json"
+      ],
+      "command": "node scripts/verify-keyboard.mjs; cargo test -p xterm-core --test keyboard_upstream --test keyboard_edges",
+      "binding": "Borrowed UTF-16 key/code, Option<Vec<u16>> output, enum action and bool cancellation.",
+      "gap": "DOM WebIDL conversion and actual browser routing missing; Node Unicode17 lowercase pin differs with other Unicode runtime versions."
+    },
+    {
+      "source": "source_repo/src/common/parser/DcsParser.ts",
+      "implementation": [
+        "crates/xterm-core/src/parser/dcs.rs",
+        "crates/xterm-core/src/parser/dcs_handler.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/dcs.rs"
+      ],
+      "evidence": [
+        "docs/dcs.md",
+        "results/dcs/verification.json"
+      ],
+      "command": "node scripts/check-dcs.mjs; cargo test -p xterm-core --test dcs",
+      "binding": "i32 identifiers, UTF-32 slices, UTF-16 callbacks, HandlerResult futures and explicit cleanup ownership.",
+      "gap": "Integration executor must poll retained futures; direct mutable-handler reborrowing unsupported; no outer terminal/browser equivalence."
+    },
+    {
+      "source": "source_repo/src/common/parser/ApcParser.ts",
+      "implementation": [
+        "crates/xterm-core/src/parser/apc.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/apc.rs",
+        "crates/xterm-core/tests/apc_edges.rs",
+        "crates/xterm-core/tests/apc_differential.rs"
+      ],
+      "evidence": [
+        "docs/apc-port.md",
+        "results/apc/oracle.json"
+      ],
+      "command": "node scripts/check-apc.mjs; cargo test -p xterm-core --test apc --test apc_edges --test apc_differential",
+      "binding": "APC shares OSC dispatch after identifier parsing; explicit future/cleanup adapter.",
+      "gap": "Outer escape parser/browser scheduling integration and native Linux/macOS evidence missing."
+    },
+    {
+      "source": "source_repo/src/common/parser/OscParser.ts",
+      "implementation": [
+        "crates/xterm-core/src/parser/osc.rs",
+        "crates/xterm-core/src/parser/osc_handler.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/osc.rs",
+        "crates/xterm-core/tests/osc_edges.rs",
+        "crates/xterm-core/tests/osc_differential.rs"
+      ],
+      "evidence": [
+        "docs/osc.md",
+        "results/osc/oracle.json"
+      ],
+      "command": "node scripts/check-osc.mjs; cargo test -p xterm-core --test osc --test osc_edges --test osc_differential",
+      "binding": "IEEE754 numeric identifiers, explicit async HandlerResult continuations and Result dispatch errors.",
+      "gap": "Embedding executor must honor lazy future cleanup and errors; terminal OSC handler integration not established."
+    },
+    {
+      "source": "source_repo/src/common/data/Charsets.ts",
+      "implementation": [
+        "crates/xterm-core/src/charset.rs",
+        "crates/xterm-core/src/charset_tables.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/charset.rs"
+      ],
+      "evidence": [
+        "docs/charset.md",
+        "results/charset/oracle.json"
+      ],
+      "command": "node scripts/charset-oracle.mjs; cargo test -p xterm-core --test charset",
+      "binding": "Arc<BTreeMap<u16,Vec<u16>>> preserves UTF16 replacement and alias identity; usize designation and Result growth.",
+      "gap": "Arbitrary external mutable JS aliases and fractional/nonfinite property keys not represented; InputHandler must retain first-unit Dutch ij behavior."
+    },
+    {
+      "source": "source_repo/src/common/services/CharsetService.ts",
+      "implementation": [
+        "crates/xterm-core/src/charset.rs",
+        "crates/xterm-core/src/charset_tables.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/charset.rs"
+      ],
+      "evidence": [
+        "docs/charset.md",
+        "results/charset/oracle.json"
+      ],
+      "command": "node scripts/charset-oracle.mjs; cargo test -p xterm-core --test charset",
+      "binding": "Arc<BTreeMap<u16,Vec<u16>>> preserves UTF16 replacement and alias identity; usize designation and Result growth.",
+      "gap": "Arbitrary external mutable JS aliases and fractional/nonfinite property keys not represented; InputHandler must retain first-unit Dutch ij behavior."
+    }
+  ],
+  "apiOwners": [
+    {
+      "owner": "IDisposable",
+      "implementation": [
+        "crates/xterm-core/src/lifecycle.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/lifecycle.rs"
+      ],
+      "evidence": [
+        "docs/lifecycle.md",
+        "results/lifecycle/oracle.json"
+      ],
+      "command": "node scripts/check-lifecycle.mjs; cargo test -p xterm-core --test lifecycle",
+      "binding": "IDisposable -> Disposable trait; Rc handles, DisposableOwner embedding; explicit dispose plus Rust drop cleanup.",
+      "gap": "Only internal lifecycle contract mapped. No browser-compatible public binding; Rust ownership adds drop cleanup."
+    }
+  ]
+}
