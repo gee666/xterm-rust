@@ -1,0 +1,78 @@
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error: variable does not need to be mutable
+   --> crates\xterm-core\src\parser\escape.rs:186:13
+    |
+186 |         let mut parser = Self {
+    |             ----^^^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `-D unused-mut` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(unused_mut)]`
+
+error: method `erase_cell` is never used
+  --> crates\xterm-core\src\terminal\state.rs:51:19
+   |
+33 | impl TerminalState {
+   | ------------------ method in this implementation
+...
+51 |     pub(crate) fn erase_cell(&self) -> CellData {
+   |                   ^^^^^^^^^^
+   |
+   = note: `-D dead-code` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(dead_code)]`
+
+error: very complex type used. Consider factoring parts into `type` definitions
+  --> crates\xterm-core\src\public_api\addon_manager.rs:95:14
+   |
+95 |     entries: Weak<RefCell<Vec<Rc<Entry<T, E>>>>>,
+   |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#type_complexity
+   = note: `-D clippy::type-complexity` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::type_complexity)]`
+
+error: unused `std::result::Result` that must be used
+  --> crates\xterm-core\src\buffer\cleanup.rs:66:9
+   |
+66 |         self.queue.process(time_remaining);
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: this `Result` may be an `Err` variant, which should be handled
+   = note: `-D unused-must-use` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(unused_must_use)]`
+help: use `let _ = ...` to ignore the resulting value
+   |
+66 |         let _ = self.queue.process(time_remaining);
+   |         +++++++
+
+error: unused `std::result::Result` that must be used
+  --> crates\xterm-core\src\buffer\cleanup.rs:70:9
+   |
+70 |         self.queue.process_priority();
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: this `Result` may be an `Err` variant, which should be handled
+help: use `let _ = ...` to ignore the resulting value
+   |
+70 |         let _ = self.queue.process_priority();
+   |         +++++++
+
+error: unused `std::result::Result` that must be used
+   --> crates\xterm-core\src\buffer\cleanup.rs:110:9
+    |
+110 | /         queue.enqueue(move |_| {
+111 | |             let Some(buffer) = buffer.upgrade() else {
+112 | |                 return false;
+113 | |             };
+...   |
+125 | |         });
+    | |__________^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+help: use `let _ = ...` to ignore the resulting value
+    |
+110 |         let _ = queue.enqueue(move |_| {
+    |         +++++++
+
+error: could not compile `xterm-core` (lib) due to 6 previous errors

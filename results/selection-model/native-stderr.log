@@ -1,0 +1,13 @@
+warning: unused `Result` that must be used
+   --> crates\xterm-core\src\buffer\service.rs:180:17
+    |
+180 |                 buffer.lines.set(bottom, Some(clone_blank(&new_line)?));
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+    = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+    |
+180 |                 let _ = buffer.lines.set(bottom, Some(clone_blank(&new_line)?));
+    |                 +++++++
+

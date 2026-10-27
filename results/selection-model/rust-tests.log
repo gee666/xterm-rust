@@ -1,0 +1,46 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+warning: unused `Result` that must be used
+   --> crates\xterm-core\src\buffer\service.rs:180:17
+    |
+180 |                 buffer.lines.set(bottom, Some(clone_blank(&new_line)?));
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+    = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+    |
+180 |                 let _ = buffer.lines.set(bottom, Some(clone_blank(&new_line)?));
+    |                 +++++++
+
+   Compiling xterm-addons v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons)
+warning: `xterm-core` (lib) generated 1 warning
+   Compiling xterm-web v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 2.31s
+     Running tests\selection_model.rs (target\debug\deps\selection_model-aea62656e702b460.exe)
+
+running 22 tests
+test clear_selection_should_clear_the_final_selection ... ok
+test clear_when_trimmed_in_entirety ... ok
+test dimensions_are_live_for_select_all ... ok
+test explicit_end_after_minimum_wins ... ok
+test final_start_without_end ... ok
+test exact_wrap_with_explicit_same_row_end_preserves_source_branch ... ok
+test overflow_to_following_row ... ok
+test end_uses_start_plus_length_when_reversed ... ok
+test final_start_reverses_values ... ok
+test end_uses_start_plus_length_without_end ... ok
+test no_end_without_start ... ok
+test no_trailing_eol_at_end_of_line ... ok
+test numeric_overflow_is_recoverable_and_trim_atomic ... ok
+test end_inside_minimum_uses_minimum ... ok
+test reset_start_to_origin_when_start_row_trimmed ... ok
+test reversed_when_end_precedes_start ... ok
+test select_all_ends_at_buffer_end ... ok
+test select_all_starts_at_origin ... ok
+test trim_a_portion_of_selection ... ok
+test trim_returns_false_for_coordinate_only_move ... ok
+test overflow_with_end_in_between ... ok
+test not_reversed_when_end_follows_start ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
