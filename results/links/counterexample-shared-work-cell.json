@@ -1,0 +1,8 @@
+{
+  "seed": "0x01a8c055",
+  "fixtureCase": 7,
+  "status": "fixed in Rust by preserving shared work-cell mutation",
+  "input": "2\t0\t0;109:3:1,105:2:1,0:1:1,106:3:1,118:1:1|1;121:2:1,115:4:1,0:6:1,100:1:1,98:0:1",
+  "originalMismatch": "Rust omitted https://example.com/1 at range x=2,y=2 through x=2,y=2",
+  "cause": "OscLinkProvider._getRangeWithLineWrap calls _hasUrlId, which loads into the same _workCell held by provideLinks. After range expansion the next run uses this mutated cell's id, not the original loop cell id."
+}
