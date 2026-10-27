@@ -1,0 +1,10 @@
+# Keep concurrent swarm builds within the available disk space. These settings
+# remove development debug symbols and incremental caches, not test assertions.
+# Release profiles remain unchanged for performance and size measurements.
+[profile.dev]
+debug = 0
+incremental = false
+
+[profile.test]
+debug = 0
+incremental = false
