@@ -107,6 +107,28 @@ fn unicode_classification_and_known_transitions() {
 }
 
 #[test]
+fn clone_and_vt500_instances_do_not_alias_and_untouched_entries_remain() {
+    let original = TransitionTable::vt500();
+    let mut copy = original.clone();
+    let before = copy.packed().to_vec();
+    let changed = Transition::new(A::Error, S::ApcEntry);
+    copy.add_many(b"ab", S::Ground, changed).unwrap();
+    for (index, &value) in copy.packed().iter().enumerate() {
+        assert_eq!(
+            value,
+            if index == usize::from(b'a') || index == usize::from(b'b') {
+                changed.packed()
+            } else {
+                before[index]
+            }
+        );
+    }
+    assert_eq!(original.packed(), before);
+    assert_eq!(TransitionTable::vt500(), original);
+    assert_ne!(copy, original);
+}
+
+#[test]
 fn invalid_custom_writes_are_errors_without_partial_changes() {
     let mut table = TransitionTable::new(3);
     let original = table.clone();

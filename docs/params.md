@@ -45,4 +45,10 @@ Use `node scripts/check-params.mjs --generate` only to regenerate after reviewin
 
 Observed here on native Windows, Rust 1.85.1, Node v24.15.0: all 22 Rust tests passed, including all 49,409 differential snapshots. `node scripts/params-baseline.mjs` also passed all 20 original upstream tests with actual Mocha 11.7.5 and Chai 6.2.2. It transforms TypeScript syntax, removes type-only imports and remaps runtime import URLs without editing assertions. Counts and hashes are in `results/params/original.json`; full output is in `results/params/original-tests.txt`. To reproduce dependencies without touching the reference, run `npm install --prefix tmp/params-deps --no-package-lock --no-audit --no-fund mocha@11.7.5 chai@6.2.2`, then set `PARAMS_TEST_DEPS=tmp/params-deps/node_modules` before running the script. If unset, it reuses `tmp/color-oracle/node_modules` created by the Color verification task.
 
-These checks cover Params only. They do not establish whole-terminal equivalence, native Linux/macOS results, browser behavior, or the behavior of arbitrary JavaScript numeric values.
+## Focused acceptance follow-up
+
+`tests/params_edges.rs` adds seven deterministic tests for the P1-P4 contracts in `docs/criteria/parser-storage.md`: exact default/zero capacities, owned snapshot independence, multiple leading arrays and capacity truncation, rejection-before-validation, cloned rejection state, clone continuation, validation-error digit targeting and exact saturation boundaries. `parser_table.rs` also checks table clone independence and every untouched entry after a multi-write.
+
+The combined Params/table suite passed 35 tests in both debug and release, with warning-free targeted Clippy and rustfmt. Evidence is `results/params/edges.json` and sibling `edges-*.txt` logs. After the run-2 interruption, the debug suite passed again under `.cargo/config.toml` with debug information disabled and incremental compilation off; those settings change build artifacts, not assertions.
+
+These checks cover Params and transition tables only. They do not establish whole-terminal equivalence, native Linux/macOS results, browser behavior, or the behavior of arbitrary JavaScript numeric values.

@@ -1,0 +1,21 @@
+{
+  "scope": "Params P1-P4 and VT500 T3 focused edge checks",
+  "platform": "native Windows x86_64",
+  "rustc": "1.85.1",
+  "node": "v24.15.0",
+  "commands": [
+    "cargo test -p xterm-core --test params --test params_edges --test params_differential --test parser_table",
+    "cargo test -p xterm-core --release --test params --test params_edges --test params_differential --test parser_table",
+    "cargo clippy -p xterm-core --test params --test params_edges --test params_differential --test parser_table -- -D warnings",
+    "rustfmt --edition 2021 --check crates/xterm-core/src/parser/params.rs crates/xterm-core/src/parser/table.rs crates/xterm-core/src/parser/vt500_table.rs crates/xterm-core/tests/params.rs crates/xterm-core/tests/params_edges.rs crates/xterm-core/tests/params_differential.rs crates/xterm-core/tests/parser_table.rs",
+    "node scripts/check-params.mjs",
+    "node scripts/vt500-oracle.mjs"
+  ],
+  "debug": { "passed": 35, "failed": 0, "ignored": 0 },
+  "release": { "passed": 35, "failed": 0, "ignored": 0 },
+  "clippy": "passed warning-free",
+  "fmt": "passed",
+  "paramsOracleSnapshots": 49409,
+  "vt500OracleEntries": 4257,
+  "notEstablished": ["native Linux", "native macOS", "browser numeric boundary conversion", "whole-terminal equivalence"]
+}
