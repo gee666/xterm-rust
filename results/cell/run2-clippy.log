@@ -1,0 +1,37 @@
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error: this boolean expression can be simplified
+   --> crates\xterm-core\src\log_service.rs:109:38
+    |
+109 |         if level == LogLevel::Off || !self.level.get().is_some_and(|minimum| minimum <= level) {
+    |                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `self.level.get().is_none_or(|minimum| minimum > level)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#nonminimal_bool
+    = note: `-D clippy::nonminimal-bool` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::nonminimal_bool)]`
+
+error: `if` chain can be rewritten with `match`
+   --> crates\xterm-core\src\serialize\ansi.rs:155:5
+    |
+155 | /     if target>current {append(out,&format!("\x1b[{}{positive}",target-current));}
+156 | |     else if target<current {append(out,&format!("\x1b[{}{negative}",current-target));}
+    | |______________________________________________________________________________________^ help: consider rewriting the `if` chain with `match`: `match target.cmp(&current) {...}`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#comparison_chain
+    = note: `-D clippy::comparison-chain` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::comparison_chain)]`
+
+error: unused `std::result::Result` that must be used
+   --> crates\xterm-core\src\buffer\reflow.rs:225:9
+    |
+225 |         lines.set(i, Some(line));
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+    = note: `-D unused-must-use` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(unused_must_use)]`
+help: use `let _ = ...` to ignore the resulting value
+    |
+225 |         let _ = lines.set(i, Some(line));
+    |         +++++++
+
+error: could not compile `xterm-core` (lib) due to 3 previous errors

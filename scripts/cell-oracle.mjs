@@ -115,17 +115,44 @@ for (let i = 0; i < 1024; ++i) {
     Number.isNaN(a.getCode()) ? -1 : a.getCode(), a.isCombined(), hexUnits(a.getChars()),
     hexUnits(a.combinedData), a.extended.ext >>> 0, a.extended.urlId].join('\t'));
 }
+const extendedRows = [];
+const extended = [new ExtendedAttrs(), new ExtendedAttrs(), new ExtendedAttrs()];
+for (let i = 0; i < 4096; ++i) {
+  const target = random() % 3;
+  const operation = random() % 8;
+  const value = random();
+  const attrs = extended[target];
+  switch (operation) {
+    case 0: attrs.ext = value; break;
+    case 1: attrs.underlineStyle = value; break;
+    case 2: attrs.underlineColor = value; break;
+    case 3: attrs.underlineVariantOffset = value; break;
+    case 4: attrs.urlId = value % 3 === 0 ? 0 : value; break;
+    case 5: attrs.payload = value % 2 ? {} : undefined; break;
+    case 6: extended[target] = extended[value % 3]; break;
+    case 7: extended[target] = extended[value % 3].clone(); break;
+  }
+  const snapshot = extended.flatMap(a => [a.ext >>> 0, a.underlineStyle, a.underlineColor,
+    a.underlineVariantOffset, a.urlId, +a.isEmpty(), +(a.payload !== undefined)]);
+  snapshot.push(+(extended[0] === extended[1]), +(extended[0] === extended[2]), +(extended[1] === extended[2]));
+  extendedRows.push([target, operation, value, snapshot.join(',')].join('\t'));
+}
 const fixtures = resolve(root, 'crates/xterm-core/tests/fixtures');
 mkdirSync(fixtures, {recursive: true});
 writeFileSync(resolve(fixtures, 'cell-raw.tsv'), rawRows.join('\n') + '\n');
 writeFileSync(resolve(fixtures, 'cell-char-data.tsv'), charRows.join('\n') + '\n');
+writeFileSync(resolve(fixtures, 'cell-extended.tsv'), extendedRows.join('\n') + '\n');
 const report = {
   scope: 'CellData.test.ts complete; BufferLine.test.ts AttributeData and CellData describes only',
   overallEquivalence: 'NOT PROVEN', node: process.version, platform: process.platform,
-  sourceHashes: hashes, seed: '0xce11da7a', upstream: {
-    executed: outcomes.length, passed: outcomes.filter(t => t.status === 'passed').length,
+  sourceHashes: hashes,
+  fixtureHashes: Object.fromEntries(['cell-raw.tsv', 'cell-char-data.tsv', 'cell-extended.tsv']
+    .map(name => [name, createHash('sha256').update(readFileSync(resolve(fixtures, name))).digest('hex')])),
+  seed: '0xce11da7a', upstream: {
+    discovered: outcomes.length, executed: outcomes.length, skipped: 0, unrun: 0,
+    passed: outcomes.filter(t => t.status === 'passed').length,
     failed: outcomes.filter(t => t.status === 'failed').length, outcomes,
-  }, fixtures: { rawCells: rawRows.length, charData: charRows.length },
+  }, fixtures: { rawCells: rawRows.length, charData: charRows.length, extendedOperations: extendedRows.length },
   unrun: ['Remaining BufferLine suites', 'Terminal integration', 'Native Linux/macOS runtime'],
 };
 const results = resolve(root, 'results/cell');

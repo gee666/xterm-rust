@@ -83,11 +83,19 @@ fn seeded_raw_cells_match_javascript() {
             },
             ..CellData::default()
         };
+        let expected_equal = fields[12] == "1";
         assert_eq!(
             a.attributes_equals(&b),
-            fields[12] == "1",
+            expected_equal,
             "attributes equals {index}"
         );
+        assert_eq!(
+            b.attributes_equals(&a),
+            expected_equal,
+            "symmetric pair {index}"
+        );
+        assert!(a.attributes_equals(&a), "reflexive first cell {index}");
+        assert!(b.attributes_equals(&b), "reflexive second cell {index}");
     }
 }
 
