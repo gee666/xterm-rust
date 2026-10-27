@@ -1,0 +1,17 @@
+[package]
+name = "xterm-addons"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Portable xterm.js addon behavior and adapter contracts"
+
+[dependencies]
+xterm-core = { path = "../xterm-core" }
+
+# JSON is used only to replay source-generated differential fixtures.
+[dev-dependencies]
+serde_json = "1"
+
+[lints]
+workspace = true

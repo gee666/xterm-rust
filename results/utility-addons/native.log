@@ -1,0 +1,154 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0583]: file not found for module `buffer`
+ --> crates\xterm-core\src\serialize\mod.rs:5:1
+  |
+5 | mod buffer;
+  | ^^^^^^^^^^^
+  |
+  = help: to create the module `buffer`, create file "crates\xterm-core\src\serialize\buffer.rs" or "crates\xterm-core\src\serialize\buffer\mod.rs"
+  = note: if there is a `mod buffer` elsewhere in the crate already, import it with `use crate::...` instead
+
+error[E0308]: mismatched types
+  --> crates\xterm-core\src\serialize\ansi.rs:41:16
+   |
+41 |         if let Some(len) = buffer.line_len(row) {
+   |                ^^^^^^^^^   -------------------- this expression has type `Result<Option<usize>, SerializeError>`
+   |                |
+   |                expected `Result<Option<usize>, ...>`, found `Option<_>`
+   |
+   = note: expected enum `Result<Option<usize>, SerializeError>`
+              found enum `Option<_>`
+help: try wrapping the pattern in `Ok`
+   |
+41 |         if let Ok(Some(len)) = buffer.line_len(row) {
+   |                +++         +
+
+error[E0308]: mismatched types
+  --> crates\xterm-core\src\serialize\ansi.rs:49:24
+   |
+49 |                 if let Some(cell) = buffer.cell(row, col) {
+   |                        ^^^^^^^^^^   --------------------- this expression has type `Result<Option<CellData>, SerializeError>`
+   |                        |
+   |                        expected `Result<Option<CellData>, ...>`, found `Option<_>`
+   |
+   = note: expected enum `Result<Option<CellData>, SerializeError>`
+              found enum `Option<_>`
+help: try wrapping the pattern in `Ok`
+   |
+49 |                 if let Ok(Some(cell)) = buffer.cell(row, col) {
+   |                        +++          +
+
+error[E0308]: mismatched types
+   --> crates\xterm-core\src\serialize\ansi.rs:114:24
+    |
+114 |                   if let Some(cell) = self
+    |  ________________________^^^^^^^^^^___-
+    | |                        |
+    | |                        expected `Result<Option<CellData>, ...>`, found `Option<_>`
+115 | |                     .buffer
+116 | |                     .cell(self.style_position.0, self.style_position.1)
+    | |_______________________________________________________________________- this expression has type `Result<Option<CellData>, SerializeError>`
+    |
+    = note: expected enum `Result<Option<CellData>, SerializeError>`
+               found enum `Option<_>`
+help: try wrapping the pattern in `Ok`
+    |
+114 |                 if let Ok(Some(cell)) = self
+    |                        +++          +
+
+error[E0600]: cannot apply unary operator `!` to type `Result<bool, SerializeError>`
+   --> crates\xterm-core\src\serialize\ansi.rs:121:16
+    |
+121 |             if !self.buffer.is_wrapped(row + 1) {
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ cannot apply unary operator `!`
+    |
+note: the foreign item type `Result<bool, SerializeError>` doesn't implement `Not`
+   --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\core\src\result.rs:528:1
+    |
+    = note: not implement `Not`
+
+error[E0308]: mismatched types
+   --> crates\xterm-core\src\serialize\ansi.rs:134:55
+    |
+134 |         let len = self.buffer.line_len(row).unwrap_or(0);
+    |                                             --------- ^ expected `Option<usize>`, found integer
+    |                                             |
+    |                                             arguments to this method are incorrect
+    |
+    = note: expected enum `Option<usize>`
+               found type `{integer}`
+help: the return type of this call is `{integer}` due to the type of the argument passed
+   --> crates\xterm-core\src\serialize\ansi.rs:134:19
+    |
+134 |         let len = self.buffer.line_len(row).unwrap_or(0);
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-^
+    |                                                       |
+    |                                                       this argument influences the return type of `unwrap_or`
+note: method defined here
+   --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\core\src\result.rs:1439:12
+help: try wrapping the expression in `Some`
+    |
+134 |         let len = self.buffer.line_len(row).unwrap_or(Some(0));
+    |                                                       +++++ +
+
+error[E0599]: no method named `checked_sub` found for enum `Option` in the current scope
+   --> crates\xterm-core\src\serialize\ansi.rs:135:24
+    |
+135 |         let last = len.checked_sub(1).and_then(|c| self.buffer.cell(row, c));
+    |                        ^^^^^^^^^^^ method not found in `Option<usize>`
+    |
+note: the method `checked_sub` exists on the type `usize`
+   --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\core\src\num\mod.rs:1214:5
+    = note: this error originates in the macro `uint_impl` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider using `Option::expect` to unwrap the `usize` value, panicking if the value is an `Option::None`
+    |
+135 |         let last = len.expect("REASON").checked_sub(1).and_then(|c| self.buffer.cell(row, c));
+    |                       +++++++++++++++++
+
+error[E0599]: no method named `checked_sub` found for enum `Option` in the current scope
+   --> crates\xterm-core\src\serialize\ansi.rs:136:26
+    |
+136 |         let second = len.checked_sub(2).and_then(|c| self.buffer.cell(row, c));
+    |                          ^^^^^^^^^^^ method not found in `Option<usize>`
+    |
+note: the method `checked_sub` exists on the type `usize`
+   --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\core\src\num\mod.rs:1214:5
+    = note: this error originates in the macro `uint_impl` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider using `Option::expect` to unwrap the `usize` value, panicking if the value is an `Option::None`
+    |
+136 |         let second = len.expect("REASON").checked_sub(2).and_then(|c| self.buffer.cell(row, c));
+    |                         +++++++++++++++++
+
+error[E0599]: no method named `saturating_sub` found for enum `Option` in the current scope
+   --> crates\xterm-core\src\serialize\ansi.rs:164:30
+    |
+164 |             let offset = len.saturating_sub(self.nulls);
+    |                              ^^^^^^^^^^^^^^ method not found in `Option<usize>`
+    |
+note: the method `saturating_sub` exists on the type `usize`
+   --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\core\src\num\mod.rs:1214:5
+    = note: this error originates in the macro `uint_impl` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider using `Option::expect` to unwrap the `usize` value, panicking if the value is an `Option::None`
+    |
+164 |             let offset = len.expect("REASON").saturating_sub(self.nulls);
+    |                             +++++++++++++++++
+
+error[E0308]: mismatched types
+   --> crates\xterm-core\src\serialize\mod.rs:106:5
+    |
+102 | ) -> Result<Vec<u16>, SerializeError> {
+    |      -------------------------------- expected `Result<Vec<u16>, SerializeError>` because of return type
+...
+106 |     ansi::serialize(buffer, cols, rows, attrs, range, exclude_final_cursor)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Result<Vec<u16>, SerializeError>`, found `Vec<u16>`
+    |
+    = note: expected enum `Result<Vec<_>, SerializeError>`
+             found struct `Vec<_>`
+help: try wrapping the expression in `Ok`
+    |
+106 |     Ok(ansi::serialize(buffer, cols, rows, attrs, range, exclude_final_cursor))
+    |     +++                                                                       +
+
+Some errors have detailed explanations: E0308, E0583, E0599, E0600.
+For more information about an error, try `rustc --explain E0308`.
+error: could not compile `xterm-core` (lib) due to 10 previous errors
