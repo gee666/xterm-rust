@@ -7,6 +7,8 @@ import { createHash } from 'node:crypto';
 import { stripTypeScriptTypes } from 'node:module';
 
 const root = process.cwd();
+const generate = process.argv.slice(2).includes('--generate');
+if (process.argv.slice(2).some(arg => arg !== '--generate')) throw new Error('Only --generate is supported');
 const temporary = path.join(root, 'tmp/font-oracle');
 const results = path.join(root, 'results/font-addons');
 const fixture = path.join(root, 'crates/xterm-addons/tests/fixtures/font-parse.tsv');
@@ -22,9 +24,21 @@ export default function parse(input: string): string[] {
   catch (error) { globalThis.fontCases.push({ input, error: error.message }); throw error; }
 }
 `);
-await fs.writeFile(path.join(temporary, 'parse.test.ts'), tests.replace("import { assert } from 'chai';", "import assert from 'node:assert/strict';").replace("from './parse';", "from './parse.ts';"));
+await fs.writeFile(path.join(temporary, 'assert.mjs'), `import native from 'node:assert/strict';
+export default new Proxy(native, {get(target, key) {
+  const value = Reflect.get(target, key);
+  if (typeof value !== 'function') return value;
+  return (...args) => {
+    globalThis.fontAssertions.executed++;
+    try { const result = value(...args); globalThis.fontAssertions.passed++; return result; }
+    catch(error) { globalThis.fontAssertions.failed++; throw error; }
+  };
+}});
+`);
+await fs.writeFile(path.join(temporary, 'parse.test.ts'), tests.replace("import { assert } from 'chai';", "import assert from './assert.mjs';").replace("from './parse';", "from './parse.ts';"));
 const outcomes = [];
 globalThis.fontCases = [];
+globalThis.fontAssertions = { executed: 0, passed: 0, failed: 0 };
 globalThis.describe = (_name, callback) => callback();
 globalThis.it = (name, callback) => {
   try { callback(); outcomes.push({ name, status: 'passed' }); }
@@ -42,7 +56,19 @@ for (let i = 0; i < 8192; i++) {
   try { parse(String.fromCharCode(...units)); } catch {}
 }
 function hex(value) { return Array.from({ length: value.length }, (_, i) => value.charCodeAt(i).toString(16).padStart(4, '0')).join('') || '-'; }
-await fs.writeFile(fixture, globalThis.fontCases.map(({ input, value, error }) => `${hex(input)}\t${error ? 'E:' + error : 'V:' + value.map(hex).join(',')}`).join('\n') + '\n');
+async function checkFixture(file, content) {
+  if (generate) {
+    await fs.writeFile(file, content);
+    return;
+  }
+  const expected = await fs.readFile(file, 'utf8');
+  if (expected !== content) {
+    const counterexample = path.join(temporary, path.basename(file) + '.actual');
+    await fs.writeFile(counterexample, content);
+    throw new Error(`Fixture drift: ${file}; actual retained at ${counterexample}. Inspect before --generate.`);
+  }
+}
+await checkFixture(fixture, globalThis.fontCases.map(({ input, value, error }) => `${hex(input)}\t${error ? 'E:' + error : 'V:' + value.map(hex).join(',')}`).join('\n') + '\n');
 const fallbackSourcePath = 'source_repo/addons/addon-ligatures/src/index.ts';
 const addonSourcePath = 'source_repo/addons/addon-ligatures/src/LigaturesAddon.ts';
 const fallbackSource = await fs.readFile(fallbackSourcePath, 'utf8');
@@ -62,12 +88,14 @@ for (let i = 0; i < 4096; i++) {
   fallbackCase(text, patterns);
 }
 const fallbackFixture = path.join(root, 'crates/xterm-addons/tests/fixtures/font-fallback.tsv');
-await fs.writeFile(fallbackFixture, fallbackCases.map(([text, patterns, ranges]) => [hex(text), patterns.map(hex).join(','), ranges.map(range => range.join(':')).join(',')].join('\t')).join('\n') + '\n');
+await checkFixture(fallbackFixture, fallbackCases.map(([text, patterns, ranges]) => [hex(text), patterns.map(hex).join(','), ranges.map(range => range.join(':')).join(',')].join('\t')).join('\n') + '\n');
 const report = {
   node: process.version,
   seed: '0xF017CA5E',
   source: [sourcePath, testsPath].map((file, i) => ({ file, sha256: createHash('sha256').update(i ? tests : source).digest('hex') })),
   original: { discovered: outcomes.length, executed: outcomes.length, passed: outcomes.filter(v => v.status === 'passed').length, failed: outcomes.filter(v => v.status === 'failed').length, skipped: 0, unrun: 0, outcomes },
+  assertions: globalThis.fontAssertions,
+  fixtureMode: generate ? 'generate' : 'verify',
   corpus: { rows: globalThis.fontCases.length, random: 8192, fixture: path.relative(root, fixture), sha256: createHash('sha256').update(await fs.readFile(fixture)).digest('hex') },
   fallback: { rows: fallbackCases.length, random: 4096, defaultPatterns: defaultList.length, fixture: path.relative(root, fallbackFixture), sources: [fallbackSourcePath, addonSourcePath].map((file, i) => ({ file, sha256: createHash('sha256').update(i ? addonSource : fallbackSource).digest('hex') })) },
   notProven: ['GSUB shaping', 'browser font access', 'ligature lifecycle', 'three-browser web-font relayout', 'native Linux/macOS']

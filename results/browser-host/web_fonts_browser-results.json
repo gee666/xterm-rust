@@ -1,0 +1,139 @@
+{
+  "testName": "web_fonts_browser",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-10-27T23:52:02.129Z",
+  "componentOnly": true,
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "web_fonts_browser",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 5245.1217,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\wasm-tools\\wasm-bindgen-0.2.100-x86_64-pc-windows-msvc\\wasm-bindgen.exe",
+        "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\target\\wasm32-unknown-unknown\\debug\\deps\\web_fonts_browser-1cff6a1aa2616222.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\browser-host\\web_fonts_browser",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 143.7478000000001,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "passed",
+      "tests": [
+        "__wbgt__web_fonts_browser::boundary_helpers_preserve_lone_surrogate_font_names",
+        "__wbgt__web_fonts_browser::default_initial_relayout_runs_after_ready",
+        "__wbgt__web_fonts_browser::empty_clean_families_use_monospace_then_restore",
+        "__wbgt__web_fonts_browser::failed_font_load_rejects_without_relayout_assignments",
+        "__wbgt__web_fonts_browser::loads_fontface_buffers_and_deduplicates_all_five_descriptors",
+        "__wbgt__web_fonts_browser::no_registered_family_and_disposed_addon_have_no_writes",
+        "__wbgt__web_fonts_browser::relayout_partitions_families_and_restores_exact_original",
+        "__wbgt__web_fonts_browser::unknown_family_preserves_prior_addition_and_exact_error"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "warning",
+          "text": "OTS parsing error: invalid sfntVersion: 66051"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 8 tests\ntest unknown_family_preserves_prior_addition_and_exact_error ... ok\ntest relayout_partitions_families_and_restores_exact_original ... ok\ntest no_registered_family_and_disposed_addon_have_no_writes ... ok\ntest loads_fontface_buffers_and_deduplicates_all_five_descriptors ... ok\ntest failed_font_load_rejects_without_relayout_assignments ... ok\ntest empty_clean_families_use_monospace_then_restore ... ok\ntest default_initial_relayout_runs_after_ready ... ok\ntest boundary_helpers_preserve_lone_surrogate_font_names ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.02s\n\n",
+      "counts": {
+        "passed": 8,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "firefox",
+      "status": "passed",
+      "tests": [
+        "__wbgt__web_fonts_browser::boundary_helpers_preserve_lone_surrogate_font_names",
+        "__wbgt__web_fonts_browser::default_initial_relayout_runs_after_ready",
+        "__wbgt__web_fonts_browser::empty_clean_families_use_monospace_then_restore",
+        "__wbgt__web_fonts_browser::failed_font_load_rejects_without_relayout_assignments",
+        "__wbgt__web_fonts_browser::loads_fontface_buffers_and_deduplicates_all_five_descriptors",
+        "__wbgt__web_fonts_browser::no_registered_family_and_disposed_addon_have_no_writes",
+        "__wbgt__web_fonts_browser::relayout_partitions_families_and_restores_exact_original",
+        "__wbgt__web_fonts_browser::unknown_family_preserves_prior_addition_and_exact_error"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "[JavaScript Error: \"downloadable font: rejected by sanitizer (font-family: \"BrokenFont\" style:normal weight:400 stretch:100 src index:0) source: (invalid URI)\"]"
+        },
+        {
+          "type": "error",
+          "text": "[JavaScript Error: \"downloadable font: font load failed (font-family: \"BrokenFont\" style:normal weight:400 stretch:100 src index:0) source: (invalid URI)\"]"
+        }
+      ],
+      "version": "150.0.2",
+      "output": "running 8 tests\ntest unknown_family_preserves_prior_addition_and_exact_error ... ok\ntest relayout_partitions_families_and_restores_exact_original ... ok\ntest no_registered_family_and_disposed_addon_have_no_writes ... ok\ntest loads_fontface_buffers_and_deduplicates_all_five_descriptors ... ok\ntest failed_font_load_rejects_without_relayout_assignments ... ok\ntest empty_clean_families_use_monospace_then_restore ... ok\ntest default_initial_relayout_runs_after_ready ... ok\ntest boundary_helpers_preserve_lone_surrogate_font_names ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.01s\n\n",
+      "counts": {
+        "passed": 8,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "webkit",
+      "status": "passed",
+      "tests": [
+        "__wbgt__web_fonts_browser::boundary_helpers_preserve_lone_surrogate_font_names",
+        "__wbgt__web_fonts_browser::default_initial_relayout_runs_after_ready",
+        "__wbgt__web_fonts_browser::empty_clean_families_use_monospace_then_restore",
+        "__wbgt__web_fonts_browser::failed_font_load_rejects_without_relayout_assignments",
+        "__wbgt__web_fonts_browser::loads_fontface_buffers_and_deduplicates_all_five_descriptors",
+        "__wbgt__web_fonts_browser::no_registered_family_and_disposed_addon_have_no_writes",
+        "__wbgt__web_fonts_browser::relayout_partitions_families_and_restores_exact_original",
+        "__wbgt__web_fonts_browser::unknown_family_preserves_prior_addition_and_exact_error"
+      ],
+      "errors": [],
+      "console": [],
+      "version": "26.4",
+      "output": "running 8 tests\ntest unknown_family_preserves_prior_addition_and_exact_error ... ok\ntest relayout_partitions_families_and_restores_exact_original ... ok\ntest no_registered_family_and_disposed_addon_have_no_writes ... ok\ntest loads_fontface_buffers_and_deduplicates_all_five_descriptors ... ok\ntest failed_font_load_rejects_without_relayout_assignments ... ok\ntest empty_clean_families_use_monospace_then_restore ... ok\ntest default_initial_relayout_runs_after_ready ... ok\ntest boundary_helpers_preserve_lone_surrogate_font_names ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.03s\n\n",
+      "counts": {
+        "passed": 8,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ]
+}

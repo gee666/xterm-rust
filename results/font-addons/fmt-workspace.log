@@ -1,0 +1,2318 @@
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\lib.rs:6:
+ pub mod clipboard;
+ pub mod fit;
+ pub mod ligatures;
+[31m-pub mod web_fonts;
+[0m[32m+pub mod native_status;
+[0m pub mod program_status;
+ pub mod progress;
+ pub mod status_terminal;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\lib.rs:13:
+[31m-pub mod native_status;
+[0m[31m-pub mod web_links;
+[0m[32m+pub mod web_fonts;
+[0m pub mod web_link_provider;
+[32m+pub mod web_links;
+[0m 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:3:
+ use std::{cell::RefCell, collections::BTreeSet, error::Error, rc::Rc};
+ use xterm_core::{
+     buffer::{marker::Marker, AttributeData, BufferService},
+[31m-    osc_link_service::{LinkDataRef, OscLinkData, OscLinkService},
+[0m     options::{OptionValue, OptionsService},
+[32m+    osc_link_service::{LinkDataRef, OscLinkData, OscLinkService},
+[0m };
+ 
+ type Result<T> = std::result::Result<T, Box<dyn Error>>;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:19:
+ 
+ impl Runner {
+     pub fn new() -> Result<Self> {
+[31m-        let options = OptionsService::new(false, [
+[0m[31m-            ("cols", OptionValue::Number(10.0)), ("rows", OptionValue::Number(3.0)),
+[0m[31m-            ("scrollback", OptionValue::Number(2.0)),
+[0m[31m-        ]);
+[0m[32m+        let options = OptionsService::new(
+[0m[32m+            false,
+[0m[32m+            [
+[0m[32m+                ("cols", OptionValue::Number(10.0)),
+[0m[32m+                ("rows", OptionValue::Number(3.0)),
+[0m[32m+                ("scrollback", OptionValue::Number(2.0)),
+[0m[32m+            ],
+[0m[32m+        );
+[0m         let buffers = Rc::new(BufferService::new(Rc::new(options))?);
+         let links = OscLinkService::new(Rc::clone(&buffers));
+[31m-        Ok(Self { buffers, links, data: Vec::new(), ids: BTreeSet::new(), markers: Vec::new() })
+[0m[32m+        Ok(Self {
+[0m[32m+            buffers,
+[0m[32m+            links,
+[0m[32m+            data: Vec::new(),
+[0m[32m+            ids: BTreeSet::new(),
+[0m[32m+            markers: Vec::new(),
+[0m[32m+        })
+[0m     }
+ 
+     pub fn step(&mut self, operation: &str) -> Result<String> {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:35:
+         match field(0)? {
+             "data" => {
+                 self.data.push(Rc::new(RefCell::new(OscLinkData {
+[31m-                    id: decode_id(field(1)?)?, uri: decode(field(2)?)?,
+[0m[32m+                    id: decode_id(field(1)?)?,
+[0m[32m+                    uri: decode(field(2)?)?,
+[0m                 })));
+             }
+             "mut" => {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:46:
+             }
+             "reg" => {
+                 let index: usize = field(1)?.parse()?;
+[31m-                let id = self.links.register_link(Rc::clone(self.data.get(index).ok_or("unknown data")?))?;
+[0m[32m+                let id = self
+[0m[32m+                    .links
+[0m[32m+                    .register_link(Rc::clone(self.data.get(index).ok_or("unknown data")?))?;
+[0m                 self.ids.insert(id);
+                 reply = id.to_string();
+             }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:53:
+[31m-            "line" => self.links.add_line_to_link(field(1)?.parse()?, field(2)?.parse()?)?,
+[0m[32m+            "line" => self
+[0m[32m+                .links
+[0m[32m+                .add_line_to_link(field(1)?.parse()?, field(2)?.parse()?)?,
+[0m             "cursor" => {
+                 let active = self.buffers.buffer();
+                 let mut active = active.borrow_mut();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:62:
+             "scroll" => self.buffers.scroll(&AttributeData::default(), false)?,
+             "dispose" => {
+                 let index: usize = field(1)?.parse()?;
+[31m-                if let Some(marker) = self.markers.get(index) { marker.dispose()?; }
+[0m[32m+                if let Some(marker) = self.markers.get(index) {
+[0m[32m+                    marker.dispose()?;
+[0m[32m+                }
+[0m             }
+             "move" => {
+                 let index: usize = field(1)?.parse()?;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:69:
+[31m-                if let Some(marker) = self.markers.get(index) { marker.set_line(field(2)?.parse()?); }
+[0m[32m+                if let Some(marker) = self.markers.get(index) {
+[0m[32m+                    marker.set_line(field(2)?.parse()?);
+[0m[32m+                }
+[0m             }
+             _ => return Err("unknown trace operation".into()),
+         }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:73:
+         for buffer in [self.buffers.buffers.normal(), self.buffers.buffers.alt()] {
+             let buffer = buffer.borrow();
+             for marker in buffer.markers.borrow().iter() {
+[31m-                if !self.markers.iter().any(|old| old.ptr_eq(marker)) { self.markers.push(marker.clone()); }
+[0m[32m+                if !self.markers.iter().any(|old| old.ptr_eq(marker)) {
+[0m[32m+                    self.markers.push(marker.clone());
+[0m[32m+                }
+[0m             }
+         }
+         let normal = Rc::ptr_eq(&self.buffers.buffer(), &self.buffers.buffers.normal());
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:85:
+                 result.push_str(&data.id.as_deref().map(encode).unwrap_or_else(|| "-".into()));
+                 result.push('/');
+                 result.push_str(&encode(&data.uri));
+[31m-            } else { result.push('-'); }
+[0m[32m+            } else {
+[0m[32m+                result.push('-');
+[0m[32m+            }
+[0m             result.push(',');
+         }
+         result.push(';');
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:92:
+         for marker in &self.markers {
+[31m-            result.push_str(&format!("{}:{},", marker.line(), u8::from(marker.is_disposed())));
+[0m[32m+            result.push_str(&format!(
+[0m[32m+                "{}:{},",
+[0m[32m+                marker.line(),
+[0m[32m+                u8::from(marker.is_disposed())
+[0m[32m+            ));
+[0m         }
+         Ok(result)
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:97:
+ }
+ 
+ fn decode_id(text: &str) -> Result<Option<Vec<u16>>> {
+[31m-    if text == "-" { Ok(None) } else { Ok(Some(decode(text)?)) }
+[0m[32m+    if text == "-" {
+[0m[32m+        Ok(None)
+[0m[32m+    } else {
+[0m[32m+        Ok(Some(decode(text)?))
+[0m[32m+    }
+[0m }
+ fn decode(text: &str) -> Result<Vec<u16>> {
+[31m-    if text == "_" { return Ok(Vec::new()); }
+[0m[31m-    if !text.is_ascii() || text.len() % 4 != 0 { return Err("invalid UTF16 trace field".into()); }
+[0m[31m-    (0..text.len()).step_by(4)
+[0m[31m-        .map(|i| u16::from_str_radix(&text[i..i + 4], 16).map_err(Into::into)).collect()
+[0m[32m+    if text == "_" {
+[0m[32m+        return Ok(Vec::new());
+[0m[32m+    }
+[0m[32m+    if !text.is_ascii() || text.len() % 4 != 0 {
+[0m[32m+        return Err("invalid UTF16 trace field".into());
+[0m[32m+    }
+[0m[32m+    (0..text.len())
+[0m[32m+        .step_by(4)
+[0m[32m+        .map(|i| u16::from_str_radix(&text[i..i + 4], 16).map_err(Into::into))
+[0m[32m+        .collect()
+[0m }
+ fn encode(units: &[u16]) -> String {
+[31m-    if units.is_empty() { return "_".into(); }
+[0m[32m+    if units.is_empty() {
+[0m[32m+        return "_".into();
+[0m[32m+    }
+[0m     units.iter().map(|unit| format!("{unit:04x}")).collect()
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\task_platform_trace.rs:44:
+     }
+ }
+ fn decode_hex(text: &str) -> Result<String, Box<dyn Error>> {
+[31m-    if text.len() % 2 != 0 { return Err("odd hex length".into()); }
+[0m[32m+    if text.len() % 2 != 0 {
+[0m[32m+        return Err("odd hex length".into());
+[0m[32m+    }
+[0m     let bytes: Vec<u8> = text
+         .as_bytes()
+         .chunks(2)
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\task_platform_trace.rs:112:
+     let ybase = fields[2].parse()?;
+     let y = fields[3].parse()?;
+     let ends: Vec<_> = fields[4].split(',').collect();
+[31m-    if fields[5].len() != ends.len() { return Err("invalid wrapped flags".into()); }
+[0m[32m+    if fields[5].len() != ends.len() {
+[0m[32m+        return Err("invalid wrapped flags".into());
+[0m[32m+    }
+[0m     let lines = CircularList::new(ends.len())?;
+     for (i, end) in ends.iter().enumerate() {
+         if *end == "-" {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\task_platform_trace.rs:146:
+         let line = line?;
+         let f: Vec<_> = line.split('\t').collect();
+         let required = match f[0] {
+[31m-            "P" | "E" | "S" => 5, "W" => 6, "I" | "D" => 2,
+[0m[31m-            "F" | "C" | "Y" => 1, _ => return Err("unknown command".into()),
+[0m[32m+            "P" | "E" | "S" => 5,
+[0m[32m+            "W" => 6,
+[0m[32m+            "I" | "D" => 2,
+[0m[32m+            "F" | "C" | "Y" => 1,
+[0m[32m+            _ => return Err("unknown command".into()),
+[0m         };
+[31m-        if f.len() != required { return Err("invalid command fields".into()); }
+[0m[32m+        if f.len() != required {
+[0m[32m+            return Err("invalid command fields".into());
+[0m[32m+        }
+[0m         let output = match f[0] {
+             "P" => Some(platform(&f)?),
+             "W" => Some(windows(&f)?),
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\line.rs:6:
+ };
+ use std::{cell::RefCell, collections::BTreeMap};
+ 
+[32m+#[cfg(test)]
+[0m[32m+#[path = "line_buffer_cleanup_tests.rs"]
+[0m[32m+mod buffer_cleanup_tests;
+[0m #[path = "line_edit.rs"]
+ mod edit;
+ #[cfg(test)]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\line.rs:12:
+ #[path = "line_storage_tests.rs"]
+ mod storage_tests;
+[31m-#[cfg(test)]
+[0m[31m-#[path = "line_buffer_cleanup_tests.rs"]
+[0m[31m-mod buffer_cleanup_tests;
+[0m #[path = "line_text.rs"]
+ mod text;
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\mod.rs:1:
+ //! Packed cells and attributes shared by buffers, renderers and terminal APIs.
+ mod attributes;
+ mod cell;
+[32m+pub mod cleanup;
+[0m pub mod constants;
+ mod extended;
+ mod line;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\mod.rs:7:
+[31m-pub mod reflow;
+[0m pub mod marker;
+ pub mod range;
+[32m+pub mod reflow;
+[0m pub mod screen;
+[31m-pub mod cleanup;
+[0m pub use cleanup::BufferCleanup;
+ pub mod buffer_set;
+ pub mod service;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\mod.rs:15:
+[31m-pub use screen::{Buffer, BufferDimensions, BufferError, LineRef};
+[0m pub use buffer_set::BufferSet;
+[32m+pub use screen::{Buffer, BufferDimensions, BufferError, LineRef};
+[0m pub use service::BufferService;
+ 
+ pub use attributes::AttributeData;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\circular_list\storage.rs:99:
+         // Reserve the actual populated copies before cloning. A size failure
+         // must not copy billions of entries before discovering the bad size.
+         let required = self.slots.keys().try_fold(0usize, |total, &physical| {
+[31m-            let Some(logical) = self.logical_index(physical) else { return Ok(total); };
+[0m[31m-            if logical >= limit { return Ok(total); }
+[0m[32m+            let Some(logical) = self.logical_index(physical) else {
+[0m[32m+                return Ok(total);
+[0m[32m+            };
+[0m[32m+            if logical >= limit {
+[0m[32m+                return Ok(total);
+[0m[32m+            }
+[0m             let copies = (limit - 1 - logical) / number(self.max_length) + 1;
+             let copies = usize::try_from(copies).map_err(|_| CircularListError::SizeOverflow)?;
+[31m-            total.checked_add(copies).ok_or(CircularListError::SizeOverflow)
+[0m[32m+            total
+[0m[32m+                .checked_add(copies)
+[0m[32m+                .ok_or(CircularListError::SizeOverflow)
+[0m         })?;
+         reserve_slots(&mut slots, required)?;
+         for (&physical, value) in &self.slots {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\circular_list\storage.rs:110:
+[31m-            let Some(mut logical) = self.logical_index(physical) else { continue; };
+[0m[32m+            let Some(mut logical) = self.logical_index(physical) else {
+[0m[32m+                continue;
+[0m[32m+            };
+[0m             while logical < limit {
+                 slots.insert(logical, value.clone());
+                 logical += number(self.max_length);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\circular_list\storage.rs:125:
+     }
+ }
+ 
+[31m-fn reserve_slots<T>(slots: &mut HashMap<i128, T>, additional: usize) -> Result<(), CircularListError> {
+[0m[31m-    slots.try_reserve(additional).map_err(|_| CircularListError::AllocationFailed)
+[0m[32m+fn reserve_slots<T>(
+[0m[32m+    slots: &mut HashMap<i128, T>,
+[0m[32m+    additional: usize,
+[0m[32m+) -> Result<(), CircularListError> {
+[0m[32m+    slots
+[0m[32m+        .try_reserve(additional)
+[0m[32m+        .map_err(|_| CircularListError::AllocationFailed)
+[0m }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\headless\terminal.rs:99:
+         callback(self)
+     }
+     pub fn write_bytes_with_callback(
+[31m-        &self, bytes: &[u8], callback: impl FnOnce(&Self) -> Result<(), HeadlessError>,
+[0m[32m+        &self,
+[0m[32m+        bytes: &[u8],
+[0m[32m+        callback: impl FnOnce(&Self) -> Result<(), HeadlessError>,
+[0m     ) -> Result<(), HeadlessError> {
+         self.write_bytes(bytes)?;
+         callback(self)
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\osc_link_service.rs:75:
+     pub fn register_link(&self, data: LinkDataRef) -> Result<u64, OscLinkError> {
+         let buffer = self.buffers.buffer();
+         let line = {
+[31m-            let buffer = buffer.try_borrow().map_err(|_| OscLinkError::BorrowedBuffer)?;
+[0m[31m-            let line = buffer.ybase.checked_add(buffer.y).ok_or(OscLinkError::LineOverflow)?;
+[0m[32m+            let buffer = buffer
+[0m[32m+                .try_borrow()
+[0m[32m+                .map_err(|_| OscLinkError::BorrowedBuffer)?;
+[0m[32m+            let line = buffer
+[0m[32m+                .ybase
+[0m[32m+                .checked_add(buffer.y)
+[0m[32m+                .ok_or(OscLinkError::LineOverflow)?;
+[0m             i64::try_from(line).map_err(|_| OscLinkError::LineOverflow)?
+         };
+         let key = {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\osc_link_service.rs:96:
+                 return Ok(existing.id);
+             }
+         }
+[31m-        let marker = buffer.try_borrow_mut()
+[0m[31m-            .map_err(|_| OscLinkError::BorrowedBuffer)?.add_marker(line);
+[0m[32m+        let marker = buffer
+[0m[32m+            .try_borrow_mut()
+[0m[32m+            .map_err(|_| OscLinkError::BorrowedBuffer)?
+[0m[32m+            .add_marker(line);
+[0m         let id = self.state.next_id.get();
+         self.state.next_id.set(following_id(id));
+[31m-        let entry = Rc::new(Entry { id, key, data, lines: RefCell::new(vec![marker.clone()]) });
+[0m[32m+        let entry = Rc::new(Entry {
+[0m[32m+            id,
+[0m[32m+            key,
+[0m[32m+            data,
+[0m[32m+            lines: RefCell::new(vec![marker.clone()]),
+[0m[32m+        });
+[0m         self.track_marker(&entry, &marker);
+         if let Some(key) = &entry.key {
+[31m-            self.state.named.borrow_mut().insert(key.clone(), Rc::clone(&entry));
+[0m[32m+            self.state
+[0m[32m+                .named
+[0m[32m+                .borrow_mut()
+[0m[32m+                .insert(key.clone(), Rc::clone(&entry));
+[0m         }
+         let overwritten = self.state.by_id.borrow_mut().insert(id, entry);
+         if let Some(overwritten) = overwritten {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\osc_link_service.rs:117:
+     /// Deduplicate by current marker line only, even across active buffers.
+     pub fn add_line_to_link(&self, link_id: u64, line: i64) -> Result<(), OscLinkError> {
+         let entry = self.state.by_id.borrow().get(&link_id).cloned();
+[31m-        let Some(entry) = entry else { return Ok(()); };
+[0m[31m-        if entry.lines.borrow().iter().any(|marker| marker.line() == line) {
+[0m[32m+        let Some(entry) = entry else {
+[0m             return Ok(());
+[32m+        };
+[0m[32m+        if entry
+[0m[32m+            .lines
+[0m[32m+            .borrow()
+[0m[32m+            .iter()
+[0m[32m+            .any(|marker| marker.line() == line)
+[0m[32m+        {
+[0m[32m+            return Ok(());
+[0m         }
+[31m-        let marker = self.buffers.buffer().try_borrow_mut()
+[0m[31m-            .map_err(|_| OscLinkError::BorrowedBuffer)?.add_marker(line);
+[0m[32m+        let marker = self
+[0m[32m+            .buffers
+[0m[32m+            .buffer()
+[0m[32m+            .try_borrow_mut()
+[0m[32m+            .map_err(|_| OscLinkError::BorrowedBuffer)?
+[0m[32m+            .add_marker(line);
+[0m         entry.lines.borrow_mut().push(marker.clone());
+         self.track_marker(&entry, &marker);
+         Ok(())
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\osc_link_service.rs:130:
+ 
+     /// Return the original data identity, not a snapshot or a recomputed key.
+     pub fn get_link_data(&self, link_id: u64) -> Option<LinkDataRef> {
+[31m-        self.state.by_id.borrow().get(&link_id).map(|entry| Rc::clone(&entry.data))
+[0m[32m+        self.state
+[0m[32m+            .by_id
+[0m[32m+            .borrow()
+[0m[32m+            .get(&link_id)
+[0m[32m+            .map(|entry| Rc::clone(&entry.data))
+[0m     }
+ 
+     fn track_marker(&self, entry: &Rc<Entry>, marker: &Marker) {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\osc_link_service.rs:159:
+                         }
+                     }
+                     state.by_id.borrow_mut().remove(&entry.id);
+[31m-                    state.overwritten.borrow_mut().retain(|old| !Rc::ptr_eq(old, &entry));
+[0m[32m+                    state
+[0m[32m+                        .overwritten
+[0m[32m+                        .borrow_mut()
+[0m[32m+                        .retain(|old| !Rc::ptr_eq(old, &entry));
+[0m                 }
+             }
+             Ok(())
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\controls.rs:12:
+             0x0e => self.charset.set_g_level(1),
+             0x0f => self.charset.set_g_level(0),
+             0x84 => self.index()?,
+[31m-            0x85 => { self.active_buffer().borrow_mut().x = 0; self.index()?; }
+[0m[31m-            0x88 => { let b = self.active_buffer(); let mut b = b.borrow_mut(); let x = b.x; b.tabs.insert(x); }
+[0m[32m+            0x85 => {
+[0m[32m+                self.active_buffer().borrow_mut().x = 0;
+[0m[32m+                self.index()?;
+[0m[32m+            }
+[0m[32m+            0x88 => {
+[0m[32m+                let b = self.active_buffer();
+[0m[32m+                let mut b = b.borrow_mut();
+[0m[32m+                let x = b.x;
+[0m[32m+                b.tabs.insert(x);
+[0m[32m+            }
+[0m             _ => {}
+         }
+         Ok(())
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\controls.rs:25:
+         let convert_eol = self.option_bool("convertEol")?;
+         let scroll = {
+             let mut b = active.borrow_mut();
+[31m-            if convert_eol { b.x = 0; }
+[0m[32m+            if convert_eol {
+[0m[32m+                b.x = 0;
+[0m[32m+            }
+[0m             b.y += 1;
+             let scroll = b.y == b.scroll_bottom + 1;
+[31m-            if scroll { b.y -= 1; }
+[0m[31m-            else if b.y >= self.rows() { b.y = self.rows() - 1; }
+[0m[31m-            else { b.set_wrapped(b.ybase + b.y, false).map_err(|e| TerminalError::Buffer(e.to_string()))?; }
+[0m[31m-            if b.x >= self.cols() { b.x -= 1; }
+[0m[32m+            if scroll {
+[0m[32m+                b.y -= 1;
+[0m[32m+            } else if b.y >= self.rows() {
+[0m[32m+                b.y = self.rows() - 1;
+[0m[32m+            } else {
+[0m[32m+                b.set_wrapped(b.ybase + b.y, false)
+[0m[32m+                    .map_err(|e| TerminalError::Buffer(e.to_string()))?;
+[0m[32m+            }
+[0m[32m+            if b.x >= self.cols() {
+[0m[32m+                b.x -= 1;
+[0m[32m+            }
+[0m             scroll
+         };
+[31m-        if scroll { self.scroll(false)?; }
+[0m[32m+        if scroll {
+[0m[32m+            self.scroll(false)?;
+[0m[32m+        }
+[0m         let pty = self.options.get("windowsPty")?;
+         let backend = pty.get_property("backend")?;
+         let build = pty.get_property("buildNumber")?;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\controls.rs:41:
+         if backend == crate::options::OptionValue::from("conpty") && build.number()? < 21376.0 {
+             let b = active.borrow();
+[31m-            crate::windows_mode::update_windows_mode_wrapped_state(&b.lines, b.ybase, b.y, self.cols());
+[0m[32m+            crate::windows_mode::update_windows_mode_wrapped_state(
+[0m[32m+                &b.lines,
+[0m[32m+                b.ybase,
+[0m[32m+                b.y,
+[0m[32m+                self.cols(),
+[0m[32m+            );
+[0m         }
+         self.dirty_row(active.borrow().y);
+         self.events.borrow_mut().push(TerminalEvent::LineFeed);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\controls.rs:50:
+         let active = self.active_buffer();
+         let scroll = {
+             let mut b = active.borrow_mut();
+[31m-            if b.x > self.cols() - 1 { b.x = self.cols() - 1; }
+[0m[32m+            if b.x > self.cols() - 1 {
+[0m[32m+                b.x = self.cols() - 1;
+[0m[32m+            }
+[0m             b.y += 1;
+             let scroll = b.y == b.scroll_bottom + 1;
+[31m-            if scroll || b.y >= self.rows() { b.y -= 1; }
+[0m[32m+            if scroll || b.y >= self.rows() {
+[0m[32m+                b.y -= 1;
+[0m[32m+            }
+[0m             scroll
+         };
+[31m-        if scroll { self.scroll(false)?; }
+[0m[32m+        if scroll {
+[0m[32m+            self.scroll(false)?;
+[0m[32m+        }
+[0m         self.dirty_row(active.borrow().y);
+         Ok(())
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\controls.rs:63:
+     pub(crate) fn scroll(&mut self, wrapped: bool) -> Result<(), TerminalError> {
+         let attrs = self.erase_attributes();
+[31m-        self.buffer_service.scroll(&attrs, wrapped).map_err(|e| TerminalError::Buffer(e.to_string()))?;
+[0m[32m+        self.buffer_service
+[0m[32m+            .scroll(&attrs, wrapped)
+[0m[32m+            .map_err(|e| TerminalError::Buffer(e.to_string()))?;
+[0m         self.dirty_all();
+         Ok(())
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\controls.rs:70:
+         let active = self.active_buffer();
+         let distance = {
+             let mut b = active.borrow_mut();
+[31m-            if b.x >= self.cols() { return Ok(()); }
+[0m[32m+            if b.x >= self.cols() {
+[0m[32m+                return Ok(());
+[0m[32m+            }
+[0m             let original = b.x;
+             b.x = b.next_stop(None);
+             b.x - original
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\controls.rs:77:
+         };
+[31m-        if self.option_bool("screenReaderMode")? { self.events.borrow_mut().push(TerminalEvent::AccessibilityTab(distance)); }
+[0m[32m+        if self.option_bool("screenReaderMode")? {
+[0m[32m+            self.events
+[0m[32m+                .borrow_mut()
+[0m[32m+                .push(TerminalEvent::AccessibilityTab(distance));
+[0m[32m+        }
+[0m         Ok(())
+     }
+     fn backspace(&mut self) -> Result<(), TerminalError> {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\controls.rs:82:
+         let reverse = self.core.dec_private_modes.borrow().reverse_wraparound;
+         let active = self.active_buffer();
+         let mut b = active.borrow_mut();
+[31m-        b.x = b.x.min(if reverse { self.cols() } else { self.cols() - 1 });
+[0m[32m+        b.x = b.x.min(if reverse {
+[0m[32m+            self.cols()
+[0m[32m+        } else {
+[0m[32m+            self.cols() - 1
+[0m[32m+        });
+[0m         b.y = b.y.min(self.rows() - 1);
+[31m-        if b.x > 0 { b.x -= 1; }
+[0m[31m-        else if reverse && b.y > b.scroll_top && b.y <= b.scroll_bottom {
+[0m[31m-            let line = b.lines.get(b.ybase + b.y).ok_or(TerminalError::MissingLine)?;
+[0m[32m+        if b.x > 0 {
+[0m[32m+            b.x -= 1;
+[0m[32m+        } else if reverse && b.y > b.scroll_top && b.y <= b.scroll_bottom {
+[0m[32m+            let line = b
+[0m[32m+                .lines
+[0m[32m+                .get(b.ybase + b.y)
+[0m[32m+                .ok_or(TerminalError::MissingLine)?;
+[0m             if line.borrow().is_wrapped {
+                 line.borrow_mut().is_wrapped = false;
+[31m-                b.y -= 1; b.x = self.cols() - 1;
+[0m[31m-                let previous = b.lines.get(b.ybase + b.y).ok_or(TerminalError::MissingLine)?;
+[0m[32m+                b.y -= 1;
+[0m[32m+                b.x = self.cols() - 1;
+[0m[32m+                let previous = b
+[0m[32m+                    .lines
+[0m[32m+                    .get(b.ybase + b.y)
+[0m[32m+                    .ok_or(TerminalError::MissingLine)?;
+[0m                 let previous = previous.borrow();
+[31m-                if previous.has_width(b.x) != Some(0) && previous.has_content(b.x) == Some(0) { b.x -= 1; }
+[0m[32m+                if previous.has_width(b.x) != Some(0) && previous.has_content(b.x) == Some(0) {
+[0m[32m+                    b.x -= 1;
+[0m[32m+                }
+[0m             }
+         }
+         b.x = b.x.min(self.cols() - 1);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\dispatch.rs:1:
+ // Copyright (c) 2026 The xterm.js authors. All rights reserved. MIT license.
+ use super::{TerminalError, TerminalState};
+[31m-use std::{cell::RefCell,rc::Rc};
+[0m[32m+use std::{cell::RefCell, rc::Rc};
+[0m 
+ /// Never hold terminal state, queue or callback-slot borrows across user code.
+[31m-pub(super) fn dispatch_events(shared:&Rc<RefCell<TerminalState>>)->Result<(),TerminalError> {
+[0m[31m-    let (queue,handler)={let s=shared.try_borrow().map_err(|_|TerminalError::Borrowed)?;(Rc::clone(&s.events),Rc::clone(&s.event_handler))};
+[0m[32m+pub(super) fn dispatch_events(shared: &Rc<RefCell<TerminalState>>) -> Result<(), TerminalError> {
+[0m[32m+    let (queue, handler) = {
+[0m[32m+        let s = shared.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+[0m[32m+        (Rc::clone(&s.events), Rc::clone(&s.event_handler))
+[0m[32m+    };
+[0m     loop {
+[31m-        let callback=handler.borrow().clone();
+[0m[31m-        let Some(callback)=callback else {return Ok(());};
+[0m[31m-        let event={let mut queue=queue.borrow_mut();if queue.is_empty(){return Ok(());}queue.remove(0)};
+[0m[32m+        let callback = handler.borrow().clone();
+[0m[32m+        let Some(callback) = callback else {
+[0m[32m+            return Ok(());
+[0m[32m+        };
+[0m[32m+        let event = {
+[0m[32m+            let mut queue = queue.borrow_mut();
+[0m[32m+            if queue.is_empty() {
+[0m[32m+                return Ok(());
+[0m[32m+            }
+[0m[32m+            queue.remove(0)
+[0m[32m+        };
+[0m         callback(event).map_err(TerminalError::Event)?;
+     }
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\error.rs:1:
+ // Copyright (c) 2026 The xterm.js authors. All rights reserved. MIT license.
+[31m-use crate::{core_service::CoreError, options::OptionError, parser::escape::{IdentifierError, ParseError}, unicode_service::UnicodeServiceError};
+[0m[32m+use crate::{
+[0m[32m+    core_service::CoreError,
+[0m[32m+    options::OptionError,
+[0m[32m+    parser::escape::{IdentifierError, ParseError},
+[0m[32m+    unicode_service::UnicodeServiceError,
+[0m[32m+};
+[0m use std::fmt;
+ 
+ #[derive(Debug)]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\error.rs:28:
+             Self::Borrowed => f.write_str("terminal state is already borrowed"),
+             Self::MissingLine => f.write_str("terminal buffer line is missing"),
+             Self::InvalidDimensions => f.write_str("terminal dimensions exceed supported range"),
+[31m-            Self::Parse(error) => error.fmt(f), Self::Identifier(error) => error.fmt(f),
+[0m[31m-            Self::Option(error) => error.fmt(f), Self::Core(error) => error.fmt(f),
+[0m[31m-            Self::Unicode(error) => error.fmt(f), Self::Buffer(error) => f.write_str(error),
+[0m[31m-            Self::Mouse(error) => error.fmt(f), Self::Log(error) => error.fmt(f),
+[0m[32m+            Self::Parse(error) => error.fmt(f),
+[0m[32m+            Self::Identifier(error) => error.fmt(f),
+[0m[32m+            Self::Option(error) => error.fmt(f),
+[0m[32m+            Self::Core(error) => error.fmt(f),
+[0m[32m+            Self::Unicode(error) => error.fmt(f),
+[0m[32m+            Self::Buffer(error) => f.write_str(error),
+[0m[32m+            Self::Mouse(error) => error.fmt(f),
+[0m[32m+            Self::Log(error) => error.fmt(f),
+[0m         }
+     }
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\error.rs:38:
+ impl std::error::Error for TerminalError {}
+[31m-impl From<crate::buffer::BufferError> for TerminalError { fn from(error: crate::buffer::BufferError) -> Self { Self::Buffer(error.to_string()) } }
+[0m[31m-impl From<ParseError> for TerminalError { fn from(error: ParseError) -> Self { Self::Parse(error) } }
+[0m[31m-impl From<IdentifierError> for TerminalError { fn from(error: IdentifierError) -> Self { Self::Identifier(error) } }
+[0m[31m-impl From<OptionError> for TerminalError { fn from(error: OptionError) -> Self { Self::Option(error) } }
+[0m[31m-impl From<CoreError> for TerminalError { fn from(error: CoreError) -> Self { Self::Core(error) } }
+[0m[31m-impl From<UnicodeServiceError> for TerminalError { fn from(error: UnicodeServiceError) -> Self { Self::Unicode(error) } }
+[0m[32m+impl From<crate::buffer::BufferError> for TerminalError {
+[0m[32m+    fn from(error: crate::buffer::BufferError) -> Self {
+[0m[32m+        Self::Buffer(error.to_string())
+[0m[32m+    }
+[0m[32m+}
+[0m[32m+impl From<ParseError> for TerminalError {
+[0m[32m+    fn from(error: ParseError) -> Self {
+[0m[32m+        Self::Parse(error)
+[0m[32m+    }
+[0m[32m+}
+[0m[32m+impl From<IdentifierError> for TerminalError {
+[0m[32m+    fn from(error: IdentifierError) -> Self {
+[0m[32m+        Self::Identifier(error)
+[0m[32m+    }
+[0m[32m+}
+[0m[32m+impl From<OptionError> for TerminalError {
+[0m[32m+    fn from(error: OptionError) -> Self {
+[0m[32m+        Self::Option(error)
+[0m[32m+    }
+[0m[32m+}
+[0m[32m+impl From<CoreError> for TerminalError {
+[0m[32m+    fn from(error: CoreError) -> Self {
+[0m[32m+        Self::Core(error)
+[0m[32m+    }
+[0m[32m+}
+[0m[32m+impl From<UnicodeServiceError> for TerminalError {
+[0m[32m+    fn from(error: UnicodeServiceError) -> Self {
+[0m[32m+        Self::Unicode(error)
+[0m[32m+    }
+[0m[32m+}
+[0m 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\mod.rs:5:
+ use dispatch::dispatch_events;
+ mod error;
+ mod events;
+[32m+mod kitty_modes;
+[0m[32m+mod mode_query;
+[0m[32m+mod modes;
+[0m[32m+mod operations;
+[0m mod print;
+ mod register;
+[31m-mod state;
+[0m[31m-mod operations;
+[0m[31m-mod modes;
+[0m[31m-mod mode_query;
+[0m[31m-mod kitty_modes;
+[0m pub mod sgr;
+[31m-pub use error::TerminalError;
+[0m[31m-pub use events::TerminalEvent;
+[0m[31m-pub use state::TerminalState;
+[0m[32m+mod state;
+[0m use crate::{
+     buffer::BufferService,
+     charset::CharsetService,
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\mod.rs:29:
+     unicode_service::UnicodeService,
+     unicode_v6::UnicodeV6,
+ };
+[31m-use std::{cell::{Ref, RefCell}, rc::Rc};
+[0m[32m+pub use error::TerminalError;
+[0m[32m+pub use events::TerminalEvent;
+[0m[32m+pub use state::TerminalState;
+[0m[32m+use std::{
+[0m[32m+    cell::{Ref, RefCell},
+[0m[32m+    rc::Rc,
+[0m[32m+};
+[0m 
+ struct MemoryLog(Rc<RefCell<Vec<LogRecord>>>);
+ impl LogSink for MemoryLog {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\mod.rs:36:
+[31m-    fn log(&self, record: LogRecord) -> Result<(), LogError> { self.0.borrow_mut().push(record); Ok(()) }
+[0m[32m+    fn log(&self, record: LogRecord) -> Result<(), LogError> {
+[0m[32m+        self.0.borrow_mut().push(record);
+[0m[32m+        Ok(())
+[0m[32m+    }
+[0m }
+ 
+ pub type EventHandler = Rc<dyn Fn(TerminalEvent) -> Result<(), crate::event::EmitError>>;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\mod.rs:56:
+         if cols > i32::MAX as usize || rows > i32::MAX as usize || scrollback > i32::MAX as usize {
+             return Err(TerminalError::InvalidDimensions);
+         }
+[31m-        let options = Rc::new(OptionsService::new(false, [
+[0m[31m-            ("cols", OptionValue::Number(cols.max(2) as f64)),
+[0m[31m-            ("rows", OptionValue::Number(rows.max(1) as f64)),
+[0m[31m-            ("scrollback", OptionValue::Number(scrollback as f64)),
+[0m[31m-        ]));
+[0m[32m+        let options = Rc::new(OptionsService::new(
+[0m[32m+            false,
+[0m[32m+            [
+[0m[32m+                ("cols", OptionValue::Number(cols.max(2) as f64)),
+[0m[32m+                ("rows", OptionValue::Number(rows.max(1) as f64)),
+[0m[32m+                ("scrollback", OptionValue::Number(scrollback as f64)),
+[0m[32m+            ],
+[0m[32m+        ));
+[0m         Self::with_options(options)
+     }
+     pub fn with_options(options: Rc<OptionsService>) -> Result<Self, TerminalError> {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\mod.rs:67:
+[31m-        let service = Rc::new(BufferService::new(Rc::clone(&options)).map_err(|e| TerminalError::Buffer(e.to_string()))?);
+[0m[32m+        let service = Rc::new(
+[0m[32m+            BufferService::new(Rc::clone(&options))
+[0m[32m+                .map_err(|e| TerminalError::Buffer(e.to_string()))?,
+[0m[32m+        );
+[0m         let logs = Rc::new(RefCell::new(Vec::new()));
+[31m-        let logger = Rc::new(LogService::new(Rc::clone(&options), Rc::new(MemoryLog(Rc::clone(&logs))))?);
+[0m[32m+        let logger = Rc::new(LogService::new(
+[0m[32m+            Rc::clone(&options),
+[0m[32m+            Rc::new(MemoryLog(Rc::clone(&logs))),
+[0m[32m+        )?);
+[0m         let position_service = Rc::clone(&service);
+[31m-        let core = Rc::new(CoreService::new(Rc::clone(&options), Rc::clone(&logger), move || {
+[0m[31m-            let active = position_service.buffer(); let b = active.borrow();
+[0m[31m-            BufferPosition { ybase: b.ybase, ydisp: b.ydisp }
+[0m[31m-        })?);
+[0m[32m+        let core = Rc::new(CoreService::new(
+[0m[32m+            Rc::clone(&options),
+[0m[32m+            Rc::clone(&logger),
+[0m[32m+            move || {
+[0m[32m+                let active = position_service.buffer();
+[0m[32m+                let b = active.borrow();
+[0m[32m+                BufferPosition {
+[0m[32m+                    ybase: b.ybase,
+[0m[32m+                    ydisp: b.ydisp,
+[0m[32m+                }
+[0m[32m+            },
+[0m[32m+        )?);
+[0m         let events = Rc::new(RefCell::new(Vec::new()));
+         let mut listeners = Vec::new();
+         let scrolling = Rc::downgrade(&service);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\mod.rs:78:
+         listeners.push(core.on_request_scroll_to_bottom().try_subscribe(move |_| {
+[31m-            let Some(service) = scrolling.upgrade() else { return Ok(()); };
+[0m[31m-            let active = service.buffer(); let b = active.borrow();
+[0m[31m-            let difference = b.ybase.saturating_sub(b.ydisp) as i64; drop(b);
+[0m[31m-            service.scroll_lines(difference, false).map_err(|_| crate::event::EmitError)
+[0m[32m+            let Some(service) = scrolling.upgrade() else {
+[0m[32m+                return Ok(());
+[0m[32m+            };
+[0m[32m+            let active = service.buffer();
+[0m[32m+            let b = active.borrow();
+[0m[32m+            let difference = b.ybase.saturating_sub(b.ydisp) as i64;
+[0m[32m+            drop(b);
+[0m[32m+            service
+[0m[32m+                .scroll_lines(difference, false)
+[0m[32m+                .map_err(|_| crate::event::EmitError)
+[0m         }));
+         let queue = Rc::clone(&events);
+[31m-        listeners.push(core.on_data().subscribe(move |data| queue.borrow_mut().push(TerminalEvent::Data(data.clone()))));
+[0m[32m+        listeners.push(
+[0m[32m+            core.on_data()
+[0m[32m+                .subscribe(move |data| queue.borrow_mut().push(TerminalEvent::Data(data.clone()))),
+[0m[32m+        );
+[0m         let queue = Rc::clone(&events);
+[31m-        listeners.push(core.on_binary().subscribe(move |data| queue.borrow_mut().push(TerminalEvent::Binary(data.clone()))));
+[0m[32m+        listeners.push(
+[0m[32m+            core.on_binary().subscribe(move |data| {
+[0m[32m+                queue.borrow_mut().push(TerminalEvent::Binary(data.clone()))
+[0m[32m+            }),
+[0m[32m+        );
+[0m         let queue = Rc::clone(&events);
+[31m-        listeners.push(service.on_scroll().subscribe(move |position| queue.borrow_mut().push(TerminalEvent::Scroll(*position))));
+[0m[32m+        listeners.push(
+[0m[32m+            service.on_scroll().subscribe(move |position| {
+[0m[32m+                queue.borrow_mut().push(TerminalEvent::Scroll(*position))
+[0m[32m+            }),
+[0m[32m+        );
+[0m         let queue = Rc::clone(&events);
+[31m-        listeners.push(service.on_resize().subscribe(move |event| queue.borrow_mut().push(TerminalEvent::Resize { cols: event.cols, rows: event.rows })));
+[0m[32m+        listeners.push(service.on_resize().subscribe(move |event| {
+[0m[32m+            queue.borrow_mut().push(TerminalEvent::Resize {
+[0m[32m+                cols: event.cols,
+[0m[32m+                rows: event.rows,
+[0m[32m+            })
+[0m[32m+        }));
+[0m         let unicode = Rc::new(UnicodeService::new());
+         unicode.register(Rc::new(UnicodeV6::new()))?;
+         let state = Rc::new(RefCell::new(TerminalState {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\mod.rs:95:
+[31m-            buffer_service: service, options, core, unicode, logger,
+[0m[31m-            mouse: Rc::new(MouseStateService::new()), charset: CharsetService::default(),
+[0m[31m-            attributes: Default::default(), title: Vec::new(), icon_name: Vec::new(),
+[0m[31m-            events, event_handler: Rc::new(RefCell::new(None)), error: None, dirty: None, preceding_join_state: Rc::default(),
+[0m[32m+            buffer_service: service,
+[0m[32m+            options,
+[0m[32m+            core,
+[0m[32m+            unicode,
+[0m[32m+            logger,
+[0m[32m+            mouse: Rc::new(MouseStateService::new()),
+[0m[32m+            charset: CharsetService::default(),
+[0m[32m+            attributes: Default::default(),
+[0m[32m+            title: Vec::new(),
+[0m[32m+            icon_name: Vec::new(),
+[0m[32m+            events,
+[0m[32m+            event_handler: Rc::new(RefCell::new(None)),
+[0m[32m+            error: None,
+[0m[32m+            dirty: None,
+[0m[32m+            preceding_join_state: Rc::default(),
+[0m         }));
+         let mut parser = EscapeSequenceParser::new();
+[31m-        state.borrow_mut().preceding_join_state=Rc::clone(&parser.preceding_join_state);
+[0m[32m+        state.borrow_mut().preceding_join_state = Rc::clone(&parser.preceding_join_state);
+[0m         register::register(&mut parser, &state)?;
+[31m-        Ok(Self { state, parser, utf16: StringToUtf32::new(), utf8: Utf8ToUtf32::new(),
+[0m[31m-            decoded: Vec::new(), pending: None, awaiting: false, cursor_start: (0,0), disposed: false, listeners, logs })
+[0m[32m+        Ok(Self {
+[0m[32m+            state,
+[0m[32m+            parser,
+[0m[32m+            utf16: StringToUtf32::new(),
+[0m[32m+            utf8: Utf8ToUtf32::new(),
+[0m[32m+            decoded: Vec::new(),
+[0m[32m+            pending: None,
+[0m[32m+            awaiting: false,
+[0m[32m+            cursor_start: (0, 0),
+[0m[32m+            disposed: false,
+[0m[32m+            listeners,
+[0m[32m+            logs,
+[0m[32m+        })
+[0m     }
+[31m-    pub fn state(&self) -> Ref<'_, TerminalState> { self.state.borrow() }
+[0m[31m-    pub fn state_handle(&self) -> Rc<RefCell<TerminalState>> { Rc::clone(&self.state) }
+[0m[32m+    pub fn state(&self) -> Ref<'_, TerminalState> {
+[0m[32m+        self.state.borrow()
+[0m[32m+    }
+[0m[32m+    pub fn state_handle(&self) -> Rc<RefCell<TerminalState>> {
+[0m[32m+        Rc::clone(&self.state)
+[0m[32m+    }
+[0m     pub fn set_event_handler(&mut self, handler: Option<EventHandler>) {
+         *self.state.borrow().event_handler.borrow_mut() = handler;
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\mod.rs:111:
+[31m-    pub fn parser_mut(&mut self) -> &mut EscapeSequenceParser { &mut self.parser }
+[0m[31m-    pub fn cols(&self) -> usize { self.state.borrow().cols() }
+[0m[31m-    pub fn rows(&self) -> usize { self.state.borrow().rows() }
+[0m[31m-    pub fn is_disposed(&self) -> bool { self.disposed }
+[0m[31m-    pub fn drain_events(&mut self) -> Vec<TerminalEvent> { std::mem::take(&mut *self.state.borrow().events.borrow_mut()) }
+[0m[31m-    pub fn drain_logs(&mut self) -> Vec<LogRecord> { std::mem::take(&mut *self.logs.borrow_mut()) }
+[0m[32m+    pub fn parser_mut(&mut self) -> &mut EscapeSequenceParser {
+[0m[32m+        &mut self.parser
+[0m[32m+    }
+[0m[32m+    pub fn cols(&self) -> usize {
+[0m[32m+        self.state.borrow().cols()
+[0m[32m+    }
+[0m[32m+    pub fn rows(&self) -> usize {
+[0m[32m+        self.state.borrow().rows()
+[0m[32m+    }
+[0m[32m+    pub fn is_disposed(&self) -> bool {
+[0m[32m+        self.disposed
+[0m[32m+    }
+[0m[32m+    pub fn drain_events(&mut self) -> Vec<TerminalEvent> {
+[0m[32m+        std::mem::take(&mut *self.state.borrow().events.borrow_mut())
+[0m[32m+    }
+[0m[32m+    pub fn drain_logs(&mut self) -> Vec<LogRecord> {
+[0m[32m+        std::mem::take(&mut *self.logs.borrow_mut())
+[0m[32m+    }
+[0m     pub fn input(&mut self, data: &[u16], was_user_input: bool) -> Result<(), TerminalError> {
+         self.ensure_live()?;
+         let core = Rc::clone(&self.state.borrow().core);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\mod.rs:121:
+         Ok(())
+     }
+     pub fn write_utf16(&mut self, data: &[u16]) -> Result<(), TerminalError> {
+[31m-        self.begin_write()?; self.utf16.decode(data, &mut self.decoded); self.parse(None)
+[0m[32m+        self.begin_write()?;
+[0m[32m+        self.utf16.decode(data, &mut self.decoded);
+[0m[32m+        self.parse(None)
+[0m     }
+     pub fn write_bytes(&mut self, data: &[u8]) -> Result<(), TerminalError> {
+[31m-        self.begin_write()?; self.utf8.decode(data, &mut self.decoded); self.parse(None)
+[0m[32m+        self.begin_write()?;
+[0m[32m+        self.utf8.decode(data, &mut self.decoded);
+[0m[32m+        self.parse(None)
+[0m     }
+     pub fn write(&mut self, data: &str) -> Result<(), TerminalError> {
+         self.write_utf16(&data.encode_utf16().collect::<Vec<_>>())
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\mod.rs:131:
+     }
+     fn begin_write(&mut self) -> Result<(), TerminalError> {
+         self.ensure_live()?;
+[31m-        if self.awaiting { return Err(TerminalError::Pending); }
+[0m[32m+        if self.awaiting {
+[0m[32m+            return Err(TerminalError::Pending);
+[0m[32m+        }
+[0m         self.decoded.clear();
+[31m-        let state = self.state.borrow(); let b = state.active_buffer(); let b = b.borrow();
+[0m[31m-        self.cursor_start = (b.x,b.y);
+[0m[32m+        let state = self.state.borrow();
+[0m[32m+        let b = state.active_buffer();
+[0m[32m+        let b = b.borrow();
+[0m[32m+        self.cursor_start = (b.x, b.y);
+[0m         Ok(())
+     }
+     /// Take and await the handler future, then call `resume` with its result.
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\mod.rs:141:
+[31m-    pub fn take_pending(&mut self) -> Option<HandlerResult> { self.pending.take() }
+[0m[32m+    pub fn take_pending(&mut self) -> Option<HandlerResult> {
+[0m[32m+        self.pending.take()
+[0m[32m+    }
+[0m     pub fn resume(&mut self, result: bool) -> Result<(), TerminalError> {
+         self.ensure_live()?;
+[31m-        if !self.awaiting { return Err(TerminalError::Parse(crate::parser::escape::ParseError::ImproperContinuation)); }
+[0m[31m-        self.pending = None; self.awaiting = false; self.parse(Some(result))
+[0m[32m+        if !self.awaiting {
+[0m[32m+            return Err(TerminalError::Parse(
+[0m[32m+                crate::parser::escape::ParseError::ImproperContinuation,
+[0m[32m+            ));
+[0m[32m+        }
+[0m[32m+        self.pending = None;
+[0m[32m+        self.awaiting = false;
+[0m[32m+        self.parse(Some(result))
+[0m     }
+     fn parse(&mut self, result: Option<bool>) -> Result<(), TerminalError> {
+         let result = self.parser.parse(&self.decoded, result);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\mod.rs:149:
+[31m-        if let Some(error) = self.state.borrow_mut().error.take() { return Err(error); }
+[0m[32m+        if let Some(error) = self.state.borrow_mut().error.take() {
+[0m[32m+            return Err(error);
+[0m[32m+        }
+[0m         match result? {
+[31m-            Some(pending) => { self.pending = Some(pending); self.awaiting = true; Err(TerminalError::Pending) }
+[0m[32m+            Some(pending) => {
+[0m[32m+                self.pending = Some(pending);
+[0m[32m+                self.awaiting = true;
+[0m[32m+                Err(TerminalError::Pending)
+[0m[32m+            }
+[0m             None => {
+                 let mut state = self.state.borrow_mut();
+[31m-                let b = state.active_buffer(); let b = b.borrow();
+[0m[31m-                if self.cursor_start != (b.x,b.y) { state.events.borrow_mut().push(TerminalEvent::CursorMove); }
+[0m[31m-                if let Some((start,end)) = state.dirty.take() { state.events.borrow_mut().push(TerminalEvent::Render { start,end }); }
+[0m[32m+                let b = state.active_buffer();
+[0m[32m+                let b = b.borrow();
+[0m[32m+                if self.cursor_start != (b.x, b.y) {
+[0m[32m+                    state.events.borrow_mut().push(TerminalEvent::CursorMove);
+[0m[32m+                }
+[0m[32m+                if let Some((start, end)) = state.dirty.take() {
+[0m[32m+                    state
+[0m[32m+                        .events
+[0m[32m+                        .borrow_mut()
+[0m[32m+                        .push(TerminalEvent::Render { start, end });
+[0m[32m+                }
+[0m                 state.events.borrow_mut().push(TerminalEvent::WriteParsed);
+[31m-                drop(b); drop(state);
+[0m[31m-                self.decoded.clear(); dispatch_events(&self.state)
+[0m[32m+                drop(b);
+[0m[32m+                drop(state);
+[0m[32m+                self.decoded.clear();
+[0m[32m+                dispatch_events(&self.state)
+[0m             }
+         }
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\mod.rs:163:
+[31m-    pub(crate) fn ensure_live(&self) -> Result<(), TerminalError> { if self.disposed { Err(TerminalError::Disposed) } else { Ok(()) } }
+[0m[32m+    pub(crate) fn ensure_live(&self) -> Result<(), TerminalError> {
+[0m[32m+        if self.disposed {
+[0m[32m+            Err(TerminalError::Disposed)
+[0m[32m+        } else {
+[0m[32m+            Ok(())
+[0m[32m+        }
+[0m[32m+    }
+[0m     pub fn dispose(&mut self) {
+[31m-        if self.disposed { return; }
+[0m[31m-        self.disposed = true; self.parser.dispose(); self.pending = None; self.decoded.clear();
+[0m[31m-        self.listeners.clear(); self.awaiting = false;
+[0m[32m+        if self.disposed {
+[0m[32m+            return;
+[0m[32m+        }
+[0m[32m+        self.disposed = true;
+[0m[32m+        self.parser.dispose();
+[0m[32m+        self.pending = None;
+[0m[32m+        self.decoded.clear();
+[0m[32m+        self.listeners.clear();
+[0m[32m+        self.awaiting = false;
+[0m     }
+ }
+[31m-impl Drop for CoreTerminal { fn drop(&mut self) { self.dispose(); } }
+[0m[32m+impl Drop for CoreTerminal {
+[0m[32m+    fn drop(&mut self) {
+[0m[32m+        self.dispose();
+[0m[32m+    }
+[0m[32m+}
+[0m 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\operations.rs:5:
+ impl CoreTerminal {
+     pub fn resize(&mut self, cols: usize, rows: usize) -> Result<(), TerminalError> {
+         self.ensure_live()?;
+[31m-        if self.awaiting { return Err(TerminalError::Pending); }
+[0m[31m-        if cols > i32::MAX as usize || rows > i32::MAX as usize { return Err(TerminalError::InvalidDimensions); }
+[0m[32m+        if self.awaiting {
+[0m[32m+            return Err(TerminalError::Pending);
+[0m[32m+        }
+[0m[32m+        if cols > i32::MAX as usize || rows > i32::MAX as usize {
+[0m[32m+            return Err(TerminalError::InvalidDimensions);
+[0m[32m+        }
+[0m         let mut state = self.state.borrow_mut();
+[31m-        state.buffer_service.resize(cols.max(2),rows.max(1)).map_err(|e| TerminalError::Buffer(e.to_string()))?;
+[0m[31m-        state.dirty_all(); Ok(())
+[0m[32m+        state
+[0m[32m+            .buffer_service
+[0m[32m+            .resize(cols.max(2), rows.max(1))
+[0m[32m+            .map_err(|e| TerminalError::Buffer(e.to_string()))?;
+[0m[32m+        state.dirty_all();
+[0m[32m+        Ok(())
+[0m     }
+     pub fn scroll_lines(&mut self, lines: i64) -> Result<(), TerminalError> {
+         self.ensure_live()?;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\operations.rs:16:
+         let mut state = self.state.borrow_mut();
+[31m-        state.buffer_service.scroll_lines(lines,false).map_err(|e| TerminalError::Buffer(e.to_string()))?;
+[0m[31m-        state.dirty_all(); Ok(())
+[0m[32m+        state
+[0m[32m+            .buffer_service
+[0m[32m+            .scroll_lines(lines, false)
+[0m[32m+            .map_err(|e| TerminalError::Buffer(e.to_string()))?;
+[0m[32m+        state.dirty_all();
+[0m[32m+        Ok(())
+[0m     }
+     pub fn scroll_pages(&mut self, pages: i64) -> Result<(), TerminalError> {
+[31m-        let lines = pages.saturating_mul((self.rows() - 1) as i64); self.scroll_lines(lines)
+[0m[32m+        let lines = pages.saturating_mul((self.rows() - 1) as i64);
+[0m[32m+        self.scroll_lines(lines)
+[0m     }
+[31m-    pub fn scroll_to_top(&mut self) -> Result<(), TerminalError> { self.scroll_to_line(0) }
+[0m[32m+    pub fn scroll_to_top(&mut self) -> Result<(), TerminalError> {
+[0m[32m+        self.scroll_to_line(0)
+[0m[32m+    }
+[0m     pub fn scroll_to_bottom(&mut self) -> Result<(), TerminalError> {
+[31m-        let ybase = self.state.borrow().active_buffer().borrow().ybase; self.scroll_to_line(ybase)
+[0m[32m+        let ybase = self.state.borrow().active_buffer().borrow().ybase;
+[0m[32m+        self.scroll_to_line(ybase)
+[0m     }
+     pub fn scroll_to_line(&mut self, line: usize) -> Result<(), TerminalError> {
+         let ydisp = self.state.borrow().active_buffer().borrow().ydisp;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\operations.rs:29:
+         let difference = line as i128 - ydisp as i128;
+[31m-        self.scroll_lines(difference.clamp(i128::from(i64::MIN),i128::from(i64::MAX)) as i64)
+[0m[32m+        self.scroll_lines(difference.clamp(i128::from(i64::MIN), i128::from(i64::MAX)) as i64)
+[0m     }
+     pub fn reset(&mut self) -> Result<(), TerminalError> {
+         self.ensure_live()?;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\operations.rs:37:
+     pub fn clear(&mut self) -> Result<(), TerminalError> {
+         self.ensure_live()?;
+         let mut state = self.state.borrow_mut();
+[31m-        let active = state.active_buffer(); let mut b = active.borrow_mut();
+[0m[31m-        b.clear_all_markers().map_err(|e| TerminalError::Buffer(e.to_string()))?;
+[0m[31m-        let row = b.lines.get(b.ybase+b.y).ok_or(TerminalError::MissingLine)?;
+[0m[31m-        b.lines.set(0,Some(row)).map_err(|e| TerminalError::Buffer(e.to_string()))?; b.lines.set_length(1); b.ydisp=0; b.ybase=0; b.y=0;
+[0m[31m-        for _ in 1..state.rows() { b.lines.push(b.get_blank_line(&AttributeData::default(),false)).map_err(|e| TerminalError::Buffer(e.to_string()))?; }
+[0m[31m-        state.events.borrow_mut().push(TerminalEvent::Scroll(0)); state.dirty_all(); Ok(())
+[0m[32m+        let active = state.active_buffer();
+[0m[32m+        let mut b = active.borrow_mut();
+[0m[32m+        b.clear_all_markers()
+[0m[32m+            .map_err(|e| TerminalError::Buffer(e.to_string()))?;
+[0m[32m+        let row = b
+[0m[32m+            .lines
+[0m[32m+            .get(b.ybase + b.y)
+[0m[32m+            .ok_or(TerminalError::MissingLine)?;
+[0m[32m+        b.lines
+[0m[32m+            .set(0, Some(row))
+[0m[32m+            .map_err(|e| TerminalError::Buffer(e.to_string()))?;
+[0m[32m+        b.lines.set_length(1);
+[0m[32m+        b.ydisp = 0;
+[0m[32m+        b.ybase = 0;
+[0m[32m+        b.y = 0;
+[0m[32m+        for _ in 1..state.rows() {
+[0m[32m+            b.lines
+[0m[32m+                .push(b.get_blank_line(&AttributeData::default(), false))
+[0m[32m+                .map_err(|e| TerminalError::Buffer(e.to_string()))?;
+[0m[32m+        }
+[0m[32m+        state.events.borrow_mut().push(TerminalEvent::Scroll(0));
+[0m[32m+        state.dirty_all();
+[0m[32m+        Ok(())
+[0m     }
+ }
+ impl TerminalState {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\operations.rs:49:
+     pub(crate) fn set_cursor(&mut self, x: i64, y: i64) -> Result<(), TerminalError> {
+[31m-        let active=self.active_buffer(); let mut b=active.borrow_mut(); self.dirty_row(b.y);
+[0m[31m-        let origin=self.core.dec_private_modes.borrow().origin;
+[0m[31m-        b.x=x.clamp(0,(self.cols()-1) as i64) as usize;
+[0m[31m-        let (min,max,y)=if origin {(b.scroll_top,b.scroll_bottom,y.saturating_add(b.scroll_top as i64))} else {(0,self.rows()-1,y)};
+[0m[31m-        b.y=y.clamp(min as i64,max as i64) as usize;
+[0m[31m-        self.dirty_row(b.y); Ok(())
+[0m[32m+        let active = self.active_buffer();
+[0m[32m+        let mut b = active.borrow_mut();
+[0m[32m+        self.dirty_row(b.y);
+[0m[32m+        let origin = self.core.dec_private_modes.borrow().origin;
+[0m[32m+        b.x = x.clamp(0, (self.cols() - 1) as i64) as usize;
+[0m[32m+        let (min, max, y) = if origin {
+[0m[32m+            (
+[0m[32m+                b.scroll_top,
+[0m[32m+                b.scroll_bottom,
+[0m[32m+                y.saturating_add(b.scroll_top as i64),
+[0m[32m+            )
+[0m[32m+        } else {
+[0m[32m+            (0, self.rows() - 1, y)
+[0m[32m+        };
+[0m[32m+        b.y = y.clamp(min as i64, max as i64) as usize;
+[0m[32m+        self.dirty_row(b.y);
+[0m[32m+        Ok(())
+[0m     }
+     pub(crate) fn save_cursor(&mut self) -> Result<(), TerminalError> {
+[31m-        let active=self.active_buffer(); let mut b=active.borrow_mut();
+[0m[31m-        b.saved_x=b.x; b.saved_y=b.ybase+b.y; b.saved_cur_attr_data=self.attributes.clone();
+[0m[31m-        b.saved_charset=self.charset.charset.clone(); b.saved_charsets=self.charset.charsets().to_vec(); b.saved_glevel=self.charset.glevel;
+[0m[31m-        let modes=self.core.dec_private_modes.borrow(); b.saved_origin_mode=modes.origin; b.saved_wraparound_mode=modes.wraparound;
+[0m[32m+        let active = self.active_buffer();
+[0m[32m+        let mut b = active.borrow_mut();
+[0m[32m+        b.saved_x = b.x;
+[0m[32m+        b.saved_y = b.ybase + b.y;
+[0m[32m+        b.saved_cur_attr_data = self.attributes.clone();
+[0m[32m+        b.saved_charset = self.charset.charset.clone();
+[0m[32m+        b.saved_charsets = self.charset.charsets().to_vec();
+[0m[32m+        b.saved_glevel = self.charset.glevel;
+[0m[32m+        let modes = self.core.dec_private_modes.borrow();
+[0m[32m+        b.saved_origin_mode = modes.origin;
+[0m[32m+        b.saved_wraparound_mode = modes.wraparound;
+[0m         Ok(())
+     }
+     pub(crate) fn restore_cursor(&mut self) -> Result<(), TerminalError> {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\operations.rs:65:
+[31m-        let active=self.active_buffer(); let b=active.borrow();
+[0m[31m-        let (x,y)=(b.saved_x,b.saved_y.saturating_sub(b.ybase));
+[0m[31m-        self.attributes=b.saved_cur_attr_data.clone(); self.charset.charset=b.saved_charset.clone();
+[0m[31m-        *self.charset.charsets_mut()=b.saved_charsets.clone(); self.charset.glevel=b.saved_glevel;
+[0m[31m-        {let mut modes=self.core.dec_private_modes.borrow_mut(); modes.origin=b.saved_origin_mode; modes.wraparound=b.saved_wraparound_mode;}
+[0m[31m-        drop(b); self.set_cursor(x as i64,y as i64)
+[0m[32m+        let active = self.active_buffer();
+[0m[32m+        let b = active.borrow();
+[0m[32m+        let (x, y) = (b.saved_x, b.saved_y.saturating_sub(b.ybase));
+[0m[32m+        self.attributes = b.saved_cur_attr_data.clone();
+[0m[32m+        self.charset.charset = b.saved_charset.clone();
+[0m[32m+        *self.charset.charsets_mut() = b.saved_charsets.clone();
+[0m[32m+        self.charset.glevel = b.saved_glevel;
+[0m[32m+        {
+[0m[32m+            let mut modes = self.core.dec_private_modes.borrow_mut();
+[0m[32m+            modes.origin = b.saved_origin_mode;
+[0m[32m+            modes.wraparound = b.saved_wraparound_mode;
+[0m[32m+        }
+[0m[32m+        drop(b);
+[0m[32m+        self.set_cursor(x as i64, y as i64)
+[0m     }
+     pub fn reset_state(&mut self) -> Result<(), TerminalError> {
+[31m-        self.buffer_service.reset().map_err(|e| TerminalError::Buffer(e.to_string()))?;
+[0m[31m-        self.core.reset(); self.mouse.reset()?; self.charset.reset(); self.attributes=AttributeData::default();
+[0m[31m-        self.dirty_all(); self.events.borrow_mut().push(TerminalEvent::RequestReset); Ok(())
+[0m[32m+        self.buffer_service
+[0m[32m+            .reset()
+[0m[32m+            .map_err(|e| TerminalError::Buffer(e.to_string()))?;
+[0m[32m+        self.core.reset();
+[0m[32m+        self.mouse.reset()?;
+[0m[32m+        self.charset.reset();
+[0m[32m+        self.attributes = AttributeData::default();
+[0m[32m+        self.dirty_all();
+[0m[32m+        self.events.borrow_mut().push(TerminalEvent::RequestReset);
+[0m[32m+        Ok(())
+[0m     }
+ }
+[31m-impl From<crate::mouse_state::MouseStateError> for TerminalError { fn from(e:crate::mouse_state::MouseStateError)->Self { Self::Mouse(e) } }
+[0m[31m-impl From<crate::log_service::LogError> for TerminalError { fn from(e:crate::log_service::LogError)->Self { Self::Log(e) } }
+[0m[32m+impl From<crate::mouse_state::MouseStateError> for TerminalError {
+[0m[32m+    fn from(e: crate::mouse_state::MouseStateError) -> Self {
+[0m[32m+        Self::Mouse(e)
+[0m[32m+    }
+[0m[32m+}
+[0m[32m+impl From<crate::log_service::LogError> for TerminalError {
+[0m[32m+    fn from(e: crate::log_service::LogError) -> Self {
+[0m[32m+        Self::Log(e)
+[0m[32m+    }
+[0m[32m+}
+[0m 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\print.rs:4:
+ use std::cell::Cell;
+ 
+ impl TerminalState {
+[31m-    pub(crate) fn print(&mut self, data: &[u32], preceding: &Cell<u32>) -> Result<(), TerminalError> {
+[0m[32m+    pub(crate) fn print(
+[0m[32m+        &mut self,
+[0m[32m+        data: &[u32],
+[0m[32m+        preceding: &Cell<u32>,
+[0m[32m+    ) -> Result<(), TerminalError> {
+[0m         let active = self.active_buffer();
+         let cols = self.cols();
+         let rows = self.rows();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\print.rs:18:
+         {
+             let b = active.borrow();
+             if b.x > 0 && row.borrow().get_width(b.x - 1) == Some(2) {
+[31m-                row.borrow_mut().set_cell_from_codepoint(b.x - 1, 0, 1, &attrs);
+[0m[32m+                row.borrow_mut()
+[0m[32m+                    .set_cell_from_codepoint(b.x - 1, 0, 1, &attrs);
+[0m             }
+         }
+         for &original in data {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\print.rs:25:
+[31m-            if original == 0xad { continue; }
+[0m[32m+            if original == 0xad {
+[0m[32m+                continue;
+[0m[32m+            }
+[0m             let code = if original < 127 {
+[31m-                self.charset.charset.as_ref().and_then(|map| map.get(&(original as u16)))
+[0m[31m-                    .filter(|value| !value.is_empty()).map_or(original, |value| u32::from(value[0]))
+[0m[31m-            } else { original };
+[0m[32m+                self.charset
+[0m[32m+                    .charset
+[0m[32m+                    .as_ref()
+[0m[32m+                    .and_then(|map| map.get(&(original as u16)))
+[0m[32m+                    .filter(|value| !value.is_empty())
+[0m[32m+                    .map_or(original, |value| u32::from(value[0]))
+[0m[32m+            } else {
+[0m[32m+                original
+[0m[32m+            };
+[0m             let current = self.unicode.char_properties(code, info)?;
+             let width = usize::from(current.width());
+[31m-            let old_width = if current.should_join() { usize::from(info.width()) } else { 0 };
+[0m[32m+            let old_width = if current.should_join() {
+[0m[32m+                usize::from(info.width())
+[0m[32m+            } else {
+[0m[32m+                0
+[0m[32m+            };
+[0m             info = current;
+[31m-            if a11y { self.events.borrow_mut().push(TerminalEvent::AccessibilityChar(string_from_code_point(code))); }
+[0m[32m+            if a11y {
+[0m[32m+                self.events
+[0m[32m+                    .borrow_mut()
+[0m[32m+                    .push(TerminalEvent::AccessibilityChar(string_from_code_point(
+[0m[32m+                        code,
+[0m[32m+                    )));
+[0m[32m+            }
+[0m             if active.borrow().x + width > cols + old_width {
+                 if modes.wraparound {
+                     let old_row = RcLine::clone(&row);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\print.rs:40:
+                         let mut b = active.borrow_mut();
+                         b.x = old_width;
+                         b.y += 1;
+[31m-                        if b.y == b.scroll_bottom + 1 { b.y -= 1; true }
+[0m[31m-                        else { b.y = b.y.min(rows - 1); b.set_wrapped(b.ybase + b.y, true).map_err(|e| TerminalError::Buffer(e.to_string()))?; false }
+[0m[32m+                        if b.y == b.scroll_bottom + 1 {
+[0m[32m+                            b.y -= 1;
+[0m[32m+                            true
+[0m[32m+                        } else {
+[0m[32m+                            b.y = b.y.min(rows - 1);
+[0m[32m+                            b.set_wrapped(b.ybase + b.y, true)
+[0m[32m+                                .map_err(|e| TerminalError::Buffer(e.to_string()))?;
+[0m[32m+                            false
+[0m[32m+                        }
+[0m                     };
+[31m-                    if scroll { self.scroll(true)?; }
+[0m[32m+                    if scroll {
+[0m[32m+                        self.scroll(true)?;
+[0m[32m+                    }
+[0m                     row = self.line(active.borrow().y)?;
+                     if old_width > 0 {
+                         // A joining mark may widen the prior grapheme across the margin.
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\print.rs:50:
+                         let saved = old_row.borrow().clone();
+[31m-                        row.borrow_mut().copy_cells_from(&saved, old_col, 0, old_width, false);
+[0m[32m+                        row.borrow_mut()
+[0m[32m+                            .copy_cells_from(&saved, old_col, 0, old_width, false);
+[0m                     }
+[31m-                    for column in old_col..cols { old_row.borrow_mut().set_cell_from_codepoint(column, 0, 1, &attrs); }
+[0m[32m+                    for column in old_col..cols {
+[0m[32m+                        old_row
+[0m[32m+                            .borrow_mut()
+[0m[32m+                            .set_cell_from_codepoint(column, 0, 1, &attrs);
+[0m[32m+                    }
+[0m                 } else {
+                     active.borrow_mut().x = cols - 1;
+[31m-                    if width == 2 { continue; }
+[0m[32m+                    if width == 2 {
+[0m[32m+                        continue;
+[0m[32m+                    }
+[0m                 }
+             }
+             let x = active.borrow().x;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\print.rs:60:
+             if current.should_join() && x != 0 {
+[31m-                let offset = if row.borrow().get_width(x - 1).is_some_and(|w| w != 0) { 1 } else { 2 };
+[0m[31m-                row.borrow_mut().add_codepoint_to_cell(x.saturating_sub(offset), code, width as i32);
+[0m[32m+                let offset = if row.borrow().get_width(x - 1).is_some_and(|w| w != 0) {
+[0m[32m+                    1
+[0m[32m+                } else {
+[0m[32m+                    2
+[0m[32m+                };
+[0m[32m+                row.borrow_mut().add_codepoint_to_cell(
+[0m[32m+                    x.saturating_sub(offset),
+[0m[32m+                    code,
+[0m[32m+                    width as i32,
+[0m[32m+                );
+[0m                 for column in 0..width.saturating_sub(old_width) {
+[31m-                    row.borrow_mut().set_cell_from_codepoint(x + column, 0, 0, &attrs);
+[0m[32m+                    row.borrow_mut()
+[0m[32m+                        .set_cell_from_codepoint(x + column, 0, 0, &attrs);
+[0m                     active.borrow_mut().x += 1;
+                 }
+                 continue;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\print.rs:68:
+             }
+             if insert {
+                 let fill = active.borrow().get_null_cell(Some(&attrs));
+[31m-                row.borrow_mut().insert_cells(x, width.saturating_sub(old_width), &fill);
+[0m[32m+                row.borrow_mut()
+[0m[32m+                    .insert_cells(x, width.saturating_sub(old_width), &fill);
+[0m                 if row.borrow().get_width(cols - 1) == Some(2) {
+[31m-                    row.borrow_mut().set_cell_from_codepoint(cols - 1, 0, 1, &attrs);
+[0m[32m+                    row.borrow_mut()
+[0m[32m+                        .set_cell_from_codepoint(cols - 1, 0, 1, &attrs);
+[0m                 }
+             }
+[31m-            row.borrow_mut().set_cell_from_codepoint(x, code, width as i32, &attrs);
+[0m[32m+            row.borrow_mut()
+[0m[32m+                .set_cell_from_codepoint(x, code, width as i32, &attrs);
+[0m             active.borrow_mut().x += 1;
+             for column in 1..width {
+[31m-                row.borrow_mut().set_cell_from_codepoint(x + column, 0, 0, &attrs);
+[0m[32m+                row.borrow_mut()
+[0m[32m+                    .set_cell_from_codepoint(x + column, 0, 0, &attrs);
+[0m                 active.borrow_mut().x += 1;
+             }
+         }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\print.rs:83:
+         preceding.set(info.raw());
+         let b = active.borrow();
+[31m-        if b.x < cols && !data.is_empty() && row.borrow().get_width(b.x) == Some(0)
+[0m[31m-            && row.borrow().has_content(b.x) == Some(0) {
+[0m[32m+        if b.x < cols
+[0m[32m+            && !data.is_empty()
+[0m[32m+            && row.borrow().get_width(b.x) == Some(0)
+[0m[32m+            && row.borrow().has_content(b.x) == Some(0)
+[0m[32m+        {
+[0m             row.borrow_mut().set_cell_from_codepoint(b.x, 0, 1, &attrs);
+         }
+         self.dirty_row(b.y);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\register.rs:1:
+ // Copyright (c) 2014-2026 The xterm.js authors. All rights reserved. MIT license.
+ use super::{TerminalError, TerminalEvent, TerminalState};
+[31m-use crate::{charset::builtin_charset, parser::{escape::{CommandHandler, EscapeSequenceParser, FunctionIdentifier, ParseError}, handler::{DispatchError, HandlerResult}, osc::OscHandler, params::Params}};
+[0m[32m+use crate::{
+[0m[32m+    charset::builtin_charset,
+[0m[32m+    parser::{
+[0m[32m+        escape::{CommandHandler, EscapeSequenceParser, FunctionIdentifier, ParseError},
+[0m[32m+        handler::{DispatchError, HandlerResult},
+[0m[32m+        osc::OscHandler,
+[0m[32m+        params::Params,
+[0m[32m+    },
+[0m[32m+};
+[0m use std::{cell::RefCell, rc::Rc};
+ 
+[31m-pub(super) fn register(parser: &mut EscapeSequenceParser, state: &Rc<RefCell<TerminalState>>) -> Result<(), TerminalError> {
+[0m[31m-    let shared=Rc::clone(state); let preceding=Rc::clone(&parser.preceding_join_state);
+[0m[32m+pub(super) fn register(
+[0m[32m+    parser: &mut EscapeSequenceParser,
+[0m[32m+    state: &Rc<RefCell<TerminalState>>,
+[0m[32m+) -> Result<(), TerminalError> {
+[0m[32m+    let shared = Rc::clone(state);
+[0m[32m+    let preceding = Rc::clone(&parser.preceding_join_state);
+[0m     parser.set_print_handler_checked(move |data| {
+[31m-        let mut state=shared.try_borrow_mut().map_err(|_|ParseError::HandlerAborted)?;
+[0m[31m-        if let Err(e)=state.print(data,&preceding) {state.error=Some(e);return Err(ParseError::HandlerAborted);}
+[0m[32m+        let mut state = shared
+[0m[32m+            .try_borrow_mut()
+[0m[32m+            .map_err(|_| ParseError::HandlerAborted)?;
+[0m[32m+        if let Err(e) = state.print(data, &preceding) {
+[0m[32m+            state.error = Some(e);
+[0m[32m+            return Err(ParseError::HandlerAborted);
+[0m[32m+        }
+[0m         drop(state);
+[31m-        super::dispatch_events(&shared).map_err(|e|{shared.borrow_mut().error=Some(e);ParseError::HandlerAborted})
+[0m[32m+        super::dispatch_events(&shared).map_err(|e| {
+[0m[32m+            shared.borrow_mut().error = Some(e);
+[0m[32m+            ParseError::HandlerAborted
+[0m[32m+        })
+[0m     });
+[31m-    for code in [0x07,0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f,0x84,0x85,0x88] {
+[0m[31m-        let shared=Rc::clone(state);
+[0m[31m-        parser.set_execute_handler_checked(code,move |_| {
+[0m[31m-            let mut state=shared.try_borrow_mut().map_err(|_|ParseError::HandlerAborted)?;
+[0m[31m-            if let Err(e)=state.execute(code) {state.error=Some(e);return Err(ParseError::HandlerAborted);}
+[0m[32m+    for code in [
+[0m[32m+        0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x84, 0x85, 0x88,
+[0m[32m+    ] {
+[0m[32m+        let shared = Rc::clone(state);
+[0m[32m+        parser.set_execute_handler_checked(code, move |_| {
+[0m[32m+            let mut state = shared
+[0m[32m+                .try_borrow_mut()
+[0m[32m+                .map_err(|_| ParseError::HandlerAborted)?;
+[0m[32m+            if let Err(e) = state.execute(code) {
+[0m[32m+                state.error = Some(e);
+[0m[32m+                return Err(ParseError::HandlerAborted);
+[0m[32m+            }
+[0m             drop(state);
+[31m-            super::dispatch_events(&shared).map(|()|true).map_err(|e|{shared.borrow_mut().error=Some(e);ParseError::HandlerAborted})
+[0m[32m+            super::dispatch_events(&shared).map(|()| true).map_err(|e| {
+[0m[32m+                shared.borrow_mut().error = Some(e);
+[0m[32m+                ParseError::HandlerAborted
+[0m[32m+            })
+[0m         });
+     }
+[31m-    for final_byte in ["7","8","D","E","H","M","=",">","c","n","o","|","}","~"] {
+[0m[31m-        let shared=Rc::clone(state);
+[0m[31m-        parser.register_esc_handler(FunctionIdentifier::new(final_byte),command(move |s,_| s.escape(final_byte),shared))?;
+[0m[32m+    for final_byte in [
+[0m[32m+        "7", "8", "D", "E", "H", "M", "=", ">", "c", "n", "o", "|", "}", "~",
+[0m[32m+    ] {
+[0m[32m+        let shared = Rc::clone(state);
+[0m[32m+        parser.register_esc_handler(
+[0m[32m+            FunctionIdentifier::new(final_byte),
+[0m[32m+            command(move |s, _| s.escape(final_byte), shared),
+[0m[32m+        )?;
+[0m     }
+[31m-    for intermediate in ["(",")","*","+","-",".","/"] {
+[0m[31m-        for designator in ['0','A','B','4','C','5','R','Q','K','Y','E','6','Z','H','7','='] {
+[0m[31m-            let final_byte=designator.to_string(); let shared=Rc::clone(state);
+[0m[31m-            parser.register_esc_handler(FunctionIdentifier {prefix:None,intermediates:Some(intermediate),final_byte:&final_byte},command(move |s,_| {
+[0m[31m-                let level=match intermediate {"("=>0,")"|"-"=>1,"*"|"."=>2,"+"=>3,_=>return Ok(())};
+[0m[31m-                s.charset.set_g_charset(level,builtin_charset(designator)).map_err(|e|TerminalError::Buffer(e.to_string()))
+[0m[31m-            },shared))?;
+[0m[32m+    for intermediate in ["(", ")", "*", "+", "-", ".", "/"] {
+[0m[32m+        for designator in [
+[0m[32m+            '0', 'A', 'B', '4', 'C', '5', 'R', 'Q', 'K', 'Y', 'E', '6', 'Z', 'H', '7', '=',
+[0m[32m+        ] {
+[0m[32m+            let final_byte = designator.to_string();
+[0m[32m+            let shared = Rc::clone(state);
+[0m[32m+            parser.register_esc_handler(
+[0m[32m+                FunctionIdentifier {
+[0m[32m+                    prefix: None,
+[0m[32m+                    intermediates: Some(intermediate),
+[0m[32m+                    final_byte: &final_byte,
+[0m[32m+                },
+[0m[32m+                command(
+[0m[32m+                    move |s, _| {
+[0m[32m+                        let level = match intermediate {
+[0m[32m+                            "(" => 0,
+[0m[32m+                            ")" | "-" => 1,
+[0m[32m+                            "*" | "." => 2,
+[0m[32m+                            "+" => 3,
+[0m[32m+                            _ => return Ok(()),
+[0m[32m+                        };
+[0m[32m+                        s.charset
+[0m[32m+                            .set_g_charset(level, builtin_charset(designator))
+[0m[32m+                            .map_err(|e| TerminalError::Buffer(e.to_string()))
+[0m[32m+                    },
+[0m[32m+                    shared,
+[0m[32m+                ),
+[0m[32m+            )?;
+[0m         }
+     }
+[31m-    for final_byte in ["@","G"] {
+[0m[31m-        parser.register_esc_handler(FunctionIdentifier{prefix:None,intermediates:Some("%"),final_byte},command(|s,_|{s.charset.reset();Ok(())},Rc::clone(state)))?;
+[0m[32m+    for final_byte in ["@", "G"] {
+[0m[32m+        parser.register_esc_handler(
+[0m[32m+            FunctionIdentifier {
+[0m[32m+                prefix: None,
+[0m[32m+                intermediates: Some("%"),
+[0m[32m+                final_byte,
+[0m[32m+            },
+[0m[32m+            command(
+[0m[32m+                |s, _| {
+[0m[32m+                    s.charset.reset();
+[0m[32m+                    Ok(())
+[0m[32m+                },
+[0m[32m+                Rc::clone(state),
+[0m[32m+            ),
+[0m[32m+        )?;
+[0m     }
+[31m-    parser.register_esc_handler(FunctionIdentifier{prefix:None,intermediates:Some("#"),final_byte:"8"},command(|s,_|s.alignment_pattern(),Rc::clone(state)))?;
+[0m[31m-    parser.register_csi_handler(FunctionIdentifier::new("m"),command(|s,p| {
+[0m[31m-        let enabled=s.mode_option("vtExtensions","kittySgrBoldFaintControl",true)?;
+[0m[31m-        for code in super::sgr::apply_with_options(&mut s.attributes,p,enabled) {
+[0m[31m-            s.mode_debug(&format!("Unknown SGR attribute: {code}."))?;
+[0m[32m+    parser.register_esc_handler(
+[0m[32m+        FunctionIdentifier {
+[0m[32m+            prefix: None,
+[0m[32m+            intermediates: Some("#"),
+[0m[32m+            final_byte: "8",
+[0m[32m+        },
+[0m[32m+        command(|s, _| s.alignment_pattern(), Rc::clone(state)),
+[0m[32m+    )?;
+[0m[32m+    parser.register_csi_handler(
+[0m[32m+        FunctionIdentifier::new("m"),
+[0m[32m+        command(
+[0m[32m+            |s, p| {
+[0m[32m+                let enabled = s.mode_option("vtExtensions", "kittySgrBoldFaintControl", true)?;
+[0m[32m+                for code in super::sgr::apply_with_options(&mut s.attributes, p, enabled) {
+[0m[32m+                    s.mode_debug(&format!("Unknown SGR attribute: {code}."))?;
+[0m[32m+                }
+[0m[32m+                Ok(())
+[0m[32m+            },
+[0m[32m+            Rc::clone(state),
+[0m[32m+        ),
+[0m[32m+    )?;
+[0m[32m+    for prefix in [None, Some("?")] {
+[0m[32m+        for final_byte in ["h", "l"] {
+[0m[32m+            parser.register_csi_handler(
+[0m[32m+                FunctionIdentifier {
+[0m[32m+                    prefix,
+[0m[32m+                    intermediates: None,
+[0m[32m+                    final_byte,
+[0m[32m+                },
+[0m[32m+                command(
+[0m[32m+                    move |s, p| s.dispatch_mode(prefix, final_byte, p).map(|_| ()),
+[0m[32m+                    Rc::clone(state),
+[0m[32m+                ),
+[0m[32m+            )?;
+[0m         }
+[31m-        Ok(())
+[0m[31m-    },Rc::clone(state)))?;
+[0m[31m-    for prefix in [None,Some("?")] {
+[0m[31m-        for final_byte in ["h","l"] {
+[0m[31m-            parser.register_csi_handler(FunctionIdentifier{prefix,intermediates:None,final_byte},command(move |s,p|s.dispatch_mode(prefix,final_byte,p).map(|_|()),Rc::clone(state)))?;
+[0m[31m-        }
+[0m[31m-        parser.register_csi_handler(FunctionIdentifier{prefix,intermediates:Some("$"),final_byte:"p"},command(move |s,p|s.dispatch_mode(prefix,"$p",p).map(|_|()),Rc::clone(state)))?;
+[0m[32m+        parser.register_csi_handler(
+[0m[32m+            FunctionIdentifier {
+[0m[32m+                prefix,
+[0m[32m+                intermediates: Some("$"),
+[0m[32m+                final_byte: "p",
+[0m[32m+            },
+[0m[32m+            command(
+[0m[32m+                move |s, p| s.dispatch_mode(prefix, "$p", p).map(|_| ()),
+[0m[32m+                Rc::clone(state),
+[0m[32m+            ),
+[0m[32m+        )?;
+[0m     }
+[31m-    for prefix in ["=","?",">","<"] {
+[0m[31m-        parser.register_csi_handler(FunctionIdentifier{prefix:Some(prefix),intermediates:None,final_byte:"u"},command(move |s,p|s.dispatch_mode(Some(prefix),"u",p).map(|_|()),Rc::clone(state)))?;
+[0m[32m+    for prefix in ["=", "?", ">", "<"] {
+[0m[32m+        parser.register_csi_handler(
+[0m[32m+            FunctionIdentifier {
+[0m[32m+                prefix: Some(prefix),
+[0m[32m+                intermediates: None,
+[0m[32m+                final_byte: "u",
+[0m[32m+            },
+[0m[32m+            command(
+[0m[32m+                move |s, p| s.dispatch_mode(Some(prefix), "u", p).map(|_| ()),
+[0m[32m+                Rc::clone(state),
+[0m[32m+            ),
+[0m[32m+        )?;
+[0m     }
+[31m-    for ident in [0,1,2] {
+[0m[31m-        let shared=Rc::clone(state);
+[0m[31m-        parser.osc.register_handler(f64::from(ident),Rc::new(RefCell::new(OscHandler::new(move |data:Vec<u16>| {
+[0m[31m-            let Ok(mut s)=shared.try_borrow_mut() else {return HandlerResult::Failed(DispatchError::CallbackFailed);};
+[0m[31m-            if ident==0 || ident==2 { s.title=data.clone(); s.events.borrow_mut().push(TerminalEvent::TitleChange(data.clone())); }
+[0m[31m-            if ident==0 || ident==1 {s.icon_name=data;}
+[0m[31m-            drop(s);
+[0m[31m-            match super::dispatch_events(&shared) {Ok(())=>HandlerResult::Ready(true),Err(e)=>{shared.borrow_mut().error=Some(e);HandlerResult::Failed(DispatchError::CallbackFailed)}}
+[0m[31m-        }))));
+[0m[32m+    for ident in [0, 1, 2] {
+[0m[32m+        let shared = Rc::clone(state);
+[0m[32m+        parser.osc.register_handler(
+[0m[32m+            f64::from(ident),
+[0m[32m+            Rc::new(RefCell::new(OscHandler::new(move |data: Vec<u16>| {
+[0m[32m+                let Ok(mut s) = shared.try_borrow_mut() else {
+[0m[32m+                    return HandlerResult::Failed(DispatchError::CallbackFailed);
+[0m[32m+                };
+[0m[32m+                if ident == 0 || ident == 2 {
+[0m[32m+                    s.title = data.clone();
+[0m[32m+                    s.events
+[0m[32m+                        .borrow_mut()
+[0m[32m+                        .push(TerminalEvent::TitleChange(data.clone()));
+[0m[32m+                }
+[0m[32m+                if ident == 0 || ident == 1 {
+[0m[32m+                    s.icon_name = data;
+[0m[32m+                }
+[0m[32m+                drop(s);
+[0m[32m+                match super::dispatch_events(&shared) {
+[0m[32m+                    Ok(()) => HandlerResult::Ready(true),
+[0m[32m+                    Err(e) => {
+[0m[32m+                        shared.borrow_mut().error = Some(e);
+[0m[32m+                        HandlerResult::Failed(DispatchError::CallbackFailed)
+[0m[32m+                    }
+[0m[32m+                }
+[0m[32m+            }))),
+[0m[32m+        );
+[0m     }
+     Ok(())
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\register.rs:68:
+[31m-pub(super) fn command(callback: impl Fn(&mut TerminalState,&Params)->Result<(),TerminalError>+'static,shared:Rc<RefCell<TerminalState>>)->CommandHandler {
+[0m[31m-    Rc::new(RefCell::new(move |params:&Params| {
+[0m[31m-        let Ok(mut s)=shared.try_borrow_mut() else {return HandlerResult::Failed(DispatchError::CallbackFailed);};
+[0m[31m-        if s.error.is_some() {return HandlerResult::Failed(DispatchError::CallbackFailed);}
+[0m[31m-        if let Err(e)=callback(&mut s,params) {s.error=Some(e);return HandlerResult::Failed(DispatchError::CallbackFailed);}
+[0m[32m+pub(super) fn command(
+[0m[32m+    callback: impl Fn(&mut TerminalState, &Params) -> Result<(), TerminalError> + 'static,
+[0m[32m+    shared: Rc<RefCell<TerminalState>>,
+[0m[32m+) -> CommandHandler {
+[0m[32m+    Rc::new(RefCell::new(move |params: &Params| {
+[0m[32m+        let Ok(mut s) = shared.try_borrow_mut() else {
+[0m[32m+            return HandlerResult::Failed(DispatchError::CallbackFailed);
+[0m[32m+        };
+[0m[32m+        if s.error.is_some() {
+[0m[32m+            return HandlerResult::Failed(DispatchError::CallbackFailed);
+[0m[32m+        }
+[0m[32m+        if let Err(e) = callback(&mut s, params) {
+[0m[32m+            s.error = Some(e);
+[0m[32m+            return HandlerResult::Failed(DispatchError::CallbackFailed);
+[0m[32m+        }
+[0m         drop(s);
+[31m-        match super::dispatch_events(&shared) {Ok(())=>HandlerResult::Ready(true),Err(e)=>{shared.borrow_mut().error=Some(e);HandlerResult::Failed(DispatchError::CallbackFailed)}}
+[0m[32m+        match super::dispatch_events(&shared) {
+[0m[32m+            Ok(()) => HandlerResult::Ready(true),
+[0m[32m+            Err(e) => {
+[0m[32m+                shared.borrow_mut().error = Some(e);
+[0m[32m+                HandlerResult::Failed(DispatchError::CallbackFailed)
+[0m[32m+            }
+[0m[32m+        }
+[0m     }))
+ }
+ impl TerminalState {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\register.rs:78:
+[31m-    fn escape(&mut self,final_byte:&str)->Result<(),TerminalError> {
+[0m[32m+    fn escape(&mut self, final_byte: &str) -> Result<(), TerminalError> {
+[0m         match final_byte {
+[31m-            "7"=>self.save_cursor()?, "8"=>self.restore_cursor()?,
+[0m[31m-            "D"=>self.index()?, "E"=>{self.active_buffer().borrow_mut().x=0;self.index()?;},
+[0m[31m-            "H"=>self.execute(0x88)?, "M"=>self.reverse_index()?,
+[0m[31m-            "="|">"=>{self.core.dec_private_modes.borrow_mut().application_keypad=final_byte=="=";self.events.borrow_mut().push(TerminalEvent::SyncScrollBar);},
+[0m[31m-            "c"=>self.reset_state()?,
+[0m[31m-            "n"|"}"=>self.charset.set_g_level(2),"o"|"|"=>self.charset.set_g_level(3),"~"=>self.charset.set_g_level(1),
+[0m[31m-            _=>{}
+[0m[32m+            "7" => self.save_cursor()?,
+[0m[32m+            "8" => self.restore_cursor()?,
+[0m[32m+            "D" => self.index()?,
+[0m[32m+            "E" => {
+[0m[32m+                self.active_buffer().borrow_mut().x = 0;
+[0m[32m+                self.index()?;
+[0m[32m+            }
+[0m[32m+            "H" => self.execute(0x88)?,
+[0m[32m+            "M" => self.reverse_index()?,
+[0m[32m+            "=" | ">" => {
+[0m[32m+                self.core.dec_private_modes.borrow_mut().application_keypad = final_byte == "=";
+[0m[32m+                self.events.borrow_mut().push(TerminalEvent::SyncScrollBar);
+[0m[32m+            }
+[0m[32m+            "c" => self.reset_state()?,
+[0m[32m+            "n" | "}" => self.charset.set_g_level(2),
+[0m[32m+            "o" | "|" => self.charset.set_g_level(3),
+[0m[32m+            "~" => self.charset.set_g_level(1),
+[0m[32m+            _ => {}
+[0m         }
+         Ok(())
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\register.rs:90:
+[31m-    fn reverse_index(&mut self)->Result<(),TerminalError> {
+[0m[31m-        let active=self.active_buffer();let mut b=active.borrow_mut();
+[0m[31m-        b.x=b.x.min(self.cols()-1);b.y=b.y.min(self.rows()-1);
+[0m[31m-        if b.y==b.scroll_top {
+[0m[31m-            let top=b.ybase+b.y;let height=b.scroll_bottom-b.scroll_top;
+[0m[31m-            b.lines.shift_elements(top as isize,height,1).map_err(|e|TerminalError::Buffer(e.to_string()))?;
+[0m[31m-            b.lines.set(top,Some(b.get_blank_line(&self.erase_attributes(),false))).map_err(|e|TerminalError::Buffer(e.to_string()))?;
+[0m[32m+    fn reverse_index(&mut self) -> Result<(), TerminalError> {
+[0m[32m+        let active = self.active_buffer();
+[0m[32m+        let mut b = active.borrow_mut();
+[0m[32m+        b.x = b.x.min(self.cols() - 1);
+[0m[32m+        b.y = b.y.min(self.rows() - 1);
+[0m[32m+        if b.y == b.scroll_top {
+[0m[32m+            let top = b.ybase + b.y;
+[0m[32m+            let height = b.scroll_bottom - b.scroll_top;
+[0m[32m+            b.lines
+[0m[32m+                .shift_elements(top as isize, height, 1)
+[0m[32m+                .map_err(|e| TerminalError::Buffer(e.to_string()))?;
+[0m[32m+            b.lines
+[0m[32m+                .set(top, Some(b.get_blank_line(&self.erase_attributes(), false)))
+[0m[32m+                .map_err(|e| TerminalError::Buffer(e.to_string()))?;
+[0m             self.dirty_all();
+[31m-        } else {b.y=b.y.saturating_sub(1);self.dirty_row(b.y);}
+[0m[32m+        } else {
+[0m[32m+            b.y = b.y.saturating_sub(1);
+[0m[32m+            self.dirty_row(b.y);
+[0m[32m+        }
+[0m         Ok(())
+     }
+[31m-    fn alignment_pattern(&mut self)->Result<(),TerminalError> {
+[0m[31m-        self.set_cursor(0,0)?;
+[0m[31m-        let cell=crate::buffer::CellData {content:(1<<crate::buffer::constants::content::WIDTH_SHIFT)|u32::from(b'E'),attributes:self.attributes.clone(),..Default::default()};
+[0m[31m-        let active=self.active_buffer();let b=active.borrow();
+[0m[31m-        for y in 0..self.rows() {if let Some(row)=b.lines.get(b.ybase+b.y+y) {let mut row=row.borrow_mut();row.is_wrapped=false;row.fill(&cell,false);}}
+[0m[31m-        drop(b);self.dirty_all();self.set_cursor(0,0)
+[0m[32m+    fn alignment_pattern(&mut self) -> Result<(), TerminalError> {
+[0m[32m+        self.set_cursor(0, 0)?;
+[0m[32m+        let cell = crate::buffer::CellData {
+[0m[32m+            content: (1 << crate::buffer::constants::content::WIDTH_SHIFT) | u32::from(b'E'),
+[0m[32m+            attributes: self.attributes.clone(),
+[0m[32m+            ..Default::default()
+[0m[32m+        };
+[0m[32m+        let active = self.active_buffer();
+[0m[32m+        let b = active.borrow();
+[0m[32m+        for y in 0..self.rows() {
+[0m[32m+            if let Some(row) = b.lines.get(b.ybase + b.y + y) {
+[0m[32m+                let mut row = row.borrow_mut();
+[0m[32m+                row.is_wrapped = false;
+[0m[32m+                row.fill(&cell, false);
+[0m[32m+            }
+[0m[32m+        }
+[0m[32m+        drop(b);
+[0m[32m+        self.dirty_all();
+[0m[32m+        self.set_cursor(0, 0)
+[0m     }
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\state.rs:1:
+ // Copyright (c) 2014-2026 The xterm.js authors. All rights reserved. MIT license.
+ use super::{TerminalError, TerminalEvent};
+ use crate::{
+[31m-    buffer::{AttributeData, Buffer, BufferLine},
+[0m     buffer::BufferService,
+[32m+    buffer::{AttributeData, Buffer, BufferLine},
+[0m     charset::CharsetService,
+     core_service::CoreService,
+     options::OptionsService,
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\state.rs:30:
+ }
+ impl std::ops::Deref for TerminalState {
+     type Target = BufferService;
+[31m-    fn deref(&self) -> &BufferService { &self.buffer_service }
+[0m[32m+    fn deref(&self) -> &BufferService {
+[0m[32m+        &self.buffer_service
+[0m[32m+    }
+[0m }
+ impl TerminalState {
+[31m-    pub fn active_buffer(&self) -> Rc<RefCell<Buffer>> { self.buffers.active() }
+[0m[32m+    pub fn active_buffer(&self) -> Rc<RefCell<Buffer>> {
+[0m[32m+        self.buffers.active()
+[0m[32m+    }
+[0m     pub(crate) fn line(&self, y: usize) -> Result<Rc<RefCell<BufferLine>>, TerminalError> {
+         let buffer = self.active_buffer();
+         let buffer = buffer.borrow();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\state.rs:40:
+[31m-        if y >= self.rows() { return Err(TerminalError::MissingLine); }
+[0m[31m-        buffer.lines.get(buffer.ybase + y).ok_or(TerminalError::MissingLine)
+[0m[32m+        if y >= self.rows() {
+[0m[32m+            return Err(TerminalError::MissingLine);
+[0m[32m+        }
+[0m[32m+        buffer
+[0m[32m+            .lines
+[0m[32m+            .get(buffer.ybase + y)
+[0m[32m+            .ok_or(TerminalError::MissingLine)
+[0m     }
+     pub(crate) fn dirty_row(&mut self, y: usize) {
+         self.dirty = Some(match self.dirty {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\state.rs:45:
+[31m-            None => (y, y), Some((start, end)) => (start.min(y), end.max(y)),
+[0m[32m+            None => (y, y),
+[0m[32m+            Some((start, end)) => (start.min(y), end.max(y)),
+[0m         });
+     }
+[31m-    pub(crate) fn dirty_all(&mut self) { self.dirty = Some((0, self.rows() - 1)); }
+[0m[32m+    pub(crate) fn dirty_all(&mut self) {
+[0m[32m+        self.dirty = Some((0, self.rows() - 1));
+[0m[32m+    }
+[0m     pub(crate) fn erase_attributes(&self) -> AttributeData {
+         // BCE retains background color, not styles, protection or hyperlinks.
+[31m-        AttributeData { bg: self.attributes.bg & (crate::buffer::constants::attributes::CM_MASK | crate::buffer::constants::attributes::RGB_MASK), ..AttributeData::default() }
+[0m[32m+        AttributeData {
+[0m[32m+            bg: self.attributes.bg
+[0m[32m+                & (crate::buffer::constants::attributes::CM_MASK
+[0m[32m+                    | crate::buffer::constants::attributes::RGB_MASK),
+[0m[32m+            ..AttributeData::default()
+[0m[32m+        }
+[0m     }
+     pub(crate) fn option_bool(&self, key: &str) -> Result<bool, TerminalError> {
+         Ok(self.options.get(key)?.is_truthy())
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\state.rs:55:
+     }
+     pub(crate) fn reply(&mut self, text: &str) -> Result<(), TerminalError> {
+[31m-        self.core.trigger_data_event(&text.encode_utf16().collect::<Vec<_>>(), false)?;
+[0m[32m+        self.core
+[0m[32m+            .trigger_data_event(&text.encode_utf16().collect::<Vec<_>>(), false)?;
+[0m         Ok(())
+     }
+     pub(crate) fn mode_debug(&self, text: &str) -> Result<(), TerminalError> {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\state.rs:61:
+[31m-        self.logger.log(crate::log_service::LogLevel::Debug, &text.encode_utf16().collect::<Vec<_>>(), Vec::new())?;
+[0m[32m+        self.logger.log(
+[0m[32m+            crate::log_service::LogLevel::Debug,
+[0m[32m+            &text.encode_utf16().collect::<Vec<_>>(),
+[0m[32m+            Vec::new(),
+[0m[32m+        )?;
+[0m         Ok(())
+     }
+ }
+error: couldn't read \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\headless_cases\buffers.rs: The system cannot find the file specified. (os error 2)
+  --> \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\headless_upstream.rs:10:1
+   |
+10 | mod buffers;
+   | ^^^^^^^^^^^^
+
+Error writing files: failed to resolve mod `buffers`: \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\headless_cases\buffers.rs does not exist
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\osc_link_service.rs:3:
+ use std::{cell::RefCell, rc::Rc};
+ use xterm_core::{
+     buffer::{AttributeData, BufferService},
+[31m-    osc_link_service::{LinkDataRef, OscLinkData, OscLinkError, OscLinkService},
+[0m     options::{OptionValue, OptionsService},
+[32m+    osc_link_service::{LinkDataRef, OscLinkData, OscLinkError, OscLinkService},
+[0m };
+ 
+ #[path = "support/osc_link_trace.rs"]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\osc_link_service.rs:11:
+ mod trace;
+ 
+ fn service() -> (Rc<BufferService>, OscLinkService) {
+[31m-    let options = OptionsService::new(false, [
+[0m[31m-        ("cols", OptionValue::Number(10.0)), ("rows", OptionValue::Number(3.0)),
+[0m[31m-        ("scrollback", OptionValue::Number(2.0)),
+[0m[31m-    ]);
+[0m[32m+    let options = OptionsService::new(
+[0m[32m+        false,
+[0m[32m+        [
+[0m[32m+            ("cols", OptionValue::Number(10.0)),
+[0m[32m+            ("rows", OptionValue::Number(3.0)),
+[0m[32m+            ("scrollback", OptionValue::Number(2.0)),
+[0m[32m+        ],
+[0m[32m+    );
+[0m     let buffers = Rc::new(BufferService::new(Rc::new(options)).unwrap());
+     let links = OscLinkService::new(Rc::clone(&buffers));
+     (buffers, links)
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\osc_link_service.rs:21:
+ }
+ fn data(id: Option<&str>, uri: &str) -> LinkDataRef {
+[31m-    Rc::new(RefCell::new(OscLinkData { id: id.map(|id| id.encode_utf16().collect()), uri: uri.encode_utf16().collect() }))
+[0m[32m+    Rc::new(RefCell::new(OscLinkData {
+[0m[32m+        id: id.map(|id| id.encode_utf16().collect()),
+[0m[32m+        uri: uri.encode_utf16().collect(),
+[0m[32m+    }))
+[0m }
+ 
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\osc_link_service.rs:43:
+ fn upstream_fetches_exact_link_data() {
+     let (_, links) = service();
+     let id = links.register_link(data(Some("foo"), "bar")).unwrap();
+[31m-    assert_eq!(*links.get_link_data(id).unwrap().borrow(), *data(Some("foo"), "bar").borrow());
+[0m[32m+    assert_eq!(
+[0m[32m+        *links.get_link_data(id).unwrap().borrow(),
+[0m[32m+        *data(Some("foo"), "bar").borrow()
+[0m[32m+    );
+[0m }
+ 
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\osc_link_service.rs:56:
+     assert_eq!(links.register_link(data(Some(""), "same")), Ok(empty));
+     let collision = links.register_link(data(Some("a;;b"), "c")).unwrap();
+     assert_eq!(links.register_link(data(Some("a"), "b;;c")), Ok(collision));
+[31m-    assert_eq!(links.get_link_data(collision).unwrap().borrow().uri, vec![u16::from(b'c')]);
+[0m[32m+    assert_eq!(
+[0m[32m+        links.get_link_data(collision).unwrap().borrow().uri,
+[0m[32m+        vec![u16::from(b'c')]
+[0m[32m+    );
+[0m }
+ 
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\osc_link_service.rs:63:
+ fn data_identity_and_utf16_surrogates_are_lossless() {
+     let (_, links) = service();
+[31m-    let shared = Rc::new(RefCell::new(OscLinkData { id: Some(vec![0xd800]), uri: vec![0xdc00, 0, 0xd83d, 0xde00] }));
+[0m[32m+    let shared = Rc::new(RefCell::new(OscLinkData {
+[0m[32m+        id: Some(vec![0xd800]),
+[0m[32m+        uri: vec![0xdc00, 0, 0xd83d, 0xde00],
+[0m[32m+    }));
+[0m     let id = links.register_link(Rc::clone(&shared)).unwrap();
+     assert!(Rc::ptr_eq(&shared, &links.get_link_data(id).unwrap()));
+     shared.borrow_mut().uri.push(0xffff);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\osc_link_service.rs:69:
+[31m-    assert_eq!(links.get_link_data(id).unwrap().borrow().uri, shared.borrow().uri);
+[0m[32m+    assert_eq!(
+[0m[32m+        links.get_link_data(id).unwrap().borrow().uri,
+[0m[32m+        shared.borrow().uri
+[0m[32m+    );
+[0m     assert!(links.get_link_data(0).is_none());
+     assert!(links.get_link_data(u64::MAX).is_none());
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\osc_link_service.rs:135:
+     let shared = data(Some("foo"), "bar");
+     let active = buffers.buffer();
+     let borrowed_buffer = active.borrow_mut();
+[31m-    assert_eq!(links.register_link(Rc::clone(&shared)), Err(OscLinkError::BorrowedBuffer));
+[0m[32m+    assert_eq!(
+[0m[32m+        links.register_link(Rc::clone(&shared)),
+[0m[32m+        Err(OscLinkError::BorrowedBuffer)
+[0m[32m+    );
+[0m     drop(borrowed_buffer);
+     let borrowed_data = shared.borrow_mut();
+[31m-    assert_eq!(links.register_link(Rc::clone(&shared)), Err(OscLinkError::BorrowedData));
+[0m[32m+    assert_eq!(
+[0m[32m+        links.register_link(Rc::clone(&shared)),
+[0m[32m+        Err(OscLinkError::BorrowedData)
+[0m[32m+    );
+[0m     drop(borrowed_data);
+     assert!(active.borrow().markers.borrow().is_empty());
+     assert_eq!(links.register_link(shared), Ok(1));
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\osc_link_service.rs:162:
+ #[test]
+ fn deterministic_source_service_trace_matches_rust() {
+     let mut runner = trace::Runner::new().unwrap();
+[31m-    for (index, line) in include_str!("fixtures/osc-link-traces.tsv").lines().enumerate() {
+[0m[32m+    for (index, line) in include_str!("fixtures/osc-link-traces.tsv")
+[0m[32m+        .lines()
+[0m[32m+        .enumerate()
+[0m[32m+    {
+[0m         let (operation, expected) = line.split_once('\t').unwrap();
+[31m-        assert_eq!(runner.step(operation).unwrap(), expected, "trace operation{index}: {operation}");
+[0m[32m+        assert_eq!(
+[0m[32m+            runner.step(operation).unwrap(),
+[0m[32m+            expected,
+[0m[32m+            "trace operation{index}: {operation}"
+[0m[32m+        );
+[0m     }
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:3:
+ use std::{cell::RefCell, collections::BTreeSet, error::Error, rc::Rc};
+ use xterm_core::{
+     buffer::{marker::Marker, AttributeData, BufferService},
+[31m-    osc_link_service::{LinkDataRef, OscLinkData, OscLinkService},
+[0m     options::{OptionValue, OptionsService},
+[32m+    osc_link_service::{LinkDataRef, OscLinkData, OscLinkService},
+[0m };
+ 
+ type Result<T> = std::result::Result<T, Box<dyn Error>>;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:19:
+ 
+ impl Runner {
+     pub fn new() -> Result<Self> {
+[31m-        let options = OptionsService::new(false, [
+[0m[31m-            ("cols", OptionValue::Number(10.0)), ("rows", OptionValue::Number(3.0)),
+[0m[31m-            ("scrollback", OptionValue::Number(2.0)),
+[0m[31m-        ]);
+[0m[32m+        let options = OptionsService::new(
+[0m[32m+            false,
+[0m[32m+            [
+[0m[32m+                ("cols", OptionValue::Number(10.0)),
+[0m[32m+                ("rows", OptionValue::Number(3.0)),
+[0m[32m+                ("scrollback", OptionValue::Number(2.0)),
+[0m[32m+            ],
+[0m[32m+        );
+[0m         let buffers = Rc::new(BufferService::new(Rc::new(options))?);
+         let links = OscLinkService::new(Rc::clone(&buffers));
+[31m-        Ok(Self { buffers, links, data: Vec::new(), ids: BTreeSet::new(), markers: Vec::new() })
+[0m[32m+        Ok(Self {
+[0m[32m+            buffers,
+[0m[32m+            links,
+[0m[32m+            data: Vec::new(),
+[0m[32m+            ids: BTreeSet::new(),
+[0m[32m+            markers: Vec::new(),
+[0m[32m+        })
+[0m     }
+ 
+     pub fn step(&mut self, operation: &str) -> Result<String> {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:35:
+         match field(0)? {
+             "data" => {
+                 self.data.push(Rc::new(RefCell::new(OscLinkData {
+[31m-                    id: decode_id(field(1)?)?, uri: decode(field(2)?)?,
+[0m[32m+                    id: decode_id(field(1)?)?,
+[0m[32m+                    uri: decode(field(2)?)?,
+[0m                 })));
+             }
+             "mut" => {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:46:
+             }
+             "reg" => {
+                 let index: usize = field(1)?.parse()?;
+[31m-                let id = self.links.register_link(Rc::clone(self.data.get(index).ok_or("unknown data")?))?;
+[0m[32m+                let id = self
+[0m[32m+                    .links
+[0m[32m+                    .register_link(Rc::clone(self.data.get(index).ok_or("unknown data")?))?;
+[0m                 self.ids.insert(id);
+                 reply = id.to_string();
+             }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:53:
+[31m-            "line" => self.links.add_line_to_link(field(1)?.parse()?, field(2)?.parse()?)?,
+[0m[32m+            "line" => self
+[0m[32m+                .links
+[0m[32m+                .add_line_to_link(field(1)?.parse()?, field(2)?.parse()?)?,
+[0m             "cursor" => {
+                 let active = self.buffers.buffer();
+                 let mut active = active.borrow_mut();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:62:
+             "scroll" => self.buffers.scroll(&AttributeData::default(), false)?,
+             "dispose" => {
+                 let index: usize = field(1)?.parse()?;
+[31m-                if let Some(marker) = self.markers.get(index) { marker.dispose()?; }
+[0m[32m+                if let Some(marker) = self.markers.get(index) {
+[0m[32m+                    marker.dispose()?;
+[0m[32m+                }
+[0m             }
+             "move" => {
+                 let index: usize = field(1)?.parse()?;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:69:
+[31m-                if let Some(marker) = self.markers.get(index) { marker.set_line(field(2)?.parse()?); }
+[0m[32m+                if let Some(marker) = self.markers.get(index) {
+[0m[32m+                    marker.set_line(field(2)?.parse()?);
+[0m[32m+                }
+[0m             }
+             _ => return Err("unknown trace operation".into()),
+         }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:73:
+         for buffer in [self.buffers.buffers.normal(), self.buffers.buffers.alt()] {
+             let buffer = buffer.borrow();
+             for marker in buffer.markers.borrow().iter() {
+[31m-                if !self.markers.iter().any(|old| old.ptr_eq(marker)) { self.markers.push(marker.clone()); }
+[0m[32m+                if !self.markers.iter().any(|old| old.ptr_eq(marker)) {
+[0m[32m+                    self.markers.push(marker.clone());
+[0m[32m+                }
+[0m             }
+         }
+         let normal = Rc::ptr_eq(&self.buffers.buffer(), &self.buffers.buffers.normal());
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:85:
+                 result.push_str(&data.id.as_deref().map(encode).unwrap_or_else(|| "-".into()));
+                 result.push('/');
+                 result.push_str(&encode(&data.uri));
+[31m-            } else { result.push('-'); }
+[0m[32m+            } else {
+[0m[32m+                result.push('-');
+[0m[32m+            }
+[0m             result.push(',');
+         }
+         result.push(';');
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:92:
+         for marker in &self.markers {
+[31m-            result.push_str(&format!("{}:{},", marker.line(), u8::from(marker.is_disposed())));
+[0m[32m+            result.push_str(&format!(
+[0m[32m+                "{}:{},",
+[0m[32m+                marker.line(),
+[0m[32m+                u8::from(marker.is_disposed())
+[0m[32m+            ));
+[0m         }
+         Ok(result)
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\support\osc_link_trace.rs:97:
+ }
+ 
+ fn decode_id(text: &str) -> Result<Option<Vec<u16>>> {
+[31m-    if text == "-" { Ok(None) } else { Ok(Some(decode(text)?)) }
+[0m[32m+    if text == "-" {
+[0m[32m+        Ok(None)
+[0m[32m+    } else {
+[0m[32m+        Ok(Some(decode(text)?))
+[0m[32m+    }
+[0m }
+ fn decode(text: &str) -> Result<Vec<u16>> {
+[31m-    if text == "_" { return Ok(Vec::new()); }
+[0m[31m-    if !text.is_ascii() || text.len() % 4 != 0 { return Err("invalid UTF16 trace field".into()); }
+[0m[31m-    (0..text.len()).step_by(4)
+[0m[31m-        .map(|i| u16::from_str_radix(&text[i..i + 4], 16).map_err(Into::into)).collect()
+[0m[32m+    if text == "_" {
+[0m[32m+        return Ok(Vec::new());
+[0m[32m+    }
+[0m[32m+    if !text.is_ascii() || text.len() % 4 != 0 {
+[0m[32m+        return Err("invalid UTF16 trace field".into());
+[0m[32m+    }
+[0m[32m+    (0..text.len())
+[0m[32m+        .step_by(4)
+[0m[32m+        .map(|i| u16::from_str_radix(&text[i..i + 4], 16).map_err(Into::into))
+[0m[32m+        .collect()
+[0m }
+ fn encode(units: &[u16]) -> String {
+[31m-    if units.is_empty() { return "_".into(); }
+[0m[32m+    if units.is_empty() {
+[0m[32m+        return "_".into();
+[0m[32m+    }
+[0m     units.iter().map(|unit| format!("{unit:04x}")).collect()
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\public_buffer_api.rs:37:
+     ));
+     assert!(normal.get_line(3).unwrap().is_none());
+     let capacity = backing.borrow().lines.max_length();
+[31m-    assert!(Rc::ptr_eq(&normal.get_line(0).unwrap().unwrap(), &normal.get_line(capacity).unwrap().unwrap()));
+[0m[32m+    assert!(Rc::ptr_eq(
+[0m[32m+        &normal.get_line(0).unwrap().unwrap(),
+[0m[32m+        &normal.get_line(capacity).unwrap().unwrap()
+[0m[32m+    ));
+[0m     let mut cell = normal.get_null_cell();
+     assert_eq!(cell.content, 0);
+     cell.content = 123;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\terminal_engine.rs:1:
+ // Copyright (c) 2014-2026 The xterm.js authors. All rights reserved. MIT license.
+[31m-use xterm_core::terminal::{CoreTerminal,TerminalEvent};
+[0m[31m-fn lines(terminal:&CoreTerminal)->Vec<String> {
+[0m[31m-    let state=terminal.state();let active=state.active_buffer();let b=active.borrow();
+[0m[31m-    (0..b.lines.len()).map(|i|String::from_utf16_lossy(&b.lines.get(i).unwrap().borrow().translate_to_string(true,None,None,None))).collect()
+[0m[32m+use xterm_core::terminal::{CoreTerminal, TerminalEvent};
+[0m[32m+fn lines(terminal: &CoreTerminal) -> Vec<String> {
+[0m[32m+    let state = terminal.state();
+[0m[32m+    let active = state.active_buffer();
+[0m[32m+    let b = active.borrow();
+[0m[32m+    (0..b.lines.len())
+[0m[32m+        .map(|i| {
+[0m[32m+            String::from_utf16_lossy(
+[0m[32m+                &b.lines
+[0m[32m+                    .get(i)
+[0m[32m+                    .unwrap()
+[0m[32m+                    .borrow()
+[0m[32m+                    .translate_to_string(true, None, None, None),
+[0m[32m+            )
+[0m[32m+        })
+[0m[32m+        .collect()
+[0m }
+ #[test]
+ fn print_wrap_scroll_and_explicit_linefeed() {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\terminal_engine.rs:9:
+[31m-    let mut t=CoreTerminal::new(4,2,2).unwrap();
+[0m[32m+    let mut t = CoreTerminal::new(4, 2, 2).unwrap();
+[0m     t.write("abcdefghi").unwrap();
+[31m-    assert_eq!(lines(&t),["abcd","efgh","i"]);
+[0m[31m-    {let s=t.state();let b=s.active_buffer();let b=b.borrow();assert_eq!((b.x,b.y,b.ybase,b.ydisp),(1,1,1,1));}
+[0m[32m+    assert_eq!(lines(&t), ["abcd", "efgh", "i"]);
+[0m[32m+    {
+[0m[32m+        let s = t.state();
+[0m[32m+        let b = s.active_buffer();
+[0m[32m+        let b = b.borrow();
+[0m[32m+        assert_eq!((b.x, b.y, b.ybase, b.ydisp), (1, 1, 1, 1));
+[0m[32m+    }
+[0m     t.write("\r\nz").unwrap();
+[31m-    assert_eq!(lines(&t),["abcd","efgh","i","z"]);
+[0m[31m-    let events=t.drain_events();assert!(events.contains(&TerminalEvent::LineFeed));
+[0m[32m+    assert_eq!(lines(&t), ["abcd", "efgh", "i", "z"]);
+[0m[32m+    let events = t.drain_events();
+[0m[32m+    assert!(events.contains(&TerminalEvent::LineFeed));
+[0m     assert!(events.contains(&TerminalEvent::Scroll(2)));
+ }
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\terminal_engine.rs:19:
+ fn decoder_boundaries_wide_combining_and_bom() {
+[31m-    let mut t=CoreTerminal::new(6,2,0).unwrap();
+[0m[31m-    for byte in "a界e\u{301}🙂".as_bytes() {t.write_bytes(&[*byte]).unwrap();}
+[0m[31m-    assert_eq!(lines(&t),["a界e\u{301}🙂",""]);
+[0m[31m-    {let s=t.state();let b=s.active_buffer();let b=b.borrow();let l=b.lines.get(0).unwrap();let l=l.borrow();assert_eq!(l.get_width(1),Some(2));assert_eq!(l.get_width(2),Some(0));assert_eq!(l.get_string(3),Some(vec![b'e' as u16,0x301]));}
+[0m[31m-    let mut t=CoreTerminal::new(4,2,0).unwrap();
+[0m[31m-    t.write_utf16(&[0xd83d]).unwrap();t.write_utf16(&[0xde42,0xfeff]).unwrap();
+[0m[31m-    assert_eq!(lines(&t),["🙂",""]);
+[0m[32m+    let mut t = CoreTerminal::new(6, 2, 0).unwrap();
+[0m[32m+    for byte in "a界e\u{301}🙂".as_bytes() {
+[0m[32m+        t.write_bytes(&[*byte]).unwrap();
+[0m[32m+    }
+[0m[32m+    assert_eq!(lines(&t), ["a界e\u{301}🙂", ""]);
+[0m[32m+    {
+[0m[32m+        let s = t.state();
+[0m[32m+        let b = s.active_buffer();
+[0m[32m+        let b = b.borrow();
+[0m[32m+        let l = b.lines.get(0).unwrap();
+[0m[32m+        let l = l.borrow();
+[0m[32m+        assert_eq!(l.get_width(1), Some(2));
+[0m[32m+        assert_eq!(l.get_width(2), Some(0));
+[0m[32m+        assert_eq!(l.get_string(3), Some(vec![b'e' as u16, 0x301]));
+[0m[32m+    }
+[0m[32m+    let mut t = CoreTerminal::new(4, 2, 0).unwrap();
+[0m[32m+    t.write_utf16(&[0xd83d]).unwrap();
+[0m[32m+    t.write_utf16(&[0xde42, 0xfeff]).unwrap();
+[0m[32m+    assert_eq!(lines(&t), ["🙂", ""]);
+[0m }
+ #[test]
+ fn charset_designation_shift_and_saved_cursor() {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\terminal_engine.rs:30:
+[31m-    let mut t=CoreTerminal::new(8,2,0).unwrap();
+[0m[32m+    let mut t = CoreTerminal::new(8, 2, 0).unwrap();
+[0m     t.write("\x1b)0\x0eq\x0fx\x1b7abc\x1b8Z").unwrap();
+[31m-    assert_eq!(lines(&t),["─xZbc",""]);
+[0m[32m+    assert_eq!(lines(&t), ["─xZbc", ""]);
+[0m }
+ #[test]
+ fn control_input_does_not_echo_and_preserves_events() {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\terminal_engine.rs:36:
+[31m-    let mut t=CoreTerminal::new(4,2,0).unwrap();
+[0m[32m+    let mut t = CoreTerminal::new(4, 2, 0).unwrap();
+[0m     t.write("ab\x08Z\r!\x07\x1b]2;hello\x07").unwrap();
+[31m-    assert_eq!(lines(&t),["!Z",""]);
+[0m[31m-    t.input(&[0xd800,13],true).unwrap();
+[0m[31m-    let events=t.drain_events();
+[0m[32m+    assert_eq!(lines(&t), ["!Z", ""]);
+[0m[32m+    t.input(&[0xd800, 13], true).unwrap();
+[0m[32m+    let events = t.drain_events();
+[0m     assert!(events.contains(&TerminalEvent::Bell));
+[31m-    assert!(events.contains(&TerminalEvent::TitleChange("hello".encode_utf16().collect())));
+[0m[31m-    assert!(events.contains(&TerminalEvent::Data(vec![0xd800,13])));
+[0m[31m-    assert_eq!(lines(&t),["!Z",""]);
+[0m[32m+    assert!(events.contains(&TerminalEvent::TitleChange(
+[0m[32m+        "hello".encode_utf16().collect()
+[0m[32m+    )));
+[0m[32m+    assert!(events.contains(&TerminalEvent::Data(vec![0xd800, 13])));
+[0m[32m+    assert_eq!(lines(&t), ["!Z", ""]);
+[0m }
+ #[test]
+ fn direct_reset_retains_parser_partial_sequence() {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\terminal_engine.rs:48:
+[31m-    let mut t=CoreTerminal::new(4,2,0).unwrap();
+[0m[31m-    t.write("\x1b]2;before").unwrap();t.reset().unwrap();t.write("after\x07").unwrap();
+[0m[31m-    assert_eq!(t.state().title,"beforeafter".encode_utf16().collect::<Vec<_>>());
+[0m[31m-    assert_eq!(lines(&t),["",""]);
+[0m[32m+    let mut t = CoreTerminal::new(4, 2, 0).unwrap();
+[0m[32m+    t.write("\x1b]2;before").unwrap();
+[0m[32m+    t.reset().unwrap();
+[0m[32m+    t.write("after\x07").unwrap();
+[0m[32m+    assert_eq!(
+[0m[32m+        t.state().title,
+[0m[32m+        "beforeafter".encode_utf16().collect::<Vec<_>>()
+[0m[32m+    );
+[0m[32m+    assert_eq!(lines(&t), ["", ""]);
+[0m }
+ #[test]
+ fn clear_at_first_row_and_dispose_are_real_operations() {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\terminal_engine.rs:55:
+[31m-    let mut t=CoreTerminal::new(4,2,0).unwrap();
+[0m[31m-    t.write("abc").unwrap();t.clear().unwrap();assert_eq!(lines(&t),["abc",""]);
+[0m[32m+    let mut t = CoreTerminal::new(4, 2, 0).unwrap();
+[0m[32m+    t.write("abc").unwrap();
+[0m[32m+    t.clear().unwrap();
+[0m[32m+    assert_eq!(lines(&t), ["abc", ""]);
+[0m     assert!(t.drain_events().contains(&TerminalEvent::Scroll(0)));
+[31m-    t.dispose();assert!(t.write("lost").is_err());t.dispose();
+[0m[32m+    t.dispose();
+[0m[32m+    assert!(t.write("lost").is_err());
+[0m[32m+    t.dispose();
+[0m }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\unicode_addon_manager.rs:36:
+ #[test]
+ fn unchanged_original_addon_lifecycle_traces() {
+     let mut count = 0;
+[31m-    for (case, line) in include_str!("fixtures/unicode-addon-lifecycle.tsv").lines().enumerate() {
+[0m[31m-        let services = [Rc::new(UnicodeService::new()), Rc::new(UnicodeService::new())];
+[0m[32m+    for (case, line) in include_str!("fixtures/unicode-addon-lifecycle.tsv")
+[0m[32m+        .lines()
+[0m[32m+        .enumerate()
+[0m[32m+    {
+[0m[32m+        let services = [
+[0m[32m+            Rc::new(UnicodeService::new()),
+[0m[32m+            Rc::new(UnicodeService::new()),
+[0m[32m+        ];
+[0m         let changes = Rc::new(RefCell::new(Vec::new()));
+         for (index, service) in services.iter().enumerate() {
+             service.register(Rc::new(UnicodeV6::new())).unwrap();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\unicode_addon_manager.rs:44:
+             let changes = Rc::clone(&changes);
+[31m-            service.on_change().subscribe(move |version| changes.borrow_mut().push(format!("{index}:{version}")));
+[0m[32m+            service
+[0m[32m+                .on_change()
+[0m[32m+                .subscribe(move |version| changes.borrow_mut().push(format!("{index}:{version}")));
+[0m         }
+         let addon = UnicodeGraphemesAddon::new();
+         let (actions, expected) = line.split_once('\t').unwrap();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\unicode_addon_manager.rs:53:
+             let result = match action.as_bytes()[0] {
+                 b'd' => addon.dispose(),
+                 b'a' => addon.activate(Rc::clone(&services[action[1..].parse::<usize>().unwrap()])),
+[31m-                b'e' => Unicode11Addon::new().activate(&services[action[1..].parse::<usize>().unwrap()]),
+[0m[32m+                b'e' => {
+[0m[32m+                    Unicode11Addon::new().activate(&services[action[1..].parse::<usize>().unwrap()])
+[0m[32m+                }
+[0m                 b'v' => {
+                     let (index, version) = action[1..].split_once(':').unwrap();
+                     services[index.parse::<usize>().unwrap()].set_active_version(version)
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\unicode_addon_manager.rs:61:
+                 _ => panic!("invalid persisted action"),
+             };
+             let error = result.err().map_or_else(String::new, |e| format!("!{e}:"));
+[31m-            let actual = format!("{error}{},{}|{}>{}|{}", services[0].active_version(), services[1].active_version(), services[0].versions().join(","), services[1].versions().join(","), changes.borrow().join(","));
+[0m[31m-            assert_eq!(actual, expected, "lifecycle case {case} step {step} action {action}");
+[0m[32m+            let actual = format!(
+[0m[32m+                "{error}{},{}|{}>{}|{}",
+[0m[32m+                services[0].active_version(),
+[0m[32m+                services[1].active_version(),
+[0m[32m+                services[0].versions().join(","),
+[0m[32m+                services[1].versions().join(","),
+[0m[32m+                changes.borrow().join(",")
+[0m[32m+            );
+[0m[32m+            assert_eq!(
+[0m[32m+                actual, expected,
+[0m[32m+                "lifecycle case {case} step {step} action {action}"
+[0m[32m+            );
+[0m             count += 1;
+         }
+     }
