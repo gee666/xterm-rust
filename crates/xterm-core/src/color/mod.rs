@@ -5,6 +5,7 @@
 //! CSS strings are retained where upstream retains them, including letter case.
 
 pub mod css;
+pub mod palette;
 
 /// Upstream `IColor`. `rgba` is packed as `0xrrggbbaa`.
 #[derive(Clone, Debug, PartialEq, Eq)]
