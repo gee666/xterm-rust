@@ -7,17 +7,32 @@ pub mod buffer;
 pub mod charset;
 pub mod circular_list;
 pub mod color;
+pub mod core_service;
 pub mod event;
+pub mod instantiation;
 pub mod lifecycle;
+pub mod log_service;
+pub mod mouse_state;
 pub mod multi_key_map;
 pub mod options;
+pub mod platform;
+pub mod serialize;
+pub mod service_registry;
 pub mod sorted_list;
 pub mod string_builder;
+pub mod task_queue;
 pub mod unicode;
+pub mod unicode11;
+pub mod unicode_graphemes;
+pub mod unicode_properties;
+pub mod unicode_service;
 pub mod unicode_v6;
+pub mod version;
+pub mod windows_mode;
 
 pub mod input {
     pub mod keyboard;
+    pub mod kitty_keyboard;
     pub mod text_decoder;
     pub mod win32_input_mode;
     pub mod xparse_color;
@@ -28,7 +43,9 @@ pub use input::{keyboard, text_decoder, win32_input_mode};
 pub mod parser {
     pub mod apc;
     pub mod dcs;
+    pub mod escape;
     pub mod handler;
     pub mod osc;
     pub mod params;
+    pub mod table;
 }
