@@ -3,6 +3,7 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { pathToFileURL, fileURLToPath } from 'node:url';
+import { strict as assert } from 'node:assert';
 import path from 'node:path';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -103,17 +104,29 @@ for (const kind of ['8', '16']) {
     trace(kind, chunks);
   }
 }
-await writeFile(path.join(fixtureDir, 'text-decoder-traces.tsv'), fixtures.join('\n') + '\n');
+async function fixture(name, content) {
+  const file = path.join(fixtureDir, name);
+  if (process.argv.includes('--generate')) await writeFile(file, content);
+  else assert.equal((await readFile(file, 'utf8')).replace(/\r\n/g, '\n'), content, name);
+}
+await fixture('text-decoder-traces.tsv', fixtures.join('\n') + '\n');
 // Preserve the exact upstream multilingual strings, including all code units.
 const strings = (await readFile(sourceTest, 'utf8')).match(/const TEST_STRINGS = \[([\s\S]*?)\r?\n\];/)[1];
 const samples = Function(`return [${strings}];`)();
-await writeFile(path.join(fixtureDir, 'text-decoder-strings.txt'), samples.join('\n') + '\n');
+await fixture('text-decoder-strings.txt', samples.join('\n') + '\n');
+const conversionValues = [0, 1, 0xfeff, 0xd800, 0xdbff, 0xdc00, 0xdfff, 0xffff,
+  0x10000, 0x10ffff, 0x110000, 0x80000000, 0x80010000, 0xffffffff];
+const conversionRows = conversionValues.map(value => {
+  const converted = decoder.stringFromCodePoint(value);
+  return `${value.toString(16)}\t${hexList(Array.from({length: converted.length}, (_, i) => converted.charCodeAt(i)))}`;
+});
+await fixture('text-decoder-conversion.tsv', conversionRows.join('\n') + '\n');
 const report = {
   source: 'source_repo/src/common/input/TextDecoder.ts', sourceSha256: await hash(source),
   test: 'source_repo/src/common/input/TextDecoder.test.ts', testSha256: await hash(sourceTest),
   node: process.version, platform: process.platform, arch: process.arch,
   harness: 'Native Node TypeScript stripping, synchronous describe/it, Node strictEqual replacing chai strictEqual',
-  seed, generatedTraces: fixtures.length,
+  seed, generatedTraces: fixtures.length, conversionCases: conversionValues.length,
   baseline: { discovered: outcomes.length, executed: outcomes.length, passed: outcomes.filter(x => x.status === 'passed').length,
     failed: outcomes.filter(x => x.status === 'failed').length, skipped: 0, unrun: 0, outcomes }
 };

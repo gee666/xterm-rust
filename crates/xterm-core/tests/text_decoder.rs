@@ -133,6 +133,29 @@ fn parse_hex(text: &str) -> Vec<u32> {
 }
 
 #[test]
+fn javascript_conversion_boundaries_and_slices() {
+    let mut points = Vec::new();
+    let mut expected = Vec::new();
+    for line in include_str!("fixtures/text-decoder-conversion.tsv").lines() {
+        let (input, output) = line.split_once('\t').unwrap();
+        let point = u32::from_str_radix(input, 16).unwrap();
+        let units: Vec<u16> = parse_hex(output)
+            .into_iter()
+            .map(|v| u16::try_from(v).unwrap())
+            .collect();
+        assert_eq!(string_from_code_point(point), units, "u32 {point:x}");
+        points.push(point);
+        expected.extend(units);
+    }
+    assert_eq!(utf32_to_string(&points), expected);
+    assert_eq!(utf32_to_string(&[]), Vec::<u16>::new());
+    assert_eq!(
+        utf32_to_string(&points[3..7]),
+        vec![0xd800, 0xdbff, 0xdc00, 0xdfff]
+    );
+}
+
+#[test]
 fn js_oracle_chunked_malformed_traces() {
     let fixtures = include_str!("fixtures/text-decoder-traces.tsv");
     for (case, line) in fixtures.lines().enumerate() {
