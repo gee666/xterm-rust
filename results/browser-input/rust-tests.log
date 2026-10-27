@@ -1,0 +1,90 @@
+    Blocking waiting for file lock on build directory
+warning: method `erase_cell` is never used
+  --> crates\xterm-core\src\terminal\state.rs:51:19
+   |
+33 | impl TerminalState {
+   | ------------------ method in this implementation
+...
+51 |     pub(crate) fn erase_cell(&self) -> CellData {
+   |                   ^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: unused `Result` that must be used
+  --> crates\xterm-core\src\buffer\cleanup.rs:66:9
+   |
+66 |         self.queue.process(time_remaining);
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: this `Result` may be an `Err` variant, which should be handled
+   = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+   |
+66 |         let _ = self.queue.process(time_remaining);
+   |         +++++++
+
+warning: unused `Result` that must be used
+  --> crates\xterm-core\src\buffer\cleanup.rs:70:9
+   |
+70 |         self.queue.process_priority();
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: this `Result` may be an `Err` variant, which should be handled
+help: use `let _ = ...` to ignore the resulting value
+   |
+70 |         let _ = self.queue.process_priority();
+   |         +++++++
+
+warning: unused `Result` that must be used
+   --> crates\xterm-core\src\buffer\cleanup.rs:110:9
+    |
+110 | /         queue.enqueue(move |_| {
+111 | |             let Some(buffer) = buffer.upgrade() else {
+112 | |                 return false;
+113 | |             };
+...   |
+125 | |         });
+    | |__________^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+help: use `let _ = ...` to ignore the resulting value
+    |
+110 |         let _ = queue.enqueue(move |_| {
+    |         +++++++
+
+warning: unused `Result` that must be used
+   --> crates\xterm-core\src\input\write_buffer_drain.rs:132:13
+    |
+132 |             self.schedule(0.0, true);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+help: use `let _ = ...` to ignore the resulting value
+    |
+132 |             let _ = self.schedule(0.0, true);
+    |             +++++++
+
+warning: unused `Result` that must be used
+   --> crates\xterm-core\src\input\write_buffer_drain.rs:163:21
+    |
+163 |                     queue.schedule(0.0, result);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+help: use `let _ = ...` to ignore the resulting value
+    |
+163 |                     let _ = queue.schedule(0.0, result);
+    |                     +++++++
+
+warning: `xterm-core` (lib) generated 6 warnings
+   Compiling xterm-addons v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons)
+   Compiling xterm-web v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 7.79s
+     Running tests\input_upstream.rs (target\debug\deps\input_upstream-4e7715350c4bdb2d.exe)
+
+running 2 tests
+test directed_deferred_and_utf16_regressions ... ok
+test every_original_clipboard_and_ime_trace_step ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

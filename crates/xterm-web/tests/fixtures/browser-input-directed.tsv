@@ -1,0 +1,72 @@
+reset	~	-	-	0;-;~;-;0	insertion and repeated229
+value	61,62,61	-	-	0;-;~;-;0	insertion and repeated229
+key	~	229	-	0;0;~;-;1	insertion and repeated229
+key	~	229	-	0;0;~;-;1	insertion and repeated229
+value	61,62,61,62,61	-	-	0;-;~;-;1	insertion and repeated229
+tick	~	-	-	0;-;~;62,61;0	insertion and repeated229
+reset	~	-	-	0;-;~;-;0	deletion
+value	61,62	-	-	0;-;~;-;0	deletion
+key	~	229	-	0;0;~;-;1	deletion
+value	61	-	-	0;-;~;-;1	deletion
+tick	~	-	-	0;-;~;7f;0	deletion
+reset	~	-	-	0;-;~;-;0	same-length replacement
+value	61,62	-	-	0;-;~;-;0	same-length replacement
+key	~	229	-	0;0;~;-;1	same-length replacement
+value	4e2d,61	-	-	0;-;~;-;1	same-length replacement
+tick	~	-	-	0;-;~;4e2d,61;0	same-length replacement
+reset	~	-	-	0;-;~;-;0	no-change
+value	61,62	-	-	0;-;~;-;0	no-change
+key	~	229	-	0;0;~;-;1	no-change
+tick	~	-	-	0;-;~;-;0	no-change
+reset	~	-	-	0;-;~;-;0	composition cancels pendingdiff
+key	~	229	-	0;0;~;-;1	composition cancels pendingdiff
+start	~	-	-	1;-;~;-;1	composition cancels pendingdiff
+value	4e2d	-	-	1;-;~;-;1	composition cancels pendingdiff
+tick	~	-	-	1;-;~;-;0	composition cancels pendingdiff
+end	~	-	-	0;-;~;-;1	composition cancels pendingdiff
+tick	~	-	-	0;-;~;4e2d;0	composition cancels pendingdiff
+reset	~	-	-	0;-;~;-;0	immediate commit cancels send
+start	~	-	-	1;-;~;-;0	immediate commit cancels send
+update	4e2d	-	-	1;-;200e,4e2d,200e;-;1	immediate commit cancels send
+value	4e2d	-	-	1;-;200e,4e2d,200e;-;1	immediate commit cancels send
+tick	~	-	-	1;-;200e,4e2d,200e;-;0	immediate commit cancels send
+end	~	-	-	0;-;200e,4e2d,200e;-;1	immediate commit cancels send
+key	~	13	-	0;1;200e,4e2d,200e;4e2d;1	immediate commit cancels send
+tick	~	-	-	0;-;200e,4e2d,200e;4e2d;0	immediate commit cancels send
+reset	~	-	-	0;-;~;-;0	deferred text before newcomposition
+start	~	-	-	1;-;~;-;0	deferred text before newcomposition
+update	61	-	-	1;-;200e,61,200e;-;1	deferred text before newcomposition
+value	61	-	-	1;-;200e,61,200e;-;1	deferred text before newcomposition
+tick	~	-	-	1;-;200e,61,200e;-;0	deferred text before newcomposition
+end	~	-	-	0;-;200e,61,200e;-;1	deferred text before newcomposition
+start	~	-	-	1;-;~;-;1	deferred text before newcomposition
+update	62	-	-	1;-;200e,62,200e;-;2	deferred text before newcomposition
+value	61,62	-	-	1;-;200e,62,200e;-;2	deferred text before newcomposition
+tick	~	-	-	1;-;200e,62,200e;61;1	deferred text before newcomposition
+tick	~	-	-	1;-;200e,62,200e;61;0	deferred text before newcomposition
+end	~	-	-	0;-;200e,62,200e;61;1	deferred text before newcomposition
+tick	~	-	-	0;-;200e,62,200e;61/62;0	deferred text before newcomposition
+reset	~	-	-	0;-;~;-;0	reversed selection and suffix
+value	61,4e2d,62	-	-	0;-;~;-;0	reversed selection and suffix
+startsel	~	2	-	0;-;~;-;0	reversed selection and suffix
+endsel	~	1	-	0;-;~;-;0	reversed selection and suffix
+start	~	-	-	1;-;~;-;0	reversed selection and suffix
+update	d83d,de00	-	-	1;-;200e,d83d,de00,200e;-;1	reversed selection and suffix
+value	61,d83d,de00,62	-	-	1;-;200e,d83d,de00,200e;-;1	reversed selection and suffix
+endsel	~	3	-	1;-;200e,d83d,de00,200e;-;1	reversed selection and suffix
+tick	~	-	-	1;-;200e,d83d,de00,200e;-;0	reversed selection and suffix
+end	~	-	-	0;-;200e,d83d,de00,200e;-;1	reversed selection and suffix
+value	61,d83d,de00,31,62	-	-	0;-;200e,d83d,de00,200e;-;1	reversed selection and suffix
+tick	~	-	-	0;-;200e,d83d,de00,200e;d83d,de00,31;0	reversed selection and suffix
+reset	~	-	-	0;-;~;-;0	lone surrogates and modifier gates
+start	~	-	-	1;-;~;-;0	lone surrogates and modifier gates
+update	d800	-	-	1;-;200e,d800,200e;-;1	lone surrogates and modifier gates
+value	d800	-	-	1;-;200e,d800,200e;-;1	lone surrogates and modifier gates
+key	~	16	-	1;0;200e,d800,200e;-;1	lone surrogates and modifier gates
+key	~	17	-	1;0;200e,d800,200e;-;1	lone surrogates and modifier gates
+key	~	18	-	1;0;200e,d800,200e;-;1	lone surrogates and modifier gates
+key	~	20	-	1;0;200e,d800,200e;-;1	lone surrogates and modifier gates
+key	~	229	-	1;0;200e,d800,200e;-;1	lone surrogates and modifier gates
+tick	~	-	-	1;-;200e,d800,200e;-;0	lone surrogates and modifier gates
+end	~	-	-	0;-;200e,d800,200e;-;1	lone surrogates and modifier gates
+tick	~	-	-	0;-;200e,d800,200e;d800;0	lone surrogates and modifier gates

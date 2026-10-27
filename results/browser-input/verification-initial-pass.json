@@ -1,0 +1,53 @@
+{
+  "command": "node scripts/browser-input-oracle.mjs",
+  "platform": "win32",
+  "arch": "x64",
+  "node": "v24.15.0",
+  "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+  "seed": 1229800758,
+  "freeBytesBeforeBuild": 2434596864,
+  "sourceHashes": {
+    "source_repo/src/browser/Clipboard.ts": "cc0f2615860665867e54d96a2e788d07af72641635fff730411ddde30092bc5f",
+    "source_repo/src/browser/Clipboard.test.ts": "eb135a14251539ae37d9bbca898614a57365aea332b5a1a9bfca20b4e7df9567",
+    "source_repo/src/browser/input/CompositionHelper.ts": "3797eb1d8ace96c49a7ef68ae965272c2758d9bb484eb7c074727c9e19d49584",
+    "source_repo/src/browser/input/CompositionHelper.test.ts": "f4ea18ff6f375b4097cd2fc9f28585c59e7393b04d49d2add3bb06c13b481a8a"
+  },
+  "upstream": {
+    "discovered": 11,
+    "executed": 11,
+    "passed": 11,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0,
+    "assertions": 16,
+    "clipboardCalls": 6,
+    "compositionTraceSteps": 123,
+    "names": [
+      "evaluatePastedTextProcessing / should replace carriage return and/or line feed with carriage return",
+      "evaluatePastedTextProcessing / should bracket pasted text in bracketedPasteMode",
+      "evaluatePastedTextProcessing / should escape embedded escape sequences in pasted text only when bracketed",
+      "CompositionHelper / Input / Should insert simple characters",
+      "CompositionHelper / Input / Should insert complex characters",
+      "CompositionHelper / Input / Should insert complex characters that change with following character",
+      "CompositionHelper / Input / Should insert multi-characters compositions",
+      "CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with the same length",
+      "CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with different lengths",
+      "CompositionHelper / Input / Should insert non-composition characters input immediately after composition characters",
+      "CompositionHelper / Input / Should insert middle composition and subsequent input without appending existing trailing text"
+    ]
+  },
+  "differential": {
+    "executed": 252340,
+    "passed": 252340,
+    "failed": 0,
+    "retainedMismatches": 0,
+    "counts": {
+      "original": 129,
+      "BMP line endings": 65536,
+      "BMP ESC bracketing": 65536,
+      "seeded paste flags": 40000,
+      "seeded composition steps": 81139
+    }
+  },
+  "scope": "Clipboard string policy and CompositionHelper deferred/state/output policy only. Geometry, actual DOM events, browser timing and full terminal equivalence NOT PROVEN."
+}

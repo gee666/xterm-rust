@@ -1,0 +1,90 @@
+    Blocking waiting for file lock on build directory
+   Compiling xterm-addons v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons)
+   Compiling xterm-web v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web)
+error[E0599]: no method named `dispose` found for struct `Emitter` in the current scope
+   --> crates\xterm-web\src\selection\service.rs:245:30
+    |
+245 |         self.refresh_request.dispose();
+    |                              ^^^^^^^ method not found in `Emitter<()>`
+    |
+   ::: P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\lifecycle.rs:16:8
+    |
+16  |     fn dispose(&self);
+    |        ------- the method is available for `Emitter<()>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `Disposable` which provides `dispose` is implemented but not in scope; perhaps you want to import it
+    |
+3   + use xterm_core::lifecycle::Disposable;
+    |
+
+error[E0599]: no method named `dispose` found for struct `Emitter` in the current scope
+   --> crates\xterm-web\src\selection\service.rs:246:21
+    |
+246 |         self.redraw.dispose();
+    |                     ^^^^^^^ method not found in `Emitter<RedrawRequest>`
+    |
+   ::: P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\lifecycle.rs:16:8
+    |
+16  |     fn dispose(&self);
+    |        ------- the method is available for `Emitter<RedrawRequest>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `Disposable` which provides `dispose` is implemented but not in scope; perhaps you want to import it
+    |
+3   + use xterm_core::lifecycle::Disposable;
+    |
+
+error[E0599]: no method named `dispose` found for struct `Emitter` in the current scope
+   --> crates\xterm-web\src\selection\service.rs:247:31
+    |
+247 |         self.selection_change.dispose();
+    |                               ^^^^^^^ method not found in `Emitter<()>`
+    |
+   ::: P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\lifecycle.rs:16:8
+    |
+16  |     fn dispose(&self);
+    |        ------- the method is available for `Emitter<()>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `Disposable` which provides `dispose` is implemented but not in scope; perhaps you want to import it
+    |
+3   + use xterm_core::lifecycle::Disposable;
+    |
+
+error[E0599]: no method named `dispose` found for struct `Emitter` in the current scope
+   --> crates\xterm-web\src\selection\service.rs:248:30
+    |
+248 |         self.linux_selection.dispose();
+    |                              ^^^^^^^ method not found in `Emitter<Vec<u16>>`
+    |
+   ::: P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\lifecycle.rs:16:8
+    |
+16  |     fn dispose(&self);
+    |        ------- the method is available for `Emitter<Vec<u16>>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `Disposable` which provides `dispose` is implemented but not in scope; perhaps you want to import it
+    |
+3   + use xterm_core::lifecycle::Disposable;
+    |
+
+error[E0599]: no method named `dispose` found for struct `Emitter` in the current scope
+   --> crates\xterm-web\src\selection\service.rs:249:24
+    |
+249 |         self.drag_stop.dispose();
+    |                        ^^^^^^^ method not found in `Emitter<()>`
+    |
+   ::: P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\lifecycle.rs:16:8
+    |
+16  |     fn dispose(&self);
+    |        ------- the method is available for `Emitter<()>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `Disposable` which provides `dispose` is implemented but not in scope; perhaps you want to import it
+    |
+3   + use xterm_core::lifecycle::Disposable;
+    |
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `xterm-web` (lib) due to 5 previous errors

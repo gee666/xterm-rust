@@ -1,0 +1,129 @@
+prepare	66,6f,6f,a,62,61,72,a	0	-	66,6f,6f,d,62,61,72,d	evaluatePastedTextProcessing / should replace carriage return and/or line feed with carriage return
+prepare	66,6f,6f,d,a,62,61,72,d,a	0	-	66,6f,6f,d,62,61,72,d	evaluatePastedTextProcessing / should replace carriage return and/or line feed with carriage return
+bracket	66,6f,6f,20,62,61,72	0	-	66,6f,6f,20,62,61,72	evaluatePastedTextProcessing / should bracket pasted text in bracketedPasteMode
+bracket	66,6f,6f,20,62,61,72	1	-	1b,5b,32,30,30,7e,66,6f,6f,20,62,61,72,1b,5b,32,30,31,7e	evaluatePastedTextProcessing / should bracket pasted text in bracketedPasteMode
+bracket	1b,5b,32,30,31,7e,66,6f,6f,1b,5b,32,30,30,7e,62,61,72	0	-	1b,5b,32,30,31,7e,66,6f,6f,1b,5b,32,30,30,7e,62,61,72	evaluatePastedTextProcessing / should escape embedded escape sequences in pasted text only when bracketed
+bracket	1b,5b,32,30,31,7e,66,6f,6f,1b,5b,32,30,30,7e,62,61,72	1	-	1b,5b,32,30,30,7e,241b,5b,32,30,31,7e,66,6f,6f,241b,5b,32,30,30,7e,62,61,72,1b,5b,32,30,31,7e	evaluatePastedTextProcessing / should escape embedded escape sequences in pasted text only when bracketed
+reset	~	-	-	0;-;~;-;0	CompositionHelper / Input / Should insert simple characters
+start	~	-	-	1;-;~;-;0	CompositionHelper / Input / Should insert simple characters
+update	3147	-	-	1;-;200e,3147,200e;-;1	CompositionHelper / Input / Should insert simple characters
+value	3147	-	-	1;-;200e,3147,200e;-;1	CompositionHelper / Input / Should insert simple characters
+tick	~	-	-	1;-;200e,3147,200e;-;0	CompositionHelper / Input / Should insert simple characters
+end	~	-	-	0;-;200e,3147,200e;-;1	CompositionHelper / Input / Should insert simple characters
+tick	~	-	-	0;-;200e,3147,200e;3147;0	CompositionHelper / Input / Should insert simple characters
+start	~	-	-	1;-;~;3147;0	CompositionHelper / Input / Should insert simple characters
+update	3147	-	-	1;-;200e,3147,200e;3147;1	CompositionHelper / Input / Should insert simple characters
+value	3147,3147	-	-	1;-;200e,3147,200e;3147;1	CompositionHelper / Input / Should insert simple characters
+tick	~	-	-	1;-;200e,3147,200e;3147;0	CompositionHelper / Input / Should insert simple characters
+end	~	-	-	0;-;200e,3147,200e;3147;1	CompositionHelper / Input / Should insert simple characters
+tick	~	-	-	0;-;200e,3147,200e;3147/3147;0	CompositionHelper / Input / Should insert simple characters
+reset	~	-	-	0;-;~;-;0	CompositionHelper / Input / Should insert complex characters
+start	~	-	-	1;-;~;-;0	CompositionHelper / Input / Should insert complex characters
+update	3147	-	-	1;-;200e,3147,200e;-;1	CompositionHelper / Input / Should insert complex characters
+value	3147	-	-	1;-;200e,3147,200e;-;1	CompositionHelper / Input / Should insert complex characters
+tick	~	-	-	1;-;200e,3147,200e;-;0	CompositionHelper / Input / Should insert complex characters
+update	c544	-	-	1;-;200e,c544,200e;-;1	CompositionHelper / Input / Should insert complex characters
+value	c544	-	-	1;-;200e,c544,200e;-;1	CompositionHelper / Input / Should insert complex characters
+tick	~	-	-	1;-;200e,c544,200e;-;0	CompositionHelper / Input / Should insert complex characters
+update	c559	-	-	1;-;200e,c559,200e;-;1	CompositionHelper / Input / Should insert complex characters
+value	c559	-	-	1;-;200e,c559,200e;-;1	CompositionHelper / Input / Should insert complex characters
+tick	~	-	-	1;-;200e,c559,200e;-;0	CompositionHelper / Input / Should insert complex characters
+end	~	-	-	0;-;200e,c559,200e;-;1	CompositionHelper / Input / Should insert complex characters
+tick	~	-	-	0;-;200e,c559,200e;c559;0	CompositionHelper / Input / Should insert complex characters
+start	~	-	-	1;-;~;c559;0	CompositionHelper / Input / Should insert complex characters
+update	3147	-	-	1;-;200e,3147,200e;c559;1	CompositionHelper / Input / Should insert complex characters
+value	c559,3147	-	-	1;-;200e,3147,200e;c559;1	CompositionHelper / Input / Should insert complex characters
+tick	~	-	-	1;-;200e,3147,200e;c559;0	CompositionHelper / Input / Should insert complex characters
+update	c544	-	-	1;-;200e,c544,200e;c559;1	CompositionHelper / Input / Should insert complex characters
+value	c559,c544	-	-	1;-;200e,c544,200e;c559;1	CompositionHelper / Input / Should insert complex characters
+tick	~	-	-	1;-;200e,c544,200e;c559;0	CompositionHelper / Input / Should insert complex characters
+update	c559	-	-	1;-;200e,c559,200e;c559;1	CompositionHelper / Input / Should insert complex characters
+value	c559,c559	-	-	1;-;200e,c559,200e;c559;1	CompositionHelper / Input / Should insert complex characters
+tick	~	-	-	1;-;200e,c559,200e;c559;0	CompositionHelper / Input / Should insert complex characters
+end	~	-	-	0;-;200e,c559,200e;c559;1	CompositionHelper / Input / Should insert complex characters
+tick	~	-	-	0;-;200e,c559,200e;c559/c559;0	CompositionHelper / Input / Should insert complex characters
+reset	~	-	-	0;-;~;-;0	CompositionHelper / Input / Should insert complex characters that change with following character
+start	~	-	-	1;-;~;-;0	CompositionHelper / Input / Should insert complex characters that change with following character
+update	3147	-	-	1;-;200e,3147,200e;-;1	CompositionHelper / Input / Should insert complex characters that change with following character
+value	3147	-	-	1;-;200e,3147,200e;-;1	CompositionHelper / Input / Should insert complex characters that change with following character
+tick	~	-	-	1;-;200e,3147,200e;-;0	CompositionHelper / Input / Should insert complex characters that change with following character
+update	c544	-	-	1;-;200e,c544,200e;-;1	CompositionHelper / Input / Should insert complex characters that change with following character
+value	c544	-	-	1;-;200e,c544,200e;-;1	CompositionHelper / Input / Should insert complex characters that change with following character
+tick	~	-	-	1;-;200e,c544,200e;-;0	CompositionHelper / Input / Should insert complex characters that change with following character
+update	c559	-	-	1;-;200e,c559,200e;-;1	CompositionHelper / Input / Should insert complex characters that change with following character
+value	c559	-	-	1;-;200e,c559,200e;-;1	CompositionHelper / Input / Should insert complex characters that change with following character
+tick	~	-	-	1;-;200e,c559,200e;-;0	CompositionHelper / Input / Should insert complex characters that change with following character
+end	~	-	-	0;-;200e,c559,200e;-;1	CompositionHelper / Input / Should insert complex characters that change with following character
+start	~	-	-	1;-;~;-;1	CompositionHelper / Input / Should insert complex characters that change with following character
+update	c544	-	-	1;-;200e,c544,200e;-;2	CompositionHelper / Input / Should insert complex characters that change with following character
+value	c544,c544	-	-	1;-;200e,c544,200e;-;2	CompositionHelper / Input / Should insert complex characters that change with following character
+tick	~	-	-	1;-;200e,c544,200e;c544;1	CompositionHelper / Input / Should insert complex characters that change with following character
+tick	~	-	-	1;-;200e,c544,200e;c544;0	CompositionHelper / Input / Should insert complex characters that change with following character
+end	~	-	-	0;-;200e,c544,200e;c544;1	CompositionHelper / Input / Should insert complex characters that change with following character
+tick	~	-	-	0;-;200e,c544,200e;c544/c544;0	CompositionHelper / Input / Should insert complex characters that change with following character
+reset	~	-	-	0;-;~;-;0	CompositionHelper / Input / Should insert multi-characters compositions
+start	~	-	-	1;-;~;-;0	CompositionHelper / Input / Should insert multi-characters compositions
+update	64	-	-	1;-;200e,64,200e;-;1	CompositionHelper / Input / Should insert multi-characters compositions
+value	64	-	-	1;-;200e,64,200e;-;1	CompositionHelper / Input / Should insert multi-characters compositions
+tick	~	-	-	1;-;200e,64,200e;-;0	CompositionHelper / Input / Should insert multi-characters compositions
+update	3060	-	-	1;-;200e,3060,200e;-;1	CompositionHelper / Input / Should insert multi-characters compositions
+value	3060	-	-	1;-;200e,3060,200e;-;1	CompositionHelper / Input / Should insert multi-characters compositions
+tick	~	-	-	1;-;200e,3060,200e;-;0	CompositionHelper / Input / Should insert multi-characters compositions
+update	3060,3042	-	-	1;-;200e,3060,3042,200e;-;1	CompositionHelper / Input / Should insert multi-characters compositions
+value	3060,3042	-	-	1;-;200e,3060,3042,200e;-;1	CompositionHelper / Input / Should insert multi-characters compositions
+tick	~	-	-	1;-;200e,3060,3042,200e;-;0	CompositionHelper / Input / Should insert multi-characters compositions
+end	~	-	-	0;-;200e,3060,3042,200e;-;1	CompositionHelper / Input / Should insert multi-characters compositions
+tick	~	-	-	0;-;200e,3060,3042,200e;3060,3042;0	CompositionHelper / Input / Should insert multi-characters compositions
+reset	~	-	-	0;-;~;-;0	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with the same length
+start	~	-	-	1;-;~;-;0	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with the same length
+update	64	-	-	1;-;200e,64,200e;-;1	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with the same length
+value	64	-	-	1;-;200e,64,200e;-;1	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with the same length
+tick	~	-	-	1;-;200e,64,200e;-;0	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with the same length
+update	3060	-	-	1;-;200e,3060,200e;-;1	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with the same length
+value	3060	-	-	1;-;200e,3060,200e;-;1	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with the same length
+tick	~	-	-	1;-;200e,3060,200e;-;0	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with the same length
+update	3060,30fc	-	-	1;-;200e,3060,30fc,200e;-;1	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with the same length
+value	3060,30fc	-	-	1;-;200e,3060,30fc,200e;-;1	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with the same length
+tick	~	-	-	1;-;200e,3060,30fc,200e;-;0	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with the same length
+update	30c0,30fc	-	-	1;-;200e,30c0,30fc,200e;-;1	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with the same length
+value	30c0,30fc	-	-	1;-;200e,30c0,30fc,200e;-;1	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with the same length
+tick	~	-	-	1;-;200e,30c0,30fc,200e;-;0	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with the same length
+end	~	-	-	0;-;200e,30c0,30fc,200e;-;1	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with the same length
+tick	~	-	-	0;-;200e,30c0,30fc,200e;30c0,30fc;0	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with the same length
+reset	~	-	-	0;-;~;-;0	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with different lengths
+start	~	-	-	1;-;~;-;0	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with different lengths
+update	3044	-	-	1;-;200e,3044,200e;-;1	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with different lengths
+value	3044	-	-	1;-;200e,3044,200e;-;1	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with different lengths
+tick	~	-	-	1;-;200e,3044,200e;-;0	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with different lengths
+update	3044,6d	-	-	1;-;200e,3044,6d,200e;-;1	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with different lengths
+value	3044,6d	-	-	1;-;200e,3044,6d,200e;-;1	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with different lengths
+tick	~	-	-	1;-;200e,3044,6d,200e;-;0	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with different lengths
+update	3044,307e	-	-	1;-;200e,3044,307e,200e;-;1	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with different lengths
+value	3044,307e	-	-	1;-;200e,3044,307e,200e;-;1	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with different lengths
+tick	~	-	-	1;-;200e,3044,307e,200e;-;0	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with different lengths
+update	4eca	-	-	1;-;200e,4eca,200e;-;1	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with different lengths
+value	4eca	-	-	1;-;200e,4eca,200e;-;1	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with different lengths
+tick	~	-	-	1;-;200e,4eca,200e;-;0	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with different lengths
+end	~	-	-	0;-;200e,4eca,200e;-;1	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with different lengths
+tick	~	-	-	0;-;200e,4eca,200e;4eca;0	CompositionHelper / Input / Should insert multi-character compositions that are converted to other characters with different lengths
+reset	~	-	-	0;-;~;-;0	CompositionHelper / Input / Should insert non-composition characters input immediately after composition characters
+start	~	-	-	1;-;~;-;0	CompositionHelper / Input / Should insert non-composition characters input immediately after composition characters
+update	3147	-	-	1;-;200e,3147,200e;-;1	CompositionHelper / Input / Should insert non-composition characters input immediately after composition characters
+value	3147	-	-	1;-;200e,3147,200e;-;1	CompositionHelper / Input / Should insert non-composition characters input immediately after composition characters
+tick	~	-	-	1;-;200e,3147,200e;-;0	CompositionHelper / Input / Should insert non-composition characters input immediately after composition characters
+end	~	-	-	0;-;200e,3147,200e;-;1	CompositionHelper / Input / Should insert non-composition characters input immediately after composition characters
+value	3147,31	-	-	0;-;200e,3147,200e;-;1	CompositionHelper / Input / Should insert non-composition characters input immediately after composition characters
+tick	~	-	-	0;-;200e,3147,200e;3147,31;0	CompositionHelper / Input / Should insert non-composition characters input immediately after composition characters
+reset	~	-	-	0;-;~;-;0	CompositionHelper / Input / Should insert middle composition and subsequent input without appending existing trailing text
+value	4e00,4e8c	-	-	0;-;~;-;0	CompositionHelper / Input / Should insert middle composition and subsequent input without appending existing trailing text
+startsel	~	1	-	0;-;~;-;0	CompositionHelper / Input / Should insert middle composition and subsequent input without appending existing trailing text
+endsel	~	1	-	0;-;~;-;0	CompositionHelper / Input / Should insert middle composition and subsequent input without appending existing trailing text
+start	~	-	-	1;-;~;-;0	CompositionHelper / Input / Should insert middle composition and subsequent input without appending existing trailing text
+update	4e00	-	-	1;-;200e,4e00,200e;-;1	CompositionHelper / Input / Should insert middle composition and subsequent input without appending existing trailing text
+value	4e00,4e00,4e8c	-	-	1;-;200e,4e00,200e;-;1	CompositionHelper / Input / Should insert middle composition and subsequent input without appending existing trailing text
+startsel	~	2	-	1;-;200e,4e00,200e;-;1	CompositionHelper / Input / Should insert middle composition and subsequent input without appending existing trailing text
+endsel	~	2	-	1;-;200e,4e00,200e;-;1	CompositionHelper / Input / Should insert middle composition and subsequent input without appending existing trailing text
+tick	~	-	-	1;-;200e,4e00,200e;-;0	CompositionHelper / Input / Should insert middle composition and subsequent input without appending existing trailing text
+end	~	-	-	0;-;200e,4e00,200e;-;1	CompositionHelper / Input / Should insert middle composition and subsequent input without appending existing trailing text
+value	4e00,4e00,31,4e8c	-	-	0;-;200e,4e00,200e;-;1	CompositionHelper / Input / Should insert middle composition and subsequent input without appending existing trailing text
+tick	~	-	-	0;-;200e,4e00,200e;4e00,31;0	CompositionHelper / Input / Should insert middle composition and subsequent input without appending existing trailing text

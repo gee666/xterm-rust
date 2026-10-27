@@ -1,0 +1,48 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: cargo build -p xterm-web --example input_trace
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0004]: non-exhaustive patterns: `parser::handler::HandlerResult::Failed(_)` not covered
+  --> crates\xterm-core\src\parser\escape_resume.rs:26:19
+   |
+26 |             match result {
+   |                   ^^^^^^ pattern `parser::handler::HandlerResult::Failed(_)` not covered
+   |
+note: `parser::handler::HandlerResult` defined here
+  --> crates\xterm-core\src\parser\handler.rs:36:10
+   |
+36 | pub enum HandlerResult {
+   |          ^^^^^^^^^^^^^
+...
+40 |     Failed(DispatchError),
+   |     ------ not covered
+   = note: the matched value is of type `parser::handler::HandlerResult`
+help: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern or an explicit pattern as shown
+   |
+32 ~                 },
+33 +                 parser::handler::HandlerResult::Failed(_) => todo!()
+   |
+
+For more information about this error, try `rustc --explain E0004`.
+error: could not compile `xterm-core` (lib) due to 1 previous error
+
+
+
+101 !== 0
+
+    at run (file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/scripts/browser-input-oracle.mjs:79:10)
+    at file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/scripts/browser-input-oracle.mjs:85:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)
+    at async node:internal/modules/esm/loader:639:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 101,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.15.0
