@@ -1,37 +1,65 @@
    Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.10s
-     Running tests\apc.rs (target\debug\deps\apc-810f96654a568612.exe)
+warning: unused `Result` that must be used
+   --> crates\xterm-core\src\buffer\reflow.rs:225:9
+    |
+225 |         lines.set(i, Some(line));
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+    = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+    |
+225 |         let _ = lines.set(i, Some(line));
+    |         +++++++
+
+warning: `xterm-core` (lib) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 1.34s
+     Running tests\apc.rs (target\debug\deps\apc-6a8deed1348ed6e3.exe)
 
 running 11 tests
-test add_apc_handler_return_false ... ok
-test clear_apc_handler ... ok
-test add_apc_handler ... ok
-test factory_payload_limit_and_overflow ... ok
-test factory_end_success_and_abort_sync_async ... ok
 test dispose_handlers ... ok
-test factory_return_false_sync_async ... ok
+test add_apc_handler ... ok
+test clear_apc_handler ... ok
 test factory_dispose_sync_async ... ok
+test add_apc_handler_return_false ... ok
+test factory_end_success_and_abort_sync_async ... ok
+test factory_payload_limit_and_overflow ... ok
+test factory_return_false_sync_async ... ok
 test mixed_sync_async_dispatch ... ok
 test reset_aborts_active_handlers ... ok
 test set_apc_handler ... ok
 
 test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
-     Running tests\apc_differential.rs (target\debug\deps\apc_differential-c8b9c175c0ad0faa.exe)
+     Running tests\apc_differential.rs (target\debug\deps\apc_differential-c91aa40510a307b0.exe)
 
 running 1 test
 test randomized_registration_lifecycle_and_streaming_matches_javascript ... ok
 
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
 
-     Running tests\apc_edges.rs (target\debug\deps\apc_edges-9af23963d448986d.exe)
+     Running tests\apc_edges.rs (target\debug\deps\apc_edges-327dd31ce4754d14.exe)
 
-running 5 tests
+running 7 tests
+test dropped_callback_future_does_not_leak_payload_into_next_command ... ok
+test asynchronous_false_during_cleanup_does_not_restore_bubbling ... ok
 test idle_calls_and_disposal_use_identifier_zero_without_start_notifications ... ok
+test reset_while_paused_does_not_abort_the_already_returned_future ... ok
+test reset_retains_lazy_abort_cleanup_through_disposal_in_reverse_order ... ok
 test clearing_a_registration_does_not_abort_an_active_command ... ok
 test payload_limit_counts_utf16_units_and_preserves_lone_surrogates ... ok
-test reset_retains_lazy_abort_cleanup_in_reverse_order ... ok
-test reset_while_paused_does_not_abort_the_already_returned_future ... ok
 
-test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\apc_registration.rs (target\debug\deps\apc_registration-79f3005cb1ec27b9.exe)
+
+running 6 tests
+test cleared_active_list_is_distinct_from_new_registration_list ... ok
+test dispose_does_not_end_active_handlers_and_allows_new_registration ... ok
+test callback_removal_errors_match_upstream_partial_logs_in_all_dispatch_phases ... ok
+test duplicate_identity_disposal_removes_first_match_repeatedly ... ok
+test identifiers_are_separate_and_dropped_tokens_do_not_unregister ... ok
+test registration_during_active_payload_joins_the_shared_list ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 

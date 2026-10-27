@@ -6,7 +6,7 @@
 //! cleanup order are identical to OSC payload dispatch, so both use one engine.
 //! Payload strings are UTF-16 units to preserve JavaScript lone surrogates.
 
-use super::handler::HandlerResult;
+use super::handler::{DispatchError, HandlerResult};
 use super::osc::OscParser;
 use crate::lifecycle::DisposableHandle;
 
@@ -54,8 +54,8 @@ impl ApcParser {
 
     /// Abort unfinished handlers in reverse order. A previously returned future
     /// remains owned by its caller; it is not awaited by reset.
-    pub fn reset(&mut self) {
-        self.dispatch.reset();
+    pub fn reset(&mut self) -> Result<(), DispatchError> {
+        self.dispatch.reset()
     }
 
     /// Take asynchronous abort cleanup initiated by reset or a new start.
@@ -66,19 +66,23 @@ impl ApcParser {
     }
 
     /// Starting another command first aborts the previous command.
-    pub fn start(&mut self, ident: u32) {
-        self.dispatch.start_identified(f64::from(ident));
+    pub fn start(&mut self, ident: u32) -> Result<(), DispatchError> {
+        self.dispatch.start_identified(f64::from(ident))
     }
 
     /// A borrowed slice replaces the upstream data/start/end triple.
-    pub fn put(&mut self, data: &[u32]) {
-        self.dispatch.put_identified(data);
+    pub fn put(&mut self, data: &[u32]) -> Result<(), DispatchError> {
+        self.dispatch.put_identified(data)
     }
 
     /// Return a pending callback future, or `None` after finishing all handlers.
     /// Await the future and call again with the same success flag and its result.
     /// Use `true` as the initial previous result, like upstream's default.
-    pub fn end(&mut self, success: bool, previous_result: bool) -> Option<HandlerResult> {
+    pub fn end(
+        &mut self,
+        success: bool,
+        previous_result: bool,
+    ) -> Result<Option<HandlerResult>, DispatchError> {
         self.dispatch.end_identified(success, previous_result)
     }
 }

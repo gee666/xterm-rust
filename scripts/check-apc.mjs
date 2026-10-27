@@ -1,51 +1,12 @@
 // Copyright (c) 2025 The xterm.js authors. All rights reserved.
 // Licensed under MIT. Uses read-only upstream source and assertions.
 import assert from 'node:assert/strict';
-import { stripTypeScriptTypes } from 'node:module';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
-import vm from 'node:vm';
+import { parserOracle, utf16Hex as units } from './parser-oracle-common.mjs';
 
-const paths = [
-  'source_repo/src/common/parser/Constants.ts',
-  'source_repo/src/common/input/TextDecoder.ts',
-  'source_repo/src/common/StringBuilder.ts',
-  'source_repo/src/common/parser/ApcParser.ts',
-  'source_repo/src/common/parser/ApcParser.test.ts',
-];
-const texts = await Promise.all(paths.map(path => readFile(path, 'utf8')));
-// Imports are the only source edits before TypeScript erasure. Assertions and
-// implementation bodies remain unchanged and run in their original order.
-function erase(text) {
-  return stripTypeScriptTypes(text.replace(/^import .*;\r?$/gm, '').replace(/^export /gm, ''), { mode: 'transform' });
-}
-const suites = [];
-const tests = [];
-const context = vm.createContext({ assert,
-  describe(name, callback) {
-    suites.push({ name, before: [], after: [] });
-    callback();
-    suites.pop();
-  },
-  beforeEach(callback) { suites.at(-1).before.push(callback); },
-  afterEach(callback) { suites.at(-1).after.push(callback); },
-  it(name, callback) { tests.push({ name: [...suites.map(s => s.name), name].join(' / '),
-    callback, before: suites.flatMap(s => s.before), after: suites.toReversed().flatMap(s => s.after) }); },
-});
-vm.runInContext(texts.slice(0, -1).map(erase).join('\n') + '\nglobalThis.Parser = ApcParser;', context);
-vm.runInContext(erase(texts.at(-1)), context);
-const outcomes = [];
-for (const test of tests) {
-  try {
-    for (const before of test.before) await before();
-    await test.callback.call({ timeout() {} });
-    outcomes.push({ name: test.name, status: 'passed' });
-  } catch (error) {
-    outcomes.push({ name: test.name, status: 'failed', error: String(error.stack) });
-  } finally {
-    for (const after of test.after) await after();
-  }
-}
+const oracle = await parserOracle('Apc');
+const { context } = oracle;
 
 const seed = 0xa9c2025;
 let state = seed;
@@ -55,8 +16,7 @@ function random() {
   state ^= state << 5;
   return state >>> 0;
 }
-const units = data => Array.from({ length: data.length }, (_, i) => data.charCodeAt(i).toString(16)).join(',');
-const dataToString = data => vm.runInContext(`utf32ToString(Uint32Array.from([${data.join(',')}]))`, context);
+const dataToString = data => oracle.utf32String(data);
 const lines = [];
 const cases = 256;
 const steps = 80;
@@ -84,7 +44,7 @@ for (let index = 0; index < cases; index++) {
     } else if (kind < 7) {
       ops.push(`s:${id}`); parser.start(id);
     } else if (kind < 12) {
-      const data = [[], [65], [0xd800], [0x1f600, 0x4e2d], [0xfeff, 0, 0x10ffff]][random() % 5];
+      const data = [[], [65], [0xd800], [0x1f600, 0x4e2d], [0xfeff, 0, 0x10ffff, 0xffffffff]][random() % 5];
       ops.push(`p:${data.map(x => x.toString(16)).join(',')}`);
       parser.put(Uint32Array.from(data), 0, data.length);
     } else if (kind < 15) {
@@ -108,15 +68,44 @@ const fixture = 'crates/xterm-core/tests/fixtures/apc-oracle.tsv';
 await mkdir('crates/xterm-core/tests/fixtures', { recursive: true });
 if (process.argv.includes('--generate')) await writeFile(fixture, corpus);
 else assert.equal(await readFile(fixture, 'utf8'), corpus, 'APC oracle drift');
+const mutableListErrors = [];
+for (const stage of ['start', 'put', 'end', 'reset', 'shift']) {
+  const parser = new context.Parser();
+  const log = [];
+  const tokens = [];
+  const handler = name => ({
+    start() { log.push(`${name}:s`); if (name === 'b' && ['start', 'shift'].includes(stage)) remove(); },
+    put() { log.push(`${name}:p`); if (name === 'b' && stage === 'put') remove(); },
+    end(success) { log.push(`${name}:e:${Number(success)}`); if (name === 'b' && ['end', 'reset'].includes(stage)) remove(); return false; },
+  });
+  function remove() { for (const token of stage === 'shift' ? tokens.slice(0, 1) : tokens) token.dispose(); }
+  tokens.push(parser.registerHandler(71, handler('a')));
+  tokens.push(parser.registerHandler(71, handler('b')));
+  let error;
+  try {
+    parser.start(71);
+    if (stage === 'put') parser.put(Uint32Array.from([65]), 0, 1);
+    if (stage === 'end') parser.end(true);
+    if (stage === 'reset') parser.reset();
+  } catch (caught) { error = { name: caught.name, message: caught.message }; }
+  assert.equal(error?.name, stage === 'shift' ? undefined : 'TypeError', `${stage} must preserve source reverse-index behavior`);
+  mutableListErrors.push({ stage, log, error });
+}
+const mutationFixture = mutableListErrors.map(row => `${row.stage}\t${row.log.join('|')}\t${row.error?.name ?? 'none'}`).join('\n') + '\n';
+const mutationPath = 'crates/xterm-core/tests/fixtures/apc-mutation.tsv';
+if (process.argv.includes('--generate')) await writeFile(mutationPath, mutationFixture);
+else assert.equal(await readFile(mutationPath, 'utf8'), mutationFixture, 'APC mutable-list oracle drift');
 const report = {
   node: process.version, seed, randomizedCases: cases, stepsPerCase: steps,
-  baseline: { discovered: outcomes.length, passed: outcomes.filter(x => x.status === 'passed').length,
-    failed: outcomes.filter(x => x.status === 'failed').length, skipped: 0, outcomes },
-  sources: paths.map((path, index) => ({ path, sha256: createHash('sha256').update(texts[index]).digest('hex') })),
+  baseline: { ...oracle.baseline, unrun: 0 },
+  sources: oracle.sources,
   fixtureSha256: createHash('sha256').update(corpus).digest('hex'),
+  mutationFixtureSha256: createHash('sha256').update(mutationFixture).digest('hex'),
+  mutableListErrors,
   status: process.argv.includes('--generate') ? 'generated' : 'matched',
 };
 await mkdir('results/apc', { recursive: true });
 await writeFile('results/apc/oracle.json', JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify({ ...report, baseline: { ...report.baseline, outcomes: undefined } }, null, 2));
 assert.equal(report.baseline.failed, 0, 'upstream APC baseline failed');
+assert.equal(report.baseline.discovered, 20, 'upstream APC inventory changed');

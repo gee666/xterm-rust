@@ -11,12 +11,16 @@
 | `clearHandler` | `clear_handler` | Clears future lookup, not the active shared handler list |
 | Registration `dispose` | `DisposableHandle::dispose` | Explicit and repeatable; dropping a handle does not unregister |
 | `setHandlerFallback` | `set_handler_fallback` | `ApcAction::{Start, Put, End}` replaces string action and optional payload |
-| `dispose`, `reset`, `start` | Same snake_case methods | Reset aborts unfinished callbacks; dispose removes registrations and fallback |
+| `dispose`, `reset`, `start` | Same snake_case methods | Reset/start return `Result`; dispose removes registrations and fallback without callbacks |
 | `put(data, start, end)` | `put(&data[start..end])` | Borrowed UTF-32 slice; fallback payloads preserve UTF-16 units |
-| `end(success, promiseResult)` | `end(success, previous_result)` | Initial previous result is `true`; returns a pending future or `None` |
+| `end(success, promiseResult)` | `end(success, previous_result)` | Initial previous result is `true`; returns `Result` containing a pending future or `None` |
 | `IApcHandler` | `ApcHandlerTrait` | Same start, put and end callbacks |
 | `ApcHandler` | `ApcHandler::new` | Whole-payload callback receives owned `Vec<u16>` |
 | Private mutable payload limit in upstream tests | `ApcHandler::with_limit` | Instance-local limit, no global mutation |
+
+`start`, `put`, `end` and `reset` return `Result<_, DispatchError>`. If callback-driven token disposal removes an index needed by the active reverse traversal, upstream throws TypeError. Rust returns `DispatchError::ActiveHandlerRemoved` without silently skipping the missing callback or resetting partial state. Five retained oracle cases cover errors in all four dispatch phases and the successful shifted-index case where upstream invokes a handler twice.
+
+The detailed acceptance requirements are in `docs/criteria/apc.md`, criteria 79 through 84. Actual outer-parser/native/browser integration is a separate task, not inferred from these subparser tests.
 
 The default limit is 10,000,000 UTF-16 units, taken from upstream `ParserConstants.PAYLOAD_LIMIT`, not the stale 50 MB comments elsewhere in upstream. Supplementary code points count as two units. Lone surrogates remain representable.
 
@@ -42,7 +46,9 @@ All 20 original `it` bodies run with their assertions unchanged under `scripts/c
 | async factory, disposable; respect return false | `factory_dispose_sync_async` and `factory_return_false_sync_async`, asynchronous iterations |
 | reset during payload, then reuse | `reset_aborts_active_handlers` |
 
-The 11 Rust tests preserve the original expected callback sequences and payloads while parameterizing repeated cases. `tests/apc_edges.rs` adds five tests for idle fallback, UTF-16 payload boundaries, clearing an active registration, asynchronous abort cleanup, and reset during a pending callback.
+The 11 Rust tests preserve the original expected callback sequences and payloads while parameterizing repeated cases. `tests/apc_edges.rs` adds seven tests for idle fallback, UTF-16 payload boundaries, clearing an active registration, asynchronous abort cleanup through disposal, reset during a pending callback, false results during asynchronous cleanup, and dropped-future/empty-payload reuse.
+
+`tests/apc_registration.rs` adds six tests for distinct identifiers and dropped tokens, duplicate identity/repeated disposal, clear-and-reregister active-list identity, registration during payload, parser disposal/reuse, and all five mutable-list oracle cases. Its callback captures the token store weakly, avoiding an ownership cycle.
 
 `tests/apc_differential.rs` compares complete callback and fallback logs on 256 operation traces, each with 80 operations. The seed is `0xa9c2025`. Operations include registration, token disposal, clear, reset, restart, success/abort, disposal, idle calls, empty chunks and non-BMP/lone-surrogate input. The committed fixture stores the full traces and expected logs. A failure prints its seed, index and operations. This corpus covers synchronous dispatch; the original four mixed asynchronous cases and focused reset tests cover asynchronous continuation separately.
 
@@ -50,11 +56,11 @@ The 11 Rust tests preserve the original expected callback sequences and payloads
 
 ```sh
 node scripts/check-apc.mjs
-cargo test -p xterm-core --test apc --test apc_edges --test apc_differential
-cargo clippy -p xterm-core --test apc --test apc_edges --test apc_differential -- -D warnings
-rustfmt --edition 2021 --check crates/xterm-core/src/parser/apc.rs crates/xterm-core/tests/apc.rs crates/xterm-core/tests/apc_edges.rs crates/xterm-core/tests/apc_differential.rs
+cargo test -p xterm-core --test apc --test apc_edges --test apc_differential --test apc_registration
+cargo clippy -p xterm-core --test apc --test apc_edges --test apc_differential --test apc_registration -- -D warnings
+rustfmt --edition 2021 --check crates/xterm-core/src/parser/apc.rs crates/xterm-core/tests/apc.rs crates/xterm-core/tests/apc_edges.rs crates/xterm-core/tests/apc_differential.rs crates/xterm-core/tests/apc_registration.rs
 ```
 
-Observed locally on Windows with Rust 1.85.1 and Node v24.15.0. Original baseline passed 20/20 with no skips. Rust passed 17 test functions: 11 assertion-migration tests, five edge tests, and one differential corpus test covering 20,480 operations. Focused Clippy and formatting passed. Raw output and versions are under `results/apc/`; `oracle.json` records the source and fixture SHA-256 values and every original case name.
+Observed locally on Windows with Rust 1.85.1 and Node v24.15.0. Original baseline passed 20/20 with no skips. Rust passed 25 test functions: 11 assertion-migration tests, seven edge tests, six registration/mutation tests, and one differential corpus test covering 20,480 operations. Five additional upstream mutable-list scenarios matched exact partial logs and error outcomes. Owned-file formatting passed. The latest focused Clippy attempt is currently unsuccessful because concurrent Buffer/options/serialize integration does not compile; see `results/apc/clippy.log`. Earlier focused runs passed but are not evidence for the current shared tree. This is work in progress, not an external blocker. Raw output and versions are under `results/apc/`; `oracle.json` records the source and fixture SHA-256 values and every original case name.
 
 These results verify the APC subparser only. They do not demonstrate outer escape-parser integration, WASM/browser operation, native Linux/macOS runtime behavior, or full terminal equivalence.

@@ -19,7 +19,7 @@ impl Wake for NoWake {
 
 fn complete(parser: &mut ApcParser, success: bool) {
     let mut previous = true;
-    while let Some(result) = parser.end(success, previous) {
+    while let Some(result) = parser.end(success, previous).unwrap() {
         match result {
             HandlerResult::Ready(value) => previous = value,
             HandlerResult::Pending(mut future) => {
@@ -86,10 +86,12 @@ fn register(
     parser.register_handler(ID, handler)
 }
 fn put(parser: &mut ApcParser, text: &str) {
-    parser.put(&text.chars().map(u32::from).collect::<Vec<_>>());
+    parser
+        .put(&text.chars().map(u32::from).collect::<Vec<_>>())
+        .unwrap();
 }
 fn run(parser: &mut ApcParser) {
-    parser.start(ID);
+    parser.start(ID).unwrap();
     put(parser, "Here comes");
     put(parser, "the mouse!");
     complete(parser, true);
@@ -218,7 +220,7 @@ fn factory(
     )
 }
 fn payload(parser: &mut ApcParser, success: bool, first: &str, second: &str) {
-    parser.start(ID);
+    parser.start(ID).unwrap();
     put(parser, first);
     put(parser, second);
     complete(parser, success);
@@ -288,7 +290,7 @@ fn factory_payload_limit_and_overflow() {
         let mut parser = ApcParser::new();
         let calls = Calls::default();
         factory(&mut parser, &calls, "", true, false);
-        parser.start(ID);
+        parser.start(ID).unwrap();
         for _ in 0..10 {
             put(&mut parser, "AAAAAAAAAA");
         }
@@ -314,15 +316,15 @@ fn reset_aborts_active_handlers() {
     let mut parser = ApcParser::new();
     let reports = Reports::default();
     register(&mut parser, &reports, "th", true, false);
-    parser.start(ID);
+    parser.start(ID).unwrap();
     put(&mut parser, "partial");
-    parser.reset();
+    parser.reset().unwrap();
     assert_eq!(
         *reports.borrow(),
         ["th START", "th PUT partial", "th END false"]
     );
     reports.borrow_mut().clear();
-    parser.start(ID);
+    parser.start(ID).unwrap();
     put(&mut parser, "complete");
     complete(&mut parser, true);
     assert_eq!(
