@@ -1,0 +1,602 @@
+{
+  "node": "v24.15.0",
+  "platform": "win32",
+  "command": "node scripts/search-baseline.mjs",
+  "overallEquivalence": "NOT PROVEN",
+  "scope": "Unchanged original SearchEngine and SearchLineCache tests over original browser Terminal. Not Rust execution.",
+  "suites": [
+    {
+      "tests": "source_repo/addons/addon-search/src/SearchEngine.test.ts",
+      "hashes": {
+        "source_repo/addons/addon-search/src/SearchEngine.ts": "c509c1975eec75bc019f7984b7d499c292e30ebb0bcb668c0437141e59b19613",
+        "source_repo/src/common/Lifecycle.ts": "e00016aae991e24137ab066778912414f4af959f2b26baecf47ec542ad313a83",
+        "source_repo/src/common/Async.ts": "dc91cfe28cbbc295f85db93939d0199d8a43fdb82823fb59c1c7dec4e97d024f",
+        "source_repo/addons/addon-search/src/SearchLineCache.ts": "145238390d994528501e9a935ea1b78e1b7aac2ebafe227ca9cbcd9e0705633c",
+        "source_repo/src/browser/LocalizableStrings.ts": "c9f53b7dd37c0bb3b654dc52791c880e8aaec25dc66576091c0aba2df75e7143",
+        "source_repo/src/browser/Clipboard.ts": "cc0f2615860665867e54d96a2e788d07af72641635fff730411ddde30092bc5f",
+        "source_repo/src/common/input/TextDecoder.ts": "0368a7fddbb53502f86144b61d023f8d022f5ce973a1b01b59c552ec62631a1b",
+        "source_repo/src/common/buffer/Constants.ts": "0342c709b580e7a7c62fffb61bab359f93511b82529f5a155374797ca4799f21",
+        "source_repo/src/common/buffer/AttributeData.ts": "09a9dc9693200cd7c34a98af3c1fc97b47b4354828cb02a76ab561a03515748a",
+        "source_repo/src/common/buffer/CellData.ts": "d0dfcbf310a949d8bdf4172f9896a6f143d3abf4e0dc68b896dec6612b82d992",
+        "source_repo/src/common/services/ServiceRegistry.ts": "a467a496d3f1f26130c55809c587e1a7aeaa56d91e22be60af4182db6bb89171",
+        "source_repo/src/common/services/Services.ts": "617002157a8f7946b2245db9d795e2808d5d843171e84bb6917a80c0fe6e9a4b",
+        "source_repo/src/browser/OscLinkProvider.ts": "5be35edf6dc8f15527999909587de8c373e2c2c3581be19f0f8deb40e6613b93",
+        "source_repo/src/browser/services/Services.ts": "163a5cdcf8b6e5c2ebfaa5d1883b9cc6ace5a42931169f37b0a01fd92252d155",
+        "source_repo/src/browser/shared/Constants.ts": "07d4515a8f0cbe95fecdc7f4c5730eb4830444a9442ddd65bca5ae06104f3fbb",
+        "source_repo/src/common/Types.ts": "55f33764a24eae132a8c0bbabd6770355ef1fc3d6110eb6645e41cae15b80cb8",
+        "source_repo/src/browser/Dom.ts": "4df16b754fb4896a885bf7ef3f8a0e947a0c20de5fe6a5e62f0ebcdbdbaece17",
+        "source_repo/src/browser/scrollable/fastDomNode.ts": "5d4bab96071d8a289cfab909d429005a082522d07215a740cb0fbad83a100102",
+        "source_repo/src/common/Platform.ts": "be5ab9b1d1056e892b656732b375600178864e60281fc6a218480ac19c1f845a",
+        "source_repo/src/browser/scrollable/mouseEvent.ts": "0e040169efcfc901a42686489c97a2bfd8b08a20f1d8787d9b24a5d9cf032716",
+        "source_repo/src/browser/scrollable/globalPointerMoveMonitor.ts": "e1ea2845b8fd72bb0dede140626f85b1be5a5fd0ca9821c00186840657e73793",
+        "source_repo/src/browser/scrollable/widget.ts": "da8d98816e53a096ced80ec8280a14b6e268aa8564953ac7062e75299e0acfac",
+        "source_repo/src/browser/scrollable/scrollbarArrow.ts": "c242a331da556acf6acf2c753e3b85be91834b64ed784d1e91849b89393fad63",
+        "source_repo/src/common/Event.ts": "aa374272c5ec5c0d6992d6072687211a94676b086a2505b0414ddd20cf57d641",
+        "source_repo/src/browser/scrollable/scrollable.ts": "010ddcb39e40b268e4f37afc1da968ae30b64eaf356c918bb08484558150eba4",
+        "source_repo/src/browser/scrollable/scrollbarVisibilityController.ts": "2de21285bc2a3f08c77994394efb2ae6b29199e90332d6eb8b085215fe541a74",
+        "source_repo/src/browser/scrollable/abstractScrollbar.ts": "a6b9a98036b58c3202a5cfef5e0d67cf36c48c32e8ae6c6db1e10eac1506de82",
+        "source_repo/src/browser/scrollable/scrollbarState.ts": "32aa675ca98c528264b97c6959e4b9d8c10ecbf8b28e6436b2f49cbfffd2f2bc",
+        "source_repo/src/browser/scrollable/horizontalScrollbar.ts": "48962b4f3e73191cc0e08b9906ab62530a96961b5eec92d482dbb255c77f3ec6",
+        "source_repo/src/browser/scrollable/verticalScrollbar.ts": "780e2fbe6d150cf793a335e0bb5df247feefc6f018ae9fd25d6ca149acb2d658",
+        "source_repo/src/browser/scrollable/scrollableElement.ts": "8c1678a2ebbf4590f664f4f4c2fb409b433c2f75b9d4617ab7ed9f4818e33b90",
+        "source_repo/src/browser/Viewport.ts": "63d2f0e68a57026ab7f00c61f0295382055333b8505986c0f2b01636815518c9",
+        "source_repo/src/browser/decorations/BufferDecorationRenderer.ts": "6cde218fd7a077005987f82c92f2e6c21f9eb26841c3af5cbe32c16bdf7c1207",
+        "source_repo/src/browser/decorations/ColorZoneStore.ts": "402ad5fe138428a7fa2589c783ed69c9769421e64601d73bdeef79820bef7409",
+        "source_repo/src/browser/decorations/OverviewRulerRenderer.ts": "e35949abcef24aca316a0ef85bd73fc38db07190e2390784dc62bec352a106dd",
+        "source_repo/src/common/data/EscapeSequences.ts": "d891e05aaf5982ee46f73649804c84eb407e603e360e84f8f89b9fcaa83f6276",
+        "source_repo/src/browser/input/CompositionHelper.ts": "3797eb1d8ace96c49a7ef68ae965272c2758d9bb484eb7c074727c9e19d49584",
+        "source_repo/src/browser/renderer/shared/Constants.ts": "1eabe5c2acb8f02c8439947f9ea3b563b581635270d89bd0f5cd27f82a30079f",
+        "source_repo/src/common/Color.ts": "18899f9607f8a11c8e317c2bae8676eeb660cc9ed1d69ca7d016a003724fa057",
+        "source_repo/src/browser/services/CharacterJoinerService.ts": "60026882dc1b03e5b37eb753eeae310a453f87b7ca8e46a487258d9b08d685e7",
+        "source_repo/src/browser/renderer/shared/RendererUtils.ts": "9401f9bd11bf524ded84ff0a5bdb81445430cd33bdb5f01976038efffa78a0ff",
+        "source_repo/src/browser/renderer/dom/DomRendererRowFactory.ts": "0a3d852b4cffb347ea3f89abe938ea8f1ac7e2abbe1ac1a8e5f416baeda1a063",
+        "source_repo/src/browser/renderer/dom/WidthCache.ts": "bbd9268cf19d0210f38a35c8a691aff7a2fa236cad244417484f81f805bd1e4e",
+        "source_repo/src/browser/renderer/shared/SelectionRenderModel.ts": "6f6dba5652a7ed1525d3c75fb8f42b53a3ecba61d156ee58eb58cd20864b1195",
+        "source_repo/src/browser/renderer/shared/TextBlinkStateManager.ts": "9be67a1d6bd96452a09aae6b841f65f3e2f2afaafbeac7c4f8cba1759d25012b",
+        "source_repo/src/browser/renderer/dom/DomRenderer.ts": "9973c533fc763b068c78ee73d58ac27af163b39a1e9b94d123973133a2015851",
+        "source_repo/src/browser/services/CharSizeService.ts": "7ca11aa575339d363c9da77f3816f019c1a88c6510ac23034532ecb8ef241b0b",
+        "source_repo/src/browser/services/CoreBrowserService.ts": "514f1dd63d1aa5c51cb9bfeb2dd42c165f104cd1b0da2afc5a25f5eb6990fa80",
+        "source_repo/src/browser/services/LinkProviderService.ts": "f46e5e2cfdee8794fe21006139a378a5d12a6edc97943ccebbc285f34969d1bd",
+        "source_repo/src/browser/input/Mouse.ts": "977343fb0427d041b8cc64947332669a3d09f3ef8f4663d9456293d46d8ae919",
+        "source_repo/src/browser/services/MouseCoordsService.ts": "235d7febfd33a65074036c0fd74a00a8bf0b3fa6488fcc16c72bb3ce99073699",
+        "source_repo/src/browser/scrollable/touch.ts": "23d494b09ee2c237e200991adf5356c65d93a529c48615295c97c944920e148e",
+        "source_repo/src/browser/services/MouseService.ts": "cb1c4b1d292a7c049e0d73564227a949c8915bd7637ad2784124905467e1129c",
+        "source_repo/src/browser/RenderDebouncer.ts": "2600736f0e7b63f05c3e8dd78e1a9a968a74e5cac8a24077aa232bd74bfa1c7c",
+        "source_repo/src/common/TaskQueue.ts": "3a3c33a8d50aa767a7eaf355980ad6d53c1e9fc5acc287b14eabe0a72720142a",
+        "source_repo/src/browser/services/RenderService.ts": "17edb34b5e757cc7a20ece8384ce44d8bcaccf09b36b081f5da5ec985b2805fa",
+        "source_repo/src/browser/input/MoveToCell.ts": "36fd7d8943434eb24403faca27678fea34ebedd3749b37f4311c73ec230a3c6f",
+        "source_repo/src/browser/selection/SelectionModel.ts": "017e719ca43033229894f237315e8548261320632ef099f85d976b6643719aa7",
+        "source_repo/src/common/buffer/BufferRange.ts": "d3f3f15beb2f3d3e9adcea3db21d8f8d9a5a10bad617d98b901232723211ab67",
+        "source_repo/src/browser/services/SelectionService.ts": "a989bc70f29c187a626b2eba0a20a1fa272d2bdb19c01f2c6040eeaf704acfc4",
+        "source_repo/src/common/MultiKeyMap.ts": "adf534854007ff157fc77bc86bf443186c9a3557704e50278d1868de61c8ea19",
+        "source_repo/src/browser/ColorContrastCache.ts": "c8ca59fa8b65dd3191c9ab441df2b169d83650501f2a138d5b2662369654b1de",
+        "source_repo/src/browser/Types.ts": "cdabd9c6d7266520172589b5af5c669f2ce79add185d36ab21ca5fefd25565dc",
+        "source_repo/src/browser/services/ThemeService.ts": "c40bacbdcac9088247eb73e0bb7a0d7eacb34b7d0a06b4e0e3876278319d2b22",
+        "source_repo/src/common/input/Keyboard.ts": "cdde489c924ae4792276bb3346e051f2b94629b9d5d926bf98627b84608198c0",
+        "source_repo/src/common/input/KittyKeyboard.ts": "b2e17f3ce40ff0660c8dd8a167a3ce8a775dfd0b66da72410ce92fa43bcebe82",
+        "source_repo/src/common/input/Win32InputMode.ts": "e5cc4d3507391f9e249e731a078f35494c5e65ba2d46c81eea3378493da857c7",
+        "source_repo/src/browser/services/KeyboardService.ts": "0ca4f77fde82a82812cc8d709fad9970330bd4509cf93d5857f276e19735ba66",
+        "source_repo/src/common/services/InstantiationService.ts": "43f48014c7e56738fb0dd2fafaaa7bfd477bea71d3f35f3ed8c6a01b6b5dacbe",
+        "source_repo/src/common/services/LogService.ts": "0035ee1b5739bec8576f48b990db94ffad6efe606cfb3119205df1c5492dd51b",
+        "source_repo/src/common/CircularList.ts": "558ae3c18862469de29c2f77e06c31c44c2cddaa25fd6e69059bf2176efc54f6",
+        "source_repo/src/common/buffer/BufferLine.ts": "409958425629c5592bd4813272b00b480e6a723985ea28f24125a7a72ef95bdf",
+        "source_repo/src/common/buffer/BufferReflow.ts": "d2fa77716bd3190c5f2fbe2510fbae7218da8cf14fc55a48143c450802ccefe3",
+        "source_repo/src/common/buffer/Marker.ts": "3a6dc8fe7e791de49b825faba6c47093d73427bddf80fa6dd4069b8a90aac88d",
+        "source_repo/src/common/data/Charsets.ts": "64fe88d37beb2cc7c60a18d23fb4033e24f19b56b7f481fc656f8e912faac725",
+        "source_repo/src/common/buffer/Buffer.ts": "b299d8dfdd75deee31807a94c9417093b0c0a0f1714e5553779052602b32e4af",
+        "source_repo/src/common/buffer/BufferSet.ts": "3a2cc96d786e65bbfd1c7dc0c60653ce0062eb9c6f58a0e89214b1660ba5722c",
+        "source_repo/src/common/services/BufferService.ts": "8c418b27ef5893691a32d7770c2cf7d0a305803624ae1969f463d7484c893966",
+        "source_repo/src/common/services/OptionsService.ts": "2cef872a29730441e2de5ef31a224872d9d1fb99be069d409febc8c9a7e41a09",
+        "source_repo/src/common/services/CoreService.ts": "fb7bb62faaedcb72dacdaa7e021584e90c0c92cd9c0c9cf4f22f24db58c3d512",
+        "source_repo/src/common/services/MouseStateService.ts": "1b562be54a3ea3d91c565ac8d94239f8e219cb82ff735388a3650170a993d5ee",
+        "source_repo/src/common/services/UnicodeService.ts": "dae3733c0a07bfe55f264ea749e3df61b3b4505830e4e685183771497c292811",
+        "source_repo/src/common/input/UnicodeV6.ts": "526041b7d903ef88bf031825dde557a7f6d4b3e156be984fb524c66d02ac412e",
+        "source_repo/src/common/services/CharsetService.ts": "72f7cd0cf438d0399ea46108fdabf4fda73ee4b8379f110aa4fb2f9776a348b1",
+        "source_repo/src/common/WindowsMode.ts": "a7a1a4322c42da5ca1e23e4d0a9d22643a28982fc0fb91a73349fde54580321d",
+        "source_repo/src/common/parser/Types.ts": "ec838132ae42b3d8ce84e1dccfb572519d75982c1aab67759da170289d542a8c",
+        "source_repo/src/common/parser/Constants.ts": "b27193683d50f676cc2ad779fc8a5a5b4c0b38c2b0bb762168739c6d100942dd",
+        "source_repo/src/common/parser/Params.ts": "91bd52f527755b9cfc9e8ccd6e96aab49aa5554eb642d3a22a62120c3d12a25f",
+        "source_repo/src/common/StringBuilder.ts": "1c5fb0677d84788609304e7ea1efc3f760ad5e8c43dc691ceb83b283f1286114",
+        "source_repo/src/common/parser/OscParser.ts": "3a06692c278f8850922e54eafde315253c55df76a1c76a6b7327146e957e8f24",
+        "source_repo/src/common/parser/DcsParser.ts": "37bfefb7aeb66bb25b58d48676b4e0471ea005b778431b449c994572a825d5e9",
+        "source_repo/src/common/parser/ApcParser.ts": "f65e7a431013374e5794b360a8840359720630fec9330151a22ff17b09147fec",
+        "source_repo/src/common/parser/EscapeSequenceParser.ts": "bd85a7f4b4cd95bb6f6d8941902ba9c922022b9d9f88fdc585f7182c5daef624",
+        "source_repo/src/common/input/XParseColor.ts": "58483acb33f6cf892b5087d43e36629101728ac2c1c92bbe41e9795a10eea594",
+        "source_repo/src/common/Version.ts": "1add55c9a0f0b38f367e2641a154c6974ef5ca958fec91c67a1590d2ebb37e58",
+        "source_repo/src/common/InputHandler.ts": "1e4f0e4c3e0d706ea30bae3e32bf68a95f026c6a55275b8b3397b03a626e05a7",
+        "source_repo/src/common/input/WriteBuffer.ts": "eb66b561becafcd0ad67ed311d621174cc52ec2b890ea4e2c8702caec7c4fbe3",
+        "source_repo/src/common/services/OscLinkService.ts": "f5ed0de0da3eb09feb80aef7603b1f082450cd8b7476c4a8ce0cad5968468b64",
+        "source_repo/src/common/CoreTerminal.ts": "fcb17486df9b3a8916fb6488056919d59454bd1938ce0c3bee4877aefad1840d",
+        "source_repo/src/common/SortedList.ts": "63480fd923c431a1d70e25ccd4e4fece575c5369f5686b17ddf93085da24bf52",
+        "source_repo/src/common/services/DecorationService.ts": "a963db9e4db5fad71744513d2a08ba976fc4382093998fb463e15feeb5a84dce",
+        "source_repo/src/browser/TimeBasedDebouncer.ts": "1219c93fea754ff30a17cae65256c17d7555907e620efe6c413194949f15515e",
+        "source_repo/src/browser/AccessibilityManager.ts": "6519cc3ee85382a7da9b42a112010044f78f3a1cd4d02fe4fcb37bea36f526ec",
+        "source_repo/src/browser/Linkifier.ts": "7acc535eafc218032d0c480158e6f97dd5d7c8e8bae102b035b96622e4bbd2a6",
+        "source_repo/src/browser/CoreBrowserTerminal.ts": "53800fdb234c4cfe9d449ebf18b055e0fcb06a88e3a0ca4d7a1af1c4d3d59114",
+        "source_repo/src/common/public/AddonManager.ts": "b815df3b09908a3d651c0cfe93e00efe29551eb5119946755efa7f375877992c",
+        "source_repo/src/common/public/BufferApiView.ts": "498e5add826d2c9a6d9482faff97cea666cd9c876986cdce459d6c8ca299bf87",
+        "source_repo/src/common/public/BufferNamespaceApi.ts": "69e317ab542b90b18535e797d6486f98d93e1df17f458cc6e7d31035dc63575a",
+        "source_repo/src/common/public/ParserApi.ts": "200ac118e408d1a12f47ee34c95f73a3022491fcca84d48e5b4ce333d67d7aff",
+        "source_repo/src/common/public/UnicodeApi.ts": "c00f2d01708057fa33b24dc5f3d5c086edd68627d5a11c5d3c28c779b8102ed2",
+        "source_repo/src/browser/public/Terminal.ts": "f5c1c0d79c1c3484d305b8ec3ab201066958f056adb9878d27f5a1a0dd264011",
+        "source_repo/addons/addon-search/src/SearchEngine.test.ts": "eef891ab3d7f64bc1586b46732fe1a07036f266297333d7e7b2d058428b1946e"
+      },
+      "discovered": 58,
+      "executed": 58,
+      "passed": 58,
+      "failed": 0,
+      "pending": 0,
+      "unrun": 0,
+      "outcomes": [
+        {
+          "name": "SearchEngine find should return undefined for empty search term",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine find should find basic text in terminal content",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine find should find text starting from specified position",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine find should search across multiple rows",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine find should return undefined when text is not found",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine find should throw error for invalid column position",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine find should handle search starting from last column",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine find should handle search from middle of match",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine search options caseSensitive should find text with case-insensitive search (default)",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine search options caseSensitive should find text with case-sensitive search when enabled",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine search options caseSensitive should not find text with case-sensitive search when case differs",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine search options wholeWord should find whole word when enabled",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine search options wholeWord should not find partial word when wholeWord is enabled",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine search options wholeWord should find word at beginning of line with wholeWord",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine search options wholeWord should find word at end of line with wholeWord",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine search options wholeWord should handle word boundaries with punctuation",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine search options wholeWord should not match when not whole word",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine search options regex should find text using simple regex pattern",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine search options regex should find text using regex with case-insensitive flag",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine search options regex should find text using regex with case-sensitive flag",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine search options regex should handle complex regex patterns",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine search options regex should return undefined for invalid regex pattern",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine search options regex should handle empty regex matches",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine search options combined options should handle regex + caseSensitive combination",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine search options combined options should handle wholeWord + caseSensitive combination",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine findNextWithSelection should return undefined for empty search term",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine findNextWithSelection should find first occurrence when no selection exists",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine findNextWithSelection should find next occurrence after current selection",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine findNextWithSelection should wrap around to beginning when reaching end",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine findNextWithSelection should wrap across multiple rows",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine findNextWithSelection should return same selection if only one match exists",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine findNextWithSelection should clear selection and return undefined when term not found",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine findPreviousWithSelection should return undefined for empty search term",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine findPreviousWithSelection should find last occurrence when no selection exists",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine findPreviousWithSelection should find previous occurrence before current selection",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine findPreviousWithSelection should wrap around to end when reaching beginning",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine findPreviousWithSelection should work across multiple rows in reverse",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine findPreviousWithSelection should handle selection expansion correctly",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine findPreviousWithSelection should clear selection and return undefined when term not found",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine edge cases and error handling unicode and special characters should handle unicode characters correctly",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine edge cases and error handling unicode and special characters should handle wide characters",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine edge cases and error handling wrapped lines should handle search across wrapped lines",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine edge cases and error handling wrapped lines should handle wrapped lines with unicode",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine edge cases and error handling wrapped lines should skip wrapped lines correctly in findInLine",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine edge cases and error handling buffer boundaries should handle empty buffer gracefully",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine edge cases and error handling buffer boundaries should handle search beyond buffer size",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine edge cases and error handling invalid inputs should handle undefined search options gracefully",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine edge cases and error handling invalid inputs should handle negative start positions",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine edge cases and error handling invalid inputs should handle search options with undefined properties",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine private method behaviors (tested indirectly) _isWholeWord behavior should recognize word boundaries with various punctuation",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine private method behaviors (tested indirectly) _isWholeWord behavior should handle word boundaries at line start and end",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine private method behaviors (tested indirectly) buffer offset calculations should handle wide character offset calculations",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine private method behaviors (tested indirectly) string to buffer size conversions should correctly calculate size for simple text",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine private method behaviors (tested indirectly) string to buffer size conversions should correctly calculate size for unicode text",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine private method behaviors (tested indirectly) string to buffer size conversions should handle size calculation across wrapped lines",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine integration with SearchLineCache should use cache for line translation",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine integration with SearchLineCache should handle cache misses gracefully",
+          "status": "passed"
+        },
+        {
+          "name": "SearchEngine integration with SearchLineCache should work correctly with cache invalidation",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "tests": "source_repo/addons/addon-search/src/SearchLineCache.test.ts",
+      "hashes": {
+        "source_repo/src/common/Lifecycle.ts": "e00016aae991e24137ab066778912414f4af959f2b26baecf47ec542ad313a83",
+        "source_repo/src/common/Async.ts": "dc91cfe28cbbc295f85db93939d0199d8a43fdb82823fb59c1c7dec4e97d024f",
+        "source_repo/addons/addon-search/src/SearchLineCache.ts": "145238390d994528501e9a935ea1b78e1b7aac2ebafe227ca9cbcd9e0705633c",
+        "source_repo/src/browser/LocalizableStrings.ts": "c9f53b7dd37c0bb3b654dc52791c880e8aaec25dc66576091c0aba2df75e7143",
+        "source_repo/src/browser/Clipboard.ts": "cc0f2615860665867e54d96a2e788d07af72641635fff730411ddde30092bc5f",
+        "source_repo/src/common/input/TextDecoder.ts": "0368a7fddbb53502f86144b61d023f8d022f5ce973a1b01b59c552ec62631a1b",
+        "source_repo/src/common/buffer/Constants.ts": "0342c709b580e7a7c62fffb61bab359f93511b82529f5a155374797ca4799f21",
+        "source_repo/src/common/buffer/AttributeData.ts": "09a9dc9693200cd7c34a98af3c1fc97b47b4354828cb02a76ab561a03515748a",
+        "source_repo/src/common/buffer/CellData.ts": "d0dfcbf310a949d8bdf4172f9896a6f143d3abf4e0dc68b896dec6612b82d992",
+        "source_repo/src/common/services/ServiceRegistry.ts": "a467a496d3f1f26130c55809c587e1a7aeaa56d91e22be60af4182db6bb89171",
+        "source_repo/src/common/services/Services.ts": "617002157a8f7946b2245db9d795e2808d5d843171e84bb6917a80c0fe6e9a4b",
+        "source_repo/src/browser/OscLinkProvider.ts": "5be35edf6dc8f15527999909587de8c373e2c2c3581be19f0f8deb40e6613b93",
+        "source_repo/src/browser/services/Services.ts": "163a5cdcf8b6e5c2ebfaa5d1883b9cc6ace5a42931169f37b0a01fd92252d155",
+        "source_repo/src/browser/shared/Constants.ts": "07d4515a8f0cbe95fecdc7f4c5730eb4830444a9442ddd65bca5ae06104f3fbb",
+        "source_repo/src/common/Types.ts": "55f33764a24eae132a8c0bbabd6770355ef1fc3d6110eb6645e41cae15b80cb8",
+        "source_repo/src/browser/Dom.ts": "4df16b754fb4896a885bf7ef3f8a0e947a0c20de5fe6a5e62f0ebcdbdbaece17",
+        "source_repo/src/browser/scrollable/fastDomNode.ts": "5d4bab96071d8a289cfab909d429005a082522d07215a740cb0fbad83a100102",
+        "source_repo/src/common/Platform.ts": "be5ab9b1d1056e892b656732b375600178864e60281fc6a218480ac19c1f845a",
+        "source_repo/src/browser/scrollable/mouseEvent.ts": "0e040169efcfc901a42686489c97a2bfd8b08a20f1d8787d9b24a5d9cf032716",
+        "source_repo/src/browser/scrollable/globalPointerMoveMonitor.ts": "e1ea2845b8fd72bb0dede140626f85b1be5a5fd0ca9821c00186840657e73793",
+        "source_repo/src/browser/scrollable/widget.ts": "da8d98816e53a096ced80ec8280a14b6e268aa8564953ac7062e75299e0acfac",
+        "source_repo/src/browser/scrollable/scrollbarArrow.ts": "c242a331da556acf6acf2c753e3b85be91834b64ed784d1e91849b89393fad63",
+        "source_repo/src/common/Event.ts": "aa374272c5ec5c0d6992d6072687211a94676b086a2505b0414ddd20cf57d641",
+        "source_repo/src/browser/scrollable/scrollable.ts": "010ddcb39e40b268e4f37afc1da968ae30b64eaf356c918bb08484558150eba4",
+        "source_repo/src/browser/scrollable/scrollbarVisibilityController.ts": "2de21285bc2a3f08c77994394efb2ae6b29199e90332d6eb8b085215fe541a74",
+        "source_repo/src/browser/scrollable/abstractScrollbar.ts": "a6b9a98036b58c3202a5cfef5e0d67cf36c48c32e8ae6c6db1e10eac1506de82",
+        "source_repo/src/browser/scrollable/scrollbarState.ts": "32aa675ca98c528264b97c6959e4b9d8c10ecbf8b28e6436b2f49cbfffd2f2bc",
+        "source_repo/src/browser/scrollable/horizontalScrollbar.ts": "48962b4f3e73191cc0e08b9906ab62530a96961b5eec92d482dbb255c77f3ec6",
+        "source_repo/src/browser/scrollable/verticalScrollbar.ts": "780e2fbe6d150cf793a335e0bb5df247feefc6f018ae9fd25d6ca149acb2d658",
+        "source_repo/src/browser/scrollable/scrollableElement.ts": "8c1678a2ebbf4590f664f4f4c2fb409b433c2f75b9d4617ab7ed9f4818e33b90",
+        "source_repo/src/browser/Viewport.ts": "63d2f0e68a57026ab7f00c61f0295382055333b8505986c0f2b01636815518c9",
+        "source_repo/src/browser/decorations/BufferDecorationRenderer.ts": "6cde218fd7a077005987f82c92f2e6c21f9eb26841c3af5cbe32c16bdf7c1207",
+        "source_repo/src/browser/decorations/ColorZoneStore.ts": "402ad5fe138428a7fa2589c783ed69c9769421e64601d73bdeef79820bef7409",
+        "source_repo/src/browser/decorations/OverviewRulerRenderer.ts": "e35949abcef24aca316a0ef85bd73fc38db07190e2390784dc62bec352a106dd",
+        "source_repo/src/common/data/EscapeSequences.ts": "d891e05aaf5982ee46f73649804c84eb407e603e360e84f8f89b9fcaa83f6276",
+        "source_repo/src/browser/input/CompositionHelper.ts": "3797eb1d8ace96c49a7ef68ae965272c2758d9bb484eb7c074727c9e19d49584",
+        "source_repo/src/browser/renderer/shared/Constants.ts": "1eabe5c2acb8f02c8439947f9ea3b563b581635270d89bd0f5cd27f82a30079f",
+        "source_repo/src/common/Color.ts": "18899f9607f8a11c8e317c2bae8676eeb660cc9ed1d69ca7d016a003724fa057",
+        "source_repo/src/browser/services/CharacterJoinerService.ts": "60026882dc1b03e5b37eb753eeae310a453f87b7ca8e46a487258d9b08d685e7",
+        "source_repo/src/browser/renderer/shared/RendererUtils.ts": "9401f9bd11bf524ded84ff0a5bdb81445430cd33bdb5f01976038efffa78a0ff",
+        "source_repo/src/browser/renderer/dom/DomRendererRowFactory.ts": "0a3d852b4cffb347ea3f89abe938ea8f1ac7e2abbe1ac1a8e5f416baeda1a063",
+        "source_repo/src/browser/renderer/dom/WidthCache.ts": "bbd9268cf19d0210f38a35c8a691aff7a2fa236cad244417484f81f805bd1e4e",
+        "source_repo/src/browser/renderer/shared/SelectionRenderModel.ts": "6f6dba5652a7ed1525d3c75fb8f42b53a3ecba61d156ee58eb58cd20864b1195",
+        "source_repo/src/browser/renderer/shared/TextBlinkStateManager.ts": "9be67a1d6bd96452a09aae6b841f65f3e2f2afaafbeac7c4f8cba1759d25012b",
+        "source_repo/src/browser/renderer/dom/DomRenderer.ts": "9973c533fc763b068c78ee73d58ac27af163b39a1e9b94d123973133a2015851",
+        "source_repo/src/browser/services/CharSizeService.ts": "7ca11aa575339d363c9da77f3816f019c1a88c6510ac23034532ecb8ef241b0b",
+        "source_repo/src/browser/services/CoreBrowserService.ts": "514f1dd63d1aa5c51cb9bfeb2dd42c165f104cd1b0da2afc5a25f5eb6990fa80",
+        "source_repo/src/browser/services/LinkProviderService.ts": "f46e5e2cfdee8794fe21006139a378a5d12a6edc97943ccebbc285f34969d1bd",
+        "source_repo/src/browser/input/Mouse.ts": "977343fb0427d041b8cc64947332669a3d09f3ef8f4663d9456293d46d8ae919",
+        "source_repo/src/browser/services/MouseCoordsService.ts": "235d7febfd33a65074036c0fd74a00a8bf0b3fa6488fcc16c72bb3ce99073699",
+        "source_repo/src/browser/scrollable/touch.ts": "23d494b09ee2c237e200991adf5356c65d93a529c48615295c97c944920e148e",
+        "source_repo/src/browser/services/MouseService.ts": "cb1c4b1d292a7c049e0d73564227a949c8915bd7637ad2784124905467e1129c",
+        "source_repo/src/browser/RenderDebouncer.ts": "2600736f0e7b63f05c3e8dd78e1a9a968a74e5cac8a24077aa232bd74bfa1c7c",
+        "source_repo/src/common/TaskQueue.ts": "3a3c33a8d50aa767a7eaf355980ad6d53c1e9fc5acc287b14eabe0a72720142a",
+        "source_repo/src/browser/services/RenderService.ts": "17edb34b5e757cc7a20ece8384ce44d8bcaccf09b36b081f5da5ec985b2805fa",
+        "source_repo/src/browser/input/MoveToCell.ts": "36fd7d8943434eb24403faca27678fea34ebedd3749b37f4311c73ec230a3c6f",
+        "source_repo/src/browser/selection/SelectionModel.ts": "017e719ca43033229894f237315e8548261320632ef099f85d976b6643719aa7",
+        "source_repo/src/common/buffer/BufferRange.ts": "d3f3f15beb2f3d3e9adcea3db21d8f8d9a5a10bad617d98b901232723211ab67",
+        "source_repo/src/browser/services/SelectionService.ts": "a989bc70f29c187a626b2eba0a20a1fa272d2bdb19c01f2c6040eeaf704acfc4",
+        "source_repo/src/common/MultiKeyMap.ts": "adf534854007ff157fc77bc86bf443186c9a3557704e50278d1868de61c8ea19",
+        "source_repo/src/browser/ColorContrastCache.ts": "c8ca59fa8b65dd3191c9ab441df2b169d83650501f2a138d5b2662369654b1de",
+        "source_repo/src/browser/Types.ts": "cdabd9c6d7266520172589b5af5c669f2ce79add185d36ab21ca5fefd25565dc",
+        "source_repo/src/browser/services/ThemeService.ts": "c40bacbdcac9088247eb73e0bb7a0d7eacb34b7d0a06b4e0e3876278319d2b22",
+        "source_repo/src/common/input/Keyboard.ts": "cdde489c924ae4792276bb3346e051f2b94629b9d5d926bf98627b84608198c0",
+        "source_repo/src/common/input/KittyKeyboard.ts": "b2e17f3ce40ff0660c8dd8a167a3ce8a775dfd0b66da72410ce92fa43bcebe82",
+        "source_repo/src/common/input/Win32InputMode.ts": "e5cc4d3507391f9e249e731a078f35494c5e65ba2d46c81eea3378493da857c7",
+        "source_repo/src/browser/services/KeyboardService.ts": "0ca4f77fde82a82812cc8d709fad9970330bd4509cf93d5857f276e19735ba66",
+        "source_repo/src/common/services/InstantiationService.ts": "43f48014c7e56738fb0dd2fafaaa7bfd477bea71d3f35f3ed8c6a01b6b5dacbe",
+        "source_repo/src/common/services/LogService.ts": "0035ee1b5739bec8576f48b990db94ffad6efe606cfb3119205df1c5492dd51b",
+        "source_repo/src/common/CircularList.ts": "558ae3c18862469de29c2f77e06c31c44c2cddaa25fd6e69059bf2176efc54f6",
+        "source_repo/src/common/buffer/BufferLine.ts": "409958425629c5592bd4813272b00b480e6a723985ea28f24125a7a72ef95bdf",
+        "source_repo/src/common/buffer/BufferReflow.ts": "d2fa77716bd3190c5f2fbe2510fbae7218da8cf14fc55a48143c450802ccefe3",
+        "source_repo/src/common/buffer/Marker.ts": "3a6dc8fe7e791de49b825faba6c47093d73427bddf80fa6dd4069b8a90aac88d",
+        "source_repo/src/common/data/Charsets.ts": "64fe88d37beb2cc7c60a18d23fb4033e24f19b56b7f481fc656f8e912faac725",
+        "source_repo/src/common/buffer/Buffer.ts": "b299d8dfdd75deee31807a94c9417093b0c0a0f1714e5553779052602b32e4af",
+        "source_repo/src/common/buffer/BufferSet.ts": "3a2cc96d786e65bbfd1c7dc0c60653ce0062eb9c6f58a0e89214b1660ba5722c",
+        "source_repo/src/common/services/BufferService.ts": "8c418b27ef5893691a32d7770c2cf7d0a305803624ae1969f463d7484c893966",
+        "source_repo/src/common/services/OptionsService.ts": "2cef872a29730441e2de5ef31a224872d9d1fb99be069d409febc8c9a7e41a09",
+        "source_repo/src/common/services/CoreService.ts": "fb7bb62faaedcb72dacdaa7e021584e90c0c92cd9c0c9cf4f22f24db58c3d512",
+        "source_repo/src/common/services/MouseStateService.ts": "1b562be54a3ea3d91c565ac8d94239f8e219cb82ff735388a3650170a993d5ee",
+        "source_repo/src/common/services/UnicodeService.ts": "dae3733c0a07bfe55f264ea749e3df61b3b4505830e4e685183771497c292811",
+        "source_repo/src/common/input/UnicodeV6.ts": "526041b7d903ef88bf031825dde557a7f6d4b3e156be984fb524c66d02ac412e",
+        "source_repo/src/common/services/CharsetService.ts": "72f7cd0cf438d0399ea46108fdabf4fda73ee4b8379f110aa4fb2f9776a348b1",
+        "source_repo/src/common/WindowsMode.ts": "a7a1a4322c42da5ca1e23e4d0a9d22643a28982fc0fb91a73349fde54580321d",
+        "source_repo/src/common/parser/Types.ts": "ec838132ae42b3d8ce84e1dccfb572519d75982c1aab67759da170289d542a8c",
+        "source_repo/src/common/parser/Constants.ts": "b27193683d50f676cc2ad779fc8a5a5b4c0b38c2b0bb762168739c6d100942dd",
+        "source_repo/src/common/parser/Params.ts": "91bd52f527755b9cfc9e8ccd6e96aab49aa5554eb642d3a22a62120c3d12a25f",
+        "source_repo/src/common/StringBuilder.ts": "1c5fb0677d84788609304e7ea1efc3f760ad5e8c43dc691ceb83b283f1286114",
+        "source_repo/src/common/parser/OscParser.ts": "3a06692c278f8850922e54eafde315253c55df76a1c76a6b7327146e957e8f24",
+        "source_repo/src/common/parser/DcsParser.ts": "37bfefb7aeb66bb25b58d48676b4e0471ea005b778431b449c994572a825d5e9",
+        "source_repo/src/common/parser/ApcParser.ts": "f65e7a431013374e5794b360a8840359720630fec9330151a22ff17b09147fec",
+        "source_repo/src/common/parser/EscapeSequenceParser.ts": "bd85a7f4b4cd95bb6f6d8941902ba9c922022b9d9f88fdc585f7182c5daef624",
+        "source_repo/src/common/input/XParseColor.ts": "58483acb33f6cf892b5087d43e36629101728ac2c1c92bbe41e9795a10eea594",
+        "source_repo/src/common/Version.ts": "1add55c9a0f0b38f367e2641a154c6974ef5ca958fec91c67a1590d2ebb37e58",
+        "source_repo/src/common/InputHandler.ts": "1e4f0e4c3e0d706ea30bae3e32bf68a95f026c6a55275b8b3397b03a626e05a7",
+        "source_repo/src/common/input/WriteBuffer.ts": "eb66b561becafcd0ad67ed311d621174cc52ec2b890ea4e2c8702caec7c4fbe3",
+        "source_repo/src/common/services/OscLinkService.ts": "f5ed0de0da3eb09feb80aef7603b1f082450cd8b7476c4a8ce0cad5968468b64",
+        "source_repo/src/common/CoreTerminal.ts": "fcb17486df9b3a8916fb6488056919d59454bd1938ce0c3bee4877aefad1840d",
+        "source_repo/src/common/SortedList.ts": "63480fd923c431a1d70e25ccd4e4fece575c5369f5686b17ddf93085da24bf52",
+        "source_repo/src/common/services/DecorationService.ts": "a963db9e4db5fad71744513d2a08ba976fc4382093998fb463e15feeb5a84dce",
+        "source_repo/src/browser/TimeBasedDebouncer.ts": "1219c93fea754ff30a17cae65256c17d7555907e620efe6c413194949f15515e",
+        "source_repo/src/browser/AccessibilityManager.ts": "6519cc3ee85382a7da9b42a112010044f78f3a1cd4d02fe4fcb37bea36f526ec",
+        "source_repo/src/browser/Linkifier.ts": "7acc535eafc218032d0c480158e6f97dd5d7c8e8bae102b035b96622e4bbd2a6",
+        "source_repo/src/browser/CoreBrowserTerminal.ts": "53800fdb234c4cfe9d449ebf18b055e0fcb06a88e3a0ca4d7a1af1c4d3d59114",
+        "source_repo/src/common/public/AddonManager.ts": "b815df3b09908a3d651c0cfe93e00efe29551eb5119946755efa7f375877992c",
+        "source_repo/src/common/public/BufferApiView.ts": "498e5add826d2c9a6d9482faff97cea666cd9c876986cdce459d6c8ca299bf87",
+        "source_repo/src/common/public/BufferNamespaceApi.ts": "69e317ab542b90b18535e797d6486f98d93e1df17f458cc6e7d31035dc63575a",
+        "source_repo/src/common/public/ParserApi.ts": "200ac118e408d1a12f47ee34c95f73a3022491fcca84d48e5b4ce333d67d7aff",
+        "source_repo/src/common/public/UnicodeApi.ts": "c00f2d01708057fa33b24dc5f3d5c086edd68627d5a11c5d3c28c779b8102ed2",
+        "source_repo/src/browser/public/Terminal.ts": "f5c1c0d79c1c3484d305b8ec3ab201066958f056adb9878d27f5a1a0dd264011",
+        "source_repo/addons/addon-search/src/SearchLineCache.test.ts": "c855d24d401c0555fd15117148d9dd53d1d0b807abaf6220e228eb11ab6b954b"
+      },
+      "discovered": 28,
+      "executed": 28,
+      "passed": 28,
+      "failed": 0,
+      "pending": 0,
+      "unrun": 0,
+      "outcomes": [
+        {
+          "name": "SearchLineCache constructor should create a SearchLineCache instance",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache constructor should start with no cache initialized",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache initLinesCache should initialize the lines cache array",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache initLinesCache should not reinitialize if cache already exists",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache initLinesCache should set up TTL timeout",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache getLineFromCache should return undefined when cache is not initialized",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache getLineFromCache should return undefined for unset entries when cache is initialized",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache getLineFromCache should return cached entries",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache setLineInCache should not set entries when cache is not initialized",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache setLineInCache should set entries when cache is initialized",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache setLineInCache should overwrite existing entries",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache translateBufferLineToStringWithWrap should translate a single line without wrapping",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache translateBufferLineToStringWithWrap should handle trimRight parameter",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache translateBufferLineToStringWithWrap should handle wrapped lines",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache translateBufferLineToStringWithWrap should handle wide characters",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache translateBufferLineToStringWithWrap should handle empty lines",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache translateBufferLineToStringWithWrap should handle lines beyond buffer",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache translateBufferLineToStringWithWrap should handle complex wrapped content",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache cache invalidation should invalidate cache on line feed",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache cache invalidation should invalidate cache on cursor move",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache cache invalidation should invalidate cache on resize",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache disposal should clean up resources on dispose",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache disposal should be safe to dispose multiple times",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache LineCacheEntry type should handle complex line offsets",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache LineCacheEntry type should handle unicode characters in cache entries",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache integration with real terminal content should correctly translate real buffer content",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache integration with real terminal content should handle real wrapped content correctly",
+          "status": "passed"
+        },
+        {
+          "name": "SearchLineCache integration with real terminal content should work with real escape sequences",
+          "status": "passed"
+        }
+      ]
+    }
+  ]
+}
