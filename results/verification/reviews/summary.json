@@ -1,0 +1,101 @@
+{
+  "reviewer": "Aaliyah",
+  "scope": "Lifecycle, Params, UnicodeV6 and XParseColor module review only; full terminal equivalence NOT PROVEN",
+  "environment": {
+    "platform": "native Windows x64",
+    "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+    "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+    "node": "v24.15.0"
+  },
+  "commands": [
+    {
+      "command": "cargo test -p xterm-core --test lifecycle --test params --test params_differential --test unicode_v6 --test xparse_color",
+      "exitCode": 0,
+      "log": "tests.log",
+      "tests": {
+        "passed": 45,
+        "failed": 0,
+        "ignored": 0
+      }
+    },
+    {
+      "command": "cargo clippy -p xterm-core --lib --test lifecycle --test params --test params_differential --test unicode_v6 --test xparse_color --example xparse_color_oracle -- -D warnings",
+      "exitCode": 0,
+      "log": "clippy.log"
+    },
+    {
+      "command": "rustfmt --edition 2021 --check crates/xterm-core/src/lifecycle.rs crates/xterm-core/tests/lifecycle.rs crates/xterm-core/src/parser/params.rs crates/xterm-core/tests/params.rs crates/xterm-core/tests/params_differential.rs crates/xterm-core/src/unicode.rs crates/xterm-core/src/unicode_v6.rs crates/xterm-core/src/unicode_v6_tables.rs crates/xterm-core/tests/unicode_v6.rs crates/xterm-core/src/input/xparse_color.rs crates/xterm-core/tests/xparse_color.rs crates/xterm-core/examples/xparse_color_oracle.rs",
+      "exitCode": 0,
+      "log": "fmt.log"
+    },
+    {
+      "command": "node scripts/check-lifecycle.mjs",
+      "exitCode": 0,
+      "log": "oracle-0.log",
+      "sharedCallbackFixtureCount": 16
+    },
+    {
+      "command": "node scripts/check-params.mjs",
+      "exitCode": 0,
+      "log": "oracle-1.log",
+      "snapshots": 49409,
+      "seed": "0x2389abcd"
+    },
+    {
+      "command": "node scripts/unicode-v6-oracle.mjs",
+      "exitCode": 0,
+      "log": "oracle-2.log",
+      "upstreamAssertions": 65536,
+      "widthCodepoints": 1114112,
+      "propertyCases": 110
+    },
+    {
+      "command": "node scripts/check-xparse-color.mjs",
+      "exitCode": 0,
+      "log": "oracle-3.log",
+      "originalCases": 7,
+      "originalAssertions": 49,
+      "comparisons": 153872,
+      "seed": 1480806220
+    },
+    {
+      "command": "node scripts/params-baseline.mjs",
+      "exitCode": 0,
+      "log": "params-baseline.log",
+      "originalCases": 20
+    }
+  ],
+  "findings": [
+    {
+      "task": 5,
+      "result": "accepted",
+      "detail": "Inspected Set-tombstone correction for nested clear plus callback ordering, mutation/disposal and drop behavior."
+    },
+    {
+      "task": 8,
+      "result": "accepted",
+      "detail": "Compared all 20 original test cases and numeric/packed-offset behavior with Rust; typed boundary differences documented."
+    },
+    {
+      "task": 10,
+      "result": "accepted",
+      "detail": "Compared source combining/wide ranges, lazy initialization and bit packing; raw reserved widths preserved."
+    },
+    {
+      "task": 13,
+      "result": "independent checks passed; already accepted by Octavia",
+      "detail": "Inspected ASCII grammar, hash truncation versus rgb rounding, low-channel formatting and strict adapter parsing."
+    },
+    {
+      "task": 17,
+      "result": "changes requested",
+      "detail": "Callbacks deleting all active registrations cause upstream index error; shared Rust OSC dispatch silently skips missing handlers. Owner retained case and is fixing explicit error contract."
+    }
+  ],
+  "missing": [
+    "These module checks do not run terminal/buffer/API/addon integration.",
+    "No native Linux/macOS runtime result is claimed.",
+    "No Rust-backed browser e2e, complete upstream-suite equivalence or benchmark comparison is claimed.",
+    "APC shared dispatch mutation mismatch must be resolved before acceptance."
+  ]
+}
