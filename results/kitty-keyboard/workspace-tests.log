@@ -1,0 +1,22 @@
+   Compiling itoa v1.0.18
+   Compiling zmij v1.0.23
+   Compiling serde_core v1.0.229
+   Compiling serde_json v1.0.154
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+   Compiling xterm-web v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web)
+error[E0432]: unresolved import `xterm_core::buffer::reflow`
+ --> crates\xterm-core\tests\buffer_reflow_edges.rs:4:14
+  |
+4 |     buffer::{reflow::*, BufferLine, CellData, CharData},
+  |              ^^^^^^ could not find `reflow` in `buffer`
+
+error[E0432]: unresolved import `xterm_core::buffer::reflow`
+ --> crates\xterm-core\tests\buffer_reflow_upstream.rs:8:14
+  |
+8 |     buffer::{reflow::*, BufferLine},
+  |              ^^^^^^ could not find `reflow` in `buffer`
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `xterm-core` (test "buffer_reflow_edges") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `xterm-core` (test "buffer_reflow_upstream") due to 1 previous error

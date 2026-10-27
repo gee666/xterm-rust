@@ -1,0 +1,169 @@
+0	41		1	1	1	0	0	0	41	KittyKeyboard / evaluate / modifier encoding (value = 1 + modifiers) / shift+letter sends plain character in DISAMBIGUATE mode
+0	61		2	1	1	0	0	1	1b,5b,39,37,3b,33,75	KittyKeyboard / evaluate / modifier encoding (value = 1 + modifiers) / alt=3 (1+2) still uses CSI u
+0	61		4	1	1	0	0	1	1b,5b,39,37,3b,35,75	KittyKeyboard / evaluate / modifier encoding (value = 1 + modifiers) / ctrl=5 (1+4)
+0	61		8	1	1	0	0	1	1b,5b,39,37,3b,39,75	KittyKeyboard / evaluate / modifier encoding (value = 1 + modifiers) / super/meta=9 (1+8)
+0	61		5	1	1	0	0	1	1b,5b,39,37,3b,36,75	KittyKeyboard / evaluate / modifier encoding (value = 1 + modifiers) / ctrl+shift=6 (1+4+1)
+0	61		6	1	1	0	0	1	1b,5b,39,37,3b,37,75	KittyKeyboard / evaluate / modifier encoding (value = 1 + modifiers) / ctrl+alt=7 (1+4+2)
+0	61		7	1	1	0	0	1	1b,5b,39,37,3b,38,75	KittyKeyboard / evaluate / modifier encoding (value = 1 + modifiers) / ctrl+alt+shift=8 (1+4+2+1)
+0	61		12	1	1	0	0	1	1b,5b,39,37,3b,31,33,75	KittyKeyboard / evaluate / modifier encoding (value = 1 + modifiers) / ctrl+super=13 (1+4+8)
+0	61		15	1	1	0	0	1	1b,5b,39,37,3b,31,36,75	KittyKeyboard / evaluate / modifier encoding (value = 1 + modifiers) / all four modifiers=16 (1+1+2+4+8)
+0	45,73,63,61,70,65		0	1	1	0	0	1	1b,5b,32,37,75	KittyKeyboard / evaluate / modifier encoding (value = 1 + modifiers) / no modifiers omits modifier field
+0	45,73,63,61,70,65		0	1	1	0	0	1	1b,5b,32,37,75	KittyKeyboard / evaluate / C0 control keys with DISAMBIGUATE_ESCAPE_CODES / Escape → CSI 27 u
+0	45,6e,74,65,72		0	1	1	0	0	0	d	KittyKeyboard / evaluate / C0 control keys with DISAMBIGUATE_ESCAPE_CODES / Enter → legacy \r
+0	54,61,62		0	1	1	0	0	0	9	KittyKeyboard / evaluate / C0 control keys with DISAMBIGUATE_ESCAPE_CODES / Tab → legacy \t
+0	42,61,63,6b,73,70,61,63,65		0	1	1	0	0	0	7f	KittyKeyboard / evaluate / C0 control keys with DISAMBIGUATE_ESCAPE_CODES / Backspace → legacy \x7f
+0	20		0	1	1	0	0	0	20	KittyKeyboard / evaluate / C0 control keys with DISAMBIGUATE_ESCAPE_CODES / Space → plain space (text-generating key)
+0	54,61,62		1	1	1	0	0	1	1b,5b,39,3b,32,75	KittyKeyboard / evaluate / C0 control keys with DISAMBIGUATE_ESCAPE_CODES / Shift+Tab → CSI 9;2 u
+0	45,6e,74,65,72		4	1	1	0	0	1	1b,5b,31,33,3b,35,75	KittyKeyboard / evaluate / C0 control keys with DISAMBIGUATE_ESCAPE_CODES / Ctrl+Enter → CSI 13;5 u
+0	45,73,63,61,70,65		2	1	1	0	0	1	1b,5b,32,37,3b,33,75	KittyKeyboard / evaluate / C0 control keys with DISAMBIGUATE_ESCAPE_CODES / Alt+Escape → CSI 27;3 u
+0	42,61,63,6b,73,70,61,63,65		4	1	1	0	0	1	1b,5b,31,32,37,3b,35,75	KittyKeyboard / evaluate / C0 control keys with DISAMBIGUATE_ESCAPE_CODES / Ctrl+Backspace → CSI 127;5 u
+0	20		4	1	1	0	0	1	1b,5b,33,32,3b,35,75	KittyKeyboard / evaluate / C0 control keys with DISAMBIGUATE_ESCAPE_CODES / Ctrl+Space → CSI 32;5 u
+0	20		2	1	1	0	0	1	1b,5b,33,32,3b,33,75	KittyKeyboard / evaluate / C0 control keys with DISAMBIGUATE_ESCAPE_CODES / Alt+Space → CSI 32;3 u
+0	49,6e,73,65,72,74		0	1	1	0	0	1	1b,5b,32,7e	KittyKeyboard / evaluate / navigation keys / Insert → CSI 2 ~
+0	44,65,6c,65,74,65		0	1	1	0	0	1	1b,5b,33,7e	KittyKeyboard / evaluate / navigation keys / Delete → CSI 3 ~
+0	50,61,67,65,55,70		0	1	1	0	0	1	1b,5b,35,7e	KittyKeyboard / evaluate / navigation keys / PageUp → CSI 5 ~
+0	50,61,67,65,44,6f,77,6e		0	1	1	0	0	1	1b,5b,36,7e	KittyKeyboard / evaluate / navigation keys / PageDown → CSI 6 ~
+0	48,6f,6d,65		0	1	1	0	0	1	1b,5b,48	KittyKeyboard / evaluate / navigation keys / Home → CSI H
+0	45,6e,64		0	1	1	0	0	1	1b,5b,46	KittyKeyboard / evaluate / navigation keys / End → CSI F
+0	50,61,67,65,55,70		1	1	1	0	0	1	1b,5b,35,3b,32,7e	KittyKeyboard / evaluate / navigation keys / Shift+PageUp → CSI 5;2 ~
+0	48,6f,6d,65		4	1	1	0	0	1	1b,5b,31,3b,35,48	KittyKeyboard / evaluate / navigation keys / Ctrl+Home → CSI 1;5 H
+0	41,72,72,6f,77,55,70		0	1	1	0	0	1	1b,5b,41	KittyKeyboard / evaluate / arrow keys / ArrowUp → CSI A
+0	41,72,72,6f,77,44,6f,77,6e		0	1	1	0	0	1	1b,5b,42	KittyKeyboard / evaluate / arrow keys / ArrowDown → CSI B
+0	41,72,72,6f,77,52,69,67,68,74		0	1	1	0	0	1	1b,5b,43	KittyKeyboard / evaluate / arrow keys / ArrowRight → CSI C
+0	41,72,72,6f,77,4c,65,66,74		0	1	1	0	0	1	1b,5b,44	KittyKeyboard / evaluate / arrow keys / ArrowLeft → CSI D
+0	41,72,72,6f,77,55,70		1	1	1	0	0	1	1b,5b,31,3b,32,41	KittyKeyboard / evaluate / arrow keys / Shift+ArrowUp → CSI 1;2 A
+0	41,72,72,6f,77,4c,65,66,74		4	1	1	0	0	1	1b,5b,31,3b,35,44	KittyKeyboard / evaluate / arrow keys / Ctrl+ArrowLeft → CSI 1;5 D
+0	41,72,72,6f,77,52,69,67,68,74		5	1	1	0	0	1	1b,5b,31,3b,36,43	KittyKeyboard / evaluate / arrow keys / Ctrl+Shift+ArrowRight → CSI 1;6 C
+0	46,31		0	1	1	0	0	1	1b,4f,50	KittyKeyboard / evaluate / function keys F1-F12 / F1 → CSI P (SS3 form)
+0	46,32		0	1	1	0	0	1	1b,4f,51	KittyKeyboard / evaluate / function keys F1-F12 / F2 → CSI Q (SS3 form)
+0	46,33		0	1	1	0	0	1	1b,4f,52	KittyKeyboard / evaluate / function keys F1-F12 / F3 → CSI R (SS3 form)
+0	46,34		0	1	1	0	0	1	1b,4f,53	KittyKeyboard / evaluate / function keys F1-F12 / F4 → CSI S (SS3 form)
+0	46,35		0	1	1	0	0	1	1b,5b,31,35,7e	KittyKeyboard / evaluate / function keys F1-F12 / F5 → CSI 15 ~
+0	46,36		0	1	1	0	0	1	1b,5b,31,37,7e	KittyKeyboard / evaluate / function keys F1-F12 / F6 → CSI 17 ~
+0	46,37		0	1	1	0	0	1	1b,5b,31,38,7e	KittyKeyboard / evaluate / function keys F1-F12 / F7 → CSI 18 ~
+0	46,38		0	1	1	0	0	1	1b,5b,31,39,7e	KittyKeyboard / evaluate / function keys F1-F12 / F8 → CSI 19 ~
+0	46,39		0	1	1	0	0	1	1b,5b,32,30,7e	KittyKeyboard / evaluate / function keys F1-F12 / F9 → CSI 20 ~
+0	46,31,30		0	1	1	0	0	1	1b,5b,32,31,7e	KittyKeyboard / evaluate / function keys F1-F12 / F10 → CSI 21 ~
+0	46,31,31		0	1	1	0	0	1	1b,5b,32,33,7e	KittyKeyboard / evaluate / function keys F1-F12 / F11 → CSI 23 ~
+0	46,31,32		0	1	1	0	0	1	1b,5b,32,34,7e	KittyKeyboard / evaluate / function keys F1-F12 / F12 → CSI 24 ~
+0	46,31		1	1	1	0	0	1	1b,5b,31,3b,32,50	KittyKeyboard / evaluate / function keys F1-F12 / Shift+F1 → CSI 1;2 P
+0	46,35		4	1	1	0	0	1	1b,5b,31,35,3b,35,7e	KittyKeyboard / evaluate / function keys F1-F12 / Ctrl+F5 → CSI 15;5 ~
+0	46,31,33		0	1	1	0	0	1	1b,5b,35,37,33,37,36,75	KittyKeyboard / evaluate / extended function keys F13-F35 (Private Use Area) / F13 → CSI 57376 u
+0	46,31,34		0	1	1	0	0	1	1b,5b,35,37,33,37,37,75	KittyKeyboard / evaluate / extended function keys F13-F35 (Private Use Area) / F14 → CSI 57377 u
+0	46,32,30		0	1	1	0	0	1	1b,5b,35,37,33,38,33,75	KittyKeyboard / evaluate / extended function keys F13-F35 (Private Use Area) / F20 → CSI 57383 u
+0	46,32,34		0	1	1	0	0	1	1b,5b,35,37,33,38,37,75	KittyKeyboard / evaluate / extended function keys F13-F35 (Private Use Area) / F24 → CSI 57387 u
+0	30	4e,75,6d,70,61,64,30	0	1	1	0	0	1	1b,5b,35,37,33,39,39,75	KittyKeyboard / evaluate / numpad keys (Private Use Area) / Numpad0 → CSI 57399 u
+0	31	4e,75,6d,70,61,64,31	0	1	1	0	0	1	1b,5b,35,37,34,30,30,75	KittyKeyboard / evaluate / numpad keys (Private Use Area) / Numpad1 → CSI 57400 u
+0	39	4e,75,6d,70,61,64,39	0	1	1	0	0	1	1b,5b,35,37,34,30,38,75	KittyKeyboard / evaluate / numpad keys (Private Use Area) / Numpad9 → CSI 57408 u
+0	2e	4e,75,6d,70,61,64,44,65,63,69,6d,61,6c	0	1	1	0	0	1	1b,5b,35,37,34,30,39,75	KittyKeyboard / evaluate / numpad keys (Private Use Area) / NumpadDecimal → CSI 57409 u
+0	2f	4e,75,6d,70,61,64,44,69,76,69,64,65	0	1	1	0	0	1	1b,5b,35,37,34,31,30,75	KittyKeyboard / evaluate / numpad keys (Private Use Area) / NumpadDivide → CSI 57410 u
+0	2a	4e,75,6d,70,61,64,4d,75,6c,74,69,70,6c,79	0	1	1	0	0	1	1b,5b,35,37,34,31,31,75	KittyKeyboard / evaluate / numpad keys (Private Use Area) / NumpadMultiply → CSI 57411 u
+0	2d	4e,75,6d,70,61,64,53,75,62,74,72,61,63,74	0	1	1	0	0	1	1b,5b,35,37,34,31,32,75	KittyKeyboard / evaluate / numpad keys (Private Use Area) / NumpadSubtract → CSI 57412 u
+0	2b	4e,75,6d,70,61,64,41,64,64	0	1	1	0	0	1	1b,5b,35,37,34,31,33,75	KittyKeyboard / evaluate / numpad keys (Private Use Area) / NumpadAdd → CSI 57413 u
+0	45,6e,74,65,72	4e,75,6d,70,61,64,45,6e,74,65,72	0	1	1	0	0	1	1b,5b,35,37,34,31,34,75	KittyKeyboard / evaluate / numpad keys (Private Use Area) / NumpadEnter → CSI 57414 u
+0	3d	4e,75,6d,70,61,64,45,71,75,61,6c	0	1	1	0	0	1	1b,5b,35,37,34,31,35,75	KittyKeyboard / evaluate / numpad keys (Private Use Area) / NumpadEqual → CSI 57415 u
+0	35	4e,75,6d,70,61,64,35	4	1	1	0	0	1	1b,5b,35,37,34,30,34,3b,35,75	KittyKeyboard / evaluate / numpad keys (Private Use Area) / Ctrl+Numpad5 → CSI 57404;5 u
+0	53,68,69,66,74	53,68,69,66,74,4c,65,66,74	1	8	1	0	0	1	1b,5b,35,37,34,34,31,3b,32,75	KittyKeyboard / evaluate / modifier keys (Private Use Area) / Left Shift → CSI 57441 u
+0	53,68,69,66,74	53,68,69,66,74,52,69,67,68,74	1	8	1	0	0	1	1b,5b,35,37,34,34,37,3b,32,75	KittyKeyboard / evaluate / modifier keys (Private Use Area) / Right Shift → CSI 57447 u
+0	43,6f,6e,74,72,6f,6c	43,6f,6e,74,72,6f,6c,4c,65,66,74	4	8	1	0	0	1	1b,5b,35,37,34,34,32,3b,35,75	KittyKeyboard / evaluate / modifier keys (Private Use Area) / Left Control → CSI 57442 u
+0	43,6f,6e,74,72,6f,6c	43,6f,6e,74,72,6f,6c,52,69,67,68,74	4	8	1	0	0	1	1b,5b,35,37,34,34,38,3b,35,75	KittyKeyboard / evaluate / modifier keys (Private Use Area) / Right Control → CSI 57448 u
+0	41,6c,74	41,6c,74,4c,65,66,74	2	8	1	0	0	1	1b,5b,35,37,34,34,33,3b,33,75	KittyKeyboard / evaluate / modifier keys (Private Use Area) / Left Alt → CSI 57443 u
+0	41,6c,74	41,6c,74,52,69,67,68,74	2	8	1	0	0	1	1b,5b,35,37,34,34,39,3b,33,75	KittyKeyboard / evaluate / modifier keys (Private Use Area) / Right Alt → CSI 57449 u
+0	4d,65,74,61	4d,65,74,61,4c,65,66,74	8	8	1	0	0	1	1b,5b,35,37,34,34,34,3b,39,75	KittyKeyboard / evaluate / modifier keys (Private Use Area) / Left Meta/Super → CSI 57444 u
+0	4d,65,74,61	4d,65,74,61,52,69,67,68,74	8	8	1	0	0	1	1b,5b,35,37,34,35,30,3b,39,75	KittyKeyboard / evaluate / modifier keys (Private Use Area) / Right Meta/Super → CSI 57450 u
+0	43,61,70,73,4c,6f,63,6b	43,61,70,73,4c,6f,63,6b	0	8	1	0	0	1	1b,5b,35,37,33,35,38,75	KittyKeyboard / evaluate / modifier keys (Private Use Area) / CapsLock → CSI 57358 u
+0	4e,75,6d,4c,6f,63,6b	4e,75,6d,4c,6f,63,6b	0	8	1	0	0	1	1b,5b,35,37,33,36,30,75	KittyKeyboard / evaluate / modifier keys (Private Use Area) / NumLock → CSI 57360 u
+0	53,63,72,6f,6c,6c,4c,6f,63,6b	53,63,72,6f,6c,6c,4c,6f,63,6b	0	8	1	0	0	1	1b,5b,35,37,33,35,39,75	KittyKeyboard / evaluate / modifier keys (Private Use Area) / ScrollLock → CSI 57359 u
+0	61		0	3	1	0	0	0	61	KittyKeyboard / evaluate / event types (press/repeat/release) / UTF-8 text press event
+0	45,73,63,61,70,65		0	3	1	0	0	1	1b,5b,32,37,75	KittyKeyboard / evaluate / event types (press/repeat/release) / Escape key press event (default, no suffix)
+0	45,6e,74,65,72		0	3	1	0	0	0	d	KittyKeyboard / evaluate / event types (press/repeat/release) / Enter key press event → legacy \r
+0	54,61,62		0	3	1	0	0	0	9	KittyKeyboard / evaluate / event types (press/repeat/release) / Tab key press event → legacy \t
+0	42,61,63,6b,73,70,61,63,65		0	3	1	0	0	0	7f	KittyKeyboard / evaluate / event types (press/repeat/release) / Backspace key press event → legacy \x7f
+0	61		4	3	1	0	0	1	1b,5b,39,37,3b,35,75	KittyKeyboard / evaluate / event types (press/repeat/release) / press event when modifiers present
+0	61		0	3	2	0	0	0	61	KittyKeyboard / evaluate / event types (press/repeat/release) / UTF-8 text repeat event
+0	45,73,63,61,70,65		0	3	2	0	0	1	1b,5b,32,37,3b,31,3a,32,75	KittyKeyboard / evaluate / event types (press/repeat/release) / Escape key repeat event → :2 suffix
+0	45,6e,74,65,72		0	3	2	0	0	0	d	KittyKeyboard / evaluate / event types (press/repeat/release) / Enter key repeat event → legacy \r
+0	54,61,62		0	3	2	0	0	0	9	KittyKeyboard / evaluate / event types (press/repeat/release) / Tab key repeat event → legacy \t
+0	42,61,63,6b,73,70,61,63,65		0	3	2	0	0	0	7f	KittyKeyboard / evaluate / event types (press/repeat/release) / Backspace key repeat event → legacy \x7f
+0	61		0	3	3	0	0	1	1b,5b,39,37,3b,31,3a,33,75	KittyKeyboard / evaluate / event types (press/repeat/release) / release event → :3 suffix
+0	45,73,63,61,70,65		0	3	3	0	0	1	1b,5b,32,37,3b,31,3a,33,75	KittyKeyboard / evaluate / event types (press/repeat/release) / Escape key release event → :3 suffix
+0	45,6e,74,65,72		0	3	3	0	0	0	-	KittyKeyboard / evaluate / event types (press/repeat/release) / Enter key release event is not reported
+0	54,61,62		0	3	3	0	0	0	-	KittyKeyboard / evaluate / event types (press/repeat/release) / Tab key release event is not reported
+0	42,61,63,6b,73,70,61,63,65		0	3	3	0	0	0	-	KittyKeyboard / evaluate / event types (press/repeat/release) / Backspace key release event is not reported
+0	61		4	3	3	0	0	1	1b,5b,39,37,3b,35,3a,33,75	KittyKeyboard / evaluate / event types (press/repeat/release) / release with modifier → mod:3
+0	61		3	3	2	0	0	1	1b,5b,39,37,3b,34,3a,32,75	KittyKeyboard / evaluate / event types (press/repeat/release) / repeat with modifier → mod:2
+0	44,65,6c,65,74,65		0	3	3	0	0	1	1b,5b,33,3b,31,3a,33,7e	KittyKeyboard / evaluate / event types (press/repeat/release) / functional key release → CSI code;1:3 ~
+0	53,68,69,66,74	53,68,69,66,74,4c,65,66,74	0	11	3	0	0	1	1b,5b,35,37,34,34,31,3b,31,3a,33,75	KittyKeyboard / evaluate / event types (press/repeat/release) / modifier key release includes its own bit cleared
+0	61		4	2	1	0	0	1	1b,5b,39,37,3b,35,75	KittyKeyboard / evaluate / REPORT_EVENT_TYPES flag without DISAMBIGUATE_ESCAPE_CODES / press event is not swallowed when modifiers present
+0	61		4	2	2	0	0	1	1b,5b,39,37,3b,35,3a,32,75	KittyKeyboard / evaluate / REPORT_EVENT_TYPES flag without DISAMBIGUATE_ESCAPE_CODES / repeat event is not swallowed when modifiers present
+0	61		4	2	3	0	0	1	1b,5b,39,37,3b,35,3a,33,75	KittyKeyboard / evaluate / REPORT_EVENT_TYPES flag without DISAMBIGUATE_ESCAPE_CODES / release event is reported as CSI u sequence
+0	53,68,69,66,74	53,68,69,66,74,4c,65,66,74	1	2	1	0	0	0	-	KittyKeyboard / evaluate / modifier-only reporting / does not report modifier press without REPORT_ALL_KEYS_AS_ESCAPE_CODES
+0	53,68,69,66,74	53,68,69,66,74,4c,65,66,74	0	2	3	0	0	0	-	KittyKeyboard / evaluate / modifier-only reporting / does not report modifier release without REPORT_ALL_KEYS_AS_ESCAPE_CODES
+0	43,61,70,73,4c,6f,63,6b	43,61,70,73,4c,6f,63,6b	0	1	1	0	0	0	-	KittyKeyboard / evaluate / modifier-only reporting / does not report CapsLock press without REPORT_ALL_KEYS_AS_ESCAPE_CODES
+0	43,61,70,73,4c,6f,63,6b	43,61,70,73,4c,6f,63,6b	0	2	1	0	0	0	-	KittyKeyboard / evaluate / modifier-only reporting / does not report CapsLock press without REPORT_ALL_KEYS_AS_ESCAPE_CODES
+0	43,61,70,73,4c,6f,63,6b	43,61,70,73,4c,6f,63,6b	0	3	1	0	0	0	-	KittyKeyboard / evaluate / modifier-only reporting / does not report CapsLock press without REPORT_ALL_KEYS_AS_ESCAPE_CODES
+0	4e,75,6d,4c,6f,63,6b	4e,75,6d,4c,6f,63,6b	0	1	1	0	0	0	-	KittyKeyboard / evaluate / modifier-only reporting / does not report NumLock press without REPORT_ALL_KEYS_AS_ESCAPE_CODES
+0	53,63,72,6f,6c,6c,4c,6f,63,6b	53,63,72,6f,6c,6c,4c,6f,63,6b	0	1	1	0	0	0	-	KittyKeyboard / evaluate / modifier-only reporting / does not report ScrollLock press without REPORT_ALL_KEYS_AS_ESCAPE_CODES
+0	43,61,70,73,4c,6f,63,6b	43,61,70,73,4c,6f,63,6b	0	2	3	0	0	0	-	KittyKeyboard / evaluate / modifier-only reporting / does not report CapsLock release without REPORT_ALL_KEYS_AS_ESCAPE_CODES
+0	61		0	8	1	0	0	1	1b,5b,39,37,75	KittyKeyboard / evaluate / REPORT_ALL_KEYS_AS_ESCAPE_CODES flag / lowercase letter → CSI codepoint u
+0	41		1	8	1	0	0	1	1b,5b,39,37,3b,32,75	KittyKeyboard / evaluate / REPORT_ALL_KEYS_AS_ESCAPE_CODES flag / uppercase letter uses lowercase codepoint
+0	35		0	8	1	0	0	1	1b,5b,35,33,75	KittyKeyboard / evaluate / REPORT_ALL_KEYS_AS_ESCAPE_CODES flag / digit → CSI codepoint u
+0	2e		0	8	1	0	0	1	1b,5b,34,36,75	KittyKeyboard / evaluate / REPORT_ALL_KEYS_AS_ESCAPE_CODES flag / punctuation → CSI codepoint u
+0	2c		0	8	1	0	0	1	1b,5b,34,34,75	KittyKeyboard / evaluate / REPORT_ALL_KEYS_AS_ESCAPE_CODES flag / punctuation → CSI codepoint u
+0	3b		0	8	1	0	0	1	1b,5b,35,39,75	KittyKeyboard / evaluate / REPORT_ALL_KEYS_AS_ESCAPE_CODES flag / punctuation → CSI codepoint u
+0	2f		0	8	1	0	0	1	1b,5b,34,37,75	KittyKeyboard / evaluate / REPORT_ALL_KEYS_AS_ESCAPE_CODES flag / punctuation → CSI codepoint u
+0	5b		0	8	1	0	0	1	1b,5b,39,31,75	KittyKeyboard / evaluate / REPORT_ALL_KEYS_AS_ESCAPE_CODES flag / brackets → CSI codepoint u
+0	5d		0	8	1	0	0	1	1b,5b,39,33,75	KittyKeyboard / evaluate / REPORT_ALL_KEYS_AS_ESCAPE_CODES flag / brackets → CSI codepoint u
+0	20		0	8	1	0	0	1	1b,5b,33,32,75	KittyKeyboard / evaluate / REPORT_ALL_KEYS_AS_ESCAPE_CODES flag / space → CSI 32 u
+0	45,6e,74,65,72		0	10	1	0	0	1	1b,5b,31,33,75	KittyKeyboard / evaluate / REPORT_ALL_KEYS_AS_ESCAPE_CODES flag with REPORT_EVENT_TYPES / Enter key press event → CSI 13 u
+0	54,61,62		0	10	1	0	0	1	1b,5b,39,75	KittyKeyboard / evaluate / REPORT_ALL_KEYS_AS_ESCAPE_CODES flag with REPORT_EVENT_TYPES / Tab key press event → CSI 9 u
+0	42,61,63,6b,73,70,61,63,65		0	10	1	0	0	1	1b,5b,31,32,37,75	KittyKeyboard / evaluate / REPORT_ALL_KEYS_AS_ESCAPE_CODES flag with REPORT_EVENT_TYPES / Backspace key press event → CSI 127 u
+0	45,6e,74,65,72		0	10	2	0	0	1	1b,5b,31,33,3b,31,3a,32,75	KittyKeyboard / evaluate / REPORT_ALL_KEYS_AS_ESCAPE_CODES flag with REPORT_EVENT_TYPES / Enter key repeat event → CSI 13;1:2 u
+0	54,61,62		0	10	2	0	0	1	1b,5b,39,3b,31,3a,32,75	KittyKeyboard / evaluate / REPORT_ALL_KEYS_AS_ESCAPE_CODES flag with REPORT_EVENT_TYPES / Tab key repeat event → CSI 9;1:2 u
+0	42,61,63,6b,73,70,61,63,65		0	10	2	0	0	1	1b,5b,31,32,37,3b,31,3a,32,75	KittyKeyboard / evaluate / REPORT_ALL_KEYS_AS_ESCAPE_CODES flag with REPORT_EVENT_TYPES / Backspace key repeat event → CSI 127;1:2 u
+0	45,6e,74,65,72		0	10	3	0	0	1	1b,5b,31,33,3b,31,3a,33,75	KittyKeyboard / evaluate / REPORT_ALL_KEYS_AS_ESCAPE_CODES flag with REPORT_EVENT_TYPES / Enter key release event → CSI 13;1:3 u
+0	54,61,62		0	10	3	0	0	1	1b,5b,39,3b,31,3a,33,75	KittyKeyboard / evaluate / REPORT_ALL_KEYS_AS_ESCAPE_CODES flag with REPORT_EVENT_TYPES / Tab key release event → CSI 9;1:3 u
+0	42,61,63,6b,73,70,61,63,65		0	10	3	0	0	1	1b,5b,31,32,37,3b,31,3a,33,75	KittyKeyboard / evaluate / REPORT_ALL_KEYS_AS_ESCAPE_CODES flag with REPORT_EVENT_TYPES / Backspace key release event → CSI 127;1:3 u
+0	61		0	24	1	0	0	1	1b,5b,39,37,3b,3b,39,37,75	KittyKeyboard / evaluate / REPORT_ASSOCIATED_TEXT flag / regular key includes text codepoint
+0	41		1	24	1	0	0	1	1b,5b,39,37,3b,32,3b,36,35,75	KittyKeyboard / evaluate / REPORT_ASSOCIATED_TEXT flag / shifted key includes shifted text
+0	61		4	24	1	0	0	1	1b,5b,39,37,3b,35,75	KittyKeyboard / evaluate / REPORT_ASSOCIATED_TEXT flag / Ctrl+key omits text (control code)
+0	45,73,63,61,70,65		0	24	1	0	0	1	1b,5b,32,37,75	KittyKeyboard / evaluate / REPORT_ASSOCIATED_TEXT flag / functional key has no text
+0	61		0	26	3	0	0	1	1b,5b,39,37,3b,31,3a,33,75	KittyKeyboard / evaluate / REPORT_ASSOCIATED_TEXT flag / release event has no text
+0	35		0	24	1	0	0	1	1b,5b,35,33,3b,3b,35,33,75	KittyKeyboard / evaluate / REPORT_ASSOCIATED_TEXT flag / digit with text
+0	25	44,69,67,69,74,35	1	24	1	0	0	1	1b,5b,35,33,3b,32,3b,33,37,75	KittyKeyboard / evaluate / REPORT_ASSOCIATED_TEXT flag / Shift+digit shows shifted symbol
+0	41	4b,65,79,41	1	12	1	0	0	1	1b,5b,39,37,3a,36,35,3b,32,75	KittyKeyboard / evaluate / REPORT_ALTERNATE_KEYS flag / Shift+a includes shifted key → CSI 97:65 ; 2 u
+0	61	4b,65,79,41	0	12	1	0	0	1	1b,5b,39,37,75	KittyKeyboard / evaluate / REPORT_ALTERNATE_KEYS flag / unshifted key has no alternate
+0	25	44,69,67,69,74,35	1	12	1	0	0	1	1b,5b,35,33,3a,33,37,3b,32,75	KittyKeyboard / evaluate / REPORT_ALTERNATE_KEYS flag / Shift+5 includes shifted key → CSI 53:37 ; 2 u
+0	45,73,63,61,70,65		1	12	1	0	0	1	1b,5b,32,37,3b,32,75	KittyKeyboard / evaluate / REPORT_ALTERNATE_KEYS flag / functional keys have no shifted alternate
+0	41	4b,65,79,41	1	28	1	0	0	1	1b,5b,39,37,3a,36,35,3b,32,3b,36,35,75	KittyKeyboard / evaluate / REPORT_ALTERNATE_KEYS with REPORT_ASSOCIATED_TEXT / Shift+a → CSI 97:65 ; 2 ; 65 u
+0	41	4b,65,79,41	1	30	3	0	0	1	1b,5b,39,37,3a,36,35,3b,32,3a,33,75	KittyKeyboard / evaluate / REPORT_ALTERNATE_KEYS with REPORT_ASSOCIATED_TEXT / Shift+a release → CSI 97:65 ; 2:3 u (no text)
+0	61		0	1	3	0	0	0	-	KittyKeyboard / evaluate / release events without REPORT_EVENT_TYPES / should not generate key sequence for release events
+0	41		1	1	1	0	0	0	41	KittyKeyboard / evaluate / edge cases / shift+letter sends plain character in DISAMBIGUATE mode
+0	41		5	1	1	0	0	1	1b,5b,39,37,3b,36,75	KittyKeyboard / evaluate / edge cases / ctrl+shift+a sends lowercase codepoint 97
+0	44,65,61,64		0	1	1	0	0	0	-	KittyKeyboard / evaluate / edge cases / Dead key produces no output
+0	55,6e,69,64,65,6e,74,69,66,69,65,64		0	1	1	0	0	0	-	KittyKeyboard / evaluate / edge cases / Unidentified key produces no output
+0	50,72,69,6e,74,53,63,72,65,65,6e		0	1	1	0	0	1	1b,5b,35,37,33,36,31,75	KittyKeyboard / evaluate / edge cases / PrintScreen → CSI 57361 u
+0	50,61,75,73,65		0	1	1	0	0	1	1b,5b,35,37,33,36,32,75	KittyKeyboard / evaluate / edge cases / Pause → CSI 57362 u
+0	43,6f,6e,74,65,78,74,4d,65,6e,75		0	1	1	0	0	1	1b,5b,35,37,33,36,33,75	KittyKeyboard / evaluate / edge cases / ContextMenu → CSI 57363 u
+0	4d,65,64,69,61,50,6c,61,79,50,61,75,73,65		0	1	1	0	0	1	1b,5b,35,37,34,33,30,75	KittyKeyboard / evaluate / media keys (Private Use Area) / MediaPlayPause → CSI 57430 u
+0	4d,65,64,69,61,53,74,6f,70		0	1	1	0	0	1	1b,5b,35,37,34,33,32,75	KittyKeyboard / evaluate / media keys (Private Use Area) / MediaStop → CSI 57432 u
+0	4d,65,64,69,61,54,72,61,63,6b,4e,65,78,74		0	1	1	0	0	1	1b,5b,35,37,34,33,35,75	KittyKeyboard / evaluate / media keys (Private Use Area) / MediaTrackNext → CSI 57435 u
+0	4d,65,64,69,61,54,72,61,63,6b,50,72,65,76,69,6f,75,73		0	1	1	0	0	1	1b,5b,35,37,34,33,36,75	KittyKeyboard / evaluate / media keys (Private Use Area) / MediaTrackPrevious → CSI 57436 u
+0	41,75,64,69,6f,56,6f,6c,75,6d,65,44,6f,77,6e		0	1	1	0	0	1	1b,5b,35,37,34,33,38,75	KittyKeyboard / evaluate / media keys (Private Use Area) / AudioVolumeDown → CSI 57438 u
+0	41,75,64,69,6f,56,6f,6c,75,6d,65,55,70		0	1	1	0	0	1	1b,5b,35,37,34,33,39,75	KittyKeyboard / evaluate / media keys (Private Use Area) / AudioVolumeUp → CSI 57439 u
+0	41,75,64,69,6f,56,6f,6c,75,6d,65,4d,75,74,65		0	1	1	0	0	1	1b,5b,35,37,34,34,30,75	KittyKeyboard / evaluate / media keys (Private Use Area) / AudioVolumeMute → CSI 57440 u
+0	192	4b,65,79,46	2	1	1	1	0	1	1b,5b,31,30,32,3b,33,75	KittyKeyboard / evaluate / macOS Option as Alt (macOptionIsMeta) / Opt+f (key=ƒ) → CSI 102;3 u
+0	222b	4b,65,79,42	2	1	1	1	0	1	1b,5b,39,38,3b,33,75	KittyKeyboard / evaluate / macOS Option as Alt (macOptionIsMeta) / Opt+b (key=∫) → CSI 98;3 u
+0	2202	4b,65,79,44	2	1	1	1	0	1	1b,5b,31,30,30,3b,33,75	KittyKeyboard / evaluate / macOS Option as Alt (macOptionIsMeta) / Opt+d (key=∂) → CSI 100;3 u
+0	44,65,61,64	4b,65,79,4e	2	1	1	1	0	1	1b,5b,31,31,30,3b,33,75	KittyKeyboard / evaluate / macOS Option as Alt (macOptionIsMeta) / Opt+n dead key (key=Dead, code=KeyN) → CSI 110;3 u
+0	44,65,61,64	4b,65,79,45	2	1	1	1	0	1	1b,5b,31,30,31,3b,33,75	KittyKeyboard / evaluate / macOS Option as Alt (macOptionIsMeta) / Opt+e dead key (key=Dead, code=KeyE) → CSI 101;3 u
+0	44,65,61,64	4b,65,79,55	2	1	1	1	0	1	1b,5b,31,31,37,3b,33,75	KittyKeyboard / evaluate / macOS Option as Alt (macOptionIsMeta) / Opt+u dead key (key=Dead, code=KeyU) → CSI 117;3 u
+0	221e	44,69,67,69,74,35	2	1	1	1	0	1	1b,5b,35,33,3b,33,75	KittyKeyboard / evaluate / macOS Option as Alt (macOptionIsMeta) / Opt+5 (key=∞) → CSI 53;3 u
+0	cf	4b,65,79,46	3	1	1	1	0	1	1b,5b,31,30,32,3b,34,75	KittyKeyboard / evaluate / macOS Option as Alt (macOptionIsMeta) / Opt+Shift+f (key=Ï) → CSI 102;4 u
+0	192	4b,65,79,46	6	1	1	1	0	1	1b,5b,31,30,32,3b,37,75	KittyKeyboard / evaluate / macOS Option as Alt (macOptionIsMeta) / Ctrl+Opt+f (key=ƒ) → CSI 102;7 u
+0	61	4b,65,79,41	2	1	1	0	0	1	1b,5b,39,37,3b,33,75	KittyKeyboard / evaluate / macOS Option as Alt (macOptionIsMeta) / does not unwind when macOptionAsAlt is false (Linux Alt is a chord)
+0	61	4b,65,79,51	2	1	1	0	0	1	1b,5b,39,37,3b,33,75	KittyKeyboard / evaluate / macOS Option as Alt (macOptionIsMeta) / does not unwind on Linux AZERTY (key=a, code=KeyQ) — uses ev.key not ev.code
+0	192	4b,65,79,46	2	1	1	0	0	1	1b,5b,34,30,32,3b,33,75	KittyKeyboard / evaluate / macOS Option as Alt (macOptionIsMeta) / does not unwind when macOptionAsAlt is false even with composed key
+0	192	4b,65,79,46	0	1	1	1	0	0	192	KittyKeyboard / evaluate / macOS Option as Alt (macOptionIsMeta) / does not unwind when altKey is false
+0	2026	53,65,6d,69,63,6f,6c,6f,6e	2	1	1	1	0	1	1b,5b,38,32,33,30,3b,33,75	KittyKeyboard / evaluate / macOS Option as Alt (macOptionIsMeta) / falls through when ev.code is not Key*/Digit* (Opt+;)
+0	192	4b,65,79,46	2	3	3	1	0	1	1b,5b,31,30,32,3b,33,3a,33,75	KittyKeyboard / evaluate / macOS Option as Alt (macOptionIsMeta) / Opt+f release with REPORT_EVENT_TYPES → CSI 102;3:3 u

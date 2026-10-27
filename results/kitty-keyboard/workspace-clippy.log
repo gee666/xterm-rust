@@ -1,0 +1,48 @@
+ Downloading crates ...
+  Downloaded serde_json v1.0.154
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling serde_json v1.0.154
+    Checking itoa v1.0.18
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Checking xterm-web v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web)
+error: can be more succinctly written as a byte str
+   --> crates\xterm-core\tests\parser_table.rs:115:19
+    |
+115 |     copy.add_many(&[b'a', b'b'], S::Ground, changed).unwrap();
+    |                   ^^^^^^^^^^^^^ help: try: `b"ab"`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#byte_char_slices
+    = note: `-D clippy::byte-char-slices` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::byte_char_slices)]`
+
+error[E0432]: unresolved import `xterm_core::buffer::reflow`
+ --> crates\xterm-core\tests\buffer_reflow_edges.rs:4:14
+  |
+4 |     buffer::{reflow::*, BufferLine, CellData, CharData},
+  |              ^^^^^^ could not find `reflow` in `buffer`
+
+error: could not compile `xterm-core` (test "parser_table") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: operator precedence can trip the unwary
+   --> crates\xterm-core\tests\cell_branches.rs:129:17
+    |
+129 |     b.content = 2 << content::WIDTH_SHIFT | 97;
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: consider parenthesizing your expression: `(2 << content::WIDTH_SHIFT) | 97`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#precedence
+    = note: `-D clippy::precedence` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::precedence)]`
+
+error: couldn't read `crates\xterm-core\tests\fixtures/cell-extended.tsv`: The system cannot find the file specified. (os error 2)
+  --> crates\xterm-core\tests\cell_extended.rs:56:19
+   |
+56 |     let fixture = include_str!("fixtures/cell-extended.tsv");
+   |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: this error originates in the macro `include_str` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `xterm-core` (test "cell_extended") due to 1 previous error
+error: could not compile `xterm-core` (test "buffer_reflow_edges") due to 1 previous error
+error: could not compile `xterm-core` (test "cell_branches") due to 1 previous error

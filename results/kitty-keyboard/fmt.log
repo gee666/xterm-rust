@@ -1,0 +1,1660 @@
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\base64.rs:16:
+         for shift in [18, 12] {
+             output.push(ALPHABET[((word >> shift) & 63) as usize] as char);
+         }
+[31m-        output.push(if chunk.len() > 1 { ALPHABET[((word >> 6) & 63) as usize] as char } else { '=' });
+[0m[31m-        output.push(if chunk.len() > 2 { ALPHABET[(word & 63) as usize] as char } else { '=' });
+[0m[32m+        output.push(if chunk.len() > 1 {
+[0m[32m+            ALPHABET[((word >> 6) & 63) as usize] as char
+[0m[32m+        } else {
+[0m[32m+            '='
+[0m[32m+        });
+[0m[32m+        output.push(if chunk.len() > 2 {
+[0m[32m+            ALPHABET[(word & 63) as usize] as char
+[0m[32m+        } else {
+[0m[32m+            '='
+[0m[32m+        });
+[0m     }
+     output
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\base64.rs:24:
+ 
+ pub fn decode_text(data: &[u16]) -> Vec<u16> {
+[31m-    let Some(bytes) = decode_bytes(data) else { return Vec::new(); };
+[0m[32m+    let Some(bytes) = decode_bytes(data) else {
+[0m[32m+        return Vec::new();
+[0m[32m+    };
+[0m     let text = String::from_utf8_lossy(&bytes);
+     // TextDecoder consumes one initial BOM by default.
+[31m-    text.strip_prefix('\u{feff}').unwrap_or(&text).encode_utf16().collect()
+[0m[32m+    text.strip_prefix('\u{feff}')
+[0m[32m+        .unwrap_or(&text)
+[0m[32m+        .encode_utf16()
+[0m[32m+        .collect()
+[0m }
+ 
+ fn decode_bytes(data: &[u16]) -> Option<Vec<u8>> {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\base64.rs:33:
+[31m-    let mut units: Vec<u16> = data.iter().copied().filter(|u| !matches!(u, 9 | 10 | 12 | 13 | 32)).collect();
+[0m[32m+    let mut units: Vec<u16> = data
+[0m[32m+        .iter()
+[0m[32m+        .copied()
+[0m[32m+        .filter(|u| !matches!(u, 9 | 10 | 12 | 13 | 32))
+[0m[32m+        .collect();
+[0m     if units.len() % 4 == 0 {
+[31m-        if units.last() == Some(&61) { units.pop(); }
+[0m[31m-        if units.last() == Some(&61) { units.pop(); }
+[0m[32m+        if units.last() == Some(&61) {
+[0m[32m+            units.pop();
+[0m[32m+        }
+[0m[32m+        if units.last() == Some(&61) {
+[0m[32m+            units.pop();
+[0m[32m+        }
+[0m     }
+[31m-    if units.len() % 4 == 1 { return None; }
+[0m[32m+    if units.len() % 4 == 1 {
+[0m[32m+        return None;
+[0m[32m+    }
+[0m     let mut output = Vec::with_capacity(units.len() * 3 / 4);
+     let mut accumulator = 0_u32;
+     let mut bits = 0;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\clipboard.rs:14:
+ #[derive(Clone, Debug, PartialEq, Eq)]
+ pub struct ClipboardError(pub String);
+ impl fmt::Display for ClipboardError {
+[31m-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.write_str(&self.0) }
+[0m[32m+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+[0m[32m+        f.write_str(&self.0)
+[0m[32m+    }
+[0m }
+ impl std::error::Error for ClipboardError {}
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\clipboard.rs:24:
+ }
+ 
+ impl<T: 'static> Completion<T> {
+[31m-    pub fn map<U: 'static>(self, map: impl FnOnce(T) -> Result<U, ClipboardError> + 'static) -> Completion<U> {
+[0m[32m+    pub fn map<U: 'static>(
+[0m[32m+        self,
+[0m[32m+        map: impl FnOnce(T) -> Result<U, ClipboardError> + 'static,
+[0m[32m+    ) -> Completion<U> {
+[0m         match self {
+             Self::Ready(result) => Completion::Ready(result.and_then(map)),
+[31m-            Self::Pending(future) => Completion::Pending(Box::pin(async move { map(future.await?) })),
+[0m[32m+            Self::Pending(future) => {
+[0m[32m+                Completion::Pending(Box::pin(async move { map(future.await?) }))
+[0m[32m+            }
+[0m         }
+     }
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\clipboard.rs:68:
+ 
+ impl ClipboardAddon {
+     pub fn new(provider: Rc<dyn ClipboardProvider>, codec: Option<Rc<dyn Base64Codec>>) -> Self {
+[31m-        Self { codec: codec.unwrap_or_else(|| Rc::new(Base64)), provider, disposable: RefCell::default() }
+[0m[32m+        Self {
+[0m[32m+            codec: codec.unwrap_or_else(|| Rc::new(Base64)),
+[0m[32m+            provider,
+[0m[32m+            disposable: RefCell::default(),
+[0m[32m+        }
+[0m     }
+ 
+     pub fn activate(&self, terminal: Rc<dyn ClipboardTerminal>) {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\clipboard.rs:78:
+         let target = Rc::downgrade(&terminal);
+         let callback = Rc::new(move |data: &[u16]| {
+             let Some(target) = target.upgrade() else {
+[31m-                return Completion::Ready(Err(ClipboardError("clipboard terminal was dropped".into())));
+[0m[32m+                return Completion::Ready(Err(ClipboardError(
+[0m[32m+                    "clipboard terminal was dropped".into(),
+[0m[32m+                )));
+[0m             };
+             handle_osc(data, Rc::clone(&codec), Rc::clone(&provider), target)
+         });
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\clipboard.rs:89:
+ impl Disposable for ClipboardAddon {
+     fn dispose(&self) {
+         let handle = self.disposable.borrow().clone();
+[31m-        if let Some(handle) = handle { handle.dispose(); }
+[0m[32m+        if let Some(handle) = handle {
+[0m[32m+            handle.dispose();
+[0m[32m+        }
+[0m     }
+ }
+ impl Drop for ClipboardAddon {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\clipboard.rs:96:
+[31m-    fn drop(&mut self) { self.dispose(); }
+[0m[32m+    fn drop(&mut self) {
+[0m[32m+        self.dispose();
+[0m[32m+    }
+[0m }
+ 
+ pub fn handle_osc(
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\clipboard.rs:104:
+ ) -> Completion<bool> {
+     let mut args = data.split(|unit| *unit == u16::from(b';'));
+     let selection = args.next().unwrap_or_default();
+[31m-    let Some(payload) = args.next() else { return Completion::Ready(Ok(true)); };
+[0m[32m+    let Some(payload) = args.next() else {
+[0m[32m+        return Completion::Ready(Ok(true));
+[0m[32m+    };
+[0m     if payload == [u16::from(b'?')] {
+         let selection = selection.to_vec();
+         provider.read_text(&selection).map(move |data| {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\fit.rs:78:
+     let width = parse_css_integer(&m.parent_width).max(0.0);
+     let padding = m.padding.each_ref().map(|value| parse_css_integer(value));
+     Some(Dimensions {
+[31m-        cols: js_max(MINIMUM_COLS, ((width - padding[2] - padding[3] - scrollbar) / m.cell_width).floor()),
+[0m[31m-        rows: js_max(MINIMUM_ROWS, ((height - padding[0] - padding[1]) / m.cell_height).floor()),
+[0m[32m+        cols: js_max(
+[0m[32m+            MINIMUM_COLS,
+[0m[32m+            ((width - padding[2] - padding[3] - scrollbar) / m.cell_width).floor(),
+[0m[32m+        ),
+[0m[32m+        rows: js_max(
+[0m[32m+            MINIMUM_ROWS,
+[0m[32m+            ((height - padding[0] - padding[1]) / m.cell_height).floor(),
+[0m[32m+        ),
+[0m     })
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\fit.rs:86:
+ fn js_max(a: f64, b: f64) -> f64 {
+[31m-    if b.is_nan() { f64::NAN } else { a.max(b) }
+[0m[32m+    if b.is_nan() {
+[0m[32m+        f64::NAN
+[0m[32m+    } else {
+[0m[32m+        a.max(b)
+[0m[32m+    }
+[0m }
+ 
+ /// parseInt(s, 10) || 0, including decimal-prefix truncation and JS whitespace.
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\fit.rs:98:
+         _ => (1.0, value),
+     };
+     let digits: String = value.chars().take_while(char::is_ascii_digit).collect();
+[31m-    if digits.is_empty() { return 0.0; }
+[0m[32m+    if digits.is_empty() {
+[0m[32m+        return 0.0;
+[0m[32m+    }
+[0m     // Parsing the complete prefix preserves JS rounding for large decimal values.
+[31m-    let number = digits.parse::<f64>().expect("ASCII decimal digits are a valid floating-point literal") * sign;
+[0m[31m-    if number == 0.0 { 0.0 } else { number }
+[0m[32m+    let number = digits
+[0m[32m+        .parse::<f64>()
+[0m[32m+        .expect("ASCII decimal digits are a valid floating-point literal")
+[0m[32m+        * sign;
+[0m[32m+    if number == 0.0 {
+[0m[32m+        0.0
+[0m[32m+    } else {
+[0m[32m+        number
+[0m[32m+    }
+[0m }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\program_status\addon.rs:26:
+ 
+     fn clear(&self, id: &str) -> Result<(), EmitError> {
+         let changed = self.store.borrow_mut().clear(id);
+[31m-        if changed { self.fire()?; }
+[0m[32m+        if changed {
+[0m[32m+            self.fire()?;
+[0m[32m+        }
+[0m         Ok(())
+     }
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\program_status\addon.rs:39:
+ }
+ 
+ impl ProgramStatusAddon {
+[31m-    pub fn new() -> Self { Self::default() }
+[0m[32m+    pub fn new() -> Self {
+[0m[32m+        Self::default()
+[0m[32m+    }
+[0m 
+[31m-    pub fn records(&self) -> Snapshot { self.inner.store.borrow_mut().records() }
+[0m[31m-    pub fn on_change(&self) -> Event<Snapshot> { self.inner.change.event() }
+[0m[32m+    pub fn records(&self) -> Snapshot {
+[0m[32m+        self.inner.store.borrow_mut().records()
+[0m[32m+    }
+[0m[32m+    pub fn on_change(&self) -> Event<Snapshot> {
+[0m[32m+        self.inner.change.event()
+[0m[32m+    }
+[0m 
+     pub fn activate(&self, terminal: Rc<dyn StatusTerminal>) {
+         let weak = Rc::downgrade(&self.inner);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\program_status\addon.rs:49:
+         let input = Rc::downgrade(&terminal);
+[31m-        self.registrations.add(terminal.register_osc_handler(OSC_IDENT, Rc::new(move |data| {
+[0m[31m-            let Some(inner) = weak.upgrade() else { return Ok(false) };
+[0m[31m-            if data == [u16::from(b'?')] {
+[0m[31m-                if let Some(terminal) = input.upgrade() { terminal.input(REPLY, false); }
+[0m[31m-                return Ok(true);
+[0m[31m-            }
+[0m[31m-            match parse_report_utf16(data) {
+[0m[31m-                Some(StatusReport::Clear(id)) => inner.clear(&id)?,
+[0m[31m-                Some(StatusReport::Record(record)) => {
+[0m[31m-                    inner.store.borrow_mut().replace(record);
+[0m[31m-                    inner.fire()?;
+[0m[32m+        self.registrations.add(terminal.register_osc_handler(
+[0m[32m+            OSC_IDENT,
+[0m[32m+            Rc::new(move |data| {
+[0m[32m+                let Some(inner) = weak.upgrade() else {
+[0m[32m+                    return Ok(false);
+[0m[32m+                };
+[0m[32m+                if data == [u16::from(b'?')] {
+[0m[32m+                    if let Some(terminal) = input.upgrade() {
+[0m[32m+                        terminal.input(REPLY, false);
+[0m[32m+                    }
+[0m[32m+                    return Ok(true);
+[0m                 }
+[31m-                None => {}
+[0m[31m-            }
+[0m[31m-            Ok(true)
+[0m[31m-        })));
+[0m[32m+                match parse_report_utf16(data) {
+[0m[32m+                    Some(StatusReport::Clear(id)) => inner.clear(&id)?,
+[0m[32m+                    Some(StatusReport::Record(record)) => {
+[0m[32m+                        inner.store.borrow_mut().replace(record);
+[0m[32m+                        inner.fire()?;
+[0m[32m+                    }
+[0m[32m+                    None => {}
+[0m[32m+                }
+[0m[32m+                Ok(true)
+[0m[32m+            }),
+[0m[32m+        ));
+[0m         let weak = Rc::downgrade(&self.inner);
+[31m-        self.registrations.add(terminal.register_esc_handler(b'c', Rc::new(move || {
+[0m[31m-            if let Some(inner) = weak.upgrade() { inner.clear("")?; }
+[0m[31m-            Ok(false)
+[0m[31m-        })));
+[0m[32m+        self.registrations.add(terminal.register_esc_handler(
+[0m[32m+            b'c',
+[0m[32m+            Rc::new(move || {
+[0m[32m+                if let Some(inner) = weak.upgrade() {
+[0m[32m+                    inner.clear("")?;
+[0m[32m+                }
+[0m[32m+                Ok(false)
+[0m[32m+            }),
+[0m[32m+        ));
+[0m     }
+ 
+[31m-    pub fn clear(&self, id: &str) -> Result<(), EmitError> { self.inner.clear(id) }
+[0m[32m+    pub fn clear(&self, id: &str) -> Result<(), EmitError> {
+[0m[32m+        self.inner.clear(id)
+[0m[32m+    }
+[0m 
+     pub fn process_exited(&self) -> Result<(), EmitError> {
+         let changed = self.inner.store.borrow_mut().remove_active_records();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\program_status\addon.rs:77:
+[31m-        if changed { self.inner.fire()?; }
+[0m[32m+        if changed {
+[0m[32m+            self.inner.fire()?;
+[0m[32m+        }
+[0m         Ok(())
+     }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\program_status\addon.rs:81:
+[31m-    pub fn prompt_started(&self) -> Result<(), EmitError> { self.process_exited() }
+[0m[32m+    pub fn prompt_started(&self) -> Result<(), EmitError> {
+[0m[32m+        self.process_exited()
+[0m[32m+    }
+[0m }
+ 
+ impl Disposable for ProgramStatusAddon {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\program_status\addon.rs:90:
+ }
+ 
+ impl Drop for ProgramStatusAddon {
+[31m-    fn drop(&mut self) { self.dispose(); }
+[0m[32m+    fn drop(&mut self) {
+[0m[32m+        self.dispose();
+[0m[32m+    }
+[0m }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\program_status\mod.rs:41:
+ impl StatusRecord {
+     pub fn new(id: impl Into<String>, state: StatusState) -> Self {
+         Self {
+[31m-            id: id.into(), state, kind: None, progress: None, app: None,
+[0m[31m-            effective_app: None, title: None, message: None,
+[0m[32m+            id: id.into(),
+[0m[32m+            state,
+[0m[32m+            kind: None,
+[0m[32m+            progress: None,
+[0m[32m+            app: None,
+[0m[32m+            effective_app: None,
+[0m[32m+            title: None,
+[0m[32m+            message: None,
+[0m         }
+     }
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\program_status\parse.rs:35:
+     let mut title = None;
+     let mut message = None;
+     for pair in data.split(':') {
+[31m-        let Some((key, value)) = pair.split_once('=') else { continue };
+[0m[32m+        let Some((key, value)) = pair.split_once('=') else {
+[0m[32m+            continue;
+[0m[32m+        };
+[0m         let key = trim(key);
+         let value = trim(value);
+         if key.len() > KEY_LIMIT {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\program_status\parse.rs:54:
+         if limit.is_some_and(|limit| value.len() > limit) || (key == "id" && !is_id(value)) {
+             return None;
+         }
+[31m-        if !value.bytes().all(|b| b.is_ascii_alphanumeric() || b"_.,+/=-".contains(&b)) {
+[0m[32m+        if !value
+[0m[32m+            .bytes()
+[0m[32m+            .all(|b| b.is_ascii_alphanumeric() || b"_.,+/=-".contains(&b))
+[0m[32m+        {
+[0m             continue;
+         }
+         match key {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\program_status\parse.rs:102:
+ }
+ 
+ fn is_segment(s: &str) -> bool {
+[31m-    !s.is_empty() && s.len() <= SEGMENT_LIMIT
+[0m[31m-        && s.bytes().all(|b| b.is_ascii_alphanumeric() || b"_.+-".contains(&b))
+[0m[32m+    !s.is_empty()
+[0m[32m+        && s.len() <= SEGMENT_LIMIT
+[0m[32m+        && s.bytes()
+[0m[32m+            .all(|b| b.is_ascii_alphanumeric() || b"_.+-".contains(&b))
+[0m }
+ 
+ fn is_id(s: &str) -> bool {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\program_status\parse.rs:110:
+[31m-    !s.is_empty() && s.len() <= ID_LIMIT && s.split('/').count() <= ID_LEVEL_LIMIT
+[0m[32m+    !s.is_empty()
+[0m[32m+        && s.len() <= ID_LIMIT
+[0m[32m+        && s.split('/').count() <= ID_LEVEL_LIMIT
+[0m         && s.split('/').all(is_segment)
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\program_status\parse.rs:114:
+ fn parse_progress(s: &str) -> Option<u8> {
+[31m-    if s.is_empty() { return None; }
+[0m[32m+    if s.is_empty() {
+[0m[32m+        return None;
+[0m[32m+    }
+[0m     let mut n = 0_u8;
+     for b in s.bytes() {
+[31m-        if !b.is_ascii_digit() { return None; }
+[0m[32m+        if !b.is_ascii_digit() {
+[0m[32m+            return None;
+[0m[32m+        }
+[0m         n = n.checked_mul(10)?.checked_add(b - b'0')?;
+[31m-        if n > 100 { return None; }
+[0m[32m+        if n > 100 {
+[0m[32m+            return None;
+[0m[32m+        }
+[0m     }
+     Some(n)
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\program_status\parse.rs:128:
+     let content_len = value.find('=').unwrap_or(value.len());
+     let padding = value.len() - content_len;
+     let remainder = content_len % 4;
+[31m-    if remainder == 1 || padding > 2 || !value[content_len..].bytes().all(|b| b == b'=')
+[0m[31m-        || (padding != 0 && (value.len() % 4 != 0 || padding != 4 - remainder)) {
+[0m[32m+    if remainder == 1
+[0m[32m+        || padding > 2
+[0m[32m+        || !value[content_len..].bytes().all(|b| b == b'=')
+[0m[32m+        || (padding != 0 && (value.len() % 4 != 0 || padding != 4 - remainder))
+[0m[32m+    {
+[0m         return None;
+     }
+     let mut bytes = Vec::with_capacity((content_len * 3 / 4).min(limit));
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\program_status\parse.rs:148:
+         count += 6;
+         if count >= 8 {
+             count -= 8;
+[31m-            if bytes.len() == limit { return None; }
+[0m[32m+            if bytes.len() == limit {
+[0m[32m+                return None;
+[0m[32m+            }
+[0m             bytes.push(((bits >> count) & 255) as u8);
+             bits &= (1 << count) - 1;
+         }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\program_status\parse.rs:155:
+     }
+[31m-    if bits != 0 { return None; }
+[0m[32m+    if bits != 0 {
+[0m[32m+        return None;
+[0m[32m+    }
+[0m     let text = String::from_utf8(bytes).ok()?;
+[31m-    if text.chars().any(|c| c <= '\u{1f}' || ('\u{7f}'..='\u{9f}').contains(&c)) {
+[0m[32m+    if text
+[0m[32m+        .chars()
+[0m[32m+        .any(|c| c <= '\u{1f}' || ('\u{7f}'..='\u{9f}').contains(&c))
+[0m[32m+    {
+[0m         return None;
+     }
+     Some(text)
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\program_status\store.rs:15:
+ }
+ 
+ impl ProgramStatusStore {
+[31m-    pub fn new() -> Self { Self::default() }
+[0m[32m+    pub fn new() -> Self {
+[0m[32m+        Self::default()
+[0m[32m+    }
+[0m 
+     pub fn records(&mut self) -> Rc<[StatusRecord]> {
+         if let Some(snapshot) = &self.snapshot {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\program_status\store.rs:22:
+             return Rc::clone(snapshot);
+         }
+[31m-        let records: Vec<_> = self.records.iter().map(|record| {
+[0m[31m-            let mut record = record.clone();
+[0m[31m-            record.effective_app = self.effective_app(&record.id).map(str::to_owned);
+[0m[31m-            record
+[0m[31m-        }).collect();
+[0m[32m+        let records: Vec<_> = self
+[0m[32m+            .records
+[0m[32m+            .iter()
+[0m[32m+            .map(|record| {
+[0m[32m+                let mut record = record.clone();
+[0m[32m+                record.effective_app = self.effective_app(&record.id).map(str::to_owned);
+[0m[32m+                record
+[0m[32m+            })
+[0m[32m+            .collect();
+[0m         let snapshot: Rc<[StatusRecord]> = records.into();
+         self.snapshot = Some(Rc::clone(&snapshot));
+         snapshot
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\program_status\store.rs:55:
+         let before = self.records.len();
+         self.records.retain(|r| !predicate(r));
+         let changed = self.records.len() != before;
+[31m-        if changed { self.snapshot = None; }
+[0m[32m+        if changed {
+[0m[32m+            self.snapshot = None;
+[0m[32m+        }
+[0m         changed
+     }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\program_status\store.rs:62:
+     fn effective_app<'a>(&'a self, mut id: &str) -> Option<&'a str> {
+         loop {
+[31m-            if let Some(app) = self.records.iter().find(|r| r.id == id).and_then(|r| r.app.as_deref()) {
+[0m[32m+            if let Some(app) = self
+[0m[32m+                .records
+[0m[32m+                .iter()
+[0m[32m+                .find(|r| r.id == id)
+[0m[32m+                .and_then(|r| r.app.as_deref())
+[0m[32m+            {
+[0m                 return Some(app);
+             }
+[31m-            if id.is_empty() { return None; }
+[0m[32m+            if id.is_empty() {
+[0m[32m+                return None;
+[0m[32m+            }
+[0m             id = id.rsplit_once('/').map_or("", |(parent, _)| parent);
+         }
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\progress.rs:31:
+ impl Inner {
+     fn set(&self, mut progress: ProgressState) -> Result<bool, EmitError> {
+         // A NaN state is accepted upstream, since both comparisons are false.
+[31m-        if progress.state < REMOVE || progress.state > PAUSE { return Ok(false); }
+[0m[31m-        progress.value = if progress.value.is_nan() { f64::NAN } else { progress.value.clamp(0.0, 100.0) };
+[0m[32m+        if progress.state < REMOVE || progress.state > PAUSE {
+[0m[32m+            return Ok(false);
+[0m[32m+        }
+[0m[32m+        progress.value = if progress.value.is_nan() {
+[0m[32m+            f64::NAN
+[0m[32m+        } else {
+[0m[32m+            progress.value.clamp(0.0, 100.0)
+[0m[32m+        };
+[0m         self.progress.set(progress);
+         let change = self.change.borrow().clone();
+[31m-        if let Some(change) = change { change.fire(&progress)?; }
+[0m[32m+        if let Some(change) = change {
+[0m[32m+            change.fire(&progress)?;
+[0m[32m+        }
+[0m         Ok(true)
+     }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\progress.rs:42:
+     fn osc(&self, data: &[u16]) -> Result<bool, EmitError> {
+[31m-        if !data.starts_with(&[u16::from(b'4'), u16::from(b';')]) { return Ok(false); }
+[0m[32m+        if !data.starts_with(&[u16::from(b'4'), u16::from(b';')]) {
+[0m[32m+            return Ok(false);
+[0m[32m+        }
+[0m         let parts: Vec<_> = data.split(|c| *c == u16::from(b';')).collect();
+[31m-        if parts.len() > 3 { return Ok(true); }
+[0m[32m+        if parts.len() > 3 {
+[0m[32m+            return Ok(true);
+[0m[32m+        }
+[0m         let state = to_int(parts[1]);
+         let value = to_int(parts.get(2).copied().unwrap_or_default());
+         let previous = self.progress.get().value;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\progress.rs:49:
+[31m-        let value = if state == REMOVE { 0.0 }
+[0m[31m-            else if state == INDETERMINATE { previous }
+[0m[31m-            else if state == SET || state == ERROR || state == PAUSE {
+[0m[31m-                if value < 0.0 { return Ok(true); }
+[0m[31m-                if state != SET && value == 0.0 { previous } else { value }
+[0m[31m-            } else { return Ok(true); };
+[0m[32m+        let value = if state == REMOVE {
+[0m[32m+            0.0
+[0m[32m+        } else if state == INDETERMINATE {
+[0m[32m+            previous
+[0m[32m+        } else if state == SET || state == ERROR || state == PAUSE {
+[0m[32m+            if value < 0.0 {
+[0m[32m+                return Ok(true);
+[0m[32m+            }
+[0m[32m+            if state != SET && value == 0.0 {
+[0m[32m+                previous
+[0m[32m+            } else {
+[0m[32m+                value
+[0m[32m+            }
+[0m[32m+        } else {
+[0m[32m+            return Ok(true);
+[0m[32m+        };
+[0m         self.set(ProgressState { state, value })?;
+         Ok(true)
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\progress.rs:60:
+ fn to_int(s: &[u16]) -> f64 {
+     let mut value = 0.0;
+     for &unit in s {
+[31m-        if !(u16::from(b'0')..=u16::from(b'9')).contains(&unit) { return -1.0; }
+[0m[32m+        if !(u16::from(b'0')..=u16::from(b'9')).contains(&unit) {
+[0m[32m+            return -1.0;
+[0m[32m+        }
+[0m         // Accumulate in binary64 instead of parsing a Rust integer. This keeps
+         // JS rounding and overflow to infinity for arbitrarily long values.
+         value = value * 10.0 + f64::from(unit - u16::from(b'0'));
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\progress.rs:75:
+ }
+ 
+ impl ProgressAddon {
+[31m-    pub fn new() -> Self { Self::default() }
+[0m[31m-    pub fn progress(&self) -> ProgressState { self.inner.progress.get() }
+[0m[32m+    pub fn new() -> Self {
+[0m[32m+        Self::default()
+[0m[32m+    }
+[0m[32m+    pub fn progress(&self) -> ProgressState {
+[0m[32m+        self.inner.progress.get()
+[0m[32m+    }
+[0m     /// Returns false for an out-of-range state, which upstream reports as a warning.
+[31m-    pub fn set_progress(&self, progress: ProgressState) -> Result<bool, EmitError> { self.inner.set(progress) }
+[0m[32m+    pub fn set_progress(&self, progress: ProgressState) -> Result<bool, EmitError> {
+[0m[32m+        self.inner.set(progress)
+[0m[32m+    }
+[0m     /// Like upstream, the event exists only after activation.
+     pub fn on_change(&self) -> Option<Event<ProgressState>> {
+[31m-        self.inner.change.borrow().as_ref().map(|emitter| emitter.event())
+[0m[32m+        self.inner
+[0m[32m+            .change
+[0m[32m+            .borrow()
+[0m[32m+            .as_ref()
+[0m[32m+            .map(|emitter| emitter.event())
+[0m     }
+ 
+     pub fn activate(&self, terminal: Rc<dyn StatusTerminal>) {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\progress.rs:88:
+         let weak = Rc::downgrade(&self.inner);
+[31m-        let registration = terminal.register_osc_handler(9, Rc::new(move |data| {
+[0m[31m-            weak.upgrade().map_or(Ok(false), |inner| inner.osc(data))
+[0m[31m-        }));
+[0m[32m+        let registration = terminal.register_osc_handler(
+[0m[32m+            9,
+[0m[32m+            Rc::new(move |data| weak.upgrade().map_or(Ok(false), |inner| inner.osc(data))),
+[0m[32m+        );
+[0m         *self.registration.borrow_mut() = Some(registration);
+         *self.inner.change.borrow_mut() = Some(Rc::new(Emitter::new()));
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\progress.rs:97:
+ impl Disposable for ProgressAddon {
+     fn dispose(&self) {
+         let registration = self.registration.borrow().clone();
+[31m-        if let Some(registration) = registration { registration.dispose(); }
+[0m[32m+        if let Some(registration) = registration {
+[0m[32m+            registration.dispose();
+[0m[32m+        }
+[0m         let emitter = self.inner.change.borrow().clone();
+[31m-        if let Some(emitter) = emitter { emitter.dispose(); }
+[0m[32m+        if let Some(emitter) = emitter {
+[0m[32m+            emitter.dispose();
+[0m[32m+        }
+[0m     }
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons\src\progress.rs:106:
+ impl Drop for ProgressAddon {
+[31m-    fn drop(&mut self) { self.dispose(); }
+[0m[32m+    fn drop(&mut self) {
+[0m[32m+        self.dispose();
+[0m[32m+    }
+[0m }
+ 
+error: couldn't read \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\options_oracle\scenarios.rs: The system cannot find the path specified. (os error 3)
+ --> \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\options_oracle.rs:9:1
+  |
+9 | mod scenarios;
+  | ^^^^^^^^^^^^^^
+
+Error writing files: failed to resolve mod `scenarios`: \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\options_oracle\scenarios.rs does not exist
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\mouse_protocol.rs:126:
+     let all = Events::DOWN | Events::UP | Events::WHEEL | Events::DRAG | Events::MOVE;
+     let specifications: [(&str, MouseEventTypes, MouseRestriction); 5] = [
+         ("NONE", Events::NONE, Rc::new(|_| false)),
+[31m-        ("X10", Events::DOWN, Rc::new(|event| {
+[0m[31m-            if event.button == MouseButton::Wheel || event.action != MouseAction::Down {
+[0m[31m-                return false;
+[0m[31m-            }
+[0m[31m-            event.ctrl = Some(false);
+[0m[31m-            event.alt = Some(false);
+[0m[31m-            event.shift = Some(false);
+[0m[31m-            true
+[0m[31m-        })),
+[0m[31m-        ("VT200", Events::DOWN | Events::UP | Events::WHEEL,
+[0m[31m-            Rc::new(|event| event.action != MouseAction::Move)),
+[0m[31m-        ("DRAG", all_without_move(), Rc::new(|event| {
+[0m[31m-            event.action != MouseAction::Move || event.button != MouseButton::None
+[0m[31m-        })),
+[0m[32m+        (
+[0m[32m+            "X10",
+[0m[32m+            Events::DOWN,
+[0m[32m+            Rc::new(|event| {
+[0m[32m+                if event.button == MouseButton::Wheel || event.action != MouseAction::Down {
+[0m[32m+                    return false;
+[0m[32m+                }
+[0m[32m+                event.ctrl = Some(false);
+[0m[32m+                event.alt = Some(false);
+[0m[32m+                event.shift = Some(false);
+[0m[32m+                true
+[0m[32m+            }),
+[0m[32m+        ),
+[0m[32m+        (
+[0m[32m+            "VT200",
+[0m[32m+            Events::DOWN | Events::UP | Events::WHEEL,
+[0m[32m+            Rc::new(|event| event.action != MouseAction::Move),
+[0m[32m+        ),
+[0m[32m+        (
+[0m[32m+            "DRAG",
+[0m[32m+            all_without_move(),
+[0m[32m+            Rc::new(|event| event.action != MouseAction::Move || event.button != MouseButton::None),
+[0m[32m+        ),
+[0m         ("ANY", all, Rc::new(|_| true)),
+     ];
+[31m-    specifications.into_iter().map(|(name, events, restrict)| {
+[0m[31m-        (name.into(), MouseProtocol { events, restrict })
+[0m[31m-    }).collect()
+[0m[32m+    specifications
+[0m[32m+        .into_iter()
+[0m[32m+        .map(|(name, events, restrict)| (name.into(), MouseProtocol { events, restrict }))
+[0m[32m+        .collect()
+[0m }
+ 
+ fn all_without_move() -> MouseEventTypes {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\mouse_protocol.rs:192:
+ }
+ 
+ fn encode_default(event: &MouseEvent) -> Vec<u16> {
+[31m-    let params = [f64::from(event_code(event, false)) + ENCODING_BIAS,
+[0m[31m-        event.col + ENCODING_BIAS, event.row + ENCODING_BIAS];
+[0m[32m+    let params = [
+[0m[32m+        f64::from(event_code(event, false)) + ENCODING_BIAS,
+[0m[32m+        event.col + ENCODING_BIAS,
+[0m[32m+        event.row + ENCODING_BIAS,
+[0m[32m+    ];
+[0m     if params.iter().any(|value| *value > MAX_ENCODED_BYTE) {
+         return Vec::new();
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\mouse_protocol.rs:208:
+     } else {
+         'M'
+     };
+[31m-    let (x, y) = if pixels { (event.x, event.y) } else { (event.col, event.row) };
+[0m[32m+    let (x, y) = if pixels {
+[0m[32m+        (event.x, event.y)
+[0m[32m+    } else {
+[0m[32m+        (event.col, event.row)
+[0m[32m+    };
+[0m     let mut x_buffer = ryu_js::Buffer::new();
+     let mut y_buffer = ryu_js::Buffer::new();
+[31m-    format!("\x1b[<{};{};{}{final_character}", event_code(event, true),
+[0m[31m-        x_buffer.format(x), y_buffer.format(y)).encode_utf16().collect()
+[0m[32m+    format!(
+[0m[32m+        "\x1b[<{};{};{}{final_character}",
+[0m[32m+        event_code(event, true),
+[0m[32m+        x_buffer.format(x),
+[0m[32m+        y_buffer.format(y)
+[0m[32m+    )
+[0m[32m+    .encode_utf16()
+[0m[32m+    .collect()
+[0m }
+ 
+ pub(super) fn default_encodings() -> Vec<(String, MouseEncoding)> {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\mouse_protocol.rs:219:
+     vec![
+         ("DEFAULT".into(), Rc::new(encode_default)),
+         ("SGR".into(), Rc::new(|event| encode_sgr(event, false))),
+[31m-        ("SGR_PIXELS".into(), Rc::new(|event| encode_sgr(event, true))),
+[0m[32m+        (
+[0m[32m+            "SGR_PIXELS".into(),
+[0m[32m+            Rc::new(|event| encode_sgr(event, true)),
+[0m[32m+        ),
+[0m     ]
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\mouse_state.rs:83:
+     }
+ 
+     pub fn protocol_names(&self) -> Vec<String> {
+[31m-        self.state.borrow().protocols.iter().map(|entry| entry.0.clone()).collect()
+[0m[32m+        self.state
+[0m[32m+            .borrow()
+[0m[32m+            .protocols
+[0m[32m+            .iter()
+[0m[32m+            .map(|entry| entry.0.clone())
+[0m[32m+            .collect()
+[0m     }
+ 
+     pub fn encoding_names(&self) -> Vec<String> {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\mouse_state.rs:90:
+[31m-        self.state.borrow().encodings.iter().map(|entry| entry.0.clone()).collect()
+[0m[32m+        self.state
+[0m[32m+            .borrow()
+[0m[32m+            .encodings
+[0m[32m+            .iter()
+[0m[32m+            .map(|entry| entry.0.clone())
+[0m[32m+            .collect()
+[0m     }
+ 
+     pub fn add_protocol(&self, name: impl Into<String>, protocol: MouseProtocol) {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\mouse_state.rs:121:
+     pub fn set_active_protocol(&self, name: &str) -> Result<(), MouseStateError> {
+         let events = {
+             let mut state = self.state.borrow_mut();
+[31m-            let events = state.protocols.iter().find(|entry| entry.0 == name)
+[0m[32m+            let events = state
+[0m[32m+                .protocols
+[0m[32m+                .iter()
+[0m[32m+                .find(|entry| entry.0 == name)
+[0m                 .map(|entry| entry.1.events)
+                 .ok_or_else(|| MouseStateError::UnknownProtocol(name.into()))?;
+             state.active_protocol = name.into();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\mouse_state.rs:144:
+         let state = self.state.borrow();
+         // Construction installs NONE and setters only accept registered names.
+         // No API removes registrations, including during disposal.
+[31m-        state.protocols.iter().find(|entry| entry.0 == state.active_protocol)
+[0m[31m-            .expect("active protocol remains registered").1.clone()
+[0m[32m+        state
+[0m[32m+            .protocols
+[0m[32m+            .iter()
+[0m[32m+            .find(|entry| entry.0 == state.active_protocol)
+[0m[32m+            .expect("active protocol remains registered")
+[0m[32m+            .1
+[0m[32m+            .clone()
+[0m     }
+ 
+     pub fn are_mouse_events_active(&self) -> bool {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\mouse_state.rs:170:
+         let encoding = {
+             let state = self.state.borrow();
+             // The same registration invariant as active_mouse_protocol applies.
+[31m-            Rc::clone(&state.encodings.iter().find(|entry| entry.0 == state.active_encoding)
+[0m[31m-                .expect("active encoding remains registered").1)
+[0m[32m+            Rc::clone(
+[0m[32m+                &state
+[0m[32m+                    .encodings
+[0m[32m+                    .iter()
+[0m[32m+                    .find(|entry| entry.0 == state.active_encoding)
+[0m[32m+                    .expect("active encoding remains registered")
+[0m[32m+                    .1,
+[0m[32m+            )
+[0m         };
+         encoding(event)
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\buffer_reflow_edges.rs:2:
+ use std::{cell::RefCell, rc::Rc};
+ use xterm_core::{
+     buffer::{constants::DEFAULT_ATTR, reflow::*, BufferLine, CellData, CharData},
+[31m-    circular_list::{CircularList, ListChange}, event::EmitError, lifecycle::Disposable,
+[0m[32m+    circular_list::{CircularList, ListChange},
+[0m[32m+    event::EmitError,
+[0m[32m+    lifecycle::Disposable,
+[0m };
+ fn cell(text: &str, width: i32) -> CellData {
+[31m-    CellData::from_char_data(&CharData { attr: 0, chars: text.encode_utf16().collect(), width, code: None })
+[0m[32m+    CellData::from_char_data(&CharData {
+[0m[32m+        attr: 0,
+[0m[32m+        chars: text.encode_utf16().collect(),
+[0m[32m+        width,
+[0m[32m+        code: None,
+[0m[32m+    })
+[0m }
+ fn list() -> Rc<CircularList<Rc<RefCell<BufferLine>>>> {
+     let lines = Rc::new(CircularList::new(8).unwrap());
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\buffer_reflow_edges.rs:12:
+     for i in 0..8 {
+[31m-        lines.push(Rc::new(RefCell::new(BufferLine::new(6, Some(&cell(&i.to_string(), 1)), false)))).unwrap();
+[0m[32m+        lines
+[0m[32m+            .push(Rc::new(RefCell::new(BufferLine::new(
+[0m[32m+                6,
+[0m[32m+                Some(&cell(&i.to_string(), 1)),
+[0m[32m+                false,
+[0m[32m+            ))))
+[0m[32m+            .unwrap();
+[0m     }
+     lines
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\buffer_reflow_edges.rs:27:
+         output.borrow_mut().push(*change);
+     });
+     let result = reflow_larger_create_new_layout(&lines, &[(1, 2), (5, 1)]).unwrap();
+[31m-    assert_eq!(result, NewLayoutResult { layout: vec![0, 3, 4, 6, 7], count_removed: 3 });
+[0m[31m-    assert_eq!(*observed.borrow(), [ListChange { index: 1, amount: 2 }, ListChange { index: 3, amount: 1 }]);
+[0m[32m+    assert_eq!(
+[0m[32m+        result,
+[0m[32m+        NewLayoutResult {
+[0m[32m+            layout: vec![0, 3, 4, 6, 7],
+[0m[32m+            count_removed: 3
+[0m[32m+        }
+[0m[32m+    );
+[0m[32m+    assert_eq!(
+[0m[32m+        *observed.borrow(),
+[0m[32m+        [
+[0m[32m+            ListChange {
+[0m[32m+                index: 1,
+[0m[32m+                amount: 2
+[0m[32m+            },
+[0m[32m+            ListChange {
+[0m[32m+                index: 3,
+[0m[32m+                amount: 1
+[0m[32m+            }
+[0m[32m+        ]
+[0m[32m+    );
+[0m     reflow_larger_apply_new_layout(&lines, &result.layout).unwrap();
+     assert_eq!(lines.len(), 5);
+     for (i, source) in result.layout.iter().enumerate() {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\buffer_reflow_edges.rs:39:
+ fn layout_propagates_disposal_during_event_dispatch() {
+     let lines = list();
+     let weak = Rc::downgrade(&lines);
+[31m-    lines.on_delete_emitter.event().subscribe(move |_| weak.upgrade().unwrap().on_delete_emitter.dispose());
+[0m[31m-    lines.on_delete_emitter.event().subscribe(|_| panic!("must not reach disposed listener"));
+[0m[31m-    assert_eq!(reflow_larger_create_new_layout(&lines, &[(1, 1)]), Err(ReflowError::Dispatch(EmitError)));
+[0m[32m+    lines
+[0m[32m+        .on_delete_emitter
+[0m[32m+        .event()
+[0m[32m+        .subscribe(move |_| weak.upgrade().unwrap().on_delete_emitter.dispose());
+[0m[32m+    lines
+[0m[32m+        .on_delete_emitter
+[0m[32m+        .event()
+[0m[32m+        .subscribe(|_| panic!("must not reach disposed listener"));
+[0m[32m+    assert_eq!(
+[0m[32m+        reflow_larger_create_new_layout(&lines, &[(1, 1)]),
+[0m[32m+        Err(ReflowError::Dispatch(EmitError))
+[0m[32m+    );
+[0m     assert_eq!(lines.len(), 8);
+ }
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\buffer_reflow_edges.rs:48:
+ fn layout_reentrant_listener_can_inspect_and_mutate_storage() {
+     let lines = list();
+     let weak = Rc::downgrade(&lines);
+[31m-    lines.on_delete_emitter.event().subscribe(move |_| weak.upgrade().unwrap().set_length(5));
+[0m[31m-    assert_eq!(reflow_larger_create_new_layout(&lines, &[(1, 1)]).unwrap().layout, [0, 2, 3, 4]);
+[0m[32m+    lines
+[0m[32m+        .on_delete_emitter
+[0m[32m+        .event()
+[0m[32m+        .subscribe(move |_| weak.upgrade().unwrap().set_length(5));
+[0m[32m+    assert_eq!(
+[0m[32m+        reflow_larger_create_new_layout(&lines, &[(1, 1)])
+[0m[32m+            .unwrap()
+[0m[32m+            .layout,
+[0m[32m+        [0, 2, 3, 4]
+[0m[32m+    );
+[0m }
+ #[test]
+ fn invalid_layout_and_columns_are_errors() {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\buffer_reflow_edges.rs:56:
+     let lines = list();
+[31m-    for bad in [vec![(1, 0)], vec![(8, 1)], vec![(2, 3), (4, 1)], vec![(7, usize::MAX)]] {
+[0m[31m-        assert_eq!(reflow_larger_create_new_layout(&lines, &bad), Err(ReflowError::InvalidRange));
+[0m[32m+    for bad in [
+[0m[32m+        vec![(1, 0)],
+[0m[32m+        vec![(8, 1)],
+[0m[32m+        vec![(2, 3), (4, 1)],
+[0m[32m+        vec![(7, usize::MAX)],
+[0m[32m+    ] {
+[0m[32m+        assert_eq!(
+[0m[32m+            reflow_larger_create_new_layout(&lines, &bad),
+[0m[32m+            Err(ReflowError::InvalidRange)
+[0m[32m+        );
+[0m         assert_eq!(lines.len(), 8);
+     }
+[31m-    assert_eq!(reflow_larger_apply_new_layout(&lines, &[8]), Err(ReflowError::InvalidRange));
+[0m[32m+    assert_eq!(
+[0m[32m+        reflow_larger_apply_new_layout(&lines, &[8]),
+[0m[32m+        Err(ReflowError::InvalidRange)
+[0m[32m+    );
+[0m     let rows = vec![lines.get(0).unwrap()];
+[31m-    for new in [0, 1, 7] { assert_eq!(reflow_smaller_get_new_line_lengths(&rows, 6, new), Err(ReflowError::InvalidColumns)); }
+[0m[31m-    assert_eq!(reflow_larger_get_lines_to_remove(&lines, 6, 6, 0, &cell("", 1), true), Err(ReflowError::InvalidColumns));
+[0m[31m-    assert_eq!(get_wrapped_line_trimmed_length(&[], 0, 6), Err(ReflowError::MissingLine));
+[0m[32m+    for new in [0, 1, 7] {
+[0m[32m+        assert_eq!(
+[0m[32m+            reflow_smaller_get_new_line_lengths(&rows, 6, new),
+[0m[32m+            Err(ReflowError::InvalidColumns)
+[0m[32m+        );
+[0m[32m+    }
+[0m[32m+    assert_eq!(
+[0m[32m+        reflow_larger_get_lines_to_remove(&lines, 6, 6, 0, &cell("", 1), true),
+[0m[32m+        Err(ReflowError::InvalidColumns)
+[0m[32m+    );
+[0m[32m+    assert_eq!(
+[0m[32m+        get_wrapped_line_trimmed_length(&[], 0, 6),
+[0m[32m+        Err(ReflowError::MissingLine)
+[0m[32m+    );
+[0m }
+ #[test]
+ fn wide_gap_excluded_only_before_wide_start() {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\buffer_reflow_edges.rs:69:
+     let a = Rc::new(RefCell::new(BufferLine::new(5, None, false)));
+     let b = Rc::new(RefCell::new(BufferLine::new(5, None, true)));
+[31m-    b.borrow_mut().set_cell_from_codepoint(0, '汉' as u32, 2, &DEFAULT_ATTR);
+[0m[32m+    b.borrow_mut()
+[0m[32m+        .set_cell_from_codepoint(0, '汉' as u32, 2, &DEFAULT_ATTR);
+[0m     b.borrow_mut().set_cell(1, &cell("", 0));
+[31m-    assert_eq!(get_wrapped_line_trimmed_length(&[a.clone(), b.clone()], 0, 5).unwrap(), 4);
+[0m[32m+    assert_eq!(
+[0m[32m+        get_wrapped_line_trimmed_length(&[a.clone(), b.clone()], 0, 5).unwrap(),
+[0m[32m+        4
+[0m[32m+    );
+[0m     a.borrow_mut().set_cell(4, &cell(" ", 1));
+[31m-    assert_eq!(get_wrapped_line_trimmed_length(&[a.clone(), b.clone()], 0, 5).unwrap(), 5);
+[0m[32m+    assert_eq!(
+[0m[32m+        get_wrapped_line_trimmed_length(&[a.clone(), b.clone()], 0, 5).unwrap(),
+[0m[32m+        5
+[0m[32m+    );
+[0m     assert_eq!(get_wrapped_line_trimmed_length(&[a, b], 1, 5).unwrap(), 2);
+ }
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\buffer_reflow_edges.rs:79:
+ fn empty_and_unwrapped_rows_do_not_mutate() {
+     let empty = CircularList::new(1).unwrap();
+[31m-    assert_eq!(reflow_larger_get_lines_to_remove(&empty, 4, 6, 0, &cell("", 1), true).unwrap(), []);
+[0m[32m+    assert_eq!(
+[0m[32m+        reflow_larger_get_lines_to_remove(&empty, 4, 6, 0, &cell("", 1), true).unwrap(),
+[0m[32m+        []
+[0m[32m+    );
+[0m     assert_eq!(reflow_smaller_get_new_line_lengths(&[], 6, 4).unwrap(), []);
+     let lines = list();
+     let refs: Vec<_> = (0..8).map(|i| lines.get(i).unwrap()).collect();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\buffer_reflow_edges.rs:85:
+[31m-    assert_eq!(reflow_larger_get_lines_to_remove(&lines, 4, 6, 0, &cell("", 1), true).unwrap(), []);
+[0m[31m-    for (i, row) in refs.iter().enumerate() { assert!(Rc::ptr_eq(row, &lines.get(i).unwrap())); }
+[0m[32m+    assert_eq!(
+[0m[32m+        reflow_larger_get_lines_to_remove(&lines, 4, 6, 0, &cell("", 1), true).unwrap(),
+[0m[32m+        []
+[0m[32m+    );
+[0m[32m+    for (i, row) in refs.iter().enumerate() {
+[0m[32m+        assert!(Rc::ptr_eq(row, &lines.get(i).unwrap()));
+[0m[32m+    }
+[0m }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\buffer_reflow_upstream.rs:4:
+ mod support;
+ use std::{cell::RefCell, rc::Rc};
+ use support::{cell, utf16};
+[31m-use xterm_core::{buffer::{reflow::*, BufferLine}, circular_list::CircularList};
+[0m[32m+use xterm_core::{
+[0m[32m+    buffer::{reflow::*, BufferLine},
+[0m[32m+    circular_list::CircularList,
+[0m[32m+};
+[0m 
+ type Line = Rc<RefCell<BufferLine>>;
+ fn row(text: &str, cols: usize, wrapped: bool) -> Line {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\buffer_reflow_upstream.rs:13:
+     for c in text.chars() {
+         let width = if c == '汉' || c == '语' { 2 } else { 1 };
+         line.set_cell(col, &cell(0, &c.to_string(), width));
+[31m-        if width == 2 { line.set_cell(col + 1, &cell(0, "", 0)); }
+[0m[32m+        if width == 2 {
+[0m[32m+            line.set_cell(col + 1, &cell(0, "", 0));
+[0m[32m+        }
+[0m         col += width as usize;
+     }
+     Rc::new(RefCell::new(line))
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\buffer_reflow_upstream.rs:35:
+ fn small_wide_line() {
+     let line = row("汉语", 4, false);
+     assert_eq!(text(&line, true), utf16("汉语"));
+[31m-    for new in [3, 2] { assert_eq!(lengths(&[line.clone()], 4, new), [2, 2]); }
+[0m[32m+    for new in [3, 2] {
+[0m[32m+        assert_eq!(lengths(&[line.clone()], 4, new), [2, 2]);
+[0m[32m+    }
+[0m }
+ #[test]
+ fn large_wide_line() {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\buffer_reflow_upstream.rs:42:
+     let line = row("汉语汉语汉语", 12, false);
+     assert_eq!(text(&line, false), utf16("汉语汉语汉语"));
+     for (new, expected) in [
+[31m-        (11, vec![10, 2]), (10, vec![10, 2]), (9, vec![8, 4]), (8, vec![8, 4]),
+[0m[31m-        (7, vec![6, 6]), (6, vec![6, 6]), (5, vec![4, 4, 4]), (4, vec![4, 4, 4]),
+[0m[31m-        (3, vec![2, 2, 2, 2, 2, 2]), (2, vec![2, 2, 2, 2, 2, 2]),
+[0m[31m-    ] { assert_eq!(lengths(&[line.clone()], 12, new), expected); }
+[0m[32m+        (11, vec![10, 2]),
+[0m[32m+        (10, vec![10, 2]),
+[0m[32m+        (9, vec![8, 4]),
+[0m[32m+        (8, vec![8, 4]),
+[0m[32m+        (7, vec![6, 6]),
+[0m[32m+        (6, vec![6, 6]),
+[0m[32m+        (5, vec![4, 4, 4]),
+[0m[32m+        (4, vec![4, 4, 4]),
+[0m[32m+        (3, vec![2, 2, 2, 2, 2, 2]),
+[0m[32m+        (2, vec![2, 2, 2, 2, 2, 2]),
+[0m[32m+    ] {
+[0m[32m+        assert_eq!(lengths(&[line.clone()], 12, new), expected);
+[0m[32m+    }
+[0m }
+ #[test]
+ fn mixed_wide_and_single() {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\buffer_reflow_upstream.rs:52:
+     let line = row("a汉语b", 6, false);
+     assert_eq!(text(&line, false), utf16("a汉语b"));
+[31m-    for (new, expected) in [(5, vec![5, 1]), (4, vec![3, 3]), (3, vec![3, 3]), (2, vec![1, 2, 2, 1])] {
+[0m[32m+    for (new, expected) in [
+[0m[32m+        (5, vec![5, 1]),
+[0m[32m+        (4, vec![3, 3]),
+[0m[32m+        (3, vec![3, 3]),
+[0m[32m+        (2, vec![1, 2, 2, 1]),
+[0m[32m+    ] {
+[0m         assert_eq!(lengths(&[line.clone()], 6, new), expected);
+     }
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\buffer_reflow_upstream.rs:58:
+ #[test]
+ fn wrapped_wide_and_single() {
+     let lines = [row("a汉语b", 6, false), row("a汉语b", 6, true)];
+[31m-    for line in &lines { assert_eq!(text(line, false), utf16("a汉语b")); }
+[0m[32m+    for line in &lines {
+[0m[32m+        assert_eq!(text(line, false), utf16("a汉语b"));
+[0m[32m+    }
+[0m     for (new, expected) in [
+[31m-        (5, vec![5, 4, 3]), (4, vec![3, 4, 4, 1]), (3, vec![3, 3, 3, 3]),
+[0m[32m+        (5, vec![5, 4, 3]),
+[0m[32m+        (4, vec![3, 4, 4, 1]),
+[0m[32m+        (3, vec![3, 3, 3, 3]),
+[0m         (2, vec![1, 2, 2, 2, 2, 2, 1]),
+[31m-    ] { assert_eq!(lengths(&lines, 6, new), expected); }
+[0m[32m+    ] {
+[0m[32m+        assert_eq!(lengths(&lines, 6, new), expected);
+[0m[32m+    }
+[0m }
+ #[test]
+ fn trailing_null_space() {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\buffer_reflow_upstream.rs:69:
+     let line = row("汉语", 5, false);
+     assert_eq!(text(&line, true), utf16("汉语"));
+     assert_eq!(text(&line, false), utf16("汉语 "));
+[31m-    for new in [3, 2] { assert_eq!(lengths(&[line.clone()], 4, new), [2, 2]); }
+[0m[32m+    for new in [3, 2] {
+[0m[32m+        assert_eq!(lengths(&[line.clone()], 4, new), [2, 2]);
+[0m[32m+    }
+[0m }
+ #[test]
+ fn cursor_block_skipped_unless_enabled() {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\buffer_reflow_upstream.rs:83:
+ #[test]
+ fn cursor_outside_wrapped_block() {
+     let lines = wrapped("abcde");
+[31m-    assert!(!reflow_larger_get_lines_to_remove(&lines, 1, 5, 10, &cell(0, "", 1), false).unwrap().is_empty());
+[0m[32m+    assert!(
+[0m[32m+        !reflow_larger_get_lines_to_remove(&lines, 1, 5, 10, &cell(0, "", 1), false)
+[0m[32m+            .unwrap()
+[0m[32m+            .is_empty()
+[0m[32m+    );
+[0m }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\cell_branches.rs:1:
+ use xterm_core::buffer::{
+[31m-    constants::{attributes as color, bg_flags as bg, content, fg_flags as fg, underline_style as style},
+[0m[32m+    constants::{
+[0m[32m+        attributes as color, bg_flags as bg, content, fg_flags as fg, underline_style as style,
+[0m[32m+    },
+[0m     AttributeData, CellData, CharData,
+ };
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\cell_branches.rs:6:
+ fn cell(fg: u32, bg: u32) -> CellData {
+[31m-    CellData { attributes: AttributeData { fg, bg, ..AttributeData::default() }, ..CellData::default() }
+[0m[32m+    CellData {
+[0m[32m+        attributes: AttributeData {
+[0m[32m+            fg,
+[0m[32m+            bg,
+[0m[32m+            ..AttributeData::default()
+[0m[32m+        },
+[0m[32m+        ..CellData::default()
+[0m[32m+    }
+[0m }
+ 
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\cell_branches.rs:11:
+ fn legacy_utf16_conversion_branches_and_signed_width_boundaries() {
+     let cases: &[(&[u16], &[u16], u32, bool)] = &[
+[31m-        (&[], &[], 0, false), (&[0], &[], 0, false), (&[97], &[97], 97, false),
+[0m[31m-        (&[0xd800], &[0xd800], 0xd800, false), (&[0xdc00], &[0xdc00], 0xdc00, false),
+[0m[31m-        (&[0xd800,0xdc00], &[0xd800,0xdc00], 0x10000, false),
+[0m[31m-        (&[0xdbff,0xdfff], &[0xdbff,0xdfff], 0x10ffff, false),
+[0m[31m-        (&[0xdc00,0xd800], &[0xdc00,0xd800], 0xd800, true),
+[0m[31m-        (&[0xd800,97], &[0xd800,97], 97, true),
+[0m[31m-        (&[97,0xdc00], &[97,0xdc00], 0xdc00, true),
+[0m[31m-        (&[97,98], &[97,98], 98, true),
+[0m[31m-        (&[0xd800,0xdc00,0xd800,0xdc00], &[0xd800,0xdc00,0xd800,0xdc00], 0xdc00, true),
+[0m[32m+        (&[], &[], 0, false),
+[0m[32m+        (&[0], &[], 0, false),
+[0m[32m+        (&[97], &[97], 97, false),
+[0m[32m+        (&[0xd800], &[0xd800], 0xd800, false),
+[0m[32m+        (&[0xdc00], &[0xdc00], 0xdc00, false),
+[0m[32m+        (&[0xd800, 0xdc00], &[0xd800, 0xdc00], 0x10000, false),
+[0m[32m+        (&[0xdbff, 0xdfff], &[0xdbff, 0xdfff], 0x10ffff, false),
+[0m[32m+        (&[0xdc00, 0xd800], &[0xdc00, 0xd800], 0xd800, true),
+[0m[32m+        (&[0xd800, 97], &[0xd800, 97], 97, true),
+[0m[32m+        (&[97, 0xdc00], &[97, 0xdc00], 0xdc00, true),
+[0m[32m+        (&[97, 98], &[97, 98], 98, true),
+[0m[32m+        (
+[0m[32m+            &[0xd800, 0xdc00, 0xd800, 0xdc00],
+[0m[32m+            &[0xd800, 0xdc00, 0xd800, 0xdc00],
+[0m[32m+            0xdc00,
+[0m[32m+            true,
+[0m[32m+        ),
+[0m     ];
+     for &(input, chars, code, combined) in cases {
+[31m-        for width in [0,1,2,3,456,-1,i32::MIN,i32::MAX] {
+[0m[32m+        for width in [0, 1, 2, 3, 456, -1, i32::MIN, i32::MAX] {
+[0m             let mut a = cell(0, u32::MAX);
+             a.extended.set_url_id(3);
+             a.combined_data = vec![123];
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\cell_branches.rs:28:
+             let identity = a.extended.share();
+[31m-            a.set_from_char_data(&CharData { attr: 42, chars: input.to_vec(), width, code: Some(999) });
+[0m[32m+            a.set_from_char_data(&CharData {
+[0m[32m+                attr: 42,
+[0m[32m+                chars: input.to_vec(),
+[0m[32m+                width,
+[0m[32m+                code: Some(999),
+[0m[32m+            });
+[0m             assert_eq!(a.fg, 42);
+             assert_eq!(a.bg, 0);
+             assert_eq!(a.get_code(), Some(code));
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\cell_branches.rs:33:
+             assert_eq!(a.get_chars(), chars);
+             assert_eq!(a.is_combined() != 0, combined);
+[31m-            assert_eq!(a.get_width(), ((width as u32) << content::WIDTH_SHIFT) as i32 >> content::WIDTH_SHIFT);
+[0m[32m+            assert_eq!(
+[0m[32m+                a.get_width(),
+[0m[32m+                ((width as u32) << content::WIDTH_SHIFT) as i32 >> content::WIDTH_SHIFT
+[0m[32m+            );
+[0m             assert!(a.extended.same_identity(&identity));
+             assert_eq!(a.extended.url_id(), 3);
+[31m-            if !combined { assert_eq!(a.combined_data, [123]); }
+[0m[32m+            if !combined {
+[0m[32m+                assert_eq!(a.combined_data, [123]);
+[0m[32m+            }
+[0m         }
+     }
+     let a = CellData::default();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\cell_branches.rs:47:
+ 
+ #[test]
+ fn foreground_and_background_modes_payloads_and_rgb_masking() {
+[31m-    for mode in [color::CM_DEFAULT,color::CM_P16,color::CM_P256,color::CM_RGB] {
+[0m[32m+    for mode in [
+[0m[32m+        color::CM_DEFAULT,
+[0m[32m+        color::CM_P16,
+[0m[32m+        color::CM_P256,
+[0m[32m+        color::CM_RGB,
+[0m[32m+    ] {
+[0m         let a = cell(mode | 0x123456, mode | 0xabcdef);
+[31m-        let expected_fg = match mode { color::CM_DEFAULT => -1, color::CM_RGB => 0x123456, _ => 0x56 };
+[0m[31m-        let expected_bg = match mode { color::CM_DEFAULT => -1, color::CM_RGB => 0xabcdef, _ => 0xef };
+[0m[32m+        let expected_fg = match mode {
+[0m[32m+            color::CM_DEFAULT => -1,
+[0m[32m+            color::CM_RGB => 0x123456,
+[0m[32m+            _ => 0x56,
+[0m[32m+        };
+[0m[32m+        let expected_bg = match mode {
+[0m[32m+            color::CM_DEFAULT => -1,
+[0m[32m+            color::CM_RGB => 0xabcdef,
+[0m[32m+            _ => 0xef,
+[0m[32m+        };
+[0m         assert_eq!(a.get_fg_color(), expected_fg);
+         assert_eq!(a.get_bg_color(), expected_bg);
+         assert_eq!(a.get_fg_color_mode(), mode);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\cell_branches.rs:57:
+         assert_eq!(a.get_bg_color_mode(), mode);
+         assert_eq!(a.is_fg_rgb(), mode == color::CM_RGB);
+         assert_eq!(a.is_bg_rgb(), mode == color::CM_RGB);
+[31m-        assert_eq!(a.is_fg_palette(), matches!(mode, color::CM_P16 | color::CM_P256));
+[0m[32m+        assert_eq!(
+[0m[32m+            a.is_fg_palette(),
+[0m[32m+            matches!(mode, color::CM_P16 | color::CM_P256)
+[0m[32m+        );
+[0m         assert_eq!(a.is_bg_palette(), a.is_fg_palette());
+         assert_eq!(a.is_fg_default(), mode == 0);
+         assert_eq!(a.is_bg_default(), mode == 0);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\cell_branches.rs:64:
+     }
+[31m-    assert!(cell(0,0).is_attribute_default());
+[0m[31m-    assert!(!cell(1,0).is_attribute_default());
+[0m[31m-    assert!(!cell(0,1).is_attribute_default());
+[0m[31m-    for r in [0,1,255,256,u32::MAX] {
+[0m[31m-        for g in [0,1,255,256,u32::MAX] {
+[0m[31m-            for b in [0,1,255,256,u32::MAX] {
+[0m[31m-                let packed = AttributeData::from_color_rgb([r,g,b]);
+[0m[31m-                assert_eq!(AttributeData::to_color_rgb(packed | 0xff000000), [r as u8,g as u8,b as u8]);
+[0m[32m+    assert!(cell(0, 0).is_attribute_default());
+[0m[32m+    assert!(!cell(1, 0).is_attribute_default());
+[0m[32m+    assert!(!cell(0, 1).is_attribute_default());
+[0m[32m+    for r in [0, 1, 255, 256, u32::MAX] {
+[0m[32m+        for g in [0, 1, 255, 256, u32::MAX] {
+[0m[32m+            for b in [0, 1, 255, 256, u32::MAX] {
+[0m[32m+                let packed = AttributeData::from_color_rgb([r, g, b]);
+[0m[32m+                assert_eq!(
+[0m[32m+                    AttributeData::to_color_rgb(packed | 0xff000000),
+[0m[32m+                    [r as u8, g as u8, b as u8]
+[0m[32m+                );
+[0m             }
+         }
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\cell_branches.rs:77:
+ 
+ #[test]
+ fn every_individual_flag_has_exact_mask_and_no_other_flag() {
+[31m-    let foreground = [fg::INVERSE,fg::BOLD,fg::UNDERLINE,fg::BLINK,fg::INVISIBLE,fg::STRIKETHROUGH];
+[0m[31m-    let background = [bg::ITALIC,bg::DIM,bg::PROTECTED,bg::OVERLINE];
+[0m[32m+    let foreground = [
+[0m[32m+        fg::INVERSE,
+[0m[32m+        fg::BOLD,
+[0m[32m+        fg::UNDERLINE,
+[0m[32m+        fg::BLINK,
+[0m[32m+        fg::INVISIBLE,
+[0m[32m+        fg::STRIKETHROUGH,
+[0m[32m+    ];
+[0m[32m+    let background = [bg::ITALIC, bg::DIM, bg::PROTECTED, bg::OVERLINE];
+[0m     for (index, &flag) in foreground.iter().enumerate() {
+         let a = cell(flag, 0);
+[31m-        let values = [a.is_inverse(),a.is_bold(),a.is_underline(),a.is_blink(),a.is_invisible(),a.is_strikethrough()];
+[0m[31m-        for (query, value) in values.into_iter().enumerate() { assert_eq!(value, if query == index { flag } else { 0 }); }
+[0m[32m+        let values = [
+[0m[32m+            a.is_inverse(),
+[0m[32m+            a.is_bold(),
+[0m[32m+            a.is_underline(),
+[0m[32m+            a.is_blink(),
+[0m[32m+            a.is_invisible(),
+[0m[32m+            a.is_strikethrough(),
+[0m[32m+        ];
+[0m[32m+        for (query, value) in values.into_iter().enumerate() {
+[0m[32m+            assert_eq!(value, if query == index { flag } else { 0 });
+[0m[32m+        }
+[0m     }
+     for (index, &flag) in background.iter().enumerate() {
+[31m-        let a = cell(0,flag);
+[0m[31m-        let values = [a.is_italic(),a.is_dim(),a.is_protected(),a.is_overline()];
+[0m[31m-        for (query, value) in values.into_iter().enumerate() { assert_eq!(value, if query == index { flag } else { 0 }); }
+[0m[32m+        let a = cell(0, flag);
+[0m[32m+        let values = [a.is_italic(), a.is_dim(), a.is_protected(), a.is_overline()];
+[0m[32m+        for (query, value) in values.into_iter().enumerate() {
+[0m[32m+            assert_eq!(value, if query == index { flag } else { 0 });
+[0m[32m+        }
+[0m     }
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\cell_branches.rs:115:
+ 
+ #[test]
+ fn equality_checks_each_visible_flag_but_excludes_protection() {
+[31m-    let a = cell(0,0);
+[0m[31m-    for flag in [fg::INVERSE,fg::BOLD,fg::UNDERLINE,fg::BLINK,fg::INVISIBLE,fg::STRIKETHROUGH] {
+[0m[31m-        let b = cell(flag,0);
+[0m[31m-        assert!(!a.attributes_equals(&b)); assert!(!b.attributes_equals(&a));
+[0m[32m+    let a = cell(0, 0);
+[0m[32m+    for flag in [
+[0m[32m+        fg::INVERSE,
+[0m[32m+        fg::BOLD,
+[0m[32m+        fg::UNDERLINE,
+[0m[32m+        fg::BLINK,
+[0m[32m+        fg::INVISIBLE,
+[0m[32m+        fg::STRIKETHROUGH,
+[0m[32m+    ] {
+[0m[32m+        let b = cell(flag, 0);
+[0m[32m+        assert!(!a.attributes_equals(&b));
+[0m[32m+        assert!(!b.attributes_equals(&a));
+[0m     }
+[31m-    for flag in [bg::ITALIC,bg::DIM,bg::OVERLINE] {
+[0m[31m-        let b = cell(0,flag);
+[0m[31m-        assert!(!a.attributes_equals(&b)); assert!(!b.attributes_equals(&a));
+[0m[32m+    for flag in [bg::ITALIC, bg::DIM, bg::OVERLINE] {
+[0m[32m+        let b = cell(0, flag);
+[0m[32m+        assert!(!a.attributes_equals(&b));
+[0m[32m+        assert!(!b.attributes_equals(&a));
+[0m     }
+[31m-    assert!(a.attributes_equals(&cell(0,bg::PROTECTED)));
+[0m[31m-    let mut b = cell(0,0);
+[0m[32m+    assert!(a.attributes_equals(&cell(0, bg::PROTECTED)));
+[0m[32m+    let mut b = cell(0, 0);
+[0m     b.content = 2 << content::WIDTH_SHIFT | 97;
+     assert!(a.attributes_equals(&b));
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\cell_branches.rs:151:
+     assert!(!a.attributes_equals(&b)); // Explicit payload mismatch.
+     b.extended.set_underline_color(color::CM_P256 | 12);
+     assert!(a.attributes_equals(&b));
+[31m-    for item in [&a,&b] { assert!(item.attributes_equals(item)); }
+[0m[32m+    for item in [&a, &b] {
+[0m[32m+        assert!(item.attributes_equals(item));
+[0m[32m+    }
+[0m }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\kitty_upstream.rs:6:
+ #[test]
+ fn upstream_evaluation_assertions() {
+     let fixture = include_str!("fixtures/kitty_upstream.tsv");
+[31m-    assert_eq!(fixture.lines().count(), 169, "upstream evaluation count must not shrink");
+[0m[32m+    assert_eq!(
+[0m[32m+        fixture.lines().count(),
+[0m[32m+        169,
+[0m[32m+        "upstream evaluation count must not shrink"
+[0m[32m+    );
+[0m     for line in fixture.lines() {
+         let fields: Vec<_> = line.split('\t').collect();
+         assert_eq!(fields.len(), 11, "{line}");
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\kitty_upstream.rs:22:
+ #[test]
+ fn upstream_protocol_enablement_assertions() {
+     let fixture = include_str!("fixtures/kitty_protocol_upstream.tsv");
+[31m-    assert_eq!(fixture.lines().count(), 4, "upstream protocol count must not shrink");
+[0m[32m+    assert_eq!(
+[0m[32m+        fixture.lines().count(),
+[0m[32m+        4,
+[0m[32m+        "upstream protocol count must not shrink"
+[0m[32m+    );
+[0m     for line in fixture.lines() {
+         let fields: Vec<_> = line.split('\t').collect();
+         assert_eq!(fields.len(), 3, "{line}");
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\params_edges.rs:38:
+ #[test]
+ fn array_conversion_keeps_source_capacity_and_leading_array_rules() {
+     let params = Params::from_array(&[
+[31m-        V::SubParams(vec![9]), V::SubParams(vec![8]), V::Param(7),
+[0m[31m-        V::SubParams(vec![]), V::Param(6),
+[0m[31m-    ]).unwrap();
+[0m[32m+        V::SubParams(vec![9]),
+[0m[32m+        V::SubParams(vec![8]),
+[0m[32m+        V::Param(7),
+[0m[32m+        V::SubParams(vec![]),
+[0m[32m+        V::Param(6),
+[0m[32m+    ])
+[0m[32m+    .unwrap();
+[0m     assert_eq!(params.to_array(), vec![V::Param(7), V::Param(6)]);
+     let overlong: Vec<_> = (0..33).map(V::Param).collect();
+     let params = Params::from_array(&overlong).unwrap();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\params_edges.rs:48:
+     assert_eq!(params.values(), (0..32).collect::<Vec<_>>());
+     let params = Params::from_array(&[V::Param(1), V::SubParams((0..33).collect())]).unwrap();
+     assert_eq!(params.sub_len(), 32);
+[31m-    assert_eq!(params.get_sub_params(0).unwrap(), (0..32).collect::<Vec<_>>());
+[0m[32m+    assert_eq!(
+[0m[32m+        params.get_sub_params(0).unwrap(),
+[0m[32m+        (0..32).collect::<Vec<_>>()
+[0m[32m+    );
+[0m }
+ 
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\params_edges.rs:83:
+     let mut params = Params::from_array(&[V::Param(1), V::SubParams(vec![22])]).unwrap();
+     let mut cloned = params.clone();
+     cloned.add_digit(3).unwrap();
+[31m-    assert_eq!(cloned.to_array(), vec![V::Param(1), V::SubParams(vec![223])]);
+[0m[32m+    assert_eq!(
+[0m[32m+        cloned.to_array(),
+[0m[32m+        vec![V::Param(1), V::SubParams(vec![223])]
+[0m[32m+    );
+[0m     assert_eq!(params.to_array(), vec![V::Param(1), V::SubParams(vec![22])]);
+     params.reset();
+     params.add_digit(9).unwrap();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\params_edges.rs:99:
+     assert_eq!(params.add_param(-2), Err(ParamsError::ValueBelowDefault));
+     params.add_digit(3).unwrap();
+     assert_eq!(params.to_array(), vec![V::Param(13), V::SubParams(vec![2])]);
+[31m-    assert_eq!(params.add_sub_param(-2), Err(ParamsError::ValueBelowDefault));
+[0m[32m+    assert_eq!(
+[0m[32m+        params.add_sub_param(-2),
+[0m[32m+        Err(ParamsError::ValueBelowDefault)
+[0m[32m+    );
+[0m     params.add_digit(4).unwrap();
+[31m-    assert_eq!(params.to_array(), vec![V::Param(13), V::SubParams(vec![24])]);
+[0m[32m+    assert_eq!(
+[0m[32m+        params.to_array(),
+[0m[32m+        vec![V::Param(13), V::SubParams(vec![24])]
+[0m[32m+    );
+[0m }
+ 
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\params_edges.rs:112:
+         params.add_sub_param(value).unwrap();
+     }
+     assert_eq!(params.values(), [i32::MAX; 3]);
+[31m-    for index in 0..3 { assert_eq!(params.get_sub_params(index), Some([i32::MAX].as_slice())); }
+[0m[32m+    for index in 0..3 {
+[0m[32m+        assert_eq!(params.get_sub_params(index), Some([i32::MAX].as_slice()));
+[0m[32m+    }
+[0m     params.reset_zdm().unwrap();
+[31m-    for byte in b"2147483647" { params.add_digit(byte - b'0').unwrap(); }
+[0m[32m+    for byte in b"2147483647" {
+[0m[32m+        params.add_digit(byte - b'0').unwrap();
+[0m[32m+    }
+[0m     assert_eq!(params.values(), [i32::MAX]);
+[31m-    for _ in 0..100 { params.add_digit(9).unwrap(); }
+[0m[32m+    for _ in 0..100 {
+[0m[32m+        params.add_digit(9).unwrap();
+[0m[32m+    }
+[0m     assert_eq!(params.values(), [i32::MAX]);
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\string_builder_upstream.rs:68:
+ 
+ #[test]
+ fn exposes_limit() {
+[31m-    assert_eq!(LimitedStringBuilder::new(42).limit(), PayloadLimit::Units(42));
+[0m[32m+    assert_eq!(
+[0m[32m+        LimitedStringBuilder::new(42).limit(),
+[0m[32m+        PayloadLimit::Units(42)
+[0m[32m+    );
+[0m }
+ 
+ #[test]
+Error writing files: failed to resolve mod `keyboard`: \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\input\keyboard.rs does not exist
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\api.rs:1:
+ use xterm_web::api::{
+[31m-    verify_integers, verify_mutable_option, verify_positive_integers,
+[0m[31m-    verify_proposed_api, ApiError,
+[0m[32m+    verify_integers, verify_mutable_option, verify_positive_integers, verify_proposed_api, ApiError,
+[0m };
+ 
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\api.rs:12:
+         assert_eq!(verify_integers(&[value]), Err(ApiError::IntegerRequired));
+     }
+     assert_eq!(verify_integers(&[]), Ok(()));
+[31m-    assert_eq!(verify_integers(&[1.0, 2.5, 3.0]), Err(ApiError::IntegerRequired));
+[0m[32m+    assert_eq!(
+[0m[32m+        verify_integers(&[1.0, 2.5, 3.0]),
+[0m[32m+        Err(ApiError::IntegerRequired)
+[0m[32m+    );
+[0m }
+ 
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\links.rs:1:
+ use std::rc::Rc;
+[31m-use xterm_core::{buffer::{BufferLine, CellData, CharData}, lifecycle::Disposable};
+[0m[32m+use xterm_core::{
+[0m[32m+    buffer::{BufferLine, CellData, CharData},
+[0m[32m+    lifecycle::Disposable,
+[0m[32m+};
+[0m use xterm_web::links::{osc_links, Link, LinkProviderService, Position, Range};
+ 
+ fn line(text: &str, ids: &[u32], wrapped: bool) -> BufferLine {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\links.rs:6:
+     let mut line = BufferLine::new(text.len(), None, wrapped);
+     for (x, cp) in text.chars().enumerate() {
+         let mut cell = CellData::from_char_data(&CharData {
+[31m-            attr: 0, chars: vec![cp as u16], width: 1, code: Some(cp as u32),
+[0m[32m+            attr: 0,
+[0m[32m+            chars: vec![cp as u16],
+[0m[32m+            width: 1,
+[0m[32m+            code: Some(cp as u32),
+[0m         });
+         cell.extended.set_url_id(ids[x]);
+         cell.update_extended();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\links.rs:15:
+     line
+ }
+ fn links(lines: &[BufferLine], y: usize) -> Vec<Link> {
+[31m-    osc_links(lines, y, |id| Some(format!("https://example.com/{id}")), false, |_| true).unwrap()
+[0m[32m+    osc_links(
+[0m[32m+        lines,
+[0m[32m+        y,
+[0m[32m+        |id| Some(format!("https://example.com/{id}")),
+[0m[32m+        false,
+[0m[32m+        |_| true,
+[0m[32m+    )
+[0m[32m+    .unwrap()
+[0m }
+ fn range(x1: usize, y1: usize, x2: usize, y2: usize) -> Range {
+[31m-    Range { start: Position { x: x1, y: y1 }, end: Position { x: x2, y: y2 } }
+[0m[32m+    Range {
+[0m[32m+        start: Position { x: x1, y: y1 },
+[0m[32m+        end: Position { x: x2, y: y2 },
+[0m[32m+    }
+[0m }
+ 
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\links.rs:25:
+ fn upstream_expands_backward() {
+[31m-    let lines = [line("aabbb", &[0,0,1,1,1], false), line("ccccx", &[1,1,1,1,0], true)];
+[0m[32m+    let lines = [
+[0m[32m+        line("aabbb", &[0, 0, 1, 1, 1], false),
+[0m[32m+        line("ccccx", &[1, 1, 1, 1, 0], true),
+[0m[32m+    ];
+[0m     let found = links(&lines, 2);
+     assert_eq!(found.len(), 1);
+[31m-    assert_eq!(found[0].range, range(3,1,4,2));
+[0m[32m+    assert_eq!(found[0].range, range(3, 1, 4, 2));
+[0m }
+ #[test]
+ fn upstream_expands_forward() {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\links.rs:33:
+[31m-    let lines = [line("aaaaa", &[1;5], false), line("bbccc", &[1,1,0,0,0], true)];
+[0m[32m+    let lines = [
+[0m[32m+        line("aaaaa", &[1; 5], false),
+[0m[32m+        line("bbccc", &[1, 1, 0, 0, 0], true),
+[0m[32m+    ];
+[0m     let found = links(&lines, 1);
+     assert_eq!(found.len(), 1);
+[31m-    assert_eq!(found[0].range, range(1,1,2,2));
+[0m[32m+    assert_eq!(found[0].range, range(1, 1, 2, 2));
+[0m }
+ #[test]
+ fn upstream_different_ids_do_not_merge() {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\links.rs:40:
+[31m-    let lines = [line("aaaaa", &[1;5], false), line("bbbcc", &[2,2,2,0,0], true)];
+[0m[32m+    let lines = [
+[0m[32m+        line("aaaaa", &[1; 5], false),
+[0m[32m+        line("bbbcc", &[2, 2, 2, 0, 0], true),
+[0m[32m+    ];
+[0m     let found = links(&lines, 1);
+     assert_eq!(found.len(), 1);
+[31m-    assert_eq!(found[0].range, range(1,1,5,1));
+[0m[32m+    assert_eq!(found[0].range, range(1, 1, 5, 1));
+[0m }
+ 
+ fn assert_underline(range: Range) {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\links.rs:47:
+[31m-    let link = Link { text: "foo".into(), range };
+[0m[32m+    let link = Link {
+[0m[32m+        text: "foo".into(),
+[0m[32m+        range,
+[0m[32m+    };
+[0m     let e = link.underline_event(100, 0);
+     assert_eq!(e.x1, link.range.start.x as i64 - 1);
+     assert_eq!(e.y1, link.range.start.y as i64 - 1);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\links.rs:52:
+     assert_eq!(e.y2, link.range.end.y as i64 - 1);
+ }
+ #[test]
+[31m-fn upstream_show_underline() { assert_underline(range(5,1,7,1)); }
+[0m[32m+fn upstream_show_underline() {
+[0m[32m+    assert_underline(range(5, 1, 7, 1));
+[0m[32m+}
+[0m #[test]
+[31m-fn upstream_hide_underline() { assert_underline(range(5,1,7,1)); }
+[0m[32m+fn upstream_hide_underline() {
+[0m[32m+    assert_underline(range(5, 1, 7, 1));
+[0m[32m+}
+[0m #[test]
+[31m-fn upstream_show_wrapped_underline() { assert_underline(range(2,1,4,2)); }
+[0m[32m+fn upstream_show_wrapped_underline() {
+[0m[32m+    assert_underline(range(2, 1, 4, 2));
+[0m[32m+}
+[0m #[test]
+[31m-fn upstream_hide_wrapped_underline() { assert_underline(range(2,1,4,2)); }
+[0m[32m+fn upstream_hide_wrapped_underline() {
+[0m[32m+    assert_underline(range(2, 1, 4, 2));
+[0m[32m+}
+[0m 
+ #[test]
+ fn provider_identity_duplicates_and_repeated_disposal() {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\links.rs:87:
+ fn missing_empty_and_protocol_policy() {
+     assert!(osc_links(&[], 0, |_| None, false, |_| true).is_none());
+     assert_eq!(links(&[BufferLine::new(5, None, false)], 1), vec![]);
+[31m-    let rows = [line("aab", &[1,1,0], false)];
+[0m[31m-    assert!(osc_links(&rows, 1, |_| Some("invalid".into()), false, |_| false).unwrap().is_empty());
+[0m[31m-    assert_eq!(osc_links(&rows, 1, |_| Some("invalid".into()), true,
+[0m[31m-        |_| panic!("protocol parser must not run when bypassed")).unwrap().len(), 1);
+[0m[32m+    let rows = [line("aab", &[1, 1, 0], false)];
+[0m[32m+    assert!(
+[0m[32m+        osc_links(&rows, 1, |_| Some("invalid".into()), false, |_| false)
+[0m[32m+            .unwrap()
+[0m[32m+            .is_empty()
+[0m[32m+    );
+[0m[32m+    assert_eq!(
+[0m[32m+        osc_links(
+[0m[32m+            &rows,
+[0m[32m+            1,
+[0m[32m+            |_| Some("invalid".into()),
+[0m[32m+            true,
+[0m[32m+            |_| panic!("protocol parser must not run when bypassed")
+[0m[32m+        )
+[0m[32m+        .unwrap()
+[0m[32m+        .len(),
+[0m[32m+        1
+[0m[32m+    );
+[0m }
+ 
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\links.rs:100:
+ 
+ #[test]
+ fn scroll_offset_can_place_underline_above_viewport() {
+[31m-    let link = Link { text: "x".into(), range: range(2,1,4,2) };
+[0m[32m+    let link = Link {
+[0m[32m+        text: "x".into(),
+[0m[32m+        range: range(2, 1, 4, 2),
+[0m[32m+    };
+[0m     let e = link.underline_event(100, 5);
+[31m-    assert_eq!((e.x1,e.y1,e.x2,e.y2), (1,-5,4,-4));
+[0m[32m+    assert_eq!((e.x1, e.y1, e.x2, e.y2), (1, -5, 4, -4));
+[0m }
+ 
