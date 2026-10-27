@@ -75,6 +75,7 @@ const parseCases = [
   'xxxrgb(1,2,3)zzz', 'rgb(1,2,3,00.5)', 'rgba(0,0,0,.00000001)',
   'rgb(\u00a01,2,3)', 'rgb(1,2,3,1.5)', 'rgba(0,0,0,1.)', 'rgb(1, 2, 3, .9)',
   'x#abc', 'xx#abcx', 'x#abcdxx', '💻#abc', '#abczzz', '#12abcd!',
+  'a-1#abc', 'a+1#abc', 'a f#abc', 'a 1#abcde', 'a0x1#abcd',
 ];
 for (const text of parseCases) {
   let result;

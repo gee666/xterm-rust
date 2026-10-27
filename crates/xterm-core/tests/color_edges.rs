@@ -36,6 +36,16 @@ fn source_unanchored_patterns_and_channel_overflow_are_preserved() {
     let result = css::to_color("x#abc").unwrap();
     assert_eq!(result.css, "#NaNaabbcc");
     assert_eq!(result.rgba, 0x00aabbcc);
+    // Independent review cases exercise parseInt's non-digit prefix handling.
+    for (input, expected) in [
+        ("a-1#abc", 0xffffffff),
+        ("a+1#abc", 511),
+        ("a f#abc", 4095),
+        ("a 1#abcde", 1),
+        ("a0x1#abcd", 1),
+    ] {
+        assert_eq!(css::to_color(input).unwrap().rgba, expected, "{input}");
+    }
     assert_eq!(
         css::to_color("prefix rgb(1,2,3,.5) suffix").unwrap(),
         channels::to_color(1, 2, 3, Some(128))

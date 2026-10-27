@@ -105,14 +105,32 @@ fn hex(c: u16) -> Option<u32> {
 }
 
 fn parse_hex_prefix(units: &[u16]) -> u32 {
+    // parseInt(..., 16) trims ECMAScript whitespace, accepts a sign, and permits
+    // a 0x prefix even with an explicit radix. The matching regex is unanchored.
+    let start = units
+        .iter()
+        .position(|&unit| !char::from_u32(u32::from(unit)).is_some_and(js_whitespace))
+        .unwrap_or(units.len());
+    let mut rest = &units[start..];
+    let negative = rest.first() == Some(&u16::from(b'-'));
+    if matches!(rest.first(), Some(43 | 45)) {
+        rest = &rest[1..];
+    }
+    if rest.len() >= 2 && rest[0] == u16::from(b'0') && matches!(rest[1], 88 | 120) {
+        rest = &rest[2..];
+    }
     let mut result = 0_u32;
-    for &c in units {
+    for &c in rest {
         let Some(digit) = hex(c) else {
             break;
         };
         result = result.wrapping_mul(16).wrapping_add(digit);
     }
-    result
+    if negative {
+        0_u32.wrapping_sub(result)
+    } else {
+        result
+    }
 }
 
 fn js_whitespace(c: char) -> bool {
