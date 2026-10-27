@@ -80,8 +80,28 @@ pub const NONE: NoopDisposable = NoopDisposable;
 /// in that same traversal, matching JavaScript Set iteration.
 #[derive(Default)]
 pub struct DisposableStore {
-    resources: RefCell<Vec<DisposableHandle>>,
+    resources: RefCell<StoreResources>,
     disposed: Cell<bool>,
+}
+
+#[derive(Default)]
+struct StoreResources {
+    entries: Vec<Option<DisposableHandle>>,
+    iterators: usize,
+}
+
+// JavaScript Set.clear leaves tombstones for active iterators. Keep those slots
+// until every traversal ends, including when a callback unwinds through one.
+struct StoreIteration<'a>(&'a RefCell<StoreResources>);
+
+impl Drop for StoreIteration<'_> {
+    fn drop(&mut self) {
+        let mut resources = self.0.borrow_mut();
+        resources.iterators -= 1;
+        if resources.iterators == 0 {
+            resources.entries.retain(Option::is_some);
+        }
+    }
 }
 
 impl DisposableStore {
@@ -99,24 +119,39 @@ impl DisposableStore {
             resource.dispose();
         } else {
             let mut resources = self.resources.borrow_mut();
-            if !resources.iter().any(|entry| Rc::ptr_eq(entry, &resource)) {
-                resources.push(Rc::clone(&resource));
+            if !resources
+                .entries
+                .iter()
+                .flatten()
+                .any(|entry| Rc::ptr_eq(entry, &resource))
+            {
+                resources.entries.push(Some(Rc::clone(&resource)));
             }
         }
         resource
     }
 
     pub fn clear(&self) {
+        self.resources.borrow_mut().iterators += 1;
+        let _iteration = StoreIteration(&self.resources);
         let mut index = 0;
         loop {
-            let resource = self.resources.borrow().get(index).cloned();
-            let Some(resource) = resource else {
-                break;
-            };
-            resource.dispose();
+            let entry = self.resources.borrow().entries.get(index).cloned();
+            match entry {
+                None => break,
+                Some(None) => {}
+                Some(Some(resource)) => resource.dispose(),
+            }
             index += 1;
         }
-        self.resources.borrow_mut().clear();
+        let removed: Vec<_> = self
+            .resources
+            .borrow_mut()
+            .entries
+            .iter_mut()
+            .filter_map(Option::take)
+            .collect();
+        drop(removed);
     }
 }
 
@@ -198,7 +233,8 @@ impl MutableDisposable {
         if let Some(old) = old {
             old.dispose();
         }
-        *self.value.borrow_mut() = value;
+        let previous = self.value.replace(value);
+        drop(previous);
     }
 
     pub fn clear(&self) {
@@ -213,7 +249,8 @@ impl Disposable for MutableDisposable {
         if let Some(old) = old {
             old.dispose();
         }
-        self.value.borrow_mut().take();
+        let previous = self.value.take();
+        drop(previous);
     }
 }
 

@@ -30,6 +30,20 @@ mutable.value = record('ignored');
 const group = combinedDisposable(a, record('group'), a);
 group.dispose();
 group.dispose();
+// Retain the nested-clear counterexample found during independent review.
+const nestedStore = new DisposableStore();
+let entered = false;
+const late = record('nested-b');
+nestedStore.add(toDisposable(() => {
+  log.push('nested-a');
+  if (!entered) {
+    entered = true;
+    nestedStore.clear();
+    nestedStore.add(late);
+  }
+}));
+nestedStore.clear();
+nestedStore.clear();
 const expected = readFileSync(new URL('../crates/xterm-core/tests/fixtures/lifecycle-trace.txt', import.meta.url), 'utf8');
 assert.equal(log.join('\n') + '\n', expected);
 console.log(JSON.stringify({

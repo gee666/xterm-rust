@@ -188,6 +188,24 @@ fn same_trace_as_typescript_oracle() {
     let group = combined_disposable(vec![Rc::clone(&a), record("group"), a]);
     group.dispose();
     group.dispose();
+
+    // Retained regression from independent review: a nested clear must not reset
+    // the outer Set iterator position before a newly added resource is visited.
+    let nested_store = Rc::new(DisposableStore::new());
+    let weak = Rc::downgrade(&nested_store);
+    let entered = Cell::new(false);
+    let nested_log = Rc::clone(&log);
+    let late = record("nested-b");
+    nested_store.add(to_disposable(move || {
+        nested_log.borrow_mut().push("nested-a");
+        if !entered.replace(true) {
+            let store = weak.upgrade().unwrap();
+            store.clear();
+            store.add(Rc::clone(&late));
+        }
+    }));
+    nested_store.clear();
+    nested_store.clear();
     let actual = log.borrow().join("\n") + "\n";
     assert_eq!(actual, include_str!("fixtures/lifecycle-trace.txt"));
 }
