@@ -1,0 +1,69 @@
+name: Rust native quality
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native:
+    name: Native ${{ matrix.os }} Rust ${{ matrix.toolchain }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        toolchain: ["1.85.1", stable]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.toolchain }}
+          components: rustfmt, clippy
+      - name: Verify the quality runner
+        run: node --test scripts/quality-process.test.mjs scripts/quality-policy.test.mjs scripts/quality-snapshot.test.mjs
+      - name: Run native library quality gates
+        run: node scripts/quality-gates.mjs --out results/quality/${{ matrix.os }}-${{ matrix.toolchain }}
+      - name: Preserve command logs and native provenance
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-${{ matrix.os }}-${{ matrix.toolchain }}
+          path: results/quality/${{ matrix.os }}-${{ matrix.toolchain }}/
+          if-no-files-found: error
+
+  wasm-compile:
+    name: WASM compilation only, not browser runtime
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - name: Check workspace libraries for the browser target
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p results/quality/wasm-compile
+          {
+            git rev-parse HEAD
+            rustc -vV
+            cargo --version
+            rustup target list --installed
+            cargo check --workspace --locked --lib --all-features --target wasm32-unknown-unknown
+          } 2>&1 | tee results/quality/wasm-compile/compile.log
+      - name: Preserve compilation result, not browser runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-wasm-compile
+          path: results/quality/wasm-compile/
+          if-no-files-found: error

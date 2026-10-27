@@ -1,0 +1,368 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-10-27T23:24:34.258Z",
+  "overallEquivalence": "NOT PROVEN",
+  "environment": {
+    "platform": "win32",
+    "architecture": "x64",
+    "release": "10.0.26300",
+    "cpu": "AMD Ryzen 9 7900X 12-Core Processor            ",
+    "node": "v24.15.0",
+    "ci": false,
+    "ciRunUrl": null,
+    "declaredTarget": null,
+    "cargoEncodedRustflags": null,
+    "rustflags": null,
+    "rustHost": "x86_64-pc-windows-msvc"
+  },
+  "commands": [
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "elapsedMs": 31.436700000000002,
+      "status": "passed",
+      "id": "git-revision",
+      "log": "results/quality/windows-initial/git-revision.log"
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "elapsedMs": 38.545,
+      "status": "passed",
+      "id": "git-status",
+      "log": "results/quality/windows-initial/git-status.log"
+    },
+    {
+      "command": [
+        "rustc",
+        "-vV"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "elapsedMs": 34.78989999999999,
+      "status": "passed",
+      "id": "rustc-version",
+      "log": "results/quality/windows-initial/rustc-version.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "elapsedMs": 82.249,
+      "status": "passed",
+      "id": "cargo-version",
+      "log": "results/quality/windows-initial/cargo-version.log"
+    },
+    {
+      "command": [
+        "rustup",
+        "target",
+        "list",
+        "--installed"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "elapsedMs": 33.72360000000003,
+      "status": "passed",
+      "id": "installed-targets",
+      "log": "results/quality/windows-initial/installed-targets.log"
+    },
+    {
+      "command": [
+        "rustup",
+        "component",
+        "list",
+        "--installed"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "elapsedMs": 29.444999999999993,
+      "status": "passed",
+      "id": "installed-components",
+      "log": "results/quality/windows-initial/installed-components.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--format-version",
+        "1",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "elapsedMs": 38.86559999999997,
+      "status": "passed",
+      "id": "metadata",
+      "log": "results/quality/windows-initial/metadata.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "elapsedMs": 321.8121,
+      "status": "failed",
+      "id": "fmt",
+      "log": "results/quality/windows-initial/fmt.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--target",
+        "x86_64-pc-windows-msvc",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "elapsedMs": 2065.4570000000003,
+      "status": "failed",
+      "id": "clippy-all-features",
+      "log": "results/quality/windows-initial/clippy-all-features.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--target",
+        "x86_64-pc-windows-msvc"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "elapsedMs": 5401.0281,
+      "status": "failed",
+      "id": "test-all-features",
+      "log": "results/quality/windows-initial/test-all-features.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--locked",
+        "--doc",
+        "--all-features",
+        "--target",
+        "x86_64-pc-windows-msvc"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "elapsedMs": 421.04359999999997,
+      "status": "passed",
+      "id": "doctest-all-features",
+      "log": "results/quality/windows-initial/doctest-all-features.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--workspace",
+        "--locked",
+        "--release",
+        "--all-targets",
+        "--all-features",
+        "--target",
+        "x86_64-pc-windows-msvc"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "elapsedMs": 3609.9740999999995,
+      "status": "failed",
+      "id": "build-release",
+      "log": "results/quality/windows-initial/build-release.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--locked",
+        "--all-targets",
+        "--target",
+        "x86_64-pc-windows-msvc"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "elapsedMs": 968.5924999999988,
+      "status": "failed",
+      "id": "test-default",
+      "log": "results/quality/windows-initial/test-default.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--locked",
+        "--all-targets",
+        "--no-default-features",
+        "--target",
+        "x86_64-pc-windows-msvc"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "elapsedMs": 4914.771799999999,
+      "status": "failed",
+      "id": "test-no-default-features",
+      "log": "results/quality/windows-initial/test-no-default-features.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--locked",
+        "--all-targets",
+        "--no-default-features",
+        "--target",
+        "x86_64-pc-windows-msvc",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "elapsedMs": 2011.186999999998,
+      "status": "failed",
+      "id": "clippy-no-default-features",
+      "log": "results/quality/windows-initial/clippy-no-default-features.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "miri",
+        "--version"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "elapsedMs": 452.46550000000207,
+      "status": "failed",
+      "id": "miri-availability",
+      "log": "results/quality/windows-initial/miri-availability.log"
+    }
+  ],
+  "gaps": [
+    "WASM target/build not requested; rerun with --wasm-check after installing the target.",
+    "Miri and sanitizers were not run. Review unsafe candidates and choose an applicable toolchain/target.",
+    "Native library tests do not establish terminal/demo/browser/addon equivalence or other OS runtime success.",
+    "Workspace changed during execution. Repeat on an immutable commit before claiming one-snapshot gate success."
+  ],
+  "featurePolicy": "default, no-default, all, and each named feature individually",
+  "sourceBefore": {
+    "sha256": "6829b4b80f75f7558a2371e6bf5b4d451d598511465ecdd8eec47f51d2abbf8c",
+    "files": 103,
+    "unsafeCandidates": []
+  },
+  "packages": [
+    {
+      "name": "xterm-core",
+      "rustVersion": "1.85",
+      "features": {
+        "default": []
+      }
+    }
+  ],
+  "safety": {
+    "scan": "Lexical unsafe candidates in workspace Rust files, including comments and strings. Not a semantic proof.",
+    "candidates": [],
+    "miriAvailability": "failed",
+    "miriExecuted": false,
+    "sanitizerExecuted": false
+  },
+  "sourceAfter": {
+    "sha256": "0e341984f7386c0670d8d981c5826c09393866d5f2ec5e9a61ee317efe3dacf3",
+    "files": 107,
+    "unsafeCandidates": []
+  },
+  "sourceStable": false,
+  "finishedAt": "2026-10-27T23:24:54.802Z",
+  "fatal": null,
+  "failedGates": [
+    "fmt",
+    "clippy-all-features",
+    "test-all-features",
+    "build-release",
+    "test-default",
+    "test-no-default-features",
+    "clippy-no-default-features"
+  ],
+  "gateStatus": "failed"
+}

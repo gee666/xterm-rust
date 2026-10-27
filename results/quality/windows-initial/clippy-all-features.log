@@ -1,0 +1,77 @@
+    Checking ryu-js v1.0.3
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0308]: mismatched types
+   --> crates\xterm-core\tests\dcs_support\mod.rs:130:15
+    |
+130 |     while let Some(result) = parser.unhook(success, previous) {
+    |               ^^^^^^^^^^^^   -------------------------------- this expression has type `std::result::Result<std::option::Option<xterm_core::parser::handler::HandlerResult>, xterm_core::parser::dcs::DcsError>`
+    |               |
+    |               expected `Result<Option<HandlerResult>, ...>`, found `Option<_>`
+    |
+    = note: expected enum `std::result::Result<std::option::Option<xterm_core::parser::handler::HandlerResult>, xterm_core::parser::dcs::DcsError>`
+               found enum `std::option::Option<_>`
+help: try wrapping the pattern in `Ok`
+    |
+130 |     while let Ok(Some(result)) = parser.unhook(success, previous) {
+    |               +++            +
+
+error[E0308]: `match` arms have incompatible types
+  --> crates\xterm-core\tests\dcs_cases\oracle.rs:21:24
+   |
+16 |               match fields[0] {
+   |               --------------- `match` arms have incompatible types
+17 |                   "r" => disposables.push(parser.register_handler(
+   |  ________________________-
+18 | |                     IDENT,
+19 | |                     handler(&reports, fields[1], fields[2] == "1", fields[3] == "1"),
+20 | |                 )),
+   | |__________________- this is found to be of type `()`
+21 |                   "h" => parser.hook(IDENT, &params(&[1, 2, 3])),
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `()`, found `Result<(), DcsError>`
+   |
+   = note: expected unit type `()`
+                   found enum `std::result::Result<(), xterm_core::parser::dcs::DcsError>`
+help: consider using `Result::expect` to unwrap the `std::result::Result<(), xterm_core::parser::dcs::DcsError>` value, panicking if the value is a `Result::Err`
+   |
+21 |                 "h" => parser.hook(IDENT, &params(&[1, 2, 3])).expect("REASON"),
+   |                                                               +++++++++++++++++
+
+error[E0308]: mismatched types
+   --> crates\xterm-core\tests\dcs.rs:181:22
+    |
+181 |     assert!(!resolve(result));
+    |              ------- ^^^^^^ expected `HandlerResult`, found `Option<HandlerResult>`
+    |              |
+    |              arguments to this function are incorrect
+    |
+    = note: expected enum `xterm_core::parser::handler::HandlerResult`
+               found enum `std::option::Option<xterm_core::parser::handler::HandlerResult>`
+note: function defined here
+   --> crates\xterm-core\tests\dcs_support\mod.rs:113:8
+    |
+113 | pub fn resolve(result: HandlerResult) -> bool {
+    |        ^^^^^^^ ---------------------
+help: consider using `Option::expect` to unwrap the `std::option::Option<xterm_core::parser::handler::HandlerResult>` value, panicking if the value is an `Option::None`
+    |
+181 |     assert!(!resolve(result.expect("REASON")));
+    |                            +++++++++++++++++
+
+error: field assignment outside of initializer for an instance created with Default::default()
+   --> crates\xterm-core\tests\buffer_line_differential.rs:192:5
+    |
+192 |     cell.bg = xterm_core::buffer::constants::bg_flags::HAS_EXTENDED;
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+note: consider initializing the variable with `xterm_core::buffer::CellData { bg: xterm_core::buffer::constants::bg_flags::HAS_EXTENDED, ..Default::default() }` and removing relevant reassignments
+   --> crates\xterm-core\tests\buffer_line_differential.rs:191:5
+    |
+191 |     let mut cell = CellData::default();
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#field_reassign_with_default
+    = note: `-D clippy::field-reassign-with-default` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::field_reassign_with_default)]`
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `xterm-core` (test "dcs") due to 3 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `xterm-core` (test "buffer_line_differential") due to 1 previous error

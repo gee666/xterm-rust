@@ -1,0 +1,84 @@
+    Blocking waiting for file lock on build directory
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0308]: mismatched types
+  --> crates\xterm-core\src\parser\apc.rs:58:9
+   |
+57 |     pub fn reset(&mut self) -> Result<(), DispatchError> {
+   |                                ------------------------- expected `std::result::Result<(), parser::handler::DispatchError>` because of return type
+58 |         self.dispatch.reset()
+   |         ^^^^^^^^^^^^^^^^^^^^^ expected `Result<(), DispatchError>`, found `()`
+   |
+   = note:   expected enum `std::result::Result<(), parser::handler::DispatchError>`
+           found unit type `()`
+note: method `reset` modifies its receiver in-place
+  --> crates\xterm-core\src\parser\apc.rs:58:23
+   |
+58 |         self.dispatch.reset()
+   |                       ^^^^^ this call modifies its receiver in-place
+help: try adding an expression at the end of the block
+   |
+58 ~         self.dispatch.reset();
+59 +         Ok(())
+   |
+
+error[E0308]: mismatched types
+  --> crates\xterm-core\src\parser\apc.rs:70:9
+   |
+69 |     pub fn start(&mut self, ident: u32) -> Result<(), DispatchError> {
+   |                                            ------------------------- expected `std::result::Result<(), parser::handler::DispatchError>` because of return type
+70 |         self.dispatch.start_identified(f64::from(ident))
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Result<(), DispatchError>`, found `()`
+   |
+   = note:   expected enum `std::result::Result<(), parser::handler::DispatchError>`
+           found unit type `()`
+note: method `start_identified` modifies its receiver in-place
+  --> crates\xterm-core\src\parser\apc.rs:70:23
+   |
+70 |         self.dispatch.start_identified(f64::from(ident))
+   |                       ^^^^^^^^^^^^^^^^ this call modifies its receiver in-place
+help: try adding an expression at the end of the block
+   |
+70 ~         self.dispatch.start_identified(f64::from(ident));
+71 +         Ok(())
+   |
+
+error[E0308]: mismatched types
+  --> crates\xterm-core\src\parser\apc.rs:75:9
+   |
+74 |     pub fn put(&mut self, data: &[u32]) -> Result<(), DispatchError> {
+   |                                            ------------------------- expected `std::result::Result<(), parser::handler::DispatchError>` because of return type
+75 |         self.dispatch.put_identified(data)
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Result<(), DispatchError>`, found `()`
+   |
+   = note:   expected enum `std::result::Result<(), parser::handler::DispatchError>`
+           found unit type `()`
+note: method `put_identified` modifies its receiver in-place
+  --> crates\xterm-core\src\parser\apc.rs:75:23
+   |
+75 |         self.dispatch.put_identified(data)
+   |                       ^^^^^^^^^^^^^^ this call modifies its receiver in-place
+help: try adding an expression at the end of the block
+   |
+75 ~         self.dispatch.put_identified(data);
+76 +         Ok(())
+   |
+
+error[E0308]: mismatched types
+  --> crates\xterm-core\src\parser\apc.rs:86:9
+   |
+85 |     ) -> Result<Option<HandlerResult>, DispatchError> {
+   |          -------------------------------------------- expected `std::result::Result<std::option::Option<parser::handler::HandlerResult>, parser::handler::DispatchError>` because of return type
+86 |         self.dispatch.end_identified(success, previous_result)
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Result<Option<HandlerResult>, ...>`, found `Option<HandlerResult>`
+   |
+   = note: expected enum `std::result::Result<std::option::Option<_>, parser::handler::DispatchError>`
+              found enum `std::option::Option<_>`
+help: try wrapping the expression in `Ok`
+   |
+86 |         Ok(self.dispatch.end_identified(success, previous_result))
+   |         +++                                                      +
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `xterm-core` (lib) due to 4 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `xterm-core` (lib test) due to 4 previous errors
