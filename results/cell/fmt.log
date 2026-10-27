@@ -1,0 +1,363 @@
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\color\css.rs:52:
+                     result.css = "#".into();
+                     for &unit in &units[1..] {
+                         if let Some(digit) = hex(unit) {
+[31m-                            result.css.push_str(&super::to_padded_hex(i64::from(digit * 17)));
+[0m[32m+                            result
+[0m[32m+                                .css
+[0m[32m+                                .push_str(&super::to_padded_hex(i64::from(digit * 17)));
+[0m                         } else {
+                             result.css.push_str("NaN");
+                         }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\color\mod.rs:67:
+ 
+ fn js_round(value: f64) -> f64 {
+     let lower = value.floor();
+[31m-    if value - lower < 0.5 { lower } else { value.ceil() }
+[0m[32m+    if value - lower < 0.5 {
+[0m[32m+        lower
+[0m[32m+    } else {
+[0m[32m+        value.ceil()
+[0m[32m+    }
+[0m }
+ 
+ // Opacity is not clamped upstream. Keep the hexadecimal representation of the
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\color\mod.rs:74:
+ // entire rounded JS number, even when its magnitude exceeds Rust integer types.
+ fn rounded_number_hex(value: f64) -> String {
+[31m-    if value.is_nan() { return "NaN".into(); }
+[0m[31m-    if value == f64::INFINITY { return "Infinity".into(); }
+[0m[31m-    if value == f64::NEG_INFINITY { return "-Infinity".into(); }
+[0m[31m-    if value == 0.0 { return "00".into(); }
+[0m[32m+    if value.is_nan() {
+[0m[32m+        return "NaN".into();
+[0m[32m+    }
+[0m[32m+    if value == f64::INFINITY {
+[0m[32m+        return "Infinity".into();
+[0m[32m+    }
+[0m[32m+    if value == f64::NEG_INFINITY {
+[0m[32m+        return "-Infinity".into();
+[0m[32m+    }
+[0m[32m+    if value == 0.0 {
+[0m[32m+        return "00".into();
+[0m[32m+    }
+[0m     let bits = value.abs().to_bits();
+     let exponent = ((bits >> 52) & 2047) as i32 - 1023;
+     let mantissa = (bits & ((1_u64 << 52) - 1)) | (1_u64 << 52);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\color\mod.rs:88:
+         digits.push_str(&"0".repeat((shift / 4) as usize));
+         digits
+     };
+[31m-    let result = if value < 0.0 { format!("-{digits}") } else { digits };
+[0m[31m-    if result.len() < 2 { format!("0{result}") } else { result }
+[0m[32m+    let result = if value < 0.0 {
+[0m[32m+        format!("-{digits}")
+[0m[32m+    } else {
+[0m[32m+        digits
+[0m[32m+    };
+[0m[32m+    if result.len() < 2 {
+[0m[32m+        format!("0{result}")
+[0m[32m+    } else {
+[0m[32m+        result
+[0m[32m+    }
+[0m }
+ 
+ /// WCAG contrast ratio, accepting either luminance order.
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\parser\dcs.rs:96:
+     /// Abort remaining handlers. Previously returned futures are caller-owned.
+     /// Cleanup starts synchronously, but reset does not await their completion.
+     pub fn reset(&mut self) {
+[31m-        let end = self.pause.as_ref().map_or_else(
+[0m[31m-            || self.active.borrow().len(),
+[0m[31m-            |pause| pause.next,
+[0m[31m-        );
+[0m[32m+        let end = self
+[0m[32m+            .pause
+[0m[32m+            .as_ref()
+[0m[32m+            .map_or_else(|| self.active.borrow().len(), |pause| pause.next);
+[0m         for index in (0..end).rev() {
+             if let Some(handler) = self.at(index) {
+                 drop(handler.borrow_mut().unhook(false));
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\parser\dcs_handler.rs:18:
+ 
+ fn empty_params() -> Params {
+     let mut params = Params::default();
+[31m-    params.reset_zdm().expect("default Params has nonzero capacity");
+[0m[32m+    params
+[0m[32m+        .reset_zdm()
+[0m[32m+        .expect("default Params has nonzero capacity");
+[0m     params
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\parser\osc.rs:128:
+ 
+     pub fn reset(&mut self) {
+         if self.state == State::Payload {
+[31m-            let end = self.pause.as_ref().map_or_else(
+[0m[31m-                || self.active.borrow().len(),
+[0m[31m-                |pause| pause.next,
+[0m[31m-            );
+[0m[32m+            let end = self
+[0m[32m+                .pause
+[0m[32m+                .as_ref()
+[0m[32m+                .map_or_else(|| self.active.borrow().len(), |pause| pause.next);
+[0m             for index in (0..end).rev() {
+                 if let Some(handler) = self.at(index) {
+                     // Upstream reset initiates cleanup but does not await it.
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\parser\osc.rs:150:
+     }
+ 
+     fn begin_payload(&mut self) {
+[31m-        self.active = self.handlers.get(&key(self.id)).cloned().unwrap_or_default();
+[0m[32m+        self.active = self
+[0m[32m+            .handlers
+[0m[32m+            .get(&key(self.id))
+[0m[32m+            .cloned()
+[0m[32m+            .unwrap_or_default();
+[0m         let count = self.active.borrow().len();
+         if count == 0 {
+             self.report(OscAction::Start);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\apc.rs:44:
+ }
+ impl ApcHandlerTrait for Reporter {
+     fn start(&mut self) {
+[31m-        self.reports.borrow_mut().push(format!("{} START", self.name));
+[0m[32m+        self.reports
+[0m[32m+            .borrow_mut()
+[0m[32m+            .push(format!("{} START", self.name));
+[0m     }
+     fn put(&mut self, data: &[u32]) {
+         self.reports.borrow_mut().push(format!(
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\apc.rs:51:
+[31m-            "{} PUT {}", self.name, String::from_utf16_lossy(&utf32_to_string(data))
+[0m[32m+            "{} PUT {}",
+[0m[32m+            self.name,
+[0m[32m+            String::from_utf16_lossy(&utf32_to_string(data))
+[0m         ));
+     }
+     fn end(&mut self, success: bool) -> HandlerResult {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\apc.rs:67:
+     }
+ }
+ 
+[31m-fn register(parser: &mut ApcParser, reports: &Reports, name: &'static str,
+[0m[31m-            handled: bool, asynchronous: bool) -> xterm_core::lifecycle::DisposableHandle {
+[0m[32m+fn register(
+[0m[32m+    parser: &mut ApcParser,
+[0m[32m+    reports: &Reports,
+[0m[32m+    name: &'static str,
+[0m[32m+    handled: bool,
+[0m[32m+    asynchronous: bool,
+[0m[32m+) -> xterm_core::lifecycle::DisposableHandle {
+[0m     let handler: HandlerHandle = Rc::new(RefCell::new(Reporter {
+[31m-        reports: Rc::clone(reports), name, handled, asynchronous,
+[0m[32m+        reports: Rc::clone(reports),
+[0m[32m+        name,
+[0m[32m+        handled,
+[0m[32m+        asynchronous,
+[0m     }));
+     parser.register_handler(ID, handler)
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\apc.rs:85:
+ }
+ fn expected(names: &[&str], handled: bool) -> Vec<String> {
+     let mut output = Vec::new();
+[31m-    for name in names { output.push(format!("{name} START")); }
+[0m[32m+    for name in names {
+[0m[32m+        output.push(format!("{name} START"));
+[0m[32m+    }
+[0m     for text in ["Here comes", "the mouse!"] {
+[31m-        for name in names { output.push(format!("{name} PUT {text}")); }
+[0m[32m+        for name in names {
+[0m[32m+            output.push(format!("{name} PUT {text}"));
+[0m[32m+        }
+[0m     }
+     for (index, name) in names.iter().enumerate() {
+         output.push(format!("{name} END {}", !handled || index == 0));
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\apc.rs:113:
+     let output = Rc::clone(&actual);
+     parser.set_handler_fallback(move |id, action| output.borrow_mut().push((id, action)));
+     run(&mut parser);
+[31m-    assert_eq!(*actual.borrow(), vec![
+[0m[31m-        (ID, ApcAction::Start),
+[0m[31m-        (ID, ApcAction::Put("Here comes".encode_utf16().collect())),
+[0m[31m-        (ID, ApcAction::Put("the mouse!".encode_utf16().collect())),
+[0m[31m-        (ID, ApcAction::End(true)),
+[0m[31m-    ]);
+[0m[32m+    assert_eq!(
+[0m[32m+        *actual.borrow(),
+[0m[32m+        vec![
+[0m[32m+            (ID, ApcAction::Start),
+[0m[32m+            (ID, ApcAction::Put("Here comes".encode_utf16().collect())),
+[0m[32m+            (ID, ApcAction::Put("the mouse!".encode_utf16().collect())),
+[0m[32m+            (ID, ApcAction::End(true)),
+[0m[32m+        ]
+[0m[32m+    );
+[0m     assert!(reports.borrow().is_empty());
+ }
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\apc.rs:125:
+[31m-fn add_apc_handler() { check_pair(true); }
+[0m[32m+fn add_apc_handler() {
+[0m[32m+    check_pair(true);
+[0m[32m+}
+[0m #[test]
+[31m-fn add_apc_handler_return_false() { check_pair(false); }
+[0m[32m+fn add_apc_handler_return_false() {
+[0m[32m+    check_pair(false);
+[0m[32m+}
+[0m fn check_pair(handled: bool) {
+     let mut parser = ApcParser::new();
+     let reports = Reports::default();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\apc.rs:150:
+     // Four original cases: two stack layouts, first handles or all bubble.
+     for asynchronous in [[false, true, false], [true, false, true]] {
+         for handled in [true, false] {
+[31m-            let names = if asynchronous[0] { ["a1", "s1", "a2"] } else { ["s1", "a1", "s2"] };
+[0m[32m+            let names = if asynchronous[0] {
+[0m[32m+                ["a1", "s1", "a2"]
+[0m[32m+            } else {
+[0m[32m+                ["s1", "a1", "s2"]
+[0m[32m+            };
+[0m             let mut parser = ApcParser::new();
+             let reports = Reports::default();
+             for index in 0..3 {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\apc.rs:157:
+[31m-                register(&mut parser, &reports, names[index], handled, asynchronous[index]);
+[0m[32m+                register(
+[0m[32m+                    &mut parser,
+[0m[32m+                    &reports,
+[0m[32m+                    names[index],
+[0m[32m+                    handled,
+[0m[32m+                    asynchronous[index],
+[0m[32m+                );
+[0m             }
+             run(&mut parser);
+             let reverse = [names[2], names[1], names[0]];
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\apc.rs:164:
+ }
+ 
+ type Calls = Rc<RefCell<Vec<(&'static str, Vec<u16>)>>>;
+[31m-fn factory(parser: &mut ApcParser, calls: &Calls, name: &'static str,
+[0m[31m-           handled: bool, asynchronous: bool) -> xterm_core::lifecycle::DisposableHandle {
+[0m[32m+fn factory(
+[0m[32m+    parser: &mut ApcParser,
+[0m[32m+    calls: &Calls,
+[0m[32m+    name: &'static str,
+[0m[32m+    handled: bool,
+[0m[32m+    asynchronous: bool,
+[0m[32m+) -> xterm_core::lifecycle::DisposableHandle {
+[0m     let calls = Rc::clone(calls);
+     let callback = move |data: Vec<u16>| {
+         calls.borrow_mut().push((name, data));
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\apc.rs:172:
+[31m-        if asynchronous { HandlerResult::Pending(Box::pin(async move { handled })) }
+[0m[31m-        else { HandlerResult::Ready(handled) }
+[0m[32m+        if asynchronous {
+[0m[32m+            HandlerResult::Pending(Box::pin(async move { handled }))
+[0m[32m+        } else {
+[0m[32m+            HandlerResult::Ready(handled)
+[0m[32m+        }
+[0m     };
+[31m-    parser.register_handler(ID, Rc::new(RefCell::new(ApcHandler::with_limit(callback, 100))))
+[0m[32m+    parser.register_handler(
+[0m[32m+        ID,
+[0m[32m+        Rc::new(RefCell::new(ApcHandler::with_limit(callback, 100))),
+[0m[32m+    )
+[0m }
+ fn payload(parser: &mut ApcParser, success: bool, first: &str, second: &str) {
+     parser.start(ID);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\apc.rs:189:
+             let calls = Calls::default();
+             factory(&mut parser, &calls, "", true, asynchronous);
+             payload(&mut parser, success, "Here comes", " the mouse!");
+[31m-            let expected = if success { vec![("", "Here comes the mouse!".encode_utf16().collect())] } else { vec![] };
+[0m[32m+            let expected = if success {
+[0m[32m+                vec![("", "Here comes the mouse!".encode_utf16().collect())]
+[0m[32m+            } else {
+[0m[32m+                vec![]
+[0m[32m+            };
+[0m             assert_eq!(*calls.borrow(), expected);
+         }
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\apc.rs:202:
+         factory(&mut parser, &calls, "one", true, asynchronous);
+         let token = factory(&mut parser, &calls, "two", true, asynchronous);
+         payload(&mut parser, true, "Here comes", " the mouse!");
+[31m-        assert_eq!(*calls.borrow(), vec![("two", "Here comes the mouse!".encode_utf16().collect::<Vec<_>>())]);
+[0m[32m+        assert_eq!(
+[0m[32m+            *calls.borrow(),
+[0m[32m+            vec![(
+[0m[32m+                "two",
+[0m[32m+                "Here comes the mouse!".encode_utf16().collect::<Vec<_>>()
+[0m[32m+            )]
+[0m[32m+        );
+[0m         token.dispose();
+         payload(&mut parser, true, "some other", " data");
+[31m-        assert_eq!(*calls.borrow(), vec![
+[0m[31m-            ("two", "Here comes the mouse!".encode_utf16().collect::<Vec<_>>()),
+[0m[31m-            ("one", "some other data".encode_utf16().collect()),
+[0m[31m-        ]);
+[0m[32m+        assert_eq!(
+[0m[32m+            *calls.borrow(),
+[0m[32m+            vec![
+[0m[32m+                (
+[0m[32m+                    "two",
+[0m[32m+                    "Here comes the mouse!".encode_utf16().collect::<Vec<_>>()
+[0m[32m+                ),
+[0m[32m+                ("one", "some other data".encode_utf16().collect()),
+[0m[32m+            ]
+[0m[32m+        );
+[0m     }
+ }
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\apc.rs:230:
+         let calls = Calls::default();
+         factory(&mut parser, &calls, "", true, false);
+         parser.start(ID);
+[31m-        for _ in 0..10 { put(&mut parser, "AAAAAAAAAA"); }
+[0m[31m-        if overflow { put(&mut parser, "A"); }
+[0m[32m+        for _ in 0..10 {
+[0m[32m+            put(&mut parser, "AAAAAAAAAA");
+[0m[32m+        }
+[0m[32m+        if overflow {
+[0m[32m+            put(&mut parser, "A");
+[0m[32m+        }
+[0m         complete(&mut parser, true);
+[31m-        let expected = if overflow { vec![] } else { vec![("", vec![65; 100])] };
+[0m[32m+        let expected = if overflow {
+[0m[32m+            vec![]
+[0m[32m+        } else {
+[0m[32m+            vec![("", vec![65; 100])]
+[0m[32m+        };
+[0m         assert_eq!(*calls.borrow(), expected);
+         payload(&mut parser, true, "clean", "");
+[31m-        assert_eq!(calls.borrow().last(), Some(&("", "clean".encode_utf16().collect())));
+[0m[32m+        assert_eq!(
+[0m[32m+            calls.borrow().last(),
+[0m[32m+            Some(&("", "clean".encode_utf16().collect()))
+[0m[32m+        );
+[0m     }
+ }
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\apc.rs:247:
+     parser.start(ID);
+     put(&mut parser, "partial");
+     parser.reset();
+[31m-    assert_eq!(*reports.borrow(), ["th START", "th PUT partial", "th END false"]);
+[0m[32m+    assert_eq!(
+[0m[32m+        *reports.borrow(),
+[0m[32m+        ["th START", "th PUT partial", "th END false"]
+[0m[32m+    );
+[0m     reports.borrow_mut().clear();
+     parser.start(ID);
+     put(&mut parser, "complete");
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\apc.rs:254:
+     complete(&mut parser, true);
+[31m-    assert_eq!(*reports.borrow(), ["th START", "th PUT complete", "th END true"]);
+[0m[32m+    assert_eq!(
+[0m[32m+        *reports.borrow(),
+[0m[32m+        ["th START", "th PUT complete", "th END true"]
+[0m[32m+    );
+[0m }
+ 

@@ -1,0 +1,79 @@
+{
+  "scope": "CellData.test.ts complete; BufferLine.test.ts AttributeData and CellData describes only",
+  "overallEquivalence": "NOT PROVEN",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "sourceHashes": {
+    "source_repo/src/common/buffer/Constants.ts": "0342c709b580e7a7c62fffb61bab359f93511b82529f5a155374797ca4799f21",
+    "source_repo/src/common/input/TextDecoder.ts": "0368a7fddbb53502f86144b61d023f8d022f5ce973a1b01b59c552ec62631a1b",
+    "source_repo/src/common/buffer/AttributeData.ts": "09a9dc9693200cd7c34a98af3c1fc97b47b4354828cb02a76ab561a03515748a",
+    "source_repo/src/common/buffer/CellData.ts": "d0dfcbf310a949d8bdf4172f9896a6f143d3abf4e0dc68b896dec6612b82d992",
+    "source_repo/src/common/buffer/CellData.test.ts": "27abb426a8a897d839b9a2681ad36ad4460ab49710d1c8f2ef87b5aaaf9b3327",
+    "source_repo/src/common/buffer/BufferLine.test.ts": "d728b3168fde7d33cd51c4ecf0dea4fb5a6d115db8915b3d222c303ea2372a24"
+  },
+  "seed": "0xce11da7a",
+  "upstream": {
+    "executed": 12,
+    "passed": 12,
+    "failed": 0,
+    "outcomes": [
+      {
+        "name": "CellData / attributesEquals / returns true for same attributes with different chars",
+        "status": "passed"
+      },
+      {
+        "name": "CellData / attributesEquals / detects underline style changes",
+        "status": "passed"
+      },
+      {
+        "name": "CellData / attributesEquals / detects underline color changes",
+        "status": "passed"
+      },
+      {
+        "name": "CellData / attributesEquals / ignores underline variant offsets",
+        "status": "passed"
+      },
+      {
+        "name": "CellData / attributesEquals / ignores url ids",
+        "status": "passed"
+      },
+      {
+        "name": "AttributeData / extended attributes / hasExtendedAttrs",
+        "status": "passed"
+      },
+      {
+        "name": "AttributeData / extended attributes / getUnderlineColor - P256",
+        "status": "passed"
+      },
+      {
+        "name": "AttributeData / extended attributes / getUnderlineColor - RGB",
+        "status": "passed"
+      },
+      {
+        "name": "AttributeData / extended attributes / getUnderlineColorMode / isUnderlineColorRGB / isUnderlineColorPalette / isUnderlineColorDefault",
+        "status": "passed"
+      },
+      {
+        "name": "AttributeData / extended attributes / getUnderlineStyle",
+        "status": "passed"
+      },
+      {
+        "name": "AttributeData / extended attributes / getUnderlineVariantOffset",
+        "status": "passed"
+      },
+      {
+        "name": "CellData / CharData <--> CellData equality",
+        "status": "passed"
+      }
+    ]
+  },
+  "fixtures": {
+    "rawCells": 2048,
+    "charData": 1024
+  },
+  "unrun": [
+    "Remaining BufferLine suites",
+    "Terminal integration",
+    "Native Linux/macOS runtime"
+  ]
+}

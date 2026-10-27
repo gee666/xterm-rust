@@ -1,0 +1,260 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+warning: unused import: `std::future::Future`
+ --> crates\xterm-core\tests\apc.rs:5:5
+  |
+5 | use std::future::Future;
+  |     ^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: `xterm-core` (test "apc") generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.45s
+     Running unittests src\lib.rs (target\debug\deps\xterm_core-ec7834e45fe59111.exe)
+
+running 4 tests
+test input::win32_input_mode::tests::alt_and_meta_prevent_ctrl_character_conversion ... ok
+test input::win32_input_mode::tests::unknown_code_uses_key_code_without_inventing_a_scan_code ... ok
+test input::win32_input_mode::tests::javascript_utf16_length_is_not_rust_character_count ... ok
+test input::win32_input_mode::tests::every_upstream_assertion_case_matches_the_complete_result ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\apc.rs (target\debug\deps\apc-810f96654a568612.exe)
+
+running 11 tests
+test dispose_handlers ... ok
+test add_apc_handler ... ok
+test add_apc_handler_return_false ... ok
+test factory_payload_limit_and_overflow ... ok
+test reset_aborts_active_handlers ... ok
+test factory_end_success_and_abort_sync_async ... ok
+test clear_apc_handler ... ok
+test factory_return_false_sync_async ... ok
+test set_apc_handler ... ok
+test mixed_sync_async_dispatch ... ok
+test factory_dispose_sync_async ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\cell_differential.rs (target\debug\deps\cell_differential-cd7351c7c4f7daa3.exe)
+
+running 6 tests
+test hyperlink_overrides_style_without_destroying_stored_style ... ok
+test lone_surrogates_and_empty_combined_strings_are_not_lost ... ok
+test payload_affects_emptiness_but_is_not_cloned_upstream ... ok
+test rgb_conversion_masks_each_channel ... ok
+test seeded_legacy_char_data_matches_javascript ... ok
+test seeded_raw_cells_match_javascript ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\cell_upstream.rs (target\debug\deps\cell_upstream-7f051462f331983a.exe)
+
+running 12 tests
+test char_data_cell_data_equality ... ok
+test get_underline_color_p256 ... ok
+test detects_underline_style_changes ... ok
+test returns_true_for_same_attributes_with_different_chars ... ok
+test detects_underline_color_changes ... ok
+test get_underline_style ... ok
+test has_extended_attrs ... ok
+test get_underline_variant_offset ... ok
+test ignores_underline_variant_offsets ... ok
+test ignores_url_ids ... ok
+test get_underline_color_rgb ... ok
+test underline_color_mode_and_queries ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\collections_upstream.rs (target\debug\deps\collections_upstream-80b01b55b2778e3e.exe)
+
+running 14 tests
+test sorted_clear ... ok
+test four_key_clear ... ok
+test sorted_clear_cancels_pending_deletes_and_inserts ... ok
+test four_key_set_get ... ok
+test map_number_and_string_keys_are_the_same_property ... ok
+test sorted_identity_and_batch_order ... ok
+test sorted_custom_key ... ok
+test sorted_insert_duplicate_keys ... ok
+test two_key_clear ... ok
+test sorted_insert_maintains_values ... ok
+test sorted_key_iterator ... ok
+test sorted_values_snapshot_survives_mutation ... ok
+test sorted_delete ... ok
+test two_key_set_get ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\color_upstream.rs (target\debug\deps\color_upstream-63d6c575cc07730c.exe)
+
+running 28 tests
+test upstream_color_1 ... ok
+test upstream_color_10 ... ok
+test upstream_color_13 ... ok
+test upstream_color_12 ... ok
+test upstream_color_11 ... ok
+test upstream_color_17 ... ok
+test upstream_color_15 ... ok
+test upstream_color_16 ... ok
+test upstream_color_21 ... ok
+test upstream_color_23 ... ok
+test upstream_color_22 ... ok
+test upstream_color_25 ... ok
+test upstream_color_28 ... ok
+test upstream_color_2 ... ok
+test upstream_color_18 ... ok
+test upstream_color_19 ... ok
+test upstream_color_4 ... ok
+test upstream_color_5 ... ok
+test upstream_color_27 ... ok
+test upstream_color_14 ... ok
+test upstream_color_24 ... ok
+test upstream_color_8 ... ok
+test upstream_color_3 ... ok
+test upstream_color_20 ... ok
+test upstream_color_6 ... ok
+test upstream_color_7 ... ok
+test upstream_color_26 ... ok
+test upstream_color_9 ... ok
+
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\lifecycle.rs (target\debug\deps\lifecycle-a10b2d2ce5b89c3a.exe)
+
+running 9 tests
+test callback_disposal_repeats_and_helpers_preserve_identity ... ok
+test combined_preserves_order_duplicates_and_repeated_calls ... ok
+test registration_during_clear_is_visited_in_the_same_pass ... ok
+test same_trace_as_typescript_oracle ... ok
+test mutable_replacement_uses_identity_and_disposes_before_assignment ... ok
+test dispose_closes_store_before_callbacks_and_late_registration_is_immediate ... ok
+test mutable_disposal_hides_value_and_ignores_future_assignment ... ok
+test stores_deduplicate_identity_and_clear_allows_reuse ... ok
+test rust_owners_clean_up_at_drop ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\params.rs (target\debug\deps\params-cb4d500a471302ea.exe)
+
+running 21 tests
+test add_param ... ok
+test add_sub_param ... ok
+test additional_boundaries ... ok
+test array_roundtrip ... ok
+test issue_2389_cancel_subdigits_beyond_params_limit ... ok
+test clone ... ok
+test get_all_sub_params ... ok
+test reject_sub_params_below_minus_one ... ok
+test resets_on_new_sequence ... ok
+test sub_default ... ok
+test clamp_parsed_sub_params ... ok
+test typical_sequences ... ok
+test reject_params_below_minus_one ... ok
+test has_and_get_sub_params ... ok
+test reset ... ok
+test issue_2389_carry_forward_sub_state ... ok
+test respects_constructor_arguments ... ok
+test clamp_parsed_params ... ok
+test sub_params_require_a_parameter ... ok
+test length_restrictions ... ok
+test zdm_default ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\params_differential.rs (target\debug\deps\params_differential-f2a4304a6004149b.exe)
+
+running 1 test
+test seeded_upstream_operation_traces ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+     Running tests\string_builder_differential.rs (target\debug\deps\string_builder_differential-cf29196fce5a41bd.exe)
+
+running 4 tests
+test maximal_limit_does_not_wrap ... ok
+test preserves_split_pairs_and_lone_surrogates ... ok
+test utf8_helper_counts_utf16_units ... ok
+test matches_seeded_javascript_traces ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests\string_builder_upstream.rs (target\debug\deps\string_builder_upstream-f214f045887abdac.exe)
+
+running 17 tests
+test accepts_single_exact_chunk ... ok
+test accepts_up_to_limit ... ok
+test accumulates_to_limit_then_rejects ... ok
+test appends_after_breach_and_reset ... ok
+test rejects_overflow_and_clears ... ok
+test appends_single_chunk ... ok
+test handles_empty_chunks ... ok
+test joins_multiple_chunks_in_order ... ok
+test limited_starts_empty ... ok
+test appends_after_reset ... ok
+test accumulates_many_small_chunks ... ok
+test resets_accumulated_data ... ok
+test zero_limit_accepts_empty_chunk ... ok
+test zero_limit_rejects_nonempty_chunk ... ok
+test exposes_limit ... ok
+test rejects_single_large_chunk ... ok
+test starts_empty ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\text_decoder.rs (target\debug\deps\text_decoder-7eccfa4198453d42.exe)
+
+running 6 tests
+test bom_and_clear ... ok
+test string_from_code_point_and_utf32_to_string ... ok
+test streaming_upstream_cases ... ok
+test exact_upstream_multilingual_samples ... ok
+test js_oracle_chunked_malformed_traces ... ok
+test full_codepoint_ranges ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+
+     Running tests\unicode_v6.rs (target\debug\deps\unicode_v6-c0bf5322131397e7.exe)
+
+running 5 tests
+test property_construction_masks_state_and_width_like_javascript ... ok
+test packed_properties_match_javascript_for_all_width_states ... ok
+test lazy_table_initialization_is_shared_and_thread_safe ... ok
+test wcwidth_should_match_all_values_from_the_old_implementation ... ok
+test supplementary_and_surrogate_codepoints_match_javascript ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests\xparse_color.rs (target\debug\deps\xparse_color-d98541ca1313a872.exe)
+
+running 9 tests
+test does_not_parse_illegal_combinations ... ok
+test defaults_to_16_bit_output ... ok
+test reduces_colors_to_8_bit_resolution ... ok
+test format_low_channels_and_unrecognized_depths_match_upstream ... ok
+test format_rgb_scheme_in_4_8_12_16_bit ... ok
+test hash_scheme_in_4_8_12_16_bit ... ok
+test rgb_scheme_in_4_8_12_16_bit ... ok
+test rejects_non_ascii_and_whitespace ... ok
+test supports_upper_case ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples\collections_trace.rs (target\debug\examples\collections_trace-3d84d0b288a70358.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples\color_oracle.rs (target\debug\examples\color_oracle-a90f66316d42295d.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples\xparse_color_oracle.rs (target\debug\examples\xparse_color_oracle-deb656aecba445d8.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
