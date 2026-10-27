@@ -1,0 +1,34 @@
+{
+  "reviewer": "Isaac",
+  "implementationOwner": "Epictetus",
+  "scope": "BufferLine storage, edits, resize, copying, UTF-16 translation and cache only",
+  "overallProjectEquivalence": "NOT PROVEN",
+  "environment": {
+    "platform": "native Windows via Git Bash",
+    "node": "v24.15.0",
+    "rustc": "1.85.1 (4eb161250 2025-03-15)",
+    "cargo": "1.85.1 (d73d2caf9 2024-12-31)"
+  },
+  "commands": [
+    {"command": "node scripts/buffer-line-oracle.mjs", "exitCode": 0, "log": "results/buffer-line/oracle.log", "originalTestsExecuted": 51, "originalTestsPassed": 51, "seed": "0xb0ff113e", "traces": 128, "operationSteps": 8192},
+    {"command": "rustfmt --edition 2021 --check crates/xterm-core/tests/buffer_line_differential.rs", "exitCode": 0, "log": "results/buffer-line/review-rustfmt.log"},
+    {"command": "cargo test -p xterm-core --test buffer_line_upstream --test buffer_line_translation --test buffer_line_extended --test buffer_line_differential", "exitCode": 0, "log": "results/buffer-line/review-tests.log", "rustTestsExecuted": 46, "rustTestsPassed": 46},
+    {"command": "cargo test -p xterm-core --lib buffer::line", "exitCode": 0, "log": "results/buffer-line/review-internal-tests.log", "rustTestsExecuted": 9, "rustTestsPassed": 9},
+    {"command": "cargo clippy -p xterm-core --test buffer_line_upstream --test buffer_line_translation --test buffer_line_extended --test buffer_line_differential -- -D warnings", "exitCode": 0, "log": "results/buffer-line/review-clippy.log"}
+  ],
+  "inspection": [
+    "Compared source BufferLine.ts and BufferLine.test.ts to line.rs, line_edit.rs, line_text.rs, line_storage_tests.rs and all three upstream assertion test files.",
+    "Original file contains 44 BufferLine cases and seven neighboring AttributeData/CellData cases. Baseline counts do not claim all 51 are new Rust BufferLine cases.",
+    "Compared packed cell content, fg/bg, width/content/protection/combined masks, UTF-16 text and code, extended words/URL, trimmed lengths, wrapped state, full/range translations and column maps after every generated operation.",
+    "Checked strict cleanup threshold and backing allocation behavior by source inspection and passing seeded return-value comparisons.",
+    "Verified shared extended mutation and payload identity through fill, load, clone, whole-line and both range-copy paths."
+  ],
+  "findings": [
+    {"issue": "Early BufferLine copy_extended copied values instead of preserving shared ExtendedAttrs identity", "resolution": "Implementation owner changed storage/copy/load to ExtendedAttrs.share(); independent shared-mutation/payload regression passes"},
+    {"issue": "Initial random resize could only shrink, reducing trace diversity", "resolution": "Oracle now chooses resize lengths zero through 32 independent of current length and compares wrapped/range column results"},
+    {"issue": "Shared APC/DCS API edits temporarily prevented compilation", "resolution": "Owners coordinated their dispatch changes; final focused builds and checks pass"},
+    {"issue": "Test default construction triggered Clippy field_reassign_with_default", "resolution": "Initialize AttributeData in CellData struct expression; focused Clippy passes"}
+  ],
+  "unrun": ["Native Linux runtime", "Native macOS runtime", "Full terminal integration", "Rust-backed browser rendering and interaction"],
+  "limitations": ["Finite seeded cases are not mathematical proof", "Missing Rust cells use Option rather than JavaScript undefined/NaN", "The source blank optimization is valid only for genuinely blank lines"]
+}

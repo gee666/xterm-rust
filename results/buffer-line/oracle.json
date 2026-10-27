@@ -1,0 +1,255 @@
+{
+  "scope": "Complete original BufferLine.test.ts baseline and seeded BufferLine operation traces",
+  "overallEquivalence": "NOT PROVEN",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "sourceHashes": {
+    "source_repo/src/common/buffer/Constants.ts": "0342c709b580e7a7c62fffb61bab359f93511b82529f5a155374797ca4799f21",
+    "source_repo/src/common/input/TextDecoder.ts": "0368a7fddbb53502f86144b61d023f8d022f5ce973a1b01b59c552ec62631a1b",
+    "source_repo/src/common/buffer/AttributeData.ts": "09a9dc9693200cd7c34a98af3c1fc97b47b4354828cb02a76ab561a03515748a",
+    "source_repo/src/common/buffer/CellData.ts": "d0dfcbf310a949d8bdf4172f9896a6f143d3abf4e0dc68b896dec6612b82d992",
+    "source_repo/src/common/buffer/BufferLine.ts": "409958425629c5592bd4813272b00b480e6a723985ea28f24125a7a72ef95bdf",
+    "source_repo/src/common/TestUtils.test.ts": "a1f20abc213a9a5f7611989c7eb74b1ad5f6810a733d5e491c29ff7f8b126034",
+    "source_repo/src/common/buffer/BufferLine.test.ts": "d728b3168fde7d33cd51c4ecf0dea4fb5a6d115db8915b3d222c303ea2372a24"
+  },
+  "seed": "0xb0ff113e",
+  "traces": 128,
+  "operations": 8192,
+  "opCounts": {
+    "cell": 585,
+    "legacy": 586,
+    "codepoint": 586,
+    "add": 586,
+    "insert": 586,
+    "delete": 586,
+    "replace": 586,
+    "resize": 586,
+    "fill": 585,
+    "within": 584,
+    "clone": 584,
+    "copy": 584,
+    "other": 584,
+    "cleanup": 584
+  },
+  "fixture": "crates/xterm-core/tests/fixtures/buffer-line-traces.tsv",
+  "fixtureSha256": "4a20ccd708b875a3cf4cdd03de2dc71b0b541bd703e1b328cda44b91d532ecb0",
+  "baseline": {
+    "discovered": 51,
+    "executed": 51,
+    "passed": 51,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0,
+    "outcomes": [
+      {
+        "name": "AttributeData / extended attributes / hasExtendedAttrs",
+        "status": "passed"
+      },
+      {
+        "name": "AttributeData / extended attributes / getUnderlineColor - P256",
+        "status": "passed"
+      },
+      {
+        "name": "AttributeData / extended attributes / getUnderlineColor - RGB",
+        "status": "passed"
+      },
+      {
+        "name": "AttributeData / extended attributes / getUnderlineColorMode / isUnderlineColorRGB / isUnderlineColorPalette / isUnderlineColorDefault",
+        "status": "passed"
+      },
+      {
+        "name": "AttributeData / extended attributes / getUnderlineStyle",
+        "status": "passed"
+      },
+      {
+        "name": "AttributeData / extended attributes / getUnderlineVariantOffset",
+        "status": "passed"
+      },
+      {
+        "name": "CellData / CharData <--> CellData equality",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / ctor",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / insertCells",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / deleteCells",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / replaceCells",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / fill",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / clone",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / copyFrom",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / should support combining chars",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / resize / enlarge(false)",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / resize / enlarge(true)",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / resize / shrink(true) - should apply new size",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / resize / shrink to 0 length",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / resize / should remove combining data on replaced cells after shrinking then enlarging",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / getTrimLength / empty line",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / getTrimLength / ASCII",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / getTrimLength / surrogate",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / getTrimLength / combining",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / getTrimLength / fullwidth",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / translateToString with and w'o trimming / empty line",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / translateToString with and w'o trimming / ASCII",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / translateToString with and w'o trimming / surrogate",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / translateToString with and w'o trimming / combining",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / translateToString with and w'o trimming / fullwidth",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / translateToString with and w'o trimming / space at end",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / translateToString with and w'o trimming / should always return some sane value",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / translateToString with and w'o trimming / should work with endCol=0",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / addCharToCell / should set width to 1 for empty cell",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / addCharToCell / should add char to combining string in cell",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / addCharToCell / should create combining string on taken cell",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / correct fullwidth handling / insert - wide char at pos",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / correct fullwidth handling / insert - wide char at end",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / correct fullwidth handling / delete",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / correct fullwidth handling / replace - start at 0",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / correct fullwidth handling / replace - start at 1",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / extended attributes / setCells",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / extended attributes / loadCell",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / extended attributes / fill",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / extended attributes / insertCells",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / extended attributes / deleteCells",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / extended attributes / replaceCells",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / extended attributes / clone",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / extended attributes / copyFrom",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / extended attributes / should cache canonical string translations",
+        "status": "passed"
+      },
+      {
+        "name": "BufferLine / extended attributes / should invalidate cached canonical strings on line mutations",
+        "status": "passed"
+      }
+    ]
+  },
+  "limitations": [
+    "Native Linux/macOS runtime unrun",
+    "Extended attribute shared mutation is independently reviewed, not covered by these value traces",
+    "Traces do not replace all upstream assertion migrations"
+  ]
+}
