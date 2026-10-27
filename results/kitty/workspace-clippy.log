@@ -1,0 +1,81 @@
+    Checking zmij v1.0.23
+    Checking serde_core v1.0.229
+    Checking xterm-web v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web)
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Checking xterm-addons v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons)
+error[E0433]: failed to resolve: could not find `selection` in `xterm_web`
+ --> crates\xterm-web\tests\selection_model.rs:4:16
+  |
+4 | use xterm_web::selection::model::{CoordinateOverflow, Dimensions, Position, SelectionModel};
+  |                ^^^^^^^^^ could not find `selection` in `xterm_web`
+
+error[E0597]: `log` does not live long enough
+  --> crates\xterm-core\examples\options_oracle\scenarios.rs:56:8
+   |
+10 |     let log = Rc::new(RefCell::new(Vec::new()));
+   |         --- binding `log` declared here
+...
+56 |     Ok(log.borrow().join(","))
+   |        ^^^---------
+   |        |
+   |        borrowed value does not live long enough
+   |        a temporary with access to the borrow is created here ...
+57 | }
+   | -
+   | |
+   | `log` dropped here while still borrowed
+   | ... and the borrow might be used here, when that temporary is dropped and runs the destructor for type `std::cell::Ref<'_, std::vec::Vec<std::string::String>>`
+   |
+   = note: the temporary is part of an expression at the end of a block;
+           consider forcing this temporary to be dropped sooner, before the block's local variables are dropped
+help: for example, you could save the expression's value in a new local variable `x` and then make `x` be the expression at the end of the block
+   |
+56 |     let x = Ok(log.borrow().join(",")); x
+   |     +++++++                           +++
+
+For more information about this error, try `rustc --explain E0433`.
+For more information about this error, try `rustc --explain E0597`.
+error: could not compile `xterm-web` (test "selection_model") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `xterm-core` (example "options_oracle") due to 1 previous error
+error: use of `format!` to build up a string from an iterator
+  --> crates\xterm-web\tests\osc_links_differential.rs:34:32
+   |
+34 |             let text: String = link.text.as_bytes().iter().map(|b| format!("{b:02x}")).collect();
+   |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+help: call `fold` instead
+  --> crates\xterm-web\tests\osc_links_differential.rs:34:60
+   |
+34 |             let text: String = link.text.as_bytes().iter().map(|b| format!("{b:02x}")).collect();
+   |                                                            ^^^
+help: ... and use the `write!` macro here
+  --> crates\xterm-web\tests\osc_links_differential.rs:34:68
+   |
+34 |             let text: String = link.text.as_bytes().iter().map(|b| format!("{b:02x}")).collect();
+   |                                                                    ^^^^^^^^^^^^^^^^^^
+   = note: this can be written more efficiently by appending to a `String` directly
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#format_collect
+   = note: `-D clippy::format-collect` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::format_collect)]`
+
+error: could not compile `xterm-web` (test "osc_links_differential") due to 1 previous error
+error: operator precedence can trip the unwary
+   --> crates\xterm-core\tests\cell_branches.rs:202:17
+    |
+202 |     b.content = 2 << content::WIDTH_SHIFT | 97;
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: consider parenthesizing your expression: `(2 << content::WIDTH_SHIFT) | 97`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#precedence
+    = note: `-D clippy::precedence` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::precedence)]`
+
+error[E0432]: unresolved import `xterm_core::buffer::reflow`
+ --> crates\xterm-core\tests\buffer_reflow_edges.rs:4:14
+  |
+4 |     buffer::{reflow::*, BufferLine, CellData, CharData},
+  |              ^^^^^^ could not find `reflow` in `buffer`
+
+error: could not compile `xterm-core` (test "cell_branches") due to 1 previous error
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `xterm-core` (test "buffer_reflow_edges") due to 1 previous error

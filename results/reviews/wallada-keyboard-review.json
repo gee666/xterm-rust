@@ -1,0 +1,39 @@
+{
+  "reviewer": "Wallada",
+  "task": 19,
+  "platform": "Windows x86-64",
+  "reviewed": [
+    "source_repo/src/common/input/Keyboard.ts",
+    "crates/xterm-core/src/input/keyboard.rs",
+    "crates/xterm-core/src/input/keyboard_lowercase.rs",
+    "crates/xterm-core/tests/keyboard_upstream.rs",
+    "crates/xterm-core/tests/keyboard_edges.rs",
+    "scripts/verify-keyboard.mjs",
+    "docs/keyboard.md"
+  ],
+  "commands": [
+    {
+      "command": "node scripts/verify-keyboard.mjs",
+      "exit": 0,
+      "log": "results/reviews/wallada-keyboard-oracle.log",
+      "upstreamTests": 61,
+      "upstreamAssertions": 156,
+      "differentialCases": 251452,
+      "seed": 1262836051
+    },
+    {
+      "command": "cargo test -p xterm-core --test keyboard_upstream --test keyboard_edges",
+      "exit": 0,
+      "tests": 8,
+      "log": "results/reviews/wallada-keyboard-tests.log"
+    }
+  ],
+  "findings": [
+    "No discrepancies found between match branches and upstream evaluator for documented DOM key-code domain.",
+    "Checked UTF-16 single-unit slicing, Unicode17 lowercasing and U+0130 multi-unit result.",
+    "Original test bodies execute unchanged in the verifier; full returned key/cancel/type checked for every captured event.",
+    "No unsafe code in policy. No DOM or OS dependency introduced.",
+    "Browser dispatch and native Linux/macOS runtime are outside this task and remain unverified."
+  ],
+  "recommendation": "accept"
+}
