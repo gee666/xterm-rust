@@ -1,0 +1,27 @@
+{
+  "reviewer": "Octavia",
+  "task": 61,
+  "scope": "BufferRange and Marker utility implementation only; real Buffer integration criterion122 remains separate",
+  "inspected": ["source_repo/src/common/buffer/Marker.ts", "source_repo/src/common/buffer/BufferRange.ts", "source_repo/src/common/buffer/BufferRange.test.ts", "crates/xterm-core/src/buffer/marker.rs", "crates/xterm-core/src/buffer/range.rs", "crates/xterm-core/tests/buffer_range_marker.rs", "scripts/check-buffer-range-marker.mjs", "docs/buffer-range-marker.md"],
+  "observed": {
+    "nativePlatform": "Windows x64",
+    "utilityTestsPassed": 13,
+    "allocatorTestsPassed": 1,
+    "originalRangeCases": 4,
+    "originalRangeAssertions": 4,
+    "rangeDifferentialRows": 1149,
+    "markerSharedTraceCallbacks": 4,
+    "seed": 1112690247,
+    "targetedRustfmt": "passed",
+    "currentGlobalClippy": "failed in concurrently edited unrelated modules; not claimed clean"
+  },
+  "findings": [
+    "Inclusive binary64 operation ordering and exact reversed-row errors match the source, including signed and out-of-width values.",
+    "Marker invalidates before event and disposes emitter before user resources; registration duplicates and live callback additions are preserved.",
+    "Fallible inherent disposal preserves listener errors without a void trait adapter hiding errors; repeated disposal does not retry after failure.",
+    "Atomic numeric ID allocator saturates at the JS precision boundary and has an isolated transition test; Rc identity remains separate from numeric IDs.",
+    "Typed numeric-domain, explicit disposal, weak capture and browser isolate limitations are documented. No unsafe code in reviewed modules."
+  ],
+  "logs": ["results/reviews/marker-octavia-allocator.log", "results/reviews/marker-lifecycle-octavia-fmt.log", "results/reviews/marker-lifecycle-octavia-clippy.log", "results/lifecycle/cargo-test.txt", "results/buffer-range-marker/oracle.json"],
+  "verdict": "accept scoped utility work; aggregate workspace quality and full terminal equivalence remain unproven"
+}
