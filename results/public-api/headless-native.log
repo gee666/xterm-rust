@@ -1,0 +1,44 @@
+warning: unused `Result` that must be used
+   --> crates\xterm-core\src\buffer\service.rs:180:17
+    |
+180 |                 buffer.lines.set(bottom, Some(clone_blank(&new_line)?));
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+    = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+    |
+180 |                 let _ = buffer.lines.set(bottom, Some(clone_blank(&new_line)?));
+    |                 +++++++
+
+warning: `xterm-core` (lib) generated 1 warning
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 0.26s
+     Running tests\headless_modes.rs (target\debug\deps\headless_modes-1a9b3bc6651844b8.exe)
+
+running 3 tests
+test pa05_mouse_protocol_names_project_to_public_lowercase_snapshot ... ok
+test pa05_all_twelve_defaults_and_snapshot_independence ... ok
+test pa05_conflicting_mode_borrow_is_a_recoverable_error ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\headless_options.rs (target\debug\deps\headless_options-efd0d98f00fbc584.exe)
+
+running 3 tests
+test pa02_view_is_live_and_copies_share_the_actual_service ... ok
+test pa02_proposed_access_reads_current_option_and_unknown_native_keys_reject ... ok
+test pa02_bulk_assignment_preserves_partial_updates_and_event_order ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\public_api_validation.rs (target\debug\deps\public_api_validation-482314946262be60.exe)
+
+running 4 tests
+test pa01_browser_positive_guard_retains_nan_and_zero_quirks ... ok
+test pa01_each_invalid_numeric_argument_rejects_with_source_message ... ok
+test pa01_signed_zero_and_large_integral_values_are_not_restricted_to_machine_indices ... ok
+test pa02_only_cols_and_rows_are_constructor_only_and_unicode_gate_is_dynamic ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

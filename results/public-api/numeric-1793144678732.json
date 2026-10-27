@@ -1,0 +1,28 @@
+{
+  "status": "failed",
+  "attempt": "numeric-1793144678732",
+  "seed": 1346449457,
+  "randomValues": 4096,
+  "numericValues": 4115,
+  "fixtureRows": 8238,
+  "wrapperDispatchCases": 90530,
+  "readonlyCases": 6,
+  "sources": {
+    "source_repo/src/headless/public/Terminal.ts": "e727263f9fc6d7c1f8aa1c27cf325aebee9404fff33872a07cba0e7abd1d2c21",
+    "source_repo/src/browser/public/Terminal.ts": "f5c1c0d79c1c3484d305b8ec3ab201066958f056adb9878d27f5a1a0dd264011"
+  },
+  "fixtureSha256": "5f8d1dbf9421cadfb8b059b9ea5b18c69df225357a065e0569609a1c3c292090",
+  "node": "v24.15.0",
+  "platform": "win32-x64",
+  "command": "cargo test -p xterm-web --test public_api_differential",
+  "scope": "PA01 validators and fake-core wrapper dispatch; PA02 readonly/proposed errors only",
+  "unrun": [
+    "real engine clamp/state/events",
+    "WASM ABI coercion",
+    "browser DOM",
+    "PA02 live options",
+    "PA03-PA06"
+  ],
+  "exitCode": 101,
+  "error": null
+}

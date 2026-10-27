@@ -1,0 +1,76 @@
+# Public terminal wrapper acceptance
+
+Scope is the supplied reference, not only the declaration comments. This document owns the shared wrapper contracts in `source_repo/src/headless/public/Terminal.ts` and `source_repo/src/browser/public/Terminal.ts`, plus the headless orchestration in `source_repo/src/headless/Terminal.ts`. Task 30 implements headless behavior; task 31 implements browser bindings. Task 66 separately owns common BufferNamespaceApi, BufferApiView, ParserApi and AddonManager internals. Browser DOM/open/IME/rendering criteria remain with their component owners.
+
+Every row below is a required test family. Acceptance requires source assertions mapped individually, executable Rust-backed assertions for each branch, source-versus-Rust operation traces, and exact discovered/mapped/executed/pass/fail/skip/unrun counts. A typed native API may exclude invalid JavaScript values, but browser bindings must test them and the native representation change must be documented. A wrapper unit test with a fake engine does not satisfy integrated behavior.
+
+## PA01 Numeric validation and dispatch
+
+Source: both public Terminal classes, `_verifyIntegers`, browser `_verifyPositiveIntegers`, and each caller.
+
+- Exercise each argument independently for resize, registerMarker, scrollLines, scrollPages and scrollToLine. Also exercise browser select, selectLines and refresh. Cover omitted values, zero, negative zero, negative integers, positive integers, fractions, NaN, both infinities, large integers at 2^31, 2^32 and 2^53 boundaries. Preserve validation order and prove rejected calls do not mutate state or emit events.
+- The source checks finite integral values, not safe integers or unsigned values. Do not replace it with an unexplained u16/u32 conversion. Signed scroll and marker offsets must remain signed. After validation, engine clamp/truncation/error rules still need end-to-end checks.
+- Browser decoration x/width/height use nullish defaults and a truthiness-guarded check. Zero and negative zero pass. Negative nonzero integers and nonzero fractions fail. NaN passes this wrapper because it is falsey; infinities fail. Test omission and null separately in JavaScript bindings. Do not silently fix this source quirk. Check validation before service dispatch and record downstream outcome.
+- Binding calls outside declared types, including strings, booleans and null, must follow observed source coercion or have an explicit documented binding restriction. Preserve error precedence when several arguments are invalid. Errors visible through the compatible JS API retain source messages.
+
+## PA02 Options identity, mutability and proposed access
+
+Source: both constructors, `_checkReadonlyOptions`, `_checkProposedApi`, options getter/setter, parser/buffer/unicode accessors.
+
+- Defaults are 80 columns and 24 rows. Nondefault constructor dimensions reach the actual engine. Public options is a stable live view, not a detached clone; reads reflect valid internal changes and public writes invoke OptionsService validation/events. Cover repeated getter calls, single-property assignment and multi-property assignment.
+- Both cols and rows reject modification through the public options view even if assigned their current values. The exact source error names the option. Test bulk update with readonly properties first and after a mutable property: updates are sequential and may partially apply before an error, not an invented atomic transaction. Resize remains allowed and must update visible dimensions.
+- Test omitted/false/true allowProposedApi and toggling it at runtime. Only unicode access is checked by these wrappers. Parser, buffer, markers, modes and registerMarker must not gain undocumented gates because typings label them proposed. Each UnicodeApi getter access creates a new forwarding wrapper; parser and buffer reuse cached wrappers. Check forwarding after reset and buffer activation, without dangling old engines.
+- Unknown property assignment/enumeration and supported Rust option representations require an explicit compatibility note, not silent omission. All actual option sanitization branches remain required under the OptionsService criteria.
+
+## PA03 Write, writeln, input and reset sequencing
+
+Source: public write/writeln/input/reset forwarding and headless Terminal.reset, integrated with CoreTerminal and WriteBuffer.
+
+- Port every headless public write and writeln assertion for string and Uint8Array input. Preserve `foobar文`, line contents and callback orders `abc`, `ABC` and `123`. Add empty input, empty bytes, embedded NUL, lone UTF-16 surrogate units and chunk splits inside multibyte UTF-8 and escape sequences.
+- Writeln queues data followed by a distinct CRLF write. Its callback belongs to the CRLF completion. Verify cursor position, parsed events, CRLF under pending async parser handlers, interleaved writes and writes queued inside callbacks. Callback runs after its data has changed state, once, and does not run early when a handler is paused. Define and test callback failure propagation and disposal while pending against the oracle.
+- Input forwards data with wasUserInput default true; explicit false follows CoreService behavior. Exercise disableStdin, scroll-on-input, binary versus data events and reentrant listeners through the public terminal, not only a standalone service.
+- Direct reset is synchronous, preserves current dimensions and pending input, and does not reset the parser. Split an escape sequence across direct reset and complete it afterward. Compare direct reset with in-band RIS and DECSTR using modes, attributes, buffers, cursor, events and pending callbacks. Repeated reset must not multiply forwarding listeners.
+
+## PA04 Public event forwarding and lifecycle
+
+Source: both public event getters; headless constructor forwarding and resize/clear/bell.
+
+- Exercise every shared event through actual terminal behavior: onBell, onBinary, onCursorMove, onData, onLineFeed, onRender, onResize, onScroll, onTitleChange and onWriteParsed. Browser additionally forwards onKey, onSelectionChange and onDimensionsChange under its own integration tests. Map the headless implementation spelling onLineFeed to its declaration contract explicitly.
+- Preserve original headless assertions: consecutive writes emit one cursor event each; DSR 5 returns ESC[0n; bell fires once; OSC 2 with C1 ST returns the exact title; render ranges for foo then LF LF bar are [0,0] then [0,2]; scrolling begins only beyond the fifth row; resize payload order is columns then rows.
+- Test same-size resize suppression, clamped resize outcomes, full-screen refresh defaults and repeated construction/reset/dispose. Compare relative order of render/cursor/scroll/reply/writeParsed/callback events, rather than checking event counts alone. Title, input and binary payloads preserve UTF-16 and control bytes.
+- Subscribe/unsubscribe during dispatch, callback-triggered input/reset/dispose, multiple listeners and repeated disposal must not leak or invent notifications. Independently compare source behavior on each exceptional/reentrant path. Terminal disposal tears down the real core and addon manager and prevents retained subscriptions from receiving later engine notifications. Post-dispose API outcomes must be observed rather than assumed to succeed or fail.
+
+## PA05 Public modes snapshot
+
+Source: both `modes` getters and headless public modes assertions.
+
+- Compare every field and its default: applicationCursorKeys false, applicationKeypad false, bracketedPaste false, insert false, mouseTracking none, origin false, reverseWraparound false, sendFocus false, showCursor true, synchronizedOutput false, win32Input false, wraparound true.
+- Set and reset each supported mode through escape input. Cover DEC modes 1, 66, 2004, 6, 45, 1004, 25, 2026, 9001 and 7, ANSI insert 4, plus keypad ESC equivalents. ShowCursor is the inverse of the hidden state, not a direct bit copy.
+- Mouse protocol projection maps X10, VT200, DRAG and ANY to x10, vt200, drag and any, with other protocols producing none. Exercise overlapping enables/disables and actual protocol selection so wrapper state cannot diverge from mouse reporting.
+- Each returned modes object is a snapshot. Holding it while terminal modes change must not mutate its previous values; subsequent reads reflect new state. Mutating a JS snapshot must not mutate engine state. Verify reset and alternate-buffer transitions with the source rather than inventing per-buffer mode ownership.
+
+## PA06 Headless clear, marker and scroll composition
+
+Source: headless Terminal.clear/registerMarker/markers and shared public scroll methods. Marker internals and buffer resize/reflow have separate criteria.
+
+- Reproduce the five-row clear assertion after ten test lines: keep the current prompt as line zero, fill remaining rows with blank default-attribute lines, set ybase/ydisp/y to zero and preserve the source cursor-x behavior. Verify cursor row not equal to last screen row, scrolled-up viewport, wrapped prompt, styled cells, wide and combining cells. Compare scroll event payload and ordering.
+- Clear disposes all current-buffer markers exactly once and removes them from the public markers list. Preserve normal versus alternate isolation. Public registerMarker defaults offset to zero and computes ybase + y + offset, including negative/out-of-range offsets according to actual source behavior. Headless addMarker is a source alias even if absent from some typings. Registering on the alternate buffer is supported by the source assertion and must not be rejected without explanation.
+- Test scrollLines, scrollPages, scrollToLine, top and bottom at each boundary: empty scrollback, first/middle/last viewport, counts beyond both ends, repeated no-change scrolls, alternate screen and after trim/clear/reset. Observe page size from source rather than assuming rows. Public baseY must stay distinct from viewportY when scrolling.
+- Addon behavior is tested through loadAddon and terminal disposal with task 66: activate receives this actual terminal, can read custom dimensions, explicit addon disposal works, and terminal disposal invokes remaining addon disposals. Reference failure and LIFO cleanup behavior remain mandatory in the common adapter criteria.
+
+## Evidence and review gate
+
+Reference suites include `source_repo/src/headless/public/Terminal.test.ts`, `source_repo/src/common/public/AddonManager.test.ts` and applicable tests in `source_repo/test/playwright/Terminal.test.ts` and `Parser.test.ts`. Keep all upstream expectations intact. Add stable test names keyed to PA01-PA06 so each checklist row can link to tests and results. Record source file hashes, test inventory, exact commands, native/WASM toolchain, browser engine versions, seeds and operation traces under tracked `results/`. Save failing traces. Execute source and Rust with the same dimensions, writes, awaits and observation boundaries.
+
+Acceptance needs independent source/code inspection and reruns of the mapped suites. Record omitted, blocked and unrun cases separately. Native API-only results do not prove the JavaScript numeric ABI or browser forwarding. No equivalence claim is permitted while any checklist row lacks implementation or executable evidence.
+
+## Independent audit in progress
+
+Audit task 86 owns the following reproducible checks, not the implementation files:
+
+- `node scripts/headless-oracle.mjs` independently reran all 45 original public headless cases unchanged, with 45 passing and no skipped/unrun cases. Log: `results/public-api/headless-baseline.log`; detailed case names and source hashes: `results/headless/upstream.json`. This is JavaScript baseline only, not 45 migrated Rust cases.
+- `node scripts/public-api-oracle.mjs` executes the original headless/browser prototype guard methods after TypeScript erasure. It checks 90,530 fake-core argument/decoration dispatch cases and compares 8,238 bit-preserving numeric/error fixture rows with the shared production Rust validators. It additionally compares all 2,048 boolean mode combinations across six protocol names, including an unknown custom protocol, for 12,288 complete snapshots. Snapshot checks use real CoreService and MouseStateService, but do not establish escape dispatch or browser bindings. Fixtures exceed the line guideline intentionally because they are generated comparison data. Normal verification rejects drift; `--generate` is an explicit reviewed fixture update.
+- Ten existing native tests for public validation, options views and modes were independently rerun, all passing. See `results/public-api/headless-native.log`. These exercise real services, not a complete terminal. The later scoped Clippy rerun for both audit test targets passes at `results/public-api/clippy.log`; workspace-wide quality remains separately required.
+- `node scripts/public-api-integration.mjs` bundles the untouched headless source and captures event-time state for Bell, DSR data reply, linefeed, title and a reset inside Bell. Source expects `A BEL B` listeners to observe only A; a listener reset leaves B afterward. The checked-in five-case Rust regression targets the actual public terminal. A delayed post-parse event drain cannot satisfy these expectations. Do not weaken the test or label a build failure a semantic pass. Antigone and Coleman own the delivery/reentrancy fix.
+
+Every attempt writes a running status before execution, retains per-attempt logs/results, and lists its scope. `numeric-summary.json` and `integration-summary.json` are the latest attempts, not permanent success markers. The current numeric and 12,288 snapshot comparison run passes. The latest actual integration regression run executes five tests and fails all five: Bell/title/LF observe state after the following print, and DSR5n produces no public Data notification. See `results/public-api/integration-cargo.stdout.log`. Earlier shared-tree compilation failures are retained in per-attempt logs; they are unresolved work, not external blockers. WASM ABI, real browser callbacks, PA03 queue semantics, PA04 parse-time reentrancy and PA06 composed behavior remain open until their current tests run successfully. Native Linux/macOS evidence is not available from this Windows audit.
