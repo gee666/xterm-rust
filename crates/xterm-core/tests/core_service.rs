@@ -234,7 +234,10 @@ fn reentrant_send_and_option_changes_preserve_entry_check() {
 fn failures_stop_later_events_and_disposal_clears_all_emitters() {
     let h = Harness::new([("logLevel", "trace".into())]);
     h.position.set(BufferPosition { ybase: 1, ydisp: 0 });
-    let fail = h.core.on_user_input().try_subscribe(|_| Err(EmitError));
+    let fail = h
+        .core
+        .on_user_input()
+        .try_subscribe(|_| Err(EmitError::ListenerArrayCleared));
     h.listen();
     assert!(matches!(
         h.core.trigger_data_event(&[], true),
@@ -270,6 +273,24 @@ fn disposing_owner_during_event_and_dropping_owner_clears_listeners() {
     let capture = Rc::clone(&received);
     data.subscribe(move |_| capture.set(true));
     assert!(!received.get());
+}
+
+#[test]
+fn callback_failure_retains_original_typed_cause() {
+    let h = Harness::new([]);
+    h.core.on_user_input().try_subscribe(|_| {
+        Err(EmitError::callback(std::io::Error::other(
+            "original callback failure",
+        )))
+    });
+    let error = h.core.trigger_data_event(&[], true).unwrap_err();
+    let CoreError::Dispatch(error) = error else {
+        panic!("wrong failure category");
+    };
+    assert_eq!(
+        error.callback_ref::<std::io::Error>().unwrap().to_string(),
+        "original callback failure"
+    );
 }
 
 #[test]

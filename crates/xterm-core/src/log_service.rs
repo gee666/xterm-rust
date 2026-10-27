@@ -73,6 +73,7 @@ pub enum LogError {
     Option(OptionError),
     InvalidLogger,
     Sink(String),
+    Host(Rc<dyn std::error::Error>),
 }
 impl fmt::Display for LogError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -80,6 +81,7 @@ impl fmt::Display for LogError {
             Self::Option(error) => error.fmt(f),
             Self::InvalidLogger => f.write_str("logger does not provide callable logging methods"),
             Self::Sink(message) => f.write_str(message),
+            Self::Host(error) => error.fmt(f),
         }
     }
 }

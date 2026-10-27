@@ -307,4 +307,17 @@ fn lazy_errors_stop_evaluation_and_do_not_reach_sink() {
         .unwrap_err();
     assert!(matches!(error, LogError::Sink(message) if message == "lazy failure"));
     assert!(sink.0.borrow().is_empty());
+    let original: Rc<dyn std::error::Error> =
+        Rc::new(std::io::Error::other("host callback failure"));
+    let retained = Rc::clone(&original);
+    custom(
+        &options,
+        Rc::new(Callback(Box::new(move |_| {
+            Err(LogError::Host(Rc::clone(&retained)))
+        }))),
+    );
+    let LogError::Host(actual) = log.log(LogLevel::Info, &[], vec![]).unwrap_err() else {
+        panic!("original host error category lost");
+    };
+    assert!(Rc::ptr_eq(&actual, &original));
 }

@@ -1,0 +1,19 @@
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error: unused `std::result::Result` that must be used
+   --> crates\xterm-core\src\headless\terminal.rs:218:9
+    |
+218 | /         self.engine
+219 | |             .try_borrow_mut()
+220 | |             .map_err(|_| HeadlessError::Borrowed)?
+221 | |             .dispose();
+    | |______________________^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+    = note: `-D unused-must-use` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(unused_must_use)]`
+help: use `let _ = ...` to ignore the resulting value
+    |
+218 |         let _ = self.engine
+    |         +++++++
+
+error: could not compile `xterm-core` (lib) due to 1 previous error
