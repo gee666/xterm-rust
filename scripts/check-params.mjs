@@ -92,7 +92,8 @@ if (process.argv.includes('--generate')) {
   await mkdir('crates/xterm-core/tests/fixtures', { recursive: true });
   await writeFile(path, corpus);
 } else {
-  assert.equal(await readFile(path, 'utf8'), corpus, 'committed oracle corpus differs');
+  const committed = (await readFile(path, 'utf8')).replace(/\r\n/g, '\n');
+  assert.equal(committed, corpus, 'committed oracle corpus differs');
 }
 const summary = {
   sourcePath,
