@@ -1,0 +1,180 @@
+{
+  "command": "node --experimental-transform-types scripts/status-addons-oracle.mjs",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "arch": "x64",
+  "seed": 7667977,
+  "source": "source_repo\\addons\\addon-program-status\\src\\ProgramStatus.ts",
+  "sourceSha256": "cde627418511b9c4effcbcf6077eedf392c112b4592f94370da55b5ab35f440b",
+  "testsSha256": "2b0f879b2d31cb6ffd01d8ab95180f3f1e2b12d02d274a3e944ad534bd7d0e8c",
+  "progressSha256": "2a21f0e0fdefb09fc5484de0b9c191a5743b6b1c2966eb70a531ea4d9ace3cca",
+  "baseline": {
+    "discovered": 38,
+    "executed": 38,
+    "passed": 38,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0,
+    "outcomes": [
+      {
+        "name": "parseProgramStatusReport / records / reads every key",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / records / reads the root record from a report without an id",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / records / reads the example from the specification",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / records / trims whitespace around keys and values",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / records / keeps the last value of a repeated key",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / records / skips pairs that it cannot read",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / records / ignores unknown keys and empty pairs",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / state / rejects a report without a valid state",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / state / keeps kind only for a blocked record",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / state / keeps progress from 0 to 100 for a working or blocked record",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / state / keeps app only when it is one id segment",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / clear / reads a clear report with or without an id",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / clear / rejects a clear report with an invalid value",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / limits / accepts a payload of 4087 bytes and rejects one of 4088",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / limits / counts the payload in UTF-8 bytes",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / limits / rejects a report with a key longer than 16 bytes",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / limits / rejects a report with a value over its encoded limit",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / limits / accepts values at their limits",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / limits / skips a value within its encoded limit that has characters outside base64",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / limits / rejects a msg that decodes to more than 2048 bytes",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / text / decodes base64 with or without padding",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / text / rejects malformed base64",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / text / rejects text that is not UTF-8",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / text / rejects text with control characters",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / text / keeps other characters as they are",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / id / accepts ids of up to 8 segments of up to 32 characters",
+        "status": "passed"
+      },
+      {
+        "name": "parseProgramStatusReport / id / rejects a report with a malformed id",
+        "status": "passed"
+      },
+      {
+        "name": "ProgramStatusStore / replaces a record whole",
+        "status": "passed"
+      },
+      {
+        "name": "ProgramStatusStore / orders records from the oldest update to the newest",
+        "status": "passed"
+      },
+      {
+        "name": "ProgramStatusStore / clears a record and its descendants",
+        "status": "passed"
+      },
+      {
+        "name": "ProgramStatusStore / clears every record for the empty id",
+        "status": "passed"
+      },
+      {
+        "name": "ProgramStatusStore / removes working and blocked records",
+        "status": "passed"
+      },
+      {
+        "name": "ProgramStatusStore / evicts the least recently updated record when it holds 256",
+        "status": "passed"
+      },
+      {
+        "name": "ProgramStatusStore / evicts nothing when it updates a record that it holds",
+        "status": "passed"
+      },
+      {
+        "name": "ProgramStatusStore / fills in effectiveApp from the record or its nearest ancestor",
+        "status": "passed"
+      },
+      {
+        "name": "ProgramStatusStore / leaves out effectiveApp when no record on the path has an app",
+        "status": "passed"
+      },
+      {
+        "name": "ProgramStatusStore / updates effectiveApp when an ancestor changes",
+        "status": "passed"
+      },
+      {
+        "name": "ProgramStatusStore / returns the same frozen list until the records change",
+        "status": "passed"
+      }
+    ]
+  },
+  "parseCases": 2215,
+  "progressCases": 2048,
+  "fixtureSha256": "df08b8f8e3cd80796c089c5823516e1135d4ea3fdf97a77982d7165390baa0d2",
+  "limitations": [
+    "Pure ProgramStatus.test.ts baseline only. Headless/browser integration suites not executed here.",
+    "Progress oracle uses a fixture terminal, not live core."
+  ]
+}

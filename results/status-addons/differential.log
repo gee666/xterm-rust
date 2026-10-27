@@ -1,0 +1,46 @@
+    Blocking waiting for file lock on build directory
+   Compiling itoa v1.0.18
+   Compiling zmij v1.0.23
+   Compiling serde_core v1.0.229
+   Compiling serde_json v1.0.154
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+warning: unused `Result` that must be used
+   --> crates\xterm-core\src\buffer\reflow.rs:225:9
+    |
+225 |         lines.set(i, Some(line));
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+    = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+    |
+225 |         let _ = lines.set(i, Some(line));
+    |         +++++++
+
+   Compiling xterm-addons v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons)
+warning: `xterm-core` (lib) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 7.93s
+     Running tests\status_addons_differential.rs (target\debug\deps\status_addons_differential-6227e7e3ed8734cb.exe)
+
+running 3 tests
+test fixture_ris_remains_unhandled_and_string_dispatch_is_available ... ok
+test progress_matches_source_seed_0x750109 ... FAILED
+test status_parser_matches_source_baseline_and_seed_0x750109 ... ok
+
+failures:
+
+---- progress_matches_source_seed_0x750109 stdout ----
+
+thread 'progress_matches_source_seed_0x750109' panicked at crates\xterm-addons\tests\status_addons_differential.rs:58:9:
+assertion `left == right` failed: case 0
+  left: Object {"state": Number(0.0), "value": Number(0.0)}
+ right: Object {"state": Number(0), "value": Number(0)}
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    progress_matches_source_seed_0x750109
+
+test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+error: test failed, to rerun pass `-p xterm-addons --test status_addons_differential`

@@ -1,0 +1,120 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+warning: variable does not need to be mutable
+   --> crates\xterm-core\src\parser\escape.rs:186:13
+    |
+186 |         let mut parser = Self {
+    |             ----^^^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` on by default
+
+warning: method `erase_cell` is never used
+  --> crates\xterm-core\src\terminal\state.rs:51:19
+   |
+33 | impl TerminalState {
+   | ------------------ method in this implementation
+...
+51 |     pub(crate) fn erase_cell(&self) -> CellData {
+   |                   ^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: unused `Result` that must be used
+  --> crates\xterm-core\src\buffer\cleanup.rs:66:9
+   |
+66 |         self.queue.process(time_remaining);
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: this `Result` may be an `Err` variant, which should be handled
+   = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+   |
+66 |         let _ = self.queue.process(time_remaining);
+   |         +++++++
+
+warning: unused `Result` that must be used
+  --> crates\xterm-core\src\buffer\cleanup.rs:70:9
+   |
+70 |         self.queue.process_priority();
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: this `Result` may be an `Err` variant, which should be handled
+help: use `let _ = ...` to ignore the resulting value
+   |
+70 |         let _ = self.queue.process_priority();
+   |         +++++++
+
+warning: unused `Result` that must be used
+   --> crates\xterm-core\src\buffer\cleanup.rs:110:9
+    |
+110 | /         queue.enqueue(move |_| {
+111 | |             let Some(buffer) = buffer.upgrade() else {
+112 | |                 return false;
+113 | |             };
+...   |
+125 | |         });
+    | |__________^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+help: use `let _ = ...` to ignore the resulting value
+    |
+110 |         let _ = queue.enqueue(move |_| {
+    |         +++++++
+
+warning: unused `Result` that must be used
+   --> crates\xterm-core\src\input\write_buffer_drain.rs:132:13
+    |
+132 |             self.schedule(0.0, true);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+help: use `let _ = ...` to ignore the resulting value
+    |
+132 |             let _ = self.schedule(0.0, true);
+    |             +++++++
+
+warning: unused `Result` that must be used
+   --> crates\xterm-core\src\input\write_buffer_drain.rs:163:21
+    |
+163 |                     queue.schedule(0.0, result);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+help: use `let _ = ...` to ignore the resulting value
+    |
+163 |                     let _ = queue.schedule(0.0, result);
+    |                     +++++++
+
+   Compiling xterm-addons v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons)
+warning: `xterm-core` (lib) generated 7 warnings (run `cargo fix --lib -p xterm-core` to apply 1 suggestion)
+    Finished `test` profile [unoptimized] target(s) in 2.29s
+     Running tests\status_live_terminal.rs (target\debug\deps\status_live_terminal-bfdc35a5ae83c144.exe)
+
+running 8 tests
+test disposal_unregisters_live_handlers ... ok
+test listener_failure_stops_before_following_text_without_rolling_back_record ... ok
+test disabled_stdin_suppresses_feature_reply ... ok
+test queries_use_st_and_precede_following_da1_without_printing ... FAILED
+test progress_and_status_cooperate_on_live_stream ... ok
+test ris_resets_terminal_and_addon_api_reset_retains_records ... ok
+test soft_reset_and_alternate_screen_retain_records ... ok
+test report_chunking_bel_st_and_abort_follow_actual_parser ... ok
+
+failures:
+
+---- queries_use_st_and_precede_following_da1_without_printing stdout ----
+
+thread 'queries_use_st_and_precede_following_da1_without_printing' panicked at crates\xterm-addons\tests\status_live_terminal.rs:52:9:
+assertion `left == right` failed
+  left: ["\u{1b}]7501;?\u{1b}\\"]
+ right: ["\u{1b}]7501;?\u{1b}\\", "\u{1b}[?1;2c"]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    queries_use_st_and_precede_following_da1_without_printing
+
+test result: FAILED. 7 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+error: test failed, to rerun pass `-p xterm-addons --test status_live_terminal`

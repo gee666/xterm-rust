@@ -1,0 +1,128 @@
+    Blocking waiting for file lock on build directory
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+warning: variable does not need to be mutable
+   --> crates\xterm-core\src\parser\escape.rs:186:13
+    |
+186 |         let mut parser = Self {
+    |             ----^^^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` on by default
+
+warning: method `erase_cell` is never used
+  --> crates\xterm-core\src\terminal\state.rs:51:19
+   |
+33 | impl TerminalState {
+   | ------------------ method in this implementation
+...
+51 |     pub(crate) fn erase_cell(&self) -> CellData {
+   |                   ^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: unused `Result` that must be used
+  --> crates\xterm-core\src\buffer\cleanup.rs:66:9
+   |
+66 |         self.queue.process(time_remaining);
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: this `Result` may be an `Err` variant, which should be handled
+   = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+   |
+66 |         let _ = self.queue.process(time_remaining);
+   |         +++++++
+
+warning: unused `Result` that must be used
+  --> crates\xterm-core\src\buffer\cleanup.rs:70:9
+   |
+70 |         self.queue.process_priority();
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: this `Result` may be an `Err` variant, which should be handled
+help: use `let _ = ...` to ignore the resulting value
+   |
+70 |         let _ = self.queue.process_priority();
+   |         +++++++
+
+warning: unused `Result` that must be used
+   --> crates\xterm-core\src\buffer\cleanup.rs:110:9
+    |
+110 | /         queue.enqueue(move |_| {
+111 | |             let Some(buffer) = buffer.upgrade() else {
+112 | |                 return false;
+113 | |             };
+...   |
+125 | |         });
+    | |__________^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+help: use `let _ = ...` to ignore the resulting value
+    |
+110 |         let _ = queue.enqueue(move |_| {
+    |         +++++++
+
+   Compiling xterm-addons v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons)
+warning: `xterm-core` (lib) generated 5 warnings (run `cargo fix --lib -p xterm-core` to apply 1 suggestion)
+    Finished `test` profile [unoptimized] target(s) in 3.38s
+     Running tests\program_status_addon.rs (target\debug\deps\program_status_addon-0312374235749894.exe)
+
+running 10 tests
+test answers_exact_query_only_and_respects_disabled_stdin ... ok
+test dropping_owner_unregisters_but_event_snapshot_remains_valid ... ok
+test rejected_and_noop_reports_fire_nothing ... ok
+test clear_removes_only_id_and_descendants ... ok
+test callback_reentrancy_has_no_mutable_store_borrow ... ok
+test dispose_silently_drops_records_and_unregisters_handlers ... ok
+test removes_records_with_clear_report ... ok
+test ris_clears_and_delegates_to_terminal_core ... ok
+test keeps_reported_records_and_exact_snapshot_identity ... ok
+test process_exit_and_prompt_remove_only_active_records ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\program_status_store.rs (target\debug\deps\program_status_store-834b271e7325e6fb.exe)
+
+running 11 tests
+test clears_every_record_for_empty_id ... ok
+test effective_app_is_absent_without_ancestor ... ok
+test effective_app_changes_when_ancestor_changes ... ok
+test effective_app_uses_nearest_ancestor_including_root ... ok
+test clears_record_and_descendants ... ok
+test orders_records_from_oldest_update_to_newest ... ok
+test removes_working_and_blocked_only ... ok
+test replaces_a_record_whole ... ok
+test shares_immutable_snapshot_until_real_change ... ok
+test evicts_least_recently_updated_at_256 ... ok
+test existing_update_never_evicts_other_record ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\progress_upstream.rs (target\debug\deps\progress_upstream-ec1478323014b6aa.exe)
+
+running 12 tests
+test pause_accepts_new_value ... ok
+test fallback_malformed_parts_dispose_and_no_ris_reset ... ok
+test initial_values_are_zero_zero ... ok
+test error_accepts_new_value ... ok
+test error_preserves_previous_value_on_empty_or_zero ... ok
+test indeterminate_keeps_value ... ok
+test state_one_set ... ok
+test pause_preserves_previous_on_empty_or_zero ... ok
+test public_numeric_setter_matches_javascript_and_event_lifecycle ... ok
+test invalid_sequences_do_not_emit ... ok
+test state_one_special_sequences ... ok
+test state_zero_remove_ignores_value ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\status_addons_differential.rs (target\debug\deps\status_addons_differential-6227e7e3ed8734cb.exe)
+
+running 3 tests
+test fixture_ris_remains_unhandled_and_string_dispatch_is_available ... ok
+test progress_matches_source_seed_0x750109 ... ok
+test status_parser_matches_source_baseline_and_seed_0x750109 ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
