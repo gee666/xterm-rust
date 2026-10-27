@@ -1,0 +1,11 @@
+# Workspace contract
+
+`crates/xterm-core` owns platform-independent terminal code. Its Rust import name is `xterm_core`. Browser/WASM and native platform adapters must use separate crates and must not introduce DOM or OS dependencies into the core.
+
+The workspace uses Rust 2021 and declares Rust 1.85 as its minimum supported version. Cargo's resolver version is 2. The core has no default features or optional feature combinations yet. New public features require documented behavior and separate test commands. Dependencies need a concrete use and license review before adoption. Collection numeric property keys use `ryu-js` 1.0.3 for exact ECMAScript number formatting. It requires Rust 1.71 and is licensed `Apache-2.0 OR BSL-1.0`; `licenses/ryu-js-BSL-1.0.txt` retains the selected notice. The initial proposal mistakenly called it MIT and was corrected after inspecting the downloaded manifest. Other initial modules use the standard library. Upstream MIT notices are retained in `licenses/xterm-js-MIT.txt` and source headers.
+
+Chloe owns root `Cargo.toml`, `crates/xterm-core/Cargo.toml`, and `crates/xterm-core/src/lib.rs`. Module owners should send export requests instead of editing `lib.rs` concurrently. Cornelia owns `color/`; Chloe owns `sorted_list.rs` and `multi_key_map.rs`; Octavia owns lifecycle code. This ownership list describes the initial integration arrangement, not coverage of the whole requested port.
+
+Use `cargo fmt --all -- --check`, `cargo clippy --workspace --all-targets --all-features -- -D warnings`, `cargo test --workspace --all-targets --all-features`, and `cargo test --workspace --doc`. Keep generated build products in `target/`. Repository-root `tmp/` holds temporary tooling output. Track `Cargo.lock` for repeatable dependency resolution.
+
+The launch environment has Rust 1.85.1 and Cargo 1.85.1 on Windows. Git Bash does not initially expose Rust or Git in PATH. For this environment, prepend `/c/Users/user/.cargo/bin` and `/c/Program Files/Git/cmd` before running commands. These local executable locations are not requirements for other machines.

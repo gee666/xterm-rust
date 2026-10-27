@@ -1,0 +1,49 @@
+{
+  "status": "passed scoped collection checks; full equivalence NOT PROVEN",
+  "command": "node scripts/collections-oracle.mjs",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+  "source": {
+    "SortedList.ts": "63480fd923c431a1d70e25ccd4e4fece575c5369f5686b17ddf93085da24bf52",
+    "SortedList.test.ts": "4b94587926942c573d5741772eb04ba1bbc9eb496d99316fa50d96236c63ddb2",
+    "MultiKeyMap.ts": "adf534854007ff157fc77bc86bf443186c9a3557704e50278d1868de61c8ea19",
+    "MultiKeyMap.test.ts": "1ac61ff78ab0681f14371235f378f79e16a82ac1c48895d1eacf83e789be2a50"
+  },
+  "upstream": {
+    "discovered": 11,
+    "executed": 11,
+    "passed": 11,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0,
+    "assertions": 49,
+    "names": [
+      "SortedList / insert / should maintain sorted values",
+      "SortedList / insert / should allow duplicates of the same key",
+      "SortedList / delete",
+      "SortedList / getKeyIterator",
+      "SortedList / clear",
+      "SortedList / custom key",
+      "SortedList / values / should iterate correctly when list items change during iteration",
+      "TwoKeyMap / set, get",
+      "TwoKeyMap / clear",
+      "FourKeyMap / set, get",
+      "FourKeyMap / clear"
+    ]
+  },
+  "differential": {
+    "seed": 5285869,
+    "iterations": 5000,
+    "map_cases": 1010,
+    "trace_operations": 7761,
+    "compared_results": 3861,
+    "failures": 0
+  },
+  "gaps": [
+    "Real IdleTaskQueue scheduling is not executed.",
+    "Repeated deletion before a read can trigger upstream sparse-array or RangeError bugs not reproduced in Rust.",
+    "JavaScript inherited object keys and __proto__ mutation are intentionally not exposed by Rust maps.",
+    "getKeyIterator uses a Rust borrow and cannot mutate the list during iteration."
+  ]
+}

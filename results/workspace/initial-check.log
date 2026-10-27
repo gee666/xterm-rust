@@ -1,0 +1,18 @@
+    Blocking waiting for file lock on build directory
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0432]: unresolved import `xterm_core::parser::table`
+ --> crates\xterm-core\tests\parser_table.rs:2:25
+  |
+2 | use xterm_core::parser::table::{
+  |                         ^^^^^ could not find `table` in `parser`
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `xterm-core` (test "parser_table") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error[E0432]: unresolved import `xterm_core::input::kitty_keyboard`
+ --> crates\xterm-core\tests\kitty_edges.rs:4:24
+  |
+4 | use xterm_core::input::kitty_keyboard::{evaluate, flags, EventType};
+  |                        ^^^^^^^^^^^^^^ could not find `kitty_keyboard` in `input`
+
+error: could not compile `xterm-core` (test "kitty_edges") due to 1 previous error
