@@ -1,0 +1,30 @@
+{
+  "reviewer": "Bradley",
+  "task": 4,
+  "status": "accepted after fixes in 1d6871c",
+  "environment": "native Windows x64, Node v24.15.0, Rust 1.85.1",
+  "passingChecks": [
+    "cargo test -p xterm-core --test color_upstream --test color_edges: 32 tests passed",
+    "node tools/check_color.mjs: original Mocha 28 cases passed, 28733 differential operations passed"
+  ],
+  "finding": "css::parse_hex_prefix omits JavaScript parseInt whitespace, sign and 0x-prefix semantics when upstream's unanchored regex admits malformed CSS",
+  "counterexamples": [
+    {"input": "a-1#abc", "expectedRgba": 4294967295, "actualRgba": 255},
+    {"input": "a+1#abc", "expectedRgba": 511, "actualRgba": 255},
+    {"input": "a f#abc", "expectedRgba": 4095, "actualRgba": 255},
+    {"input": "a 1#abcde", "expectedRgba": 1, "actualRgba": 0},
+    {"input": "a0x1#abcd", "expectedRgba": 1, "actualRgba": 0}
+  ],
+  "reproduction": "Import tmp/color-oracle/Color.mjs after tools/check_color.mjs transforms upstream, call css.toColor(input), then compare cargo run -p xterm-core --example color_oracle with parse-tab-input lines.",
+  "requiredChanges": "Completed: parseInt trim/sign/optional-0x behavior fixed; all five cases retained in named regressions and differential corpus.",
+  "reReview": {
+    "rustTestsPassed": 32,
+    "originalMochaCasesPassed": 28,
+    "differentialOperationsCompared": 28738,
+    "differentialMismatches": 0,
+    "focusedRustfmt": "passed",
+    "currentClippy": "blocked by unrelated log_service.rs109 nonminimal_bool, serialize/ansi.rs155 comparison_chain and buffer/reflow.rs225 unused Result; owners notified. Earlier focused Color Clippy was clean.",
+    "coverageVotes": [189, 190, 191],
+    "unverified": "Real canvas/browser integration remains separate task32 and criterion189, not accepted by task4 alone."
+  }
+}
