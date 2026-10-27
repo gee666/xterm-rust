@@ -10,7 +10,7 @@ const slash = value => value.replaceAll('\\', '/');
 const empty = () => ({ files: 0, physical: 0, nonblank: 0, bytes: 0 });
 const categories = ['production-library', 'addons', 'bindings-glue', 'generated-code-data', 'mixed-code-data',
   'tests', 'test-data', 'demos', 'tooling', 'configuration'];
-const decoder = new TextDecoder('utf-8', { fatal: true });
+const decoder = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
 
 export function lineCounts(text) {
   // LF and CRLF delimit lines. A final delimiter does not create a phantom line.

@@ -7,7 +7,7 @@ This is the detailed gate for task #49 and aggregate criterion #9. It measures s
 - Apply the identical UTF-8 physical-line and nonblank-line algorithm to original and Rust trees. Include comments. Do not describe these numbers as comment-stripped SLOC.
 - Empty file counts zero. A final LF does not add a phantom line. Unterminated final content counts once. CRLF counts once; standalone CR is content. Unicode whitespace-only lines are blank.
 - Report raw bytes separately from line counts. Do not normalize repository files, newlines or escape fixtures to obtain matching bytes.
-- Test empty, blank-only, comments-only, LF, CRLF, standalone CR, missing final LF, tabs, Unicode whitespace and binary input boundaries.
+- Test empty, blank-only, comments-only, LF, CRLF, standalone CR, missing final LF, tabs, Unicode whitespace, BOM-only, BOM-plus-LF and binary input boundaries.
 - Known source/configuration that is not UTF-8 fails explicitly. Binary fixture assets remain inventoried by bytes rather than being decoded with replacement characters.
 
 Evidence: `lineCounts`, Node unit tests and `results/loc/tests.txt`.

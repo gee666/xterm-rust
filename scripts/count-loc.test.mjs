@@ -24,7 +24,7 @@ test('physical lines count final unterminated lines and avoid phantom trailing l
   for (const [text, expected] of [
     ['', [0, 0]], ['a', [1, 1]], ['a\n', [1, 1]], ['a\n\n', [2, 1]],
     ['\n', [1, 0]], ['a\r\n\t\r\nb', [3, 2]], ['  \u2003\n', [1, 0]],
-    ['// comment\n', [1, 1]], ['a\rb', [1, 1]]
+    ['// comment\n', [1, 1]], ['a\rb', [1, 1]], ['\ufeff', [1, 0]], ['\ufeff\n', [1, 0]]
   ]) assert.deepEqual(Object.values(lineCounts(text)), expected, JSON.stringify(text));
 });
 
@@ -66,6 +66,13 @@ test('inventory includes generated sources and configuration but excludes output
     }, { files: 0, physical: 0, nonblank: 0, bytes: 0 });
     assert.deepEqual(sum, result.totals);
   }
+}));
+
+test('UTF-8 BOM bytes do not erase a physical source line', () => fixture((dir, put) => {
+  put('src/bom-only.rs', Buffer.from([0xef, 0xbb, 0xbf]));
+  put('src/bom-newline.rs', Buffer.from([0xef, 0xbb, 0xbf, 0x0a]));
+  const result = inventory(dir, 'source', rules);
+  assert.deepEqual(result.totals, { files: 2, physical: 2, nonblank: 0, bytes: 7 });
 }));
 
 test('unknown production extensions cannot silently pass classification review', () => fixture((dir, put) => {

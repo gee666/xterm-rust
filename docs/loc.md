@@ -13,7 +13,7 @@ This is a partial-port working-tree snapshot, not evidence that Rust implements 
 
 ## Counting method
 
-`count-loc.mjs v1` applies exactly the same UTF-8 algorithm to both trees. Physical lines use LF or CRLF delimiters; a trailing delimiter does not create a phantom line, and final unterminated content counts once. A standalone CR is content, not a delimiter. A line is nonblank when JavaScript's Unicode-aware `trim()` leaves content. Comments are included. These are not comment-stripped SLOC counts. Raw bytes and SHA-256 hashes cover the original bytes, without newline normalization.
+`count-loc.mjs v1` applies exactly the same UTF-8 algorithm to both trees. Physical lines use LF or CRLF delimiters; a trailing delimiter does not create a phantom line, and final unterminated content counts once. A standalone CR is content, not a delimiter. A line is nonblank when JavaScript's Unicode-aware `trim()` leaves content. A UTF-8 BOM is retained as content for physical counting, but is whitespace for nonblank counting. Comments are included. These are not comment-stripped SLOC counts. Raw bytes and SHA-256 hashes cover the original bytes, without newline normalization.
 
 The checked-in rules include Rust, JS/TS and declarations, CSS, HTML, shader languages and additional native source extensions. Configuration is counted separately, as are textual test fixtures. Binary fixtures, images, fonts and documentation retain byte/hash inventory entries, but are not assigned fabricated source line counts. Invalid UTF-8 source or configuration fails explicitly. Unknown production extensions fail for classification review.
 
@@ -39,6 +39,6 @@ The baseline check is optional for custom references, because the checked-in bas
 
 ## Verification and limits
 
-Ten Node tests cover line boundaries, exact byte arithmetic, category/purpose/extension reconciliation, generated markers and negative controls, mixed data, binary fixtures, unknown production extensions, nested exclusions, custom output stability, deterministic hashes, invalid flags, baseline mismatch failure and symlink/junction refusal. Command output is retained in `results/loc/tests.txt`.
+Eleven Node tests cover line boundaries, BOM-only and BOM-plus-newline source, exact byte arithmetic, category/purpose/extension reconciliation, generated markers and negative controls, mixed data, binary fixtures, unknown production extensions, nested exclusions, custom output stability, deterministic hashes, invalid flags, baseline mismatch failure and symlink/junction refusal. Command output is retained in `results/loc/tests.txt`.
 
 Acceptance details are in [acceptance/loc.md](acceptance/loc.md), criteria 166 through 171. Complete generated JSON manifests may exceed 350 lines because they enumerate every file. The handwritten scripts remain below that limit. Native Windows Node execution is observed; no Linux/macOS run is claimed here.
