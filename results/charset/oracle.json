@@ -1,0 +1,78 @@
+{
+  "reference": [
+    {
+      "kind": "maps",
+      "path": "source_repo/src/common/data/Charsets.ts",
+      "sha256": "64fe88d37beb2cc7c60a18d23fb4033e24f19b56b7f481fc656f8e912faac725"
+    },
+    {
+      "kind": "service",
+      "path": "source_repo/src/common/services/CharsetService.ts",
+      "sha256": "72f7cd0cf438d0399ea46108fdabf4fda73ee4b8379f110aa4fb2f9776a348b1"
+    },
+    {
+      "kind": "tests",
+      "path": "source_repo/src/common/services/CharsetService.test.ts",
+      "sha256": "441d9e74d7be56ab7733c45d5360d063b3283c438edb10b13383d547d2c4e504"
+    }
+  ],
+  "environment": {
+    "node": "v24.15.0",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "harness": "Native Node TypeScript stripping; temporary import resolution; Node strict assertions replace chai without modifying assertion bodies.",
+  "fixtures": {
+    "mapRows": 2176,
+    "designators": [
+      "0",
+      "4",
+      "5",
+      "6",
+      "7",
+      "=",
+      "A",
+      "B",
+      "C",
+      "E",
+      "H",
+      "K",
+      "Q",
+      "R",
+      "Y",
+      "Z"
+    ],
+    "definedMaps": 15,
+    "uniqueMaps": 12,
+    "stateRows": 4107,
+    "randomOperations": 4096,
+    "seed": 206185959,
+    "canonicalIdentity": "Lexicographically smallest designator sharing the same object, encoded as UTF-16 hex; undefined is -."
+  },
+  "baseline": {
+    "discovered": 4,
+    "executed": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0,
+    "outcomes": [
+      {
+        "name": "CharsetService / should not update active charset when designating an inactive glevel",
+        "status": "passed"
+      },
+      {
+        "name": "CharsetService / should expose the designated charset after setgLevel",
+        "status": "passed"
+      },
+      {
+        "name": "CharsetService / should update active charset when designating the current glevel",
+        "status": "passed"
+      },
+      {
+        "name": "CharsetService / should reset glevel, charsets, and active charset",
+        "status": "passed"
+      }
+    ]
+  }
+}

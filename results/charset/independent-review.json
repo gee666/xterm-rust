@@ -1,0 +1,33 @@
+{
+  "reviewer": "Timur",
+  "implementationOwner": "Alaric",
+  "task": 20,
+  "environment": {
+    "platform": "Windows x64",
+    "node": "v24.15.0",
+    "rustc": "1.85.1 (4eb161250 2025-03-15)",
+    "cargo": "1.85.1 (d73d2caf9 2024-12-31)"
+  },
+  "inspection": [
+    "Compared charset.rs and charset_tables.rs against all Charsets.ts and CharsetService.ts source statements.",
+    "Compared all four original service assertion bodies against their Rust counterparts.",
+    "Checked alias Arc identity, custom UTF-16 mappings, sparse-slot growth, inactive designation, direct array edits and reset.",
+    "Checked that overflow/allocation errors leave service state unchanged and that no unsafe blocks are present.",
+    "Checked docs/charset.md explicitly discloses immutable maps, UTF-16 key restriction and nonnegative usize level representation."
+  ],
+  "commands": [
+    { "command": "node scripts/charset-oracle.mjs", "exitCode": 0, "originalTests": { "discovered": 4, "executed": 4, "passed": 4, "failed": 0, "skipped": 0, "unrun": 0 }, "log": "results/charset/review-oracle.log" },
+    { "command": "cargo test -p xterm-core --test charset", "exitCode": 0, "passed": 10, "failed": 0, "ignored": 0, "log": "results/charset/review-tests.log" },
+    { "command": "cargo test -p xterm-core --release --test charset", "exitCode": 0, "passed": 10, "failed": 0, "ignored": 0, "log": "results/charset/review-release.log" },
+    { "command": "cargo clippy -p xterm-core --lib --test charset -- -D warnings", "exitCode": 0, "log": "results/charset/review-clippy.log" },
+    { "command": "rustfmt --edition 2021 --check crates/xterm-core/src/charset.rs crates/xterm-core/src/charset_tables.rs crates/xterm-core/tests/charset.rs", "exitCode": 0, "log": "results/charset/review-rustfmt.log" }
+  ],
+  "differential": { "mapRows": 2176, "serviceOperations": 4107, "randomOperations": 4096, "seed": 206185959, "counterexamples": 0 },
+  "finding": "Accepted component behavior within the documented Rust representation. All table entries and tested service states agree with the reference.",
+  "notProven": [
+    "InputHandler integration and printing semantics",
+    "Browser/WASM integration",
+    "Native Linux and macOS execution",
+    "Full xterm.js equivalence"
+  ]
+}
