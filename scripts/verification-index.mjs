@@ -1,7 +1,7 @@
 // Copyright (c) 2026 xterm-rust contributors. Licensed under MIT.
 // Index retained evidence without interpreting a log's existence as success.
 import { createHash } from 'node:crypto';
-import { readdir, readFile, mkdir, writeFile } from 'node:fs/promises';
+import { readdir, readFile, mkdir, writeFile, lstat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -9,6 +9,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 
 export async function inventory(directory, prefix = '') {
+  if ((await lstat(directory)).isSymbolicLink()) throw new Error('Evidence root symlink requires explicit policy');
   const records = [];
   for (const entry of (await readdir(directory, { withFileTypes: true })).sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)) {
     const relative = prefix ? `${prefix}/${entry.name}` : entry.name;
@@ -40,6 +41,15 @@ export async function verifyReference(directory, manifest) {
     seen.add(record.path);
     let bytes;
     try {
+      // Lexical traversal checks are not enough: a valid component may be a
+      // junction to another tree. Check each component without following links.
+      let component = directory;
+      for (const part of ['', ...record.path.split('/')]) {
+        if (part) component = path.join(component, part);
+        if ((await lstat(component)).isSymbolicLink()) {
+          throw new Error(`Reference symlink requires explicit policy: ${record.path}`);
+        }
+      }
       bytes = await readFile(path.join(directory, record.path));
     } catch (error) {
       if (error.code !== 'ENOENT') throw error;

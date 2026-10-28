@@ -28,7 +28,7 @@ node scripts/verification-index.mjs
 node scripts/verification-index.mjs --check
 ```
 
-The index records every retained regular file under `results/`, its byte length and SHA-256, excluding itself. `--check` leaves that snapshot intact and reports changed, missing and newly added evidence, altered manifest bytes and current reference mismatches. It exits nonzero when the snapshot is stale. Seven Node tests include symlink/junction refusal, changed/missing/added files and a manifest-only formatting change, and assert that checking never rewrites the prior index. It reports listed reference mismatches separately and exits nonzero for changed or missing files. Invalid paths, duplicates and unhandled I/O errors fail rather than being ignored. Its tests cover byte hashing, ordering, changed/missing files, invalid paths, CLI failure status and index self-exclusion.
+The index records every retained regular file under `results/`, its byte length and SHA-256, excluding itself. `--check` leaves that snapshot intact and reports changed, missing and newly added evidence, altered manifest bytes and current reference mismatches. It exits nonzero when the snapshot is stale. Eight Node tests include symlink/junction refusal at reference roots, path components and evidence roots, changed/missing/added files and a manifest-only formatting change. Checking never rewrites the prior index. Parysatis independently found the missing reference-component/root checks, retained pre-fix counterexamples and verified the lstat guards through separate controls. It reports listed reference mismatches separately and exits nonzero for changed or missing files. Invalid paths, duplicates and unhandled I/O errors fail rather than being ignored. Its tests cover byte hashing, ordering, changed/missing files, invalid paths, CLI failure status and index self-exclusion.
 
 `results/verification/index.json` is a file snapshot, not a test runner. Regenerate it after all report/result edits. Do not redirect its stdout to a file under `results/` during generation, because that would hash a log before its final contents are written. Concurrent agent writes can make any file inventory stale; final release checks must use an immutable committed snapshot.
 
@@ -77,6 +77,18 @@ Kassa owns the portable quality runner and CI execution. The initial native Wind
 The initial summary names seven failed build/lint/test/format gates. Source hashes changed during execution, so even passing commands do not establish one-snapshot gate success. Live DCS API mismatches and BufferLine test lint errors were reported to their owners. Keep this failed attempt when later reruns pass; do not overwrite it or infer that its errors remain current without rerunning.
 
 The source scan found no unsafe candidates in that snapshot. This was a lexical scan, not a semantic safety proof. Miri and sanitizers were not executed. The WASM target/build was not requested in this attempt. See the quality receipt for flags, installed targets, tool versions and exact failure logs.
+
+## Observed CI and resumed quality attempts
+
+GitHub Actions run [40604393672](https://github.com/gee666/xterm-rust/actions/runs/40604393672) completed with failure at commit `4cbbd8c22b7a356f6839689ab738b832da22582e` on branch `ci/native-quality`. Status, seven downloaded artifacts and job logs are retained under `results/quality/ci-40604393672/`.
+
+The six native jobs covered Ubuntu, Windows and macOS at Rust 1.85.1 and stable. Their Node quality-runner tests passed, but every retained native summary has zero quality commands executed. Preflight rejected `CARGO_INCREMENTAL=0` injected by the toolchain action. This is observed CI failure, not native Rust runtime success. Kassa is correcting the policy to permit that explicit value because it matches the shared disabled-incremental configuration, while still rejecting enabling overrides. Later attempts must retain separate results.
+
+The WASM job failed because the committed workspace referenced `crates/xterm-web`, but that manifest was absent from the tested checkout. A locally present untracked manifest is not part of a clean CI checkout. This is an integration/commit gap, not an external platform blocker or browser test result.
+
+The separate local `results/quality/windows-run2/summary.json` also records failure and a changing source snapshot. Its nine failed gates were fmt, all-feature Clippy/tests/doctests/release, default tests, no-default tests/Clippy and WASM check. It must not replace the earlier Windows attempt or be mistaken for a final stable run.
+
+Aaliyah independently reviewed the corrected quality automation and reran fifteen Node process/policy/snapshot/resource tests. See `results/verification/reviews/quality-runner-fixed.json`. Those test disk interruption and process-tree termination, source/fixture/config hashing, target/profile policy and failed-command retention. They validate the runner code, not the complete Rust port or any native Rust platform matrix.
 
 ## Independent findings and retained regressions
 

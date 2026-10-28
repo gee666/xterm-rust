@@ -29,6 +29,22 @@ test('inventory rejects symlinks and Windows junctions instead of following them
   await writeFile(path.join(directory, 'target/file.log'), 'outside evidence');
   await symlink(path.join(directory, 'target'), path.join(directory, 'linked'), process.platform === 'win32' ? 'junction' : 'dir');
   await assert.rejects(inventory(directory), /Evidence must be a regular file or directory: linked/);
+  await assert.rejects(inventory(path.join(directory, 'linked')), /Evidence root symlink requires explicit policy/);
+}));
+
+test('reference integrity refuses linked roots and linked path components', async () => fixture(async directory => {
+  const outside = path.join(directory, 'outside');
+  const reference = path.join(directory, 'reference');
+  await mkdir(outside);
+  await mkdir(reference);
+  await writeFile(path.join(outside, 'source.ts'), 'outside');
+  const linkType = process.platform === 'win32' ? 'junction' : 'dir';
+  await symlink(outside, path.join(reference, 'linked'), linkType);
+  const record = { path: 'linked/source.ts', bytes: 7, sha256: digest(Buffer.from('outside')) };
+  await assert.rejects(verifyReference(reference, [record]), /Reference symlink requires explicit policy/);
+  const linkedRoot = path.join(directory, 'linked-root');
+  await symlink(outside, linkedRoot, linkType);
+  await assert.rejects(verifyReference(linkedRoot, [{ ...record, path: 'source.ts' }]), /Reference symlink requires explicit policy/);
 }));
 
 test('reference checker retains changed and missing records', async () => fixture(async directory => {
