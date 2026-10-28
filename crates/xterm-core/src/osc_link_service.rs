@@ -163,6 +163,14 @@ impl OscLinkService {
             .map(|entry| Rc::clone(&entry.data))
     }
 
+    /// Deterministic diagnostic inventory for complete-state differential checks.
+    /// This Rust-only snapshot has no side effects and does not expose entries.
+    pub fn link_ids(&self) -> Vec<u64> {
+        let mut ids: Vec<_> = self.state.by_id.borrow().keys().copied().collect();
+        ids.sort_unstable();
+        ids
+    }
+
     fn track_marker(&self, entry: &Rc<Entry>, marker: &Marker) {
         let state = Rc::downgrade(&self.state);
         let entry = Rc::downgrade(entry);
@@ -193,7 +201,14 @@ impl OscLinkService {
                             state.named.borrow_mut().remove(key);
                         }
                     }
-                    state.by_id.borrow_mut().remove(&entry.id);
+                    let removed = state.by_id.borrow_mut().remove(&entry.id);
+                    if let Some(removed) = removed {
+                        if !Rc::ptr_eq(&removed, &entry) && !removed.lines.borrow().is_empty() {
+                            // A stale saturated-id callback can unlink another
+                            // live entry. Its later callback must remain active.
+                            state.overwritten.borrow_mut().push(removed);
+                        }
+                    }
                     state
                         .overwritten
                         .borrow_mut()
@@ -245,8 +260,17 @@ mod tests {
         assert_eq!(links.register_link(Rc::clone(&second)), Ok(id));
         assert!(Rc::ptr_eq(&links.get_link_data(id).unwrap(), &second));
         let old_marker = buffers.buffer().borrow().markers.borrow()[0].clone();
+        let second_marker = buffers.buffer().borrow().markers.borrow()[1].clone();
         old_marker.dispose().unwrap();
         assert!(links.get_link_data(id).is_none());
+        assert_eq!(links.state.overwritten.borrow().len(), 1);
+        let third = data();
+        assert_eq!(links.register_link(Rc::clone(&third)), Ok(id));
+        assert!(Rc::ptr_eq(&links.get_link_data(id).unwrap(), &third));
+        let third_marker = buffers.buffer().borrow().markers.borrow()[1].clone();
+        second_marker.dispose().unwrap();
+        assert!(links.get_link_data(id).is_none());
+        third_marker.dispose().unwrap();
         assert!(links.state.overwritten.borrow().is_empty());
     }
 }

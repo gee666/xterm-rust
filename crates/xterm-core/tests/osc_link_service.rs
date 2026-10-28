@@ -59,9 +59,11 @@ fn upstream_fetches_exact_link_data() {
 #[test]
 fn unnamed_links_are_unique_empty_named_ids_reuse_and_delimiters_collide() {
     let (_, links) = service();
+    assert!(links.link_ids().is_empty());
     let a = links.register_link(data(None, "same")).unwrap();
     let b = links.register_link(data(None, "same")).unwrap();
     assert_ne!(a, b);
+    assert_eq!(links.link_ids(), vec![a, b]);
     let empty = links.register_link(data(Some(""), "same")).unwrap();
     assert_eq!(links.register_link(data(Some(""), "same")), Ok(empty));
     let collision = links.register_link(data(Some("a;;b"), "c")).unwrap();

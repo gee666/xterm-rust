@@ -114,7 +114,13 @@ const limitData = { uri: '' };
 const limitId = limitLinks.registerLink({ uri: '' });
 assert.equal(limitLinks.registerLink(limitData), limitId);
 assert.equal(limitLinks.getLinkData(limitId), limitData);
-limitBuffers.buffer.markers[0].dispose();
+const oldMarker = limitBuffers.buffer.markers[0], secondMarker = limitBuffers.buffer.markers[1];
+oldMarker.dispose();
+assert.equal(limitLinks.getLinkData(limitId), undefined);
+const thirdData = { uri: 'third' };
+assert.equal(limitLinks.registerLink(thirdData), limitId);
+assert.equal(limitLinks.getLinkData(limitId), thirdData);
+secondMarker.dispose();
 assert.equal(limitLinks.getLinkData(limitId), undefined);
 const fixture = operations.map((operation, i) => `${operation}\t${expected[i]}`).join('\n') + '\n';
 const fixturePath = 'crates/xterm-core/tests/fixtures/osc-link-traces.tsv';
@@ -148,7 +154,7 @@ const summary = {
   baselineCases: baselineReport.stats.tests, baselinePassed: baselineReport.stats.passes,
   baselineAssertions: (readFileSync('source_repo/src/common/services/OscLinkService.test.ts', 'utf8').match(/assert\./g) ?? []).length,
   seed, directedOperations, randomizedOperations: 1200, compared: actual.length, mismatches: 0,
-  numericLimitAssertions: 3,
+  numericLimitAssertions: 6,
   fixtureSha256: createHash('sha256').update(fixture).digest('hex'), hashes, status: 'passed',
 };
 writeFileSync(`${result}/summary.json`, JSON.stringify(summary, null, 2) + '\n');
