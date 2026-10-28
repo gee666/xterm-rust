@@ -68,7 +68,7 @@ pub(super) fn find(
                     .take(offset - search_term.len() + 1)
                     .filter(|(_, value)| *value == search_term.as_ref())
                     .map(|(i, _)| i)
-                    .last()
+                    .next_back()
             }
         } else {
             search_line
