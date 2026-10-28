@@ -1,0 +1,78 @@
+(node:31272) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{
+  "scope": "UnicodeService only; full terminal equivalence NOT PROVEN",
+  "environment": {
+    "node": "v24.15.0",
+    "platform": "win32",
+    "architecture": "x64"
+  },
+  "baseline": {
+    "discovered": 5,
+    "executed": 5,
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0,
+    "tests": [
+      {
+        "name": "default to V6",
+        "status": "passed"
+      },
+      {
+        "name": "activate should throw for unknown version",
+        "status": "passed"
+      },
+      {
+        "name": "should notify about version change",
+        "status": "passed"
+      },
+      {
+        "name": "correctly changes provider impl",
+        "status": "passed"
+      },
+      {
+        "name": "wcwidth V6 emoji test",
+        "status": "passed"
+      }
+    ]
+  },
+  "differential": {
+    "seed": 1910399905,
+    "deterministicInputs": 10,
+    "randomInputs": 4096,
+    "totalInputs": 4106,
+    "providers": [
+      "6",
+      "trace"
+    ],
+    "comparison": "width and exact provider call log",
+    "registryOperations": 531
+  },
+  "sources": [
+    {
+      "path": "source_repo/src/common/Lifecycle.ts",
+      "sha256": "e00016aae991e24137ab066778912414f4af959f2b26baecf47ec542ad313a83"
+    },
+    {
+      "path": "source_repo/src/common/Event.ts",
+      "sha256": "aa374272c5ec5c0d6992d6072687211a94676b086a2505b0414ddd20cf57d641"
+    },
+    {
+      "path": "source_repo/src/common/services/UnicodeService.ts",
+      "sha256": "dae3733c0a07bfe55f264ea749e3df61b3b4505830e4e685183771497c292811"
+    },
+    {
+      "path": "source_repo/src/common/input/UnicodeV6.ts",
+      "sha256": "526041b7d903ef88bf031825dde557a7f6d4b3e156be984fb524c66d02ac412e"
+    },
+    {
+      "path": "source_repo/src/common/services/UnicodeService.test.ts",
+      "sha256": "ab613cacaebed99f37ebbfe9feb2f644c900f6d93a4c4c83af2943b99d54b693"
+    }
+  ],
+  "fixtureHashes": {
+    "unicode-service-widths.tsv": "851617d40a1c40688ade024a11cafd014a17013e26aaa8710515e4db904e7aee",
+    "unicode-service-registry.tsv": "27cd9cce1955f17f0f86c017cfb4d5446ff668a41aaf7a92c4fd92c79adea2fb"
+  }
+}
