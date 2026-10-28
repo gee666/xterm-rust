@@ -3,10 +3,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::sync::Arc;
-use std::task::{Context, Poll, Wake, Waker};
 use xterm_core::parser::apc::{ApcAction, ApcHandler, ApcHandlerTrait, ApcParser};
-use xterm_core::parser::handler::HandlerResult;
+use xterm_core::parser::handler::{DispatchError, HandlerResult};
 
 type Log = Rc<RefCell<Vec<(u8, bool)>>>;
 struct Async {
@@ -27,22 +25,10 @@ impl ApcHandlerTrait for Async {
         }))
     }
 }
-struct NoWake;
-impl Wake for NoWake {
-    fn wake(self: Arc<Self>) {}
-}
-fn resolve(result: HandlerResult) -> bool {
-    match result {
-        HandlerResult::Ready(result) => result,
-        HandlerResult::Pending(mut future) => {
-            let waker = Waker::from(Arc::new(NoWake));
-            match future.as_mut().poll(&mut Context::from_waker(&waker)) {
-                Poll::Ready(value) => value,
-                Poll::Pending => panic!("test future did not resolve"),
-            }
-        }
-    }
-}
+#[path = "parser_support/future.rs"]
+mod fixture_future;
+use fixture_future::resolve;
+
 fn register(parser: &mut ApcParser, id: u8, log: &Log) {
     parser.register_handler(
         71,
@@ -187,4 +173,61 @@ fn dropped_callback_future_does_not_leak_payload_into_next_command() {
     assert!(resolve(handler.end(true)));
     assert_eq!(calls.borrow().last(), Some(&vec![]));
     assert_eq!(xterm_core::parser::apc::PAYLOAD_LIMIT, 10_000_000);
+}
+
+#[test]
+fn callback_failure_does_not_bubble_as_false_to_older_handlers() {
+    let log = Log::default();
+    let mut parser = ApcParser::new();
+    register(&mut parser, 1, &log);
+    parser.register_handler(
+        71,
+        Rc::new(RefCell::new(ApcHandler::new(|_| {
+            HandlerResult::Failed(DispatchError::CallbackFailed)
+        }))),
+    );
+    parser.start(71).unwrap();
+    assert_eq!(
+        parser.end(true, true).err(),
+        Some(DispatchError::CallbackFailed)
+    );
+    assert!(log.borrow().is_empty());
+    parser.reset().unwrap();
+    for cleanup in parser.take_cleanup() {
+        resolve(cleanup);
+    }
+    assert_eq!(*log.borrow(), [(1, false)]);
+}
+
+#[test]
+fn rejected_callback_future_preserves_pause_until_explicit_reset() {
+    let calls = Rc::new(RefCell::new(Vec::new()));
+    let output = Rc::clone(&calls);
+    let mut parser = ApcParser::new();
+    parser.register_handler(
+        71,
+        Rc::new(RefCell::new(ApcHandler::new(move |data| {
+            output.borrow_mut().push(data);
+            if output.borrow().len() == 1 {
+                HandlerResult::PendingFallible(Box::pin(async {
+                    Err(DispatchError::CallbackFailed)
+                }))
+            } else {
+                HandlerResult::Ready(true)
+            }
+        }))),
+    );
+    parser.start(71).unwrap();
+    parser.put(&[65, 66]).unwrap();
+    let pending = parser.end(true, true).unwrap().unwrap();
+    assert_eq!(
+        fixture_future::resolve_checked(pending),
+        Err(DispatchError::CallbackFailed)
+    );
+    parser.reset().unwrap();
+    assert!(parser.take_cleanup().is_empty());
+    parser.start(71).unwrap();
+    parser.put(&[67]).unwrap();
+    assert!(parser.end(true, true).unwrap().is_none());
+    assert_eq!(*calls.borrow(), [vec![65, 66], vec![67]]);
 }

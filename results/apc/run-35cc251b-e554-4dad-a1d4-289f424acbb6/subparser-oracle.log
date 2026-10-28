@@ -1,0 +1,95 @@
+(node:32312) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{
+  "node": "v24.15.0",
+  "seed": 178004005,
+  "randomizedCases": 256,
+  "stepsPerCase": 80,
+  "baseline": {
+    "discovered": 20,
+    "passed": 20,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0
+  },
+  "sources": [
+    {
+      "path": "source_repo/src/common/parser/Constants.ts",
+      "sha256": "b27193683d50f676cc2ad779fc8a5a5b4c0b38c2b0bb762168739c6d100942dd"
+    },
+    {
+      "path": "source_repo/src/common/input/TextDecoder.ts",
+      "sha256": "0368a7fddbb53502f86144b61d023f8d022f5ce973a1b01b59c552ec62631a1b"
+    },
+    {
+      "path": "source_repo/src/common/StringBuilder.ts",
+      "sha256": "1c5fb0677d84788609304e7ea1efc3f760ad5e8c43dc691ceb83b283f1286114"
+    },
+    {
+      "path": "source_repo/src/common/parser/ApcParser.ts",
+      "sha256": "f65e7a431013374e5794b360a8840359720630fec9330151a22ff17b09147fec"
+    },
+    {
+      "path": "source_repo/src/common/parser/ApcParser.test.ts",
+      "sha256": "01383ca1d0a21f0746cec9a00f2702adddeeaa36217454fc7071ff08811d7964"
+    }
+  ],
+  "fixtureSha256": "5b798a17574b49ba2ce971a4dddfbea50f535078d47d3ea1b4b307cb86e3e614",
+  "mutationFixtureSha256": "b4dc0fb09c7acfc7d7062d40c020e574ff31d3337214d94513f7c1b5416d59a9",
+  "mutableListErrors": [
+    {
+      "stage": "start",
+      "log": [
+        "b:s"
+      ],
+      "error": {
+        "name": "TypeError",
+        "message": "Cannot read properties of undefined (reading 'start')"
+      }
+    },
+    {
+      "stage": "put",
+      "log": [
+        "b:s",
+        "a:s",
+        "b:p"
+      ],
+      "error": {
+        "name": "TypeError",
+        "message": "Cannot read properties of undefined (reading 'put')"
+      }
+    },
+    {
+      "stage": "end",
+      "log": [
+        "b:s",
+        "a:s",
+        "b:e:1"
+      ],
+      "error": {
+        "name": "TypeError",
+        "message": "Cannot read properties of undefined (reading 'end')"
+      }
+    },
+    {
+      "stage": "reset",
+      "log": [
+        "b:s",
+        "a:s",
+        "b:e:0"
+      ],
+      "error": {
+        "name": "TypeError",
+        "message": "Cannot read properties of undefined (reading 'end')"
+      }
+    },
+    {
+      "stage": "shift",
+      "log": [
+        "b:s",
+        "b:s"
+      ]
+    }
+  ],
+  "status": "matched"
+}

@@ -3,8 +3,6 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::sync::Arc;
-use std::task::{Context, Poll, Wake, Waker};
 use xterm_core::parser::apc::{ApcAction, ApcHandler, ApcHandlerTrait, ApcParser, HandlerHandle};
 use xterm_core::parser::handler::HandlerResult;
 use xterm_core::text_decoder::utf32_to_string;
@@ -12,26 +10,14 @@ use xterm_core::text_decoder::utf32_to_string;
 const ID: u32 = 0x2b70;
 type Reports = Rc<RefCell<Vec<String>>>;
 
-struct NoWake;
-impl Wake for NoWake {
-    fn wake(self: Arc<Self>) {}
-}
+#[path = "parser_support/future.rs"]
+mod fixture_future;
+use fixture_future::resolve;
 
 fn complete(parser: &mut ApcParser, success: bool) {
     let mut previous = true;
     while let Some(result) = parser.end(success, previous).unwrap() {
-        match result {
-            HandlerResult::Ready(value) => previous = value,
-            HandlerResult::Pending(mut future) => {
-                let waker = Waker::from(Arc::new(NoWake));
-                let mut context = Context::from_waker(&waker);
-                // Test futures resolve on their first poll. Never hide stalled work.
-                previous = match future.as_mut().poll(&mut context) {
-                    Poll::Ready(value) => value,
-                    Poll::Pending => panic!("test future did not resolve"),
-                };
-            }
-        }
+        previous = resolve(result);
     }
 }
 

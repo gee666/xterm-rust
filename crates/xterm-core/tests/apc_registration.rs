@@ -4,7 +4,7 @@
 use std::cell::RefCell;
 use std::rc::{Rc, Weak};
 use xterm_core::lifecycle::DisposableHandle;
-use xterm_core::parser::apc::{ApcAction, ApcHandler, ApcHandlerTrait, ApcParser};
+use xterm_core::parser::apc::{ApcAction, ApcHandler, ApcHandlerTrait, ApcParser, ApcRegistrar};
 use xterm_core::parser::handler::{DispatchError, HandlerResult};
 
 type Log = Rc<RefCell<Vec<String>>>;
@@ -188,4 +188,52 @@ fn dispose_does_not_end_active_handlers_and_allows_new_registration() {
     parser.start(71).unwrap();
     assert!(parser.end(true, true).unwrap().is_none());
     assert_eq!(*log.borrow(), ["new:0"]);
+}
+
+struct RegisterDuringStart {
+    registrar: ApcRegistrar,
+    log: Log,
+}
+impl ApcHandlerTrait for RegisterDuringStart {
+    fn start(&mut self) {
+        let log = Rc::clone(&self.log);
+        self.registrar
+            .register_handler(
+                71,
+                Rc::new(RefCell::new(ApcHandler::new(move |data: Vec<u16>| {
+                    log.borrow_mut().push(format!("new:{}", data.len()));
+                    HandlerResult::Ready(false)
+                }))),
+            )
+            .unwrap();
+    }
+    fn put(&mut self, _: &[u32]) {
+        self.log.borrow_mut().push("old:put".to_owned());
+    }
+    fn end(&mut self, success: bool) -> HandlerResult {
+        self.log.borrow_mut().push(format!("old:end:{success}"));
+        HandlerResult::Ready(true)
+    }
+}
+
+#[test]
+fn registrar_allows_callback_registration_without_retaining_parser() {
+    let mut parser = ApcParser::new();
+    let registrar = parser.registrar();
+    let log = Log::default();
+    parser.register_handler(
+        71,
+        Rc::new(RefCell::new(RegisterDuringStart {
+            registrar: registrar.clone(),
+            log: Rc::clone(&log),
+        })),
+    );
+    parser.start(71).unwrap();
+    parser.put(&[65]).unwrap();
+    assert!(parser.end(true, true).unwrap().is_none());
+    assert_eq!(*log.borrow(), ["old:put", "new:1", "old:end:true"]);
+    parser.dispose();
+    assert_eq!(registrar.clear_handler(71), Some(()));
+    drop(parser);
+    assert_eq!(registrar.clear_handler(71), None);
 }

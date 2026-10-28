@@ -7,6 +7,8 @@ description: Use when validating APC dispatch, regenerating upstream oracle trac
 
 Run from repository root with Node.js 24.15 or newer and Rust 1.85.1 or newer.
 
+`node scripts/verify-apc.mjs` runs the source oracles, all APC Rust suites, formatting and Clippy through the shared bounded process runner. Each run has a separate evidence directory and starts with an incomplete false summary, so interruption cannot retain a stale green report. It records before/after input hashes and rejects changed-input runs. It uses the checked-in Cargo profile and existing target directory.
+
 ```sh
 node scripts/check-apc.mjs
 cargo test -p xterm-core --test apc --test apc_edges --test apc_differential --test apc_registration
@@ -19,4 +21,6 @@ Use `node scripts/check-apc.mjs --generate` only to regenerate the committed ora
 
 The mutable-list fixture retains five source cases, covering abrupt errors in start/put/end/reset and successful index-shift reexecution. Start, put, end and reset return `Result` to preserve source errors without panics.
 
-See `docs/apc-port.md` and `docs/criteria/apc.md` for representation differences and the mapping between 20 upstream cases and parameterized Rust assertions. These checks do not cover the outer escape parser or prove complete terminal equivalence.
+See `docs/apc-port.md` and `docs/criteria/apc.md` for representation differences and the mapping between 20 upstream cases and parameterized Rust assertions. For actual outer-parser integration, run `node scripts/apc-escape-oracle.mjs` and `cargo test -p xterm-core --test apc_escape`. The 280 trace corpus compares exact callbacks, state, collect, Params and join state; three retained control cases cover sync/rejected callback errors and reset during a pending end. See `docs/apc-escape.md` and `results/apc-escape`. Only intentional source-reference changes justify `--generate`.
+
+Neither the subparser nor escape-parser checks prove terminal/browser integration or complete terminal equivalence.

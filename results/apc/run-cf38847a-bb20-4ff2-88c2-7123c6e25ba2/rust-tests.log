@@ -1,0 +1,83 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0423]: expected value, found enum `EmitError`
+  --> crates\xterm-core\src\buffer\buffer_set.rs:80:25
+   |
+80 |                         EmitError
+   |                         ^^^^^^^^^
+   |
+note: the enum is defined here
+  --> crates\xterm-core\src\event.rs:18:1
+   |
+18 | / pub enum EmitError {
+19 | |     ListenerArrayCleared,
+20 | |     /// Retain an actual callback failure, including a browser-owned wrapper
+21 | |     /// around a thrown JsValue. The portable core does not depend on that type.
+22 | |     Callback(Rc<dyn std::error::Error>),
+23 | | }
+   | |_^
+help: you might have meant to use the following enum variant
+   |
+80 |                         input::write_buffer::EmitError::ListenerArrayCleared
+   |
+help: alternatively, the following enum variant is available
+   |
+80 |                         (input::write_buffer::EmitError::Callback(/* fields */))
+   |
+
+error[E0423]: expected value, found enum `EmitError`
+  --> crates\xterm-core\src\buffer\service.rs:45:30
+   |
+45 |                 .map_err(|_| EmitError)?
+   |                              ^^^^^^^^^
+   |
+note: the enum is defined here
+  --> crates\xterm-core\src\event.rs:18:1
+   |
+18 | / pub enum EmitError {
+19 | |     ListenerArrayCleared,
+20 | |     /// Retain an actual callback failure, including a browser-owned wrapper
+21 | |     /// around a thrown JsValue. The portable core does not depend on that type.
+22 | |     Callback(Rc<dyn std::error::Error>),
+23 | | }
+   | |_^
+help: you might have meant to use the following enum variant
+   |
+45 |                 .map_err(|_| input::write_buffer::EmitError::ListenerArrayCleared)?
+   |                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: alternatively, the following enum variant is available
+   |
+45 |                 .map_err(|_| (input::write_buffer::EmitError::Callback(/* fields */)))?
+   |                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0624]: method `alignment_pattern` is private
+   --> crates\xterm-core\src\terminal\register.rs:114:26
+    |
+114 |         command(|s, _| s.alignment_pattern(), Rc::clone(state)),
+    |                          ^^^^^^^^^^^^^^^^^ private method
+    |
+   ::: crates\xterm-core\src\terminal\escape.rs:48:5
+    |
+48  |     fn alignment_pattern(&mut self) -> Result<(), TerminalError> {
+    |     ------------------------------------------------------------ private method defined here
+
+error[E0509]: cannot move out of type `DisposableStore`, which implements the `Drop` trait
+   --> crates\xterm-core\src\lifecycle.rs:117:9
+    |
+117 |         Self { explicit_disposal: true, ..Self::default() }
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |         |
+    |         cannot move out of here
+    |         move occurs because value has type `std::cell::RefCell<StoreResources>`, which does not implement the `Copy` trait
+
+error[E0509]: cannot move out of type `DisposableStore`, which implements the `Drop` trait
+   --> crates\xterm-core\src\lifecycle.rs:117:9
+    |
+117 |         Self { explicit_disposal: true, ..Self::default() }
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |         |
+    |         cannot move out of here
+    |         move occurs because value has type `std::cell::Cell<bool>`, which does not implement the `Copy` trait
+
+Some errors have detailed explanations: E0423, E0509, E0624.
+For more information about an error, try `rustc --explain E0423`.
+error: could not compile `xterm-core` (lib) due to 5 previous errors

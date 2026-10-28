@@ -7,13 +7,28 @@
 //! Payload strings are UTF-16 units to preserve JavaScript lone surrogates.
 
 use super::handler::{DispatchError, HandlerResult};
-use super::osc::OscParser;
+use super::osc::{OscParser, OscRegistrar};
 use crate::lifecycle::DisposableHandle;
 
 pub use super::osc::{
     HandlerHandle, OscAction as ApcAction, OscHandler as ApcHandler,
     OscHandlerTrait as ApcHandlerTrait, PAYLOAD_LIMIT,
 };
+
+/// Callback-safe registration access without retaining the parser or its lists.
+#[derive(Clone)]
+pub struct ApcRegistrar(OscRegistrar);
+
+impl ApcRegistrar {
+    /// None means the parser was dropped, not merely explicitly disposed.
+    pub fn register_handler(&self, ident: u32, handler: HandlerHandle) -> Option<DisposableHandle> {
+        self.0.register_handler(f64::from(ident), handler)
+    }
+
+    pub fn clear_handler(&self, ident: u32) -> Option<()> {
+        self.0.clear_handler(f64::from(ident))
+    }
+}
 
 /// APC registration, fallback, streaming and resumable handler dispatch.
 ///
@@ -34,6 +49,10 @@ impl ApcParser {
     /// Identifiers are the packed integer supplied by the escape parser.
     pub fn register_handler(&mut self, ident: u32, handler: HandlerHandle) -> DisposableHandle {
         self.dispatch.register_handler(f64::from(ident), handler)
+    }
+
+    pub fn registrar(&self) -> ApcRegistrar {
+        ApcRegistrar(self.dispatch.registrar())
     }
 
     pub fn clear_handler(&mut self, ident: u32) {

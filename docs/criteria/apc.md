@@ -39,6 +39,7 @@ Evidence must compare full callback and fallback logs, including identifiers, pa
 - A6. Since Rust futures are lazy, asynchronous cleanup initiated by reset or implicit reset inside start must be retained for `take_cleanup`. Transfer each exactly once in reverse invocation order. Do not silently drop or claim it executed without polling.
 - A7. A pending cleanup queue remains available through parser disposal. The outer integration must drive it on its executor. Document eager callback prefixes and future ownership rather than introducing a hidden global runtime.
 - A8. The buffered callback keeps accumulated payload alive until asynchronous completion, clears it on resolution, and resets it on the next start. A dropped future must not corrupt subsequent command setup.
+- A9. A synchronous callback failure or rejected asynchronous callback is not a false return. Propagate a typed callback error without invoking older handlers or resuming subsequent input. Keep the pending state until explicit reset. Retained payload clears on the next start, not on failed completion.
 
 Required evidence includes the four original mixed asynchronous cases, async callback-factory cases, reset before completion, reset during pause, multiple async cleanup callbacks and the outer parser's resume/abort integration tests. No sleeps are needed.
 
