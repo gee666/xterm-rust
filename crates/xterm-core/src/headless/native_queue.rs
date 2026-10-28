@@ -132,9 +132,14 @@ impl NativeWritePump {
         state.timers.len() + state.futures.len()
     }
     pub fn poll(&self) -> Result<usize, Vec<WriteError>> {
-        let timers = std::mem::take(&mut self.state.borrow_mut().timers);
+        let timers: Vec<_> = self.state.borrow().timers.keys().copied().collect();
         let mut executed = 0;
-        for timer in timers.into_values() {
+        for id in timers {
+            // Keep not-yet-fired timers in live storage so an earlier callback
+            // can cancel a later timer from this same poll batch.
+            let Some(timer) = self.state.borrow_mut().timers.remove(&id) else {
+                continue;
+            };
             if let Some(queue) = timer.queue.upgrade() {
                 executed += 1;
                 if let Err(error) = queue.process(timer.last_time, timer.result) {

@@ -1,0 +1,145 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 3.24s
+     Running tests\headless_contract.rs (target\debug\deps\headless_contract-9b44617f0effe45e.exe)
+
+running 5 tests
+test pa04_public_input_allows_nested_data_callbacks_without_engine_borrow_panics ... ok
+test pa03_byte_and_surrogate_splits_reach_real_cells_without_replacement ... ok
+test pa02_live_options_and_cached_namespace_keep_identity_across_reset ... ok
+test pa03_direct_reset_keeps_partial_parser_sequence_and_registration ... ok
+test pa02_unicode_addons_gate_at_actual_terminal_activation_and_restore_retained_service ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\headless_modes.rs (target\debug\deps\headless_modes-1a9b3bc6651844b8.exe)
+
+running 3 tests
+test pa05_all_twelve_defaults_and_snapshot_independence ... ok
+test pa05_mouse_protocol_names_project_to_public_lowercase_snapshot ... ok
+test pa05_conflicting_mode_borrow_is_a_recoverable_error ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\headless_options.rs (target\debug\deps\headless_options-efd0d98f00fbc584.exe)
+
+running 3 tests
+test pa02_view_is_live_and_copies_share_the_actual_service ... ok
+test pa02_proposed_access_reads_current_option_and_unknown_native_keys_reject ... ok
+test pa02_bulk_assignment_preserves_partial_updates_and_event_order ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\headless_queue.rs (target\debug\deps\headless_queue-3722f15556953f21.exe)
+
+running 10 tests
+test dropping_pump_rejects_new_timers_without_leaking_queue_state ... ok
+test pending_local_future_is_not_busy_polled_and_wakes_on_demand ... ok
+test callback_error_is_returned_without_a_false_success_or_later_callback ... ok
+test fifo_callbacks_precede_one_batched_parsed_notification ... ok
+test dispose_cancels_queued_work_and_releases_host_timer ... ok
+test reentrant_callback_appends_to_the_same_fifo_without_losing_input ... ok
+test rejected_handler_retains_typed_error_and_resumes_false_into_older_handler ... ok
+test pending_parser_resumes_once_before_callback_and_later_chunks ... ok
+test writeln_bytes_and_crlf_callback_observe_completed_state ... ok
+test user_input_drives_the_source_low_latency_path_but_disabled_stdin_does_not ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\headless_queue_edges.rs (target\debug\deps\headless_queue_edges-c41d9af672b6ce79.exe)
+
+running 4 tests
+test earlier_timer_can_cancel_a_later_timer_in_the_same_host_poll ... ok
+test unchanged_headless_resize_keeps_queued_text_deferred ... ok
+test sync_flush_during_paused_handler_preserves_improper_continuation_error ... ok
+test resize_flushes_queued_text_and_callback_before_resizing_real_buffer ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\headless_reentry.rs (target\debug\deps\headless_reentry-7b3848d5ea6c393a.exe)
+
+running 1 test
+test pa04_six_source_reentrant_paths_preserve_event_time_and_final_state ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\headless_upstream.rs (target\debug\deps\headless_upstream-7ebebc6dfe41ba16.exe)
+
+running 45 tests
+test events::on_line_feed ... ok
+test buffers::get_line_invalid_index ... ok
+test events::on_render ... ok
+test buffers::get_line_get_cell ... ok
+test modes::defaults ... ok
+test buffers::get_line_is_wrapped ... ok
+test buffers::length ... ok
+test events::on_cursor_move ... ok
+test events::on_data ... ok
+test modes::bracketed_paste_mode ... ok
+test modes::mouse_tracking_mode ... ok
+test buffers::cursor_x_cursor_y ... ok
+test buffers::viewport_y ... ok
+test modes::insert_mode ... ok
+test events::on_scroll ... ok
+test buffers::register_marker_on_alternate_buffer ... ok
+test buffers::base_y ... ok
+test modes::application_keypad_mode ... ok
+test buffers::get_line_translate_to_string ... ok
+test events::on_resize ... ok
+test events::on_title_change ... ok
+test modes::application_cursor_keys_mode ... ok
+test buffers::active_normal_alternate ... ok
+test events::on_bell ... ok
+test modes::send_focus_mode ... ok
+test writes::clear ... ok
+test modes::reverse_wraparound_mode ... ok
+test writes::default_options ... ok
+test modes::origin_mode ... ok
+test modes::wraparound_mode ... ok
+test writes::clear_disposes_markers ... ok
+test writes::get_options ... ok
+test writes::dispose ... ok
+test writes::load_addon_constructor ... ok
+test writes::load_addon_dispose_addon ... ok
+test writes::proposed_api_check ... ok
+test writes::load_addon_dispose_terminal ... ok
+test writes::writeln ... ok
+test writes::write ... ok
+test writes::set_options ... ok
+test writes::writeln_bytes_utf8 ... ok
+test writes::write_bytes_utf8_with_callback ... ok
+test writes::write_bytes_utf8 ... ok
+test writes::writeln_with_callback ... ok
+test writes::write_with_callback ... ok
+
+test result: ok. 45 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\public_adapter_terminal.rs (target\debug\deps\public_adapter_terminal-60c1b5b59aaa1174.exe)
+
+running 3 tests
+test source_load_addon_assertions_use_actual_public_terminal ... ok
+test buffer_namespace_survives_actual_writes_alt_switch_and_reset ... ok
+test every_public_parser_family_works_through_utf8_and_utf16_terminal_chunks ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\public_api_integration.rs (target\debug\deps\public_api_integration-e5af1e6e5e2bbddb.exe)
+
+running 5 tests
+test pa04_title_observes_state_before_following_print ... ok
+test pa04_bell_observes_state_before_following_print ... ok
+test pa04_linefeed_observes_state_before_following_print ... ok
+test pa04_bell_reset_precedes_following_print ... ok
+test pa04_data_reply_observes_state_before_following_print ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\public_api_validation.rs (target\debug\deps\public_api_validation-482314946262be60.exe)
+
+running 4 tests
+test pa01_browser_positive_guard_retains_nan_and_zero_quirks ... ok
+test pa01_each_invalid_numeric_argument_rejects_with_source_message ... ok
+test pa01_signed_zero_and_large_integral_values_are_not_restricted_to_machine_indices ... ok
+test pa02_only_cols_and_rows_are_constructor_only_and_unicode_gate_is_dynamic ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

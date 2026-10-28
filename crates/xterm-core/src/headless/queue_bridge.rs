@@ -5,6 +5,15 @@ use crate::{
 };
 
 impl Terminal {
+    pub fn take_cleanup(
+        &self,
+    ) -> Result<Vec<crate::parser::handler::HandlerResult>, HeadlessError> {
+        Ok(self
+            .engine
+            .try_borrow_mut()
+            .map_err(|_| HeadlessError::Borrowed)?
+            .take_cleanup())
+    }
     /// Parse once or resume the same decoded chunk. Queue hosts own completion
     /// callbacks and batched writeParsed events, rather than individual parses.
     pub fn parse_write_data(
@@ -17,9 +26,7 @@ impl Terminal {
             None => match data {
                 WriteData::Text(text) => self.write_utf16(text),
                 WriteData::Bytes(bytes) => self.write_bytes(bytes),
-                WriteData::External(_) => Err(HeadlessError::Engine(TerminalError::Buffer(
-                    "host payload must be converted by its adapter before native parsing".into(),
-                ))),
+                WriteData::External(_) => Err(HeadlessError::HostPayloadRequiresConversion),
             },
         });
         match result {

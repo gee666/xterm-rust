@@ -1,6 +1,8 @@
 use super::{HeadlessError, NativeWritePump, NativeWriteScheduler, Terminal};
 use crate::{
-    input::write_buffer::{WriteAction, WriteBuffer, WriteCallback, WriteData, WriteError},
+    input::write_buffer::{
+        WriteAction, WriteBuffer, WriteCallback, WriteData, WriteError, WriteScheduler,
+    },
     lifecycle::DisposableHandle,
 };
 use std::{cell::Cell, rc::Rc};
@@ -14,24 +16,42 @@ pub struct QueuedTerminal {
     pump: NativeWritePump,
     parsed: DisposableHandle,
     input: DisposableHandle,
+    terminal_dispose: DisposableHandle,
 }
 impl QueuedTerminal {
     pub fn new(terminal: Rc<Terminal>) -> Result<Self, HeadlessError> {
         let pump = NativeWritePump::new();
         let target = Rc::downgrade(&terminal);
         let pending = Cell::new(false);
+        let cleanup_scheduler = pump.scheduler();
         let queue = WriteBuffer::new(pump.scheduler(), move |_, data, result| {
             let terminal = target
                 .upgrade()
                 .ok_or_else(|| WriteError::Action("native terminal was dropped".into()))?;
             // The source queue passes true even for a first call. Only a prior
             // suspended parser result makes that argument a real continuation.
-            let resume = if pending.replace(false) {
-                Some(result.unwrap_or(true))
+            let resume = if pending.get() {
+                let result = result.ok_or_else(|| {
+                    WriteError::external(crate::terminal::TerminalError::Parse(
+                        crate::parser::escape::ParseError::ImproperContinuation,
+                    ))
+                })?;
+                pending.set(false);
+                Some(result)
             } else {
                 None
             };
-            let action = terminal.parse_write_data(data, resume)?;
+            let action = terminal.parse_write_data(data, resume);
+            for cleanup in terminal.take_cleanup().map_err(WriteError::external)? {
+                let mut scheduler = cleanup_scheduler.clone();
+                let mut errors = cleanup_scheduler.clone();
+                scheduler.spawn(Box::pin(async move {
+                    if let Err(error) = cleanup.resolve().await {
+                        errors.report_error(WriteError::external(error));
+                    }
+                }));
+            }
+            let action = action?;
             pending.set(matches!(action, WriteAction::Pending(_)));
             Ok(action)
         });
@@ -49,12 +69,19 @@ impl QueuedTerminal {
                 queue.handle_user_input();
             }
         });
+        let weak = queue.downgrade();
+        let terminal_dispose = terminal.on_dispose_request().subscribe(move |_| {
+            if let Some(queue) = weak.upgrade() {
+                queue.dispose();
+            }
+        });
         Ok(Self {
             terminal,
             queue,
             pump,
             parsed,
             input,
+            terminal_dispose,
         })
     }
     pub fn terminal(&self) -> &Rc<Terminal> {
@@ -81,10 +108,22 @@ impl QueuedTerminal {
         self.queue.write(data, None)?;
         self.queue.write(WriteData::text("\r\n"), callback)
     }
+    pub fn resize(&self, cols: usize, rows: usize) -> Result<(), WriteError> {
+        if cols == self.terminal.cols().map_err(WriteError::external)?
+            && rows == self.terminal.rows().map_err(WriteError::external)?
+        {
+            return Ok(());
+        }
+        self.queue.flush_sync()?;
+        self.terminal
+            .resize(cols, rows)
+            .map_err(WriteError::external)
+    }
     pub fn dispose(&self) -> Result<(), HeadlessError> {
         self.queue.dispose();
         self.parsed.dispose();
         self.input.dispose();
+        self.terminal_dispose.dispose();
         self.terminal.dispose()
     }
 }
@@ -93,5 +132,6 @@ impl Drop for QueuedTerminal {
         self.queue.dispose();
         self.parsed.dispose();
         self.input.dispose();
+        self.terminal_dispose.dispose();
     }
 }

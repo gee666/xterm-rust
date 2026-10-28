@@ -8,6 +8,8 @@
 node scripts/headless-oracle.mjs
 cargo test -p xterm-core --test headless_upstream --test public_api_integration
 cargo test -p xterm-core --test public_api_validation --test headless_options --test headless_modes
+cargo test -p xterm-core --test headless_queue --test headless_queue_edges --test headless_reentry --test headless_contract
+node scripts/check-headless.mjs
 cargo clippy -p xterm-core --lib --test headless_upstream --test public_api_validation --test headless_options --test headless_modes -- -D warnings
 ```
 
@@ -40,6 +42,8 @@ Native dimensions and direct line indices are unsigned. Native scroll counts and
 
 ## Remaining integration work
 
-The synchronous native write convenience API is not the source WriteBuffer scheduling contract. `parse_write_data` bridges actual engine continuation into the portable queue; tasks 128 and 118 own native and browser host scheduling. Pending parser handlers expose `take_pending` and `resume`. Queue integration must account for cleanup futures, callback order, empty data, errors and disposal, not just immediate writes.
+The synchronous native write convenience API is not the source WriteBuffer scheduling contract. `QueuedTerminal` connects the real terminal to `WriteBuffer<NativeWriteScheduler>`. Call `pump().poll()` from the native host and handle its returned errors. A poll runs the timers ready at its start, then polls ready local futures once; future wakers mark readiness without executing inline. It creates no threads and uses no sleeps. Dropping the pump cancels owned work. `QueuedTerminal::resize` flushes queued input before a changed-size resize; a same-size resize preserves the source early return.
 
-Reentrant observation and direct reset now use a shared state handle while the engine releases state borrows before callbacks. Reentrant writes, resize, input and disposal still require dedicated source comparisons and queue-aware integration. All additional PA01-PA06 paths in `docs/public-api-acceptance.md` remain required. There is no full wrapper acceptance or platform/browser equivalence claim from the scoped cases above.
+`parse_write_data` bridges actual engine continuation and suppresses per-chunk parsed notifications. The queue owns completion callbacks and batched parsed events. Native adapters spawn cleanup futures independently and retain typed errors. Pending parser handlers expose `take_pending`, `take_cleanup` and `resume`. Task 128 owns the native adapter and its independent source traces; task 118 owns browser scheduling. The initial 14 native adapter tests pass with warning-free scoped Clippy in `results/review-antigone/headless-queue-run4.log` and `headless-queue-clippy2.log`. Review findings and later regressions remain separate evidence.
+
+Reentrant observation, direct reset, resize and input use a shared state handle while the engine releases state borrows before callbacks. Reentrant disposal stops queued callbacks and shared service notifications immediately while allowing the active parser chunk to finish, then releases the parser. `scripts/headless-reentry-oracle.mjs` records six unchanged source scenarios for observation, reset, disposal, resize, input and queued writes. Corresponding native checks are in `headless_reentry.rs`. These cases do not exhaust every error or lifecycle interleaving. All additional PA01-PA06 paths in `docs/public-api-acceptance.md` remain required. There is no full wrapper acceptance or platform/browser equivalence claim from the scoped cases above.

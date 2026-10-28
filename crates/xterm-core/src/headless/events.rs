@@ -110,7 +110,8 @@ impl Events {
             | TerminalEvent::SendFocus
             | TerminalEvent::ColorSchemeQuery
             | TerminalEvent::WindowReport(_)
-            | TerminalEvent::Color(_) => {
+            | TerminalEvent::Color(_)
+            | TerminalEvent::InputScroll(_) => {
                 // These internal browser requests have no corresponding public
                 // headless event or host listener upstream. The raw observer
                 // below still receives them for an attached browser adapter.
