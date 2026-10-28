@@ -1,0 +1,28 @@
+{
+  "task": 55,
+  "reviewer": "Timur",
+  "owner": "Tuah",
+  "scope": "Independent typed MouseStateService differential consumer, including signed buttons. Not dynamic prototype registries, browser routing or full terminal equivalence.",
+  "inspection": [
+    "Read complete source MouseStateService.ts, mouse_state.rs, mouse_protocol.rs, independent mouse_differential.rs and the unchanged-source raw signed-button generator.",
+    "Compared all five restrictions, modifier mutation, event-code bit operations, DEFAULT ToUint16/address limit and SGR numeric formatting/terminators.",
+    "Checked the original eight-case mapping, source import/assertion transformations and Chai message-substring throws adaptation.",
+    "Reviewed custom mutable encoders, shared protocol edits, snapshot callback replacement, concrete error source chains and weak-capture/drop tests.",
+    "Requested changes because button/action preservation was absent from the full-event comparator. Owner added exact numeric button bits and action checks after both restriction and encoding; no fixture or row count was weakened."
+  ],
+  "checks": [
+    { "receipt": "results/build-slots/1793172773686-47908-37070cf4-3b72-43f1-8b26-2e057b0eb9b0/receipt.json", "command": "node scripts/mouse-state-oracle.mjs", "exitCode": 0, "originalCasesPassed": 8, "additionalSourceCasesPassed": 4, "corpusRows": 12226 },
+    { "receipt": "results/build-slots/1793172883228-46800-64fa3acf-d618-4524-84ce-f8ad56efa694/receipt.json", "command": "node scripts/mouse-raw-button-oracle.mjs", "exitCode": 0, "corpusRows": 4200 },
+    { "receipt": "results/build-slots/1793173142299-48668-512980a1-ec07-4bcc-af5b-8b474ab2adc0/receipt.json", "command": "cargo test -p xterm-core --test mouse_state --test mouse_callbacks --test mouse_differential --test mouse_custom --test mouse_button_numeric", "exitCode": 0, "testsPassed": 27, "testsFailed": 0, "ignored": 0, "differentialRows": 16426 },
+    { "command": "rustfmt --edition 2021 --check crates/xterm-core/tests/mouse_differential.rs crates/xterm-core/src/mouse_state.rs crates/xterm-core/src/mouse_protocol.rs", "exitCode": 0 },
+    { "receipt": "results/build-slots/1793173200353-41056-75b89366-5f61-4499-ab8e-db61dd8563c9/receipt.json", "command": "cargo clippy -p xterm-core --lib --test mouse_state --test mouse_callbacks --test mouse_differential --test mouse_custom --test mouse_button_numeric -- -D warnings", "exitCode": 101, "finding": "Blocked by unrelated in-progress buffer cleanup_owner unread fields/methods, not a mouse diagnostic. Failure log retained; no clean Clippy claim for this snapshot." }
+  ],
+  "nativePlatform": "Windows x64 only",
+  "release": "Not rerun locally because controlled build policy prohibits release builds. Historical owner results are not claimed as this review's execution.",
+  "remaining": [
+    "Task171 dynamic/inherited/prototype registry names and non-string return behavior remain incomplete.",
+    "Event task14 remains independently open; removing its coarse dependency does not accept that module.",
+    "DOM coordinate conversion/routing and native Linux/macOS/browser execution are separate gates."
+  ],
+  "verdict": "Accept scoped independent comparator work after the button/action fix. Full equivalence remains NOT PROVEN."
+}
