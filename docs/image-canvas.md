@@ -59,4 +59,6 @@ Required workspace commands were attempted and failed. Logs are retained under `
 - `cargo test --workspace --all-targets --all-features`: unresolved `xterm_web::scroll` and `search_host` imports among the existing browser integration tests.
 - `cargo check --locked -p xterm-web --lib --target wasm32-unknown-unknown`: missing browser root modules/APIs such as terminal, js_error, composition callbacks and task queue producers.
 
+The gated merge was attempted after review and rebased the accepted code to `09db704` over main `1e62bc5`. It stopped at the native `search_addon` test's missing `xterm_web::search_host` import. `results/image-canvas/merge-gate.log` retains the failure. Task277 owns the eventual gated merge of this branch and accepted QOI branch `swarm/Marie`; do not bypass the checks.
+
 These failures are integration work, not external blockers and not waived by the component pass. Original full ImageAddon/Kitty browser suites, live protocol ingestion, terminal lifecycle subscriptions, native Linux/macOS execution and full addon equivalence remain unproven.
