@@ -1,6 +1,10 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved. MIT license.
 //! Buffer dimensions, full/partial-region scrolling and display tracking.
-use super::{buffer_set::BufferRef, screen::LineRef, AttributeData, BufferError, BufferSet};
+use super::{
+    buffer_set::{BufferRef, CleanupFactory, CleanupFactoryHandle},
+    screen::LineRef,
+    AttributeData, BufferError, BufferSet,
+};
 use crate::{
     event::{EmitError, Emitter, Event},
     lifecycle::{Disposable, DisposableHandle},
@@ -62,6 +66,12 @@ impl BufferService {
     }
     pub fn rows(&self) -> usize {
         self.buffers.dimensions().rows.get()
+    }
+    pub fn install_cleanup_factory(
+        &self,
+        factory: CleanupFactory,
+    ) -> Result<CleanupFactoryHandle, BufferError> {
+        self.buffers.install_cleanup_factory(factory)
     }
     pub fn buffer(&self) -> BufferRef {
         self.buffers.active()

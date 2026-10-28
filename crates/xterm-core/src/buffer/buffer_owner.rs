@@ -1,9 +1,6 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
 use super::{Buffer, BufferError, BufferRef};
-use std::{
-    cell::{Cell, RefCell},
-    rc::Rc,
-};
+use std::cell::{Cell, RefCell};
 
 /// Buffer-specific MutableDisposable contract. The shared lifecycle trait is
 /// infallible, so using it here would discard marker/host callback errors. Keep
@@ -21,14 +18,18 @@ impl BufferOwner {
             disposed: Cell::new(false),
         }
     }
+    /// Host attachment must include retained owner values even when reentry
+    /// made them differ from the Set's raw fields or hid them after disposal.
+    pub(super) fn retained_buffer(&self) -> Option<BufferRef> {
+        self.value.borrow().clone()
+    }
     pub(super) fn replace(&self, value: BufferRef) -> Result<(), BufferError> {
         if self.disposed.get() {
             return Ok(());
         }
         let old = self.value.borrow().clone();
-        if old.as_ref().is_some_and(|old| Rc::ptr_eq(old, &value)) {
-            return Ok(());
-        }
+        // Set reset always supplies a freshly constructed buffer, so the
+        // generic MutableDisposable same-value branch is unreachable here.
         if let Some(old) = old {
             Buffer::dispose_shared(&old)?;
         }

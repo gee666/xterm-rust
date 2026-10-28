@@ -15,6 +15,9 @@ pub type BufferRef = Rc<RefCell<Buffer>>;
 #[path = "buffer_owner.rs"]
 mod owner;
 use owner::BufferOwner;
+#[path = "buffer_cleanup_factory.rs"]
+mod factory;
+pub use factory::{CleanupFactory, CleanupFactoryError, CleanupFactoryHandle};
 
 #[derive(Clone)]
 pub struct BufferActivation {
@@ -28,6 +31,7 @@ struct State {
     active: RefCell<BufferRef>,
     normal_owner: BufferOwner,
     alt_owner: BufferOwner,
+    factory: RefCell<Option<Rc<factory::Registration>>>,
     dimensions: Rc<BufferDimensions>,
     options: Rc<OptionsService>,
     activate: Emitter<BufferActivation>,
@@ -51,6 +55,7 @@ impl BufferSet {
             active: RefCell::new(Rc::clone(&normal)),
             normal_owner: BufferOwner::new(Rc::clone(&normal)),
             alt_owner: BufferOwner::new(Rc::clone(&alt)),
+            factory: RefCell::new(None),
             normal: RefCell::new(normal),
             alt: RefCell::new(alt),
             dimensions,
@@ -104,12 +109,44 @@ impl BufferSet {
         self.state.activate.event()
     }
 
+    pub fn install_cleanup_factory(
+        &self,
+        factory: CleanupFactory,
+    ) -> Result<CleanupFactoryHandle, BufferError> {
+        factory::install(self, factory)
+    }
+    fn create_buffer(&self, scrollback: bool) -> Result<BufferRef, BufferError> {
+        let buffer = make_buffer(scrollback, &self.state.dimensions, &self.state.options)?;
+        let factory = self.state.factory.borrow().clone();
+        if let Some(factory) = factory {
+            factory.attach(&buffer)?;
+        }
+        Ok(buffer)
+    }
+    fn retained_buffers(&self) -> Vec<BufferRef> {
+        let mut unique = Vec::new();
+        for buffer in [
+            Some(self.normal()),
+            Some(self.alt()),
+            Some(self.active()),
+            self.state.normal_owner.retained_buffer(),
+            self.state.alt_owner.retained_buffer(),
+        ]
+        .into_iter()
+        .flatten()
+        {
+            if !unique.iter().any(|old| Rc::ptr_eq(old, &buffer)) {
+                unique.push(buffer);
+            }
+        }
+        unique
+    }
     pub fn reset(&self) -> Result<(), BufferError> {
-        let normal = make_buffer(true, &self.state.dimensions, &self.state.options)?;
+        let normal = self.create_buffer(true)?;
         *self.state.normal.borrow_mut() = Rc::clone(&normal);
         self.state.normal_owner.replace(normal)?;
         Buffer::fill_viewport_rows_shared(&self.normal(), None)?;
-        let alt = make_buffer(false, &self.state.dimensions, &self.state.options)?;
+        let alt = self.create_buffer(false)?;
         *self.state.alt.borrow_mut() = Rc::clone(&alt);
         self.state.alt_owner.replace(alt)?;
         let normal = self.normal();

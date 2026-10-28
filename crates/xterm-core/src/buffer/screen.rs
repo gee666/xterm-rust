@@ -1,6 +1,6 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
 //! Terminal buffer state. Row references preserve JavaScript line identity.
-use super::{AttributeData, BufferLine, CellData};
+use super::{cleanup_owner::CleanupOwnerSlot, AttributeData, BufferLine, CellData};
 use crate::{
     charset::Charset,
     circular_list::{CircularList, CircularListError},
@@ -143,6 +143,7 @@ pub struct Buffer {
     disposed: bool,
     pub(crate) cleanup_events: Rc<Emitter<bool>>,
     pub(crate) cleanup_attached: Rc<Cell<bool>>,
+    cleanup_owner: Rc<CleanupOwnerSlot>,
 }
 impl Buffer {
     pub fn new(
@@ -183,12 +184,22 @@ impl Buffer {
             disposed: false,
             cleanup_events: Rc::new(Emitter::new()),
             cleanup_attached: Rc::new(Cell::new(false)),
+            cleanup_owner: Rc::new(CleanupOwnerSlot::default()),
         };
         buffer
             .lines
             .set_max_length(buffer.correct_buffer_length(rows)?)?;
         buffer.setup_tab_stops(None)?;
         Ok(buffer)
+    }
+    pub(crate) fn cleanup_owner_slot(&self) -> Rc<CleanupOwnerSlot> {
+        Rc::clone(&self.cleanup_owner)
+    }
+    pub(crate) fn cleanup_owner_slot_shared(
+        buffer: &Rc<RefCell<Self>>,
+    ) -> Result<Rc<CleanupOwnerSlot>, BufferError> {
+        let state = buffer.try_borrow().map_err(|_| BufferError::BorrowedLine)?;
+        Ok(state.cleanup_owner_slot())
     }
     pub fn cols(&self) -> usize {
         self.cols
@@ -281,7 +292,8 @@ impl Buffer {
         let mut cleaned = 0;
         while self.cleanup_position < self.lines.len() {
             let index = self.cleanup_position;
-            // Source get(position++) advances even when the row is undefined.
+            // Source uses get(position++): even an undefined row advances the
+            // resume position before its cleanup method access can fail.
             self.cleanup_position += 1;
             let line = self.line(index)?;
             cleaned += usize::from(
