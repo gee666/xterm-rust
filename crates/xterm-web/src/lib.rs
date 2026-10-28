@@ -3,6 +3,10 @@
 //! This crate is an incomplete port. Its DOM host is not a complete terminal;
 //! unsupported terminal APIs are not exported as successful placeholders.
 
+/// The unchanged upstream MIT stylesheet, shared with browser distributions.
+pub const XTERM_CSS: &str = include_str!("../assets/xterm.css");
+
+pub mod accessibility;
 pub mod api;
 pub mod input;
 pub mod links;
