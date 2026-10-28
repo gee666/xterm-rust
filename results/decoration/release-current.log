@@ -1,0 +1,93 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `release` profile [optimized] target(s) in 5.18s
+     Running tests\cell_branches.rs (target\release\deps\cell_branches-0abaa43101d22c79.exe)
+
+running 8 tests
+test equality_checks_each_visible_flag_but_excludes_protection ... ok
+test foreground_and_background_modes_payloads_and_rgb_masking ... ok
+test equality_uses_numeric_underline_and_not_a_rendering_guess ... ok
+test every_individual_flag_has_exact_mask_and_no_other_flag ... ok
+test equality_decodes_modes_colors_and_default_underline_branches ... ok
+test legacy_utf16_conversion_branches_and_signed_width_boundaries ... ok
+test underline_presence_style_and_default_color_are_distinct_queries ... ok
+test raw_content_masks_and_out_of_range_codepoints_keep_js_truncation ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\cell_differential.rs (target\release\deps\cell_differential-8273548bb3607c5e.exe)
+
+running 7 tests
+test buffer_handles_share_identity_while_explicit_clone_does_not ... ok
+test payload_affects_emptiness_but_is_not_cloned_upstream ... ok
+test lone_surrogates_and_empty_combined_strings_are_not_lost ... ok
+test rgb_conversion_masks_each_channel ... ok
+test hyperlink_overrides_style_without_destroying_stored_style ... ok
+test seeded_legacy_char_data_matches_javascript ... ok
+test seeded_raw_cells_match_javascript ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\cell_extended.rs (target\release\deps\cell_extended-e3220f19fe72a828.exe)
+
+running 4 tests
+test clone_keeps_hidden_style_when_url_is_present_and_cell_clone_drops_payload ... ok
+test setter_masks_preserve_all_other_fields ... ok
+test emptiness_update_and_clone_preserve_unrelated_data ... ok
+test seeded_extended_mutations_match_js_identity_and_payload_behavior ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\cell_upstream.rs (target\release\deps\cell_upstream-678027249639923a.exe)
+
+running 12 tests
+test char_data_cell_data_equality ... ok
+test detects_underline_style_changes ... ok
+test get_underline_color_p256 ... ok
+test detects_underline_color_changes ... ok
+test get_underline_variant_offset ... ok
+test has_extended_attrs ... ok
+test ignores_url_ids ... ok
+test get_underline_style ... ok
+test get_underline_color_rgb ... ok
+test ignores_underline_variant_offsets ... ok
+test underline_color_mode_and_queries ... ok
+test returns_true_for_same_attributes_with_different_chars ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\decoration_differential.rs (target\release\deps\decoration_differential-9799d7150760867a.exe)
+
+running 1 test
+test all_1024_seeded_operations_match_actual_javascript ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests\decoration_edges.rs (target\release\deps\decoration_edges-07b2bd848ce35cb8.exe)
+
+running 7 tests
+test attach_replaces_listeners_clear_cancels_work_and_batches_sync_requests ... ok
+test lazy_colors_cache_absence_success_and_retry_failed_parse ... ok
+test disposal_event_order_and_marker_invalidation ... ok
+test lookup_traverses_live_bucket_while_service_iterator_is_a_snapshot ... ok
+test disposed_marker_rejection_defaults_and_layer_boundaries ... ok
+test render_handle_identity_and_listener_errors_propagate ... ok
+test live_buffer_activation_replaces_cache_subscriptions ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\decoration_upstream.rs (target\release\deps\decoration_upstream-8f75d8c02125fcfa.exe)
+
+running 10 tests
+test should_find_decoration_at_its_marker_line ... ok
+test should_find_height_on_subsequent_lines_callback ... ok
+test should_return_absence_for_lines_without_indexed_decorations ... ok
+test should_not_find_decoration_outside_x_range ... ok
+test should_find_height_on_subsequent_lines_iterator ... ok
+test should_set_is_disposed_to_true_after_dispose ... ok
+test should_keep_multiline_index_after_actual_line_insert ... ok
+test should_keep_lookups_correct_after_buffer_trim ... ok
+test should_remove_decoration_when_marker_trimmed_off_buffer ... ok
+test should_find_multiline_with_single_line_decorations_elsewhere ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
