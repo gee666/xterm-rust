@@ -12,8 +12,7 @@ pub mod dom;
 pub mod geometry;
 #[cfg(target_arch = "wasm32")]
 mod options;
-#[cfg(target_arch = "wasm32")]
-pub use options::read_font as font_from_options;
+pub mod raw_font;
 pub mod row;
 mod row_colors;
 #[cfg(target_arch = "wasm32")]
@@ -30,4 +29,3 @@ pub mod theme_css;
 pub mod theme_css_utf16;
 pub mod utils;
 pub mod width_cache;
-pub mod raw_font;

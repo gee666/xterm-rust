@@ -15,7 +15,7 @@ pub fn line(cells: &[Value]) -> BufferLine {
                     bg: number(&raw["bg"]) as u32,
                     extended: ExtendedAttrs::new(
                         number(&raw["ext"]) as u32,
-                        number(&raw["url"]) as u32,
+                        raw["url"].as_u64().unwrap(),
                     ),
                 },
                 combined_data: raw["chars"]

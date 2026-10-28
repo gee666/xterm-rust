@@ -7,21 +7,20 @@ mod draw;
 mod layout;
 mod styles;
 use super::{
-    canvas_width::CanvasWidthMeasurer,
+    canvas_width::{CanvasWidthMeasurer, SourceCanvasCache},
     cursor_blink::CursorBlinkController,
     options::RenderOptions,
     row::RowFactory,
     row_types::Selection,
     service_api::{BrowserService, RedrawRequest},
     text_blink::TextBlinkController,
-    width_cache::WidthCache,
 };
 use crate::{
     api::RenderDimensions, char_size_browser::CharSizeService,
     character_joiner::CharacterJoinerService, dom::BrowserDom, theme::ThemeService,
 };
 use std::{
-    cell::{Cell, RefCell},
+    cell::{Cell, OnceCell, RefCell},
     rc::Rc,
     sync::atomic::{AtomicU64, Ordering},
 };
@@ -63,7 +62,7 @@ pub struct DomRenderer {
     joiners: Rc<CharacterJoinerService>,
     decoration: DecorationService,
     metrics: Rc<CharSizeService>,
-    widths: RefCell<WidthCache<CanvasWidthMeasurer>>,
+    widths: OnceCell<SourceCanvasCache>,
     options: RefCell<RenderOptions>,
     options_service: Rc<OptionsService>,
     listeners: DisposableStore,
@@ -112,6 +111,11 @@ impl DomRenderer {
                 }));
         }
     }
+    fn widths(&self) -> Result<&SourceCanvasCache, JsValue> {
+        self.widths
+            .get()
+            .ok_or_else(|| js_sys::TypeError::new("width cache is not initialized").into())
+    }
     pub fn dimensions(&self) -> RenderDimensions {
         self.dimensions.get()
     }
@@ -133,10 +137,6 @@ impl DomRenderer {
     fn options_changed(&self) -> Result<(), JsValue> {
         let options = RenderOptions::read(&self.options_service)
             .map_err(|e| crate::js_error::to_js_error(&e))?;
-        self.widths
-            .borrow_mut()
-            .set_font(options.font.clone())
-            .map_err(width_error)?;
         *self.options.borrow_mut() = options;
         let cols = self
             .terminal
@@ -148,6 +148,9 @@ impl DomRenderer {
             .map_err(|e| crate::js_error::to_js_error(&e))?;
         self.update_dimensions(cols, rows)?;
         self.inject_css()?;
+        self.widths()?
+            .set_font_from_options(&self.options_service)
+            .map_err(width_error)?;
         self.set_default_spacing()?;
         self.update_blink_duration()
     }
@@ -171,7 +174,9 @@ impl DomRenderer {
         if let Some(blink) = self.cursor_blink.borrow_mut().take() {
             blink.dispose();
         }
-        self.widths.borrow_mut().dispose();
+        if let Some(widths) = self.widths.get() {
+            widths.dispose();
+        }
         self.row_container.remove();
         self.selection_container.remove();
         self.dimensions_style.remove();

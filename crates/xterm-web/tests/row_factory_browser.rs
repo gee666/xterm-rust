@@ -98,7 +98,7 @@ fn replay_every_original_row_assertion_in_real_browser_dom() {
                 column: flag(&case["column"]),
             },
         };
-        let mut widths = WidthCache::new(FixtureMeasurer(case["widths"].clone()));
+        let widths = WidthCache::new(FixtureMeasurer(case["widths"].clone()));
         let colors = colors.borrow();
         let row = factory
             .create_row(
@@ -109,7 +109,7 @@ fn replay_every_original_row_assertion_in_real_browser_dom() {
                     joined_ranges: &[],
                     decorations: &|_, _| Ok(Vec::new()),
                 },
-                &mut widths,
+                &widths,
             )
             .unwrap();
         let container = document.create_element("div").unwrap();
