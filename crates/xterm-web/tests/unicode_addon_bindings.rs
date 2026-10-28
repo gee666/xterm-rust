@@ -4,7 +4,9 @@ use wasm_bindgen::{prelude::wasm_bindgen, JsCast, JsValue};
 
 // The public browser facade supplies this exact one-line ABI adapter. The raw
 // wasm-bindgen class cannot receive its JavaScript wrapper as Rust's &self.
-#[wasm_bindgen(inline_js = "export function publicLoadAddon(terminal, addon) { return terminal._loadAddon(terminal, addon); }")]
+#[wasm_bindgen(
+    inline_js = "export function publicLoadAddon(terminal, addon) { return terminal._loadAddon(terminal, addon); }"
+)]
 extern "C" {
     #[wasm_bindgen(catch, js_name = publicLoadAddon)]
     fn public_load_addon(terminal: &JsValue, addon: &JsValue) -> Result<(), JsValue>;
