@@ -8,6 +8,7 @@ use xterm_core::{
     lifecycle::{Disposable, DisposableHandle},
     options::{OptionError, OptionValue, OptionsService},
 };
+use xterm_wasm_support::js_error;
 
 #[wasm_bindgen(inline_js = "export function xtermMeasureNumber(value) { return Number(value); }")]
 extern "C" {
@@ -39,13 +40,13 @@ impl FontSource {
                     FontProperty::Family => "fontFamily",
                     FontProperty::Size => "fontSize",
                 })
-                .map_err(|error| crate::js_error::to_js_error(&error)),
+                .map_err(|error| js_error::to_js_error(&error)),
         }
     }
     fn text(&self, property: FontProperty) -> Result<Vec<u16>, JsValue> {
         self.value(property)?
             .to_utf16()
-            .map_err(|error| crate::js_error::to_js_error(&error))
+            .map_err(|error| js_error::to_js_error(&error))
     }
     fn metrics_font(&self) -> Result<Vec<u16>, JsValue> {
         // Size conversion may mutate the family before its subsequent lookup.
@@ -119,7 +120,8 @@ impl Strategy {
                 let style = js_sys::Reflect::get(element.as_ref(), &JsValue::from_str("style"))?;
                 // Preserve the raw value: WebIDL conversion belongs to the chosen
                 // setter, not an earlier Rust string projection.
-                let family = crate::terminal::options::into_js(&font.value(FontProperty::Family)?)?;
+                let family =
+                    xterm_wasm_support::options::into_js(&font.value(FontProperty::Family)?)?;
                 crate::utf16::set_property(&style, "fontFamily", &family)?;
                 let style = js_sys::Reflect::get(element.as_ref(), &JsValue::from_str("style"))?;
                 let mut size = font.text(FontProperty::Size)?;
@@ -185,17 +187,16 @@ impl CharSizeService {
             FontSource::Live(Rc::clone(&options)),
         )?);
         let weak = Rc::downgrade(&service);
-        let listener = options
-            .try_on_option_change(move |key| {
-                if matches!(key, "fontFamily" | "fontSize") {
-                    if let Some(service) = weak.upgrade() {
-                        service.measure().map_err(|error| {
-                            OptionError::Dispatch(crate::js_error::callback_error(error))
-                        })?;
-                    }
+        let listener = options.try_on_option_change(move |key| {
+            if matches!(key, "fontFamily" | "fontSize") {
+                if let Some(service) = weak.upgrade() {
+                    service
+                        .measure()
+                        .map_err(|error| OptionError::Dispatch(js_error::callback_error(error)))?;
                 }
-                Ok(())
-            });
+            }
+            Ok(())
+        });
         *service.option_listener.borrow_mut() = Some(listener);
         Ok(service)
     }
@@ -203,7 +204,7 @@ impl CharSizeService {
         let (width, height) = self.strategy.measure(&self.font)?;
         self.state
             .update_measurement(width, height)
-            .map_err(|error| crate::js_error::to_js_error(&error))
+            .map_err(|error| js_error::to_js_error(&error))
     }
     pub fn set_font(&self, font: Font) -> Result<(), JsValue> {
         match &self.font {

@@ -8,6 +8,8 @@ pub mod api {
 #[cfg(target_arch = "wasm32")]
 pub mod events;
 #[cfg(target_arch = "wasm32")]
+pub mod public_api;
+#[cfg(target_arch = "wasm32")]
 pub mod js_error;
 #[cfg(target_arch = "wasm32")]
 pub mod logger;

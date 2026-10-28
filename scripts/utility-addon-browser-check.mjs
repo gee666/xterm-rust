@@ -9,7 +9,7 @@ const server = new WebSocketServer({ host: '127.0.0.1', port: 0 });
 await new Promise((done, reject) => { server.once('listening', done); server.once('error', reject); });
 server.on('connection', socket => { socket.send('foo'); socket.send(Buffer.from([102, 111, 111])); });
 process.env.UTILITY_SOCKET_URL = `ws://127.0.0.1:${server.address().port}`;
-process.env.WASM_TEST = 'wasm_utility_addons';
+process.env.WASM_TEST ??= 'wasm_utility_addons';
 try { await import('./browser-host-check.mjs'); }
 finally {
   for (const client of server.clients) client.terminate();

@@ -100,6 +100,18 @@ lower.dispose();
 equal(lower._addons.length,1);
 observations.push({case:'remove-lower-captured-splice-index',remaining:lower._addons.length});
 
+const exotic=new AddonManager();
+let applyCalls=0;
+const custom={activate(){},dispose:{apply(instance){equal(instance,custom);applyCalls++;}}};
+exotic.loadAddon(terminal,custom);exotic.dispose();
+equal(applyCalls,1);
+const invalid=new AddonManager();
+assert.throws(()=>invalid.loadAddon(terminal,{activate:17,dispose:undefined}),TypeError);checks++;
+assert.throws(()=>invalid.dispose(),TypeError);checks++;
+invalid.dispose();
+equal(invalid._addons.length,1);
+observations.push({case:'dynamic-apply-and-nonfunction-type-errors',applyCalls,failedDisposedRecords:invalid._addons.length});
+
 const report = { source:'source_repo/src/common/public/AddonManager.ts', node:process.version, status:'passed', checks, observations,
   upstream:{discovered:cases.length,executed:cases.length,passed:cases.filter(c=>c.status==='passed').length,failed:failures,skipped:0,unrun:0,cases},
   hashes:Object.fromEntries(['AddonManager.ts','AddonManager.test.ts'].map(name=>[name,createHash('sha256').update(readFileSync(resolve(root,'source_repo/src/common/public',name))).digest('hex')])),

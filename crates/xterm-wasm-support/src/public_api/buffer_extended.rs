@@ -17,7 +17,7 @@ impl WebExtendedAttrs {
         }
     }
 }
-#[wasm_bindgen]
+#[wasm_bindgen(js_class = ExtendedCellAttributes)]
 impl WebExtendedAttrs {
     #[wasm_bindgen(getter)]
     pub fn ext(&self) -> u32 {
