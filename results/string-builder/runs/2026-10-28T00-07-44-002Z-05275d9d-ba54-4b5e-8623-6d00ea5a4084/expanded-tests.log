@@ -1,0 +1,75 @@
+
+running 4 tests
+test utf8_helper_counts_utf16_units ... ok
+test preserves_split_pairs_and_lone_surrogates ... ok
+test maximal_limit_does_not_wrap ... ok
+test matches_seeded_javascript_traces ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+
+running 6 tests
+test every_chunk_partition_preserves_surrogate_sequences ... ok
+test breach_never_poisons_future_payload_or_retains_surrogates ... ok
+test numeric_constructor_metadata_survives_every_operation ... ok
+test owned_snapshots_and_clone_are_independent_of_reset_and_reuse ... ok
+test boundary_matrix_matches_single_and_cumulative_utf8_and_utf16 ... ok
+test every_single_utf16_unit_survives_observation ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+
+running 17 tests
+test accepts_single_exact_chunk ... ok
+test accepts_up_to_limit ... ok
+test appends_single_chunk ... ok
+test accumulates_to_limit_then_rejects ... ok
+test appends_after_reset ... ok
+test appends_after_breach_and_reset ... ok
+test exposes_limit ... ok
+test handles_empty_chunks ... ok
+test joins_multiple_chunks_in_order ... ok
+test limited_starts_empty ... ok
+test rejects_overflow_and_clears ... ok
+test rejects_single_large_chunk ... ok
+test accumulates_many_small_chunks ... ok
+test resets_accumulated_data ... ok
+test starts_empty ... ok
+test zero_limit_accepts_empty_chunk ... ok
+test zero_limit_rejects_nonempty_chunk ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+    Blocking waiting for file lock on build directory
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+warning: associated function `clear_markers_shared` is never used
+  --> crates\xterm-core\src\buffer\screen_shared.rs:20:19
+   |
+11 | impl Buffer {
+   | ----------- associated function in this implementation
+...
+20 |     pub(crate) fn clear_markers_shared(
+   |                   ^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: function `clear_markers_on_line` is never used
+  --> crates\xterm-core\src\buffer\screen_shared.rs:44:15
+   |
+44 | pub(super) fn clear_markers_on_line(
+   |               ^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `with_queued_parse` is never used
+  --> crates\xterm-core\src\headless\events.rs:67:12
+   |
+33 | impl Events {
+   | ----------- method in this implementation
+...
+67 |     pub fn with_queued_parse<T>(&self, action: impl FnOnce() -> T) -> T {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: `xterm-core` (lib) generated 3 warnings
+    Finished `test` profile [unoptimized] target(s) in 11.54s
+     Running tests\string_builder_differential.rs (target\debug\deps\string_builder_differential-a071170267b34dfd.exe)
+     Running tests\string_builder_edges.rs (target\debug\deps\string_builder_edges-c8a77a47b224e928.exe)
+     Running tests\string_builder_upstream.rs (target\debug\deps\string_builder_upstream-c3202224b3358114.exe)

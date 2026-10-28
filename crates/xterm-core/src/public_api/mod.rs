@@ -1,6 +1,7 @@
 //! Contracts shared by native terminal APIs and browser bindings.
 pub mod addon_manager;
 pub mod buffer;
+pub mod line_numbers;
 pub mod parser;
 pub mod validation;
 

@@ -16,6 +16,8 @@ mod storage_tests;
 mod buffer_cleanup_tests;
 #[path = "line_text.rs"]
 mod text;
+#[path = "line_numeric.rs"]
+mod numeric;
 
 /// One terminal row with sparse combined strings and extended attributes.
 /// Out-of-range cell access returns `None`; mutations outside the row are ignored,
