@@ -1,0 +1,47 @@
+{
+  "task": 139,
+  "scope": "Portable TouchData, EndGesture, Inertia and TapCount arithmetic only",
+  "platform": "native Windows x86_64",
+  "rustc": "1.85.1",
+  "node": "v24.15.0",
+  "files": {
+    "crates/xterm-web/src/input/touch.rs": "5a42ef10ef3eafc2448659d8259e295e0293058e018f1544fea5fabcf0884c84",
+    "crates/xterm-web/tests/touch_policy.rs": "5f11c5f0c83c3fc0f91998e12b21e779da14ef903934605e5c6ee5c6e19fc2ef",
+    "scripts/touch-oracle.mjs": "610c0ccdc1d9f8edf309201cbd9eb6fe12960df358e6595a6545a679ab7a385b"
+  },
+  "oracle": {
+    "command": "node scripts/touch-oracle.mjs",
+    "directedCases": 127,
+    "randomCases": 512,
+    "seed": "0x704c4b31",
+    "traces": 639,
+    "movementCalls": 2251,
+    "frameAttempts": 3353,
+    "operationSnapshots": 8061,
+    "status": "matched",
+    "originalTouchSpecificSuitesFound": 0
+  },
+  "debug": {
+    "command": "cargo test -p xterm-web --test touch_policy",
+    "passed": 7, "failed": 0, "ignored": 0,
+    "log": "results/touch-policy/debug.txt"
+  },
+  "release": {
+    "command": "cargo test -p xterm-web --release --test touch_policy",
+    "passed": 7, "failed": 0, "ignored": 0,
+    "log": "results/touch-policy/release.txt"
+  },
+  "clippy": {
+    "command": "cargo clippy -p xterm-web --test touch_policy -- -D warnings",
+    "status": "passed warning-free",
+    "log": "results/touch-policy/clippy.txt"
+  },
+  "fmt": {
+    "command": "rustfmt --edition 2021 --check crates/xterm-web/src/input/touch.rs crates/xterm-web/tests/touch_policy.rs",
+    "status": "passed",
+    "log": "results/touch-policy/fmt.txt"
+  },
+  "resourcePolicy": "Used shared Cargo target and existing profiles. Commands completed before the new disk pause; no further Cargo/Node build runners launched after pause acknowledgment.",
+  "notEstablished": ["DOM gestures and callback ordering", "real touch-to-scroll", "Chromium Firefox WebKit runtime", "native Linux/macOS", "whole terminal equivalence"],
+  "domIntegrationOwnerTask": 108
+}
