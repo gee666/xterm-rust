@@ -58,4 +58,14 @@ See the `scroll-element-check` skill for commands and environment overrides. Raw
 
 Environment: cargo/rustc1.85.1, wasm-bindgen CLI/runtime0.2.100, Node24.15.0. A fresh Cargo1.85 target created its cache tag only under `target/wasm32-unknown-unknown`; the runner requires the parent tag too. This run copied that actual Cargo-generated tag into the private target root. No assertion or source was changed to bypass the artifact check.
 
-This is component evidence on the private integration stack. It does not establish full browser API equivalence, main integration, all-feature workspace health, Linux/macOS runtime success, malformed raw model arithmetic, cross-origin iframe completeness or every dynamic getter path. Those remain separate integration/verification obligations. Overall equivalence remains NOT PROVEN.
+The initial task167 evidence above was collected on the private integration stack. It did not establish main integration or whole-port equivalence.
+
+## Main integration, task283
+
+Only task167 checkpoint `b29f518` was cherry-picked onto a fresh main branch, `swarm/DominicIntegrate`. Main already contained identical concrete Element producers. No private Root history was replayed. Canonical `node scripts/worktree-merge.mjs` first refused to merge because main advanced during testing. A second bounded invocation rebased, retested and fast-forwarded main to `25058162d4792128fc2cc619a12eb5d250822988`.
+
+The accepted merge ran default-feature native build and all-target tests for changed crate xterm-web, affected-dependent all-target checking, workspace checking and applicable WASM library checking. Native tests passed298 cases across90 targets, including targets with zero tests. This default-feature gate does not imply all-feature Clippy or release/platform gates. Full output is `results/scroll-element/canonical-merge-2.log`; the refused race attempt is `canonical-merge.log`.
+
+After that exact merge, a clean private target rebuilt the suite and all11 Rust functions again passed Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4. See the updated `results/browser-host/wasm_scroll_element-results.json` and `results/scroll-element/integration.json`. The old cells.rs failure above belongs to the initial Bharata stack, not this integrated checkpoint. Other global gates were not silently inferred from this component pass.
+
+Full browser API equivalence, all-feature workspace health, Linux/macOS runtime success, malformed raw model arithmetic, cross-origin iframe completeness and every dynamic getter path remain separate obligations. Overall equivalence remains NOT PROVEN.
