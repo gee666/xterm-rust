@@ -5,12 +5,17 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { delimiter, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { runScopedOracle, buildNativeOracle, recordSyncCommand } from './oracle-evidence.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 process.chdir(root);
-const temp = resolve('tmp/osc-link-service');
-const result = 'results/osc-link-service';
-mkdirSync(temp, { recursive: true }); mkdirSync(result, { recursive: true });
+const attemptReport = await runScopedOracle(resolve('results/osc-link-service'), {
+  kind: 'osc-link-service', command: 'node scripts/check-osc-link-service.mjs', scope: 'OSC link store only; full equivalence NOT PROVEN'
+}, async context => {
+const result = context.directory;
+const temp = resolve('tmp/osc-link-service', context.runId);
+mkdirSync(temp, { recursive: true });
+context.checkpoint({ phase: 'source-build' });
 const require = createRequire(resolve('source_repo/package.json'));
 const { build } = require('esbuild');
 const runtime = resolve(temp, 'runtime.cjs');
@@ -36,8 +41,11 @@ const runBaseline = spawnSync(process.execPath,
   { encoding: 'utf8', timeout: 120000, env });
 writeFileSync(`${result}/original-stdout.json`, runBaseline.stdout ?? '');
 writeFileSync(`${result}/original-stderr.log`, runBaseline.stderr ?? '');
+recordSyncCommand(context, [process.execPath, 'source_repo/node_modules/mocha/bin/mocha.js', baseline, '--reporter=json'], runBaseline,
+  { stdout: `${result}/original-stdout.json`, stderr: `${result}/original-stderr.log` });
 if (runBaseline.error) throw runBaseline.error;
 assert.equal(runBaseline.status, 0, runBaseline.stderr);
+context.checkpoint({ phase: 'original-output-parse' });
 const baselineReport = JSON.parse(runBaseline.stdout);
 assert.equal(baselineReport.stats.tests, 3); assert.equal(baselineReport.stats.passes, 3);
 assert.equal(baselineReport.stats.failures, 0); assert.equal(baselineReport.stats.pending, 0);
@@ -126,12 +134,16 @@ const fixture = operations.map((operation, i) => `${operation}\t${expected[i]}`)
 const fixturePath = 'crates/xterm-core/tests/fixtures/osc-link-traces.tsv';
 if (process.argv.includes('--write-fixtures')) writeFileSync(fixturePath, fixture);
 else assert.equal(readFileSync(fixturePath, 'utf8').replaceAll('\r\n', '\n'), fixture);
-const cargo = spawnSync(process.env.CARGO ?? 'cargo', ['run', '--quiet', '-p', 'xterm-core', '--example', 'osc_link_oracle'], {
+context.checkpoint({ baselineCases: baselineReport.stats.tests, baselinePassed: baselineReport.stats.passes, phase: 'native-build' });
+const artifact = await buildNativeOracle(context, root, 'osc_link_oracle');
+const cargo = spawnSync(artifact.executable, [], {
   input: operations.join('\n') + '\n', encoding: 'utf8', timeout: 120000, maxBuffer: 32 * 1024 * 1024,
 });
 writeFileSync(`${result}/native-stderr.log`, cargo.stderr ?? '');
+recordSyncCommand(context, [artifact.executable], cargo, { stderr: `${result}/native-stderr.log` });
 if (cargo.error) throw cargo.error;
 assert.equal(cargo.status, 0, cargo.stderr);
+context.checkpoint({ phase: 'native-output-comparison' });
 const actual = cargo.stdout.trimEnd().split(/\r?\n/);
 assert.equal(actual.length, expected.length);
 for (let i = 0; i < actual.length; i++) {
@@ -143,13 +155,10 @@ for (let i = 0; i < actual.length; i++) {
 const inputs = new Set([...Object.keys(compiled.metafile.inputs), ...Object.keys(tests.metafile.inputs)]);
 const hashes = {};
 for (const input of [...inputs].sort()) if (input.startsWith('source_repo/')) hashes[input] = createHash('sha256').update(readFileSync(input)).digest('hex');
-const rustc = spawnSync(process.env.RUSTC ?? 'rustc', ['--version'], { encoding: 'utf8', timeout: 10000 });
-if (rustc.error) throw rustc.error;
-assert.equal(rustc.status, 0, rustc.stderr);
 const summary = {
   scope: 'OSCLinkService and actual BufferService markers only; OSC8 terminal/browser integration NOT PROVEN',
   command: 'node scripts/check-osc-link-service.mjs', platform: process.platform, node: process.version,
-  rustc: rustc.stdout.trim(), esbuild: require('esbuild/package.json').version,
+  rustc: artifact.rustc, esbuild: require('esbuild/package.json').version,
   mocha: require('mocha/package.json').version,
   baselineCases: baselineReport.stats.tests, baselinePassed: baselineReport.stats.passes,
   baselineAssertions: (readFileSync('source_repo/src/common/services/OscLinkService.test.ts', 'utf8').match(/assert\./g) ?? []).length,
@@ -157,5 +166,6 @@ const summary = {
   numericLimitAssertions: 6,
   fixtureSha256: createHash('sha256').update(fixture).digest('hex'), hashes, status: 'passed',
 };
-writeFileSync(`${result}/summary.json`, JSON.stringify(summary, null, 2) + '\n');
-console.log(JSON.stringify(summary, null, 2));
+return summary;
+});
+console.log(JSON.stringify(attemptReport, null, 2));

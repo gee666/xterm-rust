@@ -6,11 +6,14 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { stripTypeScriptTypes } from 'node:module';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { runScopedOracle } from './oracle-evidence.mjs';
 
-process.chdir(resolve(import.meta.dirname, '..'));
-const directory = resolve('tmp/buffer-range-marker');
+const root = resolve(import.meta.dirname, '..'); process.chdir(root);
+const attemptReport = await runScopedOracle(resolve('results/buffer-range-marker'), {
+  kind: 'buffer-range-marker-source', command: 'node scripts/check-buffer-range-marker.mjs', scope: 'Range/marker source oracle only; native replay is separate'
+}, async context => {
+const directory = resolve('tmp/buffer-range-marker', context.runId);
 mkdirSync(directory, { recursive: true });
-mkdirSync('results/buffer-range-marker', { recursive: true });
 const sourceFiles = ['Lifecycle.ts', 'Event.ts', 'buffer/Marker.ts', 'buffer/BufferRange.ts'];
 const hashes = {};
 for (const file of sourceFiles) {
@@ -62,6 +65,33 @@ for (const min of [-2147483648, -1, 0, 1, 2147483647]) {
 for (let i = 0; i < 1024; i++) addRange(random(), random(), random(), random(), random());
 const fixture = ranges.join('\n') + '\n';
 const fixturePath = 'crates/xterm-core/tests/fixtures/buffer-range-oracle.tsv';
+const numberFixturePath = 'crates/xterm-core/tests/fixtures/buffer-range-number-oracle.tsv';
+const numberSeed = 0x424e554d;
+let numberState = numberSeed;
+const numberBytes = new DataView(new ArrayBuffer(8));
+function randomNumber() {
+  function bits() { numberState ^= numberState << 13; numberState ^= numberState >>> 17; numberState ^= numberState << 5; return numberState >>> 0; }
+  numberBytes.setUint32(0, bits(), true); numberBytes.setUint32(4, bits(), true);
+  return numberBytes.getFloat64(0, true);
+}
+const numberText = value => Object.is(value, -0) ? '-0' : String(value);
+const numberRanges = [];
+function addNumberRange(x1, y1, x2, y2, cols) {
+  let result;
+  try { result = numberText(getRangeLength({ start: { x: x1, y: y1 }, end: { x: x2, y: y2 } }, cols)); }
+  catch (error) { result = `error:${error.message}`; }
+  numberRanges.push([...([x1, y1, x2, y2, cols].map(numberText)), result].join('\t'));
+}
+const numberEdges = [0, -0, 1, -1, .5, -.5, 1e-7, 1e21, Number.MIN_VALUE, Number.MAX_VALUE, Number.MAX_SAFE_INTEGER, 2 ** 53, 2 ** 32 - 1, Infinity, -Infinity, NaN];
+for (const value of numberEdges) {
+  for (let field = 0; field < 5; field++) {
+    const values = [1, 1, 4, 5, 5]; values[field] = value; addNumberRange(...values);
+  }
+  addNumberRange(value, 2, -value, 1, 0);
+}
+for (const start of numberEdges) for (const end of numberEdges) for (const cols of [0, -0, 1, -1, Infinity, NaN]) addNumberRange(0, start, 1, end, cols);
+for (let i = 0; i < 2048; i++) addNumberRange(randomNumber(), randomNumber(), randomNumber(), randomNumber(), randomNumber());
+const numberFixture = numberRanges.join('\n') + '\n';
 const markerPath = 'crates/xterm-core/tests/fixtures/marker-trace.txt';
 const log = [];
 const marker = new Marker(7);
@@ -101,23 +131,33 @@ failed.dispose(); assert.equal(reached, false);
 failed.line = 19; failed.dispose(); assert.equal(failed.line, 19);
 assert.equal(dynamic.id, marker.id + 1);
 assert.equal(failed.id, dynamic.id + 1);
+Marker._nextId = 2 ** 53;
+const limitMarker = new Marker(0), nextLimitMarker = new Marker(0);
+assert.equal(limitMarker.id, 2 ** 53);
+assert.equal(nextLimitMarker.id, 2 ** 53);
+assert.notEqual(limitMarker, nextLimitMarker);
 
 if (process.argv.includes('--write-fixtures')) {
   writeFileSync(fixturePath, fixture);
   writeFileSync(markerPath, trace);
+  writeFileSync(numberFixturePath, numberFixture);
 } else {
   assert.equal(readFileSync(fixturePath, 'utf8').replaceAll('\r\n', '\n'), fixture);
   assert.equal(readFileSync(markerPath, 'utf8').replaceAll('\r\n', '\n'), trace);
+  assert.equal(readFileSync(numberFixturePath, 'utf8').replaceAll('\r\n', '\n'), numberFixture);
 }
 const summary = {
   scope: 'BufferRange and Marker utilities only; real Buffer integration remains separate criterion122',
   command: 'node scripts/check-buffer-range-marker.mjs',
   node: process.version, platform: process.platform, seed,
   baselineCases, baselineAssertions, rangeComparisons: ranges.length,
-  markerTraceCallbacks: log.length, markerAdditionalBranches: ['live resources', 'event failure', 'state before event', 'id sequencing', 'post-dispose line mutation'],
+  numberSeed, numberRangeComparisons: numberRanges.length,
+  numberFixtureSha256: createHash('sha256').update(numberFixture).digest('hex'),
+  markerTraceCallbacks: log.length, markerCounterAssertions: 3, markerAdditionalBranches: ['live resources', 'event failure', 'state before event', 'id sequencing', 'post-dispose line mutation'],
   fixtureSha256: createHash('sha256').update(fixture).digest('hex'),
   markerTraceSha256: createHash('sha256').update(trace).digest('hex'),
   hashes, status: 'passed'
 };
-writeFileSync('results/buffer-range-marker/oracle.json', JSON.stringify(summary, null, 2) + '\n');
-console.log(JSON.stringify(summary, null, 2));
+return summary;
+});
+console.log(JSON.stringify(attemptReport, null, 2));

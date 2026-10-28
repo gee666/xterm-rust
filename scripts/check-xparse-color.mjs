@@ -3,16 +3,18 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { stripTypeScriptTypes } from 'node:module';
 import { resolve } from 'node:path';
-import { parseColor, toRgbString } from '../source_repo/src/common/input/XParseColor.ts';
+import { runScopedOracle, buildNativeOracle, recordSyncCommand } from './oracle-evidence.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 process.chdir(root);
-const resultDir = 'results/xparse-color';
-mkdirSync(resultDir, { recursive: true });
-mkdirSync('tmp/xparse-color', { recursive: true });
+const attemptReport = await runScopedOracle(resolve('results/xparse-color'), {
+  kind: 'xparse-color', command: 'node scripts/check-xparse-color.mjs', scope: 'XParseColor only; full equivalence NOT PROVEN'
+}, async context => {
+const resultDir = context.directory;
+const { parseColor, toRgbString } = await import('../source_repo/src/common/input/XParseColor.ts');
 
 // Execute every original assertion. Only the test runner and import plumbing
 // change. These assertions use no Chai-specific behavior, so strict Node assert
@@ -83,19 +85,17 @@ for (let i = 0; i < 12000; i++) {
   parse(spec);
 }
 
-const cargo = process.env.CARGO ?? 'cargo';
-const buildArgs = ['build', '-p', 'xterm-core', '--example', 'xparse_color_oracle'];
-const build = spawnSync(cargo, buildArgs, { encoding: 'utf8', timeout: 120000 });
-writeFileSync(`${resultDir}/build.log`, `${build.stdout ?? ''}${build.stderr ?? ''}`);
-if (build.error) throw build.error;
-assert.equal(build.status, 0, build.stderr);
-const executable = resolve('target/debug/examples/xparse_color_oracle' + (process.platform === 'win32' ? '.exe' : ''));
-const run = spawnSync(executable, [], {
+context.checkpoint({ baselineCases, baselineAssertions, phase: 'native-build' });
+const artifact = await buildNativeOracle(context, root, 'xparse_color_oracle');
+const run = spawnSync(artifact.executable, [], {
   encoding: 'utf8', input: operations.join('\n') + '\n',
   maxBuffer: 32 * 1024 * 1024, timeout: 120000
 });
+writeFileSync(`${resultDir}/native-stderr.log`, run.stderr ?? '');
+recordSyncCommand(context, [artifact.executable], run, { stderr: `${resultDir}/native-stderr.log` });
 if (run.error) throw run.error;
 assert.equal(run.status, 0, run.stderr);
+context.checkpoint({ phase: 'native-output-comparison' });
 const actual = run.stdout.trimEnd().split(/\r?\n/);
 assert.equal(actual.length, expected.length);
 for (let i = 0; i < actual.length; i++) {
@@ -104,19 +104,17 @@ for (let i = 0; i < actual.length; i++) {
     assert.fail(`Mismatch at operation ${i}; see ${resultDir}/counterexample.json`);
   }
 }
-const rustc = spawnSync(process.env.RUSTC ?? 'rustc', ['--version'], { encoding: 'utf8', timeout: 10000 });
-if (rustc.error) throw rustc.error;
-assert.equal(rustc.status, 0);
 const source = readFileSync('source_repo/src/common/input/XParseColor.ts');
 const summary = {
   scope: 'XParseColor only; full terminal equivalence NOT PROVEN',
   command: 'node scripts/check-xparse-color.mjs',
-  node: process.version, rustc: rustc.stdout.trim(), platform: process.platform,
+  node: process.version, rustc: artifact.rustc, platform: process.platform,
   arch: process.arch, seed, baselineCases, baselineAssertions,
   parseCases, formatCases, totalCompared: actual.length, mismatches: 0,
   upstreamSha256: createHash('sha256').update(source).digest('hex'),
   operationSha256: createHash('sha256').update(operations.join('\n')).digest('hex'),
   outputSha256: createHash('sha256').update(actual.join('\n')).digest('hex')
 };
-writeFileSync(`${resultDir}/summary.json`, JSON.stringify(summary, null, 2) + '\n');
-console.log(JSON.stringify(summary, null, 2));
+return { ...summary, status: 'passed' };
+});
+console.log(JSON.stringify(attemptReport, null, 2));
