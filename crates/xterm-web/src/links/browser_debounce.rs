@@ -11,9 +11,10 @@ use web_sys::{Performance, Window};
 type CallbackSlot = Rc<RefCell<Option<Function>>>;
 type FrameCallback = Closure<dyn FnMut(f64) -> Result<(), JsValue>>;
 type TimerCallback = Closure<dyn FnMut() -> Result<(), JsValue>>;
+pub type WindowSource = Rc<dyn Fn() -> Window>;
 
 struct BrowserFrameScheduler {
-    window: Window,
+    window: Rc<RefCell<WindowSource>>,
     callback: CallbackSlot,
 }
 impl FrameScheduler for BrowserFrameScheduler {
@@ -24,10 +25,12 @@ impl FrameScheduler for BrowserFrameScheduler {
         let callback = callback
             .as_ref()
             .ok_or_else(|| JsValue::from_str("animation callback not initialized"))?;
-        self.window.request_animation_frame(callback)
+        let source = self.window.borrow().clone();
+        source().request_animation_frame(callback)
     }
     fn cancel_frame(&mut self, handle: i32) -> Result<(), JsValue> {
-        self.window.cancel_animation_frame(handle)
+        let source = self.window.borrow().clone();
+        source().cancel_animation_frame(handle)
     }
     fn cleanup_error(&mut self, error: JsValue) {
         web_sys::console::error_1(&error);
@@ -38,6 +41,7 @@ impl FrameScheduler for BrowserFrameScheduler {
 /// releasing it. The closure captures weak core state, never a strong owner.
 pub struct BrowserRenderDebouncer {
     inner: RenderDebouncer<BrowserFrameScheduler>,
+    window: Rc<RefCell<WindowSource>>,
     callback: Option<FrameCallback>,
 }
 impl BrowserRenderDebouncer {
@@ -51,10 +55,19 @@ impl BrowserRenderDebouncer {
         window: Window,
         render: impl Fn(RenderRange) -> Result<(), JsValue> + 'static,
     ) -> Self {
+        Self::try_new_with_window_source(Rc::new(move || window.clone()), render)
+    }
+    /// Read the service's current owner directly, including during nested window
+    /// change/DPR events before a later window-change listener could run.
+    pub fn try_new_with_window_source(
+        source: WindowSource,
+        render: impl Fn(RenderRange) -> Result<(), JsValue> + 'static,
+    ) -> Self {
         let slot: CallbackSlot = Rc::new(RefCell::new(None));
+        let window = Rc::new(RefCell::new(source));
         let inner = RenderDebouncer::try_new(
             BrowserFrameScheduler {
-                window,
+                window: Rc::clone(&window),
                 callback: slot.clone(),
             },
             move |_, rows| render(rows),
@@ -66,8 +79,14 @@ impl BrowserRenderDebouncer {
         *slot.borrow_mut() = Some(callback.as_ref().unchecked_ref::<Function>().clone());
         Self {
             inner,
+            window,
             callback: Some(callback),
         }
+    }
+    /// Request and cancellation use the current CoreBrowserService owner window,
+    /// including cancellation of an id originally issued by a previous window.
+    pub fn set_window(&self, window: Window) {
+        *self.window.borrow_mut() = Rc::new(move || window.clone());
     }
     pub fn refresh(&self, start: Option<f64>, end: Option<f64>, count: f64) -> Result<(), JsValue> {
         self.inner.refresh(start, end, count)

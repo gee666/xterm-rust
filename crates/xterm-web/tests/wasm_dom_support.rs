@@ -1,5 +1,5 @@
 #![cfg(target_arch = "wasm32")]
-use js_sys::{Function, Promise, Reflect};
+use js_sys::{Function, Promise};
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_futures::JsFuture;
@@ -92,22 +92,20 @@ async fn priority_stability_cancellation_and_reentrant_next_frame() {
 fn owner_document_event_view_and_page_coordinates() {
     let window = web_sys::window().unwrap();
     let document = window.document().unwrap();
-    let iframe = document.create_element("iframe").unwrap();
-    document.body().unwrap().append_child(&iframe).unwrap();
-    let child_window: Window = Reflect::get(iframe.as_ref(), &JsValue::from_str("contentWindow"))
+    let iframe: web_sys::HtmlIFrameElement = document
+        .create_element("iframe")
         .unwrap()
         .dyn_into()
         .unwrap();
-    let child_document: Document =
-        Reflect::get(iframe.as_ref(), &JsValue::from_str("contentDocument"))
-            .unwrap()
-            .dyn_into()
-            .unwrap();
+    document.body().unwrap().append_child(&iframe).unwrap();
+    let child_window: Window = iframe.content_window().unwrap();
+    let child_document: Document = iframe.content_document().unwrap();
+    // HTMLDocument.createElement('div') guarantees HTMLElement, but instanceof
+    // checks against the parent's constructor are not valid across realms.
     let element: HtmlElement = child_document
         .create_element("div")
         .unwrap()
-        .dyn_into()
-        .unwrap();
+        .unchecked_into();
     element
         .style()
         .set_css_text("position:absolute;left:100px;top:2000px;width:120px;height:50px;");
@@ -153,11 +151,12 @@ async fn interval_cancels_reentrantly_and_rejects_reuse_after_dispose() {
     let output = count.clone();
     let completed = Promise::new(&mut |resolve, _| {
         let output = output.clone();
+        let timer_handle = timer.downgrade();
         timer
             .cancel_and_set(
-                move |timer| {
+                move || {
                     output.set(output.get() + 1);
-                    timer.cancel()?;
+                    timer_handle.upgrade().unwrap().cancel()?;
                     resolve.call0(&JsValue::NULL)?;
                     Ok(())
                 },
@@ -171,10 +170,10 @@ async fn interval_cancels_reentrantly_and_rejects_reuse_after_dispose() {
     timer.dispose().unwrap();
     timer.dispose().unwrap();
     let error = timer
-        .cancel_and_set(|_| Ok(()), 0.0, Some(&window))
+        .cancel_and_set(|| Ok(()), 0.0, Some(&window))
         .unwrap_err();
     assert_eq!(
-        error.as_string().unwrap(),
+        error.dyn_into::<js_sys::Error>().unwrap().message().as_string().unwrap(),
         "Calling cancelAndSet on a disposed IntervalTimer"
     );
 }

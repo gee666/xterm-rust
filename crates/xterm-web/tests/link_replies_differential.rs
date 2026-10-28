@@ -1,5 +1,5 @@
 use std::{collections::BTreeSet, rc::Rc};
-use xterm_web::links::{Link, Position, ProviderReplies, ProviderRequest, Range};
+use xterm_web::links::{Link, Position, ProviderReplies, ProviderRequest, Range, RangePosition};
 fn links(value: &str) -> Option<Vec<Rc<Link>>> {
     if value == "-" {
         return None;
@@ -15,11 +15,11 @@ fn links(value: &str) -> Option<Vec<Rc<Link>>> {
                 Rc::new(Link {
                     text: p[0].encode_utf16().collect(),
                     range: Range {
-                        start: Position {
+                        start: RangePosition {
                             x: p[1].parse().unwrap(),
                             y: p[2].parse().unwrap(),
                         },
-                        end: Position {
+                        end: RangePosition {
                             x: p[3].parse().unwrap(),
                             y: p[4].parse().unwrap(),
                         },

@@ -12,6 +12,7 @@ Reference `source_repo/src/browser/OscLinkProvider.ts` and its complete original
 - Upward expansion requires column zero, current line wrapped, an existing previous line, and the same id at its trimmed final cell. Scan backward through only contiguous same-id cells. Stop at the first different id or nonwrapped boundary.
 - Downward expansion requires end equal to trimmed EOL, next line wrapped, and same id at next column zero. Include only the contiguous prefix. Cover multiple wrapped lines, scrollback start/end, empty continuation, different ids and mid-line boundaries.
 - Default protocol guard uses WHATWG URL parsing and accepts only http/https. Reject malformed URLs and other protocols. allowNonHttpProtocols bypasses parsing, including malformed strings, exactly as upstream. Do not introduce a separate approximate parser.
+- Missing rows must not read linkHandler. Existing empty rows read linkHandler once but never read allowNonHttpProtocols. Read that policy property after URI lookup and wrapped-range expansion for every completed nonempty run, not once per provider call. Getter exceptions stop scanning and do not invoke the reply callback. A getter may replace buffer rows: the main scan retains its original row identity, while wrapped-range probes fetch current indexed rows.
 - Custom activation receives the originating mouse event, full URI and expanded range. Hover/leave optional callbacks receive the same values. Default activation prompts with the exact upstream warning; cancel does not open a window; accept clears opener before assigning location; blocked popup warns. Test in a real browser.
 
 ## Provider registration and asynchronous priority
@@ -22,7 +23,8 @@ Reference `source_repo/src/browser/services/LinkProviderService.ts` and `Linkifi
 - Provider reply states distinguish not-yet-replied, undefined and empty array. Empty arrays are truthy in JavaScript and delay lower priority selection until all providers finish. A defined higher provider reply without a matching link still blocks early lower provider selection.
 - Undefined higher replies permit a lower matching reply early. When every provider replies and no link was selected, choose the first matching result in provider order, not callback completion order.
 - Remove overlapping lower priority links using inclusive occupied cells. Preserve the source's partially occupied cells when a rejected link first overlaps partway through its range. Wrapped ranges use columns zero through cols on intermediate rows.
-- Cache is per row. Reuse cached replies within a row; do not ask unresolved providers again. Starting a new row disposes prior cached links. Mouse-out replies are ignored. Preserve and test source behavior for late replies after line changes; do not silently impose a different cancellation contract.
+- Cache is per row. Reuse cached replies within a row; do not ask unresolved providers again. Starting a new row disposes prior cached links. Dispose in reply Map insertion order, not provider priority. Replacing an existing reply does not change its Map position. A disposal exception leaves the old cache in place; earlier disposals may repeat on retry. Reentrant reply additions and in-place filtering during disposal must follow the source's Map/Array traversal, including retained old-array identity after replacement.
+- Mouse-out replies are ignored. Preserve and test source behavior for late replies after line changes; do not silently impose a different cancellation contract.
 
 ## Link hover, activation and decorations
 
@@ -31,6 +33,7 @@ Reference `source_repo/src/browser/services/LinkProviderService.ts` and `Linkifi
 - Mousedown records current link. Mouseup activates only with a current link, valid position inside it, and a mousedown link with equal text and all four range coordinates. A replacement object with equal content qualifies; unequal URI/range does not.
 - Hover defaults underline/pointer to true only when decorations are absent. Supplied partial decoration objects preserve absent fields as falsey. Dynamic pointer/underline updates affect DOM/events only while hovered.
 - Show/hide underline uses x1=start.x-1, y1=start.y-ydisp-1, x2=end.x, y2=end.y-ydisp-1, current cols. Run all four original Linkifier assertions and add nonzero scroll offset and wrapped rows above the viewport.
+- Underline callbacks may mutate decoration state or replace current link/cache. Re-read pointer state after underline callbacks, then invoke the original link's hover/leave callback with the original mouse event. Leave keeps currentLink present until callbacks complete; a thrown callback preserves that partial state. Preserve JavaScript exception identity rather than logging it and continuing.
 - Rendered viewport changes clear/requery only when the entire current range is within the affected buffer rows. Start row zero also clears links above the fold. Dispose removes listeners and cached references; no callback after disposal can mutate detached DOM.
 
 ## Animation-frame render debouncing
@@ -39,17 +42,19 @@ Reference `source_repo/src/browser/RenderDebouncer.ts`.
 
 - Requests combine minimum start and maximum end, using latest rowCount. Omitted bounds mean whole viewport. Clamp only on frame execution. A pending frame is not requested again.
 - Callback-only requests schedule a frame and execute without a render range. Refresh callbacks receive zero, in registration order, after render. Document and test callbacks registered reentrantly during render and callback iteration.
-- Clear the scheduled frame and row bounds before invoking render so reentrant refresh creates a new frame and does not lose new rows. Dispose cancels the pending browser frame. Test repeated disposal and subsequent calls against the source.
+- Clear the scheduled frame and row bounds before invoking render so reentrant refresh creates a new frame and does not lose new rows. A thrown render skips refresh callbacks but retains their array. A thrown refresh callback stops later callbacks and does not clear the original array. Retrying starts at its first callback again. Propagate the original exception to JavaScript.
+- Dispose cancels the pending browser frame. Test repeated disposal and subsequent calls against the source. Cancellation failure retains the token so it can be retried. Preserve NaN and signed-zero Math.min/Math.max behavior.
 
 ## Time-based debouncing and DOM integration
 
 Reference `source_repo/src/browser/TimeBasedDebouncer.ts` and `Dom.ts`.
 
 - First refresh before the threshold waits for the remaining interval since zero. At or beyond threshold, render immediately. Throttled requests share one trailing timeout and aggregate bounds. Latest rowCount clamps the aggregate.
-- Immediate refresh cancels pending trailing timeout. Trailing execution records actual current time. Reset row bounds before callback. Test callback reentrancy, boundary equality, repeated disposal and refresh after disposal without sleeps using injected virtual time.
+- Immediate refresh cancels pending trailing timeout. Trailing execution records actual current time. Reset row bounds before callback. A thrown trailing render retains the additional-request flag and timeout token because source clears them only after rendering succeeds. A later at-threshold refresh cancels that stale token and recovers. Test callback reentrancy, boundary equality, repeated disposal and refresh after disposal without sleeps using injected virtual time.
 - Window selection prefers node.ownerDocument.defaultView, then event.view, then global window. Page coordinates add that window's scroll offsets.
 - Disposable listeners preserve capture/options and remove the same callback identity exactly once. Animation queue is per-window, descending priority with stable equal-priority order, canceled items skipped, new items deferred to the next frame. Callback exceptions are reported and do not stop remaining work.
-- Browser integration must exercise actual Rust/WASM links and scheduling in Chromium, Firefox and WebKit, including scrolling, hover, activation, provider disposal and animation cancellation. Native unit tests and cross-compilation alone do not satisfy this section.
+- WindowIntervalTimer chooses an explicit target over its captured node's owner window, otherwise the browser fallback. Replacing cancels prior interval; callbacks can cancel their own timer without a reference cycle. Dispose is idempotent and later cancelAndSet throws the exact source disposed error. Preserve floating-point timer arguments through WebIDL, and propagate set/clear exceptions.
+- Browser integration must exercise actual Rust/WASM links and scheduling in Chromium, Firefox and WebKit, including scrolling, hover, activation, provider disposal and animation cancellation. The exported Terminal must parse OSC8 through Rust, render using the canonical production CSS, use measured live coordinates, preserve shared JS callback range identity and detach listeners on disposal. Native unit tests and cross-compilation alone do not satisfy this section.
 
 ## Evidence
 
