@@ -180,6 +180,48 @@ fn cached_results_preserve_external_mutation_and_uncached_array_alias() {
     assert!(!Rc::ptr_eq(&first, &second));
 }
 #[test]
+fn woff_compressed_tables_match_actual_javascript_font_outputs() {
+    let bytes = include_bytes!("../../tests/fixtures/ligature-fonts/Monoid-Regular.woff");
+    let mut font = Font::load_buffer(bytes, FontOptions::default()).unwrap();
+    let cases: Value =
+        serde_json::from_str(include_str!("../../tests/fixtures/ligature-woff.json")).unwrap();
+    for case in array(&cases) {
+        let text: Vec<_> = array(&case["input"])
+            .iter()
+            .map(|value| u16::try_from(integer(value)).unwrap())
+            .collect();
+        let result = font.find_ligatures(&text).unwrap();
+        let result = result.borrow();
+        assert_eq!(
+            json!(result
+                .input_glyphs
+                .borrow()
+                .iter()
+                .copied()
+                .map(glyph)
+                .collect::<Vec<_>>()),
+            case["inputGlyphs"]
+        );
+        assert_eq!(
+            json!(result
+                .output_glyphs
+                .borrow()
+                .iter()
+                .copied()
+                .map(glyph)
+                .collect::<Vec<_>>()),
+            case["outputGlyphs"]
+        );
+        assert_eq!(json!(*result.context_ranges.borrow()), case["ranges"]);
+        assert_eq!(
+            json!(*font.find_ligature_ranges(&text).unwrap().borrow()),
+            case["rangeOnly"]
+        );
+    }
+    assert_eq!(array(&cases).len(), 6);
+}
+
+#[test]
 fn malformed_containers_return_errors_without_panicking() {
     for length in 0..12 {
         assert!(Font::load_buffer(&vec![0; length], FontOptions::default()).is_err());

@@ -1,6 +1,7 @@
 // Copyright (c) 2018 The xterm.js authors. All rights reserved. MIT license.
 //! UTF-16 fallback joining and CSS font-family parsing used by browser addons.
 
+pub mod font;
 pub mod parse;
 
 use std::fmt;

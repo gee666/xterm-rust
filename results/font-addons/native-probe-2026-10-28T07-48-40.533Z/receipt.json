@@ -1,0 +1,51 @@
+{
+  "scope": "Actual production font modules compiled in isolation, not Cargo/browser integration",
+  "records": [
+    {
+      "command": [
+        "rustc",
+        "--test",
+        "--edition=2021",
+        "--crate-name",
+        "font_probe",
+        "-D",
+        "warnings",
+        "tmp/font-probe.rs",
+        "--extern",
+        "miniz_oxide=target/debug/deps/libminiz_oxide-cad996c5fa65d49d.rlib",
+        "--extern",
+        "serde_json=target/debug/deps/libserde_json-07911a5fa458bab1.rlib",
+        "-L",
+        "dependency=target/debug/deps",
+        "-o",
+        "tmp/font-probe-tests.exe"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 718.2217,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\font-probe-tests.exe",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1449.8414999999998,
+      "status": "passed"
+    }
+  ]
+}
