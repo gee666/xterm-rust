@@ -1,0 +1,6 @@
+cargo run -p xterm-core --example native -- [--plain] [--script FILE] [--max-cells N]
+Commands: sample | write TEXT | input TEXT | resize COLS ROWS | show | serialize | reset | help | quit
+Escapes in TEXT: \e \n \r \t \\ \xHH \uHHHH. Input emits outbound data, not display echo.
+Script checks: assert-size COLS ROWS | assert-cursor X Y | assert-line ROW TEXT
+assert-cell COL ROW TEXT | assert-fg COL ROW PALETTE | assert-width COL ROW WIDTH | assert-output TEXT
+This example executes the Rust parser and buffers. Full xterm.js equivalence is NOT PROVEN.

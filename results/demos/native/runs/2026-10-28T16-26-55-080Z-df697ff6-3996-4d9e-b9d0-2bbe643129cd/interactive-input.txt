@@ -1,0 +1,9 @@
+reset
+input PING\r
+unsupported-command
+write after-error
+assert-line 0 after-error
+assert-output PING\r
+resize 12 4
+assert-size 12 4
+quit

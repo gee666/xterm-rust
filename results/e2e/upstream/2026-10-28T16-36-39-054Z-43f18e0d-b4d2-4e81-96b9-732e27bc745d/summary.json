@@ -1,0 +1,154 @@
+{
+  "status": "failed",
+  "engine": "Rust WASM",
+  "suite": "addon-fit",
+  "project": "Chromium",
+  "mode": "runtime",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "counts": {
+    "discovered": 9,
+    "executed": 0,
+    "passed": 0,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 9
+  },
+  "errors": [
+    {
+      "message": "Timed out waiting 0.5s for the test suite to run"
+    },
+    {
+      "message": "Timed out waiting 0.5s for the teardown for test suite to run"
+    },
+    "Error: No Rust-backed browser assertions executed\n    at file:///C:/Users/user/.xterm-rust-target/7144d30a1fc3-worktrees/Integration/tmp/worktrees/Sandra/scripts/e2e-upstream.mjs:91:55"
+  ],
+  "commands": [
+    {
+      "stage": "playwright",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "C:\\Users\\user\\.xterm-rust-target\\7144d30a1fc3-worktrees\\Integration\\tmp\\worktrees\\Sandra\\source_repo\\node_modules\\@playwright\\test\\cli.js",
+        "test",
+        "--config=C:\\Users\\user\\.xterm-rust-target\\7144d30a1fc3-worktrees\\Integration\\tmp\\worktrees\\Sandra\\tmp\\e2e\\2026-10-28T16-36-39-054Z-43f18e0d-b4d2-4e81-96b9-732e27bc745d\\playwright.cjs",
+        "--reporter=json",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=500",
+        "--output=C:\\Users\\user\\.xterm-rust-target\\7144d30a1fc3-worktrees\\Integration\\tmp\\worktrees\\Sandra\\results\\e2e\\upstream\\2026-10-28T16-36-39-054Z-43f18e0d-b4d2-4e81-96b9-732e27bc745d\\artifacts",
+        "--project=Chromium"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": true,
+      "terminationError": "ERROR: The process \"27596\" not found.\r\n",
+      "resourceError": null,
+      "elapsedMs": 1267.7109,
+      "status": "failed",
+      "log": "playwright.log"
+    }
+  ],
+  "scope": "This run does not establish complete terminal or cross-platform equivalence.",
+  "source": {
+    "revision": "d59b73b8a87f95a0b5b7b583e4de3f203b373afb",
+    "sha256": "88c2db08d9c108303b6b6739a098bd521ee34af4a26f5d7b4089a67e7f497090",
+    "files": 1193
+  },
+  "reference": [
+    {
+      "path": "demo/test.html",
+      "bytes": 545,
+      "sha256": "35f81ad165aee291f49ac3ffea10068bf164207aad8d5fe4e5a558ada0e5ceed"
+    },
+    {
+      "path": "addons/addon-fit/test/playwright.config.ts",
+      "bytes": 626,
+      "sha256": "84a4cd16b01f399f9d7e447c817237ed4616d79c9a1e9071851261e1d06c31f9"
+    }
+  ],
+  "fixture": [
+    {
+      "path": "scripts/e2e-upstream.mjs",
+      "bytes": 7780,
+      "sha256": "12d881e3127c7865f00d7a55251bad4de8b611c24403fe3e14867798e6e16977"
+    },
+    {
+      "path": "scripts/e2e/fixture-server.mjs",
+      "bytes": 7410,
+      "sha256": "4790325527ed20905ecbaf0ceba34272325ccdecdd36060c9cf6bf5ec7a0b2ef"
+    },
+    {
+      "path": "scripts/e2e/test-page.mjs",
+      "bytes": 1867,
+      "sha256": "58a7f3ff1c587dff8b78d8c5775b9b7a3ac72b144f800d893d80bd8e98d20b28"
+    },
+    {
+      "path": "scripts/e2e/build-bootstrap.mjs",
+      "bytes": 905,
+      "sha256": "487154862b39623222d248d465c66aa06ee08467631b6dacdbe5c43f3a51f801"
+    },
+    {
+      "path": "scripts/e2e/upstream-config.mjs",
+      "bytes": 1388,
+      "sha256": "0ff88d3d995ad09fa7308bd6ac5675a82d10992f22f5b9b8304a9fee9590aa2f"
+    },
+    {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    }
+  ],
+  "build": {
+    "report": "results/demos/build/2026-10-28T16-36-37-221Z/report.json",
+    "source": {
+      "revision": "d59b73b8a87f95a0b5b7b583e4de3f203b373afb",
+      "sha256": "88c2db08d9c108303b6b6739a098bd521ee34af4a26f5d7b4089a67e7f497090",
+      "files": 1193
+    },
+    "artifacts": [
+      {
+        "path": "browser/pkg/xterm_web.js",
+        "bytes": 149606,
+        "sha256": "788963e6a1088974d068995833dfeefd2b6d9a8f73fad517df0f880fad17f4ac"
+      },
+      {
+        "path": "browser/pkg/xterm_web_bg.wasm",
+        "bytes": 11462961,
+        "sha256": "e216371f30a7942a476c7a6b16bd5869b9ce4f2aa16991c21cf944746ebb801d"
+      }
+    ]
+  },
+  "bindings": [
+    {
+      "path": "browser/xterm.mjs",
+      "bytes": 818,
+      "sha256": "1fa45337d7991c71e6fc521012b192790a561e8881bb460ebcdfa3d845a00926"
+    }
+  ],
+  "command": [
+    "C:\\nvm4w\\nodejs\\node.exe",
+    "C:\\Users\\user\\.xterm-rust-target\\7144d30a1fc3-worktrees\\Integration\\tmp\\worktrees\\Sandra\\source_repo\\node_modules\\@playwright\\test\\cli.js",
+    "test",
+    "--config=C:\\Users\\user\\.xterm-rust-target\\7144d30a1fc3-worktrees\\Integration\\tmp\\worktrees\\Sandra\\tmp\\e2e\\2026-10-28T16-36-39-054Z-43f18e0d-b4d2-4e81-96b9-732e27bc745d\\playwright.cjs",
+    "--reporter=json",
+    "--workers=2",
+    "--retries=0",
+    "--global-timeout=500",
+    "--output=C:\\Users\\user\\.xterm-rust-target\\7144d30a1fc3-worktrees\\Integration\\tmp\\worktrees\\Sandra\\results\\e2e\\upstream\\2026-10-28T16-36-39-054Z-43f18e0d-b4d2-4e81-96b9-732e27bc745d\\artifacts",
+    "--project=Chromium"
+  ],
+  "playwrightStats": {
+    "startTime": "2026-10-28T16:36:40.303Z",
+    "duration": 503.85499999999996,
+    "expected": 0,
+    "skipped": 9,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "requests": [],
+  "serverErrors": [],
+  "runtimes": []
+}

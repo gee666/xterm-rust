@@ -1,0 +1,104 @@
+
+Running 27 tests using 2 workers
+F°°°°°°°°F°°°°°°°°F°°°°°°°°
+
+  1) [Chromium] › addons\addon-fit\test\FitAddon.test.ts:42:7 › FitAddon › no terminal ─────────────
+
+    Error: page.evaluate: TypeError: Cannot set properties of undefined (setting 'activeVersion')
+        at eval (eval at evaluate (:302:30), <anonymous>:3:41)
+        at eval (<anonymous>)
+        at UtilityScript.evaluate (<anonymous>:302:30)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at eval (eval at evaluate (:302:30), <anonymous>:3:41)
+        at UtilityScript.evaluate (<anonymous>:302:30)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at openTerminal (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\source_repo\test\playwright\TestUtils.ts:509:20)
+        at C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\source_repo\addons\addon-fit\test\FitAddon.test.ts:14:3
+
+    Error: page.exposeFunction: Target page, context or browser has been closed
+
+       at ..\..\..\test\playwright\TestUtils.ts:149
+
+      147 |     await this._page.exposeFunction('onKey', (e: { key: string, domEvent: KeyboardEvent }) => this._onKey.fire(e));
+      148 |     await this._page.exposeFunction('onLineFeed', () => this._onLineFeed.fire());
+    > 149 |     await this._page.exposeFunction('onRender', (e: { start: number, end: number }) => this._onRender.fire(e));
+          |                      ^
+      150 |     await this._page.exposeFunction('onResize', (e: { cols: number, rows: number }) => this._onResize.fire(e));
+      151 |     await this._page.exposeFunction('onScroll', (e: number) => this._onScroll.fire(e));
+      152 |     await this._page.exposeFunction('onSelectionChange', () => this._onSelectionChange.fire());
+        at TerminalProxy.initPage (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\source_repo\test\playwright\TestUtils.ts:149:22)
+
+    Error Context: ..\results\e2e\upstream\2026-10-28T16-49-23-299Z-ab385825-5643-48a5-bcac-462e14e39945\artifacts\FitAddon-FitAddon-no-terminal-Chromium\error-context.md
+
+    Error Context: ..\results\e2e\upstream\2026-10-28T16-49-23-299Z-ab385825-5643-48a5-bcac-462e14e39945\artifacts\FitAddon-FitAddon-no-terminal-Chromium\error-context.md
+
+  2) [FirefoxStable] › addons\addon-fit\test\FitAddon.test.ts:42:7 › FitAddon › no terminal ────────
+
+    Error: page.evaluate: can't access property "activeVersion", window.term.unicode is undefined
+    @debugger eval code line 302 > eval:3:7
+    evaluate@debugger eval code:302:30
+    @debugger eval code:1:44
+    @debugger eval code:1:62
+
+        at @debugger eval code line 302 > eval:3:7
+        at evaluate@debugger eval code:302:30
+        at @debugger eval code:1:44
+        at @debugger eval code:1:62
+        at openTerminal (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\source_repo\test\playwright\TestUtils.ts:509:20)
+        at C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\source_repo\addons\addon-fit\test\FitAddon.test.ts:14:3
+
+    Error: page.exposeFunction: Target page, context or browser has been closed
+
+       at ..\..\..\test\playwright\TestUtils.ts:148
+
+      146 |     await this._page.exposeFunction('onData', (e: string) => this._onData.fire(e));
+      147 |     await this._page.exposeFunction('onKey', (e: { key: string, domEvent: KeyboardEvent }) => this._onKey.fire(e));
+    > 148 |     await this._page.exposeFunction('onLineFeed', () => this._onLineFeed.fire());
+          |                      ^
+      149 |     await this._page.exposeFunction('onRender', (e: { start: number, end: number }) => this._onRender.fire(e));
+      150 |     await this._page.exposeFunction('onResize', (e: { cols: number, rows: number }) => this._onResize.fire(e));
+      151 |     await this._page.exposeFunction('onScroll', (e: number) => this._onScroll.fire(e));
+        at TerminalProxy.initPage (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\source_repo\test\playwright\TestUtils.ts:148:22)
+
+    Error Context: ..\results\e2e\upstream\2026-10-28T16-49-23-299Z-ab385825-5643-48a5-bcac-462e14e39945\artifacts\FitAddon-FitAddon-no-terminal-FirefoxStable\error-context.md
+
+    Error Context: ..\results\e2e\upstream\2026-10-28T16-49-23-299Z-ab385825-5643-48a5-bcac-462e14e39945\artifacts\FitAddon-FitAddon-no-terminal-FirefoxStable\error-context.md
+
+  3) [WebKit] › addons\addon-fit\test\FitAddon.test.ts:42:7 › FitAddon › no terminal ───────────────
+
+    Error: page.evaluate: TypeError: undefined is not an object (evaluating 'window.term.unicode.activeVersion = '15-graphemes'')
+
+       at ..\..\..\test\playwright\TestUtils.ts:509
+
+      507 |   // more complete integration tests. See https://github.com/xtermjs/xterm.js/pull/4519#discussion_r1285234453
+      508 |   if (testOptions.loadUnicodeGraphemesAddon) {
+    > 509 |     await ctx.page.evaluate(`
+          |                    ^
+      510 |       window.unicode = new UnicodeGraphemesAddon();
+      511 |       window.term.loadAddon(window.unicode);
+      512 |       window.term.unicode.activeVersion = '15-graphemes';
+        at openTerminal (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\source_repo\test\playwright\TestUtils.ts:509:20)
+        at C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\source_repo\addons\addon-fit\test\FitAddon.test.ts:14:3
+
+    Error: page.exposeFunction: Target page, context or browser has been closed
+
+       at ..\..\..\test\playwright\TestUtils.ts:149
+
+      147 |     await this._page.exposeFunction('onKey', (e: { key: string, domEvent: KeyboardEvent }) => this._onKey.fire(e));
+      148 |     await this._page.exposeFunction('onLineFeed', () => this._onLineFeed.fire());
+    > 149 |     await this._page.exposeFunction('onRender', (e: { start: number, end: number }) => this._onRender.fire(e));
+          |                      ^
+      150 |     await this._page.exposeFunction('onResize', (e: { cols: number, rows: number }) => this._onResize.fire(e));
+      151 |     await this._page.exposeFunction('onScroll', (e: number) => this._onScroll.fire(e));
+      152 |     await this._page.exposeFunction('onSelectionChange', () => this._onSelectionChange.fire());
+        at TerminalProxy.initPage (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\source_repo\test\playwright\TestUtils.ts:149:22)
+
+    Error Context: ..\results\e2e\upstream\2026-10-28T16-49-23-299Z-ab385825-5643-48a5-bcac-462e14e39945\artifacts\FitAddon-FitAddon-no-terminal-WebKit\error-context.md
+
+    Error Context: ..\results\e2e\upstream\2026-10-28T16-49-23-299Z-ab385825-5643-48a5-bcac-462e14e39945\artifacts\FitAddon-FitAddon-no-terminal-WebKit\error-context.md
+
+  3 failed
+    [Chromium] › addons\addon-fit\test\FitAddon.test.ts:42:7 › FitAddon › no terminal ──────────────
+    [FirefoxStable] › addons\addon-fit\test\FitAddon.test.ts:42:7 › FitAddon › no terminal ─────────
+    [WebKit] › addons\addon-fit\test\FitAddon.test.ts:42:7 › FitAddon › no terminal ────────────────
+  24 did not run

@@ -1,0 +1,366 @@
+
+Running 21 tests using 2 workers
+······F··FFFF·F···FFF
+
+  1) [Chromium] › scripts\demo-e2e\demo-05.spec.cjs:85:1 › ANSI serialization write-back preserves complete cells, wraps and cursor 
+
+    Error: page.evaluate: Error: serialize: Error: Rust SerializeAddon is not exported
+        at DemoAddons.load (http://127.0.0.1:50504/demo/addons.mjs:31:50)
+        at DemoAddons.ensure (http://127.0.0.1:50504/demo/addons.mjs:61:71)
+        at http://127.0.0.1:50504/demo/controls.mjs:144:48
+        at http://127.0.0.1:50504/demo/controls.mjs:48:28
+        at action (http://127.0.0.1:50504/demo/app.mjs:53:26)
+        at Object.action (http://127.0.0.1:50504/demo/app.mjs:110:48)
+        at byId.addEventListener.signal (http://127.0.0.1:50504/demo/controls.mjs:48:11)
+        at DemoAddons.load (http://127.0.0.1:50504/demo/addons.mjs:31:50)
+        at DemoAddons.ensure (http://127.0.0.1:50504/demo/addons.mjs:61:71)
+        at http://127.0.0.1:50504/demo/controls.mjs:144:48
+        at http://127.0.0.1:50504/demo/controls.mjs:48:28
+        at action (http://127.0.0.1:50504/demo/app.mjs:53:26)
+        at Object.action (http://127.0.0.1:50504/demo/app.mjs:110:48)
+        at byId.addEventListener.signal (http://127.0.0.1:50504/demo/controls.mjs:48:11)
+        at eval (eval at evaluate (:302:30), <anonymous>:6:61)
+        at UtilityScript.evaluate (<anonymous>:304:16)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at DemoAddons.load (http://127.0.0.1:50504/demo/addons.mjs:31:50)
+        at DemoAddons.ensure (http://127.0.0.1:50504/demo/addons.mjs:61:71)
+        at http://127.0.0.1:50504/demo/controls.mjs:144:48
+        at http://127.0.0.1:50504/demo/controls.mjs:48:28
+        at action (http://127.0.0.1:50504/demo/app.mjs:53:26)
+        at Object.action (http://127.0.0.1:50504/demo/app.mjs:110:48)
+        at byId.addEventListener.signal (http://127.0.0.1:50504/demo/controls.mjs:48:11)
+        at DemoAddons.load (http://127.0.0.1:50504/demo/addons.mjs:31:50)
+        at DemoAddons.ensure (http://127.0.0.1:50504/demo/addons.mjs:61:71)
+        at http://127.0.0.1:50504/demo/controls.mjs:144:48
+        at http://127.0.0.1:50504/demo/controls.mjs:48:28
+        at action (http://127.0.0.1:50504/demo/app.mjs:53:26)
+        at Object.action (http://127.0.0.1:50504/demo/app.mjs:110:48)
+        at byId.addEventListener.signal (http://127.0.0.1:50504/demo/controls.mjs:48:11)
+        at eval (eval at evaluate (:302:30), <anonymous>:6:61)
+        at UtilityScript.evaluate (<anonymous>:304:16)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\scripts\demo-e2e\support.cjs:58:32
+        at click (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\scripts\demo-e2e\support.cjs:58:3)
+        at C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\scripts\demo-e2e\demo-05.spec.cjs:89:3
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-ANSI-serialization-21d03-lete-cells-wraps-and-cursor-Chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-ANSI-serialization-21d03-lete-cells-wraps-and-cursor-Chromium\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-ANSI-serialization-21d03-lete-cells-wraps-and-cursor-Chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-ANSI-serialization-21d03-lete-cells-wraps-and-cursor-Chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [Chromium] › scripts\demo-e2e\demo-05.spec.cjs:95:1 › HTML serialization reaches the real clipboard or reports host denial 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: locator('#html-output')
+    Expected substring: [32m"HTML"[39m
+    Received string:    [31m""[39m
+    Timeout: 5000ms
+
+    Call log:
+    [2m  - Expect "toContainText" with timeout 5000ms[22m
+    [2m  - waiting for locator('#html-output')[22m
+    [2m    14 × locator resolved to <pre id="html-output"></pre>[22m
+    [2m       - unexpected value ""[22m
+
+
+       97 |   await fresh(page, '\x1b[38;2;255;0;0mHTML 界😀\x1b[0m');
+       98 |   await page.locator('#serialize-html').click();
+    >  99 |   await expect(page.locator('#html-output')).toContainText('HTML');
+          |                                              ^
+      100 |   const html = await page.locator('#html-output').textContent();
+      101 |   expect(html).toContain('<'); expect(html).toContain('255');
+      102 |   await expect.poll(() => page.evaluate(() => demo.events.some(event => event.name === 'serialize:html-copied') || demo.errors.length > 0)).toBe(true);
+        at C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\scripts\demo-e2e\demo-05.spec.cjs:99:46
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-Chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-Chromium\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-Chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-Chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [Chromium] › scripts\demo-e2e\demo-05.spec.cjs:119:1 › DOM and WebGL controls replace actual renderer ownership and retain selection 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      123 |   const canvases = await page.locator('.xterm canvas').count();
+      124 |   await change(page, 'renderer', 'webgl');
+    > 125 |   await expect.poll(() => page.locator('.xterm canvas').count()).toBeGreaterThan(canvases);
+          |                                                                  ^
+      126 |   expect(await snapshot(page)).toEqual(before);
+      127 |   expect(await page.evaluate(() => demo.terminal.getSelection())).toBe('renderer');
+      128 |   await change(page, 'renderer', 'dom');
+        at C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\scripts\demo-e2e\demo-05.spec.cjs:125:66
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-Chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-Chromium\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-Chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-Chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [FirefoxStable] › scripts\demo-e2e\demo-05.spec.cjs:85:1 › ANSI serialization write-back preserves complete cells, wraps and cursor 
+
+    Error: page.evaluate: serialize: load@http://127.0.0.1:50504/demo/addons.mjs:31:50
+    ensure@http://127.0.0.1:50504/demo/addons.mjs:61:71
+    setupControls/<@http://127.0.0.1:50504/demo/controls.mjs:144:48
+    setupControls/on/</<@http://127.0.0.1:50504/demo/controls.mjs:48:34
+    action@http://127.0.0.1:50504/demo/app.mjs:53:26
+    action@http://127.0.0.1:50504/demo/app.mjs:110:54
+    setupControls/on/<@http://127.0.0.1:50504/demo/controls.mjs:48:11
+    EventListener.handleEvent*on@http://127.0.0.1:50504/demo/controls.mjs:46:14
+    setupControls@http://127.0.0.1:50504/demo/controls.mjs:143:5
+    @http://127.0.0.1:50504/demo/app.mjs:112:18
+
+    @debugger eval code line 302 > eval:6:61
+    evaluate@debugger eval code:304:16
+    @debugger eval code:1:44
+    @debugger eval code:1:62
+
+        at page.evaluate: serialize: load@http://127.0.0.1:50504/demo/addons.mjs:31:50
+        at ensure@http://127.0.0.1:50504/demo/addons.mjs:61:71
+        at setupControls/<@http://127.0.0.1:50504/demo/controls.mjs:144:48
+        at setupControls/on/</<@http://127.0.0.1:50504/demo/controls.mjs:48:34
+        at action@http://127.0.0.1:50504/demo/app.mjs:53:26
+        at action@http://127.0.0.1:50504/demo/app.mjs:110:54
+        at setupControls/on/<@http://127.0.0.1:50504/demo/controls.mjs:48:11
+        at EventListener.handleEvent*on@http://127.0.0.1:50504/demo/controls.mjs:46:14
+        at setupControls@http://127.0.0.1:50504/demo/controls.mjs:143:5
+        at @http://127.0.0.1:50504/demo/app.mjs:112:18
+        at @debugger eval code line 302 > eval:6:61
+        at evaluate@debugger eval code:304:16
+        at @debugger eval code:1:44
+        at @debugger eval code:1:62
+        at C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\scripts\demo-e2e\support.cjs:58:32
+        at click (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\scripts\demo-e2e\support.cjs:58:3)
+        at C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\scripts\demo-e2e\demo-05.spec.cjs:89:3
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-ANSI-serialization-21d03-lete-cells-wraps-and-cursor-FirefoxStable\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-ANSI-serialization-21d03-lete-cells-wraps-and-cursor-FirefoxStable\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-ANSI-serialization-21d03-lete-cells-wraps-and-cursor-FirefoxStable\trace.zip
+    Usage:
+
+        npx playwright show-trace results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-ANSI-serialization-21d03-lete-cells-wraps-and-cursor-FirefoxStable\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [FirefoxStable] › scripts\demo-e2e\demo-05.spec.cjs:95:1 › HTML serialization reaches the real clipboard or reports host denial 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: locator('#html-output')
+    Expected substring: [32m"HTML"[39m
+    Received string:    [31m""[39m
+    Timeout: 5000ms
+
+    Call log:
+    [2m  - Expect "toContainText" with timeout 5000ms[22m
+    [2m  - waiting for locator('#html-output')[22m
+    [2m    13 × locator resolved to <pre id="html-output"></pre>[22m
+    [2m       - unexpected value ""[22m
+
+
+       97 |   await fresh(page, '\x1b[38;2;255;0;0mHTML 界😀\x1b[0m');
+       98 |   await page.locator('#serialize-html').click();
+    >  99 |   await expect(page.locator('#html-output')).toContainText('HTML');
+          |                                              ^
+      100 |   const html = await page.locator('#html-output').textContent();
+      101 |   expect(html).toContain('<'); expect(html).toContain('255');
+      102 |   await expect.poll(() => page.evaluate(() => demo.events.some(event => event.name === 'serialize:html-copied') || demo.errors.length > 0)).toBe(true);
+        at C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\scripts\demo-e2e\demo-05.spec.cjs:99:46
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-FirefoxStable\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-FirefoxStable\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-FirefoxStable\trace.zip
+    Usage:
+
+        npx playwright show-trace results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-FirefoxStable\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [FirefoxStable] › scripts\demo-e2e\demo-05.spec.cjs:119:1 › DOM and WebGL controls replace actual renderer ownership and retain selection 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      123 |   const canvases = await page.locator('.xterm canvas').count();
+      124 |   await change(page, 'renderer', 'webgl');
+    > 125 |   await expect.poll(() => page.locator('.xterm canvas').count()).toBeGreaterThan(canvases);
+          |                                                                  ^
+      126 |   expect(await snapshot(page)).toEqual(before);
+      127 |   expect(await page.evaluate(() => demo.terminal.getSelection())).toBe('renderer');
+      128 |   await change(page, 'renderer', 'dom');
+        at C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\scripts\demo-e2e\demo-05.spec.cjs:125:66
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-FirefoxStable\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-FirefoxStable\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-FirefoxStable\trace.zip
+    Usage:
+
+        npx playwright show-trace results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-FirefoxStable\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [WebKit] › scripts\demo-e2e\demo-05.spec.cjs:85:1 › ANSI serialization write-back preserves complete cells, wraps and cursor 
+
+    Error: page.evaluate: Error: serialize: load@http://127.0.0.1:50504/demo/addons.mjs:31:59
+    @http://127.0.0.1:50504/demo/controls.mjs:144:54
+    action@http://127.0.0.1:50504/demo/app.mjs:53:34
+    action@http://127.0.0.1:50504/demo/app.mjs:110:54
+    @http://127.0.0.1:50504/demo/controls.mjs:48:17
+        at page.evaluate: Error: serialize: load@http://127.0.0.1:50504/demo/addons.mjs:31:59
+        at @http://127.0.0.1:50504/demo/controls.mjs:144:54
+        at action@http://127.0.0.1:50504/demo/app.mjs:53:34
+        at action@http://127.0.0.1:50504/demo/app.mjs:110:54
+        at @http://127.0.0.1:50504/demo/controls.mjs:48:17
+        at C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\scripts\demo-e2e\support.cjs:58:32
+        at click (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\scripts\demo-e2e\support.cjs:58:3)
+        at C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\scripts\demo-e2e\demo-05.spec.cjs:89:3
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-ANSI-serialization-21d03-lete-cells-wraps-and-cursor-WebKit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-ANSI-serialization-21d03-lete-cells-wraps-and-cursor-WebKit\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-ANSI-serialization-21d03-lete-cells-wraps-and-cursor-WebKit\trace.zip
+    Usage:
+
+        npx playwright show-trace results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-ANSI-serialization-21d03-lete-cells-wraps-and-cursor-WebKit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [WebKit] › scripts\demo-e2e\demo-05.spec.cjs:95:1 › HTML serialization reaches the real clipboard or reports host denial 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: locator('#html-output')
+    Expected substring: [32m"HTML"[39m
+    Received string:    [31m""[39m
+    Timeout: 5000ms
+
+    Call log:
+    [2m  - Expect "toContainText" with timeout 5000ms[22m
+    [2m  - waiting for locator('#html-output')[22m
+    [2m    14 × locator resolved to <pre id="html-output"></pre>[22m
+    [2m       - unexpected value ""[22m
+
+
+       97 |   await fresh(page, '\x1b[38;2;255;0;0mHTML 界😀\x1b[0m');
+       98 |   await page.locator('#serialize-html').click();
+    >  99 |   await expect(page.locator('#html-output')).toContainText('HTML');
+          |                                              ^
+      100 |   const html = await page.locator('#html-output').textContent();
+      101 |   expect(html).toContain('<'); expect(html).toContain('255');
+      102 |   await expect.poll(() => page.evaluate(() => demo.events.some(event => event.name === 'serialize:html-copied') || demo.errors.length > 0)).toBe(true);
+        at C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\scripts\demo-e2e\demo-05.spec.cjs:99:46
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-WebKit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-WebKit\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-WebKit\trace.zip
+    Usage:
+
+        npx playwright show-trace results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-WebKit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  9) [WebKit] › scripts\demo-e2e\demo-05.spec.cjs:119:1 › DOM and WebGL controls replace actual renderer ownership and retain selection 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      123 |   const canvases = await page.locator('.xterm canvas').count();
+      124 |   await change(page, 'renderer', 'webgl');
+    > 125 |   await expect.poll(() => page.locator('.xterm canvas').count()).toBeGreaterThan(canvases);
+          |                                                                  ^
+      126 |   expect(await snapshot(page)).toEqual(before);
+      127 |   expect(await page.evaluate(() => demo.terminal.getSelection())).toBe('renderer');
+      128 |   await change(page, 'renderer', 'dom');
+        at C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Sandra\scripts\demo-e2e\demo-05.spec.cjs:125:66
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-WebKit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-WebKit\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-WebKit\trace.zip
+    Usage:
+
+        npx playwright show-trace results\demos\browser\2026-10-28T16-48-32-069Z-c0d9bafd-2475-481c-a9bb-2229eaae79d8\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-WebKit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  9 failed
+    [Chromium] › scripts\demo-e2e\demo-05.spec.cjs:85:1 › ANSI serialization write-back preserves complete cells, wraps and cursor 
+    [Chromium] › scripts\demo-e2e\demo-05.spec.cjs:95:1 › HTML serialization reaches the real clipboard or reports host denial 
+    [Chromium] › scripts\demo-e2e\demo-05.spec.cjs:119:1 › DOM and WebGL controls replace actual renderer ownership and retain selection 
+    [FirefoxStable] › scripts\demo-e2e\demo-05.spec.cjs:85:1 › ANSI serialization write-back preserves complete cells, wraps and cursor 
+    [FirefoxStable] › scripts\demo-e2e\demo-05.spec.cjs:95:1 › HTML serialization reaches the real clipboard or reports host denial 
+    [FirefoxStable] › scripts\demo-e2e\demo-05.spec.cjs:119:1 › DOM and WebGL controls replace actual renderer ownership and retain selection 
+    [WebKit] › scripts\demo-e2e\demo-05.spec.cjs:85:1 › ANSI serialization write-back preserves complete cells, wraps and cursor 
+    [WebKit] › scripts\demo-e2e\demo-05.spec.cjs:95:1 › HTML serialization reaches the real clipboard or reports host denial 
+    [WebKit] › scripts\demo-e2e\demo-05.spec.cjs:119:1 › DOM and WebGL controls replace actual renderer ownership and retain selection 
+  12 passed (50.4s)
