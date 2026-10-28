@@ -13,6 +13,27 @@ assert.match(source, importLine);
 // the source constants and all method bodies, including Uint16 offset behavior.
 const js = stripTypeScriptTypes(source.replace(importLine, ''), { mode: 'transform' });
 const { Params } = await import(`data:text/javascript;base64,${Buffer.from(js).toString('base64')}`);
+// SIXEL reads params.params[1] even after a reset shortened logical length.
+// Match that source bug deliberately, including constructor zeros and clones.
+const stored = new Params(2, 0);
+assert.deepEqual(Array.from(stored.params), [0, 0]);
+assert.equal(stored.length, 0);
+stored.addParam(7);
+stored.addParam(1);
+stored.reset();
+assert.equal(stored.length, 0);
+assert.deepEqual(Array.from(stored.params), [7, 1]);
+const storedClone = stored.clone();
+stored.resetZdm();
+assert.equal(stored.params[0], 0);
+assert.equal(stored.params[1], 1);
+assert.equal(storedClone.params[0], 7);
+stored.addParam(-1);
+assert.equal(stored.params[1], -1);
+assert.equal(storedClone.params[1], 1);
+assert.equal(stored.params[2], undefined);
+assert.equal(new Params(0, 0).params[0], undefined);
+const storedSlotAssertions = 11;
 const seed = 0x2389abcd;
 let state = seed;
 function next() {
@@ -104,6 +125,7 @@ const summary = {
   stepsPerCase: steps,
   boundaryCases: 1,
   comparedSnapshots: operations + 257,
+  storedSlotAssertions,
   corpusSha256: createHash('sha256').update(corpus).digest('hex'),
   status: process.argv.includes('--generate') ? 'generated' : 'matched'
 };

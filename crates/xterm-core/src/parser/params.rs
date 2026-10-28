@@ -98,6 +98,13 @@ impl Params {
         &self.params[..self.length]
     }
 
+    /// Read an allocated backing slot, including inactive stale values.
+    /// SIXEL's source fill selector intentionally reads slot 1 without checking
+    /// logical length. Normal sequence handlers should use `values` instead.
+    pub fn stored_value(&self, index: usize) -> Option<i32> {
+        self.params.get(index).copied()
+    }
+
     pub fn len(&self) -> usize {
         self.length
     }

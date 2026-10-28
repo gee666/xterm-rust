@@ -1,0 +1,29 @@
+{
+  "task": 182,
+  "status": "scoped debug/source/lint passed",
+  "sourceContract": "source_repo/addons/addon-image/src/SixelHandler.ts:58 strict params.params[1]===1 without logical-length check",
+  "native": {
+    "command": "cargo test -p xterm-core --test params_stored --test a11y_utf16",
+    "storedTestsPassed": 3,
+    "failed": 0,
+    "receipt": "results/build-slots/1793149789714-49456-53843d04-157e-462c-800c-8fcaa5190d29/receipt.json"
+  },
+  "source": {
+    "command": "node scripts/check-params.mjs",
+    "storedSlotAssertions": 11,
+    "existingDifferentialSnapshots": 49409,
+    "status": "matched",
+    "receipt": "results/build-slots/1793149821711-40592-8294437c-e7b3-4b36-8354-8c2b42e67c83/receipt.json"
+  },
+  "clippy": {
+    "command": "cargo clippy -p xterm-core --test params_stored --test a11y_utf16 -- -D warnings",
+    "status": "passed warning-free",
+    "receipt": "results/build-slots/1793150095541-22580-fc2334b1-6fd3-40c2-b1c0-c2f9d57c0aaf/receipt.json"
+  },
+  "fmt": "focused check passed",
+  "release": "new local release run not authorized by scoped build-slot policy; no new release pass claimed",
+  "consumer": "Nuwa task125 uses stored_value(1)==Some(1), criterion419 retains actual image integration separately",
+  "platform": "native Windows x86_64",
+  "rustc": "1.85.1",
+  "node": "v24.15.0"
+}

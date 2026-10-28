@@ -11,6 +11,7 @@
 | `Params.fromArray` | `Params::from_array` |
 | `ParamsArray` | `Vec<ParamValue>`, enum variants `Param(i32)` and `SubParams(Vec<i32>)` |
 | `params`, `length` | `values()`, `len()`, `is_empty()` |
+| raw `params[index]` compatibility read | `stored_value(index)`, including inactive slots |
 | `maxLength`, `maxSubParamsLength` | `capacity()`, `sub_capacity()` |
 | protected `_subParamsLength` | `sub_len()` |
 | `clone`, `toArray` | `Clone::clone`, `to_array` |
@@ -21,7 +22,7 @@
 
 Mutating additions and construction return `Result` rather than throwing. Values below -1 fail with the original error text, unless capacity rejection happens first, matching the source ordering. Values above `i32::MAX` clamp. Rust uses integral `i64` input for additions and `u8` decimal digits. JavaScript fractional numbers, NaN, and infinities are outside this typed API. Browser binding conversion, if needed, must handle those separately. Passing digits above 9 returns an error instead of invoking the source's unchecked internal helper.
 
-Storage capacity is private and cannot be mutated into an invalid layout. `values()` exposes only active parameters. Access beyond active length returns `None`, rather than exposing stale backing storage. This follows the source's documented requirement never to read beyond `length - 1`; it does not claim equivalence for contract-violating reads. Negative JS indices have no Rust `usize` representation.
+Storage capacity is private and cannot be mutated into an invalid layout. `values()` exposes only active parameters. Subparameter queries beyond active length return `None`, following the source's documented active-range requirement. `stored_value(index)` is a separate compatibility read of an allocated scalar backing slot, including inactive values left by reset. SIXEL's actual source violates the usual active-range guidance by reading slot 1 unconditionally. This narrow read-only accessor preserves that behavior without exporting mutable storage. Negative JS indices have no Rust `usize` representation.
 
 `reset_zdm` on zero parameter capacity returns `ZeroCapacityZdm`. The JS source reports a logical length of one while its zero-sized typed array silently ignores the write, producing `undefined` values. Rust does not represent this invalid layout. Normal parser construction uses nonzero capacity. This boundary mapping must remain visible to bindings rather than being advertised as identical behavior for arbitrary JavaScript inputs.
 
@@ -44,6 +45,12 @@ cargo clippy -p xterm-core --test params --test params_differential -- -D warnin
 Use `node scripts/check-params.mjs --generate` only to regenerate after reviewing an upstream source change. The normal command asserts exact corpus equality and records source/corpus SHA-256 hashes, seed and counts in `results/params/oracle.json`. A mismatch retains its case and step in Rust assertion output and the full operation history in the TSV corpus. Test command output is in `results/params/rust-tests.txt`.
 
 Observed here on native Windows, Rust 1.85.1, Node v24.15.0: all 22 Rust tests passed, including all 49,409 differential snapshots. `node scripts/params-baseline.mjs` also passed all 20 original upstream tests with actual Mocha 11.7.5 and Chai 6.2.2. It transforms TypeScript syntax, removes type-only imports and remaps runtime import URLs without editing assertions. Counts and hashes are in `results/params/original.json`; full output is in `results/params/original-tests.txt`. To reproduce dependencies without touching the reference, run `npm install --prefix tmp/params-deps --no-package-lock --no-audit --no-fund mocha@11.7.5 chai@6.2.2`, then set `PARAMS_TEST_DEPS=tmp/params-deps/node_modules` before running the script. If unset, it reuses `tmp/color-oracle/node_modules` created by the Color verification task.
+
+## SIXEL stored-slot compatibility
+
+`source_repo/addons/addon-image/src/SixelHandler.ts:58` reads `params.params[1] === 1` without checking active parameter length. A prior sequence can therefore leave a transparent-fill selector in slot 1 after reset. `stored_value(index)` preserves this source behavior: allocated slots are zero-initialized, reset leaves inactive data intact, clone copies it, and out-of-capacity reads return `None`. The SIXEL consumer compares against `Some(1)` rather than substituting an active-length default.
+
+Task 182 adds three `params_stored` tests and eleven direct source assertions in `check-params.mjs`. These additions were prepared during the coordinated disk pause, then verified through the controlled build-slot queue. All three native stored-slot tests, eleven source checks and the existing 49,409-snapshot corpus passed; focused Clippy and rustfmt also passed. Receipts are recorded in `results/params/stored-accessor.json`. Rerun `cargo test -p xterm-core --test params_stored` and `node scripts/check-params.mjs` through the current build-slot policy. A new local release run was not authorized, so no new release pass is claimed. Image-hook integration is tracked separately by criterion 419; the accessor alone does not prove rendered SIXEL parity.
 
 ## Focused acceptance follow-up
 
