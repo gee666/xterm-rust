@@ -56,7 +56,7 @@ impl WebParserApi {
         Self { terminal }
     }
 }
-#[wasm_bindgen]
+#[wasm_bindgen(js_class = ParserApi)]
 impl WebParserApi {
     #[wasm_bindgen(js_name = registerCsiHandler)]
     pub fn register_csi_handler(
