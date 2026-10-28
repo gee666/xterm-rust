@@ -10,6 +10,7 @@ use xterm_core::lifecycle::Disposable;
 
 type FrameCallback = Closure<dyn FnMut(f64)>;
 type Runner = Rc<dyn Fn(&WindowAnimationQueue) -> Result<(), JsValue>>;
+type FrameCallback = Closure<dyn FnMut(f64)>;
 struct Item {
     canceled: Cell<bool>,
     priority: Cell<f64>,
