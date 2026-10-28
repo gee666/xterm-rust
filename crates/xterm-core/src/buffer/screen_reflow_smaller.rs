@@ -9,8 +9,16 @@ struct Insertion {
     start: usize,
     lines: Vec<LineRef>,
 }
+pub(super) struct SmallerPlan {
+    insertions: Vec<Insertion>,
+    count: usize,
+}
 impl Buffer {
-    pub(super) fn reflow_smaller(&mut self, cols: usize, rows: usize) -> Result<(), BufferError> {
+    pub(super) fn prepare_reflow_smaller(
+        &mut self,
+        cols: usize,
+        rows: usize,
+    ) -> Result<SmallerPlan, BufferError> {
         let null = self.get_null_cell(Some(&AttributeData::default()));
         let mut insertions = Vec::new();
         let mut count_to_insert = 0;
@@ -168,26 +176,32 @@ impl Buffer {
                     .map_err(|_| BufferError::SizeOverflow)?,
                 );
         }
-        if !insertions.is_empty() {
-            self.apply_insertions(insertions, count_to_insert)?;
-        }
-        Ok(())
+        Ok(SmallerPlan {
+            insertions,
+            count: count_to_insert,
+        })
     }
-    fn apply_insertions(
-        &self,
-        insertions: Vec<Insertion>,
-        count: usize,
+}
+impl SmallerPlan {
+    pub(super) fn apply(
+        self,
+        get_lines: impl Fn() -> Result<crate::circular_list::CircularList<LineRef>, BufferError>,
     ) -> Result<(), BufferError> {
-        let original = (0..self.lines.len())
-            .map(|index| self.line(index))
+        let Self { insertions, count } = self;
+        if insertions.is_empty() {
+            return Ok(());
+        }
+        let lines = get_lines()?;
+        let original = (0..lines.len())
+            .map(|index| lines.get(index).ok_or(BufferError::MissingLine(index)))
             .collect::<Result<Vec<_>, _>>()?;
         let original_length = original.len();
         let expanded = original_length
             .checked_add(count)
             .ok_or(BufferError::SizeOverflow)?;
-        self.lines.set_length(self.lines.max_length().min(expanded));
+        lines.set_length(lines.max_length().min(expanded));
         let mut source = i64::try_from(original_length).map_err(|_| BufferError::SizeOverflow)? - 1;
-        let mut target = i64::try_from(self.lines.max_length().min(expanded))
+        let mut target = i64::try_from(lines.max_length().min(expanded))
             .map_err(|_| BufferError::SizeOverflow)?
             - 1;
         let mut next = 0;
@@ -198,7 +212,7 @@ impl Buffer {
                 i64::try_from(insertion.start).is_ok_and(|start| start > source + inserted)
             }) {
                 for line in insertion.lines.iter().rev() {
-                    self.lines.set_signed(target, Some(line.clone()))?;
+                    lines.set_signed(target, Some(line.clone()))?;
                     target -= 1;
                 }
                 events.push(ListChange {
@@ -217,7 +231,7 @@ impl Buffer {
                     .ok()
                     .and_then(|index| original.get(index))
                     .cloned();
-                self.lines.set_signed(target, line)?;
+                lines.set_signed(target, line)?;
                 source -= 1;
                 target -= 1;
             }
@@ -228,14 +242,14 @@ impl Buffer {
                 .index
                 .checked_add(emitted)
                 .ok_or(BufferError::SizeOverflow)?;
-            self.lines.on_insert_emitter.fire(&event)?;
+            get_lines()?.on_insert_emitter.fire(&event)?;
             emitted = emitted
                 .checked_add(event.amount)
                 .ok_or(BufferError::SizeOverflow)?;
         }
-        let trim = expanded.saturating_sub(self.lines.max_length());
+        let trim = expanded.saturating_sub(get_lines()?.max_length());
         if trim > 0 {
-            self.lines.on_trim_emitter.fire(&trim)?;
+            get_lines()?.on_trim_emitter.fire(&trim)?;
         }
         Ok(())
     }

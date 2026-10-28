@@ -25,6 +25,8 @@ mod options;
 mod reflow;
 #[path = "screen_resize.rs"]
 mod resize;
+#[path = "screen_shared.rs"]
+mod shared;
 
 pub type LineRef = Rc<RefCell<BufferLine>>;
 pub const MAX_BUFFER_SIZE: usize = u32::MAX as usize;
@@ -51,6 +53,7 @@ pub enum BufferError {
     MissingLine(usize),
     BorrowedLine,
     CleanupAlreadyAttached,
+    CleanupQueueBusy,
     SizeOverflow,
     Options(OptionError),
     List(CircularListError),
@@ -67,6 +70,9 @@ impl fmt::Display for BufferError {
             Self::CleanupAlreadyAttached => {
                 f.write_str("buffer already has a host cleanup scheduler")
             }
+            Self::CleanupQueueBusy => {
+                f.write_str("buffer cleanup requires an empty dedicated task queue")
+            }
             Self::SizeOverflow => f.write_str("buffer size arithmetic overflow"),
             Self::Options(error) => error.fmt(f),
             Self::List(error) => error.fmt(f),
@@ -75,7 +81,17 @@ impl fmt::Display for BufferError {
         }
     }
 }
-impl std::error::Error for BufferError {}
+impl std::error::Error for BufferError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Options(error) => Some(error),
+            Self::List(error) => Some(error),
+            Self::Dispatch(error) => Some(error),
+            Self::Reflow(error) => Some(error),
+            _ => None,
+        }
+    }
+}
 impl From<OptionError> for BufferError {
     fn from(e: OptionError) -> Self {
         Self::Options(e)
@@ -124,7 +140,8 @@ pub struct Buffer {
     is_clearing: Rc<Cell<bool>>,
     cleanup_position: usize,
     cleanup_pending: bool,
-    pub(crate) cleanup_events: Emitter<bool>,
+    disposed: bool,
+    pub(crate) cleanup_events: Rc<Emitter<bool>>,
     pub(crate) cleanup_attached: Rc<Cell<bool>>,
 }
 impl Buffer {
@@ -163,7 +180,8 @@ impl Buffer {
             is_clearing: Rc::new(Cell::new(false)),
             cleanup_position: 0,
             cleanup_pending: false,
-            cleanup_events: Emitter::new(),
+            disposed: false,
+            cleanup_events: Rc::new(Emitter::new()),
             cleanup_attached: Rc::new(Cell::new(false)),
         };
         buffer
@@ -287,6 +305,10 @@ impl Buffer {
         self.cleanup_pending
     }
     pub fn dispose(&mut self) -> Result<(), BufferError> {
+        if self.disposed {
+            return Ok(());
+        }
+        self.disposed = true;
         self.cleanup_pending = false;
         self.cleanup_events.fire(&false)?;
         self.clear_all_markers()

@@ -1,144 +1,237 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
-use super::{Buffer, BufferError};
-use crate::buffer::{AttributeData, BufferLine};
+use super::{Buffer, BufferError, LineRef};
+use crate::{
+    buffer::{AttributeData, BufferLine, CellData},
+    circular_list::CircularList,
+};
 use std::{cell::RefCell, rc::Rc};
 
+// Both ownership paths execute one algorithm. The shared path must end every
+// state borrow before a list/marker/host callback can synchronously reenter.
+pub(super) enum ResizeTarget<'a> {
+    Owned(RefCell<&'a mut Buffer>),
+    Shared(&'a Rc<RefCell<Buffer>>),
+}
+impl ResizeTarget<'_> {
+    pub(super) fn read<R>(&self, action: impl FnOnce(&Buffer) -> R) -> Result<R, BufferError> {
+        match self {
+            Self::Owned(state) => {
+                let state = state.try_borrow().map_err(|_| BufferError::BorrowedLine)?;
+                Ok(action(&state))
+            }
+            Self::Shared(state) => {
+                let state = state.try_borrow().map_err(|_| BufferError::BorrowedLine)?;
+                Ok(action(&state))
+            }
+        }
+    }
+    pub(super) fn update<R>(
+        &self,
+        action: impl FnOnce(&mut Buffer) -> Result<R, BufferError>,
+    ) -> Result<R, BufferError> {
+        match self {
+            Self::Owned(state) => {
+                let mut state = state
+                    .try_borrow_mut()
+                    .map_err(|_| BufferError::BorrowedLine)?;
+                action(&mut state)
+            }
+            Self::Shared(state) => {
+                let mut state = state
+                    .try_borrow_mut()
+                    .map_err(|_| BufferError::BorrowedLine)?;
+                action(&mut state)
+            }
+        }
+    }
+    pub(super) fn lines(&self) -> Result<CircularList<LineRef>, BufferError> {
+        self.read(|b| b.lines.share())
+    }
+}
 impl Buffer {
-    /// Resize internal state; the owning service updates host_dimensions first.
-    pub fn resize(&mut self, new_cols: usize, new_rows: usize) -> Result<(), BufferError> {
-        if new_cols == 0 || new_rows == 0 {
-            return Err(BufferError::InvalidDimensions);
+    pub fn resize(&mut self, cols: usize, rows: usize) -> Result<(), BufferError> {
+        resize_target(&ResizeTarget::Owned(RefCell::new(self)), cols, rows)
+    }
+    /// Browser/service callers use this path so synchronous observers can read
+    /// or mutate this very same Buffer handle at the source event checkpoints.
+    pub fn resize_shared(
+        buffer: &Rc<RefCell<Self>>,
+        cols: usize,
+        rows: usize,
+    ) -> Result<(), BufferError> {
+        resize_target(&ResizeTarget::Shared(buffer), cols, rows)
+    }
+}
+fn resize_target(target: &ResizeTarget<'_>, cols: usize, rows: usize) -> Result<(), BufferError> {
+    if cols == 0 || rows == 0 {
+        return Err(BufferError::InvalidDimensions);
+    }
+    let (options, scrollback, null) = target.read(|b| {
+        (
+            Rc::clone(&b.options),
+            b.has_scrollback,
+            b.get_null_cell(Some(&AttributeData::default())),
+        )
+    })?;
+    let maximum = super::options::correct_buffer_length(scrollback, rows, &options)?;
+    if maximum > target.lines()?.max_length() {
+        target.lines()?.set_max_length(maximum)?;
+    }
+    let mut dirty = 0;
+    let filled = !target.lines()?.is_empty();
+    if filled {
+        if target.read(|b| b.cols)? < cols {
+            dirty += resize_lines(target, cols, &null)?;
         }
-        let null = self.get_null_cell(Some(&AttributeData::default()));
-        let mut dirty = 0;
-        let new_max = self.correct_buffer_length(new_rows)?;
-        if new_max > self.lines.max_length() {
-            self.lines.set_max_length(new_max)?;
-        }
-        if !self.lines.is_empty() {
-            if self.cols < new_cols {
-                for i in 0..self.lines.len() {
-                    dirty += usize::from(
-                        self.line(i)?
-                            .try_borrow_mut()
-                            .map_err(|_| BufferError::BorrowedLine)?
-                            .resize(new_cols, &null),
-                    );
-                }
-            }
-            let mut add_to_y = 0;
-            if self.rows < new_rows {
-                let pty = self.windows_pty()?;
-                for _ in self.rows..new_rows {
-                    if self.lines.len()
-                        < new_rows
-                            .checked_add(self.ybase)
-                            .ok_or(BufferError::SizeOverflow)?
-                    {
-                        if pty.backend.is_some() || pty.build_number.is_some() {
-                            self.lines.push(Rc::new(RefCell::new(BufferLine::new(
-                                new_cols,
-                                Some(&null),
-                                false,
-                            ))))?;
-                        } else if self.ybase > 0
-                            && self.lines.len()
-                                <= self
-                                    .ybase
-                                    .checked_add(self.y)
-                                    .and_then(|n| n.checked_add(add_to_y))
-                                    .and_then(|n| n.checked_add(1))
-                                    .ok_or(BufferError::SizeOverflow)?
-                        {
-                            self.ybase -= 1;
-                            add_to_y += 1;
-                            self.ydisp = self.ydisp.saturating_sub(1);
-                        } else {
-                            self.lines.push(Rc::new(RefCell::new(BufferLine::new(
-                                new_cols,
-                                Some(&null),
-                                false,
-                            ))))?;
-                        }
-                    }
-                }
-            } else {
-                for _ in (new_rows..self.rows).rev() {
-                    if self.lines.len()
-                        > new_rows
-                            .checked_add(self.ybase)
-                            .ok_or(BufferError::SizeOverflow)?
-                    {
-                        if self.lines.len()
-                            > self
-                                .ybase
-                                .checked_add(self.y)
-                                .and_then(|n| n.checked_add(1))
-                                .ok_or(BufferError::SizeOverflow)?
-                        {
-                            self.lines.pop()?;
-                        } else {
-                            self.ybase =
-                                self.ybase.checked_add(1).ok_or(BufferError::SizeOverflow)?;
-                            self.ydisp =
-                                self.ydisp.checked_add(1).ok_or(BufferError::SizeOverflow)?;
-                        }
-                    }
-                }
-            }
-            if new_max < self.lines.max_length() {
-                let trim = self.lines.len().saturating_sub(new_max);
-                if trim > 0 {
-                    self.lines.trim_start(trim)?;
-                    self.ybase = self.ybase.saturating_sub(trim);
-                    self.ydisp = self.ydisp.saturating_sub(trim);
-                    self.saved_y = self
+        let old_rows = target.read(|b| b.rows)?;
+        let add = if old_rows < rows {
+            grow_rows(target, old_rows, cols, rows, &null)?
+        } else {
+            shrink_rows(target, old_rows, rows)?;
+            0
+        };
+        if maximum < target.lines()?.max_length() {
+            let trim = target.lines()?.len().saturating_sub(maximum);
+            if trim > 0 {
+                target.lines()?.trim_start(trim)?;
+                target.update(|b| {
+                    b.ybase = b.ybase.saturating_sub(trim);
+                    b.ydisp = b.ydisp.saturating_sub(trim);
+                    b.saved_y = b
                         .saved_y
                         .saturating_sub(i64::try_from(trim).map_err(|_| BufferError::SizeOverflow)?)
                         .max(0);
-                }
-                self.lines.set_max_length(new_max)?;
+                    Ok(())
+                })?;
             }
-            self.x = self.x.min(new_cols - 1);
-            self.y = self
-                .y
-                .min(new_rows - 1)
-                .checked_add(add_to_y)
-                .ok_or(BufferError::SizeOverflow)?;
-            self.saved_x = self.saved_x.min(new_cols - 1);
-            self.scroll_top = 0;
+            target.lines()?.set_max_length(maximum)?;
         }
-        self.scroll_bottom = new_rows - 1;
-        if self.is_reflow_enabled()? {
-            self.reflow(new_cols, new_rows)?;
-            if self.cols > new_cols {
-                for i in 0..self.lines.len() {
-                    dirty += usize::from(
-                        self.line(i)?
-                            .try_borrow_mut()
-                            .map_err(|_| BufferError::BorrowedLine)?
-                            .resize(new_cols, &null),
-                    );
-                }
-            }
-        }
-        self.cols = new_cols;
-        self.rows = new_rows;
-        if !self.lines.is_empty() {
-            self.y = self.y.min(
-                self.lines
-                    .len()
-                    .saturating_sub(self.ybase)
-                    .saturating_sub(1),
-            );
-        }
-        self.cleanup_pending = false;
-        self.cleanup_events.fire(&false)?;
-        if dirty as f64 > 0.1 * self.lines.len() as f64 {
-            self.cleanup_position = 0;
-            self.cleanup_pending = true;
-            self.cleanup_events.fire(&true)?;
-        }
-        Ok(())
+        target.update(|b| {
+            b.x = b.x.min(cols - 1);
+            b.y =
+                b.y.min(rows - 1)
+                    .checked_add(add)
+                    .ok_or(BufferError::SizeOverflow)?;
+            b.saved_x = b.saved_x.min(cols - 1);
+            b.scroll_top = 0;
+            Ok(())
+        })?;
     }
+    target.update(|b| {
+        b.scroll_bottom = rows - 1;
+        Ok(())
+    })?;
+    let (options, scrollback) = target.read(|b| (Rc::clone(&b.options), b.has_scrollback))?;
+    if super::options::is_reflow_enabled(scrollback, &options)? {
+        super::reflow::reflow(target, cols, rows)?;
+        if target.read(|b| b.cols)? > cols {
+            dirty += resize_lines(target, cols, &null)?;
+        }
+    }
+    let cleanup = target.update(|b| {
+        b.cols = cols;
+        b.rows = rows;
+        if !b.lines.is_empty() {
+            b.y =
+                b.y.min(b.lines.len().saturating_sub(b.ybase).saturating_sub(1));
+        }
+        b.cleanup_pending = false;
+        Ok(Rc::clone(&b.cleanup_events))
+    })?;
+    cleanup.fire(&false)?;
+    if dirty as f64 > 0.1 * target.lines()?.len() as f64 {
+        target.update(|b| {
+            b.cleanup_position = 0;
+            b.cleanup_pending = true;
+            Ok(())
+        })?;
+        cleanup.fire(&true)?;
+    }
+    Ok(())
+}
+fn resize_lines(
+    target: &ResizeTarget<'_>,
+    cols: usize,
+    null: &CellData,
+) -> Result<usize, BufferError> {
+    let mut dirty = 0;
+    for index in 0..target.lines()?.len() {
+        let line = target.read(|b| b.line(index))??;
+        dirty += usize::from(
+            line.try_borrow_mut()
+                .map_err(|_| BufferError::BorrowedLine)?
+                .resize(cols, null),
+        );
+    }
+    Ok(dirty)
+}
+fn grow_rows(
+    target: &ResizeTarget<'_>,
+    old_rows: usize,
+    cols: usize,
+    rows: usize,
+    null: &CellData,
+) -> Result<usize, BufferError> {
+    let mut add = 0;
+    for _ in old_rows..rows {
+        let base = target.read(|b| b.ybase)?;
+        if target.lines()?.len() >= rows.checked_add(base).ok_or(BufferError::SizeOverflow)? {
+            continue;
+        }
+        let options = target.read(|b| Rc::clone(&b.options))?;
+        let configured = super::options::windows_pty_configured(&options)?;
+        let reveal = if configured {
+            false
+        } else {
+            target.read(|b| {
+                if b.ybase == 0 {
+                    return Ok(false);
+                }
+                let end = b
+                    .ybase
+                    .checked_add(b.y)
+                    .and_then(|n| n.checked_add(add))
+                    .and_then(|n| n.checked_add(1))
+                    .ok_or(BufferError::SizeOverflow)?;
+                Ok(b.lines.len() <= end)
+            })??
+        };
+        if reveal {
+            target.update(|b| {
+                b.ybase -= 1;
+                b.ydisp = b.ydisp.saturating_sub(1);
+                Ok(())
+            })?;
+            add += 1;
+        } else {
+            target.lines()?.push(Rc::new(RefCell::new(BufferLine::new(
+                cols,
+                Some(null),
+                false,
+            ))))?;
+        }
+    }
+    Ok(add)
+}
+fn shrink_rows(target: &ResizeTarget<'_>, old_rows: usize, rows: usize) -> Result<(), BufferError> {
+    for _ in (rows..old_rows).rev() {
+        let (base, y) = target.read(|b| (b.ybase, b.y))?;
+        if target.lines()?.len() > rows.checked_add(base).ok_or(BufferError::SizeOverflow)? {
+            if target.lines()?.len()
+                > base
+                    .checked_add(y)
+                    .and_then(|n| n.checked_add(1))
+                    .ok_or(BufferError::SizeOverflow)?
+            {
+                target.lines()?.pop()?;
+            } else {
+                target.update(|b| {
+                    b.ybase = b.ybase.checked_add(1).ok_or(BufferError::SizeOverflow)?;
+                    b.ydisp = b.ydisp.checked_add(1).ok_or(BufferError::SizeOverflow)?;
+                    Ok(())
+                })?;
+            }
+        }
+    }
+    Ok(())
 }

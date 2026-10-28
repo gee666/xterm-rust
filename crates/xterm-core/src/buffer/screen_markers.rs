@@ -29,19 +29,7 @@ impl Buffer {
         Ok(())
     }
     pub fn clear_all_markers(&mut self) -> Result<(), BufferError> {
-        self.is_clearing.set(true);
-        let mut index = 0;
-        loop {
-            let marker = self.markers.borrow().get(index).cloned();
-            let Some(marker) = marker else {
-                break;
-            };
-            marker.dispose()?;
-            index += 1;
-        }
-        self.markers.borrow_mut().clear();
-        self.is_clearing.set(false);
-        Ok(())
+        super::shared::clear_markers(&self.markers, &self.is_clearing)
     }
     pub fn add_marker(&mut self, y: i64) -> Marker {
         let marker = Marker::new(y);

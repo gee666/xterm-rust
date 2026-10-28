@@ -21,7 +21,7 @@ Recoverable options, dimension, missing-row, borrow, storage, reflow and event f
 
 ## Resize behavior
 
-Rows and columns follow the source ordering: grow capacity, grow columns, adjust rows/viewport, trim top on capacity reduction, clamp cursors, apply reflow and then shrink physical rows. Reflow observes the ConPTY build 21,376 boundary and cursor-line exclusion option.
+Rows and columns follow the source ordering: grow capacity, grow columns, adjust rows/viewport, trim top on capacity reduction, clamp cursors, apply reflow and then shrink physical rows. `Buffer::resize_shared(&Rc<RefCell<Buffer>>, cols, rows)` and owned `resize` execute the same algorithm through short-lived state access. Services and browser bindings must use the shared method when observers can synchronously access the buffer. Reflow observes the ConPTY build 21,376 boundary and cursor-line exclusion option.
 
 Smaller reflow copies backwards, batches new rows, emits corrected insertion events, then trims. Larger reflow emits deletion events before rearranging references. Both preserve combined cells and wide-character wrap gaps. Internal ASCII buffers support one column because the upstream tests use that path. The public BufferService constructor still enforces the source minimum of two columns.
 
@@ -29,7 +29,7 @@ Signed insertion counts matter for an empty wrapped row. It can produce zero des
 
 ## Host-scheduled memory cleanup
 
-`buffer::BufferCleanup<S: Scheduler>` attaches the existing Rust TaskQueue to a shared buffer. The host supplies real idle/priority scheduling and dispatches `process_idle` or `process_priority` when the requested callback fires. Native and browser hosts must retain one adapter per buffer for automatic cleanup.
+`buffer::BufferCleanup<S: Scheduler>` attaches the existing Rust TaskQueue to a shared buffer. `with_queue` accepts an empty dedicated queue already wired to the host's weak callback dispatcher, while `new` constructs one from a scheduler. Supplying unrelated queued work is rejected without cancelling that work. Hosts dispatching the injected queue directly must also check `take_error`; the adapter's `process_idle` and `process_priority` methods do that automatically. The host supplies real idle/priority scheduling and dispatches `process_idle` or `process_priority` when the requested callback fires. Native and browser hosts must retain one adapter per buffer for automatic cleanup.
 
 Resize cancels old queued work and schedules cleanup only when more than 10% of rows report excess capacity. Each cleanup task stops after 101 cleaned rows, matching the source's `counted > 100` condition, and performs the final rescan. There are no sleeps or background threads in the core.
 
@@ -50,12 +50,12 @@ cargo clippy -p xterm-core --lib --test buffer_contracts -- -D warnings
 cargo fmt --all -- --check
 ```
 
-The independent Buffer oracle is task 67. It executes all 61 original Buffer tests unchanged, captures every resize before/after snapshot and compares full cells, canonical text, row identity, markers and ordered line events. Its corpus adds 128 seeded traces with eight resizes each, for 1,110 resize pairs including the 86 original calls. Seed is `0xb0ff67`. Source hashes, test names, fixture hashes, failures and command results are under `results/buffer`.
+The independent Buffer oracle is task 67. It executes all 61 original Buffer tests unchanged, captures every resize before/after snapshot and compares full cells, canonical text, row identity, markers and ordered line events. Its corpus adds 128 seeded traces with eight resizes each, for 1,111 resize pairs including the 86 original calls and one directed signed-saved-Y regression. Seed is `0xb0ff67`. Source hashes, test names, fixture hashes, failures and command results are under `results/buffer`.
 
 `buffer_contracts.rs` adds eleven tests for real host requests/cancellation, fallback scheduling, same-object error preservation, borrow recovery, adapter ownership, batch thresholds, tab setup, saved-state reset rules, marker events, cell attributes and safe bounds. These pass on native Windows. Debug/release and full corpus results must be read from the current command logs rather than inferred from this description.
 
 ## Remaining integration work
 
-Task 122 tracks source-legal observer reentrancy during resize/scroll/marker disposal. Holding an outer mutable Buffer borrow across a nested marker callback can currently reject a read or nested mutation that JavaScript permits. This is an implementation gap, not an external blocker or a waived language difference.
+Task 122 implements shared resize/reflow checkpoints and task 130 implements shared scrolling and marker-disposal checkpoints. They release root Buffer borrows before source callback dispatch rather than treating a native borrow error as equivalent. The new ten-scenario resize observer corpus is written in `scripts/buffer-resize-reentry-oracle.mjs`; execution was paused for disk recovery and is not yet claimed passed. Existing base evidence predates this refactor. Callback replacement of the entire line list must preserve source undefined slots rather than introduce a range rejection.
 
 Task 99 tracks actual parser/InputHandler/addon writes and real host cleanup scheduling, plus observed platform runs. Native Linux/macOS and browser evidence are not supplied by these component tests. Full equivalence remains NOT PROVEN.

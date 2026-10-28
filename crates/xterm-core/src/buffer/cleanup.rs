@@ -27,7 +27,15 @@ impl<E: fmt::Display> fmt::Display for CleanupError<E> {
         }
     }
 }
-impl<E: std::error::Error + 'static> std::error::Error for CleanupError<E> {}
+impl<E: std::error::Error + 'static> std::error::Error for CleanupError<E> {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Buffer(error) => Some(error),
+            Self::Schedule(error) => Some(error),
+            Self::ScheduledCallback(error) => Some(error.as_ref()),
+        }
+    }
+}
 impl<E> From<BufferError> for CleanupError<E> {
     fn from(error: BufferError) -> Self {
         Self::Buffer(error)
@@ -58,11 +66,21 @@ where
         scheduler: S,
         supports_idle: bool,
     ) -> Result<Self, CleanupError<S::Error>> {
+        Self::with_queue(buffer, TaskQueue::idle(scheduler, supports_idle))
+    }
+    /// Attach an empty dedicated queue already configured with the host's weak
+    /// callback dispatcher. The host may retain its queue handle for dispatch.
+    pub fn with_queue(
+        buffer: &Rc<RefCell<Buffer>>,
+        queue: TaskQueue<S>,
+    ) -> Result<Self, CleanupError<S::Error>> {
+        if queue.remaining_tasks() != 0 || queue.has_pending_callback() {
+            return Err(BufferError::CleanupQueueBusy.into());
+        }
         let state = buffer.try_borrow().map_err(|_| BufferError::BorrowedLine)?;
         if state.cleanup_attached.replace(true) {
             return Err(BufferError::CleanupAlreadyAttached.into());
         }
-        let queue = TaskQueue::idle(scheduler, supports_idle);
         let failure = Rc::new(RefCell::new(None));
         let weak = Rc::downgrade(buffer);
         let queue_ref = queue.clone();

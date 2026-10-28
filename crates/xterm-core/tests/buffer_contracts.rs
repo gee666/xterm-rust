@@ -33,7 +33,7 @@ struct Host(Rc<RefCell<HostState>>);
 impl Scheduler for Host {
     type Handle = u64;
     type Error = RequestDenied;
-    fn request(&mut self, kind: CallbackKind) -> Result<u64, Self::Error> {
+    fn request(&self, kind: CallbackKind) -> Result<u64, Self::Error> {
         let mut state = self.0.borrow_mut();
         if state.fail {
             return Err(RequestDenied);
@@ -42,13 +42,13 @@ impl Scheduler for Host {
         state.requested.push(kind);
         Ok(state.next)
     }
-    fn cancel(&mut self, handle: u64) {
+    fn cancel(&self, handle: u64) {
         self.0.borrow_mut().cancelled.push(handle);
     }
     fn now(&self) -> f64 {
         0.0
     }
-    fn deadline_exceeded(&mut self, _milliseconds: f64) {
+    fn deadline_exceeded(&self, _milliseconds: f64) -> Result<(), Self::Error> {
         panic!("fixed test deadline cannot overrun");
     }
 }
