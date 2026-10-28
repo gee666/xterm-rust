@@ -38,7 +38,7 @@ impl Rows {
         })
     }
 }
-pub(super) fn js_min(a: f64, b: f64) -> f64 {
+pub(crate) fn js_min(a: f64, b: f64) -> f64 {
     if a.is_nan() || b.is_nan() {
         f64::NAN
     } else if a == 0.0 && b == 0.0 {
@@ -51,7 +51,7 @@ pub(super) fn js_min(a: f64, b: f64) -> f64 {
         a.min(b)
     }
 }
-pub(super) fn js_max(a: f64, b: f64) -> f64 {
+pub(crate) fn js_max(a: f64, b: f64) -> f64 {
     if a.is_nan() || b.is_nan() {
         f64::NAN
     } else if a == 0.0 && b == 0.0 {
