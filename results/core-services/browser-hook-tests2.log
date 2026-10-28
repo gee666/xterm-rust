@@ -1,0 +1,28 @@
+    Blocking waiting for file lock on build directory
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0433]: failed to resolve: could not find `sgr_dispatch` in `super`
+   --> crates\xterm-core\src\terminal\commands.rs:142:16
+    |
+142 |         super::sgr_dispatch::handler(Rc::clone(state)),
+    |                ^^^^^^^^^^^^ could not find `sgr_dispatch` in `super`
+
+error[E0425]: cannot find function `reflow` in module `super::reflow`
+  --> crates\xterm-core\src\buffer\screen_resize.rs:68:24
+   |
+68 |         super::reflow::reflow(target,cols,rows)?;
+   |                        ^^^^^^ not found in `super::reflow`
+
+error[E0599]: no method named `reflow_smaller` found for mutable reference `&mut screen::Buffer` in the current scope
+  --> crates\xterm-core\src\buffer\screen_reflow.rs:16:18
+   |
+16 |             self.reflow_smaller(cols, rows)
+   |                  ^^^^^^^^^^^^^^
+   |
+help: there is a method `prepare_reflow_smaller` with a similar name
+   |
+16 |             self.prepare_reflow_smaller(cols, rows)
+   |                  ~~~~~~~~~~~~~~~~~~~~~~
+
+Some errors have detailed explanations: E0425, E0433, E0599.
+For more information about an error, try `rustc --explain E0425`.
+error: could not compile `xterm-core` (lib) due to 3 previous errors

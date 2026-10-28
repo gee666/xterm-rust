@@ -1,0 +1,70 @@
+(node:47904) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/src/common/Lifecycle.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]:    Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0428]: the name `sgr_dispatch` is defined multiple times
+  --> crates\xterm-core\src\terminal\mod.rs:27:1
+   |
+26 | mod sgr_dispatch;
+   | ----------------- previous definition of the module `sgr_dispatch` here
+27 | mod sgr_dispatch;
+   | ^^^^^^^^^^^^^^^^^ `sgr_dispatch` redefined here
+   |
+   = note: `sgr_dispatch` must be defined only once in the type namespace of this module
+
+error[E0277]: can't compare `{integer}` with `&u16`
+   --> crates\xterm-core\src\input\win32_input_mode.rs:100:85
+    |
+100 |         if let Some(second) = units.get(1).filter(|unit| (0xdc00..=0xdfff).contains(unit)) {
+    |                                                                            -------- ^^^^ the trait `PartialOrd<&u16>` is not implemented for `{integer}`
+    |                                                                            |
+    |                                                                            required by a bound introduced by this call
+    |
+    = note: the trait bound `{integer}: PartialOrd<&u16>` is not satisfied
+note: required by a bound in `RangeInclusive::<Idx>::contains`
+   --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\core\src\ops\range.rs:509:5
+help: consider borrowing here
+    |
+100 |         if let Some(second) = units.get(1).filter(|unit| (0xdc00..=0xdfff).contains(&unit)) {
+    |                                                                                     +
+
+error[E0277]: can't compare `&u16` with `{integer}`
+   --> crates\xterm-core\src\input\win32_input_mode.rs:100:85
+    |
+100 |         if let Some(second) = units.get(1).filter(|unit| (0xdc00..=0xdfff).contains(unit)) {
+    |                                                                            -------- ^^^^ no implementation for `&u16 < {integer}` and `&u16 > {integer}`
+    |                                                                            |
+    |                                                                            required by a bound introduced by this call
+    |
+    = help: the trait `PartialOrd<{integer}>` is not implemented for `&_`
+            but trait `PartialOrd<u16>` is implemented for `_`
+    = help: for that trait implementation, expected `u16`, found `&u16`
+note: required by a bound in `RangeInclusive::<Idx>::contains`
+   --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\core\src\ops\range.rs:509:5
+
+Some errors have detailed explanations: E0277, E0428.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `xterm-core` (lib) due to 3 previous errors
+
+
+101 !== 0
+
+    at file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/scripts/check-core-services.mjs:157:44
+    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async node:internal/modules/esm/loader:639:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 101,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.15.0

@@ -1,0 +1,44 @@
+warning: variant `Debug` is never constructed
+  --> crates\xterm-core\src\terminal\state.rs:15:5
+   |
+13 | pub(crate) enum CoreAction {
+   |                 ---------- variant in this enum
+14 |     Reply(Vec<u16>),
+15 |     Debug(Vec<u16>),
+   |     ^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: method `mode_debug` is never used
+  --> crates\xterm-core\src\terminal\state.rs:97:19
+   |
+48 | impl TerminalState {
+   | ------------------ method in this implementation
+...
+97 |     pub(crate) fn mode_debug(&mut self, text: &str) -> Result<(), TerminalError> {
+   |                   ^^^^^^^^^^
+
+warning: `xterm-core` (lib) generated 2 warnings
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 0.30s
+     Running tests\core_services_integration.rs (target\debug\deps\core_services_integration-47d36332f7106566.exe)
+
+running 6 tests
+test opaque_logger_errors_reach_the_terminal_caller_without_data_dispatch ... ok
+test parser_replies_and_logger_callbacks_can_observe_engine_without_borrow_panics ... ok
+test disposal_disconnects_retained_services_and_drop_releases_engine_state ... ok
+test actual_input_and_binary_forwarding_obey_disable_stdin_and_user_origin ... ok
+test actual_scrollback_input_orders_scroll_user_and_data_with_live_options ... ok
+test parser_modes_and_terminal_reset_use_the_same_shared_core_state ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\log_dynamic_binding.rs (target\debug\deps\log_dynamic_binding-1f90aee41c44c68b.exe)
+
+running 3 tests
+test method_getter_failure_prevents_lazy_arguments_and_retains_original_cause ... ok
+test filtered_messages_do_not_access_dynamic_methods ... ok
+test dynamic_method_is_captured_before_lazy_callbacks_but_prefix_is_read_afterward ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

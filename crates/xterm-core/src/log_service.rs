@@ -6,7 +6,7 @@
 
 use crate::lifecycle::{Disposable, DisposableHandle};
 use crate::options::{OptionError, OptionValue, OptionsService};
-use std::cell::Cell;
+use std::cell::{Cell, RefCell};
 use std::fmt;
 use std::rc::Rc;
 
@@ -100,10 +100,19 @@ impl From<OptionError> for LogError {
     }
 }
 
+/// A prepared dynamic method, captured before lazy parameters are evaluated.
+pub type BoundLogCall = Box<dyn FnOnce(LogRecord) -> Result<(), LogError>>;
+
 /// A call may reenter the terminal. Implementations must not retain a mutable
 /// borrow across user callbacks. Errors are the equivalent of JS logger throws.
 pub trait LogSink {
     fn log(&self, record: LogRecord) -> Result<(), LogError>;
+
+    /// Fixed native sinks need no binding. Dynamic host objects return a bound
+    /// call so method getters and throws occur before lazy parameter callbacks.
+    fn prepare(&self, _level: LogLevel) -> Result<Option<BoundLogCall>, LogError> {
+        Ok(None)
+    }
 }
 
 /// Store this payload in `OptionValue::object` to install a custom logger. The
@@ -115,7 +124,7 @@ pub struct LogService {
     options: Rc<OptionsService>,
     level: Rc<Cell<Option<LogLevel>>>,
     option_listener: DisposableHandle,
-    console: Rc<dyn LogSink>,
+    console: RefCell<Rc<dyn LogSink>>,
 }
 
 impl LogService {
@@ -132,8 +141,15 @@ impl LogService {
             options,
             level,
             option_listener,
-            console,
+            console: RefCell::new(console),
         })
+    }
+
+    /// Install the host's default console without changing the custom logger
+    /// option or prefix policy. An admitted call keeps its selected sink even
+    /// if a callback replaces this endpoint while evaluating parameters.
+    pub fn set_console_sink(&self, sink: Rc<dyn LogSink>) {
+        *self.console.borrow_mut() = sink;
     }
 
     /// None models an invalid raw JS log level, whose comparisons suppress logs.
@@ -154,7 +170,7 @@ impl LogService {
         let logger = self.options.get("logger")?;
         let (sink, route) = match &logger {
             OptionValue::Undefined | OptionValue::Null => (
-                Rc::clone(&self.console),
+                Rc::clone(&self.console.borrow()),
                 match level {
                     LogLevel::Trace | LogLevel::Debug => LogRoute::Log,
                     LogLevel::Info => LogRoute::Info,
@@ -171,6 +187,7 @@ impl LogService {
             }
             _ => return Err(LogError::InvalidLogger),
         };
+        let prepared = sink.prepare(level)?;
         let parameters = parameters
             .into_iter()
             .map(|parameter| match parameter {
@@ -187,12 +204,16 @@ impl LogService {
             "xterm.js: ".encode_utf16().collect()
         };
         output.extend_from_slice(message);
-        sink.log(LogRecord {
+        let record = LogRecord {
             level,
             route,
             message: output,
             parameters,
-        })
+        };
+        match prepared {
+            Some(call) => call(record),
+            None => sink.log(record),
+        }
     }
 }
 

@@ -3,10 +3,11 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { stripTypeScriptTypes } from 'node:module';
 import { resolve } from 'node:path';
 import { Disposable, DisposableStore, toDisposable } from '../source_repo/src/common/Lifecycle.ts';
+import { runCommand } from './quality-process.mjs';
 
 process.chdir(resolve(import.meta.dirname, '..'));
 mkdirSync('results/core-services', { recursive: true });
@@ -178,3 +179,33 @@ const summary = { scope: 'CoreService/LogService only; terminal integration and 
   operationsSha256: sha256(operations.join('\n')), outputSha256: sha256(actual.join('\n')) };
 writeFileSync('results/core-services/summary.json', JSON.stringify(summary, null, 2) + '\n');
 console.log(JSON.stringify(summary, null, 2));
+
+if (process.argv.includes('--engine')) {
+  const inputs = ['Cargo.toml', 'Cargo.lock', 'crates/xterm-core/Cargo.toml',
+    'crates/xterm-core/tests/core_services_integration.rs',
+    ...readdirSync('crates/xterm-core/src', { recursive: true }).filter(path => path.endsWith('.rs'))
+      .map(path => `crates/xterm-core/src/${path.replaceAll('\\\\', '/')}`)];
+  const snapshot = () => inputs.sort().map(path => ({ path, sha256: sha256(readFileSync(path)) }));
+  const before = snapshot();
+  const stamp = Date.now();
+  const commands = [
+    [process.env.CARGO ?? 'cargo', ['test', '-p', 'xterm-core', '--test', 'core_services_integration'], 'tests'],
+    [process.env.CARGO ?? 'cargo', ['clippy', '-p', 'xterm-core', '--lib', '--test', 'core_services_integration', '--', '-D', 'warnings'], 'clippy'],
+    [process.env.RUSTFMT ?? 'rustfmt', ['--edition', '2021', '--check', 'crates/xterm-core/tests/core_services_integration.rs'], 'fmt'],
+  ];
+  const runs = [];
+  for (const [command, args, name] of commands) {
+    const log = `results/core-services/engine-${stamp}-${name}.log`;
+    runs.push({ name, log, ...await runCommand(command, args, { cwd: process.cwd(),
+      env: process.env, log, timeoutMs: 120000 }) });
+  }
+  const after = snapshot();
+  const stable = JSON.stringify(before) === JSON.stringify(after);
+  const engine = { scope: 'Six native core/log integration tests only; no browser/platform/full equivalence claim',
+    node: process.version, platform: process.platform, arch: process.arch,
+    sourceStableDuringCommands: stable, before, after, runs,
+    status: stable && runs.every(run => run.status === 'passed') ? 'passed' : 'failed' };
+  writeFileSync('results/core-services/engine-summary.json', JSON.stringify(engine, null, 2) + '\n');
+  console.log(JSON.stringify({ engine: engine.status, sourceStableDuringCommands: stable }));
+  assert.equal(engine.status, 'passed', 'Engine checks failed or source changed during commands; inspect retained evidence');
+}

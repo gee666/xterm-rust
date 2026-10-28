@@ -1,0 +1,1395 @@
+{
+  "scope": "Six native core/log integration tests only; no browser/platform/full equivalence claim",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "arch": "x64",
+  "sourceStableDuringCommands": true,
+  "before": [
+    {
+      "path": "Cargo.lock",
+      "sha256": "cb9e7c3fc16797a5d1a6d1052c3aae0858b3b9a00ca6ae0a4ad1dc811af5a13f"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256": "9cf738a8b991fdf7d4a7782870c3c367c4249bdf7cb89a35462148f49e69308b"
+    },
+    {
+      "path": "crates/xterm-core/Cargo.toml",
+      "sha256": "4373cdb9255f8bf59497975252e6ef3c2303db569575a1f48d78c49f2e00d4ca"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\attributes.rs",
+      "sha256": "8e91e059bd0e0e353d5b6179b869b17bb75be85b9c680768ddff917a7f74ac66"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\buffer_set.rs",
+      "sha256": "fc268dce703bb17c74cc5496bb9a8a238cd4dc6faaf620c0d42c4fbd40db27f4"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\cell.rs",
+      "sha256": "52bdef9deadcdb4010ac1afeb19a8711120184e15de48b862497fb6c8c226daa"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\cleanup.rs",
+      "sha256": "65b806f05097c3b0d934c858ffca6f33f43e7711e87498c36930384c3607f816"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\constants.rs",
+      "sha256": "70623dbf0d49f5532a56f3ea1c7fc2de6b7ce30c0e41b9ccdc33927491defbac"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\extended.rs",
+      "sha256": "41d314890f8fb868aacb0f1387893ce6ca5d950baaddf59c786e6011af7583bb"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\line.rs",
+      "sha256": "7b2345b2f64132de098167eb2a955994ea126475bdb69cf6ff8a1c7437ad2daa"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\line_buffer_cleanup_tests.rs",
+      "sha256": "b3ce67d315167e7266aa7ff65685271a6e83c729ecabbc233f8dec00a894656b"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\line_edit.rs",
+      "sha256": "28a7ceb0ce686157489425bf0dbc7660fc04d1d472e2b97b5651f3cfddf74df9"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\line_numeric.rs",
+      "sha256": "2f4aafde7f3485d2ac63f4d2cf512b1357e857622cb93c133facdda9634840bf"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\line_storage_tests.rs",
+      "sha256": "9060432041ebac64fd176d4ad13caf98a0cf8f8fadab7f4c296d414050996324"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\line_text.rs",
+      "sha256": "36606e32d3d3ad35f70aa6dc3211c743961debe29e43089a42a64de7299a6e9a"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\marker.rs",
+      "sha256": "bcdca03aa9b77969ffc5add24523e2085388c1b9d3ed386e0d9cc8b6426410f6"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\mod.rs",
+      "sha256": "7c2147ea86043ec80f4394c589b1c5c68fece1b0343bc384639412e4be33a469"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\range.rs",
+      "sha256": "eead3ef738e92a5f36e32cfbfc7c1103b33aae313d77bd2cc2e013507f72ad9b"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\reflow.rs",
+      "sha256": "7c1e7908dc2f7d59cad15c023d25b96f8b99e7de0cc7effb6fe9d178e5ebe87f"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\screen.rs",
+      "sha256": "2da2bb6eda4ebb8e7f2d31307daddc38eab08372767ce97489aff78e3bdeb23e"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\screen_markers.rs",
+      "sha256": "338cc855adedeb7b5e76a2530a31b5e7641a142aafefee2735f2359c3014e654"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\screen_navigation.rs",
+      "sha256": "5b7813e4cc019195382ed0e2489b9bd40034eeaf857f2f65bf7a851a7209020d"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\screen_options.rs",
+      "sha256": "1278960f57676c407e99e94f3cb46ebfb5b7bdb457d1c58bf50b85a7303a2710"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\screen_reflow.rs",
+      "sha256": "38243a66e5928280d5aadbe437fceecea0193880188565b37433265162aef522"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\screen_reflow_smaller.rs",
+      "sha256": "b1a8b456cb7ad9e59580bff62744d15404daab743ee92c020b25afa99e55d486"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\screen_resize.rs",
+      "sha256": "1769d567e48978086c3577a17a2530b70dc59463bfee3e48e24ad095c71b4a36"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\screen_shared.rs",
+      "sha256": "2d782314a1089696c9368558100f949f19256fb4cb4d267cbce2bb8ff2f14399"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\service.rs",
+      "sha256": "f66722ddb6d0e660ed487b6634f75596586400cf85676aad504537815e04f51f"
+    },
+    {
+      "path": "crates/xterm-core/src/charset.rs",
+      "sha256": "2f886e18235426a28b0b852f5fd97ccfb3e0ac0fd5d933736e8c310d0ea7a27e"
+    },
+    {
+      "path": "crates/xterm-core/src/charset_tables.rs",
+      "sha256": "e7c9ab868337c94306c7eec0ccdf0a97d9088b735eff946f105ee4b5b2f204e6"
+    },
+    {
+      "path": "crates/xterm-core/src/circular_list.rs",
+      "sha256": "744027a9f3bba9e43012f04ebdf5f99fafca731baefc79e0c0bf670a9c88b625"
+    },
+    {
+      "path": "crates/xterm-core/src/circular_list\\storage.rs",
+      "sha256": "3c756b92344f9adb2c03316ba6159f77f4f3c8371d3e8e488f07a24941f3b633"
+    },
+    {
+      "path": "crates/xterm-core/src/color\\css.rs",
+      "sha256": "53fbc2fe54f951103cdb85e90c52c55af4139c0a2928a2501ad9e49d2ba71731"
+    },
+    {
+      "path": "crates/xterm-core/src/color\\mod.rs",
+      "sha256": "804e46b004befec326439dfa916d9fa9a8e9363080a756990bc54836a1e3d3b1"
+    },
+    {
+      "path": "crates/xterm-core/src/color\\palette.rs",
+      "sha256": "f1ceaa6a78a58040d033cf029cb1eeac3909a39eecaadcdece0c558133cee6cb"
+    },
+    {
+      "path": "crates/xterm-core/src/core_service.rs",
+      "sha256": "ff01572c940dfecc68b1720678a1a9ea613c69b976f74c8fe7d4e2b7da6fabbd"
+    },
+    {
+      "path": "crates/xterm-core/src/decoration.rs",
+      "sha256": "5f02ce26c99fd19e6b4000e5b81eca719ed1ca0dc868bc84c28c29f07779a851"
+    },
+    {
+      "path": "crates/xterm-core/src/decoration_cache.rs",
+      "sha256": "7bb18de4d75465d3d3d85fd599afa2579a475f13ed70bc4b2f16bee705c3deb0"
+    },
+    {
+      "path": "crates/xterm-core/src/decoration_iterator.rs",
+      "sha256": "387be61537ba294f59aa316bec0474efa328b4a584d30f31568df2582e233b93"
+    },
+    {
+      "path": "crates/xterm-core/src/decoration_service.rs",
+      "sha256": "02dac4a4a560875e3674c5fe4207e3421810e0e9254b1f62a683ea7a938aeccd"
+    },
+    {
+      "path": "crates/xterm-core/src/event.rs",
+      "sha256": "165314ec366d3416e0f83325265945cfb6ccb51a2bdd773e243a815ff579fd9a"
+    },
+    {
+      "path": "crates/xterm-core/src/headless\\error.rs",
+      "sha256": "f48c7d8f5dc5677c773eb53e1db4f295f69279a03d0e476f3e9bc72a9e753512"
+    },
+    {
+      "path": "crates/xterm-core/src/headless\\events.rs",
+      "sha256": "961ca537a91629de22916602756a9db61e9124124b0bfe166c59afa6775557fb"
+    },
+    {
+      "path": "crates/xterm-core/src/headless\\mod.rs",
+      "sha256": "b9e98253ee8a8663239994743cef7d2483c4b10409ba33b249c9bc16f18e84d0"
+    },
+    {
+      "path": "crates/xterm-core/src/headless\\modes.rs",
+      "sha256": "3cf1c079c9893ed3599bf4b2efd4ad87c6b3dbd2b704e2bff18bc132585daea6"
+    },
+    {
+      "path": "crates/xterm-core/src/headless\\native_queue.rs",
+      "sha256": "324ccc69ed8f6cd66371263fed4e32311d74a6ca5e48a93530ba5f5306c5a884"
+    },
+    {
+      "path": "crates/xterm-core/src/headless\\options_view.rs",
+      "sha256": "d188e1aa4f16749dbe0f3dd1e707e86f3145106f78298aae04a6406e3d3eca43"
+    },
+    {
+      "path": "crates/xterm-core/src/headless\\queue_bridge.rs",
+      "sha256": "a2d91674caea01dd3890283f0d404df647572867cb5fd8fda99f5b1ebafd78e7"
+    },
+    {
+      "path": "crates/xterm-core/src/headless\\queued.rs",
+      "sha256": "3203c061edb0c697ec6f741d842f4942b1fe063c29f65a1a9b1947e352f93148"
+    },
+    {
+      "path": "crates/xterm-core/src/headless\\terminal.rs",
+      "sha256": "06c2310ce2df0ade07514df098cd61e99d57b97c5be6583e27d71fbf24dd5081"
+    },
+    {
+      "path": "crates/xterm-core/src/headless\\views.rs",
+      "sha256": "019a54f5d24ad8b186ce39f0a4ce3ff966ce792fff052ade41e52b83900a17fc"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\keyboard.rs",
+      "sha256": "03836dcea0755638e4ee19e795b14874d92a429963906185481860df71068241"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\keyboard_default.rs",
+      "sha256": "63ab2b806216c59f24f378f6775861da2b2792e5f50036368ae79430021c3a43"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\keyboard_event_source.rs",
+      "sha256": "9056864d213ffa1d4e2290c930618c8ccda9ce4205babb1c619204cc0c050fbf"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\keyboard_lowercase.rs",
+      "sha256": "d35b06cf6f278b18bc97c2bd36d414a15168fc70c9d160fe80229e19379509b5"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\keyboard_policy.rs",
+      "sha256": "0f4b932393c6e645f5c5478a772158eea787951ca55391b1596e757fbea418de"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\keyboard_uppercase.rs",
+      "sha256": "fc25f264a6c4fc5111390cc82f78f62b5cbddfbb755fb89fef87b18a6830f74f"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\kitty_keyboard.rs",
+      "sha256": "1e4fe11fa6df9496bbdc660341ef7ffea4b0124b8a680507922abfe4544cde58"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\kitty_keyboard\\inherited.rs",
+      "sha256": "7c86c05a1682a540fdc4ad3890ea526a5e80570692e6a3e6e9e546a3412b1d3b"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\kitty_keyboard\\keys.rs",
+      "sha256": "a128e22b4a61e03d74d8a926910cc537ea97c87054b5494e8c677ed665a8a8e2"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\move_to_cell.rs",
+      "sha256": "037d9600346792683d443752cb0cb4f34eb0e666e697ecf79e45e4b059d089c6"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\text_decoder.rs",
+      "sha256": "282585d0b4070083ff4e79e9ade02bca4148f68c0ec3f1f6011beebe06f9d525"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\win32_input_mode.rs",
+      "sha256": "f2af91c06867a31010f26755cef93587b3f5d64435cb48f60fdd4df0c68f615d"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\win32_input_mode_tests.rs",
+      "sha256": "8c32537421b96feee2ad63cd16926ed0b90f8c81f2492e86b78a12f604290385"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\win32_key_codes.rs",
+      "sha256": "7ac7f86e9979b8374401f3ab3ab1c9b71037f61f8c0a5826a715594c79c1956e"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\write_buffer.rs",
+      "sha256": "73491996ca3e6dbe4987edd0b6c78e81b8746c0264fea766bb1d405290c68dca"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\write_buffer_drain.rs",
+      "sha256": "3c831e4d8a27be980f3703bf5de7bbd4ddd35635e84df97f564bdf56adee82fe"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\write_buffer_types.rs",
+      "sha256": "beaf1355195411240323baf2bbee8a2d819ded0d95fa536bc7f6b3effa5532e3"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\xparse_color.rs",
+      "sha256": "4b20e6d95daebc7a706438a7fb004272e1ea8b21df7c69512b7de9aac8d5cf44"
+    },
+    {
+      "path": "crates/xterm-core/src/instantiation.rs",
+      "sha256": "b81e959e740d2cfcaad83f8033a84e551714bc5cba70028ce1e0c937df813b99"
+    },
+    {
+      "path": "crates/xterm-core/src/lib.rs",
+      "sha256": "cefe6164a92aff1cd0b4450e8d301cd5fa70ab27e594a83948f82067d3411c53"
+    },
+    {
+      "path": "crates/xterm-core/src/lifecycle.rs",
+      "sha256": "bcd7fab9c761373bb75a0cff558795749ba63819c0de9592e2d9e0ff3b774931"
+    },
+    {
+      "path": "crates/xterm-core/src/log_service.rs",
+      "sha256": "7436d20e57fe279c891e75cd4a76f5a1b7aa1af3491ddf844148e4a6dc1fd185"
+    },
+    {
+      "path": "crates/xterm-core/src/mouse_protocol.rs",
+      "sha256": "37d13297e42b0cf87ecdee0e0f95c0b0a803638579070dd7ffe51ff4c8a0f832"
+    },
+    {
+      "path": "crates/xterm-core/src/mouse_state.rs",
+      "sha256": "08e6b86ef11bc4eee55e50ddef8b9b15e91cd293431bf56ce383542d545dc94b"
+    },
+    {
+      "path": "crates/xterm-core/src/multi_key_map.rs",
+      "sha256": "fa4caf7d3fd79c547b4962b8664c730f2dcb4c62ec96bc1c089f0ae91ce258f1"
+    },
+    {
+      "path": "crates/xterm-core/src/options\\defaults.rs",
+      "sha256": "660292b88e90d5d2798855d9806706edbb039ada9b69910f7f83480c2d52e68d"
+    },
+    {
+      "path": "crates/xterm-core/src/options\\host_store.rs",
+      "sha256": "2156b455313a817e2f3a59e85f8cbdb09b5c5476d98e481f7019f960b72a49b0"
+    },
+    {
+      "path": "crates/xterm-core/src/options\\mod.rs",
+      "sha256": "2c408b75a4160a168e40da7a47ffaba4236a420bbf09d8d7dc0b43591d91dced"
+    },
+    {
+      "path": "crates/xterm-core/src/options\\object.rs",
+      "sha256": "533ed05861c78f58093f46d52a8cd562e377946e506ac9e6ad047aa9375b854a"
+    },
+    {
+      "path": "crates/xterm-core/src/options\\validation.rs",
+      "sha256": "af430e5059e4f2e376f066e04ca7ab2d01ca5ef379092f6a6276b466cdf128d4"
+    },
+    {
+      "path": "crates/xterm-core/src/options\\value.rs",
+      "sha256": "87a38bd293797a8b11f267845772d2fc0bced43f07a5357c60ccde8c4c2f89eb"
+    },
+    {
+      "path": "crates/xterm-core/src/osc_link_service.rs",
+      "sha256": "4d7a4f773a7294180899e20edf6daba6457d5a559118d58c34a69e8cb094fa59"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\apc.rs",
+      "sha256": "b9b2bee3b24a4a882f8f7c17eeefad2568767ad29f00a238e3259fe033b0b816"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\dcs.rs",
+      "sha256": "240e93f1031ceae3c8fb322702097dd04182225307ebc3efe275607a8370cb89"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\dcs_handler.rs",
+      "sha256": "02ca346643f828d4ea88532a89d482e4c18400909fbdc73bf037f92b33042217"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\escape.rs",
+      "sha256": "5772e095f659547660e07ffd2edfc88fd1b0a32c97adbb2f4da8ef1a497cf2eb"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\escape_handlers.rs",
+      "sha256": "c9103d6c75549e6395833870bd4cd94a7cd12ebf2189eade2173879826b47268"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\escape_parse.rs",
+      "sha256": "5e81fc8f7f52c36e64a2b42efb6fb0bef781bb9fd70f2689249788da28dbbc6a"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\escape_resume.rs",
+      "sha256": "6ede98b708e7cf9c5cf613e334d632ab0ef841c5b3857e5b6db3bf640b8e7de7"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\handler.rs",
+      "sha256": "6b0aa0367ad00cf72081214ec758dceb0b0a62e8ea35ec389db0a3153ea545f3"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\handler_registry.rs",
+      "sha256": "d3aae8eee9c898a44980f46368097e0e2d8f3858e58210d19fc05821fbf910f4"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\osc.rs",
+      "sha256": "3900c26643a30d6eaa1c4c699b26066ba803592407ccef08c3517f736b0e63b7"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\osc_handler.rs",
+      "sha256": "00522ed59f27ec586e28e709d2c01274f57511420acb8108793876621427326d"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\osc_registry.rs",
+      "sha256": "0686c13530785eaf27ce4d12a105147bc9d1dbbf301d78fd3a8ab2977bda1418"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\params.rs",
+      "sha256": "7791583aed1338cb52829d205cd64734889b496bd9c6adb72bb60e4780e34824"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\table.rs",
+      "sha256": "babf160c5ec24622c3a5ec349d7622ef2ec716fc59a7b50934ac973358909868"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\vt500_table.rs",
+      "sha256": "3155452ba6accf9c8e7bed7156c2150ae85729fc34de290e5293aa2bcf34f460"
+    },
+    {
+      "path": "crates/xterm-core/src/platform.rs",
+      "sha256": "6f1fe6e9cb8a48e2e2983cce5c2bfcd99fdb36edcb764400dbf9ba116bca8ac3"
+    },
+    {
+      "path": "crates/xterm-core/src/public_api\\addon_manager.rs",
+      "sha256": "3e0328494ada7baa688d91738dd0289c48ffe38530a69df1d4cc432c2a391c4b"
+    },
+    {
+      "path": "crates/xterm-core/src/public_api\\buffer.rs",
+      "sha256": "345cac244a50cce0d451025d105c87237283c36447a04a8969af25e3f04d63fd"
+    },
+    {
+      "path": "crates/xterm-core/src/public_api\\line_numbers.rs",
+      "sha256": "d2c331833d764fbe7daa67058b0d60f42e9f3442de89ed5946ec0ecb0e4a386b"
+    },
+    {
+      "path": "crates/xterm-core/src/public_api\\line_translation.rs",
+      "sha256": "fe6359038f4784d42c66fd9e54a06b5c5932d0e3e7b974d9d9743fb043f3a2b7"
+    },
+    {
+      "path": "crates/xterm-core/src/public_api\\mod.rs",
+      "sha256": "767b5bfaaec96a9af9c22943573127078f02b6fca2a48879df8510692bf7aa48"
+    },
+    {
+      "path": "crates/xterm-core/src/public_api\\parser.rs",
+      "sha256": "d3ccbe1ea19810356bd0db76a6723aeb098e69577e83a95d52d9046c783976c6"
+    },
+    {
+      "path": "crates/xterm-core/src/public_api\\validation.rs",
+      "sha256": "7e02401691b0c677198c5f2238c2e58124eec88eef1c633447241956dc939a44"
+    },
+    {
+      "path": "crates/xterm-core/src/search\\cache.rs",
+      "sha256": "b2fb52e786a1201447fda180c169e5f644222610e9c16e25a89dba5ea8c66806"
+    },
+    {
+      "path": "crates/xterm-core/src/search\\engine.rs",
+      "sha256": "d65bdf3a9e06d1603a6997c60ca55dce9af9b57865411996c21f74039880ac65"
+    },
+    {
+      "path": "crates/xterm-core/src/search\\matching.rs",
+      "sha256": "f8437e559c569c17282ace838c608519b4123010590803e24dcf3e3dbad9f434"
+    },
+    {
+      "path": "crates/xterm-core/src/search\\mod.rs",
+      "sha256": "47c803b0c994145e873d04d8e9d3c89c5e56c97792ed17f394b27bc0bf1c50bb"
+    },
+    {
+      "path": "crates/xterm-core/src/search\\state.rs",
+      "sha256": "cfa8a0b6f6fd5863248bf4d79f05bd56a5235dc693d66b09d63d03cc9449b8c1"
+    },
+    {
+      "path": "crates/xterm-core/src/serialize\\addon.rs",
+      "sha256": "d2fd344b08622f0611b23ad40e3bef86c200420eb7a4e252446f16bd5b50367d"
+    },
+    {
+      "path": "crates/xterm-core/src/serialize\\ansi.rs",
+      "sha256": "6fc4eabc157b23f5828c9ca22df679f75d53c8c4e02e681921b44b7ade9c296d"
+    },
+    {
+      "path": "crates/xterm-core/src/serialize\\buffer.rs",
+      "sha256": "781cd5f0538228d68bcc2c5c14a6707f0437dd17db69dce45a652760c0f58ace"
+    },
+    {
+      "path": "crates/xterm-core/src/serialize\\html.rs",
+      "sha256": "320ceea1323343c87f36f59da977d4c2cc626ef5a96f5e6a9479c5d6bfefea14"
+    },
+    {
+      "path": "crates/xterm-core/src/serialize\\mod.rs",
+      "sha256": "b5a7cd84ac130d7a8254bebe0d2821ac4c8083b10cd80fb5928b5faec72b35ee"
+    },
+    {
+      "path": "crates/xterm-core/src/serialize\\style.rs",
+      "sha256": "c930897894aef6f7c184d1430f408dc56666dad48ba2bbf728415fe5944ca550"
+    },
+    {
+      "path": "crates/xterm-core/src/serialize\\terminal.rs",
+      "sha256": "d80c9de9eaf322b4d4d07b778924de444fc305bcf1945a40e16e07852ef28867"
+    },
+    {
+      "path": "crates/xterm-core/src/service_registry.rs",
+      "sha256": "5037627661ed00b68ebebde93291da621995f572c54d44b87618af814ec4decf"
+    },
+    {
+      "path": "crates/xterm-core/src/sorted_list.rs",
+      "sha256": "f978298aa5769e1b21abb5354cfc64b47b4bbbb27158b725a2b9567b1de89db3"
+    },
+    {
+      "path": "crates/xterm-core/src/sorted_list\\iteration.rs",
+      "sha256": "d0475f0d4ba8eb9e1922279175c21b4852fe8fad45b7e020dcf59cc2b2b4821d"
+    },
+    {
+      "path": "crates/xterm-core/src/sorted_list\\sort_batch.rs",
+      "sha256": "0945209de4ed0e589d74777a636caaf84697552ca5682cdf6185dcecd620599d"
+    },
+    {
+      "path": "crates/xterm-core/src/string_builder.rs",
+      "sha256": "3a50f3c396dbd53ee6a673097753620d792510d7a80f8e50610668649cfa7638"
+    },
+    {
+      "path": "crates/xterm-core/src/task_queue.rs",
+      "sha256": "e4bb5d0dba55b6afdf15ce81afc85d7cbead6e75525271be2815b214de6933e3"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\commands.rs",
+      "sha256": "c8a8d3addd27a13a7426dcef3c13d0df2242f10e55f04c0f83b9cca6f7f86fd6"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\construction.rs",
+      "sha256": "855e4cf2f96318a8696e1b07c3c82825ff5d57216c06ac0d946534821feab676"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\controls.rs",
+      "sha256": "f69162ce84a6979cfe81273092e767981decaf8da290778103764a747cd98bca"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\csi.rs",
+      "sha256": "a2c884488f8d4ab8916951862f60feb572447923c99bde956e9f9469c20334a6"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\csi_edits.rs",
+      "sha256": "7a38a06e47eccb1381feabd9f936d8fee72f495bad4e4e206a4f7d960d67f1df"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\csi_erase.rs",
+      "sha256": "b652b9dd1b3ca48e8b49d3ed985f3867b0f3318a98c6c50ff519d755ec3cf87f"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\dispatch.rs",
+      "sha256": "72ade877c09e83dd93b72aaa18cb9935b994c3f0265e775a273272865d4294d0"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\error.rs",
+      "sha256": "2c6f23227238a5a538bbde6d8d33fd6bc3b5ec5c7b0a901d320b950705c73fdf"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\escape.rs",
+      "sha256": "88259fd0a6e13549927adacf59d80140390efe1bd55d7860a3aa215d3168c237"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\events.rs",
+      "sha256": "8c9dfeeaaa2866db873583ccf43714a440c7ae4b05a160eb4e3c2402a9190cf6"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\kitty_modes.rs",
+      "sha256": "badef6b6702ddb1b1a6cd1ffbae129aadd5555f5a455147e678614147cd0461a"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\mod.rs",
+      "sha256": "2850cc7e801d1359b81538482e8d5361e379cbe2bd5dd39c5bafddb7ade5827d"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\mode_callbacks.rs",
+      "sha256": "a4212647c25d0fe85bf621d0c898051c7083a731427b5bb0fc8b1875634b0f36"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\mode_query.rs",
+      "sha256": "8125cb89c8a3d7f131d738f74a323e93dc93e2c4ac7ff5a253e6d6d44e056bf2"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\modes.rs",
+      "sha256": "b8927668a0ec2c2b423001250dde0969c36a4e762034edb2f24983c39f6cf77f"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\operations.rs",
+      "sha256": "daeedfb3bbded03d5365b07bbf767623e6e3e25cdb6ceec70c761f5e1894b6b5"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\osc.rs",
+      "sha256": "56fc573376b0ac47c4c80de86298d455ed5a28de9b02216f47a48901d2607cbe"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\osc_colors.rs",
+      "sha256": "b3027fc88b415129a49ece4220b49d44dbf0a6f329db5c71e8aea8d0b74828c7"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\print.rs",
+      "sha256": "8059a4c7b3603c014a60d4f63fc48f1dcda5fdcc8d845726b52e6a7a0fe4ea05"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\register.rs",
+      "sha256": "67dab0a791c206a952395be9d50849b67668e25ff2ca0637720688f27e0e7fd6"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\replies.rs",
+      "sha256": "616722ca2aae1ded9d2e24b56bd4c67c5923a8af56af084a4311a0a1eb21ad20"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\reply_tests.rs",
+      "sha256": "4de576e929eeb98a445de7184cc258ce17ae232d62486f8d85de8d40855959d7"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\sgr.rs",
+      "sha256": "4dae2ba7a519be006a12ea41f5a33de89f6fd032c5f2df9390a6b3702d2fd5b6"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\sgr_dispatch.rs",
+      "sha256": "a64677d56a25cf4334bc9bfef2640d4d4ddcb0da646f21f2049860fd4f78a51c"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\state.rs",
+      "sha256": "9e50424a10e9f59d8415280caac186f40bfa2fa625157d3a22979b61d141e4ae"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\window.rs",
+      "sha256": "ae27ed56ac11cbb6757dead70108361bc6f3b9d6bb983215d39f4d232476048a"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\windows_heuristics.rs",
+      "sha256": "ff6da948a4e5648d76c48f31cbd9b8a7f5a0b1164349b340656cffd5a610491d"
+    },
+    {
+      "path": "crates/xterm-core/src/unicode.rs",
+      "sha256": "4dfd33b3de3331b3e0ecc41fa9109d6968db0f601960b7a8b9dede99865c147e"
+    },
+    {
+      "path": "crates/xterm-core/src/unicode11.rs",
+      "sha256": "a5b2e480f39237b477f5b6b3a7ead3636552d3fd3befc89b41fa702ff7f29e88"
+    },
+    {
+      "path": "crates/xterm-core/src/unicode11_tables.rs",
+      "sha256": "6ad9974d412e70d0462e6cd59f275fbd49650e053f392c5de595f2db6493a7ac"
+    },
+    {
+      "path": "crates/xterm-core/src/unicode15_tables.rs",
+      "sha256": "fddf1eeb4ec31fbcadf9a0497b764203c57031ca21cb38ad05f255d305972f38"
+    },
+    {
+      "path": "crates/xterm-core/src/unicode_addons.rs",
+      "sha256": "5b9df259db5cb04db64498e8daad50871ee79460e22a2a814a22b743ff819a85"
+    },
+    {
+      "path": "crates/xterm-core/src/unicode_graphemes.rs",
+      "sha256": "231caeb48a9b18378c8f8830ef2a1546cdd55374c1b17e17df3cd076e1304080"
+    },
+    {
+      "path": "crates/xterm-core/src/unicode_properties.rs",
+      "sha256": "e73148fa3dbad203e7979d9a6d5b38fd0330c2f2e978e20929542458a01fcb3d"
+    },
+    {
+      "path": "crates/xterm-core/src/unicode_service.rs",
+      "sha256": "9e44249a79b9a19c9c3c52f603fe4ccd09e07c701135063416218676a7c6f9a5"
+    },
+    {
+      "path": "crates/xterm-core/src/unicode_v6.rs",
+      "sha256": "e427968168c96cf948e78fa2c7d52ec169b5e4c203bd2bfb2b0e75ca52419393"
+    },
+    {
+      "path": "crates/xterm-core/src/unicode_v6_tables.rs",
+      "sha256": "d8ee02632b0672df8b1148c371b6dec6ca03c9c0448ad226c13a80565626693a"
+    },
+    {
+      "path": "crates/xterm-core/src/version.rs",
+      "sha256": "e02badb736157232cdb7333581af9e53c64545c477ce292f22761b9f5370cf80"
+    },
+    {
+      "path": "crates/xterm-core/src/windows_mode.rs",
+      "sha256": "d144b1b52cfaf7c3dc9aea2723fdbee880b1940f3150eb5f33b8ac12429b748c"
+    },
+    {
+      "path": "crates/xterm-core/tests/core_services_integration.rs",
+      "sha256": "e41fafa0626a3a2f6b06ad747c0077cbb10e1adcf030f9f46aac95663e44625d"
+    }
+  ],
+  "after": [
+    {
+      "path": "Cargo.lock",
+      "sha256": "cb9e7c3fc16797a5d1a6d1052c3aae0858b3b9a00ca6ae0a4ad1dc811af5a13f"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256": "9cf738a8b991fdf7d4a7782870c3c367c4249bdf7cb89a35462148f49e69308b"
+    },
+    {
+      "path": "crates/xterm-core/Cargo.toml",
+      "sha256": "4373cdb9255f8bf59497975252e6ef3c2303db569575a1f48d78c49f2e00d4ca"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\attributes.rs",
+      "sha256": "8e91e059bd0e0e353d5b6179b869b17bb75be85b9c680768ddff917a7f74ac66"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\buffer_set.rs",
+      "sha256": "fc268dce703bb17c74cc5496bb9a8a238cd4dc6faaf620c0d42c4fbd40db27f4"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\cell.rs",
+      "sha256": "52bdef9deadcdb4010ac1afeb19a8711120184e15de48b862497fb6c8c226daa"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\cleanup.rs",
+      "sha256": "65b806f05097c3b0d934c858ffca6f33f43e7711e87498c36930384c3607f816"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\constants.rs",
+      "sha256": "70623dbf0d49f5532a56f3ea1c7fc2de6b7ce30c0e41b9ccdc33927491defbac"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\extended.rs",
+      "sha256": "41d314890f8fb868aacb0f1387893ce6ca5d950baaddf59c786e6011af7583bb"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\line.rs",
+      "sha256": "7b2345b2f64132de098167eb2a955994ea126475bdb69cf6ff8a1c7437ad2daa"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\line_buffer_cleanup_tests.rs",
+      "sha256": "b3ce67d315167e7266aa7ff65685271a6e83c729ecabbc233f8dec00a894656b"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\line_edit.rs",
+      "sha256": "28a7ceb0ce686157489425bf0dbc7660fc04d1d472e2b97b5651f3cfddf74df9"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\line_numeric.rs",
+      "sha256": "2f4aafde7f3485d2ac63f4d2cf512b1357e857622cb93c133facdda9634840bf"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\line_storage_tests.rs",
+      "sha256": "9060432041ebac64fd176d4ad13caf98a0cf8f8fadab7f4c296d414050996324"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\line_text.rs",
+      "sha256": "36606e32d3d3ad35f70aa6dc3211c743961debe29e43089a42a64de7299a6e9a"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\marker.rs",
+      "sha256": "bcdca03aa9b77969ffc5add24523e2085388c1b9d3ed386e0d9cc8b6426410f6"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\mod.rs",
+      "sha256": "7c2147ea86043ec80f4394c589b1c5c68fece1b0343bc384639412e4be33a469"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\range.rs",
+      "sha256": "eead3ef738e92a5f36e32cfbfc7c1103b33aae313d77bd2cc2e013507f72ad9b"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\reflow.rs",
+      "sha256": "7c1e7908dc2f7d59cad15c023d25b96f8b99e7de0cc7effb6fe9d178e5ebe87f"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\screen.rs",
+      "sha256": "2da2bb6eda4ebb8e7f2d31307daddc38eab08372767ce97489aff78e3bdeb23e"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\screen_markers.rs",
+      "sha256": "338cc855adedeb7b5e76a2530a31b5e7641a142aafefee2735f2359c3014e654"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\screen_navigation.rs",
+      "sha256": "5b7813e4cc019195382ed0e2489b9bd40034eeaf857f2f65bf7a851a7209020d"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\screen_options.rs",
+      "sha256": "1278960f57676c407e99e94f3cb46ebfb5b7bdb457d1c58bf50b85a7303a2710"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\screen_reflow.rs",
+      "sha256": "38243a66e5928280d5aadbe437fceecea0193880188565b37433265162aef522"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\screen_reflow_smaller.rs",
+      "sha256": "b1a8b456cb7ad9e59580bff62744d15404daab743ee92c020b25afa99e55d486"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\screen_resize.rs",
+      "sha256": "1769d567e48978086c3577a17a2530b70dc59463bfee3e48e24ad095c71b4a36"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\screen_shared.rs",
+      "sha256": "2d782314a1089696c9368558100f949f19256fb4cb4d267cbce2bb8ff2f14399"
+    },
+    {
+      "path": "crates/xterm-core/src/buffer\\service.rs",
+      "sha256": "f66722ddb6d0e660ed487b6634f75596586400cf85676aad504537815e04f51f"
+    },
+    {
+      "path": "crates/xterm-core/src/charset.rs",
+      "sha256": "2f886e18235426a28b0b852f5fd97ccfb3e0ac0fd5d933736e8c310d0ea7a27e"
+    },
+    {
+      "path": "crates/xterm-core/src/charset_tables.rs",
+      "sha256": "e7c9ab868337c94306c7eec0ccdf0a97d9088b735eff946f105ee4b5b2f204e6"
+    },
+    {
+      "path": "crates/xterm-core/src/circular_list.rs",
+      "sha256": "744027a9f3bba9e43012f04ebdf5f99fafca731baefc79e0c0bf670a9c88b625"
+    },
+    {
+      "path": "crates/xterm-core/src/circular_list\\storage.rs",
+      "sha256": "3c756b92344f9adb2c03316ba6159f77f4f3c8371d3e8e488f07a24941f3b633"
+    },
+    {
+      "path": "crates/xterm-core/src/color\\css.rs",
+      "sha256": "53fbc2fe54f951103cdb85e90c52c55af4139c0a2928a2501ad9e49d2ba71731"
+    },
+    {
+      "path": "crates/xterm-core/src/color\\mod.rs",
+      "sha256": "804e46b004befec326439dfa916d9fa9a8e9363080a756990bc54836a1e3d3b1"
+    },
+    {
+      "path": "crates/xterm-core/src/color\\palette.rs",
+      "sha256": "f1ceaa6a78a58040d033cf029cb1eeac3909a39eecaadcdece0c558133cee6cb"
+    },
+    {
+      "path": "crates/xterm-core/src/core_service.rs",
+      "sha256": "ff01572c940dfecc68b1720678a1a9ea613c69b976f74c8fe7d4e2b7da6fabbd"
+    },
+    {
+      "path": "crates/xterm-core/src/decoration.rs",
+      "sha256": "5f02ce26c99fd19e6b4000e5b81eca719ed1ca0dc868bc84c28c29f07779a851"
+    },
+    {
+      "path": "crates/xterm-core/src/decoration_cache.rs",
+      "sha256": "7bb18de4d75465d3d3d85fd599afa2579a475f13ed70bc4b2f16bee705c3deb0"
+    },
+    {
+      "path": "crates/xterm-core/src/decoration_iterator.rs",
+      "sha256": "387be61537ba294f59aa316bec0474efa328b4a584d30f31568df2582e233b93"
+    },
+    {
+      "path": "crates/xterm-core/src/decoration_service.rs",
+      "sha256": "02dac4a4a560875e3674c5fe4207e3421810e0e9254b1f62a683ea7a938aeccd"
+    },
+    {
+      "path": "crates/xterm-core/src/event.rs",
+      "sha256": "165314ec366d3416e0f83325265945cfb6ccb51a2bdd773e243a815ff579fd9a"
+    },
+    {
+      "path": "crates/xterm-core/src/headless\\error.rs",
+      "sha256": "f48c7d8f5dc5677c773eb53e1db4f295f69279a03d0e476f3e9bc72a9e753512"
+    },
+    {
+      "path": "crates/xterm-core/src/headless\\events.rs",
+      "sha256": "961ca537a91629de22916602756a9db61e9124124b0bfe166c59afa6775557fb"
+    },
+    {
+      "path": "crates/xterm-core/src/headless\\mod.rs",
+      "sha256": "b9e98253ee8a8663239994743cef7d2483c4b10409ba33b249c9bc16f18e84d0"
+    },
+    {
+      "path": "crates/xterm-core/src/headless\\modes.rs",
+      "sha256": "3cf1c079c9893ed3599bf4b2efd4ad87c6b3dbd2b704e2bff18bc132585daea6"
+    },
+    {
+      "path": "crates/xterm-core/src/headless\\native_queue.rs",
+      "sha256": "324ccc69ed8f6cd66371263fed4e32311d74a6ca5e48a93530ba5f5306c5a884"
+    },
+    {
+      "path": "crates/xterm-core/src/headless\\options_view.rs",
+      "sha256": "d188e1aa4f16749dbe0f3dd1e707e86f3145106f78298aae04a6406e3d3eca43"
+    },
+    {
+      "path": "crates/xterm-core/src/headless\\queue_bridge.rs",
+      "sha256": "a2d91674caea01dd3890283f0d404df647572867cb5fd8fda99f5b1ebafd78e7"
+    },
+    {
+      "path": "crates/xterm-core/src/headless\\queued.rs",
+      "sha256": "3203c061edb0c697ec6f741d842f4942b1fe063c29f65a1a9b1947e352f93148"
+    },
+    {
+      "path": "crates/xterm-core/src/headless\\terminal.rs",
+      "sha256": "06c2310ce2df0ade07514df098cd61e99d57b97c5be6583e27d71fbf24dd5081"
+    },
+    {
+      "path": "crates/xterm-core/src/headless\\views.rs",
+      "sha256": "019a54f5d24ad8b186ce39f0a4ce3ff966ce792fff052ade41e52b83900a17fc"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\keyboard.rs",
+      "sha256": "03836dcea0755638e4ee19e795b14874d92a429963906185481860df71068241"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\keyboard_default.rs",
+      "sha256": "63ab2b806216c59f24f378f6775861da2b2792e5f50036368ae79430021c3a43"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\keyboard_event_source.rs",
+      "sha256": "9056864d213ffa1d4e2290c930618c8ccda9ce4205babb1c619204cc0c050fbf"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\keyboard_lowercase.rs",
+      "sha256": "d35b06cf6f278b18bc97c2bd36d414a15168fc70c9d160fe80229e19379509b5"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\keyboard_policy.rs",
+      "sha256": "0f4b932393c6e645f5c5478a772158eea787951ca55391b1596e757fbea418de"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\keyboard_uppercase.rs",
+      "sha256": "fc25f264a6c4fc5111390cc82f78f62b5cbddfbb755fb89fef87b18a6830f74f"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\kitty_keyboard.rs",
+      "sha256": "1e4fe11fa6df9496bbdc660341ef7ffea4b0124b8a680507922abfe4544cde58"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\kitty_keyboard\\inherited.rs",
+      "sha256": "7c86c05a1682a540fdc4ad3890ea526a5e80570692e6a3e6e9e546a3412b1d3b"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\kitty_keyboard\\keys.rs",
+      "sha256": "a128e22b4a61e03d74d8a926910cc537ea97c87054b5494e8c677ed665a8a8e2"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\move_to_cell.rs",
+      "sha256": "037d9600346792683d443752cb0cb4f34eb0e666e697ecf79e45e4b059d089c6"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\text_decoder.rs",
+      "sha256": "282585d0b4070083ff4e79e9ade02bca4148f68c0ec3f1f6011beebe06f9d525"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\win32_input_mode.rs",
+      "sha256": "f2af91c06867a31010f26755cef93587b3f5d64435cb48f60fdd4df0c68f615d"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\win32_input_mode_tests.rs",
+      "sha256": "8c32537421b96feee2ad63cd16926ed0b90f8c81f2492e86b78a12f604290385"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\win32_key_codes.rs",
+      "sha256": "7ac7f86e9979b8374401f3ab3ab1c9b71037f61f8c0a5826a715594c79c1956e"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\write_buffer.rs",
+      "sha256": "73491996ca3e6dbe4987edd0b6c78e81b8746c0264fea766bb1d405290c68dca"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\write_buffer_drain.rs",
+      "sha256": "3c831e4d8a27be980f3703bf5de7bbd4ddd35635e84df97f564bdf56adee82fe"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\write_buffer_types.rs",
+      "sha256": "beaf1355195411240323baf2bbee8a2d819ded0d95fa536bc7f6b3effa5532e3"
+    },
+    {
+      "path": "crates/xterm-core/src/input\\xparse_color.rs",
+      "sha256": "4b20e6d95daebc7a706438a7fb004272e1ea8b21df7c69512b7de9aac8d5cf44"
+    },
+    {
+      "path": "crates/xterm-core/src/instantiation.rs",
+      "sha256": "b81e959e740d2cfcaad83f8033a84e551714bc5cba70028ce1e0c937df813b99"
+    },
+    {
+      "path": "crates/xterm-core/src/lib.rs",
+      "sha256": "cefe6164a92aff1cd0b4450e8d301cd5fa70ab27e594a83948f82067d3411c53"
+    },
+    {
+      "path": "crates/xterm-core/src/lifecycle.rs",
+      "sha256": "bcd7fab9c761373bb75a0cff558795749ba63819c0de9592e2d9e0ff3b774931"
+    },
+    {
+      "path": "crates/xterm-core/src/log_service.rs",
+      "sha256": "7436d20e57fe279c891e75cd4a76f5a1b7aa1af3491ddf844148e4a6dc1fd185"
+    },
+    {
+      "path": "crates/xterm-core/src/mouse_protocol.rs",
+      "sha256": "37d13297e42b0cf87ecdee0e0f95c0b0a803638579070dd7ffe51ff4c8a0f832"
+    },
+    {
+      "path": "crates/xterm-core/src/mouse_state.rs",
+      "sha256": "08e6b86ef11bc4eee55e50ddef8b9b15e91cd293431bf56ce383542d545dc94b"
+    },
+    {
+      "path": "crates/xterm-core/src/multi_key_map.rs",
+      "sha256": "fa4caf7d3fd79c547b4962b8664c730f2dcb4c62ec96bc1c089f0ae91ce258f1"
+    },
+    {
+      "path": "crates/xterm-core/src/options\\defaults.rs",
+      "sha256": "660292b88e90d5d2798855d9806706edbb039ada9b69910f7f83480c2d52e68d"
+    },
+    {
+      "path": "crates/xterm-core/src/options\\host_store.rs",
+      "sha256": "2156b455313a817e2f3a59e85f8cbdb09b5c5476d98e481f7019f960b72a49b0"
+    },
+    {
+      "path": "crates/xterm-core/src/options\\mod.rs",
+      "sha256": "2c408b75a4160a168e40da7a47ffaba4236a420bbf09d8d7dc0b43591d91dced"
+    },
+    {
+      "path": "crates/xterm-core/src/options\\object.rs",
+      "sha256": "533ed05861c78f58093f46d52a8cd562e377946e506ac9e6ad047aa9375b854a"
+    },
+    {
+      "path": "crates/xterm-core/src/options\\validation.rs",
+      "sha256": "af430e5059e4f2e376f066e04ca7ab2d01ca5ef379092f6a6276b466cdf128d4"
+    },
+    {
+      "path": "crates/xterm-core/src/options\\value.rs",
+      "sha256": "87a38bd293797a8b11f267845772d2fc0bced43f07a5357c60ccde8c4c2f89eb"
+    },
+    {
+      "path": "crates/xterm-core/src/osc_link_service.rs",
+      "sha256": "4d7a4f773a7294180899e20edf6daba6457d5a559118d58c34a69e8cb094fa59"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\apc.rs",
+      "sha256": "b9b2bee3b24a4a882f8f7c17eeefad2568767ad29f00a238e3259fe033b0b816"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\dcs.rs",
+      "sha256": "240e93f1031ceae3c8fb322702097dd04182225307ebc3efe275607a8370cb89"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\dcs_handler.rs",
+      "sha256": "02ca346643f828d4ea88532a89d482e4c18400909fbdc73bf037f92b33042217"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\escape.rs",
+      "sha256": "5772e095f659547660e07ffd2edfc88fd1b0a32c97adbb2f4da8ef1a497cf2eb"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\escape_handlers.rs",
+      "sha256": "c9103d6c75549e6395833870bd4cd94a7cd12ebf2189eade2173879826b47268"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\escape_parse.rs",
+      "sha256": "5e81fc8f7f52c36e64a2b42efb6fb0bef781bb9fd70f2689249788da28dbbc6a"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\escape_resume.rs",
+      "sha256": "6ede98b708e7cf9c5cf613e334d632ab0ef841c5b3857e5b6db3bf640b8e7de7"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\handler.rs",
+      "sha256": "6b0aa0367ad00cf72081214ec758dceb0b0a62e8ea35ec389db0a3153ea545f3"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\handler_registry.rs",
+      "sha256": "d3aae8eee9c898a44980f46368097e0e2d8f3858e58210d19fc05821fbf910f4"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\osc.rs",
+      "sha256": "3900c26643a30d6eaa1c4c699b26066ba803592407ccef08c3517f736b0e63b7"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\osc_handler.rs",
+      "sha256": "00522ed59f27ec586e28e709d2c01274f57511420acb8108793876621427326d"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\osc_registry.rs",
+      "sha256": "0686c13530785eaf27ce4d12a105147bc9d1dbbf301d78fd3a8ab2977bda1418"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\params.rs",
+      "sha256": "7791583aed1338cb52829d205cd64734889b496bd9c6adb72bb60e4780e34824"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\table.rs",
+      "sha256": "babf160c5ec24622c3a5ec349d7622ef2ec716fc59a7b50934ac973358909868"
+    },
+    {
+      "path": "crates/xterm-core/src/parser\\vt500_table.rs",
+      "sha256": "3155452ba6accf9c8e7bed7156c2150ae85729fc34de290e5293aa2bcf34f460"
+    },
+    {
+      "path": "crates/xterm-core/src/platform.rs",
+      "sha256": "6f1fe6e9cb8a48e2e2983cce5c2bfcd99fdb36edcb764400dbf9ba116bca8ac3"
+    },
+    {
+      "path": "crates/xterm-core/src/public_api\\addon_manager.rs",
+      "sha256": "3e0328494ada7baa688d91738dd0289c48ffe38530a69df1d4cc432c2a391c4b"
+    },
+    {
+      "path": "crates/xterm-core/src/public_api\\buffer.rs",
+      "sha256": "345cac244a50cce0d451025d105c87237283c36447a04a8969af25e3f04d63fd"
+    },
+    {
+      "path": "crates/xterm-core/src/public_api\\line_numbers.rs",
+      "sha256": "d2c331833d764fbe7daa67058b0d60f42e9f3442de89ed5946ec0ecb0e4a386b"
+    },
+    {
+      "path": "crates/xterm-core/src/public_api\\line_translation.rs",
+      "sha256": "fe6359038f4784d42c66fd9e54a06b5c5932d0e3e7b974d9d9743fb043f3a2b7"
+    },
+    {
+      "path": "crates/xterm-core/src/public_api\\mod.rs",
+      "sha256": "767b5bfaaec96a9af9c22943573127078f02b6fca2a48879df8510692bf7aa48"
+    },
+    {
+      "path": "crates/xterm-core/src/public_api\\parser.rs",
+      "sha256": "d3ccbe1ea19810356bd0db76a6723aeb098e69577e83a95d52d9046c783976c6"
+    },
+    {
+      "path": "crates/xterm-core/src/public_api\\validation.rs",
+      "sha256": "7e02401691b0c677198c5f2238c2e58124eec88eef1c633447241956dc939a44"
+    },
+    {
+      "path": "crates/xterm-core/src/search\\cache.rs",
+      "sha256": "b2fb52e786a1201447fda180c169e5f644222610e9c16e25a89dba5ea8c66806"
+    },
+    {
+      "path": "crates/xterm-core/src/search\\engine.rs",
+      "sha256": "d65bdf3a9e06d1603a6997c60ca55dce9af9b57865411996c21f74039880ac65"
+    },
+    {
+      "path": "crates/xterm-core/src/search\\matching.rs",
+      "sha256": "f8437e559c569c17282ace838c608519b4123010590803e24dcf3e3dbad9f434"
+    },
+    {
+      "path": "crates/xterm-core/src/search\\mod.rs",
+      "sha256": "47c803b0c994145e873d04d8e9d3c89c5e56c97792ed17f394b27bc0bf1c50bb"
+    },
+    {
+      "path": "crates/xterm-core/src/search\\state.rs",
+      "sha256": "cfa8a0b6f6fd5863248bf4d79f05bd56a5235dc693d66b09d63d03cc9449b8c1"
+    },
+    {
+      "path": "crates/xterm-core/src/serialize\\addon.rs",
+      "sha256": "d2fd344b08622f0611b23ad40e3bef86c200420eb7a4e252446f16bd5b50367d"
+    },
+    {
+      "path": "crates/xterm-core/src/serialize\\ansi.rs",
+      "sha256": "6fc4eabc157b23f5828c9ca22df679f75d53c8c4e02e681921b44b7ade9c296d"
+    },
+    {
+      "path": "crates/xterm-core/src/serialize\\buffer.rs",
+      "sha256": "781cd5f0538228d68bcc2c5c14a6707f0437dd17db69dce45a652760c0f58ace"
+    },
+    {
+      "path": "crates/xterm-core/src/serialize\\html.rs",
+      "sha256": "320ceea1323343c87f36f59da977d4c2cc626ef5a96f5e6a9479c5d6bfefea14"
+    },
+    {
+      "path": "crates/xterm-core/src/serialize\\mod.rs",
+      "sha256": "b5a7cd84ac130d7a8254bebe0d2821ac4c8083b10cd80fb5928b5faec72b35ee"
+    },
+    {
+      "path": "crates/xterm-core/src/serialize\\style.rs",
+      "sha256": "c930897894aef6f7c184d1430f408dc56666dad48ba2bbf728415fe5944ca550"
+    },
+    {
+      "path": "crates/xterm-core/src/serialize\\terminal.rs",
+      "sha256": "d80c9de9eaf322b4d4d07b778924de444fc305bcf1945a40e16e07852ef28867"
+    },
+    {
+      "path": "crates/xterm-core/src/service_registry.rs",
+      "sha256": "5037627661ed00b68ebebde93291da621995f572c54d44b87618af814ec4decf"
+    },
+    {
+      "path": "crates/xterm-core/src/sorted_list.rs",
+      "sha256": "f978298aa5769e1b21abb5354cfc64b47b4bbbb27158b725a2b9567b1de89db3"
+    },
+    {
+      "path": "crates/xterm-core/src/sorted_list\\iteration.rs",
+      "sha256": "d0475f0d4ba8eb9e1922279175c21b4852fe8fad45b7e020dcf59cc2b2b4821d"
+    },
+    {
+      "path": "crates/xterm-core/src/sorted_list\\sort_batch.rs",
+      "sha256": "0945209de4ed0e589d74777a636caaf84697552ca5682cdf6185dcecd620599d"
+    },
+    {
+      "path": "crates/xterm-core/src/string_builder.rs",
+      "sha256": "3a50f3c396dbd53ee6a673097753620d792510d7a80f8e50610668649cfa7638"
+    },
+    {
+      "path": "crates/xterm-core/src/task_queue.rs",
+      "sha256": "e4bb5d0dba55b6afdf15ce81afc85d7cbead6e75525271be2815b214de6933e3"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\commands.rs",
+      "sha256": "c8a8d3addd27a13a7426dcef3c13d0df2242f10e55f04c0f83b9cca6f7f86fd6"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\construction.rs",
+      "sha256": "855e4cf2f96318a8696e1b07c3c82825ff5d57216c06ac0d946534821feab676"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\controls.rs",
+      "sha256": "f69162ce84a6979cfe81273092e767981decaf8da290778103764a747cd98bca"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\csi.rs",
+      "sha256": "a2c884488f8d4ab8916951862f60feb572447923c99bde956e9f9469c20334a6"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\csi_edits.rs",
+      "sha256": "7a38a06e47eccb1381feabd9f936d8fee72f495bad4e4e206a4f7d960d67f1df"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\csi_erase.rs",
+      "sha256": "b652b9dd1b3ca48e8b49d3ed985f3867b0f3318a98c6c50ff519d755ec3cf87f"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\dispatch.rs",
+      "sha256": "72ade877c09e83dd93b72aaa18cb9935b994c3f0265e775a273272865d4294d0"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\error.rs",
+      "sha256": "2c6f23227238a5a538bbde6d8d33fd6bc3b5ec5c7b0a901d320b950705c73fdf"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\escape.rs",
+      "sha256": "88259fd0a6e13549927adacf59d80140390efe1bd55d7860a3aa215d3168c237"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\events.rs",
+      "sha256": "8c9dfeeaaa2866db873583ccf43714a440c7ae4b05a160eb4e3c2402a9190cf6"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\kitty_modes.rs",
+      "sha256": "badef6b6702ddb1b1a6cd1ffbae129aadd5555f5a455147e678614147cd0461a"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\mod.rs",
+      "sha256": "2850cc7e801d1359b81538482e8d5361e379cbe2bd5dd39c5bafddb7ade5827d"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\mode_callbacks.rs",
+      "sha256": "a4212647c25d0fe85bf621d0c898051c7083a731427b5bb0fc8b1875634b0f36"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\mode_query.rs",
+      "sha256": "8125cb89c8a3d7f131d738f74a323e93dc93e2c4ac7ff5a253e6d6d44e056bf2"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\modes.rs",
+      "sha256": "b8927668a0ec2c2b423001250dde0969c36a4e762034edb2f24983c39f6cf77f"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\operations.rs",
+      "sha256": "daeedfb3bbded03d5365b07bbf767623e6e3e25cdb6ceec70c761f5e1894b6b5"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\osc.rs",
+      "sha256": "56fc573376b0ac47c4c80de86298d455ed5a28de9b02216f47a48901d2607cbe"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\osc_colors.rs",
+      "sha256": "b3027fc88b415129a49ece4220b49d44dbf0a6f329db5c71e8aea8d0b74828c7"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\print.rs",
+      "sha256": "8059a4c7b3603c014a60d4f63fc48f1dcda5fdcc8d845726b52e6a7a0fe4ea05"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\register.rs",
+      "sha256": "67dab0a791c206a952395be9d50849b67668e25ff2ca0637720688f27e0e7fd6"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\replies.rs",
+      "sha256": "616722ca2aae1ded9d2e24b56bd4c67c5923a8af56af084a4311a0a1eb21ad20"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\reply_tests.rs",
+      "sha256": "4de576e929eeb98a445de7184cc258ce17ae232d62486f8d85de8d40855959d7"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\sgr.rs",
+      "sha256": "4dae2ba7a519be006a12ea41f5a33de89f6fd032c5f2df9390a6b3702d2fd5b6"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\sgr_dispatch.rs",
+      "sha256": "a64677d56a25cf4334bc9bfef2640d4d4ddcb0da646f21f2049860fd4f78a51c"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\state.rs",
+      "sha256": "9e50424a10e9f59d8415280caac186f40bfa2fa625157d3a22979b61d141e4ae"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\window.rs",
+      "sha256": "ae27ed56ac11cbb6757dead70108361bc6f3b9d6bb983215d39f4d232476048a"
+    },
+    {
+      "path": "crates/xterm-core/src/terminal\\windows_heuristics.rs",
+      "sha256": "ff6da948a4e5648d76c48f31cbd9b8a7f5a0b1164349b340656cffd5a610491d"
+    },
+    {
+      "path": "crates/xterm-core/src/unicode.rs",
+      "sha256": "4dfd33b3de3331b3e0ecc41fa9109d6968db0f601960b7a8b9dede99865c147e"
+    },
+    {
+      "path": "crates/xterm-core/src/unicode11.rs",
+      "sha256": "a5b2e480f39237b477f5b6b3a7ead3636552d3fd3befc89b41fa702ff7f29e88"
+    },
+    {
+      "path": "crates/xterm-core/src/unicode11_tables.rs",
+      "sha256": "6ad9974d412e70d0462e6cd59f275fbd49650e053f392c5de595f2db6493a7ac"
+    },
+    {
+      "path": "crates/xterm-core/src/unicode15_tables.rs",
+      "sha256": "fddf1eeb4ec31fbcadf9a0497b764203c57031ca21cb38ad05f255d305972f38"
+    },
+    {
+      "path": "crates/xterm-core/src/unicode_addons.rs",
+      "sha256": "5b9df259db5cb04db64498e8daad50871ee79460e22a2a814a22b743ff819a85"
+    },
+    {
+      "path": "crates/xterm-core/src/unicode_graphemes.rs",
+      "sha256": "231caeb48a9b18378c8f8830ef2a1546cdd55374c1b17e17df3cd076e1304080"
+    },
+    {
+      "path": "crates/xterm-core/src/unicode_properties.rs",
+      "sha256": "e73148fa3dbad203e7979d9a6d5b38fd0330c2f2e978e20929542458a01fcb3d"
+    },
+    {
+      "path": "crates/xterm-core/src/unicode_service.rs",
+      "sha256": "9e44249a79b9a19c9c3c52f603fe4ccd09e07c701135063416218676a7c6f9a5"
+    },
+    {
+      "path": "crates/xterm-core/src/unicode_v6.rs",
+      "sha256": "e427968168c96cf948e78fa2c7d52ec169b5e4c203bd2bfb2b0e75ca52419393"
+    },
+    {
+      "path": "crates/xterm-core/src/unicode_v6_tables.rs",
+      "sha256": "d8ee02632b0672df8b1148c371b6dec6ca03c9c0448ad226c13a80565626693a"
+    },
+    {
+      "path": "crates/xterm-core/src/version.rs",
+      "sha256": "e02badb736157232cdb7333581af9e53c64545c477ce292f22761b9f5370cf80"
+    },
+    {
+      "path": "crates/xterm-core/src/windows_mode.rs",
+      "sha256": "d144b1b52cfaf7c3dc9aea2723fdbee880b1940f3150eb5f33b8ac12429b748c"
+    },
+    {
+      "path": "crates/xterm-core/tests/core_services_integration.rs",
+      "sha256": "e41fafa0626a3a2f6b06ad747c0077cbb10e1adcf030f9f46aac95663e44625d"
+    }
+  ],
+  "runs": [
+    {
+      "name": "tests",
+      "log": "results/core-services/engine-1793147213085-tests.log",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-core",
+        "--test",
+        "core_services_integration"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 417.10490000000004,
+      "status": "passed"
+    },
+    {
+      "name": "clippy",
+      "log": "results/core-services/engine-1793147213085-clippy.log",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "xterm-core",
+        "--lib",
+        "--test",
+        "core_services_integration",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 303.0259000000001,
+      "status": "passed"
+    },
+    {
+      "name": "fmt",
+      "log": "results/core-services/engine-1793147213085-fmt.log",
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2021",
+        "--check",
+        "crates/xterm-core/tests/core_services_integration.rs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 39.837600000000066,
+      "status": "passed"
+    }
+  ],
+  "status": "passed"
+}
