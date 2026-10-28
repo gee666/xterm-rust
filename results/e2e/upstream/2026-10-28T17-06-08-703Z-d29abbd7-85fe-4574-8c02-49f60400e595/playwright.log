@@ -1,0 +1,59 @@
+
+Running 3 tests using 2 workers
+FFF
+
+  1) [Chromium] › addons\addon-unicode11\test\Unicode11Addon.test.ts:28:7 › Unicode11Addon › wcwidth V11 emoji test 
+
+    Error: page.evaluate: TypeError: Cannot read properties of undefined (reading 'unicodeService')
+        at eval (eval at evaluate (:302:30), <anonymous>:1:19)
+        at eval (<anonymous>)
+        at UtilityScript.evaluate (<anonymous>:302:30)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at eval (eval at evaluate (:302:30), <anonymous>:1:19)
+        at UtilityScript.evaluate (<anonymous>:302:30)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\swarm\Sandra\BehanzinE2E\source_repo\addons\addon-unicode11\test\Unicode11Addon.test.ts:35:36
+
+    Error Context: ..\results\e2e\upstream\2026-10-28T17-06-08-703Z-d29abbd7-85fe-4574-8c02-49f60400e595\artifacts\Unicode11Addon-Unicode11Addon-wcwidth-V11-emoji-test-Chromium\error-context.md
+
+    Error Context: ..\results\e2e\upstream\2026-10-28T17-06-08-703Z-d29abbd7-85fe-4574-8c02-49f60400e595\artifacts\Unicode11Addon-Unicode11Addon-wcwidth-V11-emoji-test-Chromium\error-context.md
+
+  2) [FirefoxStable] › addons\addon-unicode11\test\Unicode11Addon.test.ts:28:7 › Unicode11Addon › wcwidth V11 emoji test 
+
+    Error: page.evaluate: can't access property "unicodeService", window.term._core is undefined
+    @debugger eval code line 302 > eval:1:1
+    evaluate@debugger eval code:302:30
+    @debugger eval code:1:44
+    @debugger eval code:1:62
+
+        at @debugger eval code line 302 > eval:1:1
+        at evaluate@debugger eval code:302:30
+        at @debugger eval code:1:44
+        at @debugger eval code:1:62
+        at C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\swarm\Sandra\BehanzinE2E\source_repo\addons\addon-unicode11\test\Unicode11Addon.test.ts:35:36
+
+    Error Context: ..\results\e2e\upstream\2026-10-28T17-06-08-703Z-d29abbd7-85fe-4574-8c02-49f60400e595\artifacts\Unicode11Addon-Unicode11Addon-wcwidth-V11-emoji-test-FirefoxStable\error-context.md
+
+    Error Context: ..\results\e2e\upstream\2026-10-28T17-06-08-703Z-d29abbd7-85fe-4574-8c02-49f60400e595\artifacts\Unicode11Addon-Unicode11Addon-wcwidth-V11-emoji-test-FirefoxStable\error-context.md
+
+  3) [WebKit] › addons\addon-unicode11\test\Unicode11Addon.test.ts:28:7 › Unicode11Addon › wcwidth V11 emoji test 
+
+    Error: page.evaluate: TypeError: undefined is not an object (evaluating 'window.term._core.unicodeService')
+
+      33 |     deepStrictEqual(await ctx.page.evaluate(`window.term.unicode.activeVersion`), '11');
+      34 |     // v6: 10, V11: 20
+    > 35 |     deepStrictEqual(await ctx.page.evaluate(`window.term._core.unicodeService.getStringCellWidth('🤣🤣🤣🤣🤣🤣🤣🤣🤣🤣')`), 20);
+         |                                    ^
+      36 |   });
+      37 | });
+      38 |
+        at C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\swarm\Sandra\BehanzinE2E\source_repo\addons\addon-unicode11\test\Unicode11Addon.test.ts:35:36
+
+    Error Context: ..\results\e2e\upstream\2026-10-28T17-06-08-703Z-d29abbd7-85fe-4574-8c02-49f60400e595\artifacts\Unicode11Addon-Unicode11Addon-wcwidth-V11-emoji-test-WebKit\error-context.md
+
+    Error Context: ..\results\e2e\upstream\2026-10-28T17-06-08-703Z-d29abbd7-85fe-4574-8c02-49f60400e595\artifacts\Unicode11Addon-Unicode11Addon-wcwidth-V11-emoji-test-WebKit\error-context.md
+
+  3 failed
+    [Chromium] › addons\addon-unicode11\test\Unicode11Addon.test.ts:28:7 › Unicode11Addon › wcwidth V11 emoji test 
+    [FirefoxStable] › addons\addon-unicode11\test\Unicode11Addon.test.ts:28:7 › Unicode11Addon › wcwidth V11 emoji test 
+    [WebKit] › addons\addon-unicode11\test\Unicode11Addon.test.ts:28:7 › Unicode11Addon › wcwidth V11 emoji test 

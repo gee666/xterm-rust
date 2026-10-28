@@ -236,6 +236,16 @@ impl Terminal {
         self.shared.parser.clone()
     }
     #[wasm_bindgen(getter)]
+    pub fn unicode(
+        &self,
+    ) -> Result<xterm_wasm_support::public_api::unicode_api::WebUnicodeApi, JsValue> {
+        self.shared
+            .native
+            .unicode()
+            .map(xterm_wasm_support::public_api::unicode_api::WebUnicodeApi::new)
+            .map_err(|error| to_js_error(&error))
+    }
+    #[wasm_bindgen(getter)]
     pub fn element(&self) -> Option<web_sys::HtmlElement> {
         self.shared
             .dom

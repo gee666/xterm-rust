@@ -8,6 +8,7 @@ use std::rc::Rc;
 use crate::event::{EmitError, Emitter, Event};
 use crate::lifecycle::Disposable;
 use crate::unicode::{UnicodeCharProperties, UnicodeCharWidth, UnicodeVersionProvider};
+use crate::unicode_callbacks::{Provider, UnicodeProviderCallbacks};
 
 /// Recoverable failures from provider selection, callbacks or width accumulation.
 #[derive(Debug, Eq, PartialEq)]
@@ -42,9 +43,9 @@ impl std::error::Error for UnicodeServiceError {
 
 #[derive(Default)]
 struct State {
-    providers: Vec<(String, Rc<dyn UnicodeVersionProvider>)>,
+    providers: Vec<(String, Rc<Provider>)>,
     active_version: String,
-    active_provider: Option<Rc<dyn UnicodeVersionProvider>>,
+    active_provider: Option<Rc<Provider>>,
 }
 
 /// Unicode provider registry and UTF-16 string-width calculation.
@@ -116,15 +117,7 @@ impl UnicodeService {
         provider: Rc<dyn UnicodeVersionProvider>,
     ) -> Result<(), UnicodeServiceError> {
         let version = provider.version().to_owned();
-        let activate = {
-            let mut state = self.state.borrow_mut();
-            if let Some(entry) = state.providers.iter_mut().find(|entry| entry.0 == version) {
-                entry.1 = provider;
-            } else {
-                state.providers.push((version.clone(), provider));
-            }
-            state.active_version.is_empty()
-        };
+        let activate = self.insert_provider(version.clone(), Provider::Native(provider));
         // Replacing an active name does not replace the selected provider object
         // until the caller selects that name again. The reference stores both.
         if activate {
@@ -133,8 +126,36 @@ impl UnicodeService {
         Ok(())
     }
 
+    /// Register a host provider without losing errors from property reads or
+    /// callbacks. The second version read on initial activation is intentional.
+    pub fn register_callbacks(
+        &self,
+        provider: Rc<dyn UnicodeProviderCallbacks>,
+    ) -> Result<(), UnicodeServiceError> {
+        let version = provider.version().map_err(UnicodeServiceError::Event)?;
+        let activate = self.insert_provider(version, Provider::Host(Rc::clone(&provider)));
+        if activate {
+            let active = provider.version().map_err(UnicodeServiceError::Event)?;
+            self.set_active_version(&active)?;
+        }
+        Ok(())
+    }
+
+    fn insert_provider(&self, version: String, provider: Provider) -> bool {
+        let mut state = self.state.borrow_mut();
+        let provider = Rc::new(provider);
+        if let Some(entry) = state.providers.iter_mut().find(|entry| entry.0 == version) {
+            entry.1 = provider;
+        } else {
+            state.providers.push((version, provider));
+        }
+        state.active_version.is_empty()
+    }
+
     pub fn wcwidth(&self, codepoint: u32) -> Result<UnicodeCharWidth, UnicodeServiceError> {
-        Ok(self.active_provider()?.wcwidth(codepoint))
+        self.active_provider()?
+            .wcwidth(codepoint)
+            .map_err(UnicodeServiceError::Event)
     }
 
     pub fn char_properties(
@@ -142,9 +163,9 @@ impl UnicodeService {
         codepoint: u32,
         preceding: UnicodeCharProperties,
     ) -> Result<UnicodeCharProperties, UnicodeServiceError> {
-        Ok(self
-            .active_provider()?
-            .char_properties(codepoint, preceding))
+        self.active_provider()?
+            .char_properties(codepoint, preceding)
+            .map_err(UnicodeServiceError::Event)
     }
 
     pub fn get_string_cell_width(&self, text: &str) -> Result<i64, UnicodeServiceError> {
@@ -191,7 +212,7 @@ impl UnicodeService {
         Ok(result)
     }
 
-    fn active_provider(&self) -> Result<Rc<dyn UnicodeVersionProvider>, UnicodeServiceError> {
+    fn active_provider(&self) -> Result<Rc<Provider>, UnicodeServiceError> {
         self.state
             .borrow()
             .active_provider

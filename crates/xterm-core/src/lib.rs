@@ -30,6 +30,7 @@ pub mod terminal;
 pub mod unicode;
 pub mod unicode11;
 pub mod unicode_addons;
+pub mod unicode_callbacks;
 pub mod unicode_graphemes;
 pub mod unicode_properties;
 pub mod unicode_service;

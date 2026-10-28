@@ -1,0 +1,70 @@
+   Compiling foldhash v0.1.5
+   Compiling equivalent v1.0.3
+   Compiling allocator-api2 v0.2.21
+   Compiling memchr v2.8.3
+   Compiling ryu-js v1.0.3
+   Compiling hashbrown v0.15.5
+   Compiling regress v0.10.4
+   Compiling xterm-core v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\swarm\Sandra\BehanzinE2E\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 11.16s
+     Running tests\unicode_addon_drop.rs (target\debug\deps\unicode_addon_drop-f063d3df8d234ca2.exe)
+
+running 1 test
+test replacing_only_owned_service_releases_borrow_before_listener_capture_drop ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\unicode_addon_manager.rs (target\debug\deps\unicode_addon_manager-22c1e83a791989b8.exe)
+
+running 3 tests
+test addon_reentry_releases_borrows_and_owns_no_callback_cycles ... ok
+test shared_manager_owns_registration_and_idempotent_disposal ... ok
+test unchanged_original_addon_lifecycle_traces ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests\unicode_addons.rs (target\debug\deps\unicode_addons-4c1a6f8351f4a8b3.exe)
+
+running 7 tests
+test activation_disposal_and_reentrant_events ... ok
+test callback_selection_and_errors_preserve_source_order ... ok
+test original_addon_version_and_emoji_width_assertions ... ok
+test utf16_column_helpers_match_javascript ... ok
+test state_helpers_and_standalone_widths_match_javascript ... ok
+test seeded_multi_codepoint_property_traces ... ok
+test exhaustive_codepoint_width_and_property_oracle ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.22s
+
+     Running tests\unicode_service.rs (target\debug\deps\unicode_service-92e43e7dab249ed1.exe)
+
+running 15 tests
+test version_keys_match_object_keys ... ok
+test event_failure_keeps_committed_state ... ok
+test registry_replacement_retains_active_snapshot ... ok
+test empty_name_registration_follows_source ... ok
+test empty_service ... ok
+test wcwidth_v6_emoji_test ... ok
+test unknown_version_is_transactional ... ok
+test event_callback_payload_is_retained ... ok
+test correctly_changes_provider_implementation ... ok
+test default_to_v6 ... ok
+test should_notify_about_version_change ... ok
+test activate_should_throw_for_unknown_version ... ok
+test unicode_api_views_share_service ... ok
+test dispose_only_clears_notifications ... ok
+test selection_commits_before_reentrant_events ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\unicode_service_differential.rs (target\debug\deps\unicode_service_differential-978e29c608c1d4fb.exe)
+
+running 5 tests
+test joined_width_can_decrease ... ok
+test custom_provider_call_order_matches_source ... ok
+test provider_callbacks_can_switch_active_version_without_borrow_panics ... ok
+test registry_operation_traces_match_javascript ... ok
+test seeded_utf16_traces_match_javascript ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+

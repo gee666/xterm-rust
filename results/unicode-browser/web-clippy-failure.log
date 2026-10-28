@@ -1,0 +1,28 @@
+    Checking itoa v1.0.18
+    Checking serde_core v1.0.229
+    Checking zmij v1.0.23
+    Checking xterm-core v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\swarm\Sandra\BehanzinE2E\crates\xterm-core)
+    Checking wasm-bindgen-test v0.3.50
+    Checking serde_json v1.0.154
+    Checking xterm-wasm-support v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\swarm\Sandra\BehanzinE2E\crates\xterm-wasm-support)
+    Checking xterm-addons v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\swarm\Sandra\BehanzinE2E\crates\xterm-addons)
+    Checking xterm-web v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\swarm\Sandra\BehanzinE2E\crates\xterm-web)
+error: very complex type used. Consider factoring parts into `type` definitions
+  --> crates\xterm-web\src\links\animation_queue.rs:40:15
+   |
+40 |     callback: RefCell<Option<Closure<dyn FnMut(f64)>>>,
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#type_complexity
+   = note: `-D clippy::type-complexity` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::type_complexity)]`
+
+error: very complex type used. Consider factoring parts into `type` definitions
+  --> crates\xterm-web\src\selection\dom.rs:70:19
+   |
+70 |     raf_callback: RefCell<Option<Closure<dyn FnMut(f64)>>>,
+   |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#type_complexity
+
+error: could not compile `xterm-web` (lib) due to 2 previous errors
