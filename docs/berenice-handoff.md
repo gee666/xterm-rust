@@ -25,6 +25,8 @@ I read the carried artifacts instead of replaying their side effects. The merge 
 
 Main was not advanced. The exact transcript is results/integration/berenice/gated-merge.log. Xavier task31 now points to b956eeb with a newer working Root WASM producer. Coordinate that branch rather than editing competing copies. Native test imports/fixture correction still need actual integration.
 
+After the gated attempt, I also ran the required workspace fmt, Clippy and all-feature tests explicitly. Fmt hit Windows os error206. Workspace Clippy exposed another existing type_complexity in core tests/event_context.rs12. Workspace tests failed existing webgl root exports. Exact logs are results/integration/berenice/{fmt,clippy,tests}.log. Nine release Windows tests passed in results/windows-wrapping/release-tests.log.
+
 The initial full-core logger assertion failed at core_services_integration.rs188. I inspected and cherry-picked Willie4f34bd0: the strengthened test checks all four records and x positions0,0,2,2. That clears the failure without dropping assertions. Task264 tracks the main merge. Full-core Clippy still fails pre-existing move_to_cell format_collect and input_handler_bounded single_range_in_vec_init on local1.85.1. Scoped changed-code Clippy passes. No blanket allows or skips were added.
 
 ## Observed Coleman CI
