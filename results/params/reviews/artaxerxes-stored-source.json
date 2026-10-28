@@ -1,0 +1,89 @@
+{
+  "scope": "Independent stored-slot checks against read-only Params.ts using builtin type erasure; no bundler or Cargo",
+  "source": "source_repo/src/common/parser/Params.ts",
+  "sourceSha256": "91bd52f527755b9cfc9e8ccd6e96aab49aa5554eb642d3a22a62120c3d12a25f",
+  "rustSourceSha256": "31313bc993c11dfcc5eee758a4a21b84e49e476f1ecd36f0c4b76548f40762f8",
+  "testSha256": "ca07c212e9201f5daab0c8a9d4abc75d24afa3e54f0a1ba7f22269d31287237a",
+  "binarySha256": "90121ef5a30be12967ce5e39bc523291b528c7b7e60300590b58fc5678e8edd7",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "checks": [
+    {
+      "name": "initial length",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "initial slot0",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "initial slot1",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "past capacity",
+      "actual": "undefined",
+      "expected": "undefined"
+    },
+    {
+      "name": "zero capacity",
+      "actual": "undefined",
+      "expected": "undefined"
+    },
+    {
+      "name": "ZDM logical length",
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "name": "SIXEL stale transparency slot",
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "name": "overwritten second slot",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "clone retains old slot",
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "name": "reset logical length",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "reset stale first",
+      "actual": 7,
+      "expected": 7
+    },
+    {
+      "name": "reset negative sentinel",
+      "actual": -1,
+      "expected": -1
+    },
+    {
+      "name": "untouched third",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "ZDM replaces first",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "name": "clone preserves stale first",
+      "actual": 7,
+      "expected": 7
+    }
+  ],
+  "passed": 15,
+  "status": "passed"
+}
