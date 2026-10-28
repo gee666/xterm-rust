@@ -1,7 +1,7 @@
 //! Line protocol used by scripts/collections-oracle.mjs, not a terminal demo.
 use std::error::Error;
 use std::io::{self, BufRead};
-use xterm_core::multi_key_map::TwoKeyMap;
+use xterm_core::multi_key_map::{FourKeyMap, PropertyKey, TwoKeyMap};
 use xterm_core::sorted_list::SortedList;
 
 fn missing() -> io::Error {
@@ -39,6 +39,40 @@ fn main() -> Result<(), Box<dyn Error>> {
             "N" => {
                 let key: f64 = parts.next().ok_or_else(missing)?.parse()?;
                 map.set(key, "key", 1);
+            }
+            "B" => {
+                let bits = u64::from_str_radix(parts.next().ok_or_else(missing)?, 16)?;
+                map.set(f64::from_bits(bits), "key", 1);
+            }
+            "Q" => {
+                let bits = u64::from_str_radix(parts.next().ok_or_else(missing)?, 16)?;
+                let position: usize = parts.next().ok_or_else(missing)?.parse()?;
+                if position >= 4 {
+                    return Err(missing().into());
+                }
+                let text = parts.next().ok_or_else(missing)?;
+                let mut keys = [1, 2, 3, 4].map(PropertyKey::from);
+                keys[position] = f64::from_bits(bits).into();
+                let mut four = FourKeyMap::new();
+                four.set(
+                    keys[0].clone(),
+                    keys[1].clone(),
+                    keys[2].clone(),
+                    keys[3].clone(),
+                    1,
+                );
+                let mut query = ["1", "2", "3", "4"].map(str::to_owned);
+                query[position] = text.to_owned();
+                println!(
+                    "{}",
+                    four.get(
+                        query[0].clone(),
+                        query[1].clone(),
+                        query[2].clone(),
+                        query[3].clone()
+                    )
+                    .is_some()
+                );
             }
             "S" => {
                 let key = parts.next().ok_or_else(missing)?;

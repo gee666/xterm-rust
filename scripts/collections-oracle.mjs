@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import { stripTypeScriptTypes } from 'node:module';
 import { createHash } from 'node:crypto';
-import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
+import { readFileSync, mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -12,6 +12,10 @@ import vm from 'node:vm';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const resultDir = path.join(root, 'results/collections');
 mkdirSync(resultDir, { recursive: true });
+const reportPath = path.join(resultDir, 'oracle.json');
+const previousReport = existsSync(reportPath) ? readFileSync(reportPath, 'utf8') : undefined;
+const scriptHash = createHash('sha256').update(readFileSync(fileURLToPath(import.meta.url))).digest('hex');
+try {
 const files = ['SortedList.ts', 'SortedList.test.ts', 'MultiKeyMap.ts', 'MultiKeyMap.test.ts'];
 const sources = Object.fromEntries(files.map(file => [file, readFileSync(path.join(root, 'source_repo/src/common', file), 'utf8')]));
 function erase(source) {
@@ -101,6 +105,31 @@ for (const number of numbers) {
   expected.push(map.get(String(number), 'key') !== undefined);
   map.clear();
 }
+// Exercise raw IEEE-754 bit patterns without a decimal round trip. The four
+// key positions are checked independently against the original FourKeyMap.
+const bits = [0n, 0x8000000000000000n, 1n, 0x0010000000000000n, 0x7fefffffffffffffn,
+  0x7ff0000000000000n, 0xfff0000000000000n, 0x7ff0000000000001n, 0xfff8000000000001n];
+for (let i = 0; i < 4096; i++) bits.push(BigInt(random()) << 32n | BigInt(random()));
+const bytes = new DataView(new ArrayBuffer(8));
+const four = new context.implementations.FourKeyMap();
+for (const bit of bits) {
+  bytes.setBigUint64(0, bit, false);
+  const value = bytes.getFloat64(0, false);
+  const hex = bit.toString(16);
+  const text = String(value);
+  map.set(value, 'key', 1);
+  trace.push(`B\t${hex}`, `S\t${text}`);
+  expected.push(map.get(text, 'key') !== undefined);
+  map.clear();
+  for (let position = 0; position < 4; position++) {
+    const keys = [1,2,3,4]; keys[position] = value;
+    const query = ['1','2','3','4']; query[position] = text;
+    four.set(...keys, 1);
+    trace.push(`Q\t${hex}\t${position}\t${text}`);
+    expected.push(four.get(...query) !== undefined);
+    four.clear();
+  }
+}
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, { cwd: root, encoding: 'utf8', timeout: 120000, maxBuffer: 16 * 1024 * 1024, ...options });
   if (result.error) throw result.error;
@@ -120,12 +149,26 @@ try {
 }
 const report = {
   status: 'passed scoped collection checks; full equivalence NOT PROVEN',
-  command: 'node scripts/collections-oracle.mjs', platform: process.platform,
+  command: 'node scripts/collections-oracle.mjs', script_sha256: scriptHash, platform: process.platform,
   node: process.version, cargo: run(cargo, ['--version']).trim(),
   source: Object.fromEntries(files.map(file => [file, createHash('sha256').update(sources[file]).digest('hex')])),
   upstream: { discovered: tests.length, executed: tests.length, passed: tests.length, failed: 0, skipped: 0, unrun: 0, assertions, names: tests.map(test => test.name) },
-  differential: { seed, iterations: 5000, map_cases: numbers.length, trace_operations: trace.length, compared_results: expected.length, failures: 0 },
-  gaps: ['Real IdleTaskQueue scheduling is not executed.', 'JavaScript inherited object keys and __proto__ mutation are not yet represented by Rust maps.', 'getKeyIterator uses a Rust borrow and cannot mutate the list during iteration.', 'Task76 tracks mutable/NaN/undefined keys, identity-bearing randomized traces and complete four-key/f64-bit edge coverage.']
+  differential: { seed, iterations: 5000, map_cases: numbers.length, raw_f64_bit_cases: bits.length, four_key_position_cases: bits.length * 4, trace_operations: trace.length, compared_results: expected.length, failures: 0 },
+  gaps: ['Real IdleTaskQueue scheduling is not executed.', 'JavaScript inherited object keys and __proto__ mutation are not yet represented by Rust maps.', 'getKeyIterator uses a Rust borrow and cannot mutate the list during iteration.', 'Task105 still tracks inherited/prototype lookup and mutation semantics; numeric bit and four-position cases now run.']
 };
 writeFileSync(path.join(resultDir, 'oracle.json'), JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify(report, null, 2));
+} catch (error) {
+  let previous;
+  if (previousReport) {
+    const digest = createHash('sha256').update(previousReport).digest('hex');
+    previous = `archive/oracle-${digest}.json`;
+    mkdirSync(path.join(resultDir,'archive'), {recursive:true});
+    writeFileSync(path.join(resultDir,previous), previousReport);
+  }
+  const failure = {status:'failed; prior report is not current evidence', command:'node scripts/collections-oracle.mjs', script_sha256:scriptHash,
+    node:process.version,platform:process.platform,error:String(error.stack || error),previous_report:previous};
+  writeFileSync(reportPath,JSON.stringify(failure,null,2)+'\n');
+  console.error(error);
+  process.exitCode=1;
+}
