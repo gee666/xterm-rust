@@ -1,0 +1,58 @@
+
+
+  SerializeAddon
+    text
+      ✔ restoring cursor styles
+      ISerializeOptions.range
+        ✔ should serialize the top line
+        ✔ should serialize multiple lines from the top
+        ✔ should serialize lines in the middle
+      underline styles
+        ✔ should serialize single underline with style
+        ✔ should serialize double underline
+        ✔ should serialize curly underline
+        ✔ should serialize dotted underline
+        ✔ should serialize dashed underline
+        ✔ should serialize underline with RGB color
+        ✔ should serialize underline with palette color
+      scroll region
+        ✔ should serialize scroll region when margins are set
+        ✔ should not serialize scroll region when excludeModes is true
+        ✔ should restore scroll region correctly when deserialized
+      cursor visibility
+        ✔ should serialize hidden cursor
+        ✔ should not serialize visible cursor (default state)
+        ✔ should not serialize cursor visibility when excludeModes is true
+        ✔ should restore hidden cursor correctly when deserialized
+    html
+      ✔ empty terminal with selection turned off
+      ✔ empty terminal with no selection
+      ✔ basic terminal with selection
+      ✔ basic terminal with html unsafe chars
+      ✔ serializes rows within a provided range
+      ✔ cells with bold styling
+      ✔ cells with italic styling
+      ✔ cells with inverse styling
+      ✔ cells with underline styling
+      ✔ cells with double underline styling
+      ✔ cells with curly underline styling
+      ✔ cells with dotted underline styling
+      ✔ cells with dashed underline styling
+      ✔ cells with underline color (palette)
+      ✔ cells with underline color (RGB)
+      ✔ cells with invisible styling
+      ✔ cells with dim styling
+      ✔ cells with strikethrough styling
+      ✔ cells with combined styling
+      ✔ cells with color styling
+      ✔ cells with background styling
+      ✔ empty terminal with default options
+      ✔ empty terminal with custom options
+      ✔ empty terminal with background included
+      ✔ cells with custom color styling
+      ✔ cells with color styling - xterm headless
+
+
+  44 passing (629ms)
+
+{"baseline":{"discovered":44,"assertionCalls":60,"executed":44,"passed":44,"failed":0,"pending":0,"skipped":0,"unrun":0},"fixtures":{"path":"crates/xterm-core/tests/fixtures/serialize-oracle.tsv","sha256":"8d392db35a2c7563aa7d2786214ef0830f93d6b1b2de7d1a6316d5b8544788c6","cases":3350,"originalCaptures":44,"directed":{"outputs":1242},"seeded":{"seed":98703889,"iterations":1024,"outputs":2048},"headers":{"outputs":16},"palettes":2,"ansi":1663,"html":1687,"errors":181}}

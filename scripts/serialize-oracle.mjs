@@ -7,22 +7,23 @@ import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import { FixtureWriter, directedCases, seededCases } from './serialize-oracle-support.mjs';
+import { FixtureWriter, directedCases, headerCases, seededCases } from './serialize-oracle-support.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const require = createRequire(path.join(root, 'source_repo/package.json'));
-const { build } = require('esbuild');
-const Mocha = require('mocha');
 const temp = path.join(root, 'tmp/serialize-oracle');
 const results = path.join(root, 'results/serialize');
 const fixture = path.join(root, 'crates/xterm-core/tests/fixtures/serialize-oracle.tsv');
-await Promise.all([temp, results].map(dir => mkdir(dir, { recursive: true })));
+await mkdir(results, { recursive: true });
 const attempt = { command: 'node scripts/serialize-oracle.mjs', startedAt: new Date().toISOString(), node: process.version };
 const receipt = path.join(results, 'last-attempt.json');
 await writeFile(receipt, JSON.stringify({ ...attempt, status: 'running' }, null, 2) + '\n');
 process.once('uncaughtExceptionMonitor', error => {
   writeFileSync(receipt, JSON.stringify({ ...attempt, status: 'failed', error: String(error.stack) }, null, 2) + '\n');
 });
+await mkdir(temp, { recursive: true });
+const { build } = require('esbuild');
+const Mocha = require('mocha');
 const disk = await statfs(root);
 assert.ok(disk.bavail * disk.bsize >= 256 * 1024 ** 2, 'Insufficient free disk space for oracle');
 const source = 'source_repo/addons/addon-serialize/src/SerializeAddon.ts';
@@ -110,6 +111,7 @@ try {
 const originalCaptures = writer.cases.length;
 const directed = directedCases(reference, (...args) => writer.capture(...args));
 const seeded = seededCases(reference, (...args) => writer.capture(...args));
+const headers = headerCases(reference, (...args) => writer.capture(...args));
 await writeFile(fixture, writer.text());
 const count = status => outcomes.filter(test => test.status === status).length;
 for (const outcome of outcomes) outcome.assertions = assertionCounts.get(outcome.name) || {};
@@ -126,7 +128,7 @@ const report = {
   baseline: { discovered, assertionCalls, executed: count('passed') + count('failed'), passed: count('passed'), failed: count('failed'),
     pending: count('pending'), skipped: 0, unrun: discovered - outcomes.length, outcomes },
   fixtures: { path: path.relative(root, fixture).replaceAll('\\', '/'), sha256: hash(await readFile(fixture)),
-    cases: writer.cases.length, originalCaptures, directed, seeded, palettes: writer.palettes.size,
+    cases: writer.cases.length, originalCaptures, directed, seeded, headers, palettes: writer.palettes.size,
     ansi: writer.cases.filter(test => test.kind === 'ansi').length,
     html: writer.cases.filter(test => test.kind === 'html').length,
     errors: writer.cases.filter(test => test.status === 'error').length },
@@ -139,6 +141,6 @@ assert.equal(report.baseline.unrun, 0, 'Original test discovery mismatch');
 assert.equal(discovered, 44, 'Original suite case count changed');
 assert.equal(assertionCalls, 60, 'Original assertion count changed');
 assert.equal(originalCaptures, 44, 'Original serializer capture count changed');
-assert.equal(seeded.outputs + directed.outputs + originalCaptures, writer.cases.length);
+assert.equal(seeded.outputs + directed.outputs + headers.outputs + originalCaptures, writer.cases.length);
 await writeFile(receipt, JSON.stringify({ ...attempt, status: 'passed', fixtureSha256: report.fixtures.sha256 }, null, 2) + '\n');
 console.log(JSON.stringify({ baseline: { ...report.baseline, outcomes: undefined }, fixtures: report.fixtures }));

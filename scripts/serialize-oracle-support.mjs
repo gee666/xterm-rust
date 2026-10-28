@@ -158,6 +158,33 @@ export function directedCases(reference, record) {
   return { outputs };
 }
 
+export function headerCases(reference, record) {
+  const { CellData, AttributeData, SerializeAddon } = reference;
+  const cases = [
+    { fontFamily: '\ud800' }, { fontFamily: '\udc00' }, { fontFamily: 'Test 😀 Font' }, { fontFamily: '' },
+    { theme: { foreground: '\ud800' } }, { theme: { background: '\udc00' } },
+    { fontFamily: 'x\ud800y', theme: { foreground: 'a\udc00', background: '\ud800z' } },
+    { theme: { foreground: '', background: '' } },
+    ...[NaN, Infinity, -Infinity, -0, 1e21, 1e-7, 0, 15.5].map(fontSize => ({ fontSize }))
+  ];
+  for (let index = 0; index < cases.length; index++) {
+    const normal = fakeBuffer(CellData, [{ cells: Array.from({ length: 2 }, () => CellData.fromCharData([0, '', 1, 0])) }], 2);
+    const alternate = fakeBuffer(CellData, [], 2, 0, 0, 0, 'alternate');
+    const terminal = {
+      cols: 2, rows: 1, buffer: { normal, alternate, active: normal },
+      modes: { ...Object.fromEntries(modeNames.map(name => [name, name === 'wraparoundMode' || name === 'showCursor'])), mouseTrackingMode: 'none' },
+      options: { fontFamily: 'monospace', fontSize: 15, theme: {}, ...cases[index] },
+      _core: { buffer: { scrollTop: 0, scrollBottom: 0 }, _inputHandler: { _curAttrData: new AttributeData() } },
+      getSelectionPosition: () => undefined
+    };
+    const addon = new SerializeAddon();
+    addon.activate(terminal);
+    const options = { includeGlobalBackground: true };
+    record(terminal, options, 'html', addon.serializeAsHTML(options), undefined, `header:${index}`);
+  }
+  return { outputs: cases.length };
+}
+
 export function seededCases(reference, record) {
   const { CellData, AttributeData, SerializeAddon } = reference;
   const seed = 0x5e21a11;

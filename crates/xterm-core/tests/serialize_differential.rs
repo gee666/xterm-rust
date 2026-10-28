@@ -24,7 +24,7 @@ fn result_text(value: &Result<Vec<u16>, String>) -> String {
 }
 fn run(kind: &str, expected_count: usize) {
     let cases = fixture::load();
-    assert_eq!(cases.len(), 3334);
+    assert_eq!(cases.len(), 3350);
     let mut report = String::from("id\tstatus\tactual\texpected\n");
     let mut failed = Vec::new();
     let mut count = 0;
@@ -89,5 +89,5 @@ fn ansi_matches_original_utf16_for_upstream_and_seeded_buffers() {
 
 #[test]
 fn html_matches_original_utf16_for_upstream_and_seeded_buffers() {
-    run("html", 1671);
+    run("html", 1687);
 }

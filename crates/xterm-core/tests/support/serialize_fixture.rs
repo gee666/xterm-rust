@@ -209,7 +209,7 @@ pub fn load() -> Vec<Case> {
                     selection: selection(c[12]),
                     config: HtmlConfig {
                         font_family: units(c[13]),
-                        font_size: num(c[14]),
+                        font_size: num::<f64>(c[14]).into(),
                         foreground: (c[15] != "-").then(|| units(c[15])),
                         background: (c[16] != "-").then(|| units(c[16])),
                         ansi_colors: opt::<usize>(c[17])
