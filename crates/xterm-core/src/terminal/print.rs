@@ -1,160 +1,212 @@
 // Copyright (c) 2014-2026 The xterm.js authors. All rights reserved. MIT license.
+//! Source print-call snapshots with callback boundaries outside state borrows.
 use super::{TerminalError, TerminalEvent, TerminalState};
-use crate::{input::text_decoder::string_from_code_point, unicode::UnicodeCharProperties};
-use std::cell::Cell;
+use crate::{
+    buffer::{AttributeData, Buffer, BufferLine, BufferService},
+    charset::Charset,
+    input::text_decoder::string_from_code_point,
+    unicode::UnicodeCharProperties,
+    unicode_service::UnicodeService,
+};
+use std::{
+    cell::{Cell, RefCell},
+    rc::Rc,
+};
 
-impl TerminalState {
-    pub(crate) fn print(
-        &mut self,
-        data: &[u32],
-        preceding: &Cell<u32>,
-    ) -> Result<(), TerminalError> {
-        let active = self.active_buffer();
-        let cols = self.cols();
-        let rows = self.rows();
-        let modes = self.core.dec_private_modes.borrow().clone();
-        let insert = self.core.modes.borrow().insert_mode;
-        let a11y = self.option_bool("screenReaderMode")?;
-        let attrs = self.attributes.clone();
-        let mut info = UnicodeCharProperties::from_raw(preceding.get());
-        let mut row = self.line(active.borrow().y)?;
-        self.dirty_row(active.borrow().y);
-        {
-            let b = active.borrow();
-            if b.x > 0 && row.borrow().get_width(b.x - 1) == Some(2) {
-                row.borrow_mut()
-                    .set_cell_from_codepoint(b.x - 1, 0, 1, &attrs);
-            }
+#[path = "print_render.rs"]
+mod render;
+
+type RcLine = Rc<RefCell<BufferLine>>;
+type AttributeIdentity = Rc<RefCell<Option<AttributeData>>>;
+
+struct PrintRun {
+    shared: Rc<RefCell<TerminalState>>,
+    service: Rc<BufferService>,
+    unicode: Rc<UnicodeService>,
+    charset: Option<Charset>,
+    attributes: AttributeIdentity,
+    row: RcLine,
+    cols: usize,
+    wraparound: bool,
+    insert: bool,
+    a11y: bool,
+    info: UnicodeCharProperties,
+}
+
+pub(super) fn print(
+    shared: &Rc<RefCell<TerminalState>>,
+    data: &[u32],
+    preceding: &Cell<u32>,
+) -> Result<(), TerminalError> {
+    let Some(mut run) = PrintRun::new(shared, data, preceding)? else {
+        return Ok(());
+    };
+    for &original in data {
+        if original == 0xad {
+            continue;
         }
-        for &original in data {
-            if original == 0xad {
-                continue;
-            }
-            let code = if original < 127 {
-                self.charset
-                    .charset
-                    .as_ref()
-                    .and_then(|map| map.get(&(original as u16)))
-                    .filter(|value| !value.is_empty())
-                    .map_or(original, |value| u32::from(value[0]))
-            } else {
-                original
-            };
-            let current = self.unicode.char_properties(code, info)?;
-            let width = usize::from(current.width());
-            let old_width = if current.should_join() {
-                usize::from(info.width())
-            } else {
-                0
-            };
-            info = current;
-            if a11y {
-                self.events
+        let code = if original < 127 {
+            run.charset
+                .as_ref()
+                .and_then(|map| map.get(&(original as u16)))
+                .filter(|value| !value.is_empty())
+                .map_or(original, |value| u32::from(value[0]))
+        } else {
+            original
+        };
+        // Unicode providers can themselves call back into the terminal. No
+        // terminal, buffer, attribute or row borrow crosses their invocation.
+        let current = run.unicode.char_properties(code, run.info)?;
+        let old_width = if current.should_join() {
+            usize::from(run.info.width())
+        } else {
+            0
+        };
+        run.info = current;
+        if run.a11y {
+            {
+                let state = shared.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+                state
+                    .events
                     .borrow_mut()
                     .push(TerminalEvent::AccessibilityChar(string_from_code_point(
                         code,
                     )));
             }
-            let link_id = self.attributes.extended.url_id();
-            if link_id != 0 {
-                let b = active.borrow();
-                let line = b
-                    .ybase
-                    .checked_add(b.y)
-                    .ok_or(TerminalError::InvalidDimensions)?;
-                let line = i64::try_from(line).map_err(|_| TerminalError::InvalidDimensions)?;
-                drop(b);
-                self.links.add_line_to_link(link_id, line)?;
-            }
-            if active.borrow().x + width > cols + old_width {
-                if modes.wraparound {
-                    let old_row = RcLine::clone(&row);
-                    let old_col = active.borrow().x.saturating_sub(old_width);
-                    let scroll = {
-                        let mut b = active.borrow_mut();
-                        b.x = old_width;
-                        b.y += 1;
-                        if b.y == b.scroll_bottom + 1 {
-                            b.y -= 1;
-                            true
-                        } else {
-                            b.y = b.y.min(rows - 1);
-                            b.set_wrapped(b.ybase + b.y, true)
-                                .map_err(|e| TerminalError::Buffer(e.to_string()))?;
-                            false
-                        }
-                    };
-                    if scroll {
-                        self.scroll(true)?;
-                    }
-                    row = self.line(active.borrow().y)?;
-                    if old_width > 0 {
-                        // A joining mark may widen the prior grapheme across the margin.
-                        let saved = old_row.borrow().clone();
-                        row.borrow_mut()
-                            .copy_cells_from(&saved, old_col, 0, old_width, false);
-                    }
-                    for column in old_col..cols {
-                        old_row
-                            .borrow_mut()
-                            .set_cell_from_codepoint(column, 0, 1, &attrs);
-                    }
-                } else {
-                    active.borrow_mut().x = cols - 1;
-                    if width == 2 {
-                        continue;
-                    }
-                }
-            }
-            let x = active.borrow().x;
-            if current.should_join() && x != 0 {
-                let offset = if row.borrow().get_width(x - 1).is_some_and(|w| w != 0) {
-                    1
-                } else {
-                    2
-                };
-                row.borrow_mut().add_codepoint_to_cell(
-                    x.saturating_sub(offset),
-                    code,
-                    width as i32,
-                );
-                for column in 0..width.saturating_sub(old_width) {
-                    row.borrow_mut()
-                        .set_cell_from_codepoint(x + column, 0, 0, &attrs);
-                    active.borrow_mut().x += 1;
-                }
-                continue;
-            }
-            if insert {
-                let fill = active.borrow().get_null_cell(Some(&attrs));
-                row.borrow_mut()
-                    .insert_cells(x, width.saturating_sub(old_width), &fill);
-                if row.borrow().get_width(cols - 1) == Some(2) {
-                    row.borrow_mut()
-                        .set_cell_from_codepoint(cols - 1, 0, 1, &attrs);
-                }
-            }
-            row.borrow_mut()
-                .set_cell_from_codepoint(x, code, width as i32, &attrs);
-            active.borrow_mut().x += 1;
-            for column in 1..width {
-                row.borrow_mut()
-                    .set_cell_from_codepoint(x + column, 0, 0, &attrs);
-                active.borrow_mut().x += 1;
-            }
+            super::dispatch_events(shared)?;
         }
-        preceding.set(info.raw());
-        let b = active.borrow();
-        if b.x < cols
+        run.track_link()?;
+        if !run.render(code, current, old_width)? {
+            return Ok(());
+        }
+    }
+    preceding.set(run.info.raw());
+    run.finish(!data.is_empty())
+}
+
+impl PrintRun {
+    fn new(
+        shared: &Rc<RefCell<TerminalState>>,
+        data: &[u32],
+        preceding: &Cell<u32>,
+    ) -> Result<Option<Self>, TerminalError> {
+        let mut state = shared
+            .try_borrow_mut()
+            .map_err(|_| TerminalError::Borrowed)?;
+        let active = state.active_buffer();
+        let buffer = active.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+        let index = buffer
+            .ybase
+            .checked_add(buffer.y)
+            .ok_or(TerminalError::InvalidDimensions)?;
+        // Upstream intentionally returns when async resizing removed this row.
+        let Some(row) = buffer.lines.get(index) else {
+            return Ok(None);
+        };
+        let run = Self {
+            shared: Rc::clone(shared),
+            service: Rc::clone(&state.buffer_service),
+            unicode: Rc::clone(&state.unicode),
+            charset: state.charset.charset.clone(),
+            attributes: Rc::clone(&state.attributes_identity),
+            row,
+            cols: state.cols(),
+            wraparound: state.core.dec_private_modes.borrow().wraparound,
+            insert: state.core.modes.borrow().insert_mode,
+            a11y: state.option_bool("screenReaderMode")?,
+            info: UnicodeCharProperties::from_raw(preceding.get()),
+        };
+        state.dirty_row(buffer.y);
+        let x = buffer.x;
+        drop(buffer);
+        drop(state);
+        if x > 0
             && !data.is_empty()
-            && row.borrow().get_width(b.x) == Some(0)
-            && row.borrow().has_content(b.x) == Some(0)
+            && run
+                .row
+                .try_borrow()
+                .map_err(|_| TerminalError::Borrowed)?
+                .get_width(x - 1)
+                == Some(2)
         {
-            row.borrow_mut().set_cell_from_codepoint(b.x, 0, 1, &attrs);
+            let attrs = run.attrs()?;
+            run.row
+                .try_borrow_mut()
+                .map_err(|_| TerminalError::Borrowed)?
+                .set_cell_from_codepoint(x - 1, 0, 1, &attrs);
         }
-        self.dirty_row(b.y);
+        Ok(Some(run))
+    }
+
+    fn active(&self) -> Rc<RefCell<Buffer>> {
+        self.service.buffers.active()
+    }
+
+    fn row_for_active(&self) -> Result<Option<RcLine>, TerminalError> {
+        let active = self.active();
+        let buffer = active.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+        let index = buffer
+            .ybase
+            .checked_add(buffer.y)
+            .ok_or(TerminalError::InvalidDimensions)?;
+        Ok(buffer.lines.get(index))
+    }
+
+    fn attrs(&self) -> Result<AttributeData, TerminalError> {
+        // ExtendedAttrs::clone intentionally drops custom payload. Printing
+        // shares the source attribute object's extended data instead.
+        super::sgr_dispatch::with_target(&self.shared, &self.attributes, |attrs| AttributeData {
+            fg: attrs.fg,
+            bg: attrs.bg,
+            extended: attrs.extended.share(),
+        })
+    }
+
+    fn track_link(&self) -> Result<(), TerminalError> {
+        let (link_id, links) = {
+            let state = self
+                .shared
+                .try_borrow()
+                .map_err(|_| TerminalError::Borrowed)?;
+            (state.attributes.extended.url_id(), Rc::clone(&state.links))
+        };
+        if link_id != 0 {
+            let active = self.active();
+            let line = {
+                let buffer = active.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+                buffer
+                    .ybase
+                    .checked_add(buffer.y)
+                    .ok_or(TerminalError::InvalidDimensions)?
+            };
+            links.add_line_to_link(
+                link_id,
+                i64::try_from(line).map_err(|_| TerminalError::InvalidDimensions)?,
+            )?;
+        }
+        Ok(())
+    }
+
+    fn finish(&self, nonempty: bool) -> Result<(), TerminalError> {
+        let active = self.active();
+        let buffer = active.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+        if buffer.x < self.cols && nonempty {
+            let fix = {
+                let row = self.row.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+                row.get_width(buffer.x) == Some(0) && row.has_content(buffer.x) == Some(0)
+            };
+            if fix {
+                let attrs = self.attrs()?;
+                self.row
+                    .try_borrow_mut()
+                    .map_err(|_| TerminalError::Borrowed)?
+                    .set_cell_from_codepoint(buffer.x, 0, 1, &attrs);
+            }
+        }
+        self.shared
+            .try_borrow_mut()
+            .map_err(|_| TerminalError::Borrowed)?
+            .dirty_row(buffer.y);
         Ok(())
     }
 }
-use std::{cell::RefCell, rc::Rc};
-type RcLine = Rc<RefCell<crate::buffer::BufferLine>>;

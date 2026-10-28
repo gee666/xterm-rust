@@ -83,7 +83,6 @@ impl TerminalState {
             "r" => self.csi_margins(params)?,
             "s" => self.save_cursor()?,
             "u" => self.restore_cursor()?,
-            "b" => self.repeat_preceding(params)?,
             _ => return self.dispatch_edits(final_byte, params, selective),
         }
         Ok(true)
@@ -157,10 +156,10 @@ impl TerminalState {
         }
         Ok(())
     }
-    fn repeat_preceding(&mut self, params: &Params) -> Result<(), TerminalError> {
+    pub(super) fn repeat_data(&self, params: &Params) -> Result<Option<Vec<u32>>, TerminalError> {
         let preceding = self.preceding_join_state.clone();
         if preceding.get() == 0 {
-            return Ok(());
+            return Ok(None);
         }
         let width = usize::from(UnicodeCharProperties::from_raw(preceding.get()).width());
         let active = self.active_buffer();
@@ -205,6 +204,6 @@ impl TerminalState {
         for _ in 0..count {
             data.extend_from_slice(&glyph);
         }
-        self.print(&data, &preceding)
+        Ok(Some(data))
     }
 }
