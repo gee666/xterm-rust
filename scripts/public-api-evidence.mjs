@@ -7,11 +7,10 @@ export function sha256(path) {
   return createHash('sha256').update(readFileSync(path)).digest('hex');
 }
 
-export function captureRustInputs(extraPaths) {
-  const root = 'crates/xterm-core/src';
+export function captureRustInputs(extraPaths, roots = ['crates/xterm-core/src']) {
   const paths = [
     'Cargo.toml', 'Cargo.lock', '.cargo/config.toml', 'crates/xterm-core/Cargo.toml',
-    ...readdirSync(root, { recursive: true }).map(path => `${root}/${path}`),
+    ...roots.flatMap(root => readdirSync(root, { recursive: true }).map(path => `${root}/${path}`)),
     ...extraPaths
   ].map(path => path.replaceAll('\\', '/')).filter(path => statSync(path).isFile());
   return Object.fromEntries([...new Set(paths)].sort().map(path => [path, sha256(path)]));

@@ -1,6 +1,8 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved. MIT license.
 //! Packed buffer values match `common/buffer/Constants.ts` bit for bit.
 
+/// Packed words per cell, upstream Constants.CELL_INDICIES.
+pub const CELL_WORDS: usize = 3;
 pub const DEFAULT_COLOR: u32 = 0;
 pub const DEFAULT_ATTR: u32 = 256;
 pub const DEFAULT_EXT: u32 = 0;

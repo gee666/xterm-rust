@@ -2,9 +2,10 @@
 pub mod addon_manager;
 pub mod buffer;
 pub mod line_numbers;
+pub mod line_translation;
 pub mod parser;
 pub mod validation;
 
 pub use addon_manager::{AddonError, AddonHandle, AddonManager, TerminalAddon, WeakAddonManager};
 pub use buffer::{BufferApiView, BufferNamespaceApi, BufferType, InvalidActiveBuffer};
-pub use parser::ParserApi;
+pub use parser::{ParserApi, ParserRegistrations};

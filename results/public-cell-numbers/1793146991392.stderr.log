@@ -1,0 +1,49 @@
+warning: field `numeric` is never read
+  --> crates\xterm-core\src\options\object.rs:28:5
+   |
+21 | pub struct OptionObject {
+   |            ------------ field in this struct
+...
+28 |     numeric: Option<Rc<dyn NumericSemantics>>,
+   |     ^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: methods `less_than`, `less_equal`, and `multiply` are never used
+   --> crates\xterm-core\src\options\object.rs:191:19
+    |
+53  | impl OptionObject {
+    | ----------------- methods in this implementation
+...
+191 |     pub(super) fn less_than(&self, rhs: f64) -> Result<bool, OptionError> {
+    |                   ^^^^^^^^^
+...
+194 |     pub(super) fn less_equal(&self, rhs: f64) -> Result<bool, OptionError> {
+    |                   ^^^^^^^^^^
+...
+197 |     pub(super) fn multiply(&self, rhs: f64) -> Result<f64, OptionError> {
+    |                   ^^^^^^^^
+
+warning: variant `Debug` is never constructed
+  --> crates\xterm-core\src\terminal\state.rs:15:5
+   |
+13 | pub(crate) enum CoreAction {
+   |                 ---------- variant in this enum
+14 |     Reply(Vec<u16>),
+15 |     Debug(Vec<u16>),
+   |     ^^^^^
+
+warning: method `mode_debug` is never used
+  --> crates\xterm-core\src\terminal\state.rs:97:19
+   |
+48 | impl TerminalState {
+   | ------------------ method in this implementation
+...
+97 |     pub(crate) fn mode_debug(&mut self, text: &str) -> Result<(), TerminalError> {
+   |                   ^^^^^^^^^^
+
+warning: `xterm-core` (lib) generated 4 warnings
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 0.26s
+     Running tests\public_cell_numbers.rs (target\debug\deps\public_cell_numbers-1c2691b0042c7f07.exe)
+     Running tests\public_cell_numbers_differential.rs (target\debug\deps\public_cell_numbers_differential-0a320619ec4114a6.exe)
