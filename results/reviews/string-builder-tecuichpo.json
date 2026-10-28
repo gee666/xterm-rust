@@ -1,0 +1,54 @@
+{
+  "task": 75,
+  "reviewer": "Tecuichpo",
+  "scope": "StringBuilder and LimitedStringBuilder, SB01-SB08. Full terminal equivalence NOT PROVEN.",
+  "inspected": [
+    "source_repo/src/common/StringBuilder.ts",
+    "source_repo/src/common/StringBuilder.test.ts",
+    "crates/xterm-core/src/string_builder.rs",
+    "crates/xterm-core/tests/string_builder_upstream.rs",
+    "crates/xterm-core/tests/string_builder_differential.rs",
+    "crates/xterm-core/tests/string_builder_edges.rs",
+    "scripts/string-builder-oracle.mjs",
+    "scripts/check-string-builders.mjs",
+    "docs/acceptance/string-builders.md"
+  ],
+  "commands": [
+    {
+      "command": "node scripts/check-string-builders.mjs",
+      "exitCode": 0,
+      "log": "results/reviews/tecuichpo-string-builder-check.log"
+    }
+  ],
+  "observed": {
+    "platform": "win32",
+    "node": "v24.15.0",
+    "rustc": "1.85.1",
+    "original": {
+      "discovered": 17,
+      "executed": 17,
+      "passed": 17,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0
+    },
+    "rust": 27,
+    "parserIntegration": 53,
+    "traces": 278,
+    "operations": 16648,
+    "singleUnits": 65536,
+    "seed": "0x51b01d",
+    "fmt": "passed",
+    "clippy": "passed"
+  },
+  "runId": "2026-10-28T00-15-11-372Z-f5bf46a4-bdd1-4a10-9223-24eae1120316",
+  "findings": [],
+  "notes": [
+    "All 17 upstream assertion inputs/results map faithfully to Rust tests.",
+    "Native usize limits avoid wrapping; JavaScript f64 limits retain negative zero, fractions, NaN and infinities.",
+    "Vec growth is amortized; rejected chunks are preflighted without an extra copy.",
+    "Ordinary source oracle regenerates its fixture as documented. This review produced no fixture diff.",
+    "OSC/DCS import the same builder and APC uses the shared OSC adapter. Parser integration passed 53 tests, not just startup.",
+    "Native Linux/macOS, browser and whole-terminal checks remain separate."
+  ]
+}

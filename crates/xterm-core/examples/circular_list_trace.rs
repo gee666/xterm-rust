@@ -91,6 +91,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 },
             )?,
             "G" => result = optional(list.get_signed(fields[1].parse()?)),
+            "Z" => result = optional(list.get_number(fields[1].parse()?)),
             "L" => list.set_length(integer(1)?),
             "M" => list.set_max_length(integer(1)?)?,
             "O" => result = optional(list.pop()?),

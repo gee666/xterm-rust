@@ -11,6 +11,7 @@ use crate::event::{EmitError, Emitter};
 use crate::lifecycle::Disposable;
 use std::cell::RefCell;
 use std::fmt;
+use std::rc::Rc;
 
 #[path = "circular_list/storage.rs"]
 mod storage;
@@ -47,7 +48,14 @@ impl fmt::Display for CircularListError {
     }
 }
 
-impl std::error::Error for CircularListError {}
+impl std::error::Error for CircularListError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Dispatch(error) => Some(error),
+            _ => None,
+        }
+    }
+}
 impl From<EmitError> for CircularListError {
     fn from(value: EmitError) -> Self {
         Self::Dispatch(value)
@@ -55,10 +63,10 @@ impl From<EmitError> for CircularListError {
 }
 
 pub struct CircularList<T> {
-    storage: RefCell<Storage<T>>,
-    pub on_delete_emitter: Emitter<ListChange>,
-    pub on_insert_emitter: Emitter<ListChange>,
-    pub on_trim_emitter: Emitter<usize>,
+    storage: Rc<RefCell<Storage<T>>>,
+    pub on_delete_emitter: Rc<Emitter<ListChange>>,
+    pub on_insert_emitter: Rc<Emitter<ListChange>>,
+    pub on_trim_emitter: Rc<Emitter<usize>>,
 }
 
 impl<T: Clone> CircularList<T> {
@@ -67,10 +75,10 @@ impl<T: Clone> CircularList<T> {
             return Err(CircularListError::ZeroCapacity);
         }
         Ok(Self {
-            storage: RefCell::new(Storage::new(max_length)),
-            on_delete_emitter: Emitter::new(),
-            on_insert_emitter: Emitter::new(),
-            on_trim_emitter: Emitter::new(),
+            storage: Rc::new(RefCell::new(Storage::new(max_length))),
+            on_delete_emitter: Rc::new(Emitter::new()),
+            on_insert_emitter: Rc::new(Emitter::new()),
+            on_trim_emitter: Rc::new(Emitter::new()),
         })
     }
 
@@ -113,6 +121,11 @@ impl<T: Clone> CircularList<T> {
     /// Preserve JavaScript's signed remainder and negative array-property slots.
     pub fn get_signed(&self, index: i64) -> Option<T> {
         self.storage.borrow().get_signed(index)
+    }
+
+    /// JavaScript-number indexing for public bindings, preserving f64 rounding.
+    pub fn get_number(&self, index: f64) -> Option<T> {
+        self.storage.borrow().get_number(index)
     }
 
     pub fn set_signed(&self, index: i64, value: Option<T>) -> Result<(), CircularListError> {
@@ -265,6 +278,20 @@ impl<T: Clone> CircularList<T> {
             }
         }
         Ok(())
+    }
+}
+
+impl<T> CircularList<T> {
+    /// Another reference to this exact list and its event emitters. Buffer owners
+    /// can release their own RefCell borrow before invoking reentrant observers.
+    /// No element is copied and disposing either reference closes both events.
+    pub fn share(&self) -> Self {
+        Self {
+            storage: Rc::clone(&self.storage),
+            on_delete_emitter: Rc::clone(&self.on_delete_emitter),
+            on_insert_emitter: Rc::clone(&self.on_insert_emitter),
+            on_trim_emitter: Rc::clone(&self.on_trim_emitter),
+        }
     }
 }
 

@@ -236,3 +236,86 @@ fn impossible_sparse_resize_reports_reserve_failure_atomically() {
     assert_eq!(list.len(), usize::MAX);
     assert_eq!(list.get(0), Some(7));
 }
+
+#[test]
+fn shared_list_releases_owner_borrow_before_observers_and_shares_disposal() {
+    let owner = Rc::new(RefCell::new(CircularList::new(2).unwrap()));
+    owner.borrow().push(1).unwrap();
+    owner.borrow().push(2).unwrap();
+    let alias = owner.borrow().share();
+    assert!(Rc::ptr_eq(
+        &alias.on_trim_emitter,
+        &owner.borrow().on_trim_emitter
+    ));
+    let weak = Rc::downgrade(&owner);
+    let count = Rc::new(Cell::new(0));
+    let calls = Rc::clone(&count);
+    alias.on_trim_emitter.event().subscribe(move |_| {
+        calls.set(calls.get() + 1);
+        weak.upgrade().unwrap().borrow_mut().set_length(1);
+    });
+    alias.push(3).unwrap();
+    assert_eq!(owner.borrow().len(), 1);
+    assert_eq!(alias.get(0), Some(2));
+    assert_eq!(count.get(), 1);
+    alias.dispose();
+    owner.borrow().push(4).unwrap();
+    owner.borrow().push(5).unwrap();
+    assert_eq!(count.get(), 1);
+}
+
+#[test]
+fn number_indexing_matches_js_rounding_and_undefined_nonintegral_slots() {
+    let list = list(&[1, 2, 3, 4, 5]);
+    list.push(6).unwrap();
+    for value in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY, -1.5, 0.5] {
+        assert_eq!(list.get_number(value), None);
+    }
+    assert_eq!(list.get_number(-0.0), Some(2));
+    assert_eq!(list.get_number(-1.0), Some(6));
+    assert_eq!(list.get_number(9_007_199_254_740_992.0), Some(3));
+    assert_eq!(list.get_number(9_007_199_254_740_994.0), Some(2));
+    // A fractional input can become an integer during start+index rounding.
+    assert_eq!(list.get_number(f64::from_bits(1)), Some(2));
+}
+
+#[test]
+fn sharing_does_not_clone_elements() {
+    struct Counted(Rc<Cell<usize>>);
+    impl Clone for Counted {
+        fn clone(&self) -> Self {
+            self.0.set(self.0.get() + 1);
+            Self(Rc::clone(&self.0))
+        }
+    }
+    let clones = Rc::new(Cell::new(0));
+    let list = CircularList::new(1).unwrap();
+    list.push(Counted(Rc::clone(&clones))).unwrap();
+    let alias = list.share();
+    assert_eq!(clones.get(), 0);
+    assert!(alias.get(0).is_some());
+    assert_eq!(clones.get(), 1);
+}
+
+#[test]
+fn callback_error_chain_retains_concrete_cause_for_bindings() {
+    use std::error::Error;
+    use xterm_core::event::EmitError;
+    let list = list(&[1]);
+    let cause = EmitError::callback(std::io::Error::other("original callback"));
+    let retained = cause.clone();
+    list.on_trim_emitter
+        .event()
+        .try_subscribe(move |_| Err(retained.clone()));
+    let error = list.push(2).unwrap_err();
+    let dispatch = error.source().unwrap().downcast_ref::<EmitError>().unwrap();
+    assert_eq!(dispatch, &cause);
+    assert_eq!(
+        dispatch
+            .callback_ref::<std::io::Error>()
+            .unwrap()
+            .to_string(),
+        "original callback"
+    );
+    assert!(CircularListError::InvalidRange.source().is_none());
+}

@@ -20,7 +20,7 @@ Reference files are `source_repo/src/common/{Event,CircularList}.ts` and their u
 - E2.04: Disposing the emitter during a one-listener dispatch completes successfully.
 - E2.05: Disposing during a multi-listener dispatch clears the active array and stops traversal with the upstream TypeError represented by `EmitError`. The error occurs only when there is a subsequent entry to read.
 - E2.06: Adding/removing a listener before disposal replaces the array. Disposal clears only the current array, not a separately captured outer array. Verify both paths, including nested fire.
-- E2.07: Fallible callbacks propagate errors synchronously and stop later callbacks. A user panic propagates rather than being swallowed or converted into success. Forwarded errors stop the source traversal too.
+- E2.07: Fallible callbacks propagate the original concrete error synchronously and stop later callbacks. `EmitError::Callback` retains an `Rc<dyn Error>` cause; browser-owned wrappers must preserve arbitrary thrown `JsValue` identity. Downcasting and `Error::source` must recover the cause without a string conversion. A user panic propagates rather than becoming success. Forwarded/map/combined errors retain the same cause.
 
 ## Event utilities, E3
 
@@ -37,7 +37,7 @@ Reference files are `source_repo/src/common/{Event,CircularList}.ts` and their u
 - L1.02: Push below capacity extends length. Push at capacity overwrites the oldest slot, advances the start index, emits exactly one trim and leaves length capped.
 - L1.03: `get` and `set` wrap independently of logical length. Undefined slots stay absent. `pop` decrements length but does not clear the stale backing slot.
 - L1.04: `recycle` errors before any mutation when not full. When full, it advances first, emits trim, then reads the recycled last element. Shared mutable element identity survives copies/recycling with `Rc` storage.
-- L1.05: Cyclic-index arithmetic cannot overflow even for large representable indexes. The maximum source capacity, 4,294,967,295, must not cause eager capacity-sized allocation.
+- L1.05: Cyclic-index arithmetic cannot overflow even for large representable indexes. The maximum source capacity, 4,294,967,295, must not cause eager capacity-sized allocation. Signed indexing preserves negative JavaScript array-property slots and unnormalized trim/shift/splice starts. `get_number` performs f64 start+index before remainder, including -0, NaN, infinities, subnormal inputs and rounding beyond 2^53.
 
 ## Capacity and raw length, L2
 
@@ -64,7 +64,7 @@ Reference files are `source_repo/src/common/{Event,CircularList}.ts` and their u
 
 ## Reentrant observers and lifecycle, L5
 
-- L5.01: Delete, insert and trim callbacks may read and mutate the same list. Outer continuation reads state again at the same source statements. No storage borrow spans callback entry.
+- L5.01: Delete, insert and trim callbacks may read and mutate the same list. Outer continuation reads state again at the same source statements. No storage borrow spans callback entry. `share()` retains the exact storage and emitter objects without cloning elements, allowing Buffer owners to release their outer borrow before invoking list observers.
 - L5.02: Capture callback-time length, capacity, slots and event payloads, not only final state. Reentrant push, trim, resize and length changes must have explicit deterministic assertions.
 - L5.03: An event error interrupts mutation at the same statement as upstream. Compare retained partial storage, length and subsequent-operation behavior.
 - L5.04: List disposal unregisters all three emitter families. Storage operations remain callable afterward without emitting events, matching the source.
@@ -80,6 +80,23 @@ Reference files are `source_repo/src/common/{Event,CircularList}.ts` and their u
 
 Run `node scripts/check-events-and-circular-list.mjs`, `cargo test -p xterm-core --test event --test circular_list`, and focused Clippy on the library, both tests and both trace examples. Run workspace quality gates after integration. Keep all implementation/test files at most 350 lines or document a cohesive exception.
 
-The baseline has seven Event tests and nineteen CircularList tests containing 95 original assertions. Preserve the assertion bodies and source hashes. Current trace seed is `0xc1ac01a7`; compare every raw/cyclic slot, length, capacity, fullness, result/error, ordered event payload and callback-time snapshot across 20,001 circular states and 10,008 event traces. Retain the shortest available failing operation prefix as a counterexample. Record exact commands, versions, counts and independent reviewer results under `results/events-circular-list/`.
+The baseline has seven Event tests and nineteen CircularList tests containing 95 original assertions. Preserve the assertion bodies and source hashes. Current trace seed is `0xc1ac01a7`; compare every raw/cyclic slot, length, capacity, fullness, result/error, ordered event payload and callback-time snapshot across 20,047 circular states and 10,008 event traces. Signed/f64 directed prefixes are included. Retain the failing operation prefix starting at the most recent reset as a replayable counterexample. Record exact commands, versions, source/harness hashes, counts and independent review under `results/events-circular-list/`.
 
-The initial implementation passed those scoped counts but did not yet demonstrate every newly enumerated edge above. In particular, extreme sparse capacity, event getter identity and complete reentrant mutation/error matrices require follow-up assertions. Native Windows utility checks do not prove Linux/macOS, browser/WASM or complete terminal equivalence.
+The expanded scoped suite has 74 Rust tests and 12 paired directed source checks in addition to the 26 unchanged upstream tests. This covers sparse source-maximum capacity, deterministic failed-reserve atomicity, cached event identity, explicit-only subscription groups, concrete callback causes, signed/f64 indexing, shared list identity and reentrant mutation/error states. `--isolated` compiles the exact utility modules into small files under tmp/ when unrelated in-flight workspace code fails; its separate report never counts as a workspace pass. Native Windows utility checks do not prove Linux/macOS, browser/WASM or complete terminal equivalence. Integrated Buffer/marker and browser obligations remain in tasks 27, 31, 122 and 130.
+
+### Named regression mapping
+
+| Cases | Implementation and executable evidence |
+| --- | --- |
+| E1.01/E1.04, original callback/disposal cases | `tests/event.rs`, original seven tests via oracle |
+| E1.02/E1.03/E1.05/E1.06 | `tests/event_edges.rs` getter/duplicate/container/retained-owner tests |
+| E1.07/E2.01-E2.06 | `tests/event.rs`, `event_edges.rs`, 10,008 listener traces |
+| E2.07 | `tests/event_errors.rs`, panic propagation tests, paired source exception-identity check |
+| E3.01-E3.06 | mapped/any/forward/initial-value tests in event/event_edges/event_errors; `tests/lifecycle_explicit.rs`; paired source utility checks |
+| L1.01-L1.04 | 19 faithful cases in `tests/circular_list.rs`, recycle shared-identity test |
+| L1.05/L2.01-L2.05 | `tests/circular_list_edges.rs` sparse limits, resize repetition/holes, signed/f64 arithmetic, failed allocation; all-slot oracle snapshots |
+| L3.01-L3.05/L4.01-L4.04 | faithful tests, per-trim snapshot and zero-count-invalid-argument cases; 20,047 operation states |
+| L5.01-L5.04 | callback-time oracle snapshots, directed reentrant source/Rust tests, partial-error states and shared-owner-borrow regression |
+| L5.05/B1.02 | actual Buffer/service and browser integration tasks, not satisfied by this utility suite |
+| B1.01/B1.03 | module rustdoc, report differences, explicit invalid-boundary tests; overall status remains NOT PROVEN |
+| V1 | scripts/check-events-and-circular-list.mjs and results/events-circular-list/verification*.json |

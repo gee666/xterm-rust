@@ -58,6 +58,18 @@ impl<T: Clone> Storage<T> {
         self.slots.get(&self.signed_index(index)).cloned()
     }
 
+    pub fn get_number(&self, index: f64) -> Option<T> {
+        // Preserve JS addition rounding before remainder. An integer modulo of
+        // the original index would give different slots beyond 2^53.
+        let physical = (self.start as f64 + index) % self.max_length as f64;
+        if !physical.is_finite() || physical.fract() != 0.0 {
+            return None;
+        }
+        // The finite remainder is bounded by usize capacity, at most 64 bits,
+        // so widening that integral value to i128 cannot saturate or truncate.
+        self.slots.get(&(physical as i128)).cloned()
+    }
+
     pub fn set(&mut self, index: usize, value: Option<T>) -> Result<(), CircularListError> {
         self.set_physical(self.cyclic_index(index), value)
     }

@@ -2,16 +2,16 @@
   "rustSource": {
     "crates/xterm-core/src/event.rs": "165314ec366d3416e0f83325265945cfb6ccb51a2bdd773e243a815ff579fd9a",
     "crates/xterm-core/src/lifecycle.rs": "bcd7fab9c761373bb75a0cff558795749ba63819c0de9592e2d9e0ff3b774931",
-    "crates/xterm-core/src/circular_list.rs": "c77a6be5918b2f92b0f698eeebd7ac2566a4af5d72e3c70d75a43a665150a2cd",
-    "crates/xterm-core/src/circular_list/storage.rs": "f61519042c367d31e2670e865e2177ffde004cee5c1bf94977b36894a9e7ef85",
+    "crates/xterm-core/src/circular_list.rs": "744027a9f3bba9e43012f04ebdf5f99fafca731baefc79e0c0bf670a9c88b625",
+    "crates/xterm-core/src/circular_list/storage.rs": "3c756b92344f9adb2c03316ba6159f77f4f3c8371d3e8e488f07a24941f3b633",
     "crates/xterm-core/tests/event.rs": "1b1945c2ee1c90345c7988d3a8b3b4e3737450c54258261fd0385c8a9ada678c",
     "crates/xterm-core/tests/event_edges.rs": "f7c8fae3c84b66b68cc9b2d1035bb0c8e14419341a45803b1debcb7f63715ab5",
     "crates/xterm-core/tests/event_errors.rs": "8f0078fe27389a3eba50a8f767bb2c21bedb631006af6ea1e2b904ae382b9267",
     "crates/xterm-core/tests/lifecycle_explicit.rs": "754d192a5cf856d0e46181b0b2362a8b4e2d2cd3897ab7c49df7b855ff057f34",
     "crates/xterm-core/tests/circular_list.rs": "f53b28c80b25ed48d08e8870f0883e057b5e7d1df740081eb2e592f622127f7e",
-    "crates/xterm-core/tests/circular_list_edges.rs": "502678cba9579ca33d6a1b053608cbb9641d212303d495d01fdb45e2e894a06b",
+    "crates/xterm-core/tests/circular_list_edges.rs": "b9f401f7c3fd497e85eacf14d4721d43e88acc2b1ce06d2d42dfa721b9873d9a",
     "crates/xterm-core/examples/event_trace.rs": "7e49c5a6887921ba24eeb4af2f35f6adc48c7b367e5809907b87e1a728700521",
-    "crates/xterm-core/examples/circular_list_trace.rs": "8c9f4ef7664abf38deda6fc274e7580405e20aa63fe7aba2b1b49b7f0142e01e"
+    "crates/xterm-core/examples/circular_list_trace.rs": "574706a30fb2bf6297380cee177855f14993bdca0b92019b8ba6ebc57b7273bc"
   },
   "directed": [
     {
@@ -64,6 +64,10 @@
     }
   ],
   "status": "passed scoped checks; terminal equivalence NOT PROVEN",
+  "harnessSource": {
+    "scripts/check-events-and-circular-list.mjs": "6d2b4e789e7c8976a50aabcf7cb98b834cd60c614e957d40aaa7b174d6630755",
+    "scripts/events-circular-directed.mjs": "9dd8da41682f7ee7d5f0559608f698356cced45130ccb6d90868a4d4ebce62ea"
+  },
   "command": "node scripts/check-events-and-circular-list.mjs",
   "platform": "win32",
   "node": "v24.15.0",
@@ -193,15 +197,15 @@
     ]
   },
   "rust": {
-    "tests": 70,
+    "tests": 74,
     "upstreamMapped": 26,
-    "added": 44,
+    "added": 48,
     "log": "rust-tests.log"
   },
   "differential": {
     "seed": 3249275303,
     "circleIterations": 20000,
-    "circleComparedStates": 20022,
+    "circleComparedStates": 20047,
     "eventIterations": 10000,
     "eventComparedTraces": 10008,
     "failures": 0,
@@ -209,11 +213,11 @@
   },
   "differences": [
     "CircularList requires a positive capacity. Zero capacity is rejected rather than constructing the degenerate upstream array.",
-    "Rust uses usize list lengths and indexes; empty pop and invalid splice ranges return errors rather than creating negative JavaScript lengths.",
+    "Canonical lengths/indexes are usize; get_signed/set_signed preserve negative property slots and get_number preserves public f64 indexing. Empty pop and invalid splice ranges are rejected instead of negative lengths.",
     "Captured closures replace thisArgs. Rust events borrow payloads. EmitError distinguishes cleared listener arrays from retained concrete callback errors, including browser JsValue wrappers.",
     "Cloning Rust elements copies values. Rc elements preserve JavaScript mutable object identity.",
     "EventUtils.any combines a homogeneous Rust payload type; erase payloads explicitly for the heterogeneous JavaScript void overload."
   ]
 }
-(node:30904) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(node:47908) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
 (Use `node --trace-warnings ...` to show where the warning was created)

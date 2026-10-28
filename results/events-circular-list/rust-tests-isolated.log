@@ -1,20 +1,20 @@
 
 running 16 tests
 test additions_and_removals_use_snapshot_and_nested_fire_sees_new_list ... ok
-test dispose_listener ... ok
+test dispose_after_copying_list_does_not_clear_active_snapshot ... ok
 test dispose_during_active_multi_listener_dispatch_returns_upstream_error ... ok
-test fire_with_zero_listeners ... ok
+test fire_with_receiver_captured_instead_of_this_args ... ok
 test fire_with_multiple_listeners ... ok
 test listener_removal_during_fire ... ok
-test fire_with_receiver_captured_instead_of_this_args ... ok
+test dispose_listener ... ok
 test retained_event_keeps_emitter_state_alive_without_cycles ... ok
 test store_and_array_dispose_registrations ... ok
-test forwarded_dispatch_error_propagates ... ok
 test map_any_and_forward_preserve_disposal ... ok
 test no_fire_after_dispose ... ok
 test registration_after_disposal_is_noop ... ok
-test dispose_after_copying_list_does_not_clear_active_snapshot ... ok
+test fire_with_zero_listeners ... ok
 test run_and_subscribe_initial_value_precedes_registration ... ok
+test forwarded_dispatch_error_propagates ... ok
 test fire_with_one_listener ... ok
 
 test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
@@ -22,18 +22,18 @@ test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fin
 
 
 running 12 tests
-test captured_resource_drop_can_dispose_another_subscription ... ok
-test any_handles_zero_one_and_repeated_sources_and_repeated_disposal ... ok
-test disposal_in_single_or_final_listener_completes_successfully ... ok
 test disposed_store_unregisters_immediately_and_handles_retain_identity ... ok
-test handles_after_emitter_destruction_release_captured_objects ... ok
-test getter_identity_and_duplicate_subscriptions_are_independent ... ok
-test initial_handler_panic_leaves_no_registration ... ok
-test heterogenous_any_has_explicit_payload_erasure ... ok
-test fallible_callbacks_and_panics_stop_dispatch_without_poisoning_borrows ... ok
-test forwarding_preserves_payload_identity_and_vector_disposal ... ok
-test map_runs_per_subscriber_and_stops_after_store_disposal ... ok
+test any_handles_zero_one_and_repeated_sources_and_repeated_disposal ... ok
+test captured_resource_drop_can_dispose_another_subscription ... ok
+test disposal_in_single_or_final_listener_completes_successfully ... ok
 test removal_of_future_listener_keeps_current_snapshot_only ... ok
+test getter_identity_and_duplicate_subscriptions_are_independent ... ok
+test handles_after_emitter_destruction_release_captured_objects ... ok
+test fallible_callbacks_and_panics_stop_dispatch_without_poisoning_borrows ... ok
+test heterogenous_any_has_explicit_payload_erasure ... ok
+test initial_handler_panic_leaves_no_registration ... ok
+test map_runs_per_subscriber_and_stops_after_store_disposal ... ok
+test forwarding_preserves_payload_identity_and_vector_disposal ... ok
 
 test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
@@ -51,55 +51,58 @@ running 24 tests
 test length_capped_at_maximum ... ok
 test callbacks_can_mutate_same_list_without_borrow_conflicts ... ok
 test emits_delete_insert_trim_in_order ... ok
-test length_growth_clears_physical_slots_and_capacity_shrink_retains_length ... ok
-test max_length_getter ... ok
-test max_length_increases_size ... ok
-test recycle_retains_shared_identity_and_requires_full_buffer ... ok
-test shift_elements_backwards ... ok
-test shift_count_zero_does_not_mutate ... ok
-test shift_elements_forward ... ok
-test shift_invalid_arguments_match_upstream_errors ... ok
-test shift_forward_expands_list ... ok
-test pop_keeps_slot_and_boundary_validation_is_explicit ... ok
 test push_discards_old_values_at_max_length ... ok
-test shift_forward_wraps_list ... ok
-test splice_inserts_items ... ok
-test trim_removes_all_when_count_exceeds_length ... ok
+test shift_elements_forward ... ok
+test shift_count_zero_does_not_mutate ... ok
+test pop_keeps_slot_and_boundary_validation_is_explicit ... ok
 test shift_one_element_backwards ... ok
 test shift_one_element_forward ... ok
+test recycle_retains_shared_identity_and_requires_full_buffer ... ok
+test splice_inserts_items ... ok
+test trim_removes_from_beginning ... ok
+test max_length_increases_size ... ok
+test shift_forward_expands_list ... ok
+test shift_forward_wraps_list ... ok
+test shift_invalid_arguments_match_upstream_errors ... ok
+test max_length_getter ... ok
+test push_values_onto_array ... ok
 test splice_deletes_items ... ok
 test splice_deletes_then_inserts_items ... ok
-test push_values_onto_array ... ok
 test splice_wraps_when_more_inserted_than_deleted ... ok
-test trim_removes_from_beginning ... ok
+test length_growth_clears_physical_slots_and_capacity_shrink_retains_length ... ok
+test trim_removes_all_when_count_exceeds_length ... ok
+test shift_elements_backwards ... ok
 
 test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 
 
-running 12 tests
+running 15 tests
 test arithmetic_errors_precede_storage_mutation ... ok
-test insert_observer_trim_changes_outer_length_adjustment ... ok
 test capacity_growing_after_shrink_repeats_cyclic_values_and_preserves_holes ... ok
-test sparse_source_maximum_capacity_and_length_do_not_allocate_all_holes ... ok
-test event_error_interrupts_delete_insert_and_trim_at_source_statements ... ok
 test delete_observer_length_reset_precedes_insert ... ok
+test event_error_interrupts_delete_insert_and_trim_at_source_statements ... ok
+test insert_observer_trim_changes_outer_length_adjustment ... ok
 test multi_trim_reports_each_partial_state_and_zero_count_skips_validation ... ok
+test reentrant_push_observer_can_resize_without_storage_borrow ... ok
 test reentrant_recycle_reads_after_observer_length_change ... ok
+test impossible_sparse_resize_reports_reserve_failure_atomically ... ok
+test shared_list_releases_owner_borrow_before_observers_and_shares_disposal ... ok
+test sharing_does_not_clone_elements ... ok
+test number_indexing_matches_js_rounding_and_undefined_nonintegral_slots ... ok
 test shift_overflow_observer_can_shorten_before_next_trim ... ok
 test signed_slots_preserve_js_remainder_and_unwrapped_trim_start ... ok
-test impossible_sparse_resize_reports_reserve_failure_atomically ... ok
-test reentrant_push_observer_can_resize_without_storage_borrow ... ok
+test sparse_source_maximum_capacity_and_length_do_not_allocate_all_holes ... ok
 
-test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 
 
 running 4 tests
 test discarding_any_handle_keeps_listeners_without_leaking_capture ... ok
+test explicit_disposal_is_idempotent_and_deduplicates_handle_identity ... ok
 test dropped_explicit_store_releases_handles_without_executing_them ... ok
 test native_default_and_explicit_store_have_different_drop_boundaries ... ok
-test explicit_disposal_is_idempotent_and_deduplicates_handle_identity ... ok
 
 test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
