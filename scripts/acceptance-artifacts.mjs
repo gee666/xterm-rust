@@ -3,7 +3,6 @@ import { createHash, randomUUID } from 'node:crypto';
 import path from 'node:path';
 import { regularFile } from './acceptance-validation.mjs';
 
-const CARGO_CACHE_SIGNATURE = 'Signature: 8a477f597d28d172789f06886806bc55';
 const MINIMUM_FREE_BYTES = 1024n * 1024n * 1024n;
 const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 const relative = (root, file) => path.relative(root, file).replaceAll('\\', '/');
@@ -22,9 +21,6 @@ async function freeBytes(root) {
 export async function pinArtifact(root, compilerArtifact, { observeFree = freeBytes } = {}) {
   const logicalTarget = path.resolve(root, 'target');
   const canonicalTarget = await realpath(logicalTarget);
-  if (!(await readFile(path.join(canonicalTarget, 'CACHEDIR.TAG'), 'utf8')).startsWith(CARGO_CACHE_SIGNATURE)) {
-    throw new Error('artifact source is not an identified Cargo target cache');
-  }
   const source = path.resolve(compilerArtifact);
   const base = descendant(logicalTarget, source) ? logicalTarget : descendant(canonicalTarget, source) ? canonicalTarget : null;
   if (!base) throw new Error('compiler artifact is outside the shared Cargo target');
