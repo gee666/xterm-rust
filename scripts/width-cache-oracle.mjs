@@ -1,12 +1,14 @@
 // Copyright (c) 2023 The xterm.js authors. All rights reserved. MIT license.
 // Run unchanged WidthCache assertions with their original injected canvases.
 import fs from 'node:fs';
+import path from 'node:path';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
-const require=createRequire(import.meta.url),ts=require('../source_repo/node_modules/typescript');
+const sourceRoot=path.resolve(process.env.SOURCE_ROOT ?? 'source_repo');
+const require=createRequire(path.join(sourceRoot,'package.json')),ts=require('typescript');
 function load(file,imports={},globals={}){
-  const source=fs.readFileSync(`source_repo/src/browser/renderer/${file}`,'utf8');
+  const source=fs.readFileSync(path.join(sourceRoot,'src/browser/renderer',file),'utf8');
   const code=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
   const module={exports:{}};
   vm.runInNewContext(code,{module,exports:module.exports,Float32Array,Map,require:id=>{if(!(id in imports))throw Error(`Unmapped source import ${id}`);return imports[id];},...globals},{filename:file});
