@@ -1,15 +1,18 @@
 // Copyright (c) 2020 The xterm.js authors. All rights reserved. MIT license.
-//! Browser canvas operations for shared image storage. Terminal lifecycle hooks
-//! are separate: callers supply live metrics and DOM ownership through the host.
+//! Browser canvas operations for shared image storage. ImageRendererLifecycle
+//! binds these operations to the Rust terminal's open/options/renderer lifecycle.
 mod drawing;
 mod js;
 mod layers;
+mod lifecycle;
 mod placeholder;
 pub mod primitives;
 mod resource;
 mod storage;
+mod terminal_host;
 
 use js::{get, set};
+pub use lifecycle::ImageRendererLifecycle;
 pub use resource::BrowserImageSurface;
 use std::rc::Rc;
 use wasm_bindgen::JsValue;

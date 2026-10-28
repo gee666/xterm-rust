@@ -14,6 +14,7 @@ impl RenderService {
         self.viewport_change.dispose();
         self.render.dispose();
         self.refresh_request.dispose();
+        self.before_set_renderer.borrow_mut().clear();
         self.paused_resize.clear();
         if let Some(debouncer) = self.debouncer.borrow().clone() {
             debouncer.dispose()?;

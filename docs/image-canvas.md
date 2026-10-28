@@ -1,6 +1,6 @@
 # Browser image canvas component
 
-Task272 implements the canvas and resource operations from `source_repo/addons/addon-image/src/ImageRenderer.ts`. It is not the complete image addon. Task127 retains terminal open, font option, renderer replacement and disposal subscription wiring. Task38 retains protocol/parser activation and exported addon integration. Full equivalence is NOT PROVEN.
+Task272 implements the canvas and resource operations from `source_repo/addons/addon-image/src/ImageRenderer.ts`. It is not the complete image addon. Task127 supplies terminal open, font option, renderer replacement and disposal subscription wiring in `docs/image-lifecycle.md`. Task38 retains protocol/parser activation and exported addon integration. Full equivalence is NOT PROVEN.
 
 ## Implementation and ownership
 
@@ -13,7 +13,7 @@ Task272 implements the canvas and resource operations from `source_repo/addons/a
 - `resource.rs` wraps real canvas/bitmap surfaces and exposes the original bitmap's close operation to storage. Native decoders call `upload_pixels` once before adding the canvas resource to browser storage. Passing an unuploaded native pixel surface to drawing returns an error instead of copying it on every tile draw.
 - `storage.rs` implements every `StorageRenderer` operation over these actual browser operations. It preserves thrown JavaScript values through `StorageError`.
 
-`ImageCanvasHost` supplies the current document, screen element, CSS cell/canvas metrics and screen width. Metrics are typed binary64 snapshots, not a JS property object. A host must release terminal state borrows before returning. No terminal subscriptions or strong terminal reference are hidden inside this component. Its lifecycle owner must call `rescale_canvas`, remove layers on renderer replacement, call `dispose`, and request row refreshes after font/placeholder changes. Those operations are pending task127, not simulated here. Resource and context calls hold no Rust state borrow across host code. Layer resizing traverses a live JS Map iterator.
+`ImageCanvasHost` supplies the current document, screen element, CSS cell/canvas metrics and screen width. Metrics are typed binary64 snapshots, not a JS property object. A host must release terminal state borrows before returning. No terminal subscriptions or strong terminal reference are hidden inside this component. Its lifecycle owner must call `rescale_canvas`, remove layers on renderer replacement, call `dispose`, and request row refreshes after font/placeholder changes. Task127 now supplies those operations through `ImageRendererLifecycle`, with live Rust Terminal tests. Task38 still owns the full addon. Resource and context calls hold no Rust state borrow across host code. Layer resizing traverses a live JS Map iterator.
 
 ## Run
 
@@ -23,7 +23,7 @@ Requires Rust1.85.1 or the repository-supported toolchain, the wasm32-unknown-un
 node scripts/image-canvas-check.mjs
 ```
 
-The default compiles the real xterm-web test target. It fails while the shared browser crate has unresolved producers. Do not describe the isolated command below as a workspace pass.
+The default compiles the real xterm-web test target. After task60 integrated the browser producers, task127 reran all14 tests in each browser with the full crate. The following isolated commands record the historical272 route only; isolated-component mode has since been removed.
 
 ```sh
 node scripts/image-canvas-check.mjs --isolated-component

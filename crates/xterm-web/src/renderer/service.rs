@@ -1,4 +1,6 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved. MIT license.
+#[path = "service_backend.rs"]
+mod backend;
 #[path = "service_init.rs"]
 mod initialize;
 #[path = "service_lifecycle.rs"]
@@ -62,6 +64,7 @@ pub struct RenderService {
     viewport_change: Emitter<RenderRange>,
     render: Emitter<RenderRange>,
     refresh_request: Emitter<RenderRange>,
+    before_set_renderer: backend::RendererInterceptors,
 }
 impl RenderService {
     pub fn on_dimensions_change(&self) -> Event<RenderDimensions> {
@@ -95,35 +98,6 @@ impl RenderService {
     }
     pub fn has_valid_char_size(&self) -> bool {
         self.metrics.state.has_valid_size()
-    }
-    pub fn set_renderer(self: &Rc<Self>, renderer: Rc<dyn Renderer>) -> Result<(), JsValue> {
-        if !self.disposed.get() {
-            let old = self.current_renderer();
-            if !old.as_ref().is_some_and(|old| Rc::ptr_eq(old, &renderer)) {
-                if let Some(old) = old {
-                    old.dispose()?;
-                }
-                *self.renderer.borrow_mut() = Some(renderer);
-            }
-            // MutableDisposable skips equal assignment, but source still wires
-            // another redraw listener and requests a full selection refresh.
-            if let Some(renderer) = self.current_renderer() {
-                let weak = Rc::downgrade(self);
-                // The renderer owns this event's lifetime, as in source. Dropping
-                // a native subscription handle does not unregister its callback.
-                let _subscription = renderer.on_request_redraw().try_subscribe(move |event| {
-                    if let Some(service) = weak.upgrade() {
-                        service
-                            .refresh_rows(event.start, event.end, event.sync, true)
-                            .map_err(crate::js_error::callback_error)?;
-                    }
-                    Ok(())
-                });
-                self.selection_dirty.set(true);
-                self.full_refresh()?;
-            }
-        }
-        Ok(())
     }
     pub fn refresh_rows(
         &self,

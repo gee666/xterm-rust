@@ -1,0 +1,53 @@
+running 6 tests
+test source_lifecycle_traces_match_font_filter_and_replacement_failure_order ... ok
+test replacement_removes_snapshot_in_insertion_order_before_backend_and_preserves_throw ... FAIL
+test placeholder_toggle_requests_real_terminal_renders_and_drop_unhooks ... ok
+test newest_interceptor_runs_first_and_errors_stop_older_wrappers ... ok
+test lazy_open_failure_then_success_and_same_storage_renderer_identity ... ok
+test attach_after_open_font_size_rescales_actual_canvases_only_while_owned ... ok
+
+failures:
+
+---- replacement_removes_snapshot_in_insertion_order_before_backend_and_preserves_throw output ----
+    JS exception that was thrown:
+        RuntimeError: Unreachable code should not be executed (evaluating 'wasm.wasm_bindgen__convert__closures__invoke0_mut__h6ccbabcefd85a5b8(arg0, arg1)')
+        35298@wasm-function[35298]
+        31488@wasm-function[31488]
+        9614@wasm-function[9614]
+        12198@wasm-function[12198]
+        34881@wasm-function[34881]
+        23617@wasm-function[23617]
+        23618@wasm-function[23618]
+        14624@wasm-function[14624]
+        10663@wasm-function[10663]
+        662@wasm-function[662]
+        23153@wasm-function[23153]
+        9272@wasm-function[9272]
+        12204@wasm-function[12204]
+        19816@wasm-function[19816]
+        __wbg_adapter_908@http://127.0.0.1:54357/suite.js:524:73
+        cb0@http://127.0.0.1:54357/suite.js:4265:45
+        @
+        @http://127.0.0.1:54357/suite.js:4270:30
+        handleError@http://127.0.0.1:54357/suite.js:141:23
+        5828@wasm-function[5828]
+        11179@wasm-function[11179]
+        13923@wasm-function[13923]
+        1554@wasm-function[1554]
+        695@wasm-function[695]
+        3168@wasm-function[3168]
+        1488@wasm-function[1488]
+        3145@wasm-function[3145]
+        2844@wasm-function[2844]
+        17813@wasm-function[17813]
+        14552@wasm-function[14552]
+        28230@wasm-function[28230]
+        __wbg_adapter_106@http://127.0.0.1:54357/suite.js:520:36
+        real@http://127.0.0.1:54357/suite.js:207:21
+
+failures:
+
+    replacement_removes_snapshot_in_insertion_order_before_backend_and_preserves_throw
+
+test result: FAILED. 5 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.38s
+

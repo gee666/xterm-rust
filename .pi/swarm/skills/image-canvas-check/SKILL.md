@@ -1,14 +1,14 @@
 ---
 name: image-canvas-check
-description: Use when changing WASM image canvas operations, storage resources, cropping, scaling, placeholders or browser pixel evidence.
+description: Use when changing browser image canvas operations, terminal lifecycle, storage resources, cropping, scaling, placeholders or pixel evidence.
 ---
 
-# Image canvas checks
+# Image canvas and lifecycle checks
 
-Run `node scripts/image-canvas-check.mjs` from the worktree with Cargo on PATH. It reuses `browser-host-check.mjs`, compiles the unchanged source renderer into an oracle prelude, and runs the Rust image canvas tests in Chromium, Firefox and WebKit. Keep original source and assertions unchanged. See `docs/image-canvas.md` for scope and commands.
+Run `node scripts/image-canvas-check.mjs` for the canvas suite. Run `WASM_TEST=image_lifecycle_browser node scripts/image-canvas-check.mjs` for live Terminal lifecycle tests. Both compile the full xterm-web crate, bundle the unchanged source renderer as comparator and run Rust assertions in Chromium, Firefox and WebKit.
 
-If unresolved shared browser producers prevent compilation, `--isolated-component` explicitly compiles the same production files/tests through a temporary manifest. This mode uses actual core/addon/storage crates, not mocks of the engine. Do not call its result a workspace or full-addon pass. Use `CARGO_TARGET_DIR="$PWD/target"` for follow-up Cargo commands against that manifest to avoid another target directory.
+The old isolated-component fallback was removed once main browser producers compiled. Build errors now fail the full command; do not bypass them with a substitute library.
 
-Prerequisites are wasm32-unknown-unknown, wasm-bindgen0.2.100, and matching source esbuild/sixel/Playwright/browser installations. `SOURCE_REPO`, `REFERENCE_NODE_MODULES`, `WASM_BINDGEN`, `PLAYWRIGHT_MODULE` and `BROWSERS` override locations/selection. Missing build artifacts, missing browsers and zero-test exports fail. Browser/server cleanup comes from the existing runner.
+Prerequisites are wasm32-unknown-unknown, wasm-bindgen0.2.100, and matching source esbuild/sixel/Playwright/browser installations. SOURCE_REPO, REFERENCE_NODE_MODULES, WASM_BINDGEN, PLAYWRIGHT_MODULE and BROWSERS override locations/selection. Missing builds, browsers and zero exports fail. The runner closes browser/server resources.
 
-Retain `results/image-canvas/verification.json`, source hashes and the browser report/logs. Seed0x272389 runs128 full-pixel draw/extract pairs per browser. Scoped Clippy uses the generated manifest, target wasm32 and `-D warnings`; direct rustfmt checks target the new files. Required workspace failures must stay visible. Terminal lifecycle hooks remain task127 and full protocol/addon wiring task38 until separately implemented and verified.
+Retain results/image-canvas and results/image-lifecycle verification files, source hashes and immutable browser reports/logs. Seed0x272389 runs128 draw/extract pairs per browser; seed0x127389 runs64 lifecycle actions per browser. Native/workspace gates and failures remain separate. Full protocol/addon activation and original full-addon suites remain task38. See docs/image-canvas.md and docs/image-lifecycle.md.

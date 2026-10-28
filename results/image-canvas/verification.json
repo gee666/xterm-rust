@@ -1,9 +1,9 @@
 {
-  "status": "passed-component-only",
   "fullImageAddonEquivalence": "NOT PROVEN",
-  "isolatedComponent": true,
-  "seed": "0x272389",
-  "seededDrawAndExtractPairsPerBrowser": 128,
+  "test": "image_canvas_browser",
+  "status": "passed-renderer-component",
+  "isolatedComponent": false,
+  "browserReport": "results/browser-host/image_canvas_browser-results.json",
   "rustInputs": [
     {
       "path": "crates/xterm-web/src/image/drawing.rs",
@@ -18,8 +18,12 @@
       "sha256": "975cbe79afd7a30af86e5cc6023112712ad06400b00c595ff831fd9d6a863eb1"
     },
     {
+      "path": "crates/xterm-web/src/image/lifecycle.rs",
+      "sha256": "303d509f580ca4c8bf8251255d0e9d2685655067ae5ca6031c9db5e31a71d635"
+    },
+    {
       "path": "crates/xterm-web/src/image/mod.rs",
-      "sha256": "7aba2f2d232bf147b9422bc29cee583446593c0dd2f9b42f9d442ff20ed194cd"
+      "sha256": "ab0278998dfcb903ab909718735a12483deac49141e319e004710a6f7379c699"
     },
     {
       "path": "crates/xterm-web/src/image/placeholder.js",
@@ -42,6 +46,10 @@
       "sha256": "ee82563250c0a2b2c54704b727856b592ecf835b6f21e25e14913d6365db4a07"
     },
     {
+      "path": "crates/xterm-web/src/image/terminal_host.rs",
+      "sha256": "162c3aaad358acaced2b2ebec7098b2967a924375ad14927828e1028461a5289"
+    },
+    {
       "path": "crates/xterm-web/tests/image_canvas_support/failures.rs",
       "sha256": "f321e83967940cc1d1f0af97e4d5cfdb1b13d59ddc63ad9319b36b06f4c32f25"
     },
@@ -50,20 +58,28 @@
       "sha256": "841dfdb9e1438d788772b2a7af7f2da5311656f3ac30f1cfc4dedfe2e67e6ad2"
     },
     {
+      "path": "crates/xterm-web/tests/image_lifecycle_support/mod.rs",
+      "sha256": "94f4ade3bf7f52def49a0f9973184a70180310fba8b8ebf9c0824709d13ed52a"
+    },
+    {
+      "path": "crates/xterm-web/tests/image_lifecycle_support/reentrancy.rs",
+      "sha256": "dd68a33d11e3fef22b2a006a5d407e354a9cd382d277f1d3453dea68ef2e4370"
+    },
+    {
       "path": "crates/xterm-web/tests/image_canvas_browser.rs",
       "sha256": "505238b37d9e4b57b280b46b8300a8059729d730b23a84dd70f2b8003269b3d6"
     },
     {
       "path": "Cargo.lock",
-      "sha256": "2cf4d4045023fb84864a1a47b13187e426d79884ed0589b2f1bc85128b9625f4"
+      "sha256": "383ed3982dab291c6f96344dc41e6fc2f99e8e8bdaecc07184c990f92fdd00fb"
     },
     {
       "path": "scripts/image-canvas-check.mjs",
-      "sha256": "99d275c6a1f477247e67b60d14c248ff7bf8b4d7538b6412c5d36b03bd49c014"
+      "sha256": "e8a5af1597624f4fc84d4be9882159eda8858565339e971c77471b1e436837b8"
     },
     {
       "path": "scripts/browser-host-check.mjs",
-      "sha256": "cf8c8221d11da535338e7539d765cfdb4c017a2578648e7f26fe4953c9595ef6"
+      "sha256": "8d804f49867f134240f5e5ef3d22d3790b435c73ed0f6859890d46451d2de87a"
     }
   ],
   "sourceInputs": [
@@ -72,18 +88,19 @@
       "sha256": "a390409f0c7eb65bbe1b8f73eb02d361c5a5bc7abb9c40de839ed34748bff09b"
     },
     {
-      "path": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\src\\common\\Lifecycle.ts",
+      "path": "C:\\Users\\user\\.xterm-rust-target\\7144d30a1fc3-worktrees\\Integration\\tmp\\worktrees\\Harper\\source_repo\\src\\common\\Lifecycle.ts",
       "sha256": "e00016aae991e24137ab066778912414f4af959f2b26baecf47ec542ad313a83"
     },
     {
-      "path": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\src\\ImageRenderer.ts",
+      "path": "C:\\Users\\user\\.xterm-rust-target\\7144d30a1fc3-worktrees\\Integration\\tmp\\worktrees\\Harper\\source_repo\\addons\\addon-image\\src\\ImageRenderer.ts",
       "sha256": "2bc134bac2b730db0a4161bc4a15f5d19788c40ad5cb5eb1a27282dfa5b7e5be"
     }
   ],
-  "browserReport": "results/browser-host/image_canvas_browser-results.json",
+  "seed": "0x272389",
+  "seededDrawAndExtractPairsPerBrowser": 128,
   "remaining": [
-    "127 terminal open/font/renderer lifecycle hooks",
     "38 complete addon/parser/browser integration",
-    "workspace build/test/lint/WASM producers and native OS matrix"
+    "277 QOI integration",
+    "native OS and full workspace gates"
   ]
 }

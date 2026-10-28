@@ -57,7 +57,12 @@ impl Terminal {
             .rows()
             .map_err(|error| to_js_error(&error))?;
         services.refresh(0.0, (rows - 1) as f64)?;
-        services.bind_input()
+        services.bind_input()?;
+        // Addon post-open hooks run only after the original operation succeeds.
+        self.shared
+            .did_open
+            .fire(&())
+            .map_err(|error| to_js_error(&error))
     }
 
     pub fn refresh(&self, start: f64, end: f64) -> Result<(), JsValue> {
@@ -104,6 +109,14 @@ impl Terminal {
     }
 }
 impl Terminal {
+    /// Native addon access to the active, replaceable renderer service.
+    pub fn render_service_handle(&self) -> Option<Rc<crate::renderer::service::RenderService>> {
+        self.shared
+            .services
+            .borrow()
+            .as_ref()
+            .map(|services| Rc::clone(&services.render_service))
+    }
     pub fn render_dimensions(&self) -> Option<crate::api::RenderDimensions> {
         self.shared
             .services

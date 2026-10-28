@@ -33,6 +33,12 @@ pub trait LinkUnderlineRenderer {
         event: crate::links::UnderlineEvent,
     ) -> Result<(), JsValue>;
 }
+/// Whether an addon wrapper still delegates to the saved renderer setter.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum RendererChangeAction {
+    Continue,
+    Stop,
+}
 pub trait Renderer {
     fn dimensions(&self) -> RenderDimensions;
     fn on_request_redraw(&self) -> Event<RedrawRequest>;

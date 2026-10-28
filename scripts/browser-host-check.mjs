@@ -110,6 +110,9 @@ try {
       page.on('pageerror', error => entry.errors.push(error.stack ?? error.message));
       page.on('console', event => entry.console.push({ type: event.type(), text: event.text() }));
       await page.goto(baseUrl);
+      if (process.env.WASM_PRELUDE) {
+        await page.addScriptTag({ content: await readFile(resolve(process.env.WASM_PRELUDE), 'utf8') });
+      }
       await page.evaluate(() => {
         globalThis.__wbg_test_invoke = callback => callback();
         globalThis.testRun = (async () => {

@@ -1,0 +1,80 @@
+running 6 tests
+test source_lifecycle_traces_match_font_filter_and_replacement_failure_order ... ok
+test replacement_removes_snapshot_in_insertion_order_before_backend_and_preserves_throw ... FAIL
+test placeholder_toggle_requests_real_terminal_renders_and_drop_unhooks ... ok
+test newest_interceptor_runs_first_and_errors_stop_older_wrappers ... ok
+test lazy_open_failure_then_success_and_same_storage_renderer_identity ... ok
+test attach_after_open_font_size_rescales_actual_canvases_only_while_owned ... ok
+
+failures:
+
+---- replacement_removes_snapshot_in_insertion_order_before_backend_and_preserves_throw output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable executed
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.__rust_start_panic@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[35298]:0x7d94d1
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.rust_panic@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[31488]:0x7d059c
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[9614]:0x626a5d
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[12198]:0x692fea
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[34881]:0x7d8a37
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.rust_begin_unwind@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[23617]:0x7a0985
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[23618]:0x7a09b2
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.core::result::unwrap_failed::ha18832984acbf380@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[14624]:0x6e7b36
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.image_lifecycle_browser::eval::h10a174de181bca57@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[10663]:0x6558dd
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.image_lifecycle_browser::replacement_removes_snapshot_in_insertion_order_before_backend_and_preserves_throw::h56980b7ecb931438@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[662]:0x1a38a3
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.core::ops::function::FnOnce::call_once::hb3ca545aa1480cdb@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[23153]:0x79b673
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h5bcc0989a73d484e@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[9272]:0x615f97
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::hd35213a2b5458e11@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[12204]:0x693395
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[19816]:0x767311
+        __wbg_adapter_908@http://127.0.0.1:54357/suite.js:524:10
+        cb0@http://127.0.0.1:54357/suite.js:4265:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:54357/suite.js:4270:30
+        handleError@http://127.0.0.1:54357/suite.js:141:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:54357/suite.js:4258:76
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[5828]:0x5424f7
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::hedc35f0cddd6592c@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[11179]:0x66b458
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::h2259eeddbab1b8c0@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[13923]:0x6d03e8
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::habb6c49835f1f914@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[1554]:0x33212d
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[695]:0x1c0bb6
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[3168]:0x449b64
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[1488]:0x321062
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[3145]:0x446f96
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[2844]:0x4203fe
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[17813]:0x73d54d
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[14552]:0x6e5666
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.closure2389 externref shim@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[28230]:0x7c3748
+        __wbg_adapter_106@http://127.0.0.1:54357/suite.js:520:10
+        real@http://127.0.0.1:54357/suite.js:207:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:54357/suite.js:3870:23
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[34980]:0x7d8e01
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[27838]:0x7c12f3
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[4849]:0x4f4b80
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::{{closure}}::h95b28db559806c13@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[31859]:0x7d170d
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasm_bindgen_futures::queue::Queue::with::h9bd5fdd801f7dec4@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[27839]:0x7c1306
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::h42fed9c117de84b9@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[2460]:0x3e7abf
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasm_bindgen_futures::spawn_local::h3dc491f304d42e44@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[10383]:0x649383
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::h15c44db32e5b7614@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[8035]:0x5d42c1
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasm_bindgen::convert::closures::invoke2_mut::hba2fa4cbb261e43e@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[16417]:0x71b436
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.closure2412 externref shim@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[25242]:0x7b0277
+        __wbg_adapter_1039@http://127.0.0.1:54357/suite.js:532:10
+        cb0@http://127.0.0.1:54357/suite.js:3654:28
+        __wbg_get_imports/imports.wbg.__wbg_new_23a2665fac83c611@http://127.0.0.1:54357/suite.js:3659:25
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.__wbg_new_23a2665fac83c611 externref shim@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[27908]:0x7c1a5e
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.js_sys::Promise::new::hf39a358a769dc6ed@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[11612]:0x67c448
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasm_bindgen_futures::future_to_promise::h65257425de8480bc@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[9231]:0x613ead
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasm_bindgen_test::__rt::Context::run::he8da95eeed777e80@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[1217]:0x2d09f1
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasmbindgentestcontext_run@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[8486]:0x5ed534
+        image_lifecycle_browser-a61a4b9177da2a35.wasm.wasmbindgentestcontext_run externref shim@http://127.0.0.1:54357/suite_bg.wasm:wasm-function[28227]:0x7c36f7
+        run@http://127.0.0.1:54357/suite.js:2603:26
+        globalThis.testRun<@debugger eval code line 302 > eval:11:42
+        async*@debugger eval code line 302 > eval:14:11
+        evaluate@debugger eval code:304:16
+        @debugger eval code:1:44
+        @debugger eval code:1:62
+
+failures:
+
+    replacement_removes_snapshot_in_insertion_order_before_backend_and_preserves_throw
+
+test result: FAILED. 5 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.33s
+

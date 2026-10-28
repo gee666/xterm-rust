@@ -47,6 +47,7 @@ impl RenderService {
             viewport_change: Emitter::new(),
             render: Emitter::new(),
             refresh_request: Emitter::new(),
+            before_set_renderer: Rc::default(),
         });
         let browser = Rc::clone(&service.browser);
         let window: Rc<dyn Fn() -> web_sys::Window> = Rc::new(move || browser.window());
