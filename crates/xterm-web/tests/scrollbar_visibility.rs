@@ -47,9 +47,10 @@ impl TimerScheduler for Clock {
     }
 }
 type Controller = VisibilityController<Clock>;
-fn controller(
-    mode: ScrollbarVisibility,
-) -> (Controller, Rc<RefCell<Host>>, Rc<RefCell<Vec<String>>>) {
+type SharedHost = Rc<RefCell<Host>>;
+type ClassWrites = Rc<RefCell<Vec<String>>>;
+type Fixture = (Controller, SharedHost, ClassWrites);
+fn controller(mode: ScrollbarVisibility) -> Fixture {
     let host = Rc::new(RefCell::new(Host::default()));
     let node = Rc::new(RefCell::new(Vec::new()));
     let value = Controller::new(
