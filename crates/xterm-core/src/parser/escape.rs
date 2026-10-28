@@ -85,7 +85,15 @@ impl fmt::Display for ParseError {
         }
     }
 }
-impl Error for ParseError {}
+impl Error for ParseError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        match self {
+            Self::Dispatch(error) => Some(error),
+            Self::Params(error) => Some(error),
+            _ => None,
+        }
+    }
+}
 impl From<DispatchError> for ParseError {
     fn from(value: DispatchError) -> Self {
         Self::Dispatch(value)

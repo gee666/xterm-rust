@@ -127,10 +127,11 @@ fn one_codepoint_chunks_preserve_original_callback_splitting() {
             "PRINT:N"
         ]
     );
-    assert_eq!(pauses.len(), 7);
-    assert!(pauses
-        .iter()
-        .all(|pause| pause.chunk_position == 0 && pause.handler_position == 0));
+    let expected: Vec<_> = BASE_PAUSES
+        .into_iter()
+        .map(|(_, kind, handler)| (0, kind, handler))
+        .collect();
+    assert_pauses(&pauses, &expected);
 }
 
 #[test]
@@ -159,15 +160,7 @@ fn multiple_async_handlers_bubble_suppress_and_dispose_in_all_five_families() {
                 assert!(log.borrow()[index + 1].starts_with(original));
             }
         }
-        let original_pauses = [
-            (6, Csi, 0),
-            (15, Esc, 0),
-            (20, Esc, 0),
-            (27, Csi, 0),
-            (41, Dcs, 0),
-            (54, Osc, 0),
-            (62, Apc, 0),
-        ];
+        let original_pauses = BASE_PAUSES;
         let mut expected = Vec::new();
         for entry in original_pauses {
             if entry.1 == kind && !(kind == Esc && entry.0 == 15) {
@@ -185,7 +178,7 @@ fn multiple_async_handlers_bubble_suppress_and_dispose_in_all_five_families() {
         token.dispose();
         token.dispose();
         log.borrow_mut().clear();
-        assert_eq!(drive(&mut parser, &data(INPUT)).len(), 7);
+        assert_pauses(&drive(&mut parser, &data(INPUT)), &BASE_PAUSES);
         assert_eq!(*log.borrow(), EXPECTED);
         let token = extra(&mut parser, kind, &log, "handled", true, true);
         log.borrow_mut().clear();
@@ -210,7 +203,7 @@ fn multiple_async_handlers_bubble_suppress_and_dispose_in_all_five_families() {
         assert!(!log.borrow().iter().any(|entry| entry.starts_with(original)));
         token.dispose();
         log.borrow_mut().clear();
-        drive(&mut parser, &data(INPUT));
+        assert_pauses(&drive(&mut parser, &data(INPUT)), &BASE_PAUSES);
         assert_eq!(*log.borrow(), EXPECTED);
     }
 }
@@ -227,28 +220,26 @@ fn mixed_sync_async_sgr_handlers_keep_original_order_and_stack_positions() {
             assert!(log.borrow()[index + 2].starts_with("SGR:"));
         }
     }
-    assert_eq!(
-        pauses
-            .iter()
-            .filter(|p| p.kind == HandlerKind::Csi)
-            .map(|p| (p.chunk_position, p.handler_position))
-            .collect::<Vec<_>>(),
-        [(6, 2), (6, 0), (27, 2), (27, 0)]
-    );
+    let expected = |extra_index| {
+        BASE_PAUSES
+            .into_iter()
+            .flat_map(|entry| {
+                if entry.1 == HandlerKind::Csi {
+                    vec![(entry.0, entry.1, extra_index), entry]
+                } else {
+                    vec![entry]
+                }
+            })
+            .collect::<Vec<_>>()
+    };
+    assert_pauses(&pauses, &expected(2));
     sync.dispose();
     log.borrow_mut().clear();
     let pauses = drive(&mut parser, &data(INPUT));
-    assert_eq!(
-        pauses
-            .iter()
-            .filter(|p| p.kind == HandlerKind::Csi)
-            .map(|p| p.handler_position)
-            .collect::<Vec<_>>(),
-        [1, 0, 1, 0]
-    );
+    assert_pauses(&pauses, &expected(1));
     asynchronous.dispose();
     log.borrow_mut().clear();
-    drive(&mut parser, &data(INPUT));
+    assert_pauses(&drive(&mut parser, &data(INPUT)), &BASE_PAUSES);
     assert_eq!(*log.borrow(), EXPECTED);
 }
 

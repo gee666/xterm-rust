@@ -304,3 +304,18 @@ fn synchronous_boundaries_deliver_events_before_later_actions() {
     ));
     assert_eq!(*log.borrow(), ["print"]);
 }
+
+#[test]
+fn callback_error_source_chain_retains_original_host_error() {
+    use std::error::Error;
+    let original: Rc<dyn Error> = Rc::new(std::io::Error::other("host sentinel"));
+    let error = ParseError::Dispatch(DispatchError::Callback(
+        xterm_core::event::EmitError::Callback(Rc::clone(&original)),
+    ));
+    let mut source: &dyn Error = &error;
+    while let Some(next) = source.source() {
+        source = next;
+    }
+    assert!(std::ptr::eq(source, original.as_ref()));
+    assert_eq!(source.to_string(), "host sentinel");
+}

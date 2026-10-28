@@ -21,6 +21,24 @@ use xterm_core::{
 };
 
 pub type Log = Rc<RefCell<Vec<String>>>;
+pub const BASE_PAUSES: [(usize, HandlerKind, usize); 7] = [
+    (6, HandlerKind::Csi, 0),
+    (15, HandlerKind::Esc, 0),
+    (20, HandlerKind::Esc, 0),
+    (27, HandlerKind::Csi, 0),
+    (41, HandlerKind::Dcs, 0),
+    (54, HandlerKind::Osc, 0),
+    (62, HandlerKind::Apc, 0),
+];
+pub fn assert_pauses(actual: &[PauseInfo], expected: &[(usize, HandlerKind, usize)]) {
+    assert_eq!(
+        actual
+            .iter()
+            .map(|p| (p.chunk_position, p.kind, p.handler_position))
+            .collect::<Vec<_>>(),
+        expected
+    );
+}
 pub const INPUT: &str = "\x1b[1;31mhello \x1b%Gwor\x1bEld!\x1b[0m\r\n$>\x1bP1;2axyz\x1b\\\x1b]1;foo=bar\x1b\\\x1b_Xabc\x1b\\FIN";
 pub const EXPECTED: [&str; 14] = [
     "SGR:[1, 31]",

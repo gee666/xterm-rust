@@ -1,0 +1,100 @@
+    Blocking waiting for file lock on build directory
+warning: method `with_queued_parse` is never used
+  --> crates\xterm-core\src\headless\events.rs:67:12
+   |
+33 | impl Events {
+   | ----------- method in this implementation
+...
+67 |     pub fn with_queued_parse<T>(&self, action: impl FnOnce() -> T) -> T {
+   |            ^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `xterm-core` (lib) generated 1 warning
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 9.53s
+     Running tests\escape_async.rs (target\debug\deps\escape_async-69ed69c6931e9d4f.exe)
+
+running 9 tests
+test async_handlers_require_continuation_and_remain_failed_until_reset ... ok
+test awaited_parse_preserves_original_results_and_exact_stack_positions ... ok
+test one_codepoint_chunks_preserve_original_callback_splitting ... ok
+test asynchronous_false_exhaustion_does_not_call_fallback_matching_source ... ok
+test callback_removal_during_reverse_traversal_is_not_silent_success ... ok
+test sync_handlers_keep_sync_mode_and_produce_original_result ... ok
+test reset_during_async_pause_continues_at_next_codepoint_in_same_chunk ... ok
+test mixed_sync_async_sgr_handlers_keep_original_order_and_stack_positions ... ok
+test multiple_async_handlers_bubble_suppress_and_dispose_in_all_five_families ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\escape_differential.rs (target\debug\deps\escape_differential-74573765f8dcb52e.exe)
+
+running 1 test
+test all_states_and_seeded_streams_match_original_snapshots_and_callbacks ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.28s
+
+     Running tests\escape_edges.rs (target\debug\deps\escape_edges-258529f716e667f3.exe)
+
+running 8 tests
+test callback_error_source_chain_retains_original_host_error ... ok
+test fallible_future_rejection_leaves_pause_until_explicit_reset ... ok
+test failed_command_stops_bubbling_and_resumed_errors_retain_saved_frame ... ok
+test unresolved_future_stops_suffix_without_sleep_or_executor ... ok
+test registrar_registers_reentrantly_without_changing_current_reverse_loop ... ok
+test synchronous_boundaries_deliver_events_before_later_actions ... ok
+test checked_callbacks_abort_before_suffix_and_leave_join_state_unchanged ... ok
+test weak_registrar_does_not_create_callback_cycles_and_reports_dropped_parser ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\escape_upstream.rs (target\debug\deps\escape_upstream-ba522daa48f93a45.exe)
+
+running 43 tests
+test basic_handlers::original_error_handler_diagnostic_and_clear ... ok
+test examples::example_00 ... ok
+test examples::example_01 ... ok
+test basic_handlers::original_dcs_apc_raw_streaming_set_clear_handlers ... ok
+test examples::example_02 ... ok
+test basic_handlers::original_print_execute_and_esc_set_clear_handlers ... ok
+test examples::example_05 ... ok
+test examples::example_03 ... ok
+test examples::example_07 ... ok
+test examples::example_04 ... ok
+test examples::example_14 ... ok
+test examples::example_09 ... ok
+test examples::example_10 ... ok
+test examples::example_11 ... ok
+test examples::example_13 ... ok
+test examples::example_08 ... ok
+test examples::example_12 ... ok
+test examples::example_15 ... ok
+test examples::example_16 ... ok
+test examples::example_17 ... ok
+test examples::example_18 ... ok
+test examples::example_20 ... ok
+test examples::example_06 ... ok
+test identifiers::original_identifier_packing_order ... ok
+test examples::example_19 ... ok
+test identifiers::original_identifier_invocations_all_four_families ... ok
+test registrations::original_csi_osc_set_clear_handlers ... ok
+test parameters::original_ignore_entry_from_parameter_and_intermediate ... ok
+test parameters::original_parameter_and_prefix_rules ... ok
+test parameters::original_collect_ranges ... ok
+test identifiers::original_prefix_intermediate_and_final_limits ... ok
+test registrations::original_exact_latest_to_original_order ... ok
+test states::construction_initial_and_reset_states ... ok
+test registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families ... ok
+test strings::original_unicode_coverage_cases ... ok
+test states::original_entry_clear_and_sos_pm_transitions ... ok
+test states::original_esc_dispatch_ranges ... ok
+test parameters::original_csi_dispatch_and_ignore_exit_rules ... ok
+test strings::original_osc_raw_put_and_ignore_expectations_with_real_dispatch ... ok
+test states::original_executable_state_rules_and_ground_printables ... ok
+test states::original_anywhere_cancel_st_and_escape_clear_rules ... ok
+test states::original_ignore_rules ... ok
+test strings::original_dcs_apc_start_put_and_end_rules ... ok
+
+test result: ok. 43 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

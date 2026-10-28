@@ -1,0 +1,92 @@
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\escape_async.rs:127:
+             "PRINT:N"
+         ]
+     );
+[31m-    let expected: Vec<_> = BASE_PAUSES.into_iter().map(|(_,kind,handler)|(0,kind,handler)).collect();
+[0m[31m-    assert_pauses(&pauses,&expected);
+[0m[32m+    let expected: Vec<_> = BASE_PAUSES
+[0m[32m+        .into_iter()
+[0m[32m+        .map(|(_, kind, handler)| (0, kind, handler))
+[0m[32m+        .collect();
+[0m[32m+    assert_pauses(&pauses, &expected);
+[0m }
+ 
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\escape_async.rs:175:
+         token.dispose();
+         token.dispose();
+         log.borrow_mut().clear();
+[31m-        assert_pauses(&drive(&mut parser,&data(INPUT)), &BASE_PAUSES);
+[0m[32m+        assert_pauses(&drive(&mut parser, &data(INPUT)), &BASE_PAUSES);
+[0m         assert_eq!(*log.borrow(), EXPECTED);
+         let token = extra(&mut parser, kind, &log, "handled", true, true);
+         log.borrow_mut().clear();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\escape_async.rs:200:
+         assert!(!log.borrow().iter().any(|entry| entry.starts_with(original)));
+         token.dispose();
+         log.borrow_mut().clear();
+[31m-        assert_pauses(&drive(&mut parser,&data(INPUT)), &BASE_PAUSES);
+[0m[32m+        assert_pauses(&drive(&mut parser, &data(INPUT)), &BASE_PAUSES);
+[0m         assert_eq!(*log.borrow(), EXPECTED);
+     }
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\escape_async.rs:217:
+             assert!(log.borrow()[index + 2].starts_with("SGR:"));
+         }
+     }
+[31m-    let expected = |extra_index| BASE_PAUSES.into_iter().flat_map(|entry| {
+[0m[31m-        if entry.1 == HandlerKind::Csi { vec![(entry.0,entry.1,extra_index),entry] } else { vec![entry] }
+[0m[31m-    }).collect::<Vec<_>>();
+[0m[31m-    assert_pauses(&pauses,&expected(2));
+[0m[32m+    let expected = |extra_index| {
+[0m[32m+        BASE_PAUSES
+[0m[32m+            .into_iter()
+[0m[32m+            .flat_map(|entry| {
+[0m[32m+                if entry.1 == HandlerKind::Csi {
+[0m[32m+                    vec![(entry.0, entry.1, extra_index), entry]
+[0m[32m+                } else {
+[0m[32m+                    vec![entry]
+[0m[32m+                }
+[0m[32m+            })
+[0m[32m+            .collect::<Vec<_>>()
+[0m[32m+    };
+[0m[32m+    assert_pauses(&pauses, &expected(2));
+[0m     sync.dispose();
+     log.borrow_mut().clear();
+     let pauses = drive(&mut parser, &data(INPUT));
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\escape_async.rs:227:
+[31m-    assert_pauses(&pauses,&expected(1));
+[0m[32m+    assert_pauses(&pauses, &expected(1));
+[0m     asynchronous.dispose();
+     log.borrow_mut().clear();
+[31m-    assert_pauses(&drive(&mut parser,&data(INPUT)), &BASE_PAUSES);
+[0m[32m+    assert_pauses(&drive(&mut parser, &data(INPUT)), &BASE_PAUSES);
+[0m     assert_eq!(*log.borrow(), EXPECTED);
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\escape_async_support\mod.rs:22:
+ 
+ pub type Log = Rc<RefCell<Vec<String>>>;
+ pub const BASE_PAUSES: [(usize, HandlerKind, usize); 7] = [
+[31m-    (6,HandlerKind::Csi,0),(15,HandlerKind::Esc,0),(20,HandlerKind::Esc,0),(27,HandlerKind::Csi,0),
+[0m[31m-    (41,HandlerKind::Dcs,0),(54,HandlerKind::Osc,0),(62,HandlerKind::Apc,0),
+[0m[32m+    (6, HandlerKind::Csi, 0),
+[0m[32m+    (15, HandlerKind::Esc, 0),
+[0m[32m+    (20, HandlerKind::Esc, 0),
+[0m[32m+    (27, HandlerKind::Csi, 0),
+[0m[32m+    (41, HandlerKind::Dcs, 0),
+[0m[32m+    (54, HandlerKind::Osc, 0),
+[0m[32m+    (62, HandlerKind::Apc, 0),
+[0m ];
+ pub fn assert_pauses(actual: &[PauseInfo], expected: &[(usize, HandlerKind, usize)]) {
+[31m-    assert_eq!(actual.iter().map(|p|(p.chunk_position,p.kind,p.handler_position)).collect::<Vec<_>>(), expected);
+[0m[32m+    assert_eq!(
+[0m[32m+        actual
+[0m[32m+            .iter()
+[0m[32m+            .map(|p| (p.chunk_position, p.kind, p.handler_position))
+[0m[32m+            .collect::<Vec<_>>(),
+[0m[32m+        expected
+[0m[32m+    );
+[0m }
+ pub const INPUT: &str = "\x1b[1;31mhello \x1b%Gwor\x1bEld!\x1b[0m\r\n$>\x1bP1;2axyz\x1b\\\x1b]1;foo=bar\x1b\\\x1b_Xabc\x1b\\FIN";
+ pub const EXPECTED: [&str; 14] = [
