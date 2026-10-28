@@ -1,0 +1,30 @@
+    Blocking waiting for file lock on build directory
+warning: unused `Result` that must be used
+   --> crates\xterm-core\src\headless\terminal.rs:218:9
+    |
+218 | /         self.engine
+219 | |             .try_borrow_mut()
+220 | |             .map_err(|_| HeadlessError::Borrowed)?
+221 | |             .dispose();
+    | |______________________^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+    = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+    |
+218 |         let _ = self.engine
+    |         +++++++
+
+warning: `xterm-core` (lib) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 0.19s
+     Running tests\sgr.rs (target\debug\deps\sgr-bc31ac11eff89014.exe)
+
+running 5 tests
+test flag_set_reset_and_kitty_controls_preserve_other_bits ... ok
+test reset_clones_extended_drops_payload_and_preserves_url_and_variant ... ok
+test underline_color_clone_and_packed_flag_quirks_are_preserved ... ok
+test palette_and_rgb_transitions_retain_flags_and_protection ... ok
+test unchanged_source_assertion_states_and_seeded_corpus ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
