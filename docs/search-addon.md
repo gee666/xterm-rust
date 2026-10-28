@@ -1,6 +1,6 @@
 # Search addon integration in progress
 
-Task #59 owns `crates/xterm-addons/src/search/`, `crates/xterm-web/src/search_host.rs`, `crates/xterm-web/src/search_addon/` and the delegated `terminal/selection_api.rs`. Full equivalence is NOT PROVEN. Source files and test cases written during the disk pause are not executed evidence.
+Task #59 owns `crates/xterm-addons/src/search/`, `crates/xterm-web/src/search_host.rs`, `crates/xterm-web/src/search_addon/` and the delegated `terminal/selection_api.rs`. Full equivalence is NOT PROVEN. The 25 native search integration tests passed in `swarm/Jeremiah`; browser verification is still pending.
 
 ## Implemented source contracts
 
@@ -28,7 +28,7 @@ Highlight limits deliberately distinguish comparison from Array.slice conversion
 
 Native `xterm-web/tests/search_addon.rs` and its support/case modules exercise real parser-written buffers, SelectionService and DecorationService with a virtual clock. They cover the two original decoration assertions, result indices/event order, clearing without invented selection changes, active style behavior, numeric limits, option mutation, reentrant disposal/error identity, cache TTL/invalidation and 200ms debounce cancellation. Native element objects are deliberate style unit-test adapters, not browser rendering proof.
 
-The browser binding and delegated public selection methods have not yet run after the disk pause. Public selection numbers outside i64 and negative zero remain explicitly tracked by criterion #420. Non-string truthy search terms currently have an explicit binding restriction rather than full original dynamic-value behavior. General accessor-backed matching options still need precise property-read/exception-order tests; provider snapshots must not be mistaken for proof of every JavaScript getter path. These are implementation gaps, not external blockers.
+The browser binding and delegated public selection methods have not yet run. A clean committed-base WASM build currently fails in other browser modules; the producer owners are integrating those fixes. Public selection numbers outside i64 and negative zero remain explicitly tracked by criterion #420. Non-string truthy search terms currently have an explicit binding restriction rather than full original dynamic-value behavior. General accessor-backed matching options still need precise property-read/exception-order tests; provider snapshots must not be mistaken for proof of every JavaScript getter path. These are implementation gaps, not external blockers.
 
 Actual DOM decoration creation/onRender and overview drawing belong to Isaac's task #193 under browser rendering. Search requires that renderer to deliver real HtmlElement objects through Decoration::fire_render. The source's 81 three-browser search cases passed against JavaScript, as reported by task #44, but have not yet passed against the Rust binding. No source-JavaScript engine is used as a Rust fallback. Original SearchEngine/Cache assertions and the reopened ring correction are tracked separately in `docs/search.md`.
 

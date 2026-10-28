@@ -14,6 +14,8 @@ use xterm_core::{
     search::{SearchPosition, SearchResult, SearchSelection},
 };
 
+#[path = "search_cases/cache_queries.rs"]
+mod cache_queries;
 #[path = "search_cases/clocks.rs"]
 mod clocks;
 #[path = "search_cases/decorations.rs"]
