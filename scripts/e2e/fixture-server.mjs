@@ -13,7 +13,7 @@ const sourceData = new Set(['.ttf', '.otf', '.woff', '.woff2', '.png', '.jpg', '
 export function rustFixtureHtml(original) {
   const bundle = /<script\s+src="\/dist\/client-bundle\.js"\s+defer><\/script>/g;
   if ([...original.matchAll(bundle)].length !== 1) throw new Error('Expected the original test fixture engine script exactly once');
-  return original.replace(bundle, '<script type="module" src="/rust-test-page.mjs"></script>');
+  return original.replace(bundle, '<script src="/rust-test-page.js" defer></script>');
 }
 
 function inside(root, file) {
@@ -26,8 +26,10 @@ async function fromDirectory(root, name) {
   return { file, bytes: await readFile(file) };
 }
 
-export async function startFixtureServer({ root, packageRoot, referenceRoot = join(root, 'source_repo'), timeoutMs = 120000 }) {
+export async function startFixtureServer({ root, packageRoot, bootstrapFile, referenceRoot = join(root, 'source_repo'), timeoutMs = 120000 }) {
   if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1) throw new Error('A bounded server lifetime is required');
+  if (typeof bootstrapFile !== 'string') throw new Error('A compiled Rust bootstrap file is required');
+  await readFile(bootstrapFile);
   const reference = await realpath(referenceRoot);
   const browser = await realpath(join(root, 'browser'));
   const pkg = await realpath(packageRoot);
@@ -35,7 +37,7 @@ export async function startFixtureServer({ root, packageRoot, referenceRoot = jo
   const files = new Map([
     ['/xterm.mjs', join(browser, 'xterm.mjs')],
     ['/xterm.css', join(root, 'crates/xterm-web/assets/xterm.css')],
-    ['/rust-test-page.mjs', join(root, 'scripts/e2e/test-page.mjs')]
+    ['/rust-test-page.js', bootstrapFile]
   ]);
   const requests = [];
   const failures = [];

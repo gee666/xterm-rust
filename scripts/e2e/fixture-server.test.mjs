@@ -13,7 +13,7 @@ async function fixture(callback) {
   const files = { 'reference/demo/test.html': original, 'reference/demo/fonts/demo.ttf': 'font',
     'reference/addons/addon-image/fixture/image.png': 'image',
     'browser/xterm.mjs': 'export class Terminal {}', 'browser/demo/app.mjs': 'demo',
-    'crates/xterm-web/assets/xterm.css': '.xterm{}', 'scripts/e2e/test-page.mjs': 'rust-only',
+    'crates/xterm-web/assets/xterm.css': '.xterm{}', 'tmp/rust-test-page.js': 'rust-only',
     'pkg/xterm_web.js': 'Rust binding', 'pkg/xterm_web_bg.wasm': 'wasm', 'private.txt': 'not public' };
   for (const [name, text] of Object.entries(files)) {
     const file = join(directory, name);
@@ -22,13 +22,13 @@ async function fixture(callback) {
   let server;
   try {
     server = await startFixtureServer({ root: directory, packageRoot: join(directory, 'pkg'),
-      referenceRoot: join(directory, 'reference'), timeoutMs: 10000 });
+      referenceRoot: join(directory, 'reference'), bootstrapFile: join(directory, 'tmp/rust-test-page.js'), timeoutMs: 10000 });
     await callback({ directory, server });
   } finally { if (server) await server.close(); await rm(directory, { recursive: true, force: true }); }
 }
 
 test('changes only the original fixture engine script', () => {
-  const replacement = '<script type="module" src="/rust-test-page.mjs"></script>';
+  const replacement = '<script src="/rust-test-page.js" defer></script>';
   assert.equal(rustFixtureHtml(original), original.replace('<script src="/dist/client-bundle.js" defer></script>', replacement));
   assert.throws(() => rustFixtureHtml('<html></html>'), /exactly once/);
   assert.throws(() => rustFixtureHtml(original + original), /exactly once/);
@@ -36,7 +36,7 @@ test('changes only the original fixture engine script', () => {
 test('serves Rust module, binary, canonical CSS, fonts and original image data', async () => fixture(async ({ server }) => {
   for (const [route, body, type] of [
     ['/pkg/xterm_web_bg.wasm', 'wasm', 'application/wasm'], ['/xterm.mjs', 'export class Terminal {}', 'text/javascript'],
-    ['/xterm.css', '.xterm{}', 'text/css'], ['/fonts/demo.ttf', 'font', 'font/ttf'],
+    ['/xterm.css', '.xterm{}', 'text/css'], ['/rust-test-page.js', 'rust-only', 'text/javascript'], ['/fonts/demo.ttf', 'font', 'font/ttf'],
     ['/addons/addon-image/fixture/image.png', 'image', 'image/png']
   ]) {
     const response = await fetch(server.origin + route);
