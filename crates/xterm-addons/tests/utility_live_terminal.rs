@@ -103,6 +103,37 @@ fn clipboard_real_osc_parser_chunk_boundaries_replies_and_disposal() {
         assert!(replies(&mut engine.borrow_mut()).is_empty());
     }
 }
+#[path = "support/utility_view.rs"]
+mod view;
+#[test]
+fn socket_view_reads_later_mutations_after_a_parser_pause() {
+    let engine = Rc::new(RefCell::new(CoreTerminal::new(80, 24, 2000).unwrap()));
+    let adapter = Rc::new(NativeUtilityTerminal::new(engine.clone()));
+    let provider = Rc::new(Provider {
+        value: RefCell::new(Vec::new()),
+        asynchronous: true,
+    });
+    let addon = ClipboardAddon::new(provider, None);
+    addon.activate(adapter.clone());
+    let limit = xterm_core::terminal::MAX_PARSE_BUFFER_LENGTH;
+    let mut bytes = vec![b'A'; limit + 1];
+    let query = b"\x1b]52;c;?\x07";
+    bytes[..query.len()].copy_from_slice(query);
+    let data = Rc::new(view::MutableView(RefCell::new(bytes)));
+    let error = adapter
+        .write(SocketMessage::View(data.clone()))
+        .unwrap_err();
+    assert!(
+        matches!(error,xterm_addons::attach::AttachError::Host(cause) if matches!(cause.downcast_ref::<TerminalError>(),Some(TerminalError::Pending)))
+    );
+    data.0.borrow_mut()[limit] = b'B';
+    settle(&engine);
+    let last = engine.borrow().state().active_buffer();
+    let buffer = last.borrow();
+    let line = buffer.lines.get(buffer.ybase + buffer.y).unwrap();
+    let output = line.borrow().translate_to_string(true, None, None, None);
+    assert_eq!(output.last(), Some(&u16::from(b'B')));
+}
 struct NoWake;
 impl Wake for NoWake {
     fn wake(self: Arc<Self>) {}

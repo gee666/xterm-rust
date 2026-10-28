@@ -47,6 +47,17 @@ impl AttachSocket for BrowserSocket {
             SocketMessage::Binary(bytes) => {
                 args.push(&Uint8Array::from(bytes.as_slice()));
             }
+            view @ SocketMessage::View(_) => {
+                let source = view.into_parse_source()?;
+                match source.read_all().map_err(AttachError::host)? {
+                    xterm_core::input::parse_source::ParseChunk::Text(text) => {
+                        args.push(&to_js_string(&text));
+                    }
+                    xterm_core::input::parse_source::ParseChunk::Bytes(bytes) => {
+                        args.push(&Uint8Array::from(bytes.as_ref()));
+                    }
+                }
+            }
         }
         js_property::call(self.0.as_ref(), "send", &args).map_err(error)?;
         Ok(())
@@ -65,11 +76,13 @@ impl AttachSocket for BrowserSocket {
         let listener = Closure::wrap(Box::new(move |value: Event| -> Result<(), JsValue> {
             let payload = if event == SocketEvent::Message {
                 // Source uses property access, not same-realm instanceof.
-                let data=js_property::get(value.as_ref(),"data")?;
+                let data = js_property::get(value.as_ref(), "data")?;
                 Some(if let Some(text) = data.dyn_ref::<JsString>() {
                     SocketMessage::Text(from_js_string(text))
                 } else {
-                    SocketMessage::Binary(js_property::bytes(&data)?.to_vec())
+                    SocketMessage::View(crate::terminal::byte_view_payload(js_property::bytes(
+                        &data,
+                    )?))
                 })
             } else {
                 None

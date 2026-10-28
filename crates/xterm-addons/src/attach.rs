@@ -7,7 +7,13 @@
 use std::cell::RefCell;
 use std::fmt;
 use std::rc::Rc;
-use xterm_core::lifecycle::{Disposable, DisposableHandle};
+use xterm_core::{
+    input::{
+        parse_source::{OwnedParseInput, ParseInputSource},
+        write_buffer::WritePayload,
+    },
+    lifecycle::{Disposable, DisposableHandle},
+};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum SocketState {
@@ -18,10 +24,34 @@ pub enum SocketState {
     Unknown,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug)]
 pub enum SocketMessage {
     Text(Vec<u16>),
     Binary(Vec<u8>),
+    /// A retained mutable host view, read by the parser only when consumed.
+    View(Rc<dyn WritePayload>),
+}
+impl PartialEq for SocketMessage {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Self::Text(a), Self::Text(b)) => a == b,
+            (Self::Binary(a), Self::Binary(b)) => a == b,
+            (Self::View(a), Self::View(b)) => Rc::ptr_eq(a, b),
+            _ => false,
+        }
+    }
+}
+impl Eq for SocketMessage {}
+impl SocketMessage {
+    pub fn into_parse_source(self) -> Result<Rc<dyn ParseInputSource>, AttachError> {
+        match self {
+            Self::Text(data) => Ok(Rc::new(OwnedParseInput::Text(data))),
+            Self::Binary(data) => Ok(Rc::new(OwnedParseInput::Bytes(data))),
+            Self::View(data) => data
+                .into_parse_source()
+                .ok_or_else(|| AttachError::Adapter("socket view has no parser source".into())),
+        }
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
