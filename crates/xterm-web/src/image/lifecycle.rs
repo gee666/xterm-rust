@@ -54,14 +54,15 @@ impl State {
                     };
                     state.renderer.remove_layer(layer)?;
                 }
-            }
-            Ok(
-                if weak.upgrade().is_some_and(|state| state.delegates.get()) {
+                return Ok(if state.delegates.get() {
                     RendererChangeAction::Continue
                 } else {
                     RendererChangeAction::Stop
-                },
-            )
+                });
+            }
+            // A snapshot can outlive its unsubscribed native owner. It must
+            // not leave an empty wrapper that blocks the live render service.
+            Ok(RendererChangeAction::Continue)
         });
         *self.renderer_hook.borrow_mut() = Some(hook);
     }
@@ -90,6 +91,9 @@ impl State {
             hook.dispose();
         }
         self.service.borrow_mut().take();
+        // Removal callbacks may have inserted a new layer. Source clears the
+        // map after restoring hooks, without removing that new canvas again.
+        self.renderer.layers.clear();
         self.renderer.clear_placeholder()
     }
 }
@@ -163,5 +167,13 @@ impl Drop for ImageRendererLifecycle {
             // A destructor cannot return a JS exception. Explicit dispose does.
             web_sys::console::error_1(&error);
         }
+        // Explicit failed disposal retains its source partial state while the
+        // owner is alive. Destruction must still detach native subscriptions,
+        // without retrying a throwing browser cleanup operation.
+        let hook = self.state.renderer_hook.borrow_mut().take();
+        if let Some(hook) = hook {
+            hook.dispose();
+        }
+        self.state.service.borrow_mut().take();
     }
 }

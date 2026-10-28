@@ -1,0 +1,51 @@
+{
+  "commit": "ebe43cc",
+  "cases": [
+    "Bottom canvas remove reenters insert_layer(Top) during disposal",
+    "Top remove throws during explicit dispose; drop Rust lifecycle; restore remove; set_renderer"
+  ],
+  "results": [
+    {
+      "browser": "chromium",
+      "version": "148.0.7778.96",
+      "rust": {
+        "reinserted_layer_after_dispose": true,
+        "explicit_dispose_failed": true,
+        "backend_calls_after_drop": 0
+      },
+      "source": {
+        "reinserted_layer_after_dispose": false,
+        "explicit_dispose_failed": true,
+        "backend_calls_after_drop": 1
+      }
+    },
+    {
+      "browser": "firefox",
+      "version": "150.0.2",
+      "rust": {
+        "reinserted_layer_after_dispose": true,
+        "explicit_dispose_failed": true,
+        "backend_calls_after_drop": 0
+      },
+      "source": {
+        "reinserted_layer_after_dispose": false,
+        "explicit_dispose_failed": true,
+        "backend_calls_after_drop": 1
+      }
+    },
+    {
+      "browser": "webkit",
+      "version": "26.4",
+      "rust": {
+        "reinserted_layer_after_dispose": true,
+        "explicit_dispose_failed": true,
+        "backend_calls_after_drop": 0
+      },
+      "source": {
+        "reinserted_layer_after_dispose": false,
+        "explicit_dispose_failed": true,
+        "backend_calls_after_drop": 1
+      }
+    }
+  ]
+}
