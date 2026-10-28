@@ -69,7 +69,7 @@ impl PrintRun {
             let fill = active
                 .try_borrow()
                 .map_err(|_| TerminalError::Borrowed)?
-                .get_null_cell(Some(&attrs));
+                .get_null_cell_snapshot(Some(&attrs));
             let mut row = self
                 .row
                 .try_borrow_mut()

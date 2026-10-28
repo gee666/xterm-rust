@@ -43,8 +43,8 @@ fn scratch_cells_share_extended_attributes_but_default_resets_them() {
         ..AttributeData::default()
     };
     attr.extended.set_url_id(789);
-    let null = buffer.get_null_cell(Some(&attr));
-    let space = buffer.get_whitespace_cell(Some(&attr));
+    let null = buffer.get_null_cell_snapshot(Some(&attr));
+    let space = buffer.get_whitespace_cell_snapshot(Some(&attr));
     assert_eq!(null.get_code(), Some(0));
     assert_eq!(space.get_code(), Some(32));
     assert!(null.attributes.extended.same_identity(&attr.extended));
@@ -52,7 +52,10 @@ fn scratch_cells_share_extended_attributes_but_default_resets_them() {
     attr.extended.set_url_id(33);
     assert_eq!(null.attributes.extended.url_id(), 33);
     assert_eq!(space.attributes.extended.url_id(), 33);
-    for cell in [buffer.get_null_cell(None), buffer.get_whitespace_cell(None)] {
+    for cell in [
+        buffer.get_null_cell_snapshot(None),
+        buffer.get_whitespace_cell_snapshot(None),
+    ] {
         assert_eq!(
             (
                 cell.attributes.fg,

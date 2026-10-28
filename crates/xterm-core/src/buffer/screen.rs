@@ -1,6 +1,6 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
 //! Terminal buffer state. Row references preserve JavaScript line identity.
-use super::{cleanup_owner::CleanupOwnerSlot, AttributeData, BufferLine, CellData};
+use super::{cleanup_owner::CleanupOwnerSlot, AttributeData, BufferLine, CellData, ScratchCell};
 use crate::{
     charset::Charset,
     circular_list::{CircularList, CircularListError},
@@ -144,6 +144,8 @@ pub struct Buffer {
     pub(crate) cleanup_events: Rc<Emitter<bool>>,
     pub(crate) cleanup_attached: Rc<Cell<bool>>,
     cleanup_owner: Rc<CleanupOwnerSlot>,
+    null_cell: ScratchCell,
+    whitespace_cell: ScratchCell,
 }
 impl Buffer {
     pub fn new(
@@ -185,6 +187,14 @@ impl Buffer {
             cleanup_events: Rc::new(Emitter::new()),
             cleanup_attached: Rc::new(Cell::new(false)),
             cleanup_owner: Rc::new(CleanupOwnerSlot::default()),
+            null_cell: ScratchCell::new(
+                super::constants::NULL_CELL_CODE,
+                super::constants::NULL_CELL_WIDTH,
+            ),
+            whitespace_cell: ScratchCell::new(
+                super::constants::WHITESPACE_CELL_CODE,
+                super::constants::WHITESPACE_CELL_WIDTH,
+            ),
         };
         buffer
             .lines
@@ -215,28 +225,26 @@ impl Buffer {
             .checked_add(self.y)
             .is_some_and(|absolute| absolute >= self.ydisp && absolute - self.ydisp < self.rows)
     }
-    /// Owned scratch-cell result replaces JS's reused mutable object. Extended attributes still share identity.
-    pub fn get_null_cell(&self, attr: Option<&AttributeData>) -> CellData {
-        self.scratch_cell(attr, 0, 1)
+    /// Calls reuse one mutable object; previous handles observe attribute updates.
+    pub fn get_null_cell(&self, attr: Option<&AttributeData>) -> ScratchCell {
+        self.null_cell.configure(attr);
+        self.null_cell.clone()
     }
-    pub fn get_whitespace_cell(&self, attr: Option<&AttributeData>) -> CellData {
-        self.scratch_cell(attr, 32, 1)
+    pub fn get_whitespace_cell(&self, attr: Option<&AttributeData>) -> ScratchCell {
+        self.whitespace_cell.configure(attr);
+        self.whitespace_cell.clone()
     }
-    fn scratch_cell(&self, attr: Option<&AttributeData>, cp: u32, width: u32) -> CellData {
-        CellData {
-            content: cp | (width << super::constants::content::WIDTH_SHIFT),
-            attributes: attr.map_or_else(AttributeData::default, |a| AttributeData {
-                fg: a.fg,
-                bg: a.bg,
-                extended: a.extended.share(),
-            }),
-            combined_data: Vec::new(),
-        }
+    /// Owned convenience copy, distinct from the aliased source object.
+    pub fn get_null_cell_snapshot(&self, attr: Option<&AttributeData>) -> CellData {
+        self.get_null_cell(attr).snapshot()
+    }
+    pub fn get_whitespace_cell_snapshot(&self, attr: Option<&AttributeData>) -> CellData {
+        self.get_whitespace_cell(attr).snapshot()
     }
     pub fn get_blank_line(&self, attr: &AttributeData, is_wrapped: bool) -> LineRef {
         Rc::new(RefCell::new(BufferLine::new(
             self.host_dimensions.cols.get(),
-            Some(&self.get_null_cell(Some(attr))),
+            Some(&self.get_null_cell(Some(attr)).snapshot()),
             is_wrapped,
         )))
     }

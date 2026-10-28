@@ -238,7 +238,7 @@ fn sparse_replacement_then_smaller() {
         let count = h.buffer.borrow().lines.len();
         for i in 0..count {
             let line = h.buffer.borrow().lines.get(i).unwrap();
-            let null = h.buffer.borrow().get_null_cell(None);
+            let null = h.buffer.borrow().get_null_cell_snapshot(None);
             line.borrow_mut().resize(10, &null);
             h.letters(i, "abcdefghij");
         }

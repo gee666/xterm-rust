@@ -285,16 +285,16 @@ fn scratch_cells_preserve_width_code_and_clear_unspecified_attributes() {
         bg: 456,
         ..Default::default()
     };
-    let null = buffer.get_null_cell(Some(&attrs));
+    let null = buffer.get_null_cell_snapshot(Some(&attrs));
     assert_eq!(
         (null.get_code(), null.get_width(), null.fg, null.bg),
         (Some(0), 1, 123, 456)
     );
-    let space = buffer.get_whitespace_cell(Some(&attrs));
+    let space = buffer.get_whitespace_cell_snapshot(Some(&attrs));
     assert_eq!(
         (space.get_code(), space.get_width(), space.fg, space.bg),
         (Some(32), 1, 123, 456)
     );
-    let null = buffer.get_null_cell(None);
+    let null = buffer.get_null_cell_snapshot(None);
     assert_eq!((null.fg, null.bg), (0, 0));
 }

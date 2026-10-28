@@ -24,7 +24,7 @@ impl TerminalState {
         let active = self.active_buffer();
         let b = active.try_borrow().map_err(|_| TerminalError::Borrowed)?;
         if let Some(line) = b.lines.get(b.ybase + b.y) {
-            let fill = b.get_null_cell(Some(&self.erase_attributes()));
+            let fill = b.get_null_cell_snapshot(Some(&self.erase_attributes()));
             let mut line = line.try_borrow_mut().map_err(|_| TerminalError::Borrowed)?;
             if insert {
                 line.insert_cells(b.x, count(params)?, &fill);
@@ -119,7 +119,7 @@ impl TerminalState {
         let position = if command.starts_with(' ') { 0 } else { b.x };
         let insert = matches!(command, " A" | "'}");
         let amount = count(params)?;
-        let fill = b.get_null_cell(Some(&self.erase_attributes()));
+        let fill = b.get_null_cell_snapshot(Some(&self.erase_attributes()));
         for y in b.scroll_top..=b.scroll_bottom {
             let line = b.lines.get(b.ybase + y).ok_or(TerminalError::MissingLine)?;
             let mut line = line.try_borrow_mut().map_err(|_| TerminalError::Borrowed)?;

@@ -11,6 +11,8 @@ pub mod marker_line;
 pub mod range;
 pub mod reflow;
 pub mod screen;
+mod scratch_cell;
+pub use scratch_cell::ScratchCell;
 pub use cleanup::BufferCleanup;
 pub mod buffer_set;
 pub mod service;

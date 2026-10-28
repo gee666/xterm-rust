@@ -201,7 +201,7 @@ fn idle_cleanup_realigns_retained_storage_after_shrink() {
     let mut buffer = buffer(1000);
     buffer.fill_viewport_rows(None).unwrap();
     buffer.resize(39, 24).unwrap();
-    let null = buffer.get_null_cell(None);
+    let null = buffer.get_null_cell_snapshot(None);
     for y in 0..24 {
         let line = buffer.lines.get(y).unwrap();
         assert_eq!(line.borrow().len(), 39);

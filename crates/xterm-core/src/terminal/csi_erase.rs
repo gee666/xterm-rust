@@ -41,7 +41,7 @@ impl TerminalState {
         let Some(line) = b.lines.get(b.ybase + y) else {
             return Ok(());
         };
-        let fill = b.get_null_cell(Some(&self.erase_attributes()));
+        let fill = b.get_null_cell_snapshot(Some(&self.erase_attributes()));
         drop(b);
         let mut line = line.try_borrow_mut().map_err(|_| TerminalError::Borrowed)?;
         line.replace_cells(start, end, &fill, selective);
@@ -58,7 +58,7 @@ impl TerminalState {
         let Some(line) = b.lines.get(row) else {
             return Ok(());
         };
-        let fill = b.get_null_cell(Some(&self.erase_attributes()));
+        let fill = b.get_null_cell_snapshot(Some(&self.erase_attributes()));
         drop(b);
         line.try_borrow_mut()
             .map_err(|_| TerminalError::Borrowed)?

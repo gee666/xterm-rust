@@ -132,7 +132,7 @@ impl Buffer {
                 if let Some(&length) = lengths.get(index).filter(|&&length| length < cols) {
                     line.try_borrow_mut()
                         .map_err(|_| BufferError::BorrowedLine)?
-                        .set_cell(length, &null);
+                        .set_cell(length, &null.snapshot());
                 }
             }
             for _ in 0..lines_to_add.saturating_sub(trimmed) {
@@ -195,7 +195,7 @@ impl SmallerPlan {
         // A prior observer may have installed a sparse list. The source keeps
         // those undefined slots through layout and dispatches before later cell
         // access fails, so rejecting a hole here would change partial state.
-        let original:Vec<_> = (0..lines.len()).map(|index|lines.get(index)).collect();
+        let original: Vec<_> = (0..lines.len()).map(|index| lines.get(index)).collect();
         let original_length = original.len();
         let expanded = original_length
             .checked_add(count)

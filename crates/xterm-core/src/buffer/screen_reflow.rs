@@ -30,7 +30,7 @@ pub(super) fn reflow(
         old,
         cols,
         absolute,
-        &null,
+        &null.snapshot(),
         cursor_line,
     )?;
     if remove.is_empty() {
@@ -40,6 +40,7 @@ pub(super) fn reflow(
     // again afterward. A callback may replace the buffer's list synchronously.
     let layout = reflow_larger_create_new_layout(&target.lines()?, &remove)?;
     reflow_larger_apply_new_layout(&target.lines()?, &layout.layout)?;
+    let null = target.read(|b| b.get_null_cell(Some(&AttributeData::default())))?;
     for _ in 0..layout.count_removed {
         let append = target.update(|b| {
             if b.ybase == 0 {
@@ -56,7 +57,7 @@ pub(super) fn reflow(
         if append {
             target.lines()?.push(Rc::new(RefCell::new(BufferLine::new(
                 cols,
-                Some(&null),
+                Some(&null.snapshot()),
                 false,
             ))))?;
         }

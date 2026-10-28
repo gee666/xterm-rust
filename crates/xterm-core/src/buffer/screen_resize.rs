@@ -1,7 +1,7 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
 use super::{Buffer, BufferError, LineRef};
 use crate::{
-    buffer::{AttributeData, BufferLine, CellData},
+    buffer::{AttributeData, BufferLine, ScratchCell},
     circular_list::CircularList,
 };
 use std::{cell::RefCell, rc::Rc};
@@ -152,7 +152,7 @@ fn resize_target(target: &ResizeTarget<'_>, cols: usize, rows: usize) -> Result<
 fn resize_lines(
     target: &ResizeTarget<'_>,
     cols: usize,
-    null: &CellData,
+    null: &ScratchCell,
 ) -> Result<usize, BufferError> {
     let mut dirty = 0;
     for index in 0..target.lines()?.len() {
@@ -160,7 +160,7 @@ fn resize_lines(
         dirty += usize::from(
             line.try_borrow_mut()
                 .map_err(|_| BufferError::BorrowedLine)?
-                .resize(cols, null),
+                .resize(cols, &null.snapshot()),
         );
     }
     Ok(dirty)
@@ -170,7 +170,7 @@ fn grow_rows(
     old_rows: usize,
     cols: usize,
     rows: usize,
-    null: &CellData,
+    null: &ScratchCell,
 ) -> Result<usize, BufferError> {
     let mut add = 0;
     for _ in old_rows..rows {
@@ -183,7 +183,7 @@ fn grow_rows(
         let reveal = if configured {
             false
         } else {
-            target.read(|b| -> Result<bool,BufferError> {
+            target.read(|b| -> Result<bool, BufferError> {
                 if b.ybase == 0 {
                     return Ok(false);
                 }
@@ -206,7 +206,7 @@ fn grow_rows(
         } else {
             target.lines()?.push(Rc::new(RefCell::new(BufferLine::new(
                 cols,
-                Some(null),
+                Some(&null.snapshot()),
                 false,
             ))))?;
         }
