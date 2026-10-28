@@ -42,8 +42,20 @@ impl KeyboardReadHost for Host {
 }
 
 impl InputHost for Host {
-    fn options(&self) -> Result<InputOptions, JsValue> {
-        Ok(self.options.get())
+    fn bracketed_paste(&self) -> Result<bool, JsValue> {
+        Ok(self.options.get().bracketed_paste)
+    }
+    fn ignore_bracketed_paste(&self) -> Result<bool, JsValue> {
+        Ok(self.options.get().ignore_bracketed_paste)
+    }
+    fn right_click_selects_word(&self) -> Result<bool, JsValue> {
+        Ok(self.options.get().right_click_selects_word)
+    }
+    fn is_firefox(&self) -> Result<bool, JsValue> {
+        Ok(self.options.get().is_firefox)
+    }
+    fn is_linux(&self) -> Result<bool, JsValue> {
+        Ok(self.options.get().is_linux)
     }
     fn custom_key_handler(&self, event: &KeyboardEvent) -> Result<bool, JsValue> {
         let callback = self.custom_key.borrow().clone();
