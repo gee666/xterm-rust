@@ -1,6 +1,6 @@
 # Scrollbar helper verification
 
-Task165 covers `crates/xterm-web/src/scroll/{scrollbar_state,visibility,fast_dom_node,browser_visibility,widget}.rs`. These are helper components, not proof of full terminal scrolling equivalence. Overall port equivalence remains NOT PROVEN. Raw JavaScript positions remain task215; Element integration is167, oriented scrollbars/Arrow/pointer capture are166, and Viewport integration is71/239/251.
+Task 165 covers `crates/xterm-web/src/scroll/{scrollbar_state,visibility,fast_dom_node,browser_visibility,widget}.rs`. These are helper components, not proof of full terminal scrolling equivalence. Overall port equivalence remains NOT PROVEN. Raw JavaScript positions remain task215; Element integration is167, oriented scrollbars/Arrow/pointer capture are166, and Viewport integration is71/239/251.
 
 ## Contracts and mapping
 
@@ -15,7 +15,7 @@ There are no dedicated upstream `*.test.ts` files for these helpers in the suppl
 
 ### Geometry
 
-`ScrollbarState` follows the six-number constructor and snake_case setters/getters. Constructor visible/scroll/position values are not eagerly rounded. Scrollbar/opposite/arrow sizes use JavaScript Math.round, including negative zero and ties toward positive infinity. NaN propagates rather than following Rust's NaN-eliding `f64::max`. The source minimum slider size is20 even when it exceeds the available track and creates a negative ratio.
+`ScrollbarState` follows the six-number constructor and snake_case setters/getters. Constructor visible/scroll/position values are not eagerly rounded. Scrollbar/opposite/arrow sizes use JavaScript Math.round, including negative zero and ties toward positive infinity. NaN propagates rather than following Rust's NaN-eliding `f64::max`. The source minimum slider size is 20 even when it exceeds the available track and creates a negative ratio.
 
 `set_opposite_scrollbar_size` and `set_scrollbar_size` do not refresh computed values. Clone reconstructs and recomputes. Desired offsets/deltas/pages are not clamped here; Scrollable owns clamping. Native tests compare all exposed geometry, setter return values, clones and desired-position methods against source-generated bit patterns.
 
@@ -47,14 +47,20 @@ WASM_TEST=wasm_visibility_differential node scripts/browser-host-check.mjs
 cargo clippy --locked -p xterm-web --target wasm32-unknown-unknown --test scrollbar_helpers_browser --test wasm_fast_dom_differential --test wasm_widget_differential --test wasm_visibility_differential -- -D warnings
 ```
 
-Repeat the two native test commands with `--release`. For an isolated worktree without local Node dependencies, set `ESBUILD_MODULE` to an installed esbuild package and `PLAYWRIGHT_MODULE` to Playwright's `index.mjs`. `CARGO` and `WASM_BINDGEN` can select tool executables. wasm-bindgen CLI must match the locked0.2.100 runtime. Browsers are Chromium, Firefox and WebKit by default. Servers close in finally blocks.
+Repeat the two native test commands with `--release`. For an isolated worktree without local Node dependencies, set `ESBUILD_MODULE` to an installed esbuild package and `PLAYWRIGHT_MODULE` to Playwright's `index.mjs`. `CARGO` and `WASM_BINDGEN` can select tool executables. wasm-bindgen CLI must match the locked 0.2.100 runtime. Browsers are Chromium, Firefox and WebKit by default. Servers close in finally blocks.
 
 ## Observed results and limits
 
-`results/scrollbar-helpers/verification.json` records this run and links its raw reports/logs. Native debug/release helper suites each pass11 tests; the geometry generator matches1,024 snapshots. The existing browser suite passes7 tests per engine. The shared suites pass8 FastDom,4 Widget and5 visibility cases per engine, with identical fixtures passing against unchanged source. Native web all-targets/all-features passes301 tests.
+`results/scrollbar-helpers/verification.json` records this run and links its raw reports/logs. Native debug/release helper suites each pass 11 tests; the geometry generator matches 1,024 snapshots. The existing browser suite passes 7 tests per engine. The shared suites pass 8 FastDom, 4 Widget and 5 visibility cases per engine, with identical fixtures passing against unchanged source. Native web all-targets/all-features passes 301 tests.
 
-The full workspace gates did not pass on the Ashleyccc2e83 base. Workspace tests fail the unrelated `core_services_integration.rs:188` callback-state assertion. Workspace Clippy fails `public_cell_numbers.rs:69` for `field_reassign_with_default`. `cargo fmt --all -- --check` fails with Windows OS206, command-line length; direct checks of the owned helper/test files pass. These failures are retained, not waived or suppressed. No Linux/macOS runtime result is claimed here.
+The full workspace gates did not pass on the Ashley ccc2e83 base. Workspace tests fail the unrelated `core_services_integration.rs:188` callback-state assertion. Workspace Clippy fails `public_cell_numbers.rs:69` for `field_reassign_with_default`. `cargo fmt --all -- --check` fails with Windows OS206, command-line length; direct checks of the owned helper/test files pass. These failures are retained, not waived or suppressed. No Linux/macOS runtime result is claimed here.
 
 Initial harness failures are retained too. The first browser runner failed because its newly created private target lacked the standard Cargo cache tag. After creating that tag, it ran unchanged. The new attribute fixture initially made its intercepted method read-only, preventing the intended error phase; its descriptor was corrected for both source and Rust. Chromium normalizes button values on mouseover/mouseleave, so shared assertions use the delivered MouseEvent.button, exactly as the source does. No upstream input/assertion was changed.
 
 Generated WASM/binding bundles remain local under report-linked artifact paths and are hashed. The small JSON reports and raw logs are tracked; the large generated bundles are not required source inputs and are not committed. Re-running the commands rebuilds them. This is component evidence, not full browser-engine, trusted-input or platform equivalence.
+
+## Main integration
+
+Task 282 replayed only the accepted helper verification commit onto main, without replaying Ashley's duplicated historical Root commits. It also restored Lukeni's alias-only `74a0c8f` change in `scrollbar_visibility.rs`, which main lacked. No assertion or production helper algorithm changed.
+
+The four Rust browser suites and scoped Clippy passed again on main base `0726a3e`. The canonical merge then rebased onto `674b7cf`, ran 298 native default-feature web tests, affected-package checks, workspace checks and the production WASM library check, and fast-forwarded main to `3e2e91c`. Two earlier attempts ran their checks successfully but refused the fast-forward because another worker had advanced main. No forced merge was used. `results/scrollbar-helpers/main-integration.json` links immutable browser reports and the exact merge logs. The successful script removed only the private Cargo target. These scoped checks do not replace the required all-features workspace quality gates.
