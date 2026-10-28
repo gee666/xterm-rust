@@ -24,7 +24,6 @@ use xterm_core::{buffer::BufferService, event::Event, lifecycle::DisposableHandl
 
 type FrameCallback = Closure<dyn FnMut(f64)>;
 type Geometry = dyn Fn() -> Result<MouseGeometry, JsValue>;
-type FrameCallback = Closure<dyn FnMut(f64)>;
 #[derive(Clone, Debug)]
 pub struct SelectionDomOptions {
     pub platform: SelectionPlatform,
