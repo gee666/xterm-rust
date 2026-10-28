@@ -35,7 +35,7 @@ fn snapshot(line: &BufferLine, start: usize, end: usize) -> Vec<String> {
             i64::from(line.get_fg(i).unwrap()),
             i64::from(line.get_bg(i).unwrap()),
             i64::from(cell.extended.ext()),
-            i64::from(cell.extended.url_id()),
+            i64::try_from(cell.extended.url_id()).unwrap(),
             i64::from(line.get_code_point(i).unwrap()),
             i64::from(line.get_width(i).unwrap()),
             i64::from(line.has_width(i).unwrap()),
@@ -122,7 +122,7 @@ fn seeded_buffer_line_operations_match_javascript() {
         cell.attributes = AttributeData {
             fg: number(f[7]),
             bg: number(f[8]),
-            extended: ExtendedAttrs::new(number(f[9]), number(f[10])),
+            extended: ExtendedAttrs::new(number(f[9]), u64::from(number(f[10]))),
         };
         let cp = number(f[13]);
         let mut result = "-".to_owned();

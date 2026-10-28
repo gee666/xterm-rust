@@ -1,0 +1,133 @@
+    Blocking waiting for file lock on build directory
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+warning: unused `Result` that must be used
+   --> crates\xterm-core\src\headless\terminal.rs:218:9
+    |
+218 | /         self.engine
+219 | |             .try_borrow_mut()
+220 | |             .map_err(|_| HeadlessError::Borrowed)?
+221 | |             .dispose();
+    | |______________________^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+    = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+    |
+218 |         let _ = self.engine
+    |         +++++++
+
+warning: `xterm-core` (lib) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 5.02s
+     Running tests\buffer_line_differential.rs (target\debug\deps\buffer_line_differential-824cde1fd45d4d10.exe)
+
+running 2 tests
+test shared_extended_attributes_survive_all_copy_paths ... ok
+test seeded_buffer_line_operations_match_javascript ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.74s
+
+     Running tests\buffer_reflow_differential.rs (target\debug\deps\buffer_reflow_differential-b61717fa270bef22.exe)
+
+running 1 test
+test seeded_full_cell_layout_and_identity_snapshots ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.72s
+
+     Running tests\cell_branches.rs (target\debug\deps\cell_branches-9a91ecc3525e0b03.exe)
+
+running 8 tests
+test equality_checks_each_visible_flag_but_excludes_protection ... ok
+test equality_decodes_modes_colors_and_default_underline_branches ... ok
+test every_individual_flag_has_exact_mask_and_no_other_flag ... ok
+test foreground_and_background_modes_payloads_and_rgb_masking ... ok
+test equality_uses_numeric_underline_and_not_a_rendering_guess ... ok
+test legacy_utf16_conversion_branches_and_signed_width_boundaries ... ok
+test raw_content_masks_and_out_of_range_codepoints_keep_js_truncation ... ok
+test underline_presence_style_and_default_color_are_distinct_queries ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\cell_differential.rs (target\debug\deps\cell_differential-d8a0192252719661.exe)
+
+running 7 tests
+test hyperlink_overrides_style_without_destroying_stored_style ... ok
+test lone_surrogates_and_empty_combined_strings_are_not_lost ... ok
+test buffer_handles_share_identity_while_explicit_clone_does_not ... ok
+test payload_affects_emptiness_but_is_not_cloned_upstream ... ok
+test rgb_conversion_masks_each_channel ... ok
+test seeded_legacy_char_data_matches_javascript ... ok
+test seeded_raw_cells_match_javascript ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\cell_extended.rs (target\debug\deps\cell_extended-fa45e2cbc956f842.exe)
+
+running 4 tests
+test clone_keeps_hidden_style_when_url_is_present_and_cell_clone_drops_payload ... ok
+test emptiness_update_and_clone_preserve_unrelated_data ... ok
+test setter_masks_preserve_all_other_fields ... ok
+test seeded_extended_mutations_match_js_identity_and_payload_behavior ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\cell_upstream.rs (target\debug\deps\cell_upstream-b86ca6ec185fb1f4.exe)
+
+running 12 tests
+test char_data_cell_data_equality ... ok
+test detects_underline_style_changes ... ok
+test detects_underline_color_changes ... ok
+test get_underline_color_p256 ... ok
+test get_underline_color_rgb ... ok
+test ignores_underline_variant_offsets ... ok
+test get_underline_variant_offset ... ok
+test underline_color_mode_and_queries ... ok
+test get_underline_style ... ok
+test ignores_url_ids ... ok
+test returns_true_for_same_attributes_with_different_chars ... ok
+test has_extended_attrs ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\cell_url.rs (target\debug\deps\cell_url-08769ea01aa30f86.exe)
+
+running 1 test
+test original_js_url_ids_survive_32bit_and_safe_integer_boundaries ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\serialize_html.rs (target\debug\deps\serialize_html-cba7fc5a971e9871.exe)
+
+running 6 tests
+test upstream_combined_style_assertions ... ok
+test upstream_global_default_custom_and_included_background_assertions ... ok
+test upstream_foreground_background_theme_and_headless_assertions ... ok
+test upstream_empty_selection_unsafe_chars_and_explicit_range ... ok
+test upstream_single_flag_style_assertions ... ok
+test upstream_underline_style_and_color_assertions ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\serialize_html_edges.rs (target\debug\deps\serialize_html_edges-4b039b23ad3e0c44.exe)
+
+running 7 tests
+test borrowed_buffer_errors_propagate_instead_of_emitting_successful_empty_html ... ok
+test whole_cell_escaping_and_lone_utf16_units_match_source_policy ... ok
+test wide_placeholders_advance_old_style_and_rows_do_not_reset_it ... ok
+test all_decorations_follow_order_and_colors_use_leading_zeroes ... ok
+test selection_multiline_end_exclusive_empty_and_range_precedence ... ok
+test default_palette_endpoints_theme_overrides_and_font_js_numbers ... ok
+test exact_wrappers_empty_range_missing_line_and_scrollback_clamp ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\sgr.rs (target\debug\deps\sgr-bc31ac11eff89014.exe)
+
+running 5 tests
+test reset_clones_extended_drops_payload_and_preserves_url_and_variant ... ok
+test flag_set_reset_and_kitty_controls_preserve_other_bits ... ok
+test underline_color_clone_and_packed_flag_quirks_are_preserved ... ok
+test palette_and_rgb_transitions_retain_flags_and_protection ... ok
+test unchanged_source_assertion_states_and_seeded_corpus ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+

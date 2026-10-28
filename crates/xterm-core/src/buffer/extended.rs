@@ -5,7 +5,7 @@ use std::{any::Any, cell::RefCell, fmt, rc::Rc};
 #[derive(Default)]
 struct Data {
     raw: u32,
-    url_id: u32,
+    url_id: u64,
     payload: Option<Rc<dyn Any>>,
 }
 
@@ -20,7 +20,7 @@ pub struct ExtendedAttrs {
 }
 
 impl ExtendedAttrs {
-    pub fn new(ext: u32, url_id: u32) -> Self {
+    pub fn new(ext: u32, url_id: u64) -> Self {
         Self {
             data: Rc::new(RefCell::new(Data {
                 raw: ext,
@@ -41,10 +41,12 @@ impl ExtendedAttrs {
         Rc::ptr_eq(&self.data, &other.data)
     }
 
-    pub fn url_id(&self) -> u32 {
+    /// Valid internal OSC IDs are nonnegative integers. Keep them separate from
+    /// packed u32 data so generated JavaScript IDs through 2^53 retain identity.
+    pub fn url_id(&self) -> u64 {
         self.data.borrow().url_id
     }
-    pub fn set_url_id(&mut self, value: u32) {
+    pub fn set_url_id(&mut self, value: u64) {
         self.data.borrow_mut().url_id = value;
     }
     pub fn payload(&self) -> Option<Rc<dyn Any>> {

@@ -106,8 +106,13 @@ fn selection_multiline_end_exclusive_empty_and_range_precedence() {
 fn wide_placeholders_advance_old_style_and_rows_do_not_reset_it() {
     let mut text = buffer(&["界x", "yz"], 3);
     text.lines[0][0].content = (2 << content::WIDTH_SHIFT) | u32::from('界');
-    let mut placeholder = CellData::default();
-    placeholder.fg = fg::BOLD;
+    let placeholder = CellData {
+        attributes: xterm_core::buffer::AttributeData {
+            fg: fg::BOLD,
+            ..Default::default()
+        },
+        ..Default::default()
+    };
     text.lines[0].insert(1, placeholder);
     text.lines[0].truncate(3);
     text.lines[0][2].fg = fg::BOLD;

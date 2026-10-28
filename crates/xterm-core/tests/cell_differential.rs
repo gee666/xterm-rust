@@ -69,7 +69,7 @@ fn seeded_raw_cells_match_javascript() {
             attributes: AttributeData {
                 fg: number(fields[0]),
                 bg: number(fields[1]),
-                extended: ExtendedAttrs::new(number(fields[2]), number(fields[3])),
+                extended: ExtendedAttrs::new(number(fields[2]), u64::from(number(fields[3]))),
             },
         };
         let expected: Vec<i64> = fields[6].split(',').map(|s| s.parse().unwrap()).collect();
@@ -79,7 +79,7 @@ fn seeded_raw_cells_match_javascript() {
             attributes: AttributeData {
                 fg: number(fields[8]),
                 bg: number(fields[9]),
-                extended: ExtendedAttrs::new(number(fields[10]), number(fields[11])),
+                extended: ExtendedAttrs::new(number(fields[10]), u64::from(number(fields[11]))),
             },
             ..CellData::default()
         };
@@ -142,7 +142,11 @@ fn seeded_legacy_char_data_matches_javascript() {
             "stale combined storage {index}"
         );
         assert_eq!(cell.extended.ext(), number(f[10]), "ext {index}");
-        assert_eq!(cell.extended.url_id(), number(f[11]), "url {index}");
+        assert_eq!(
+            cell.extended.url_id(),
+            u64::from(number(f[11])),
+            "url {index}"
+        );
     }
 }
 

@@ -99,7 +99,7 @@ fn seeded_extended_mutations_match_js_identity_and_payload_behavior() {
             1 => objects[target].set_underline_style(value),
             2 => objects[target].set_underline_color(value),
             3 => objects[target].set_underline_variant_offset(value),
-            4 => objects[target].set_url_id(if value % 3 == 0 { 0 } else { value }),
+            4 => objects[target].set_url_id(if value % 3 == 0 { 0 } else { u64::from(value) }),
             5 => objects[target].set_payload(if value % 2 == 0 {
                 None
             } else {
@@ -116,7 +116,7 @@ fn seeded_extended_mutations_match_js_identity_and_payload_behavior() {
                 a.underline_style(),
                 a.underline_color(),
                 a.underline_variant_offset(),
-                a.url_id(),
+                u32::try_from(a.url_id()).unwrap(),
                 u32::from(a.is_empty()),
                 u32::from(a.payload().is_some()),
             ]);

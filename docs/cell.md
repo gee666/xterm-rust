@@ -10,6 +10,8 @@ JS strings map to UTF-16 unit vectors so lone surrogates survive. A combined str
 
 Foreground, background and extended data use unsigned 32-bit bit patterns. Numeric flag methods return their original mask, including the high strikethrough bit as `0x80000000` rather than JS's signed `-2147483648`. Browser bindings must convert this to JS signed bitwise representation if exposing the internal numeric method. Public truthiness is unchanged. Colors retain upstream's signed `-1` default sentinel. Underline styles are raw packed `u32` values, retaining reserved values 6 and 7.
 
+`ExtendedAttrs` stores valid internal OSC link IDs as `u64`, separate from the packed `u32` attribute word. This preserves all exactly representable generated IDs through JavaScript's `2^53` boundary without truncating at `2^32`. Direct assignment of arbitrary JS numeric values such as fractional, negative or NaN URL IDs is not a typed Rust operation; any binding exposing that internal setter must define those conversions separately. The OSC service generates nonnegative integer IDs.
+
 `ExtendedAttrs` privately owns `Rc<RefCell<Data>>`. `share()` retains the same mutable object, which buffer storage and cell loads need for JS reference identity. `same_identity()` compares those handles. Explicit `clone()` copies packed data and URL identity into a separate object and drops payload, matching upstream `ExtendedAttrs.clone()`. Rust's full `CellData::clone()` is a language addition, using that same attribute-clone rule. It is not JS reference assignment; buffer storage must use `extended.share()` instead. Payload uses `Option<Rc<dyn Any>>`; accessors return a shared opaque value. Setters do not hold a borrow across callbacks. No unsafe code or dependencies were added. These handles are local-thread objects like the rest of the event-driven core.
 
 Hyperlinks force dashed underline style while retaining the raw style for use after the URL is cleared. Color and variant offset alone do not make extended attributes nonempty. `AttributeData::update_extended` sets or clears HAS_EXTENDED from that exact definition. Underline presence and underline style are intentionally different upstream queries. Attribute comparison ignores protection, URL identity, underline offset, and character content, but retains numeric underline-query differences.
@@ -18,9 +20,9 @@ Hyperlinks force dashed underline style while retaining the raw style for use af
 
 ```sh
 node scripts/cell-oracle.mjs
-cargo test -p xterm-core --test cell_upstream --test cell_differential --test cell_branches --test cell_extended
-cargo test -p xterm-core --release --test cell_upstream --test cell_differential --test cell_branches --test cell_extended
-cargo clippy -p xterm-core --test cell_upstream --test cell_differential --test cell_branches --test cell_extended -- -D warnings
+cargo test -p xterm-core --test cell_upstream --test cell_differential --test cell_branches --test cell_extended --test cell_url
+cargo test -p xterm-core --release --test cell_upstream --test cell_differential --test cell_branches --test cell_extended --test cell_url
+cargo clippy -p xterm-core --test cell_upstream --test cell_differential --test cell_branches --test cell_extended --test cell_url -- -D warnings
 ```
 
 Observed on Windows with Node 24.15.0 and Rust/Cargo 1.85.1. The source oracle executes all five `CellData.test.ts` tests and the seven AttributeData/CellData tests at the beginning of `BufferLine.test.ts`. All 12 passed, with the assertions unmodified. Each has a Rust test in `tests/cell_upstream.rs`, all passing.
@@ -33,7 +35,9 @@ C1 maps to `legacy_utf16_conversion_branches_and_signed_width_boundaries`, `raw_
 
 On the resumed Windows run, all 31 scoped Rust tests pass in debug and release. All 12 scoped upstream tests pass, with zero skipped or unrun within that stated scope. Regenerating the oracle twice yields identical hashes for all three fixtures. Focused rustfmt passes. Exact logs are `results/cell/run2-{debug,release,oracle,oracle-repeat,reproduction,fmt,clippy,toolchains}.log`. The first run2 Clippy snapshot failed in concurrent `log_service.rs`, `serialize/ansi.rs` and `buffer/reflow.rs`, not cell code. Owners were notified; that failure is retained rather than suppressed.
 
-Source hashes and per-test original outcomes are in `results/cell/oracle.json`. Fixtures are `tests/fixtures/cell-raw.tsv`, `cell-char-data.tsv` and `cell-extended.tsv`, under `crates/xterm-core/`. Reproduction instructions are also in `.pi/swarm/skills/cell-oracle/SKILL.md`. Focused Rust logs are `results/cell/focused-tests.log` and `focused-clippy.log`.
+A subsequent integration fix widens valid OSC URL IDs beyond the packed-word width. `cell_url.rs` checks six original-JS fixtures at 0, 1, `2^32-1`, `2^32`, `2^53-1` and `2^53`. It verifies raw and visible style, URL clearing after clone, shared payload identity, and BufferLine fill/copy identity. All 32 cell tests plus the BufferLine/reflow/SGR dependent fixtures pass in `results/cell/url-tests-final.log`. This change does not expand the finite test set into a full-equivalence claim.
+
+Source hashes and per-test original outcomes are in `results/cell/oracle.json`. Fixtures are `tests/fixtures/cell-raw.tsv`, `cell-char-data.tsv`, `cell-extended.tsv` and `cell-url.tsv`, under `crates/xterm-core/`. Reproduction instructions are also in `.pi/swarm/skills/cell-oracle/SKILL.md`. Focused Rust logs are `results/cell/focused-tests.log` and `focused-clippy.log`.
 
 An integration snapshot ran all then-present workspace tests successfully. Its workspace fmt and Clippy checks failed on concurrently edited Color/APC modules, not cell files; retained logs are `results/cell/{fmt,clippy,workspace-tests}.log`. Owners were notified. These historical logs are not a claim about the eventual workspace status.
 

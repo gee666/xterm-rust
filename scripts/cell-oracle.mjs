@@ -137,22 +137,36 @@ for (let i = 0; i < 4096; ++i) {
   snapshot.push(+(extended[0] === extended[1]), +(extended[0] === extended[2]), +(extended[1] === extended[2]));
   extendedRows.push([target, operation, value, snapshot.join(',')].join('\t'));
 }
+const urlRows = [];
+for (const id of [0, 1, 0xffffffff, 0x100000000, 0x1fffffffffffff, 0x20000000000000]) {
+  const original = new ExtendedAttrs(3 << 26, id);
+  original.payload = {};
+  const shared = original;
+  const cloned = original.clone();
+  const before = [original.urlId, original.ext >>> 0, original.underlineStyle,
+    cloned.urlId, cloned.ext >>> 0, cloned.underlineStyle,
+    +(original.payload === shared.payload), +(cloned.payload === undefined)];
+  cloned.urlId = 0;
+  before.push(original.urlId, cloned.underlineStyle, cloned.ext >>> 0);
+  urlRows.push(before.join('\t'));
+}
 const fixtures = resolve(root, 'crates/xterm-core/tests/fixtures');
 mkdirSync(fixtures, {recursive: true});
 writeFileSync(resolve(fixtures, 'cell-raw.tsv'), rawRows.join('\n') + '\n');
 writeFileSync(resolve(fixtures, 'cell-char-data.tsv'), charRows.join('\n') + '\n');
 writeFileSync(resolve(fixtures, 'cell-extended.tsv'), extendedRows.join('\n') + '\n');
+writeFileSync(resolve(fixtures, 'cell-url.tsv'), urlRows.join('\n') + '\n');
 const report = {
   scope: 'CellData.test.ts complete; BufferLine.test.ts AttributeData and CellData describes only',
   overallEquivalence: 'NOT PROVEN', node: process.version, platform: process.platform,
   sourceHashes: hashes,
-  fixtureHashes: Object.fromEntries(['cell-raw.tsv', 'cell-char-data.tsv', 'cell-extended.tsv']
+  fixtureHashes: Object.fromEntries(['cell-raw.tsv', 'cell-char-data.tsv', 'cell-extended.tsv', 'cell-url.tsv']
     .map(name => [name, createHash('sha256').update(readFileSync(resolve(fixtures, name))).digest('hex')])),
   seed: '0xce11da7a', upstream: {
     discovered: outcomes.length, executed: outcomes.length, skipped: 0, unrun: 0,
     passed: outcomes.filter(t => t.status === 'passed').length,
     failed: outcomes.filter(t => t.status === 'failed').length, outcomes,
-  }, fixtures: { rawCells: rawRows.length, charData: charRows.length, extendedOperations: extendedRows.length },
+  }, fixtures: { rawCells: rawRows.length, charData: charRows.length, extendedOperations: extendedRows.length, urlBoundaries: urlRows.length },
   unrun: ['Remaining BufferLine suites', 'Terminal integration', 'Native Linux/macOS runtime'],
 };
 const results = resolve(root, 'results/cell');
