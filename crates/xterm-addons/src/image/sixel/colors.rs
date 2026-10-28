@@ -45,7 +45,7 @@ const fn addon_palette() -> [u32; 256] {
         while g < 6 {
             let mut b = 0;
             while b < 6 {
-                result[i] = 0xff00_0000 | levels[b] << 16 | levels[g] << 8 | levels[r];
+                result[i] = 0xff00_0000 | (levels[b] << 16) | (levels[g] << 8) | levels[r];
                 i += 1;
                 b += 1;
             }
@@ -55,7 +55,7 @@ const fn addon_palette() -> [u32; 256] {
     }
     let mut gray = 8;
     while gray <= 238 {
-        result[i] = 0xff00_0000 | gray << 16 | gray << 8 | gray;
+        result[i] = 0xff00_0000 | (gray << 16) | (gray << 8) | gray;
         gray += 10;
         i += 1;
     }

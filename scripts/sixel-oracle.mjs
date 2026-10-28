@@ -18,6 +18,10 @@ const colors = require(path.join(dependency, 'lib/Colors.js'));
 const limits = require(path.join(dependency, 'lib/wasm.js')).LIMITS;
 assert.equal(colors.BIG_ENDIAN, false, 'the original dependency documents only little-endian support');
 assert.deepEqual([limits.CHUNK_SIZE, limits.PALETTE_SIZE, limits.MAX_WIDTH], [16384, 4096, 16384]);
+const layoutDecoder = new Decoder();
+const layout = { pixelOffset: layoutDecoder._pSrc.byteOffset, pixelWords: layoutDecoder._pSrc.length,
+  memoryBytes: layoutDecoder._wasm.memory.buffer.byteLength };
+assert.deepEqual(layout, { pixelOffset: 33968, pixelWords: 106196, memoryBytes: 458752 });
 const addonPalette = Uint32Array.from(colors.PALETTE_ANSI_256);
 addonPalette.set(colors.PALETTE_VT340_COLOR);
 const cases = [];
@@ -139,7 +143,7 @@ const report = { scope: 'Exact dependency decoder pixels/properties, not live te
     tagCommit: '35f542f8b1b9a8867fab133aea5d43cb3da6108a',
     referenceUrl: 'https://github.com/jerch/node-sixel/tree/35f542f8b1b9a8867fab133aea5d43cb3da6108a' },
   environment: { node: process.version, platform: process.platform, arch: process.arch },
-  limits: { chunkSize: limits.CHUNK_SIZE, paletteSize: limits.PALETTE_SIZE, maxWidth: limits.MAX_WIDTH },
+  limits: { chunkSize: limits.CHUNK_SIZE, paletteSize: limits.PALETTE_SIZE, maxWidth: limits.MAX_WIDTH }, layout,
   schemaVersion: 2, paletteFormat: 'full4096-word initial sparse basis plus per-snapshot deltas; unchanged properties repeat via null after',
   seed, cases: cases.length, snapshots: cases.reduce((sum, row) => sum + row.snapshots.length, 0),
   fixtureBytes: Buffer.byteLength(corpus), fixtureSha256: createHash('sha256').update(corpus).digest('hex'),

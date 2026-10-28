@@ -29,11 +29,11 @@ pub fn add_sixel_image(
 pub fn advance_sixel_cursor<E>(
     height: f64,
     scrolling: bool,
-    cell_size: impl FnOnce() -> CellSize,
+    cell_size: impl FnOnce() -> Result<CellSize, E>,
     mut line_feed: impl FnMut() -> Result<(), E>,
 ) -> Result<(), E> {
     if scrolling {
-        let mut size = cell_size();
+        let mut size = cell_size()?;
         if size.width == -1.0 || size.height == -1.0 {
             size = CELL_SIZE_DEFAULT;
         }
@@ -66,9 +66,11 @@ mod tests {
             advance_sixel_cursor(
                 height,
                 true,
-                || CellSize {
-                    width: -1.0,
-                    height: 3.0,
+                || {
+                    Ok(CellSize {
+                        width: -1.0,
+                        height: 3.0,
+                    })
                 },
                 || {
                     count.set(count.get() + 1);
@@ -96,10 +98,10 @@ mod tests {
             true,
             || {
                 reads.set(reads.get() + 1);
-                CellSize {
+                Ok(CellSize {
                     width: 7.5,
                     height: 2.5,
-                }
+                })
             },
             || {
                 count.set(count.get() + 1);
@@ -113,5 +115,14 @@ mod tests {
         assert_eq!(result, Err("linefeed failed"));
         assert_eq!(reads.get(), 1);
         assert_eq!(count.get(), 2);
+        let result = advance_sixel_cursor(
+            8.0,
+            true,
+            || Err("metrics getter failed"),
+            || {
+                panic!("linefeed must not run after getter error");
+            },
+        );
+        assert_eq!(result, Err("metrics getter failed"));
     }
 }

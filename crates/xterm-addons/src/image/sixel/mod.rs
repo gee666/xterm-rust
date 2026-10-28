@@ -32,6 +32,10 @@ const STRIDE: usize = MAX_WIDTH + 4;
 // that observable accounting for the handler's release threshold, not as a
 // claim about the native allocator's physical memory usage.
 const SOURCE_STATIC_BYTES: usize = 7 * 65_536;
+// The pinned WASM places p0's four reserved words at byte33952. Preserve the
+// remaining sandbox tail for checked emulation of malformed memcpy/repeats.
+const SOURCE_PIXEL_OFFSET_BYTES: usize = 33_952;
+const SOURCE_PIXEL_MEMORY_WORDS: usize = (SOURCE_STATIC_BYTES - SOURCE_PIXEL_OFFSET_BYTES) / 4;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum State {
@@ -78,9 +82,7 @@ impl SixelDecoder {
         let mut palette = canvas::allocate(PALETTE_SIZE, 0)?;
         let length = options.palette.len().min(PALETTE_SIZE);
         palette[..length].copy_from_slice(&options.palette[..length]);
-        // Four guard pixels retain the C band's final alignment copy without
-        // an out-of-bounds native write. They never enter reported image rows.
-        let band = canvas::allocate(6 * STRIDE + 4, 0)?;
+        let band = canvas::allocate(SOURCE_PIXEL_MEMORY_WORDS, 0)?;
         let color = options.foreground;
         let palette_limit = types::js_uint32(options.palette_limit).min(PALETTE_SIZE as u32);
         Ok(Self {

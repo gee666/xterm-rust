@@ -193,15 +193,17 @@ impl SixelDecoder {
             self.cleared_width = 4;
         } else {
             let stored_width = (self.raster.width as i32).min(MAX_WIDTH as i32) + 4;
-            if stored_width < 0 {
-                return Err(DecodeError::MemoryAccess);
-            }
             let count = ((stored_width - 3) / 2).max(0) as usize * 2;
             self.band[4..4 + count].fill(self.fill);
+            // C computes the memcpy byte count in wrapping i32 arithmetic.
+            // A negative width can wrap to a small valid copy instead of trap.
+            let copy_words = (stored_width as u32).wrapping_mul(4) as usize / 4;
             for row in 1..6 {
                 let destination = row * STRIDE + 4;
-                self.band
-                    .copy_within(4..4 + stored_width as usize, destination);
+                if 4 + copy_words > self.band.len() || destination + copy_words > self.band.len() {
+                    return Err(DecodeError::MemoryAccess);
+                }
+                self.band.copy_within(4..4 + copy_words, destination);
             }
         }
         Ok(())
