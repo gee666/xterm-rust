@@ -44,6 +44,49 @@ fn dispose_marker_observer_can_mutate_live_terminal_state() {
 }
 
 #[test]
+fn reset_activation_observer_sees_default_attributes() {
+    let mut terminal = CoreTerminal::new(10, 3, 10).unwrap();
+    terminal.write("\x1b[31m").unwrap();
+    let shared = terminal.state_handle();
+    assert_ne!(shared.borrow().attributes.fg, 0);
+    let buffers = Rc::clone(&shared.borrow().buffers);
+    let weak = Rc::downgrade(&shared);
+    let observed = Rc::new(Cell::new(None));
+    let result = Rc::clone(&observed);
+    buffers.on_buffer_activate().subscribe(move |_| {
+        let shared = weak.upgrade().unwrap();
+        result.set(Some(
+            shared.try_borrow().ok().map(|state| state.attributes.fg),
+        ));
+    });
+    terminal.reset().unwrap();
+    assert_eq!(
+        observed.get(),
+        Some(Some(0)),
+        "InputHandler attributes must reset before buffer activation without a state borrow"
+    );
+}
+
+#[test]
+fn resize_preserves_callback_error_identity() {
+    use xterm_core::{buffer::BufferError, event::EmitError, terminal::TerminalError};
+    let mut terminal = CoreTerminal::new(10, 3, 10).unwrap();
+    let shared = terminal.state_handle();
+    let service = Rc::clone(&shared.borrow().buffer_service);
+    let cause: Rc<dyn std::error::Error> = Rc::new(std::io::Error::other("resize callback cause"));
+    let expected = Rc::clone(&cause);
+    service
+        .on_resize()
+        .try_subscribe(move |_| Err(EmitError::Callback(Rc::clone(&cause))));
+    match terminal.resize(12, 4) {
+        Err(TerminalError::BufferState(BufferError::Dispatch(EmitError::Callback(actual)))) => {
+            assert!(Rc::ptr_eq(&expected, &actual))
+        }
+        result => panic!("callback error was replaced: {result:?}"),
+    }
+}
+
+#[test]
 fn clear_marker_observer_can_read_live_terminal_state_and_buffer() {
     let mut terminal = CoreTerminal::new(10, 3, 10).unwrap();
     let shared = terminal.state_handle();
