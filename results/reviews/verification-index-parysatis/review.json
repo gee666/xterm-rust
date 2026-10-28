@@ -1,0 +1,69 @@
+{
+  "reviewer": "Parysatis",
+  "task": 135,
+  "implementationAuthor": "Aaliyah",
+  "scope": "Verification-index automation only; not terminal, browser, platform or whole-port equivalence",
+  "inspected": [
+    "scripts/verification-index.mjs",
+    "scripts/verification-index.test.mjs",
+    "docs/verification-acceptance.md",
+    ".pi/swarm/skills/verification-index/SKILL.md"
+  ],
+  "environment": {
+    "node": "v24.15.0",
+    "platform": "win32",
+    "architecture": "x64"
+  },
+  "checks": [
+    {
+      "command": "node --test scripts/verification-index.test.mjs",
+      "beforeFix": { "passed": 7, "failed": 0, "log": "tests-before-fix.log" },
+      "afterFix": { "passed": 8, "failed": 0, "skipped": 0, "exitCode": 0, "log": "tests-after-fix.log" }
+    },
+    {
+      "command": "node scripts/review-verification-index-parysatis.mjs",
+      "exitCode": 0,
+      "result": "Reference-component and evidence-root symlink controls reject linked private fixtures",
+      "log": "control-after-fix.log"
+    },
+    {
+      "command": "buildIndex(process.cwd()) imported from scripts/verification-index.mjs",
+      "result": "776 listed files checked with zero missing or changed; no saved index overwritten",
+      "log": "final-live.json",
+      "sourceHashReceipt": "final-live.json"
+    },
+    {
+      "command": "node scripts/verification-index.mjs --check",
+      "exitCode": 1,
+      "result": "Correctly rejects retained snapshot after live evidence churn; does not replace it",
+      "log": "stale-check.json"
+    }
+  ],
+  "findings": [
+    {
+      "id": "VI-P1",
+      "severity": "medium",
+      "problem": "Lexically valid reference paths could traverse a directory junction outside the selected reference root and report matched:true",
+      "beforeEvidence": "symlink-before-fix.json",
+      "resolution": "Owner added lstat checks on selected root and every reference component; independent regression now rejects the same private junction shape",
+      "status": "fixed and independently rerun"
+    },
+    {
+      "id": "VI-P2",
+      "severity": "medium",
+      "problem": "inventory(directory) rejected linked entries but followed a linked selected evidence root",
+      "beforeEvidence": "evidence-root-before-fix.log",
+      "resolution": "Owner added selected evidence root lstat guard plus source regression; independent VI-P2 control now passes",
+      "status": "fixed and independently rerun"
+    }
+  ],
+  "assessment": "Scoped automation accepted after both findings were fixed. Historical failures remain retained. No unresolved finding in the inspected index code.",
+  "limits": [
+    "No Rust or browser test execution performed by this review.",
+    "No native Linux/macOS execution claimed.",
+    "Starting manifest checks only its listed files; current source additions require the separate compatibility inventory.",
+    "File hashes do not authenticate test success or provide a malicious-concurrent-filesystem security sandbox.",
+    "Current shared evidence is mutable; a stable final committed snapshot still requires regeneration and freshness checks.",
+    "Overall xterm.js equivalence remains NOT PROVEN."
+  ]
+}
