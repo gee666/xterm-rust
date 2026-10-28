@@ -15,4 +15,7 @@ mod browser_rows;
 #[cfg(target_arch = "wasm32")]
 mod browser_selection;
 #[cfg(target_arch = "wasm32")]
-pub use browser::{AccessibilityEvent, AccessibilityHost, AccessibilityManager, Dimensions, Row};
+pub use browser::{
+    AccessibilityBuffer, AccessibilityEvent, AccessibilityHost, AccessibilityManager, Dimensions,
+    Row,
+};

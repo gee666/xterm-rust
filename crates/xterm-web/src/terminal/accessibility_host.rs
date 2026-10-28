@@ -2,7 +2,7 @@
 //! Weak service ownership permits reentrant callbacks without reference cycles.
 use super::browser_services::{BrowserServices, WeakBrowserServices};
 use crate::{
-    accessibility::browser::Listener,
+    accessibility::browser::{AccessibilityBuffer, Listener},
     accessibility::{AccessibilityEvent, AccessibilityHost, Dimensions, Row},
     js_error::{to_js_error, JsCallbackError},
     selection::{model::Position, service::buffer_dimensions},
@@ -12,6 +12,7 @@ use js_sys::{JsString, Reflect};
 use std::rc::Rc;
 use wasm_bindgen::{JsCast, JsValue};
 use xterm_core::{
+    buffer::buffer_set::BufferRef,
     event::{EmitError, Event},
     lifecycle::DisposableHandle,
     terminal::TerminalEvent,
@@ -59,6 +60,42 @@ pub(super) fn dispose(services: &BrowserServices) -> Result<(), JsValue> {
     Ok(())
 }
 
+// Retain identity, not a copied row snapshot or a borrow guard. DOM callbacks
+// may reset the terminal or mutate this buffer between rows in the same batch.
+struct RenderBuffer(BufferRef);
+impl AccessibilityBuffer for RenderBuffer {
+    fn display_offset(&self) -> Result<usize, JsValue> {
+        Ok(self
+            .0
+            .try_borrow()
+            .map_err(|error| to_js_error(&error))?
+            .ydisp)
+    }
+    fn line_count(&self) -> Result<usize, JsValue> {
+        Ok(self
+            .0
+            .try_borrow()
+            .map_err(|error| to_js_error(&error))?
+            .lines
+            .len())
+    }
+    fn row(&self, absolute: usize) -> Result<Option<Row>, JsValue> {
+        let line = self
+            .0
+            .try_borrow()
+            .map_err(|error| to_js_error(&error))?
+            .lines
+            .get(absolute);
+        line.map(|line| {
+            let line = line.try_borrow().map_err(|error| to_js_error(&error))?;
+            let mut columns = Vec::new();
+            let text = line.translate_to_string(true, None, None, Some(&mut columns));
+            Ok(Row { text, columns })
+        })
+        .transpose()
+    }
+}
+
 impl AccessibilityHost for WeakBrowserServices {
     fn rows(&self) -> Result<usize, JsValue> {
         self.upgrade()?
@@ -72,18 +109,13 @@ impl AccessibilityHost for WeakBrowserServices {
             .cols()
             .map_err(|error| to_js_error(&error))
     }
-    fn display_offset(&self) -> Result<usize, JsValue> {
+    fn render_buffer(self: Rc<Self>) -> Result<Rc<dyn AccessibilityBuffer>, JsValue> {
         let buffers = self
             .upgrade()?
             .native
             .with_state(|state| state.buffer_service.clone())
             .map_err(|error| to_js_error(&error))?;
-        let active = buffers.buffer();
-        let result = active
-            .try_borrow()
-            .map_err(|error| to_js_error(&error))?
-            .ydisp;
-        Ok(result)
+        Ok(Rc::new(RenderBuffer(buffers.buffer())))
     }
     fn buffer_length(&self) -> Result<usize, JsValue> {
         let buffers = self
@@ -98,25 +130,6 @@ impl AccessibilityHost for WeakBrowserServices {
             .lines
             .len();
         Ok(result)
-    }
-    fn row(&self, absolute: usize) -> Result<Option<Row>, JsValue> {
-        let buffers = self
-            .upgrade()?
-            .native
-            .with_state(|state| state.buffer_service.clone())
-            .map_err(|error| to_js_error(&error))?;
-        let line = {
-            let active = buffers.buffer();
-            let active = active.try_borrow().map_err(|error| to_js_error(&error))?;
-            active.lines.get(absolute)
-        };
-        line.map(|line| {
-            let line = line.try_borrow().map_err(|error| to_js_error(&error))?;
-            let mut columns = Vec::new();
-            let text = line.translate_to_string(true, None, None, Some(&mut columns));
-            Ok(Row { text, columns })
-        })
-        .transpose()
     }
     fn dimensions(&self) -> Result<Dimensions, JsValue> {
         let services = self.upgrade()?;

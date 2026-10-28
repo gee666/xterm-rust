@@ -29,13 +29,9 @@ struct Point {
 }
 impl Inner {
     pub fn selection_change(&self) -> Result<(), JsValue> {
-        let (first, last) = {
-            let rows = self.rows.borrow();
-            (rows.first().cloned(), rows.last().cloned())
-        };
-        let (Some(first), Some(last)) = (first, last) else {
+        if self.rows.borrow().is_empty() {
             return Ok(());
-        };
+        }
         let Some(selection) = self.document.get_selection()? else {
             return Ok(());
         };
@@ -61,16 +57,28 @@ impl Inner {
             offset: selection.focus_offset() as usize,
         };
         if begin.node.compare_document_position(&end.node) & Node::DOCUMENT_POSITION_PRECEDING != 0
-            || begin.node.is_same_node(Some(&end.node)) && begin.offset > end.offset
+            || begin.node == end.node && begin.offset > end.offset
         {
             std::mem::swap(&mut begin, &mut end);
         }
+        let first = self
+            .rows
+            .borrow()
+            .first()
+            .cloned()
+            .ok_or_else(|| js_sys::TypeError::new("accessibility first row is missing"))?;
         if begin.node.compare_document_position(&first.element)
             & (Node::DOCUMENT_POSITION_CONTAINED_BY | Node::DOCUMENT_POSITION_FOLLOWING)
             != 0
         {
             // Before the first render a row can have no child Text node. Source
             // contains(undefined) is false, so that selection is left untouched.
+            let first = self
+                .rows
+                .borrow()
+                .first()
+                .cloned()
+                .ok_or_else(|| js_sys::TypeError::new("accessibility first row is missing"))?;
             let Some(node) = first.element.child_nodes().item(0) else {
                 return Ok(());
             };
@@ -79,6 +87,14 @@ impl Inner {
         if !self.row_container.contains(Some(&begin.node)) {
             return Ok(());
         }
+        // Selection/DOM methods above can synchronously resize the terminal.
+        // Source captures its last row here, not at handler entry.
+        let last = self
+            .rows
+            .borrow()
+            .last()
+            .cloned()
+            .ok_or_else(|| js_sys::TypeError::new("accessibility last row is missing"))?;
         if end.node.compare_document_position(&last.element)
             & (Node::DOCUMENT_POSITION_CONTAINED_BY | Node::DOCUMENT_POSITION_PRECEDING)
             != 0

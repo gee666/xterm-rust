@@ -15,7 +15,7 @@ use xterm_core::{
     event::{EmitError, Emitter},
     lifecycle::DisposableHandle,
 };
-use xterm_web::accessibility::browser::Listener;
+use xterm_web::accessibility::browser::{AccessibilityBuffer, Listener};
 use xterm_web::accessibility::{
     AccessibilityEvent, AccessibilityHost, AccessibilityManager, Dimensions, LocalizableStrings,
     Row, SelectionRange,
@@ -88,14 +88,11 @@ impl AccessibilityHost for Host {
     fn cols(&self) -> Result<usize, JsValue> {
         Ok(self.cols)
     }
-    fn display_offset(&self) -> Result<usize, JsValue> {
-        Ok(self.offset.get())
+    fn render_buffer(self: Rc<Self>) -> Result<Rc<dyn AccessibilityBuffer>, JsValue> {
+        Ok(self)
     }
     fn buffer_length(&self) -> Result<usize, JsValue> {
-        Ok(self.lines.borrow().len())
-    }
-    fn row(&self, row: usize) -> Result<Option<Row>, JsValue> {
-        Ok(self.lines.borrow().get(row).cloned())
+        self.line_count()
     }
     fn dimensions(&self) -> Result<Dimensions, JsValue> {
         Ok(self.dimensions.get())
@@ -123,6 +120,17 @@ impl AccessibilityHost for Host {
         Ok(vec![self.events.event().try_subscribe(move |event| {
             listener(event.clone()).map_err(|error| EmitError::callback(JsCallbackError(error)))
         })])
+    }
+}
+impl AccessibilityBuffer for Host {
+    fn display_offset(&self) -> Result<usize, JsValue> {
+        Ok(self.offset.get())
+    }
+    fn line_count(&self) -> Result<usize, JsValue> {
+        Ok(self.lines.borrow().len())
+    }
+    fn row(&self, row: usize) -> Result<Option<Row>, JsValue> {
+        Ok(self.lines.borrow().get(row).cloned())
     }
 }
 pub struct Fixture {

@@ -36,15 +36,22 @@ pub enum AccessibilityEvent {
 }
 pub type Listener = Rc<dyn Fn(AccessibilityEvent) -> Result<(), JsValue>>;
 
+/// One captured buffer identity for a render batch. Reads stay live within
+/// that buffer, but a terminal reset must not redirect later rows to a new one.
+pub trait AccessibilityBuffer {
+    fn display_offset(&self) -> Result<usize, JsValue>;
+    fn line_count(&self) -> Result<usize, JsValue>;
+    fn row(&self, absolute: usize) -> Result<Option<Row>, JsValue>;
+}
+
 /// The real terminal supplies live snapshots and shares its existing selection
 /// service. Host callbacks must not retain a terminal-state borrow while calling
 /// subscribers; DOM focus and selection can synchronously reenter the terminal.
 pub trait AccessibilityHost {
     fn rows(&self) -> Result<usize, JsValue>;
     fn cols(&self) -> Result<usize, JsValue>;
-    fn display_offset(&self) -> Result<usize, JsValue>;
+    fn render_buffer(self: Rc<Self>) -> Result<Rc<dyn AccessibilityBuffer>, JsValue>;
     fn buffer_length(&self) -> Result<usize, JsValue>;
-    fn row(&self, absolute: usize) -> Result<Option<Row>, JsValue>;
     fn dimensions(&self) -> Result<Dimensions, JsValue>;
     fn scroll_lines(&self, amount: i32) -> Result<(), JsValue>;
     fn clear_selection(&self) -> Result<(), JsValue>;

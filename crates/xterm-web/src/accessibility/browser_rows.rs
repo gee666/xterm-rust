@@ -24,7 +24,8 @@ impl Inner {
         Ok(Rc::new(TreeRow { element }))
     }
     pub fn render_rows(&self, start: f64, end: f64) -> Result<(), JsValue> {
-        let set_size = self.host.buffer_length()?.to_string();
+        let buffer = Rc::clone(&self.host).render_buffer()?;
+        let set_size = buffer.line_count()?.to_string();
         if start.is_finite()
             && end.is_finite()
             && start >= 0.0
@@ -33,11 +34,11 @@ impl Inner {
         {
             let mut index = start;
             while index <= end {
-                let offset = self.host.display_offset()?;
+                let offset = buffer.display_offset()?;
                 let absolute = offset
                     .checked_add(index as usize)
                     .ok_or_else(|| js_sys::RangeError::new("accessibility row overflow"))?;
-                let data = self.host.row(absolute)?;
+                let data = buffer.row(absolute)?;
                 let position = absolute
                     .checked_add(1)
                     .ok_or_else(|| js_sys::RangeError::new("accessibility position overflow"))?
