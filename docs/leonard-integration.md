@@ -1,6 +1,6 @@
 # Leonard integration checkpoint
 
-Overall equivalence is NOT PROVEN. This branch carries the Berenice core fixes, including accepted Windows task267, and adds accepted test-lint repair276. Task264 still requires a gated main merge after task60 browser bootstrap. No browser engine or source reference was edited here.
+Overall equivalence is NOT PROVEN. This branch carries the Berenice core fixes, including accepted Windows task267, and adds accepted test-lint repair276. The unchanged canonical gate merged this branch into main at `acee593` after the task60 bootstrap. Task264 independent review remains separate. No browser engine or source reference was edited here.
 
 ## Provenance
 
@@ -8,7 +8,15 @@ Overall equivalence is NOT PROVEN. This branch carries the Berenice core fixes, 
 
 `9bb4118` fixes three demonstrated test lints without altering production code or expected results. Review276 independently reran all three test modules plus public-cell tests, 26 passing tests, exact-file formatting, and full-core Clippy. `0cfbf95` carries Salahuddin's existing `67d5cc8` initializer-only prerequisite instead of duplicating it.
 
-## Local commands and results
+## Main integration
+
+After Ernest bootstrap `b6ed3ff`, the canonical helper rebased this branch. The one conflict in headless disposal retained both reset-hook cleanup and immediate parser disposal. Git dropped duplicate virtual-reset and diagnostic-phase patches already in main. The diagnostic test still checks four records, exact UTF-16 input/reply values and cursor phases `[0, 0, 2, 2]`.
+
+`node scripts/worktree-merge.mjs` then passed1492 core tests across223 test/example suites, native all-target checks for all affected crates, workspace check and the browser/WASM library check. It fast-forwarded main to `acee593` and removed this private target. Exact successful transcript is `results/integration/leonard/gated-merge.log`; the first conflicting rebase is retained in `gated-rebase.log`.
+
+Final rebased code commits are `aa01851` for Windows ordering, `bbe11fe` for immediate parser disposal, `ac589e9` for accepted lint repair276 and `88d7ea7` for the existing numeric test initializer fix. `ea15a85` formats the diagnostic state construction. Earlier commit IDs below describe the pre-rebase checks, not a claim that those checks ran against the larger main bootstrap.
+
+## Pre-rebase local commands and results
 
 Run from this worktree. Environment is native Windows MSVC, Rust/Cargo1.85.1, LLVM19.1.7. Logs are `results/integration/leonard/`.
 
@@ -25,10 +33,10 @@ Run from this worktree. Environment is native Windows MSVC, Rust/Cargo1.85.1, LL
 
 The first short coordination post mistakenly said29 focused tests. Counting the actual retained transcript gives19, as reported above.
 
-## Gates still failing on this branch
+## Pre-rebase failed gates and remaining scope
 
 - `cargo fmt --all -- --check`: Windows error206 before the formatter can run, `fmt.log`.
 - `cargo clippy --workspace --all-targets --all-features -- -D warnings`: stopped at the now-repaired core test hex lint, `clippy-before.log`. No full-workspace success is inferred from scoped Clippy.
-- `cargo test --workspace --all-targets --all-features`: existing missing web module exports and u32/u64 URL fixture mismatch, `tests-before.log`. Ernest task60 owns the coherent browser bootstrap and existing fixture fix, not this branch.
+- `cargo test --workspace --all-targets --all-features`: failed before the bootstrap on missing web module exports and the u32/u64 URL fixture mismatch, `tests-before.log`. Task60 fixed those compile gaps. The successful merge checked affected native targets but did not rerun the whole workspace all-feature runtime command here.
 
 Linux/macOS runtime, full browser/addon/upstream suites, full release workspace and benchmark equivalence are not established by these results. Params226, diagnostics194 and genuine async resize replay257 remain unfinished implementation work.
