@@ -8,6 +8,8 @@ pub mod input;
 pub mod links;
 pub mod selection;
 pub mod search_host;
+pub mod character_joiner;
+pub mod webgl;
 pub mod theme;
 pub mod contrast_cache;
 pub mod renderer;
