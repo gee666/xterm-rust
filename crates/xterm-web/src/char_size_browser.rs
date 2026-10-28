@@ -195,8 +195,7 @@ impl CharSizeService {
                     }
                 }
                 Ok(())
-            })
-            .map_err(|error| crate::js_error::to_js_error(&error))?;
+            });
         *service.option_listener.borrow_mut() = Some(listener);
         Ok(service)
     }

@@ -77,7 +77,7 @@ fn params_array(params: Vec<ParamValue>) -> Array {
         })
         .collect()
 }
-fn result(value: Result<JsValue, JsValue>) -> HandlerResult {
+pub(crate) fn result(value: Result<JsValue, JsValue>) -> HandlerResult {
     match value {
         Err(error) => HandlerResult::Failed(DispatchError::Callback(callback_error(error))),
         Ok(value) if value.is_instance_of::<Promise>() => {
@@ -199,6 +199,7 @@ impl WebParserApi {
                     result(callback.call1(&JsValue::UNDEFINED, &to_js_string(&data)))
                 })
             })
+            .map_err(|error| to_js_error(&error))?
             .map_err(|error| to_js_error(&error))?;
         Ok(ApiDisposable::new(handle))
     }

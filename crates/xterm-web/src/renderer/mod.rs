@@ -11,7 +11,7 @@ mod cursor_blink;
 pub mod dom;
 pub mod geometry;
 #[cfg(target_arch = "wasm32")]
-mod options;
+pub(crate) mod options;
 #[cfg(target_arch = "wasm32")]
 pub use options::read_font as font_from_options;
 pub mod row;
