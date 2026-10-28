@@ -1,0 +1,31 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+warning: field `cleanup_owner` is never read
+   --> crates\xterm-core\src\buffer\screen.rs:149:5
+    |
+119 | pub struct Buffer {
+    |            ------ field in this struct
+...
+149 |     cleanup_owner: CleanupOwnerSlot,
+    |     ^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` on by default
+
+warning: associated function `cleanup_owner_slot_shared` is never used
+   --> crates\xterm-core\src\buffer\screen.rs:198:19
+    |
+151 | impl Buffer {
+    | ----------- associated function in this implementation
+...
+198 |     pub(crate) fn cleanup_owner_slot_shared(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `xterm-core` (lib test) generated 2 warnings
+    Finished `test` profile [unoptimized] target(s) in 2.94s
+     Running unittests src\lib.rs (target\debug\deps\xterm_core-71fa172dc17bbd8d.exe)
+
+running 2 tests
+test osc_link_service::tests::ids_follow_javascript_safe_integer_boundary ... ok
+test osc_link_service::tests::overwritten_limit_entry_still_removes_the_current_numeric_id ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 57 filtered out; finished in 0.00s
+

@@ -1,0 +1,42 @@
+warning: field `cleanup_owner` is never read
+   --> crates\xterm-core\src\buffer\screen.rs:149:5
+    |
+119 | pub struct Buffer {
+    |            ------ field in this struct
+...
+149 |     cleanup_owner: CleanupOwnerSlot,
+    |     ^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` on by default
+
+warning: associated function `cleanup_owner_slot_shared` is never used
+   --> crates\xterm-core\src\buffer\screen.rs:198:19
+    |
+151 | impl Buffer {
+    | ----------- associated function in this implementation
+...
+198 |     pub(crate) fn cleanup_owner_slot_shared(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `xterm-core` (lib) generated 2 warnings
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 0.47s
+     Running tests\osc_link_service.rs (target\debug\deps\osc_link_service-7f4271f588742b27.exe)
+
+running 13 tests
+test upstream_link_ids_are_created_and_fetched_consistently ... ok
+test active_buffers_and_absolute_cursor_lines_are_live ... ok
+test named_id_mutation_preserves_stale_key_source_behavior ... ok
+test data_identity_and_utf16_surrogates_are_lossless ... ok
+test service_drop_releases_data_without_disposing_buffer_markers ... ok
+test upstream_last_trimmed_marker_expires_link_id ... ok
+test marker_cleanup_borrow_failure_retains_original_error_and_partial_state ... ok
+test typed_borrow_errors_do_not_allocate_a_marker_or_id ... ok
+test unnamed_to_named_mutation_cleans_only_its_numeric_entry ... ok
+test markers_deduplicate_current_lines_and_last_disposal_expires_entry ... ok
+test upstream_fetches_exact_link_data ... ok
+test unnamed_links_are_unique_empty_named_ids_reuse_and_delimiters_collide ... ok
+test deterministic_source_service_trace_matches_rust ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
