@@ -196,16 +196,14 @@ impl GestureContext {
         }
         let ignores = self.ignores.borrow().iter();
         for target in ignores {
-            let initial = reads::field(event.as_ref(), "initialTarget")?;
-            if contains(&target.element, &initial)? {
+            if contains_event(&target.element, event)? {
                 return Ok(());
             }
         }
         let candidates = self.targets.borrow().iter();
         let mut targets = Vec::new();
         for target in candidates {
-            let initial = reads::field(event.as_ref(), "initialTarget")?;
-            if !contains(&target.element, &initial)? {
+            if !contains_event(&target.element, event)? {
                 continue;
             }
             let mut node = reads::field(event.as_ref(), "initialTarget")?;
@@ -271,12 +269,17 @@ fn type_is(event: &Event, kind: &str) -> Result<bool, JsValue> {
     Ok(reads::field(event.as_ref(), "type")? == JsValue::from_str(kind))
 }
 
+fn contains_event(target: &HtmlElement, event: &Event) -> Result<bool, JsValue> {
+    // JS evaluates the method before its argument, and checks callability only
+    // after evaluating that argument. Both getters may change routing or throw.
+    let callback = reads::field(target.as_ref(), "contains")?;
+    let initial = reads::field(event.as_ref(), "initialTarget")?;
+    Ok(reads::call1(&callback, target.as_ref(), &initial)?.is_truthy())
+}
+
 fn contains(target: &HtmlElement, node: &JsValue) -> Result<bool, JsValue> {
-    // Calling through the host function preserves thrown values and reentrant
-    // replacements without retaining a list borrow across an overridable method.
-    let callback: js_sys::Function =
-        js_sys::Reflect::get(target, &"contains".into())?.dyn_into()?;
-    Ok(callback.call1(target, node)?.is_truthy())
+    let callback = reads::field(target.as_ref(), "contains")?;
+    Ok(reads::call1(&callback, target.as_ref(), node)?.is_truthy())
 }
 
 fn set(target: &Event, name: &str, value: &JsValue) -> Result<(), JsValue> {

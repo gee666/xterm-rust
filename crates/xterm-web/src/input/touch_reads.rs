@@ -5,9 +5,15 @@ use super::TouchId;
 use wasm_bindgen::{prelude::wasm_bindgen, JsCast, JsValue};
 
 #[wasm_bindgen(
-    inline_js = "export function touchField(target, key) { return target[key]; }\nexport function missingTouchRecord(timestamp) { let data; return timestamp ? data.initialTimeStamp : data.initialTarget; }"
+    inline_js = "export function touchField(target, key) { return target[key]; }\nexport function missingTouchRecord(timestamp) { let data; return timestamp ? data.initialTimeStamp : data.initialTarget; }\nexport function touchCall1(callback, receiver, argument) { return Reflect.apply(callback, receiver, [argument]); }"
 )]
 extern "C" {
+    #[wasm_bindgen(catch, js_name = touchCall1)]
+    pub(super) fn call1(
+        callback: &JsValue,
+        receiver: &JsValue,
+        argument: &JsValue,
+    ) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch, js_name = touchField)]
     fn read_touch_field(target: &JsValue, key: &str) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch, js_name = missingTouchRecord)]

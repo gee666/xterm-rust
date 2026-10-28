@@ -12,7 +12,7 @@ fn original_touch_getter_event_and_partial_history_traces_match_rust_dom() {
     let corpus: serde_json::Value =
         serde_json::from_str(include_str!("fixtures/touch-live.json")).unwrap();
     let cases = corpus.as_array().unwrap();
-    assert_eq!(cases.len(), 86);
+    assert_eq!(cases.len(), 91);
     let create = js_sys::Function::new_no_args(concat!(
         include_str!("../../../tools/touch_live/browser_host.js"),
         "\nreturn createBrowserTouchHost();"
@@ -34,6 +34,13 @@ fn original_touch_getter_event_and_partial_history_traces_match_rust_dom() {
                 .dyn_into()
                 .unwrap();
             handles.push(context.add_target(&element).unwrap());
+        }
+        for label in case["ignores"].as_array().unwrap() {
+            let element: HtmlElement = js_sys::Reflect::get(&host, &label.as_str().unwrap().into())
+                .unwrap()
+                .dyn_into()
+                .unwrap();
+            handles.push(context.ignore_target(&element).unwrap());
         }
         let context = Rc::new(RefCell::new(Some(context)));
         let captured = Rc::clone(&context);

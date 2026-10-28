@@ -4,7 +4,9 @@ const TOUCH_LIVE_CASES = [
   'move-create-reentry', 'commit-x-reentry', 'partial-y-history', 'throw-identifier',
   'throw-commit-x', 'init-throw', 'tap-clock-distinct', 'type-live', 'initial-target-live',
   'translation-set-reentry', 'clock-throw', 'end-key-missing', 'numeric-ids', 'initial-depth-reverse',
-  'throw-event-type', 'throw-initial-target', 'throw-translation-set'
+  'throw-event-type', 'throw-initial-target', 'throw-translation-set',
+  'contains-method-target', 'ignore-contains-method-target', 'contains-null',
+  'contains-null-argument-throw', 'contains-getter-throw'
 ];
 function runTouchScenario(host, name) {
   const log = host.log;
@@ -183,6 +185,23 @@ function runTouchScenario(host, name) {
   } else if (name === 'end-key-missing') {
     start(); send('touchend', [touch('missing-end', { identifier:[1,99] })]);
     move(1,2,1010);
+  } else if (name === 'contains-method-target' || name === 'ignore-contains-method-target') {
+    const ignore=name==='ignore-contains-method-target';
+    const original=host.root.contains;let lookedUp=false;
+    Object.defineProperty(host.root,'contains',{configurable:true,get(){log.push('contains:root:get');lookedUp=true;return original;}});
+    onGet=(meta,key)=>key==='initialTarget'?{value:ignore?(lookedUp?host.leaf:host.outside):(lookedUp?host.outside:host.leaf)}:null;
+    start();onGet=null;delete host.root.contains;
+  } else if (name === 'contains-null' || name === 'contains-null-argument-throw') {
+    Object.defineProperty(host.root,'contains',{configurable:true,value:null});
+    if(name==='contains-null-argument-throw'){
+      const error=token('contains-argument');
+      onGet=(meta,key,count)=>{if(key==='initialTarget'&&count===2)throw error;return null;};
+    }
+    start();onGet=null;delete host.root.contains;
+  } else if (name === 'contains-getter-throw') {
+    const error=token('contains-getter');
+    Object.defineProperty(host.root,'contains',{configurable:true,get(){log.push('contains:root:get');throw error;}});
+    start();delete host.root.contains;
   } else if (name === 'throw-event-type' || name === 'throw-initial-target') {
     start(); const error=token(name);
     onGet=(meta,key,count)=>{if(meta.kind==='-xterm-gesturechange' && key===(name==='throw-event-type'?'type':'initialTarget') && count===2)throw error;return null;};

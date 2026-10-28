@@ -109,8 +109,10 @@ for (const name of names) {
   const gesture = new context.module.exports.Gesture();
   const targets = name === 'initial-depth-reverse' ? ['child','root'] : ['root','child'];
   for (const target of targets) gesture._targets.push(fixture.host[target]);
+  const ignores = name === 'ignore-contains-method-target' ? ['root'] : [];
+  for (const target of ignores) gesture._ignoreTargets.push(fixture.host[target]);
   const result = context.run(fixture.host,name);
-  cases.push({ name, targets, log:Array.from(result) });
+  cases.push({ name, targets, ignores, log:Array.from(result) });
   gesture.dispose();
 }
 const fixturePath = 'crates/xterm-web/tests/fixtures/touch-live.json';

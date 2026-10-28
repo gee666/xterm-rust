@@ -9,6 +9,31 @@ use xterm_web::dom_listener::DomListener;
 wasm_bindgen_test_configure!(run_in_browser);
 
 #[wasm_bindgen_test]
+fn capability_matches_native_window_and_unsupported_tokens_share_identity() {
+    use wasm_bindgen::JsCast;
+    use xterm_web::input::touch::GestureContext;
+    let window = web_sys::window().unwrap();
+    let document = window.document().unwrap();
+    let expected = js_sys::Reflect::has(&window, &"ontouchstart".into()).unwrap()
+        || window.navigator().max_touch_points() > 0;
+    let context = GestureContext::new(document.clone()).unwrap();
+    assert_eq!(context.is_touch_device(), expected);
+    if !expected {
+        let element: web_sys::HtmlElement =
+            document.create_element("div").unwrap().dyn_into().unwrap();
+        document.body().unwrap().append_child(&element).unwrap();
+        let target = context.add_target(&element).unwrap();
+        let ignored = context.ignore_target(&element).unwrap();
+        assert!(std::rc::Rc::ptr_eq(&target, &ignored));
+        assert!(!support::send(&element, "touchstart", 1, 0.0, 0.0).default_prevented());
+        target.dispose();
+        ignored.dispose();
+        element.remove();
+    }
+    context.dispose().unwrap();
+}
+
+#[wasm_bindgen_test]
 fn nested_duplicate_ignore_targets_and_exact_event_fields() {
     let mut setup = Setup::new();
     setup.track(false);

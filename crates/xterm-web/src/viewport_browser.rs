@@ -4,8 +4,17 @@
 mod bindings;
 #[path = "viewport_options.rs"]
 mod options;
+#[cfg(test)]
+#[path = "viewport_state_browser_tests.rs"]
+mod state_tests;
+#[cfg(test)]
+#[path = "viewport_touch_browser_tests.rs"]
+mod touch_tests;
 #[path = "viewport_styles.rs"]
 mod styles;
+#[cfg(test)]
+#[path = "viewport_browser_tests.rs"]
+mod tests;
 
 use super::{SyncCallback, ViewportController, ViewportError, ViewportHost};
 use crate::{
@@ -23,7 +32,7 @@ use std::{
     cell::{Cell, RefCell},
     rc::Rc,
 };
-use wasm_bindgen::{JsCast, JsValue};
+use wasm_bindgen::JsValue;
 use web_sys::{Document, HtmlElement};
 use xterm_core::{
     buffer::BufferService, core_service::CoreService, event::Event, lifecycle::DisposableHandle,
@@ -136,9 +145,7 @@ impl Cleanup {
                 Ok(())
             }
             Self::Node(node) => {
-                let remove: js_sys::Function =
-                    js_sys::Reflect::get(node, &"remove".into())?.dyn_into()?;
-                remove.call0(node).map(|_| ())
+                crate::scroll::interop::method0(node.as_ref(), "remove").map(|_| ())
             }
         }
     }
