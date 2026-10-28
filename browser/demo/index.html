@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>xterm Rust demo</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../xterm.css">
+  <link rel="stylesheet" href="./demo.css">
+</head>
+<body>
+  <header><h1>xterm Rust demo</h1><p>Rust parser, buffers and rendering. Full xterm.js equivalence is not proven.</p></header>
+  <p id="status" role="status">Loading Rust WASM terminal...</p>
+  <p id="error" role="alert" hidden></p>
+  <main>
+    <section aria-label="Terminal session">
+      <div class="toolbar">
+        <button id="sample">ANSI and Unicode sample</button><button id="reset">Reset</button>
+        <button id="dispose">Dispose</button><button id="reopen">Reopen</button>
+      </div>
+      <div id="terminal-container"></div>
+      <form id="write-form"><label>Incoming display text, or a JSON string with escapes <input id="write-text" value="hello from Rust"></label><button>Write</button></form>
+      <form id="input-form"><label>Outgoing user input <input id="input-text" value="user input"></label><button>Send input</button></form>
+      <details open><summary>Live terminal state and outgoing data</summary><pre id="snapshot"></pre><pre id="outgoing" aria-live="polite"></pre></details>
+    </section>
+    <aside aria-label="Live terminal controls">
+      <details open><summary>Size, style and renderer</summary>
+        <form id="size-form"><label>Size, COLSxROWS or auto <input id="size" value="80x24"></label><button>Resize</button></form>
+        <label>Padding <input id="padding" type="number" value="8" min="0"></label>
+        <label>Theme <select id="theme"><option>default</option><option>xtermjs</option><option>sapphire</option><option>light</option></select></label>
+        <label>Renderer <select id="renderer"><option value="dom">DOM</option><option value="webgl">WebGL</option></select></label>
+      </details>
+      <details><summary>Options on this terminal</summary><div id="options"></div></details>
+      <details open><summary>Search</summary>
+        <label>Text <input id="search-text" value="Rust"></label>
+        <label><input id="search-regex" type="checkbox"> Regex</label>
+        <label><input id="search-case" type="checkbox"> Case sensitive</label>
+        <label><input id="search-word" type="checkbox"> Whole word</label>
+        <label><input id="search-highlight" type="checkbox" checked> Highlight all matches</label>
+        <button id="find-next">Find next</button><button id="find-previous">Find previous</button>
+        <output id="search-results"></output>
+      </details>
+      <details open><summary>Serialize</summary>
+        <button id="serialize">Serialize ANSI</button><label><input id="write-back" type="checkbox"> Reset and write back to this terminal</label>
+        <button id="serialize-html">Serialize HTML and copy</button>
+        <pre id="serialize-output"></pre><pre id="html-output"></pre>
+      </details>
+      <details open><summary>Addon lifecycle</summary>
+        <label>Addon <select id="addon-select"></select></label>
+        <label>Attach WebSocket URL <input id="socket-url" value="ws://127.0.0.1:3000/socket"></label>
+        <button id="addon-load">Load</button><button id="addon-unload">Unload</button><button id="addon-reload">Reload</button>
+        <pre id="addon-state"></pre>
+      </details>
+    </aside>
+  </main>
+  <details><summary>Action and lifecycle log</summary><pre id="events"></pre></details>
+  <script type="module" src="./app.mjs"></script>
+</body>
+</html>
