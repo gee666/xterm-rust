@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "sourceExtensions": [".rs", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".css", ".scss", ".html", ".py", ".sh", ".ps1", ".bat", ".cmd", ".c", ".h", ".cpp", ".hpp", ".go", ".java", ".kt", ".swift", ".wgsl", ".glsl", ".vert", ".frag", ".wat"],
   "configurationExtensions": [".json", ".toml", ".yaml", ".yml"],
   "fixtureExtensions": [".txt", ".tsv", ".csv", ".text", ".in", ".out"],
@@ -10,8 +10,11 @@
   "lockFiles": ["Cargo.lock", "package-lock.json", "yarn.lock", "pnpm-lock.yaml"],
   "bindingOverrides": {
     "source": [],
-    "port": ["crates/xterm-web/src/host.rs"]
+    "port": ["crates/xterm-web/src/host.rs", "browser/xterm.mjs"]
   },
+  "bindingPrefixOverrides": { "source": [], "port": ["browser/pkg/"] },
+  "productionOverrides": { "source": [], "port": ["browser/xterm.css"] },
+  "generatedPrefixOverrides": { "source": [], "port": ["browser/pkg/"] },
   "generatedOverrides": {
     "source": [],
     "port": ["crates/xterm-core/src/charset_tables.rs", "crates/xterm-core/src/input/win32_key_codes.rs"]

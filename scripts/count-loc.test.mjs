@@ -68,6 +68,35 @@ test('inventory includes generated sources and configuration but excludes output
   }
 }));
 
+test('structured fixture data takes precedence over configuration and lockfile names', () => fixture((dir, put) => {
+  put('crates/core/tests/fixtures/trace.json', '[1,2]\n');
+  put('crates/core/tests/fixtures/package-lock.json', '{}\n');
+  put('crates/core/tests/tsconfig.json', '{}\n');
+  put('crates/core/Cargo.toml', '[package]\n');
+  const result = inventory(dir, 'port', rules);
+  assert.equal(result.totals.files, 4);
+  assert.equal(result.byCategory['test-data'].files, 2);
+  assert.equal(result.byCategory.configuration.files, 2);
+  assert.equal(result.byPurpose.tests.files, 3);
+  assert.equal(result.files.find(row => row.path.endsWith('fixtures/package-lock.json')).counted, true);
+}));
+
+test('mandatory browser generated glue is counted separately from demo and binary assets', () => fixture((dir, put) => {
+  put('browser/pkg/xterm_web.js', 'export function init() {}\n');
+  put('browser/pkg/xterm_web_bg.wasm', Buffer.from([0, 97, 115, 109]));
+  put('browser/xterm.mjs', "export * from './pkg/xterm_web.js';\n");
+  put('browser/xterm.css', '.xterm {}\n');
+  put('browser/demo/app.mjs', 'console.log(1);\n');
+  const result = inventory(dir, 'port', rules);
+  assert.equal(result.totals.files, 4);
+  assert.equal(result.byCategory['generated-code-data'].files, 1);
+  assert.equal(result.byCategory['bindings-glue'].files, 1);
+  assert.equal(result.byCategory['production-library'].files, 1);
+  assert.equal(result.byCategory.demos.files, 1);
+  assert.equal(result.byPurpose['bindings-glue'].files, 2);
+  assert.equal(result.files.find(row => row.path.endsWith('.wasm')).counted, false);
+}));
+
 test('UTF-8 BOM bytes do not erase a physical source line', () => fixture((dir, put) => {
   put('src/bom-only.rs', Buffer.from([0xef, 0xbb, 0xbf]));
   put('src/bom-newline.rs', Buffer.from([0xef, 0xbb, 0xbf, 0x0a]));
