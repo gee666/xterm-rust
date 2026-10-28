@@ -9,9 +9,10 @@ impl BrowserServices {
         let weak = Rc::downgrade(self);
         let resize = self.native.on_resize().try_subscribe(move |event| {
             if let Some(services) = weak.upgrade() {
-                services.renderer.char_size_service().measure().map_err(callback_error)?;
-                services.renderer.handle_resize(event.cols, event.rows).map_err(callback_error)?;
-                services.sync_dimensions().map_err(callback_error)?;
+                services.metrics.measure().map_err(callback_error)?;
+                services.render_service.resize(event.cols, event.rows).map_err(callback_error)?;
+                services.render_service.handle_resize(event.cols, event.rows).map_err(callback_error)?;
+                services.sync_textarea().map_err(callback_error)?;
                 let ydisp = services.native.with_state(|state| state.active_buffer().borrow().ydisp)
                     .map_err(|error| callback_error(to_js_error(&error)))?;
                 let links = services.links.borrow().clone();
@@ -25,7 +26,7 @@ impl BrowserServices {
         let weak = Rc::downgrade(self);
         let cursor = self.native.on_cursor_move().try_subscribe(move |_| {
             if let Some(services) = weak.upgrade() {
-                services.renderer.handle_cursor_move().map_err(callback_error)?;
+                services.render_service.handle_cursor_move().map_err(callback_error)?;
                 services.sync_textarea().map_err(callback_error)?;
             }
             Ok(())
@@ -44,14 +45,11 @@ impl BrowserServices {
         });
         self.listeners.borrow_mut().push(native);
         let weak = Rc::downgrade(self);
-        let redraw = self.renderer.on_request_redraw().try_subscribe(move |request| {
-            if let Some(services) = weak.upgrade() {
-                if request.sync { services.render_rows(request.start, request.end).map_err(callback_error)?; }
-                else { services.refresh(request.start as f64, request.end as f64).map_err(callback_error)?; }
-            }
+        let dpr = self.core_browser.on_dpr_change().try_subscribe(move |value| {
+            if let Some(services) = weak.upgrade() { services.events.dpr_change.fire(value)?; }
             Ok(())
         });
-        self.listeners.borrow_mut().push(redraw);
+        self.listeners.borrow_mut().push(dpr);
         let weak = Rc::downgrade(self);
         let colors = self.theme.on_change_colors().try_subscribe(move |_| {
             if let Some(services) = weak.upgrade() {
