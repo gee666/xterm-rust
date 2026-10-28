@@ -82,6 +82,7 @@ pub const NONE: NoopDisposable = NoopDisposable;
 pub struct DisposableStore {
     resources: RefCell<StoreResources>,
     disposed: Cell<bool>,
+    explicit_disposal: bool,
 }
 
 #[derive(Default)]
@@ -107,6 +108,17 @@ impl Drop for StoreIteration<'_> {
 impl DisposableStore {
     pub fn new() -> Self {
         Self::default()
+    }
+
+    /// Do not call disposal callbacks on drop. Event subscription groups need
+    /// JavaScript's explicit-only lifetime: ignoring a returned registration
+    /// handle must not unsubscribe it. Stored Rust handles still drop normally.
+    pub fn new_explicit() -> Self {
+        Self {
+            resources: RefCell::default(),
+            disposed: Cell::new(false),
+            explicit_disposal: true,
+        }
     }
 
     pub fn is_disposed(&self) -> bool {
@@ -165,7 +177,9 @@ impl Disposable for DisposableStore {
 
 impl Drop for DisposableStore {
     fn drop(&mut self) {
-        self.dispose();
+        if !self.explicit_disposal {
+            self.dispose();
+        }
     }
 }
 

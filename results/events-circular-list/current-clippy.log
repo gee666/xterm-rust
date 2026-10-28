@@ -1,0 +1,23 @@
+    Blocking waiting for file lock on build directory
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0592]: duplicate definitions with name `addon_registrars`
+  --> crates\xterm-core\src\headless\views.rs:28:5
+   |
+10 | /     pub fn addon_registrars(
+11 | |         &self,
+12 | |     ) -> Result<
+...  |
+17 | |         HeadlessError,
+18 | |     > {
+   | |_____- other definition for `addon_registrars`
+...
+28 | /     pub fn addon_registrars(
+29 | |         &self,
+30 | |     ) -> Result<
+...  |
+35 | |         HeadlessError,
+36 | |     > {
+   | |_____^ duplicate definitions for `addon_registrars`
+
+For more information about this error, try `rustc --explain E0592`.
+error: could not compile `xterm-core` (lib) due to 1 previous error

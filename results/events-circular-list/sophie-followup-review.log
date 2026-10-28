@@ -1,0 +1,155 @@
+{
+  "status": "passed scoped checks; terminal equivalence NOT PROVEN",
+  "command": "node scripts/check-events-and-circular-list.mjs",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+  "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+  "buildMode": "workspace Cargo build",
+  "source": {
+    "Lifecycle.ts": "e00016aae991e24137ab066778912414f4af959f2b26baecf47ec542ad313a83",
+    "Event.ts": "aa374272c5ec5c0d6992d6072687211a94676b086a2505b0414ddd20cf57d641",
+    "CircularList.ts": "558ae3c18862469de29c2f77e06c31c44c2cddaa25fd6e69059bf2176efc54f6",
+    "Event.test.ts": "dc2614b7d33ed749c4d0c97235353c1ab39c61b8ad59fe406c106ed9aa54331c",
+    "CircularList.test.ts": "0b133ab2b0c7527d1b87f7e7a6d80358fcb26fed8807bdb120cf3f867faa88d3"
+  },
+  "upstream": {
+    "discovered": 26,
+    "executed": 26,
+    "passed": 26,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0,
+    "assertions": 95,
+    "outcomes": [
+      {
+        "name": "Emitter / should fire with 0 listeners without error",
+        "status": "passed"
+      },
+      {
+        "name": "Emitter / should fire with 1 listener",
+        "status": "passed"
+      },
+      {
+        "name": "Emitter / should fire with 1 listener using thisArgs",
+        "status": "passed"
+      },
+      {
+        "name": "Emitter / should fire with multiple listeners",
+        "status": "passed"
+      },
+      {
+        "name": "Emitter / should handle listener removal during fire",
+        "status": "passed"
+      },
+      {
+        "name": "Emitter / should not fire after dispose",
+        "status": "passed"
+      },
+      {
+        "name": "Emitter / should allow disposing a listener",
+        "status": "passed"
+      },
+      {
+        "name": "CircularList / push / should push values onto the array",
+        "status": "passed"
+      },
+      {
+        "name": "CircularList / push / should push old values from the start out of the array when max length is reached",
+        "status": "passed"
+      },
+      {
+        "name": "CircularList / maxLength / should increase the size of the list",
+        "status": "passed"
+      },
+      {
+        "name": "CircularList / maxLength / should return the maximum length of the list",
+        "status": "passed"
+      },
+      {
+        "name": "CircularList / length / should return the current length of the list, capped at the maximum length",
+        "status": "passed"
+      },
+      {
+        "name": "CircularList / splice / should delete items",
+        "status": "passed"
+      },
+      {
+        "name": "CircularList / splice / should insert items",
+        "status": "passed"
+      },
+      {
+        "name": "CircularList / splice / should delete items then insert items",
+        "status": "passed"
+      },
+      {
+        "name": "CircularList / splice / should wrap the array correctly when more items are inserted than deleted",
+        "status": "passed"
+      },
+      {
+        "name": "CircularList / trimStart / should remove items from the beginning of the list",
+        "status": "passed"
+      },
+      {
+        "name": "CircularList / trimStart / should remove all items if the requested trim amount is larger than the list's length",
+        "status": "passed"
+      },
+      {
+        "name": "CircularList / shiftElements / should not mutate the list when count is 0",
+        "status": "passed"
+      },
+      {
+        "name": "CircularList / shiftElements / should throw for invalid args",
+        "status": "passed"
+      },
+      {
+        "name": "CircularList / shiftElements / should shift an element forward",
+        "status": "passed"
+      },
+      {
+        "name": "CircularList / shiftElements / should shift elements forward",
+        "status": "passed"
+      },
+      {
+        "name": "CircularList / shiftElements / should shift elements forward, expanding the list if needed",
+        "status": "passed"
+      },
+      {
+        "name": "CircularList / shiftElements / should shift elements forward, wrapping the list if needed",
+        "status": "passed"
+      },
+      {
+        "name": "CircularList / shiftElements / should shift an element backwards",
+        "status": "passed"
+      },
+      {
+        "name": "CircularList / shiftElements / should shift elements backwards",
+        "status": "passed"
+      }
+    ]
+  },
+  "rust": {
+    "tests": 63,
+    "upstreamMapped": 26,
+    "added": 37,
+    "log": "rust-tests.log"
+  },
+  "differential": {
+    "seed": 3249275303,
+    "circleIterations": 20000,
+    "circleComparedStates": 20022,
+    "eventIterations": 10000,
+    "eventComparedTraces": 10008,
+    "failures": 0,
+    "comparison": "all wrapped slots, length, capacity, fullness, operation result, event order/payload and event-time storage snapshots; listener traces, nested dispatch, additions/removals and disposal errors"
+  },
+  "differences": [
+    "CircularList requires a positive capacity. Zero capacity is rejected rather than constructing the degenerate upstream array.",
+    "Rust uses usize list lengths and indexes; empty pop and invalid splice ranges return errors rather than creating negative JavaScript lengths.",
+    "Captured closures replace thisArgs. Rust events borrow payloads, and EmitError represents the upstream dispose-during-fire TypeError.",
+    "Cloning Rust elements copies values. Rc elements preserve JavaScript mutable object identity.",
+    "EventUtils.any combines a homogeneous Rust payload type; erase payloads explicitly for the heterogeneous JavaScript void overload."
+  ]
+}
+(node:21184) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
