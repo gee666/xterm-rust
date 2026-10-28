@@ -5,6 +5,13 @@ use wasm_bindgen_test::*;
 use xterm_web::terminal::addon_manager::BrowserAddonManager;
 wasm_bindgen_test_configure!(run_in_browser);
 
+#[path = "public_adapter_cases/buffer.rs"]
+mod buffer;
+#[path = "public_adapter_cases/identifiers.rs"]
+mod identifiers;
+#[path = "public_adapter_cases/parser.rs"]
+mod parser;
+
 #[wasm_bindgen(inline_js = "
 export function addon(label, log, activateError, disposeError) {
   return {
@@ -17,6 +24,21 @@ export function recursiveAddon(log) {
   return a;
 }
 export function terminalObject() {return {cols:5};}
+export function customApply(log) {
+  const instance={activate() {},dispose:{apply(receiver) {log.push(receiver===instance);}}};
+  return instance;
+}
+export function invalidMethods(activate, dispose) {return {activate,dispose};}
+export function domProbe(terminal, log) {
+  return {activate(t) {log.push(t===terminal);},dispose() {log.push(terminal.element.isConnected);}};
+}
+export function withRecordSetterTrap(action) {
+  const before=Object.getOwnPropertyDescriptor(Object.prototype,'instance');
+  Object.defineProperty(Object.prototype,'instance',{configurable:true,set(){throw new Error('record must be an object literal');}});
+  try {action();} finally {
+    if(before)Object.defineProperty(Object.prototype,'instance',before);else delete Object.prototype.instance;
+  }
+}
 ")]
 extern "C" {
     fn addon(
@@ -29,6 +51,14 @@ extern "C" {
     fn recursive_addon(log: &Array) -> JsValue;
     #[wasm_bindgen(js_name = terminalObject)]
     fn terminal_object() -> JsValue;
+    #[wasm_bindgen(js_name = customApply)]
+    fn custom_apply(log: &Array) -> JsValue;
+    #[wasm_bindgen(js_name = invalidMethods)]
+    fn invalid_methods(activate: &JsValue, dispose: &JsValue) -> JsValue;
+    #[wasm_bindgen(js_name = domProbe)]
+    fn dom_probe(terminal: &JsValue, log: &Array) -> JsValue;
+    #[wasm_bindgen(catch, js_name = withRecordSetterTrap)]
+    fn with_record_setter_trap(action: &Function) -> Result<(), JsValue>;
 }
 fn dispose(addon: &JsValue) -> Result<JsValue, JsValue> {
     Reflect::get(addon, &"dispose".into())?
@@ -118,6 +148,86 @@ fn duplicate_instances_cross_manager_wrappers_dispose_original_once() {
         log_values(&log),
         ["activate:shared:5", "activate:shared:5", "dispose:shared"]
     );
+}
+
+#[wasm_bindgen_test]
+fn dynamic_apply_and_non_function_method_errors_follow_javascript() {
+    let manager = BrowserAddonManager::new();
+    let log = Array::new();
+    let instance = custom_apply(&log);
+    manager.load_addon(&terminal_object(), &instance).unwrap();
+    manager.dispose().unwrap();
+    assert_eq!(log.get(0).as_bool(), Some(true));
+    let invalid = invalid_methods(&17.into(), &JsValue::UNDEFINED);
+    let error = manager
+        .load_addon(&terminal_object(), &invalid)
+        .unwrap_err();
+    assert!(error.is_instance_of::<js_sys::TypeError>());
+    let error = manager.dispose().unwrap_err();
+    assert!(error.is_instance_of::<js_sys::TypeError>());
+    manager.dispose().unwrap();
+}
+
+#[wasm_bindgen_test]
+fn record_literals_bypass_inherited_setters_and_primitive_load_failure_keeps_record() {
+    let manager = std::rc::Rc::new(BrowserAddonManager::new());
+    let loaded = manager.clone();
+    let action = Closure::wrap(Box::new(move || -> Result<(), JsValue> {
+        let item = addon(
+            "literal",
+            &Array::new(),
+            &JsValue::UNDEFINED,
+            &JsValue::UNDEFINED,
+        );
+        loaded.load_addon(&terminal_object(), &item)
+    }) as Box<dyn FnMut() -> Result<(), JsValue>>);
+    with_record_setter_trap(action.as_ref().unchecked_ref()).unwrap();
+    manager.dispose().unwrap();
+    let invalid = BrowserAddonManager::new();
+    assert!(invalid
+        .load_addon(&terminal_object(), &17.into())
+        .unwrap_err()
+        .is_instance_of::<js_sys::TypeError>());
+    assert!(invalid
+        .dispose()
+        .unwrap_err()
+        .is_instance_of::<js_sys::TypeError>());
+    assert!(invalid
+        .dispose()
+        .unwrap_err()
+        .is_instance_of::<js_sys::TypeError>());
+}
+
+#[wasm_bindgen_test]
+fn actual_terminal_identity_and_core_dom_cleanup_precede_addon_disposal() {
+    let document = web_sys::window().unwrap().document().unwrap();
+    let style = document.create_element("style").unwrap();
+    style.set_text_content(Some(include_str!("../assets/xterm.css")));
+    document.body().unwrap().append_child(&style).unwrap();
+    let container = document.create_element("div").unwrap();
+    document.body().unwrap().append_child(&container).unwrap();
+    let terminal: JsValue = xterm_web::terminal::Terminal::new(js_sys::Object::new().into())
+        .unwrap()
+        .into();
+    Reflect::get(&terminal, &"open".into())
+        .unwrap()
+        .dyn_into::<Function>()
+        .unwrap()
+        .call1(&terminal, &container)
+        .unwrap();
+    let log = Array::new();
+    let addon = dom_probe(&terminal, &log);
+    Reflect::get(&terminal, &"_loadAddon".into())
+        .unwrap()
+        .dyn_into::<Function>()
+        .unwrap()
+        .call2(&terminal, &terminal, &addon)
+        .unwrap();
+    assert_eq!(log.get(0).as_bool(), Some(true));
+    dispose(&terminal).unwrap();
+    assert_eq!(log.get(1).as_bool(), Some(false));
+    container.remove();
+    style.remove();
 }
 
 #[wasm_bindgen_test]
