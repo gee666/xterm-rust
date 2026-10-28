@@ -105,54 +105,48 @@ impl Terminal {
     #[wasm_bindgen(js_name = scrollLines)]
     pub fn scroll_lines(&self, amount: f64) -> Result<(), JsValue> {
         verify_integers(&[amount]).map_err(|error| to_js_error(&error))?;
-        let amount = self
-            .shared
-            .native
-            .with_state(|state| {
-                let buffer = state.active_buffer();
-                let buffer = buffer.borrow();
-                amount.clamp(-(buffer.ydisp as f64), (buffer.ybase - buffer.ydisp) as f64) as i64
-            })
-            .map_err(|error| to_js_error(&error))?;
-        self.shared
-            .native
-            .scroll_lines(amount)
-            .map_err(|error| to_js_error(&error))
+        self.scroll_lines_inner(amount)
     }
     #[wasm_bindgen(js_name = scrollPages)]
     pub fn scroll_pages(&self, amount: f64) -> Result<(), JsValue> {
         verify_integers(&[amount]).map_err(|error| to_js_error(&error))?;
-        self.scroll_lines(amount * (self.rows()? - 1.0))
+        self.scroll_lines_inner(amount * (self.rows()? - 1.0))
     }
     #[wasm_bindgen(js_name = scrollToTop)]
     pub fn scroll_to_top(&self) -> Result<(), JsValue> {
-        self.shared
+        let display = self
+            .shared
             .native
-            .scroll_to_top()
-            .map_err(|error| to_js_error(&error))
+            .with_state(|state| state.active_buffer().borrow().ydisp)
+            .map_err(|error| to_js_error(&error))?;
+        self.scroll_lines_inner(-(display as f64))
     }
     #[wasm_bindgen(js_name = scrollToBottom)]
     pub fn scroll_to_bottom(&self) -> Result<(), JsValue> {
-        self.shared
+        let amount = self
+            .shared
             .native
-            .scroll_to_bottom()
-            .map_err(|error| to_js_error(&error))
+            .with_state(|state| {
+                let active = state.active_buffer();
+                let buffer = active.borrow();
+                buffer.ybase as f64 - buffer.ydisp as f64
+            })
+            .map_err(|error| to_js_error(&error))?;
+        self.scroll_lines_inner(amount)
     }
     #[wasm_bindgen(js_name = scrollToLine)]
     pub fn scroll_to_line(&self, line: f64) -> Result<(), JsValue> {
         verify_integers(&[line]).map_err(|error| to_js_error(&error))?;
-        let line = self
+        let display = self
             .shared
             .native
-            .with_state(|state| {
-                line.max(0.0)
-                    .min(state.active_buffer().borrow().ybase as f64) as usize
-            })
+            .with_state(|state| state.active_buffer().borrow().ydisp)
             .map_err(|error| to_js_error(&error))?;
-        self.shared
-            .native
-            .scroll_to_line(line)
-            .map_err(|error| to_js_error(&error))
+        let difference = line - display as f64;
+        if difference != 0.0 {
+            self.scroll_lines_inner(difference)?;
+        }
+        Ok(())
     }
     pub fn focus(&self) -> Result<(), JsValue> {
         if let Some(dom) = self.shared.dom.borrow().as_ref() {
@@ -230,6 +224,33 @@ impl Terminal {
     }
 }
 impl Terminal {
+    fn scroll_lines_inner(&self, amount: f64) -> Result<(), JsValue> {
+        let services = self.shared.services.borrow().clone();
+        if let Some(services) = services {
+            if services.viewport.get().is_some() {
+                return services.scroll_lines_number(amount);
+            }
+        }
+        // Before Viewport construction, source delegates to the core. Its
+        // bounded coordinates make clamping safe here, but not in the pixel
+        // path where an in-flight fractional position must remain observable.
+        let amount = self
+            .shared
+            .native
+            .with_state(|state| {
+                let active = state.active_buffer();
+                let buffer = active.borrow();
+                amount.clamp(
+                    -(buffer.ydisp as f64),
+                    buffer.ybase as f64 - buffer.ydisp as f64,
+                ) as i64
+            })
+            .map_err(|error| to_js_error(&error))?;
+        self.shared
+            .native
+            .scroll_lines(amount)
+            .map_err(|error| to_js_error(&error))
+    }
     pub fn queued_write_handle(&self) -> Rc<dyn Fn(WriteData) -> Result<(), JsValue>> {
         let writer = self.shared.writer.clone();
         Rc::new(move |data| {

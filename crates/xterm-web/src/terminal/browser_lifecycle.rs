@@ -143,6 +143,9 @@ impl BrowserServices {
             listener.dispose();
         }
         self.render_service.dispose()?;
+        if let Some(viewport) = self.viewport.get() {
+            viewport.dispose()?;
+        }
         self.metrics.state.dispose();
         self.core_browser.dispose()?;
         self.theme.dispose();
