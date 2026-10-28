@@ -24,4 +24,10 @@ The eleven native CSI/edit/erase test executables pass 65 tests. Scoped Clippy w
 
 [Run 40659600619](https://github.com/gee666/xterm-rust/actions/runs/40659600619) tested the earlier branch commit `5f565a4`. Its focused Miri job passed 21 tests. Its native Windows, Linux and macOS quality jobs failed, as did WASM compilation. This is observed failed CI, not missing OS access and not a pass for these new changes. The run metadata and job logs are retained under `results/quality/ci-40659600619/`. Current xterm-web compilation also fails on unrelated missing browser adapters, so the DOM-free WASM package isolates the terminal callback checks without claiming browser binding coverage.
 
+[Run 40724491868](https://github.com/gee666/xterm-rust/actions/runs/40724491868) tested the current implementation at `e310426`. At the last observation five native jobs had failed quality-runner verification before Cargo gates, WASM compilation had failed, focused Miri had passed, and macOS MSRV was still queued. Metadata is in `results/quality/ci-40724491868/run.json`. It is already non-green, but not a completed matrix.
+
+## Integration still pending
+
+Independent `swarm_review` accepted tasks176 and241 and reran all 65 focused tests, six release regressions and scoped lint checks. The canonical merge refused integration because the existing `core_services_integration` logger regression requires every callback to observe x=2. Restoring only the three changed CSI implementation files to main reproduced that same failure. Task264 already owns the source-correct diagnostic phase regression. Task270 tracks rebasing and merging this branch after264 lands. The implementation is reviewed and pushed, but is not yet on main.
+
 Full equivalence remains NOT PROVEN.
