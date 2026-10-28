@@ -8,6 +8,7 @@ pub mod input;
 pub mod links;
 pub mod selection;
 pub mod theme;
+pub mod viewport;
 pub mod contrast_cache;
 pub mod renderer;
 pub mod char_size;
