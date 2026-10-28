@@ -1,5 +1,7 @@
 // Copyright (c) 2018-2026 The xterm.js authors. All rights reserved. MIT license.
 //! Live JavaScript buffer views over the Rust buffer namespace.
+#[path = "buffer_line_json.rs"]
+mod json;
 use super::buffer_cell::WebBufferCell;
 use crate::{js_error::to_js_error, utf16::to_js_string};
 use js_sys::{Function, JsString, Reflect};

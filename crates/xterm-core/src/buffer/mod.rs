@@ -21,4 +21,4 @@ pub use service::BufferService;
 pub use attributes::AttributeData;
 pub use cell::{CellData, CharData};
 pub use extended::ExtendedAttrs;
-pub use line::BufferLine;
+pub use line::{BufferLine, LineSnapshot};

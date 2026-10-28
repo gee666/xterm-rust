@@ -59,6 +59,9 @@ impl ExtendedAttrs {
         drop(previous);
     }
 
+    /// Stored word before hyperlink-driven underline presentation overrides.
+    pub fn raw_ext(&self) -> u32 { self.data.borrow().raw }
+
     pub fn ext(&self) -> u32 {
         let data = self.data.borrow();
         if data.url_id != 0 {

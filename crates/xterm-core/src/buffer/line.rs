@@ -18,6 +18,9 @@ mod buffer_cleanup_tests;
 mod text;
 #[path = "line_numeric.rs"]
 mod numeric;
+#[path = "line_snapshot.rs"]
+mod snapshot;
+pub use snapshot::LineSnapshot;
 
 /// One terminal row with sparse combined strings and extended attributes.
 /// Out-of-range cell access returns `None`; mutations outside the row are ignored,

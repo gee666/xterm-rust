@@ -81,6 +81,34 @@ fn javascript_buffer_and_line_identities_are_live_and_cell_targets_are_reused() 
 }
 
 #[wasm_bindgen_test]
+fn line_json_contains_value_state_not_wasm_pointer_identity() {
+    let first = Rc::new(Terminal::new(5, 3, 10).unwrap());
+    let second = Rc::new(Terminal::new(5, 3, 10).unwrap());
+    let input = "A\u{301}\x1b[4:3mB";
+    first.write(input).unwrap();
+    second.write(input).unwrap();
+    let first_view = WebBufferNamespace::new(first).unwrap().normal();
+    let second_view = WebBufferNamespace::new(second).unwrap().normal();
+    let first_line = call(&first_view, "getLine", &[0.into()]);
+    let second_line = call(&second_view, "getLine", &[0.into()]);
+    let first_json = js_sys::JSON::stringify(&first_line)
+        .unwrap()
+        .as_string()
+        .unwrap();
+    let second_json = js_sys::JSON::stringify(&second_line)
+        .unwrap()
+        .as_string()
+        .unwrap();
+    assert_eq!(first_json, second_json);
+    assert!(!first_json.contains("__wbg_ptr"));
+    let value = js_sys::JSON::parse(&first_json).unwrap();
+    assert_eq!(property(&value, "length").as_f64(), Some(5.0));
+    assert!(property(&property(&value, "_data"), "0").as_f64().unwrap() > 0.0);
+    assert!(!property(&property(&value, "_combined"), "0").is_undefined());
+    assert!(!property(&property(&value, "_extendedAttrs"), "1").is_undefined());
+}
+
+#[wasm_bindgen_test]
 fn namespace_event_function_keeps_identity_and_does_not_require_a_receiver() {
     let terminal = Rc::new(Terminal::new(5, 3, 10).unwrap());
     let namespace = WebBufferNamespace::new(terminal.clone()).unwrap();
