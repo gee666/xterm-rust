@@ -1,0 +1,68 @@
+{
+  "reviewer": "Sargon",
+  "platform": "win32",
+  "outcomes": [
+    {
+      "name": "outer-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-core",
+        "--test",
+        "escape_osc"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1349.2085,
+      "status": "passed",
+      "log": "results/osc/sargon-review/outer-tests.log"
+    },
+    {
+      "name": "outer-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "xterm-core",
+        "--test",
+        "escape_osc",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 2502.1904,
+      "status": "failed",
+      "log": "results/osc/sargon-review/outer-clippy.log"
+    },
+    {
+      "name": "outer-fmt",
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2021",
+        "--check",
+        "crates/xterm-core/tests/escape_osc.rs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 42.85869999999977,
+      "status": "passed",
+      "log": "results/osc/sargon-review/outer-fmt.log"
+    }
+  ]
+}

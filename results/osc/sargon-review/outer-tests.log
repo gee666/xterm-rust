@@ -1,0 +1,25 @@
+    Blocking waiting for file lock on build directory
+warning: method `with_queued_parse` is never used
+  --> crates\xterm-core\src\headless\events.rs:67:12
+   |
+33 | impl Events {
+   | ----------- method in this implementation
+...
+67 |     pub fn with_queued_parse<T>(&self, action: impl FnOnce() -> T) -> T {
+   |            ^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `xterm-core` (lib) generated 1 warning
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 1.10s
+     Running tests\escape_osc.rs (target\debug\deps\escape_osc-cb6f5d0a16c264ab.exe)
+
+running 4 tests
+test failed_callback_stops_before_trailing_print_and_does_not_invoke_older_handler ... ok
+test every_osc_mutation_exception_propagates_through_outer_parser ... ok
+test rejected_callback_future_keeps_parser_paused_until_explicit_reset ... ok
+test every_osc_intro_terminator_and_chunk_boundary_matches_original_parser ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
