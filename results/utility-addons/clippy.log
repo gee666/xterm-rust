@@ -1,0 +1,29 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on build directory
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error: fields `truthy` and `equal` are never read
+  --> crates\xterm-core\src\options\object.rs:17:5
+   |
+13 | pub struct OptionObject {
+   |            ------------ fields in this struct
+...
+17 |     truthy: bool,
+   |     ^^^^^^
+18 |     equal: Option<Box<Equality>>,
+   |     ^^^^^
+   |
+   = note: `-D dead-code` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(dead_code)]`
+
+error: methods `truthy` and `equals` are never used
+   --> crates\xterm-core\src\options\object.rs:105:19
+    |
+43  | impl OptionObject {
+    | ----------------- methods in this implementation
+...
+105 |     pub(super) fn truthy(&self) -> bool { self.truthy }
+    |                   ^^^^^^
+106 |     pub(super) fn equals(&self, other: &Self) -> bool {
+    |                   ^^^^^^
+
+error: could not compile `xterm-core` (lib) due to 2 previous errors

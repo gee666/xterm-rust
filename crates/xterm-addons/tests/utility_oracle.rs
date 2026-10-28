@@ -120,7 +120,7 @@ fn web_link_window_and_utf16_mapping_match_source() {
     let corpus = corpus();
     assert_eq!(STRICT_URL_REGEX, corpus["regex"].as_str().unwrap());
     let cases = corpus["links"].as_array().unwrap();
-    assert_eq!(cases.len(), 1764);
+    assert_eq!(cases.len(), 1765);
     for (i, case) in cases.iter().enumerate() {
         let buffer = Buffer(
             case["lines"]

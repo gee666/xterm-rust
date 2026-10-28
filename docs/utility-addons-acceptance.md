@@ -33,7 +33,7 @@ Reference `source_repo/addons/addon-fit/src/FitAddon.ts`, `browser/shared/Consta
 - Scrollbar width is zero for scrollback=0 or showScrollbar=false. Otherwise use explicit width, including zero, or default14. Test absent scrollbar object and absent individual properties.
 - Subtract top/bottom and right/left padding and scrollbar before division; floor and clamp to minimum2 columns/1 row. Preserve fractional cell dimensions and JS NaN/Infinity behavior. fit rejects NaN but otherwise forwards dimensions and adapter errors exactly. A second fit at the same dimensions still calls resize and does not throw.
 - Dispose has no observable state change in the original, so fit/proposal after dispose still works. Rust must not invent invalidation.
-- Port all ten browser cases, including no terminal, default/width/small/hidden proposals and default/width/small/same-dimensions fit, without weakening bounds. Add DOM removal, zero measurement, custom scrollbar and iframe cases.
+- Port all nine browser cases, including no terminal, default/width/small/hidden proposals and default/width/small/same-dimensions fit, without weakening bounds. Add DOM removal, zero measurement, custom scrollbar and iframe cases.
 
 ## Web links
 

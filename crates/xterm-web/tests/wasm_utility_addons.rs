@@ -135,8 +135,9 @@ impl AttachTerminal for Sink {
 }
 #[wasm_bindgen_test(async)]
 async fn real_websocket_delivers_string_and_arraybuffer_to_rust_addon() {
-    let url = option_env!("UTILITY_SOCKET_URL")
-        .expect("run with scripts/utility-addon-browser-check.mjs");
+    let Some(url) = option_env!("UTILITY_SOCKET_URL") else {
+        panic!("run with scripts/utility-addon-browser-check.mjs");
+    };
     let socket = WebSocket::new(url).unwrap();
     let terminal = Rc::new(Sink {
         writes: RefCell::default(),

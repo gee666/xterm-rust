@@ -42,7 +42,7 @@ pub fn decode_text(data: &[u16]) -> Vec<u16> {
         .collect()
 }
 
-fn decode_bytes(data: &[u16]) -> Option<Vec<u8>> {
+pub(crate) fn decode_bytes(data: &[u16]) -> Option<Vec<u8>> {
     let mut units: Vec<u16> = data
         .iter()
         .copied()

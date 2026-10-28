@@ -78,15 +78,34 @@ function bufferFor(lines) {
   }));
   return { active: { getLine: i => wrappers[i], getNullCell: () => ({}) } };
 }
-function cells(value) { return Array.from(value, c => ({ chars: u16(c), width: 1 })); }
+function makeLines(value, width) {
+  const lines = [{ wrapped: false, cells: [] }];
+  for (const char of value) {
+    let line = lines.at(-1);
+    if (/\p{Mark}/u.test(char) && line.cells.length) {
+      const cell = [...line.cells].reverse().find(cell => cell.width);
+      cell.chars.push(...u16(char));
+      continue;
+    }
+    const cp = char.codePointAt(0);
+    const wide = cp === 0xffe5 || (cp >= 0xac00 && cp <= 0xd7af) || cp > 0xffff;
+    const size = wide ? 2 : 1;
+    if (line.cells.length + size > width) {
+      while (line.cells.length < width) line.cells.push({ chars: [], width: 1 });
+      line = { wrapped: true, cells: [] }; lines.push(line);
+    }
+    line.cells.push({ chars: u16(char), width: size });
+    if (wide) line.cells.push({ chars: [], width: 0 });
+  }
+  while (lines.at(-1).cells.length < width) lines.at(-1).cells.push({ chars: [], width: 1 });
+  return lines;
+}
 const links = [];
 const examples = ['aaa http://example.com aaa http://example.com aaa', 'HTTP://EXAMPLE.COM HTTPS://Example.com HTTP://Ab:xY@abc.com:80/staysUpper', 'http://example.com/colon:test: "http://example.com/" http://example.com/a~b#c~d?e~f', '￥￥￥cafe\u0301 http://test:password@example.com/some_path', 'https://ko.wikipedia.org/wiki/위키백과:대문', 'http://[::1]/ http://not a url ftp://host/ http://example.com:999999/'];
 for (let i = 0; i < 256; i++) examples.push('a'.repeat(next() % 50) + ' http://example.com/' + 'x'.repeat(next() % 100));
 for (const value of examples) {
   const width = [8, 20, 40][next() % 3];
-  const all = cells(value);
-  const lines = [];
-  for (let i = 0; i < all.length; i += width) lines.push({ wrapped: i !== 0, cells: all.slice(i, i + width) });
+  const lines = makeLines(value, width);
   const terminal = { buffer: bufferFor(lines) };
   for (let y = 1; y <= lines.length; y++) {
     const [parts] = LinkComputer._getWindowedLineStrings(y - 1, terminal);
@@ -96,12 +115,23 @@ for (const value of examples) {
     links.push({ lines, y, candidates, expected });
   }
 }
+const linkTestPath = root + 'addon-web-links/test/WebLinksAddon.test.ts';
+const linkTest = await readFile(linkTestPath, 'utf8');
+hashes[linkTestPath] = createHash('sha256').update(linkTest).digest('hex');
+const tldBlock = linkTest.match(/const countryTlds = \[([\s\S]*?)\n  \];/)[1];
+const tlds = [...tldBlock.matchAll(/'(\.[a-z]+)'/g)].map(match => match[1]);
+const hostnames = [...tlds.map(tld => `foo${tld}`), 'foo.com', ...tlds.map(tld => `foo.com${tld}`)];
+const hostCorpus = JSON.stringify({ hosts: hostnames, source: linkTestPath, sourceSha256: hashes[linkTestPath] }) + '\n';
+const hostPath = 'crates/xterm-web/tests/fixtures/utility-hostnames.json';
+await mkdir('crates/xterm-web/tests/fixtures', { recursive: true });
+if (process.argv.includes('--generate')) await writeFile(hostPath, hostCorpus);
+else assert.equal(await readFile(hostPath, 'utf8'), hostCorpus);
 const corpus = JSON.stringify({ base64, fit, clipboard, links, regex: regex.source });
 const path = 'crates/xterm-addons/tests/fixtures/utility-addons.json';
 await mkdir('crates/xterm-addons/tests/fixtures', { recursive: true });
 if (process.argv.includes('--generate')) await writeFile(path, corpus + '\n');
 else assert.equal((await readFile(path, 'utf8')).trim(), corpus);
-const report = { node: process.version, seed, hashes, counts: { base64: base64.length, fit: fit.length, clipboard: clipboard.length, links: links.length }, corpusSha256: createHash('sha256').update(corpus).digest('hex'), status: 'source methods executed; portable corpus only; browser suites unrun' };
+const report = { node: process.version, seed, hashes, counts: { base64: base64.length, fit: fit.length, clipboard: clipboard.length, links: links.length, countryTlds: tlds.length, hostnameCases: hostnames.length, hostnameAssertions: hostnames.length * 7 }, corpusSha256: createHash('sha256').update(corpus).digest('hex'), status: 'source methods executed; portable corpus only; browser suites unrun' };
 await mkdir('results/utility-addons', { recursive: true });
 await writeFile('results/utility-addons/oracle.json', JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify(report, null, 2));
