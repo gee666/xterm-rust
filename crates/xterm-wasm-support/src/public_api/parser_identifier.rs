@@ -13,7 +13,7 @@ const FINAL_MAX: u32 = 0x7e;
 const MAX_PREFIX_LENGTH: u32 = 1;
 const MAX_INTERMEDIATE_LENGTH: u32 = 2;
 
-#[wasm_bindgen(module = "/src/terminal/parser_identifier_bridge.js")]
+#[wasm_bindgen(module = "/src/public_api/parser_identifier_bridge.js")]
 extern "C" {
     #[wasm_bindgen(catch,js_name=identifierProperty)]
     fn property(value: &JsValue, key: &str) -> Result<JsValue, JsValue>;

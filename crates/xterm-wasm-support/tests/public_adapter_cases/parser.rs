@@ -4,7 +4,7 @@ use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_test::*;
 use xterm_core::headless::Terminal;
-use xterm_web::{js_error::to_js_error, terminal::parser_api::WebParserApi, utf16::from_js_string};
+use xterm_wasm_support::{js_error::to_js_error, public_api::parser_api::WebParserApi, utf16::from_js_string};
 
 #[wasm_bindgen(inline_js = "
 export function callback(log, label, handled, asynchronous) {

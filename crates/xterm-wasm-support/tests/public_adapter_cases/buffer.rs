@@ -4,7 +4,7 @@ use std::rc::Rc;
 use wasm_bindgen::{prelude::*, JsCast};
 use wasm_bindgen_test::*;
 use xterm_core::headless::Terminal;
-use xterm_web::terminal::buffer_api::WebBufferNamespace;
+use xterm_wasm_support::public_api::buffer_api::WebBufferNamespace;
 
 #[wasm_bindgen(
     inline_js = "export function capture(log) {return value => log.push(value);}\nexport function captureReceiver(log, expected) {return function(value) {log.push([this===expected,value]);};}"

@@ -37,7 +37,7 @@ function inputHashes() {
   const files=[...rustFiles('crates/xterm-core/src'),...suites.map(suite=>`crates/xterm-core/tests/${suite}.rs`),
     'Cargo.toml','Cargo.lock','.cargo/config.toml','crates/xterm-core/Cargo.toml',
     'scripts/check-public-adapters.mjs','scripts/public-addon-oracle.mjs','scripts/public-buffer-oracle.mjs',
-    'scripts/quality-process.mjs','scripts/quality-tree.mjs','crates/xterm-web/tests/fixtures/public-cell-methods.json',
+    'scripts/quality-process.mjs','scripts/quality-tree.mjs','crates/xterm-wasm-support/tests/fixtures/public-cell-methods.json',
     ...['public/AddonManager.ts','public/AddonManager.test.ts','public/BufferApiView.ts','CircularList.ts','buffer/CellData.ts','buffer/AttributeData.ts'].map(path=>`source_repo/src/common/${path}`),
   ].sort();
   return Object.fromEntries(files.map(path=>[path,createHash('sha256').update(readFileSync(resolve(root,path))).digest('hex')]));

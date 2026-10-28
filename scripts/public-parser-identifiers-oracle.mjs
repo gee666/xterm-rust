@@ -15,13 +15,13 @@ function persist(){const text=JSON.stringify(report,null,2)+'\n';writeFileSync(`
 persist();
 function hashes(){
   const paths=['source_repo/src/common','source_repo/src/headless'].flatMap(base=>readdirSync(base,{recursive:true}).map(path=>`${base}/${path}`)).filter(path=>statSync(path).isFile());
-  paths.push('scripts/public-parser-identifiers-oracle.mjs','crates/xterm-web/tests/fixtures/parser_identifiers.mjs');
+  paths.push('scripts/public-parser-identifiers-oracle.mjs','crates/xterm-wasm-support/tests/fixtures/parser_identifiers.mjs');
   return Object.fromEntries(paths.sort().map(path=>[path.replaceAll('\\','/'),createHash('sha256').update(readFileSync(path)).digest('hex')]));
 }
 try {
   report.inputsBefore=hashes();
   const require=createRequire(resolve(root,'source_repo/package.json'));
-  const {identifierSpecs,makeIdentifier,registerIdentifier,identifierHook,observeError}=await import('../crates/xterm-web/tests/fixtures/parser_identifiers.mjs');
+  const {identifierSpecs,makeIdentifier,registerIdentifier,identifierHook,observeError}=await import('../crates/xterm-wasm-support/tests/fixtures/parser_identifiers.mjs');
   const reuse=process.argv.includes('--reuse-built');
   let output=resolve(root,'source_repo/out-esbuild/headless/public/Terminal.js');
   function compiledHashes() {
@@ -66,7 +66,7 @@ try {
   report.inputsAfter=hashes();
   report.snapshotStable=JSON.stringify(report.inputsBefore)===JSON.stringify(report.inputsAfter);
   assert.equal(report.snapshotStable,true,'source/helper changed during observations');
-  const fixture='crates/xterm-web/tests/fixtures/parser-identifiers.json';
+  const fixture='crates/xterm-wasm-support/tests/fixtures/parser-identifiers.json';
   if(process.argv.includes('--generate'))writeFileSync(fixture,JSON.stringify(report.observations,null,2)+'\n');
   else assert.deepEqual(report.observations,JSON.parse(readFileSync(fixture,'utf8')));
   report.fixture=fixture;
