@@ -2,6 +2,7 @@ import { spawn } from 'node:child_process';
 import { openSync, closeSync, writeSync } from 'node:fs';
 import { performance } from 'node:perf_hooks';
 import { stopProcessTree } from './quality-tree.mjs';
+import { failureText } from './quality-failure.mjs';
 
 /** Own a server until stop(), deadline, resource failure or unexpected exit.
  * ready returns false only for expected not-yet-ready states. Rejections fail
@@ -36,7 +37,7 @@ export function startManagedProcess(command, args, {
   function stop(reason = null) {
     if (!closed && !stopping) {
       stopping = true;
-      if (reason) error = reason;
+      if (reason !== null) error = failureText(reason);
       abort.abort(new Error(reason ?? 'Owned server stopped'));
       terminationError = stopProcessTree(child);
     }
@@ -56,11 +57,11 @@ export function startManagedProcess(command, args, {
     resolveReady();
   }
   function output(chunk) {
-    if (loggingError) return;
+    if (loggingError !== null) return;
     try { writeSync(fd, chunk); }
     catch (value) {
-      loggingError = value.message;
-      void stop(`Managed process logging failed: ${value.message}`);
+      loggingError = failureText(value);
+      void stop(`Managed process logging failed: ${loggingError}`);
       return;
     }
     if (readyPattern && !becameReady) {
@@ -86,8 +87,8 @@ export function startManagedProcess(command, args, {
       }
     } catch (value) {
       if (!closed && !stopping) {
-        if (checkingResource) resourceError = value.message;
-        void stop(value.message);
+        if (checkingResource) resourceError = failureText(value);
+        void stop(failureText(value));
       }
     } finally { probing = false; }
   }, probeIntervalMs);
@@ -98,12 +99,12 @@ export function startManagedProcess(command, args, {
     clearInterval(probe);
     abort.abort(new Error('Owned server exited'));
     try { closeSync(fd); }
-    catch (value) { loggingError = value.message; error ??= `Managed process log close failed: ${value.message}`; }
+    catch (value) { loggingError = failureText(value); error ??= `Managed process log close failed: ${loggingError}`; }
     const result = {
       command: [command, ...args], pid: child.pid ?? null, exitCode, signal,
       ready: becameReady, readinessProbes, timedOut, error, resourceError, loggingError, terminationError,
       elapsedMs: performance.now() - started,
-      status: stopping && !error && !timedOut && !resourceError && !loggingError && !terminationError ? 'stopped' : 'failed'
+      status: stopping && error === null && !timedOut && resourceError === null && loggingError === null && terminationError === null ? 'stopped' : 'failed'
     };
     if (!becameReady) rejectReady(new Error(error ?? `Managed process exited before readiness with status ${exitCode}`));
     resolveFinished(result);

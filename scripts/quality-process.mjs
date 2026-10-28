@@ -1,6 +1,7 @@
 import { spawn } from 'node:child_process';
 import { openSync, closeSync } from 'node:fs';
 import { stopProcessTree } from './quality-tree.mjs';
+import { failureText } from './quality-failure.mjs';
 export { startManagedProcess } from './quality-managed.mjs';
 export { stopProcessTree } from './quality-tree.mjs';
 import { performance } from 'node:perf_hooks';
@@ -12,7 +13,7 @@ export async function runCommand(command, args, { cwd, env, log, timeoutMs, reso
   if (abortSignal?.aborted) {
     closeSync(fd);
     return { command: [command, ...args], exitCode: null, signal: null, error: null,
-      aborted: true, abortError: abortSignal.reason?.message ?? String(abortSignal.reason ?? 'Command aborted'),
+      aborted: true, abortError: failureText(abortSignal.reason),
       timedOut: false, terminationError: null, resourceError: null, elapsedMs: 0, status: 'failed' };
   }
   const child = spawn(command, args, {
@@ -36,7 +37,7 @@ export async function runCommand(command, args, { cwd, env, log, timeoutMs, reso
   const timer = setTimeout(() => { timedOut = true; terminate(); }, timeoutMs);
   function onAbort() {
     aborted = true;
-    abortError = abortSignal.reason?.message ?? String(abortSignal.reason ?? 'Command aborted');
+    abortError = failureText(abortSignal.reason);
     clearTimeout(timer);
     terminate();
   }
@@ -48,7 +49,7 @@ export async function runCommand(command, args, { cwd, env, log, timeoutMs, reso
     probing = true;
     try { await resourceCheck(); }
     catch (value) {
-      if (!closed) { resourceError = value.message; terminate(); }
+      if (!closed) { resourceError = failureText(value); terminate(); }
     } finally { probing = false; }
   }, monitorMs) : null;
   const [exitCode, signal] = await new Promise(resolve => {
@@ -61,6 +62,6 @@ export async function runCommand(command, args, { cwd, env, log, timeoutMs, reso
   return {
     command: [command, ...args], exitCode, signal, error, aborted, abortError, timedOut, terminationError, resourceError,
     elapsedMs: performance.now() - started,
-    status: exitCode === 0 && !error && !aborted && !timedOut && !resourceError ? 'passed' : 'failed'
+    status: exitCode === 0 && error === null && !aborted && !timedOut && resourceError === null ? 'passed' : 'failed'
   };
 }

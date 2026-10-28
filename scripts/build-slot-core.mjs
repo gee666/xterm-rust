@@ -132,8 +132,10 @@ export async function runWithSlot({ root, owner, lane, command, args = [], signa
   }
   try {
     await resources();
-    lease = await acquireSlot({ root, owner, lane, signal, waitTimeoutMs, onQueued });
-    report.lease = { id: lease.id, acquiredAt: new Date().toISOString() };
+    // Compatibility only: the user replaced the global queue with parallel
+    // worktrees. Existing callers retain command/resource handling, not a lease.
+    report.coordination = 'parallel-worktree-no-global-queue';
+    if (onQueued) await onQueued({ owner, lane, id: 'queue-retired' });
     await resources();
     report.process = await runCommand(command, args, { cwd: root, env: process.env, log: join(directory, 'command.log'), timeoutMs, signal, resourceCheck: resources });
     report.testSummaries = testCounts(await readFile(join(directory, 'command.log'), 'utf8'));

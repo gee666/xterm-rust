@@ -109,6 +109,17 @@ test('managed spawn errors reject readiness and retain a failed receipt', () => 
   await assert.rejects(handle.ready, /ENOENT/);
   assert.equal((await handle.finished).status, 'failed');
 }));
+for (const thrown of ['failure', new Error(''), null, undefined]) test(`readiness thrown ${String(thrown)} remains failed`, () => fixture(async directory => {
+  const handle = start(directory, 'setInterval(()=>{},60000)', {
+    readyPattern: undefined, ready: async () => { throw thrown; }
+  });
+  await assert.rejects(handle.ready);
+  const result = await handle.finished;
+  assert.equal(result.status, 'failed');
+  assert.notEqual(result.error, null);
+  if (thrown instanceof Error) assert.equal(result.error, '');
+  assert.equal(result.terminationError, null);
+}));
 test('tree stop refuses arbitrary PIDs', () => {
   assert.throws(() => stopProcessTree(process.pid), /ChildProcess handle/);
 });
