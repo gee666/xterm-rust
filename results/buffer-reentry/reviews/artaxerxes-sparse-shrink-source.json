@@ -1,0 +1,145 @@
+{
+  "scope": "Existing unchanged source bundle; legal widening-delete callback clears/refills and installs wrapped rows, then resize shrinks again. No compiler/bundler ran.",
+  "before": {
+    "cols": 5,
+    "rows": 4,
+    "x": 1,
+    "y": 3,
+    "base": 4,
+    "display": 4,
+    "length": 8,
+    "lines": [
+      {
+        "len": 5,
+        "wrap": false,
+        "text": "abcde"
+      },
+      {
+        "len": 5,
+        "wrap": true,
+        "text": "fghij"
+      },
+      {
+        "len": 5,
+        "wrap": false,
+        "text": "k"
+      },
+      {
+        "len": 5,
+        "wrap": false,
+        "text": "l"
+      },
+      {
+        "len": 5,
+        "wrap": false,
+        "text": "m"
+      },
+      {
+        "len": 5,
+        "wrap": false,
+        "text": "n"
+      },
+      {
+        "len": 5,
+        "wrap": false,
+        "text": "o"
+      },
+      {
+        "len": 5,
+        "wrap": false,
+        "text": "p"
+      }
+    ]
+  },
+  "afterWiden": {
+    "cols": 10,
+    "rows": 4,
+    "x": 0,
+    "y": 0,
+    "base": 0,
+    "display": 0,
+    "length": 7,
+    "lines": [
+      {
+        "len": 10,
+        "wrap": false,
+        "text": "abcdefghij"
+      },
+      {
+        "len": 10,
+        "wrap": false,
+        "text": "abcdefghij"
+      },
+      {
+        "len": 10,
+        "wrap": false,
+        "text": "abcdefghij"
+      },
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "error": {
+    "name": "TypeError",
+    "message": "Cannot read properties of undefined (reading 'resize')"
+  },
+  "afterShrink": {
+    "cols": 10,
+    "rows": 4,
+    "x": 0,
+    "y": 3,
+    "base": 3,
+    "display": 3,
+    "length": 10,
+    "lines": [
+      {
+        "len": 4,
+        "wrap": false,
+        "text": "abcd"
+      },
+      {
+        "len": 4,
+        "wrap": true,
+        "text": "efgh"
+      },
+      {
+        "len": 4,
+        "wrap": true,
+        "text": "ij"
+      },
+      {
+        "len": 4,
+        "wrap": false,
+        "text": "abcd"
+      },
+      {
+        "len": 4,
+        "wrap": true,
+        "text": "efgh"
+      },
+      {
+        "len": 4,
+        "wrap": true,
+        "text": "ij"
+      },
+      {
+        "len": 4,
+        "wrap": false,
+        "text": "abcd"
+      },
+      {
+        "len": 4,
+        "wrap": true,
+        "text": "efgh"
+      },
+      {
+        "len": 4,
+        "wrap": true,
+        "text": "ij"
+      },
+      null
+    ]
+  }
+}
