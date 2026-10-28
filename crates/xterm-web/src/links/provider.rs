@@ -33,6 +33,16 @@ impl<T: ?Sized> LinkProviderService<T> {
     pub fn snapshot(&self) -> Vec<Rc<T>> {
         self.providers.borrow().clone()
     }
+    /// Live iteration can observe providers appended by an earlier callback.
+    pub fn get(&self, index: usize) -> Option<Rc<T>> {
+        self.providers.borrow().get(index).cloned()
+    }
+    pub fn len(&self) -> usize {
+        self.providers.borrow().len()
+    }
+    pub fn is_empty(&self) -> bool {
+        self.providers.borrow().is_empty()
+    }
 }
 
 impl<T: ?Sized> Disposable for LinkProviderService<T> {

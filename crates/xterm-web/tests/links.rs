@@ -14,7 +14,7 @@ fn line(text: &str, ids: &[u32], wrapped: bool) -> BufferLine {
             width: 1,
             code: Some(cp as u32),
         });
-        cell.extended.set_url_id(ids[x]);
+        cell.extended.set_url_id(u64::from(ids[x]));
         cell.update_extended();
         line.set_cell(x, &cell);
     }

@@ -1,15 +1,23 @@
 // Copyright (c) 2019-2026 The xterm.js authors. All rights reserved. MIT license.
 //! Browser link algorithms with explicit host boundaries for URL validation and callbacks.
 #[cfg(target_arch = "wasm32")]
+pub mod animation_queue;
+#[cfg(target_arch = "wasm32")]
 pub mod browser;
 #[cfg(target_arch = "wasm32")]
 pub mod browser_debounce;
+#[cfg(target_arch = "wasm32")]
+pub mod browser_linkifier;
 pub mod debounce;
+#[cfg(target_arch = "wasm32")]
+pub mod dom_helpers;
 mod hover;
 mod osc;
 mod provider;
 mod replies;
 pub mod time_debounce;
+#[cfg(target_arch = "wasm32")]
+pub mod window_interval;
 
 pub use hover::{Decorations, HoverEffect, HoverState};
 pub use osc::osc_links;

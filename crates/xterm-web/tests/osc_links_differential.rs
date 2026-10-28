@@ -1,3 +1,4 @@
+use std::fmt::Write;
 use xterm_core::buffer::{BufferLine, CellData, CharData};
 use xterm_web::links::osc_links;
 
@@ -26,7 +27,7 @@ fn source_seeded_cell_id_and_wrap_cases() {
                         width: data[2] as i32,
                         code: Some(data[0]),
                     });
-                    cell.extended.set_url_id(data[1]);
+                    cell.extended.set_url_id(u64::from(data[1]));
                     cell.update_extended();
                     line.set_cell(x, &cell);
                 }
@@ -61,14 +62,15 @@ fn source_seeded_cell_id_and_wrap_cases() {
                 links
                     .iter()
                     .map(|link| {
-                        let text: String = link
-                            .text
-                            .iter()
-                            .map(|unit| *unit as u8)
-                            .collect::<Vec<_>>()
-                            .iter()
-                            .map(|b| format!("{b:02x}"))
-                            .collect();
+                        let text = link.text.iter().fold(String::new(), |mut text, unit| {
+                            write!(
+                                text,
+                                "{:02x}",
+                                u8::try_from(*unit).expect("ASCII fixture URI")
+                            )
+                            .unwrap();
+                            text
+                        });
                         format!(
                             "{text},{},{},{},{}",
                             link.range.start.x,

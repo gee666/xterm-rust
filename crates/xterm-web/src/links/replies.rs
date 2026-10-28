@@ -48,12 +48,39 @@ impl ProviderReplies {
         provider_count: usize,
         cols: usize,
     ) -> Option<Rc<Link>> {
-        self.replies.insert(index, links);
-        let result = self.check(index, request, provider_count, cols);
-        if self.replies.len() == provider_count {
-            self.remove_intersections(request.position.y, cols);
-        }
+        let result = self.receive_unfiltered(index, links, request, provider_count, cols);
+        self.filter_complete(request.position.y, provider_count, cols);
         result
+    }
+
+    /// Browser hosts dispatch hover callbacks before overlap filtering.
+    pub fn receive_unfiltered(
+        &mut self,
+        index: usize,
+        links: Option<Vec<Rc<Link>>>,
+        request: &ProviderRequest,
+        provider_count: usize,
+        cols: usize,
+    ) -> Option<Rc<Link>> {
+        self.replies.insert(index, links);
+        self.check(index, request, provider_count, cols)
+    }
+    pub fn filter_complete(&mut self, y: usize, provider_count: usize, cols: usize) {
+        if self.replies.len() == provider_count {
+            self.remove_intersections(y, cols);
+        }
+    }
+    pub fn from_cache_index(
+        &self,
+        index: usize,
+        request: &ProviderRequest,
+        provider_count: usize,
+        cols: usize,
+    ) -> Option<Rc<Link>> {
+        if !matches!(self.replies.get(&index), Some(Some(_))) {
+            return None;
+        }
+        self.check(index, request, provider_count, cols)
     }
 
     pub fn from_cache(

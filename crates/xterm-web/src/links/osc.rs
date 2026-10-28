@@ -11,14 +11,14 @@ use xterm_core::buffer::BufferLine;
 pub fn osc_links(
     lines: &[BufferLine],
     y: usize,
-    mut uri: impl FnMut(u32) -> Option<Vec<u16>>,
+    mut uri: impl FnMut(u64) -> Option<Vec<u16>>,
     allow_non_http_protocols: bool,
     mut is_http_url: impl FnMut(&[u16]) -> bool,
 ) -> Option<Vec<Link>> {
     let line = lines.get(y.checked_sub(1)?)?;
     let length = line.get_trimmed_length();
     let mut result = Vec::new();
-    let mut current: Option<(usize, u32)> = None;
+    let mut current: Option<(usize, u64)> = None;
     for x in 0..length {
         if current.is_none() && line.has_content(x).unwrap_or(0) == 0 {
             continue;
@@ -47,7 +47,7 @@ pub fn osc_links(
     Some(result)
 }
 
-fn url_id(line: &BufferLine, x: usize) -> u32 {
+fn url_id(line: &BufferLine, x: usize) -> u64 {
     line.get_extended(x).map(|ext| ext.url_id()).unwrap_or(0)
 }
 
@@ -56,8 +56,8 @@ fn wrapped_range(
     y: usize,
     start: usize,
     end: usize,
-    id: u32,
-    work_id: &mut u32,
+    id: u64,
+    work_id: &mut u64,
 ) -> Range {
     // Upstream range expansion loads into the SAME work cell as the outer scan.
     // Preserve its last probe so the next run sees that mutation, including when
