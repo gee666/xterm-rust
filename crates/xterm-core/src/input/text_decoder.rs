@@ -4,8 +4,8 @@
 //! Streaming decoders preserve xterm.js's treatment of malformed input.
 //!
 //! JavaScript strings map to UTF-16 units, not Rust `str`, because lone
-//! surrogates are observable. Decoders append to a caller-owned vector and
-//! return the number appended, replacing the unchecked JS target-array API.
+//! surrogates are observable. Vector APIs append and report new values. Fixed
+//! slice APIs preserve JS typed-array overflow drops and logical write counts.
 
 /// Convert a code point to JavaScript UTF-16 units, including lone surrogates.
 /// Out-of-range values retain the upstream `String.fromCharCode` truncation.
@@ -36,6 +36,44 @@ fn push_code_point(code_point: u32, target: &mut Vec<u16>) {
     }
 }
 
+trait Utf32Output {
+    fn position(&self) -> usize;
+    fn push(&mut self, value: u32);
+    fn pair(&mut self, first: u32, second: u32) {
+        self.push(first);
+        self.push(second);
+    }
+}
+
+impl Utf32Output for Vec<u32> {
+    fn position(&self) -> usize {
+        self.len()
+    }
+    fn push(&mut self, value: u32) {
+        Vec::push(self, value);
+    }
+    fn pair(&mut self, first: u32, second: u32) {
+        self.extend([first, second]);
+    }
+}
+
+struct SliceOutput<'a> {
+    data: &'a mut [u32],
+    attempted: usize,
+}
+impl Utf32Output for SliceOutput<'_> {
+    fn position(&self) -> usize {
+        self.attempted
+    }
+    fn push(&mut self, value: u32) {
+        if let Some(slot) = self.data.get_mut(self.attempted) {
+            *slot = value;
+        }
+        // Output is bounded by input length plus one pending surrogate/prefix.
+        self.attempted += 1;
+    }
+}
+
 /// Streaming UTF-16 decoder. Lone surrogates pass through as UCS-2 values.
 #[derive(Debug, Default)]
 pub struct StringToUtf32 {
@@ -56,10 +94,26 @@ impl StringToUtf32 {
     /// Empty input does not flush pending state. U+FEFF is dropped except when
     /// it immediately follows an unpaired high surrogate, matching upstream.
     pub fn decode(&mut self, input: &[u16], target: &mut Vec<u32>) -> usize {
+        self.decode_into(input, target)
+    }
+
+    /// Write from index zero, discarding out-of-bounds writes like a JS typed
+    /// array. Returns the logical count, which may exceed target.len().
+    pub fn decode_to_slice(&mut self, input: &[u16], target: &mut [u32]) -> usize {
+        self.decode_into(
+            input,
+            &mut SliceOutput {
+                data: target,
+                attempted: 0,
+            },
+        )
+    }
+
+    fn decode_into<T: Utf32Output>(&mut self, input: &[u16], target: &mut T) -> usize {
         if input.is_empty() {
             return 0;
         }
-        let original_len = target.len();
+        let original_len = target.position();
         let mut index = 0;
         if let Some(high) = self.interim.take() {
             decode_pair(high, input[0], target);
@@ -79,15 +133,15 @@ impl StringToUtf32 {
                 target.push(u32::from(code));
             }
         }
-        target.len() - original_len
+        target.position() - original_len
     }
 }
 
-fn decode_pair(high: u16, second: u16, target: &mut Vec<u32>) {
+fn decode_pair<T: Utf32Output>(high: u16, second: u16, target: &mut T) {
     if (0xdc00..=0xdfff).contains(&second) {
         target.push((u32::from(high) - 0xd800) * 0x400 + u32::from(second) - 0xdc00 + 0x10000);
     } else {
-        target.extend([u32::from(high), u32::from(second)]);
+        target.pair(u32::from(high), u32::from(second));
     }
 }
 
@@ -112,10 +166,26 @@ impl Utf8ToUtf32 {
     /// invalid starters and out-of-range values are discarded. A noncontinuation
     /// byte is retried as a starter. Empty input does not flush the prefix.
     pub fn decode(&mut self, input: &[u8], target: &mut Vec<u32>) -> usize {
+        self.decode_into(input, target)
+    }
+
+    /// Write from index zero, discarding out-of-bounds writes like a JS typed
+    /// array. Returns the logical count, which may exceed target.len().
+    pub fn decode_to_slice(&mut self, input: &[u8], target: &mut [u32]) -> usize {
+        self.decode_into(
+            input,
+            &mut SliceOutput {
+                data: target,
+                attempted: 0,
+            },
+        )
+    }
+
+    fn decode_into<T: Utf32Output>(&mut self, input: &[u8], target: &mut T) -> usize {
         if input.is_empty() {
             return 0;
         }
-        let original_len = target.len();
+        let original_len = target.position();
         let mut index = 0;
         if self.interim[0] != 0 {
             let count = self.interim.iter().take_while(|&&byte| byte != 0).count();
@@ -124,7 +194,7 @@ impl Utf8ToUtf32 {
             self.clear();
             self.decode_sequence(sequence, count, input, &mut index, target);
             if self.interim[0] != 0 {
-                return target.len() - original_len;
+                return target.position() - original_len;
             }
         }
         while index < input.len() {
@@ -139,16 +209,16 @@ impl Utf8ToUtf32 {
                 }
             }
         }
-        target.len() - original_len
+        target.position() - original_len
     }
 
-    fn decode_sequence(
+    fn decode_sequence<T: Utf32Output>(
         &mut self,
         mut sequence: [u8; 4],
         mut count: usize,
         input: &[u8],
         index: &mut usize,
-        target: &mut Vec<u32>,
+        target: &mut T,
     ) {
         // An externally changed interim prefix uses upstream's fallback type 4.
         let length = sequence_length(sequence[0]).unwrap_or(4);
