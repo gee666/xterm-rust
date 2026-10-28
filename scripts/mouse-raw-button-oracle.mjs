@@ -11,8 +11,13 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const require = createRequire(new URL('../source_repo/package.json', import.meta.url));
 const esbuild = require('esbuild');
 const source = 'source_repo/src/common/services/MouseStateService.ts';
-const built = esbuild.buildSync({ absWorkingDir: root, entryPoints: [source],
-  bundle: true, platform: 'node', format: 'cjs', write: false, metafile: true, logLevel: 'silent' });
+let built;
+try {
+  built = esbuild.buildSync({ absWorkingDir: root, entryPoints: [source],
+    bundle: true, platform: 'node', format: 'cjs', write: false, metafile: true, logLevel: 'silent' });
+} finally {
+  esbuild.stop();
+}
 const module = { exports: {} };
 vm.runInNewContext(built.outputFiles[0].text, { module, exports: module.exports });
 const { MouseStateService } = module.exports;

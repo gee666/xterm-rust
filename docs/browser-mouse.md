@@ -89,13 +89,15 @@ The source oracle uses seed 0xb0a5e and records these additional operation rows:
 | --- | ---: | --- |
 | Original trigger calls | 1,562 | protocol/encoding, dimensions, full event before/after, accepted, output/channel |
 | Geometry | 1,024 | padding text, bounds/metrics/validity, selection cells, report cells/pixels |
-| Wheel | 2,522 | mode/flags/metrics/options, output amount and partial accumulator, resets |
+| Wheel | 3,034 | mode/flags/metrics/options, output amount and partial accumulator, resets |
 | Touch | 516 | metric/translation/application mode, accumulator, every cursor output, resets |
 
 Geometry includes NaN, infinities, signed zero, negative dimensions, fractions,
 invalid/missing padding and exact ECMAScript whitespace cases. Wheel includes
 all modifiers and modes, directed values immediately below/at threshold 50,
-partial reversal, zero deltas, missing metrics and reset. Touch cases preserve
+partial reversal, zero deltas, missing metrics and reset. A separately reset
+zero/NaN/infinity metric matrix checks the source's +0 denominator normalization
+without allowing a preceding NaN accumulator to hide a signed-zero mismatch. Touch cases preserve
 source invalid-height and signed-line behavior while keeping gesture counts
 finite so the source's output loop terminates.
 

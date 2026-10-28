@@ -1,0 +1,204 @@
+{
+  "scope": "Pure browser mouse policy, original source assertions, native tests and WASM compile. Actual DOM/browser tests are separate and NOT PROVEN here.",
+  "command": "node scripts/check-browser-mouse.mjs",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "arch": "x64",
+  "toolVersions": {
+    "cargo": {
+      "exitCode": 0,
+      "output": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+      "error": ""
+    },
+    "rustc": {
+      "exitCode": 0,
+      "output": "rustc 1.85.1 (4eb161250 2025-03-15)",
+      "error": ""
+    },
+    "rustfmt": {
+      "exitCode": 0,
+      "output": "rustfmt 1.8.0-stable (4eb161250e 2025-03-15)",
+      "error": ""
+    }
+  },
+  "sourceHashesBefore": {
+    "crates/xterm-web/src/input/mouse_coords.rs": "0a6917af24e7d9093b7fa80881ec0961ead48a710d056def2e991b8685a4bc9f",
+    "crates/xterm-web/src/input/mouse_policy.rs": "6755cc36a14feeb89da96cb608db9e05ed7c116ba3c292c7eee7d6b41db8f5e1",
+    "crates/xterm-web/src/input/mouse_wheel.rs": "39aa77448755548c01e5ee675100351e94d46557c37c890d323ded6ff151ec5b",
+    "crates/xterm-web/tests/mouse_policy.rs": "bc111157ac49c7ed55ce2d0056d91cbacdb366a2b3dca71a3c77497086d7adb4",
+    "crates/xterm-web/tests/mouse_routing.rs": "dc59b83c2232d82a4376d54fd2c8fea0e11ef3c60e77712e825596a472ba71f7",
+    "crates/xterm-core/src/mouse_state.rs": "08e6b86ef11bc4eee55e50ddef8b9b15e91cd293431bf56ce383542d545dc94b",
+    "crates/xterm-core/src/mouse_protocol.rs": "37d13297e42b0cf87ecdee0e0f95c0b0a803638579070dd7ffe51ff4c8a0f832"
+  },
+  "sourceHashes": {
+    "crates/xterm-web/src/input/mouse_coords.rs": "0a6917af24e7d9093b7fa80881ec0961ead48a710d056def2e991b8685a4bc9f",
+    "crates/xterm-web/src/input/mouse_policy.rs": "6755cc36a14feeb89da96cb608db9e05ed7c116ba3c292c7eee7d6b41db8f5e1",
+    "crates/xterm-web/src/input/mouse_wheel.rs": "39aa77448755548c01e5ee675100351e94d46557c37c890d323ded6ff151ec5b",
+    "crates/xterm-web/tests/mouse_policy.rs": "bc111157ac49c7ed55ce2d0056d91cbacdb366a2b3dca71a3c77497086d7adb4",
+    "crates/xterm-web/tests/mouse_routing.rs": "dc59b83c2232d82a4376d54fd2c8fea0e11ef3c60e77712e825596a472ba71f7",
+    "crates/xterm-core/src/mouse_state.rs": "08e6b86ef11bc4eee55e50ddef8b9b15e91cd293431bf56ce383542d545dc94b",
+    "crates/xterm-core/src/mouse_protocol.rs": "37d13297e42b0cf87ecdee0e0f95c0b0a803638579070dd7ffe51ff4c8a0f832"
+  },
+  "sourceChangedDuringRun": false,
+  "freeBytesBefore": 1326075904,
+  "freeBytesAfter": 1271119872,
+  "oracle": {
+    "node": "v24.15.0",
+    "platform": "win32",
+    "seed": 723550,
+    "fixtures": {
+      "browser-mouse-trigger.tsv": {
+        "rows": 1562,
+        "canonicalSha256": "323f4aff58746fd2571d87df935d7687825151cc77c58ee8f4c90edcfe0e7f67",
+        "fileSha256": "323f4aff58746fd2571d87df935d7687825151cc77c58ee8f4c90edcfe0e7f67"
+      },
+      "browser-mouse-coords.tsv": {
+        "rows": 1024,
+        "canonicalSha256": "633336daf496650b851724f5461ad9eec45398b47984a9d35e9fb10d9480b777",
+        "fileSha256": "633336daf496650b851724f5461ad9eec45398b47984a9d35e9fb10d9480b777"
+      },
+      "browser-mouse-wheel.tsv": {
+        "rows": 3034,
+        "canonicalSha256": "acad21d51c8e58e84ce5b486026bbbf1925b0d3e3083dae5132f03011769466e",
+        "fileSha256": "acad21d51c8e58e84ce5b486026bbbf1925b0d3e3083dae5132f03011769466e"
+      },
+      "browser-mouse-touch.tsv": {
+        "rows": 516,
+        "canonicalSha256": "92e6b2d1bab06405354dc8e6e1ce97c98529427ad61b103578ffdb5757ff1bb3",
+        "fileSha256": "92e6b2d1bab06405354dc8e6e1ce97c98529427ad61b103578ffdb5757ff1bb3"
+      }
+    },
+    "directedCustomEncoderCases": 1,
+    "sourceHashes": {
+      "browser/input/Mouse.ts": "977343fb0427d041b8cc64947332669a3d09f3ef8f4663d9456293d46d8ae919",
+      "browser/input/Mouse.test.ts": "911518475c17a36772fec50a67a334e9c12326067c644e2dabddc5fdd011707e",
+      "browser/services/MouseCoordsService.ts": "235d7febfd33a65074036c0fd74a00a8bf0b3fa6488fcc16c72bb3ce99073699",
+      "browser/services/MouseService.ts": "cb1c4b1d292a7c049e0d73564227a949c8915bd7637ad2784124905467e1129c",
+      "browser/services/MouseService.test.ts": "c7deb1cf7fdf554aa9b88a585c6db914e5aadc459dcfba75fcca32867ee550ee",
+      "common/services/MouseStateService.ts": "1b562be54a3ea3d91c565ac8d94239f8e219cb82ff735388a3650170a993d5ee"
+    },
+    "upstream": {
+      "discovered": 15,
+      "executed": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0
+    },
+    "names": [
+      "Mouse getCoords should return the cell that was clicked",
+      "Mouse getCoords should ensure the coordinates are returned within the terminal bounds",
+      "MouseService _triggerMouseEvent NONE",
+      "MouseService _triggerMouseEvent X10",
+      "MouseService _triggerMouseEvent VT200",
+      "MouseService _triggerMouseEvent DRAG",
+      "MouseService _triggerMouseEvent ANY",
+      "MouseService _triggerMouseEvent eventCodes with modifiers (DEFAULT encoding)",
+      "MouseService _triggerMouseEvent coords DEFAULT encoding",
+      "MouseService _triggerMouseEvent coords SGR encoding",
+      "MouseService _triggerMouseEvent coords SGR_PIXELS encoding",
+      "MouseService mouseEventsRequireAlt should update selection state and cursor class when toggled while mouse events are active",
+      "MouseService mouseEventsRequireAlt should strip alt modifier from forwarded mouse reports",
+      "MouseService mouseEventsRequireAlt should toggle enable-mouse-events class when alt modifier changes",
+      "MouseService multi-window should manage protocol mouseup/mousemove listeners on the element's current document, not the document the terminal was opened with"
+    ],
+    "scope": "Original 15 tests and pure policy corpus; Rust DOM/three-browser proof remains separate."
+  },
+  "checks": [
+    {
+      "name": "oracle",
+      "command": "C:\\nvm4w\\nodejs\\node.exe",
+      "args": [
+        "scripts/browser-mouse-oracle.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "results/browser-mouse/runs/2026-10-28T01-13-49-544Z-27ad4e1d-d6e4-4f9e-8bb0-9538f20f5a24/oracle.log",
+      "status": "passed"
+    },
+    {
+      "name": "native-tests",
+      "command": "cargo",
+      "args": [
+        "test",
+        "-p",
+        "xterm-web",
+        "--test",
+        "mouse_policy",
+        "--test",
+        "mouse_routing"
+      ],
+      "expectedTests": 12,
+      "exitCode": 0,
+      "signal": null,
+      "log": "results/browser-mouse/runs/2026-10-28T01-13-49-544Z-27ad4e1d-d6e4-4f9e-8bb0-9538f20f5a24/native-tests.log",
+      "status": "passed",
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "name": "fmt",
+      "command": "rustfmt",
+      "args": [
+        "--edition",
+        "2021",
+        "--check",
+        "crates/xterm-web/src/input/mouse_coords.rs",
+        "crates/xterm-web/src/input/mouse_policy.rs",
+        "crates/xterm-web/src/input/mouse_wheel.rs",
+        "crates/xterm-web/tests/mouse_policy.rs",
+        "crates/xterm-web/tests/mouse_routing.rs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "results/browser-mouse/runs/2026-10-28T01-13-49-544Z-27ad4e1d-d6e4-4f9e-8bb0-9538f20f5a24/fmt.log",
+      "status": "passed"
+    },
+    {
+      "name": "clippy",
+      "command": "cargo",
+      "args": [
+        "clippy",
+        "-p",
+        "xterm-web",
+        "--lib",
+        "--test",
+        "mouse_policy",
+        "--test",
+        "mouse_routing",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "log": "results/browser-mouse/runs/2026-10-28T01-13-49-544Z-27ad4e1d-d6e4-4f9e-8bb0-9538f20f5a24/clippy.log",
+      "status": "failed"
+    },
+    {
+      "name": "wasm-check",
+      "command": "cargo",
+      "args": [
+        "check",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown"
+      ],
+      "status": "unrun"
+    }
+  ],
+  "status": "failed",
+  "browsersUnrun": [
+    "chromium",
+    "firefox",
+    "webkit"
+  ],
+  "nativePlatformsUnrun": [
+    "linux",
+    "darwin"
+  ],
+  "runId": "2026-10-28T01-13-49-544Z-27ad4e1d-d6e4-4f9e-8bb0-9538f20f5a24"
+}

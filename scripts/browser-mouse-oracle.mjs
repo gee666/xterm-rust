@@ -137,6 +137,14 @@ service.reset(); wheels.push('reset');
 for (const deltaY of [1, 1, 1, 1, 1, -1, -1, -49.9, 49.9, 50]) {
   wheel({ deltaY, deltaMode: 0, flags: 0, cellHeight: 20, dpr: 2, scroll: 1, fast: 5, rows: 24 });
 }
+for (const cellHeight of [-0, 0, 1, -1, Infinity, -Infinity, NaN, undefined]) {
+  for (const dpr of [-0, 0, 1, -1, Infinity, -Infinity, NaN, undefined]) {
+    for (const deltaY of [1, -1, 50, -50]) {
+      service.reset(); wheels.push('reset');
+      wheel({ deltaY, deltaMode: 0, flags: 0, cellHeight, dpr, scroll: 1, fast: 5, rows: 24 });
+    }
+  }
+}
 const touches = [];
 let outputs = [];
 core.triggerDataEvent = (payload, user) => {

@@ -217,7 +217,7 @@ fn every_source_wheel_operation_preserves_partial_accumulator() {
         same_number(state.partial_scroll(), number(p[9]), row);
         count += 1;
     }
-    assert_eq!(count, 2522);
+    assert_eq!(count, 3034);
 }
 
 #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]

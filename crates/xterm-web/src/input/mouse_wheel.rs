@@ -73,7 +73,8 @@ impl WheelState {
             amount *= options.scroll_sensitivity;
         }
         if input.delta_mode == DOM_DELTA_PIXEL {
-            amount /= cell_height / dpr;
+            // The source's +0 is observable: it canonicalizes a -0 quotient.
+            amount /= cell_height / dpr + 0.0;
             if input.delta_y.abs() < TRACKPAD_THRESHOLD {
                 amount *= TRACKPAD_MULTIPLIER;
             }
