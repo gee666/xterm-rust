@@ -188,7 +188,16 @@ pub fn reset_state_handle(
 pub fn request_reset_state(
     shared: &std::rc::Rc<std::cell::RefCell<TerminalState>>,
 ) -> Result<(), TerminalError> {
-    reset_state_handle(shared)?;
+    let slot = {
+        let state = shared.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+        std::rc::Rc::clone(&state.reset_request_handler)
+    };
+    let handler = slot.borrow().clone();
+    if let Some(handler) = handler {
+        handler().map_err(TerminalError::Event)?;
+    } else {
+        reset_state_handle(shared)?;
+    }
     shared
         .try_borrow()
         .map_err(|_| TerminalError::Borrowed)?
@@ -196,6 +205,17 @@ pub fn request_reset_state(
         .borrow_mut()
         .push(TerminalEvent::RequestReset);
     super::dispatch_events(shared)
+}
+pub(super) fn clear_reset_request_handler(
+    shared: &std::rc::Rc<std::cell::RefCell<TerminalState>>,
+) -> Result<(), TerminalError> {
+    let slot = {
+        let state = shared.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+        std::rc::Rc::clone(&state.reset_request_handler)
+    };
+    let previous = slot.borrow_mut().take();
+    drop(previous);
+    Ok(())
 }
 impl TerminalState {
     pub(crate) fn set_cursor(&mut self, x: i64, y: i64) -> Result<(), TerminalError> {
