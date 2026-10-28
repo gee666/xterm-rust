@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-10-28T00:01:18.131Z",
+  "overallEquivalence": "NOT PROVEN",
+  "environment": {
+    "platform": "win32",
+    "architecture": "x64",
+    "release": "10.0.26300",
+    "cpu": "AMD Ryzen 9 7900X 12-Core Processor            ",
+    "node": "v24.15.0",
+    "ci": false,
+    "ciCommit": null,
+    "execution": "local OS runtime",
+    "runnerEnvironment": null,
+    "ciRunUrl": null,
+    "declaredTarget": null,
+    "cargoIncremental": null,
+    "cargoEncodedRustflags": null,
+    "rustflags": null,
+    "buildOverrideKeys": []
+  },
+  "disk": {
+    "minFreeMiB": 1048576,
+    "observations": [
+      {
+        "stage": "before-git-revision",
+        "observedAt": "2026-10-28T00:01:18.316Z",
+        "availableBytes": "1650102272",
+        "minimumBytes": "1099511627776",
+        "sufficient": false
+      }
+    ]
+  },
+  "commands": [],
+  "gaps": [
+    "Insufficient disk headroom: 1650102272 bytes available, 1099511627776 required. No cleanup was attempted."
+  ],
+  "featurePolicy": "default, no-default, all, and each named feature individually",
+  "sourceBefore": {
+    "sha256": "83256f7c869489008e5236cd043b3dae6f48f90589c65dd3d1c6a32343243c88",
+    "files": 631,
+    "unsafeCandidates": [
+      {
+        "path": "crates/xterm-core/src/instantiation.rs",
+        "line": 3,
+        "text": "//! Shared service values and constructor argument resolution without unsafe code."
+      }
+    ]
+  },
+  "finishedAt": "2026-10-28T00:01:18.316Z",
+  "fatal": "Insufficient disk headroom: 1650102272 bytes available, 1099511627776 required. No cleanup was attempted.",
+  "failedGates": [],
+  "gateStatus": "failed"
+}

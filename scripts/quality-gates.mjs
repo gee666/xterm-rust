@@ -1,19 +1,17 @@
 #!/usr/bin/env node
 import { snapshot } from './quality-snapshot.mjs';
 import { diskHeadroom, requireHeadroom } from './quality-resources.mjs';
-import { parseOptions, outputPath, assertNativeHost, assertBuildEnvironment, assertResolvedTarget, assertSharedTarget, testCounts } from './quality-policy.mjs';
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
-import { relative, join, sep, dirname } from 'node:path';
+import { parseOptions, reserveOutput, assertNativeHost, assertBuildEnvironment, assertResolvedTarget, assertSharedTarget, testCounts } from './quality-policy.mjs';
+import { readFile, writeFile } from 'node:fs/promises';
+import { relative, join, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import os from 'node:os';
 import { runCommand } from './quality-process.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const { destination, timeoutMs, wasm, minFreeMiB } = parseOptions(process.argv.slice(2), process.platform, process.arch);
-const out = outputPath(root, destination);
-await mkdir(dirname(out), { recursive: true });
-// Refuse even an empty existing directory rather than racing another run's logs.
-await mkdir(out);
+// Atomically reserve a new attempt and reject symlinked output parents.
+const out = await reserveOutput(root, destination);
 const report = {
   schemaVersion: 1, startedAt: new Date().toISOString(), overallEquivalence: 'NOT PROVEN',
   environment: {
@@ -26,6 +24,7 @@ const report = {
     ciRunUrl: process.env.GITHUB_ACTIONS === 'true'
       ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}` : null,
     declaredTarget: process.env.CARGO_BUILD_TARGET ?? null,
+    cargoIncremental: process.env.CARGO_INCREMENTAL ?? null,
     cargoEncodedRustflags: process.env.CARGO_ENCODED_RUSTFLAGS ?? null,
     rustflags: process.env.RUSTFLAGS ?? null
   },
@@ -83,19 +82,18 @@ try {
   const workspace = ['--workspace', '--locked'];
   // Native commands share Cargo's existing target directory. Do not create a
   // duplicate target/<host>/ tree merely to restate the verified native host.
-  const target = [];
   await run('fmt', 'cargo', ['fmt', '--all', '--', '--check']);
-  await run('clippy-all-features', 'cargo', ['clippy', ...workspace, '--all-targets', '--all-features', ...target, '--', '-D', 'warnings']);
-  await run('test-all-features', 'cargo', ['test', ...workspace, '--all-targets', '--all-features', ...target]);
-  await run('doctest-all-features', 'cargo', ['test', ...workspace, '--doc', '--all-features', ...target]);
-  await run('build-release', 'cargo', ['build', ...workspace, '--release', '--all-targets', '--all-features', ...target]);
-  await run('test-default', 'cargo', ['test', ...workspace, '--all-targets', ...target]);
-  await run('test-no-default-features', 'cargo', ['test', ...workspace, '--all-targets', '--no-default-features', ...target]);
-  await run('clippy-no-default-features', 'cargo', ['clippy', ...workspace, '--all-targets', '--no-default-features', ...target, '--', '-D', 'warnings']);
+  await run('clippy-all-features', 'cargo', ['clippy', ...workspace, '--all-targets', '--all-features', '--', '-D', 'warnings']);
+  await run('test-all-features', 'cargo', ['test', ...workspace, '--all-targets', '--all-features']);
+  await run('doctest-all-features', 'cargo', ['test', ...workspace, '--doc', '--all-features']);
+  await run('build-release', 'cargo', ['build', ...workspace, '--release', '--all-targets', '--all-features']);
+  await run('test-default', 'cargo', ['test', ...workspace, '--all-targets']);
+  await run('test-no-default-features', 'cargo', ['test', ...workspace, '--all-targets', '--no-default-features']);
+  await run('clippy-no-default-features', 'cargo', ['clippy', ...workspace, '--all-targets', '--no-default-features', '--', '-D', 'warnings']);
   for (const pkg of packages) {
     for (const feature of Object.keys(pkg.features).filter(value => value !== 'default').sort()) {
       const label = `${pkg.name}-${feature}`.replace(/[^\w.-]/g, '_');
-      await run(`feature-${label}`, 'cargo', ['test', '--locked', '-p', pkg.name, '--all-targets', '--no-default-features', '--features', feature, ...target]);
+      await run(`feature-${label}`, 'cargo', ['test', '--locked', '-p', pkg.name, '--all-targets', '--no-default-features', '--features', feature]);
     }
   }
   if (wasm) {

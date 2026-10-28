@@ -7,11 +7,11 @@ import { join } from 'node:path';
 async function main() {
 const root = fileURLToPath(new URL('../', import.meta.url));
 const [action, value] = process.argv.slice(2);
-if (!['runs', 'dispatch', 'status', 'artifacts'].includes(action)) {
-  throw new Error('Usage: node scripts/github-quality.mjs runs|dispatch REF|status RUN_ID|artifacts RUN_ID');
+if (!['runs', 'dispatch', 'status', 'artifacts', 'logs'].includes(action)) {
+  throw new Error('Usage: node scripts/github-quality.mjs runs|dispatch REF|status RUN_ID|artifacts RUN_ID|logs RUN_ID');
 }
 if (action !== 'runs' && !value) throw new Error('A ref or run ID is required');
-if (['status', 'artifacts'].includes(action) && !/^\d+$/.test(value)) throw new Error('Run ID must be numeric');
+if (['status', 'artifacts', 'logs'].includes(action) && !/^\d+$/.test(value)) throw new Error('Run ID must be numeric');
 const env = { ...process.env, GIT_TERMINAL_PROMPT: '0', GCM_INTERACTIVE: 'Never' };
 const remote = spawnSync('git', ['remote', 'get-url', 'origin'], { cwd: root, env, encoding: 'utf8', timeout: 30_000 });
 if (remote.error || remote.status !== 0) throw new Error('Cannot read origin URL');
@@ -72,6 +72,16 @@ if (action === 'dispatch') {
     }
     await writeFile(join(directory, 'artifacts.json'), JSON.stringify(saved, null, 2) + '\n');
     summary.savedArtifacts = saved.length;
+  }
+  if (action === 'logs') {
+    for (const job of jobs.jobs) {
+      if (job.status !== 'completed') throw new Error(`Job ${job.id} has not completed; log retrieval deferred`);
+      const response = await api(`/actions/jobs/${job.id}/logs`);
+      const bytes = new Uint8Array(await response.arrayBuffer());
+      if (bytes.length > 10_000_000) throw new Error(`Job ${job.id} log exceeds 10 MB`);
+      await writeFile(join(directory, `job-${job.id}.log`), bytes);
+    }
+    summary.savedJobLogs = jobs.jobs.length;
   }
   console.log(JSON.stringify(summary, null, 2));
 }

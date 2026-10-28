@@ -1,6 +1,8 @@
-import { spawn, spawnSync } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import { openSync, closeSync } from 'node:fs';
-import { join } from 'node:path';
+import { stopProcessTree } from './quality-tree.mjs';
+export { startManagedProcess } from './quality-managed.mjs';
+export { stopProcessTree } from './quality-tree.mjs';
 import { performance } from 'node:perf_hooks';
 
 /** Run without a shell, retaining failures and bounding lifetime and disk growth. */
@@ -20,22 +22,7 @@ export async function runCommand(command, args, { cwd, env, log, timeoutMs, reso
   function terminate() {
     if (closed || terminating || !child.pid) return;
     terminating = true;
-    if (process.platform === 'win32') {
-      const kill = spawnSync(join(process.env.SystemRoot ?? 'C:\\Windows', 'System32', 'taskkill.exe'),
-        ['/PID', String(child.pid), '/T', '/F'], { timeout: 10_000, windowsHide: true });
-      if (kill.error || kill.status !== 0) {
-        terminationError = kill.error?.message ?? kill.stderr.toString();
-        child.kill('SIGKILL');
-      }
-    } else {
-      try { process.kill(-child.pid, 'SIGKILL'); }
-      catch (value) {
-        if (value.code !== 'ESRCH') {
-          terminationError = value.message;
-          child.kill('SIGKILL');
-        }
-      }
-    }
+    terminationError = stopProcessTree(child);
   }
   child.on('error', value => { error = value.message; });
   const timer = setTimeout(() => { timedOut = true; terminate(); }, timeoutMs);

@@ -1,8 +1,9 @@
 import { test } from 'node:test';
+import { mkdir, mkdtemp, writeFile, readFile, rm, symlink } from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parseOptions, outputPath, assertNativeHost, assertBuildEnvironment, assertResolvedTarget, assertSharedTarget, testCounts } from './quality-policy.mjs';
+import { parseOptions, outputPath, reserveOutput, assertNativeHost, assertBuildEnvironment, assertResolvedTarget, assertSharedTarget, testCounts } from './quality-policy.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
 test('options preserve explicit WASM intent, destination and finite deadlines', () => {
   const defaults = parseOptions([], 'linux', 'x64');
@@ -28,6 +29,20 @@ test('output destinations cannot overwrite the root or escape results', () => {
     assert.throws(() => outputPath(root, path));
   }
 });
+test('attempt reservation preserves existing evidence and rejects output junctions', async () => {
+  await mkdir(join(root, 'tmp'), { recursive: true });
+  const directory = await mkdtemp(join(root, 'tmp', 'quality-output-'));
+  try {
+    const out = await reserveOutput(directory, 'results/quality/attempt');
+    await writeFile(join(out, 'evidence.log'), 'retained failure');
+    await assert.rejects(reserveOutput(directory, 'results/quality/attempt'), { code: 'EEXIST' });
+    assert.equal(await readFile(join(out, 'evidence.log'), 'utf8'), 'retained failure');
+    const external = join(directory, 'outside-results');
+    await mkdir(external);
+    await symlink(external, join(directory, 'results', 'redirect'), process.platform === 'win32' ? 'junction' : 'dir');
+    await assert.rejects(reserveOutput(directory, 'results/redirect/attempt'), /real directory/);
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
 test('native evidence rejects missing, foreign and ambient cross-compilation hosts', () => {
   for (const [platform, host] of [['win32', 'x86_64-pc-windows-msvc'], ['linux', 'x86_64-unknown-linux-gnu'], ['darwin', 'aarch64-apple-darwin']]) {
     assert.doesNotThrow(() => assertNativeHost(platform, host, undefined));
@@ -40,9 +55,11 @@ test('native evidence rejects missing, foreign and ambient cross-compilation hos
 });
 test('inherited build policy cannot redirect disk or override shared profiles', () => {
   assert.doesNotThrow(() => assertBuildEnvironment({ PATH: 'toolchain' }));
+  assert.doesNotThrow(() => assertBuildEnvironment({ CARGO_INCREMENTAL: '0' }));
   for (const key of ['CARGO_TARGET_DIR', 'CARGO_INCREMENTAL', 'CARGO_PROFILE_DEV_DEBUG', 'CARGO_PROFILE_TEST_INCREMENTAL', 'CARGO_PROFILE_RELEASE_LTO']) {
     assert.throws(() => assertBuildEnvironment({ [key]: 'value' }), /must be unset/);
   }
+  assert.throws(() => assertBuildEnvironment({ CARGO_INCREMENTAL: '1' }), /must be unset/);
   assert.doesNotThrow(() => assertSharedTarget(root, join(root, 'target'), process.platform));
   assert.throws(() => assertSharedTarget(root, join(root, 'tmp', 'other-target'), process.platform));
 });

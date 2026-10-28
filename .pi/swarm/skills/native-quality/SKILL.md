@@ -7,7 +7,7 @@ description: Use when running workspace quality gates, verifying native platform
 
 Run from repository root with Rust, rustfmt, Clippy, Git and Node 24 in PATH. No new runtime dependencies are required. The scripts use Node built-ins for shell-free subprocesses, source hashes and disk observations.
 
-- `node --test scripts/quality-process.test.mjs scripts/quality-policy.test.mjs scripts/quality-snapshot.test.mjs`
+- `node --test scripts/quality-process.test.mjs scripts/quality-policy.test.mjs scripts/quality-snapshot.test.mjs scripts/quality-managed.test.mjs`
 - `node scripts/quality-gates.mjs --out results/quality/NEW-ATTEMPT`
 - Install the supported WASM target, then add `--wasm-check` for compilation-only evidence.
 
@@ -23,5 +23,6 @@ Source hashes include crate fixtures/glue, scripts/tooling, workflows and build 
 - `node scripts/github-quality.mjs dispatch REF`
 - `node scripts/github-quality.mjs status RUN_ID`
 - `node scripts/github-quality.mjs artifacts RUN_ID`
+- `node scripts/github-quality.mjs logs RUN_ID`
 
-The GitHub script uses private environment tokens or Git's existing credential helper. It never prints credentials or stores them in artifacts. Retrieved run/job receipts and artifact ZIPs go under `results/quality/ci-RUN_ID/`. Verify their source SHA and completed job conclusions before claiming an OS passed. See `docs/acceptance/quality.md` for the acceptance and negative-case matrix.
+The GitHub script uses private environment tokens or Git's existing credential helper. It never prints credentials or stores them in artifacts. Retrieved run/job receipts and artifact ZIPs go under `results/quality/ci-RUN_ID/`. Verify their source SHA and completed job conclusions before claiming an OS passed. See `docs/acceptance/quality.md` for the acceptance and negative-case matrix. `docs/managed-processes.md` documents reusable owned server startup/readiness/cleanup for baseline and browser E2E.

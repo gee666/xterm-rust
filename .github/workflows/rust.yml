@@ -28,7 +28,7 @@ jobs:
           toolchain: ${{ matrix.toolchain }}
           components: rustfmt, clippy
       - name: Verify the quality runner
-        run: node --test scripts/quality-process.test.mjs scripts/quality-policy.test.mjs scripts/quality-snapshot.test.mjs
+        run: node --test scripts/quality-process.test.mjs scripts/quality-policy.test.mjs scripts/quality-snapshot.test.mjs scripts/quality-managed.test.mjs
       - name: Run native library quality gates
         run: node scripts/quality-gates.mjs --out results/quality/${{ matrix.os }}-${{ matrix.toolchain }}
       - name: Preserve command logs and native provenance
@@ -37,6 +37,35 @@ jobs:
         with:
           name: quality-${{ matrix.os }}-${{ matrix.toolchain }}
           path: results/quality/${{ matrix.os }}-${{ matrix.toolchain }}/
+          if-no-files-found: error
+
+  miri-focused:
+    name: Focused core lifecycle and cell Miri tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: miri
+      - name: Interpret focused memory and callback tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p results/quality/miri-focused
+          {
+            git rev-parse HEAD
+            rustc -vV
+            cargo miri --version
+            cargo miri setup
+            cargo miri test --locked -p xterm-core --test lifecycle --test cell_upstream
+          } 2>&1 | tee results/quality/miri-focused/miri.log
+      - name: Preserve focused Miri evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-miri-focused
+          path: results/quality/miri-focused/
           if-no-files-found: error
 
   wasm-compile:

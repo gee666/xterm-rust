@@ -1,4 +1,5 @@
-import { resolve, relative, sep } from 'node:path';
+import { resolve, relative, sep, join } from 'node:path';
+import { mkdir, lstat } from 'node:fs/promises';
 import { DEFAULT_MIN_FREE_MIB } from './quality-resources.mjs';
 
 export function parseOptions(args, platform, architecture) {
@@ -26,6 +27,20 @@ export function outputPath(root, destination) {
   }
   return path;
 }
+export async function reserveOutput(root, destination) {
+  const out = outputPath(root, destination);
+  const parts = relative(root, out).split(sep);
+  let current = root;
+  for (const part of parts.slice(0, -1)) {
+    current = join(current, part);
+    try { await mkdir(current); }
+    catch (error) { if (error.code !== 'EEXIST') throw error; }
+    const info = await lstat(current);
+    if (!info.isDirectory() || info.isSymbolicLink()) throw new Error('Output parent must be a real directory inside repository results/');
+  }
+  await mkdir(out);
+  return out;
+}
 export function assertNativeHost(platform, host, declaredTarget) {
   const pattern = { win32: /windows/, linux: /linux/, darwin: /apple-darwin/ }[platform];
   if (!host || !pattern?.test(host)) throw new Error('rustc host does not match the executing OS; native evidence rejected');
@@ -35,7 +50,7 @@ export function assertNativeHost(platform, host, declaredTarget) {
 }
 export function assertBuildEnvironment(env) {
   const overrides = Object.keys(env).filter(key =>
-    key === 'CARGO_TARGET_DIR' || key === 'CARGO_INCREMENTAL' || /^CARGO_PROFILE_(DEV|TEST|RELEASE)_/.test(key));
+    key === 'CARGO_TARGET_DIR' || (key === 'CARGO_INCREMENTAL' && env[key] !== '0') || /^CARGO_PROFILE_(DEV|TEST|RELEASE)_/.test(key));
   if (overrides.length) throw new Error(`Build policy overrides must be unset: ${overrides.sort().join(', ')}`);
 }
 export function assertResolvedTarget(platform, cfg) {

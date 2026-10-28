@@ -66,7 +66,7 @@ These checks apply to the implemented workspace. They do not establish completio
 ## Q8. Shared disk and resumed-run safety
 
 - Preserve `.cargo/config.toml` from705104c, with development/test debug=0 and incremental=false. Assertions and release settings remain unchanged.
-- Do not create a duplicate native target/host directory or an alternate Cargo target directory merely to run quality checks.
+- Do not create a duplicate native target/host directory or an alternate Cargo target directory merely to run quality checks. Reject inherited CARGO_TARGET_DIR, profile overrides and incremental values other than zero. Explicit CARGO_INCREMENTAL=0 from the CI toolchain action is allowed because it preserves the shared policy. Record it.
 - Observe free space before and after every subprocess and once per second during long commands. Default minimum headroom is1024 MiB; explicit choices cannot go below256 MiB.
 - If space is insufficient before a command, retain the failing observation and do not start it. If it crosses the threshold during execution, terminate that process tree and retain resource/termination errors.
 - A probe failure is a failed resource check, not permission to proceed. No automated cleanup, source deletion, evidence deletion or other owner's process termination is allowed.

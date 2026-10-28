@@ -1,0 +1,35 @@
+✔ managed readiness and explicit stop retain output and are idempotent (264.6967ms)
+✔ early exit is failed even with a zero exit code (103.2745ms)
+✔ readiness deadline terminates the owned server (436.2276ms)
+✔ readiness callback rejection is retained instead of retried (341.5871ms)
+✔ disk failure kills the server and retains the exact resource error (296.3178ms)
+✔ log write failure stops its server rather than throwing out of the data callback (223.6066ms)
+✔ expected false readiness responses can become ready within the startup deadline (397.0725ms)
+✔ lifetime remains bounded after readiness (707.4795ms)
+✔ a ready server that exits unexpectedly is not a stopped success (47.289ms)
+✔ managed spawn errors reject readiness and retain a failed receipt (2.3064ms)
+✔ tree stop refuses arbitrary PIDs (0.1421ms)
+✔ options preserve explicit WASM intent, destination and finite deadlines (1.7077ms)
+✔ output destinations cannot overwrite the root or escape results (0.3501ms)
+✔ attempt reservation preserves existing evidence and rejects output junctions (10.5569ms)
+✔ native evidence rejects missing, foreign and ambient cross-compilation hosts (0.3625ms)
+✔ inherited build policy cannot redirect disk or override shared profiles (0.3617ms)
+✔ resolved Cargo cfg catches configuration-file targets, not only environment overrides (0.1912ms)
+✔ test counts preserve failures, ignored and filtered cases per suite (0.2003ms)
+✔ successful command retains stdout and stderr without a shell (48.2345ms)
+✔ failed command preserves exit status and output (93.4271ms)
+✔ missing executable is a recorded failure, not an uncaught spawn error (2.7385ms)
+✔ timeout terminates a blocked command and records the failure (523.5938ms)
+✔ disk monitor terminates a command and records its resource failure (348.0173ms)
+✔ timeout terminates spawned descendants, not just the shell-free parent (1223.3044ms)
+✔ snapshot changes for Rust, fixture, JS, workflow and profile edits (34.5821ms)
+✔ unsafe scan retains exact file and line but does not claim semantic safety (10.5401ms)
+✔ disk preflight records byte counts and rejects insufficient headroom without cleanup (0.7367ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2877.406
