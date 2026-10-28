@@ -4,7 +4,7 @@ Reference: `source_repo/src/common/input/WriteBuffer.ts` and every assertion in 
 
 ## Queue, synchronous writes and failures
 
-- Preserve FIFO text/byte/mixed chunk order and callback order, including empty text and empty byte arrays. Text length is UTF-16 units; byte length is bytes.
+- Preserve FIFO text/byte/mixed chunk order and callback order, including empty text and empty byte arrays. Text length is UTF-16 units; byte length is bytes. Browser byte views retain identity until parsing, so mutations, detachment and resizable-buffer length changes remain visible. Dynamic length is read at enqueue and after parsing, preserving temporarily negative pending counts when a view grows.
 - Reject asynchronous writes only when already-pending data is strictly greater than 50,000,000 units before adding the new chunk. Preserve exact error text. Equality is accepted; the crossing chunk is accepted; the next write is rejected. No policy substitution or hidden truncation.
 - Start one zero-delay task only on transition from an empty backing queue. User input makes the first new write run immediately, consumes that flag only on the empty transition, and preserves older queued work.
 - `write_sync` drains synchronously and allows action/callback reentry without growing the native stack. Match the strict recursion-count comparison, reset behavior and maximum-subsequent-calls data loss from the deprecated source API.
@@ -16,7 +16,7 @@ Reference: `source_repo/src/common/input/WriteBuffer.ts` and every assertion in 
 
 - Record the start clock once per slice, carry it across fast pending-handler continuations and yield at elapsed >=12ms. Continuations resolved at or after the boundary request a zero-delay host task; earlier resolution resumes immediately.
 - Paused handlers keep the current chunk/offset and do not decrement pending units or invoke its callback. Resume forwards the Boolean result to the action, with default true on ordinary timer dispatch. Multiple pauses in one chunk preserve order.
-- A rejected handler reports its original error through the host's asynchronous error path and continues the current input position with false. It must not swallow the error or abort all queued input.
+- A rejected handler reports its original typed error object through the host's microtask error path before false continuation runs. It must not stringify/swallow the error or abort all queued input. Immediate parser failures propagate synchronously; all HandlerResult variants are handled explicitly.
 - After each completed chunk, call the callback before incrementing offset and subtracting that chunk's units. Preserve action/callback reentrant writes and source order.
 - If work remains after a budget break, retain processed chunks until offset >50, compact exactly then, request the next task and fire parsed after scheduling. When exhausted, clear both queues/counters and fire parsed once.
 - Disposal cancels the scheduled task, clears queues/pending units/offset and disposes parsed subscriptions. All writes/flushes after disposal do nothing. Pending future completion after disposal neither resumes the action nor schedules work. Repeated disposal is safe. Dropping the final Rust owner cancels scheduled host resources without an ownership cycle.

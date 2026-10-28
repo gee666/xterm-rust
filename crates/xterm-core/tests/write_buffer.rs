@@ -9,6 +9,8 @@ mod external_errors;
 mod external_payloads;
 #[path = "write_buffer_cases/parser_bridge.rs"]
 mod parser_bridge;
+#[path = "write_buffer_cases/resizable_payload.rs"]
+mod resizable_payload;
 #[path = "write_buffer_cases/timing.rs"]
 mod timing;
 #[path = "write_buffer_cases/upstream.rs"]

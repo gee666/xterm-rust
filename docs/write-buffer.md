@@ -6,12 +6,12 @@
 
 Construct `WriteBuffer::new(scheduler, action)`. The action receives the queue handle, borrowed `WriteData` and `Option<bool>` parser continuation. `None` is the source's synchronous action call without a promise result. Timed writes pass `Some(true)` initially and carry the resolved result through the entire continuation slice. The action returns `Result<WriteAction, WriteError>`.
 
-- `WriteData::Text(Vec<u16>)` retains UTF-16 units, including lone surrogates. `Bytes(Vec<u8>)` remains a separate chunk type.
+- `WriteData::Text(Vec<u16>)` retains UTF-16 units, including lone surrogates. `Bytes(Vec<u8>)` owns native bytes. `External(Rc<dyn WritePayload>)` retains adapter-owned byte views until parsing, preserving JavaScript Uint8Array mutation, detachment and resizing. The queue rechecks dynamic length after parsing, even when a resized view makes the source pending count temporarily negative.
 - `write(data, Option<WriteCallback<S>>)` schedules a zero-delay write unless the user-input fast path applies. Callback closures receive the queue for safe reentry.
 - `write_sync(data, Option<f64>)` ports the deprecated source method, including strict recursion-limit comparison and dropped data when the limit rejects a call.
 - `flush_sync()` ports the source's synchronous flush. Neither synchronous method waits for pending parser handlers.
 - `handle_user_input()`, `on_write_parsed()` and `dispose()` map directly to source behavior. Disposal is explicit and idempotent; dropping the final owner cancels its timer.
-- `WriteAction::from_parser(Option<HandlerResult>)` adapts the shared parser future result. The terminal action must retain its decoded chunk while pending, call the parser's resume method with the continuation result, and not decode the same chunk again.
+- `WriteAction::from_parser(Option<HandlerResult>) -> Result<WriteAction, WriteError>` explicitly adapts every shared parser result, including immediate failures and fallible futures. The terminal action must retain its decoded chunk while pending, call the parser's resume method with the continuation result, and not decode the same chunk again.
 
 `WriteScheduler` provides `request`, `cancel`, `now`, `spawn` and `report_error`. A requested timer stores the weak queue and clock/result arguments. When fired later, upgrade the weak queue and call `process(last_time, result)`. Requests and future polling must not call back inline while the scheduler is borrowed. Request failure returns `WriteError::Schedule`, propagated after releasing the scheduler borrow. The host reports uncaught asynchronous errors rather than discarding them. `WriteError::external(error)` retains an original typed parser/host error object by shared identity, and `external_ref` recovers that type without string conversion.
 
@@ -69,5 +69,7 @@ cargo fmt --all -- --check
 The oracle records source SHA256 values, exact original outcomes, Node/platform, seed `0x5717eb0f`, 128 traces and8192 steps under `results/write-buffer/oracle.json`. Its retained fixture is `tests/fixtures/write-buffer-traces.tsv`. The replay compares action data and continuation values, callback order, parsed events, pending units, backing queue length, offsets, disposal and scheduled-task counts after every operation. Costs vary between0,3,6,12 and13ms per action.
 
 `timing.rs` and `edges.rs` supplement that synchronous/timer corpus with exact watermark, UTF-16 lengths,50/51 compaction,12ms continuation, false and rejected results, disposal of an actually pending future, callback reentry, empty chunk truthiness, host request errors, source partial throw state and final-owner cleanup.
+
+Observed native Windows checks: all19 original tests pass,8192 seeded steps match,42 Rust tests pass, and targeted Clippy is warning-free. `results/write-buffer/final-{oracle,tests,clippy}.log` retain these command outputs. The extra source assertions record rejection/error ordering plus actual mutable, detached and resizable JavaScript byte views. Earlier shared-build failures remain in the same results directory rather than being removed.
 
 Observed checks run on native Windows. A clean queue result is not evidence of terminal integration or browser scheduling. Native adapter work belongs to Antigone; browser adapter work belongs to Xavier. The detailed criteria in `docs/criteria/write-buffer.md` retain these integration gates. Overall equivalence is NOT PROVEN. Native Linux/macOS and integrated browser/terminal checks remain unrun until their actual results are recorded.

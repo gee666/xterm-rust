@@ -1,0 +1,128 @@
+{
+  "scope": "Portable WriteBuffer implementation only",
+  "overallEquivalence": "NOT PROVEN",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+  "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+  "baseline": {
+    "executed": 19,
+    "passed": 19,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0
+  },
+  "rust": {
+    "executed": 42,
+    "passed": 42,
+    "failed": 0,
+    "ignored": 0
+  },
+  "differential": {
+    "seed": "0x5717eb0f",
+    "traces": 128,
+    "steps": 8192,
+    "scope": "Synchronous and timer operations; controlled async tests are separate"
+  },
+  "extraOriginalAssertions": {
+    "rejectionOrder": [
+      "action:true",
+      "error",
+      "action:false",
+      "callback",
+      "parsed"
+    ],
+    "externalViews": {
+      "mutated": {
+        "seen": [
+          [
+            67,
+            66
+          ]
+        ],
+        "pending": 0,
+        "offset": 0,
+        "chunks": 0
+      },
+      "detached": {
+        "seen": [
+          []
+        ],
+        "pending": 3,
+        "offset": 1,
+        "chunks": 2
+      },
+      "resized": {
+        "seen": [
+          [
+            65,
+            66,
+            67,
+            68
+          ]
+        ],
+        "pending": -1,
+        "offset": 1,
+        "chunks": 2
+      }
+    }
+  },
+  "commands": [
+    {
+      "command": "node scripts/write-buffer-oracle.mjs",
+      "log": "results/write-buffer/final-oracle.log",
+      "exitCode": 0
+    },
+    {
+      "command": "cargo test -p xterm-core --test write_buffer",
+      "log": "results/write-buffer/final-tests.log",
+      "exitCode": 0
+    },
+    {
+      "command": "cargo clippy -p xterm-core --test write_buffer -- -D warnings",
+      "log": "results/write-buffer/final-clippy.log",
+      "exitCode": 0
+    },
+    {
+      "command": "rustfmt --edition 2021 --check crates/xterm-core/src/input/write_buffer.rs crates/xterm-core/src/input/write_buffer_drain.rs crates/xterm-core/src/input/write_buffer_types.rs crates/xterm-core/tests/write_buffer.rs",
+      "log": "results/write-buffer/final-fmt.log",
+      "exitCode": 0
+    }
+  ],
+  "hashes": {
+    "crates/xterm-core/src/input/write_buffer.rs": "73491996ca3e6dbe4987edd0b6c78e81b8746c0264fea766bb1d405290c68dca",
+    "crates/xterm-core/src/input/write_buffer_drain.rs": "3c831e4d8a27be980f3703bf5de7bbd4ddd35635e84df97f564bdf56adee82fe",
+    "crates/xterm-core/src/input/write_buffer_types.rs": "beaf1355195411240323baf2bbee8a2d819ded0d95fa536bc7f6b3effa5532e3",
+    "crates/xterm-core/tests/write_buffer.rs": "37141165f07309a059c0900f30d64fcb539259c8cc6ed0efcd9d3aa6a01dd3ff",
+    "crates/xterm-core/tests/write_buffer_support/mod.rs": "005fe9d642b31f0e2b1f470772cc5bf45970823bb16fcffc000abf0fb48dd303",
+    "scripts/write-buffer-oracle.mjs": "87e33f692bca4965d3f28e171cb6deabbb6192efb18a7e3d5f8ab8f47e784ca8",
+    "scripts/write-buffer-evidence.mjs": "3953e988e5bd16ea8661199aefae9eb2ef608478e0a0f1e457c92b21b14942e0",
+    "crates/xterm-core/tests/write_buffer_cases/differential.rs": "9e9a5ee36dcf74106e1514b271de1637dd271e4fe7daaf1403c2c53b5b7b7a2a",
+    "crates/xterm-core/tests/write_buffer_cases/edges.rs": "bb27ce46ad2e2d258e865a0ea570a759255f6aa1965ed4362a4634366dc8dd3e",
+    "crates/xterm-core/tests/write_buffer_cases/external_errors.rs": "4c3a514ad9dbf31dff1d341b8e70a2c6e119bb74a2a8c3f7baa958af54158a31",
+    "crates/xterm-core/tests/write_buffer_cases/external_payloads.rs": "537f86ce7ef6cb40ebd59f7e558b720ffae3007ed9952eff73761c4d3263806f",
+    "crates/xterm-core/tests/write_buffer_cases/parser_bridge.rs": "3a76108aaee74c0ae6da8ed0553f2651f2030b150981d9994d88f6937235b232",
+    "crates/xterm-core/tests/write_buffer_cases/resizable_payload.rs": "c91280284da739feddc9a9838c414aab80a05c4ec3b082a9e6f450e1409ebee2",
+    "crates/xterm-core/tests/write_buffer_cases/timing.rs": "86811592d839cbd94318bacab4aa7a92d59bf466bddd0f71d935f09abc6421b9",
+    "crates/xterm-core/tests/write_buffer_cases/upstream.rs": "8fa569fc5f2fdded1794aa68e2bb7ada6ba57fc940260523a58c7475729547f5",
+    "crates/xterm-core/tests/fixtures/write-buffer-traces.tsv": "e7118fa6d77f5b7eb95fcc816197abd3defd044f740299f57337698808742b4d",
+    "results/write-buffer/oracle.json": "53acf1c7a321491a1b4afd974718eca845847584cdd57cab1b823c035a0b3f14",
+    "results/write-buffer/final-oracle.log": "ff4b42fa831ba4f6a3b5a5d4f96aef8ae253c654fcb5966b31f24aef6dd250cf",
+    "results/write-buffer/final-tests.log": "32c00f68e05121161c4eb267fb8288f51eeec0171e44c836b1354b4ad71d3b2e",
+    "results/write-buffer/final-clippy.log": "406adb39f244468a66fd79c1f22762977d4ecd699247f5c84686cfd53c307419",
+    "results/write-buffer/final-fmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "retainedFailures": [
+    "results/write-buffer/build-failure-lifecycle-terminal.log",
+    "results/write-buffer/build-failure-shared-api.log",
+    "results/write-buffer/validated-tests-v2.log",
+    "results/write-buffer/adapter-bridge-clippy.log"
+  ],
+  "unrun": [
+    "Native Linux runtime",
+    "Native macOS runtime",
+    "Integrated native queue task128",
+    "Integrated browser queue task118",
+    "Workspace-wide quality gates"
+  ]
+}

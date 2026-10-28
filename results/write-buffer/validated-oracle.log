@@ -1,0 +1,124 @@
+(node:40660) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{
+  "scope": "WriteBuffer only",
+  "overallEquivalence": "NOT PROVEN",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "sourceHashes": {
+    "source_repo/src/common/Lifecycle.ts": "e00016aae991e24137ab066778912414f4af959f2b26baecf47ec542ad313a83",
+    "source_repo/src/common/Event.ts": "aa374272c5ec5c0d6992d6072687211a94676b086a2505b0414ddd20cf57d641",
+    "source_repo/src/common/Async.ts": "dc91cfe28cbbc295f85db93939d0199d8a43fdb82823fb59c1c7dec4e97d024f",
+    "source_repo/src/common/input/WriteBuffer.ts": "eb66b561becafcd0ad67ed311d621174cc52ec2b890ea4e2c8702caec7c4fbe3",
+    "source_repo/src/common/input/WriteBuffer.test.ts": "628bd009d8d421ceb4f0c5019f3832f14c0cb849c76dc12f976218c5338ce0f0"
+  },
+  "seed": "0x5717eb0f",
+  "traces": 128,
+  "steps": 8192,
+  "counts": {
+    "tick": 1622,
+    "write": 1584,
+    "flush": 1630,
+    "sync": 1566,
+    "input": 1662,
+    "dispose": 128
+  },
+  "rejectionOrder": [
+    "action:true",
+    "error",
+    "action:false",
+    "callback",
+    "parsed"
+  ],
+  "fixture": "crates/xterm-core/tests/fixtures/write-buffer-traces.tsv",
+  "fixtureSha256": "e7118fa6d77f5b7eb95fcc816197abd3defd044f740299f57337698808742b4d",
+  "baseline": {
+    "discovered": 19,
+    "executed": 19,
+    "passed": 19,
+    "failed": 0,
+    "outcomes": [
+      {
+        "name": "WriteBuffer / write input / string",
+        "status": "passed"
+      },
+      {
+        "name": "WriteBuffer / write input / bytes",
+        "status": "passed"
+      },
+      {
+        "name": "WriteBuffer / write input / string/bytes mixed",
+        "status": "passed"
+      },
+      {
+        "name": "WriteBuffer / write input / write callback works for empty chunks",
+        "status": "passed"
+      },
+      {
+        "name": "WriteBuffer / write input / writeSync",
+        "status": "passed"
+      },
+      {
+        "name": "WriteBuffer / write input / writeSync called from action does not overflow callstack - issue #3265",
+        "status": "passed"
+      },
+      {
+        "name": "WriteBuffer / write input / writeSync maxSubsequentCalls argument",
+        "status": "passed"
+      },
+      {
+        "name": "WriteBuffer / write input / flushSync processes all pending writes",
+        "status": "passed"
+      },
+      {
+        "name": "WriteBuffer / write input / flushSync with no pending writes is a no-op",
+        "status": "passed"
+      },
+      {
+        "name": "WriteBuffer / write input / flushSync fires onWriteParsed",
+        "status": "passed"
+      },
+      {
+        "name": "WriteBuffer / write input / flushSync with no pending writes does not fire onWriteParsed",
+        "status": "passed"
+      },
+      {
+        "name": "WriteBuffer / write input / dispose cancels scheduled innerWrite",
+        "status": "passed"
+      },
+      {
+        "name": "WriteBuffer / write input / dispose does not fire onWriteParsed for pending writes",
+        "status": "passed"
+      },
+      {
+        "name": "WriteBuffer / write input / write after dispose is a no-op",
+        "status": "passed"
+      },
+      {
+        "name": "WriteBuffer / write input / dispose is idempotent",
+        "status": "passed"
+      },
+      {
+        "name": "WriteBuffer / write input / async handler continuation is skipped after dispose",
+        "status": "passed"
+      },
+      {
+        "name": "WriteBuffer / write input / handleUserInput still processes first chunk synchronously",
+        "status": "passed"
+      },
+      {
+        "name": "WriteBuffer / write input / flushSync after dispose is a no-op",
+        "status": "passed"
+      },
+      {
+        "name": "WriteBuffer / write input / writeSync after dispose is a no-op",
+        "status": "passed"
+      }
+    ]
+  },
+  "unrun": [
+    "Native Linux/macOS runtime",
+    "Integrated terminal/browser scheduling",
+    "Async future differential traces, covered by controlled Rust tests only"
+  ]
+}

@@ -67,6 +67,8 @@ let state=0x5717eb0f;
 function random(){state^=state<<13;state^=state>>>17;state^=state<<5;return state>>>0;}
 function units(s){return Array.from({length:s.length},(_,i)=>s.charCodeAt(i).toString(16)).join(',')||'-';}
 const rows=[]; const operations=['write','sync','flush','input','tick']; const counts={};
+const externalViews={};
+function tick(){const first=timers.entries().next().value;if(first){timers.delete(first[0]);first[1]();}}
 try {
  for(let trace=0;trace<128;trace++) {
   timers.clear(); now=100; const log=[]; const cost=[0,3,6,12,13][trace%5];
@@ -86,11 +88,26 @@ try {
    rows.push([trace,step,op,bytes?'b':'t',encoded,cost,wb._pendingData,wb._bufferOffset,wb._writeBuffer.length,+wb._store.isDisposed,timers.size,log.join('|')||'-'].join('\t'));
   }
  }
+ for(const scenario of ['mutated','detached','resized']) {
+  timers.clear();now=100;const seen=[];
+  const wb=new WriteBuffer(data=>{seen.push(Array.from({length:data.length},(_,i)=>data[i]));now+=12;});
+  const backing=new ArrayBuffer(2,{maxByteLength:4});const view=new Uint8Array(backing);view.set([65,66]);
+  wb.write(view);
+  if(scenario==='mutated')view[0]=67;
+  if(scenario==='detached')structuredClone(backing,{transfer:[backing]});
+  if(scenario==='resized'){backing.resize(4);view.set([65,66,67,68]);}
+  if(scenario!=='mutated')wb.write(new Uint8Array([88]));
+  tick();externalViews[scenario]={seen,pending:wb._pendingData,offset:wb._bufferOffset,chunks:wb._writeBuffer.length};
+  wb.dispose();
+ }
+ assert.deepEqual(externalViews.mutated.seen,[[67,66]]);
+ assert.deepEqual(externalViews.detached,{seen:[[]],pending:3,offset:1,chunks:2});
+ assert.deepEqual(externalViews.resized,{seen:[[65,66,67,68]],pending:-1,offset:1,chunks:2});
 } finally {globalThis.setTimeout=originalTimeout;globalThis.clearTimeout=originalClear;Object.defineProperty(globalThis,'performance',performanceDescriptor);}
 const fixture='crates/xterm-core/tests/fixtures/write-buffer-traces.tsv';
 writeFileSync(resolve(root,fixture),rows.join('\n')+'\n');
 const report={scope:'WriteBuffer only',overallEquivalence:'NOT PROVEN',node:process.version,platform:process.platform,sourceHashes,
- seed:'0x5717eb0f',traces:128,steps:rows.length,counts,rejectionOrder,fixture,fixtureSha256:createHash('sha256').update(readFileSync(resolve(root,fixture))).digest('hex'),
+ seed:'0x5717eb0f',traces:128,steps:rows.length,counts,rejectionOrder,externalViews,fixture,fixtureSha256:createHash('sha256').update(readFileSync(resolve(root,fixture))).digest('hex'),
  baseline:{discovered:tests.length,executed:outcomes.length,passed:outcomes.filter(t=>t.status==='passed').length,failed:outcomes.filter(t=>t.status==='failed').length,outcomes},
  unrun:['Native Linux/macOS runtime','Integrated terminal/browser scheduling','Async future differential traces, covered by controlled Rust tests only']};
 mkdirSync(resolve(root,'results/write-buffer'),{recursive:true});

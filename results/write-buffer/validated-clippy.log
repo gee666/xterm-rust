@@ -1,0 +1,22 @@
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error: redundant closure
+  --> crates\xterm-core\src\headless\terminal.rs:48:34
+   |
+48 |                         .map_err(|error| crate::event::EmitError::callback(error))?
+   |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace the closure with the function itself: `crate::event::EmitError::callback`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#redundant_closure
+   = note: `-D clippy::redundant-closure` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::redundant_closure)]`
+
+error: very complex type used. Consider factoring parts into `type` definitions
+  --> crates\xterm-core\src\sorted_list.rs:45:20
+   |
+45 |     undefined_key: Option<Box<dyn Fn(&T) -> bool>>,
+   |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#type_complexity
+   = note: `-D clippy::type-complexity` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::type_complexity)]`
+
+error: could not compile `xterm-core` (lib) due to 2 previous errors
