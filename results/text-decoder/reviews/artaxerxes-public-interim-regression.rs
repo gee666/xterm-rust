@@ -1,4 +1,5 @@
-#[path = "../crates/xterm-core/src/input/text_decoder.rs"]
+// Run with rustc --edition 2021 --test this file; output belongs under root tmp/.
+#[path = "../../../crates/xterm-core/src/input/text_decoder.rs"]
 pub mod decoder;
 #[test]
 fn public_interim_keeps_all_populated_prefix_bytes() {
