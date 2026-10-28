@@ -25,7 +25,7 @@ The supplied reference reports version 6.0.0. The index scans 776 non-generated 
 
 The current source has 209 production modules, including CSS and declarations, and 16 declaration files. The AST index contains 770 declaration/member records: 109 declarations, 183 option members, 38 event members and 440 other members. Counts include browser/headless duplicates because those are independent contracts. These are not counts of implemented Rust APIs.
 
-The test index has 120 files: 73 unit files, 25 browser integration files, six benchmark files and 16 runner/support files. It retains 2,449 static test definitions, including registrations in shared renderer helpers. Static definitions do not equal expanded runtime cases or assertion counts. Loops, shared-helper injection, conditional registration and benchmark contexts have different execution semantics.
+The test index has 120 files: 73 unit files, 25 browser integration files, six benchmark files and 16 runner/support files. It retains 2,426 static test definitions, including registrations in shared renderer helpers, and 32 static benchmark-case definitions. Named/default Playwright imports are resolved as registration bindings; local assertion helpers named `test` are not test cases. Static definitions do not equal expanded runtime cases or assertion counts. Loops, shared-helper injection, conditional registration and benchmark contexts have different execution semantics.
 
 All fourteen addon directories are discovered from disk, not selected from a working subset: attach, clipboard, fit, image, ligatures, program-status, progress, search, serialize, unicode-graphemes, unicode11, web-fonts, web-links and webgl.
 

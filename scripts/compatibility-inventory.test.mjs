@@ -80,7 +80,12 @@ test('suite support, conditional renderer cases and skip annotation semantics su
   assert(renderer.definitions.some(d => d.callee === 'test.describe.skip'));
   const terminal = suites.find(s => s.source === 'source_repo/test/playwright/Terminal.test.ts');
   assert(terminal.definitions.some(d => d.parents.length > 1));
+  const defaultImport = suites.find(s => s.source === 'source_repo/addons/addon-image/test/KittyGraphics.test.ts');
+  assert(defaultImport.staticTestDefinitions > 100, 'Default-imported Playwright test must retain its registrations');
   assert(terminal.definitions.every(d => d.callee !== 'test.fail'));
+  const escape = suites.find(s => s.source === 'source_repo/src/common/parser/EscapeSequenceParser.test.ts');
+  assert(escape.definitions.every(d => d.callee !== 'test'), 'Local assertion helper test(s,value,noReset) is not a registered test');
+  assert(escape.definitions.some(d => d.callee === 'it'));
   const eventBenchmark = suites.find(s => s.source.endsWith('/Event.benchmark.ts'));
   assert(eventBenchmark.definitions.some(d => d.kind === 'benchmark'));
   const throughput = suites.find(s => s.source.endsWith('/Terminal.benchmark.ts'));

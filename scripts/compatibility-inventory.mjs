@@ -174,10 +174,27 @@ function calleeNames(node, sf) {
 for (const p of testFiles) {
   const sf = parse(p, await read(p));
   const definitions = [];
+  const frameworkTestNames = new Set();
+  for (const statement of sf.statements) {
+    if (ts.isImportDeclaration(statement) && ['@playwright/test', 'mocha'].includes(statement.moduleSpecifier.text)) {
+      if (statement.moduleSpecifier.text === '@playwright/test' && statement.importClause?.name) frameworkTestNames.add(statement.importClause.name.text);
+      const bindings = statement.importClause?.namedBindings;
+      if (bindings && ts.isNamedImports(bindings)) for (const binding of bindings.elements) {
+        if ((binding.propertyName?.text ?? binding.name.text) === 'test') frameworkTestNames.add(binding.name.text);
+      }
+    }
+  }
   function visit(node, parents = []) {
     if (ts.isCallExpression(node) || ts.isNewExpression(node)) {
       const callees = calleeNames(node.expression, sf);
-      const callee = callees.find(c => /^(test\.describe|describe|context|suite|it|test|specify|perfContext|RuntimeCase|ThroughputRuntimeCase)(\.(skip|only|serial|parallel|concurrent|todo))*$/.test(c));
+      // Unit suites also define local functions named test for assertions. Those
+      // are not registrations, even when their first argument is a string.
+      const registrations = callees.flatMap(c => {
+        const [name, ...members] = c.split('.');
+        if (frameworkTestNames.has(name)) return [['test', ...members].join('.')];
+        return /^test(\.|$)/.test(c) ? [] : [c];
+      });
+      const callee = registrations.find(c => /^(test\.describe|describe|context|suite|it|test|specify|perfContext|RuntimeCase|ThroughputRuntimeCase)(\.(skip|only|serial|parallel|concurrent|todo))*$/.test(c));
       const args = node.arguments ?? [];
       // Playwright test.skip(condition, reason) is a runtime annotation, not registration.
       const registration = args.length > 0 && (ts.isStringLiteralLike(args[0]) || ts.isTemplateExpression(args[0]) || (args[1] && (ts.isArrowFunction(args[1]) || ts.isFunctionExpression(args[1]))));
