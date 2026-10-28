@@ -2,7 +2,9 @@
 use wasm_bindgen::{closure::Closure, prelude::*, JsCast};
 use wasm_bindgen_test::*;
 use web_sys::HtmlElement;
+use xterm_web::scroll::browser_visibility::BrowserVisibility;
 use xterm_web::scroll::fast_dom_node::FastDomNode;
+use xterm_web::scroll::ScrollbarVisibility;
 wasm_bindgen_test_configure!(run_in_browser);
 
 #[wasm_bindgen(inline_js = "
@@ -17,6 +19,7 @@ export function fastWrites(node){return records.get(node).writes;}
 export function fastCoercible(log){return {[Symbol.toPrimitive](hint){log.push(hint);return '4px';}};}
 export function fastReenter(node,callback){let once=true;const state=records.get(node);Object.defineProperty(node,'style',{configurable:true,get(){if(once){once=false;callback();}return state.proxy;}});}
 export function restoreFast(node){delete node.style;}
+export function fastNextTask(){return new Promise(resolve=>setTimeout(resolve,0));}
 ")]
 extern "C" {
     #[wasm_bindgen(js_name = instrumentFast)]
@@ -29,6 +32,8 @@ extern "C" {
     fn reenter(node: &HtmlElement, callback: &js_sys::Function);
     #[wasm_bindgen(js_name = restoreFast)]
     fn restore(node: &HtmlElement);
+    #[wasm_bindgen(js_name = fastNextTask)]
+    fn next_task() -> js_sys::Promise;
 }
 fn element() -> HtmlElement {
     web_sys::window()
@@ -133,4 +138,51 @@ fn toggle_refreshes_class_cache_and_attributes_are_not_deduplicated() {
     assert_eq!(node.class_name(), "first");
     fast.set_attribute("aria-label", "value").unwrap();
     assert_eq!(node.get_attribute("aria-label").as_deref(), Some("value"));
+}
+
+#[wasm_bindgen_test]
+async fn visibility_reveal_is_a_later_task_and_hide_cancels_it() {
+    let node = element();
+    let value = BrowserVisibility::new(
+        web_sys::window().unwrap(),
+        ScrollbarVisibility::Auto,
+        "shown",
+        "hidden",
+    )
+    .unwrap();
+    value.set_dom_node(FastDomNode::new(node.clone())).unwrap();
+    value.set_is_needed(true).unwrap();
+    value.set_should_be_visible(true).unwrap();
+    assert_eq!(node.class_name(), "hidden");
+    wasm_bindgen_futures::JsFuture::from(next_task())
+        .await
+        .unwrap();
+    assert_eq!(node.class_name(), "shown");
+    value.set_should_be_visible(false).unwrap();
+    assert_eq!(node.class_name(), "hidden xterm-fade");
+    value.set_should_be_visible(true).unwrap();
+    value.set_is_needed(false).unwrap();
+    wasm_bindgen_futures::JsFuture::from(next_task())
+        .await
+        .unwrap();
+    assert_eq!(node.class_name(), "hidden");
+    value.dispose().unwrap();
+}
+
+#[wasm_bindgen_test]
+async fn visibility_string_mode_is_not_coerced_to_hidden() {
+    let node = element();
+    let mode = ScrollbarVisibility::from_value(xterm_core::options::OptionValue::from("2"));
+    let value =
+        BrowserVisibility::new(web_sys::window().unwrap(), mode, "shown", "hidden").unwrap();
+    value.set_dom_node(FastDomNode::new(node.clone())).unwrap();
+    value.set_is_needed(true).unwrap();
+    value.set_should_be_visible(true).unwrap();
+    wasm_bindgen_futures::JsFuture::from(next_task())
+        .await
+        .unwrap();
+    assert_eq!(node.class_name(), "shown");
+    value.set_visibility(ScrollbarVisibility::Hidden).unwrap();
+    assert_eq!(node.class_name(), "hidden xterm-fade");
+    value.dispose().unwrap();
 }
