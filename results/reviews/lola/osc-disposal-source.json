@@ -1,0 +1,88 @@
+{
+  "status": "passed",
+  "scope": "Six directed source-only OSC disposal traces matching tests/osc_disposal.rs. No Rust execution claimed.",
+  "sources": [
+    {
+      "path": "source_repo/src/common/parser/Constants.ts",
+      "sha256": "b27193683d50f676cc2ad779fc8a5a5b4c0b38c2b0bb762168739c6d100942dd"
+    },
+    {
+      "path": "source_repo/src/common/input/TextDecoder.ts",
+      "sha256": "0368a7fddbb53502f86144b61d023f8d022f5ce973a1b01b59c552ec62631a1b"
+    },
+    {
+      "path": "source_repo/src/common/StringBuilder.ts",
+      "sha256": "1c5fb0677d84788609304e7ea1efc3f760ad5e8c43dc691ceb83b283f1286114"
+    },
+    {
+      "path": "source_repo/src/common/parser/OscParser.ts",
+      "sha256": "3a06692c278f8850922e54eafde315253c55df76a1c76a6b7327146e957e8f24"
+    },
+    {
+      "path": "source_repo/src/common/parser/OscParser.test.ts",
+      "sha256": "fbfe2b0d03b05d26c46dc25ccf490fb04f5fd0989dbbfa268ae8b970e60ee5e6"
+    }
+  ],
+  "checks": [
+    {
+      "kind": "fallback disposal and later registration",
+      "phase": "s",
+      "log": [
+        "s",
+        "new:42"
+      ]
+    },
+    {
+      "kind": "fallback disposal and later registration",
+      "phase": "p",
+      "log": [
+        "s",
+        "p:41",
+        "new:42"
+      ]
+    },
+    {
+      "kind": "fallback disposal and later registration",
+      "phase": "e",
+      "log": [
+        "s",
+        "p:41",
+        "e:1",
+        "new:42"
+      ]
+    },
+    {
+      "kind": "active disposal and next index error",
+      "phase": "s",
+      "log": [
+        "s2"
+      ],
+      "error": "TypeError"
+    },
+    {
+      "kind": "active disposal and next index error",
+      "phase": "p",
+      "log": [
+        "s2",
+        "s1",
+        "s0",
+        "p2"
+      ],
+      "error": "TypeError"
+    },
+    {
+      "kind": "active disposal and next index error",
+      "phase": "e",
+      "log": [
+        "s2",
+        "s1",
+        "s0",
+        "p2",
+        "p1",
+        "p0",
+        "e2:1"
+      ],
+      "error": "TypeError"
+    }
+  ]
+}

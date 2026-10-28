@@ -1,0 +1,604 @@
+(node:39200) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{
+  "node": "v24.15.0",
+  "seed": 6037529,
+  "randomizedCases": 512,
+  "stepsPerCase": 96,
+  "baseline": {
+    "discovered": 23,
+    "passed": 23,
+    "failed": 0,
+    "skipped": 0
+  },
+  "mutationChecks": [
+    {
+      "phase": "start",
+      "error": "TypeError",
+      "rustError": "DispatchError::ActiveHandlerRemoved",
+      "status": "passed"
+    },
+    {
+      "phase": "put",
+      "error": "TypeError",
+      "rustError": "DispatchError::ActiveHandlerRemoved",
+      "status": "passed"
+    },
+    {
+      "phase": "end",
+      "error": "TypeError",
+      "rustError": "DispatchError::ActiveHandlerRemoved",
+      "status": "passed"
+    },
+    {
+      "phase": "reset",
+      "error": "TypeError",
+      "rustError": "DispatchError::ActiveHandlerRemoved",
+      "status": "passed"
+    },
+    {
+      "phase": "repeated disposal with duplicate identity",
+      "status": "passed"
+    },
+    {
+      "phase": "register from callback",
+      "status": "passed"
+    },
+    {
+      "phase": "clear then register from callback",
+      "status": "passed"
+    }
+  ],
+  "callbackFailureChecks": [
+    {
+      "asynchronous": false,
+      "path": "buffer retained on error; cleared on success",
+      "status": "passed"
+    },
+    {
+      "asynchronous": true,
+      "path": "buffer retained on error; cleared on success",
+      "status": "passed"
+    },
+    {
+      "stage": "end",
+      "path": "failure stops older dispatch with partial state",
+      "status": "passed"
+    },
+    {
+      "stage": "reset",
+      "path": "failure stops older dispatch with partial state",
+      "status": "passed"
+    },
+    {
+      "stage": "cleanup",
+      "path": "failure stops older dispatch with partial state",
+      "status": "passed"
+    },
+    {
+      "stage": "resume-lower-error then reset",
+      "log": [
+        [
+          2,
+          true
+        ],
+        [
+          1,
+          true
+        ],
+        [
+          1,
+          false
+        ],
+        [
+          0,
+          false
+        ],
+        [
+          2,
+          false
+        ]
+      ],
+      "innerPausedAfterError": false,
+      "status": "passed"
+    }
+  ],
+  "fallbackFailureChecks": [
+    {
+      "scenario": "start_put",
+      "log": [
+        "2:s",
+        "2:p:42",
+        "2:e:1"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "start_end",
+      "log": [
+        "2:s",
+        "2:s",
+        "2:e:1"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "put",
+      "log": [
+        "2:s",
+        "2:p:41",
+        "2:p:42",
+        "2:e:1"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "end_payload",
+      "log": [
+        "2:s",
+        "2:p:41",
+        "2:e:1",
+        "2:e:0"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "end_id",
+      "log": [
+        "2:s",
+        "2:e:1",
+        "2:s",
+        "2:e:1"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "reset/dispose after s",
+      "log": [
+        "2:s"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "reset/dispose after p",
+      "log": [
+        "2:s",
+        "2:p"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "reset/dispose after e",
+      "log": [
+        "2:s",
+        "2:p",
+        "2:e"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    }
+  ],
+  "rawHandlerFailureChecks": [
+    {
+      "scenario": "s",
+      "phase": "s",
+      "failing": 0,
+      "reset": false,
+      "log": [
+        "s2",
+        "s1",
+        "s0",
+        "p2:42",
+        "p1:42",
+        "p0:42",
+        "e2:1",
+        "e1:0",
+        "e0:0"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "s",
+      "phase": "s",
+      "failing": 0,
+      "reset": true,
+      "log": [
+        "s2",
+        "s1",
+        "s0",
+        "e2:0",
+        "e1:0",
+        "e0:0",
+        "s2",
+        "s1",
+        "s0",
+        "p2:42",
+        "p1:42",
+        "p0:42",
+        "e2:1",
+        "e1:0",
+        "e0:0"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "s",
+      "phase": "s",
+      "failing": 1,
+      "reset": false,
+      "log": [
+        "s2",
+        "s1",
+        "p2:42",
+        "p1:42",
+        "p0:42",
+        "e2:1",
+        "e1:0",
+        "e0:0"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "s",
+      "phase": "s",
+      "failing": 1,
+      "reset": true,
+      "log": [
+        "s2",
+        "s1",
+        "e2:0",
+        "e1:0",
+        "e0:0",
+        "s2",
+        "s1",
+        "s0",
+        "p2:42",
+        "p1:42",
+        "p0:42",
+        "e2:1",
+        "e1:0",
+        "e0:0"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "s",
+      "phase": "s",
+      "failing": 2,
+      "reset": false,
+      "log": [
+        "s2",
+        "p2:42",
+        "p1:42",
+        "p0:42",
+        "e2:1",
+        "e1:0",
+        "e0:0"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "s",
+      "phase": "s",
+      "failing": 2,
+      "reset": true,
+      "log": [
+        "s2",
+        "e2:0",
+        "e1:0",
+        "e0:0",
+        "s2",
+        "s1",
+        "s0",
+        "p2:42",
+        "p1:42",
+        "p0:42",
+        "e2:1",
+        "e1:0",
+        "e0:0"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "p",
+      "phase": "p",
+      "failing": 0,
+      "reset": false,
+      "log": [
+        "s2",
+        "s1",
+        "s0",
+        "p2:41",
+        "p1:41",
+        "p0:41",
+        "p2:42",
+        "p1:42",
+        "p0:42",
+        "e2:1",
+        "e1:0",
+        "e0:0"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "p",
+      "phase": "p",
+      "failing": 0,
+      "reset": true,
+      "log": [
+        "s2",
+        "s1",
+        "s0",
+        "p2:41",
+        "p1:41",
+        "p0:41",
+        "e2:0",
+        "e1:0",
+        "e0:0",
+        "s2",
+        "s1",
+        "s0",
+        "p2:42",
+        "p1:42",
+        "p0:42",
+        "e2:1",
+        "e1:0",
+        "e0:0"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "p",
+      "phase": "p",
+      "failing": 1,
+      "reset": false,
+      "log": [
+        "s2",
+        "s1",
+        "s0",
+        "p2:41",
+        "p1:41",
+        "p2:42",
+        "p1:42",
+        "p0:42",
+        "e2:1",
+        "e1:0",
+        "e0:0"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "p",
+      "phase": "p",
+      "failing": 1,
+      "reset": true,
+      "log": [
+        "s2",
+        "s1",
+        "s0",
+        "p2:41",
+        "p1:41",
+        "e2:0",
+        "e1:0",
+        "e0:0",
+        "s2",
+        "s1",
+        "s0",
+        "p2:42",
+        "p1:42",
+        "p0:42",
+        "e2:1",
+        "e1:0",
+        "e0:0"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "p",
+      "phase": "p",
+      "failing": 2,
+      "reset": false,
+      "log": [
+        "s2",
+        "s1",
+        "s0",
+        "p2:41",
+        "p2:42",
+        "p1:42",
+        "p0:42",
+        "e2:1",
+        "e1:0",
+        "e0:0"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "p",
+      "phase": "p",
+      "failing": 2,
+      "reset": true,
+      "log": [
+        "s2",
+        "s1",
+        "s0",
+        "p2:41",
+        "e2:0",
+        "e1:0",
+        "e0:0",
+        "s2",
+        "s1",
+        "s0",
+        "p2:42",
+        "p1:42",
+        "p0:42",
+        "e2:1",
+        "e1:0",
+        "e0:0"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "i",
+      "phase": "s",
+      "failing": 0,
+      "reset": false,
+      "log": [
+        "s2",
+        "s1",
+        "s0",
+        "s2",
+        "s1",
+        "s0",
+        "e2:1",
+        "e1:0",
+        "e0:0"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "i",
+      "phase": "s",
+      "failing": 0,
+      "reset": true,
+      "log": [
+        "s2",
+        "s1",
+        "s0",
+        "s2",
+        "s1",
+        "s0",
+        "p2:42",
+        "p1:42",
+        "p0:42",
+        "e2:1",
+        "e1:0",
+        "e0:0"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "i",
+      "phase": "s",
+      "failing": 1,
+      "reset": false,
+      "log": [
+        "s2",
+        "s1",
+        "s2",
+        "s1",
+        "s0",
+        "e2:1",
+        "e1:0",
+        "e0:0"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "i",
+      "phase": "s",
+      "failing": 1,
+      "reset": true,
+      "log": [
+        "s2",
+        "s1",
+        "s2",
+        "s1",
+        "s0",
+        "p2:42",
+        "p1:42",
+        "p0:42",
+        "e2:1",
+        "e1:0",
+        "e0:0"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "i",
+      "phase": "s",
+      "failing": 2,
+      "reset": false,
+      "log": [
+        "s2",
+        "s2",
+        "s1",
+        "s0",
+        "e2:1",
+        "e1:0",
+        "e0:0"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    },
+    {
+      "scenario": "i",
+      "phase": "s",
+      "failing": 2,
+      "reset": true,
+      "log": [
+        "s2",
+        "s2",
+        "s1",
+        "s0",
+        "p2:42",
+        "p1:42",
+        "p0:42",
+        "e2:1",
+        "e1:0",
+        "e0:0"
+      ],
+      "errorIdentity": true,
+      "status": "passed"
+    }
+  ],
+  "rawHandlerFixtureSha256": "978c92fd8e9521f731347aaa207be553b1e9198b6fe50034d48ed103f6f6df7c",
+  "rawHandlerCanonicalSha256": "978c92fd8e9521f731347aaa207be553b1e9198b6fe50034d48ed103f6f6df7c",
+  "sources": [
+    {
+      "path": "source_repo/src/common/parser/Constants.ts",
+      "sha256": "b27193683d50f676cc2ad779fc8a5a5b4c0b38c2b0bb762168739c6d100942dd"
+    },
+    {
+      "path": "source_repo/src/common/input/TextDecoder.ts",
+      "sha256": "0368a7fddbb53502f86144b61d023f8d022f5ce973a1b01b59c552ec62631a1b"
+    },
+    {
+      "path": "source_repo/src/common/StringBuilder.ts",
+      "sha256": "1c5fb0677d84788609304e7ea1efc3f760ad5e8c43dc691ceb83b283f1286114"
+    },
+    {
+      "path": "source_repo/src/common/parser/OscParser.ts",
+      "sha256": "3a06692c278f8850922e54eafde315253c55df76a1c76a6b7327146e957e8f24"
+    },
+    {
+      "path": "source_repo/src/common/parser/OscParser.test.ts",
+      "sha256": "fbfe2b0d03b05d26c46dc25ccf490fb04f5fd0989dbbfa268ae8b970e60ee5e6"
+    }
+  ],
+  "fixtureSha256": "cd29c37268ea3c4e2280b7325dd6249ca54b6ece28d2e6c1c3dc3f54bafe93e4",
+  "fixtureCanonicalSha256": "cd29c37268ea3c4e2280b7325dd6249ca54b6ece28d2e6c1c3dc3f54bafe93e4",
+  "status": "matched"
+}

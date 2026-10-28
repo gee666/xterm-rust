@@ -1,0 +1,298 @@
+   Compiling equivalent v1.0.3
+   Compiling allocator-api2 v0.2.21
+   Compiling foldhash v0.1.5
+   Compiling memchr v2.8.3
+   Compiling ryu-js v1.0.3
+   Compiling hashbrown v0.15.5
+   Compiling regress v0.10.4
+   Compiling xterm-core v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\LolaReview\crates\xterm-core)
+error[E0364]: `with_unordered_keys` is private, and cannot be re-exported
+  --> crates\xterm-core\src\sorted_list.rs:11:9
+   |
+11 | pub use sort_batch::with_unordered_keys as stable_sort_by_js_number;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+note: consider marking `with_unordered_keys` as `pub` in the imported module
+  --> crates\xterm-core\src\sorted_list.rs:11:9
+   |
+11 | pub use sort_batch::with_unordered_keys as stable_sort_by_js_number;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0433]: failed to resolve: could not find `mode_callbacks` in `commands`
+  --> crates\xterm-core\src\terminal\modes.rs:13:26
+   |
+13 |         super::commands::mode_callbacks::option_flag(&self.options, group, key, default)
+   |                          ^^^^^^^^^^^^^^ could not find `mode_callbacks` in `commands`
+
+error[E0433]: failed to resolve: could not find `sgr_dispatch` in `super`
+   --> crates\xterm-core\src\terminal\print.rs:160:16
+    |
+160 |         super::sgr_dispatch::with_target(&self.shared, &self.attributes, |attrs| AttributeData {
+    |                ^^^^^^^^^^^^ could not find `sgr_dispatch` in `super`
+
+error[E0425]: cannot find function `clear_state_handle` in module `crate::terminal`
+   --> crates\xterm-core\src\headless\terminal.rs:198:26
+    |
+198 |         crate::terminal::clear_state_handle(&self.state)?;
+    |                          ^^^^^^^^^^^^^^^^^^ not found in `crate::terminal`
+
+error[E0425]: cannot find function `reset_state_handle` in module `crate::terminal`
+   --> crates\xterm-core\src\headless\terminal.rs:207:26
+    |
+207 |         crate::terminal::reset_state_handle(&self.state).map_err(Into::into)
+    |                          ^^^^^^^^^^^^^^^^^^ not found in `crate::terminal`
+
+error[E0425]: cannot find function `window_option_allowed` in module `crate::terminal`
+  --> crates\xterm-core\src\headless\views.rs:25:30
+   |
+25 |             crate::terminal::window_option_allowed(&options, params)
+   |                              ^^^^^^^^^^^^^^^^^^^^^ not found in `crate::terminal`
+
+error[E0425]: cannot find function `scroll_state` in module `super::super::controls`
+   --> crates\xterm-core\src\terminal\print_render.rs:142:37
+    |
+142 |             super::super::controls::scroll_state(&self.shared, true)?;
+    |                                     ^^^^^^^^^^^^ not found in `super::super::controls`
+
+warning: unused import: `sort_batch::with_unordered_keys as stable_sort_by_js_number`
+  --> crates\xterm-core\src\sorted_list.rs:11:9
+   |
+11 | pub use sort_batch::with_unordered_keys as stable_sort_by_js_number;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` on by default
+
+error[E0053]: method `request` has an incompatible type for trait
+   --> crates\xterm-core\src\headless\native_queue.rs:101:9
+    |
+101 |         &self,
+    |         ^^^^^ types differ in mutability
+    |
+note: type in trait
+   --> crates\xterm-core\src\input\write_buffer_types.rs:143:9
+    |
+143 |         &mut self,
+    |         ^^^^^^^^^
+    = note: expected signature `fn(&mut NativeWriteScheduler, WeakWriteBuffer<_>, _, _) -> Result<_, _>`
+               found signature `fn(&NativeWriteScheduler, WeakWriteBuffer<_>, _, _) -> Result<_, _>`
+help: change the self-receiver type to match the trait
+    |
+101 |         &mut self,
+    |         ~~~~~~~~~
+
+error[E0053]: method `cancel` has an incompatible type for trait
+   --> crates\xterm-core\src\headless\native_queue.rs:112:15
+    |
+112 |     fn cancel(&self, handle: Self::Handle) -> Result<(), WriteError> {
+    |               ^^^^^ types differ in mutability
+    |
+note: type in trait
+   --> crates\xterm-core\src\input\write_buffer_types.rs:148:15
+    |
+148 |     fn cancel(&mut self, handle: Self::Handle);
+    |               ^^^^^^^^^
+    = note: expected signature `fn(&mut NativeWriteScheduler, _) -> ()`
+               found signature `fn(&NativeWriteScheduler, _) -> Result<(), types::WriteError>`
+help: change the self-receiver type to match the trait
+    |
+112 |     fn cancel(&mut self, handle: Self::Handle) -> Result<(), WriteError> {
+    |               ~~~~~~~~~
+
+error[E0053]: method `spawn` has an incompatible type for trait
+   --> crates\xterm-core\src\headless\native_queue.rs:120:14
+    |
+120 |     fn spawn(&self, future: Pin<Box<dyn Future<Output = ()>>>) {
+    |              ^^^^^ types differ in mutability
+    |
+note: type in trait
+   --> crates\xterm-core\src\input\write_buffer_types.rs:150:14
+    |
+150 |     fn spawn(&mut self, future: Pin<Box<dyn Future<Output = ()>>>);
+    |              ^^^^^^^^^
+    = note: expected signature `fn(&mut NativeWriteScheduler, std::pin::Pin<_>)`
+               found signature `fn(&NativeWriteScheduler, std::pin::Pin<_>)`
+help: change the self-receiver type to match the trait
+    |
+120 |     fn spawn(&mut self, future: Pin<Box<dyn Future<Output = ()>>>) {
+    |              ~~~~~~~~~
+
+error[E0053]: method `report_error` has an incompatible type for trait
+   --> crates\xterm-core\src\headless\native_queue.rs:144:21
+    |
+144 |     fn report_error(&self, error: WriteError) {
+    |                     ^^^^^ types differ in mutability
+    |
+note: type in trait
+   --> crates\xterm-core\src\input\write_buffer_types.rs:151:21
+    |
+151 |     fn report_error(&mut self, error: WriteError);
+    |                     ^^^^^^^^^
+    = note: expected signature `fn(&mut NativeWriteScheduler, types::WriteError)`
+               found signature `fn(&NativeWriteScheduler, types::WriteError)`
+help: change the self-receiver type to match the trait
+    |
+144 |     fn report_error(&mut self, error: WriteError) {
+    |                     ~~~~~~~~~
+
+error[E0599]: no method named `write_source` found for mutable reference `&mut CoreTerminal` in the current scope
+  --> crates\xterm-core\src\headless\queue_bridge.rs:18:38
+   |
+18 |         self.operate(|engine| engine.write_source(source))
+   |                                      ^^^^^^^^^^^^
+   |
+help: there is a method `resume` with a similar name
+   |
+18 |         self.operate(|engine| engine.resume(source))
+   |                                      ~~~~~~
+
+error[E0599]: no method named `into_parse_source` found for struct `std::rc::Rc<types::WriteData>` in the current scope
+  --> crates\xterm-core\src\headless\queue_bridge.rs:40:55
+   |
+40 |         self.parse_write_source(Rc::new(data.clone()).into_parse_source()?, None)
+   |                                                       ^^^^^^^^^^^^^^^^^ method not found in `Rc<WriteData>`
+
+error[E0599]: no method named `write_source` found for mutable reference `&mut CoreTerminal` in the current scope
+  --> crates\xterm-core\src\headless\queue_bridge.rs:54:64
+   |
+54 |             .with_queued_parse(|| self.operate(|engine| engine.write_source(source)));
+   |                                                                ^^^^^^^^^^^^
+   |
+help: there is a method `resume` with a similar name
+   |
+54 |             .with_queued_parse(|| self.operate(|engine| engine.resume(source)));
+   |                                                                ~~~~~~
+
+error[E0599]: no function or associated item named `new_owned` found for struct `write_buffer::WriteBuffer` in the current scope
+  --> crates\xterm-core\src\headless\queued.rs:29:34
+   |
+29 |         let queue = WriteBuffer::new_owned(pump.scheduler(), move |_, data, result| {
+   |                                  ^^^^^^^^^ function or associated item not found in `WriteBuffer<_>`
+   |
+  ::: crates\xterm-core\src\input\write_buffer.rs:54:1
+   |
+54 | pub struct WriteBuffer<S: WriteScheduler> {
+   | ----------------------------------------- function or associated item `new_owned` not found for this struct
+   |
+note: if you're trying to build a new `write_buffer::WriteBuffer<_>`, consider using `write_buffer::WriteBuffer::<S>::new` which returns `write_buffer::WriteBuffer<_>`
+  --> crates\xterm-core\src\input\write_buffer.rs:80:5
+   |
+80 | /     pub fn new(
+81 | |         scheduler: S,
+82 | |         action: impl Fn(&Self, &WriteData, Option<bool>) -> Result<WriteAction, WriteError> + 'static,
+83 | |     ) -> Self {
+   | |_____________^
+help: there is a method `to_owned` with a similar name, but with different arguments
+  --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\alloc\src\borrow.rs:58:5
+
+error[E0599]: no method named `into_parse_source` found for enum `types::WriteData` in the current scope
+  --> crates\xterm-core\src\headless\queued.rs:49:22
+   |
+49 |                 data.into_parse_source()
+   |                      ^^^^^^^^^^^^^^^^^ method not found in `WriteData`
+   |
+  ::: crates\xterm-core\src\input\write_buffer_types.rs:19:1
+   |
+19 | pub enum WriteData {
+   | ------------------ method `into_parse_source` not found for this enum
+
+error[E0599]: no method named `finish_dispose_after_shared_services` found for struct `RefMut<'_, CoreTerminal>` in the current scope
+   --> crates\xterm-core\src\headless\terminal.rs:282:24
+    |
+282 |                 engine.finish_dispose_after_shared_services()?;
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ method not found in `RefMut<'_, CoreTerminal>`
+
+error[E0599]: no method named `dispatch_mode` found for mutable reference `&mut TerminalState` in the current scope
+   --> crates\xterm-core\src\terminal\commands.rs:171:31
+    |
+171 |                 move |s, p| s.dispatch_mode(prefix, "$p", p).map(|_| ()),
+    |                               ^^^^^^^^^^^^^
+    |
+help: there is a method `dispatch_csi` with a similar name
+    |
+171 |                 move |s, p| s.dispatch_csi(prefix, "$p", p).map(|_| ()),
+    |                               ~~~~~~~~~~~~
+
+error[E0599]: no method named `dispatch_mode` found for mutable reference `&mut TerminalState` in the current scope
+   --> crates\xterm-core\src\terminal\commands.rs:184:31
+    |
+184 |                 move |s, p| s.dispatch_mode(Some(prefix), "u", p).map(|_| ()),
+    |                               ^^^^^^^^^^^^^
+    |
+help: there is a method `dispatch_csi` with a similar name
+    |
+184 |                 move |s, p| s.dispatch_csi(Some(prefix), "u", p).map(|_| ()),
+    |                               ~~~~~~~~~~~~
+
+error[E0599]: no method named `dispatch_mode` found for struct `RefMut<'_, TerminalState>` in the current scope
+   --> crates\xterm-core\src\terminal\commands.rs:266:19
+    |
+266 |             state.dispatch_mode(prefix, final_byte, &single)?;
+    |                   ^^^^^^^^^^^^^
+    |
+help: there is a method `dispatch_csi` with a similar name
+    |
+266 |             state.dispatch_csi(prefix, final_byte, &single)?;
+    |                   ~~~~~~~~~~~~
+
+error[E0277]: `?` couldn't convert the error to `TerminalError`
+  --> crates\xterm-core\src\terminal\modes.rs:37:71
+   |
+37 |                     self.charset.set_g_charset(level, DEFAULT_CHARSET)?;
+   |                                                                       ^ the trait `From<CharsetError>` is not implemented for `TerminalError`
+   |
+   = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+   = help: the following other types implement trait `From<T>`:
+             `TerminalError` implements `From<BufferError>`
+             `TerminalError` implements `From<CoreError>`
+             `TerminalError` implements `From<IdentifierError>`
+             `TerminalError` implements `From<LogError>`
+             `TerminalError` implements `From<MouseStateError>`
+             `TerminalError` implements `From<OptionError>`
+             `TerminalError` implements `From<OscLinkError>`
+             `TerminalError` implements `From<UnicodeServiceError>`
+             `TerminalError` implements `From<parser::escape::ParseError>`
+   = note: required for `Result<(), TerminalError>` to implement `FromResidual<Result<Infallible, CharsetError>>`
+
+error[E0277]: `?` couldn't convert the error to `TerminalError`
+  --> crates\xterm-core\src\terminal\print.rs:53:60
+   |
+43 | ) -> Result<(), TerminalError> {
+   |      ------------------------- expected `TerminalError` because of this
+...
+53 |                 Some(map) => map.get_first(original as u16)?.map_or(original, u32::from),
+   |                                  --------------------------^ the trait `From<CharsetError>` is not implemented for `TerminalError`
+   |                                  |
+   |                                  this can't be annotated with `?` because it has type `Result<_, CharsetError>`
+   |
+   = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+   = help: the following other types implement trait `From<T>`:
+             `TerminalError` implements `From<BufferError>`
+             `TerminalError` implements `From<CoreError>`
+             `TerminalError` implements `From<IdentifierError>`
+             `TerminalError` implements `From<LogError>`
+             `TerminalError` implements `From<MouseStateError>`
+             `TerminalError` implements `From<OptionError>`
+             `TerminalError` implements `From<OscLinkError>`
+             `TerminalError` implements `From<UnicodeServiceError>`
+             `TerminalError` implements `From<parser::escape::ParseError>`
+   = note: required for `Result<(), TerminalError>` to implement `FromResidual<Result<Infallible, CharsetError>>`
+
+error[E0609]: no field `attributes_identity` on type `RefMut<'_, TerminalState>`
+   --> crates\xterm-core\src\terminal\print.rs:113:42
+    |
+113 |             attributes: Rc::clone(&state.attributes_identity),
+    |                                          ^^^^^^^^^^^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `buffer_service`, `links`, `options`, `core`, `mouse` ... and 15 others
+    = note: available fields are: `buffers`, `is_user_scrolling`
+
+error[E0599]: no method named `print` found for struct `RefMut<'_, TerminalState>` in the current scope
+  --> crates\xterm-core\src\terminal\register.rs:30:31
+   |
+30 |         if let Err(e) = state.print(data, &preceding) {
+   |                               ^^^^^ method not found in `RefMut<'_, TerminalState>`
+
+Some errors have detailed explanations: E0053, E0277, E0364, E0425, E0433, E0599, E0609.
+For more information about an error, try `rustc --explain E0053`.
+warning: `xterm-core` (lib) generated 1 warning
+error: could not compile `xterm-core` (lib) due to 24 previous errors; 1 warning emitted

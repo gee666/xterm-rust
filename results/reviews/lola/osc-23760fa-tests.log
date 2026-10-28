@@ -1,0 +1,102 @@
+   Compiling xterm-core v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\LolaReview\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 4.61s
+     Running tests\escape_osc.rs (target\debug\deps\escape_osc-cb6f5d0a16c264ab.exe)
+
+running 4 tests
+test failed_callback_stops_before_trailing_print_and_does_not_invoke_older_handler ... ok
+test rejected_callback_future_keeps_parser_paused_until_explicit_reset ... ok
+test every_osc_mutation_exception_propagates_through_outer_parser ... ok
+test every_osc_intro_terminator_and_chunk_boundary_matches_original_parser ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+
+     Running tests\mouse_button_numeric.rs (target\debug\deps\mouse_button_numeric-cd2de1c644a6621e.exe)
+
+running 1 test
+test numeric_buttons_keep_strict_values_until_bit_encoding ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\osc.rs (target\debug\deps\osc-5776e1d61b21962c.exe)
+
+running 7 tests
+test identifier_parsing ... ok
+test factory_success_abort_dispose_and_bubble ... ok
+test registration_clear_and_disposal ... ok
+test reset_payload_and_resume_after_reset ... ok
+test factory_exact_limit_and_limit_plus_one ... ok
+test reset_retains_async_cleanup_futures ... ok
+test bubbling_and_mixed_sync_async_cleanup ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\osc_differential.rs (target\debug\deps\osc_differential-3b590c1ed1244995.exe)
+
+running 1 test
+test randomized_registration_lifecycle_and_streaming_matches_javascript ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+     Running tests\osc_disposal.rs (target\debug\deps\osc_disposal-f669f5b460f576a7.exe)
+
+running 4 tests
+test child_disposal_never_invents_active_handler_abort_callbacks ... ok
+test active_disposal_is_observed_by_the_next_index_in_every_raw_phase ... ok
+test disposal_retains_id_collection_and_new_registration_until_the_next_dispatch ... ok
+test fallback_can_dispose_without_borrow_conflict_or_callback_resurrection ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\osc_edges.rs (target\debug\deps\osc_edges-ba86f489f2c2bd1c.exe)
+
+running 8 tests
+test utf16_lone_surrogates_and_astral_units_count_toward_limit ... ok
+test empty_and_illegal_identifier_boundaries ... ok
+test clearing_registry_does_not_replace_active_handler_list ... ok
+test repeated_disposal_removes_next_equal_identity_registration ... ok
+test numeric_identifier_preserves_javascript_float_rounding_and_overflow ... ok
+test reset_while_paused_cleans_only_lower_handlers_and_preserves_owned_future ... ok
+test live_removal_during_every_callback_stage_returns_recoverable_error ... ok
+test zero_limit_overflow_ignores_later_chunks_and_recovers_after_start ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\osc_failures.rs (target\debug\deps\osc_failures-316ef9cda815d683.exe)
+
+running 7 tests
+test event_callback_cause_is_not_replaced_by_a_generic_error ... ok
+test buffered_callback_failure_preserves_data_until_later_end_or_start ... ok
+test rejected_future_does_not_resume_bubbling_and_reset_cleans_older_handlers ... ok
+test failed_end_does_not_bubble_or_cleanup_lower_handlers ... ok
+test cleanup_failure_stops_before_older_handlers ... ok
+test rejected_future_retains_payload_and_successful_future_clears_it ... ok
+test resumed_lower_callback_error_clears_inner_pause_so_reset_aborts_all_handlers_again ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\osc_fallback_errors.rs (target\debug\deps\osc_fallback_errors-4d3ee8acef9bbc5e.exe)
+
+running 3 tests
+test reset_and_dispose_do_not_invent_fallback_cleanup_after_exception ... ok
+test every_fallback_throw_path_retains_source_retry_state_and_actual_cause ... ok
+test checked_fallback_failure_stops_real_outer_parse_before_suffix_and_reset_recovers ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\osc_raw_errors.rs (target\debug\deps\osc_raw_errors-f772e9e0ef154803.exe)
+
+running 2 tests
+test raw_phase_error_stops_real_outer_parser_without_rolling_back_printed_prefix ... ok
+test raw_start_put_errors_stop_immediately_preserve_cause_and_match_source_recovery ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\osc_registry.rs (target\debug\deps\osc_registry-9a87ac9b8e82db81.exe)
+
+running 3 tests
+test callback_can_register_and_clear_without_reborrowing_parser ... ok
+test token_captured_by_its_handler_does_not_create_reference_cycle ... ok
+test registrar_is_weak_but_explicit_dispose_does_not_permanently_close_live_parser ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
