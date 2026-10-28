@@ -44,9 +44,9 @@ const methods=['getWidth','getChars','getCode','getFgColorMode','getBgColorMode'
 const empty=view.getNullCell();
 const cellMethods=Object.fromEntries(methods.map(name=>[name,empty[name]()]));
 cellMethods.attributesEquals=empty.attributesEquals(empty);
-const fixture=resolve(root,'crates/xterm-web/tests/fixtures/public-cell-methods.json');
+const fixture=resolve(root,'crates/xterm-wasm-support/tests/fixtures/public-cell-methods.json');
 if(process.argv.includes('--generate')) {
-  mkdirSync(resolve(root,'crates/xterm-web/tests/fixtures'),{recursive:true});
+  mkdirSync(resolve(root,'crates/xterm-wasm-support/tests/fixtures'),{recursive:true});
   writeFileSync(fixture,`${JSON.stringify(cellMethods,null,2)}\n`);
 } else equal(cellMethods,JSON.parse(readFileSync(fixture,'utf8')));
 const report = {source:'source_repo/src/common/public/BufferApiView.ts',status:'passed',node:process.version,checks,

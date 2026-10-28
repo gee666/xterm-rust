@@ -4,7 +4,7 @@ use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_test::*;
 use xterm_core::headless::Terminal;
-use xterm_web::{terminal::parser_api::WebParserApi, utf16::from_js_string};
+use xterm_wasm_support::{public_api::parser_api::WebParserApi, utf16::from_js_string};
 
 #[wasm_bindgen(module = "/tests/fixtures/parser_identifiers.mjs")]
 extern "C" {
