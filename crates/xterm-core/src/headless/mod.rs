@@ -2,6 +2,7 @@
 mod error;
 mod events;
 mod modes;
+mod native_cleanup;
 mod native_queue;
 mod options_view;
 mod queue_bridge;

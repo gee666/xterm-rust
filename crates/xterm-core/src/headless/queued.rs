@@ -1,5 +1,6 @@
-use super::{HeadlessError, NativeWritePump, NativeWriteScheduler, Terminal};
+use super::{native_cleanup, HeadlessError, NativeWritePump, NativeWriteScheduler, Terminal};
 use crate::{
+    buffer::buffer_set::{CleanupFactory, CleanupFactoryHandle},
     input::write_buffer::{
         WriteAction, WriteBuffer, WriteCallback, WriteData, WriteError, WriteScheduler,
     },
@@ -17,12 +18,21 @@ pub struct QueuedTerminal {
     parsed: DisposableHandle,
     input: DisposableHandle,
     terminal_dispose: DisposableHandle,
+    cleanup: CleanupFactoryHandle,
 }
 impl QueuedTerminal {
     pub fn new(terminal: Rc<Terminal>) -> Result<Self, HeadlessError> {
         Self::with_pump(terminal, NativeWritePump::new())
     }
     pub fn with_pump(terminal: Rc<Terminal>, pump: NativeWritePump) -> Result<Self, HeadlessError> {
+        let service = terminal.with_state(|state| Rc::clone(&state.buffer_service))?;
+        let logger = terminal.with_state(|state| Rc::downgrade(&state.logger))?;
+        let cleanup_host = pump.scheduler();
+        let factory: CleanupFactory = Rc::new(move |buffer| {
+            native_cleanup::attach(buffer, &cleanup_host, &logger)
+        });
+        let cleanup = service.install_cleanup_factory(factory)
+            .map_err(crate::terminal::TerminalError::from)?;
         let target = Rc::downgrade(&terminal);
         let pending = Cell::new(false);
         let cleanup_scheduler = pump.scheduler();
@@ -92,6 +102,7 @@ impl QueuedTerminal {
             parsed,
             input,
             terminal_dispose,
+            cleanup,
         })
     }
     pub fn terminal(&self) -> &Rc<Terminal> {
@@ -137,6 +148,7 @@ impl QueuedTerminal {
 }
 impl Drop for QueuedTerminal {
     fn drop(&mut self) {
+        self.cleanup.dispose();
         self.queue.dispose();
         self.parsed.dispose();
         self.input.dispose();
