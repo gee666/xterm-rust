@@ -41,7 +41,7 @@ The first live WASM test attempt failed during dependency compilation, before th
 ## Remaining integration and evidence
 
 - Run `wasm_linkifier` and `wasm_dom_support` against all three browsers and fix failures. The new controller and shared native-OSC paths have test code but no observed browser pass yet. The real terminal write/wrap/click/trim case must execute before criterion250 can be accepted.
-- Wire BrowserLinkifier and NativeOscLinkProvider into the exported Terminal runtime, using its actual renderer coordinate service and shared pre-open provider registry. Lane's web-links adapter consumes this same registry. Bradley owns the core OSC handlers/store.
+- Finish exported Terminal runtime composition of `terminal/link_services.rs`. It creates the shared pre-open OSC-first registry, installs BrowserLinkifier with actual renderer/native coordinates and forwards underline to DOM rendering. Xavier owns the root event/resize/scroll wiring. Lane's web-links adapter consumes this same registry. Bradley owns the core OSC handlers/store.
 - Wire BrowserRenderDebouncer into the renderer and BrowserTimeDebouncer into accessibility rendering. Live host wrappers alone do not prove terminal integration.
 - Validate and compose per-window animation queues and interval/window helpers into the actual browser runtime. The browser platform must share one WindowAnimationQueues registry across services/terminals, rather than creating independent same-window queues.
 - Rerun the five existing WASM assertions after fallible-callback migration, then add full-terminal browser assertions after actual Terminal integration.

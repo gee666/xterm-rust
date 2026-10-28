@@ -75,7 +75,7 @@ fn dom_hover_activation_decorations_and_cached_leave() {
     let coords = position.clone();
     let log = Rc::new(RefCell::new(Vec::new()));
     let draw = log.clone();
-    let mut controller = BrowserLinkifier::new(
+    let controller = BrowserLinkifier::new(
         root.clone(),
         80,
         0,
@@ -117,7 +117,7 @@ fn dom_hover_activation_decorations_and_cached_leave() {
 fn async_priority_mouseout_and_disposal_ignore_late_replies() {
     let root = element();
     let log = Rc::new(RefCell::new(Vec::new()));
-    let mut controller = BrowserLinkifier::new(
+    let controller = BrowserLinkifier::new(
         root.clone(),
         80,
         0,
@@ -233,6 +233,89 @@ fn real_rust_osc8_cells_resolve_wrap_activate_and_expire_on_trim() {
         .with_state(|state| assert!(state.links.get_link_data(id).is_none()))
         .unwrap();
     controller.on_render(0, 2).unwrap();
+    assert!(controller.current_link().is_none());
+    root.remove();
+}
+
+#[wasm_bindgen_test]
+fn underline_callback_changes_pointer_before_hover_pointer_step() {
+    let root = element();
+    let holder: Rc<RefCell<Option<std::rc::Weak<BrowserLinkifier>>>> = Rc::new(RefCell::new(None));
+    let weak = holder.clone();
+    let controller = Rc::new(
+        BrowserLinkifier::new(
+            root.clone(),
+            80,
+            0,
+            Rc::new(|_| Some(Position { x: 5, y: 1 })),
+            Rc::new(move |show, _| {
+                if show {
+                    weak.borrow()
+                        .as_ref()
+                        .unwrap()
+                        .upgrade()
+                        .unwrap()
+                        .set_current_pointer_cursor(false)?;
+                }
+                Ok(())
+            }),
+        )
+        .unwrap(),
+    );
+    *holder.borrow_mut() = Some(Rc::downgrade(&controller));
+    let provider = Rc::new(Provider::default());
+    let _registration = controller.register_provider(provider.clone());
+    event(&root, "mousemove");
+    provider.callbacks.borrow_mut().remove(0)(Some(vec![link(Rc::new(RefCell::new(Vec::new())))]))
+        .unwrap();
+    assert!(controller.current_link().is_some());
+    assert!(!root.class_list().contains("xterm-cursor-pointer"));
+    root.remove();
+}
+
+#[wasm_bindgen_test]
+fn throwing_leave_preserves_current_until_successful_callback_completion() {
+    let root = element();
+    let holder: Rc<RefCell<Option<std::rc::Weak<BrowserLinkifier>>>> = Rc::new(RefCell::new(None));
+    let controller = Rc::new(
+        BrowserLinkifier::new(
+            root.clone(),
+            80,
+            0,
+            Rc::new(|_| Some(Position { x: 5, y: 1 })),
+            Rc::new(|_, _| Ok(())),
+        )
+        .unwrap(),
+    );
+    *holder.borrow_mut() = Some(Rc::downgrade(&controller));
+    let fail = Rc::new(Cell::new(true));
+    let should_fail = fail.clone();
+    let weak = holder.clone();
+    let marker: JsValue = js_sys::Object::new().into();
+    let thrown = marker.clone();
+    let mut provided = link(Rc::new(RefCell::new(Vec::new())));
+    provided.leave = Some(Rc::new(move |_, _| {
+        assert!(weak
+            .borrow()
+            .as_ref()
+            .unwrap()
+            .upgrade()
+            .unwrap()
+            .current_link()
+            .is_some());
+        if should_fail.replace(false) {
+            Err(thrown.clone())
+        } else {
+            Ok(())
+        }
+    }));
+    let provider = Rc::new(Provider::default());
+    let _registration = controller.register_provider(provider.clone());
+    event(&root, "mousemove");
+    provider.callbacks.borrow_mut().remove(0)(Some(vec![provided])).unwrap();
+    assert_eq!(controller.resize(80, 0).unwrap_err(), marker);
+    assert!(controller.current_link().is_some());
+    controller.resize(80, 0).unwrap();
     assert!(controller.current_link().is_none());
     root.remove();
 }

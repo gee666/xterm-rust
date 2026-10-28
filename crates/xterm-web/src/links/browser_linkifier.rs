@@ -19,6 +19,7 @@ pub type LinkCallback = Rc<dyn Fn(&MouseEvent, &Link) -> Result<(), JsValue>>;
 pub type LinkDisposal = Rc<dyn Fn() -> Result<(), JsValue>>;
 pub type LinkReply = Box<dyn Fn(Option<Vec<BrowserLink>>) -> Result<(), JsValue>>;
 pub type MouseCoordinates = Rc<dyn Fn(&MouseEvent) -> Option<Position>>;
+pub type FallibleMouseCoordinates = Rc<dyn Fn(&MouseEvent) -> Result<Option<Position>, JsValue>>;
 pub type UnderlineCallback = Rc<dyn Fn(bool, UnderlineEvent) -> Result<(), JsValue>>;
 
 #[derive(Clone)]
@@ -41,7 +42,7 @@ pub(super) struct State {
     replies: RefCell<ProviderReplies>,
     handlers: RefCell<HashMap<*const Link, Rc<BrowserLink>>>,
     hover: RefCell<HoverState>,
-    coordinates: MouseCoordinates,
+    coordinates: FallibleMouseCoordinates,
     underline: UnderlineCallback,
     last_event: RefCell<Option<MouseEvent>>,
     last_cell: Cell<Option<Position>>,
@@ -58,7 +59,7 @@ pub(super) struct State {
 /// late provider replies cannot retain this controller after disposal/drop.
 pub struct BrowserLinkifier {
     state: Rc<State>,
-    listeners: Vec<DomListener>,
+    listeners: RefCell<Vec<DomListener>>,
 }
 impl BrowserLinkifier {
     pub fn new(
@@ -84,6 +85,23 @@ impl BrowserLinkifier {
         cols: usize,
         scroll_offset: usize,
         coordinates: MouseCoordinates,
+        underline: UnderlineCallback,
+        providers: BrowserProviders,
+    ) -> Result<Self, JsValue> {
+        Self::with_fallible_providers(
+            element,
+            cols,
+            scroll_offset,
+            Rc::new(move |event| Ok(coordinates(event))),
+            underline,
+            providers,
+        )
+    }
+    pub fn with_fallible_providers(
+        element: HtmlElement,
+        cols: usize,
+        scroll_offset: usize,
+        coordinates: FallibleMouseCoordinates,
         underline: UnderlineCallback,
         providers: BrowserProviders,
     ) -> Result<Self, JsValue> {
@@ -132,7 +150,8 @@ impl BrowserLinkifier {
                             .dyn_into::<MouseEvent>()
                             .map_err(|_| JsValue::from_str("mouseup was not a MouseEvent"))
                             .and_then(|e| {
-                                let effect = state.hover.borrow().mouse_up((state.coordinates)(&e));
+                                let position = (state.coordinates)(&e)?;
+                                let effect = state.hover.borrow().mouse_up(position);
                                 state.apply(effect.into_iter().collect(), Some(&e))
                             }),
                         _ => unreachable!("fixed event type list"),
@@ -140,7 +159,10 @@ impl BrowserLinkifier {
                 },
             )?);
         }
-        Ok(Self { state, listeners })
+        Ok(Self {
+            state,
+            listeners: RefCell::new(listeners),
+        })
     }
     pub fn register_provider(
         &self,
@@ -172,7 +194,11 @@ impl BrowserLinkifier {
         if invalidated {
             self.state.clear_current()?;
             let event = self.state.last_event.borrow().clone();
-            if let Some(position) = event.as_ref().and_then(|e| (self.state.coordinates)(e)) {
+            let position = match event.as_ref() {
+                Some(event) => (self.state.coordinates)(event)?,
+                None => None,
+            };
+            if let Some(position) = position {
                 self.state.ask(position, false)?;
             }
         }
@@ -186,9 +212,9 @@ impl BrowserLinkifier {
         let effect = self.state.hover.borrow_mut().set_pointer_cursor(value);
         self.state.apply(effect.into_iter().collect(), None)
     }
-    pub fn dispose(&mut self) -> Result<(), JsValue> {
+    pub fn dispose(&self) -> Result<(), JsValue> {
         self.state.disposed.set(true);
-        for listener in &mut self.listeners {
+        for listener in self.listeners.borrow_mut().iter_mut() {
             listener.dispose()?;
         }
         self.state.last_event.borrow_mut().take();

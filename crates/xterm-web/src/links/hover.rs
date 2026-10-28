@@ -48,6 +48,9 @@ impl HoverState {
     pub fn current(&self) -> Option<&Rc<Link>> {
         self.current.as_ref()
     }
+    pub fn decorations(&self) -> Option<Decorations> {
+        self.current.as_ref().map(|_| self.decorations)
+    }
     pub fn set_geometry(&mut self, cols: usize, scroll_offset: usize) {
         self.cols = cols;
         self.scroll_offset = scroll_offset;

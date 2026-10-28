@@ -8,7 +8,7 @@ Cameron owns `crates/xterm-web/src/links/`. Xavier owns Terminal/runtime and Dom
 
 Providers implement `provide_links(y, callback) -> Result<(), JsValue>`. Rows are one-based absolute buffer rows, including scrollback. Callback distinguishes None from Some(empty). It may run asynchronously or more than once, matching the source's callback API. It holds only weak controller state. Replies after mouse-out or disposal are ignored. Late replies from an older row deliberately use the source's uncanceled callback semantics, not a silently different generation filter.
 
-`BrowserLink` holds `Rc<Link>` data, optional decoration flags, required activation callback and optional hover/leave/dispose callbacks. `Link.text` is Vec<u16>, not String. `Range` coordinates are one-based and inclusive at the end. Callback functions return Result so original JavaScript exceptions can retain identity rather than becoming successful no-ops. Provider registration handles use explicit disposal, like core lifecycle handles. Every disposal removes the first matching provider identity, including repeated registration of the same object.
+`BrowserLink` holds `Rc<Link>` data, optional decoration flags, required activation callback and optional hover/leave/dispose callbacks. `Link.text` is Vec<u16>, not String. `Range` coordinates are one-based and inclusive at the end. Callback functions and fallible coordinate providers return Result so original JavaScript exceptions can retain identity rather than becoming successful no-ops. `with_fallible_providers` installs real computed-style/native-state coordinate reads; the original infallible constructor remains a convenience wrapper. Provider registration handles use explicit disposal, like core lifecycle handles. Every disposal removes the first matching provider identity, including repeated registration of the same object.
 
 ## Coordinate and renderer hooks
 
@@ -18,7 +18,7 @@ The coordinate callback receives MouseEvent and returns a one-based Position or 
 - Call set_scroll_offset(ydisp) when the displayed buffer offset changes.
 - Call on_render(start, end) with zero-based viewport row bounds after rendered rows change. Full-range containment follows upstream, including the start-zero case.
 - Call set_current_underline or set_current_pointer_cursor for binding decoration setters.
-- Dispose the controller's DOM listeners before disposing shared providers and terminal state.
+- Dispose the controller's DOM listeners before disposing shared providers and terminal state. `dispose(&self)` is idempotent and can be called through Rc.
 
 No RefCell state borrow is held across activation/hover/leave/dispose callbacks. Leave keeps the current link available until callbacks finish successfully, preserving partial failure state.
 
@@ -26,7 +26,7 @@ No RefCell state borrow is held across activation/hover/leave/dispose callbacks.
 
 Register `NativeOscLinkProvider::new(Rc::downgrade(native_terminal), window, handler_settings)` before external providers, as upstream does. The settings callback returns Result<Option<OscLinkHandler>, JsValue> and is sampled once per provideLinks call. None uses confirmation/default navigation and only valid http/https URIs. A custom handler specifies the protocol bypass and activation/hover/leave callbacks.
 
-Discovery reads the active Rust buffer and `TerminalState.links` directly. The OscBuffer.with_line contract releases each row borrow before URI lookup or host callback. It does not snapshot or clone scrollback. URL IDs use u64 to retain source safe-integer identities, including2^53, and URI strings retain unpaired UTF-16 surrogates. WHATWG URL's USVString conversion replaces surrogates only at the URL-constructor boundary, never in stored callback text.
+Discovery reads the active Rust buffer and `TerminalState.links` directly. The OscBuffer.with_line contract releases each row borrow before URI lookup or host callback. It does not snapshot or clone scrollback. URL IDs use u64 to retain source safe-integer identities, including 2^53, and URI strings retain unpaired UTF-16 surrogates. WHATWG URL's USVString conversion replaces surrogates only at the URL-constructor boundary, never in stored callback text.
 
 A full JavaScript custom-handler binding still needs deliberate shared range-object mutation/identity behavior. Rust callback arguments are immutable references, which alone do not prove the mutable JavaScript contract. Track that gap rather than silently advertising equivalence.
 
