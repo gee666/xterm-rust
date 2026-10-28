@@ -14,6 +14,8 @@ use std::{
 
 #[path = "write_buffer_drain.rs"]
 mod drain;
+#[path = "write_buffer_source.rs"]
+mod source;
 #[path = "write_buffer_types.rs"]
 mod types;
 pub use types::{WriteAction, WriteData, WriteError, WritePayload, WriteScheduler};
@@ -23,7 +25,7 @@ pub const WRITE_TIMEOUT_MS: f64 = 12.0;
 const LENGTH_THRESHOLD: usize = 50;
 const SYNC_OFFSET: usize = 0x7fff_ffff;
 type Action<S> =
-    dyn Fn(&WriteBuffer<S>, &WriteData, Option<bool>) -> Result<WriteAction, WriteError>;
+    dyn Fn(&WriteBuffer<S>, Rc<WriteData>, Option<bool>) -> Result<WriteAction, WriteError>;
 pub type WriteCallback<S> = Rc<dyn Fn(&WriteBuffer<S>) -> Result<(), WriteError>>;
 
 struct State<S: WriteScheduler> {
@@ -36,14 +38,16 @@ struct State<S: WriteScheduler> {
     user_input: Cell<bool>,
     disposed: Cell<bool>,
     timer: RefCell<Option<S::Handle>>,
-    scheduler: RefCell<S>,
+    scheduler: S,
     action: Rc<Action<S>>,
     parsed: Emitter<()>,
 }
 impl<S: WriteScheduler> Drop for State<S> {
     fn drop(&mut self) {
         if let Some(handle) = self.timer.get_mut().take() {
-            self.scheduler.get_mut().cancel(handle);
+            if let Err(error) = self.scheduler.cancel(handle) {
+                self.scheduler.report_error(error);
+            }
         }
     }
 }
@@ -81,6 +85,16 @@ impl<S: WriteScheduler + 'static> WriteBuffer<S> {
         scheduler: S,
         action: impl Fn(&Self, &WriteData, Option<bool>) -> Result<WriteAction, WriteError> + 'static,
     ) -> Self {
+        Self::new_owned(scheduler, move |queue, data, result| {
+            action(queue, data.as_ref(), result)
+        })
+    }
+    /// Owning action form for parsers that retain the original input across
+    /// await. The queue shares its existing Rc rather than cloning a whole Vec.
+    pub fn new_owned(
+        scheduler: S,
+        action: impl Fn(&Self, Rc<WriteData>, Option<bool>) -> Result<WriteAction, WriteError> + 'static,
+    ) -> Self {
         Self {
             state: Rc::new(State {
                 data: RefCell::new(VecDeque::new()),
@@ -92,7 +106,7 @@ impl<S: WriteScheduler + 'static> WriteBuffer<S> {
                 user_input: Cell::new(false),
                 disposed: Cell::new(false),
                 timer: RefCell::new(None),
-                scheduler: RefCell::new(scheduler),
+                scheduler,
                 action: Rc::new(action),
                 parsed: Emitter::new(),
             }),
@@ -140,20 +154,25 @@ impl<S: WriteScheduler + 'static> WriteBuffer<S> {
         if empty {
             self.state.offset.set(0);
             if self.state.user_input.replace(false) {
-                self.enqueue(data, callback);
+                self.enqueue(data, callback)?;
                 return self.inner_write(0.0, true);
             }
             self.schedule(0.0, true)?;
         }
-        self.enqueue(data, callback);
-        Ok(())
+        self.enqueue(data, callback)
     }
-    fn enqueue(&self, data: WriteData, callback: Option<WriteCallback<S>>) {
-        self.state
-            .pending_units
-            .set(self.pending_units() + data.len() as f64);
+    fn enqueue(
+        &self,
+        data: WriteData,
+        callback: Option<WriteCallback<S>>,
+    ) -> Result<(), WriteError> {
+        // Compound assignment reads the old pending value before a host getter.
+        let pending = self.pending_units();
+        let length = data.len()?;
+        self.state.pending_units.set(pending + length as f64);
         self.state.data.borrow_mut().push_back(Rc::new(data));
         self.state.callbacks.borrow_mut().push_back(callback);
+        Ok(())
     }
     /// Dispatch a fired zero-delay timer exactly once. The scheduler carries
     /// the supplied clock/result arguments in its request, not in global state.
@@ -165,20 +184,26 @@ impl<S: WriteScheduler + 'static> WriteBuffer<S> {
         if self.is_disposed() {
             return Ok(());
         }
-        let old = self.state.timer.borrow_mut().take();
-        if let Some(handle) = old {
-            self.state.scheduler.borrow_mut().cancel(handle);
-        }
-        let handle = self.state.scheduler.borrow_mut().request(
-            self.downgrade(),
-            last_time,
-            promise_result,
-        )?;
+        self.cancel_timer()?;
+        let handle = self
+            .state
+            .scheduler
+            .request(self.downgrade(), last_time, promise_result)?;
         *self.state.timer.borrow_mut() = Some(handle);
         Ok(())
     }
+    fn cancel_timer(&self) -> Result<(), WriteError> {
+        // Source keeps its token until clearTimeout returns. A host getter or
+        // call may reenter the queue; never retain the slot borrow across it.
+        let token = self.state.timer.borrow().as_ref().cloned();
+        if let Some(token) = token {
+            self.state.scheduler.cancel(token)?;
+            self.state.timer.borrow_mut().take();
+        }
+        Ok(())
+    }
     fn now(&self) -> f64 {
-        self.state.scheduler.borrow().now()
+        self.state.scheduler.now()
     }
     fn clear_data(&self, offset: usize) {
         self.state.data.borrow_mut().clear();
@@ -189,16 +214,23 @@ impl<S: WriteScheduler + 'static> WriteBuffer<S> {
     fn fire_parsed(&self) -> Result<(), WriteError> {
         self.state.parsed.fire(&()).map_err(WriteError::Event)
     }
-    pub fn dispose(&self) {
+    /// Source-style explicit disposal propagates host cancellation failure,
+    /// after clearing the remaining registered resources as DisposableStore does.
+    pub fn try_dispose(&self) -> Result<(), WriteError> {
         if self.state.disposed.replace(true) {
-            return;
+            return Ok(());
         }
-        let timer = self.state.timer.borrow_mut().take();
-        if let Some(handle) = timer {
-            self.state.scheduler.borrow_mut().cancel(handle);
-        }
+        let cancelled = self.cancel_timer();
         self.state.parsed.dispose();
         self.clear_data(0);
+        cancelled
+    }
+    /// Infallible Rust cleanup reports failures through the host error channel.
+    /// JavaScript-facing explicit dispose bindings must use try_dispose instead.
+    pub fn dispose(&self) {
+        if let Err(error) = self.try_dispose() {
+            self.state.scheduler.report_error(error);
+        }
     }
 }
 

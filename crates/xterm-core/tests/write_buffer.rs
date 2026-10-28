@@ -1,4 +1,6 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved. MIT license.
+#[path = "write_buffer_cases/cancellation.rs"]
+mod cancellation;
 #[path = "write_buffer_cases/differential.rs"]
 mod differential;
 #[path = "write_buffer_cases/edges.rs"]
@@ -7,6 +9,8 @@ mod edges;
 mod external_errors;
 #[path = "write_buffer_cases/external_payloads.rs"]
 mod external_payloads;
+#[path = "write_buffer_cases/host_reentry.rs"]
+mod host_reentry;
 #[path = "write_buffer_cases/parser_bridge.rs"]
 mod parser_bridge;
 #[path = "write_buffer_cases/resizable_payload.rs"]

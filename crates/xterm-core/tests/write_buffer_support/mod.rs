@@ -17,6 +17,9 @@ type LocalFuture = Pin<Box<dyn Future<Output = ()>>>;
 pub struct HostState {
     pub time: Cell<f64>,
     pub fail_requests: Cell<bool>,
+    pub cancel_error: RefCell<Option<WriteError>>,
+    pub fired: Cell<usize>,
+    pub cancelled: Cell<usize>,
     next: Cell<usize>,
     tasks: RefCell<BTreeMap<usize, Scheduled>>,
     futures: RefCell<VecDeque<LocalFuture>>,
@@ -27,7 +30,7 @@ pub struct Host(pub Rc<HostState>);
 impl WriteScheduler for Host {
     type Handle = usize;
     fn request(
-        &mut self,
+        &self,
         queue: WeakWriteBuffer<Self>,
         last_time: f64,
         result: bool,
@@ -43,16 +46,21 @@ impl WriteScheduler for Host {
             .insert(id, (queue, last_time, result));
         Ok(id)
     }
-    fn cancel(&mut self, handle: usize) {
+    fn cancel(&self, handle: usize) -> Result<(), WriteError> {
+        self.0.cancelled.set(self.0.cancelled.get() + 1);
+        if let Some(error) = self.0.cancel_error.borrow().clone() {
+            return Err(error);
+        }
         self.0.tasks.borrow_mut().remove(&handle);
+        Ok(())
     }
     fn now(&self) -> f64 {
         self.0.time.get()
     }
-    fn spawn(&mut self, future: LocalFuture) {
+    fn spawn(&self, future: LocalFuture) {
         self.0.futures.borrow_mut().push_back(future);
     }
-    fn report_error(&mut self, error: WriteError) {
+    fn report_error(&self, error: WriteError) {
         self.0.errors.borrow_mut().push(error);
     }
 }
@@ -68,6 +76,7 @@ impl Host {
         let Some((_, (queue, time, result))) = next else {
             return Ok(false);
         };
+        self.0.fired.set(self.0.fired.get() + 1);
         if let Some(queue) = queue.upgrade() {
             queue.process(time, result)?;
         }

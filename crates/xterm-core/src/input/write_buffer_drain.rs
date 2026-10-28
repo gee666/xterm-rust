@@ -16,7 +16,7 @@ impl<S: WriteScheduler> WriteBuffer<S> {
             self.state.sync_calls.set(0.0);
             return Ok(());
         }
-        self.enqueue(data, None);
+        self.enqueue(data, None)?;
         self.state.sync_calls.set(self.state.sync_calls.get() + 1.0);
         if self.state.sync_writing.replace(true) {
             return Ok(());
@@ -50,21 +50,18 @@ impl<S: WriteScheduler> WriteBuffer<S> {
                 break;
             };
             processed = true;
-            let result = (self.state.action)(self, &data, None)?;
+            let result = (self.state.action)(self, Rc::clone(&data), None)?;
             if let WriteAction::Pending(future) = result {
                 // The source calls the async action but does not await it in
                 // sync mode. Run its future without resuming the parser here.
                 let weak = self.downgrade();
-                self.state
-                    .scheduler
-                    .borrow_mut()
-                    .spawn(Box::pin(async move {
-                        if let Err(error) = future.await {
-                            if let Some(queue) = weak.upgrade() {
-                                queue.state.scheduler.borrow_mut().report_error(error);
-                            }
+                self.state.scheduler.spawn(Box::pin(async move {
+                    if let Err(error) = future.await {
+                        if let Some(queue) = weak.upgrade() {
+                            queue.state.scheduler.report_error(error);
                         }
-                    }));
+                    }
+                }));
             }
             let callback = self.state.callbacks.borrow_mut().pop_front().flatten();
             if let Some(callback) = callback {
@@ -97,7 +94,7 @@ impl<S: WriteScheduler> WriteBuffer<S> {
                 break;
             };
             if let WriteAction::Pending(future) =
-                (self.state.action)(self, &data, Some(promise_result))?
+                (self.state.action)(self, Rc::clone(&data), Some(promise_result))?
             {
                 self.await_handler(future, start);
                 return Ok(());
@@ -115,9 +112,9 @@ impl<S: WriteScheduler> WriteBuffer<S> {
             self.state
                 .offset
                 .set(self.state.offset.get().saturating_add(1));
-            self.state
-                .pending_units
-                .set(self.pending_units() - data.len() as f64);
+            let pending = self.pending_units();
+            let length = data.len()?;
+            self.state.pending_units.set(pending - length as f64);
             if self.now() - start >= WRITE_TIMEOUT_MS {
                 break;
             }
@@ -141,36 +138,29 @@ impl<S: WriteScheduler> WriteBuffer<S> {
         start: f64,
     ) {
         let weak = self.downgrade();
-        self.state
-            .scheduler
-            .borrow_mut()
-            .spawn(Box::pin(async move {
-                let result = future.await;
-                let Some(queue) = weak.upgrade() else {
-                    return;
-                };
-                match result {
-                    Ok(value) => queue.resume_handler(start, value),
-                    Err(error) => {
-                        queue.state.scheduler.borrow_mut().report_error(error);
-                        if queue.is_disposed() {
-                            return;
-                        }
-                        // Source catch queues the uncaught error before its
-                        // resolved-false promise schedules parser continuation.
-                        let weak = queue.downgrade();
-                        queue
-                            .state
-                            .scheduler
-                            .borrow_mut()
-                            .spawn(Box::pin(async move {
-                                if let Some(queue) = weak.upgrade() {
-                                    queue.resume_handler(start, false);
-                                }
-                            }));
+        self.state.scheduler.spawn(Box::pin(async move {
+            let result = future.await;
+            let Some(queue) = weak.upgrade() else {
+                return;
+            };
+            match result {
+                Ok(value) => queue.resume_handler(start, value),
+                Err(error) => {
+                    queue.state.scheduler.report_error(error);
+                    if queue.is_disposed() {
+                        return;
                     }
+                    // Source catch queues the uncaught error before its
+                    // resolved-false promise schedules parser continuation.
+                    let weak = queue.downgrade();
+                    queue.state.scheduler.spawn(Box::pin(async move {
+                        if let Some(queue) = weak.upgrade() {
+                            queue.resume_handler(start, false);
+                        }
+                    }));
                 }
-            }));
+            }
+        }));
     }
     fn resume_handler(&self, start: f64, result: bool) {
         if self.is_disposed() {
@@ -182,7 +172,7 @@ impl<S: WriteScheduler> WriteBuffer<S> {
             self.inner_write(start, result)
         };
         if let Err(error) = resumed {
-            self.state.scheduler.borrow_mut().report_error(error);
+            self.state.scheduler.report_error(error);
         }
     }
 }

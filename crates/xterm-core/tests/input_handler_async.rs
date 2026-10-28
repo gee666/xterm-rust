@@ -113,6 +113,7 @@ fn async_osc_between() {
                 }))
             })
         })
+        .unwrap()
         .unwrap();
     host.write(
         WriteData::text("hello world!\r\n\x1b]1000;some data\x07second line"),

@@ -8,11 +8,18 @@ use std::{any::Any, fmt, future::Future, pin::Pin, rc::Rc};
 /// does. The host action downcasts this value and reads bytes only when parsed.
 /// It is always truthy, including an empty or detached view.
 pub trait WritePayload: fmt::Debug + 'static {
-    fn len(&self) -> usize;
-    fn is_empty(&self) -> bool {
-        self.len() == 0
+    fn len(&self) -> Result<usize, WriteError>;
+    fn is_empty(&self) -> Result<bool, WriteError> {
+        self.len().map(|length| length == 0)
     }
     fn as_any(&self) -> &dyn Any;
+    /// Convert the same shared allocation into a live parser source. Custom
+    /// payloads interpreted by another action may legitimately lack this adapter.
+    fn into_parse_source(
+        self: Rc<Self>,
+    ) -> Option<Rc<dyn crate::input::parse_source::ParseInputSource>> {
+        None
+    }
 }
 /// Text retains UTF-16 units. Byte chunks remain distinct, including empty ones.
 #[derive(Clone, Debug)]
@@ -36,15 +43,15 @@ impl WriteData {
     pub fn text(value: &str) -> Self {
         Self::Text(value.encode_utf16().collect())
     }
-    pub fn len(&self) -> usize {
+    pub fn len(&self) -> Result<usize, WriteError> {
         match self {
-            Self::Text(v) => v.len(),
-            Self::Bytes(v) => v.len(),
+            Self::Text(v) => Ok(v.len()),
+            Self::Bytes(v) => Ok(v.len()),
             Self::External(v) => v.len(),
         }
     }
-    pub fn is_empty(&self) -> bool {
-        self.len() == 0
+    pub fn is_empty(&self) -> Result<bool, WriteError> {
+        self.len().map(|length| length == 0)
     }
     pub(super) fn truthy(&self) -> bool {
         !matches!(self, Self::Text(v) if v.is_empty())
@@ -135,18 +142,23 @@ impl WriteAction {
 /// `request` stores its weak handle and arguments until a later callback calls
 /// `upgrade()?.process(last_time, promise_result)`. Cancellation prevents that
 /// callback. `spawn` polls only after returning, and reports process failures.
-/// None of these methods may synchronously reenter the queue. `report_error`
-/// records/schedules an uncaught asynchronous error without swallowing it.
+/// Supplied timer callbacks and future polling must never execute inline.
+/// Other host code, such as a browser getter, may reenter: the core holds no
+/// scheduler or queue-slot borrow while calling the host. Adapters likewise
+/// release interior borrows before foreign calls. `report_error` schedules or
+/// records the original asynchronous exception without swallowing it.
 pub trait WriteScheduler: Sized + 'static {
-    type Handle;
+    /// A cloneable host token, not an RAII cancellation owner. Dropping a
+    /// token must not cancel its callback; cancellation is explicit below.
+    type Handle: Clone;
     fn request(
-        &mut self,
+        &self,
         queue: WeakWriteBuffer<Self>,
         last_time: f64,
         promise_result: bool,
     ) -> Result<Self::Handle, WriteError>;
-    fn cancel(&mut self, handle: Self::Handle);
+    fn cancel(&self, handle: Self::Handle) -> Result<(), WriteError>;
     fn now(&self) -> f64;
-    fn spawn(&mut self, future: Pin<Box<dyn Future<Output = ()>>>);
-    fn report_error(&mut self, error: WriteError);
+    fn spawn(&self, future: Pin<Box<dyn Future<Output = ()>>>);
+    fn report_error(&self, error: WriteError);
 }

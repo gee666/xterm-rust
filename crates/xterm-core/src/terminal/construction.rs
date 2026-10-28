@@ -38,15 +38,13 @@ impl CoreTerminal {
         Self::with_options(options)
     }
     pub fn with_options(options: Rc<OptionsService>) -> Result<Self, TerminalError> {
-        let service = Rc::new(
-            BufferService::new(Rc::clone(&options))
-                .map_err(|e| TerminalError::Buffer(e.to_string()))?,
-        );
         let logs = Rc::new(RefCell::new(Vec::new()));
         let logger = Rc::new(LogService::new(
             Rc::clone(&options),
             Rc::new(MemoryLog(Rc::clone(&logs))),
         )?);
+        // Log-level coercion can mutate options before buffer dimensions are read.
+        let service = Rc::new(BufferService::new(Rc::clone(&options))?);
         let position_service = Rc::clone(&service);
         let core = Rc::new(CoreService::new(
             Rc::clone(&options),
@@ -61,6 +59,7 @@ impl CoreTerminal {
             },
         )?);
         let events = Rc::new(RefCell::new(Vec::new()));
+        let event_handler = Rc::new(RefCell::new(None));
         let mut listeners = Vec::new();
         let scrolling = Rc::downgrade(&service);
         listeners.push(core.on_request_scroll_to_bottom().try_subscribe(move |_| {
@@ -76,28 +75,31 @@ impl CoreTerminal {
                 .map_err(crate::event::EmitError::callback)
         }));
         let queue = Rc::clone(&events);
-        listeners.push(
-            core.on_data()
-                .subscribe(move |data| queue.borrow_mut().push(TerminalEvent::Data(data.clone()))),
-        );
+        let handler = Rc::clone(&event_handler);
+        listeners.push(core.on_data().try_subscribe(move |data| {
+            super::forward::forward_event(&queue, &handler, TerminalEvent::Data(data.clone()))
+        }));
         let queue = Rc::clone(&events);
-        listeners.push(
-            core.on_binary().subscribe(move |data| {
-                queue.borrow_mut().push(TerminalEvent::Binary(data.clone()))
-            }),
-        );
+        let handler = Rc::clone(&event_handler);
+        listeners.push(core.on_binary().try_subscribe(move |data| {
+            super::forward::forward_event(&queue, &handler, TerminalEvent::Binary(data.clone()))
+        }));
         let queue = Rc::clone(&events);
-        listeners.push(
-            service.on_scroll().subscribe(move |position| {
-                queue.borrow_mut().push(TerminalEvent::Scroll(*position))
-            }),
-        );
+        let handler = Rc::clone(&event_handler);
+        listeners.push(service.on_scroll().try_subscribe(move |position| {
+            super::forward::forward_event(&queue, &handler, TerminalEvent::Scroll(*position))
+        }));
         let queue = Rc::clone(&events);
-        listeners.push(service.on_resize().subscribe(move |event| {
-            queue.borrow_mut().push(TerminalEvent::Resize {
-                cols: event.cols,
-                rows: event.rows,
-            })
+        let handler = Rc::clone(&event_handler);
+        listeners.push(service.on_resize().try_subscribe(move |event| {
+            super::forward::forward_event(
+                &queue,
+                &handler,
+                TerminalEvent::Resize {
+                    cols: event.cols,
+                    rows: event.rows,
+                },
+            )
         }));
         let windows_wrapping = Rc::new(std::cell::Cell::new(controls::windows_heuristics_enabled(
             &options.get("windowsPty")?,
@@ -135,27 +137,34 @@ impl CoreTerminal {
             mouse: Rc::new(MouseStateService::new()),
             charset: CharsetService::default(),
             attributes: Default::default(),
+            attributes_identity: Rc::new(RefCell::new(None)),
             title: Vec::new(),
             icon_name: Vec::new(),
             title_stack: Vec::new(),
             icon_stack: Vec::new(),
             events,
-            event_handler: Rc::new(RefCell::new(None)),
+            event_handler,
             error: None,
             dirty: None,
             preceding_join_state: Rc::default(),
             windows_wrapping,
-            core_actions: Default::default(),
+            pending_replies: Default::default(),
         }));
         let mut parser = EscapeSequenceParser::new();
         state.borrow_mut().preceding_join_state = Rc::clone(&parser.preceding_join_state);
         register::register(&mut parser, &state)?;
+        let logger = Rc::clone(&state.borrow().logger);
+        super::diagnostics::install_fallbacks(&mut parser, logger);
         Ok(Self {
             state,
             parser,
             utf16: StringToUtf32::new(),
             utf8: Utf8ToUtf32::new(),
-            decoded: Vec::new(),
+            decoded: vec![0; super::INITIAL_PARSE_BUFFER_LENGTH],
+            decoded_length: 0,
+            source: None,
+            source_position: 0,
+            parse_observer: None,
             pending: None,
             awaiting: false,
             cursor_start: (0, 0),

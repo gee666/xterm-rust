@@ -72,6 +72,7 @@ fn register(host: &QueuedTerminal, gate: &Rc<Gate>, calls: &Rc<Cell<usize>>) {
                 HandlerResult::Pending(Box::pin(Wait(gate.clone())))
             })
         })
+        .unwrap()
         .unwrap();
 }
 #[test]

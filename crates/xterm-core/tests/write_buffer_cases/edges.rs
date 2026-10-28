@@ -3,6 +3,19 @@ use crate::write_buffer_support::*;
 use std::{cell::Cell, rc::Rc};
 use xterm_core::input::write_buffer::{WriteAction, WriteBuffer, WriteData, WriteError};
 #[test]
+fn fired_timer_release_is_distinct_from_cancellation() {
+    let (queue, host, _, _) = queue();
+    queue.write(WriteData::text("a"), None).unwrap();
+    host.task().unwrap();
+    assert_eq!(host.0.fired.get(), 1);
+    assert_eq!(host.0.cancelled.get(), 0);
+    queue.write(WriteData::text("b"), None).unwrap();
+    queue.dispose();
+    assert_eq!(host.0.fired.get(), 1);
+    assert_eq!(host.0.cancelled.get(), 1);
+    assert_eq!(host.pending_tasks(), 0);
+}
+#[test]
 fn host_request_error_is_recoverable_without_queued_data_or_held_borrow() {
     let (queue, host, stack, _) = queue();
     host.0.fail_requests.set(true);

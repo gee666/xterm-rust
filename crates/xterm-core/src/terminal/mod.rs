@@ -6,11 +6,14 @@ mod controls;
 mod csi;
 mod csi_edits;
 mod csi_erase;
+pub mod diagnostics;
 mod dispatch;
+mod parse;
 use dispatch::dispatch_events;
 mod error;
 mod escape;
 mod events;
+mod forward;
 mod kitty_modes;
 mod mode_query;
 mod modes;
@@ -20,7 +23,11 @@ mod osc_colors;
 mod print;
 mod register;
 mod replies;
+mod reply_callbacks;
+#[cfg(test)]
+mod reply_tests;
 pub mod sgr;
+mod sgr_dispatch;
 mod state;
 mod window;
 mod windows_heuristics;
@@ -30,14 +37,22 @@ use crate::{
     log_service::LogRecord,
     parser::{escape::EscapeSequenceParser, handler::HandlerResult},
 };
+pub use controls::line_feed_state;
 pub use error::TerminalError;
 pub use events::{TerminalEvent, WindowReport};
+pub use operations::{
+    clear_state_handle, mark_dirty_state, request_reset_state, reset_state_handle,
+};
 pub use osc_colors::{ColorIndex, ColorRequest};
+pub use parse::{
+    DecodeBufferOverflow, ParseBufferObserver, INITIAL_PARSE_BUFFER_LENGTH, MAX_PARSE_BUFFER_LENGTH,
+};
 pub use state::TerminalState;
 use std::{
     cell::{Ref, RefCell},
     rc::Rc,
 };
+pub use window::window_option_allowed;
 
 pub type EventHandler = Rc<dyn Fn(TerminalEvent) -> Result<(), crate::event::EmitError>>;
 
@@ -47,6 +62,10 @@ pub struct CoreTerminal {
     utf16: StringToUtf32,
     utf8: Utf8ToUtf32,
     decoded: Vec<u32>,
+    decoded_length: usize,
+    source: Option<Rc<dyn crate::input::parse_source::ParseInputSource>>,
+    source_position: usize,
+    parse_observer: Option<ParseBufferObserver>,
     pending: Option<HandlerResult>,
     awaiting: bool,
     cursor_start: (usize, usize),
@@ -88,89 +107,6 @@ impl CoreTerminal {
         core.trigger_data_event(data, was_user_input)?;
         dispatch_events(&self.state)
     }
-    pub fn write_utf16(&mut self, data: &[u16]) -> Result<(), TerminalError> {
-        self.begin_write()?;
-        self.utf16.decode(data, &mut self.decoded);
-        self.parse(None)
-    }
-    pub fn write_bytes(&mut self, data: &[u8]) -> Result<(), TerminalError> {
-        self.begin_write()?;
-        self.utf8.decode(data, &mut self.decoded);
-        self.parse(None)
-    }
-    pub fn write(&mut self, data: &str) -> Result<(), TerminalError> {
-        self.write_utf16(&data.encode_utf16().collect::<Vec<_>>())
-    }
-    fn begin_write(&mut self) -> Result<(), TerminalError> {
-        self.ensure_live()?;
-        if self.awaiting {
-            return Err(TerminalError::Pending);
-        }
-        self.decoded.clear();
-        let state = self.state.borrow();
-        let b = state.active_buffer();
-        let b = b.borrow();
-        self.cursor_start = (b.x, b.y);
-        drop(b);
-        drop(state);
-        self.state.borrow_mut().dirty = Some((self.cursor_start.1, self.cursor_start.1));
-        Ok(())
-    }
-    /// Take and await the handler future, then call `resume` with its result.
-    pub fn take_pending(&mut self) -> Option<HandlerResult> {
-        self.pending.take()
-    }
-    /// Spawn these cleanup futures before polling the current pending action.
-    pub fn take_cleanup(&mut self) -> Vec<HandlerResult> {
-        self.parser.take_cleanup()
-    }
-    pub fn resume(&mut self, result: bool) -> Result<(), TerminalError> {
-        self.ensure_live()?;
-        if !self.awaiting {
-            return Err(TerminalError::Parse(
-                crate::parser::escape::ParseError::ImproperContinuation,
-            ));
-        }
-        self.pending = None;
-        self.awaiting = false;
-        self.parse(Some(result))
-    }
-    fn parse(&mut self, result: Option<bool>) -> Result<(), TerminalError> {
-        let result = self.parser.parse(&self.decoded, result);
-        if let Some(error) = self.state.borrow_mut().error.take() {
-            return Err(error);
-        }
-        match result? {
-            Some(pending) => {
-                self.pending = Some(pending);
-                self.awaiting = true;
-                dispatch_events(&self.state)?;
-                Err(TerminalError::Pending)
-            }
-            None => {
-                let mut state = self.state.borrow_mut();
-                let b = state.active_buffer();
-                let b = b.borrow();
-                if self.cursor_start != (b.x, b.y) {
-                    state.events.borrow_mut().push(TerminalEvent::CursorMove);
-                }
-                if let Some((start, end)) = state.dirty.take() {
-                    let offset = b.ybase.saturating_sub(b.ydisp);
-                    if start.saturating_add(offset) < state.rows() {
-                        state.events.borrow_mut().push(TerminalEvent::Render {
-                            start: start.saturating_add(offset).min(state.rows() - 1),
-                            end: end.saturating_add(offset).min(state.rows() - 1),
-                        });
-                    }
-                }
-                state.events.borrow_mut().push(TerminalEvent::WriteParsed);
-                drop(b);
-                drop(state);
-                self.decoded.clear();
-                dispatch_events(&self.state)
-            }
-        }
-    }
     pub(crate) fn ensure_live(&self) -> Result<(), TerminalError> {
         if self.disposed {
             Err(TerminalError::Disposed)
@@ -182,21 +118,72 @@ impl CoreTerminal {
         if self.disposed {
             return Ok(());
         }
+        let slot = Rc::clone(
+            &self
+                .state
+                .try_borrow()
+                .map_err(|_| TerminalError::Borrowed)?
+                .event_handler,
+        );
         self.disposed = true;
-        self.parser.dispose();
-        self.pending = None;
-        self.decoded.clear();
+        let handler = slot.borrow_mut().take();
+        drop(handler);
         for listener in self.listeners.drain(..) {
             listener.dispose();
         }
-        let state = self.state.borrow();
-        state.core.dispose();
-        state.logger.dispose();
-        state.mouse.dispose();
-        state.unicode.dispose();
-        state.buffer_service.dispose()?;
-        self.awaiting = false;
+        // Service disposal can invoke marker callbacks. Keep every terminal-state
+        // borrow out of that traversal, and retain source registration order.
+        let (options, logger, buffers, core, mouse, unicode) = {
+            let state = self
+                .state
+                .try_borrow()
+                .map_err(|_| TerminalError::Borrowed)?;
+            (
+                Rc::clone(&state.options),
+                Rc::clone(&state.logger),
+                Rc::clone(&state.buffer_service),
+                Rc::clone(&state.core),
+                Rc::clone(&state.mouse),
+                Rc::clone(&state.unicode),
+            )
+        };
+        options.dispose();
+        logger.dispose();
+        buffers.dispose()?;
+        core.dispose();
+        mouse.dispose();
+        unicode.dispose();
+        self.finish_parser_dispose();
         Ok(())
+    }
+    /// Finalize reentrant host disposal without revisiting shared services or
+    /// markers that callers registered after that traversal returned.
+    pub fn finish_dispose_after_shared_services(&mut self) -> Result<(), TerminalError> {
+        let slot = Rc::clone(
+            &self
+                .state
+                .try_borrow()
+                .map_err(|_| TerminalError::Borrowed)?
+                .event_handler,
+        );
+        self.disposed = true;
+        let handler = slot.borrow_mut().take();
+        drop(handler);
+        for listener in self.listeners.drain(..) {
+            listener.dispose();
+        }
+        self.finish_parser_dispose();
+        Ok(())
+    }
+    fn finish_parser_dispose(&mut self) {
+        self.parser.dispose();
+        self.pending = None;
+        self.source = None;
+        self.parse_observer = None;
+        self.decoded.clear();
+        self.decoded_length = 0;
+        self.source_position = 0;
+        self.awaiting = false;
     }
 }
 impl Drop for CoreTerminal {

@@ -5,8 +5,8 @@ use xterm_core::input::write_buffer::{WriteAction, WriteBuffer, WriteData, Write
 #[derive(Debug)]
 struct MutableBytes(Rc<RefCell<Vec<u8>>>);
 impl WritePayload for MutableBytes {
-    fn len(&self) -> usize {
-        self.0.borrow().len()
+    fn len(&self) -> Result<usize, xterm_core::input::write_buffer::WriteError> {
+        Ok(self.0.borrow().len())
     }
     fn as_any(&self) -> &dyn Any {
         self

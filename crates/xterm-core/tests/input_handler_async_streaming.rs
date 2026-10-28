@@ -65,14 +65,16 @@ fn run(dcs: bool, bytes: bool) {
                         })
                         .unwrap();
                 } else {
-                    parser.register_osc_handler(1000.0, move |data| {
-                        assert_eq!(data, "some data".encode_utf16().collect::<Vec<_>>());
-                        output.set(output.get() + 1);
-                        HandlerResult::Pending(Box::pin(async {
-                            microtask().await;
-                            true
-                        }))
-                    });
+                    parser
+                        .register_osc_handler(1000.0, move |data| {
+                            assert_eq!(data, "some data".encode_utf16().collect::<Vec<_>>());
+                            output.set(output.get() + 1);
+                            HandlerResult::Pending(Box::pin(async {
+                                microtask().await;
+                                true
+                            }))
+                        })
+                        .unwrap();
                 }
             })
             .unwrap();
