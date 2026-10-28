@@ -31,7 +31,7 @@ All fourteen addon directories are discovered from disk, not selected from a wor
 
 ## Machine-readable contract
 
-Every record is repository-relative and links the unchanged source. Exact paths, current counts, statuses and gaps are authoritative in these files:
+Every record is repository-relative and links the unchanged source. Generated JSON files intentionally exceed the 350-line guideline because they preserve the full path, contract and case inventory with verbatim signatures/documentation. Handwritten tooling stays below that limit. Exact paths, current counts, statuses and gaps are authoritative in these files:
 
 | Artifact under `results/compatibility/` | Contents |
 | --- | --- |
