@@ -269,5 +269,5 @@ fn actual_buffers_and_image_storage_match_source_snapshots() {
         linefeed.dispose();
         resized.dispose();
     }
-    assert_eq!(count, 563);
+    assert_eq!(count, 567);
 }

@@ -37,7 +37,7 @@ impl fmt::Display for StorageError {
                 f.write_str("invalid storageLimit, should be at least 0.5 MB and not exceed 1G")
             }
             Self::InvalidGeometry => {
-                f.write_str("image placement requires finite positive cell dimensions")
+                f.write_str("image placement exceeds native cursor or loop bounds")
             }
             Self::MissingLine(row) => write!(f, "image buffer row {row} is absent"),
             Self::BorrowedBuffer => f.write_str("image buffer is already borrowed"),

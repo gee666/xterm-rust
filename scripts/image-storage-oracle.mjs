@@ -36,7 +36,7 @@ function fixture(config) {
   globalThis.ImageBitmap = Bitmap;
   globalThis.window = { ImageBitmap: Bitmap, document: { createElement: () => new Canvas(0, 0) } };
   const terminal = new Terminal({ cols: config.cols, rows: config.rows, scrollback: 5, allowProposedApi: true });
-  let size = { width: config.cell[0], height: config.cell[1] };
+  let size = { width: parse(config.cell[0]), height: parse(config.cell[1]) };
   const layers = new Set();
   let storage;
   const idOf = spec => [...storage._images].find(([, value]) => value === spec)?.[0] ?? -1;
@@ -98,7 +98,7 @@ function fixture(config) {
       case 'alt': terminal._core._bufferService.buffers.activateAltBuffer(); return null;
       case 'normal': terminal._core._bufferService.buffers.activateNormalBuffer(); return null;
       case 'placeholder': options.showPlaceholder = step.value; return null;
-      case 'metrics': size = { width: step.cell[0], height: step.cell[1] }; return null;
+      case 'metrics': size = { width: parse(step.cell[0]), height: parse(step.cell[1]) }; return null;
       case 'actual': {
         const spec = storage._images.get(step.id);
         spec.actual = step.none ? undefined : surface(step.w, step.h, false);
@@ -147,6 +147,9 @@ const cases = [
     { op: 'add', w: 2, h: 1, z: -4, layer: 'bottom' }, { op: 'render', start: 0, end: 1 },
     { op: 'delete', id: 1 }, { op: 'render', start: 0, end: 1 }, { op: 'placeholder', value: false },
     { op: 'render', start: 0, end: 1 }, { op: 'delete', id: 2 }, { op: 'render', start: 0, end: 1 }] },
+  { name: 'infinite-metrics-zero-counts', config: { cols: 6, rows: 3, cell: [2, 'Infinity'] }, steps: [
+    { op: 'add', w: 3, h: 3, cursor: 'iip' }, { op: 'metrics', cell: ['Infinity', 2] },
+    { op: 'add', w: 3, h: 3 }, { op: 'render', start: 0, end: 2 }] },
   { name: 'fallback-empty-and-limits', config: { cols: 6, rows: 3, cell: [-1, 8] }, steps: [
     { op: 'add', w: 8, h: 15 }, { op: 'add', w: 0, h: 0 }, { op: 'add', w: 1, h: 1 },
     { op: 'limit', value: 0.499 }, { op: 'limit', value: 'Infinity' }, { op: 'limit', value: 1000 }, { op: 'reset' }] }

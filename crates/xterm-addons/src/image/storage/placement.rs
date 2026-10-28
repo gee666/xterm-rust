@@ -258,16 +258,13 @@ pub(super) fn tile_at(line: &BufferLine, x: usize) -> Option<Rc<ImageTileInfo>> 
         .ok()
 }
 fn image_cells(image: &ImageResource, size: CellSize) -> Result<(usize, usize), StorageError> {
-    if !size.width.is_finite()
-        || !size.height.is_finite()
-        || size.width <= 0.0
-        || size.height <= 0.0
-    {
-        return Err(StorageError::InvalidGeometry);
-    }
     let cols = (f64::from(image.width()?) / size.width).ceil();
     let rows = (f64::from(image.height()?) / size.height).ceil();
-    if !cols.is_finite()
+    // Infinite cell metrics produce zero loop counts in the source. Reject
+    // only counts that cannot be represented by the native cursor/loop types.
+    if cols < 0.0
+        || rows < 0.0
+        || !cols.is_finite()
         || !rows.is_finite()
         || cols >= usize::MAX as f64
         || rows >= usize::MAX as f64
