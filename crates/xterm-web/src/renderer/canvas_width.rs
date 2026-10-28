@@ -105,7 +105,7 @@ impl<F: FontDescriptor> WidthMeasurer for CanvasWidthMeasurer<F> {
     fn configure_variant(&self, font: &F, variant: FontVariant) -> Result<(), JsValue> {
         let units = font
             .variant_units(variant)
-            .map_err(|e| crate::js_error::to_js_error(&e))?;
+            .map_err(|e| xterm_wasm_support::js_error::to_js_error(&e))?;
         self.contexts[variant as usize].set_font(&units)
     }
     fn measure(&self, text: &[u16], variant: FontVariant) -> Result<f64, JsValue> {
@@ -121,7 +121,7 @@ impl WidthCache<CanvasWidthMeasurer<RawFont>> {
         options: &xterm_core::options::OptionsService,
     ) -> Result<(), WidthError<JsValue>> {
         let font = RawFont::from_options(options)
-            .map_err(|e| WidthError::Measure(crate::js_error::to_js_error(&e)))?;
+            .map_err(|e| WidthError::Measure(xterm_wasm_support::js_error::to_js_error(&e)))?;
         self.set_font(font)
     }
 }
