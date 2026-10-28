@@ -7,8 +7,8 @@ use std::collections::BTreeMap;
 use std::rc::Rc;
 
 /// Values accepted at the JS options boundary. UTF-16 strings retain lone
-/// surrogates. Numbers retain NaN, infinities, and signed zero. Object equality
-/// uses reference identity rather than structural equality, as upstream does.
+/// surrogates. Numbers retain NaN, infinities, and signed zero. Native objects
+/// use reference identity; opaque host values use their host's strict equality.
 #[derive(Clone, Debug)]
 pub enum OptionValue {
     Undefined,
@@ -26,7 +26,7 @@ impl PartialEq for OptionValue {
             (Self::Bool(a), Self::Bool(b)) => a == b,
             (Self::Number(a), Self::Number(b)) => a == b,
             (Self::String(a), Self::String(b)) => a == b,
-            (Self::Object(a), Self::Object(b)) => Rc::ptr_eq(a, b) || a.equals(b),
+            (Self::Object(a), Self::Object(b)) => a.equals(b).unwrap_or_else(|| Rc::ptr_eq(a, b)),
             _ => false,
         }
     }
@@ -106,6 +106,34 @@ impl OptionValue {
         }
     }
 
+    /// JS addition preserves numeric addition versus UTF-16 concatenation and
+    /// invokes object default-hint conversion at each call, not once per option.
+    pub fn js_add(&self, rhs: &Self) -> Result<Self, super::OptionError> {
+        if let Self::Object(left) = self {
+            if let Some(result) = left.add_left(rhs) {
+                return result;
+            }
+        }
+        if let Self::Object(right) = rhs {
+            if let Some(result) = right.add_right(self) {
+                return result;
+            }
+        }
+        let primitive = |value: &Self| match value {
+            Self::Object(value) => value.primitive(CoercionHint::Number),
+            _ => Ok(value.clone()),
+        };
+        let left = primitive(self)?;
+        let right = primitive(rhs)?;
+        if matches!(left, Self::String(_)) || matches!(right, Self::String(_)) {
+            let mut value = left.text_utf16()?;
+            value.extend(right.text_utf16()?);
+            Ok(Self::String(value))
+        } else {
+            Ok(Self::Number(left.number()? + right.number()?))
+        }
+    }
+
     pub(crate) fn less_than(&self, rhs: f64) -> Result<bool, super::OptionError> {
         match self {
             Self::Object(value) => value.less_than(rhs),
@@ -129,6 +157,15 @@ impl OptionValue {
     /// object conversion. Strings use JS whitespace and numeric grammar.
     pub fn to_number(&self) -> Result<f64, super::OptionError> {
         self.number()
+    }
+
+    /// String concatenation uses ToPrimitive with the default hint. This is
+    /// distinct from explicit String-hint conversion for Date/custom objects.
+    pub fn concat_utf16(&self) -> Result<Vec<u16>, super::OptionError> {
+        match self {
+            Self::Object(value) => value.concat_utf16(),
+            _ => self.text_utf16(),
+        }
     }
 
     /// ECMAScript string conversion with String hint and lossless UTF-16.

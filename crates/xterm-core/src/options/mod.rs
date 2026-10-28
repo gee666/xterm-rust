@@ -16,7 +16,7 @@ use crate::lifecycle::{Disposable, DisposableHandle};
 pub use defaults::default_options;
 pub use host_store::RawOptionsStore;
 pub use object::{CoercionError, CoercionHint, NumericSemantics, OptionObject};
-use std::cell::RefCell;
+use std::cell::{Cell, RefCell};
 use std::fmt;
 use std::rc::Rc;
 pub use value::OptionValue;
@@ -99,6 +99,12 @@ impl OptionError {
         Ok(Self::Invalid(message))
     }
 }
+impl From<EmitError> for OptionError {
+    fn from(error: EmitError) -> Self {
+        Self::Dispatch(error)
+    }
+}
+
 impl From<CoercionError> for OptionError {
     fn from(error: CoercionError) -> Self {
         Self::Coercion(error)
@@ -110,11 +116,14 @@ impl From<CoercionError> for OptionError {
 /// are returned rather than being written to the host's console.
 pub struct OptionsService {
     values: Rc<RefCell<Values>>,
-    changes: Emitter<&'static str>,
+    changes: Emitter<String>,
+    any_changes: Event<String>,
+    known_changes: Event<&'static str>,
     diagnostics: Vec<OptionError>,
     raw_store: Option<Rc<dyn RawOptionsStore>>,
     property_layout: Option<Vec<(String, bool)>>,
     dispose_error: RefCell<Option<OptionError>>,
+    disposed: Cell<bool>,
 }
 
 impl OptionsService {
@@ -136,13 +145,25 @@ impl OptionsService {
                 values.push((key, value));
             }
         }
+        let changes = Emitter::new();
+        let any_changes = changes.event();
+        let keys: Vec<_> = values.iter().map(|(key, _)| *key).collect();
+        let known_changes = any_changes.filter_map(move |key: &String| {
+            keys.iter()
+                .copied()
+                .find(|known| *known == key)
+                .or_else(|| host_store::prototype_key(key))
+        });
         Self {
             values: Rc::new(RefCell::new(values)),
-            changes: Emitter::new(),
+            changes,
+            any_changes,
+            known_changes,
             diagnostics,
             raw_store: None,
             property_layout: None,
             dispose_error: RefCell::new(None),
+            disposed: Cell::new(false),
         }
     }
 
@@ -163,53 +184,13 @@ impl OptionsService {
     }
 
     pub fn get(&self, key: &str) -> Result<OptionValue, OptionError> {
-        let key = self.key(key)?;
-        if let Some(store) = &self.raw_store {
-            return store.get(key);
-        }
-        self.values
-            .borrow()
-            .iter()
-            .find(|(k, _)| *k == key)
-            .map(|(_, value)| value.clone())
-            .ok_or_else(|| OptionError::UnknownKey(key.into()))
+        self.read_value(key)
     }
 
     /// Sanitizes before comparing with JS strict equality. An unchanged value
     /// emits nothing. The value is committed before listeners are invoked.
     pub fn set(&self, key: &str, value: OptionValue) -> Result<(), OptionError> {
-        let key = self.key(key)?;
-        let value = validation::sanitize(key, value)?;
-        let changed = if let Some(store) = &self.raw_store {
-            if store.get(key)? == value {
-                false
-            } else {
-                store.set(key, value)?;
-                true
-            }
-        } else {
-            let mut values = self.values.borrow_mut();
-            // key() checked existence, and this service never removes keys.
-            let (_, current) = values
-                .iter_mut()
-                .find(|(k, _)| *k == key)
-                .expect("validated option key remains present");
-            if *current == value {
-                false
-            } else {
-                *current = value;
-                true
-            }
-        };
-        if changed {
-            self.changes.fire(&key).map_err(|error| {
-                error
-                    .callback_ref::<OptionError>()
-                    .cloned()
-                    .unwrap_or(OptionError::Dispatch(error))
-            })?;
-        }
-        Ok(())
+        self.write_value(key, value)
     }
 
     /// Internal equivalent of writing rawOptions, bypassing validation/events.
@@ -217,17 +198,28 @@ impl OptionsService {
         if let Some(store) = &self.raw_store {
             return store.set(key, value);
         }
-        let mut values = self.values.borrow_mut();
-        let (_, current) = values
-            .iter_mut()
-            .find(|(k, _)| *k == key)
-            .ok_or_else(|| OptionError::UnknownKey(key.into()))?;
-        *current = value;
+        let previous = {
+            let mut values = self.values.borrow_mut();
+            let (_, current) = values
+                .iter_mut()
+                .find(|(k, _)| *k == key)
+                .ok_or_else(|| OptionError::UnknownKey(key.into()))?;
+            std::mem::replace(current, value)
+        };
+        // Adapter payload destructors may reenter options/logging.
+        drop(previous);
         Ok(())
     }
 
+    /// Typed convenience event for declared options and standard prototype names.
+    /// Use on_any_option_change for arbitrary host-prototype property names.
     pub fn on_option_change(&self) -> Event<&'static str> {
-        self.changes.event()
+        self.known_changes.clone()
+    }
+
+    /// Complete source onOptionChange, with owned dynamic JS property names.
+    pub fn on_any_option_change(&self) -> Event<String> {
+        self.any_changes.clone()
     }
 
     pub fn on_specific_option_change(
@@ -247,8 +239,7 @@ impl OptionsService {
         &self,
         listener: impl Fn(&'static str) -> Result<(), OptionError> + 'static,
     ) -> DisposableHandle {
-        self.changes
-            .event()
+        self.on_option_change()
             .try_subscribe(move |key| listener(key).map_err(EmitError::callback))
     }
 
@@ -289,7 +280,7 @@ impl OptionsService {
             .iter()
             .map(|key| self.key(key))
             .collect::<Result<_, _>>()?;
-        Ok(self.changes.event().subscribe(move |changed| {
+        Ok(self.on_option_change().subscribe(move |changed| {
             if keys.contains(changed) {
                 listener();
             }
@@ -323,7 +314,9 @@ impl Default for OptionsService {
 
 impl Disposable for OptionsService {
     fn dispose(&self) {
-        *self.dispose_error.borrow_mut() = self.try_dispose().err();
+        if !self.disposed.get() {
+            *self.dispose_error.borrow_mut() = self.try_dispose().err();
+        }
     }
 }
 impl Drop for OptionsService {

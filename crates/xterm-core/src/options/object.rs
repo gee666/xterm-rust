@@ -8,6 +8,17 @@ type Equality = dyn Fn(&OptionObject, &OptionObject) -> bool;
 /// Relational/arithmetic JS operators differ from ToNumber for BigInt. A host
 /// supplies these operations for opaque values, without coupling core to JS.
 pub trait NumericSemantics {
+    fn add_left(&self, _rhs: &OptionValue) -> Option<Result<OptionValue, OptionError>> {
+        None
+    }
+    fn add_right(&self, _lhs: &OptionValue) -> Option<Result<OptionValue, OptionError>> {
+        None
+    }
+    /// Optional JS addition/default-hint conversion. None uses the ordinary
+    /// object's Number-hint ToPrimitive contract, not a string-hint fallback.
+    fn concat_utf16(&self) -> Option<Result<Vec<u16>, OptionError>> {
+        None
+    }
     fn less_than(&self, rhs: f64) -> Result<bool, OptionError>;
     fn less_equal(&self, rhs: f64) -> Result<bool, OptionError>;
     fn multiply(&self, rhs: f64) -> Result<f64, OptionError>;
@@ -191,6 +202,28 @@ impl OptionObject {
         })
     }
 
+    pub(super) fn add_left(&self, rhs: &OptionValue) -> Option<Result<OptionValue, OptionError>> {
+        self.numeric
+            .as_ref()
+            .and_then(|numeric| numeric.add_left(rhs))
+    }
+    pub(super) fn add_right(&self, lhs: &OptionValue) -> Option<Result<OptionValue, OptionError>> {
+        self.numeric
+            .as_ref()
+            .and_then(|numeric| numeric.add_right(lhs))
+    }
+
+    pub(super) fn concat_utf16(&self) -> Result<Vec<u16>, OptionError> {
+        if let Some(result) = self
+            .numeric
+            .as_ref()
+            .and_then(|numeric| numeric.concat_utf16())
+        {
+            return result;
+        }
+        self.primitive(CoercionHint::Number)?.text_utf16()
+    }
+
     pub(super) fn less_than(&self, rhs: f64) -> Result<bool, OptionError> {
         match &self.numeric {
             Some(numeric) => numeric.less_than(rhs),
@@ -213,8 +246,8 @@ impl OptionObject {
     pub(super) fn truthy(&self) -> bool {
         self.truthy
     }
-    pub(super) fn equals(&self, other: &Self) -> bool {
-        self.equal.as_ref().is_some_and(|equal| equal(self, other))
+    pub(super) fn equals(&self, other: &Self) -> Option<bool> {
+        self.equal.as_ref().map(|equal| equal(self, other))
     }
 
     pub fn get_property(&self, key: &str) -> Result<OptionValue, OptionError> {

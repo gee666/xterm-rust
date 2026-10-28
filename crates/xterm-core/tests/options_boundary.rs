@@ -64,6 +64,77 @@ fn host_exception_text_is_lossless() {
 }
 
 #[test]
+fn opaque_host_nan_is_not_reflexive_even_through_same_rc() {
+    let value = V::Object(OptionObject::with_value_semantics(
+        f64::NAN,
+        |_| Ok(V::Number(f64::NAN)),
+        |_, _| Ok(V::Undefined),
+        false,
+        |a, b| a == b,
+    ));
+    assert_ne!(value, value.clone());
+    let service = OptionsService::default();
+    let calls = Rc::new(Cell::new(0));
+    let output = calls.clone();
+    service
+        .on_option_change()
+        .subscribe(move |_| output.set(output.get() + 1));
+    service.set("fontFamily", value.clone()).unwrap();
+    service.set("fontFamily", value).unwrap();
+    assert_eq!(calls.get(), 2);
+}
+
+#[test]
+fn js_add_preserves_number_string_and_utf16_semantics() {
+    let first = V::Number(0.0).js_add(&V::from("2")).unwrap();
+    assert_eq!(first, V::from("02"));
+    assert_eq!(first.js_add(&V::from("2")).unwrap(), V::from("022"));
+    assert_eq!(
+        V::Number(0.0).js_add(&V::Number(2.0)).unwrap(),
+        V::Number(2.0)
+    );
+    assert_eq!(V::Bool(true).js_add(&V::Null).unwrap(), V::Number(1.0));
+    assert_eq!(
+        V::String(vec![0xd800])
+            .js_add(&V::String(vec![0xdc00]))
+            .unwrap(),
+        V::String(vec![0xd800, 0xdc00])
+    );
+    assert!(matches!(V::Undefined.js_add(&V::Null).unwrap(),V::Number(value) if value.is_nan()));
+}
+
+#[test]
+fn ordinary_default_addition_uses_valueof_order_not_string_order() {
+    let hints = Rc::new(RefCell::new(Vec::new()));
+    let output = hints.clone();
+    let object = V::Object(OptionObject::new((), move |hint| {
+        output.borrow_mut().push(hint);
+        Ok(V::from(if hint == CoercionHint::Number {
+            "number"
+        } else {
+            "string"
+        }))
+    }));
+    assert_eq!(
+        object.to_utf16().unwrap(),
+        "string".encode_utf16().collect::<Vec<_>>()
+    );
+    assert_eq!(
+        object.concat_utf16().unwrap(),
+        "number".encode_utf16().collect::<Vec<_>>()
+    );
+    assert_eq!(V::Number(0.0).js_add(&object).unwrap(), V::from("0number"));
+    assert_eq!(
+        *hints.borrow(),
+        [
+            CoercionHint::String,
+            CoercionHint::Number,
+            CoercionHint::Number
+        ]
+    );
+}
+
+#[test]
 fn structured_defaults_and_typed_pty_have_properties() {
     let service = OptionsService::default();
     let V::Object(scrollbar) = service.get("scrollbar").unwrap() else {
