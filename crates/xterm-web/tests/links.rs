@@ -3,7 +3,7 @@ use xterm_core::{
     buffer::{BufferLine, CellData, CharData},
     lifecycle::Disposable,
 };
-use xterm_web::links::{osc_links, Link, LinkProviderService, Position, Range};
+use xterm_web::links::{osc_links, Link, LinkProviderService, Range, RangePosition};
 
 fn line(text: &str, ids: &[u32], wrapped: bool) -> BufferLine {
     let mut line = BufferLine::new(text.len(), None, wrapped);
@@ -32,8 +32,14 @@ fn links(lines: &[BufferLine], y: usize) -> Vec<Link> {
 }
 fn range(x1: usize, y1: usize, x2: usize, y2: usize) -> Range {
     Range {
-        start: Position { x: x1, y: y1 },
-        end: Position { x: x2, y: y2 },
+        start: RangePosition {
+            x: x1 as u64,
+            y: y1 as u64,
+        },
+        end: RangePosition {
+            x: x2 as u64,
+            y: y2 as u64,
+        },
     }
 }
 
@@ -150,6 +156,34 @@ fn missing_empty_and_protocol_policy() {
 #[test]
 fn matches_source_single_cell_eol_early_continue() {
     assert!(links(&[line("a", &[1], false)], 1).is_empty());
+}
+
+#[test]
+fn generated_endpoint_beyond_u32_survives_wasm_pointer_width() {
+    let range = Range {
+        start: RangePosition {
+            x: 1,
+            y: u64::from(u32::MAX),
+        },
+        end: RangePosition {
+            x: 1,
+            y: 1_u64 << 32,
+        },
+    };
+    assert!(range.contains(
+        xterm_web::links::Position {
+            x: 80,
+            y: u32::MAX as usize
+        },
+        80
+    ));
+    let link = Link {
+        text: vec![b'x' as u16],
+        range,
+    };
+    let event = link.underline_event(80, (u32::MAX - 1) as usize);
+    assert_eq!((event.y1, event.y2), (0, 1));
+    assert_eq!(link.range.end.y, 1_u64 << 32);
 }
 
 #[test]

@@ -1,13 +1,20 @@
 use std::rc::Rc;
 use xterm_web::links::{
     Decorations, HoverEffect, HoverState, Link, Position, ProviderReplies, ProviderRequest, Range,
+    RangePosition,
 };
 fn link(text: &str, start: usize, end: usize) -> Rc<Link> {
     Rc::new(Link {
         text: text.encode_utf16().collect(),
         range: Range {
-            start: Position { x: start, y: 1 },
-            end: Position { x: end, y: 1 },
+            start: RangePosition {
+                x: start as u64,
+                y: 1,
+            },
+            end: RangePosition {
+                x: end as u64,
+                y: 1,
+            },
         },
     })
 }

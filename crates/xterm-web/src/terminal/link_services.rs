@@ -6,7 +6,7 @@ use crate::{
     links::{
         browser_linkifier::{BrowserLinkifier, BrowserProviders, LinkCallback},
         native_osc::{NativeOscLinkProvider, OscLinkHandler},
-        Link, LinkProviderService, Position, Range,
+        Link, LinkProviderService, Position, Range, RangePosition,
     },
     utf16::to_js_string,
 };
@@ -105,7 +105,7 @@ fn range_object(range: Range) -> Result<JsValue, JsValue> {
     // through Reflect.set would incorrectly invoke Object.prototype setters.
     Ok(Object::from_entries(Array::of2(start.as_ref(), end.as_ref()).as_ref())?.into())
 }
-fn point_object(position: Position) -> Result<Object, JsValue> {
+fn point_object(position: RangePosition) -> Result<Object, JsValue> {
     let x = Array::of2(&"x".into(), &JsValue::from_f64(position.x as f64));
     let y = Array::of2(&"y".into(), &JsValue::from_f64(position.y as f64));
     Object::from_entries(Array::of2(x.as_ref(), y.as_ref()).as_ref())
@@ -130,7 +130,11 @@ pub fn install(
         }),
         Rc::new(move |show, event| {
             if let Some(services) = underline.upgrade() {
-                services.renderer.handle_link_underline(show, event)?;
+                if let Some(renderer) = services.render_service.current_renderer() {
+                    if let Some(underline) = renderer.link_underline() {
+                        underline.handle_link_underline(show, event)?;
+                    }
+                }
             }
             Ok(())
         }),
@@ -151,21 +155,17 @@ fn snapshot(services: &BrowserServices) -> Result<(usize, usize, usize), JsValue
 fn coords(services: &BrowserServices, event: &MouseEvent) -> Result<Option<Position>, JsValue> {
     let element = &services.dom.element;
     let bounds = element.get_bounding_client_rect();
-    let window = services
-        .dom
-        .document
-        .default_view()
-        .ok_or_else(|| js_sys::Error::new("Link element has no owner window"))?;
+    let window = services.core_browser.window();
     let style = window
         .get_computed_style(element)?
         .ok_or_else(|| js_sys::Error::new("Link element has no computed style"))?;
-    let dimensions = services.renderer.dimensions();
+    let dimensions = services.render_service.dimensions()?;
     let geometry = MouseGeometry {
         rect_left: bounds.left(),
         rect_top: bounds.top(),
         padding_left: parse_css_padding(&style.get_property_value("padding-left")?),
         padding_top: parse_css_padding(&style.get_property_value("padding-top")?),
-        valid_char_size: services.renderer.has_valid_char_size(),
+        valid_char_size: services.metrics.state.has_valid_size(),
         cell_width: dimensions.css.cell.width,
         cell_height: dimensions.css.cell.height,
         canvas_width: dimensions.css.canvas.width,

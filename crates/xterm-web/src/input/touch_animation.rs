@@ -1,5 +1,5 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. MIT license.
-use super::{number, GestureContext, Inertia, CHANGE};
+use super::{number, reads, GestureContext, Inertia, CHANGE};
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::JsValue;
 use web_sys::EventTarget;
@@ -12,7 +12,7 @@ pub(super) fn schedule(
     let weak = Rc::downgrade(context);
     let item = context.animation_queue.schedule(0.0, move |_| {
         if let Some(context) = weak.upgrade() {
-            let now = js_sys::Date::now();
+            let now = reads::now()?;
             let frame = state.borrow_mut().step(now);
             let event = context.event(CHANGE, None)?;
             number(&event, "translationX", frame.translation_x)?;

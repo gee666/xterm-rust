@@ -37,6 +37,18 @@ equal(b.content,0);
 const replacement = {x:0,y:0,ydisp:0,ybase:0,lines:new modules.CircularList(3)};
 assert.equal(view.init(replacement),view); checks++;
 equal([view.cursorX,view.cursorY,view.viewportY,view.baseY,view.length],[0,0,0,0,0]);
+const methods=['getWidth','getChars','getCode','getFgColorMode','getBgColorMode','getFgColor','getBgColor',
+  'isBold','isItalic','isDim','isUnderline','isBlink','isInverse','isInvisible','isStrikethrough','isOverline',
+  'isFgRGB','isBgRGB','isFgPalette','isBgPalette','isFgDefault','isBgDefault','isAttributeDefault',
+  'getUnderlineStyle','getUnderlineColor','getUnderlineColorMode','isUnderlineColorRGB','isUnderlineColorPalette','isUnderlineColorDefault'];
+const empty=view.getNullCell();
+const cellMethods=Object.fromEntries(methods.map(name=>[name,empty[name]()]));
+cellMethods.attributesEquals=empty.attributesEquals(empty);
+const fixture=resolve(root,'crates/xterm-wasm-support/tests/fixtures/public-cell-methods.json');
+if(process.argv.includes('--generate')) {
+  mkdirSync(resolve(root,'crates/xterm-wasm-support/tests/fixtures'),{recursive:true});
+  writeFileSync(fixture,`${JSON.stringify(cellMethods,null,2)}\n`);
+} else equal(cellMethods,JSON.parse(readFileSync(fixture,'utf8')));
 const report = {source:'source_repo/src/common/public/BufferApiView.ts',status:'passed',node:process.version,checks,
   observations:{capacityIndexAliasesZero:true,poppedSlotRemainsVisible:true,nullCell:{width:0,content:0},initReturnsSameView:true},
   hashes:Object.fromEntries(['public/BufferApiView.ts','CircularList.ts','buffer/CellData.ts'].map(file=>[file,createHash('sha256').update(readFileSync(resolve(root,'source_repo/src/common',file))).digest('hex')])),

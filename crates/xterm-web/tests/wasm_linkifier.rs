@@ -9,7 +9,7 @@ use web_sys::{HtmlElement, MouseEvent};
 use xterm_web::links::native_osc::{NativeOscLinkProvider, OscLinkHandler};
 use xterm_web::links::{
     browser_linkifier::{BrowserLink, BrowserLinkProvider, BrowserLinkifier, LinkReply},
-    Link, Position, Range,
+    Link, Position, Range, RangePosition,
 };
 wasm_bindgen_test_configure!(run_in_browser);
 #[derive(Default)]
@@ -45,8 +45,8 @@ fn link(log: Rc<RefCell<Vec<String>>>) -> BrowserLink {
         data: Rc::new(Link {
             text: "https://example.com/".encode_utf16().collect(),
             range: Range {
-                start: Position { x: 3, y: 1 },
-                end: Position { x: 7, y: 1 },
+                start: RangePosition { x: 3, y: 1 },
+                end: RangePosition { x: 7, y: 1 },
             },
         }),
         decorations: None,
@@ -199,8 +199,8 @@ fn real_rust_osc8_cells_resolve_wrap_activate_and_expire_on_trim() {
             assert_eq!(
                 link.range,
                 Range {
-                    start: Position { x: 1, y: 1 },
-                    end: Position { x: 2, y: 2 }
+                    start: RangePosition { x: 1, y: 1 },
+                    end: RangePosition { x: 2, y: 2 }
                 }
             );
             count.set(count.get() + 1);

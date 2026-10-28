@@ -81,14 +81,35 @@ impl std::error::Error for LinkError {
 /// Matches include the URL validation used by upstream isUrl, not regex alone.
 /// Empty matches must return an error. Upstream loops forever for such custom
 /// regexes; Rust deliberately rejects them instead of hanging the browser.
+pub trait PreparedMatcher {
+    fn matches(&self, text: &[u16]) -> Result<Vec<LinkMatch>, LinkError>;
+}
+struct DelegatedMatcher<'a, T: ?Sized> {
+    matcher: &'a T,
+    regex: RegexSpec,
+}
+impl<T: LinkMatcher + ?Sized> PreparedMatcher for DelegatedMatcher<'_, T> {
+    fn matches(&self, text: &[u16]) -> Result<Vec<LinkMatch>, LinkError> {
+        self.matcher.matches(text, &self.regex)
+    }
+}
 pub trait LinkMatcher {
     fn matches(&self, text: &[u16], regex: &RegexSpec) -> Result<Vec<LinkMatch>, LinkError>;
+    /// JS RegExp cloning and its getters precede all source buffer reads. The
+    /// prepared object is request-owned, so nested queries cannot replace it.
+    fn prepare(&self, regex: &RegexSpec) -> Result<Box<dyn PreparedMatcher + '_>, LinkError> {
+        Ok(Box::new(DelegatedMatcher {
+            matcher: self,
+            regex: regex.clone(),
+        }))
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Position {
-    pub x: usize,
-    pub y: usize,
+    pub x: u64,
+    /// A virtual end row can equal 2^32 even on a 32-bit WASM host.
+    pub y: u64,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct LinkRange {
@@ -107,13 +128,22 @@ pub fn compute_links(
     buffer: &dyn LinkBuffer,
     matcher: &dyn LinkMatcher,
 ) -> Result<Vec<Link>, LinkError> {
+    let matcher = matcher.prepare(regex)?;
+    compute_prepared_links(y, buffer, &*matcher)
+}
+
+pub fn compute_prepared_links(
+    y: usize,
+    buffer: &dyn LinkBuffer,
+    matcher: &dyn PreparedMatcher,
+) -> Result<Vec<Link>, LinkError> {
     let Some(index) = y.checked_sub(1) else {
         return Ok(Vec::new());
     };
     let (lines, top) = windowed_lines(index, buffer);
     let text: Vec<u16> = lines.into_iter().flatten().collect();
     let mut result = Vec::new();
-    for candidate in matcher.matches(&text, regex)? {
+    for candidate in matcher.matches(&text)? {
         if candidate.text.is_empty() {
             return Err(LinkError::Message(
                 "custom URL regex matched an empty string".into(),
@@ -131,21 +161,38 @@ pub fn compute_links(
         let Some((start_y, start_x)) = map_string_index(buffer, top, 0, candidate.index) else {
             continue;
         };
-        let Some((end_y, end_x)) =
-            map_string_index(buffer, start_y as isize, start_x, candidate.text.len())
-        else {
+        let Some((end_y, end_x)) = map_string_index(
+            buffer,
+            i64::try_from(start_y)
+                .map_err(|_| LinkError::Message("link row is outside source range".into()))?,
+            start_x,
+            candidate.text.len(),
+        ) else {
             continue;
         };
         result.push(Link {
             text: candidate.text,
             range: LinkRange {
                 start: Position {
-                    x: start_x + 1,
-                    y: start_y + 1,
+                    x: u64::try_from(start_x)
+                        .map_err(|_| {
+                            LinkError::Message("link column is outside source range".into())
+                        })?
+                        .checked_add(1)
+                        .ok_or_else(|| LinkError::Message("link column overflow".into()))?,
+                    y: u64::try_from(start_y)
+                        .map_err(|_| LinkError::Message("link row is outside source range".into()))?
+                        .checked_add(1)
+                        .ok_or_else(|| LinkError::Message("link row overflow".into()))?,
                 },
                 end: Position {
-                    x: end_x,
-                    y: end_y + 1,
+                    x: u64::try_from(end_x).map_err(|_| {
+                        LinkError::Message("link column is outside source range".into())
+                    })?,
+                    y: u64::try_from(end_y)
+                        .map_err(|_| LinkError::Message("link row is outside source range".into()))?
+                        .checked_add(1)
+                        .ok_or_else(|| LinkError::Message("link row overflow".into()))?,
                 },
             },
         });
@@ -153,8 +200,10 @@ pub fn compute_links(
     Ok(result)
 }
 
-pub fn windowed_lines(index: usize, buffer: &dyn LinkBuffer) -> (Vec<Vec<u16>>, isize) {
-    let mut top = index as isize;
+pub fn windowed_lines(index: usize, buffer: &dyn LinkBuffer) -> (Vec<Vec<u16>>, i64) {
+    let Ok(mut top) = i64::try_from(index) else {
+        return (Vec::new(), -1);
+    };
     let mut bottom = index;
     let mut lines = Vec::new();
     if let Some(line) = buffer.line(index) {
@@ -184,7 +233,10 @@ pub fn windowed_lines(index: usize, buffer: &dyn LinkBuffer) -> (Vec<Vec<u16>>, 
         lines.push(content);
         let mut length = 0;
         loop {
-            bottom += 1;
+            let Some(next) = bottom.checked_add(1) else {
+                break;
+            };
+            bottom = next;
             let Some(line) = buffer.line(bottom) else {
                 break;
             };
@@ -205,7 +257,7 @@ pub fn windowed_lines(index: usize, buffer: &dyn LinkBuffer) -> (Vec<Vec<u16>>, 
 
 pub fn map_string_index(
     buffer: &dyn LinkBuffer,
-    mut line_index: isize,
+    mut line_index: i64,
     column: usize,
     string_index: usize,
 ) -> Option<(usize, usize)> {
@@ -216,9 +268,13 @@ pub fn map_string_index(
         for index in start..line.len() {
             let cell = line.cell(index)?;
             if cell.width != 0 {
-                remaining -= cell.chars.len().max(1) as i128;
+                remaining -= i128::try_from(cell.chars.len().max(1)).ok()?;
                 if index == line.len() - 1 && cell.chars.is_empty() {
-                    if let Some(next) = buffer.line(usize::try_from(line_index + 1).ok()?) {
+                    if let Some(next) = line_index
+                        .checked_add(1)
+                        .and_then(|index| usize::try_from(index).ok())
+                        .and_then(|index| buffer.line(index))
+                    {
                         if next.is_wrapped() && next.cell(0).is_some_and(|cell| cell.width == 2) {
                             remaining += 1;
                         }
@@ -229,7 +285,7 @@ pub fn map_string_index(
                 return Some((usize::try_from(line_index).ok()?, index));
             }
         }
-        line_index += 1;
+        line_index = line_index.checked_add(1)?;
         start = 0;
     }
     Some((usize::try_from(line_index).ok()?, start))

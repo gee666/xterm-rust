@@ -1,7 +1,7 @@
 //! Browser-specific event payloads; callable subscriptions share one adapter.
 use js_sys::JsString;
 use wasm_bindgen::prelude::*;
-pub use xterm_wasm_support::events::{callable, disposable, empty, text};
+pub use xterm_wasm_support::events::{callable, empty, text};
 
 #[wasm_bindgen(inline_js = "
 export function pairEvent(ak, av, bk, bv) { return { [ak]: av, [bk]: bv }; }

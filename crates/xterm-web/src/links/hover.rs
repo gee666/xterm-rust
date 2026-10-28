@@ -140,9 +140,9 @@ impl HoverState {
         let start = if start == 0 {
             0
         } else {
-            start + 1 + self.scroll_offset
+            start as u64 + 1 + self.scroll_offset as u64
         };
-        let end = self.scroll_offset + 1 + end;
+        let end = self.scroll_offset as u64 + 1 + end as u64;
         self.current
             .as_ref()
             .is_some_and(|link| link.range.start.y >= start && link.range.end.y <= end)

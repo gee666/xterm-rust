@@ -1,6 +1,6 @@
 # Viewport integration ownership
 
-Norman claimed task 71 and owns `crates/xterm-web/src/scroll/` plus `src/viewport.rs`, its native and WASM tests, and its oracle scripts. These files are under active implementation. Coordinate new root exports and web-sys features with Xavier, who owns the crate root and manifest. The detailed source matrix is in `docs/selection-acceptance.md`, criteria 30 and 261-266. Preserve all 14 upstream scrollable modules as mapped behavior, not just a DOM scrollTop wrapper.
+Ashley owns tasks 71/239, `src/viewport*.rs`, their tests, oracle and `terminal/viewport_host.rs`. Norman retains portable model161; Batu owns Element167. Joyce owns `terminal/viewport_services.rs`. These files are under active implementation. Coordinate new root exports and web-sys features with Xavier, who owns the crate root and manifest. The detailed source matrix is in `docs/selection-acceptance.md`, criteria 30 and 261-266. Preserve all 14 upstream scrollable modules as mapped behavior, not just a DOM scrollTop wrapper.
 
 ## Callers waiting for the real implementation
 
@@ -8,13 +8,13 @@ Xavier's `terminal/browser_services.rs` owns the opened browser service graph. N
 
 Suggested public names follow the source, with fallible Rust browser returns:
 
-- `queue_sync(ydisp: Option<usize>)`
+- `queue_sync(ydisp: Option<f64>)`
 - `scroll_lines(displacement: f64)`
 - `scroll_to_line(line: f64, disable_smooth_scroll: bool)`
 - `handle_touch_scroll(translation_y: f64)`
 - `dispose()`
 
-The exact constructor is task71's decision. It needs the real screen/root DOM, current renderer metrics, shared Rc<BufferService>, options/theme snapshots, mouse protocol wheel support, synchronized-output mode, cancellable frame scheduling, and a request-scroll callback into the shared engine. Renderer dimensions must remain live. Do not hardcode a cell height or infer it from terminal row count.
+The actual constructor and live service fields are in `docs/viewport-browser-api.md`; Element's constructor is in `docs/scroll-element-api.md`. Options/theme updates use the real service events, not construction snapshots. Renderer dimensions must remain live. Do not hardcode a cell height or infer it from terminal row count.
 
 BrowserServices should retain an Rc<Viewport> or an equivalent cloneable controller and release its RefCell borrow before calling viewport methods. Source scroll callbacks can reenter the terminal. Buffer/line/model borrows must not cross user callbacks.
 

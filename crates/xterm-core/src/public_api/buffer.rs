@@ -38,7 +38,10 @@ impl BufferApiView {
         }
     }
     pub fn init(&self, buffer: BufferRef) -> &Self {
-        *self.buffer.borrow_mut() = buffer;
+        // Releasing the old buffer can run payload Drop code that reenters this
+        // view. Publish the new backing and end its borrow before that cleanup.
+        let previous = self.buffer.replace(buffer);
+        drop(previous);
         self
     }
     pub fn buffer_type(&self) -> BufferType {
