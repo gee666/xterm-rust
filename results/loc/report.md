@@ -27,22 +27,22 @@ Tool: xterm-rust count-loc.mjs v1, Node v24.15.0.
 
 | Category | Files | Physical | Nonblank | Bytes |
 | --- | ---: | ---: | ---: | ---: |
-| production-library | 300 | 41635 | 39855 | 1472946 |
-| addons | 60 | 8104 | 7722 | 289290 |
+| production-library | 305 | 42869 | 41048 | 1511578 |
+| addons | 64 | 8501 | 8101 | 307088 |
 | bindings-glue | 3 | 185 | 169 | 6470 |
 | generated-code-data | 14 | 8759 | 8705 | 230164 |
 | mixed-code-data | 0 | 0 | 0 | 0 |
-| mixed-code-tests | 23 | 3758 | 3558 | 133872 |
-| tests | 321 | 50338 | 48928 | 1752498 |
+| mixed-code-tests | 24 | 3967 | 3767 | 137511 |
+| tests | 326 | 51340 | 49904 | 1787262 |
 | test-data | 112 | 285244 | 285150 | 115323176 |
 | demos | 10 | 942 | 920 | 40886 |
-| tooling | 189 | 18883 | 18625 | 1116803 |
+| tooling | 194 | 19272 | 19006 | 1138135 |
 | configuration | 10 | 773 | 752 | 47099 |
-| total | 1042 | 418621 | 414384 | 120413204 |
+| total | 1062 | 421852 | 417522 | 120529369 |
 
 Original inventory SHA-256: 5fad15603e7f9938ea11ea5889426ddd4e029a9c8e0540d39de2989dcfa858aa
 
-Port inventory SHA-256: f0e2a64551619b3c932cacd1164b8209bb17ec791dad671b2c78eb8af564198b
+Port inventory SHA-256: 410044f500e436d70c6d019953454afa7de2a39cc5c3f9abddf9219886130467
 
 Rules SHA-256: 19b600906bf4919b08b72a26394f59728986e3bd6d1e2d0055a38c72c7b9a34c
 

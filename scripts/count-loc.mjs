@@ -1,6 +1,6 @@
 // Count physical/nonblank lines, not comment-stripped SLOC. No dependencies.
 import { createHash } from 'node:crypto';
-import { readFileSync, readdirSync, mkdirSync, writeFileSync } from 'node:fs';
+import { readFileSync, readdirSync, mkdirSync, writeFileSync, lstatSync } from 'node:fs';
 import { dirname, extname, isAbsolute, relative, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -46,6 +46,8 @@ function legacyPurpose(path) {
 }
 
 export function inventory(root, tree, rules, excludedRoots = []) {
+  const rootInfo = lstatSync(root);
+  if (!rootInfo.isDirectory() || rootInfo.isSymbolicLink()) throw new Error('Source root must be a real directory, not a symlink or junction');
   const rows = [];
   const excluded = [];
   const unknownProduction = [];

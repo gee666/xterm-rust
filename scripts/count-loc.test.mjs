@@ -174,6 +174,13 @@ test('CLI custom roots exclude their own output and reject baseline mismatches',
   assert.match(mismatch.stderr, /Pre-launch baseline totals differ/);
 }));
 
+test('selected root junction and ordinary file are refused before traversal', () => fixture((dir, put) => {
+  put('real/a.rs', 'fn main() {}\n');
+  symlinkSync(resolve(dir, 'real'), resolve(dir, 'root-link'), process.platform === 'win32' ? 'junction' : 'dir');
+  assert.throws(() => inventory(resolve(dir, 'root-link'), 'source', rules), /Source root must be a real directory/);
+  assert.throws(() => inventory(resolve(dir, 'real/a.rs'), 'source', rules), /Source root must be a real directory/);
+}));
+
 test('CLI rejects unknown or missing arguments', () => {
   assert.throws(() => main(['--unknown', 'x']), /Invalid argument/);
   assert.throws(() => main(['--source']), /Invalid argument/);
