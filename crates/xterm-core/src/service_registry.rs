@@ -110,6 +110,10 @@ pub struct Dependency {
     pub index: usize,
 }
 
+/// Shared dependency array returned by [`ConstructorMetadata::dependencies_view`].
+/// Drop borrowed guards before calling metadata methods or constructing instances.
+pub type DependencyList = Rc<RefCell<Vec<Dependency>>>;
+
 /// Metadata inheritance matches JavaScript constructor property inheritance.
 /// The first own decorator replaces inherited dependencies rather than appending.
 #[derive(Clone, Debug)]
@@ -118,7 +122,7 @@ pub struct ConstructorMetadata(Rc<RefCell<Metadata>>);
 struct Metadata {
     name: String,
     parent: Option<ConstructorMetadata>,
-    own: Option<Vec<Dependency>>,
+    own: Option<DependencyList>,
 }
 impl ConstructorMetadata {
     pub fn new(name: impl Into<String>, parent: Option<Self>) -> Self {
@@ -141,35 +145,37 @@ impl ConstructorMetadata {
         if arity != 3 {
             return Err(RegistryError::DecoratorArity);
         }
-        self.0
+        let own = self
+            .0
             .borrow_mut()
             .own
-            .get_or_insert_with(Vec::new)
-            .push(Dependency { id, index });
+            .get_or_insert_with(|| Rc::new(RefCell::new(Vec::new())))
+            .clone();
+        own.borrow_mut().push(Dependency { id, index });
         Ok(())
     }
-    pub fn dependencies(&self) -> Vec<Dependency> {
+    /// Resolve the source's live dependency array. Inherited annotations share
+    /// their owner's array until the child receives its first own decorator.
+    /// With no annotations, each call returns a fresh, unattached empty array.
+    pub fn dependencies_view(&self) -> DependencyList {
         let state = self.0.borrow();
         match &state.own {
-            Some(own) => own.clone(),
+            Some(own) => Rc::clone(own),
             None => state
                 .parent
                 .as_ref()
-                .map(Self::dependencies)
-                .unwrap_or_default(),
+                .map(Self::dependencies_view)
+                .unwrap_or_else(|| Rc::new(RefCell::new(Vec::new()))),
         }
     }
+    /// Owned snapshot for callers that do not need live mutation or identity.
+    pub fn dependencies(&self) -> Vec<Dependency> {
+        self.dependencies_view().borrow().clone()
+    }
     pub(crate) fn sorted_dependencies(&self) -> Vec<Dependency> {
-        let mut state = self.0.borrow_mut();
-        if let Some(own) = &mut state.own {
-            own.sort_by_key(|dependency| dependency.index);
-            own.clone()
-        } else {
-            state
-                .parent
-                .as_ref()
-                .map(Self::sorted_dependencies)
-                .unwrap_or_default()
-        }
+        let dependencies = self.dependencies_view();
+        let mut dependencies = dependencies.borrow_mut();
+        dependencies.sort_by_key(|dependency| dependency.index);
+        dependencies.clone()
     }
 }

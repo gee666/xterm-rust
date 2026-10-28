@@ -6,12 +6,15 @@ import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { spawnSync } from 'node:child_process';
 const require = createRequire(import.meta.url);
-const ts = require('../source_repo/node_modules/typescript');
 const root = path.resolve(import.meta.dirname, '..');
+// Worktrees can use the preserved reference and its installed tooling without
+// copying node_modules or linking directories that removal tools might traverse.
+const sourceRoot = path.resolve(process.env.XT_SOURCE_ROOT ?? path.join(root, 'source_repo'));
+const ts = require(path.join(sourceRoot, 'node_modules/typescript'));
 const sourceFiles = ['ServiceRegistry.ts', 'InstantiationService.ts'];
 const hashes = {};
 function original(name, imports = {}) {
-  const file = path.join(root, 'source_repo/src/common/services', name);
+  const file = path.join(sourceRoot, 'src/common/services', name);
   const source = fs.readFileSync(file, 'utf8');
   hashes[name] = createHash('sha256').update(source).digest('hex');
   const js = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
@@ -32,6 +35,7 @@ if (service.getService(selfId) !== service) throw new Error('Original self ident
 const collection = new ServiceCollection();
 const ids = new Map();
 const ctors = new Map();
+const views = new Map();
 const trace = [];
 const expected = [];
 function record(...fields) {
@@ -85,6 +89,12 @@ function record(...fields) {
         args.length = Number(d);
         ids.get(b)(...args); output = 'ok'; break;
       }
+      case 'A': views.set(a, registry.getServiceDependencies(ctors.get(b))); output = 'ok'; break;
+      case 'Q': output = String(views.get(a) === views.get(b)); break;
+      case 'P': views.get(a).push({ id: ids.get(b), index: Number(c) }); output = 'ok'; break;
+      case 'U': views.get(a)[Number(b)] = { id: ids.get(c), index: Number(d) }; output = 'ok'; break;
+      case 'C': views.get(a).length = 0; output = 'ok'; break;
+      case 'W': output = views.get(a).map(v => `${v.id._id}@${v.index}`).join(','); break;
       case 'M': output = registry.getServiceDependencies(ctors.get(a)).map(v => `${v.id._id}@${v.index}`).join(','); break;
       case 'I': output = service.createInstance(ctors.get(a), ...Array.from({ length: Number(b) }, (_, i) => `static${i}`)).args.join(','); break;
       default: throw new Error(`Unknown operation ${op}`);
@@ -102,6 +112,21 @@ record('D', 'Child', 'c', 0, 3); record('D', 'Child', 'a', 0, 3); record('D', 'C
 record('I', 'Child', 1); record('S', 'c', 'C'); record('I', 'Child', 0); record('I', 'Child', 1); record('M', 'Child');
 record('R', 'd'); record('L'); record('E');
 record('N', 'Empty', '-'); for (let count = 0; count < 5; count++) record('I', 'Empty', count);
+// Returned-array identity, detached empties, inherited replacement, live edits
+// before construction and in-place sorting all execute unchanged source methods.
+record('N', 'ViewEmpty', '-'); record('N', 'ViewChild', 'ViewEmpty');
+record('A', 'empty1', 'ViewChild'); record('A', 'empty2', 'ViewChild'); record('Q', 'empty1', 'empty2');
+record('P', 'empty1', 'a', 0); record('W', 'empty1'); record('M', 'ViewChild'); record('I', 'ViewChild', 0);
+record('D', 'ViewEmpty', 'a', 3, 3);
+record('A', 'base', 'ViewEmpty'); record('A', 'child', 'ViewChild'); record('Q', 'base', 'child');
+record('Q', 'empty1', 'base'); record('P', 'child', 'b', 0); record('P', 'child', 'c', 0);
+record('I', 'ViewChild', 0); record('W', 'base');
+record('U', 'child', 0, 'a', 1); record('I', 'ViewChild', 0); record('I', 'ViewChild', 1);
+record('D', 'ViewChild', 'a', 1, 2); record('A', 'invalid', 'ViewChild'); record('Q', 'base', 'invalid');
+record('D', 'ViewChild', 'b', 0, 3); record('A', 'own', 'ViewChild'); record('Q', 'base', 'own');
+record('C', 'base'); record('M', 'ViewEmpty'); record('M', 'ViewChild'); record('W', 'child');
+record('C', 'own'); record('I', 'ViewChild', 2); record('D', 'ViewChild', 'a', 0, 3);
+record('A', 'own2', 'ViewChild'); record('Q', 'own', 'own2'); record('W', 'own'); record('I', 'ViewChild', 0);
 const seed = 0x5e7a1ce;
 let state = seed;
 const random = n => { state ^= state << 13; state ^= state >>> 17; state ^= state << 5; return (state >>> 0) % n; };
@@ -134,7 +159,7 @@ for (let i = 0; i < Math.max(expected.length, actual.length); i++) if (expected[
 const rustc = spawnSync('rustc', ['--version'], { encoding: 'utf8', timeout: 10000 });
 const cargo = spawnSync('cargo', ['--version'], { encoding: 'utf8', timeout: 10000 });
 if (rustc.status !== 0 || cargo.status !== 0) throw new Error('Toolchain version query failed');
-const implementationFiles = ['crates/xterm-core/src/service_registry.rs', 'crates/xterm-core/src/instantiation.rs', 'crates/xterm-core/examples/service_injection_trace.rs', 'crates/xterm-core/tests/service_injection.rs', 'scripts/service-injection-oracle.mjs'];
+const implementationFiles = ['crates/xterm-core/src/service_registry.rs', 'crates/xterm-core/src/instantiation.rs', 'crates/xterm-core/examples/service_injection_trace.rs', 'crates/xterm-core/tests/service_injection.rs', 'crates/xterm-core/tests/service_dependency_views.rs', 'scripts/service-injection-oracle.mjs'];
 const implementation = implementationFiles.map(file => ({ path: file, sha256: createHash('sha256').update(fs.readFileSync(path.join(root, file))).digest('hex') }));
 const results = { schemaVersion: 1, rustc: rustc.stdout.trim(), cargo: cargo.stdout.trim(), implementation, status: failures.length ? 'failed' : 'passed', seed, iterations: 2500, comparisons: expected.length, originalUpstreamTests: 0, sourceFiles: hashes, node: process.version, typescript: ts.version, platform: process.platform, arch: process.arch, command: 'node scripts/service-injection-oracle.mjs', failures, gaps: ['No original test files exist for these two modules.', 'Rc identity/drop, typed mismatch and constructor failure are separate Rust tests, not this line protocol.', 'Terminal direct construction and browser integration are not verified by these utility traces.', 'Native Linux/macOS and WASM not run by this command.'] };
 fs.writeFileSync(path.join(root, 'results/service-injection/trace.tsv'), trace.join('\n') + '\n');

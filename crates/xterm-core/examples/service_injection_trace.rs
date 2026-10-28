@@ -6,7 +6,9 @@ use std::rc::Rc;
 use xterm_core::instantiation::{
     EmptyValue, InstantiationService, ServiceCollection, ServiceValue,
 };
-use xterm_core::service_registry::{ConstructorMetadata, ServiceId, ServiceRegistry};
+use xterm_core::service_registry::{
+    ConstructorMetadata, Dependency, DependencyList, ServiceId, ServiceRegistry,
+};
 
 fn field<'a>(fields: &mut impl Iterator<Item = &'a str>) -> Result<&'a str, Box<dyn Error>> {
     fields.next().ok_or_else(|| "missing oracle field".into())
@@ -28,6 +30,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let collection = ServiceCollection::default();
     let mut ids: HashMap<String, ServiceId<String>> = HashMap::new();
     let mut constructors: HashMap<String, ConstructorMetadata> = HashMap::new();
+    let mut views: HashMap<String, DependencyList> = HashMap::new();
     for line in io::stdin().lock().lines() {
         let line = line?;
         let mut fields = line.split('\t');
@@ -126,6 +129,57 @@ fn main() -> Result<(), Box<dyn Error>> {
                     .decorate(id.key(), index, arity)
                     .map_or_else(|e| e.to_string(), |_| "ok".to_owned())
             }
+            "A" => {
+                let name = field(&mut fields)?;
+                let constructor = constructors
+                    .get(field(&mut fields)?)
+                    .ok_or("unknown constructor")?;
+                views.insert(name.to_owned(), constructor.dependencies_view());
+                "ok".to_owned()
+            }
+            "Q" => {
+                let first = views.get(field(&mut fields)?).ok_or("unknown view")?;
+                let second = views.get(field(&mut fields)?).ok_or("unknown view")?;
+                Rc::ptr_eq(first, second).to_string()
+            }
+            "P" => {
+                let view = views.get(field(&mut fields)?).ok_or("unknown view")?;
+                let id = ids.get(field(&mut fields)?).ok_or("unknown id")?;
+                let index = field(&mut fields)?.parse()?;
+                view.borrow_mut().push(Dependency {
+                    id: id.key(),
+                    index,
+                });
+                "ok".to_owned()
+            }
+            "U" => {
+                let view = views.get(field(&mut fields)?).ok_or("unknown view")?;
+                let position: usize = field(&mut fields)?.parse()?;
+                let id = ids.get(field(&mut fields)?).ok_or("unknown id")?;
+                let index = field(&mut fields)?.parse()?;
+                let mut view = view.borrow_mut();
+                *view.get_mut(position).ok_or("unknown dependency")? = Dependency {
+                    id: id.key(),
+                    index,
+                };
+                "ok".to_owned()
+            }
+            "C" => {
+                views
+                    .get(field(&mut fields)?)
+                    .ok_or("unknown view")?
+                    .borrow_mut()
+                    .clear();
+                "ok".to_owned()
+            }
+            "W" => views
+                .get(field(&mut fields)?)
+                .ok_or("unknown view")?
+                .borrow()
+                .iter()
+                .map(|d| format!("{}@{}", d.id.name(), d.index))
+                .collect::<Vec<_>>()
+                .join(","),
             "M" => {
                 let constructor = constructors
                     .get(field(&mut fields)?)
