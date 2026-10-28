@@ -116,9 +116,11 @@ impl ProgramStatusAddon {
 impl Disposable for ProgramStatusAddon {
     fn dispose(&self) {
         self.inner.store.borrow_mut().clear("");
+        // The emitter is upstream's first registered disposable. Close it
+        // before parser tokens can run reentrant disposal callbacks.
+        self.inner.change.dispose();
         self.registrations.dispose();
         self.terminals.borrow_mut().clear();
-        self.inner.change.dispose();
     }
 }
 
