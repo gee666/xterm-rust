@@ -69,6 +69,20 @@ async function write(text, render = true) {
   });
   if (inspectionErrors.length) throw new Error(JSON.stringify(inspectionErrors));
 }
+function renderAction(action) {
+  return new Promise((resolve, reject) => {
+    let handle;
+    const timeout = setTimeout(() => {
+      handle?.dispose(); reject(new Error('Actual render action timed out'));
+    }, 15000);
+    try {
+      handle = required(terminal, 'onRender')(() => {
+        clearTimeout(timeout); handle.dispose(); resolve();
+      });
+      action();
+    } catch (error) { clearTimeout(timeout); handle?.dispose(); reject(error); }
+  });
+}
 function capture(label) {
   if (inspectionErrors.length) throw new Error(JSON.stringify(inspectionErrors));
   return { label, state: snapshot(), properties: properties(), events: structuredClone(events) };
@@ -101,9 +115,10 @@ const ready = (async () => {
   } else handles.push(required(terminal, '_acceptanceOnInternalEvent')(event => record('internal', event)));
   await write('\x1b[2J\x1b[H');
   required(terminal, 'focus')();
+  await renderAction(() => required(terminal, 'refresh')(0, terminal.rows - 1));
   events.length = 0;
 })();
-window.captureSession = { ready, write, capture, recordBusiness: value => record('business', value),
+window.captureSession = { ready, write, capture, renderAction, recordBusiness: value => record('business', value),
   get terminal() { return terminal; },
   clearEvents() { events.length = 0; inspectionErrors.length = 0; },
   async dispose() {

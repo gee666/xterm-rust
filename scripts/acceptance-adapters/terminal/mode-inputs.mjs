@@ -13,13 +13,18 @@ export async function exerciseModeCase(page, host, implementation, engine, caseI
     inputs.push({ kind: 'write', units: Array.from({ length: text.length }, (_, index) => text.charCodeAt(index)) });
     return page.evaluate(text => window.captureSession.write(text), text);
   };
-  const call = (method, args = []) => {
-    inputs.push({ kind: 'api', method, args: clone(args) });
-    return page.evaluate(({ method, args }) => {
-    const terminal = window.captureSession.terminal;
-    if (typeof terminal[method] !== 'function') throw new Error(`Missing real ${method} API`);
-    return terminal[method](...args);
-    }, { method, args });
+  const call = (method, args = [], render = false) => {
+    inputs.push({ kind: 'api', method, args: clone(args), ...(render ? { refresh: true } : {}) });
+    return page.evaluate(({ method, args, render }) => {
+      const terminal = window.captureSession.terminal;
+      if (typeof terminal[method] !== 'function') throw new Error(`Missing real ${method} API`);
+      const action = () => {
+        const result = terminal[method](...args);
+        if (render) terminal.refresh(0, terminal.rows - 1);
+        return result;
+      };
+      return render ? window.captureSession.renderAction(action) : action();
+    }, { method, args, render });
   };
   const press = key => { inputs.push({ kind: 'key', key }); return page.keyboard.press(key); };
   async function frame(label) {
@@ -142,10 +147,10 @@ export async function exerciseModeCase(page, host, implementation, engine, caseI
     const outputs = reset.events.filter(event => ['data', 'binary'].includes(event.type)).length;
     await pointer(); const inactive = await frame('pointer-no-listeners');
     same(inactive.events.filter(event => ['data', 'binary'].includes(event.type)).length, outputs, 'Resetting inactive mutually exclusive mode removes active reports');
-    await write('\x1b[?1004h'); await call('blur'); await call('focus'); const focus = await frame('focus-reports');
+    await write('\x1b[?1004h'); await call('blur', [], true); await call('focus', [], true); const focus = await frame('focus-reports');
     check(focus.events.some(event => event.type === 'data' && event.value === '\x1b[I'), 'Actual focus-in report');
     check(focus.events.some(event => event.type === 'data' && event.value === '\x1b[O'), 'Actual focus-out report');
-    await write('\x1b[?1004l'); await call('blur'); await call('focus'); await frame('focus-reset');
+    await write('\x1b[?1004l'); await call('blur', [], true); await call('focus', [], true); await frame('focus-reset');
   } else throw new Error(`Missing actual mode scenario ${caseId}`);
   const last = frames.at(-1);
   return { assertions, capture: {

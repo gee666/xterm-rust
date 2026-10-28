@@ -16,6 +16,7 @@ mod viewport_services;
 mod viewport_host;
 pub mod accessibility_host;
 mod protocols;
+mod public_modes;
 pub mod link_services;
 mod input_services;
 mod selection_services;
@@ -42,7 +43,7 @@ pub(crate) struct Shared {
     pub options: options::OptionsBinding,
     pub dom: RefCell<Option<Rc<BrowserDom>>>,
     pub events: EventFunctions,
-    pub buffer: JsValue,
+    pub buffer: RefCell<Option<JsValue>>,
     pub parser: JsValue,
     pub selection: Rc<crate::selection::service::SelectionService>,
     pub decorations: Rc<xterm_core::decoration::DecorationService>,
@@ -113,7 +114,7 @@ impl Terminal {
             if let Some(native) = weak_native.upgrade() { native.notify_write_parsed()?; }
             Ok(())
         });
-        let buffer = buffer_api::WebBufferNamespace::new(Rc::clone(&native))?.into();
+        let buffer = RefCell::new(None);
         let parser = parser_api::WebParserApi::new(Rc::clone(&native)).into();
         let link_providers = link_services::create_registry(Rc::clone(&native), &window)?;
         let selection = Rc::new(crate::selection::service::SelectionService::new(
@@ -139,7 +140,16 @@ impl Terminal {
     #[wasm_bindgen(setter)]
     pub fn set_options(&self, value: JsValue) -> Result<(), JsValue> { self.shared.options.assign(&value) }
     #[wasm_bindgen(getter)]
-    pub fn buffer(&self) -> JsValue { self.shared.buffer.clone() }
+    pub fn buffer(&self) -> Result<JsValue, JsValue> {
+        if let Some(buffer) = self.shared.buffer.borrow().as_ref() {
+            return Ok(buffer.clone());
+        }
+        // Source installs buffer forwarding only on the first public read.
+        // Constructing it before open changes selection/buffer event order.
+        let buffer: JsValue = buffer_api::WebBufferNamespace::new(Rc::clone(&self.shared.native))?.into();
+        *self.shared.buffer.borrow_mut() = Some(buffer.clone());
+        Ok(buffer)
+    }
     #[wasm_bindgen(getter)]
     pub fn parser(&self) -> JsValue { self.shared.parser.clone() }
     #[wasm_bindgen(getter)]
