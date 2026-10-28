@@ -1,0 +1,57 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 0.36s
+     Running tests\cell_branches.rs (target\debug\deps\cell_branches-9a91ecc3525e0b03.exe)
+
+running 8 tests
+test equality_decodes_modes_colors_and_default_underline_branches ... ok
+test equality_checks_each_visible_flag_but_excludes_protection ... ok
+test equality_uses_numeric_underline_and_not_a_rendering_guess ... ok
+test every_individual_flag_has_exact_mask_and_no_other_flag ... ok
+test foreground_and_background_modes_payloads_and_rgb_masking ... ok
+test underline_presence_style_and_default_color_are_distinct_queries ... ok
+test legacy_utf16_conversion_branches_and_signed_width_boundaries ... ok
+test raw_content_masks_and_out_of_range_codepoints_keep_js_truncation ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\cell_differential.rs (target\debug\deps\cell_differential-d8a0192252719661.exe)
+
+running 7 tests
+test hyperlink_overrides_style_without_destroying_stored_style ... ok
+test buffer_handles_share_identity_while_explicit_clone_does_not ... ok
+test payload_affects_emptiness_but_is_not_cloned_upstream ... ok
+test rgb_conversion_masks_each_channel ... ok
+test lone_surrogates_and_empty_combined_strings_are_not_lost ... ok
+test seeded_legacy_char_data_matches_javascript ... ok
+test seeded_raw_cells_match_javascript ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\cell_extended.rs (target\debug\deps\cell_extended-fa45e2cbc956f842.exe)
+
+running 4 tests
+test clone_keeps_hidden_style_when_url_is_present_and_cell_clone_drops_payload ... ok
+test emptiness_update_and_clone_preserve_unrelated_data ... ok
+test setter_masks_preserve_all_other_fields ... ok
+test seeded_extended_mutations_match_js_identity_and_payload_behavior ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\cell_upstream.rs (target\debug\deps\cell_upstream-b86ca6ec185fb1f4.exe)
+
+running 12 tests
+test detects_underline_color_changes ... ok
+test char_data_cell_data_equality ... ok
+test get_underline_color_p256 ... ok
+test ignores_underline_variant_offsets ... ok
+test returns_true_for_same_attributes_with_different_chars ... ok
+test get_underline_variant_offset ... ok
+test has_extended_attrs ... ok
+test detects_underline_style_changes ... ok
+test get_underline_color_rgb ... ok
+test ignores_url_ids ... ok
+test get_underline_style ... ok
+test underline_color_mode_and_queries ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -1,0 +1,86 @@
+warning: unused `Result` that must be used
+   --> crates\xterm-core\src\buffer\reflow.rs:225:9
+    |
+225 |         lines.set(i, Some(line));
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+    = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+    |
+225 |         let _ = lines.set(i, Some(line));
+    |         +++++++
+
+warning: `xterm-core` (lib) generated 1 warning
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 0.45s
+     Running tests\buffer_line_differential.rs (target\debug\deps\buffer_line_differential-824cde1fd45d4d10.exe)
+
+running 2 tests
+test shared_extended_attributes_survive_all_copy_paths ... ok
+test seeded_buffer_line_operations_match_javascript ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.75s
+
+     Running tests\buffer_line_extended.rs (target\debug\deps\buffer_line_extended-82d84d1543a3341e.exe)
+
+running 10 tests
+test copy_from ... ok
+test clone ... ok
+test insert_cells ... ok
+test fill ... ok
+test delete_cells ... ok
+test load_cell ... ok
+test protected_edits_preserve_flagged_cells_and_wide_boundaries ... ok
+test reused_cell_does_not_reset_previous_extended_entry ... ok
+test set_cells ... ok
+test replace_cells ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\buffer_line_translation.rs (target\debug\deps\buffer_line_translation-4b69ccdcb80174fc.exe)
+
+running 13 tests
+test empty_line ... ok
+test fullwidth ... ok
+test insert_wide_char_at_end ... ok
+test ascii ... ok
+test replace_fullwidth_start_zero ... ok
+test delete_fullwidth ... ok
+test insert_wide_char_at_pos ... ok
+test end_column_zero ... ok
+test combining ... ok
+test space_at_end ... ok
+test surrogate ... ok
+test replace_fullwidth_start_one ... ok
+test should_always_return_sane_value ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\buffer_line_upstream.rs (target\debug\deps\buffer_line_upstream-b5ee0af21de190d5.exe)
+
+running 21 tests
+test fill ... ok
+test clone ... ok
+test ctor ... ok
+test combining_add_to_combined_cell ... ok
+test copy_from ... ok
+test combining_create_on_taken_cell ... ok
+test resize_shrink_to_zero ... ok
+test combining_sets_width_on_empty_cell ... ok
+test trim_length_ascii ... ok
+test trim_length_combining ... ok
+test resize_enlarge_false ... ok
+test trim_length_surrogate ... ok
+test resize_removes_cut_combining_data ... ok
+test delete_cells ... ok
+test resize_shrink_true ... ok
+test insert_cells ... ok
+test replace_cells ... ok
+test trim_length_empty ... ok
+test trim_length_fullwidth ... ok
+test resize_enlarge_true ... ok
+test should_support_combining_chars ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

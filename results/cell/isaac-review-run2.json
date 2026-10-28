@@ -1,0 +1,84 @@
+{
+  "reviewer": "Isaac",
+  "task": 73,
+  "scope": "CellData/AttributeData/ExtendedAttrs C1-C5 acceptance only",
+  "overallEquivalence": "NOT PROVEN",
+  "sourceInspection": [
+    "source_repo/src/common/buffer/CellData.ts",
+    "source_repo/src/common/buffer/AttributeData.ts",
+    "source_repo/src/common/buffer/Constants.ts"
+  ],
+  "rustInspection": [
+    "crates/xterm-core/src/buffer/cell.rs",
+    "crates/xterm-core/src/buffer/attributes.rs",
+    "crates/xterm-core/src/buffer/extended.rs",
+    "crates/xterm-core/tests/cell_branches.rs",
+    "crates/xterm-core/tests/cell_extended.rs",
+    "crates/xterm-core/tests/cell_differential.rs",
+    "scripts/cell-oracle.mjs",
+    "docs/cell-acceptance.md"
+  ],
+  "commands": [
+    {
+      "command": "node scripts/cell-oracle.mjs",
+      "exitCode": 0,
+      "log": "results/cell/isaac-run2-oracle.log",
+      "upstream": {
+        "discovered": 12,
+        "executed": 12,
+        "passed": 12,
+        "failed": 0,
+        "skipped": 0,
+        "unrun": 0
+      },
+      "seed": "0xce11da7a",
+      "rawPairs": 2048,
+      "charData": 1024,
+      "extendedOperations": 4096
+    },
+    {
+      "command": "cargo test -p xterm-core --test cell_upstream --test cell_differential --test cell_branches --test cell_extended",
+      "exitCode": 0,
+      "log": "results/cell/isaac-run2-debug-reviewed.log",
+      "executed": 32,
+      "passed": 32
+    },
+    {
+      "command": "cargo test -p xterm-core --release --test decoration_upstream --test decoration_differential --test decoration_edges --test cell_upstream --test cell_differential --test cell_branches --test cell_extended",
+      "exitCode": 0,
+      "log": "results/decoration/release-current.log",
+      "cellTests": 32,
+      "decorationTests": 18
+    },
+    {
+      "command": "cargo clippy -p xterm-core --test cell_upstream --test cell_differential --test cell_branches --test cell_extended --test decoration_upstream --test decoration_differential --test decoration_edges -- -D warnings",
+      "exitCode": 101,
+      "log": "results/decoration/clippy-reviewed.log",
+      "failureScope": "Shared headless queued.rs unused import and queue_bridge.rs needless return, outside task73"
+    }
+  ],
+  "findings": [
+    {
+      "finding": "Cell branch test213 operator precedence triggered Clippy",
+      "resolution": "Owner parenthesized shift before bitwise OR; inspected actual fix"
+    },
+    {
+      "finding": "Combined code uses final UTF16 code unit, not scalar; numeric underline masks are not boolean-equivalent",
+      "resolution": "Faithful matrices cover both, including no-underline extended styles"
+    },
+    {
+      "finding": "Source extended explicit clone drops payload and keeps hidden style under URL override",
+      "resolution": "Inspected clone/share code and JS mutation traces plus Rust identity/payload tests"
+    },
+    {
+      "finding": "Valid service URL IDs widened separately in task117",
+      "resolution": "Current32-test execution includes the additional boundary test; this review does not claim arbitrary JS assignment semantics"
+    }
+  ],
+  "limitations": [
+    "No project-wide clean Clippy claim",
+    "Full workspace quality remains task47",
+    "Native Windows only; Linux/macOS runtime unrun in this review",
+    "Browser bindings and full terminal integration not established"
+  ]
+}
