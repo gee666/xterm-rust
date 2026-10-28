@@ -1,0 +1,27 @@
+{
+  "scope": "Native task 88 after header ordering/default-concatenation and weak-lifetime fixes",
+  "overallEquivalence": "NOT PROVEN",
+  "environment": { "platform": "native Windows x64", "rustc": "1.85.1", "node": "v24.15.0" },
+  "sourceFilesSha256": {
+    "crates/xterm-core/src/serialize/addon.rs": "3b5a24b752c42e4864c5ab889b1ed58a6cd8adc9b934890e098be5b7c5ebf01f",
+    "crates/xterm-core/src/serialize/html.rs": "bd4fdb20fa00b11c687bc94100009beff9d20cbb59900eec876d89772f66cd17",
+    "crates/xterm-core/src/serialize/mod.rs": "3e705523c949d4ed2853067cd96d07202ee7b33b927e7ebaa2b895a15489294a",
+    "crates/xterm-core/tests/serialize_header_order.rs": "763d8a59e472a0c877e996c53c90f9e3eb44bed1aeb453b53d9ed97aff62e703",
+    "crates/xterm-core/tests/serialize_ownership.rs": "0560bfe2530fd93f5581d52d1a0e2acc165d57c3e18870f2baffd0e3ed01533f",
+    "scripts/serialize-live-oracle.mjs": "6b446a53019e919af19db14099b7f6b76458dd71e6247792369773dc2b163a54"
+  },
+  "checks": [
+    { "name": "unchanged JS engine serializer oracle", "exitCode": 0, "roundTrips": 10, "headerReentrancyCases": 1, "headerOrderingDefaultHintCases": 1, "receipt": "results/build-slots/1793149757955-3804-c594fdb0-63ae-47dc-9494-fe7359e51e9a/receipt.json", "raw": "results/serialize/live-source.json" },
+    { "name": "five live native integration targets", "exitCode": 0, "passed": 13, "failed": 0, "ignored": 0, "receipt": "results/build-slots/1793149770192-32608-ba23d588-1c67-4f24-b2d4-d6b4ac404b4f/receipt.json" },
+    { "name": "five-target Clippy -D warnings", "exitCode": 0, "receipt": "results/build-slots/1793150168784-48060-be5ab112-50ef-45ff-b5a3-cae247bbe7d9/receipt.json" },
+    { "name": "scoped rustfmt check", "exitCode": 0, "log": "results/serialize/live-fmt-current.log" },
+    { "name": "optional lower-level 3350-fixture and numeric HTML regression rerun", "status": "NOT RUN", "reason": "Resource preflight rejected before process start at 1052082176 free bytes, below the 1 GiB reserve", "receipt": "results/build-slots/1793150199315-29192-418eb690-fc54-449d-afb6-723fe51afcc5/receipt.json" }
+  ],
+  "review": "Joyce independently reran the 13 native tests, unchanged source traces and current Clippy; see results/reviews/joyce-serialize/review.json. A previous shared-helper dead-code Clippy failure remains retained, not relabeled successful.",
+  "ownership": "The native host owns terminal state lifetime. Weak addon state links prevent options/callback back-reference cycles. Explicit addon disposal preserves usability while host state exists; dropping the Rust host can yield TerminalReleased. This is an explicit native ownership boundary, not a JavaScript GC lifetime claim.",
+  "remaining": [
+    "Task 131 actual browser/WASM binding and selection/theme/error/number/marker behavior",
+    "Native Linux/macOS execution",
+    "Release/full workspace and current lower-level regression reruns are separate verification gates"
+  ]
+}

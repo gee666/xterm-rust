@@ -70,13 +70,26 @@ pub struct HtmlOptions {
     pub range: Option<HtmlRange>,
 }
 
+/// Numeric configuration uses JS formatting; a host can also supply an exact
+/// already-coerced value because source option concatenation accepts raw values.
+#[derive(Clone, Debug)]
+pub enum HtmlFontSize {
+    Number(f64),
+    Text(Vec<u16>),
+}
+impl From<f64> for HtmlFontSize {
+    fn from(value: f64) -> Self {
+        Self::Number(value)
+    }
+}
+
 /// String and palette formatting belongs to the host theme, not core policy.
 #[derive(Clone, Debug)]
 pub struct HtmlConfig {
     pub foreground: Option<Vec<u16>>,
     pub background: Option<Vec<u16>>,
     pub font_family: Vec<u16>,
-    pub font_size: f64,
+    pub font_size: HtmlFontSize,
     /// None selects the headless default palette; Some is a full theme snapshot.
     pub ansi_colors: Option<[String; 256]>,
 }

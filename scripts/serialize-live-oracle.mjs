@@ -86,12 +86,34 @@ reentrantTerminal.options.theme = { get foreground() {
 const reentrantHtml = reentrantAddon.serializeAsHTML({ includeGlobalBackground: true });
 await writeFile(path.join(root, 'crates/xterm-core/tests/fixtures/serialize-html-reentrant.tsv'), units(reentrantHtml).map(u => u.toString(16)).join(',') + '\n');
 reentrantTerminal.dispose();
+const orderedTerminal = new Terminal({ cols: 10, rows: 2, allowProposedApi: true });
+const orderedAddon = new SerializeAddon(); orderedTerminal.loadAddon(orderedAddon);
+const orderedTrace = [];
+const orderedValue = (label, text) => ({ [Symbol.toPrimitive](hint) {
+  orderedTrace.push(`${label}:${hint}`);
+  return hint === 'default' ? text : hint === 'number' ? 15 : 'wrong-string';
+} });
+const foregroundValue = orderedValue('fg', '#112233');
+const backgroundValue = orderedValue('bg', '#445566');
+const replacementTheme = { get background() { orderedTrace.push('new:background'); return backgroundValue; } };
+orderedTerminal.options.theme = {
+  get foreground() { orderedTrace.push('old:foreground'); orderedTerminal.options.theme = replacementTheme; return foregroundValue; },
+  get background() { orderedTrace.push('old:background'); return undefined; }
+};
+orderedTerminal.options.fontFamily = orderedValue('font', 'fancy');
+orderedTerminal.options.fontSize = orderedValue('size', 'weird');
+orderedTrace.length = 0;
+const orderedHtml = orderedAddon.serializeAsHTML({ includeGlobalBackground: true });
+assert.deepEqual(orderedTrace, ['old:foreground', 'new:background', 'fg:default', 'bg:default', 'font:default', 'size:default']);
+assert.equal(orderedHtml, "<html><body><!--StartFragment--><pre><div style='color: #112233; background-color: #445566; font-family: fancy; font-size: weirdpx;'><div><span>          </span></div><div><span>          </span></div></div></pre><!--EndFragment--></body></html>");
+orderedTerminal.dispose();
 for (const [file, expected] of Object.entries(sourceHashes)) {
   const current = createHash('sha256').update(await readFile(path.join(root, file))).digest('hex');
   if (current !== expected) throw new Error(`Source changed while running: ${file}`);
 }
 const result = { command: 'node scripts/serialize-live-oracle.mjs', node: process.version,
   platform: process.platform, sourceHashes, cases, reentrantHtml: units(reentrantHtml),
+  headerOrder: { trace: orderedTrace, html: units(orderedHtml) },
   scope: 'Ten deterministic source engine serialize/restore traces. A source loss is an expected compatibility result, not permission to change Rust output. Rust integration tests must retain corresponding assertions.' };
 await writeFile(path.join(root, 'results/serialize/live-source.json'), JSON.stringify(result, null, 2) + '\n');
 const hex = units => units.map(unit => unit.toString(16)).join(',');

@@ -202,7 +202,7 @@ fn default_palette_endpoints_theme_overrides_and_font_js_numbers() {
         (f64::NAN, "NaN"),
         (f64::INFINITY, "Infinity"),
     ] {
-        config.font_size = number;
+        config.font_size = number.into();
         assert!(html(&text, 1, &HtmlOptions::default(), None, &config)
             .contains(&format!("font-size: {expected}px;")));
     }

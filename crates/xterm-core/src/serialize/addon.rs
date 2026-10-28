@@ -1,7 +1,8 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved. MIT license.
 use super::{
-    scrollback_start, serialize_html, serialize_terminal, CellRange, HtmlConfig, HtmlOptions,
-    HtmlRange, MouseTracking, SerializeError, SerializeModes, SerializeOptions, SerializeState,
+    scrollback_start, serialize_html, serialize_terminal, CellRange, HtmlConfig, HtmlFontSize,
+    HtmlOptions, HtmlRange, MouseTracking, SerializeError, SerializeModes, SerializeOptions,
+    SerializeState,
 };
 use crate::{
     headless::{HeadlessError, ModesSnapshot, MouseTrackingMode, Terminal},
@@ -12,11 +13,16 @@ use crate::{
     },
     terminal::{CoreTerminal, TerminalState},
 };
-use std::{cell::RefCell, fmt, rc::Rc};
+use std::{
+    cell::RefCell,
+    fmt,
+    rc::{Rc, Weak},
+};
 
 #[derive(Debug)]
 pub enum AddonSerializeError {
     NotLoaded,
+    TerminalReleased,
     Borrowed,
     SelectionUnavailable,
     Options(OptionError),
@@ -27,6 +33,7 @@ impl fmt::Display for AddonSerializeError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::NotLoaded => f.write_str("Cannot use addon until it has been loaded"),
+            Self::TerminalReleased => f.write_str("terminal state is no longer available"),
             Self::Borrowed => f.write_str("terminal is already borrowed"),
             Self::SelectionUnavailable => {
                 f.write_str("this._terminal?.getSelectionPosition is not a function")
@@ -43,7 +50,10 @@ impl std::error::Error for AddonSerializeError {
             Self::Options(error) => Some(error),
             Self::Api(error) => Some(error),
             Self::Serialize(error) => Some(error),
-            Self::NotLoaded | Self::Borrowed | Self::SelectionUnavailable => None,
+            Self::NotLoaded
+            | Self::TerminalReleased
+            | Self::Borrowed
+            | Self::SelectionUnavailable => None,
         }
     }
 }
@@ -63,12 +73,13 @@ impl From<ApiError> for AddonSerializeError {
     }
 }
 
-/// The retained state owns no addon manager, so this strong reference cannot
-/// form a terminal-manager-addon cycle. It matches the source's retained data
-/// after addon disposal and allows the host Terminal itself to be released.
+/// The Rust host owns state lifetime. A weak link prevents cycles when option
+/// getters or event callbacks retain this addon. Explicit addon disposal still
+/// permits serialization while the host state exists; dropping the Rust host
+/// can produce TerminalReleased, an explicit native ownership boundary.
 #[derive(Default)]
 pub struct SerializeAddon {
-    state: RefCell<Option<Rc<RefCell<TerminalState>>>>,
+    state: RefCell<Option<Weak<RefCell<TerminalState>>>>,
 }
 impl SerializeAddon {
     pub fn new() -> Self {
@@ -78,7 +89,8 @@ impl SerializeAddon {
         *self
             .state
             .try_borrow_mut()
-            .map_err(|_| AddonSerializeError::Borrowed)? = Some(terminal.state_handle());
+            .map_err(|_| AddonSerializeError::Borrowed)? =
+            Some(Rc::downgrade(&terminal.state_handle()));
         Ok(())
     }
     pub fn serialize(&self, options: &SerializeOptions) -> Result<Vec<u16>, AddonSerializeError> {
@@ -136,19 +148,21 @@ impl SerializeAddon {
             });
         }
         let (foreground, background) = if options.include_global_background {
-            let theme = terminal_options.get("theme")?;
-            (
-                theme_color(&theme, "foreground")?,
-                theme_color(&theme, "background")?,
-            )
+            // Source re-reads theme for each property and defers conversion
+            // until both getters complete. A foreground getter may replace it.
+            let foreground = theme_value(&terminal_options.get("theme")?, "foreground")?;
+            let background = theme_value(&terminal_options.get("theme")?, "background")?;
+            (foreground, background)
         } else {
             (None, None)
         };
+        let foreground = foreground.map(|value| value.concat_utf16()).transpose()?;
+        let background = background.map(|value| value.concat_utf16()).transpose()?;
         let config = HtmlConfig {
             foreground,
             background,
-            font_family: terminal_options.get("fontFamily")?.to_utf16()?,
-            font_size: terminal_options.get("fontSize")?.to_number()?,
+            font_family: terminal_options.get("fontFamily")?.concat_utf16()?,
+            font_size: HtmlFontSize::Text(terminal_options.get("fontSize")?.concat_utf16()?),
             ansi_colors: None,
         };
         let buffer = active
@@ -163,12 +177,13 @@ impl SerializeAddon {
             .try_borrow()
             .map_err(|_| AddonSerializeError::Borrowed)?
             .as_ref()
-            .cloned()
-            .ok_or(AddonSerializeError::NotLoaded)
+            .ok_or(AddonSerializeError::NotLoaded)?
+            .upgrade()
+            .ok_or(AddonSerializeError::TerminalReleased)
     }
 }
 
-fn theme_color(theme: &OptionValue, key: &str) -> Result<Option<Vec<u16>>, OptionError> {
+fn theme_value(theme: &OptionValue, key: &str) -> Result<Option<OptionValue>, OptionError> {
     if matches!(theme, OptionValue::Null | OptionValue::Undefined) {
         return Ok(None);
     }
@@ -176,7 +191,7 @@ fn theme_color(theme: &OptionValue, key: &str) -> Result<Option<Vec<u16>>, Optio
     if matches!(value, OptionValue::Null | OptionValue::Undefined) {
         Ok(None)
     } else {
-        value.to_utf16().map(Some)
+        Ok(Some(value))
     }
 }
 
@@ -208,7 +223,8 @@ impl TerminalAddon<Terminal> for SerializeAddon {
         *self
             .state
             .try_borrow_mut()
-            .map_err(|_| HeadlessError::Borrowed)? = Some(terminal.state_handle_for_addon());
+            .map_err(|_| HeadlessError::Borrowed)? =
+            Some(Rc::downgrade(&terminal.state_handle_for_addon()));
         Ok(())
     }
     fn dispose(&self) -> Result<(), HeadlessError> {

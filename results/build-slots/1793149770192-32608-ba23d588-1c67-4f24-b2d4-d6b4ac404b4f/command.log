@@ -1,0 +1,54 @@
+warning: function `fill_viewport_rows_owned` is never used
+  --> crates\xterm-core\src\buffer\screen_shared.rs:52:15
+   |
+52 | pub(super) fn fill_viewport_rows_owned(buffer: &mut Buffer, attr: Option<&AttributeData>) -> Result<(), BufferError> {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `xterm-core` (lib) generated 1 warning
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 0.49s
+     Running tests\serialize_header_order.rs (target\debug\deps\serialize_header_order-4fc61612bebcfe02.exe)
+
+running 1 test
+test getters_are_read_before_default_hint_coercions_and_theme_is_reloaded ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\serialize_live.rs (target\debug\deps\serialize_live-371fd040e1ac809a.exe)
+
+running 8 tests
+test proposed_api_gate_is_live_and_borrow_failures_are_recoverable ... ok
+test activation_is_required_and_live_writes_are_never_cached ... ok
+test live_resize_reset_and_scrollback_options_use_current_terminal_state ... ok
+test reactivation_dispose_and_manager_handle_preserve_source_behavior ... ok
+test native_html_reads_current_font_theme_and_active_buffer ... ok
+test original_underline_colors_margins_and_cursor_visibility_assertions_use_live_engine ... ok
+test original_cursor_range_and_underline_assertions_use_real_rust_writes ... ok
+test real_terminal_round_trips_match_source_buffers_cells_attributes_cursor_and_modes ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\serialize_live_callbacks.rs (target\debug\deps\serialize_live_callbacks-db59f2efc156c5a5.exe)
+
+running 2 tests
+test theme_getter_errors_are_propagated_without_successful_empty_html ... ok
+test html_reads_theme_getters_only_when_requested_and_releases_state_borrows ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\serialize_live_reentrancy.rs (target\debug\deps\serialize_live_reentrancy-f65d8d1f9a36516f.exe)
+
+running 1 test
+test html_retains_original_buffer_and_range_across_header_reentrancy ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\serialize_ownership.rs (target\debug\deps\serialize_ownership-78ebcf0811062379.exe)
+
+running 1 test
+test addon_back_reference_in_options_does_not_keep_native_state_in_a_cycle ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

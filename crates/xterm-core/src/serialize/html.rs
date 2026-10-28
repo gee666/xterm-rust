@@ -1,7 +1,7 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved. MIT license.
 use super::{
-    append, scrollback_start, style, BufferAccess, CellRange, HtmlConfig, HtmlOptions, Position,
-    SerializeError,
+    append, scrollback_start, style, BufferAccess, CellRange, HtmlConfig, HtmlFontSize,
+    HtmlOptions, Position, SerializeError,
 };
 use crate::buffer::{constants::underline_style, CellData};
 
@@ -111,13 +111,12 @@ fn header(config: &HtmlConfig, include_background: bool) -> Vec<u16> {
     );
     append(&mut output, "; font-family: ");
     output.extend_from_slice(&config.font_family);
-    append(
-        &mut output,
-        &format!(
-            "; font-size: {}px;'>",
-            ryu_js::Buffer::new().format(config.font_size)
-        ),
-    );
+    append(&mut output, "; font-size: ");
+    match &config.font_size {
+        HtmlFontSize::Number(value) => append(&mut output, ryu_js::Buffer::new().format(*value)),
+        HtmlFontSize::Text(value) => output.extend_from_slice(value),
+    }
+    append(&mut output, "px;'>");
     output
 }
 
