@@ -1,0 +1,42 @@
+{
+  "task": 80,
+  "reviewer": "Tuah",
+  "scope": "SGR methods and callback boundary integration only; full terminal/browser equivalence NOT PROVEN.",
+  "inspected": [
+    "source_repo/src/common/InputHandler.ts charAttributes/color/underline/reset/parse logging",
+    "crates/xterm-core/src/terminal/sgr.rs",
+    "crates/xterm-core/src/terminal/sgr_dispatch.rs",
+    "crates/xterm-core/src/terminal/sgr_dispatch_tests.rs",
+    "crates/xterm-core/tests/sgr.rs",
+    "scripts/check-sgr.mjs",
+    "docs/acceptance/sgr.md"
+  ],
+  "findings": [
+    {
+      "status": "fixed",
+      "finding": "Batch logging delayed unknown diagnostics past later SGR mutations; cursor now yields each external boundary."
+    },
+    {
+      "status": "fixed",
+      "finding": "New source-valid preparse debug log changed targeted test injection; tests now assert exact parse and unknown records, with separate preparse-reset regression."
+    }
+  ],
+  "observed": {
+    "sourceCases": 35,
+    "sourceAssertions": 1162,
+    "fullStateRows": 13378,
+    "methodRustTests": 8,
+    "liveRustTests": 5
+  },
+  "sourceReceipt": "results/build-slots/1793173088490-27088-dd7e3e95-8bb2-4f9b-bf0a-5d1f08b70a4d/receipt.json",
+  "attributeMethodReceipt": "results/build-slots/1793173088885-19852-57004c18-6215-4600-b61b-acc7b93ad773/receipt.json",
+  "cursorBoundaryReceipt": "results/build-slots/1793174065165-49608-d2c910f7-ae88-455a-860a-e9982962f282/receipt.json",
+  "methodCountBreakdown": { "sgr": 5, "sgrCallbacks": 3 },
+  "liveReceipt": "results/build-slots/1793173716743-28092-bbabbe68-ced5-4651-aec6-1f35833b0b43/receipt.json",
+  "failedEarlierReceipt": "results/build-slots/1793173089659-17764-c8557fb5-3d88-42f2-9166-4a84bb17506b/receipt.json",
+  "limitations": [
+    "Global lint failures from unrelated work were retained separately, not counted as a clean workspace.",
+    "Task121 remains required for complete original live SGR suites, cells and browser integration.",
+    "No native Linux/macOS or browser runtime claim from these Windows checks."
+  ]
+}
