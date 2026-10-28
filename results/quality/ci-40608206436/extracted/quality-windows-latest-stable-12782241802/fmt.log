@@ -1,0 +1,326 @@
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-core\src\buffer\line.rs:6:
+ };
+ use std::{cell::RefCell, collections::BTreeMap};
+ 
+[32m+#[cfg(test)]
+[0m[32m+#[path = "line_buffer_cleanup_tests.rs"]
+[0m[32m+mod buffer_cleanup_tests;
+[0m #[path = "line_edit.rs"]
+ mod edit;
+[32m+#[path = "line_numeric.rs"]
+[0m[32m+mod numeric;
+[0m #[cfg(test)]
+ #[path = "line_storage_tests.rs"]
+ mod storage_tests;
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-core\src\buffer\line.rs:14:
+[31m-#[cfg(test)]
+[0m[31m-#[path = "line_buffer_cleanup_tests.rs"]
+[0m[31m-mod buffer_cleanup_tests;
+[0m #[path = "line_text.rs"]
+ mod text;
+[31m-#[path = "line_numeric.rs"]
+[0m[31m-mod numeric;
+[0m 
+ /// One terminal row with sparse combined strings and extended attributes.
+ /// Out-of-range cell access returns `None`; mutations outside the row are ignored,
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-core\src\public_api\buffer.rs:4:
+ //! terminal; retained line handles have the same stale-reference caveat as JS.
+ 
+ use crate::{
+[31m-    buffer::{buffer_set::BufferRef, Buffer, BufferError, BufferLine, BufferSet, CellData, LineRef},
+[0m[32m+    buffer::{
+[0m[32m+        buffer_set::BufferRef, Buffer, BufferError, BufferLine, BufferSet, CellData, LineRef,
+[0m[32m+    },
+[0m     event::{EmitError, Emitter, Event},
+     lifecycle::{Disposable, DisposableHandle},
+ };
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-core\src\public_api\buffer.rs:13:
+ /// A signed public cell lookup, used by native and JavaScript adapters.
+ /// Unlike circular buffer line lookup, BufferLine.getCell checks its bounds.
+ pub fn get_cell_signed(line: &BufferLine, index: i64) -> Option<CellData> {
+[31m-    usize::try_from(index).ok().and_then(|index| line.get_cell(index))
+[0m[32m+    usize::try_from(index)
+[0m[32m+        .ok()
+[0m[32m+        .and_then(|index| line.get_cell(index))
+[0m }
+ 
+ #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-core\tests\terminal_engine_differential.rs:1:
+ // Copyright (c) 2014-2026 The xterm.js authors. All rights reserved. MIT license.
+[31m-#[path="support/terminal_snapshot.rs"] mod projection;
+[0m[31m-use projection::{snapshot,events,parse_hex};
+[0m[31m-use xterm_core::terminal::CoreTerminal;
+[0m[32m+#[path = "support/terminal_snapshot.rs"]
+[0m[32m+mod projection;
+[0m[32m+use projection::{events, parse_hex, snapshot};
+[0m use std::path::PathBuf;
+[32m+use xterm_core::terminal::CoreTerminal;
+[0m 
+ #[test]
+ fn both_buffers_cells_modes_and_ordered_events_match_real_source_traces() {
+Error writing files: failed to resolve mod `mouse_coords`: \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-web\src\input\mouse_coords.rs does not exist
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-web\tests\api.rs:1:
+ use xterm_web::api::{
+[31m-    verify_integers, verify_mutable_option, verify_positive_integers,
+[0m[31m-    verify_proposed_api, ApiError,
+[0m[32m+    verify_integers, verify_mutable_option, verify_positive_integers, verify_proposed_api, ApiError,
+[0m };
+ 
+ #[test]
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-web\tests\api.rs:12:
+         assert_eq!(verify_integers(&[value]), Err(ApiError::IntegerRequired));
+     }
+     assert_eq!(verify_integers(&[]), Ok(()));
+[31m-    assert_eq!(verify_integers(&[1.0, 2.5, 3.0]), Err(ApiError::IntegerRequired));
+[0m[32m+    assert_eq!(
+[0m[32m+        verify_integers(&[1.0, 2.5, 3.0]),
+[0m[32m+        Err(ApiError::IntegerRequired)
+[0m[32m+    );
+[0m }
+ 
+ #[test]
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-web\tests\wasm_host.rs:1:
+ #![cfg(target_arch = "wasm32")]
+ 
+[31m-use std::{cell::{Cell, RefCell}, rc::Rc};
+[0m use js_sys::{JsString, Promise};
+[32m+use std::{
+[0m[32m+    cell::{Cell, RefCell},
+[0m[32m+    rc::Rc,
+[0m[32m+};
+[0m use wasm_bindgen::{JsCast, JsValue};
+ use wasm_bindgen_futures::JsFuture;
+ use wasm_bindgen_test::*;
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-web\tests\wasm_host.rs:8:
+ use web_sys::{Event, HtmlElement};
+ use xterm_web::{
+[31m-    dom::{BrowserDom, DomOptions}, dom_listener::DomListener,
+[0m[31m-    task_queue::BrowserTaskQueue, utf16::{from_js_string, to_js_string}, BrowserHost,
+[0m[32m+    dom::{BrowserDom, DomOptions},
+[0m[32m+    dom_listener::DomListener,
+[0m[32m+    task_queue::BrowserTaskQueue,
+[0m[32m+    utf16::{from_js_string, to_js_string},
+[0m[32m+    BrowserHost,
+[0m };
+ 
+ wasm_bindgen_test_configure!(run_in_browser);
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-web\tests\wasm_host.rs:27:
+     assert_eq!(dom.element.class_name(), "terminal xterm");
+     assert_eq!(dom.element.dir(), "ltr");
+     assert_eq!(dom.element.children().length(), 2);
+[31m-    assert_eq!(dom.element.first_element_child().unwrap(), dom.viewport.clone().into());
+[0m[31m-    assert_eq!(dom.element.last_element_child().unwrap(), dom.screen.clone().into());
+[0m[31m-    assert_eq!(dom.helpers.parent_element().unwrap(), dom.screen.clone().into());
+[0m[31m-    assert_eq!(dom.textarea.parent_element().unwrap(), dom.helpers.clone().into());
+[0m[31m-    assert_eq!(dom.composition.parent_element().unwrap(), dom.helpers.clone().into());
+[0m[31m-    assert_eq!(dom.textarea.get_attribute("aria-label").unwrap(), "Terminal input");
+[0m[32m+    assert_eq!(
+[0m[32m+        dom.element.first_element_child().unwrap(),
+[0m[32m+        dom.viewport.clone().into()
+[0m[32m+    );
+[0m[32m+    assert_eq!(
+[0m[32m+        dom.element.last_element_child().unwrap(),
+[0m[32m+        dom.screen.clone().into()
+[0m[32m+    );
+[0m[32m+    assert_eq!(
+[0m[32m+        dom.helpers.parent_element().unwrap(),
+[0m[32m+        dom.screen.clone().into()
+[0m[32m+    );
+[0m[32m+    assert_eq!(
+[0m[32m+        dom.textarea.parent_element().unwrap(),
+[0m[32m+        dom.helpers.clone().into()
+[0m[32m+    );
+[0m[32m+    assert_eq!(
+[0m[32m+        dom.composition.parent_element().unwrap(),
+[0m[32m+        dom.helpers.clone().into()
+[0m[32m+    );
+[0m[32m+    assert_eq!(
+[0m[32m+        dom.textarea.get_attribute("aria-label").unwrap(),
+[0m[32m+        "Terminal input"
+[0m[32m+    );
+[0m     let source_textarea = dom.document.create_element("textarea").unwrap();
+     for (key, value) in [
+[31m-        ("aria-multiline", "false"), ("autocomplete", "off"),
+[0m[31m-        ("autocorrect", "off"), ("autocapitalize", "off"), ("spellcheck", "false"),
+[0m[32m+        ("aria-multiline", "false"),
+[0m[32m+        ("autocomplete", "off"),
+[0m[32m+        ("autocorrect", "off"),
+[0m[32m+        ("autocapitalize", "off"),
+[0m[32m+        ("spellcheck", "false"),
+[0m     ] {
+         // Upstream uses setAttribute. Firefox canonicalizes autocapitalize=off
+         // to none, so compare the source operation in the same browser.
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-web\tests\wasm_host.rs:43:
+         source_textarea.set_attribute(key, value).unwrap();
+[31m-        assert_eq!(dom.textarea.get_attribute(key), source_textarea.get_attribute(key), "{key}");
+[0m[32m+        assert_eq!(
+[0m[32m+            dom.textarea.get_attribute(key),
+[0m[32m+            source_textarea.get_attribute(key),
+[0m[32m+            "{key}"
+[0m[32m+        );
+[0m     }
+     assert_eq!(dom.textarea.tab_index(), 0);
+     assert!(!dom.textarea.read_only());
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-web\tests\wasm_host.rs:54:
+ fn options_update_existing_nodes_and_chromeos_accessibility() {
+     let parent = parent();
+     let options = DomOptions {
+[31m-        allow_transparency: true, disable_stdin: true, is_chrome_os: true,
+[0m[31m-        prompt_label: "入力 🦀".into(), ..DomOptions::default()
+[0m[32m+        allow_transparency: true,
+[0m[32m+        disable_stdin: true,
+[0m[32m+        is_chrome_os: true,
+[0m[32m+        prompt_label: "入力 🦀".into(),
+[0m[32m+        ..DomOptions::default()
+[0m     };
+     let dom = BrowserDom::new(&parent, &options).unwrap();
+     assert!(dom.element.class_list().contains("allow-transparency"));
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-web\tests\wasm_host.rs:75:
+ #[wasm_bindgen_test]
+ fn dispose_removes_only_owned_root_and_is_repeatable() {
+     let parent = parent();
+[31m-    let sibling = parent.owner_document().unwrap().create_element("span").unwrap();
+[0m[32m+    let sibling = parent
+[0m[32m+        .owner_document()
+[0m[32m+        .unwrap()
+[0m[32m+        .create_element("span")
+[0m[32m+        .unwrap();
+[0m     parent.append_child(&sibling).unwrap();
+     let mut dom = BrowserDom::new(&parent, &DomOptions::default()).unwrap();
+     dom.dispose();
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-web\tests\wasm_host.rs:106:
+     assert_eq!(root.parent_element().unwrap(), first.clone().into());
+     assert_eq!(second.child_element_count(), 0);
+     host.focus().unwrap();
+[31m-    assert_eq!(first.owner_document().unwrap().active_element().unwrap(), textarea.clone().into());
+[0m[32m+    assert_eq!(
+[0m[32m+        first.owner_document().unwrap().active_element().unwrap(),
+[0m[32m+        textarea.clone().into()
+[0m[32m+    );
+[0m     host.blur().unwrap();
+     host.dispose();
+     host.dispose();
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-web\tests\wasm_host.rs:132:
+     let observed = Rc::clone(&count);
+     let mut listener = DomListener::new(element.as_ref(), "test-event", true, move |_| {
+         observed.set(observed.get() + 1);
+[31m-    }).unwrap();
+[0m[31m-    element.dispatch_event(&Event::new("test-event").unwrap()).unwrap();
+[0m[32m+    })
+[0m[32m+    .unwrap();
+[0m[32m+    element
+[0m[32m+        .dispatch_event(&Event::new("test-event").unwrap())
+[0m[32m+        .unwrap();
+[0m     assert_eq!(count.get(), 1);
+     listener.dispose().unwrap();
+     listener.dispose().unwrap();
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-web\tests\wasm_host.rs:140:
+     assert!(listener.is_disposed());
+[31m-    element.dispatch_event(&Event::new("test-event").unwrap()).unwrap();
+[0m[32m+    element
+[0m[32m+        .dispatch_event(&Event::new("test-event").unwrap())
+[0m[32m+        .unwrap();
+[0m     assert_eq!(count.get(), 1);
+     let observed = Rc::clone(&count);
+     let listener = DomListener::new(element.as_ref(), "test-event", false, move |_| {
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-web\tests\wasm_host.rs:145:
+         observed.set(observed.get() + 1);
+[31m-    }).unwrap();
+[0m[32m+    })
+[0m[32m+    .unwrap();
+[0m     drop(listener);
+[31m-    element.dispatch_event(&Event::new("test-event").unwrap()).unwrap();
+[0m[32m+    element
+[0m[32m+        .dispatch_event(&Event::new("test-event").unwrap())
+[0m[32m+        .unwrap();
+[0m     assert_eq!(count.get(), 1);
+     element.remove();
+ }
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-web\tests\wasm_host.rs:157:
+     let weak = Rc::downgrade(&owner);
+     let count = Rc::new(Cell::new(0));
+     let observed = Rc::clone(&count);
+[31m-    *owner.borrow_mut() = Some(DomListener::new(element.as_ref(), "self-dispose", false, move |_| {
+[0m[31m-        observed.set(observed.get() + 1);
+[0m[31m-        weak.upgrade().unwrap().borrow_mut().take().unwrap().dispose().unwrap();
+[0m[31m-    }).unwrap());
+[0m[31m-    element.dispatch_event(&Event::new("self-dispose").unwrap()).unwrap();
+[0m[31m-    element.dispatch_event(&Event::new("self-dispose").unwrap()).unwrap();
+[0m[32m+    *owner.borrow_mut() = Some(
+[0m[32m+        DomListener::new(element.as_ref(), "self-dispose", false, move |_| {
+[0m[32m+            observed.set(observed.get() + 1);
+[0m[32m+            weak.upgrade()
+[0m[32m+                .unwrap()
+[0m[32m+                .borrow_mut()
+[0m[32m+                .take()
+[0m[32m+                .unwrap()
+[0m[32m+                .dispose()
+[0m[32m+                .unwrap();
+[0m[32m+        })
+[0m[32m+        .unwrap(),
+[0m[32m+    );
+[0m[32m+    element
+[0m[32m+        .dispatch_event(&Event::new("self-dispose").unwrap())
+[0m[32m+        .unwrap();
+[0m[32m+    element
+[0m[32m+        .dispatch_event(&Event::new("self-dispose").unwrap())
+[0m[32m+        .unwrap();
+[0m     assert_eq!(count.get(), 1);
+     element.remove();
+ }
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-web\tests\wasm_host.rs:207:
+ #[wasm_bindgen_test(async)]
+ async fn idle_queue_and_cancellation_use_live_event_loop() {
+     let window = web_sys::window().unwrap();
+[31m-    for queue in [BrowserTaskQueue::priority(&window).unwrap(), BrowserTaskQueue::idle(&window).unwrap()] {
+[0m[32m+    for queue in [
+[0m[32m+        BrowserTaskQueue::priority(&window).unwrap(),
+[0m[32m+        BrowserTaskQueue::idle(&window).unwrap(),
+[0m[32m+    ] {
+[0m         let calls = Rc::new(Cell::new(0));
+         let observed = Rc::clone(&calls);
+[31m-        queue.enqueue(move |_| { observed.set(observed.get() + 1); false });
+[0m[32m+        queue.enqueue(move |_| {
+[0m[32m+            observed.set(observed.get() + 1);
+[0m[32m+            false
+[0m[32m+        });
+[0m         queue.clear();
+         assert!(!queue.has_pending_callback());
+         drain(&queue).await;
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-web\tests\wasm_host.rs:217:
+         assert_eq!(calls.get(), 0);
+         let observed = Rc::clone(&calls);
+[31m-        queue.enqueue(move |_| { observed.set(observed.get() + 1); false });
+[0m[32m+        queue.enqueue(move |_| {
+[0m[32m+            observed.set(observed.get() + 1);
+[0m[32m+            false
+[0m[32m+        });
+[0m         queue.flush();
+         assert_eq!(calls.get(), 1);
+         assert!(!queue.has_pending_callback());
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-web\tests\web_fonts_async_browser.rs:21:
+ }
+ 
+ fn face(name: &str) -> FontFace {
+[31m-    FontFace::new_with_u8_array(
+[0m[31m-        name,
+[0m[31m-        include_bytes!("fixtures/kongtext.regular.ttf"),
+[0m[31m-    )
+[0m[31m-    .unwrap()
+[0m[32m+    FontFace::new_with_u8_array(name, include_bytes!("fixtures/kongtext.regular.ttf")).unwrap()
+[0m }
+ 
+ fn host(family: &str) -> JsValue {
+Diff in \\?\D:\a\xterm-rust\xterm-rust\crates\xterm-web\tests\web_fonts_browser.rs:14:
+ }
+ 
+ fn face(name: &str) -> FontFace {
+[31m-    FontFace::new_with_u8_array(
+[0m[31m-        name,
+[0m[31m-        include_bytes!("fixtures/kongtext.regular.ttf"),
+[0m[31m-    )
+[0m[31m-    .unwrap()
+[0m[32m+    FontFace::new_with_u8_array(name, include_bytes!("fixtures/kongtext.regular.ttf")).unwrap()
+[0m }
+ 
+ fn requests(values: &[JsValue]) -> Array {

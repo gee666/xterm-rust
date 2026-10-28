@@ -28,7 +28,10 @@ jobs:
           toolchain: ${{ matrix.toolchain }}
           components: rustfmt, clippy
       - name: Verify the quality runner
-        run: node --test scripts/quality-process.test.mjs scripts/quality-policy.test.mjs scripts/quality-snapshot.test.mjs scripts/quality-managed.test.mjs
+        run: node --test scripts/quality-process.test.mjs scripts/quality-policy.test.mjs scripts/quality-snapshot.test.mjs scripts/quality-managed.test.mjs scripts/build-slot-core.test.mjs scripts/build-slot-review.test.mjs scripts/target-relocation.test.mjs
+      - name: Probe the Windows cache-copy boundary without compiling Rust
+        if: runner.os == 'Windows'
+        run: node scripts/target-relocation-windows-probe.mjs
       - name: Run native library quality gates
         run: node scripts/quality-gates.mjs --out results/quality/${{ matrix.os }}-${{ matrix.toolchain }}
       - name: Preserve command logs and native provenance

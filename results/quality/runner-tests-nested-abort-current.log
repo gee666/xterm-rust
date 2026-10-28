@@ -1,0 +1,38 @@
+✔ managed readiness and explicit stop retain output and are idempotent (222.9005ms)
+✔ early exit is failed even with a zero exit code (44.8175ms)
+✔ readiness deadline terminates the owned server (322.3087ms)
+✔ readiness callback rejection is retained instead of retried (264.006ms)
+✔ disk failure kills the server and retains the exact resource error (319.643ms)
+✔ log write failure stops its server rather than throwing out of the data callback (177.2582ms)
+✔ expected false readiness responses can become ready within the startup deadline (368.4249ms)
+✔ lifetime remains bounded after readiness (663.5724ms)
+✔ a ready server that exits unexpectedly is not a stopped success (93.4493ms)
+✔ managed spawn errors reject readiness and retain a failed receipt (2.1146ms)
+✔ tree stop refuses arbitrary PIDs (0.1351ms)
+✔ options preserve explicit WASM intent, destination and finite deadlines (1.1136ms)
+✔ output destinations cannot overwrite the root or escape results (0.2575ms)
+✔ attempt reservation preserves existing evidence and rejects output junctions (13.7545ms)
+✔ native evidence rejects missing, foreign and ambient cross-compilation hosts (0.3026ms)
+✔ inherited build policy cannot redirect disk or override shared profiles (0.3218ms)
+✔ resolved Cargo cfg catches configuration-file targets, not only environment overrides (0.1927ms)
+✔ test counts preserve failures, ignored and filtered cases per suite (0.3101ms)
+✔ successful command retains stdout and stderr without a shell (51.4957ms)
+✔ failed command preserves exit status and output (97.0065ms)
+✔ missing executable is a recorded failure, not an uncaught spawn error (2.1508ms)
+✔ timeout terminates a blocked command and records the failure (389.251ms)
+✔ disk monitor terminates a command and records its resource failure (262.2062ms)
+✔ an already-aborted signal does not start an executable (1.8488ms)
+✔ abort stops a running owned tree without reporting a timeout (365.2083ms)
+✔ timeout terminates descendants with detached=false (1171.8863ms)
+✔ timeout terminates descendants with detached=true (1155.7343ms)
+✔ snapshot changes for Rust, fixture, JS, workflow and profile edits (32.3563ms)
+✔ unsafe scan retains exact file and line but does not claim semantic safety (13.4482ms)
+✔ disk preflight records byte counts and rejects insufficient headroom without cleanup (0.6865ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3572.6661

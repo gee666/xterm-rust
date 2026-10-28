@@ -1,0 +1,196 @@
+[1m[32m   Compiling[0m serde_core v1.0.229
+[1m[32m   Compiling[0m zmij v1.0.23
+[1m[32m   Compiling[0m xterm-core v0.1.0 (/home/runner/work/xterm-rust/xterm-rust/crates/xterm-core)
+[1m[32m   Compiling[0m itoa v1.0.18
+[0m[1m[38;5;9merror[E0423][0m[0m[1m: expected value, found enum `EmitError`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0mcrates/xterm-core/src/options/mod.rs:232:28[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m232[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                return Err(EmitError);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;9m^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: the enum is defined here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0mcrates/xterm-core/src/event.rs:16:1[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m16[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m/[0m[0m [0m[0mpub enum EmitError {[0m
+[0m[1m[38;5;12m17[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m    ListenerArrayCleared,[0m
+[0m[1m[38;5;12m18[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m    /// Retain an actual callback failure, including a browser-owned wrapper[0m
+[0m[1m[38;5;12m19[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m    /// around a thrown JsValue. The portable core does not depend on that type.[0m
+[0m[1m[38;5;12m20[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m    Callback(Rc<dyn std::error::Error>),[0m
+[0m[1m[38;5;12m21[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m}[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|_^[0m
+[0m[1m[38;5;14mhelp[0m[0m: you might have meant to use the following enum variant[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m232[0m[0m [0m[0m[1m[38;5;12m| [0m[0m                return Err([0m[0m[38;5;10minput::write_buffer::EmitError::ListenerArrayCleared[0m[0m);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[38;5;10m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[0m[1m[38;5;14mhelp[0m[0m: alternatively, the following enum variant is available[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m232[0m[0m [0m[0m[1m[38;5;12m| [0m[0m                return Err([0m[0m[38;5;10m(input::write_buffer::EmitError::Callback(/* fields */))[0m[0m);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[38;5;10m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[0m[1m[38;5;9merror[E0599][0m[0m[1m: no function or associated item named `dispose_shared` found for struct `screen::Buffer` in the current scope[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0mcrates/xterm-core/src/buffer/buffer_set.rs:104:21[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m104[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            Buffer::dispose_shared(&old)?;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mfunction or associated item not found in `Buffer`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m::: [0m[0mcrates/xterm-core/src/buffer/screen.rs:100:1[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m100[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Buffer {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-----------------[0m[0m [0m[0m[1m[38;5;12mfunction or associated item `dispose_shared` not found for this struct[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: if you're trying to build a new `screen::Buffer`, consider using `screen::Buffer::new` which returns `Result<screen::Buffer, BufferError>`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0mcrates/xterm-core/src/buffer/screen.rs:131:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m131[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m/[0m[0m [0m[0m    pub fn new([0m
+[0m[1m[38;5;12m132[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        has_scrollback: bool,[0m
+[0m[1m[38;5;12m133[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        cols: usize,[0m
+[0m[1m[38;5;12m134[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        rows: usize,[0m
+[0m[1m[38;5;12m135[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        options: Rc<OptionsService>,[0m
+[0m[1m[38;5;12m136[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m    ) -> Result<Self, BufferError> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|__________________________________^[0m
+[0m[1m[38;5;14mhelp[0m[0m: there is a method `dispose` with a similar name, but with different arguments[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0mcrates/xterm-core/src/buffer/screen.rs:289:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m289[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn dispose(&mut self) -> Result<(), BufferError> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;14m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+[0m[1m[38;5;9merror[E0599][0m[0m[1m: no function or associated item named `dispose_shared` found for struct `screen::Buffer` in the current scope[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0mcrates/xterm-core/src/buffer/buffer_set.rs:110:21[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m110[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            Buffer::dispose_shared(&old)?;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mfunction or associated item not found in `Buffer`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m::: [0m[0mcrates/xterm-core/src/buffer/screen.rs:100:1[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m100[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Buffer {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-----------------[0m[0m [0m[0m[1m[38;5;12mfunction or associated item `dispose_shared` not found for this struct[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: if you're trying to build a new `screen::Buffer`, consider using `screen::Buffer::new` which returns `Result<screen::Buffer, BufferError>`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0mcrates/xterm-core/src/buffer/screen.rs:131:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m131[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m/[0m[0m [0m[0m    pub fn new([0m
+[0m[1m[38;5;12m132[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        has_scrollback: bool,[0m
+[0m[1m[38;5;12m133[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        cols: usize,[0m
+[0m[1m[38;5;12m134[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        rows: usize,[0m
+[0m[1m[38;5;12m135[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        options: Rc<OptionsService>,[0m
+[0m[1m[38;5;12m136[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m    ) -> Result<Self, BufferError> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|__________________________________^[0m
+[0m[1m[38;5;14mhelp[0m[0m: there is a method `dispose` with a similar name, but with different arguments[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0mcrates/xterm-core/src/buffer/screen.rs:289:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m289[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn dispose(&mut self) -> Result<(), BufferError> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;14m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+[0m[1m[38;5;9merror[E0599][0m[0m[1m: no function or associated item named `clear_all_markers_shared` found for struct `screen::Buffer` in the current scope[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0mcrates/xterm-core/src/buffer/buffer_set.rs:130:17[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m130[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        Buffer::clear_all_markers_shared(&alt)?;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mfunction or associated item not found in `Buffer`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m::: [0m[0mcrates/xterm-core/src/buffer/screen.rs:100:1[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m100[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Buffer {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-----------------[0m[0m [0m[0m[1m[38;5;12mfunction or associated item `clear_all_markers_shared` not found for this struct[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: if you're trying to build a new `screen::Buffer`, consider using `screen::Buffer::new` which returns `Result<screen::Buffer, BufferError>`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0mcrates/xterm-core/src/buffer/screen.rs:131:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m131[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m/[0m[0m [0m[0m    pub fn new([0m
+[0m[1m[38;5;12m132[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        has_scrollback: bool,[0m
+[0m[1m[38;5;12m133[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        cols: usize,[0m
+[0m[1m[38;5;12m134[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        rows: usize,[0m
+[0m[1m[38;5;12m135[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        options: Rc<OptionsService>,[0m
+[0m[1m[38;5;12m136[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m    ) -> Result<Self, BufferError> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|__________________________________^[0m
+[0m[1m[38;5;14mhelp[0m[0m: there is a method `clear_all_markers` with a similar name, but with different arguments[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0mcrates/xterm-core/src/buffer/screen_markers.rs:31:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m31[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn clear_all_markers(&mut self) -> Result<(), BufferError> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;14m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+[0m[1m[38;5;9merror[E0599][0m[0m[1m: no function or associated item named `dispose_shared` found for struct `screen::Buffer` in the current scope[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0mcrates/xterm-core/src/buffer/buffer_set.rs:181:17[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m181[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        Buffer::dispose_shared(&self.normal())?;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mfunction or associated item not found in `Buffer`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m::: [0m[0mcrates/xterm-core/src/buffer/screen.rs:100:1[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m100[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Buffer {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-----------------[0m[0m [0m[0m[1m[38;5;12mfunction or associated item `dispose_shared` not found for this struct[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: if you're trying to build a new `screen::Buffer`, consider using `screen::Buffer::new` which returns `Result<screen::Buffer, BufferError>`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0mcrates/xterm-core/src/buffer/screen.rs:131:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m131[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m/[0m[0m [0m[0m    pub fn new([0m
+[0m[1m[38;5;12m132[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        has_scrollback: bool,[0m
+[0m[1m[38;5;12m133[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        cols: usize,[0m
+[0m[1m[38;5;12m134[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        rows: usize,[0m
+[0m[1m[38;5;12m135[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        options: Rc<OptionsService>,[0m
+[0m[1m[38;5;12m136[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m    ) -> Result<Self, BufferError> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|__________________________________^[0m
+[0m[1m[38;5;14mhelp[0m[0m: there is a method `dispose` with a similar name, but with different arguments[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0mcrates/xterm-core/src/buffer/screen.rs:289:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m289[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn dispose(&mut self) -> Result<(), BufferError> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;14m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+[0m[1m[38;5;9merror[E0599][0m[0m[1m: no function or associated item named `dispose_shared` found for struct `screen::Buffer` in the current scope[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0mcrates/xterm-core/src/buffer/buffer_set.rs:182:17[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m182[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        Buffer::dispose_shared(&self.alt())?;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mfunction or associated item not found in `Buffer`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m::: [0m[0mcrates/xterm-core/src/buffer/screen.rs:100:1[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m100[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Buffer {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-----------------[0m[0m [0m[0m[1m[38;5;12mfunction or associated item `dispose_shared` not found for this struct[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: if you're trying to build a new `screen::Buffer`, consider using `screen::Buffer::new` which returns `Result<screen::Buffer, BufferError>`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0mcrates/xterm-core/src/buffer/screen.rs:131:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m131[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m/[0m[0m [0m[0m    pub fn new([0m
+[0m[1m[38;5;12m132[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        has_scrollback: bool,[0m
+[0m[1m[38;5;12m133[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        cols: usize,[0m
+[0m[1m[38;5;12m134[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        rows: usize,[0m
+[0m[1m[38;5;12m135[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        options: Rc<OptionsService>,[0m
+[0m[1m[38;5;12m136[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m    ) -> Result<Self, BufferError> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|__________________________________^[0m
+[0m[1m[38;5;14mhelp[0m[0m: there is a method `dispose` with a similar name, but with different arguments[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0mcrates/xterm-core/src/buffer/screen.rs:289:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m289[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn dispose(&mut self) -> Result<(), BufferError> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;14m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+[0m[1m[38;5;9merror[E0599][0m[0m[1m: no function or associated item named `clear_markers_shared` found for struct `screen::Buffer` in the current scope[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0mcrates/xterm-core/src/terminal/csi_erase.rs:67:32[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m67[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        crate::buffer::Buffer::clear_markers_shared([0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mfunction or associated item not found in `Buffer`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m::: [0m[0mcrates/xterm-core/src/buffer/screen.rs:100:1[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m100[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Buffer {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m-----------------[0m[0m [0m[0m[1m[38;5;12mfunction or associated item `clear_markers_shared` not found for this struct[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: if you're trying to build a new `screen::Buffer`, consider using `screen::Buffer::new` which returns `Result<screen::Buffer, BufferError>`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0mcrates/xterm-core/src/buffer/screen.rs:131:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m131[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m/[0m[0m [0m[0m    pub fn new([0m
+[0m[1m[38;5;12m132[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        has_scrollback: bool,[0m
+[0m[1m[38;5;12m133[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        cols: usize,[0m
+[0m[1m[38;5;12m134[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        rows: usize,[0m
+[0m[1m[38;5;12m135[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m        options: Rc<OptionsService>,[0m
+[0m[1m[38;5;12m136[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|[0m[0m [0m[0m    ) -> Result<Self, BufferError> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m|__________________________________^[0m
+[0m[1m[38;5;14mhelp[0m[0m: there is a method `clear_markers` with a similar name, but with different arguments[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0mcrates/xterm-core/src/buffer/screen_markers.rs:11:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m11[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn clear_markers(&mut self, y: i64) -> Result<(), BufferError> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;14m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+[0m[1mSome errors have detailed explanations: E0423, E0599.[0m
+[0m[1mFor more information about an error, try `rustc --explain E0423`.[0m
+[1m[31merror[0m[1m:[0m could not compile `xterm-core` (lib test) due to 7 previous errors
+[1m[33mwarning[0m[1m:[0m build failed, waiting for other jobs to finish...
+[1m[31merror[0m[1m:[0m could not compile `xterm-core` (lib) due to 7 previous errors

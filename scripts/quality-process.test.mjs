@@ -57,8 +57,34 @@ test('disk monitor terminates a command and records its resource failure', () =>
   assert.equal(result.timedOut, false);
   assert.equal(result.terminationError, null);
 }));
-test('timeout terminates spawned descendants, not just the shell-free parent', () => fixture(async directory => {
-  const code = 'const {spawn}=require("node:child_process"); const c=spawn(process.execPath,["-e","setInterval(()=>{},60000)"],{stdio:"ignore"}); console.log(c.pid); setInterval(()=>{},60000)';
+test('an already-aborted signal does not start an executable', () => fixture(async directory => {
+  const controller = new AbortController();
+  controller.abort(new Error('cancel before spawn'));
+  const result = await runCommand(join(directory, 'would-not-exist'), [], {
+    cwd: root, env: process.env, log: join(directory, 'command.log'), timeoutMs: 10_000, signal: controller.signal
+  });
+  assert.equal(result.aborted, true);
+  assert.equal(result.abortError, 'cancel before spawn');
+  assert.equal(result.error, null);
+  assert.equal(result.exitCode, null);
+  assert.equal(result.status, 'failed');
+}));
+test('abort stops a running owned tree without reporting a timeout', () => fixture(async directory => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(new Error('caller cancellation')), 200);
+  try {
+    const result = await runCommand(process.execPath, ['-e', 'setInterval(()=>{},60000)'], {
+      cwd: root, env: process.env, log: join(directory, 'command.log'), timeoutMs: 10_000, signal: controller.signal
+    });
+    assert.equal(result.aborted, true);
+    assert.equal(result.abortError, 'caller cancellation');
+    assert.equal(result.timedOut, false);
+    assert.equal(result.terminationError, null);
+    assert.equal(result.status, 'failed');
+  } finally { clearTimeout(timer); }
+}));
+for (const detached of [false, true]) test(`timeout terminates descendants with detached=${detached}`, () => fixture(async directory => {
+  const code = `const {spawn}=require("node:child_process"); const c=spawn(process.execPath,["-e","setInterval(()=>{},60000)"],{stdio:"ignore",detached:${detached}}); console.log(c.pid); setInterval(()=>{},60000)`;
   const result = await run(directory, code, 1000);
   assert.equal(result.status, 'failed');
   assert.equal(result.terminationError, null);
@@ -68,11 +94,17 @@ test('timeout terminates spawned descendants, not just the shell-free parent', (
   try { process.kill(pid, 0); }
   catch (error) { assert.equal(error.code, 'ESRCH'); absent = true; }
   if (!absent) {
-    // Unix can retain a dead orphan's PID briefly until init reaps it. A zombie
-    // is terminated, but any still-executing descendant is a failed assertion.
-    assert.notEqual(process.platform, 'win32');
-    const state = spawnSync('ps', ['-o', 'stat=', '-p', String(pid)], { encoding: 'utf8', timeout: 5000 });
-    assert.equal(state.error, undefined);
-    assert.ok((state.status === 1 && state.stdout.trim() === '') || /^Z/.test(state.stdout.trim()));
+    try {
+      // Unix can retain a dead orphan's PID until init reaps it. A zombie is
+      // terminated, but any still-executing descendant fails the assertion.
+      assert.notEqual(process.platform, 'win32');
+      const state = spawnSync('ps', ['-o', 'stat=', '-p', String(pid)], { encoding: 'utf8', timeout: 5000 });
+      assert.equal(state.error, undefined);
+      assert.ok((state.status === 1 && state.stdout.trim() === '') || /^Z/.test(state.stdout.trim()));
+    } finally {
+      // Preserve cleanup even when this regression detects an escaped child.
+      try { process.kill(pid, 'SIGKILL'); }
+      catch (error) { if (error.code !== 'ESRCH') throw error; }
+    }
   }
 }));

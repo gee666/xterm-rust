@@ -1,0 +1,37 @@
+✔ managed readiness and explicit stop retain output and are idempotent (360.4212ms)
+✔ early exit is failed even with a zero exit code (70.2591ms)
+✔ readiness deadline terminates the owned server (497.1463ms)
+✔ readiness callback rejection is retained instead of retried (434.0863ms)
+✔ disk failure kills the server and retains the exact resource error (409.3119ms)
+✔ log write failure stops its server rather than throwing out of the data callback (321.5075ms)
+✔ expected false readiness responses can become ready within the startup deadline (400.284ms)
+✔ lifetime remains bounded after readiness (691.1281ms)
+✔ a ready server that exits unexpectedly is not a stopped success (47.2728ms)
+✔ managed spawn errors reject readiness and retain a failed receipt (2.6426ms)
+✔ tree stop refuses arbitrary PIDs (0.1636ms)
+✔ options preserve explicit WASM intent, destination and finite deadlines (1.3993ms)
+✔ output destinations cannot overwrite the root or escape results (0.3626ms)
+✔ attempt reservation preserves existing evidence and rejects output junctions (12.3293ms)
+✔ native evidence rejects missing, foreign and ambient cross-compilation hosts (0.4694ms)
+✔ inherited build policy cannot redirect disk or override shared profiles (0.4726ms)
+✔ resolved Cargo cfg catches configuration-file targets, not only environment overrides (0.3035ms)
+✔ test counts preserve failures, ignored and filtered cases per suite (0.4612ms)
+✔ successful command retains stdout and stderr without a shell (67.3429ms)
+✔ failed command preserves exit status and output (60.1396ms)
+✔ missing executable is a recorded failure, not an uncaught spawn error (3.275ms)
+✔ timeout terminates a blocked command and records the failure (495.9807ms)
+✔ disk monitor terminates a command and records its resource failure (438.9899ms)
+✔ an already-aborted signal does not start an executable (2.4077ms)
+✔ abort stops a running owned tree without reporting a timeout (525.2656ms)
+✔ timeout terminates spawned descendants, not just the shell-free parent (1197.4353ms)
+✔ snapshot changes for Rust, fixture, JS, workflow and profile edits (48.2052ms)
+✔ unsafe scan retains exact file and line but does not claim semantic safety (19.5861ms)
+✔ disk preflight records byte counts and rejects insufficient headroom without cleanup (1.0305ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3303.7706

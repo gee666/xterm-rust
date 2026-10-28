@@ -1,0 +1,24 @@
+✔ native FIFO preserves active ownership until release (21.188ms)
+✔ native and WASM are independent resource lanes (14.6642ms)
+✔ wait deadline does not steal the active lease (66.4468ms)
+✔ queued cancellation and callback errors remove only their own request (12.4393ms)
+✔ stale active owners fail closed rather than losing child ownership (6.5289ms)
+✔ completed failures retain output, free the lease and allow a later job (84.9908ms)
+✔ command timeout cleans its lease without becoming a successful skip (309.0057ms)
+✔ same-lane admissions obey documented timestamp/id FIFO (21.1156ms)
+✔ native and WASM lane leases can coexist without stealing either owner (13.1377ms)
+✔ queued cancellation removes only its request and retains the active lease (8.9633ms)
+✔ queue deadline fails without launching the requested process (122.3707ms)
+✔ failed child command is retained and releases its native lease (52.027ms)
+✔ stale active owner fails closed instead of stealing or deleting its lease (40.8931ms)
+✔ release refuses a foreign owner and does not remove its marker (9.1916ms)
+✔ active owner cancellation cannot be reported as a successful child completion (221.0341ms)
+✔ wall-clock rollback cannot extend the bounded queue deadline (116.1497ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 725.4973

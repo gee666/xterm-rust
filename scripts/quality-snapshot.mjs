@@ -18,7 +18,7 @@ async function inputFiles(directory) {
 /** Hash fixtures/glue/tooling as well as Rust. Test data changes invalidate evidence. */
 export async function snapshot(root) {
   const files = [join(root, 'Cargo.toml'), join(root, 'Cargo.lock')];
-  for (const directory of ['crates', 'scripts', 'tools', 'tests', '.cargo', '.github']) {
+  for (const directory of ['crates', 'scripts', 'tools', 'tests', 'browser', 'examples', 'demo', 'assets', '.cargo', '.github']) {
     files.push(...await inputFiles(join(root, directory)));
   }
   for (const name of ['rust-toolchain', 'rust-toolchain.toml', '.gitattributes']) {
