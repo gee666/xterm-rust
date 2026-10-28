@@ -1,0 +1,62 @@
+    Blocking waiting for file lock on build directory
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0428]: the name `sgr_dispatch` is defined multiple times
+  --> crates\xterm-core\src\terminal\mod.rs:27:1
+   |
+26 | mod sgr_dispatch;
+   | ----------------- previous definition of the module `sgr_dispatch` here
+27 | mod sgr_dispatch;
+   | ^^^^^^^^^^^^^^^^^ `sgr_dispatch` redefined here
+   |
+   = note: `sgr_dispatch` must be defined only once in the type namespace of this module
+
+error: file is loaded as a module multiple times: `crates\xterm-core\src\terminal\sgr_dispatch.rs`
+ --> crates\xterm-core\src\terminal\mod.rs:26:1
+  |
+2 | | //! Rust terminal engine. Async parser work is driven explicitly by the host.
+  | |                                                                               ^
+  | |_______________________________________________________________________________|
+  | |_______________________________________________________________________________first loaded here
+  |                                                                                 loaded again here
+...
+26| / mod sgr_dispatch;
+27| / mod sgr_dispatch;
+  |
+  = help: replace all but one `mod` item with `use` items
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#duplicate_mod
+  = note: `-D clippy::duplicate-mod` implied by `-D warnings`
+  = help: to override `-D warnings` add `#[allow(clippy::duplicate_mod)]`
+
+error[E0277]: can't compare `{integer}` with `&u16`
+   --> crates\xterm-core\src\input\win32_input_mode.rs:100:85
+    |
+100 |         if let Some(second) = units.get(1).filter(|unit| (0xdc00..=0xdfff).contains(unit)) {
+    |                                                                            -------- ^^^^ the trait `std::cmp::PartialOrd<&u16>` is not implemented for `{integer}`
+    |                                                                            |
+    |                                                                            required by a bound introduced by this call
+    |
+    = note: the trait bound `{integer}: std::cmp::PartialOrd<&u16>` is not satisfied
+note: required by a bound in `std::ops::RangeInclusive::<Idx>::contains`
+   --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\core\src\ops\range.rs:509:5
+help: consider borrowing here
+    |
+100 |         if let Some(second) = units.get(1).filter(|unit| (0xdc00..=0xdfff).contains(&unit)) {
+    |                                                                                     +
+
+error[E0277]: can't compare `&u16` with `{integer}`
+   --> crates\xterm-core\src\input\win32_input_mode.rs:100:85
+    |
+100 |         if let Some(second) = units.get(1).filter(|unit| (0xdc00..=0xdfff).contains(unit)) {
+    |                                                                            -------- ^^^^ no implementation for `&u16 < {integer}` and `&u16 > {integer}`
+    |                                                                            |
+    |                                                                            required by a bound introduced by this call
+    |
+    = help: the trait `PartialOrd<{integer}>` is not implemented for `&_`
+            but trait `PartialOrd<u16>` is implemented for `_`
+    = help: for that trait implementation, expected `u16`, found `&u16`
+note: required by a bound in `std::ops::RangeInclusive::<Idx>::contains`
+   --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\core\src\ops\range.rs:509:5
+
+Some errors have detailed explanations: E0277, E0428.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `xterm-core` (lib) due to 4 previous errors

@@ -1,0 +1,36 @@
+{
+  "reviewer": "Fergus",
+  "task": 64,
+  "scope": "Portable DecorationService, Decoration and deferred logical-line cache. Live browser rendering remains task32 and criterion245.",
+  "sourceReviewed": [
+    "source_repo/src/common/services/DecorationService.ts",
+    "source_repo/src/common/services/DecorationService.test.ts",
+    "crates/xterm-core/src/decoration.rs",
+    "crates/xterm-core/src/decoration_cache.rs",
+    "crates/xterm-core/src/decoration_iterator.rs",
+    "crates/xterm-core/src/decoration_service.rs",
+    "crates/xterm-core/tests/decoration_upstream.rs",
+    "crates/xterm-core/tests/decoration_edges.rs",
+    "docs/decoration-acceptance.md"
+  ],
+  "findings": [
+    {"issue": "Cell iterator eagerly captured a bucket, unlike the source generator's lazy first next.", "status": "fixed", "regression": "decoration_review_edges::cold_cell_iterator_observes_registration_before_first_next"},
+    {"issue": "An exhausted native cell iterator could resume after later bucket growth.", "status": "fixed", "regression": "decoration_edges::completed_cell_iterator_stays_done_when_bucket_later_grows"},
+    {"issue": "Public line-bucket getter returned a copied vector instead of a live readonly source array.", "status": "fixed with read-only DecorationBucket Rc view", "regression": "decoration_review_edges::held_readonly_bucket_observes_removal_without_becoming_a_snapshot"},
+    {"issue": "Lazy color getter returned a cloned Color rather than shared mutable cached IColor identity.", "status": "fixed with Rc<RefCell<Color>> handles and identity/mutation assertions"},
+    {"issue": "Oracle regenerated tracked expected fixtures during a normal check.", "status": "fixed with default byte-exact verification and explicit --generate"}
+  ],
+  "observedCommands": [
+    {"command": "node scripts/decoration-oracle.mjs", "exitCode": 0, "originalTestFunctions": 10, "seed": "0xdec0a710", "differentialOperations": 1024, "log": "results/decoration/fergus-review-source.log"},
+    {"command": "node scripts/review-decoration-observers.mjs", "exitCode": 0, "log": "results/decoration/review-source-observers.json"},
+    {"command": "cargo test -p xterm-core --test decoration_upstream --test decoration_differential --test decoration_edges --test decoration_review_edges", "exitCode": 0, "testFunctionsPassed": 21},
+    {"command": "cargo test -p xterm-core --release --test decoration_upstream --test decoration_differential --test decoration_edges --test decoration_review_edges", "exitCode": 0, "testFunctionsPassed": 21},
+    {"command": "cargo clippy -p xterm-core --test decoration_upstream --test decoration_differential --test decoration_edges --test decoration_review_edges -- -D warnings", "exitCode": 0}
+  ],
+  "controlledReceipts": "results/reviews/fergus-decoration-2026-10-28T00-47-07.821Z/receipt.json",
+  "controlledLogs": "results/reviews/fergus-decoration-2026-10-28T00-47-07.821Z/0.log,1.log,2.log",
+  "resourcePolicy": "Shared target, unchanged profiles, 1GiB pre/during/post disk reserve and bounded process trees. No cleanup performed.",
+  "platform": "Native Windows",
+  "notEstablished": ["actual browser DOM/microtask/renderer integration", "complete terminal equivalence", "native Linux/macOS runtime"],
+  "verdict": "accept scoped portable service after reproduced findings were fixed and independently rerun"
+}
