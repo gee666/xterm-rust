@@ -18,6 +18,10 @@ The only new runtime logic for this integration fixes the default-off acceptance
 
 Raw canonical output and browser report/logs are in `results/integration/ernest/`. Browser test compiler artifacts remain in the private untracked run directory. No background browser or server remains.
 
+## Independent review
+
+The clean task60 reviewer accepted this integration checkpoint. It independently passed locked native all-target/all-feature tests, doctests, all-feature release build, no-default check, the acceptance-hooks WASM check, all six library tests in each browser and six supporting JavaScript tests. It found no integration-specific correctness blocker. It also reproduced existing core-test Clippy findings and producer formatting differences, with workspace rustfmt still hitting the Windows command-length limit. Those global quality checks remain open. Later mainacee593 includes Leonard's separately reviewed core lint repairs and Windows integration.
+
 ## Limits
 
 Full xterm.js equivalence is NOT PROVEN. Browser/API/render/input/addon behavior remains governed by its existing feature tasks, including31/32/193. Native Linux/macOS runtime, final feature/MSRV/release/format/Clippy/safety checks remain task47 and the final audit. Existing theme format lint was repaired by the included producer, but no full workspace Clippy pass is claimed. Separate accepted producer branches such as Athena's mutable options and Aristides's raw-font/cache work still need their own tested integration. Compilation and these18 browser assertion executions are not a substitute for original complete browser suites or E2E.
