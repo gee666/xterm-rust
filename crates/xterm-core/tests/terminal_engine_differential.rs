@@ -1,8 +1,9 @@
 // Copyright (c) 2014-2026 The xterm.js authors. All rights reserved. MIT license.
-#[path="support/terminal_snapshot.rs"] mod projection;
-use projection::{snapshot,events,parse_hex};
-use xterm_core::terminal::CoreTerminal;
+#[path = "support/terminal_snapshot.rs"]
+mod projection;
+use projection::{events, parse_hex, snapshot};
 use std::path::PathBuf;
+use xterm_core::terminal::CoreTerminal;
 
 #[test]
 fn both_buffers_cells_modes_and_ordered_events_match_real_source_traces() {
