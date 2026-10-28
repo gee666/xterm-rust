@@ -3,7 +3,10 @@ use super::{
     append, scrollback_start, style, BufferAccess, CellRange, HtmlConfig, HtmlFontSize,
     HtmlOptions, Position, SerializeError,
 };
-use crate::buffer::{constants::underline_style, CellData};
+use crate::{
+    buffer::{constants::underline_style, CellData},
+    public_api::line_numbers::{NumericCell, NumericCellError},
+};
 
 /// Serialize the active buffer with the upstream HTML fragment format.
 ///
@@ -45,6 +48,17 @@ pub fn serialize_html(
             },
         })
     };
+    serialize_html_range(buffer, range, config, options.include_global_background)
+}
+
+/// Already-resolved coordinates let the browser binding preserve Number-index
+/// semantics through a mapped view without copying the terminal contents.
+pub fn serialize_html_range(
+    buffer: &dyn BufferAccess,
+    range: Option<CellRange>,
+    config: &HtmlConfig,
+    include_background: bool,
+) -> Result<Vec<u16>, SerializeError> {
     let defaults;
     let palette = match &config.ansi_colors {
         Some(colors) => colors,
@@ -53,9 +67,9 @@ pub fn serialize_html(
             &defaults
         }
     };
-    let mut output = header(config, options.include_global_background);
+    let mut output = header(config, include_background);
     if let Some(range) = range {
-        let mut previous = CellData::default();
+        let mut previous = NumericCell::from(CellData::default());
         for row in range.start.y..=range.end.y {
             append(&mut output, "<div><span>");
             if let Some(length) = buffer.line_len(row)? {
@@ -70,8 +84,8 @@ pub fn serialize_html(
                     length
                 };
                 for col in start..end {
-                    if let Some(cell) = buffer.cell(row, col)? {
-                        emit_cell(&mut output, &cell, &previous, palette);
+                    if let Some(cell) = buffer.numeric_cell(row, col)? {
+                        emit_cell(&mut output, &cell, &previous, palette)?;
                         // BaseSerializeHandler advances oldCell even for placeholders.
                         previous = cell;
                     }
@@ -128,39 +142,47 @@ fn raw_option(output: &mut Vec<u16>, value: Option<&[u16]>, fallback: &str) {
     }
 }
 
-fn emit_cell(output: &mut Vec<u16>, cell: &CellData, previous: &CellData, palette: &[String; 256]) {
-    if cell.get_width() == 0 {
-        return;
+fn emit_cell(
+    output: &mut Vec<u16>,
+    cell: &NumericCell,
+    previous: &NumericCell,
+    palette: &[String; 256],
+) -> Result<(), SerializeError> {
+    if cell.metadata().get_width() == 0 {
+        return Ok(());
     }
-    if let Some(styles) = diff_style(cell, previous, palette) {
+    if let Some(styles) = diff_style(cell, previous, palette)? {
         append(output, "</span><span");
         if !styles.is_empty() {
             append(output, &format!(" style='{}'", styles.join(" ")));
         }
         append(output, ">");
     }
-    let chars = cell.get_chars();
-    match chars.as_slice() {
-        [] => output.push(u16::from(b' ')),
-        [38] => append(output, "&amp;"),
-        [60] => append(output, "&lt;"),
-        _ => output.extend(chars),
+    match cell.chars().as_deref() {
+        Some([]) => output.push(u16::from(b' ')),
+        Some([38]) => append(output, "&amp;"),
+        Some([60]) => append(output, "&lt;"),
+        Some(chars) => output.extend_from_slice(chars),
+        None => append(output, "undefined"),
     }
+    Ok(())
 }
 
 fn diff_style(
-    cell: &CellData,
-    previous: &CellData,
+    raw: &NumericCell,
+    previous: &NumericCell,
     palette: &[String; 256],
-) -> Option<Vec<String>> {
-    if cell.attributes_equals(previous) {
-        return None;
+) -> Result<Option<Vec<String>>, SerializeError> {
+    if raw.attributes_equals(previous).map_err(numeric_error)? {
+        return Ok(None);
     }
-    if style::equal_fg(cell, previous)
-        && style::equal_bg(cell, previous)
-        && style::equal_flags(cell, previous)
-    {
-        return None;
+    let cell = raw.metadata();
+    let old = previous.metadata();
+    let fg_changed = !style::equal_fg(&cell, &old);
+    let bg_changed = !style::equal_bg(&cell, &old);
+    let flags_changed = !numeric_flags_equal(raw, previous)?;
+    if !(fg_changed || bg_changed || flags_changed) {
+        return Ok(None);
     }
     let colors = palette;
     let mut styles = Vec::new();
@@ -189,6 +211,7 @@ fn diff_style(
         styles.push("font-weight: bold;".into());
     }
     let mut decorations = Vec::new();
+    raw.require_extended().map_err(numeric_error)?;
     if cell.is_underline() != 0 {
         decorations.push(match cell.get_underline_style() {
             underline_style::DOUBLE => "underline double",
@@ -229,7 +252,24 @@ fn diff_style(
     if cell.is_dim() != 0 {
         styles.push("opacity: 0.5;".into());
     }
-    Some(styles)
+    Ok(Some(styles))
+}
+
+fn numeric_error(error: NumericCellError) -> SerializeError {
+    match error {
+        NumericCellError::MissingExtendedAttributes => SerializeError::MissingExtendedAttributes,
+        NumericCellError::MissingCombinedString => SerializeError::MissingCombinedString,
+    }
+}
+fn numeric_flags_equal(a: &NumericCell, b: &NumericCell) -> Result<bool, SerializeError> {
+    let ma = a.metadata();
+    let mb = b.metadata();
+    if ma.is_inverse() != mb.is_inverse() || ma.is_bold() != mb.is_bold() {
+        return Ok(false);
+    }
+    a.require_extended().map_err(numeric_error)?;
+    b.require_extended().map_err(numeric_error)?;
+    Ok(style::equal_flags(&ma, &mb))
 }
 
 fn hex_color(color: i32, rgb: bool, palette: bool, colors: &[String; 256]) -> Option<String> {

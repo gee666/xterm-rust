@@ -10,7 +10,7 @@ struct Handler<'a> {
     all: Vec<(Vec<u16>, String)>,
     nulls: usize,
     cursor_style: CellData,
-    style_position: (usize, usize),
+    style_position: Option<(usize, usize)>,
     background: CellData,
     cursor: (usize, usize),
     content_cursor: (usize, usize),
@@ -32,7 +32,7 @@ pub(super) fn serialize(
         all: Vec::new(),
         nulls: 0,
         cursor_style: CellData::default(),
-        style_position: (0, 0),
+        style_position: None,
         background: CellData::default(),
         cursor: (range.start.y, 0),
         content_cursor: (range.start.y, 0),
@@ -86,7 +86,7 @@ impl Handler<'_> {
             self.cursor = (row, col);
             self.emit(&format!("\x1b[{sgr}m"));
             self.cursor_style = cell.clone();
-            self.style_position = (row, col);
+            self.style_position = Some((row, col));
         }
         if empty {
             self.nulls = self.nulls.saturating_add(width.max(0) as usize);
@@ -111,10 +111,11 @@ impl Handler<'_> {
         let mut separator = String::new();
         if !last {
             if row - self.first >= self.rows {
-                if let Some(cell) = self
-                    .buffer
-                    .cell(self.style_position.0, self.style_position.1)?
-                {
+                let cell = match self.style_position {
+                    Some((row, col)) => self.buffer.cell(row, col)?,
+                    None => self.buffer.reference_cell(0)?,
+                };
+                if let Some(cell) = cell {
                     self.background = cell;
                 }
             }

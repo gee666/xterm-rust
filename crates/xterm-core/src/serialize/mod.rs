@@ -6,11 +6,15 @@ mod ansi;
 pub use addon::{serialize_live_html, serialize_live_state, AddonSerializeError, SerializeAddon};
 mod buffer;
 mod html;
+mod live_modes;
 mod view;
-pub use html::serialize_html;
+pub use html::{serialize_html, serialize_html_range};
+pub use view::View as PublicBufferView;
 mod style;
 mod terminal;
-pub use terminal::{serialize_terminal, MouseTracking, SerializeModes, SerializeState};
+pub use terminal::{
+    serialize_modes, serialize_terminal, MouseTracking, SerializeModes, SerializeState,
+};
 
 use crate::buffer::{AttributeData, CellData};
 
@@ -23,6 +27,20 @@ pub trait BufferAccess {
     }
     fn line_len(&self, row: usize) -> Result<Option<usize>, SerializeError>;
     fn cell(&self, row: usize, col: usize) -> Result<Option<CellData>, SerializeError>;
+    /// The source's initial style reference is absolute buffer row zero, even
+    /// when an adapter maps a serialized row range to logical coordinates.
+    fn reference_cell(&self, col: usize) -> Result<Option<CellData>, SerializeError> {
+        self.cell(0, col)
+    }
+    /// JS numeric adapters may retain missing packed words or combined text.
+    /// Ordinary terminal cells use the shared packed-cell implementation.
+    fn numeric_cell(
+        &self,
+        row: usize,
+        col: usize,
+    ) -> Result<Option<crate::public_api::line_numbers::NumericCell>, SerializeError> {
+        self.cell(row, col).map(|cell| cell.map(Into::into))
+    }
     fn is_wrapped(&self, row: usize) -> Result<bool, SerializeError>;
     fn cursor_x(&self) -> usize;
     fn cursor_y(&self) -> usize;
@@ -100,6 +118,8 @@ pub enum SerializeError {
     InvalidRange,
     BorrowedLine,
     MissingWrappedLine,
+    MissingExtendedAttributes,
+    MissingCombinedString,
     BufferView(std::rc::Rc<crate::buffer::BufferError>),
 }
 impl PartialEq for SerializeError {
@@ -107,7 +127,9 @@ impl PartialEq for SerializeError {
         match (self, other) {
             (Self::InvalidRange, Self::InvalidRange)
             | (Self::BorrowedLine, Self::BorrowedLine)
-            | (Self::MissingWrappedLine, Self::MissingWrappedLine) => true,
+            | (Self::MissingWrappedLine, Self::MissingWrappedLine)
+            | (Self::MissingExtendedAttributes, Self::MissingExtendedAttributes)
+            | (Self::MissingCombinedString, Self::MissingCombinedString) => true,
             // Transported callback errors retain identity, rather than matching
             // unrelated failures just because their messages happen to agree.
             (Self::BufferView(a), Self::BufferView(b)) => std::rc::Rc::ptr_eq(a, b),
@@ -127,6 +149,12 @@ impl std::fmt::Display for SerializeError {
             Self::InvalidRange => "Invalid array length",
             Self::BorrowedLine => "buffer line already borrowed",
             Self::MissingWrappedLine => "Cannot read properties of undefined (reading 'isWrapped')",
+            Self::MissingExtendedAttributes => {
+                "Cannot read properties of undefined (reading 'underlineStyle')"
+            }
+            Self::MissingCombinedString => {
+                "Cannot read properties of undefined (reading 'charCodeAt')"
+            }
             Self::BufferView(error) => return error.fmt(f),
         })
     }

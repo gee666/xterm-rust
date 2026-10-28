@@ -91,13 +91,12 @@ pub fn serialize_terminal(
         content.extend(by_scrollback(state, state.alternate, None)?);
     }
     if !options.exclude_modes {
-        append_modes(&mut content, state.modes);
-        if state.scroll_top != 0 || state.scroll_bottom != state.rows.saturating_sub(1) {
-            append(
-                &mut content,
-                &format!("\x1b[{};{}r", state.scroll_top + 1, state.scroll_bottom + 1),
-            );
-        }
+        content.extend(serialize_modes(
+            state.modes,
+            state.rows,
+            state.scroll_top,
+            state.scroll_bottom,
+        ));
     }
     Ok(content)
 }
@@ -125,6 +124,17 @@ fn by_scrollback(
         },
         false,
     )
+}
+
+/// A separate phase preserves JS option-getter ordering around normal and
+/// alternate serialization without duplicating the source mode protocol table.
+pub fn serialize_modes(modes: &SerializeModes, rows: usize, top: usize, bottom: usize) -> Vec<u16> {
+    let mut output = Vec::new();
+    append_modes(&mut output, modes);
+    if top != 0 || bottom != rows.saturating_sub(1) {
+        append(&mut output, &format!("\x1b[{};{}r", top + 1, bottom + 1));
+    }
+    output
 }
 
 fn append_modes(out: &mut Vec<u16>, m: &SerializeModes) {

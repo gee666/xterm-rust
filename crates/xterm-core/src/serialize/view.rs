@@ -9,7 +9,7 @@ use std::rc::Rc;
 /// Capture metrics after header callbacks, but read cells through the actual
 /// public view. Reset may reinitialize that same view to a new Buffer, while an
 /// alternate-screen activation leaves the captured normal view unchanged.
-pub(super) struct View {
+pub struct View {
     view: Rc<BufferApiView>,
     length: usize,
     x: usize,

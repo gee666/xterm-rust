@@ -1,11 +1,10 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved. MIT license.
 use super::{
     scrollback_start, serialize_html, serialize_terminal, CellRange, HtmlConfig, HtmlFontSize,
-    HtmlOptions, HtmlRange, MouseTracking, SerializeError, SerializeModes, SerializeOptions,
-    SerializeState,
+    HtmlOptions, HtmlRange, SerializeError, SerializeModes, SerializeOptions, SerializeState,
 };
 use crate::{
-    headless::{HeadlessError, ModesSnapshot, MouseTrackingMode, Terminal},
+    headless::{HeadlessError, ModesSnapshot, Terminal},
     options::{OptionError, OptionValue},
     public_api::{addon_manager::TerminalAddon, buffer::BufferNamespaceApi},
     terminal::{CoreTerminal, TerminalState},
@@ -295,24 +294,7 @@ pub fn serialize_live_state(
     let modes = ModesSnapshot::from_services(&state.core, &state.mouse)
         .map_err(|_| AddonSerializeError::Borrowed)?;
     let active_alternate = Rc::ptr_eq(&state.buffers.active(), &state.buffers.alt());
-    let modes = SerializeModes {
-        application_cursor_keys: modes.application_cursor_keys_mode,
-        application_keypad: modes.application_keypad_mode,
-        bracketed_paste: modes.bracketed_paste_mode,
-        insert: modes.insert_mode,
-        origin: modes.origin_mode,
-        reverse_wraparound: modes.reverse_wraparound_mode,
-        send_focus: modes.send_focus_mode,
-        wraparound: modes.wraparound_mode,
-        show_cursor: modes.show_cursor,
-        mouse_tracking: match modes.mouse_tracking_mode {
-            MouseTrackingMode::None => MouseTracking::None,
-            MouseTrackingMode::X10 => MouseTracking::X10,
-            MouseTrackingMode::Vt200 => MouseTracking::Vt200,
-            MouseTrackingMode::Drag => MouseTracking::Drag,
-            MouseTrackingMode::Any => MouseTracking::Any,
-        },
-    };
+    let modes = SerializeModes::from(&modes);
     Ok(serialize_terminal(
         &SerializeState {
             normal: &*normal,
