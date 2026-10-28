@@ -100,14 +100,27 @@ impl BrowserImageRenderer {
 
     pub fn bitmap_to_canvas(&self, image: &ImageResource) -> Result<ImageResource, JsValue> {
         let source = self.source(image)?;
+        // This public storage getter uses window.document upstream, unlike the
+        // renderer's local-document draw/extract paths.
+        let document = get(&get(&js_sys::global(), "window")?, "document")?;
         let canvas = create_canvas(
-            &self.host.document()?,
+            &document,
             number(&source, "width")?,
             number(&source, "height")?,
         )?;
-        let ctx = context(&canvas, None)?
-            .ok_or_else(|| js_sys::Error::new("Cannot create bitmap conversion canvas context"))?;
-        call(&ctx, "drawImage", &[source, 0.into(), 0.into()])?;
+        if let Some(ctx) = context(&canvas, None)? {
+            call(
+                &ctx,
+                "drawImage",
+                &[
+                    source.clone(),
+                    0.into(),
+                    0.into(),
+                    get(&source, "width")?,
+                    get(&source, "height")?,
+                ],
+            )?;
+        }
         Ok(ImageResource::new(BrowserImageSurface::canvas(canvas)))
     }
 }

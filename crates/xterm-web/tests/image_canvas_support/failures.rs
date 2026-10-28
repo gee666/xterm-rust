@@ -142,6 +142,40 @@ fn draw_and_bitmap_close_errors_keep_thrown_js_identity_and_partial_state() {
 }
 
 #[wasm_bindgen_test(async)]
+async fn storage_bitmap_retrieval_returns_canvas_when_context_is_absent() {
+    let h = Harness::new(3.0, 4.0);
+    let image = h.image(3, 4);
+    let promise = primitives::create_image_bitmap(&surface(&image))
+        .unwrap()
+        .dyn_into::<js_sys::Promise>()
+        .unwrap();
+    let bitmap = wasm_bindgen_futures::JsFuture::from(promise).await.unwrap();
+    assert!(!bitmap.is_undefined());
+    let id = h
+        .storage
+        .add_image(
+            ImageResource::new(BrowserImageSurface::bitmap(bitmap)),
+            AddImageOptions::default(),
+        )
+        .unwrap();
+    let patch = Patch::new(
+        eval("HTMLCanvasElement.prototype"),
+        "getContext",
+        eval("(function(){return null})"),
+    );
+    let retrieved = h.storage.get_image_at_buffer_cell(0, 0).unwrap().unwrap();
+    drop(patch);
+    assert_eq!(
+        (retrieved.width().unwrap(), retrieved.height().unwrap()),
+        (3, 4)
+    );
+    let canvas = surface(&retrieved);
+    assert!(get(&canvas, "ownerDocument") == eval("window.document"));
+    assert_eq!(pixels(&canvas), vec![0; 3 * 4 * 4]);
+    assert!(h.storage.image_spec(id).is_some());
+}
+
+#[wasm_bindgen_test(async)]
 async fn pending_placeholder_bitmap_uses_source_late_assignment_and_close_order() {
     let h = Harness::new(3.0, 4.0);
     h.renderer.insert_layer(ImageLayer::Top).unwrap();
