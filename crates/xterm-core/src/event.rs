@@ -65,7 +65,11 @@ impl std::error::Error for EmitError {
     }
 }
 
-type Callback<T> = Rc<dyn Fn(&T) -> Result<(), EmitError>>;
+#[path = "event/dispatch.rs"]
+mod dispatch;
+pub use dispatch::{DispatchContext, DispatchKey};
+
+type Callback<T> = Rc<dyn Fn(&T, &DispatchContext) -> Result<(), EmitError>>;
 type Listeners<T> = Rc<RefCell<Vec<Callback<T>>>>;
 type Subscribe<T> = dyn Fn(Callback<T>) -> DisposableHandle;
 
@@ -100,6 +104,15 @@ impl<T: 'static> Event<T> {
         &self,
         listener: impl Fn(&T) -> Result<(), EmitError> + 'static,
     ) -> DisposableHandle {
+        self.try_subscribe_with_context(move |value, _| listener(value))
+    }
+
+    /// Share a converter result across listeners during this exact dispatch.
+    /// The context and its native roots end when fire returns or unwinds.
+    pub fn try_subscribe_with_context(
+        &self,
+        listener: impl Fn(&T, &DispatchContext) -> Result<(), EmitError> + 'static,
+    ) -> DisposableHandle {
         (self.subscribe)(Rc::new(listener))
     }
 
@@ -124,18 +137,31 @@ impl<T: 'static> Event<T> {
     }
 
     pub fn map<O: 'static>(&self, map: impl Fn(&T) -> O + 'static) -> Event<O> {
+        self.filter_map(move |value| Some(map(value)))
+    }
+
+    /// Retain one registration on the original event, skipping absent values.
+    /// Like source map, each subscriber maps independently to a fresh output.
+    pub fn filter_map<O: 'static>(&self, map: impl Fn(&T) -> Option<O> + 'static) -> Event<O> {
         let source = self.clone();
         let map = Rc::new(map);
         Event {
             subscribe: Rc::new(move |listener| {
                 let map = Rc::clone(&map);
-                source.try_subscribe(move |value| listener(&map(value)))
+                source.try_subscribe(move |value| {
+                    if let Some(mapped) = map(value) {
+                        listener(&mapped, &DispatchContext::new())?;
+                    }
+                    Ok(())
+                })
             }),
         }
     }
 
     pub fn forward(&self, target: Rc<Emitter<T>>) -> DisposableHandle {
-        self.try_subscribe(move |value| target.fire(value))
+        self.try_subscribe_with_context(move |value, context| {
+            target.fire_with_context(value, context)
+        })
     }
 
     /// Invoke the handler before registering, matching runAndSubscribe ordering.
@@ -227,6 +253,10 @@ impl<T: 'static> Emitter<T> {
 
     /// Borrowing the value avoids cloning shared event payloads.
     pub fn fire(&self, value: &T) -> Result<(), EmitError> {
+        self.fire_with_context(value, &DispatchContext::new())
+    }
+
+    fn fire_with_context(&self, value: &T, context: &DispatchContext) -> Result<(), EmitError> {
         if self.state.disposed.get() {
             return Ok(());
         }
@@ -238,7 +268,7 @@ impl<T: 'static> Emitter<T> {
                 .get(index)
                 .cloned()
                 .ok_or(EmitError::ListenerArrayCleared)?;
-            listener(value)?;
+            listener(value, context)?;
         }
         Ok(())
     }

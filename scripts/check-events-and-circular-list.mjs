@@ -15,7 +15,7 @@ const directory = path.join(root, 'results/events-circular-list');
 mkdirSync(directory, { recursive: true });
 const files = ['Lifecycle.ts', 'Event.ts', 'CircularList.ts', 'Event.test.ts', 'CircularList.test.ts'];
 const source = Object.fromEntries(files.map(file => [file, readFileSync(path.join(root, 'source_repo/src/common', file), 'utf8')]));
-const rustPaths = ['src/event.rs', 'src/lifecycle.rs', 'src/circular_list.rs', 'src/circular_list/storage.rs', 'tests/event.rs', 'tests/event_edges.rs', 'tests/event_errors.rs', 'tests/lifecycle_explicit.rs', 'tests/circular_list.rs', 'tests/circular_list_edges.rs', 'examples/event_trace.rs', 'examples/circular_list_trace.rs'].map(file => `crates/xterm-core/${file}`);
+const rustPaths = ['src/event.rs', 'src/event/dispatch.rs', 'src/lifecycle.rs', 'src/circular_list.rs', 'src/circular_list/storage.rs', 'tests/event.rs', 'tests/event_edges.rs', 'tests/event_errors.rs', 'tests/event_context.rs', 'tests/lifecycle_explicit.rs', 'tests/circular_list.rs', 'tests/circular_list_edges.rs', 'examples/event_trace.rs', 'examples/circular_list_trace.rs'].map(file => `crates/xterm-core/${file}`);
 const hash = file => createHash('sha256').update(readFileSync(path.join(root, file))).digest('hex');
 const rustSource = Object.fromEntries(rustPaths.map(file => [file, hash(file)]));
 function erase(text) {
@@ -207,14 +207,14 @@ for (const [name, trace, expected] of [['event_trace', eventTrace, eventExpected
     assert.fail(`${name} mismatch at ${index}`);
   }
 }
-const testNames = ['event', 'event_edges', 'event_errors', 'circular_list', 'circular_list_edges', 'lifecycle_explicit'];
+const testNames = ['event', 'event_edges', 'event_errors', 'event_context', 'circular_list', 'circular_list_edges', 'lifecycle_explicit'];
 const rustTests = isolated ? testNames.map(name => {
   const binary = path.join(temporary, name + '_tests' + suffix);
   run(rustc, [...extern, '--test', `crates/xterm-core/tests/${name}.rs`, '-o', binary]);
   return run(binary, [], { includeStderr: true });
 }).join('\n') : run(cargo, ['test', '-p', 'xterm-core', ...testNames.flatMap(name => ['--test', name])], { includeStderr: true });
 const rustCount = [...rustTests.matchAll(/test result: ok\. (\d+) passed/g)].reduce((total, match) => total + Number(match[1]), 0);
-assert.ok(rustCount >= 74, 'missing scoped Rust tests');
+assert.ok(rustCount >= 83, 'missing scoped Rust tests');
 const rustLog = isolated ? 'rust-tests-isolated.log' : 'rust-tests.log';
 writeFileSync(path.join(directory, rustLog), rustTests);
 for (const file of rustPaths) assert.equal(hash(file), rustSource[file], `Rust input changed during verification: ${file}`);
