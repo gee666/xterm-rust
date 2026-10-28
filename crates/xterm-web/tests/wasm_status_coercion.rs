@@ -21,6 +21,36 @@ async fn run(body: &str) {
     JsFuture::from(promise).await.unwrap();
 }
 #[wasm_bindgen_test]
+async fn getter_uses_own_data_properties_over_inherited_read_only_accessors() {
+    run(r#"
+addon.progress={state:1,value:20};
+Object.defineProperty(Object.prototype,'state',{configurable:true,get(){return 999;}});
+Object.defineProperty(Object.prototype,'value',{configurable:true,get(){return 999;}});
+try{
+const value=addon.progress;
+assert(Object.hasOwn(value,'state')&&Object.hasOwn(value,'value'),'getter omitted own properties');
+assert(value.state===1&&value.value===20,'inherited accessor intercepted getter');
+assert(Object.getOwnPropertyDescriptor(value,'state').writable,'getter field is not writable');
+}finally{delete Object.prototype.state;delete Object.prototype.value;}
+"#)
+    .await;
+}
+#[wasm_bindgen_test]
+async fn event_literal_fields_do_not_invoke_inherited_setters() {
+    run(r#"
+let payload,setters=0;addon.onChange(value=>payload=value);
+Object.defineProperty(Object.prototype,'state',{configurable:true,get(){return 999;},set(){setters++;}});
+Object.defineProperty(Object.prototype,'value',{configurable:true,get(){return 999;},set(){setters++;}});
+try{
+addon.progress={state:2,value:25};
+assert(setters===0,'inherited setter ran during payload construction');
+assert(Object.hasOwn(payload,'state')&&Object.hasOwn(payload,'value'),'event omitted own properties');
+assert(payload.state===2&&payload.value===25,'event literal fields changed');
+}finally{delete Object.prototype.state;delete Object.prototype.value;}
+"#).await;
+}
+
+#[wasm_bindgen_test]
 async fn source_reads_state_three_times_before_value_and_keeps_partial_assignment() {
     run(r#"
 addon.progress={state:1,value:40};let events=0;addon.onChange(()=>events++);

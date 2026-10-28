@@ -1,7 +1,6 @@
 // Copyright (c) 2024 The xterm.js authors. All rights reserved. MIT license.
-use super::{coercion, event_error, event_function, set, subscription_event, SubscriptionEvent};
+use super::{coercion, event_error, event_function, subscription_event, SubscriptionEvent};
 use crate::terminal::Terminal;
-use js_sys::Object;
 use std::{
     cell::{Cell, RefCell},
     rc::Rc,
@@ -21,15 +20,14 @@ struct BindingState {
     api_event: Cell<bool>,
 }
 fn to_js(progress: &ProgressState, binding: &BindingState) -> Result<JsValue, JsValue> {
-    let object = Object::new();
     let state = binding
         .api_state
         .borrow()
         .clone()
         .unwrap_or_else(|| progress.state.into());
-    set(&object, "state", &state)?;
-    set(&object, "value", &progress.value.into())?;
-    Ok(object.into())
+    // Object literals create own data properties and must not invoke an
+    // inherited state/value setter or fail on an inherited read-only field.
+    coercion::progress_object(&state, progress.value)
 }
 #[wasm_bindgen]
 pub struct ProgressAddon {

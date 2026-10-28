@@ -8,6 +8,7 @@ use wasm_bindgen::prelude::*;
 export function statusProperty(value, key) { return value[key]; }
 export function statusLess(left, right) { return left < right; }
 export function statusNumber(value) { return +value; }
+export function statusProgressObject(state, value) { return { state, value }; }
 ")]
 extern "C" {
     #[wasm_bindgen(catch, js_name = statusProperty)]
@@ -16,4 +17,6 @@ extern "C" {
     pub fn less(left: &JsValue, right: &JsValue) -> Result<bool, JsValue>;
     #[wasm_bindgen(catch, js_name = statusNumber)]
     pub fn number(value: &JsValue) -> Result<f64, JsValue>;
+    #[wasm_bindgen(catch, js_name = statusProgressObject)]
+    pub fn progress_object(state: &JsValue, value: f64) -> Result<JsValue, JsValue>;
 }
