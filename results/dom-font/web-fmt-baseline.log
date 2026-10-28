@@ -1,0 +1,219 @@
+Diff in \\?\C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Octavia\crates\xterm-web\src\links\window_interval.rs:1:
+ // Copyright (c) 2026 The xterm.js authors. All rights reserved. MIT license.
+ use super::dom_helpers::get_window;
+ use js_sys::{Function, Reflect};
+[31m-use std::{cell::{Cell, RefCell}, rc::{Rc, Weak}};
+[0m[32m+use std::{
+[0m[32m+    cell::{Cell, RefCell},
+[0m[32m+    rc::{Rc, Weak},
+[0m[32m+};
+[0m use wasm_bindgen::{closure::Closure, JsCast, JsValue};
+ use web_sys::{Node, Window};
+ 
+Diff in \\?\C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Octavia\crates\xterm-web\src\links\window_interval.rs:15:
+     fn cancel(&self) -> Result<(), JsValue> {
+         let pending = self.pending.borrow().clone();
+         if let Some((window, handle)) = pending {
+[31m-            let clear: Function = Reflect::get(window.as_ref(), &"clearInterval".into())?.dyn_into()?;
+[0m[32m+            let clear: Function =
+[0m[32m+                Reflect::get(window.as_ref(), &"clearInterval".into())?.dyn_into()?;
+[0m             clear.call1(window.as_ref(), &handle)?;
+             self.pending.borrow_mut().take();
+         }
+Diff in \\?\C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Octavia\crates\xterm-web\src\links\window_interval.rs:24:
+ }
+ impl Drop for State {
+     fn drop(&mut self) {
+[31m-        if let Err(error) = self.cancel() { web_sys::console::error_1(&error); }
+[0m[32m+        if let Err(error) = self.cancel() {
+[0m[32m+            web_sys::console::error_1(&error);
+[0m[32m+        }
+[0m     }
+ }
+ 
+Diff in \\?\C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Octavia\crates\xterm-web\src\links\window_interval.rs:32:
+ /// Each JS callback owns its original runner, independently of later cancellation
+ /// or replacement. It does not capture this timer and create a reference cycle.
+ #[derive(Clone)]
+[31m-pub struct WindowIntervalTimer { state: Rc<State> }
+[0m[32m+pub struct WindowIntervalTimer {
+[0m[32m+    state: Rc<State>,
+[0m[32m+}
+[0m #[derive(Clone)]
+[31m-pub struct WeakWindowIntervalTimer { state: Weak<State> }
+[0m[32m+pub struct WeakWindowIntervalTimer {
+[0m[32m+    state: Weak<State>,
+[0m[32m+}
+[0m impl WeakWindowIntervalTimer {
+     pub fn upgrade(&self) -> Option<WindowIntervalTimer> {
+[31m-        self.state.upgrade().map(|state| WindowIntervalTimer { state })
+[0m[32m+        self.state
+[0m[32m+            .upgrade()
+[0m[32m+            .map(|state| WindowIntervalTimer { state })
+[0m     }
+ }
+ impl WindowIntervalTimer {
+Diff in \\?\C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Octavia\crates\xterm-web\src\links\window_interval.rs:44:
+     pub fn new(node: Option<&Node>, fallback: Window) -> Self {
+         let default_target = node.map(|node| get_window(Some(node), None, &fallback));
+[31m-        Self { state: Rc::new(State { fallback, default_target, disposed: Cell::new(false), pending: RefCell::new(None) }) }
+[0m[32m+        Self {
+[0m[32m+            state: Rc::new(State {
+[0m[32m+                fallback,
+[0m[32m+                default_target,
+[0m[32m+                disposed: Cell::new(false),
+[0m[32m+                pending: RefCell::new(None),
+[0m[32m+            }),
+[0m[32m+        }
+[0m     }
+     pub fn downgrade(&self) -> WeakWindowIntervalTimer {
+[31m-        WeakWindowIntervalTimer { state: Rc::downgrade(&self.state) }
+[0m[32m+        WeakWindowIntervalTimer {
+[0m[32m+            state: Rc::downgrade(&self.state),
+[0m[32m+        }
+[0m     }
+[31m-    pub fn cancel_and_set(&self, runner: impl Fn() -> Result<(), JsValue> + 'static,
+[0m[31m-        interval_ms: f64, target: Option<&Window>) -> Result<(), JsValue> {
+[0m[32m+    pub fn cancel_and_set(
+[0m[32m+        &self,
+[0m[32m+        runner: impl Fn() -> Result<(), JsValue> + 'static,
+[0m[32m+        interval_ms: f64,
+[0m[32m+        target: Option<&Window>,
+[0m[32m+    ) -> Result<(), JsValue> {
+[0m         if self.state.disposed.get() {
+[31m-            return Err(js_sys::Error::new("Calling cancelAndSet on a disposed IntervalTimer").into());
+[0m[32m+            return Err(
+[0m[32m+                js_sys::Error::new("Calling cancelAndSet on a disposed IntervalTimer").into(),
+[0m[32m+            );
+[0m         }
+         self.cancel()?;
+[31m-        let window = target.or(self.state.default_target.as_ref()).unwrap_or(&self.state.fallback);
+[0m[32m+        let window = target
+[0m[32m+            .or(self.state.default_target.as_ref())
+[0m[32m+            .unwrap_or(&self.state.fallback);
+[0m         let set: Function = Reflect::get(window.as_ref(), &"setInterval".into())?.dyn_into()?;
+         // JS ownership lets an instrumented host retain and invoke an old
+         // callback after clearInterval, exactly like the source's plain closure.
+Diff in \\?\C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Octavia\crates\xterm-web\src\links\window_interval.rs:61:
+         // Fn, rather than FnMut, also permits synchronous callback reentrancy.
+[31m-        let callback = Closure::wrap(Box::new(runner) as Box<dyn Fn() -> Result<(), JsValue>>).into_js_value();
+[0m[32m+        let callback =
+[0m[32m+            Closure::wrap(Box::new(runner) as Box<dyn Fn() -> Result<(), JsValue>>).into_js_value();
+[0m         let handle = set.call2(window.as_ref(), &callback, &JsValue::from_f64(interval_ms))?;
+         let old = self.state.pending.replace(Some((window.clone(), handle)));
+         drop(old);
+Diff in \\?\C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Octavia\crates\xterm-web\src\links\window_interval.rs:66:
+         Ok(())
+     }
+[31m-    pub fn cancel(&self) -> Result<(), JsValue> { self.state.cancel() }
+[0m[32m+    pub fn cancel(&self) -> Result<(), JsValue> {
+[0m[32m+        self.state.cancel()
+[0m[32m+    }
+[0m     pub fn dispose(&self) -> Result<(), JsValue> {
+         self.cancel()?;
+         self.state.disposed.set(true);
+Diff in \\?\C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Octavia\crates\xterm-web\src\task_queue.rs:1:
+ // Copyright (c) 2022 The xterm.js authors. All rights reserved. MIT license.
+ //! Browser host for cooperative queues. JS owns scheduled callback lifetimes.
+[31m-use xterm_wasm_support::js_error::{to_js_error, JsCallbackError};
+[0m use std::{cell::RefCell, rc::Rc};
+ use wasm_bindgen::{closure::Closure, prelude::*, JsCast};
+ use web_sys::{IdleDeadline, Performance, Window};
+Diff in \\?\C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Octavia\crates\xterm-web\src\task_queue.rs:7:
+ use xterm_core::task_queue::{CallbackKind, Scheduler, TaskQueue, WeakTaskQueue};
+[32m+use xterm_wasm_support::js_error::{to_js_error, JsCallbackError};
+[0m 
+ type Dispatch = Rc<RefCell<Option<WeakTaskQueue<BrowserScheduler>>>>;
+ 
+Diff in \\?\C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Octavia\crates\xterm-web\tests\public_adapters_wasm.rs:4:
+ use wasm_bindgen_test::*;
+ wasm_bindgen_test_configure!(run_in_browser);
+ 
+[31m-#[wasm_bindgen(inline_js = "export function domProbe(terminal, log) {return {activate(t) {log.push(t===terminal);},dispose() {log.push(terminal.element.isConnected);}};}")]
+[0m[31m-extern "C" { #[wasm_bindgen(js_name = domProbe)] fn dom_probe(terminal: &JsValue, log: &Array) -> JsValue; }
+[0m[31m-fn dispose(object: &JsValue) -> Result<JsValue, JsValue> { Reflect::get(object, &"dispose".into())?.dyn_into::<Function>()?.call0(object) }
+[0m[32m+#[wasm_bindgen(
+[0m[32m+    inline_js = "export function domProbe(terminal, log) {return {activate(t) {log.push(t===terminal);},dispose() {log.push(terminal.element.isConnected);}};}"
+[0m[32m+)]
+[0m[32m+extern "C" {
+[0m[32m+    #[wasm_bindgen(js_name = domProbe)]
+[0m[32m+    fn dom_probe(terminal: &JsValue, log: &Array) -> JsValue;
+[0m[32m+}
+[0m[32m+fn dispose(object: &JsValue) -> Result<JsValue, JsValue> {
+[0m[32m+    Reflect::get(object, &"dispose".into())?
+[0m[32m+        .dyn_into::<Function>()?
+[0m[32m+        .call0(object)
+[0m[32m+}
+[0m 
+ #[wasm_bindgen_test]
+ fn actual_terminal_identity_and_core_dom_cleanup_precede_addon_disposal() {
+Diff in \\?\C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Octavia\crates\xterm-web\tests\accessibility_support\mod.rs:3:
+ pub mod clock;
+ pub mod errors;
+ mod text;
+[31m-pub use text::{attribute, text, units};
+[0m use clock::Clock;
+ use std::{
+     cell::{Cell, RefCell},
+Diff in \\?\C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Octavia\crates\xterm-web\tests\accessibility_support\mod.rs:10:
+     rc::Rc,
+ };
+[32m+pub use text::{attribute, text, units};
+[0m use wasm_bindgen::{JsCast, JsValue};
+ use web_sys::{Document, HtmlElement};
+ use xterm_core::{
+Diff in \\?\C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Octavia\crates\xterm-web\tests\accessibility_support\mod.rs:16:
+     lifecycle::DisposableHandle,
+ };
+ use xterm_web::accessibility::browser::Listener;
+[31m-use xterm_web::{
+[0m[31m-    accessibility::{
+[0m[31m-        AccessibilityEvent, AccessibilityHost, AccessibilityManager, Dimensions,
+[0m[31m-        LocalizableStrings, Row, SelectionRange,
+[0m[31m-    },
+[0m[32m+use xterm_web::accessibility::{
+[0m[32m+    AccessibilityEvent, AccessibilityHost, AccessibilityManager, Dimensions, LocalizableStrings,
+[0m[32m+    Row, SelectionRange,
+[0m };
+ 
+ use xterm_wasm_support::js_error::{to_js_error, JsCallbackError};
+Diff in \\?\C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Octavia\crates\xterm-web\tests\wasm_dom_support.rs:173:
+         .cancel_and_set(|| Ok(()), 0.0, Some(&window))
+         .unwrap_err();
+     assert_eq!(
+[31m-        error.dyn_into::<js_sys::Error>().unwrap().message().as_string().unwrap(),
+[0m[32m+        error
+[0m[32m+            .dyn_into::<js_sys::Error>()
+[0m[32m+            .unwrap()
+[0m[32m+            .message()
+[0m[32m+            .as_string()
+[0m[32m+            .unwrap(),
+[0m         "Calling cancelAndSet on a disposed IntervalTimer"
+     );
+ }
+Diff in \\?\C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Octavia\crates\xterm-web\tests\web_fonts_async_browser.rs:21:
+ }
+ 
+ fn face(name: &str) -> FontFace {
+[31m-    FontFace::new_with_u8_array(
+[0m[31m-        name,
+[0m[31m-        include_bytes!("fixtures/kongtext.regular.ttf"),
+[0m[31m-    )
+[0m[31m-    .unwrap()
+[0m[32m+    FontFace::new_with_u8_array(name, include_bytes!("fixtures/kongtext.regular.ttf")).unwrap()
+[0m }
+ 
+ fn host(family: &str) -> JsValue {
+Diff in \\?\C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Octavia\crates\xterm-web\tests\web_fonts_browser.rs:14:
+ }
+ 
+ fn face(name: &str) -> FontFace {
+[31m-    FontFace::new_with_u8_array(
+[0m[31m-        name,
+[0m[31m-        include_bytes!("fixtures/kongtext.regular.ttf"),
+[0m[31m-    )
+[0m[31m-    .unwrap()
+[0m[32m+    FontFace::new_with_u8_array(name, include_bytes!("fixtures/kongtext.regular.ttf")).unwrap()
+[0m }
+ 
+ fn requests(values: &[JsValue]) -> Array {

@@ -1,0 +1,142 @@
+running 4 tests
+test failing_live_css_write_returns_the_original_error_before_touching_canvases ... FAIL
+test css_write_can_change_the_font_used_by_the_following_canvas_setters ... FAIL
+test canvas_font_setters_can_reenter_renderer_measurement_without_borrow_panics ... ok
+test actual_constructor_preserves_raw_fonts_and_has_no_eager_font_projection ... ok
+
+failures:
+
+---- failing_live_css_write_returns_the_original_error_before_touching_canvases output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable executed
+        dom_font_browser-c8d74a73ca175d66.wasm.__rust_start_panic@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[34996]:0x7c965a
+        dom_font_browser-c8d74a73ca175d66.wasm.rust_panic@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[31224]:0x7c089a
+        dom_font_browser-c8d74a73ca175d66.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[9538]:0x61a84c
+        dom_font_browser-c8d74a73ca175d66.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[12108]:0x686508
+        dom_font_browser-c8d74a73ca175d66.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[34589]:0x7c8c16
+        dom_font_browser-c8d74a73ca175d66.wasm.rust_begin_unwind@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[23424]:0x7912f3
+        dom_font_browser-c8d74a73ca175d66.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[23425]:0x791320
+        dom_font_browser-c8d74a73ca175d66.wasm.core::panicking::panic::h220e5a67f5e3e06f@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[21611]:0x77a04d
+        dom_font_browser-c8d74a73ca175d66.wasm.dom_font_browser::failing_live_css_write_returns_the_original_error_before_touching_canvases::h5c142159f603e4c0@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[846]:0x232d0c
+        dom_font_browser-c8d74a73ca175d66.wasm.core::ops::function::FnOnce::call_once::hcc501360a106c03f@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[22965]:0x78c0d7
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h7493f81e5cb7149e@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[9204]:0x60a3be
+        dom_font_browser-c8d74a73ca175d66.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::ha6b9c5f6ec4d8e1f@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[12109]:0x686551
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[19653]:0x75836a
+        __wbg_adapter_902@http://127.0.0.1:54895/suite.js:526:10
+        cb0@http://127.0.0.1:54895/suite.js:4166:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:54895/suite.js:4171:30
+        handleError@http://127.0.0.1:54895/suite.js:143:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:54895/suite.js:4159:76
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[5784]:0x537ffe
+        dom_font_browser-c8d74a73ca175d66.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::h79690ac03360815c@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[11091]:0x65ea48
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::h0f182f76f7834376@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[13808]:0x6c2a2a
+        dom_font_browser-c8d74a73ca175d66.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::h59324c3483589e2a@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[1525]:0x329289
+        dom_font_browser-c8d74a73ca175d66.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[672]:0x1b9824
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[3138]:0x44075f
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[1462]:0x318e1f
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[3114]:0x43d9b6
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[2809]:0x416592
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[17664]:0x72eab5
+        dom_font_browser-c8d74a73ca175d66.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[14428]:0x6d7794
+        dom_font_browser-c8d74a73ca175d66.wasm.closure2357 externref shim@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[27994]:0x7b3c11
+        __wbg_adapter_106@http://127.0.0.1:54895/suite.js:522:10
+        real@http://127.0.0.1:54895/suite.js:209:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:54895/suite.js:3793:23
+        dom_font_browser-c8d74a73ca175d66.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[34683]:0x7c8fac
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[27615]:0x7b190d
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[4821]:0x4eba4a
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::{{closure}}::h95b28db559806c13@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[31594]:0x7c19ef
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::queue::Queue::with::h9bd5fdd801f7dec4@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[27616]:0x7b1920
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::h42fed9c117de84b9@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[2431]:0x3dea96
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::spawn_local::h3dc491f304d42e44@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[10308]:0x63d246
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::h15c44db32e5b7614@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[7981]:0x5c926a
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen::convert::closures::invoke2_mut::hba2fa4cbb261e43e@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[16268]:0x70c9ce
+        dom_font_browser-c8d74a73ca175d66.wasm.closure2380 externref shim@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[25043]:0x7a0b17
+        __wbg_adapter_1013@http://127.0.0.1:54895/suite.js:534:10
+        cb0@http://127.0.0.1:54895/suite.js:3585:28
+        __wbg_get_imports/imports.wbg.__wbg_new_23a2665fac83c611@http://127.0.0.1:54895/suite.js:3590:25
+        dom_font_browser-c8d74a73ca175d66.wasm.__wbg_new_23a2665fac83c611 externref shim@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[27679]:0x7b1fd1
+        dom_font_browser-c8d74a73ca175d66.wasm.js_sys::Promise::new::hf39a358a769dc6ed@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[11523]:0x66f9b7
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::future_to_promise::h65257425de8480bc@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[9164]:0x6083a0
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_test::__rt::Context::run::he8da95eeed777e80@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[1193]:0x2c8efe
+        dom_font_browser-c8d74a73ca175d66.wasm.wasmbindgentestcontext_run@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[8431]:0x5e23d4
+        dom_font_browser-c8d74a73ca175d66.wasm.wasmbindgentestcontext_run externref shim@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[27991]:0x7b3bc0
+        run@http://127.0.0.1:54895/suite.js:2605:26
+        globalThis.testRun<@debugger eval code line 302 > eval:11:42
+        async*@debugger eval code line 302 > eval:14:11
+        evaluate@debugger eval code:304:16
+        @debugger eval code:1:44
+        @debugger eval code:1:62
+
+---- css_write_can_change_the_font_used_by_the_following_canvas_setters output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable executed
+        dom_font_browser-c8d74a73ca175d66.wasm.__rust_start_panic@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[34996]:0x7c965a
+        dom_font_browser-c8d74a73ca175d66.wasm.rust_panic@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[31224]:0x7c089a
+        dom_font_browser-c8d74a73ca175d66.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[9538]:0x61a84c
+        dom_font_browser-c8d74a73ca175d66.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[12108]:0x6864da
+        dom_font_browser-c8d74a73ca175d66.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[34589]:0x7c8c16
+        dom_font_browser-c8d74a73ca175d66.wasm.rust_begin_unwind@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[23424]:0x7912f3
+        dom_font_browser-c8d74a73ca175d66.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[23425]:0x791320
+        dom_font_browser-c8d74a73ca175d66.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[4296]:0x4bb8b4
+        dom_font_browser-c8d74a73ca175d66.wasm.core::panicking::assert_failed::h89a40b8ba9cd76cc@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[22098]:0x781149
+        dom_font_browser-c8d74a73ca175d66.wasm.dom_font_browser::css_write_can_change_the_font_used_by_the_following_canvas_setters::ha565b7e2f7d4eb60@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[994]:0x27c478
+        dom_font_browser-c8d74a73ca175d66.wasm.core::ops::function::FnOnce::call_once::hf835eb5067f22ae8@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[22964]:0x78c0ac
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h5e3dc5a0567b284f@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[9203]:0x60a2ea
+        dom_font_browser-c8d74a73ca175d66.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h3c8f3c59b97ed33e@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[12111]:0x686699
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[19653]:0x75836a
+        __wbg_adapter_902@http://127.0.0.1:54895/suite.js:526:10
+        cb0@http://127.0.0.1:54895/suite.js:4166:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:54895/suite.js:4171:30
+        handleError@http://127.0.0.1:54895/suite.js:143:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:54895/suite.js:4159:76
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[5784]:0x537ffe
+        dom_font_browser-c8d74a73ca175d66.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::h9cb4b01b5d23e1f4@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[11092]:0x65eaef
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::h21736c5102af0262@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[13809]:0x6c2aba
+        dom_font_browser-c8d74a73ca175d66.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::h2126b2fd802c94ab@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[1524]:0x328e9b
+        dom_font_browser-c8d74a73ca175d66.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[672]:0x1b9824
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[3138]:0x44075f
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[1462]:0x318e1f
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[3114]:0x43d9b6
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[2809]:0x416592
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[17664]:0x72eab5
+        dom_font_browser-c8d74a73ca175d66.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[14428]:0x6d7794
+        dom_font_browser-c8d74a73ca175d66.wasm.closure2357 externref shim@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[27994]:0x7b3c11
+        __wbg_adapter_106@http://127.0.0.1:54895/suite.js:522:10
+        real@http://127.0.0.1:54895/suite.js:209:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:54895/suite.js:3793:23
+        dom_font_browser-c8d74a73ca175d66.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[34683]:0x7c8fac
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[27615]:0x7b190d
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[4821]:0x4eba4a
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::{{closure}}::h95b28db559806c13@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[31594]:0x7c19ef
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::queue::Queue::with::h9bd5fdd801f7dec4@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[27616]:0x7b1920
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::h42fed9c117de84b9@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[2431]:0x3dea96
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::spawn_local::h3dc491f304d42e44@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[10308]:0x63d246
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::h15c44db32e5b7614@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[7981]:0x5c926a
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen::convert::closures::invoke2_mut::hba2fa4cbb261e43e@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[16268]:0x70c9ce
+        dom_font_browser-c8d74a73ca175d66.wasm.closure2380 externref shim@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[25043]:0x7a0b17
+        __wbg_adapter_1013@http://127.0.0.1:54895/suite.js:534:10
+        cb0@http://127.0.0.1:54895/suite.js:3585:28
+        __wbg_get_imports/imports.wbg.__wbg_new_23a2665fac83c611@http://127.0.0.1:54895/suite.js:3590:25
+        dom_font_browser-c8d74a73ca175d66.wasm.__wbg_new_23a2665fac83c611 externref shim@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[27679]:0x7b1fd1
+        dom_font_browser-c8d74a73ca175d66.wasm.js_sys::Promise::new::hf39a358a769dc6ed@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[11523]:0x66f9b7
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_futures::future_to_promise::h65257425de8480bc@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[9164]:0x6083a0
+        dom_font_browser-c8d74a73ca175d66.wasm.wasm_bindgen_test::__rt::Context::run::he8da95eeed777e80@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[1193]:0x2c8efe
+        dom_font_browser-c8d74a73ca175d66.wasm.wasmbindgentestcontext_run@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[8431]:0x5e23d4
+        dom_font_browser-c8d74a73ca175d66.wasm.wasmbindgentestcontext_run externref shim@http://127.0.0.1:54895/suite_bg.wasm:wasm-function[27991]:0x7b3bc0
+        run@http://127.0.0.1:54895/suite.js:2605:26
+        globalThis.testRun<@debugger eval code line 302 > eval:11:42
+        async*@debugger eval code line 302 > eval:14:11
+        evaluate@debugger eval code:304:16
+        @debugger eval code:1:44
+        @debugger eval code:1:62
+
+failures:
+
+    failing_live_css_write_returns_the_original_error_before_touching_canvases
+    css_write_can_change_the_font_used_by_the_following_canvas_setters
+
+test result: FAILED. 2 passed; 2 failed; 0 ignored; 0 filtered out; finished in 0.29s
+

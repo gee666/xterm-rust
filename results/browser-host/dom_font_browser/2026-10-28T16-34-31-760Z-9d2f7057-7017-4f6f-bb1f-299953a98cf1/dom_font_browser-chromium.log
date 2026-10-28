@@ -1,0 +1,43 @@
+running 4 tests
+test failing_live_css_write_returns_the_original_error_before_touching_canvases ... FAIL
+test css_write_can_change_the_font_used_by_the_following_canvas_setters ... FAIL
+test canvas_font_setters_can_reenter_renderer_measurement_without_borrow_panics ... ok
+test actual_constructor_preserves_raw_fonts_and_has_no_eager_font_projection ... ok
+
+failures:
+
+---- failing_live_css_write_returns_the_original_error_before_touching_canvases output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at dom_font_browser-c8d74a73ca175d66.wasm.__rust_start_panic (http://127.0.0.1:54895/suite_bg.wasm:wasm-function[34996]:0x7c965a)
+            at dom_font_browser-c8d74a73ca175d66.wasm.rust_panic (http://127.0.0.1:54895/suite_bg.wasm:wasm-function[31224]:0x7c089a)
+            at dom_font_browser-c8d74a73ca175d66.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:54895/suite_bg.wasm:wasm-function[9538]:0x61a84c)
+            at dom_font_browser-c8d74a73ca175d66.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:54895/suite_bg.wasm:wasm-function[12108]:0x686508)
+            at dom_font_browser-c8d74a73ca175d66.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:54895/suite_bg.wasm:wasm-function[34589]:0x7c8c16)
+            at dom_font_browser-c8d74a73ca175d66.wasm.rust_begin_unwind (http://127.0.0.1:54895/suite_bg.wasm:wasm-function[23424]:0x7912f3)
+            at dom_font_browser-c8d74a73ca175d66.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:54895/suite_bg.wasm:wasm-function[23425]:0x791320)
+            at dom_font_browser-c8d74a73ca175d66.wasm.core::panicking::panic::h220e5a67f5e3e06f (http://127.0.0.1:54895/suite_bg.wasm:wasm-function[21611]:0x77a04d)
+            at dom_font_browser-c8d74a73ca175d66.wasm.dom_font_browser::failing_live_css_write_returns_the_original_error_before_touching_canvases::h5c142159f603e4c0 (http://127.0.0.1:54895/suite_bg.wasm:wasm-function[846]:0x232d0c)
+            at dom_font_browser-c8d74a73ca175d66.wasm.core::ops::function::FnOnce::call_once::hcc501360a106c03f (http://127.0.0.1:54895/suite_bg.wasm:wasm-function[22965]:0x78c0d7)
+
+---- css_write_can_change_the_font_used_by_the_following_canvas_setters output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at dom_font_browser-c8d74a73ca175d66.wasm.__rust_start_panic (http://127.0.0.1:54895/suite_bg.wasm:wasm-function[34996]:0x7c965a)
+            at dom_font_browser-c8d74a73ca175d66.wasm.rust_panic (http://127.0.0.1:54895/suite_bg.wasm:wasm-function[31224]:0x7c089a)
+            at dom_font_browser-c8d74a73ca175d66.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:54895/suite_bg.wasm:wasm-function[9538]:0x61a84c)
+            at dom_font_browser-c8d74a73ca175d66.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:54895/suite_bg.wasm:wasm-function[12108]:0x6864da)
+            at dom_font_browser-c8d74a73ca175d66.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:54895/suite_bg.wasm:wasm-function[34589]:0x7c8c16)
+            at dom_font_browser-c8d74a73ca175d66.wasm.rust_begin_unwind (http://127.0.0.1:54895/suite_bg.wasm:wasm-function[23424]:0x7912f3)
+            at dom_font_browser-c8d74a73ca175d66.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:54895/suite_bg.wasm:wasm-function[23425]:0x791320)
+            at dom_font_browser-c8d74a73ca175d66.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:54895/suite_bg.wasm:wasm-function[4296]:0x4bb8b4)
+            at dom_font_browser-c8d74a73ca175d66.wasm.core::panicking::assert_failed::h89a40b8ba9cd76cc (http://127.0.0.1:54895/suite_bg.wasm:wasm-function[22098]:0x781149)
+            at dom_font_browser-c8d74a73ca175d66.wasm.dom_font_browser::css_write_can_change_the_font_used_by_the_following_canvas_setters::ha565b7e2f7d4eb60 (http://127.0.0.1:54895/suite_bg.wasm:wasm-function[994]:0x27c478)
+
+failures:
+
+    failing_live_css_write_returns_the_original_error_before_touching_canvases
+    css_write_can_change_the_font_used_by_the_following_canvas_setters
+
+test result: FAILED. 2 passed; 2 failed; 0 ignored; 0 filtered out; finished in 0.13s
+

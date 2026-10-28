@@ -1,0 +1,58 @@
+    Checking xterm-core v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Octavia\crates\xterm-core)
+    Checking xterm-addons v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Octavia\crates\xterm-addons)
+    Checking xterm-wasm-support v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Octavia\crates\xterm-wasm-support)
+    Checking xterm-web v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Octavia\crates\xterm-web)
+error: function `palette` is never used
+ --> crates\xterm-web\src\renderer\row_colors.rs:9:15
+  |
+9 | pub(super) fn palette<E>(colors: &ColorSet, index: i32) -> Result<Color, RowError<E>> {
+  |               ^^^^^^^
+  |
+  = note: `-D dead-code` implied by `-D warnings`
+  = help: to override `-D warnings` add `#[allow(dead_code)]`
+
+error: function `apply` is never used
+  --> crates\xterm-web\src\renderer\row_colors.rs:16:15
+   |
+16 | pub(super) fn apply<E>(
+   |               ^^^^^
+
+error: function `rgb_color` is never used
+   --> crates\xterm-web\src\renderer\row_colors.rs:165:4
+    |
+165 | fn rgb_color(color: i32) -> Color {
+    |    ^^^^^^^^^
+
+error: function `background_glyph` is never used
+   --> crates\xterm-web\src\renderer\row_colors.rs:173:4
+    |
+173 | fn background_glyph(code: Option<u32>) -> bool {
+    |    ^^^^^^^^^^^^^^^^
+
+error: struct `ContrastInput` is never constructed
+   --> crates\xterm-web\src\renderer\row_colors.rs:176:8
+    |
+176 | struct ContrastInput<'a> {
+    |        ^^^^^^^^^^^^^
+
+error: function `apply_contrast` is never used
+   --> crates\xterm-web\src\renderer\row_colors.rs:182:4
+    |
+182 | fn apply_contrast(
+    |    ^^^^^^^^^^^^^^
+
+error: fields `attrs`, `chars`, `width`, and `code` are never read
+   --> crates\xterm-web\src\renderer\row_types.rs:109:9
+    |
+108 | pub(super) struct RenderCell {
+    |                   ---------- fields in this struct
+109 |     pub attrs: AttributeData,
+    |         ^^^^^
+110 |     pub chars: Vec<u16>,
+    |         ^^^^^
+111 |     pub width: i32,
+    |         ^^^^^
+112 |     pub code: Option<u32>,
+    |         ^^^^
+
+error: could not compile `xterm-web` (lib) due to 7 previous errors
