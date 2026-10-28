@@ -142,6 +142,38 @@ for (let index = 0; index < 12000; index++) {
   }
   step(handler, body);
 }
+const interruption = makeHandler();
+const snapshots = [];
+interruption._logService = { debug: (_format, code) => {
+  snapshots.push({ code, state: bits(interruption._curAttrData) });
+  throw new Error('injected SGR log failure');
+} };
+assert.throws(() => interruption.charAttributes(paramsFor('1;999;2')), /injected SGR log failure/);
+assert.deepEqual(bits(interruption._curAttrData), [0x08000000, 0, 0, 0, 0]);
+interruption._curAttrData = new AttributeData();
+interruption._logService = { debug: () => interruption.charAttributes(paramsFor('0;3')) };
+interruption.charAttributes(paramsFor('1;999;2'));
+assert.deepEqual(bits(interruption._curAttrData), [0, 0x0c000000, 0, 0, 0]);
+const detached = makeHandler();
+const originalAttributeObject = detached._curAttrData;
+detached._logService = { debug: () => {
+  detached.charAttributes(paramsFor('3;7'));
+  detached._curAttrData = new AttributeData();
+} };
+detached.charAttributes(paramsFor('1;999;2'));
+assert.deepEqual(bits(originalAttributeObject), [0x0c000000, 0x0c000000, 0, 0, 0]);
+assert.deepEqual(bits(detached._curAttrData), [0, 0, 0, 0, 0]);
+let getterCalls = 0;
+const getterFailure = makeHandler();
+Object.defineProperty(getterFailure._optionsService.rawOptions.vtExtensions, 'kittySgrBoldFaintControl', {
+  get() { getterCalls++; throw new Error('injected SGR option failure'); }
+});
+getterFailure.charAttributes(paramsFor('1;2;3'));
+assert.equal(getterCalls, 0);
+getterFailure._curAttrData = new AttributeData();
+assert.throws(() => getterFailure.charAttributes(paramsFor('1;221;2')), /injected SGR option failure/);
+assert.deepEqual(bits(getterFailure._curAttrData), [0x08000000, 0, 0, 0, 0]);
+assert.equal(getterCalls, 1);
 const fixture = rows.join('\n') + '\n';
 const path = 'crates/xterm-core/tests/fixtures/sgr-oracle.tsv';
 if (process.argv.includes('--write-fixtures')) writeFileSync(path, fixture);
@@ -149,6 +181,7 @@ else assert.equal(readFileSync(path, 'utf8').replaceAll('\r\n', '\n'), fixture);
 const sha256 = data => createHash('sha256').update(data).digest('hex');
 const summary = { scope: 'SGR methods and scoped source assertions only, not complete InputHandler or parser baseline',
   originalCases: cases.length, originalAssertions: assertionCount, originalAssertionRows,
+  interruptionChecks: ['log failure prefix', 'nested SGR log mutation', 'detached target after replacement', 'kitty getter only on demand', 'kitty getter failure prefix'], snapshots,
   cases: caseCounts, comparedRows: rows.length, seed, node: process.version, esbuild: esbuild.version,
   sourceSha256: sha256(readFileSync('source_repo/src/common/InputHandler.ts')),
   assertionSourceSha256: sha256(selected), fixtureSha256: sha256(fixture), status: 'passed' };

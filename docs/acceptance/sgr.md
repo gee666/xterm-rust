@@ -4,7 +4,7 @@ Task #80 ports InputHandler.charAttributes and its four helpers from source_repo
 
 ## SGR1. Ordered packed mutations
 
-Test every branch and combinations in source order: 0,1,2,3,4,5,7,8,9,21,22,23,24,25,27,28,29,30-37,39,40-47,49,53,55,58,59,90-97,100-107,221,222. Unknown parameters, including unsupported blink6, must not change attributes, and must be returned in order for the caller's source diagnostic.
+Test every branch and combinations in source order: 0,1,2,3,4,5,7,8,9,21,22,23,24,25,27,28,29,30-37,39,40-47,49,53,55,58,59,90-97,100-107,221,222. Unknown parameters, including unsupported blink6, must not change attributes. The actual caller must invoke each diagnostic before later attribute mutations. A logger failure retains only the already-applied prefix; reentrant mutations and replacement of the captured attribute object must preserve source target identity. The kitty option getter runs only on221/222 and may fail or reenter before those mutations.
 
 Single SGR0 and embedded SGR0 reset foreground/background to defaults. They clone extended attributes and clear underline style/color while retaining URL id and underline variant bits. Clone drops payload, matching ExtendedAttrs.clone. Other flag operations must not mutate or clone unrelated extended state. Normal color changes retain every non-color bit, including protection; SGR0 resets protection as source does.
 

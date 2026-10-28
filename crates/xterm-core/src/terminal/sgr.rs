@@ -67,76 +67,146 @@ pub fn apply_with_options(
     kitty_control: bool,
 ) -> Vec<i32> {
     let mut unknown = Vec::new();
-    let mut index = 0;
-    while index < params.len() {
-        let value = params.values()[index];
-        match value {
-            code::FG_FIRST..=code::FG_LAST => {
-                attr.fg = (attr.fg & !COLOR_BITS) | color::CM_P16 | (value - code::FG_FIRST) as u32
-            }
-            code::BG_FIRST..=code::BG_LAST => {
-                attr.bg = (attr.bg & !COLOR_BITS) | color::CM_P16 | (value - code::BG_FIRST) as u32
-            }
-            code::BRIGHT_FG_FIRST..=code::BRIGHT_FG_LAST => {
-                attr.fg = (attr.fg & !COLOR_BITS)
-                    | color::CM_P16
-                    | (value - code::BRIGHT_FG_FIRST) as u32
-                    | 8
-            }
-            code::BRIGHT_BG_FIRST..=code::BRIGHT_BG_LAST => {
-                attr.bg = (attr.bg & !COLOR_BITS)
-                    | color::CM_P16
-                    | (value - code::BRIGHT_BG_FIRST) as u32
-                    | 8
-            }
-            code::RESET => reset(attr),
-            code::BOLD => attr.fg |= fg::BOLD,
-            code::FAINT => attr.bg |= bg::DIM,
-            code::ITALIC => attr.bg |= bg::ITALIC,
-            code::UNDERLINE => {
-                let style = params
-                    .get_sub_params(index)
-                    .and_then(|sub| sub.first())
-                    .copied()
-                    .unwrap_or(underline_style::SINGLE as i32);
-                underline(attr, style);
-            }
-            code::BLINK => attr.fg |= fg::BLINK,
-            code::INVERSE => attr.fg |= fg::INVERSE,
-            code::INVISIBLE => attr.fg |= fg::INVISIBLE,
-            code::STRIKE => attr.fg |= fg::STRIKETHROUGH,
-            code::DOUBLE_UNDERLINE => underline(attr, underline_style::DOUBLE as i32),
-            code::NORMAL_INTENSITY => {
-                attr.fg &= !fg::BOLD;
-                attr.bg &= !bg::DIM;
-            }
-            code::NO_ITALIC => attr.bg &= !bg::ITALIC,
-            code::NO_UNDERLINE => underline(attr, underline_style::NONE as i32),
-            code::NO_BLINK => attr.fg &= !fg::BLINK,
-            code::NO_INVERSE => attr.fg &= !fg::INVERSE,
-            code::NO_INVISIBLE => attr.fg &= !fg::INVISIBLE,
-            code::NO_STRIKE => attr.fg &= !fg::STRIKETHROUGH,
-            code::FG_DEFAULT => attr.fg &= !COLOR_BITS,
-            code::BG_DEFAULT => attr.bg &= !COLOR_BITS,
-            code::FG_COLOR => index += extract_color(attr, params, index, ColorTarget::Foreground),
-            code::BG_COLOR => index += extract_color(attr, params, index, ColorTarget::Background),
-            code::UNDERLINE_COLOR => {
-                index += extract_color(attr, params, index, ColorTarget::Underline)
-            }
-            code::OVERLINE => attr.bg |= bg::OVERLINE,
-            code::NO_OVERLINE => attr.bg &= !bg::OVERLINE,
-            code::NO_BOLD if kitty_control => attr.fg &= !fg::BOLD,
-            code::NO_FAINT if kitty_control => attr.bg &= !bg::DIM,
-            code::UNDERLINE_DEFAULT => {
-                attr.extended = attr.extended.clone();
-                attr.extended.set_underline_color(u32::MAX);
-                attr.update_extended();
-            }
-            _ => unknown.push(value),
-        }
-        index += 1;
+    let mut cursor = SgrCursor::new(params);
+    while let Some(value) = cursor.step(attr, kitty_control) {
+        unknown.push(value);
     }
     unknown
+}
+
+/// A source boundary that may call user-owned option getters or loggers.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum SgrAction {
+    Done,
+    Unknown(i32),
+    Kitty(KittyControl),
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum KittyControl {
+    Bold,
+    Faint,
+}
+
+impl KittyControl {
+    pub fn apply(self, attr: &mut AttributeData, enabled: bool) -> Option<i32> {
+        match (self, enabled) {
+            (Self::Bold, true) => attr.fg &= !fg::BOLD,
+            (Self::Faint, true) => attr.bg &= !bg::DIM,
+            (Self::Bold, false) => return Some(code::NO_BOLD),
+            (Self::Faint, false) => return Some(code::NO_FAINT),
+        }
+        None
+    }
+}
+
+/// Pause before each external callback and before any following mutation.
+/// Bindings release their state borrow before user-owned logging/getters, then
+/// resume against the same attribute object, even if reentrant reset detaches it.
+pub struct SgrCursor<'a> {
+    params: &'a Params,
+    index: usize,
+}
+
+impl<'a> SgrCursor<'a> {
+    pub fn new(params: &'a Params) -> Self {
+        Self { params, index: 0 }
+    }
+
+    /// Convenience for pure attribute processing with a fixed option value.
+    pub fn step(&mut self, attr: &mut AttributeData, kitty_control: bool) -> Option<i32> {
+        loop {
+            match self.next(attr) {
+                SgrAction::Done => return None,
+                SgrAction::Unknown(value) => return Some(value),
+                SgrAction::Kitty(control) => {
+                    if let Some(value) = control.apply(attr, kitty_control) {
+                        return Some(value);
+                    }
+                }
+            }
+        }
+    }
+
+    pub fn next(&mut self, attr: &mut AttributeData) -> SgrAction {
+        let params = self.params;
+        while self.index < params.len() {
+            let index = self.index;
+            let value = params.values()[index];
+            self.index += 1;
+            match value {
+                code::FG_FIRST..=code::FG_LAST => {
+                    attr.fg =
+                        (attr.fg & !COLOR_BITS) | color::CM_P16 | (value - code::FG_FIRST) as u32
+                }
+                code::BG_FIRST..=code::BG_LAST => {
+                    attr.bg =
+                        (attr.bg & !COLOR_BITS) | color::CM_P16 | (value - code::BG_FIRST) as u32
+                }
+                code::BRIGHT_FG_FIRST..=code::BRIGHT_FG_LAST => {
+                    attr.fg = (attr.fg & !COLOR_BITS)
+                        | color::CM_P16
+                        | (value - code::BRIGHT_FG_FIRST) as u32
+                        | 8
+                }
+                code::BRIGHT_BG_FIRST..=code::BRIGHT_BG_LAST => {
+                    attr.bg = (attr.bg & !COLOR_BITS)
+                        | color::CM_P16
+                        | (value - code::BRIGHT_BG_FIRST) as u32
+                        | 8
+                }
+                code::RESET => reset(attr),
+                code::BOLD => attr.fg |= fg::BOLD,
+                code::FAINT => attr.bg |= bg::DIM,
+                code::ITALIC => attr.bg |= bg::ITALIC,
+                code::UNDERLINE => {
+                    let style = params
+                        .get_sub_params(index)
+                        .and_then(|sub| sub.first())
+                        .copied()
+                        .unwrap_or(underline_style::SINGLE as i32);
+                    underline(attr, style);
+                }
+                code::BLINK => attr.fg |= fg::BLINK,
+                code::INVERSE => attr.fg |= fg::INVERSE,
+                code::INVISIBLE => attr.fg |= fg::INVISIBLE,
+                code::STRIKE => attr.fg |= fg::STRIKETHROUGH,
+                code::DOUBLE_UNDERLINE => underline(attr, underline_style::DOUBLE as i32),
+                code::NORMAL_INTENSITY => {
+                    attr.fg &= !fg::BOLD;
+                    attr.bg &= !bg::DIM;
+                }
+                code::NO_ITALIC => attr.bg &= !bg::ITALIC,
+                code::NO_UNDERLINE => underline(attr, underline_style::NONE as i32),
+                code::NO_BLINK => attr.fg &= !fg::BLINK,
+                code::NO_INVERSE => attr.fg &= !fg::INVERSE,
+                code::NO_INVISIBLE => attr.fg &= !fg::INVISIBLE,
+                code::NO_STRIKE => attr.fg &= !fg::STRIKETHROUGH,
+                code::FG_DEFAULT => attr.fg &= !COLOR_BITS,
+                code::BG_DEFAULT => attr.bg &= !COLOR_BITS,
+                code::FG_COLOR => {
+                    self.index += extract_color(attr, params, index, ColorTarget::Foreground)
+                }
+                code::BG_COLOR => {
+                    self.index += extract_color(attr, params, index, ColorTarget::Background)
+                }
+                code::UNDERLINE_COLOR => {
+                    self.index += extract_color(attr, params, index, ColorTarget::Underline)
+                }
+                code::OVERLINE => attr.bg |= bg::OVERLINE,
+                code::NO_OVERLINE => attr.bg &= !bg::OVERLINE,
+                code::NO_BOLD => return SgrAction::Kitty(KittyControl::Bold),
+                code::NO_FAINT => return SgrAction::Kitty(KittyControl::Faint),
+                code::UNDERLINE_DEFAULT => {
+                    attr.extended = attr.extended.clone();
+                    attr.extended.set_underline_color(u32::MAX);
+                    attr.update_extended();
+                }
+                _ => return SgrAction::Unknown(value),
+            }
+        }
+        SgrAction::Done
+    }
 }
 
 fn reset(attr: &mut AttributeData) {

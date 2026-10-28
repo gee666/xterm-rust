@@ -1,0 +1,43 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+warning: variant `Debug` is never constructed
+  --> crates\xterm-core\src\terminal\state.rs:15:5
+   |
+13 | pub(crate) enum CoreAction {
+   |                 ---------- variant in this enum
+14 |     Reply(Vec<u16>),
+15 |     Debug(Vec<u16>),
+   |     ^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: method `mode_debug` is never used
+  --> crates\xterm-core\src\terminal\state.rs:97:19
+   |
+48 | impl TerminalState {
+   | ------------------ method in this implementation
+...
+97 |     pub(crate) fn mode_debug(&mut self, text: &str) -> Result<(), TerminalError> {
+   |                   ^^^^^^^^^^
+
+warning: `xterm-core` (lib) generated 2 warnings
+    Finished `test` profile [unoptimized] target(s) in 2.63s
+     Running tests\sgr.rs (target\debug\deps\sgr-bc31ac11eff89014.exe)
+
+running 5 tests
+test flag_set_reset_and_kitty_controls_preserve_other_bits ... ok
+test reset_clones_extended_drops_payload_and_preserves_url_and_variant ... ok
+test underline_color_clone_and_packed_flag_quirks_are_preserved ... ok
+test palette_and_rgb_transitions_retain_flags_and_protection ... ok
+test unchanged_source_assertion_states_and_seeded_corpus ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests\sgr_callbacks.rs (target\debug\deps\sgr_callbacks-ebf5ec75567d619a.exe)
+
+running 3 tests
+test diagnostics_pause_before_following_attributes_and_allow_reentrant_changes ... ok
+test kitty_option_boundary_is_reached_only_for_kitty_parameters ... ok
+test resumed_processing_can_retain_the_detached_original_attribute_object ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
