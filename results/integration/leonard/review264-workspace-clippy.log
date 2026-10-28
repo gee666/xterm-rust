@@ -1,0 +1,30 @@
+    Checking xterm-addons v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Leonard\crates\xterm-addons)
+    Checking xterm-wasm-support v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Leonard\crates\xterm-wasm-support)
+    Checking xterm-web v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Leonard\crates\xterm-web)
+error: float has excessive precision
+   --> crates\xterm-web\src\renderer\width_cache_tests.rs:131:19
+    |
+131 |         f64::from(1.23456789_f32)
+    |                   ^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#excessive_precision
+    = note: `-D clippy::excessive-precision` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::excessive_precision)]`
+help: consider changing the type or truncating it to
+    |
+131 |         f64::from(1.234_567_9_f32)
+    |                   ~~~~~~~~~~~~~~~
+
+error: could not compile `xterm-web` (lib test) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: very complex type used. Consider factoring parts into `type` definitions
+  --> crates\xterm-web\tests\scrollbar_visibility.rs:52:6
+   |
+52 | ) -> (Controller, Rc<RefCell<Host>>, Rc<RefCell<Vec<String>>>) {
+   |      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#type_complexity
+   = note: `-D clippy::type-complexity` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::type_complexity)]`
+
+error: could not compile `xterm-web` (test "scrollbar_visibility") due to 1 previous error

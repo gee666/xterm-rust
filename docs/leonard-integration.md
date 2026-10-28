@@ -1,6 +1,6 @@
 # Leonard integration checkpoint
 
-Overall equivalence is NOT PROVEN. This branch carries the Berenice core fixes, including accepted Windows task267, and adds accepted test-lint repair276. The unchanged canonical gate merged this branch into main at `acee593` after the task60 bootstrap. Task264 independent review remains separate. No browser engine or source reference was edited here.
+Overall equivalence is NOT PROVEN. This branch carries the Berenice core fixes, including accepted Windows task267, and adds accepted test-lint repair276. The unchanged canonical gate merged this branch into main at `acee593` after the task60 bootstrap. Task264 independent review accepted the integration. No browser engine or source reference was edited here.
 
 ## Provenance
 
@@ -39,4 +39,10 @@ The first short coordination post mistakenly said29 focused tests. Counting the 
 - `cargo clippy --workspace --all-targets --all-features -- -D warnings`: stopped at the now-repaired core test hex lint, `clippy-before.log`. No full-workspace success is inferred from scoped Clippy.
 - `cargo test --workspace --all-targets --all-features`: failed before the bootstrap on missing web module exports and the u32/u64 URL fixture mismatch, `tests-before.log`. Task60 fixed those compile gaps. The successful merge checked affected native targets but did not rerun the whole workspace all-feature runtime command here.
 
-Linux/macOS runtime, full browser/addon/upstream suites, full release workspace and benchmark equivalence are not established by these results. Params226, diagnostics194 and genuine async resize replay257 remain unfinished implementation work.
+## Independent task264 review
+
+The reviewer accepted task264 on the integrated snapshot at `026a8d8`. It independently ran1492 core tests,1942 workspace all-target/all-feature tests, one workspace doctest,19 focused regressions and14 focused release tests. Core Clippy, native all-target checks, web/support WASM library checks, the all-feature workspace release build and exact-file formatting passed. Only four command transcripts were retained by the reviewer: `review264-core-tests.log`, `review264-workspace-tests.log`, `review264-workspace-doc.log` and `review264-workspace-clippy.log`, now copied unchanged into this result directory. Other observations above are the review verdict, not fabricated log files.
+
+Workspace formatting still fails with Windows error206. Workspace Clippy still reports existing test lints at `crates/xterm-web/src/renderer/width_cache_tests.rs:131` and `crates/xterm-web/tests/scrollbar_visibility.rs:52`. No workspace Clippy pass is claimed. The reviewer found no producer deletion, assertion weakening, lint suppression or unsafe change.
+
+Linux/macOS runtime, full browser/addon/upstream suites and benchmark equivalence are not established by these results. Params226, diagnostics194 and genuine async resize replay257 remain unfinished implementation work.
