@@ -8,6 +8,7 @@ import { stripTypeScriptTypes } from 'node:module';
 import { resolve } from 'node:path';
 import { Disposable, DisposableStore, toDisposable } from '../source_repo/src/common/Lifecycle.ts';
 import { runCommand } from './quality-process.mjs';
+import { pinArtifact } from './acceptance-artifacts.mjs';
 
 process.chdir(resolve(import.meta.dirname, '..'));
 mkdirSync('results/core-services', { recursive: true });
@@ -156,7 +157,8 @@ const build = spawnSync(process.env.CARGO ?? 'cargo', ['build', '-p', 'xterm-cor
 writeFileSync('results/core-services/build.log', `${build.stdout ?? ''}${build.stderr ?? ''}`);
 if (build.error) throw build.error; assert.equal(build.status, 0, build.stderr);
 const binary = resolve('target/debug/examples/core_service_oracle' + (process.platform === 'win32' ? '.exe' : ''));
-const run = spawnSync(binary, [], { input: operations.join('\n') + '\n', encoding: 'utf8', timeout: 120000, maxBuffer: 32 * 1024 * 1024 });
+const pinnedBinary = await pinArtifact(process.cwd(), binary);
+const run = spawnSync(resolve(pinnedBinary.path), [], { input: operations.join('\n') + '\n', encoding: 'utf8', timeout: 120000, maxBuffer: 32 * 1024 * 1024 });
 if (run.error) throw run.error; assert.equal(run.status, 0, run.stderr);
 const actual = run.stdout.replace(/\r?\n$/, '').split(/\r?\n/);
 assert.equal(actual.length, expected.length);
@@ -170,7 +172,7 @@ const rustc = spawnSync(process.env.RUSTC ?? 'rustc', ['--version'], { encoding:
 if (rustc.error) throw rustc.error; assert.equal(rustc.status, 0);
 const summary = { scope: 'CoreService/LogService only; terminal integration and full equivalence NOT PROVEN',
   command: 'node scripts/check-core-services.mjs', platform: process.platform, arch: process.arch,
-  node: process.version, rustc: rustc.stdout.trim(), originalCases: tests.length, originalAssertions: assertions,
+  node: process.version, rustc: rustc.stdout.trim(), pinnedBinary, originalCases: tests.length, originalAssertions: assertions,
   originalMockAdaptation: 'Three constructor-only tests use only rawOptions defaults and supplied showCursorImmediately; mock buffer/log fields not consulted by these assertions.',
   seed, differentialOperations: actual.length, randomizedOperations: 20000, mismatches: 0,
   sources: sourceFiles.map(path => ({ path, sha256: sha256(readFileSync(path)) })),
