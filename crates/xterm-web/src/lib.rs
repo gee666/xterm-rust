@@ -4,6 +4,7 @@
 //! unsupported terminal APIs are not exported as successful placeholders.
 
 pub mod api;
+pub mod scroll;
 pub mod input;
 pub mod links;
 pub mod selection;
