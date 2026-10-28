@@ -1,7 +1,7 @@
 //! Actual Rust producer to WASM callback conversion. Not a JS terminal substitute.
 use super::events;
 use crate::{js_error::to_js_error, utf16::from_js_string};
-use js_sys::{Array, Function, JsString, Object, Reflect, Symbol};
+use js_sys::{Array, Function, JsString, Object, Reflect};
 use std::{collections::BTreeMap, rc::Rc};
 use wasm_bindgen::{prelude::*, JsCast};
 use wasm_bindgen_test::*;
@@ -20,6 +20,7 @@ export function a11yRecorder(store) { return value => store.push(value); }
 export function a11yThrower(store, sentinel) {
   return value => { store.push(value); throw sentinel; };
 }
+export function a11ySymbolFailure() { return Symbol('a11y sentinel'); }
 export function a11yOpaqueFailure() {
   return {toString() { throw new Error('a11y failure must not be stringified'); }};
 }
@@ -31,6 +32,8 @@ extern "C" {
     fn thrower(store: &Array, sentinel: &JsValue) -> Function;
     #[wasm_bindgen(js_name = a11yOpaqueFailure)]
     fn opaque_failure() -> JsValue;
+    #[wasm_bindgen(js_name = a11ySymbolFailure)]
+    fn symbol_failure() -> JsValue;
 }
 
 struct Bridge {
@@ -175,7 +178,7 @@ fn disabled_a11y_and_pending_high_surrogates_do_not_invent_callbacks() {
 
 #[wasm_bindgen_test]
 fn thrown_javascript_values_keep_identity_and_stop_before_cell_write() {
-    let symbol: JsValue = Symbol::new(Some("a11y sentinel")).into();
+    let symbol = symbol_failure();
     for thrown in [
         opaque_failure(),
         symbol,

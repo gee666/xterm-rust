@@ -9,13 +9,24 @@
   "sourceStatus": "matched",
   "fmt": "focused check passed",
   "nativeTestsDeclared": 3,
-  "nativeTestsExecuted": 0,
-  "nativeStatus": "unrun pending >=1GiB headroom and controlled build slot",
+  "nativeTestsExecuted": 3,
+  "nativeStatus": "exact production file and exact repository assertions compiled/executed in isolated rustc wrapper, passed3 failed0",
+  "nativeReceipt": "results/build-slots/1793171586605-46940-766677b0-4e00-40fc-9fae-d820550ffb86/receipt.json",
+  "clippy": "isolated clippy-driver -Dwarnings passed for same exact data/test modules",
+  "clippyReceipt": "results/build-slots/1793171632650-48300-bbe466c1-6242-48c7-8c0a-7e36d74bcaff/receipt.json",
+  "integratedAttempt": "results/build-slots/1793171447072-23292-760821ea-2003-42a7-9f14-f02f247990b9: blocked by unrelated NativeWriteScheduler.cancel trait migration before tests",
   "rootExport": "Chloe confirmed data::escape_sequences inline public export",
-  "notes": "A source-text match is not a native build/test or whole-port pass.",
-  "commands": [
-    "node scripts/escape-sequences-oracle.mjs",
-    "cargo test -p xterm-core --test escape_sequence_constants",
-    "cargo clippy -p xterm-core --test escape_sequence_constants -- -D warnings"
-  ]
+  "notes": "No whole-crate matrix or other native OS pass claimed. Isolated harness imports exact implementation and test paths, does not copy or rewrite either. Shared Cargo target/profiles unchanged.",
+  "platform": "native Windows x86_64",
+  "rustc": "1.85.1",
+  "node": "v24.15.0",
+  "integratedNative": {
+    "passed": 3,
+    "failed": 0,
+    "receipt": "results/build-slots/1793172346710-21356-b4646464-f882-4016-9261-bee8b4492306/receipt.json"
+  },
+  "integratedClippy": {
+    "status": "passed warning-free",
+    "receipt": "results/build-slots/1793172358241-17448-df8d505a-89c5-4591-b962-bf61ba246c55/receipt.json"
+  }
 }

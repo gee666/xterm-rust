@@ -2,10 +2,12 @@
   "task": 168,
   "status": "native/source passed; WASM not executed",
   "currentAudit": "Existing producer, TerminalEvent and browser accessibility adapter already carry Vec<u16>; no production migration was necessary.",
+  "subsequentSourceChange": "Task211 constructor/import migration now validated by fresh native7 and current Clippy; assertions unchanged.",
   "native": {
     "testsPassed": 7,
     "failed": 0,
-    "receipt": "results/build-slots/1793149789714-49456-53843d04-157e-462c-800c-8fcaa5190d29/receipt.json"
+    "receipt": "results/build-slots/1793172138367-5944-fff8dadd-a320-4b13-b175-1e436c33ba5c/receipt.json",
+    "note": "Fresh after Charset211 constructor/import migration"
   },
   "source": {
     "producerCasesPassed": 7,
@@ -16,17 +18,23 @@
   },
   "clippy": {
     "status": "passed warning-free",
-    "receipt": "results/build-slots/1793150095541-22580-fc2334b1-6fd3-40c2-b1c0-c2f9d57c0aaf/receipt.json"
+    "receipt": "results/build-slots/1793172358241-17448-df8d505a-89c5-4591-b962-bf61ba246c55/receipt.json"
   },
   "wasm": {
     "testsDeclared": 5,
     "testsExecuted": 0,
     "firstAttempt": "results/browser-host/lib/2026-10-28T01-11-51-662Z: cargo not found without explicit CARGO environment",
     "secondAttempt": "results/browser-host/lib/2026-10-28T01-13-21-543Z: write_scheduler.rs request receiver did not match updated trait; no browser execution",
-    "actualHostIncluded": true
+    "actualHostIncluded": true,
+    "latestAttempt": "results/browser-host/lib/2026-10-28T07-25-21-365Z: missing unrelated renderer width_cache_reentry_tests.rs before browser execution"
   },
   "release": "New release execution unrun under current local build-slot policy. No new release pass claimed.",
-  "resource": "Subsequent independent model-review commands failed closed before start below 1GiB; no bypass.",
+  "resource": "Resource migration218 accepted; canonical P target now backs onto C cache. Subsequent builds use controlled190 leases; no alternate target/profile override.",
+  "postMigrationAttempts": [
+    "results/build-slots/1793171447072-23292-760821ea-2003-42a7-9f14-f02f247990b9: NativeWriteScheduler.cancel Result signature migration blocked tests",
+    "results/build-slots/1793171447072-50036-413866b5-a455-4b79-ad4e-169a6882e1b4: same core cancellation mismatch blocked WASM compilation; no browser execution",
+    "results/build-slots/1793171773470-5212-f58c1bf9-bcba-4552-b946-157ed684ed34: SortedList missing lookup/sort_insert/KeyItem during atomic module migration; no tests ran"
+  ],
   "notEstablished": [
     "Five actual three-engine WASM unit results",
     "New native release result",

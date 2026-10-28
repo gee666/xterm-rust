@@ -69,12 +69,14 @@ Evidence: `scripts/vt500-oracle.mjs`, `exhaustive_vt500_oracle`, `unicode_classi
 
 ## T3. Custom-table mutation, regeneration and evidence
 
-- A custom table of requested length initially contains zero, meaning Ignore/Ground. `set_default` changes every allocated entry.
-- `add` uses `(state << 8) | code`; `add_many` changes exactly the selected codes. Untouched entries retain prior values. Source and Rust expectations agree for valid writes.
-- Invalid writes return `TableIndexError` with the requested index and allocated length. A rejected group leaves every entry unchanged; an empty group succeeds without writes, including a zero-length table. This explicit Rust boundary is documented, not mistaken for JS's ignored out-of-range typed-array writes.
-- Clone and VT500 constructors own independent data. Mutating one custom/default table cannot change another instance or the immutable generated default.
-- Normal oracle verification fails on any Rust-data or test-fixture drift. Generation runs only by explicit `--generate`; generation cannot edit the reference.
-- Record source/constants hashes, Node version/platform, all 4257 compared entries, custom-operation assertions and Rust test logs. Test debug and release builds plus targeted fmt and warning-free Clippy.
-- The fixture may exceed 350 lines only because it is documented generated protocol data. Preserve copyright and MIT attribution. Do not claim main-parser async behavior or whole-terminal equivalence from these checks.
+- A custom table of requested length initially contains zero, meaning Ignore/Ground. Default replacement changes every allocated entry. Untouched entries retain prior values.
+- Preserve the source raw-table path. The parser retains its supplied TransitionTable object and observes changes through a retained alias, including changes made by a callback before the next lookup. A deep snapshot must not masquerade as that alias.
+- Source raw Uint16Array writes use JavaScript numeric/index coercions, ignore out-of-range assignments and preserve earlier writes in a multi-code operation. Checked/atomic Rust convenience helpers may coexist only with explicit names/contracts; they do not prove the raw source behavior.
+- Unknown packed actions perform no action while retaining their next-state byte. Unknown states remain observable until the next source lookup. Missing entries coerce to packed zero. String-end ESC combines the transition with the source bitwise OR, including an otherwise unknown resulting state.
+- Raw custom PARAM actions must preserve source signed arithmetic and Int32 assignment behavior, including code32 accumulating -16, instead of silently routing through a decimal-only validation error. Test source Number boundaries and state/index coercions supported by the raw interface.
+- A retained raw backing-array view has its original identity. If the table's backing array is replaced, subsequent parser lookups use the replacement while the old retained array remains detached from that table object. Do not keep two synchronized authoritative copies.
+- Independent newly constructed tables and the immutable generated default do not share mutation. Any deep-copy helper remains explicitly distinct from a shared table handle; document the Rust representation rather than inventing a source clone API.
+- Normal oracle verification fails on any Rust-data or test-fixture drift. Generation is explicit and cannot edit the reference. Preserve MIT attribution, source/constants hashes, exact raw mutation traces, 4257-entry data checks, scoped quality logs and failing cases.
+- The generated fixture length exception covers data only. Neither the fixed VT500 oracle nor the original checked/atomic helper tests establish raw custom-table equivalence. Task 178 is open until the coherent raw contract and its differential tests pass. No whole-terminal equivalence claim follows from these checks.
 
-Evidence: `custom_table_mutation_matches_source`, `invalid_custom_writes_are_errors_without_partial_changes`, focused clone/untouched-entry assertions, generator check and `docs/parser-table.md`.
+Evidence: existing VT500/custom checked-helper tests are retained as their original subset; task178 adds actual source raw-table/alias/coercion/unknown-action-state/PARAM assertions and updates `docs/parser-table.md` with the implemented mapping.

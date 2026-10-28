@@ -1,0 +1,91 @@
+{
+  "status": "passed model-only checks",
+  "scope": "exact production SelectionModel only, no workspace/browser equivalence claim",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "commands": [
+    {
+      "command": [
+        "C:\\Users\\user\\.cargo\\bin\\rustc.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "log": "rustc-version.log"
+    },
+    {
+      "command": [
+        "C:\\Users\\user\\.cargo\\bin\\rustc.exe",
+        "--edition",
+        "2021",
+        "-D",
+        "warnings",
+        "-C",
+        "debuginfo=0",
+        "--crate-name",
+        "xterm_web",
+        "--crate-type",
+        "rlib",
+        "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\selection-model-isolated\\lib.rs",
+        "-o",
+        "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\selection-model-isolated\\libxterm_web.rlib"
+      ],
+      "exitCode": 0,
+      "log": "model-build.log"
+    },
+    {
+      "command": [
+        "C:\\Users\\user\\.cargo\\bin\\rustc.exe",
+        "--edition",
+        "2021",
+        "-D",
+        "warnings",
+        "-C",
+        "debuginfo=0",
+        "--test",
+        "crates/xterm-web/tests/selection_model.rs",
+        "--extern",
+        "xterm_web=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\selection-model-isolated\\libxterm_web.rlib",
+        "-o",
+        "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\selection-model-isolated\\selection-model-tests.exe"
+      ],
+      "exitCode": 0,
+      "log": "tests-build.log"
+    },
+    {
+      "command": [
+        "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\selection-model-isolated\\selection-model-tests.exe"
+      ],
+      "exitCode": 0,
+      "log": "native-tests.log"
+    },
+    {
+      "command": [
+        "C:\\Users\\user\\.cargo\\bin\\rustc.exe",
+        "--edition",
+        "2021",
+        "-D",
+        "warnings",
+        "-C",
+        "debuginfo=0",
+        "crates/xterm-web/examples/selection_oracle.rs",
+        "--extern",
+        "xterm_web=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\selection-model-isolated\\libxterm_web.rlib",
+        "-o",
+        "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\selection-model-isolated\\selection-model-driver.exe"
+      ],
+      "exitCode": 0,
+      "log": "driver-build.log"
+    },
+    {
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/selection-model-oracle.mjs"
+      ],
+      "exitCode": 0,
+      "log": "oracle.log"
+    }
+  ],
+  "modelSha256": "9bd192f7607299c31970c46ac0b868911f0b663b787feb736759600063753e73",
+  "driverSha256": "5b8fc02ded2ac54bba616aaa77ef41f473b4f5943911eec3d667d455c0710594",
+  "testsSha256": "961c0e6ebbf6d4bb51d50a5dd9f0c00710dde3789b862082a6dcd271c5f31f05"
+}
