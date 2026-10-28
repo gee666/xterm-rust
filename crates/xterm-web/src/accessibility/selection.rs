@@ -26,14 +26,19 @@ impl std::error::Error for InvalidRange {}
 /// externally edited row, which upstream warns about and ignores. Columns are
 /// indexed in UTF-16 units, including both units of astral characters.
 pub fn map_point(row: f64, offset: usize, columns: &[usize], cols: usize) -> Option<CellPoint> {
+    let column = columns.get(offset).map_or_else(
+        || columns.last().map_or(f64::NAN, |value| *value as f64 + 1.0),
+        |value| *value as f64,
+    );
+    normalize_point(row, column, cols)
+}
+
+pub(super) fn normalize_point(row: f64, column: f64, cols: usize) -> Option<CellPoint> {
     if row.is_nan() {
         return None;
     }
     let mut row = row;
-    let mut column = columns.get(offset).map_or_else(
-        || columns.last().map_or(f64::NAN, |value| *value as f64 + 1.0),
-        |value| *value as f64,
-    );
+    let mut column = column;
     if column >= cols as f64 {
         row += 1.0;
         column = 0.0;

@@ -1,0 +1,103 @@
+running 7 tests
+test runtime_strings_keep_raw_values_share_across_terminals_and_apply_prompt_only_on_open ... ok
+test reentry::selection_clamps_to_live_last_row_after_comparison_resizes_terminal ... ok
+test reentry::reset_from_first_row_setter_keeps_original_buffer_for_the_whole_render ... ok
+test reentry::failed_row_creation_during_resize_preserves_listeners_and_recovers ... ok
+test reentry::clamped_selection_uses_optional_raw_text_length_and_preserves_getter_errors ... FAIL
+test real_terminal_writes_deliver_utf16_to_tree_and_live_region_then_toggle_cleanly ... ok
+test actual_keyboard_on_key_suppresses_only_the_following_matching_output_echo ... ok
+
+failures:
+
+---- reentry::clamped_selection_uses_optional_raw_text_length_and_preserves_getter_errors output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable executed
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.__rust_start_panic@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[35739]:0x804a25
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.rust_panic@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[31919]:0x7fbaa0
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[9747]:0x64d460
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[12351]:0x6ba7b7
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[35309]:0x803f3a
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.rust_begin_unwind@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[23921]:0x7cb229
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[23922]:0x7cb256
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[4400]:0x4e7335
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.core::panicking::assert_failed::hc0a21a4de54714c4@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[17823]:0x761c3f
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_accessibility_terminal::reentry::clamped_selection_uses_optional_raw_text_length_and_preserves_getter_errors::{{closure}}::hc1331aaba4e24ea2@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[452]:0x8be42
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h7b0be37c87692972@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[3545]:0x48f2e5
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h26b7414305a79b6a@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[12357]:0x6bab62
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[19864]:0x78d266
+        __wbg_adapter_142@http://127.0.0.1:51431/suite.js:526:10
+        cb0@http://127.0.0.1:51431/suite.js:4269:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:51431/suite.js:4274:30
+        handleError@http://127.0.0.1:51431/suite.js:143:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:51431/suite.js:4262:76
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[5909]:0x565909
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::h22ffc1c83ce5a9e8@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[11322]:0x69259c
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::h4aea7e4980a9f9e5@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[14084]:0x6f8009
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::hcb1ccbad090c0b92@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[1584]:0x34e057
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[699]:0x1d34d5
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[3221]:0x469ca6
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[1506]:0x339e1f
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[3200]:0x46745b
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[2889]:0x43f286
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[17949]:0x764ace
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[14688]:0x70c62f
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.closure1808 externref shim@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[28595]:0x7ee76c
+        __wbg_adapter_106@http://127.0.0.1:51431/suite.js:522:10
+        real@http://127.0.0.1:51431/suite.js:209:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:51431/suite.js:3875:23
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[35344]:0x804083
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[27751]:0x7e99fd
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[4922]:0x517174
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_futures::queue::Queue::push_task::hed54b62c8a63136f@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[32154]:0x7fc605
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::{{closure}}::h1bc235cd2ffabe9f@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[32156]:0x7fc61b
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_futures::queue::Queue::with::hdbd18b987237042a@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[27753]:0x7e9a37
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::h9f138db513920fdf@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[34162]:0x8013f8
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_futures::task::singlethread::Task::wake::ha0a8116bd20324a1@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[11510]:0x699d31
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_futures::task::singlethread::Task::into_raw_waker::raw_wake::h7cd0464b561f844e@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[29377]:0x7f21c8
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.core::task::wake::Waker::wake::h14e3bd6775d5e60c@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[21066]:0x7a29a8
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::finish::h3ec7387b4cde006e@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[2261]:0x3dd109
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::{{closure}}::hcef9282b9bac11dc@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[17255]:0x7542e1
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.core::ops::function::FnOnce::call_once::h7c8524434abbe90b@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[16542]:0x74225e
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.<T as wasm_bindgen::closure::WasmClosureFnOnce<A,R>>::into_fn_mut::{{closure}}::h64b0b01977ad41e4@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[23822]:0x7ca0e4
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[14688]:0x70c62f
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.closure1808 externref shim@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[28595]:0x7ee76c
+        __wbg_adapter_106@http://127.0.0.1:51431/suite.js:522:10
+        real@http://127.0.0.1:51431/suite.js:209:20
+        promise callback*__wbg_get_imports/imports.wbg.__wbg_then_48b406749878a531@http://127.0.0.1:51431/suite.js:4203:26
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.__wbg_then_48b406749878a531 externref shim@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[25552]:0x7dac13
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.js_sys::Promise::then2::h7b08f2f14140ca21@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[14628]:0x70a713
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::ha4dc543ce1f01629@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[1490]:0x335ada
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_accessibility_terminal::Opened::expect::{{closure}}::h6d6478612edee199@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[1511]:0x33b343
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_accessibility_terminal::reentry::clamped_selection_uses_optional_raw_text_length_and_preserves_getter_errors::{{closure}}::hc1331aaba4e24ea2@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[452]:0x899ce
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h7b0be37c87692972@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[3545]:0x48f2e5
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h26b7414305a79b6a@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[12357]:0x6bab62
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[19864]:0x78d266
+        __wbg_adapter_142@http://127.0.0.1:51431/suite.js:526:10
+        cb0@http://127.0.0.1:51431/suite.js:4269:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:51431/suite.js:4274:30
+        handleError@http://127.0.0.1:51431/suite.js:143:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:51431/suite.js:4262:76
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[5909]:0x565909
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::h22ffc1c83ce5a9e8@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[11322]:0x69259c
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::h4aea7e4980a9f9e5@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[14084]:0x6f8009
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::hcb1ccbad090c0b92@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[1584]:0x34e057
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[699]:0x1d34d5
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[3221]:0x469ca6
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[1506]:0x339e1f
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[3200]:0x46745b
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[2889]:0x43f286
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[17949]:0x764ace
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[14688]:0x70c62f
+        wasm_accessibility_terminal-d2b291bdfd98a171.wasm.closure1808 externref shim@http://127.0.0.1:51431/suite_bg.wasm:wasm-function[28595]:0x7ee76c
+        __wbg_adapter_106@http://127.0.0.1:51431/suite.js:522:10
+        real@http://127.0.0.1:51431/suite.js:209:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:51431/suite.js:3875:23
+
+failures:
+
+    reentry::clamped_selection_uses_optional_raw_text_length_and_preserves_getter_errors
+
+test result: FAILED. 6 passed; 1 failed; 0 ignored; 0 filtered out; finished in 7.77s
+

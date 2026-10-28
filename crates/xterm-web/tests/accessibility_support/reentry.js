@@ -56,3 +56,30 @@ export function resizeOnComparison(node, resize) {
   });
   return () => { delete node.compareDocumentPosition; };
 }
+
+export function failRowCreation(document, last, marker) {
+  const create = document.createElement;
+  const remove = last.removeEventListener;
+  let armed = false, fired = false;
+  Object.defineProperty(last, 'removeEventListener', {
+    configurable: true,
+    value(...args) {
+      const result = Reflect.apply(remove, this, args);
+      if (args[0] === 'focus') armed = true;
+      return result;
+    }
+  });
+  Object.defineProperty(document, 'createElement', {
+    configurable: true,
+    value(...args) {
+      if (armed && !fired && args[0] === 'div') { fired = true; throw marker; }
+      return Reflect.apply(create, this, args);
+    }
+  });
+  return () => { delete document.createElement; delete last.removeEventListener; };
+}
+
+export function setTextValue(row, value) {
+  Object.defineProperty(row, 'textContent', { configurable: true, get() { return value; } });
+  return () => { delete row.textContent; };
+}

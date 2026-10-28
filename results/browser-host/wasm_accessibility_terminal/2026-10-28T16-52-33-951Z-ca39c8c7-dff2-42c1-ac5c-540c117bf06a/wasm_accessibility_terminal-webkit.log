@@ -1,0 +1,53 @@
+running 7 tests
+test runtime_strings_keep_raw_values_share_across_terminals_and_apply_prompt_only_on_open ... ok
+test reentry::selection_clamps_to_live_last_row_after_comparison_resizes_terminal ... ok
+test reentry::reset_from_first_row_setter_keeps_original_buffer_for_the_whole_render ... ok
+test reentry::failed_row_creation_during_resize_preserves_listeners_and_recovers ... ok
+test reentry::clamped_selection_uses_optional_raw_text_length_and_preserves_getter_errors ... FAIL
+test real_terminal_writes_deliver_utf16_to_tree_and_live_region_then_toggle_cleanly ... ok
+test actual_keyboard_on_key_suppresses_only_the_following_matching_output_echo ... ok
+
+failures:
+
+---- reentry::clamped_selection_uses_optional_raw_text_length_and_preserves_getter_errors output ----
+    JS exception that was thrown:
+        RuntimeError: Unreachable code should not be executed (evaluating 'wasm.wasm_bindgen__convert__closures__invoke0_mut__h6ccbabcefd85a5b8(arg0, arg1)')
+        35739@wasm-function[35739]
+        31919@wasm-function[31919]
+        9747@wasm-function[9747]
+        12351@wasm-function[12351]
+        35309@wasm-function[35309]
+        23921@wasm-function[23921]
+        23922@wasm-function[23922]
+        4400@wasm-function[4400]
+        17823@wasm-function[17823]
+        452@wasm-function[452]
+        3545@wasm-function[3545]
+        12357@wasm-function[12357]
+        wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@wasm_accessibility_terminal-d2b291bdfd98a171.wasm:wasm-function[19864]
+        __wbg_adapter_142@http://127.0.0.1:51431/suite.js:526:73
+        cb0@http://127.0.0.1:51431/suite.js:4269:45
+        @
+        @http://127.0.0.1:51431/suite.js:4274:30
+        handleError@http://127.0.0.1:51431/suite.js:143:23
+        wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@wasm_accessibility_terminal-d2b291bdfd98a171.wasm:wasm-function[5909]
+        11322@wasm-function[11322]
+        14084@wasm-function[14084]
+        1584@wasm-function[1584]
+        699@wasm-function[699]
+        3221@wasm-function[3221]
+        1506@wasm-function[1506]
+        3200@wasm-function[3200]
+        2889@wasm-function[2889]
+        17949@wasm-function[17949]
+        <dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@wasm_accessibility_terminal-d2b291bdfd98a171.wasm:wasm-function[14688]
+        closure1808 externref shim@wasm_accessibility_terminal-d2b291bdfd98a171.wasm:wasm-function[28595]
+        __wbg_adapter_106@http://127.0.0.1:51431/suite.js:522:36
+        real@http://127.0.0.1:51431/suite.js:209:21
+
+failures:
+
+    reentry::clamped_selection_uses_optional_raw_text_length_and_preserves_getter_errors
+
+test result: FAILED. 6 passed; 1 failed; 0 ignored; 0 filtered out; finished in 7.88s
+

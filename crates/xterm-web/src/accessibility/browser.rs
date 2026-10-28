@@ -3,7 +3,7 @@
 use super::{Announcements, CharacterAction, LocalizableStrings};
 use crate::{dom_listener::DomListener, links::browser_debounce::BrowserTimeDebouncer, utf16};
 use std::{
-    cell::{Cell, RefCell},
+    cell::{Cell, OnceCell, RefCell},
     rc::Rc,
 };
 use wasm_bindgen::{prelude::wasm_bindgen, JsCast, JsValue};
@@ -72,7 +72,7 @@ pub(super) struct Inner {
     pub rows: RefCell<Vec<Rc<TreeRow>>>,
     pub column_map: js_sys::WeakMap,
     pub announcements: RefCell<Announcements>,
-    pub boundaries: RefCell<Option<(DomListener, DomListener)>>,
+    pub boundaries: OnceCell<(js_sys::Function, js_sys::Function)>,
     timer: RefCell<Option<Rc<BrowserTimeDebouncer>>>,
     subscriptions: RefCell<Vec<DisposableHandle>>,
     selection_listener: RefCell<Option<DomListener>>,
@@ -110,7 +110,7 @@ impl AccessibilityManager {
             rows: RefCell::default(),
             column_map: js_sys::WeakMap::new(),
             announcements: RefCell::default(),
-            boundaries: RefCell::new(None),
+            boundaries: OnceCell::new(),
             timer: RefCell::new(None),
             subscriptions: RefCell::default(),
             selection_listener: RefCell::new(None),
@@ -127,6 +127,7 @@ impl AccessibilityManager {
             inner.rows.borrow_mut().push(Rc::clone(&row));
             inner.row_container.append_child(&row.element)?;
         }
+        inner.initialize_boundaries()?;
         inner.attach_boundaries()?;
         let weak = Rc::downgrade(&inner);
         let timer = BrowserTimeDebouncer::try_new(
@@ -313,11 +314,4 @@ extern "C" {
         left: &JsValue,
         right: &js_sys::JsString,
     ) -> Result<JsValue, JsValue>;
-}
-pub(super) fn get_text(element: &HtmlElement) -> Result<Vec<u16>, JsValue> {
-    let value = js_sys::Reflect::get(element, &"textContent".into())?;
-    if !value.is_string() {
-        return Err(js_sys::TypeError::new("element textContent is not a string").into());
-    }
-    Ok(utf16::from_js_string(&value.unchecked_into()))
 }

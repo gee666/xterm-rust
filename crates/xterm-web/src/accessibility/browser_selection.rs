@@ -1,8 +1,9 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved.
 // Licensed under MIT. Accessibility DOM selection sorting and cell mapping.
 use super::{
-    browser::{get_text, js_error, Inner},
-    map_point, selection_range, CellPoint,
+    browser::{js_error, Inner},
+    selection::normalize_point,
+    selection_range, CellPoint,
 };
 use wasm_bindgen::{prelude::wasm_bindgen, JsCast, JsValue};
 use web_sys::{Node, Text};
@@ -10,13 +11,17 @@ use web_sys::{Node, Text};
 // These shims preserve JavaScript structural method dispatch and parseInt
 // coercion, including iframe nodes and the original thrown callback value.
 #[wasm_bindgen(
-    inline_js = "export function accessibility_attribute(element,name){return element.getAttribute(name);} export function accessibility_position(value){return parseInt(value,10)-1;}"
+    inline_js = "export function accessibility_attribute(element,name){return element.getAttribute(name);} export function accessibility_position(value){return parseInt(value,10)-1;} export function accessibility_text_length(element){return element.textContent?.length??0;} export function accessibility_less(left,right){return left<right;}"
 )]
 extern "C" {
     #[wasm_bindgen(catch)]
     fn accessibility_attribute(element: &Node, name: &str) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch)]
     fn accessibility_position(value: &JsValue) -> Result<f64, JsValue>;
+    #[wasm_bindgen(catch)]
+    fn accessibility_text_length(element: &Node) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch)]
+    fn accessibility_less(left: &JsValue, right: &JsValue) -> Result<bool, JsValue>;
 }
 
 pub(super) fn attribute(element: &Node, name: &str) -> Result<JsValue, JsValue> {
@@ -25,7 +30,7 @@ pub(super) fn attribute(element: &Node, name: &str) -> Result<JsValue, JsValue> 
 
 struct Point {
     node: Node,
-    offset: usize,
+    offset: JsValue,
 }
 impl Inner {
     pub fn selection_change(&self) -> Result<(), JsValue> {
@@ -50,14 +55,14 @@ impl Inner {
         };
         let mut begin = Point {
             node: anchor,
-            offset: selection.anchor_offset() as usize,
+            offset: JsValue::from_f64(f64::from(selection.anchor_offset())),
         };
         let mut end = Point {
             node: focus,
-            offset: selection.focus_offset() as usize,
+            offset: JsValue::from_f64(f64::from(selection.focus_offset())),
         };
         if begin.node.compare_document_position(&end.node) & Node::DOCUMENT_POSITION_PRECEDING != 0
-            || begin.node == end.node && begin.offset > end.offset
+            || begin.node == end.node && accessibility_less(&end.offset, &begin.offset)?
         {
             std::mem::swap(&mut begin, &mut end);
         }
@@ -82,7 +87,10 @@ impl Inner {
             let Some(node) = first.element.child_nodes().item(0) else {
                 return Ok(());
             };
-            begin = Point { node, offset: 0 };
+            begin = Point {
+                node,
+                offset: JsValue::from_f64(0.0),
+            };
         }
         if !self.row_container.contains(Some(&begin.node)) {
             return Ok(());
@@ -101,7 +109,7 @@ impl Inner {
         {
             end = Point {
                 node: last.element.clone().into(),
-                offset: get_text(&last.element)?.len(),
+                offset: accessibility_text_length(last.element.as_ref())?,
             };
         }
         if !self.row_container.contains(Some(&end.node)) {
@@ -135,28 +143,24 @@ impl Inner {
             web_sys::console::warn_1(&"columns is null. Race condition?".into());
             return Ok(None);
         };
-        let mut mapping = Vec::new();
-        mapping
-            .try_reserve(columns.length() as usize)
-            .map_err(js_error)?;
-        for value in columns.iter() {
-            let column = value
+        // Keep the optional length value raw until the source's comparison and
+        // property-index conversions. Nullish text becomes zero; a throwing
+        // length getter or conversion preserves its original thrown value.
+        let column = if accessibility_less(
+            &point.offset,
+            &JsValue::from_f64(f64::from(columns.length())),
+        )? {
+            js_sys::Reflect::get(columns, &point.offset)?
                 .as_f64()
-                .ok_or_else(|| js_sys::TypeError::new("accessibility column is not numeric"))?;
-            // Column maps originate from Rust buffer cell indices in this WASM
-            // instance, so all entries fit usize and are exact JS integers.
-            if !column.is_finite()
-                || column < 0.0
-                || column.fract() != 0.0
-                || column > usize::MAX as f64
-            {
-                return Err(js_sys::RangeError::new(
-                    "accessibility column is outside cell-index bounds",
-                )
-                .into());
-            }
-            mapping.push(column as usize);
-        }
-        Ok(map_point(row, point.offset, &mapping, self.host.cols()?))
+                .unwrap_or(f64::NAN)
+        } else {
+            columns
+                .length()
+                .checked_sub(1)
+                .and_then(|index| columns.get(index).as_f64())
+                .unwrap_or(f64::NAN)
+                + 1.0
+        };
+        Ok(normalize_point(row, column, self.host.cols()?))
     }
 }

@@ -1,0 +1,31 @@
+running 7 tests
+test runtime_strings_keep_raw_values_share_across_terminals_and_apply_prompt_only_on_open ... ok
+test reentry::selection_clamps_to_live_last_row_after_comparison_resizes_terminal ... ok
+test reentry::reset_from_first_row_setter_keeps_original_buffer_for_the_whole_render ... ok
+test reentry::failed_row_creation_during_resize_preserves_listeners_and_recovers ... ok
+test reentry::clamped_selection_uses_optional_raw_text_length_and_preserves_getter_errors ... FAIL
+test real_terminal_writes_deliver_utf16_to_tree_and_live_region_then_toggle_cleanly ... ok
+test actual_keyboard_on_key_suppresses_only_the_following_matching_output_echo ... ok
+
+failures:
+
+---- reentry::clamped_selection_uses_optional_raw_text_length_and_preserves_getter_errors output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at wasm_accessibility_terminal-d2b291bdfd98a171.wasm.__rust_start_panic (http://127.0.0.1:51431/suite_bg.wasm:wasm-function[35739]:0x804a25)
+            at wasm_accessibility_terminal-d2b291bdfd98a171.wasm.rust_panic (http://127.0.0.1:51431/suite_bg.wasm:wasm-function[31919]:0x7fbaa0)
+            at wasm_accessibility_terminal-d2b291bdfd98a171.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:51431/suite_bg.wasm:wasm-function[9747]:0x64d460)
+            at wasm_accessibility_terminal-d2b291bdfd98a171.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:51431/suite_bg.wasm:wasm-function[12351]:0x6ba7b7)
+            at wasm_accessibility_terminal-d2b291bdfd98a171.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:51431/suite_bg.wasm:wasm-function[35309]:0x803f3a)
+            at wasm_accessibility_terminal-d2b291bdfd98a171.wasm.rust_begin_unwind (http://127.0.0.1:51431/suite_bg.wasm:wasm-function[23921]:0x7cb229)
+            at wasm_accessibility_terminal-d2b291bdfd98a171.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:51431/suite_bg.wasm:wasm-function[23922]:0x7cb256)
+            at wasm_accessibility_terminal-d2b291bdfd98a171.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:51431/suite_bg.wasm:wasm-function[4400]:0x4e7335)
+            at wasm_accessibility_terminal-d2b291bdfd98a171.wasm.core::panicking::assert_failed::hc0a21a4de54714c4 (http://127.0.0.1:51431/suite_bg.wasm:wasm-function[17823]:0x761c3f)
+            at wasm_accessibility_terminal-d2b291bdfd98a171.wasm.wasm_accessibility_terminal::reentry::clamped_selection_uses_optional_raw_text_length_and_preserves_getter_errors::{{closure}}::hc1331aaba4e24ea2 (http://127.0.0.1:51431/suite_bg.wasm:wasm-function[452]:0x8be42)
+
+failures:
+
+    reentry::clamped_selection_uses_optional_raw_text_length_and_preserves_getter_errors
+
+test result: FAILED. 6 passed; 1 failed; 0 ignored; 0 filtered out; finished in 7.98s
+

@@ -1,9 +1,8 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved.
 // Licensed under MIT. Accessibility row rendering, focus rotation and dimensions.
 use super::browser::{set_text, Inner, TreeRow};
-use crate::dom_listener::DomListener;
 use std::rc::Rc;
-use wasm_bindgen::{JsCast, JsValue};
+use wasm_bindgen::{closure::Closure, JsCast, JsValue};
 use web_sys::{FocusEvent, HtmlElement};
 
 #[derive(Clone, Copy)]
@@ -113,41 +112,74 @@ impl Inner {
         Ok(())
     }
     pub fn detach_boundaries(&self) -> Result<(), JsValue> {
-        let boundaries = self.boundaries.borrow_mut().take();
-        if let Some((mut top, mut bottom)) = boundaries {
-            top.dispose()?;
-            bottom.dispose()?;
-        }
-        Ok(())
-    }
-    fn boundary_listener(
-        self: &Rc<Self>,
-        element: &HtmlElement,
-        position: Boundary,
-    ) -> Result<DomListener, JsValue> {
-        let weak = Rc::downgrade(self);
-        DomListener::new_reentrant_fallible(element.as_ref(), "focus", false, None, move |event| {
-            if let Some(inner) = weak.upgrade() {
-                // The registered focus event may come from another document's
-                // realm. Source TypeScript assertions do not run instanceof.
-                inner.boundary_focus(event.unchecked_into(), position)
-            } else {
-                Ok(())
-            }
-        })
-    }
-    pub fn attach_boundaries(self: &Rc<Self>) -> Result<(), JsValue> {
         let (top, bottom) = {
             let rows = self.rows.borrow();
             (rows.first().cloned(), rows.last().cloned())
         };
-        let top = top.ok_or_else(|| js_sys::Error::new("accessibility top row is missing"))?;
-        let bottom =
-            bottom.ok_or_else(|| js_sys::Error::new("accessibility bottom row is missing"))?;
-        let top = self.boundary_listener(&top.element, Boundary::Top)?;
-        let bottom = self.boundary_listener(&bottom.element, Boundary::Bottom)?;
-        self.boundaries.replace(Some((top, bottom)));
+        if let (Some(top), Some(bottom)) = (top, bottom) {
+            self.remove_boundary_listeners(&top.element, &bottom.element)?;
+        }
         Ok(())
+    }
+    fn remove_boundary_listeners(
+        &self,
+        top: &HtmlElement,
+        bottom: &HtmlElement,
+    ) -> Result<(), JsValue> {
+        let (top_callback, bottom_callback) = self.boundary_callbacks()?;
+        top.remove_event_listener_with_callback("focus", top_callback)?;
+        bottom.remove_event_listener_with_callback("focus", bottom_callback)
+    }
+    fn boundary_callback(self: &Rc<Self>, position: Boundary) -> js_sys::Function {
+        let weak = Rc::downgrade(self);
+        // JS owns the callback as in DomListener. Only a Weak reference points
+        // back to the manager, so neither retained rows nor errors form cycles.
+        Closure::<dyn Fn(web_sys::Event) -> Result<(), JsValue>>::new(
+            move |event: web_sys::Event| {
+                if let Some(inner) = weak.upgrade() {
+                    inner.boundary_focus(event.unchecked_into(), position)
+                } else {
+                    Ok(())
+                }
+            },
+        )
+        .into_js_value()
+        .unchecked_into()
+    }
+    pub fn initialize_boundaries(self: &Rc<Self>) -> Result<(), JsValue> {
+        self.boundaries
+            .set((
+                self.boundary_callback(Boundary::Top),
+                self.boundary_callback(Boundary::Bottom),
+            ))
+            .map_err(|_| {
+                js_sys::Error::new("accessibility boundary callbacks already initialized").into()
+            })
+    }
+    fn boundary_callbacks(&self) -> Result<&(js_sys::Function, js_sys::Function), JsValue> {
+        self.boundaries.get().ok_or_else(|| {
+            js_sys::Error::new("accessibility boundary callbacks are missing").into()
+        })
+    }
+    pub fn attach_boundaries(self: &Rc<Self>) -> Result<(), JsValue> {
+        let (top_callback, bottom_callback) = self.boundary_callbacks()?;
+        let top = self
+            .rows
+            .borrow()
+            .first()
+            .cloned()
+            .ok_or_else(|| js_sys::Error::new("accessibility top row is missing"))?;
+        top.element
+            .add_event_listener_with_callback("focus", top_callback)?;
+        let bottom = self
+            .rows
+            .borrow()
+            .last()
+            .cloned()
+            .ok_or_else(|| js_sys::Error::new("accessibility bottom row is missing"))?;
+        bottom
+            .element
+            .add_event_listener_with_callback("focus", bottom_callback)
     }
     fn boundary_focus(
         self: &Rc<Self>,
@@ -193,7 +225,10 @@ impl Inner {
         }
         .ok_or_else(|| js_sys::Error::new("accessibility boundary row is missing"))?;
         self.row_container.remove_child(&removed.element)?;
-        self.detach_boundaries()?;
+        match position {
+            Boundary::Top => self.remove_boundary_listeners(&target, &removed.element)?,
+            Boundary::Bottom => self.remove_boundary_listeners(&removed.element, &target)?,
+        }
         let row = self.create_row()?;
         match position {
             Boundary::Top => {
@@ -226,19 +261,26 @@ impl Inner {
         Ok(())
     }
     pub fn resize_rows(self: &Rc<Self>, count: usize) -> Result<(), JsValue> {
-        if count == 0 || count != self.host.rows()? {
-            return Err(js_sys::Error::new(
-                "accessibility resize requires committed terminal rows",
-            )
-            .into());
+        if count == 0 {
+            return Err(
+                js_sys::Error::new("accessibility requires at least one terminal row").into(),
+            );
         }
-        let (top, mut bottom) =
-            self.boundaries.borrow_mut().take().ok_or_else(|| {
-                js_sys::Error::new("accessibility boundary listeners are missing")
-            })?;
-        bottom.dispose()?;
+        let (_, bottom_callback) = self.boundary_callbacks()?;
+        let bottom = self
+            .rows
+            .borrow()
+            .last()
+            .cloned()
+            .ok_or_else(|| js_sys::Error::new("accessibility bottom row is missing"))?;
+        // Source removes only the bottom listener. The reusable callbacks stay
+        // owned even if row creation/removal fails, allowing a later resize.
+        bottom
+            .element
+            .remove_event_listener_with_callback("focus", bottom_callback)?;
         let old_count = self.row_container.children().length() as usize;
-        for index in old_count..count {
+        let mut index = old_count;
+        while index < self.host.rows()? {
             let row = self.create_row()?;
             {
                 let mut rows = self.rows.borrow_mut();
@@ -251,6 +293,7 @@ impl Inner {
                 }
             }
             self.row_container.append_child(&row.element)?;
+            index += 1;
         }
         while self.rows.borrow().len() > count {
             let row = self
@@ -266,8 +309,8 @@ impl Inner {
             .last()
             .cloned()
             .ok_or_else(|| js_sys::Error::new("accessibility bottom row is missing"))?;
-        let bottom = self.boundary_listener(&row.element, Boundary::Bottom)?;
-        self.boundaries.replace(Some((top, bottom)));
+        row.element
+            .add_event_listener_with_callback("focus", bottom_callback)?;
         self.refresh_dimensions()
     }
 }
