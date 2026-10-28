@@ -26,6 +26,13 @@ pub trait VisibilityRenderer {
 pub trait TextureAtlasRenderer {
     fn clear_texture_atlas(&self) -> Result<(), JsValue>;
 }
+pub trait LinkUnderlineRenderer {
+    fn handle_link_underline(
+        &self,
+        enabled: bool,
+        event: crate::links::UnderlineEvent,
+    ) -> Result<(), JsValue>;
+}
 pub trait Renderer {
     fn dimensions(&self) -> RenderDimensions;
     fn on_request_redraw(&self) -> Event<RedrawRequest>;
@@ -48,6 +55,9 @@ pub trait Renderer {
         None
     }
     fn texture_atlas(&self) -> Option<&dyn TextureAtlasRenderer> {
+        None
+    }
+    fn link_underline(&self) -> Option<&dyn LinkUnderlineRenderer> {
         None
     }
 }

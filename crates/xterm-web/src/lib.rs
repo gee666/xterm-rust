@@ -48,6 +48,8 @@ pub mod logger;
 #[cfg(target_arch = "wasm32")]
 pub mod write_scheduler;
 #[cfg(target_arch = "wasm32")]
+pub mod byte_view;
+#[cfg(target_arch = "wasm32")]
 pub mod terminal;
 #[cfg(target_arch = "wasm32")]
 pub mod status_addons;

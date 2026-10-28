@@ -12,6 +12,7 @@ impl BrowserServices {
     pub(crate) fn install(self: &Rc<Self>, shared: &Shared) -> Result<(), JsValue> {
         let links = super::link_services::install(Rc::clone(&shared.link_providers), self)?;
         *self.links.borrow_mut() = Some(links);
+        self.install_default_renderer()?;
         let weak = Rc::downgrade(self);
         let geometry = Rc::new(move || {
             weak.upgrade().ok_or_else(|| js_sys::Error::new("Selection owner has been disposed"))?.mouse_geometry()
@@ -20,14 +21,19 @@ impl BrowserServices {
         let selection_host: Rc<dyn SelectionHost> = Rc::new(WeakBrowserServices(Rc::downgrade(self)));
         let selection = Rc::new(SelectionDom::new(&self.dom, buffers, Rc::clone(&self.selection), geometry, selection_host)?);
         *self.selection_dom.borrow_mut() = Some(selection);
-        let services: Rc<dyn super::input_host::BrowserInputServices> = Rc::new(WeakBrowserServices(Rc::downgrade(self)));
-        let input: Rc<dyn InputHost> = Rc::new(EngineInputHost::new(Rc::clone(&self.native), Rc::clone(&self.dom), services,
-            InputPlatform { mac: self.platform.is_mac, windows: self.platform.is_windows, linux: self.platform.is_linux, firefox: self.platform.is_firefox })?);
-        *self.input.borrow_mut() = Some(Rc::new(InputBindings::new(&self.dom, input)?));
         self.bind_events()?;
         self.bind_focus()?;
         self.bind_options()?;
         super::accessibility_host::update(self)
+    }
+
+    pub fn bind_input(self: &Rc<Self>) -> Result<(), JsValue> {
+        let services: Rc<dyn super::input_host::BrowserInputServices> = Rc::new(WeakBrowserServices(Rc::downgrade(self)));
+        let input: Rc<dyn InputHost> = Rc::new(EngineInputHost::new(Rc::clone(&self.native), Rc::clone(&self.dom), services,
+            InputPlatform { mac: self.platform.is_mac, windows: self.platform.is_windows, linux: self.platform.is_linux, firefox: self.platform.is_firefox })?);
+        let bindings = Rc::new(InputBindings::new_without_mouse(&self.dom, input)?);
+        *self.input.borrow_mut() = Some(Rc::clone(&bindings));
+        bindings.bind_mouse(&self.dom)
     }
 
     fn bind_focus(self: &Rc<Self>) -> Result<(), JsValue> {
@@ -72,8 +78,6 @@ impl BrowserServices {
         let theme = options.try_on_specific_option_change("theme", move |value| {
             if let Some(services) = weak.upgrade() {
                 services.theme.set_theme_value(&value).map_err(|error| option_callback(to_js_error(&error)))?;
-                let rows = services.native.rows().map_err(|error| option_callback(to_js_error(&error)))?;
-                services.refresh(0.0, (rows - 1) as f64).map_err(option_callback)?;
             }
             Ok(())
         }).map_err(|error| to_js_error(&error))?;

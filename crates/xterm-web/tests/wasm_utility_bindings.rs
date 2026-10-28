@@ -10,6 +10,52 @@ use xterm_web::{
 wasm_bindgen_test_configure!(run_in_browser);
 
 #[wasm_bindgen_test]
+fn attach_constructor_matches_socket_first_order_and_primitive_option_boxing() {
+    use xterm_web::utility_addons::bindings::AttachAddon;
+    for options in [
+        JsValue::UNDEFINED,
+        JsValue::NULL,
+        JsValue::FALSE,
+        JsValue::TRUE,
+        JsValue::from_f64(0.0),
+        JsValue::from_f64(42.0),
+        JsValue::from_str(""),
+        JsValue::from_str("value"),
+    ] {
+        // Constructor-only host fixture. Real sockets are tested separately.
+        let socket = Object::new();
+        let addon = AttachAddon::new(socket.clone().unchecked_into(), options).unwrap();
+        assert_eq!(
+            Reflect::get(&socket, &"binaryType".into())
+                .unwrap()
+                .as_string()
+                .unwrap(),
+            "arraybuffer"
+        );
+        addon.dispose();
+    }
+    let socket = Object::new();
+    let captured = socket.clone();
+    let options = Object::new();
+    let getter = Closure::wrap(Box::new(move || -> JsValue {
+        assert_eq!(
+            Reflect::get(&captured, &"binaryType".into())
+                .unwrap()
+                .as_string()
+                .unwrap(),
+            "arraybuffer"
+        );
+        JsValue::FALSE
+    }) as Box<dyn FnMut() -> JsValue>);
+    let descriptor = Object::new();
+    Reflect::set(&descriptor, &"get".into(), getter.as_ref()).unwrap();
+    Object::define_property(&options, &"bidirectional".into(), &descriptor);
+    AttachAddon::new(socket.unchecked_into(), options.into())
+        .unwrap()
+        .dispose();
+}
+
+#[wasm_bindgen_test]
 fn exported_clipboard_custom_provider_uses_real_terminal_osc_and_exact_replies() {
     let provider = Object::new();
     let saved = Rc::new(RefCell::new(String::new()));
@@ -24,7 +70,7 @@ fn exported_clipboard_custom_provider_uses_real_terminal_osc_and_exact_replies()
     }) as Box<dyn FnMut(JsString) -> JsValue>);
     Reflect::set(&provider, &"readText".into(), read.as_ref()).unwrap();
     let terminal = Terminal::new(JsValue::UNDEFINED).unwrap();
-    let addon = ClipboardAddon::new(JsValue::UNDEFINED, provider.into()).unwrap();
+    let addon = ClipboardAddon::new(JsValue::UNDEFINED, provider.into());
     addon.activate(&terminal).unwrap();
     let replies = Rc::new(RefCell::new(Vec::new()));
     let capture = replies.clone();
@@ -66,7 +112,7 @@ fn exported_clipboard_preserves_original_javascript_provider_exception() {
     );
     Reflect::set(&provider, &"readText".into(), read.as_ref()).unwrap();
     let terminal = Terminal::new(JsValue::UNDEFINED).unwrap();
-    let addon = ClipboardAddon::new(JsValue::UNDEFINED, provider.into()).unwrap();
+    let addon = ClipboardAddon::new(JsValue::UNDEFINED, provider.into());
     addon.activate(&terminal).unwrap();
     let error = terminal
         .shared_native()

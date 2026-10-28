@@ -43,8 +43,8 @@ for (let i = 0; i < 512; i++) {
 for (const input of dec) base64.push({ op: 'decode', input: u16(input), output: u16(codec.decodeText(input)) });
 const css = ['800px', '450.9px', '1px', '-10px', '', 'auto', '  +34.99em', '1e3', '\ufeff12px', '0x10', '9'.repeat(310), '-0', '\u008512px'];
 const fit = [];
-for (let i = 0; i < 512; i++) {
-  const m = { cell_width: [0, 1, 9.2, 18.3, -1][next() % 5], cell_height: [0, 1, 17, 30.2][next() % 4], parent_width: css[next() % css.length], parent_height: css[next() % css.length], padding: Array.from({ length: 4 }, () => css[next() % css.length]), scrollback: next() % 2 ? 1000 : 0, show_scrollbar: [null, true, false][next() % 3], scrollbar_width: [null, 0, 14, 25][next() % 4] };
+for (let i = 0; i < 513; i++) {
+  const m = i===512 ? { cell_width:1,cell_height:1,parent_width:'18014398509481984px',parent_height:'18014398509481984px',padding:['1px','1px','1px','1px'],scrollback:0,show_scrollbar:false,scrollbar_width:null } : { cell_width: [0, 1, 9.2, 18.3, -1][next() % 5], cell_height: [0, 1, 17, 30.2][next() % 4], parent_width: css[next() % css.length], parent_height: css[next() % css.length], padding: Array.from({ length: 4 }, () => css[next() % css.length]), scrollback: next() % 2 ? 1000 : 0, show_scrollbar: [null, true, false][next() % 3], scrollbar_width: [null, 0, 14, 25][next() % 4] };
   const addon = new FitAddon();
   const style = values => ({ getPropertyValue: name => values[name] ?? '' });
   const view = { getComputedStyle: element => element.style };
@@ -129,9 +129,21 @@ else assert.equal(await readFile(hostPath, 'utf8'), hostCorpus);
 const corpus = JSON.stringify({ base64, fit, clipboard, links, regex: regex.source });
 const path = 'crates/xterm-addons/tests/fixtures/utility-addons.json';
 await mkdir('crates/xterm-addons/tests/fixtures', { recursive: true });
+const sparseLinks=[];
+for(const row of [3000000000,4294967294]) {
+  const line=bufferFor(makeLines('http://example.com',18)).active.getLine(0);
+  const terminal={buffer:{active:{getLine:index=>index===row?line:undefined,getNullCell:()=>({})}}};
+  const found=LinkComputer.computeLink(row+1,regex,terminal,()=>{});
+  assert.equal(found.length,1);
+  sparseLinks.push({row,top:LinkComputer._getWindowedLineStrings(row,terminal)[1],range:found[0].range});
+}
+const sparsePath='crates/xterm-addons/tests/fixtures/utility-sparse-links.json';
+const sparseCorpus=JSON.stringify(sparseLinks)+'\n';
+if(process.argv.includes('--generate'))await writeFile(sparsePath,sparseCorpus);
+else assert.equal(await readFile(sparsePath,'utf8'),sparseCorpus);
 if (process.argv.includes('--generate')) await writeFile(path, corpus + '\n');
 else assert.equal((await readFile(path, 'utf8')).trim(), corpus);
-const report = { node: process.version, seed, hashes, counts: { base64: base64.length, fit: fit.length, clipboard: clipboard.length, links: links.length, countryTlds: tlds.length, hostnameCases: hostnames.length, hostnameAssertions: hostnames.length * 7 }, corpusSha256: createHash('sha256').update(corpus).digest('hex'), status: 'source methods executed; portable corpus only; browser suites unrun' };
+const report = { node: process.version, seed, hashes, counts: { base64: base64.length, fit: fit.length, clipboard: clipboard.length, links: links.length, countryTlds: tlds.length, hostnameCases: hostnames.length, hostnameAssertions: hostnames.length * 7, sparseLinks: sparseLinks.length }, corpusSha256: createHash('sha256').update(corpus).digest('hex'), status: 'source methods executed; portable corpus only; browser suites unrun' };
 await mkdir('results/utility-addons', { recursive: true });
 await writeFile('results/utility-addons/oracle.json', JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify(report, null, 2));

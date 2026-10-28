@@ -14,14 +14,20 @@ struct Socket {
     sent: RefCell<Vec<SocketMessage>>,
     listeners: SocketSlots,
     warnings: Cell<usize>,
+    state_error: RefCell<Option<AttachError>>,
+    warning_error: RefCell<Option<AttachError>>,
 }
 impl AttachSocket for Socket {
     fn use_array_buffer(&self) -> Result<(), AttachError> {
         self.binary.set(true);
         Ok(())
     }
-    fn state(&self) -> SocketState {
-        self.state.get().unwrap_or(SocketState::Open)
+    fn state(&self) -> Result<SocketState, AttachError> {
+        if let Some(error) = self.state_error.borrow().clone() {
+            Err(error)
+        } else {
+            Ok(self.state.get().unwrap_or(SocketState::Open))
+        }
     }
     fn send(&self, data: SocketMessage) -> Result<(), AttachError> {
         self.sent.borrow_mut().push(data);
@@ -39,8 +45,13 @@ impl AttachSocket for Socket {
             listeners.borrow_mut()[index] = None;
         }))
     }
-    fn warn_closing(&self) {
+    fn warn_closing(&self) -> Result<(), AttachError> {
         self.warnings.set(self.warnings.get() + 1);
+        if let Some(error) = self.warning_error.borrow().clone() {
+            Err(error)
+        } else {
+            Ok(())
+        }
     }
 }
 impl Socket {
@@ -87,6 +98,39 @@ fn fire(slots: &DataSlots, data: &[u16]) -> Result<(), AttachError> {
         callback(data)?;
     }
     Ok(())
+}
+#[test]
+fn arraybuffer_configuration_precedes_option_getters_and_survives_getter_failure() {
+    let socket = Rc::new(Socket::default());
+    let source = socket.clone();
+    let result = AttachAddon::with_options(socket.clone(), move || {
+        assert!(source.binary.get());
+        Err(AttachError::Adapter("option getter failed".into()))
+    });
+    assert!(matches!(result,Err(AttachError::Adapter(message)) if message=="option getter failed"));
+    assert!(socket.binary.get());
+    assert!(socket.listeners.borrow().is_empty());
+}
+#[test]
+fn socket_state_getter_and_closing_warning_failures_propagate_without_sending() {
+    let socket = Rc::new(Socket::default());
+    let terminal = Rc::new(Terminal::default());
+    let addon = AttachAddon::new(socket.clone(), None).unwrap();
+    addon.activate(terminal.clone()).unwrap();
+    *socket.state_error.borrow_mut() = Some(AttachError::Adapter("state getter failed".into()));
+    assert_eq!(
+        fire(&terminal.data, &[97]),
+        Err(AttachError::Adapter("state getter failed".into()))
+    );
+    *socket.state_error.borrow_mut() = None;
+    socket.state.set(Some(SocketState::Closing));
+    *socket.warning_error.borrow_mut() = Some(AttachError::Adapter("warning failed".into()));
+    assert_eq!(
+        fire(&terminal.binary, &[97]),
+        Err(AttachError::Adapter("warning failed".into()))
+    );
+    assert_eq!(socket.warnings.get(), 1);
+    assert!(socket.sent.borrow().is_empty());
 }
 #[test]
 fn source_attach_string_and_utf8_payload_methods() {
