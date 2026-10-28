@@ -1,0 +1,141 @@
+running 2 tests
+test internal_width_retains_utf16_callback_order_receiver_and_error_identity ... FAIL
+test internal_service_is_stable_ungated_and_shares_public_addon_selection ... FAIL
+
+failures:
+
+---- internal_width_retains_utf16_callback_order_receiver_and_error_identity output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable executed
+        unicode_internal_service-93a1f89320772ec3.wasm.__rust_start_panic@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[35250]:0x7cec9d
+        unicode_internal_service-93a1f89320772ec3.wasm.rust_panic@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[31439]:0x7c5d6b
+        unicode_internal_service-93a1f89320772ec3.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[9614]:0x61d654
+        unicode_internal_service-93a1f89320772ec3.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[12186]:0x689430
+        unicode_internal_service-93a1f89320772ec3.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[34836]:0x7ce223
+        unicode_internal_service-93a1f89320772ec3.wasm.rust_begin_unwind@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[23572]:0x796160
+        unicode_internal_service-93a1f89320772ec3.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[23573]:0x79618d
+        unicode_internal_service-93a1f89320772ec3.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[4305]:0x4b9eed
+        unicode_internal_service-93a1f89320772ec3.wasm.core::panicking::assert_failed::h4026a7f0d1fff23b@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[17255]:0x72697f
+        unicode_internal_service-93a1f89320772ec3.wasm.unicode_internal_service::internal_width_retains_utf16_callback_order_receiver_and_error_identity::hdec114df09235a13@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[518]:0x104c49
+        unicode_internal_service-93a1f89320772ec3.wasm.core::ops::function::FnOnce::call_once::hb7882d73e66e5958@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[23116]:0x790fbf
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h9881ba6e73ba6379@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[9270]:0x60ca1a
+        unicode_internal_service-93a1f89320772ec3.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::hf311800c706383ed@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[12188]:0x68954b
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[19776]:0x75ca6e
+        __wbg_adapter_934@http://127.0.0.1:50994/suite.js:526:10
+        cb0@http://127.0.0.1:50994/suite.js:4399:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:50994/suite.js:4404:30
+        handleError@http://127.0.0.1:50994/suite.js:143:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:50994/suite.js:4392:76
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[5819]:0x53872a
+        unicode_internal_service-93a1f89320772ec3.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::h07838fa3dc4e6ac9@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[11172]:0x661ba6
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::h1025a6e4e0641374@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[13906]:0x6c64f8
+        unicode_internal_service-93a1f89320772ec3.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::ha4e486fe60f0e106@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[1541]:0x329db2
+        unicode_internal_service-93a1f89320772ec3.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[684]:0x1b95c9
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[3137]:0x43db49
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[1473]:0x31842c
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[3113]:0x43ad66
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[2814]:0x4145f9
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[17785]:0x7330aa
+        unicode_internal_service-93a1f89320772ec3.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[14538]:0x6db916
+        unicode_internal_service-93a1f89320772ec3.wasm.closure2358 externref shim@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[28184]:0x7b8f3a
+        __wbg_adapter_106@http://127.0.0.1:50994/suite.js:522:10
+        real@http://127.0.0.1:50994/suite.js:209:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:50994/suite.js:3991:23
+        unicode_internal_service-93a1f89320772ec3.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[34934]:0x7ce5e3
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[27796]:0x7b6b46
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[4834]:0x4ea665
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::{{closure}}::h95b28db559806c13@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[31809]:0x7c6eca
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::queue::Queue::with::h9bd5fdd801f7dec4@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[27797]:0x7b6b59
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::h42fed9c117de84b9@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[2430]:0x3dbd2b
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::spawn_local::h3dc491f304d42e44@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[10381]:0x63fe04
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::h15c44db32e5b7614@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[8040]:0x5cb2d4
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen::convert::closures::invoke2_mut::hba2fa4cbb261e43e@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[16387]:0x710edc
+        unicode_internal_service-93a1f89320772ec3.wasm.closure2381 externref shim@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[25197]:0x7a5a4e
+        __wbg_adapter_1045@http://127.0.0.1:50994/suite.js:534:10
+        cb0@http://127.0.0.1:50994/suite.js:3779:28
+        __wbg_get_imports/imports.wbg.__wbg_new_23a2665fac83c611@http://127.0.0.1:50994/suite.js:3784:25
+        unicode_internal_service-93a1f89320772ec3.wasm.__wbg_new_23a2665fac83c611 externref shim@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[27863]:0x7b725d
+        unicode_internal_service-93a1f89320772ec3.wasm.js_sys::Promise::new::hf39a358a769dc6ed@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[11605]:0x672b90
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::future_to_promise::h65257425de8480bc@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[9231]:0x60aada
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_test::__rt::Context::run::he8da95eeed777e80@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[1204]:0x2c884c
+        unicode_internal_service-93a1f89320772ec3.wasm.wasmbindgentestcontext_run@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[8493]:0x5e472b
+        unicode_internal_service-93a1f89320772ec3.wasm.wasmbindgentestcontext_run externref shim@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[28181]:0x7b8ee9
+        run@http://127.0.0.1:50994/suite.js:2759:26
+        globalThis.testRun<@debugger eval code line 302 > eval:11:42
+        async*@debugger eval code line 302 > eval:14:11
+        evaluate@debugger eval code:304:16
+        @debugger eval code:1:44
+        @debugger eval code:1:62
+
+---- internal_service_is_stable_ungated_and_shares_public_addon_selection output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable executed
+        unicode_internal_service-93a1f89320772ec3.wasm.__rust_start_panic@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[35250]:0x7cec9d
+        unicode_internal_service-93a1f89320772ec3.wasm.rust_panic@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[31439]:0x7c5d6b
+        unicode_internal_service-93a1f89320772ec3.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[9614]:0x61d654
+        unicode_internal_service-93a1f89320772ec3.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[12186]:0x689430
+        unicode_internal_service-93a1f89320772ec3.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[34836]:0x7ce223
+        unicode_internal_service-93a1f89320772ec3.wasm.rust_begin_unwind@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[23572]:0x796160
+        unicode_internal_service-93a1f89320772ec3.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[23573]:0x79618d
+        unicode_internal_service-93a1f89320772ec3.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[4305]:0x4b9eed
+        unicode_internal_service-93a1f89320772ec3.wasm.core::panicking::assert_failed::h96481bb73f62ce82@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[17590]:0x72e8af
+        unicode_internal_service-93a1f89320772ec3.wasm.unicode_internal_service::internal_service_is_stable_ungated_and_shares_public_addon_selection::h9d661be7d9ad06fd@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[609]:0x1722a6
+        unicode_internal_service-93a1f89320772ec3.wasm.core::ops::function::FnOnce::call_once::h143f5ad499a191e3@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[23117]:0x790fea
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h9c5f7b390fc65894@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[9271]:0x60caee
+        unicode_internal_service-93a1f89320772ec3.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h1323167e9856a513@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[12187]:0x6894a7
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[19776]:0x75ca6e
+        __wbg_adapter_934@http://127.0.0.1:50994/suite.js:526:10
+        cb0@http://127.0.0.1:50994/suite.js:4399:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:50994/suite.js:4404:30
+        handleError@http://127.0.0.1:50994/suite.js:143:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:50994/suite.js:4392:76
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[5819]:0x53872a
+        unicode_internal_service-93a1f89320772ec3.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::h1fcfee8e48e362c2@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[11173]:0x661c4d
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::hb8b8b235013d41f2@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[13907]:0x6c6588
+        unicode_internal_service-93a1f89320772ec3.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::h76e526ee0dba1e5e@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[1540]:0x3299c4
+        unicode_internal_service-93a1f89320772ec3.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[684]:0x1b95c9
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[3137]:0x43db49
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[1473]:0x31842c
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[3113]:0x43ad66
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[2814]:0x4145f9
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[17785]:0x7330aa
+        unicode_internal_service-93a1f89320772ec3.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[14538]:0x6db916
+        unicode_internal_service-93a1f89320772ec3.wasm.closure2358 externref shim@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[28184]:0x7b8f3a
+        __wbg_adapter_106@http://127.0.0.1:50994/suite.js:522:10
+        real@http://127.0.0.1:50994/suite.js:209:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:50994/suite.js:3991:23
+        unicode_internal_service-93a1f89320772ec3.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[34934]:0x7ce5e3
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[27796]:0x7b6b46
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[4834]:0x4ea665
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::{{closure}}::h95b28db559806c13@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[31809]:0x7c6eca
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::queue::Queue::with::h9bd5fdd801f7dec4@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[27797]:0x7b6b59
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::h42fed9c117de84b9@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[2430]:0x3dbd2b
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::spawn_local::h3dc491f304d42e44@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[10381]:0x63fe04
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::h15c44db32e5b7614@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[8040]:0x5cb2d4
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen::convert::closures::invoke2_mut::hba2fa4cbb261e43e@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[16387]:0x710edc
+        unicode_internal_service-93a1f89320772ec3.wasm.closure2381 externref shim@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[25197]:0x7a5a4e
+        __wbg_adapter_1045@http://127.0.0.1:50994/suite.js:534:10
+        cb0@http://127.0.0.1:50994/suite.js:3779:28
+        __wbg_get_imports/imports.wbg.__wbg_new_23a2665fac83c611@http://127.0.0.1:50994/suite.js:3784:25
+        unicode_internal_service-93a1f89320772ec3.wasm.__wbg_new_23a2665fac83c611 externref shim@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[27863]:0x7b725d
+        unicode_internal_service-93a1f89320772ec3.wasm.js_sys::Promise::new::hf39a358a769dc6ed@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[11605]:0x672b90
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_futures::future_to_promise::h65257425de8480bc@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[9231]:0x60aada
+        unicode_internal_service-93a1f89320772ec3.wasm.wasm_bindgen_test::__rt::Context::run::he8da95eeed777e80@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[1204]:0x2c884c
+        unicode_internal_service-93a1f89320772ec3.wasm.wasmbindgentestcontext_run@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[8493]:0x5e472b
+        unicode_internal_service-93a1f89320772ec3.wasm.wasmbindgentestcontext_run externref shim@http://127.0.0.1:50994/suite_bg.wasm:wasm-function[28181]:0x7b8ee9
+        run@http://127.0.0.1:50994/suite.js:2759:26
+        globalThis.testRun<@debugger eval code line 302 > eval:11:42
+        async*@debugger eval code line 302 > eval:14:11
+        evaluate@debugger eval code:304:16
+        @debugger eval code:1:44
+        @debugger eval code:1:62
+
+failures:
+
+    internal_width_retains_utf16_callback_order_receiver_and_error_identity
+    internal_service_is_stable_ungated_and_shares_public_addon_selection
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 filtered out; finished in 0.03s
+

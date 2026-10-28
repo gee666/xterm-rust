@@ -84,7 +84,10 @@ retained in `docs/upstream-browser-baseline.md` and its complete matrix receipt.
 The new Rust execution passes the same two suites: three cases per suite,
 three executed and passed, zero failed/skipped/unrun, covering all original
 Chromium, FirefoxStable and WebKit projects. The original assertions and source
-reference remain unchanged. Fresh reports are under `results/e2e/upstream/`.
+reference remain unchanged. Fresh reports are under `results/e2e/upstream/`:
+
+- Unicode11: `2026-10-28T17-31-18-866Z-4bbcdb09-6af3-4632-892b-b237ac07ba5d/`.
+- Graphemes: `2026-10-28T17-31-23-700Z-46c6b782-9487-42bd-89a5-fa203c0d1261/`.
 
 Two internal-service WASM tests and five existing public-API WASM tests pass in
 each of Chromium 148.0.7778.96, Firefox 150.0.2 and WebKit 26.4. Five focused native
@@ -93,6 +96,12 @@ xterm-wasm-support and xterm-web on this main checkpoint. Targeted rustfmt
 passes; workspace-wide cargo fmt still cannot launch due to Windows OS206.
 Logs are retained under `results/unicode-browser-internal/`, with component
 receipts under `results/browser-host/`.
+
+The wider WASM all-targets/all-features Clippy attempt fails outside this
+change: stale wasm_input host trait implementations, unsupported Function.call4
+in wasm_search_addon, and an excessive-precision literal in width-cache tests.
+The complete diagnostics are retained in `all-wasm-clippy.log`; task47 owns
+these workspace quality gaps. No warnings or assertions were suppressed.
 
 These results close the missing internal-width setup failure from task144.
 They do not close task31, task46, Fit geometry, complete internal API coverage,
