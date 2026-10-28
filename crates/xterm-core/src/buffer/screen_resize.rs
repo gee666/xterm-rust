@@ -183,7 +183,7 @@ fn grow_rows(
         let reveal = if configured {
             false
         } else {
-            target.read(|b| {
+            target.read(|b| -> Result<bool,BufferError> {
                 if b.ybase == 0 {
                     return Ok(false);
                 }
