@@ -136,6 +136,9 @@ for (let i=0;i<2500;i++) {
   const ua = Array.from({length:random()%7},()=>uaParts[random()%uaParts.length]).join(' ');
   operation(`P\t${random()%2}\t${random()%8===0?0:1}\t${encode(ua)}\t${encode(platforms[random()%platforms.length])}`);
 }
+for(const digits of ['9007199254740993','9'.repeat(400)]) {
+  operation(`P\t0\t1\t${encode(`Safari Version/${digits}`)}\t${encode('MacIntel')}`);
+}
 for (let i=0;i<500;i++) {
   const codes = [0,32,9,97,8192,128512,'97+32','97+769','-'];
   const ends = Array.from({length:5},()=>codes[random()%codes.length]);
@@ -181,7 +184,7 @@ const report = { status:'scoped checks passed; full equivalence NOT PROVEN',comm
     names:original.tests.map(test=>test.fullTitle),runner:'Actual Mocha suite after upstream esbuild, with real BufferService/OptionsService/BufferLine.'},
     supplemental_structural_fixture:{executed:originalNames.length,passed:originalNames.length,names:originalNames}, 
     task_queue:{discovered:0,executed:0,passed:0,failed:0,skipped:0,unrun:0},platform:{discovered:0,executed:0,passed:0,failed:0,skipped:0,unrun:0}},
-  differential:{seed,queue_random_iterations:1500,platform_cases:2500,windows_cases:500,total_operations:trace.length,compared_results:actual.length,mismatches:0},
+  differential:{seed,queue_random_iterations:1500,platform_cases:2502,windows_cases:500,total_operations:trace.length,compared_results:actual.length,mismatches:0},
   gaps:['Live browser timer/idle adapter tested separately in task84.','Real Windows linefeed/resize/copy integration tested separately in task28.','Native Linux/macOS runtime not observed here.','JavaScript exceptions vs Rust callback panics are not yet differential-tested.'] };
 writeFileSync(path.join(out,'oracle.json'),JSON.stringify(report,null,2)+'\n');
 attempt.status='passed';attempt.completed=new Date().toISOString();saveAttempt();

@@ -1,0 +1,69 @@
+{
+  "status": "passed scoped verification; full equivalence NOT PROVEN",
+  "environment": {
+    "node": "v24.15.0",
+    "platform": "win32",
+    "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+    "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)"
+  },
+  "tests": {
+    "passed": 24,
+    "failed": 0,
+    "ignored": 0
+  },
+  "commands": [
+    "cargo test -p xterm-core --test task_queue --test task_queue_edges --test platform_windows --test windows_terminal",
+    "node scripts/task-platform-oracle.mjs",
+    "cargo clippy -p xterm-core --lib --test task_queue --test task_queue_edges --test platform_windows --test windows_terminal --example task_platform_trace -- -D warnings"
+  ],
+  "command_sha256": "c856dd318f5ae32394f42343c11068ea2610ccafa029bc286383d2aec260de8e",
+  "artifacts": [
+    {
+      "path": "target/debug/deps/platform_windows-c048ff291ea83a6b.exe",
+      "sha256": "2333afee8a3c3c1b97985590986135462cff2eb4c90a25a20fa08a6857252219"
+    },
+    {
+      "path": "target/debug/deps/task_queue-3c4b70f0c5268b11.exe",
+      "sha256": "fa635bac6e3da3443f0979e930d47685cb92ed53a8e00d3c0c13f4fedde39c66"
+    },
+    {
+      "path": "target/debug/deps/task_queue_edges-28b936aab62fff19.exe",
+      "sha256": "587f0d2074b06a5e4ec2a101b0bff0730f75f87eac3ee4c21152b87d9b53b03b"
+    },
+    {
+      "path": "target/debug/deps/windows_terminal-500026fd8150736a.exe",
+      "sha256": "81c4c2ebeac2da0ce1d72a696a44eaef97d745d1962cf417a4a454eb5719b4bd"
+    }
+  ],
+  "logs": [
+    {
+      "path": "results/task-platform/rust-tests.log",
+      "sha256": "5779116da3f2f8a605982778e2bd434b2c20f4746f76b995b56f63b8b434aa80"
+    },
+    {
+      "path": "results/task-platform/oracle.json",
+      "sha256": "cd207b7edff521ba3be1b1733cf12736cc4fcc71e72d2beb3fb77882fd1f8f3d"
+    },
+    {
+      "path": "results/task-platform/oracle.log",
+      "sha256": "8f6ed7a2ed883c41d8bb5faae456c2f823d2111298266c378aab4bb4542979e9"
+    },
+    {
+      "path": "results/task-platform/clippy.log",
+      "sha256": "74b88b75a088ac81244b86fc6be93ca712b401792edb64236273b13367c9521a"
+    },
+    {
+      "path": "results/task-platform/rustfmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "differential": {
+    "seed": 7429293,
+    "queue_random_iterations": 1500,
+    "platform_cases": 2502,
+    "windows_cases": 500,
+    "total_operations": 4519,
+    "compared_results": 4519,
+    "mismatches": 0
+  }
+}

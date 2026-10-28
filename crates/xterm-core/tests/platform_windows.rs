@@ -58,6 +58,24 @@ fn safari_regex_boundaries_and_ascii_word_boundary() {
         assert!(p.is_mac);
     }
 }
+#[test]
+fn safari_major_version_uses_javascript_number_range() {
+    for (digits, expected) in [
+        ("9007199254740993".to_owned(), 9_007_199_254_740_992.0),
+        ("9".repeat(400), f64::INFINITY),
+    ] {
+        let agent = format!("Safari Version/{digits}");
+        let platform = Platform::detect(
+            false,
+            Some(Navigator {
+                user_agent: &agent,
+                platform: "MacIntel",
+            }),
+        )
+        .unwrap();
+        assert_eq!(platform.safari_version, expected);
+    }
+}
 fn lines() -> CircularList<Rc<RefCell<BufferLine>>> {
     let lines = CircularList::new(5).unwrap();
     for _ in 0..5 {

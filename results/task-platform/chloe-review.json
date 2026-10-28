@@ -1,0 +1,63 @@
+{
+  "reviewer": "Chloe",
+  "task": 58,
+  "decision": "accept scoped queue/platform/Windows port after requested warning-reentry fix",
+  "platform": "native Windows",
+  "source_read": [
+    "source_repo/src/common/TaskQueue.ts",
+    "source_repo/src/common/Platform.ts",
+    "source_repo/src/common/WindowsMode.ts",
+    "crates/xterm-core/src/task_queue.rs",
+    "crates/xterm-core/src/platform.rs",
+    "crates/xterm-core/src/windows_mode.rs",
+    "crates/xterm-core/src/version.rs",
+    "crates/xterm-core/tests/task_queue.rs",
+    "crates/xterm-core/tests/task_queue_edges.rs",
+    "crates/xterm-core/tests/platform_windows.rs",
+    "docs/task-scheduling-acceptance.md"
+  ],
+  "executed": [
+    {
+      "command": "node scripts/task-platform-oracle.mjs",
+      "stage": "before warning-reentry fix",
+      "status": 0,
+      "evidence": "results/task-platform/chloe-oracle.log",
+      "matched_results": 4517,
+      "original_windows_cases": 3
+    },
+    {
+      "command": "native pre-fix warning reentry probe",
+      "status": 101,
+      "evidence": "results/task-platform/chloe-warning-probe.log",
+      "finding": "scheduler RefMut held over warning callback; unchanged source retained replacement task"
+    },
+    {
+      "command": "existing four current scoped test binaries",
+      "status": 0,
+      "evidence": "results/task-platform/chloe-final-native.log",
+      "tests_passed": 24,
+      "tests_failed": 0
+    },
+    {
+      "command": "node tmp/task-queue-chloe-review/warning.mjs",
+      "status": 0,
+      "evidence": "results/task-platform/chloe-final-source-warning.log"
+    },
+    {
+      "command": "rustfmt --edition 2021 --check four production component files",
+      "status": 0
+    },
+    {
+      "command": "current binary and implementation SHA256 validation against latest owner verification",
+      "status": 0,
+      "evidence": "results/task-platform/chloe-final-hashes.json"
+    }
+  ],
+  "findings": [
+    "Requested changes were implemented without a scheduler borrow across callbacks.",
+    "Typed warning failures retain partial queue index and pending-token state.",
+    "Real browser host adapter and full terminal/platform proof remain separate incomplete gates.",
+    "Current owner oracle4519/sourceMocha3 and Clippy receipts validated; reviewer does not relabel them as own rerun."
+  ],
+  "full_equivalence": "NOT PROVEN"
+}

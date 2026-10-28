@@ -107,7 +107,7 @@ fn platform(fields: &[&str]) -> Result<String, Box<dyn Error>> {
     Ok(format!(
         "{}:{}",
         flags.map(|v| if v { "1" } else { "0" }).join(""),
-        p.safari_version
+        ryu_js::Buffer::new().format(p.safari_version)
     ))
 }
 fn windows(fields: &[&str]) -> Result<String, Box<dyn Error>> {
