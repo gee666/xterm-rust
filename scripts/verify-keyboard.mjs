@@ -105,6 +105,32 @@ if (process.argv.includes('--generate')) {
   assert.deepEqual([...actual.matchAll(/\(0x([0-9a-f]+),\s*0x([0-9a-f]+)\)/g)].map(m => `(0x${m[1]}, 0x${m[2]})`), lowerPairs);
 }
 
+const upperPairs = [];
+for(let unit=0;unit<65536;unit++) {
+  const upper=String.fromCharCode(unit).toUpperCase();
+  if(upper!==String.fromCharCode(unit)) upperPairs.push([unit,Array.from({length:upper.length},(_,i)=>upper.charCodeAt(i))]);
+}
+let upperSource='// Generated from Unicode17.0 JS uppercase by scripts/verify-keyboard.mjs --generate.\n';
+upperSource+='// Unicode data license: licenses/UNICODE-3.0.txt. Do not edit by hand.\n';
+upperSource+='// Cohesive generated BMP data exceeds350lines to retain every expansion.\n\n';
+upperSource+='pub(super) fn append_uppercase(output: &mut Vec<u16>, unit: u16) {\n';
+upperSource+='    match MAPPINGS.binary_search_by_key(&unit, |pair| pair.0) {\n';
+upperSource+='        Ok(index) => output.extend_from_slice(MAPPINGS[index].1),\n';
+upperSource+='        Err(_) => output.push(unit),\n    }\n}\n\nconst MAPPINGS: &[(u16, &[u16])] = &[\n';
+for(const [unit,upper] of upperPairs) upperSource+=`    (0x${unit.toString(16)}, &[${upper.map(u=>`0x${u.toString(16)}`).join(', ')}]),\n`;
+upperSource+='];\n';
+const upperPath=path.join(root,'crates/xterm-core/src/input/keyboard_uppercase.rs');
+if(process.argv.includes('--generate')) {
+  writeFileSync(upperPath,upperSource);
+  const formatted=spawnSync(process.env.RUSTFMT || 'rustfmt',['--edition','2021',upperPath],{encoding:'utf8',timeout:120000});
+  if(formatted.error) throw formatted.error; assert.equal(formatted.status,0,formatted.stderr);
+} else {
+  const actual=readFileSync(upperPath,'utf8').match(/const MAPPINGS[^=]*= &[\[]([\s\S]*?)\];/)?.[1];
+  assert.ok(actual,'uppercase data missing');
+  const pairs=[...actual.matchAll(/\(0x([0-9a-f]+),\s*&\[([^\]]*)\]\)/g)].map(m=>[parseInt(m[1],16),[...m[2].matchAll(/0x([0-9a-f]+)/g)].map(u=>parseInt(u[1],16))]);
+  assert.deepEqual(pairs,upperPairs);
+}
+
 const seed = 0x4b455953;
 let state = seed;
 function random() {
@@ -152,13 +178,17 @@ for (let i = 0; i < 20000; i++) {
   const key = i % 3 ? keys[random() % keys.length] : String.fromCharCode(random() & 0xffff, random() & 0xffff);
   add(keyCode, key, codes[random() % codes.length], modifiers, flags, 'seeded malformed keys');
 }
-const runner = `#[path = ${JSON.stringify(path.join(root, 'crates/xterm-core/src/input/keyboard.rs').replaceAll('\\', '/'))}]
+const runner = `#[path = ${JSON.stringify(path.join(root, 'crates/xterm-core/src/input/keyboard_event_source.rs').replaceAll('\\\\', '/'))}]
+mod keyboard_event_source;
+#[path = ${JSON.stringify(path.join(root, 'crates/xterm-core/src/input/keyboard.rs').replaceAll('\\', '/'))}]
 mod keyboard;
 use std::io::{self, BufRead};
 fn units(s: &str) -> Vec<u16> {
     s.split(',').filter(|s| !s.is_empty()).map(|s| u16::from_str_radix(s, 16).expect("generated UTF-16")).collect()
 }
 fn main() {
+    assert!(!keyboard_event_source::number_is_truthy(0.0));
+    assert_eq!(keyboard_event_source::code_point_at_zero(&[0x41]), Some(0x41));
     for line in io::stdin().lock().lines() {
         let line = line.expect("stdin read");
         let p: Vec<_> = line.split('\\t').collect();

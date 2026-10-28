@@ -2,14 +2,17 @@
 // Copyright (c) 2012-2013, Christopher Jeffrey (MIT License)
 // Licensed under MIT. Ported from common/input/Keyboard.ts.
 
-//! Legacy keyboard policy, independent of DOM and operating-system APIs.
-//!
-//! Strings use UTF-16 units so a lone surrogate remains a single JS character.
-//! The event's `type` is omitted because upstream never reads it here. Key codes
-//! use the DOM unsigned-long range. The caller performs any WebIDL conversion.
+//! Legacy keyboard policy independent of DOM and operating-system APIs.
+//! Native events borrow UTF-16 units; live browser adapters implement the
+//! fallible sibling KeyboardEventSource contract without eager snapshots.
 
 #[path = "keyboard_lowercase.rs"]
 pub(crate) mod lowercase;
+#[path = "keyboard_policy.rs"]
+mod policy;
+#[path = "keyboard_uppercase.rs"]
+mod uppercase;
+pub use policy::try_evaluate_keyboard_event;
 
 /// Browser keyboard data used by the legacy keyboard policy.
 #[derive(Clone, Copy, Debug, Default)]
@@ -48,190 +51,27 @@ const NUL: u16 = 0;
 const US: u16 = 0x1f;
 const RS: u16 = 0x1e;
 
-/// Evaluate one event without producing side effects or suppressing the event.
-///
-/// `cancel` is upstream's cancellation request, not an acknowledgement that
-/// the browser event was canceled. Page and select actions have no key payload.
+/// Infallible borrowed-event entrypoint. Live or throwing event properties use
+/// try_evaluate_keyboard_event and retain their source expression read order.
 pub fn evaluate_keyboard_event(
     event: &KeyboardEvent<'_>,
     application_cursor_mode: bool,
     is_mac: bool,
     mac_option_is_meta: bool,
 ) -> KeyboardResult {
-    let mut result = KeyboardResult::default();
-    let modifiers = u8::from(event.shift_key)
-        | (u8::from(event.alt_key) << 1)
-        | (u8::from(event.ctrl_key) << 2)
-        | (u8::from(event.meta_key) << 3);
-    let key = match event.key_code {
-        0 => mobile_arrow(event.key).map(|letter| cursor_key(letter, 0, application_cursor_mode)),
-        8 => Some(with_alt(
-            if event.ctrl_key { 8 } else { DEL },
-            event.alt_key,
-        )),
-        9 if event.shift_key => Some(utf16("\x1b[Z")),
-        9 => {
-            result.cancel = true;
-            Some(vec![9])
-        }
-        13 => {
-            result.cancel = true;
-            // iOS hardware Ctrl+C may report keyCode 13 instead of 67.
-            Some(if equals(event.key, "c") && event.ctrl_key {
-                vec![3]
-            } else {
-                with_alt(13, event.alt_key)
-            })
-        }
-        27 => {
-            result.cancel = true;
-            Some(with_alt(ESC, event.alt_key))
-        }
-        37..=40 if event.meta_key => None,
-        37..=40 => {
-            let letter = match event.key_code {
-                37 => 'D',
-                38 => 'A',
-                39 => 'C',
-                _ => 'B',
-            };
-            Some(cursor_key(letter, modifiers, application_cursor_mode))
-        }
-        45 if !event.shift_key && !event.ctrl_key => Some(utf16("\x1b[2~")),
-        45 => None,
-        46 => Some(tilde_key(3, modifiers)),
-        35 | 36 => Some(cursor_key(
-            if event.key_code == 35 { 'F' } else { 'H' },
-            modifiers,
-            application_cursor_mode,
-        )),
-        33 | 34 => {
-            if event.shift_key {
-                result.result_type = if event.key_code == 33 {
-                    KeyboardResultType::PageUp
-                } else {
-                    KeyboardResultType::PageDown
-                };
-                None
-            } else {
-                // Alt and Meta do not modify page keys unless Control is set.
-                Some(tilde_key(
-                    if event.key_code == 33 { 5 } else { 6 },
-                    if event.ctrl_key { modifiers } else { 0 },
-                ))
-            }
-        }
-        112..=115 => {
-            let letter = match event.key_code {
-                112 => 'P',
-                113 => 'Q',
-                114 => 'R',
-                _ => 'S',
-            };
-            // Function keys always use SS3 when unmodified, independent of mode.
-            Some(cursor_key(letter, modifiers, true))
-        }
-        116..=123 => {
-            let number = match event.key_code {
-                116 => 15,
-                117 => 17,
-                118 => 18,
-                119 => 19,
-                120 => 20,
-                121 => 21,
-                122 => 23,
-                _ => 24,
-            };
-            Some(tilde_key(number, modifiers))
-        }
-        _ => default_key(event, is_mac, mac_option_is_meta, &mut result),
-    };
-    result.key = key;
-    result
+    match try_evaluate_keyboard_event(event, application_cursor_mode, is_mac, mac_option_is_meta) {
+        Ok(result) => result,
+        Err(infallible) => match infallible {},
+    }
 }
 
-fn default_key(
-    event: &KeyboardEvent<'_>,
-    is_mac: bool,
-    mac_option_is_meta: bool,
-    result: &mut KeyboardResult,
-) -> Option<Vec<u16>> {
-    if event.ctrl_key && !event.shift_key && !event.alt_key && !event.meta_key {
-        let unit = match event.key_code {
-            65..=90 => u16::try_from(event.key_code - 64).ok()?,
-            32 => NUL,
-            51..=55 => u16::try_from(event.key_code - 51 + u32::from(ESC)).ok()?,
-            56 => DEL,
-            _ if equals(event.key, "/") => US,
-            219 => ESC,
-            220 => 0x1c,
-            221 => 0x1d,
-            _ => return None,
-        };
-        Some(vec![unit])
-    } else if (!is_mac || mac_option_is_meta) && event.alt_key && !event.meta_key {
-        alt_key(event, result)
-    } else if is_mac && !event.alt_key && !event.ctrl_key && !event.shift_key && event.meta_key {
-        if event.key_code == 65 {
-            result.result_type = KeyboardResultType::SelectAll;
-        }
-        None
-    } else if !event.ctrl_key
-        && !event.alt_key
-        && !event.meta_key
-        && event.key_code >= 48
-        && event.key.len() == 1
-    {
-        Some(event.key.to_vec())
-    } else if !event.key.is_empty() && event.ctrl_key && event.shift_key {
-        let unit = if equals(event.code, "Minus") {
-            US
-        } else if equals(event.code, "Digit2") {
-            NUL
-        } else if equals(event.code, "Digit6") {
-            RS
-        } else {
-            return None;
-        };
-        Some(vec![unit])
+fn special_key(code: f64) -> Option<u8> {
+    if (0.0..=255.0).contains(&code) && code.fract() == 0.0 {
+        // Only bounded integral values enter the byte-key switch. Defaults keep
+        // the full f64 getter value and perform JS ToUint16 where required.
+        Some(code as u8)
     } else {
         None
-    }
-}
-
-fn alt_key(event: &KeyboardEvent<'_>, result: &mut KeyboardResult) -> Option<Vec<u16>> {
-    if let Some((plain, shifted)) = key_mapping(event.key_code) {
-        return Some(vec![
-            ESC,
-            u16::from(if event.shift_key { shifted } else { plain }),
-        ]);
-    }
-    match event.key_code {
-        65..=90 => {
-            let code = if event.ctrl_key {
-                event.key_code - 64
-            } else if event.shift_key {
-                event.key_code
-            } else {
-                event.key_code + 32
-            };
-            Some(vec![ESC, u16::try_from(code).ok()?])
-        }
-        32 => Some(vec![ESC, if event.ctrl_key { NUL } else { 32 }]),
-        _ if equals(event.key, "Dead") && event.code.starts_with(&[75, 101, 121]) => {
-            let mut key = vec![ESC];
-            if let Some(&unit) = event.code.get(3) {
-                // JS slice selects one UTF-16 unit, not a Unicode scalar.
-                if event.shift_key {
-                    key.push(unit);
-                } else {
-                    lowercase::append_lowercase(&mut key, unit);
-                }
-            }
-            result.cancel = true;
-            Some(key)
-        }
-        _ => None,
     }
 }
 
@@ -259,17 +99,6 @@ fn with_alt(unit: u16, alt: bool) -> Vec<u16> {
     }
 }
 
-fn mobile_arrow(key: &[u16]) -> Option<char> {
-    [
-        ("UIKeyInputUpArrow", 'A'),
-        ("UIKeyInputLeftArrow", 'D'),
-        ("UIKeyInputRightArrow", 'C'),
-        ("UIKeyInputDownArrow", 'B'),
-    ]
-    .into_iter()
-    .find_map(|(name, letter)| equals(key, name).then_some(letter))
-}
-
 fn equals(units: &[u16], value: &str) -> bool {
     units.iter().copied().eq(value.encode_utf16())
 }
@@ -278,8 +107,8 @@ fn utf16(value: &str) -> Vec<u16> {
     value.encode_utf16().collect()
 }
 
-fn key_mapping(code: u32) -> Option<(u8, u8)> {
-    Some(match code {
+fn key_mapping(code: f64) -> Option<(u8, u8)> {
+    Some(match special_key(code)? {
         48 => (b'0', b')'),
         49 => (b'1', b'!'),
         50 => (b'2', b'@'),
