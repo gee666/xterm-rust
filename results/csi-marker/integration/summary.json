@@ -1,0 +1,112 @@
+{
+  "task": 270,
+  "implementationSnapshot": "3a0c6e5b02f68815fb2b00d5a2f75ba738698d55",
+  "overallEquivalence": "NOT PROVEN",
+  "environment": {
+    "os": "Windows",
+    "host": "x86_64-pc-windows-msvc",
+    "rustc": "1.85.1 (4eb161250 2025-03-15)",
+    "cargo": "1.85.1 (d73d2caf9 2024-12-31)",
+    "node": "v24.15.0"
+  },
+  "checks": [
+    {
+      "command": "node P:/workshop/Windows_Worshop/oira666/xterm-rust/scripts/worktree-merge.mjs",
+      "status": "passed",
+      "log": "merge-first.log",
+      "testExecutables": 229,
+      "passed": 1501,
+      "failed": 0,
+      "ignored": 0,
+      "also": [
+        "changed-crate build",
+        "affected native all-target checks",
+        "workspace check",
+        "affected WASM library checks",
+        "tested fast-forward",
+        "private target cleanup"
+      ]
+    },
+    {
+      "command": "cargo test --workspace --all-targets --all-features",
+      "status": "passed",
+      "log": "workspace-test.log",
+      "testExecutables": 338,
+      "passed": 1951,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "command": "cargo test --locked -p xterm-core --release --test terminal_marker_reentry",
+      "status": "passed",
+      "log": "release.log",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "command": "SOURCE_REPO=P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo node scripts/marker-csi-oracle.mjs",
+      "status": "passed",
+      "log": "source.log",
+      "cases": 10,
+      "result": "../source.json unchanged"
+    },
+    {
+      "command": "WASM_PACKAGE=xterm-wasm-support WASM_TEST=wasm_marker_reentry WASM_BINDGEN=P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe PLAYWRIGHT_MODULE=P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/node_modules/playwright/index.mjs node scripts/browser-host-check.mjs",
+      "status": "passed",
+      "log": "browser.log",
+      "report": "browser-results.json",
+      "componentOnly": true,
+      "browsers": [
+        {
+          "name": "chromium",
+          "version": "148.0.7778.96",
+          "passed": 2
+        },
+        {
+          "name": "firefox",
+          "version": "150.0.2",
+          "passed": 2
+        },
+        {
+          "name": "webkit",
+          "version": "26.4",
+          "passed": 2
+        }
+      ]
+    },
+    {
+      "command": "cargo clippy --locked -p xterm-core -p xterm-wasm-support --all-targets --all-features -- -D warnings",
+      "status": "passed",
+      "log": "clippy-scoped.log"
+    },
+    {
+      "command": "rustfmt --check --edition 2021 crates/xterm-core/src/terminal/commands.rs crates/xterm-core/src/terminal/csi_edits.rs crates/xterm-core/src/terminal/csi_erase.rs crates/xterm-core/tests/terminal_marker_reentry.rs crates/xterm-wasm-support/tests/wasm_marker_reentry.rs",
+      "status": "passed",
+      "log": "fmt-scoped.log"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+      "status": "failed",
+      "log": "clippy-workspace.log",
+      "gaps": [
+        "crates/xterm-web/src/renderer/width_cache_tests.rs:131 excessive_precision",
+        "crates/xterm-web/tests/scrollbar_visibility.rs:52 type_complexity"
+      ]
+    },
+    {
+      "command": "cargo fmt --all -- --check",
+      "status": "failed",
+      "log": "fmt.log",
+      "reason": "Windows OS error 206: rustfmt command line too long"
+    }
+  ],
+  "notRun": [
+    "current-snapshot native Linux/macOS runtime checks",
+    "current-snapshot remote CI"
+  ],
+  "remainingOutsideTask": [
+    "actual ED3 browser refresh integration task183",
+    "full port equivalence"
+  ]
+}
