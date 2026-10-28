@@ -117,6 +117,15 @@ struct Sink {
 }
 impl AttachTerminal for Sink {
     fn write(&self, data: SocketMessage) -> Result<(), AttachError> {
+        let source = data.into_parse_source()?;
+        let data = match source.read_all().map_err(AttachError::host)? {
+            xterm_core::input::parse_source::ParseChunk::Text(data) => {
+                SocketMessage::Text(data.into_owned())
+            }
+            xterm_core::input::parse_source::ParseChunk::Bytes(data) => {
+                SocketMessage::Binary(data.into_owned())
+            }
+        };
         self.writes.borrow_mut().push(data);
         if self.writes.borrow().len() == 2 {
             self.done
