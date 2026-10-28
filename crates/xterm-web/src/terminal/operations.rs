@@ -109,11 +109,19 @@ impl Terminal {
         self.shared.addons.load_addon(&public_terminal, &addon)
     }
     pub fn dispose(&self) -> Result<(), JsValue> {
+        if self.shared.public_disposed.replace(true) { return Ok(()); }
+        self.dispose_core()?;
+        self.shared.addons.dispose()
+    }
+    #[wasm_bindgen(js_name = _disposeCore)]
+    pub fn dispose_core(&self) -> Result<(), JsValue> {
+        if self.shared.core_disposed.replace(true) { return Ok(()); }
         self.shared.native.dispose().map_err(|error| to_js_error(&error))?;
-        self.shared.writer.dispose();
+        self.shared.writer.try_dispose().map_err(|error| to_js_error(&error))?;
         if let Some(services) = self.shared.services.borrow().clone() { services.dispose()?; }
         if let Some(dom) = self.shared.dom.borrow().as_ref() { dom.element.remove(); }
-        self.shared.addons.dispose()?;
+        self.shared.custom_key.borrow_mut().take();
+        self.shared.custom_wheel.borrow_mut().take();
         for listener in &self.shared.listeners { listener.dispose(); }
         for cleanup in self.shared.native.take_cleanup().map_err(|error| to_js_error(&error))? {
             wasm_bindgen_futures::spawn_local(async move {

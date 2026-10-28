@@ -12,7 +12,7 @@ use crate::{
     write_scheduler::BrowserWriteScheduler,
 };
 use js_sys::Function;
-use std::{cell::{Cell, RefCell}, rc::{Rc, Weak}};
+use std::{cell::{Cell, OnceCell, RefCell}, rc::{Rc, Weak}};
 use wasm_bindgen::JsValue;
 use xterm_core::{decoration::DecorationService, event::Emitter, headless::Terminal,
     input::write_buffer::WriteBuffer, lifecycle::DisposableHandle, platform::Platform};
@@ -35,6 +35,7 @@ pub struct BrowserServices {
     pub core_browser: Rc<CoreBrowserService>,
     pub metrics: Rc<CharSizeService>,
     pub render_service: Rc<RenderService>,
+    pub viewport: OnceCell<Rc<crate::viewport::Viewport>>,
     pub selection: Rc<SelectionService>,
     pub decorations: Rc<DecorationService>,
     pub theme: Rc<ThemeService>,
@@ -81,7 +82,7 @@ impl BrowserServices {
         let runtime = Rc::clone(&shared.runtime.borrow());
         let gesture = runtime.gesture(&dom.document)?;
         let services = Rc::new(Self {
-            native: Rc::clone(&shared.native), writer: shared.writer.clone(), dom, core_browser, metrics, render_service,
+            native: Rc::clone(&shared.native), writer: shared.writer.clone(), dom, core_browser, metrics, render_service, viewport: OnceCell::new(),
             selection: Rc::clone(&shared.selection), decorations: Rc::clone(&shared.decorations), theme, joiners,
             events: Rc::clone(&shared.browser_events), platform: shared.platform,
             custom_key: Rc::clone(&shared.custom_key), custom_wheel: Rc::clone(&shared.custom_wheel),

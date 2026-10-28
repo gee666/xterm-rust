@@ -12,6 +12,8 @@ mod browser_open;
 mod browser_bindings;
 mod browser_events;
 mod browser_lifecycle;
+mod viewport_services;
+mod viewport_host;
 pub mod accessibility_host;
 mod protocols;
 pub mod link_services;

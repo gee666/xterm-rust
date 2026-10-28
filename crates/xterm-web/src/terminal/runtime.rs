@@ -27,14 +27,24 @@ pub struct RuntimeContext {
     pub strings: LocalizableStrings,
     gestures: RefCell<Vec<(Document, Rc<GestureContext>)>>,
     queues: RefCell<WindowAnimationQueues>,
+    scroll_environment: RefCell<Option<Rc<crate::scroll::environment::ScrollEnvironment>>>,
 }
 impl Default for RuntimeContext {
     fn default() -> Self {
         Self { strings: LocalizableStrings::new(), gestures: RefCell::new(Vec::new()),
-            queues: RefCell::new(WindowAnimationQueues::default()) }
+            queues: RefCell::new(WindowAnimationQueues::default()), scroll_environment: RefCell::new(None) }
     }
 }
 impl RuntimeContext {
+    pub fn animation_queue(&self, window: &web_sys::Window) -> crate::links::animation_queue::WindowAnimationQueue {
+        self.queues.borrow_mut().for_window(window)
+    }
+    pub fn scroll_environment(&self, platform: xterm_core::platform::Platform, window: &web_sys::Window) -> Rc<crate::scroll::environment::ScrollEnvironment> {
+        if let Some(environment) = self.scroll_environment.borrow().as_ref() { return Rc::clone(environment); }
+        let environment = Rc::new(crate::scroll::environment::ScrollEnvironment::new(platform, window.clone()));
+        *self.scroll_environment.borrow_mut() = Some(Rc::clone(&environment));
+        environment
+    }
     pub fn gesture(&self, document: &Document) -> Result<Rc<GestureContext>, JsValue> {
         {
             let gestures = self.gestures.borrow();

@@ -13,6 +13,14 @@ impl BrowserServices {
         let links = super::link_services::install(Rc::clone(&shared.link_providers), self)?;
         *self.links.borrow_mut() = Some(links);
         self.install_default_renderer()?;
+        let runtime = Rc::clone(&shared.runtime.borrow());
+        let browser = Rc::clone(&self.core_browser);
+        let source_runtime = Rc::clone(&runtime);
+        let queue_source: crate::scroll::browser_scheduler::QueueSource = Rc::new(move || Ok(source_runtime.animation_queue(&browser.window())));
+        let global_window = web_sys::window().ok_or_else(|| js_sys::Error::new("Viewport has no main window"))?;
+        let environment = runtime.scroll_environment(self.platform, &global_window);
+        let viewport = super::viewport_host::create_viewport(self, Rc::clone(&self.render_service), Rc::clone(&self.core_browser), queue_source, environment)?;
+        self.connect_viewport(viewport)?;
         let weak = Rc::downgrade(self);
         let geometry = Rc::new(move || {
             weak.upgrade().ok_or_else(|| js_sys::Error::new("Selection owner has been disposed"))?.mouse_geometry()
