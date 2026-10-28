@@ -10,10 +10,11 @@ import { canonicalTsvRecords } from './tsv-records.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const require = createRequire(import.meta.url);
 // This is the reference's existing build dependency, not a new production one.
-const esbuild = require('../source_repo/node_modules/esbuild');
+const sourceRoot = path.resolve(process.env.XT_SOURCE_ROOT ?? path.join(root, 'source_repo'));
+const esbuild = require(path.join(sourceRoot, 'node_modules/esbuild'));
 const build = esbuild.buildSync({
-  absWorkingDir: root,
-  stdin: { contents: "export { AccessibilityManager } from './source_repo/src/browser/AccessibilityManager.ts'; export * as Strings from './source_repo/src/browser/LocalizableStrings.ts';", resolveDir: root, loader: 'ts' },
+  absWorkingDir: sourceRoot,
+  stdin: { contents: "export { AccessibilityManager } from './src/browser/AccessibilityManager.ts'; export * as Strings from './src/browser/LocalizableStrings.ts';", resolveDir: sourceRoot, loader: 'ts' },
   bundle: true, write: false, format: 'esm', platform: 'node', metafile: true,
   tsconfigRaw: { compilerOptions: { experimentalDecorators: true } },
 });
@@ -106,7 +107,7 @@ for (const [name, contents] of [['accessibility-state.tsv', corpus], ['accessibi
   fixtureHashes[name] = { rawSha256: createHash('sha256').update(raw).digest('hex'), canonicalSha256: createHash('sha256').update(contents).digest('hex') };
 }
 const sources = await Promise.all(Object.keys(build.metafile.inputs).filter(value => value !== '<stdin>').sort()
-  .map(async source => ({ path: source, sha256: createHash('sha256').update(await readFile(path.join(root, source))).digest('hex') })));
+  .map(async source => ({ path: `source_repo/${source.replaceAll(path.sep, '/')}`, sha256: createHash('sha256').update(await readFile(path.join(sourceRoot, source))).digest('hex') })));
 const report = { node: process.version, esbuild: esbuild.version, seed, directedTraces: directed,
   randomTraces: 256, randomStepsPerTrace: 128, operations, bmpKeys: 65536, sources,
   fixtures: fixtureHashes,

@@ -52,4 +52,16 @@ The reference is `source_repo/src/browser/AccessibilityManager.ts` and `source_r
 - Run actual Chromium, Firefox and WebKit against built Rust WASM. Assert DOM, events, errors, focus/selection and cleanup. A WASM compilation, native model test or configured workflow is not a runtime/browser pass.
 - Run focused formatting, warning-free native/WASM Clippy, tests and independent review. Keep current shared-build failures and resource pauses explicit. Do not launch builds during the shared disk pause or create duplicate target directories.
 
-Current status: implementation and tests are in progress. No new accessibility browser-runtime or equivalence pass is claimed by this document.
+## Observed checks
+
+On native Windows with rustc/cargo1.85.1, Node24.15.0 and wasm-bindgen0.2.100:
+
+- `cargo test --locked -p xterm-web --test accessibility_state --test accessibility_differential` passed11 tests; the same command with `--release` passed11.
+- `XT_SOURCE_ROOT=<preserved-reference> node scripts/accessibility-oracle.mjs` matched268 traces with32,871 operation snapshots and all65,536 BMP key classifications. Seed10559090. There are no upstream AccessibilityManager unit cases to claim. `XT_SOURCE_ROOT` is optional when source_repo has its own installed esbuild dependency.
+- `CARGO_FEATURES=acceptance-hooks WASM_TEST=wasm_accessibility node scripts/browser-host-check.mjs` passed25 Rust DOM/component tests in Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4.
+- The same runner with `WASM_TEST=wasm_accessibility_terminal` passed3 real exported-Terminal tests in every engine. These exercise real writes and UTF-16 announcements, onKey echo suppression, mode disable/re-enable, shared raw localization, prompt construction and disposal.
+- Warning-denied native and wasm32 Clippy passed for the library and these targets. Scoped rustfmt passed. Full-workspace/native-platform gates remain separate.
+
+When using external tooling, set `WASM_BINDGEN` to the matching CLI and `PLAYWRIGHT_MODULE` to the reference's Playwright index.mjs. The runner closes browsers and its server. Source report is `results/accessibility/oracle.json`; browser summaries and raw logs are under `results/browser-host/wasm_accessibility*`. The retained failed Terminal build predates the explicit JsValue closure annotation. The initial WASM Clippy failure was fixed with named callback aliases, not lint suppression.
+
+These are observed accessibility component and real-Terminal results, not full xterm.js equivalence or native Linux/macOS evidence. The broader selection/scroll integration remains task34/239.

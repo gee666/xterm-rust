@@ -147,7 +147,7 @@ async fn actual_keyboard_on_key_suppresses_only_the_following_matching_output_ec
     f.expect(&f.live(), &units("prompt")).await;
     let data = Rc::new(RefCell::new(Vec::new()));
     let output = Rc::clone(&data);
-    let callback = Closure::<dyn Fn(JsValue)>::new(move |value| {
+    let callback = Closure::<dyn Fn(JsValue)>::new(move |value: JsValue| {
         assert!(value.is_string());
         let value = xterm_web::utf16::from_js_string(&value.unchecked_into());
         output.borrow_mut().push(value);

@@ -22,6 +22,7 @@ use wasm_bindgen::{closure::Closure, JsCast, JsValue};
 use web_sys::{Document, HtmlElement, MouseEvent, Window};
 use xterm_core::{buffer::BufferService, event::Event, lifecycle::DisposableHandle};
 
+type FrameCallback = Closure<dyn FnMut(f64)>;
 type Geometry = dyn Fn() -> Result<MouseGeometry, JsValue>;
 #[derive(Clone, Debug)]
 pub struct SelectionDomOptions {
@@ -67,7 +68,7 @@ struct State {
     trim_subscription: RefCell<Option<DisposableHandle>>,
     listeners: RefCell<Vec<DomListener>>,
     drag_listeners: RefCell<Vec<DomListener>>,
-    raf_callback: RefCell<Option<Closure<dyn FnMut(f64)>>>,
+    raf_callback: RefCell<Option<FrameCallback>>,
     raf_id: Cell<Option<i32>>,
     drag_callback: RefCell<Option<Closure<dyn FnMut()>>>,
     drag_id: Cell<Option<i32>>,

@@ -3,12 +3,12 @@
 pub mod clock;
 pub mod errors;
 mod text;
-pub use text::{attribute, text, units};
 use clock::Clock;
 use std::{
     cell::{Cell, RefCell},
     rc::Rc,
 };
+pub use text::{attribute, text, units};
 use wasm_bindgen::{JsCast, JsValue};
 use web_sys::{Document, HtmlElement};
 use xterm_core::{
@@ -16,11 +16,9 @@ use xterm_core::{
     lifecycle::DisposableHandle,
 };
 use xterm_web::accessibility::browser::Listener;
-use xterm_web::{
-    accessibility::{
-        AccessibilityEvent, AccessibilityHost, AccessibilityManager, Dimensions,
-        LocalizableStrings, Row, SelectionRange,
-    },
+use xterm_web::accessibility::{
+    AccessibilityEvent, AccessibilityHost, AccessibilityManager, Dimensions, LocalizableStrings,
+    Row, SelectionRange,
 };
 
 use xterm_wasm_support::js_error::{to_js_error, JsCallbackError};
