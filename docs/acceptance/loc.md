@@ -35,7 +35,7 @@ Evidence: generated-marker, production-data and mixed-file unit tests; explicit 
 
 - Exclude version control, dependencies, local credentials/runtime, temporary files, build outputs and report outputs before traversal.
 - Exclude original `out-esbuild-test` outputs at every depth, as well as core/addon build outputs. Rebuilding the original must not increase its source count.
-- Do not count source_repo twice when traversing the port root. Do not count pre-existing user swarm launcher files as Rust-port tooling.
+- Do not count source_repo twice when traversing the port root. Do not count pre-existing user swarm launcher files as Rust-port tooling. Exclude the reserved port-root target path even if it is the coordinator-approved build junction; ordinary and reference-tree symlinks must still fail. Inventory generated distribution copies with bytes/hashes, but suppress duplicate line counts only after exact equality with an admitted counted canonical source; missing/divergent copies fail.
 - Report the exact excluded paths and rules hash. Do not follow symlinks or directory junctions outside the root; require explicit review instead.
 - Unit tests must include nested dependency/build output, source_repo under port, private runtime files, reporting directories and a symlink/junction boundary.
 

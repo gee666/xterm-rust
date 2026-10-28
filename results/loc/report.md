@@ -10,10 +10,10 @@ Tool: xterm-rust count-loc.mjs v1, Node v24.15.0.
 
 | Category | Files | Physical | Nonblank | Bytes |
 | --- | ---: | ---: | ---: | ---: |
-| production-library | 115 | 28744 | 25684 | 1060584 |
+| production-library | 114 | 28590 | 25533 | 1056697 |
 | addons | 75 | 15738 | 13962 | 747319 |
 | bindings-glue | 16 | 4823 | 4321 | 160464 |
-| generated-code-data | 0 | 0 | 0 | 0 |
+| generated-code-data | 1 | 154 | 151 | 3887 |
 | mixed-code-data | 3 | 528 | 493 | 26581 |
 | mixed-code-tests | 0 | 0 | 0 | 0 |
 | tests | 127 | 38811 | 35807 | 1699412 |
@@ -27,24 +27,24 @@ Tool: xterm-rust count-loc.mjs v1, Node v24.15.0.
 
 | Category | Files | Physical | Nonblank | Bytes |
 | --- | ---: | ---: | ---: | ---: |
-| production-library | 305 | 42869 | 41048 | 1511578 |
-| addons | 64 | 8501 | 8101 | 307088 |
-| bindings-glue | 3 | 185 | 169 | 6470 |
-| generated-code-data | 14 | 8759 | 8705 | 230164 |
+| production-library | 328 | 46116 | 44239 | 1651967 |
+| addons | 78 | 10493 | 10087 | 374291 |
+| bindings-glue | 3 | 186 | 170 | 6649 |
+| generated-code-data | 15 | 8909 | 8852 | 235323 |
 | mixed-code-data | 0 | 0 | 0 | 0 |
-| mixed-code-tests | 24 | 3967 | 3767 | 137511 |
-| tests | 326 | 51340 | 49904 | 1787262 |
-| test-data | 112 | 285244 | 285150 | 115323176 |
-| demos | 10 | 942 | 920 | 40886 |
-| tooling | 194 | 19272 | 19006 | 1138135 |
-| configuration | 10 | 773 | 752 | 47099 |
-| total | 1062 | 421852 | 417522 | 120529369 |
+| mixed-code-tests | 34 | 5507 | 5225 | 194043 |
+| tests | 374 | 58119 | 56533 | 2051047 |
+| test-data | 122 | 413073 | 412979 | 131234836 |
+| demos | 11 | 983 | 959 | 42283 |
+| tooling | 211 | 21026 | 20750 | 1253893 |
+| configuration | 10 | 795 | 773 | 49146 |
+| total | 1186 | 565207 | 560567 | 137093478 |
 
-Original inventory SHA-256: 5fad15603e7f9938ea11ea5889426ddd4e029a9c8e0540d39de2989dcfa858aa
+Original inventory SHA-256: 319645846cc7e05738b9283d15a6497ec88bd2c9cb723e25c6986122ca533ece
 
-Port inventory SHA-256: 410044f500e436d70c6d019953454afa7de2a39cc5c3f9abddf9219886130467
+Port inventory SHA-256: ac7cd47c1af1a42e4d43400ea6d0127c44d7cc194c607e971584ee30b6ab927c
 
-Rules SHA-256: 19b600906bf4919b08b72a26394f59728986e3bd6d1e2d0055a38c72c7b9a34c
+Rules SHA-256: 21bb893f4aabbc51a1caae0d671190bd8ba0e63bcfc84a6dde475164aca78c4c
 
 Legacy pre-launch subtotal matches: true.
 

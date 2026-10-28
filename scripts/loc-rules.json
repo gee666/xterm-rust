@@ -5,7 +5,7 @@
   "fixtureExtensions": [".txt", ".tsv", ".csv", ".text", ".in", ".out"],
   "baselineExtensions": [".ts", ".tsx", ".js", ".mjs", ".cjs", ".css", ".html", ".py", ".sh", ".ps1"],
   "excludedDirectories": [".git", ".pi", ".agents", "node_modules", "target", "tmp", "out", "out-test", "out-esbuild", "out-esbuild-test", "lib", "dist", "coverage", "build"],
-  "portExcludedRoots": ["source_repo", "docs", "results"],
+  "portExcludedRoots": ["source_repo", "docs", "results", "target"],
   "portExcludedFiles": ["start-swarm.ps1", "SWARM.md", "AGENTS.md", "PORT_REQUIREMENTS.md"],
   "lockFiles": ["Cargo.lock", "package-lock.json", "yarn.lock", "pnpm-lock.yaml"],
   "bindingOverrides": {
@@ -15,10 +15,15 @@
   "bindingPrefixOverrides": { "source": [], "port": ["browser/pkg/"] },
   "productionOverrides": { "source": [], "port": ["browser/xterm.css"] },
   "generatedPrefixOverrides": { "source": [], "port": ["browser/pkg/"] },
+  "distributionCopies": {
+    "source": {},
+    "port": { "browser/xterm.css": "crates/xterm-web/assets/xterm.css" }
+  },
   "generatedOverrides": {
     "source": [],
-    "port": ["crates/xterm-core/src/charset_tables.rs", "crates/xterm-core/src/input/win32_key_codes.rs"]
+    "port": ["crates/xterm-core/src/charset_tables.rs", "crates/xterm-core/src/input/win32_key_codes.rs", "crates/xterm-core/src/data/escape_sequences.rs"]
   },
+  "dataOverrides": { "source": ["src/common/data/EscapeSequences.ts"], "port": [] },
   "mixedSourceData": {
     "source": ["src/common/input/UnicodeV6.ts", "addons/addon-unicode11/src/UnicodeV11.ts", "addons/addon-unicode-graphemes/src/third-party/UnicodeProperties.ts"],
     "port": []

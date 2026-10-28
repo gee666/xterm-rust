@@ -86,6 +86,7 @@ test('mandatory browser generated glue is counted separately from demo and binar
   put('browser/pkg/xterm_web.js', 'export function init() {}\n');
   put('browser/pkg/xterm_web_bg.wasm', Buffer.from([0, 97, 115, 109]));
   put('browser/xterm.mjs', "export * from './pkg/xterm_web.js';\n");
+  put('crates/xterm-web/assets/xterm.css', '.xterm {}\n');
   put('browser/xterm.css', '.xterm {}\n');
   put('browser/demo/app.mjs', 'console.log(1);\n');
   const result = inventory(dir, 'port', rules);
@@ -107,6 +108,21 @@ test('inline Rust test annotations separate mixed files rather than claiming pur
   assert.equal(result.byCategory.demos.files, 0);
   assert.equal(result.byPurpose.demos.files, 1);
   assert.equal(result.files.find(row => row.path.endsWith('/native.rs')).inlineTestAnnotation, true);
+}));
+
+test('generated CSS copies count canonical source once and cannot hide changed code', () => fixture((dir, put) => {
+  put('crates/xterm-web/assets/xterm.css', '.xterm {}\n');
+  put('browser/xterm.css', '.xterm {}\n');
+  const result = inventory(dir, 'port', rules);
+  assert.equal(result.totals.files, 1);
+  assert.equal(result.byCategory['production-library'].files, 1);
+  const copy = result.files.find(row => row.path === 'browser/xterm.css');
+  assert.equal(copy.counted, false);
+  assert.equal(copy.copyOf, 'crates/xterm-web/assets/xterm.css');
+  put('browser/xterm.css', '.xterm {color:red}\n');
+  assert.throws(() => inventory(dir, 'port', rules), /Distribution copy differs/);
+  rmSync(resolve(dir, 'crates/xterm-web/assets/xterm.css'));
+  assert.throws(() => inventory(dir, 'port', rules), /Missing counted canonical source/);
 }));
 
 test('UTF-8 BOM bytes do not erase a physical source line', () => fixture((dir, put) => {
@@ -179,6 +195,31 @@ test('selected root junction and ordinary file are refused before traversal', ()
   symlinkSync(resolve(dir, 'real'), resolve(dir, 'root-link'), process.platform === 'win32' ? 'junction' : 'dir');
   assert.throws(() => inventory(resolve(dir, 'root-link'), 'source', rules), /Source root must be a real directory/);
   assert.throws(() => inventory(resolve(dir, 'real/a.rs'), 'source', rules), /Source root must be a real directory/);
+}));
+
+test('reserved port target junction is excluded but ordinary and reference links stay forbidden', () => fixture((dir, put) => {
+  put('real/a.rs', 'fn main() {}\n');
+  const kind = process.platform === 'win32' ? 'junction' : 'dir';
+  symlinkSync(resolve(dir, 'real'), resolve(dir, 'target'), kind);
+  const report = inventory(dir, 'port', rules);
+  assert(report.excluded.some(row => row.path === 'target'));
+  assert(!report.files.some(row => row.path.startsWith('target/')));
+  assert.throws(() => inventory(dir, 'source', rules), /Symlink requires explicit inventory review/);
+  symlinkSync(resolve(dir, 'real'), resolve(dir, 'ordinary-link'), kind);
+  assert.throws(() => inventory(dir, 'port', rules), /Symlink requires explicit inventory review/);
+}));
+
+test('named protocol string data is separated in both trees without calling authored source generated', () => fixture((dir, put) => {
+  put('src/common/data/EscapeSequences.ts', 'export const ESC = "\\x1b";\n');
+  const source = inventory(dir, 'source', rules);
+  assert.equal(source.byCategory['generated-code-data'].files, 1);
+  assert.equal(source.files[0].productionData, true);
+  assert.equal(source.files[0].generated, false);
+  put('crates/xterm-core/src/data/escape_sequences.rs', 'pub const ESC: &str = "\\x1b";\n');
+  const port = inventory(dir, 'port', rules);
+  const generated = port.files.find(row => row.path.startsWith('crates/'));
+  assert.equal(generated.category, 'generated-code-data');
+  assert.equal(generated.generated, true);
 }));
 
 test('CLI rejects unknown or missing arguments', () => {
