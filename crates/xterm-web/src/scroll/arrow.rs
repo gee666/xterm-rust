@@ -62,7 +62,7 @@ impl State {
                 event_window(pending_event.as_ref(), &state.window)?.unchecked_into::<Window>();
             let repeat = Rc::downgrade(&state);
             state.repeat.cancel_and_set(
-                move |_| {
+                move || {
                     if let Some(state) = repeat.upgrade() {
                         (state.activate)()?;
                     }
