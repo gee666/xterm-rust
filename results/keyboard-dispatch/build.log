@@ -1,0 +1,15 @@
+warning: method `with_queued_parse` is never used
+  --> crates\xterm-core\src\headless\events.rs:67:12
+   |
+33 | impl Events {
+   | ----------- method in this implementation
+...
+67 |     pub fn with_queued_parse<T>(&self, action: impl FnOnce() -> T) -> T {
+   |            ^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `xterm-core` (lib) generated 1 warning
+   Compiling xterm-addons v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons)
+   Compiling xterm-web v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web)
+    Finished `dev` profile [unoptimized] target(s) in 1.75s

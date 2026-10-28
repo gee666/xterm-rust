@@ -1,0 +1,36 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: cargo build -p xterm-web --example keyboard_dispatch_oracle
+    Blocking waiting for file lock on build directory
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0583]: file not found for module `line_numbers`
+ --> crates\xterm-core\src\public_api\mod.rs:4:1
+  |
+4 | pub mod line_numbers;
+  | ^^^^^^^^^^^^^^^^^^^^^
+  |
+  = help: to create the module `line_numbers`, create file "crates\xterm-core\src\public_api\line_numbers.rs" or "crates\xterm-core\src\public_api\line_numbers\mod.rs"
+  = note: if there is a `mod line_numbers` elsewhere in the crate already, import it with `use crate::...` instead
+
+For more information about this error, try `rustc --explain E0583`.
+error: could not compile `xterm-core` (lib) due to 1 previous error
+
+
+101 !== 0
+
+    at run (file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/scripts/keyboard-dispatch-oracle.mjs:149:10)
+    at file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/scripts/keyboard-dispatch-oracle.mjs:159:19
+    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)
+    at async node:internal/modules/esm/loader:639:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 101,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.15.0

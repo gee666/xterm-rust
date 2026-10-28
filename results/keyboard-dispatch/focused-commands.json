@@ -1,0 +1,246 @@
+[
+  {
+    "command": "cargo",
+    "args": [
+      "build",
+      "-p",
+      "ryu-js"
+    ],
+    "exit": 0
+  },
+  {
+    "command": "rustc",
+    "args": [
+      "--edition=2021",
+      "-Dwarnings",
+      "-Cdebuginfo=0",
+      "-L",
+      "dependency=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\target\\debug\\deps",
+      "-L",
+      "dependency=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS",
+      "--crate-name",
+      "xterm_core",
+      "--crate-type",
+      "rlib",
+      "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\core.rs",
+      "--extern",
+      "ryu_js=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\target\\debug\\deps\\libryu_js-fa0995415f239643.rlib",
+      "-o",
+      "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\libxterm_core.rlib"
+    ],
+    "exit": 0
+  },
+  {
+    "command": "rustc",
+    "args": [
+      "--edition=2021",
+      "-Dwarnings",
+      "-Cdebuginfo=0",
+      "-L",
+      "dependency=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\target\\debug\\deps",
+      "-L",
+      "dependency=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS",
+      "--crate-name",
+      "xterm_web",
+      "--crate-type",
+      "rlib",
+      "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\web.rs",
+      "--extern",
+      "xterm_core=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\libxterm_core.rlib",
+      "-o",
+      "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\libxterm_web.rlib"
+    ],
+    "exit": 0
+  },
+  {
+    "command": "clippy-driver",
+    "args": [
+      "--edition=2021",
+      "-Dwarnings",
+      "-Cdebuginfo=0",
+      "-L",
+      "dependency=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\target\\debug\\deps",
+      "-L",
+      "dependency=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS",
+      "-Wclippy::all",
+      "--crate-name",
+      "xterm_web",
+      "--crate-type",
+      "rlib",
+      "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\web.rs",
+      "--extern",
+      "xterm_core=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\libxterm_core.rlib",
+      "--emit=metadata",
+      "-o",
+      "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\web-check.rmeta"
+    ],
+    "exit": 0
+  },
+  {
+    "command": "rustc",
+    "args": [
+      "--edition=2021",
+      "-Dwarnings",
+      "-Cdebuginfo=0",
+      "-L",
+      "dependency=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\target\\debug\\deps",
+      "-L",
+      "dependency=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS",
+      "--extern",
+      "xterm_core=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\libxterm_core.rlib",
+      "--extern",
+      "xterm_web=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\libxterm_web.rlib",
+      "--test",
+      "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\crates\\xterm-web\\tests\\keyboard_dispatch.rs",
+      "-o",
+      "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\keyboard_dispatch.exe"
+    ],
+    "exit": 0
+  },
+  {
+    "command": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\keyboard_dispatch.exe",
+    "args": [],
+    "exit": 0
+  },
+  {
+    "command": "clippy-driver",
+    "args": [
+      "--edition=2021",
+      "-Dwarnings",
+      "-Cdebuginfo=0",
+      "-L",
+      "dependency=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\target\\debug\\deps",
+      "-L",
+      "dependency=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS",
+      "-Wclippy::all",
+      "--extern",
+      "xterm_core=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\libxterm_core.rlib",
+      "--extern",
+      "xterm_web=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\libxterm_web.rlib",
+      "--test",
+      "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\crates\\xterm-web\\tests\\keyboard_dispatch.rs",
+      "--emit=metadata",
+      "-o",
+      "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\keyboard_dispatch-check.rmeta"
+    ],
+    "exit": 0
+  },
+  {
+    "command": "rustc",
+    "args": [
+      "--edition=2021",
+      "-Dwarnings",
+      "-Cdebuginfo=0",
+      "-L",
+      "dependency=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\target\\debug\\deps",
+      "-L",
+      "dependency=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS",
+      "--extern",
+      "xterm_core=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\libxterm_core.rlib",
+      "--extern",
+      "xterm_web=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\libxterm_web.rlib",
+      "--test",
+      "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\crates\\xterm-web\\tests\\keyboard_dispatch_callbacks.rs",
+      "-o",
+      "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\keyboard_dispatch_callbacks.exe"
+    ],
+    "exit": 0
+  },
+  {
+    "command": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\keyboard_dispatch_callbacks.exe",
+    "args": [],
+    "exit": 0
+  },
+  {
+    "command": "clippy-driver",
+    "args": [
+      "--edition=2021",
+      "-Dwarnings",
+      "-Cdebuginfo=0",
+      "-L",
+      "dependency=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\target\\debug\\deps",
+      "-L",
+      "dependency=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS",
+      "-Wclippy::all",
+      "--extern",
+      "xterm_core=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\libxterm_core.rlib",
+      "--extern",
+      "xterm_web=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\libxterm_web.rlib",
+      "--test",
+      "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\crates\\xterm-web\\tests\\keyboard_dispatch_callbacks.rs",
+      "--emit=metadata",
+      "-o",
+      "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\keyboard_dispatch_callbacks-check.rmeta"
+    ],
+    "exit": 0
+  },
+  {
+    "command": "rustc",
+    "args": [
+      "--edition=2021",
+      "-Dwarnings",
+      "-Cdebuginfo=0",
+      "-L",
+      "dependency=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\target\\debug\\deps",
+      "-L",
+      "dependency=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS",
+      "--extern",
+      "xterm_core=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\libxterm_core.rlib",
+      "--extern",
+      "xterm_web=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\libxterm_web.rlib",
+      "--test",
+      "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\crates\\xterm-web\\tests\\keyboard_dispatch_getters.rs",
+      "-o",
+      "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\keyboard_dispatch_getters.exe"
+    ],
+    "exit": 0
+  },
+  {
+    "command": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\keyboard_dispatch_getters.exe",
+    "args": [],
+    "exit": 0
+  },
+  {
+    "command": "clippy-driver",
+    "args": [
+      "--edition=2021",
+      "-Dwarnings",
+      "-Cdebuginfo=0",
+      "-L",
+      "dependency=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\target\\debug\\deps",
+      "-L",
+      "dependency=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS",
+      "-Wclippy::all",
+      "--extern",
+      "xterm_core=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\libxterm_core.rlib",
+      "--extern",
+      "xterm_web=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\libxterm_web.rlib",
+      "--test",
+      "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\crates\\xterm-web\\tests\\keyboard_dispatch_getters.rs",
+      "--emit=metadata",
+      "-o",
+      "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\keyboard_dispatch_getters-check.rmeta"
+    ],
+    "exit": 0
+  },
+  {
+    "command": "rustc",
+    "args": [
+      "--edition=2021",
+      "-Dwarnings",
+      "-Cdebuginfo=0",
+      "-L",
+      "dependency=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\target\\debug\\deps",
+      "-L",
+      "dependency=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS",
+      "--extern",
+      "xterm_core=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\libxterm_core.rlib",
+      "--extern",
+      "xterm_web=P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\libxterm_web.rlib",
+      "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\crates\\xterm-web\\examples\\keyboard_dispatch_oracle.rs",
+      "-o",
+      "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\keyboard-dispatch-focused-hD6UCS\\oracle.exe"
+    ],
+    "exit": 0
+  }
+]
