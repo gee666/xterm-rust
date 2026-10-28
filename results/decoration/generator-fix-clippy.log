@@ -1,0 +1,21 @@
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0425]: cannot find function `correct_buffer_length` in module `super::options`
+  --> crates\xterm-core\src\buffer\screen_resize.rs:40:33
+   |
+40 |     let maximum=super::options::correct_buffer_length(scrollback,rows,&options)?;
+   |                                 ^^^^^^^^^^^^^^^^^^^^^ not found in `super::options`
+
+error[E0425]: cannot find function `is_reflow_enabled` in module `super::options`
+  --> crates\xterm-core\src\buffer\screen_resize.rs:67:24
+   |
+67 |     if super::options::is_reflow_enabled(scrollback,&options)? {
+   |                        ^^^^^^^^^^^^^^^^^ not found in `super::options`
+
+error[E0425]: cannot find function `reflow` in module `super::reflow`
+  --> crates\xterm-core\src\buffer\screen_resize.rs:68:24
+   |
+68 |         super::reflow::reflow(target,cols,rows)?;
+   |                        ^^^^^^ not found in `super::reflow`
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `xterm-core` (lib) due to 3 previous errors

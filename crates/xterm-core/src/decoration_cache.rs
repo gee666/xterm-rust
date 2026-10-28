@@ -1,6 +1,9 @@
 // Copyright (c) 2022 The xterm.js authors. All rights reserved. MIT license.
 use super::*;
 use crate::circular_list::{CircularList, ListChange};
+#[path = "decoration_iterator.rs"]
+mod iterator;
+pub use iterator::DecorationCellIterator;
 type Bucket = Rc<RefCell<Vec<Decoration>>>;
 type Buckets = Vec<(i64, Bucket)>;
 #[derive(Clone, Copy)]
@@ -303,31 +306,6 @@ impl DecorationLineCache {
         line: i64,
         layer: Option<DecorationLayer>,
     ) -> DecorationCellIterator {
-        DecorationCellIterator {
-            bucket: self.bucket(line),
-            index: 0,
-            x,
-            layer,
-        }
-    }
-}
-/// Owns the live bucket, not a borrowed map entry, so callbacks can mutate safely.
-pub struct DecorationCellIterator {
-    bucket: Option<Bucket>,
-    index: usize,
-    x: f64,
-    layer: Option<DecorationLayer>,
-}
-impl Iterator for DecorationCellIterator {
-    type Item = Decoration;
-    fn next(&mut self) -> Option<Self::Item> {
-        let bucket = self.bucket.as_ref()?;
-        loop {
-            let decoration = bucket.borrow().get(self.index).cloned()?;
-            self.index += 1;
-            if decoration.matches(self.x, self.layer) {
-                return Some(decoration);
-            }
-        }
+        DecorationCellIterator::new(self.clone(), x, line, layer)
     }
 }

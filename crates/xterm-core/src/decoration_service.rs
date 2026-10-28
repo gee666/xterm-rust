@@ -158,7 +158,10 @@ impl DecorationService {
         line: i64,
         layer: Option<DecorationLayer>,
     ) -> DecorationCellIterator {
-        self.state.cache.at_cell(x, line, layer)
+        self.state
+            .cache
+            .at_cell(x, line, layer)
+            .retain_service(self.clone())
     }
     pub fn for_each_decoration_at_cell(
         &self,

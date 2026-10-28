@@ -248,6 +248,21 @@ fn live_buffer_activation_replaces_cache_subscriptions() {
 }
 
 #[test]
+fn completed_cell_iterator_stays_done_when_bucket_later_grows() {
+    let service = DecorationService::new();
+    register(&service, DecorationOptions::new(Marker::new(0)));
+    let mut iterator = service.get_decorations_at_cell(0.0, 0, None);
+    assert!(iterator.next().is_some());
+    assert!(iterator.next().is_none());
+    register(&service, DecorationOptions::new(Marker::new(0)));
+    assert!(iterator.next().is_none());
+    let mut empty = service.get_decorations_at_cell(0.0, 1, None);
+    assert!(empty.next().is_none());
+    register(&service, DecorationOptions::new(Marker::new(1)));
+    assert!(empty.next().is_none());
+}
+
+#[test]
 fn render_handle_identity_and_listener_errors_propagate() {
     let service = DecorationService::new();
     let d = register(&service, DecorationOptions::new(Marker::new(0)));

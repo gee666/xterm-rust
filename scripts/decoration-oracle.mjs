@@ -3,6 +3,8 @@ import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+const generate = process.argv.includes('--generate');
+if (process.argv.slice(2).some(argument => argument !== '--generate')) throw new Error('Usage: node scripts/decoration-oracle.mjs [--generate]');
 const root = resolve(import.meta.dirname, '..');
 const temporary = resolve(root, 'tmp/decoration-oracle');
 const results = resolve(root, 'results/decoration');
@@ -73,13 +75,19 @@ for (let i = 0; i < 1024; i++) {
   rows.push([op, a, b, snapshot()].join('\t'));
 }
 const fixture = resolve(root, 'crates/xterm-core/tests/fixtures/decoration.tsv');
-writeFileSync(fixture, rows.join('\n') + '\n');
+const fixtureText = rows.join('\n') + '\n';
+let fixtureDrift = false;
+if (generate) writeFileSync(fixture, fixtureText);
+else {
+  fixtureDrift = readFileSync(fixture, 'utf8') !== fixtureText;
+  if (fixtureDrift) writeFileSync(resolve(temporary, 'actual.tsv'), fixtureText);
+}
 const report = { command: 'node scripts/decoration-oracle.mjs', node: process.version, platform: process.platform,
   scope: 'DecorationService only, original baseline and cache/marker traces. Browser rendering unrun.', overallEquivalence: 'NOT PROVEN',
   hashes, upstream: { discovered: runner.total, executed: runner.stats.tests - runner.stats.pending, passed: runner.stats.passes,
     failed: runner.stats.failures, skipped: runner.stats.pending, unrun: runner.total - runner.stats.tests, outcomes },
-  seed: '0xdec0a710', operations: rows.length, fixtureSha256: digest(readFileSync(fixture)) };
+  seed: '0xdec0a710', operations: rows.length, fixtureSha256: digest(readFileSync(fixture)), generatedSha256: digest(fixtureText), fixtureDrift, mode: generate ? 'generate' : 'verify' };
 writeFileSync(resolve(results, 'oracle.json'), JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify({ upstream: report.upstream, operations: report.operations }, null, 2));
-if (report.upstream.failed || report.upstream.skipped || report.upstream.unrun) process.exitCode = 1;
+if (report.upstream.failed || report.upstream.skipped || report.upstream.unrun || fixtureDrift) process.exitCode = 1;
 service.dispose();
