@@ -53,13 +53,13 @@ test('nested target links and paths outside the Cargo cache are rejected', async
   await assert.rejects(pinArtifact(root, path.join(target, 'nested/other.exe'), enough), /symbolic/);
 });
 
-test('wrong cache marker, directories and unsupported kinds fail', async t => {
+test('regular private target needs no Cargo marker; invalid kinds still fail', async t => {
   const { root, executable, target } = await fixture(t);
   await writeFile(path.join(target, 'debug/data.txt'), 'not a compiler artifact');
   await assert.rejects(pinArtifact(root, path.join(target, 'debug/data.txt'), enough), /kind/);
   await assert.rejects(pinArtifact(root, path.join(target, 'debug'), enough), /nonregular/);
-  await writeFile(path.join(target, 'CACHEDIR.TAG'), 'wrong marker');
-  await assert.rejects(pinArtifact(root, executable, enough), /identified Cargo/);
+  await rm(path.join(target, 'CACHEDIR.TAG'));
+  assert.ok((await pinArtifact(root, executable, enough)).path.endsWith('artifact.exe'));
 });
 
 test('low space never writes a new retained artifact and corrupt pins are not reused', async t => {
