@@ -7,7 +7,7 @@ mod progress;
 pub use program::ProgramStatusAddon;
 pub use progress::ProgressAddon;
 
-use js_sys::{Function, Object, Reflect};
+use js_sys::{Function, Object};
 use wasm_bindgen::prelude::*;
 use xterm_core::event::{EmitError, Event};
 
@@ -26,10 +26,12 @@ fn subscription_event<T: 'static>(
 fn event_function(event: &SubscriptionEvent) -> JsValue {
     event.clone().into()
 }
-fn set(object: &Object, key: &str, value: &JsValue) -> Result<(), JsValue> {
-    if Reflect::set(object, &key.into(), value)? {
-        Ok(())
-    } else {
-        Err(js_sys::TypeError::new("status record field is not writable").into())
-    }
+#[wasm_bindgen(inline_js = "
+export function statusOwnField(object, key, value) {
+  Object.defineProperty(object, key, { __proto__: null, value, writable: true, enumerable: true, configurable: true });
+}
+")]
+extern "C" {
+    #[wasm_bindgen(catch, js_name = statusOwnField)]
+    fn set(object: &Object, key: &str, value: &JsValue) -> Result<(), JsValue>;
 }

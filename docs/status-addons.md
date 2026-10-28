@@ -1,28 +1,28 @@
 # Program-status and progress port
 
-Implementation is in `crates/xterm-addons/src/program_status/`, `progress.rs`, `status_terminal.rs` and `native_status.rs`. Source attribution is retained. No new production dependency was added. `serde_json` is a test-only dependency for source-generated fixtures.
+Native implementations are in `crates/xterm-addons/src/program_status/`, `progress.rs`, `native_status.rs` and `managed_status.rs`. WASM bindings are in `crates/xterm-web/src/status_addons/`. They use the actual Rust terminal parser and public loadAddon/write APIs, not the JavaScript terminal engine.
 
-`ProgramStatusAddon` implements OSC7501 parsing, immutable cached status snapshots, ancestor app lookup, update-order eviction, clear/exit/prompt lifecycle, synchronous feature replies and RIS fallthrough. `ProgressAddon` implements OSC9;4 progress and the numeric setter. Rust `Option` represents omitted record fields. `Rc<[StatusRecord]>` is the immutable snapshot with identity preserved between changes. Records carry identity tokens so the browser binding reuses unchanged raw record objects across unrelated snapshot changes, while effective-app projections get fresh frozen objects as in source. Events use the core synchronous emitter. Public addon methods return callback failures rather than throwing. Progress setter returns false for an invalid state instead of a console warning; fractional and NaN states remain accepted, as the source comparisons require.
+Rust uses enums and Option for status fields, immutable shared snapshots and identity tokens for unchanged records. Browser records are frozen own-property objects. Progress retains JS property-read order, coercion, raw state identity, partial assignment on errors and reentrant setter behavior. Event payloads share one object per dispatch. Native setters return Result rather than throwing; invalid numeric states return false instead of a console warning. Browser setters retain the source warning behavior.
 
-The native adapter connects to the actual `CoreTerminal` parser. Its reply path uses a separately owned `CoreService` to avoid reborrowing the engine during parser dispatch. Original typed input errors are retained in `take_input_error` and parser dispatch returns `DispatchError::Callback` with the same `EmitError` cause. JS callback exceptions remain recoverable through Rust error sources without string conversion. Addons must retain their adapter. Rust drop unregisters parser handles. Program status disposal silently clears records; progress disposal keeps its last value.
+## Verification
 
-## Reproduction and observed results
-
-Run from repository root with Node24 TypeScript transform and Rust1.85 or newer:
+Run from the isolated worktree:
 
 ```
-node --experimental-transform-types scripts/status-addons-oracle.mjs
-cargo test -p xterm-addons --test status_addons_differential --test program_status_store --test program_status_addon --test progress_upstream
-cargo test -p xterm-addons --test status_live_terminal
+cargo test -p xterm-addons
 cargo clippy -p xterm-addons --all-targets --all-features -- -D warnings
+WASM_TEST=wasm_status_addons node scripts/browser-host-check.mjs
+WASM_TEST=wasm_status_coercion node scripts/browser-host-check.mjs
 ```
 
-`results/status-addons/oracle.json` records Node v24.15.0, Windows x64, source/test SHA-256 and fixture hash. The unchanged pure upstream ProgramStatus suite executed 38 cases: 38 passed, zero failed/skipped/unrun. Only imports/assertion runner change in a temporary copy under `tmp/status-addons`; source and assertions remain untouched. The suite contains 27 parser and 11 store cases. Rust reproduces all source parser invocations plus boundary/random inputs as 2,215 full-output comparisons. Progress replays 2,048 sequential operations against source. Seed is `0x750109`.
+Observed results:
 
-`all-native-current.log` reports 48 Rust tests passed, zero failed/ignored. This is 12 store tests including 11 faithful source cases, ten addon registration fixture tests, 12 progress tests including the ten original progress browser assertions run through a fixture, three differential/fixture tests, and 11 actual Rust terminal integration tests. The added public native loadAddon case verifies status/progress cooperation, feature replies, disposal and absence of a terminal-owner cycle. The fixture tests are not claims of browser execution.
+- Native addon crate: 146 passed, 0 failed/ignored. The focused status/progress targets contain 50 passing tests. Addon Clippy passed.
+- Original pure ProgramStatus suite: 38 passed. Source oracle compared 2,215 parser cases and 2,048 progress operations with seed `0x750109`, no mismatches. Reproduce with `node --experimental-transform-types scripts/status-addons-oracle.mjs`.
+- Actual browser binding suite: 21 passed per browser, including all four original program-status and ten original progress browser cases.
+- JS coercion/identity suite: 9 passed per browser. Task 164 was independently reviewed and accepted after fixing inherited-property construction.
+- Browsers: Chromium 148.0.7778.96, Firefox 150.0.2 and WebKit 26.4. Results are in `results/browser-host/wasm_status_addons-results.json` and `wasm_status_coercion-results.json`.
 
-`live-tests.log` initially reported eight actual Rust terminal tests, seven passed and one failed. The expanded `tests.log` records ten actual-terminal tests, nine passed and the same DA1 assertion failed. Coleman implemented the missing core DA1 reply under task28. `native-current.log` records the ten original live cases passing, with the query-ordering assertion intact. `all-native-current.log` also includes the added managed public loadAddon case, for 11 passing live cases. Passing live cases cover every split boundary of a report stream, BEL/ST, cancellation, disableStdin, silent disposal, RIS/core reset versus API reset, soft reset/alternate screen retention, status/progress cooperation and stopping parsing on listener failure. The failing assertion is not weakened.
+Earlier failed logs retain the missing DA1 dependency and test-source escaping defects; both are fixed, with assertions unchanged. Scope and API mapping are in `docs/status-addons-acceptance.md` and `docs/status-addons-api.json`.
 
-## Remaining work
-
-Native adapter registration now uses Max/Amy's cloneable weak registrars. The actual terminal reentrant-activation test passes, along with preservation of reply-listener failure causes. `clippy-current.log` records a passing warning-free addon/all-target Clippy command on the current integrated tree; earlier `clippy.log` retains an unrelated shared-tree compile failure. Run formatter and full workspace gates against the final integrated tree. The JS/WASM addon API is implemented in `crates/xterm-web/src/status_addons/`. It uses the same live headless terminal as the public browser Terminal, not a copied state model. Fifteen assertions in `wasm_status_addons.rs` include all four source status and ten source progress browser cases plus record/error identity. Run these and the complete original browser suites against Rust in Chromium, Firefox and WebKit. Browser execution is still pending. Repeated retained build attempts reached unrelated active core/renderer migrations. Local builds paused when drive P fell below 1 GiB free. Kassa coordinates cleanup of generated artifacts; no source or evidence was deleted. Another open review finding concerns preserving the same mutable JS progress-event object across listeners, rather than converting one object per listener. No browser suite or Linux/macOS runtime result is claimed here. Overall addon equivalence remains NOT PROVEN until these tests and independent review pass. Detailed requirements are in `docs/status-addons-acceptance.md` and criteria35 through37.
+This is addon evidence, not whole-terminal equivalence. Workspace quality gates and final native CI remain separate. CI run https://github.com/gee666/xterm-rust/actions/runs/40659278655 failed on the earlier dependency baseline; no native Linux/macOS pass is claimed from that run.

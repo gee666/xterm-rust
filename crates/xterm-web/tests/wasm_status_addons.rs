@@ -113,6 +113,25 @@ if(a===b||a.dispose===b.dispose||Object.isFrozen(a))throw Error('disposed regist
 "#).await;
 }
 
+#[wasm_bindgen_test]
+async fn status_records_shadow_inherited_read_only_state() {
+    run(ProgramStatusAddon::new().into(),r#"
+await write('\x1b]7501;state=working:id=job\x07');
+Object.defineProperty(Object.prototype,'state',{configurable:true,get(){return 999;}});
+try{const records=addon.records;if(records.length!==1||!Object.hasOwn(records[0],'state')||records[0].state!=='working')throw Error('status own state field lost');}
+finally{delete Object.prototype.state;}
+"#).await;
+}
+#[wasm_bindgen_test]
+async fn status_event_record_fields_bypass_inherited_setters() {
+    run(ProgramStatusAddon::new().into(),r#"
+let payload,calls=0;addon.onChange(records=>payload=records);
+Object.defineProperty(Object.prototype,'state',{configurable:true,get(){return 999;},set(){calls++;}});
+try{await write('\x1b]7501;state=done:id=job\x07');if(calls!==0||!Object.hasOwn(payload[0],'state')||payload[0].state!=='done')throw Error('inherited setter intercepted status event');}
+finally{delete Object.prototype.state;}
+"#).await;
+}
+
 macro_rules! progress_case {
     ($name:ident,$body:expr) => {
         #[wasm_bindgen_test]
