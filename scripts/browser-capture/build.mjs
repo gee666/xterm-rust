@@ -1,4 +1,4 @@
-// Scoped debug acceptance build. Run inside the existing WASM build lease.
+// Scoped debug acceptance build using this worktree's private Cargo target.
 import { createRequire } from 'node:module';
 import { existsSync } from 'node:fs';
 import { mkdir, readFile, writeFile, statfs, readdir } from 'node:fs/promises';

@@ -11,7 +11,7 @@ export async function prepareBrowserCapture(context) {
   const portable = value => relative(root, value).split(sep).join('/');
   const work = resolve(root, 'tmp/browser-mode-capture', `${caseId}-${basename(outputDirectory)}`);
   await mkdir(work, { recursive: true });
-  const buildLog = resolve(outputDirectory, 'browser-build-slot.log');
+  const buildLog = resolve(outputDirectory, 'browser-build.log');
   const argv = ['scripts/browser-capture/build.mjs', '--output', portable(work)];
   const result = await runCommand(process.execPath, argv, { cwd: root, env: process.env,
     log: buildLog, timeoutMs: 240000, signal });
