@@ -4,3 +4,5 @@
 //! Kitty graphics protocol parsing and state, separate from browser rendering.
 
 pub mod command;
+mod number_map;
+pub mod storage;
