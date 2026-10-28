@@ -6,7 +6,15 @@ use xterm_core::{
     options::{OptionValue, OptionsService},
 };
 fn service(cols: usize, rows: usize, alt: bool) -> BufferService {
-    let options = [("cols", cols), ("rows", rows), ("scrollback", 100)]
+    service_with_scrollback(cols, rows, alt, 100)
+}
+fn service_with_scrollback(
+    cols: usize,
+    rows: usize,
+    alt: bool,
+    scrollback: usize,
+) -> BufferService {
+    let options = [("cols", cols), ("rows", rows), ("scrollback", scrollback)]
         .map(|(k, v)| (k, OptionValue::Number(v as f64)));
     let service = BufferService::new(Rc::new(OptionsService::new(false, options))).unwrap();
     if alt {
@@ -70,10 +78,24 @@ fn native_borrow_conflicts_are_errors_and_huge_normal_output_is_checked() {
         Err(MoveToCellError::Buffer(_))
     ));
     drop(held);
+    // The source repeat helper returns empty for a negative cross-row count.
+    assert_eq!(
+        move_to_cell_sequence(i64::MAX, 1, &service, false).unwrap(),
+        ""
+    );
     assert!(matches!(
-        move_to_cell_sequence(i64::MAX, 1, &service, false),
+        move_to_cell_sequence(i64::MAX, 3, &service, false),
         Err(MoveToCellError::CoordinateRange) | Err(MoveToCellError::Allocation(_))
     ));
+}
+#[test]
+fn normal_zero_scrollback_uses_the_unscrollable_branch() {
+    let service = service_with_scrollback(5, 5, false, 0);
+    assert!(!service.buffer().borrow().has_scrollback());
+    assert_eq!(
+        move_to_cell_sequence(4, 4, &service, false).unwrap(),
+        "\x1b[B\x1b[C"
+    );
 }
 #[test]
 fn source_alt_cursor_across_rows() {
@@ -177,7 +199,7 @@ fn corpus(case_id: &str) {
         assert!(Rc::ptr_eq(&buffer, &s.buffer()));
         cases += 1;
     }
-    assert!(cases > 0, "zero cases must fail");
+    assert_eq!(cases, 512, "case corpus must contain exactly 512 rows");
     if let Some(path) = std::env::var_os("MOVE_CAPTURE") {
         std::fs::write(path, captures).unwrap();
     }

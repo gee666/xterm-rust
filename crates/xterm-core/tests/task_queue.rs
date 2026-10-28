@@ -53,7 +53,7 @@ fn fifo_repetition_flush_and_cancel() {
         })
         .unwrap();
     assert_eq!(events.borrow().as_slice(), ["request:1:Priority"]);
-    queue.flush();
+    queue.flush().unwrap();
     assert_eq!(count.get(), 3);
     assert_eq!(seen.get(), 1);
     assert_eq!(
@@ -62,7 +62,7 @@ fn fifo_repetition_flush_and_cancel() {
     );
     assert_eq!(queue.remaining_tasks(), 0);
     queue.clear();
-    queue.flush();
+    queue.flush().unwrap();
     assert_eq!(events.borrow().len(), 2);
 }
 #[test]
@@ -91,6 +91,7 @@ fn warning_threshold_and_javascript_rounding() {
         (21.0, None),
         (21.5, Some("warn:20")),
         (22.5, Some("warn:21")),
+        (4_503_599_627_370_498.0, Some("warn:4503599627370497")),
     ] {
         let host = Host::default();
         let clock = host.clock.clone();
@@ -152,7 +153,7 @@ fn reentrant_enqueue_clear_and_recursive_flush() {
             false
         })
         .unwrap();
-    queue.flush();
+    queue.flush().unwrap();
     assert_eq!(seen.get(), 1);
     let task_seen = seen.clone();
     queue
@@ -168,18 +169,18 @@ fn reentrant_enqueue_clear_and_recursive_flush() {
             false
         })
         .unwrap();
-    queue.flush();
+    queue.flush().unwrap();
     assert_eq!(seen.get(), 1); // upstream advances the reset index
     let entered = Cell::new(false);
     queue
         .enqueue(move |queue| {
             if !entered.replace(true) {
-                queue.flush();
+                queue.flush().unwrap();
             }
             false
         })
         .unwrap();
-    queue.flush();
+    queue.flush().unwrap();
     assert_eq!(queue.remaining_tasks(), 0);
 }
 #[test]
@@ -195,11 +196,11 @@ fn debounce_replaces_disposes_and_allows_reuse() {
         callback_calls.get() < 2
     })
     .unwrap();
-    task.flush();
+    task.flush().unwrap();
     assert_eq!(calls.get(), 2);
     task.set(|_| panic!("disposed task must not run")).unwrap();
     task.dispose();
-    task.flush();
+    task.flush().unwrap();
     task.set(|_| false).unwrap();
     task.process_priority().unwrap();
     assert_eq!(

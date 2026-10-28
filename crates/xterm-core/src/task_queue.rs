@@ -34,7 +34,7 @@ pub trait Scheduler {
     fn deadline_exceeded(&self, milliseconds: f64) -> Result<(), Self::Error>;
 }
 
-type Task<S> = Rc<dyn Fn(&TaskQueue<S>) -> bool>;
+type Task<S> = Rc<dyn Fn(&TaskQueue<S>) -> Result<bool, <S as Scheduler>::Error>>;
 struct State<S: Scheduler> {
     tasks: RefCell<Vec<Task<S>>>,
     index: Cell<usize>,
@@ -115,16 +115,26 @@ impl<S: Scheduler> TaskQueue<S> {
     /// as an exception from the upstream request API does. Callers may retry by
     /// enqueueing more work, flush synchronously or clear the queue.
     pub fn enqueue(&self, task: impl Fn(&Self) -> bool + 'static) -> Result<(), S::Error> {
+        self.enqueue_try(move |queue| Ok(task(queue)))
+    }
+    /// A callback failure leaves the current task/index unchanged. During a
+    /// scheduled dispatch the fired token is already released; during flush an
+    /// existing pending token remains. Both match a throw from the source task.
+    pub fn enqueue_try(
+        &self,
+        task: impl Fn(&Self) -> Result<bool, S::Error> + 'static,
+    ) -> Result<(), S::Error> {
         self.state.tasks.borrow_mut().push(Rc::new(task));
         self.start()
     }
-    pub fn flush(&self) {
+    pub fn flush(&self) -> Result<(), S::Error> {
         while let Some(task) = self.current_task() {
-            if !task(self) {
+            if !task(self)? {
                 self.state.index.set(self.state.index.get() + 1);
             }
         }
         self.clear();
+        Ok(())
     }
     pub fn clear(&self) {
         let handle = self.state.pending.borrow_mut().take();
@@ -155,7 +165,7 @@ impl<S: Scheduler> TaskQueue<S> {
         let mut previous_remaining = time_remaining();
         while let Some(task) = self.current_task() {
             let start = self.now();
-            if !task(self) {
+            if !task(self)? {
                 self.state.index.set(self.state.index.get() + 1);
             }
             let duration = js_max(1.0, self.now() - start);
@@ -164,10 +174,12 @@ impl<S: Scheduler> TaskQueue<S> {
             if longest * DEADLINE_HEADROOM > remaining {
                 let overrun = previous_remaining - duration;
                 if overrun < -OVERRUN_WARNING_MS {
-                    // JS Math.round ties towards +infinity, unlike f64::round.
-                    self.state
-                        .scheduler
-                        .deadline_exceeded((overrun + 0.5).floor().abs())?;
+                    // Negative ties round towards zero in JS. Do not add 0.5
+                    // before flooring: that changes odd integers above 2^52.
+                    let magnitude = overrun.abs();
+                    let rounded =
+                        magnitude.floor() + if magnitude.fract() > 0.5 { 1.0 } else { 0.0 };
+                    self.state.scheduler.deadline_exceeded(rounded)?;
                 }
                 return self.start();
             }
@@ -222,8 +234,15 @@ impl<S: Scheduler> DebouncedIdleTask<S> {
         self.queue.clear();
         self.queue.enqueue(task)
     }
-    pub fn flush(&self) {
-        self.queue.flush();
+    pub fn set_try(
+        &self,
+        task: impl Fn(&TaskQueue<S>) -> Result<bool, S::Error> + 'static,
+    ) -> Result<(), S::Error> {
+        self.queue.clear();
+        self.queue.enqueue_try(task)
+    }
+    pub fn flush(&self) -> Result<(), S::Error> {
+        self.queue.flush()
     }
     pub fn dispose(&self) {
         self.queue.clear();

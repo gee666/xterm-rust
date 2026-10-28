@@ -188,7 +188,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                             f[4].parse()?,
                         );
                     }
-                    "F" => q.flush(),
+                    "F" => q.flush().unwrap(),
                     "C" => q.clear(),
                     "Y" => q.process_priority().unwrap(),
                     "D" => {

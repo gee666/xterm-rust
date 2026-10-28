@@ -1,10 +1,11 @@
 // Copyright (c) 2017-2026 The xterm.js authors. All rights reserved. MIT license.
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
-import { readFile, writeFile, mkdir, statfs } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, statfs, copyFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { runCommand } from '../quality-process.mjs';
+import { pinArtifact } from '../acceptance-artifacts.mjs';
 const require = createRequire(import.meta.url);
 const seed=0x6d6f7665;
 const relative=(root,file)=>path.relative(root,file).replaceAll('\\','/');
@@ -46,6 +47,10 @@ export async function runCase({caseId,root,outputDirectory,signal}) {
       }
     }return text;
   }
+  const edgeService=new BufferService(new OptionsService({cols:5,rows:5,scrollback:0}),new MockLogService());
+  edgeService.buffer.x=3;edgeService.buffer.y=3;
+  const zeroScrollback=moveToCellSequence(4,4,edgeService,false);
+  assert.equal(zeroScrollback,'\x1b[B\x1b[C');edgeService.dispose();
   const fixtures=[],reference=[];let state=seed;
   const random=()=>state=(Math.imul(state,1664525)+1013904223)>>>0;
   for(const id of ['move-01','move-02'])for(let i=0;i<512;i++){
@@ -74,17 +79,24 @@ export async function runCase({caseId,root,outputDirectory,signal}) {
   const fixturePath=path.join(root,'crates/xterm-core/tests/fixtures/move-to-cell.tsv');
   const fixture=fixtures.join('\n')+'\n';
   if(process.env.MOVE_GENERATE==='1')await writeFile(fixturePath,fixture);
-  else assert.equal(await readFile(fixturePath,'utf8'),fixture,'fixture drift; explicit MOVE_GENERATE=1 is required to regenerate');
+  else assert.equal((await readFile(fixturePath,'utf8')).replace(/\r\n/g,'\n'),fixture,'fixture drift; explicit MOVE_GENERATE=1 is required to regenerate');
   const cargo=process.env.CARGO||'cargo';
   const compilation=await command(cargo,['test','-p','xterm-core','--test','move_to_cell','--no-run','--message-format=json'],root,'rust-build.log');
   const messages=compilation.split(/\r?\n/).filter(line=>line.startsWith('{')).map(line=>JSON.parse(line));
   const artifact=messages.find(message=>message.reason==='compiler-artifact'&&message.target.name==='move_to_cell'&&message.profile.test);
   assert(artifact?.executable,'missing Rust native test executable');
-  const upstreamRust=await command(artifact.executable,['source_'],root,'rust-source-assertions.log');
+  // Pin the executed artifact: shared target cleanup or later rebuilds must not
+  // invalidate an immutable receipt before independent review.
+  const pinned=await pinArtifact(root,artifact.executable);
+  const nativeArtifact=path.join(root,pinned.path);
+  const inputArtifact=path.join(outputDirectory,'input.tsv');await copyFile(fixturePath,inputArtifact);
+  const fullRust=await command(nativeArtifact,[],root,'rust-complete-suite.log');
+  assert.match(fullRust,/8 passed; 0 failed/);
+  const upstreamRust=await command(nativeArtifact,['source_'],root,'rust-source-assertions.log');
   assert.match(upstreamRust,/4 passed; 0 failed/);
   const capturesFile=path.join(outputDirectory,'rust-captures.tsv');
   const testName=caseId==='move-01'?'move_01_differential_corpus':'move_02_differential_corpus';
-  await command(artifact.executable,[testName,'--exact'],root,'rust-run.log',{MOVE_CAPTURE:capturesFile});
+  await command(nativeArtifact,[testName,'--exact'],root,'rust-run.log',{MOVE_CAPTURE:capturesFile});
   const actual=(await readFile(capturesFile,'utf8')).trimEnd().split(/\r?\n/).map(line=>{
     const [returns,postState,events]=line.split('\t');return {returns,errors:null,postState,events:JSON.parse(events)};
   });
@@ -96,11 +108,11 @@ export async function runCase({caseId,root,outputDirectory,signal}) {
   const sourcePaths=['source_repo/src/browser/input/MoveToCell.ts','source_repo/src/browser/input/MoveToCell.test.ts',
     'source_repo/src/common/buffer/BufferLine.ts','source_repo/src/common/buffer/Buffer.ts'];
   const sourceHashes=await Promise.all(sourcePaths.map(async file=>({path:file,sha256:sha256(await readFile(path.join(root,file)))})));
-  const executable=relative(root,artifact.executable);
+  const executable=pinned.path;
   const capture=entries=>Object.fromEntries(['returns','errors','postState','events'].map(field=>[field,entries.map(entry=>entry[field])]));
-  const result={caseId,sourceHashes,artifactHashes:[{path:executable,sha256:sha256(await readFile(artifact.executable))},
-    {path:relative(root,fixturePath),sha256:sha256(await readFile(fixturePath))}],commands,
+  const result={caseId,sourceHashes,artifactHashes:[{path:executable,sha256:pinned.sha256},
+    {path:relative(root,inputArtifact),sha256:sha256(await readFile(inputArtifact))}],commands,
     captures:[{engine:'native',runtimeVersion:`${process.platform}/${process.arch} Node ${process.version}`,implementation:'rust-native',
-      assertions:reference.length*4,reference:capture(reference),rust:capture(actual)}],seed,original:{tests:4,passed:4,failed:0,skipped:0,unrun:0}};
+      assertions:reference.length*4,reference:capture(reference),rust:capture(actual)}],seed,sourceEdges:{normalZeroScrollback:Buffer.from(zeroScrollback).toString('hex')},original:{tests:4,passed:4,failed:0,skipped:0,unrun:0}};
   await writeFile(path.join(outputDirectory,'result.json'),JSON.stringify(result,null,2)+'\n');return result;
 }

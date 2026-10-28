@@ -8,8 +8,10 @@ User criteria #375 and #376 have separate executable cases:
 
 | Case | Paths and checks |
 | --- | --- |
-| move-01 | Normal buffer, same-row left/right/no movement; targets on rows above/below across row ends; only horizontal arrows; CSI versus SS3 application-cursor prefixes; targetX equal to cols and targetY equal to rows retained |
-| move-02 | Alternate buffer, reset wrapped starting row, skip wrapped rows in vertical movement, horizontal direction after reset, same-position empty result; wide cells, width-zero trailing cells, combining UTF-16 strings, non-BMP characters, lone surrogate cells and initially wrapped first rows |
+| move-01 | Scrollback-capable buffer, same-row left/right/no movement; targets above/below across row ends; horizontal arrows; CSI/SS3 prefixes; targetX equal to cols and targetY equal to rows retained |
+| move-02 | Buffer without scrollback capacity, including alternate and normal with scrollback=0; reset wrapped starting row, skip wrapped rows, UTF-16 horizontal counts and unchanged location. Wide/combined/non-BMP/surrogate cells are covered. |
+
+The source branches on `hasScrollback`, not normal/alternate identity. A normal buffer configured with scrollback=0 uses the unscrollable branch and can emit down/right arrows. The native zero-scrollback regression and source-side check preserve that exception; they do not correct it to unconditional normal-buffer horizontal movement.
 
 The reference has no reverse-wraparound argument. That mode must not acquire invented effects in this helper. Its alt-buffer backwards slices are asymmetric: moving left within one row can produce an empty sequence because the final translated slice has start greater than end. The Rust implementation preserves this behavior rather than correcting it.
 
@@ -42,6 +44,15 @@ node scripts/acceptance-oracle.mjs --case move-02
 cargo test -p xterm-core --test move_to_cell
 ```
 
-`scripts/acceptance-adapters/move-to-cell.mjs` implements the shared runner contract. It hashes the exact reference sources, Rust native test executable and corpus, and returns nonzero assertion counts with full capture domains. The shared runner owns immutable attempts, process-tree cancellation and receipt validation. The adapter honors the shared target directory and 1024 MiB disk reserve. It neither runs a browser terminal nor claims real alt-click integration.
+`scripts/acceptance-adapters/move-to-cell.mjs` implements the shared runner contract. It hashes the exact reference sources, Rust native test executable and corpus, and returns nonzero assertion counts with full capture domains. The shared runner owns immutable attempts, process-tree cancellation and receipt validation. Each attempt pins the executed native test binary in the shared regular content-addressed results store and its exact input table beside its captures so later target cleanup or rebuilds do not invalidate the artifact receipt. The adapter honors the shared target directory and 1024 MiB disk reserve. It neither runs a browser terminal nor claims real alt-click integration.
 
-Standalone development attempts are retained under `results/move-to-cell/`. Original tests passed before initial Rust compilation was interrupted by an unrelated Buffer resize API migration. Final passing counts, independent review and user-case receipts must be observed before marking task #129 accepted. Full xterm.js equivalence remains NOT PROVEN.
+## Observed results
+
+On native Windows with Rust 1.85.1 and Node 24.15.0, all eight Rust tests passed. The four original Mocha tests and four faithful Rust source tests passed. Exact shared acceptance commands passed 2,048 assertions each across 512 independently captured JS/Rust traces, with no skipped runtime:
+
+- `results/acceptance-runs/move-01/1793173273669-ab3c73b0-83b7-42af-8197-b69f85478268/receipt.json`
+- `results/acceptance-runs/move-02/1793173273669-5b73513d-57a5-4389-b101-bf302afef8bb/receipt.json`
+
+These two receipts contain pinned executable/input artifacts, all eight Rust test results, source hashes and complete independent captures. The discovered original suite has four unique tests, not eight because it was rerun for both cases. Likewise, the eight Rust tests are not counted twice.
+
+Earlier failed attempts and development logs remain retained. The final scoped Clippy command is blocked by task179's unfinished cleanup-owner consumer, not suppressed; independent review and that lint rerun remain required. Record newlines alone are normalized for CRLF checkout compatibility; pinned input hashes retain the actual raw bytes. Each Rust corpus test now asserts exactly 512 rows. No native Linux/macOS or actual browser-click pass is claimed here. Full xterm.js equivalence remains NOT PROVEN.

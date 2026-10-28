@@ -79,7 +79,7 @@ fn request_failure_releases_borrows_and_preserves_queue_state() {
     queue.clear();
     fail.set(false);
     queue.enqueue(|_| false).unwrap();
-    queue.flush();
+    queue.flush().unwrap();
     assert_eq!(queue.remaining_tasks(), 0);
 }
 struct ReentrantWarningHost {
@@ -167,8 +167,96 @@ fn warning_failure_preserves_partial_index_and_allows_retry() {
     assert_eq!(queue.process(|| 1.0), Err("log callback failed"));
     assert_eq!(queue.remaining_tasks(), 1);
     assert!(!queue.has_pending_callback());
-    queue.flush();
+    queue.flush().unwrap();
     assert_eq!(queue.remaining_tasks(), 0);
+}
+#[test]
+fn fallible_tasks_retain_the_current_index_on_flush_and_dispatch_errors() {
+    for scheduled in [false, true] {
+        let host = Host::default();
+        let cancelled = host.cancelled.clone();
+        let queue = TaskQueue::idle(
+            FallibleHost {
+                host,
+                fail: Rc::new(Cell::new(false)),
+            },
+            true,
+        );
+        let first = Cell::new(true);
+        let count = Rc::new(Cell::new(0));
+        let seen = count.clone();
+        queue
+            .enqueue_try(move |_| {
+                if first.replace(false) {
+                    Err("task failed")
+                } else {
+                    Ok(false)
+                }
+            })
+            .unwrap();
+        queue
+            .enqueue(move |_| {
+                seen.set(seen.get() + 1);
+                false
+            })
+            .unwrap();
+        let deadlines = Cell::new(0);
+        let result = if scheduled {
+            queue.process(|| {
+                deadlines.set(deadlines.get() + 1);
+                100.0
+            })
+        } else {
+            queue.flush()
+        };
+        assert_eq!(result, Err("task failed"));
+        assert_eq!(queue.remaining_tasks(), 2);
+        assert_eq!(queue.has_pending_callback(), !scheduled);
+        assert_eq!(count.get(), 0);
+        assert_eq!(deadlines.get(), usize::from(scheduled));
+        queue.flush().unwrap();
+        assert_eq!(count.get(), 1);
+        assert_eq!(queue.remaining_tasks(), 0);
+        assert_eq!(
+            cancelled.borrow().as_slice(),
+            if scheduled { &[][..] } else { &[1][..] }
+        );
+    }
+}
+#[test]
+fn fallible_task_clear_then_enqueue_keeps_replacement_after_error() {
+    for scheduled in [false, true] {
+        let host = Host::default();
+        let cancelled = host.cancelled.clone();
+        let queue = TaskQueue::idle(
+            FallibleHost {
+                host,
+                fail: Rc::new(Cell::new(false)),
+            },
+            true,
+        );
+        queue
+            .enqueue_try(|queue| {
+                queue.clear();
+                queue.enqueue(|_| false)?;
+                Err("replacement retained")
+            })
+            .unwrap();
+        let result = if scheduled {
+            queue.process(|| 100.0)
+        } else {
+            queue.flush()
+        };
+        assert_eq!(result, Err("replacement retained"));
+        assert_eq!(queue.remaining_tasks(), 1);
+        assert!(queue.has_pending_callback());
+        queue.flush().unwrap();
+        assert_eq!(queue.remaining_tasks(), 0);
+        assert_eq!(
+            cancelled.borrow().as_slice(),
+            if scheduled { &[2][..] } else { &[1, 2][..] }
+        );
+    }
 }
 #[test]
 fn weak_dispatch_does_not_extend_lifetime() {
@@ -224,14 +312,14 @@ fn callback_panic_preserves_retry_index_and_pending_semantics() {
             if processing {
                 queue.process(|| 100.0).unwrap()
             } else {
-                queue.flush()
+                queue.flush().unwrap()
             }
         }));
         assert!(result.is_err());
         assert_eq!(queue.remaining_tasks(), 1);
         assert_eq!(queue.has_pending_callback(), !processing);
         queue.enqueue(|_| false).unwrap();
-        queue.flush();
+        queue.flush().unwrap();
         assert_eq!(requested.get(), if processing { 2 } else { 1 });
         assert_eq!(
             cancelled.borrow().as_slice(),
