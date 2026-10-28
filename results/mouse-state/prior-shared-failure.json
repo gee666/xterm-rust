@@ -1,0 +1,187 @@
+{
+  "status": "failed scoped mouse checks",
+  "terminalEquivalence": "NOT PROVEN",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+  "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+  "implementationHashes": {
+    "crates/xterm-core/src/mouse_state.rs": "01e1336cee9a3bae6fb860371fd76b2eccd2e3831b03d892dcc221da204236d4",
+    "crates/xterm-core/src/mouse_protocol.rs": "f1266f1d8da6f1c37041a0365825275d4ab3c74ff06d5b24669a17c9faa46b9b",
+    "crates/xterm-core/tests/mouse_state.rs": "a0ecb343b503aa9af1bc1f0b314abebc63b3cf314359e2f23b61ab211b814c92",
+    "crates/xterm-core/tests/mouse_callbacks.rs": "182f63df92f3b86fd1d6208a10dbc0453264cd38108be212fd845054132c303b",
+    "crates/xterm-core/tests/mouse_differential.rs": "794a1e7846322f09ec766ba432b5d548e5d818a627787b6577f10917a5db27ab"
+  },
+  "sourceHashes": {
+    "source_repo/src/common/services/MouseStateService.test.ts": "041ecc7a5482d76209e6858f5bb594babce8674e3e161f2f2e1085100e559635",
+    "source_repo/src/common/services/MouseStateService.ts": "1b562be54a3ea3d91c565ac8d94239f8e219cb82ff735388a3650170a993d5ee",
+    "source_repo/src/common/Types.ts": "55f33764a24eae132a8c0bbabd6770355ef1fc3d6110eb6645e41cae15b80cb8",
+    "source_repo/src/common/Lifecycle.ts": "e00016aae991e24137ab066778912414f4af959f2b26baecf47ec542ad313a83",
+    "source_repo/src/common/Event.ts": "aa374272c5ec5c0d6992d6072687211a94676b086a2505b0414ddd20cf57d641"
+  },
+  "upstream": {
+    "discovered": 8,
+    "executed": 8,
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0
+  },
+  "differential": {
+    "seed": 7146078,
+    "traces": 12226,
+    "corpusSha256": "9243dcf4f617764939affafafdefc5e52f5d78bf6cefbefe429533de9d496561"
+  },
+  "rust": {
+    "debug": {
+      "passed": 20,
+      "failed": 0,
+      "ignored": 0,
+      "suites": 3
+    },
+    "release": {
+      "passed": 20,
+      "failed": 0,
+      "ignored": 0,
+      "suites": 3
+    },
+    "upstreamMapped": 8,
+    "targetedAdditional": 11,
+    "differentialTests": 1
+  },
+  "commands": [
+    {
+      "name": "node-version",
+      "command": "C:\\nvm4w\\nodejs\\node.exe",
+      "args": [
+        "--version"
+      ],
+      "status": 0,
+      "signal": null,
+      "passed": true,
+      "freeBytesBefore": 2836275200,
+      "log": "node-version.log"
+    },
+    {
+      "name": "rust-version",
+      "command": "rustc",
+      "args": [
+        "--version"
+      ],
+      "status": 0,
+      "signal": null,
+      "passed": true,
+      "freeBytesBefore": 2836275200,
+      "log": "rust-version.log"
+    },
+    {
+      "name": "cargo-version",
+      "command": "cargo",
+      "args": [
+        "--version"
+      ],
+      "status": 0,
+      "signal": null,
+      "passed": true,
+      "freeBytesBefore": 2836271104,
+      "log": "cargo-version.log"
+    },
+    {
+      "name": "oracle-replay",
+      "command": "C:\\nvm4w\\nodejs\\node.exe",
+      "args": [
+        "scripts/mouse-state-oracle.mjs"
+      ],
+      "status": 0,
+      "signal": null,
+      "passed": true,
+      "freeBytesBefore": 2836271104,
+      "log": "oracle-replay.log"
+    },
+    {
+      "name": "rustfmt",
+      "command": "rustfmt",
+      "args": [
+        "--check",
+        "--edition",
+        "2021",
+        "crates/xterm-core/src/mouse_state.rs",
+        "crates/xterm-core/src/mouse_protocol.rs",
+        "crates/xterm-core/tests/mouse_state.rs",
+        "crates/xterm-core/tests/mouse_callbacks.rs",
+        "crates/xterm-core/tests/mouse_differential.rs"
+      ],
+      "status": 0,
+      "signal": null,
+      "passed": true,
+      "freeBytesBefore": 2836254720,
+      "log": "rustfmt.log"
+    },
+    {
+      "name": "debug-tests",
+      "command": "cargo",
+      "args": [
+        "test",
+        "-p",
+        "xterm-core",
+        "--test",
+        "mouse_state",
+        "--test",
+        "mouse_callbacks",
+        "--test",
+        "mouse_differential"
+      ],
+      "status": 0,
+      "signal": null,
+      "passed": true,
+      "freeBytesBefore": 2836246528,
+      "log": "debug-tests.log"
+    },
+    {
+      "name": "release-tests",
+      "command": "cargo",
+      "args": [
+        "test",
+        "--release",
+        "-p",
+        "xterm-core",
+        "--test",
+        "mouse_state",
+        "--test",
+        "mouse_callbacks",
+        "--test",
+        "mouse_differential"
+      ],
+      "status": 0,
+      "signal": null,
+      "passed": true,
+      "freeBytesBefore": 2835959808,
+      "log": "release-tests.log"
+    },
+    {
+      "name": "clippy",
+      "command": "cargo",
+      "args": [
+        "clippy",
+        "-p",
+        "xterm-core",
+        "--test",
+        "mouse_state",
+        "--test",
+        "mouse_callbacks",
+        "--test",
+        "mouse_differential",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "status": 101,
+      "signal": null,
+      "passed": false,
+      "freeBytesBefore": 2817687552,
+      "log": "clippy.log"
+    }
+  ],
+  "scope": "MouseStateService only. DOM input, terminal DEC mouse modes, transport and native Linux/macOS are not established by this report."
+}

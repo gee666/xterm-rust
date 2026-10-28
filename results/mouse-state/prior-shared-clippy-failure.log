@@ -1,0 +1,53 @@
+    Blocking waiting for file lock on build directory
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0271]: expected `impl FnMut(&[u32]) + 'static` to be a type parameter that returns `Result<(), ParseError>`, but it returns `()`
+  --> crates\xterm-core\src\parser\escape_handlers.rs:74:100
+   |
+74 |     pub fn set_print_handler(&mut self, handler: impl FnMut(&[u32]) + 'static) { self.print = Some(Box::new(handler)); }
+   |                                                                                                    ^^^^^^^^^^^^^^^^^ expected `Result<(), ParseError>`, found `()`
+   |
+   = note:   expected enum `std::result::Result<(), parser::escape::ParseError>`
+           found unit type `()`
+   = note: required for the cast from `std::boxed::Box<impl FnMut(&[u32]) + 'static>` to `Box<dyn FnMut(&[u32]) -> Result<(), ParseError>>`
+   = note: the full name for the type has been written to 'P:\workshop\Windows_Worshop\oira666\xterm-rust\target\debug\deps\xterm_core-589bdc797704f23a.long-type-5608017108057984355.txt'
+   = note: consider using `--verbose` to print the full type name to the console
+
+error[E0271]: expected `impl FnMut(Option<u32>) -> bool + 'static` to be a type parameter that returns `Result<bool, ParseError>`, but it returns `bool`
+  --> crates\xterm-core\src\parser\escape_handlers.rs:78:35
+   |
+78 |         self.execute.insert(code, Box::new(handler));
+   |                                   ^^^^^^^^^^^^^^^^^ expected `Result<bool, ParseError>`, found `bool`
+   |
+   = note: expected enum `std::result::Result<bool, parser::escape::ParseError>`
+              found type `bool`
+   = note: required for the cast from `std::boxed::Box<impl FnMut(Option<u32>) -> bool + 'static>` to `Box<dyn FnMut(Option<u32>) -> Result<bool, ParseError>>`
+   = note: the full name for the type has been written to 'P:\workshop\Windows_Worshop\oira666\xterm-rust\target\debug\deps\xterm_core-589bdc797704f23a.long-type-18046436489475090869.txt'
+   = note: consider using `--verbose` to print the full type name to the console
+
+error[E0308]: `match` arms have incompatible types
+  --> crates\xterm-core\src\parser\escape_parse.rs:38:28
+   |
+26 | /             match transition.action {
+27 | |                 Print | OscPut | DcsPut | ApcPut => {
+28 | |                     let end = payload_end(data, index, transition.action);
+29 | |                     match transition.action {
+...  |
+36 | |                     index = end - 1;
+   | |                     ---------------- this is found to be of type `()`
+37 | |                 }
+38 | |                 Execute => self.execute_code(code, false),
+   | |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `()`, found `Result<(), ParseError>`
+...  |
+68 | |             }
+   | |_____________- `match` arms have incompatible types
+   |
+   = note: expected unit type `()`
+                   found enum `std::result::Result<(), parser::escape::ParseError>`
+help: use the `?` operator to extract the `std::result::Result<(), parser::escape::ParseError>` value, propagating a `Result::Err` value to the caller
+   |
+38 |                 Execute => self.execute_code(code, false)?,
+   |                                                          +
+
+Some errors have detailed explanations: E0271, E0308.
+For more information about an error, try `rustc --explain E0271`.
+error: could not compile `xterm-core` (lib) due to 3 previous errors
