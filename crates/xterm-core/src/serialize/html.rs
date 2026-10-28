@@ -85,20 +85,48 @@ pub fn serialize_html(
 }
 
 fn header(config: &HtmlConfig, include_background: bool) -> Vec<u16> {
-    let (fg, bg) = if include_background {
-        (
-            config.foreground.as_deref().unwrap_or("#ffffff"),
-            config.background.as_deref().unwrap_or("#000000"),
-        )
-    } else {
-        ("#000000", "#ffffff")
-    };
     let mut output = Vec::new();
-    append(&mut output, &format!(
-        "<html><body><!--StartFragment--><pre><div style='color: {fg}; background-color: {bg}; font-family: {}; font-size: {}px;'>",
-        config.font_family, ryu_js::Buffer::new().format(config.font_size)
-    ));
+    append(
+        &mut output,
+        "<html><body><!--StartFragment--><pre><div style='color: ",
+    );
+    raw_option(
+        &mut output,
+        config.foreground.as_deref().filter(|_| include_background),
+        if include_background {
+            "#ffffff"
+        } else {
+            "#000000"
+        },
+    );
+    append(&mut output, "; background-color: ");
+    raw_option(
+        &mut output,
+        config.background.as_deref().filter(|_| include_background),
+        if include_background {
+            "#000000"
+        } else {
+            "#ffffff"
+        },
+    );
+    append(&mut output, "; font-family: ");
+    output.extend_from_slice(&config.font_family);
+    append(
+        &mut output,
+        &format!(
+            "; font-size: {}px;'>",
+            ryu_js::Buffer::new().format(config.font_size)
+        ),
+    );
     output
+}
+
+fn raw_option(output: &mut Vec<u16>, value: Option<&[u16]>, fallback: &str) {
+    if let Some(value) = value {
+        output.extend_from_slice(value);
+    } else {
+        append(output, fallback);
+    }
 }
 
 fn emit_cell(output: &mut Vec<u16>, cell: &CellData, previous: &CellData, palette: &[String; 256]) {

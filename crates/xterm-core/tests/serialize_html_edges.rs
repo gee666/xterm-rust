@@ -1,5 +1,6 @@
 mod serialize_html_support;
 use serialize_html_support::*;
+use std::fmt::Write;
 use xterm_core::{
     buffer::{
         constants::{
@@ -24,10 +25,10 @@ fn exact_wrappers_empty_range_missing_line_and_scrollback_clamp() {
         (Some(-2), ""),
         (Some(isize::MIN), ""),
     ] {
-        let rows: String = expected
-            .chars()
-            .map(|c| format!("<div><span>{c}</span></div>"))
-            .collect();
+        let mut rows = String::new();
+        for c in expected.chars() {
+            write!(&mut rows, "<div><span>{c}</span></div>").unwrap();
+        }
         assert_eq!(
             html(
                 &text,
@@ -205,6 +206,39 @@ fn default_palette_endpoints_theme_overrides_and_font_js_numbers() {
         assert!(html(&text, 1, &HtmlOptions::default(), None, &config)
             .contains(&format!("font-size: {expected}px;")));
     }
+}
+
+#[test]
+fn raw_theme_and_font_options_retain_malformed_utf16_and_empty_strings() {
+    let text = buffer(&["x"], 1);
+    let mut config = config();
+    config.font_family = vec![0xd800, 0, 0xdc00];
+    config.foreground = Some(vec![0xdc01, 38]);
+    config.background = Some(Vec::new());
+    let output = serialize_html(
+        &text,
+        1,
+        2,
+        None,
+        &config,
+        &HtmlOptions {
+            include_global_background: true,
+            ..HtmlOptions::default()
+        },
+    )
+    .unwrap();
+    let mut expected: Vec<u16> = "color: ".encode_utf16().collect();
+    expected.extend([0xdc01, 38]);
+    expected.extend("; background-color: ; font-family: ".encode_utf16());
+    expected.extend([0xd800, 0, 0xdc00]);
+    expected.extend("; font-size: 15px;".encode_utf16());
+    assert!(output
+        .windows(expected.len())
+        .any(|window| window == expected));
+    let without_background =
+        serialize_html(&text, 1, 2, None, &config, &HtmlOptions::default()).unwrap();
+    assert!(!without_background.contains(&0xdc01));
+    assert!(without_background.contains(&0xd800));
 }
 
 struct Borrowed;

@@ -55,7 +55,7 @@ pub fn config() -> HtmlConfig {
     HtmlConfig {
         foreground: None,
         background: None,
-        font_family: "monospace".into(),
+        font_family: "monospace".encode_utf16().collect(),
         font_size: 15.0,
         ansi_colors: None,
     }

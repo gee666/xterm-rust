@@ -207,10 +207,10 @@ fn upstream_global_default_custom_and_included_background_assertions() {
     };
     let output = html(&empty, 10, &include, None, &config);
     assert_eq!(output.matches("color: #ffffff; background-color: #000000; font-family: monospace; font-size: 15px;").count(), 1);
-    config.font_family = "verdana".into();
+    config.font_family = "verdana".encode_utf16().collect();
     config.font_size = 20.0;
-    config.foreground = Some("#ff00ff".into());
-    config.background = Some("#00ff00".into());
+    config.foreground = Some("#ff00ff".encode_utf16().collect());
+    config.background = Some("#00ff00".encode_utf16().collect());
     let output = html(&empty, 10, &include, None, &config);
     assert_eq!(
         output

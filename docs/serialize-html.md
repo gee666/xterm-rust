@@ -6,6 +6,8 @@ UTF-16 output preserves lone surrogates. Escaping deliberately follows the sourc
 
 A selection is used only when requested and no explicit range exists. Range overrides selection and scrollback. Final selection columns are exclusive. Explicit HTML ranges extend through terminal columns. Missing lines still produce empty row wrappers; missing cells are skipped. Row wrappers do not reset the source's previous-cell attribute state, and width-zero placeholders still advance that state despite emitting nothing. Buffer borrow errors propagate instead of becoming successful empty fragments.
 
+`HtmlConfig.font_family`, `foreground` and `background` retain UTF-16 vectors, including lone surrogates and embedded NUL. Global foreground/background distinguish absent values from present empty strings, matching the source's nullish defaults. The header appends these raw vectors without a lossy Rust string conversion. Parsed palette CSS remains valid Rust strings.
+
 `HtmlConfig.ansi_colors` is `Option<[String; 256]>`. `None` selects the headless default ANSI palette; `Some` supplies a complete browser theme snapshot without invalid short-vector states. Palette generation moved unchanged from `xterm-web/src/theme/palette.rs` to `xterm-core/src/color/palette.rs`, with the browser module re-exporting it. The move avoids both duplicate generators and a core-to-browser dependency. Font sizes use the existing `ryu-js` dependency for JS number formatting, including exponent thresholds and negative zero.
 
 ## Assertion mapping
@@ -36,4 +38,6 @@ Observed local debug results: 13 tests passed, zero failed or ignored, in `resul
 
 Independent task 87 owns the original suite baseline and deterministic/seeded exact UTF-16 differential corpus in `scripts/serialize-oracle.mjs`, `tests/serialize_differential.rs`, fixture files and `results/serialize/oracle.json`. Its initial observed result was all 44 original cases passing, and 2092 differential cases passing, including 1050 HTML cases. Subsequent corpus expansions must be read from the current report rather than this historical count.
 
-Task 88 owns live Rust terminal and browser/WASM addon integration, activation/proposed-API/lifecycle behavior and terminal round trips. These detached-buffer tests do not establish that gate. Native Linux/macOS and actual browser results remain separate requirements. Full equivalence is NOT PROVEN.
+The lossless-option follow-up passed 14 direct HTML tests and both differential test groups in `results/serialize/utf16-tests-final.log`; the differential group covers 3334 source-generated cases. Focused Clippy with warnings denied passes in `utf16-clippy-clean.log`. Earlier failed attempts remain retained. The new raw-option regression checks malformed UTF-16 foreground/font values, present empty background and includeGlobalBackground exclusion.
+
+Task 88 owns live native Rust terminal integration and terminal round trips. Task 131 owns the actual browser/WASM addon binding and three-browser evidence, including activation/proposed-API/lifecycle behavior. These detached-buffer tests do not establish that gate. Native Linux/macOS and actual browser results remain separate requirements. Full equivalence is NOT PROVEN.

@@ -71,9 +71,9 @@ pub struct HtmlOptions {
 /// String and palette formatting belongs to the host theme, not core policy.
 #[derive(Clone, Debug)]
 pub struct HtmlConfig {
-    pub foreground: Option<String>,
-    pub background: Option<String>,
-    pub font_family: String,
+    pub foreground: Option<Vec<u16>>,
+    pub background: Option<Vec<u16>>,
+    pub font_family: Vec<u16>,
     pub font_size: f64,
     /// None selects the headless default palette; Some is a full theme snapshot.
     pub ansi_colors: Option<[String; 256]>,

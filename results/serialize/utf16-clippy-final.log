@@ -1,0 +1,29 @@
+    Blocking waiting for file lock on build directory
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error: use of `format!` to build up a string from an iterator
+  --> crates\xterm-core\tests\serialize_html_edges.rs:27:28
+   |
+27 |           let rows: String = expected
+   |  ____________________________^
+28 | |             .chars()
+29 | |             .map(|c| format!("<div><span>{c}</span></div>"))
+30 | |             .collect();
+   | |______________________^
+   |
+help: call `fold` instead
+  --> crates\xterm-core\tests\serialize_html_edges.rs:29:14
+   |
+29 |             .map(|c| format!("<div><span>{c}</span></div>"))
+   |              ^^^
+help: ... and use the `write!` macro here
+  --> crates\xterm-core\tests\serialize_html_edges.rs:29:22
+   |
+29 |             .map(|c| format!("<div><span>{c}</span></div>"))
+   |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   = note: this can be written more efficiently by appending to a `String` directly
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#format_collect
+   = note: `-D clippy::format-collect` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::format_collect)]`
+
+error: could not compile `xterm-core` (test "serialize_html_edges") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
