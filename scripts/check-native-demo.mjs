@@ -2,6 +2,8 @@
 import assert from 'node:assert/strict';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { performance } from 'node:perf_hooks';
 import { fileURLToPath } from 'node:url';
 import { createEvidenceRun, persistEvidence } from './upstream-baseline-utils.mjs';
 
@@ -14,7 +16,11 @@ const report = { scope: 'Native demo only; full terminal equivalence NOT PROVEN'
   commands: [], negativeChecks: [], status: 'incomplete', gaps: [] };
 const reserveMiB = 1024;
 let runtime;
-async function checkDisk() { runtime.requireHeadroom(await runtime.diskHeadroom(root, reserveMiB)); }
+async function checkDisk() {
+  runtime.requireHeadroom(await runtime.diskHeadroom(root, reserveMiB));
+  try { runtime.requireHeadroom(await runtime.diskHeadroom(path.join(root, 'target'), reserveMiB)); }
+  catch (error) { if (error.code !== 'ENOENT') throw error; }
+}
 async function run(name, command, args, expected = 'success') {
   await checkDisk();
   const log = path.join(attempt.directory, `${name}.log`);
@@ -29,6 +35,32 @@ async function success(name, command, args) {
   assert.equal(runResult.result.status, 'passed', `${name}: inspect retained log`);
   return runResult.output;
 }
+async function interactive(executable) {
+  await checkDisk();
+  const input = 'reset\ninput PING\\r\nunsupported-command\nwrite after-error\nassert-line 0 after-error\nassert-output PING\\r\nresize 12 4\nassert-size 12 4\nquit\n';
+  const started = performance.now();
+  // The native example cannot spawn children. A bounded stdin pipe exercises
+  // its interactive loop, which the generic runner's ignored stdin cannot do.
+  const result = spawnSync(executable, ['--plain'], { cwd: root, env: process.env,
+    encoding: 'utf8', input, timeout: 30000, maxBuffer: 8 * 1024 * 1024 });
+  const stdout = result.stdout ?? '';
+  const stderr = result.stderr ?? '';
+  for (const [name, text] of [['interactive-input.txt', input], ['interactive-stdout.log', stdout], ['interactive-stderr.log', stderr]]) {
+    await writeFile(path.join(attempt.directory, name), text);
+  }
+  report.commands.push({ command: [executable, '--plain'], expected: 'success with one rejected interactive command',
+    exitCode: result.status, signal: result.signal, error: result.error?.message ?? null,
+    timedOut: result.error?.code === 'ETIMEDOUT', elapsedMs: performance.now() - started,
+    status: result.status === 0 && !result.error && !result.signal ? 'passed' : 'failed',
+    log: relative(path.join(attempt.directory, 'interactive-stdout.log')) });
+  persistEvidence(attempt, report);
+  assert(!result.error && result.status === 0 && !result.signal, 'Interactive command pipe failed');
+  assert.equal(stderr.trim().split(/\r?\n/).length, 1, 'Only the deliberately unknown command should fail');
+  assert(stderr.includes('unknown command'));
+  for (const name of ['assert-line', 'assert-output', 'assert-size']) assert(stdout.includes(`ok ${name}`));
+  assert(stdout.includes('Assertions: 3; disposed: true'), 'Interactive errors must not prevent later checks or cleanup');
+  report.interactiveChecks = { recoveredCommandErrors: 1, successfulStateAssertions: 3, disposed: true };
+}
 try {
   // Allocate the incomplete attempt before loading shared tools. A broken
   // tooling import must not leave an older successful run looking current.
@@ -40,14 +72,24 @@ try {
   report.sourceBefore = await runtime.snapshot(root);
   const cargo = process.env.CARGO ?? 'cargo';
   report.environment.rustc = (await success('rustc', process.env.RUSTC ?? 'rustc', ['--version'])).trim();
+  const metadata = JSON.parse(await success('metadata', cargo, ['metadata', '--locked', '--no-deps', '--format-version', '1']));
+  runtime.assertSharedTarget(root, metadata.target_directory, process.platform);
+  report.environment.targetDirectory = metadata.target_directory;
+  const cfg = await success('target-cfg', cargo, ['rustc', '--locked', '-p', 'xterm-core', '--lib', '--', '--print', 'cfg']);
+  report.environment.resolvedTargetOs = runtime.assertResolvedTarget(process.platform, cfg);
   await success('unit', cargo, ['test', '--locked', '-p', 'xterm-core', '--example', 'native']);
   await success('clippy', cargo, ['clippy', '--locked', '-p', 'xterm-core', '--example', 'native', '--', '-D', 'warnings']);
   await success('format', 'rustfmt', ['--edition', '2021', '--check',
     'crates/xterm-core/examples/native.rs', 'crates/xterm-core/examples/native/commands.rs',
     'crates/xterm-core/examples/native/checks.rs', 'crates/xterm-core/examples/native/view.rs',
-    'crates/xterm-core/examples/native/escape.rs']);
-  await success('build', cargo, ['build', '--locked', '-p', 'xterm-core', '--example', 'native']);
-  const executable = path.join(root, `target/debug/examples/native${process.platform === 'win32' ? '.exe' : ''}`);
+    'crates/xterm-core/examples/native/escape.rs', 'crates/xterm-core/examples/native/arguments.rs']);
+  const build = await success('build', cargo, ['build', '--locked', '-p', 'xterm-core', '--example', 'native', '--message-format=json-render-diagnostics']);
+  const artifacts = build.split(/\r?\n/).filter(line => line.startsWith('{')).map(line => JSON.parse(line))
+    .filter(message => message.reason === 'compiler-artifact' && message.target.name === 'native' &&
+      message.target.kind.includes('example') && !message.profile.test && message.executable);
+  assert.equal(artifacts.length, 1, 'Use this build artifact, never a stale hardcoded executable');
+  const executable = artifacts[0].executable;
+  report.executable = relative(executable);
   const script = 'crates/xterm-core/tests/fixtures/native-demo.txt';
   const expectedAssertions = (await readFile(path.join(root, script), 'utf8')).split(/\r?\n/).filter(line => line.startsWith('assert-')).length;
   assert(expectedAssertions >= 20, 'Demo script must assert actual state, not startup alone');
@@ -58,6 +100,7 @@ try {
   assert(ansi.includes('\x1b[38;5;1m'), 'Sample must render real red cell attributes');
   assert(ansi.includes('\x1b[38;5;2m'), 'Sample must render real green cell attributes');
   assert(ansi.includes(`Assertions: ${expectedAssertions}; disposed: true`));
+  await interactive(executable);
   const eof = await success('stdin-eof', executable, ['--plain']);
   assert(eof.includes('disposed: true'), 'EOF must explicitly dispose the terminal');
   await success('help', executable, ['--help']);
@@ -73,7 +116,10 @@ try {
     const file = path.join(temporary, `${name}.txt`);
     await writeFile(file, text);
     const checked = await run(`negative-${name}`, executable, ['--plain', '--script', file], 'failure');
-    const accepted = checked.result.exitCode !== 0 && !checked.result.timedOut &&
+    const accepted = Number.isInteger(checked.result.exitCode) && checked.result.exitCode > 0 &&
+      !checked.result.signal && !checked.result.error && !checked.result.timedOut &&
+      !checked.result.resourceError && !checked.result.terminationError && !checked.result.loggingError &&
+      !checked.result.aborted && !checked.result.abortError &&
       checked.output.includes(message) && !checked.output.includes('panicked');
     report.negativeChecks.push({ name, accepted, expectedMessage: message });
     assert(accepted, `Negative case ${name} did not fail with its expected diagnostic`);

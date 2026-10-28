@@ -11,9 +11,9 @@ cargo test --locked -p xterm-core --example native
 node scripts/check-native-demo.mjs
 ```
 
-Honor the shared disk/build policy. Do not start local builds during a coordinated disk pause. The checker requires1GiB free, uses the shared target directory, and never changes profiles or removes files. It reuses the existing quality process runner and immutable evidence-attempt helper, with no npm dependency.
+Honor the shared disk/build policy. Do not start local builds during a coordinated disk pause. The checker requires1GiB free on the root and existing target filesystem, validates the resolved Cargo OS/shared directory, uses Cargo's actual JSON executable artifact, and never changes profiles or removes files. It reuses the existing quality process runner and immutable evidence-attempt helper, with no npm dependency.
 
-The fixture crates/xterm-core/tests/fixtures/native-demo.txt drives the same executor as interactive commands. Its assertions inspect actual Rust cells/colors/widths/cursor/dimensions, resize reflow and outbound UTF16, not echoed text. Plain and ANSI runs, EOF disposal and six expected-failure cases are retained separately under results/demos/native/runs. Read latest.json for the current attempt; older successes do not establish a later run passed.
+The fixture crates/xterm-core/tests/fixtures/native-demo.txt drives the same executor as interactive commands. Its assertions inspect actual Rust cells/colors/widths/cursor/dimensions, resize reflow and outbound UTF16, not echoed text. Plain and ANSI runs, a stdin-driven interactive error/recovery session, EOF disposal and six strict expected-failure cases are retained separately under results/demos/native/runs. Read latest.json for the current attempt; older successes do not establish a later run passed.
 
 The source defaults to Unicode6: U+1F600 is width1, CJK width2. Default reflow skips the cursor's wrapped group; move the cursor below the group before checking widening. Do not change these assertions to match an incorrect Rust result. The unchanged JS source was separately checked for these cases.
 
