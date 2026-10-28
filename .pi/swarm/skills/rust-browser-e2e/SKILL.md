@@ -12,6 +12,8 @@ node --test scripts/e2e/*.test.mjs
 node scripts/e2e-upstream.mjs --suite addon-fit --list
 node scripts/e2e-upstream.mjs --suite addon-fit --project Chromium
 node scripts/e2e-upstream.mjs --suite core --timeout-ms 1200000
+node scripts/demo-e2e.mjs --case demo-05
+node scripts/demo-e2e.mjs --case demo-06
 ```
 
 The default runtime command builds the debug Rust library. `--no-build` is only for an already built matching library. `--grep PATTERN` explicitly selects a smaller scope. Omitting `--project` retains every original browser project.
