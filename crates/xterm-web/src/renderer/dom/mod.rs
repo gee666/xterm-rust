@@ -1,12 +1,20 @@
 // Copyright (c) 2018 The xterm.js authors. All rights reserved. MIT license.
 mod backend;
 mod blink;
+mod browser;
+mod create;
 mod draw;
 mod layout;
+mod styles;
 use super::{
-    canvas_width::CanvasWidthMeasurer, cursor_blink::CursorBlinkController, options::RenderOptions,
-    row::RowFactory, row_types::Selection, service_api::RedrawRequest,
-    text_blink::TextBlinkController, width_cache::WidthCache,
+    canvas_width::CanvasWidthMeasurer,
+    cursor_blink::CursorBlinkController,
+    options::RenderOptions,
+    row::RowFactory,
+    row_types::Selection,
+    service_api::{BrowserService, RedrawRequest},
+    text_blink::TextBlinkController,
+    width_cache::WidthCache,
 };
 use crate::{
     api::RenderDimensions, char_size_browser::CharSizeService,
@@ -34,6 +42,8 @@ pub struct DomRenderer {
     terminal: Rc<Terminal>,
     document: Document,
     window: Window,
+    browser: Option<Rc<dyn BrowserService>>,
+    owns_metrics: bool,
     element: HtmlElement,
     screen: HtmlElement,
     viewport: HtmlElement,
@@ -65,139 +75,6 @@ pub struct DomRenderer {
     dom_listeners: RefCell<Vec<crate::dom_listener::DomListener>>,
 }
 impl DomRenderer {
-    pub fn new(
-        terminal: Rc<Terminal>,
-        dom: &BrowserDom,
-        theme: Rc<ThemeService>,
-        joiners: Rc<CharacterJoinerService>,
-    ) -> Result<Rc<Self>, JsValue> {
-        let buffers = terminal
-            .with_state(|state| Rc::clone(&state.buffers))
-            .map_err(|e| crate::js_error::to_js_error(&e))?;
-        let decoration = DecorationService::with_buffers(&buffers)
-            .map_err(|e| crate::js_error::to_js_error(&e))?;
-        Self::new_with_decorations(terminal, dom, theme, joiners, decoration)
-    }
-    pub fn new_with_decorations(
-        terminal: Rc<Terminal>,
-        dom: &BrowserDom,
-        theme: Rc<ThemeService>,
-        joiners: Rc<CharacterJoinerService>,
-        decoration: DecorationService,
-    ) -> Result<Rc<Self>, JsValue> {
-        Self::create(terminal, dom, theme, joiners, decoration, None)
-    }
-    pub fn new_with_metrics(
-        terminal: Rc<Terminal>,
-        dom: &BrowserDom,
-        theme: Rc<ThemeService>,
-        joiners: Rc<CharacterJoinerService>,
-        decoration: DecorationService,
-        metrics: Rc<CharSizeService>,
-    ) -> Result<Rc<Self>, JsValue> {
-        Self::create(terminal, dom, theme, joiners, decoration, Some(metrics))
-    }
-    fn create(
-        terminal: Rc<Terminal>,
-        dom: &BrowserDom,
-        theme: Rc<ThemeService>,
-        joiners: Rc<CharacterJoinerService>,
-        decoration: DecorationService,
-        metrics: Option<Rc<CharSizeService>>,
-    ) -> Result<Rc<Self>, JsValue> {
-        let options_service = terminal
-            .with_state(|state| Rc::clone(&state.options))
-            .map_err(|e| crate::js_error::to_js_error(&e))?;
-        let options =
-            RenderOptions::read(&options_service).map_err(|e| crate::js_error::to_js_error(&e))?;
-        let metrics = match metrics {
-            Some(metrics) => metrics,
-            None => Rc::new(CharSizeService::new(
-                &dom.document,
-                &dom.helpers,
-                options.font.clone(),
-            )?),
-        };
-        metrics.measure()?;
-        let mut widths = WidthCache::new(CanvasWidthMeasurer::new(&dom.document)?);
-        widths.set_font(options.font.clone()).map_err(width_error)?;
-        let row_container = element(&dom.document, "div", "xterm-rows")?;
-        row_container
-            .style()
-            .set_property("line-height", "normal")?;
-        row_container.set_attribute("aria-hidden", "true")?;
-        let selection_container = element(&dom.document, "div", "xterm-selection")?;
-        selection_container.set_attribute("aria-hidden", "true")?;
-        let dimensions_style = element(&dom.document, "style", "")?;
-        let theme_style = element(&dom.document, "style", "")?;
-        let window = dom
-            .document
-            .default_view()
-            .ok_or_else(|| js_sys::Error::new("Terminal document has no owner window"))?;
-        let focused = dom
-            .document
-            .active_element()
-            .is_some_and(|active| active.is_same_node(Some(dom.textarea.as_ref())));
-        let renderer = Rc::new(Self {
-            terminal,
-            document: dom.document.clone(),
-            window,
-            element: dom.element.clone(),
-            screen: dom.screen.clone(),
-            viewport: dom.viewport.clone(),
-            row_container,
-            selection_container,
-            dimensions_style,
-            theme_style,
-            rows: RefCell::new(Vec::new()),
-            row_blink: RefCell::new(Vec::new()),
-            dimensions: Cell::new(RenderDimensions::default()),
-            spacing: Cell::new(0.0),
-            focused: Cell::new(focused),
-            selection: RefCell::new(Selection::default()),
-            last_selection: Cell::new(Selection::default()),
-            selection_model: Cell::new(super::selection_model::SelectionRenderModel::default()),
-            theme,
-            joiners,
-            decoration,
-            metrics,
-            widths: RefCell::new(widths),
-            options: RefCell::new(options),
-            options_service,
-            listeners: DisposableStore::new(),
-            terminal_id: NEXT_TERMINAL_ID.fetch_add(1, Ordering::Relaxed),
-            disposed: Cell::new(false),
-            redraw: Emitter::new(),
-            text_blink: RefCell::new(None),
-            cursor_blink: RefCell::new(None),
-            dom_listeners: RefCell::new(Vec::new()),
-        });
-        let cols = renderer
-            .terminal
-            .cols()
-            .map_err(|e| crate::js_error::to_js_error(&e))?;
-        let rows = renderer
-            .terminal
-            .rows()
-            .map_err(|e| crate::js_error::to_js_error(&e))?;
-        renderer.refresh_row_elements(rows)?;
-        renderer.screen.append_child(&renderer.dimensions_style)?;
-        renderer.screen.append_child(&renderer.theme_style)?;
-        renderer.update_dimensions(cols, rows)?;
-        renderer.inject_css();
-        renderer
-            .element
-            .class_list()
-            .add_1(&renderer.owner_class())?;
-        renderer.screen.append_child(&renderer.row_container)?;
-        renderer
-            .screen
-            .append_child(&renderer.selection_container)?;
-        renderer.set_default_spacing()?;
-        renderer.initialize_blink()?;
-        renderer.subscribe();
-        Ok(renderer)
-    }
     fn subscribe(self: &Rc<Self>) {
         let weak = Rc::downgrade(self);
         self.listeners.add(
@@ -214,21 +91,26 @@ impl DomRenderer {
         );
         let weak = Rc::downgrade(self);
         self.listeners
-            .add(self.theme.on_change_colors().subscribe(move |_| {
-                if let Some(renderer) = weak.upgrade() {
-                    renderer.inject_css();
-                }
-            }));
-        let weak = Rc::downgrade(self);
-        self.listeners
-            .add(self.metrics.state.on_change().try_subscribe(move |_| {
+            .add(self.theme.on_change_colors().try_subscribe(move |_| {
                 if let Some(renderer) = weak.upgrade() {
                     renderer
-                        .handle_char_size_changed()
+                        .inject_css()
                         .map_err(crate::js_error::callback_error)?;
                 }
                 Ok(())
             }));
+        if self.owns_metrics {
+            let weak = Rc::downgrade(self);
+            self.listeners
+                .add(self.metrics.state.on_change().try_subscribe(move |_| {
+                    if let Some(renderer) = weak.upgrade() {
+                        renderer
+                            .handle_char_size_changed()
+                            .map_err(crate::js_error::callback_error)?;
+                    }
+                    Ok(())
+                }));
+        }
     }
     pub fn dimensions(&self) -> RenderDimensions {
         self.dimensions.get()
@@ -257,7 +139,7 @@ impl DomRenderer {
             .map_err(width_error)?;
         let font_changed = self.options.borrow().font != options.font;
         *self.options.borrow_mut() = options.clone();
-        if font_changed {
+        if font_changed && self.owns_metrics {
             self.metrics.set_font(options.font)?;
         }
         let cols = self
@@ -269,21 +151,9 @@ impl DomRenderer {
             .rows()
             .map_err(|e| crate::js_error::to_js_error(&e))?;
         self.update_dimensions(cols, rows)?;
-        self.inject_css();
+        self.inject_css()?;
         self.set_default_spacing()?;
         self.update_blink_duration()
-    }
-    fn inject_css(&self) {
-        let colors = self.theme.colors();
-        let colors = colors.borrow();
-        let options = self.options.borrow();
-        self.theme_style
-            .set_text_content(Some(&super::theme_css::theme_css(
-                self.terminal_id,
-                &colors,
-                &options.font,
-                options.cursor_width,
-            )));
     }
     pub fn clear(&self) -> Result<(), JsValue> {
         for row in self.rows.borrow().iter() {
@@ -327,7 +197,9 @@ impl Drop for DomRenderer {
     }
 }
 fn element(document: &Document, tag: &str, class: &str) -> Result<HtmlElement, JsValue> {
-    let element: HtmlElement = document.create_element(tag)?.dyn_into()?;
+    // Callers use known HTML tags. A realm-dependent instanceof would reject
+    // valid nodes created by a same-origin iframe document, unlike the TS cast.
+    let element: HtmlElement = document.create_element(tag)?.unchecked_into();
     if !class.is_empty() {
         element.set_class_name(class);
     }

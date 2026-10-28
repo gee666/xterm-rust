@@ -7,7 +7,7 @@ use wasm_bindgen::{closure::Closure, JsCast, JsValue};
 use web_sys::Window;
 type TimerCallback = Closure<dyn Fn() -> Result<(), JsValue>>;
 struct State {
-    window: Window,
+    window: Rc<dyn Fn() -> Window>,
     duration: Cell<f64>,
     handle: Cell<Option<i32>>,
     callback: RefCell<Option<TimerCallback>>,
@@ -19,7 +19,7 @@ struct State {
 impl State {
     fn clear(&self) {
         if let Some(handle) = self.handle.take() {
-            self.window.clear_interval_with_handle(handle);
+            (self.window)().clear_interval_with_handle(handle);
         }
         self.callback.borrow_mut().take();
     }
@@ -37,12 +37,10 @@ impl State {
                 }
                 Ok(())
             }));
-            let handle = self
-                .window
-                .set_interval_with_callback_and_timeout_and_arguments_0(
-                    callback.as_ref().unchecked_ref(),
-                    to_int32(self.duration.get()),
-                )?;
+            let handle = (self.window)().set_interval_with_callback_and_timeout_and_arguments_0(
+                callback.as_ref().unchecked_ref(),
+                to_int32(self.duration.get()),
+            )?;
             *self.callback.borrow_mut() = Some(callback);
             self.handle.set(Some(handle));
             if !was_on {
@@ -67,7 +65,7 @@ impl Drop for State {
 pub struct TextBlinkController(Rc<State>);
 impl TextBlinkController {
     pub fn new(
-        window: Window,
+        window: Rc<dyn Fn() -> Window>,
         duration: f64,
         render: impl Fn() -> Result<(), JsValue> + 'static,
     ) -> Self {

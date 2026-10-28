@@ -41,8 +41,8 @@ impl Renderer for DomRenderer {
     fn clear(&self) -> Result<(), JsValue> {
         DomRenderer::clear(self)
     }
-    fn render_rows(&self, start: usize, end: usize) -> Result<(), JsValue> {
-        DomRenderer::render_rows(self, start, end)
+    fn render_rows(&self, start: f64, end: f64) -> Result<(), JsValue> {
+        DomRenderer::render_rows_js(self, start, end)
     }
     fn visibility(&self) -> Option<&dyn VisibilityRenderer> {
         Some(self)

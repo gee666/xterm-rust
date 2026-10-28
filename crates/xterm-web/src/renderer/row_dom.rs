@@ -9,7 +9,8 @@ pub fn create_spans(document: &Document, spans: &[RowSpan]) -> Result<Vec<HtmlEl
     spans
         .iter()
         .map(|span| {
-            let element: HtmlElement = document.create_element("span")?.dyn_into()?;
+            // A known HTML tag has the correct interface in its own document realm.
+            let element: HtmlElement = document.create_element("span")?.unchecked_into();
             js_sys::Reflect::set(
                 element.as_ref(),
                 &JsValue::from_str("textContent"),

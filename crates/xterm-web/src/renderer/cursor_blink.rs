@@ -8,7 +8,7 @@ use web_sys::{HtmlElement, Window};
 const IDLE_TIMEOUT_MS: i32 = 5 * 60 * 1000;
 type TimerCallback = Closure<dyn Fn() -> Result<(), JsValue>>;
 struct State {
-    window: Window,
+    window: Rc<dyn Fn() -> Window>,
     row: HtmlElement,
     handle: Cell<Option<i32>>,
     callback: RefCell<Option<TimerCallback>>,
@@ -17,7 +17,7 @@ struct State {
 impl State {
     fn clear(&self) {
         if let Some(handle) = self.handle.take() {
-            self.window.clear_timeout_with_handle(handle);
+            (self.window)().clear_timeout_with_handle(handle);
         }
         self.callback.borrow_mut().take();
     }
@@ -33,12 +33,10 @@ impl State {
             }
             Ok(())
         }));
-        let handle = self
-            .window
-            .set_timeout_with_callback_and_timeout_and_arguments_0(
-                callback.as_ref().unchecked_ref(),
-                IDLE_TIMEOUT_MS,
-            )?;
+        let handle = (self.window)().set_timeout_with_callback_and_timeout_and_arguments_0(
+            callback.as_ref().unchecked_ref(),
+            IDLE_TIMEOUT_MS,
+        )?;
         *self.callback.borrow_mut() = Some(callback);
         self.handle.set(Some(handle));
         Ok(())
@@ -52,7 +50,11 @@ impl Drop for State {
 #[derive(Clone)]
 pub struct CursorBlinkController(Rc<State>);
 impl CursorBlinkController {
-    pub fn new(window: Window, row: HtmlElement, focused: bool) -> Result<Self, JsValue> {
+    pub fn new(
+        window: Rc<dyn Fn() -> Window>,
+        row: HtmlElement,
+        focused: bool,
+    ) -> Result<Self, JsValue> {
         let state = Rc::new(State {
             window,
             row,

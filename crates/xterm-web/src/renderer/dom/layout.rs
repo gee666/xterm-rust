@@ -22,7 +22,7 @@ impl DomRenderer {
         let options = self.options.borrow();
         let dimensions = super::super::geometry::dimensions(
             self.metrics.state.size(),
-            self.window.device_pixel_ratio(),
+            self.browser_dpr()?,
             cols,
             rows,
             options.letter_spacing,
@@ -89,7 +89,6 @@ impl DomRenderer {
         self.set_default_spacing()
     }
     pub fn handle_device_pixel_ratio_change(&self) -> Result<(), JsValue> {
-        self.metrics.measure()?;
         self.handle_char_size_changed()
     }
     pub fn handle_focus(&self) -> Result<(), JsValue> {

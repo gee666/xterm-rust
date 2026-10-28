@@ -13,6 +13,17 @@ pub(super) struct RenderOptions {
     pub minimum_contrast_ratio: f64,
     pub blink_interval: f64,
 }
+pub fn read_font(options: &OptionsService) -> Result<Font, OptionError> {
+    let text = |key| -> Result<String, OptionError> {
+        Ok(String::from_utf16_lossy(&options.get(key)?.to_utf16()?))
+    };
+    Ok(Font {
+        family: text("fontFamily")?,
+        size: options.get("fontSize")?.to_number()?,
+        weight: text("fontWeight")?,
+        weight_bold: text("fontWeightBold")?,
+    })
+}
 impl RenderOptions {
     pub fn read(options: &OptionsService) -> Result<Self, OptionError> {
         let text = |key| -> Result<String, OptionError> {
@@ -20,12 +31,7 @@ impl RenderOptions {
         };
         let number = |key| options.get(key)?.to_number();
         Ok(Self {
-            font: Font {
-                family: text("fontFamily")?,
-                size: number("fontSize")?,
-                weight: text("fontWeight")?,
-                weight_bold: text("fontWeightBold")?,
-            },
+            font: read_font(options)?,
             letter_spacing: number("letterSpacing")?,
             line_height: number("lineHeight")?,
             cursor_width: number("cursorWidth")?,

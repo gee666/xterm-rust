@@ -18,6 +18,28 @@ impl DomRenderer {
     pub fn render_rows(&self, start: usize, end: usize) -> Result<(), JsValue> {
         self.render_rows_inner(start, end, None)
     }
+    /// JavaScript loop semantics survive NaN/fractional refresh ranges. The
+    /// service clamps upper bounds; undefined negative row slots have no effect.
+    pub fn render_rows_js(&self, start: f64, end: f64) -> Result<(), JsValue> {
+        if start.is_nan() || end.is_nan() || start.fract() != 0.0 || end < start || end < 0.0 {
+            return self.update_text_blink();
+        }
+        if !start.is_finite() || !end.is_finite() {
+            return Err(js_sys::RangeError::new(
+                "renderer row range must be finite after service clamping",
+            )
+            .into());
+        }
+        let count = self.rows.borrow().len();
+        if count == 0 || start >= count as f64 {
+            return self.update_text_blink();
+        }
+        self.render_rows_inner(
+            start.max(0.0) as usize,
+            end.floor().min((count - 1) as f64) as usize,
+            None,
+        )
+    }
     pub fn handle_link_underline(
         &self,
         enabled: bool,
@@ -118,7 +140,7 @@ impl DomRenderer {
                 },
                 cursor_hidden: core.is_cursor_hidden.get(),
                 cursor_initialized: core.is_cursor_initialized.get(),
-                focused: self.focused.get(),
+                focused: self.browser_focused()?,
                 blink_on: self.is_text_blink_on(),
                 cell_width: self.dimensions.get().css.cell.width,
                 default_spacing: self.spacing.get(),

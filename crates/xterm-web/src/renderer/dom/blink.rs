@@ -4,7 +4,7 @@ impl DomRenderer {
     pub(super) fn initialize_blink(self: &Rc<Self>) -> Result<(), JsValue> {
         let weak = Rc::downgrade(self);
         let text = TextBlinkController::new(
-            self.window.clone(),
+            self.window_source(),
             self.options.borrow().blink_interval,
             move || {
                 if let Some(renderer) = weak.upgrade() {
@@ -15,8 +15,8 @@ impl DomRenderer {
                     renderer
                         .redraw
                         .fire(&RedrawRequest {
-                            start: 0,
-                            end: rows - 1,
+                            start: 0.0,
+                            end: (rows - 1) as f64,
                             sync: false,
                         })
                         .map_err(|e| crate::js_error::to_js_error(&e))?;
@@ -25,7 +25,7 @@ impl DomRenderer {
             },
         );
         let cursor = CursorBlinkController::new(
-            self.window.clone(),
+            self.window_source(),
             self.row_container.clone(),
             self.focused.get(),
         )?;

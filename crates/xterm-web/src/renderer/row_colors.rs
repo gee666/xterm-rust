@@ -171,7 +171,7 @@ fn rgb_color(color: i32) -> Color {
     )
 }
 fn background_glyph(code: Option<u32>) -> bool {
-    code.is_some_and(|code| (0xe0a4..=0xe0d6).contains(&code) || (0x2500..=0x259f).contains(&code))
+    code.is_some_and(super::utils::treat_glyph_as_background_color)
 }
 struct ContrastInput<'a> {
     bg: &'a Color,

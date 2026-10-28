@@ -1,11 +1,22 @@
 //! Shared renderer replacement contract corresponding to upstream IRenderer.
 use crate::api::RenderDimensions;
 use wasm_bindgen::JsValue;
+use web_sys::Window;
 use xterm_core::event::Event;
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+
+/// The live CoreBrowserService view shared by renderers and RenderService.
+/// A trait also permits controlled observer/clock tests without a second host.
+pub trait BrowserService {
+    fn window(&self) -> Window;
+    fn dpr(&self) -> Result<f64, JsValue>;
+    fn is_focused(&self) -> Result<bool, JsValue>;
+    fn on_dpr_change(&self) -> Event<f64>;
+    fn on_window_change(&self) -> Event<Window>;
+}
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct RedrawRequest {
-    pub start: usize,
-    pub end: usize,
+    pub start: f64,
+    pub end: f64,
     pub sync: bool,
 }
 /// Optional upstream methods are capabilities, not successful no-op methods.
@@ -32,7 +43,7 @@ pub trait Renderer {
     ) -> Result<(), JsValue>;
     fn handle_cursor_move(&self) -> Result<(), JsValue>;
     fn clear(&self) -> Result<(), JsValue>;
-    fn render_rows(&self, start: usize, end: usize) -> Result<(), JsValue>;
+    fn render_rows(&self, start: f64, end: f64) -> Result<(), JsValue>;
     fn visibility(&self) -> Option<&dyn VisibilityRenderer> {
         None
     }
