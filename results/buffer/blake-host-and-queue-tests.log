@@ -1,0 +1,68 @@
+    Blocking waiting for file lock on build directory
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 7.03s
+     Running tests\buffer_contracts.rs (target\debug\deps\buffer_contracts-11423298b6a0f041.exe)
+
+running 11 tests
+test cleanup_owner_is_unique_and_drop_cancels_then_permits_replacement ... ok
+test clear_preserves_saved_state_but_resets_cursor_and_scrolling ... ok
+test host_schedule_failure_propagates_with_typed_error_and_explicit_retry ... ok
+test cleanup_priority_fallback_and_dispose_cancel_the_actual_token ... ok
+test cleanup_borrow_failure_is_not_hidden_or_retried_implicitly ... ok
+test real_marker_insert_delete_and_clear_one_line_preserve_identity_and_events ... ok
+test line_borrow_contention_reports_error_and_viewport_checks_do_not_overflow ... ok
+test tab_setup_preserves_incremental_stops_and_rebuilds_current_option ... ok
+test scratch_cells_preserve_width_code_and_clear_unspecified_attributes ... ok
+test cleanup_batches_preserve_source_101_cleaned_rows_and_final_rescan ... ok
+test host_idle_cleanup_is_requested_cancelled_and_drained_without_sleep ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\write_buffer.rs (target\debug\deps\write_buffer-a8f8096467c32498.exe)
+
+running 42 tests
+test edges::sync_flush_called_from_action_does_not_recurse ... ok
+test edges::sync_throw_retains_source_in_progress_state ... ok
+test edges::host_request_error_is_recoverable_without_queued_data_or_held_borrow ... ok
+test edges::flush_stops_at_empty_text_then_clears_remaining_callbacks ... ok
+test edges::user_input_flag_is_retained_while_old_data_is_queued ... ok
+test external_errors::actual_error_object_is_retained_after_rejected_handler_and_disposal ... ok
+test external_payloads::detached_view_is_truthy_and_uses_its_post_parse_length ... ok
+test external_payloads::synchronous_empty_adapter_view_is_processed_as_an_object ... ok
+test parser_bridge::fallible_parser_future_reports_error_then_resumes_false ... ok
+test timing::exact_discard_guard_and_utf16_length ... ok
+test timing::synchronous_empty_text_stops_but_empty_bytes_do_not ... ok
+test upstream::async_handler_continuation_skipped_after_dispose ... ok
+test timing::slice_boundary_and_compaction_are_strict ... ok
+test external_payloads::queued_adapter_view_is_read_at_parse_time_not_enqueue_time ... ok
+test timing::callbacks_reenter_without_borrows_or_lost_fifo ... ok
+test timing::disposing_actual_pending_handler_prevents_continuation ... ok
+test timing::dropping_final_owner_cancels_timer_and_weak_handle_expires ... ok
+test parser_bridge::immediate_parser_failure_is_not_treated_as_complete ... ok
+test parser_bridge::ordinary_parser_future_retains_its_result ... ok
+test resizable_payload::resized_view_uses_current_length_even_when_pending_becomes_negative ... ok
+test timing::action_and_callback_errors_propagate_partial_state ... ok
+test timing::continuation_below_or_at_budget_preserves_boolean_and_callbacks ... ok
+test timing::rejection_reports_original_error_and_resumes_false ... ok
+test upstream::bytes ... ok
+test upstream::dispose_cancels_scheduled_inner_write ... ok
+test upstream::dispose_does_not_fire_parsed_for_pending ... ok
+test upstream::dispose_is_idempotent ... ok
+test upstream::flush_sync_after_dispose_is_noop ... ok
+test upstream::flush_sync_all_pending ... ok
+test upstream::flush_sync_fires_parsed ... ok
+test upstream::flush_sync_no_pending_does_not_fire_parsed ... ok
+test upstream::flush_sync_no_pending_is_noop ... ok
+test upstream::handle_user_input_processes_first_chunk_synchronously ... ok
+test upstream::string ... ok
+test upstream::write_after_dispose_is_noop ... ok
+test upstream::string_bytes_mixed ... ok
+test upstream::write_callback_for_empty_chunks ... ok
+test upstream::write_sync ... ok
+test upstream::write_sync_after_dispose_is_noop ... ok
+test upstream::write_sync_max_subsequent_calls ... ok
+test upstream::write_sync_reentry_does_not_overflow_callstack ... ok
+test differential::all_seeded_queue_actions_callbacks_events_and_offsets_match_source ... ok
+
+test result: ok. 42 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
