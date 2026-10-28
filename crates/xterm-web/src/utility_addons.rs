@@ -4,6 +4,8 @@ pub mod attach_terminal;
 pub mod bindings;
 pub mod clipboard;
 pub mod fit;
+pub mod fit_bindings;
+pub mod link_bindings;
 pub mod matcher;
 pub mod open_link;
 pub mod provider;

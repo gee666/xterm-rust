@@ -39,7 +39,7 @@ impl LinkSnapshot {
         let active = state.active_buffer();
         let buffer = active
             .try_borrow()
-            .map_err(|_| LinkError("active buffer is borrowed".into()))?;
+            .map_err(|_| LinkError::Message("active buffer is borrowed".into()))?;
         let mut lines = Vec::with_capacity(buffer.lines.len());
         for row in 0..buffer.lines.len() {
             let Some(line) = buffer.lines.get(row) else {
@@ -48,16 +48,16 @@ impl LinkSnapshot {
             };
             let line = line
                 .try_borrow()
-                .map_err(|_| LinkError("buffer line is borrowed".into()))?;
+                .map_err(|_| LinkError::Message("buffer line is borrowed".into()))?;
             let mut cells = Vec::with_capacity(line.len());
             for column in 0..line.len() {
-                let cell = line
-                    .get_cell(column)
-                    .ok_or_else(|| LinkError("buffer cell is absent within line".into()))?;
+                let cell = line.get_cell(column).ok_or_else(|| {
+                    LinkError::Message("buffer cell is absent within line".into())
+                })?;
                 cells.push(LinkCell {
                     chars: cell.get_chars(),
                     width: u8::try_from(cell.get_width())
-                        .map_err(|_| LinkError("negative cell width".into()))?,
+                        .map_err(|_| LinkError::Message("negative cell width".into()))?,
                 });
             }
             lines.push(Some(SnapshotLine {

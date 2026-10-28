@@ -6,14 +6,32 @@
 
 use std::{fmt, rc::Rc};
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct FitError(pub String);
-impl fmt::Display for FitError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str(&self.0)
+#[derive(Clone, Debug)]
+pub enum FitError {
+    Message(String),
+    Host(Rc<dyn std::error::Error>),
+}
+impl FitError {
+    pub fn host(error: impl std::error::Error + 'static) -> Self {
+        Self::Host(Rc::new(error))
     }
 }
-impl std::error::Error for FitError {}
+impl fmt::Display for FitError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Message(message) => f.write_str(message),
+            Self::Host(error) => error.fmt(f),
+        }
+    }
+}
+impl std::error::Error for FitError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Host(error) => Some(error.as_ref()),
+            _ => None,
+        }
+    }
+}
 
 pub const DEFAULT_SCROLLBAR_WIDTH: f64 = 14.0;
 const MINIMUM_COLS: f64 = 2.0;
@@ -44,7 +62,7 @@ pub trait FitTerminal {
     fn resize(&self, dimensions: Dimensions) -> Result<(), FitError>;
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct FitAddon {
     terminal: Option<Rc<dyn FitTerminal>>,
 }

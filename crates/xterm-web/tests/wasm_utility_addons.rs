@@ -70,10 +70,12 @@ fn live_dom_fit_css_padding_scrollbar_and_same_dimensions() {
             };
             Some(dimensions)
         }),
-        scrollbar: Rc::new(|| ScrollbarOptions {
-            scrollback: 1000.0,
-            show: None,
-            width: None,
+        scrollbar: Rc::new(|| {
+            Ok(ScrollbarOptions {
+                scrollback: 1000.0,
+                show: None,
+                width: None,
+            })
         }),
         resize: Rc::new(move |dimensions| {
             captured.borrow_mut().push(dimensions);

@@ -43,8 +43,9 @@ fn addon_provider_real_dom_hover_callbacks_underline_and_dispose() {
     let engine = Rc::new(engine);
     let underlines = Rc::new(RefCell::new(Vec::new()));
     let capture = underlines.clone();
+    let providers: xterm_web::links::browser_linkifier::BrowserProviders = Rc::default();
     let linkifier = Rc::new(
-        BrowserLinkifier::new(
+        BrowserLinkifier::with_providers(
             element.clone(),
             40,
             0,
@@ -53,12 +54,13 @@ fn addon_provider_real_dom_hover_callbacks_underline_and_dispose() {
                 capture.borrow_mut().push((enabled, range));
                 Ok(())
             }),
+            providers.clone(),
         )
         .unwrap(),
     );
     let snapshot = engine.clone();
     let terminal = Rc::new(BrowserWebLinkTerminal {
-        linkifier: linkifier.clone(),
+        providers,
         snapshot: Rc::new(move || Ok(Box::new(LinkSnapshot::from_engine(&snapshot)?))),
     });
     let hover = Rc::new(RefCell::new(Vec::new()));

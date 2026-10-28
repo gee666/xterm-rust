@@ -16,22 +16,22 @@ pub struct ScrollbarOptions {
 pub struct BrowserFitTerminal {
     pub element: Rc<dyn Fn() -> Option<HtmlElement>>,
     pub dimensions: Rc<dyn Fn() -> Option<RenderDimensions>>,
-    pub scrollbar: Rc<dyn Fn() -> ScrollbarOptions>,
+    pub scrollbar: Rc<dyn Fn() -> Result<ScrollbarOptions, FitError>>,
     pub resize: Rc<dyn Fn(Dimensions) -> Result<(), FitError>>,
 }
 fn error(value: JsValue) -> FitError {
-    FitError(format!("{value:?}"))
+    FitError::host(crate::js_error::JsCallbackError(value))
 }
 fn style(element: &Element) -> Result<CssStyleDeclaration, FitError> {
     let window = element
         .owner_document()
         .and_then(|document| document.default_view())
         .or_else(web_sys::window)
-        .ok_or_else(|| FitError("no window for fit measurement".into()))?;
+        .ok_or_else(|| FitError::Message("no window for fit measurement".into()))?;
     window
         .get_computed_style(element)
         .map_err(error)?
-        .ok_or_else(|| FitError("getComputedStyle returned no style".into()))
+        .ok_or_else(|| FitError::Message("getComputedStyle returned no style".into()))
 }
 impl FitTerminal for BrowserFitTerminal {
     fn measurements(&self) -> Result<Option<FitMeasurements>, FitError> {
@@ -49,7 +49,7 @@ impl FitTerminal for BrowserFitTerminal {
         }
         let parent = style(&parent)?;
         let element = style(&element)?;
-        let scrollbar = (self.scrollbar)();
+        let scrollbar = (self.scrollbar)()?;
         Ok(Some(FitMeasurements {
             cell_width: dimensions.css.cell.width,
             cell_height: dimensions.css.cell.height,

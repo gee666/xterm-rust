@@ -6,10 +6,16 @@ use xterm_core::lifecycle::{Disposable, DisposableHandle};
 
 pub type Activate<E> = Rc<dyn Fn(&E, &[u16]) -> Result<(), LinkError>>;
 pub type Hover<E> = Rc<dyn Fn(&E, &[u16], LinkRange) -> Result<(), LinkError>>;
+pub type HoverFactory<E> = Rc<dyn Fn(LinkRange) -> Result<Activate<E>, LinkError>>;
+pub type LeaveFactory<E> = Rc<dyn Fn() -> Result<Option<Activate<E>>, LinkError>>;
 pub struct LinkOptions<E> {
     pub regex: Option<RegexSpec>,
     pub hover: Option<Hover<E>>,
     pub leave: Option<Activate<E>>,
+    /// Browser bindings use factories to preserve per-link range object identity
+    /// and the exact time at which user-defined option getters execute.
+    pub hover_factory: Option<HoverFactory<E>>,
+    pub leave_factory: Option<LeaveFactory<E>>,
 }
 impl<E> Default for LinkOptions<E> {
     fn default() -> Self {
@@ -17,6 +23,8 @@ impl<E> Default for LinkOptions<E> {
             regex: None,
             hover: None,
             leave: None,
+            hover_factory: None,
+            leave_factory: None,
         }
     }
 }
@@ -60,7 +68,7 @@ impl<E: 'static> WebLinksAddon<E> {
             Rc::new(move |event, uri| {
                 open_target
                     .upgrade()
-                    .ok_or_else(|| LinkError("link terminal was dropped".into()))?
+                    .ok_or_else(|| LinkError::Message("link terminal was dropped".into()))?
                     .open_link(event, uri)
             })
         });
@@ -70,31 +78,47 @@ impl<E: 'static> WebLinksAddon<E> {
         let provider = Rc::new(move |y| {
             let buffer = target
                 .upgrade()
-                .ok_or_else(|| LinkError("link terminal was dropped".into()))?
+                .ok_or_else(|| LinkError::Message("link terminal was dropped".into()))?
                 .buffer()?;
             let links = compute_links(y, &regex, &*buffer, &*matcher)?;
-            Ok(links
+            links
                 .into_iter()
                 .map(|link| {
                     let range = link.range;
-                    let options = Rc::clone(&options);
-                    let leave = options.borrow().leave.clone();
-                    ProvidedLink {
-                        text: link.text,
-                        range,
-                        activate: handler.clone(),
-                        leave,
-                        hover: Rc::new(move |event, uri| {
-                            // Clone before callback so changing options reentrantly is safe.
+                    let (leave, leave_factory, hover_factory) = {
+                        let options = options.borrow();
+                        (
+                            options.leave.clone(),
+                            options.leave_factory.clone(),
+                            options.hover_factory.clone(),
+                        )
+                    };
+                    let leave = if let Some(factory) = leave_factory {
+                        factory()?
+                    } else {
+                        leave
+                    };
+                    let hover = if let Some(factory) = hover_factory {
+                        factory(range)?
+                    } else {
+                        let options = Rc::clone(&options);
+                        Rc::new(move |event: &E, uri: &[u16]| {
                             let callback = options.borrow().hover.clone();
                             if let Some(callback) = callback {
                                 callback(event, uri, range)?;
                             }
                             Ok(())
-                        }),
-                    }
+                        }) as Activate<E>
+                    };
+                    Ok(ProvidedLink {
+                        text: link.text,
+                        range,
+                        activate: handler.clone(),
+                        leave,
+                        hover,
+                    })
                 })
-                .collect())
+                .collect()
         });
         *self.registration.borrow_mut() = Some(terminal.register_link_provider(provider)?);
         Ok(())

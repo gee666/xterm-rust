@@ -42,11 +42,10 @@ impl AttachAddon {
             native: Rc::new(native),
             writer: terminal.queued_write_handle(),
         });
+        self.terminals.borrow_mut().push(host.clone());
         self.addon
-            .activate(host.clone())
-            .map_err(|error| crate::js_error::to_js_error(&error))?;
-        self.terminals.borrow_mut().push(host);
-        Ok(())
+            .activate(host)
+            .map_err(|error| crate::js_error::to_js_error(&error))
     }
     pub fn dispose(&self) {
         self.addon.dispose();

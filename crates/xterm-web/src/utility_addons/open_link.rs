@@ -5,7 +5,8 @@ use wasm_bindgen::{JsCast, JsValue};
 use xterm_addons::web_links::LinkError;
 
 pub fn open_link(uri: &[u16]) -> Result<(), LinkError> {
-    let window = web_sys::window().ok_or_else(|| LinkError("no window to open link".into()))?;
+    let window =
+        web_sys::window().ok_or_else(|| LinkError::Message("no window to open link".into()))?;
     let opened = window.open().map_err(error)?;
     if let Some(opened) = opened {
         // Upstream explicitly tolerates Electron throwing when clearing opener.
@@ -15,7 +16,9 @@ pub fn open_link(uri: &[u16]) -> Result<(), LinkError> {
         let assigned =
             js_sys::Reflect::set(&location, &"href".into(), &to_js_string(uri)).map_err(error)?;
         if !assigned {
-            return Err(LinkError("link window location rejected navigation".into()));
+            return Err(LinkError::Message(
+                "link window location rejected navigation".into(),
+            ));
         }
     } else {
         let console = js_sys::Reflect::get(window.as_ref(), &"console".into()).map_err(error)?;
@@ -32,5 +35,5 @@ pub fn open_link(uri: &[u16]) -> Result<(), LinkError> {
     Ok(())
 }
 fn error(value: JsValue) -> LinkError {
-    LinkError(format!("{value:?}"))
+    LinkError::host(crate::js_error::JsCallbackError(value))
 }

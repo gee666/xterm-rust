@@ -8,7 +8,7 @@ use xterm_addons::web_links::{LinkError, LinkMatch, LinkMatcher, RegexSpec};
 
 pub struct BrowserLinkMatcher;
 fn error(value: JsValue) -> LinkError {
-    LinkError(format!("{value:?}"))
+    LinkError::host(crate::js_error::JsCallbackError(value))
 }
 impl LinkMatcher for BrowserLinkMatcher {
     fn matches(&self, text: &[u16], regex: &RegexSpec) -> Result<Vec<LinkMatch>, LinkError> {
@@ -31,6 +31,7 @@ impl LinkMatcher for BrowserLinkMatcher {
             .map_err(error)?;
         let text = to_js_string(text);
         let mut result = Vec::new();
+        let mut previous_end = 0.0;
         loop {
             let found = exec.call1(&regex, &text).map_err(error)?;
             if found.is_null() {
@@ -39,15 +40,31 @@ impl LinkMatcher for BrowserLinkMatcher {
             let array = found.dyn_into::<Array>().map_err(error)?;
             let matched = array.get(0).dyn_into::<JsString>().map_err(error)?;
             if matched.length() == 0 {
-                return Err(LinkError("custom URL regex matched an empty string".into()));
+                return Err(LinkError::Message(
+                    "custom URL regex matched an empty string".into(),
+                ));
             }
+            let next_end = Reflect::get(&regex, &"lastIndex".into())
+                .map_err(error)?
+                .as_f64()
+                .ok_or_else(|| LinkError::Message("URL RegExp has no numeric lastIndex".into()))?;
+            if !next_end.is_finite()
+                || next_end.fract() != 0.0
+                || next_end <= previous_end
+                || next_end > f64::from(text.length())
+            {
+                return Err(LinkError::Message(
+                    "URL RegExp did not advance within the input".into(),
+                ));
+            }
+            previous_end = next_end;
             if !is_url(&matched) {
                 continue;
             }
             let index = Reflect::get(array.as_ref(), &"index".into())
                 .map_err(error)?
                 .as_f64()
-                .ok_or_else(|| LinkError("RegExp match has no index".into()))?;
+                .ok_or_else(|| LinkError::Message("RegExp match has no index".into()))?;
             result.push(LinkMatch {
                 index: index as usize,
                 text: from_js_string(&matched),

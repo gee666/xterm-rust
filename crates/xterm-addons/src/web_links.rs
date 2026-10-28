@@ -51,14 +51,32 @@ pub struct LinkMatch {
     pub text: Vec<u16>,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct LinkError(pub String);
-impl fmt::Display for LinkError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str(&self.0)
+#[derive(Clone, Debug)]
+pub enum LinkError {
+    Message(String),
+    Host(std::rc::Rc<dyn std::error::Error>),
+}
+impl LinkError {
+    pub fn host(error: impl std::error::Error + 'static) -> Self {
+        Self::Host(std::rc::Rc::new(error))
     }
 }
-impl std::error::Error for LinkError {}
+impl fmt::Display for LinkError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Message(message) => f.write_str(message),
+            Self::Host(error) => error.fmt(f),
+        }
+    }
+}
+impl std::error::Error for LinkError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Host(error) => Some(error.as_ref()),
+            _ => None,
+        }
+    }
+}
 
 /// Matches include the URL validation used by upstream isUrl, not regex alone.
 /// Empty matches must return an error. Upstream loops forever for such custom
@@ -97,14 +115,16 @@ pub fn compute_links(
     let mut result = Vec::new();
     for candidate in matcher.matches(&text, regex)? {
         if candidate.text.is_empty() {
-            return Err(LinkError("custom URL regex matched an empty string".into()));
+            return Err(LinkError::Message(
+                "custom URL regex matched an empty string".into(),
+            ));
         }
         if candidate
             .index
             .checked_add(candidate.text.len())
             .is_none_or(|end| end > text.len())
         {
-            return Err(LinkError(
+            return Err(LinkError::Message(
                 "URL matcher returned an out-of-bounds match".into(),
             ));
         }

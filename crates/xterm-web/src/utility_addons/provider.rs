@@ -1,7 +1,7 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved.
 // Licensed under MIT. Rust web-links addon to browser linkifier bridge.
 use crate::links::{
-    browser_linkifier::{BrowserLink, BrowserLinkProvider, BrowserLinkifier, LinkReply},
+    browser_linkifier::{BrowserLink, BrowserLinkProvider, BrowserProviders, LinkReply},
     Link, Position, Range,
 };
 use std::rc::Rc;
@@ -15,12 +15,12 @@ use xterm_core::lifecycle::DisposableHandle;
 
 pub type Snapshot = Rc<dyn Fn() -> Result<Box<dyn LinkBuffer>, LinkError>>;
 pub struct BrowserWebLinkTerminal {
-    pub linkifier: Rc<BrowserLinkifier>,
+    pub providers: BrowserProviders,
     pub snapshot: Snapshot,
 }
 struct ProviderBridge(Provider<MouseEvent>);
 fn error(error: LinkError) -> JsValue {
-    js_sys::Error::new(&error.to_string()).into()
+    crate::js_error::to_js_error(&error)
 }
 impl BrowserLinkProvider for ProviderBridge {
     fn provide_links(&self, y: usize, callback: LinkReply) -> Result<(), JsValue> {
@@ -68,8 +68,7 @@ impl WebLinkTerminal<MouseEvent> for BrowserWebLinkTerminal {
         provider: Provider<MouseEvent>,
     ) -> Result<DisposableHandle, LinkError> {
         Ok(Rc::new(
-            self.linkifier
-                .register_provider(Rc::new(ProviderBridge(provider))),
+            self.providers.register(Rc::new(ProviderBridge(provider))),
         ))
     }
     fn open_link(&self, _event: &MouseEvent, uri: &[u16]) -> Result<(), LinkError> {
