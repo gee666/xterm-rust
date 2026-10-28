@@ -37,7 +37,9 @@ export function compareOptions(reference, referenceContext, actualContext, get, 
   const referenceEvents=[];
   reference.onOptionChange(key=>referenceEvents.push(key));
   const run=new Function('get','set','view','context','assign',operations);
+  referenceContext.beforeOperations?.();
   const expected=run(key=>core[key],(key,value)=>core[key]=value,expectedPublic,referenceContext,input=>{for(const key in input)expectedPublic[key]=input[key];});
+  actualContext.beforeOperations?.();
   const actual=run(get,set,publicObject,actualContext,assign);
   equal(actual,expected,'operation result');
   equal(eventLog(),referenceEvents,'change events');

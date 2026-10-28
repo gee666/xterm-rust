@@ -1,0 +1,62 @@
+running 15 tests
+test shared_default_objects_survive_shallow_copies_without_user_value_leaks ... ok
+test same_accessor_reentrancy_and_original_thrown_value_survive ... ok
+test public_descriptors_readonly_partial_assign_utf16_and_cleanup ... ok
+test prototype_getter_setter_receiver_and_post_assignment_value ... ok
+test opaque_symbol_bigint_identity_truthiness_and_operators ... ok
+test null_and_primitive_prototype_assignment_change_membership ... ok
+test nested_default_bags_remain_live_without_root_assignment_events ... ok
+test inherited_unknown_then_own_value_fails_public_spread ... ok
+test inherited_object_prototype_names_are_real_constructor_keys ... ok
+test inherited_input_order_and_unknown_getter_skipping ... ok
+test dynamic_default_prototype_members_keep_full_string_key_events ... FAIL
+test disposal_link_first_then_document_error_is_idempotent_and_lossless ... ok
+test default_hint_addition_and_concat_preserve_custom_primitive_order ... ok
+test custom_prototype_inherited_accessors_stay_non_enumerable ... ok
+test constructor_membership_proxy_throw_retains_identity ... ok
+
+failures:
+
+---- dynamic_default_prototype_members_keep_full_string_key_events output ----
+    JS exception that was thrown:
+        RuntimeError: Unreachable code should not be executed (evaluating 'wasm.wasm_bindgen__convert__closures__invoke0_mut__h6db07fd9af57efa3(arg0, arg1)')
+        4627@wasm-function[4627]
+        4116@wasm-function[4116]
+        1229@wasm-function[1229]
+        1529@wasm-function[1529]
+        4501@wasm-function[4501]
+        3015@wasm-function[3015]
+        3016@wasm-function[3016]
+        1784@wasm-function[1784]
+        wasm_options::support::run::h87e35b3215ff76b2@wasm_options-ed44f8a259001ee4.wasm:wasm-function[133]
+        3160@wasm-function[3160]
+        2948@wasm-function[2948]
+        1162@wasm-function[1162]
+        1535@wasm-function[1535]
+        wasm_bindgen::convert::closures::invoke0_mut::h6db07fd9af57efa3@wasm_options-ed44f8a259001ee4.wasm:wasm-function[2444]
+        __wbg_adapter_85@http://127.0.0.1:54478/suite.js:385:73
+        cb0@http://127.0.0.1:54478/suite.js:841:44
+        @
+        @http://127.0.0.1:54478/suite.js:846:30
+        handleError@http://127.0.0.1:54478/suite.js:98:23
+        wasm_bindgen_test::__rt::__wbg_test_invoke::h0a1d4f36ef68929a@wasm_options-ed44f8a259001ee4.wasm:wasm-function[776]
+        1431@wasm-function[1431]
+        1689@wasm-function[1689]
+        258@wasm-function[258]
+        135@wasm-function[135]
+        477@wasm-function[477]
+        236@wasm-function[236]
+        474@wasm-function[474]
+        442@wasm-function[442]
+        2211@wasm-function[2211]
+        1761@wasm-function[1761]
+        3686@wasm-function[3686]
+        __wbg_adapter_47@http://127.0.0.1:54478/suite.js:347:35
+        real@http://127.0.0.1:54478/suite.js:144:21
+
+failures:
+
+    dynamic_default_prototype_members_keep_full_string_key_events
+
+test result: FAILED. 14 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.08s
+

@@ -39,7 +39,7 @@ fn dynamic_default_prototype_members_keep_full_string_key_events() {
     run(
         r#"
 Object.defineProperty(Object.prototype,'__xtermEdge',{value:1,enumerable:true,writable:true,configurable:true});
-return {input:{__xtermEdge:2},trace:[],cleanup(){delete Object.prototype.__xtermEdge;}};
+return {input:{__xtermEdge:2},trace:[],beforeOperations(){Object.defineProperty(Object.prototype,'__xtermEdge',{value:1,enumerable:true,writable:true,configurable:true});},cleanup(){delete Object.prototype.__xtermEdge;}};
 "#,
         r#"
 view.__xtermEdge=3;set('__xtermEdge',4);const value=get('__xtermEdge');

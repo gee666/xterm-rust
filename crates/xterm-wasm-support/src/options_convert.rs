@@ -10,8 +10,8 @@ use std::{
 };
 use wasm_bindgen::prelude::*;
 use xterm_core::options::{
-    CoercionHint, NativeProperties, NumericSemantics, OptionError, OptionObject, OptionValue as V,
-    PropertyAccess, WindowsPty,
+    CoercionError, CoercionHint, NativeProperties, NumericSemantics, OptionError, OptionObject,
+    OptionValue as V, PropertyAccess, WindowsPty,
 };
 
 #[wasm_bindgen(inline_js = "
@@ -24,7 +24,10 @@ export function optionString(value) { return `${value}`; }
 export function optionConcat(value) { return '' + value; }
 export function optionAdd(left, right) { return left + right; }
 export function optionTruthy(value) { return !!value; }
-export function optionProperty(value, key) { return Reflect.get(Object(value), key); }
+export function optionProperty(value, key) { return value[key]; }
+export function optionSetProperty(value,key,data) { value[key]=data; }
+export function optionDeleteProperty(value,key) { return delete value[key]; }
+export function optionKeys(value) { return Object.keys(value); }
 export function optionError(message, type) { return type ? new TypeError(message) : new Error(message); }
 ")]
 extern "C" {
@@ -47,6 +50,12 @@ extern "C" {
     fn optionTruthy(value: &JsValue) -> bool;
     #[wasm_bindgen(catch)]
     fn optionProperty(value: &JsValue, key: &JsString) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch)]
+    fn optionSetProperty(value: &JsValue, key: &JsString, data: &JsValue) -> Result<(), JsValue>;
+    #[wasm_bindgen(catch)]
+    fn optionDeleteProperty(value: &JsValue, key: &JsString) -> Result<bool, JsValue>;
+    #[wasm_bindgen(catch)]
+    fn optionKeys(value: &JsValue) -> Result<js_sys::Array, JsValue>;
     fn optionError(message: &JsString, type_error: bool) -> JsValue;
 }
 
@@ -104,6 +113,39 @@ impl NumericSemantics for JsNumeric {
     }
 }
 
+struct JsProperties(JsValue);
+impl PropertyAccess for JsProperties {
+    fn get(&self, key: &str) -> Result<V, OptionError> {
+        optionProperty(&self.0, &JsString::from(key))
+            .and_then(|value| from_js(&value))
+            .map_err(|e| OptionError::Dispatch(callback_error(e)))
+    }
+    fn set(&self, key: &str, value: V) -> Result<(), OptionError> {
+        let value = into_js(&value).map_err(|e| OptionError::Dispatch(callback_error(e)))?;
+        optionSetProperty(&self.0, &JsString::from(key), &value)
+            .map_err(|e| OptionError::Dispatch(callback_error(e)))
+    }
+    fn delete(&self, key: &str) -> Result<bool, OptionError> {
+        optionDeleteProperty(&self.0, &JsString::from(key))
+            .map_err(|e| OptionError::Dispatch(callback_error(e)))
+    }
+    fn keys(&self) -> Result<Vec<String>, OptionError> {
+        optionKeys(&self.0)
+            .map_err(|e| OptionError::Dispatch(callback_error(e)))?
+            .iter()
+            .map(|key| {
+                key.as_string().ok_or_else(|| {
+                    CoercionError::new("host property enumeration returned a non-string key").into()
+                })
+            })
+            .collect()
+    }
+}
+
+pub fn property_access(value: &JsValue) -> Rc<dyn PropertyAccess> {
+    Rc::new(JsProperties(value.clone()))
+}
+
 pub fn from_js(value: &JsValue) -> Result<V, JsValue> {
     if value.is_undefined() {
         return Ok(V::Undefined);
@@ -124,7 +166,7 @@ pub fn from_js(value: &JsValue) -> Result<V, JsValue> {
     let primitive = payload.clone();
     // Symbol/BigInt stay opaque host values. Unary plus and template conversion
     // preserve the source's TypeErrors; truthiness/equality retain JS semantics.
-    Ok(V::Object(OptionObject::with_numeric_value_semantics(
+    let mut object = OptionObject::with_numeric_value_semantics(
         payload,
         move |hint| {
             match hint {
@@ -143,7 +185,10 @@ pub fn from_js(value: &JsValue) -> Result<V, JsValue> {
         optionTruthy(value),
         |a, b| a == b,
         operator_semantics(value),
-    )))
+    );
+    OptionObject::attach_property_access(&mut object, property_access(value))
+        .map_err(|error| error_to_js(&error))?;
+    Ok(V::Object(object))
 }
 
 #[derive(Default)]

@@ -1,0 +1,37 @@
+/* tslint:disable */
+/* eslint-disable */
+export const memory: WebAssembly.Memory;
+export const __wbgt__wasm_events::supplied_disposal_function_keeps_identity_receiver_and_plain_properties: (a: number) => void;
+export const __wbgt__wasm_events::native_disposal_is_reentrant_and_preserves_return_and_throw_values: (a: number) => void;
+export const __wbgt__wasm_events::callable_shares_one_payload_per_fire_and_extracted_dispose_unregisters: (a: number) => void;
+export const __wbgt__wasm_events::callable_passes_this_args_and_the_custom_collection_receiver: (a: number) => void;
+export const __wbgt__wasm_events::closed_subscriptions_get_fresh_noops_and_do_not_collect: (a: number) => void;
+export const __wbgt__wasm_events::collection_error_preserves_registered_listener_and_original_thrown_value: (a: number) => void;
+export const main: (a: number, b: number) => number;
+export const __wbg_wasmbindgentestcontext_free: (a: number, b: number) => void;
+export const wasmbindgentestcontext_new: () => number;
+export const wasmbindgentestcontext_include_ignored: (a: number, b: number) => void;
+export const wasmbindgentestcontext_filtered_count: (a: number, b: number) => void;
+export const wasmbindgentestcontext_run: (a: number, b: number, c: number) => any;
+export const __wbgtest_console_log: (a: any) => void;
+export const __wbgtest_console_debug: (a: any) => void;
+export const __wbgtest_console_info: (a: any) => void;
+export const __wbgtest_console_warn: (a: any) => void;
+export const __wbgtest_console_error: (a: any) => void;
+export const __wbgtest_cov_dump: () => [number, number];
+export const __externref_table_alloc: () => number;
+export const __wbindgen_export_1: WebAssembly.Table;
+export const __wbindgen_malloc: (a: number, b: number) => number;
+export const __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
+export const __wbindgen_exn_store: (a: number) => void;
+export const __wbindgen_export_5: WebAssembly.Table;
+export const __wbindgen_free: (a: number, b: number, c: number) => void;
+export const closure2_externref_shim_multivalue_shim: (a: number, b: number, c: any, d: any, e: any) => [number, number, number];
+export const __externref_table_dealloc: (a: number) => void;
+export const _dyn_core__ops__function__Fn_____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__hcc76de36af115075: (a: number, b: number) => void;
+export const _dyn_core__ops__function__Fn_____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__hd5c21b57d94ef8a5_multivalue_shim: (a: number, b: number) => [number, number, number];
+export const closure275_externref_shim: (a: number, b: number, c: any) => void;
+export const wasm_bindgen__convert__closures__invoke0_mut__h6db07fd9af57efa3: (a: number, b: number) => void;
+export const closure300_externref_shim: (a: number, b: number, c: any, d: number, e: any) => void;
+export const closure292_externref_shim: (a: number, b: number, c: any, d: any) => void;
+export const __wbindgen_start: () => void;

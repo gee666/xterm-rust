@@ -2,7 +2,7 @@
 #[path = "options_convert.rs"]
 mod convert;
 use convert::ConversionCache;
-pub use convert::{error_to_js, from_js, into_js, operator_semantics};
+pub use convert::{error_to_js, from_js, into_js, operator_semantics, property_access};
 use js_sys::{Function, Object};
 use std::{cell::OnceCell, rc::Rc};
 // Source DEFAULT_OPTIONS shares object values across every shallow copy.
