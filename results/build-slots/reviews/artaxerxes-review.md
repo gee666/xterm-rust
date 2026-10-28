@@ -1,0 +1,13 @@
+# Independent build-slot review by Artaxerxes
+
+I inspected `scripts/build-slot-core.mjs`, `scripts/build-slot.mjs`, the active abort handling in `scripts/quality-process.mjs`, and `docs/build-slots.md`. I wrote and executed the separate `scripts/build-slot-review.test.mjs` without changing production queue code.
+
+The first eight directed tests passed. A ninth test reproduced a real bounded-wait defect: rolling the wall clock backward during queue admission extended a requested 100 ms deadline until my independent 400 ms abort guard fired. The failed result is retained in `artaxerxes-clock-before-fix.tap`. Kassa replaced deadline calculations with `performance.now` and queue ordering with host-monotonic enqueue ticks. The source also atomically publishes owner metadata and treats a temporarily absent owner file as pending within the same finite deadline, without stealing the lease.
+
+After those changes, all nine independent tests passed with no skips or ignored tests. They cover timestamp/tick-ID FIFO within one lane, simultaneous independent native/WASM lanes, queued cancellation preserving the active owner, a wait deadline that never launches its requested process, retained child failure and lease release, stale active-owner refusal, foreign-owner release refusal, active cancellation not becoming a later successful child result, and wall-clock rollback. The final run recorded unchanged before/after hashes for the queue, CLI, process runner, process-tree helper and independent tests in `artaxerxes-receipt.json`.
+
+The active abort concern I initially reported from an older process-helper read was stale. Current `runCommand` handles pre-abort and active abort, stops only its owned process tree, removes its abort listener and reports failure rather than success. The active-cancellation test exercises that current implementation. It is distinct from a process timeout.
+
+All tests used isolated roots under repository tmp/ and tiny Node child processes. No Cargo, compiler, bundler, browser, profile override or alternate target tree ran for this review. Node v24.15.0 executed on Windows x64. These tests validate coordination and failure handling, not terminal parity or either target's runtime behavior.
+
+Accept the bounded local lease automation after the clock regression fix. Preserve the one-GiB resource guard, exact owner checks, failed receipts and coordinated stale-active recovery. Actual Rust/WASM/browser checks still need their own runtime assertions and source receipts. The CLI's scoped-debug restriction does not authorize hiding release or full-matrix commands inside another script.

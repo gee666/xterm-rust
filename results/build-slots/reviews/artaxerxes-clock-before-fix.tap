@@ -1,0 +1,31 @@
+✖ wall-clock rollback cannot extend the bounded queue deadline (409.6031ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 464.1671
+
+✖ failing tests:
+
+test at scripts\build-slot-review.test.mjs:158:1
+✖ wall-clock rollback cannot extend the bounded queue deadline (409.6031ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /wait deadline exceeded/. Input:
+  
+  'Error: clock rollback defeated the finite wait'
+  
+      at async TestContext.<anonymous> (file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/scripts/build-slot-review.test.mjs:169:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: clock rollback defeated the finite wait
+        at Timeout.<anonymous> (file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/scripts/build-slot-review.test.mjs:167:51)
+        at listOnTimeout (node:internal/timers:605:17)
+        at process.processTimers (node:internal/timers:541:7),
+    expected: /wait deadline exceeded/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
