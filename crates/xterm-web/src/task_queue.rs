@@ -1,6 +1,6 @@
 // Copyright (c) 2022 The xterm.js authors. All rights reserved. MIT license.
 //! Browser host for cooperative queues. JS owns scheduled callback lifetimes.
-use crate::js_error::{to_js_error, JsCallbackError};
+use xterm_wasm_support::js_error::{to_js_error, JsCallbackError};
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::{closure::Closure, prelude::*, JsCast};
 use web_sys::{IdleDeadline, Performance, Window};
