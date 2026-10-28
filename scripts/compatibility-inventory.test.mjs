@@ -189,12 +189,13 @@ test('failed, incomplete, altered and stale baseline evidence cannot advertise r
     [s => { s.runId = 'stale'; }, /runId mismatch/],
     [s => { s.commands[0].exitCode = 1; }, /command failed/],
     [s => { s.commands[0].timedOut = true; }, /timed out/],
+    [s => { s.commands[0].log = `${dir}/missing-command.log`; }, /ENOENT/],
     [s => { s.reference.after.mismatches.push('changed'); }, /reference mismatch/],
     [s => { s.reference.manifestSha256 = '0'.repeat(64); }, /manifest hash mismatch/],
     [s => { s.rawReportSha256 = '0'.repeat(64); }, /raw report hash mismatch/],
     [s => { s.suites[0].passed++; }, /execution mismatch/],
     [s => { s.suites.push(s.suites[0]); }, /Duplicate baseline suite/],
-    [s => { s.suites.pop(); }, /suite total mismatch/]
+    [s => { s.suites.pop(); }, /suite set incomplete/]
   ];
   for (const [mutate, expected] of mutations) {
     const summary = structuredClone(original);
@@ -206,6 +207,15 @@ test('failed, incomplete, altered and stale baseline evidence cannot advertise r
   await assert.rejects(loadBaseline(root, pointerPath, manifest), /Latest baseline is not passed/);
   await writeFixture(original, { ...latest, summary: '../outside.json' });
   await assert.rejects(loadBaseline(root, pointerPath, manifest), /Invalid baseline pointer/);
+  const duplicateManifest = JSON.parse(await readFile(path.join(root, original.reference.manifest), 'utf8'));
+  duplicateManifest[1] = duplicateManifest[0];
+  const manifestBytes = JSON.stringify(duplicateManifest);
+  const duplicateSummary = structuredClone(original);
+  duplicateSummary.reference.manifest = `${dir}/duplicate-manifest.json`;
+  duplicateSummary.reference.manifestSha256 = hash(manifestBytes);
+  await writeFile(path.join(root, duplicateSummary.reference.manifest), manifestBytes);
+  await writeFixture(duplicateSummary);
+  await assert.rejects(loadBaseline(root, pointerPath, manifest), /Duplicate baseline manifest path/);
   await writeFixture(original);
   const alteredSource = structuredClone(manifest);
   alteredSource[0].sha256 = '0'.repeat(64);

@@ -28,11 +28,14 @@ export async function loadBaseline(root, pointerPath, referenceManifest) {
   assert.equal(summary.status, 'passed', 'Baseline summary is not passed');
   assert.equal(summary.runId, pointer.runId, 'Baseline pointer runId mismatch');
   assert(summary.commands.length > 0, 'Baseline commands missing');
+  const commandLogs = [];
   for (const command of summary.commands) {
     assert.equal(command.status, 'passed', 'Baseline command did not pass');
     assert.equal(command.exitCode, 0, 'Baseline command failed');
     for (const field of ['error', 'signal', 'terminationError', 'resourceError']) assert(!command[field], `Baseline command ${field}`);
     assert.equal(command.timedOut, false, 'Baseline command timed out');
+    await read(command.log);
+    commandLogs.push(command.log);
   }
   for (const phase of ['before', 'after']) {
     assert.equal(summary.reference[phase].files, referenceManifest.length, `Baseline ${phase} file count mismatch`);
@@ -42,6 +45,7 @@ export async function loadBaseline(root, pointerPath, referenceManifest) {
   assert.equal(digest(retained), summary.reference.manifestSha256, 'Baseline manifest hash mismatch');
   const originalManifest = JSON.parse(retained);
   assert.equal(originalManifest.length, referenceManifest.length, 'Baseline retained manifest incomplete');
+  assert.equal(new Set(originalManifest.map(row => row.path)).size, originalManifest.length, 'Duplicate baseline manifest path');
   const live = new Map(referenceManifest.map(row => [row.path.replace(/^source_repo\//, ''), row]));
   for (const row of originalManifest) {
     assert.equal(live.get(row.path)?.sha256, row.sha256, `Baseline source hash mismatch: ${row.path}`);
@@ -53,8 +57,10 @@ export async function loadBaseline(root, pointerPath, referenceManifest) {
   const raw = JSON.parse(rawBytes);
   validateCounts(summary.totals, 'totals');
   assert.equal(new Set(summary.suites.map(s => s.source)).size, summary.suites.length, 'Duplicate baseline suite');
+  const expectedSuites = referenceManifest.map(row => row.path.replace(/^source_repo\//, '')).filter(p => /^(src|addons\/[^/]+\/src)\/.*\.test\.ts$/.test(p)).sort();
+  assert.deepEqual(summary.suites.map(s => s.source).sort(), expectedSuites, 'Baseline source suite set incomplete');
   for (const suite of summary.suites) validateCounts(suite, suite.source);
   for (const field of fields) assert.equal(summary.suites.reduce((sum, suite) => sum + suite[field], 0), summary.totals[field], `Baseline suite total mismatch: ${field}`);
   for (const [rawKey, totalKey] of [['tests', 'discovered'], ['passes', 'passed'], ['failures', 'failed'], ['pending', 'pending']]) assert.equal(raw.stats[rawKey], summary.totals[totalKey], `Baseline raw stats mismatch: ${rawKey}`);
-  return { summary, summaryPath, evidencePaths: [pointerPath, summaryPath, summary.reference.manifest, summary.rawReport] };
+  return { summary, summaryPath, evidencePaths: [pointerPath, summaryPath, summary.reference.manifest, summary.rawReport, ...commandLogs] };
 }
