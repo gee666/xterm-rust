@@ -1,8 +1,7 @@
 use super::{error, EngineInputHost};
 use crate::input::{
-    dom::mouse::{MouseHost, MouseSnapshot},
-    mouse_policy::{MouseOutput, MouseRouting},
-    mouse_wheel::WheelOptions,
+    dom::mouse::{MouseHost, MouseReadHost},
+    mouse_policy::MouseOutput,
 };
 use std::rc::Rc;
 use wasm_bindgen::JsValue;
@@ -12,7 +11,63 @@ use xterm_core::{
     mouse_state::{MouseEventTypes, MouseStateService},
 };
 
+impl MouseReadHost for EngineInputHost {
+    fn mouse_require_alt(&self) -> Result<bool, JsValue> {
+        self.option_bool("mouseEventsRequireAlt")
+    }
+    fn mouse_has_scrollback(&self) -> Result<bool, JsValue> {
+        let buffer = self.buffer.buffer();
+        let result = buffer.try_borrow().map_err(error)?.has_scrollback();
+        Ok(result)
+    }
+    fn mouse_application_cursor(&self) -> Result<bool, JsValue> {
+        Ok(self
+            .core
+            .dec_private_modes
+            .try_borrow()
+            .map_err(error)?
+            .application_cursor_keys)
+    }
+    fn mouse_cols(&self) -> Result<f64, JsValue> {
+        Ok(self.buffer.cols() as f64)
+    }
+    fn mouse_rows(&self) -> Result<f64, JsValue> {
+        Ok(self.buffer.rows() as f64)
+    }
+    fn mouse_scroll_sensitivity(&self) -> Result<JsValue, JsValue> {
+        crate::terminal::options::into_js(&self.options.get("scrollSensitivity").map_err(error)?)
+    }
+    fn mouse_fast_scroll_sensitivity(&self) -> Result<JsValue, JsValue> {
+        crate::terminal::options::into_js(
+            &self.options.get("fastScrollSensitivity").map_err(error)?,
+        )
+    }
+    fn mouse_device_cell_height(&self) -> Result<Option<f64>, JsValue> {
+        Ok(Some(self.services.render_dimensions()?.device.cell.height))
+    }
+    fn mouse_dpr(&self) -> Result<Option<f64>, JsValue> {
+        Ok(Some(self.services.dpr()?))
+    }
+    fn mouse_valid_char_size(&self) -> Result<bool, JsValue> {
+        self.services.valid_char_size()
+    }
+    fn mouse_canvas_size(&self) -> Result<[f64; 2], JsValue> {
+        let dimensions = self.services.render_dimensions()?;
+        Ok([dimensions.css.canvas.width, dimensions.css.canvas.height])
+    }
+    fn mouse_cell_size(&self) -> Result<[f64; 2], JsValue> {
+        let dimensions = self.services.render_dimensions()?;
+        Ok([dimensions.css.cell.width, dimensions.css.cell.height])
+    }
+    fn mouse_css_cell_height(&self) -> Result<Option<f64>, JsValue> {
+        Ok(Some(self.services.render_dimensions()?.css.cell.height))
+    }
+}
+
 impl MouseHost for EngineInputHost {
+    fn mouse_option_changes(&self) -> xterm_core::event::Event<&'static str> {
+        self.options.on_option_change()
+    }
     fn mouse_service(&self) -> Result<Rc<MouseStateService>, JsValue> {
         Ok(self.mouse.clone())
     }
@@ -74,37 +129,6 @@ impl MouseHost for EngineInputHost {
         Ok(())
     }
 
-    fn mouse_snapshot(&self) -> Result<MouseSnapshot, JsValue> {
-        let metrics = self.services.metrics()?;
-        let buffer = self.buffer.buffer();
-        let has_scrollback = buffer.try_borrow().map_err(error)?.has_scrollback();
-        Ok(MouseSnapshot {
-            routing: MouseRouting {
-                cols: self.buffer.cols() as f64,
-                rows: self.buffer.rows() as f64,
-                require_alt: self.option_bool("mouseEventsRequireAlt")?,
-                device_cell_height: Some(metrics.device_cell_height),
-                dpr: Some(metrics.dpr),
-                wheel_options: WheelOptions {
-                    rows: self.buffer.rows() as f64,
-                    scroll_sensitivity: self.option_number("scrollSensitivity")?,
-                    fast_scroll_sensitivity: self.option_number("fastScrollSensitivity")?,
-                },
-            },
-            valid_char_size: metrics.valid,
-            css_cell_width: metrics.cell_width,
-            css_cell_height: metrics.cell_height,
-            css_canvas_width: metrics.canvas_width,
-            css_canvas_height: metrics.canvas_height,
-            has_scrollback,
-            application_cursor: self
-                .core
-                .dec_private_modes
-                .try_borrow()
-                .map_err(error)?
-                .application_cursor_keys,
-        })
-    }
     fn allow_custom_wheel(&self, event: &WheelEvent) -> Result<bool, JsValue> {
         self.services.custom_wheel(event)
     }
