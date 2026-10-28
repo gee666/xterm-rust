@@ -40,7 +40,7 @@
       "log": "results/terminal-review/core-clippy-clean.log"
     },
     {
-      "command": "rustfmt --edition 2021 --check scoped source/test files",
+      "command": "rustfmt --edition 2021 --check crates/xterm-core/src/decoration.rs crates/xterm-core/src/decoration_cache.rs crates/xterm-core/src/decoration_iterator.rs crates/xterm-core/src/decoration_service.rs crates/xterm-core/tests/decoration_upstream.rs crates/xterm-core/tests/decoration_differential.rs crates/xterm-core/tests/decoration_edges.rs crates/xterm-core/tests/terminal_review.rs crates/xterm-web/src/renderer/color_zone_store.rs crates/xterm-web/tests/color_zone_store.rs crates/xterm-web/tests/color_zone_differential.rs",
       "exitCode": 0,
       "log": "results/terminal-review/fmt.log"
     }
@@ -82,5 +82,6 @@
     "actual Rust browser E2E",
     "native Linux/macOS runtime from this review"
   ],
-  "independentReviewNeeded": "This review artifact requires another agent acceptance; implementation parent28 remains in progress."
+  "independentReviewNeeded": "This review artifact requires another agent acceptance; implementation parent28 remains in progress.",
+  "toolchain": "results/terminal-review/toolchain.txt"
 }
