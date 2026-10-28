@@ -194,6 +194,28 @@ fn native_public_load_addon_uses_live_engine_and_releases_terminal_owner() {
 }
 
 #[test]
+fn public_load_addon_during_callback_uses_cached_registrars() {
+    let terminal = Rc::new(xterm_core::headless::Terminal::new(80, 24, 1000).unwrap());
+    let first = Rc::new(ProgramStatusAddon::new());
+    let second = Rc::new(ProgramStatusAddon::new());
+    terminal.load_addon(first.clone()).unwrap();
+    let weak = Rc::downgrade(&terminal);
+    let capture = second.clone();
+    first.on_change().try_subscribe(move |_| {
+        weak.upgrade()
+            .unwrap()
+            .load_addon(capture.clone())
+            .map_err(EmitError::callback)?;
+        Ok(())
+    });
+    terminal
+        .write("\x1b]7501;state=working\x07\x1b]7501;state=done:id=second\x07")
+        .unwrap();
+    assert_eq!(first.records().len(), 1);
+    assert_eq!(second.records()[0].id, "second");
+}
+
+#[test]
 fn activation_during_callback_registers_without_borrowing_engine() {
     let (engine, adapter, addon) = setup();
     let second = Rc::new(ProgramStatusAddon::new());

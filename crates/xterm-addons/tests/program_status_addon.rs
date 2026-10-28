@@ -163,6 +163,50 @@ fn callback_reentrancy_has_no_mutable_store_borrow() {
     assert_eq!(changes.borrow()[1].len(), 0);
 }
 #[test]
+fn disposal_closes_emitter_before_parser_tokens_reenter() {
+    use xterm_addons::status_terminal::{EscCallback, OscCallback, StatusTerminal};
+    use xterm_core::{
+        event::EmitError,
+        lifecycle::{to_disposable, DisposableHandle},
+        parser::escape::RegistrarError,
+    };
+    struct Host(FixtureTerminal);
+    impl StatusTerminal for Host {
+        fn register_osc_handler(&self, id: u16, callback: OscCallback) -> DisposableHandle {
+            let handle = self.0.register_osc_handler(id, callback.clone());
+            to_disposable(move || {
+                handle.dispose();
+                // Instrument a custom parser disposal callback. Upstream's
+                // emitter is already disposed before this registration token.
+                callback(&"state=done".encode_utf16().collect::<Vec<_>>()).unwrap();
+            })
+        }
+        fn register_esc_handler(
+            &self,
+            final_byte: u8,
+            callback: EscCallback,
+        ) -> Result<DisposableHandle, RegistrarError> {
+            self.0.register_esc_handler(final_byte, callback)
+        }
+        fn input(&self, data: &str, user: bool) -> Result<(), EmitError> {
+            self.0.input(data, user)
+        }
+    }
+    let host = Rc::new(Host(FixtureTerminal::default()));
+    let addon = ProgramStatusAddon::new();
+    addon.activate(host.clone()).unwrap();
+    let changes = Rc::new(std::cell::Cell::new(0));
+    let captured = changes.clone();
+    addon
+        .on_change()
+        .subscribe(move |_| captured.set(captured.get() + 1));
+    host.0.osc(7501, "state=working");
+    assert_eq!(changes.get(), 1);
+    addon.dispose();
+    assert_eq!(changes.get(), 1);
+}
+
+#[test]
 fn dropping_owner_unregisters_but_event_snapshot_remains_valid() {
     let (term, addon, changes) = setup();
     term.osc(7501, "state=done");
