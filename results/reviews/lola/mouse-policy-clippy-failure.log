@@ -1,0 +1,24 @@
+    Checking xterm-wasm-support v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\LolaReview\crates\xterm-wasm-support)
+    Checking xterm-web v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\LolaReview\crates\xterm-web)
+error: use of `format!` to build up a string from an iterator
+  --> crates\xterm-web\src\theme\color_set.rs:63:21
+   |
+63 |                     units.iter().map(|unit| format!("\\u{unit:04x}")).collect();
+   |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+help: call `fold` instead
+  --> crates\xterm-web\src\theme\color_set.rs:63:34
+   |
+63 |                     units.iter().map(|unit| format!("\\u{unit:04x}")).collect();
+   |                                  ^^^
+help: ... and use the `write!` macro here
+  --> crates\xterm-web\src\theme\color_set.rs:63:45
+   |
+63 |                     units.iter().map(|unit| format!("\\u{unit:04x}")).collect();
+   |                                             ^^^^^^^^^^^^^^^^^^^^^^^^
+   = note: this can be written more efficiently by appending to a `String` directly
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#format_collect
+   = note: `-D clippy::format-collect` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::format_collect)]`
+
+error: could not compile `xterm-web` (lib) due to 1 previous error

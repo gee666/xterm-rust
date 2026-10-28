@@ -1,0 +1,52 @@
+   Compiling xterm-core v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\LolaReview\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 0.37s
+     Running tests\mouse_callbacks.rs (target\debug\deps\mouse_callbacks-9c1b450e0905592e.exe)
+
+running 5 tests
+test advertised_masks_match_all_five_protocols ... ok
+test protocol_listener_observes_committed_state_and_can_reenter ... ok
+test wheel_handler_can_clear_itself_and_its_current_result_is_retained ... ok
+test custom_restriction_and_encoder_can_replace_themselves_without_borrow_conflicts ... ok
+test interrupted_reset_propagates_error_without_resetting_encoding ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\mouse_custom.rs (target\debug\deps\mouse_custom-a8c88673084ac3ea.exe)
+
+running 5 tests
+test custom_encoder_mutates_the_original_event ... ok
+test activation_retains_the_original_callback_error_chain ... ok
+test shared_protocol_external_edits_are_visible_in_multiple_services ... ok
+test replacing_callback_captures_releases_them_outside_service_borrows ... ok
+test protocol_replacement_during_callback_finishes_the_original_call ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\mouse_differential.rs (target\debug\deps\mouse_differential-69b422072130db17.exe)
+
+running 2 tests
+test raw_signed_buttons_match_source_bitwise_and_wheel_comparisons ... ok
+test matches_every_source_protocol_encoding_and_mutation_trace ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests\mouse_state.rs (target\debug\deps\mouse_state-41ec60162692ac4f.exe)
+
+running 14 tests
+test upstream_default_encodings ... ok
+test active_overwrites_take_effect_without_notification_and_reset_retains_registry ... ok
+test disposal_is_idempotent_stops_notifications_but_not_service_operations ... ok
+test custom_callbacks_invoked_once_and_mutations_are_not_hidden ... ok
+test upstream_add_protocol ... ok
+test upstream_add_encoding ... ok
+test wheel_handler_identity_replace_clear_reset_and_dispose ... ok
+test flags_and_unknown_setters_preserve_active_state_and_events ... ok
+test upstream_init ... ok
+test upstream_setters_reset_and_errors ... ok
+test optional_modifiers_are_observable_and_x10_only_mutates_accepted_events ... ok
+test upstream_default_protocols ... ok
+test upstream_restrict_and_encode_mouse_event ... ok
+test upstream_protocol_change_event ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
