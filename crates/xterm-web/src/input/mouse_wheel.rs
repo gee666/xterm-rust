@@ -103,13 +103,25 @@ impl WheelState {
     /// mouse-wheel report per absolute line, or delegates the gesture to the
     /// viewport when it has scrollback and no mouse wheel reporting is active.
     pub fn consume_touch(&mut self, translation_y: f64, css_cell_height: Option<f64>) -> f64 {
+        self.consume_touch_from(self.touch_accumulator, translation_y, css_cell_height)
+    }
+
+    /// Source compound assignment reads the old accumulator before a fallible
+    /// translation getter. Commit that captured value after the getter returns,
+    /// even if a nested gesture start reset the current accumulator meanwhile.
+    pub fn consume_touch_from(
+        &mut self,
+        before: f64,
+        translation_y: f64,
+        css_cell_height: Option<f64>,
+    ) -> f64 {
         let Some(height) = css_cell_height else {
             return 0.0;
         };
         if height == 0.0 || height.is_nan() {
             return 0.0;
         }
-        self.touch_accumulator -= translation_y;
+        self.touch_accumulator = before - translation_y;
         let lines = (self.touch_accumulator / height).trunc();
         if lines != 0.0 {
             self.touch_accumulator -= lines * height;

@@ -259,6 +259,22 @@ fn output_failure_does_not_commit_cache_and_nested_output_sees_old_cache() {
 
 #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
 #[cfg_attr(not(target_arch = "wasm32"), test)]
+fn touch_assignment_commits_captured_accumulator_after_reentrant_reset() {
+    let policy = MousePolicy::new();
+    assert_eq!(policy.consume_touch(-5.0, Some(20.0)), 0.0);
+    let before = policy.wheel_state().touch_accumulator();
+    assert_eq!(before, 5.0);
+    // A translation getter dispatches gesturestart before returning its value.
+    policy.touch_start();
+    assert_eq!(policy.consume_touch_from(before, 2.0, Some(20.0)), 0.0);
+    assert_eq!(policy.wheel_state().touch_accumulator(), 3.0);
+    // A throwing getter keeps its reset but never calls the outer commit.
+    policy.touch_start();
+    assert_eq!(policy.wheel_state().touch_accumulator(), 0.0);
+}
+
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
+#[cfg_attr(not(target_arch = "wasm32"), test)]
 fn source_mutable_encoder_updates_event_before_cache_commit() {
     let service = service();
     service.add_encoding(

@@ -78,7 +78,11 @@ mask priorities, missing-buttons fallback, negative buttons, overrides, invalid
 pairs, veto/zero/shift/missing-coordinate paths, empty-output caching, reset,
 output errors, nested output and mutable custom encoders whose field changes
 affect subsequent move debouncing. The latter case also runs as a separate
-directed JavaScript assertion against the real source method. Source selection enable/disable, Alt cursor CSS
+directed JavaScript assertion against the real source method. Touch transaction
+helpers capture the old accumulator before a fallible translation getter; a
+nested gesture start must not change the left operand already read by source
+compound assignment. Two directed source checks cover reset and thrown-getter
+partial state, with a native captured-value regression. Source selection enable/disable, Alt cursor CSS
 and moved-document listener assertions remain actual DOM work under 33/110.
 They are not counted as migrated DOM assertions merely because the JS baseline
 passed.
@@ -118,7 +122,7 @@ node scripts/check-browser-mouse.mjs
 
 The checker rebuilds the reference's generated JS using its existing build
 script, runs all 15 original tests with assertions intact, verifies every
-fixture, runs 12 native Rust tests, focused rustfmt, warning-free Clippy and a
+fixture, runs 13 native Rust tests, focused rustfmt, warning-free Clippy and a
 WASM compilation check. `--generate` on `scripts/browser-mouse-oracle.mjs`
 regenerates expected data intentionally. Inspect hashes and fixture differences
 before accepting changes.

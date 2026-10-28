@@ -15,7 +15,7 @@ const files = ['mouse_coords', 'mouse_policy', 'mouse_wheel'].map(name => `crate
   .concat(['mouse_policy', 'mouse_routing'].map(name => `crates/xterm-web/tests/${name}.rs`));
 const checks = [
   { name: 'oracle', command: process.execPath, args: ['scripts/browser-mouse-oracle.mjs'] },
-  { name: 'native-tests', command: cargo, args: ['test', '-p', 'xterm-web', '--test', 'mouse_policy', '--test', 'mouse_routing'], expectedTests: 12 },
+  { name: 'native-tests', command: cargo, args: ['test', '-p', 'xterm-web', '--test', 'mouse_policy', '--test', 'mouse_routing'], expectedTests: 13 },
   { name: 'fmt', command: rustfmt, args: ['--edition', '2021', '--check', ...files] },
   { name: 'clippy', command: cargo, args: ['clippy', '-p', 'xterm-web', '--lib', '--test', 'mouse_policy', '--test', 'mouse_routing', '--all-features', '--', '-D', 'warnings'] },
   { name: 'wasm-check', command: cargo, args: ['check', '-p', 'xterm-web', '--target', 'wasm32-unknown-unknown'] },

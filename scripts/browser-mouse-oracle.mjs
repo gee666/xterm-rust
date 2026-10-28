@@ -179,6 +179,18 @@ assert.equal(customEvent.col, 9);
 assert.equal(customEvent.shift, true);
 assert.equal(custom._triggerMouseEvent({ ...customEvent, col: 8, row: 0 }), false);
 assert.deepEqual(customReports, [['x', true]]);
+// Compound assignment captures the accumulator before reading translationY.
+render.dimensions.css.cell.height = 20;
+service._touchScrollAccumulator = 5;
+const resetDuringRead = { get translationY() { service._handleTouchStart(); return 2; } };
+service._handleTouchScrollAsKeys(resetDuringRead);
+assert.equal(service._touchScrollAccumulator, 3);
+const translationError = new Error('original translation getter failure');
+service._touchScrollAccumulator = 5;
+assert.throws(() => service._handleTouchScrollAsKeys({ get translationY() {
+  service._handleTouchStart(); throw translationError;
+} }), error => error === translationError);
+assert.equal(service._touchScrollAccumulator, 0);
 const raw = JSON.parse(readFileSync(path.join(directory, 'upstream.json'), 'utf8'));
 if (raw.stats.tests !== 15 || raw.stats.passes !== 15) throw new Error('Upstream mouse inventory changed');
 const files = { 'browser-mouse-trigger.tsv': triggers, 'browser-mouse-coords.tsv': coords,
@@ -195,7 +207,7 @@ for (const [name, rows] of Object.entries(files)) {
 const sourceFiles = ['browser/input/Mouse.ts', 'browser/input/Mouse.test.ts', 'browser/services/MouseCoordsService.ts',
   'browser/services/MouseService.ts', 'browser/services/MouseService.test.ts', 'common/services/MouseStateService.ts'];
 writeFileSync(path.join(directory, 'oracle.json'), JSON.stringify({
-  node: process.version, platform: process.platform, seed, fixtures, directedCustomEncoderCases: 1,
+  node: process.version, platform: process.platform, seed, fixtures, directedCustomEncoderCases: 1, directedTouchReentryCases: 2,
   sourceHashes: Object.fromEntries(sourceFiles.map(file => [file, hash(readFileSync(path.join(source, 'src', file)))])),
   upstream: { discovered: raw.stats.tests, executed: raw.stats.tests, passed: raw.stats.passes, failed: raw.stats.failures, skipped: 0, unrun: 0 },
   names: raw.tests.map(test => test.fullTitle),
