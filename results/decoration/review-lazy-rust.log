@@ -1,0 +1,23 @@
+    Blocking waiting for file lock on build directory
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 4.02s
+     Running tests\decoration_review_edges.rs (target\debug\deps\decoration_review_edges-7fded97d28e2368c.exe)
+
+running 1 test
+test cold_cell_iterator_observes_registration_before_first_next ... FAILED
+
+failures:
+
+---- cold_cell_iterator_observes_registration_before_first_next stdout ----
+
+thread 'cold_cell_iterator_observes_registration_before_first_next' panicked at crates\xterm-core\tests\decoration_review_edges.rs:18:5:
+assertion failed: iterator.next().is_some_and(|value| value.ptr_eq(&decoration))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    cold_cell_iterator_observes_registration_before_first_next
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-core --test decoration_review_edges`
