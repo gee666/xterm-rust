@@ -24,11 +24,11 @@ Every DOM callback uses the reentrant fallible listener contract. It may recursi
 
 ## Verification
 
-Run the existing browser skill, using the shared Cargo target and existing low-artifact profiles:
+Run the existing browser skill in the agent's automation-created worktree:
 
 ```
-WASM_TEST=wasm_mouse node scripts/build-slot.mjs --owner NAME --lane wasm --wait-ms 600000 --timeout-ms 240000 -- node scripts/browser-host-check.mjs
-node scripts/build-slot.mjs --owner NAME-lint --lane wasm -- cargo clippy -p xterm-web --target wasm32-unknown-unknown --lib --test wasm_mouse -- -D warnings
+node scripts/check-mouse-live.mjs
+cargo clippy -p xterm-web --target wasm32-unknown-unknown --lib --test wasm_mouse -- -D warnings
 ```
 
 The WASM suite exercises actual DOM listener dispatch, cancellation, mode changes, current-document adoption, recursion, original getter errors and cleanup in Chromium, Firefox and WebKit. Its injected MouseHost records outputs and selection/focus effects. This is a browser component test, not the complete exported Terminal or PTY end-to-end test. Its gesture-consumer case uses explicit custom events and does not claim recognition or inertia coverage.

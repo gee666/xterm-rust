@@ -29,10 +29,10 @@ The planned WASM target now contains seven listener/lifecycle cases, nine initia
 
 `node scripts/mouse-live-oracle.mjs` now executes ten directed scenarios through unchanged source methods and verifies their ordered event/host/effect fixture. It records originalSuitesExecuted=0; the complete15-test original baseline is task85. Metadata groups plain canvas/cell values to the Rust host read methods rather than claiming arbitrary render-object proxy parity.
 
-No Rust build or browser runtime pass is claimed yet. Use the controlled build queue from docs/build-slots.md after resource recovery:
+No Rust build or browser runtime pass is claimed yet. Use an agent worktree from the shared worktree automation, then run:
 
 ```
-node scripts/build-slot.mjs --owner NAME --lane wasm --wait-ms 600000 --timeout-ms 300000 -- node scripts/check-mouse-live.mjs
+node scripts/check-mouse-live.mjs
 ```
 
-The scoped checker records source/fixture and Cargo/profile hashes before and after its build, rejects changed component snapshots and links the immutable browser artifact report. It forces all three browser engines rather than accepting a filtered single-engine run. Rerun the component suite and new live-read suite with the existing browser-host-check skill, full relevant source-policy oracles, targeted Clippy and independent review. Keep exact counts, seeds, current source/implementation hashes and failing traces. Native Linux/macOS, complete Terminal/browser interaction and actual touch recognition remain separate requirements.
+The checker runs the source fixture and the actual browser tests in all three engines. Record the command and observed result. Do not treat a filtered single-engine run as a three-browser pass. Rerun the component suite and new live-read suite with the existing browser-host-check skill, full relevant source-policy oracles, targeted Clippy and independent review. Keep exact counts, seeds, current source/implementation hashes and failing traces. Native Linux/macOS, complete Terminal/browser interaction and actual touch recognition remain separate requirements.
