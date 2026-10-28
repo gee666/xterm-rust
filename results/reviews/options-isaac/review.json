@@ -1,0 +1,65 @@
+{
+  "reviewer": "Isaac",
+  "task": 25,
+  "scope": "OptionsService native component and ordinary declared-key reference corpus",
+  "overallEquivalence": "NOT PROVEN",
+  "sourceInspected": [
+    "source_repo/src/common/services/OptionsService.ts",
+    "source_repo/src/common/services/OptionsService.test.ts"
+  ],
+  "implementationInspected": [
+    "crates/xterm-core/src/options/mod.rs",
+    "crates/xterm-core/src/options/defaults.rs",
+    "crates/xterm-core/src/options/validation.rs",
+    "crates/xterm-core/src/options/value.rs",
+    "crates/xterm-core/src/options/object.rs",
+    "crates/xterm-core/src/options/host_store.rs",
+    "crates/xterm-core/tests/options_service.rs",
+    "crates/xterm-core/tests/options_boundary.rs",
+    "crates/xterm-core/tests/options_host_store.rs",
+    "scripts/check-options.mjs"
+  ],
+  "checks": [
+    {
+      "command": "cargo test -p xterm-core --test options_service --test options_boundary --test options_host_store",
+      "exitCode": 0,
+      "passed": 37,
+      "failed": 0,
+      "ignored": 0,
+      "receipt": "results/build-slots/1793172643084-49936-06629e86-93a7-4a49-8a3d-7e4520f46f3f/receipt.json"
+    },
+    {
+      "command": "node scripts/check-options.mjs",
+      "exitCode": 0,
+      "originalCases": 10,
+      "originalAssertions": 22,
+      "outputLines": 31961,
+      "setterOperations": 28456,
+      "constructorOperations": 3456,
+      "defaults": 48,
+      "seed": 1330664531,
+      "mismatches": 0,
+      "receipt": "results/build-slots/1793172712408-48080-86c39a00-cac0-4e92-bfce-0e79c79e33e1/receipt.json"
+    },
+    {
+      "command": "cargo clippy -p xterm-core --lib --example options_oracle --test options_service --test options_boundary --test options_host_store -- -D warnings",
+      "exitCode": 101,
+      "failureScope": "Unrelated unfinished Buffer cleanup_owner fields/methods and screen cleanup_owner slot",
+      "receipt": "results/build-slots/1793172891608-32664-7c903d8f-5723-4fb1-9e0b-56570af6e5ae/receipt.json"
+    }
+  ],
+  "finding": {
+    "title": "Shared native default object mutation is not representable through the current safe API",
+    "sourceProof": "results/reviews/options-isaac/shared-default-source.json",
+    "sourceBehavior": "Mutating first.options.scrollbar.showScrollbar=false changes an existing second service and a later new service; all retain the same nested default object.",
+    "nativeCode": "OptionValue::property_map stores an immutable BTreeMap; OptionObject exposes get_property but no property setter. Empty default theme/windowOptions/quirks/vtExtensions are opaque unit payloads. Rc identity alone does not preserve writable shared record behavior.",
+    "required": "Provide a safe authoritative mutable-property path for native structured defaults and retain shared identity without emitting root option-change events for direct nested mutation. Add a native alias-mutation regression and source comparison. Do not implement this as a JS shadow over immutable Rust data.",
+    "ownership": "Asked Athena whether existing task109 owns it; no scope waiver assumed."
+  },
+  "limitations": [
+    "Task109 prototype/descriptor/browser checks remain separately required",
+    "No whole-workspace warning-free claim",
+    "Native Windows only, no Linux/macOS or browser runtime proof"
+  ],
+  "verdict": "changes requested for the missing shared-default mutation capability; passing existing tests retained"
+}
