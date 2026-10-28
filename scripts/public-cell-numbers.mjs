@@ -85,7 +85,12 @@ line.getCell(0,overridden);assert.equal(overridden.combinedData,undefined);
 let missingMethodError;
 try {line.getCell(0).attributesEquals({});}catch(error){missingMethodError=error.name;}
 assert.equal(missingMethodError,'TypeError');
-const sourceDestinationChecks={setterMutationFg:mutating.fg,overriddenContentHasUndefinedCombined:overridden.combinedData===undefined,missingMethodError};
+const shrunk=new BufferLine(8);const last=new CellData();last.bg=65;shrunk.setCell(2,last);
+const stale=new CellData();stale.fg=Attributes.CM_RGB|0x112233;shrunk.setCell(3,stale);
+shrunk.resize(3,new CellData());const boundary=shrunk.getCell(2+2/3);
+assert.equal(boundary.content,65);assert.equal(boundary.fg,undefined);assert.equal(boundary.bg,undefined);
+const sourceDestinationChecks={setterMutationFg:mutating.fg,overriddenContentHasUndefinedCombined:overridden.combinedData===undefined,missingMethodError,
+  shrunkView:{content:boundary.content,fgUndefined:boundary.fg===undefined,bgUndefined:boundary.bg===undefined}};
 const extras=['crates/xterm-core/tests/public_cell_numbers.rs','crates/xterm-core/tests/public_cell_numbers_differential.rs',fixture,translationFixture];
 const inputs=captureRustInputs(extras);
 const cargo=process.env.CARGO??(process.platform==='win32'?`${process.env.USERPROFILE}/.cargo/bin/cargo.exe`:'cargo');

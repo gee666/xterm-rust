@@ -78,3 +78,25 @@ fn scalar_metadata_does_not_copy_combined_text_or_extended_attributes() {
         .same_identity(cell.extended.as_ref().unwrap()));
     assert_eq!(cell.normalized().combined_data.len(), 131_072);
 }
+
+#[test]
+fn shrinking_logical_view_does_not_expose_retained_packed_backing() {
+    let mut line = BufferLine::new(8, None, false);
+    let mut last = CellData::default();
+    last.attributes.bg = 65;
+    line.set_cell(2, &last);
+    let mut stale = CellData::default();
+    stale.attributes.fg = xterm_core::buffer::constants::attributes::CM_RGB | 0x112233;
+    line.set_cell(3, &stale);
+    assert!(line.resize(3, &CellData::default()));
+    let cell = get_cell_number(&line, 2.0 + 2.0 / 3.0).unwrap();
+    assert_eq!(cell.content, Some(65));
+    assert!(cell.fg.is_none() && cell.bg.is_none());
+    assert_eq!(cell.normalized().get_bg_color(), -1);
+    assert!(line.cleanup_memory());
+    let cleaned = get_cell_number(&line, 2.0 + 2.0 / 3.0).unwrap();
+    assert_eq!(
+        (cleaned.content, cleaned.fg, cleaned.bg),
+        (cell.content, cell.fg, cell.bg)
+    );
+}

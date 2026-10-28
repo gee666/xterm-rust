@@ -1,0 +1,25 @@
+warning: field `cleanup_owner` is never read
+   --> crates\xterm-core\src\buffer\screen.rs:149:5
+    |
+119 | pub struct Buffer {
+    |            ------ field in this struct
+...
+149 |     cleanup_owner: CleanupOwnerSlot,
+    |     ^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` on by default
+
+warning: associated function `cleanup_owner_slot_shared` is never used
+   --> crates\xterm-core\src\buffer\screen.rs:198:19
+    |
+151 | impl Buffer {
+    | ----------- associated function in this implementation
+...
+198 |     pub(crate) fn cleanup_owner_slot_shared(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `xterm-core` (lib) generated 2 warnings
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 0.36s
+     Running tests\public_cell_numbers.rs (target\debug\deps\public_cell_numbers-1c2691b0042c7f07.exe)
+     Running tests\public_cell_numbers_differential.rs (target\debug\deps\public_cell_numbers_differential-0a320619ec4114a6.exe)

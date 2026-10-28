@@ -216,6 +216,25 @@ fn numeric_translation_crosses_js_boundary_without_usize_coercion() {
 }
 
 #[wasm_bindgen_test]
+fn shrunk_view_keeps_retained_words_outside_public_cell_reads() {
+    let (terminal, _normal, line) = line();
+    terminal
+        .with_state(|state| {
+            let buffer = state.active_buffer();
+            let row = buffer.borrow().lines.get(0).unwrap();
+            row.borrow_mut().resize(3, &CellData::default());
+        })
+        .unwrap();
+    let cell = call(&line, "getCell", &[(2.0 + 2.0 / 3.0).into()]).unwrap();
+    assert!(Reflect::get(&cell, &"fg".into()).unwrap().is_undefined());
+    assert!(Reflect::get(&cell, &"bg".into()).unwrap().is_undefined());
+    assert_eq!(
+        call(&cell, "isAttributeDefault", &[]).unwrap().as_bool(),
+        Some(false)
+    );
+}
+
+#[wasm_bindgen_test]
 fn numeric_reads_reuse_managed_targets_and_ignore_falsey_targets() {
     let (_terminal, normal, line) = line();
     let target = call(&normal, "getNullCell", &[]).unwrap();
