@@ -6,6 +6,9 @@ import { resolve, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runCommand } from './quality-process.mjs';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const args = process.argv.slice(2);
+if (args.some(argument => argument !== '--debug') || args.length > 1) throw new Error('Usage: node scripts/build-demo.mjs [--debug]');
+const debug = args.includes('--debug');
 const runId = new Date().toISOString().replace(/[:.]/g, '-');
 const directory = resolve(root, 'results/demos/build', runId);
 const latest = resolve(root, 'results/demos/build/latest.json');
@@ -15,7 +18,7 @@ await mkdir(output, { recursive: true });
 const portable = file => relative(root, file).replaceAll('\\', '/');
 const commands = [];
 const report = { status: 'incomplete', command: 'node scripts/build-demo.mjs', platform: process.platform,
-  node: process.version, commands, output: portable(output), artifacts: [],
+  node: process.version, profile: debug ? 'debug' : 'release', commands, output: portable(output), artifacts: [],
   scope: 'Rust WASM production library build only, not browser runtime equivalence or matched-feature benchmark proof.' };
 await writeFile(latest, `${JSON.stringify({ status: 'incomplete', report: portable(resolve(directory, 'report.json')) }, null, 2)}\n`);
 async function resources() {
@@ -40,8 +43,8 @@ try {
   const bindgen = process.env.WASM_BINDGEN || (process.platform === 'win32' && existsSync(bundledWindowsCli) ? bundledWindowsCli : 'wasm-bindgen');
   report.bindgen = (await run('bindgen-version', bindgen, ['--version'])).trim();
   if (!/^wasm-bindgen 0\.2\.100(?:\s|$)/.test(report.bindgen)) throw new Error('The locked WASM ABI requires wasm-bindgen CLI0.2.100');
-  const build = await run('release-wasm', cargo, ['build', '--locked', '-p', 'xterm-web', '--lib',
-    '--target', 'wasm32-unknown-unknown', '--release', '--message-format=json']);
+  const build = await run(debug ? 'debug-wasm' : 'release-wasm', cargo, ['build', '--locked', '-p', 'xterm-web', '--lib',
+    '--target', 'wasm32-unknown-unknown', ...(debug ? [] : ['--release']), '--message-format=json']);
   const messages = build.split(/\r?\n/).filter(line => line.startsWith('{')).map(line => JSON.parse(line));
   const artifact = messages.find(message => message.reason === 'compiler-artifact'
     && message.target.name === 'xterm_web' && message.filenames.some(file => file.endsWith('.wasm')));
