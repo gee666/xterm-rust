@@ -15,7 +15,7 @@ Evidence: `lineCounts`, Node unit tests and `results/loc/tests.txt`.
 ## LOC2. Complete source classification
 
 - Inventory all admitted files, including uncounted assets, with relative path, extension, raw bytes and SHA-256. Aggregate counted files, physical/nonblank lines and bytes without double counting.
-- Separate production library, addons, bindings/glue, generated code/data, mixed code/data, tests, textual test data, demonstrations, tooling and configuration.
+- Separate production library, addons, bindings/glue, generated code/data, mixed code/data, mixed code/tests, tests, textual test data, demonstrations, tooling and configuration. Inline Rust test-annotated files outside test-only paths get whole-file mixed-code-tests counts, not a claim of pure production/demo lines. Explicitly distinguish this annotation scan from parsed test-only line counts.
 - All required Rust, JS/TS, CSS, HTML and shader/glue source is included. Recognize additional native source extensions in the checked-in rules. Fail on an unrecognized production extension instead of silently omitting it.
 - Classify declarations as bindings, addon source separately from tests/configuration, and real user examples separately from differential adapters named oracle or trace. Structured JSON/YAML/TOML under test fixture directories is test-data, even with a dependency-lockfile basename. Ordinary test tsconfig files remain configuration.
 - Verify per-category, per-purpose and per-extension totals sum to the same complete counted total. Include generated tests and production data; do not hide their size.

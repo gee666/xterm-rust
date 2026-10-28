@@ -71,13 +71,14 @@ test('inventory includes generated sources and configuration but excludes output
 test('structured fixture data takes precedence over configuration and lockfile names', () => fixture((dir, put) => {
   put('crates/core/tests/fixtures/trace.json', '[1,2]\n');
   put('crates/core/tests/fixtures/package-lock.json', '{}\n');
+  put('crates/core/tests/fixtures/Cargo.lock', 'version = 4\n');
   put('crates/core/tests/tsconfig.json', '{}\n');
   put('crates/core/Cargo.toml', '[package]\n');
   const result = inventory(dir, 'port', rules);
-  assert.equal(result.totals.files, 4);
-  assert.equal(result.byCategory['test-data'].files, 2);
+  assert.equal(result.totals.files, 5);
+  assert.equal(result.byCategory['test-data'].files, 3);
   assert.equal(result.byCategory.configuration.files, 2);
-  assert.equal(result.byPurpose.tests.files, 3);
+  assert.equal(result.byPurpose.tests.files, 4);
   assert.equal(result.files.find(row => row.path.endsWith('fixtures/package-lock.json')).counted, true);
 }));
 
@@ -95,6 +96,17 @@ test('mandatory browser generated glue is counted separately from demo and binar
   assert.equal(result.byCategory.demos.files, 1);
   assert.equal(result.byPurpose['bindings-glue'].files, 2);
   assert.equal(result.files.find(row => row.path.endsWith('.wasm')).counted, false);
+}));
+
+test('inline Rust test annotations separate mixed files rather than claiming pure demo logic', () => fixture((dir, put) => {
+  put('crates/core/examples/native.rs', 'fn main() {}\n#[cfg(test)]\nmod tests { #[test] fn check() {} }\n');
+  put('crates/core/tests/pure.rs', '#[test]\nfn check() {}\n');
+  const result = inventory(dir, 'port', rules);
+  assert.equal(result.byCategory['mixed-code-tests'].files, 1);
+  assert.equal(result.byCategory.tests.files, 1);
+  assert.equal(result.byCategory.demos.files, 0);
+  assert.equal(result.byPurpose.demos.files, 1);
+  assert.equal(result.files.find(row => row.path.endsWith('/native.rs')).inlineTestAnnotation, true);
 }));
 
 test('UTF-8 BOM bytes do not erase a physical source line', () => fixture((dir, put) => {
