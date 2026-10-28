@@ -6,6 +6,7 @@ pub mod constants;
 mod extended;
 mod line;
 pub mod marker;
+pub mod marker_line;
 pub mod range;
 pub mod reflow;
 pub mod screen;
