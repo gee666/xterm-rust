@@ -19,10 +19,12 @@ impl LogSink for Sink {
             .parameters
             .iter()
             .map(|value| match value {
-                LogValue::CodeUnits(units) => hex(units),
-                LogValue::Value(_) => "unexpected-value".into(),
+                LogValue::CodeUnits(units) => Ok(hex(units)),
+                _ => Err(LogError::Sink(
+                    "core service trace expected code units".into(),
+                )),
             })
-            .collect::<Vec<_>>()
+            .collect::<Result<Vec<_>, _>>()?
             .join("/");
         self.0.borrow_mut().push(format!(
             "L:{}:{}:{}:{}",

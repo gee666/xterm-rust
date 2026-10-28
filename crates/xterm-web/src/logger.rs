@@ -5,13 +5,13 @@ use crate::{
     terminal::options,
     utf16::{from_js_string, to_js_string},
 };
-use js_sys::{Array, JsString};
+use js_sys::{Array, JsString, Object, Reflect, Uint8Array};
 use std::rc::Rc;
 use wasm_bindgen::{prelude::*, JsCast};
 use xterm_core::{
     log_service::{
-        BoundLogCall, CustomLogger, LogError, LogLevel, LogPropertyKey, LogRecord, LogSink,
-        LogValue,
+        BoundLogCall, CustomLogger, LogError, LogLevel, LogPropertyHost, LogPropertyKey, LogRecord,
+        LogSink, LogValue,
     },
     options::{CoercionHint, OptionError, OptionObject, OptionValue},
 };
@@ -62,19 +62,73 @@ fn method(level: LogLevel, custom: bool) -> Result<&'static str, LogError> {
         }
     })
 }
+struct JsLogProperty {
+    object: JsValue,
+    key: JsValue,
+}
+impl LogPropertyHost for JsLogProperty {
+    fn get(&self) -> Result<OptionValue, LogError> {
+        Reflect::get(&self.object, &self.key)
+            .and_then(|value| options::from_js(&value))
+            .map_err(host_error)
+    }
+    fn set(&self, value: &OptionValue) -> Result<(), LogError> {
+        let value = options::into_js(value).map_err(host_error)?;
+        if Reflect::set(&self.object, &self.key, &value).map_err(host_error)? {
+            Ok(())
+        } else {
+            Err(host_error(
+                js_sys::TypeError::new("Cannot assign to logged property").into(),
+            ))
+        }
+    }
+}
+fn log_value(value: LogValue) -> Result<JsValue, LogError> {
+    Ok(match value {
+        LogValue::Value(value) => options::into_js(&value).map_err(host_error)?,
+        LogValue::CodeUnits(units) => units
+            .into_iter()
+            .map(u32::from)
+            .map(JsValue::from)
+            .collect::<Array>()
+            .into(),
+        LogValue::Bytes(bytes) => Uint8Array::from(bytes.as_slice()).into(),
+        LogValue::Array(values) => {
+            let array = Array::new();
+            for value in values {
+                array.push(&log_value(value)?);
+            }
+            array.into()
+        }
+        LogValue::Object(fields) => {
+            let entries = Array::new();
+            let mut properties = Vec::new();
+            for (key, value) in fields {
+                if let LogValue::Property(property) = &value {
+                    properties.push((key.clone(), Rc::clone(property)));
+                }
+                let pair = Array::new();
+                pair.push(&JsValue::from_str(&key));
+                pair.push(&log_value(value)?);
+                entries.push(&pair);
+            }
+            // CreateDataProperty avoids inherited setters, including __proto__.
+            let object: JsValue = Object::from_entries(&entries).map_err(host_error)?.into();
+            for (key, property) in properties {
+                property.install_host(Rc::new(JsLogProperty {
+                    object: object.clone(),
+                    key: key.into(),
+                }));
+            }
+            object
+        }
+        LogValue::Property(property) => options::into_js(&property.get()?).map_err(host_error)?,
+    })
+}
 fn invoke(bound: &JsValue, record: LogRecord) -> Result<(), LogError> {
     let parameters = Array::new();
     for parameter in record.parameters {
-        let value = match parameter {
-            LogValue::Value(value) => options::into_js(&value).map_err(host_error)?,
-            LogValue::CodeUnits(units) => units
-                .into_iter()
-                .map(u32::from)
-                .map(JsValue::from)
-                .collect::<Array>()
-                .into(),
-        };
-        parameters.push(&value);
+        parameters.push(&log_value(parameter)?);
     }
     xtermInvokeLog(bound, &to_js_string(&record.message), &parameters).map_err(host_error)
 }
@@ -161,17 +215,20 @@ pub fn log_level_from_js(value: &JsValue) -> Result<OptionValue, JsValue> {
         })?;
         Ok(Some(from_js_string(&key)))
     }));
-    Ok(OptionValue::Object(OptionObject::with_backing_value(
-        key,
-        value.clone(),
-        move |hint| match hint {
-            CoercionHint::Number => primitive.to_number().map(OptionValue::Number),
-            CoercionHint::String => primitive.to_utf16().map(OptionValue::String),
-        },
-        move |_, key| getter.get_property(key),
-        xtermLoggerTruthy(value),
-        |a, b| a == b,
-    )))
+    Ok(OptionValue::Object(
+        OptionObject::with_numeric_backing_value(
+            key,
+            value.clone(),
+            move |hint| match hint {
+                CoercionHint::Number => primitive.to_number().map(OptionValue::Number),
+                CoercionHint::String => primitive.to_utf16().map(OptionValue::String),
+            },
+            move |_, key| getter.get_property(key),
+            xtermLoggerTruthy(value),
+            |a, b| a == b,
+            options::operator_semantics(value),
+        ),
+    ))
 }
 
 fn convert(value: &JsValue, raw_options: Option<JsValue>) -> Result<OptionValue, JsValue> {
@@ -184,15 +241,18 @@ fn convert(value: &JsValue, raw_options: Option<JsValue>) -> Result<OptionValue,
         value: value.clone(),
         options: raw_options,
     });
-    Ok(OptionValue::Object(OptionObject::with_backing_value(
-        CustomLogger(sink),
-        value.clone(),
-        move |hint| match hint {
-            CoercionHint::Number => primitive.to_number().map(OptionValue::Number),
-            CoercionHint::String => primitive.to_utf16().map(OptionValue::String),
-        },
-        move |_, key| getter.get_property(key),
-        xtermLoggerTruthy(value),
-        |a, b| a == b,
-    )))
+    Ok(OptionValue::Object(
+        OptionObject::with_numeric_backing_value(
+            CustomLogger(sink),
+            value.clone(),
+            move |hint| match hint {
+                CoercionHint::Number => primitive.to_number().map(OptionValue::Number),
+                CoercionHint::String => primitive.to_utf16().map(OptionValue::String),
+            },
+            move |_, key| getter.get_property(key),
+            xtermLoggerTruthy(value),
+            |a, b| a == b,
+            options::operator_semantics(value),
+        ),
+    ))
 }

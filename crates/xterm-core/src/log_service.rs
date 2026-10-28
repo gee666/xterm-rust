@@ -10,6 +10,9 @@ use std::cell::{Cell, RefCell};
 use std::fmt;
 use std::rc::Rc;
 
+mod property;
+pub use property::{LogProperty, LogPropertyHost};
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 #[repr(u8)]
 pub enum LogLevel {
@@ -65,6 +68,12 @@ pub enum LogRoute {
 pub enum LogValue {
     Value(OptionValue),
     CodeUnits(Vec<u16>),
+    Bytes(Vec<u8>),
+    Array(Vec<LogValue>),
+    /// Insertion order is observable to custom JS loggers through Object.keys.
+    Object(Vec<(String, LogValue)>),
+    /// A live property of one delivered diagnostic object, read after logging.
+    Property(Rc<LogProperty>),
 }
 
 pub enum LogParameter<'a> {
