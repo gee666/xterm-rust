@@ -112,6 +112,9 @@ impl<F: FontDescriptor> WidthMeasurer for CanvasWidthMeasurer<F> {
         self.contexts[variant as usize].measure(text)
     }
 }
+#[cfg(all(test, target_arch = "wasm32"))]
+#[path = "canvas_width_browser_tests.rs"]
+mod browser_tests;
 pub type SourceCanvasCache = WidthCache<CanvasWidthMeasurer<RawFont>>;
 impl WidthCache<CanvasWidthMeasurer<RawFont>> {
     /// Caller performs its CSS updates first; reads here are fresh captured raw
