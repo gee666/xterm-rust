@@ -58,6 +58,15 @@ test('creator carries exact final whitespace and refuses recursive secrets befor
   await assert.rejects(createWorktree({cwd:root,agent:'Missing',base:path.dirname(tree.directory),copyOwned:['missing.rs']}),/No owned files/);
   assert(!worktrees(root).some(item=>item.branch==='refs/heads/swarm/Missing'));
 });
+test('carry preserves exact LF bytes even when Git autocrlf would convert the patch',async t=>{
+  const {root,tree}=await fixture(t);
+  run('git',['config','core.autocrlf','true'],root);
+  const bytes=Buffer.from('pub fn value()->u8 {2}\n#[test] fn check(){assert_eq!(value(),2);}\n\n');
+  await writeFile(path.join(root,'src/lib.rs'),bytes);
+  await createWorktree({cwd:root,agent:'TestAgent',base:path.dirname(tree.directory),copyOwned:['src/lib.rs']});
+  assert.deepEqual(await readFile(path.join(tree.directory,'src/lib.rs')),bytes);
+  assert.deepEqual(await readFile(path.join(root,'src/lib.rs')),bytes);
+});
 test('reference is a physical private copy and Git removal cannot delete the original',async t=>{
   const {root,tree}=await fixture(t);await mkdir(path.join(root,'source_repo'));
   await writeFile(path.join(root,'source_repo','keep.txt'),'original');

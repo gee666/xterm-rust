@@ -10,7 +10,7 @@ The old global build queue is retired. Each agent works on `swarm/NAME` in its o
 From the original repository, with Git and Cargo in PATH:
 
 ```sh
-node scripts/worktree-create.mjs --agent NAME
+node scripts/worktree-create.mjs --agent NAME --main master
 ```
 
 The command prints the C-volume worktree path, branch and private target. Use that directory for editing and commands. You can invoke the scripts by their absolute path in the original repository until the tooling commit reaches your branch.

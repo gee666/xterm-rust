@@ -147,6 +147,18 @@ export async function carryChanges(primary,directory,paths,{move=false}={}) {
     const temporary=path.join(directory,'tmp','carry.patch');await mkdir(path.dirname(temporary),{recursive:true});await writeFile(temporary,patch);
     git(directory,'apply','--binary',temporary);await rm(temporary);
   }
+  // git apply may honor core.autocrlf. Restore exact source working bytes only
+  // when the destination differs solely in record terminators, never content.
+  for(const file of selected.filter(file=>tracked.has(file))) {
+    const source=path.join(primary,file),target=path.join(directory,file);
+    let bytes;try{bytes=await readFile(source);}catch(error){if(error.code==='ENOENT')continue;throw error;}
+    const output=await readFile(target);
+    if(!bytes.equals(output)) {
+      const records=value=>value.toString('latin1').replaceAll('\r\n','\n');
+      if(records(bytes)!==records(output))throw new Error(`Carry destination has other content changes: ${file}; source was not removed`);
+      await writeFile(target,bytes);
+    }
+  }
   for(const file of selected.filter(file=>!tracked.has(file))) {
     const target=path.join(directory,file);await mkdir(path.dirname(target),{recursive:true});
     try{await lstat(target);throw new Error(`Carry would overwrite ${target}`);}catch(error){if(error.code!=='ENOENT')throw error;}
