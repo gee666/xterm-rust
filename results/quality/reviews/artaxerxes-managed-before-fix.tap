@@ -1,0 +1,54 @@
+✖ string readiness rejection remains a failed receipt with its cause (244.0318ms)
+✖ an Error with an empty message is still failure, not successful cleanup (249.6332ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 547.2821
+
+✖ failing tests:
+
+test at scripts\quality-managed-review.test.mjs:26:1
+✖ string readiness rejection remains a failed receipt with its cause (244.0318ms)
+  AssertionError [ERR_ASSERTION]: callback failure cannot become intentional stopped cleanup
+  + actual - expected
+  
+  + 'stopped'
+  - 'failed'
+  
+      at rejection_case (file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/scripts/quality-managed-review.test.mjs:20:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/scripts/quality-managed-review.test.mjs:27:3)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'stopped',
+    expected: 'failed',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\quality-managed-review.test.mjs:29:1
+✖ an Error with an empty message is still failure, not successful cleanup (249.6332ms)
+  AssertionError [ERR_ASSERTION]: callback failure cannot become intentional stopped cleanup
+  + actual - expected
+  
+  + 'stopped'
+  - 'failed'
+  
+      at rejection_case (file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/scripts/quality-managed-review.test.mjs:20:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/scripts/quality-managed-review.test.mjs:30:3)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'stopped',
+    expected: 'failed',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
