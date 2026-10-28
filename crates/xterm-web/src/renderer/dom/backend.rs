@@ -1,5 +1,5 @@
 use super::*;
-use crate::renderer::service_api::{Renderer, VisibilityRenderer};
+use crate::renderer::service_api::{LinkUnderlineRenderer, Renderer, VisibilityRenderer};
 use xterm_core::event::Event;
 impl Renderer for DomRenderer {
     fn dimensions(&self) -> RenderDimensions {
@@ -46,6 +46,18 @@ impl Renderer for DomRenderer {
     }
     fn visibility(&self) -> Option<&dyn VisibilityRenderer> {
         Some(self)
+    }
+    fn link_underline(&self) -> Option<&dyn LinkUnderlineRenderer> {
+        Some(self)
+    }
+}
+impl LinkUnderlineRenderer for DomRenderer {
+    fn handle_link_underline(
+        &self,
+        enabled: bool,
+        event: crate::links::UnderlineEvent,
+    ) -> Result<(), JsValue> {
+        DomRenderer::handle_link_underline(self, enabled, event)
     }
 }
 impl VisibilityRenderer for DomRenderer {
