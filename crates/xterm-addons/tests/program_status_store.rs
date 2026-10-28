@@ -130,6 +130,21 @@ fn effective_app_changes_when_ancestor_changes() {
     assert!(store.records().iter().all(|r| r.effective_app.is_none()));
 }
 #[test]
+fn raw_record_identity_survives_unrelated_updates_but_projection_does_not() {
+    let mut store = ProgramStatusStore::new();
+    store.replace(record("plain", Working));
+    store.replace(app("projected", Working, "cargo"));
+    let before = store.records();
+    store.replace(record("new", Done));
+    let after = store.records();
+    assert!(Rc::ptr_eq(before[0].identity(), after[0].identity()));
+    assert!(!Rc::ptr_eq(before[1].identity(), after[1].identity()));
+    store.replace(record("plain", Working));
+    let replaced = store.records();
+    assert!(!Rc::ptr_eq(before[0].identity(), replaced[2].identity()));
+}
+
+#[test]
 fn shares_immutable_snapshot_until_real_change() {
     let mut store = ProgramStatusStore::new();
     store.replace(app("a", Working, "cargo"));

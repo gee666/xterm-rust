@@ -1,0 +1,102 @@
+    Blocking waiting for file lock on build directory
+warning: variant `Debug` is never constructed
+  --> crates\xterm-core\src\terminal\state.rs:15:5
+   |
+13 | pub(crate) enum CoreAction {
+   |                 ---------- variant in this enum
+14 |     Reply(Vec<u16>),
+15 |     Debug(Vec<u16>),
+   |     ^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: method `mode_debug` is never used
+  --> crates\xterm-core\src\terminal\state.rs:97:19
+   |
+48 | impl TerminalState {
+   | ------------------ method in this implementation
+...
+97 |     pub(crate) fn mode_debug(&mut self, text: &str) -> Result<(), TerminalError> {
+   |                   ^^^^^^^^^^
+
+warning: `xterm-core` (lib) generated 2 warnings
+   Compiling xterm-addons v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons)
+    Finished `test` profile [unoptimized] target(s) in 1.13s
+     Running tests\program_status_addon.rs (target\debug\deps\program_status_addon-0312374235749894.exe)
+
+running 10 tests
+test answers_exact_query_only_and_respects_disabled_stdin ... ok
+test dispose_silently_drops_records_and_unregisters_handlers ... ok
+test rejected_and_noop_reports_fire_nothing ... ok
+test clear_removes_only_id_and_descendants ... ok
+test dropping_owner_unregisters_but_event_snapshot_remains_valid ... ok
+test callback_reentrancy_has_no_mutable_store_borrow ... ok
+test removes_records_with_clear_report ... ok
+test process_exit_and_prompt_remove_only_active_records ... ok
+test keeps_reported_records_and_exact_snapshot_identity ... ok
+test ris_clears_and_delegates_to_terminal_core ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\program_status_store.rs (target\debug\deps\program_status_store-834b271e7325e6fb.exe)
+
+running 12 tests
+test clears_every_record_for_empty_id ... ok
+test clears_record_and_descendants ... ok
+test effective_app_changes_when_ancestor_changes ... ok
+test effective_app_is_absent_without_ancestor ... ok
+test effective_app_uses_nearest_ancestor_including_root ... ok
+test shares_immutable_snapshot_until_real_change ... ok
+test orders_records_from_oldest_update_to_newest ... ok
+test raw_record_identity_survives_unrelated_updates_but_projection_does_not ... ok
+test removes_working_and_blocked_only ... ok
+test replaces_a_record_whole ... ok
+test existing_update_never_evicts_other_record ... ok
+test evicts_least_recently_updated_at_256 ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\progress_upstream.rs (target\debug\deps\progress_upstream-ec1478323014b6aa.exe)
+
+running 12 tests
+test error_accepts_new_value ... ok
+test indeterminate_keeps_value ... ok
+test fallback_malformed_parts_dispose_and_no_ris_reset ... ok
+test error_preserves_previous_value_on_empty_or_zero ... ok
+test state_zero_remove_ignores_value ... ok
+test invalid_sequences_do_not_emit ... ok
+test pause_accepts_new_value ... ok
+test pause_preserves_previous_on_empty_or_zero ... ok
+test public_numeric_setter_matches_javascript_and_event_lifecycle ... ok
+test initial_values_are_zero_zero ... ok
+test state_one_special_sequences ... ok
+test state_one_set ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\status_addons_differential.rs (target\debug\deps\status_addons_differential-6227e7e3ed8734cb.exe)
+
+running 3 tests
+test fixture_ris_remains_unhandled_and_string_dispatch_is_available ... ok
+test progress_matches_source_seed_0x750109 ... ok
+test status_parser_matches_source_baseline_and_seed_0x750109 ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+
+     Running tests\status_live_terminal.rs (target\debug\deps\status_live_terminal-bfdc35a5ae83c144.exe)
+
+running 11 tests
+test disposal_unregisters_live_handlers ... ok
+test reply_failure_preserves_original_error_and_stops_dispatch ... ok
+test listener_failure_stops_before_following_text_without_rolling_back_record ... ok
+test disabled_stdin_suppresses_feature_reply ... ok
+test progress_and_status_cooperate_on_live_stream ... ok
+test native_public_load_addon_uses_live_engine_and_releases_terminal_owner ... ok
+test activation_during_callback_registers_without_borrowing_engine ... ok
+test soft_reset_and_alternate_screen_retain_records ... ok
+test ris_resets_terminal_and_addon_api_reset_retains_records ... ok
+test queries_use_st_and_precede_following_da1_without_printing ... ok
+test report_chunking_bel_st_and_abort_follow_actual_parser ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+

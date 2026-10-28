@@ -4,6 +4,9 @@
 //! next sequence. Returning false delegates to older handlers and core behavior.
 //! The adapter must not hold a mutable terminal borrow while invoking callbacks.
 
+#[path = "managed_status.rs"]
+mod managed;
+
 use std::rc::Rc;
 use xterm_core::event::EmitError;
 use xterm_core::lifecycle::DisposableHandle;

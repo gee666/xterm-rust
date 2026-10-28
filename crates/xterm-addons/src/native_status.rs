@@ -7,7 +7,7 @@
 use crate::status_terminal::{EscCallback, OscCallback, StatusTerminal};
 use std::{cell::RefCell, rc::Rc};
 use xterm_core::{
-    core_service::{CoreError, CoreService},
+    core_service::CoreService,
     event::EmitError,
     lifecycle::DisposableHandle,
     parser::{
@@ -17,13 +17,18 @@ use xterm_core::{
     terminal::CoreTerminal,
 };
 
-pub struct NativeStatusTerminal {
-    engine: Rc<RefCell<CoreTerminal>>,
+/// One registration implementation shared by native and browser public hosts.
+/// The owner keeps weak parser registrars valid without retaining callbacks.
+pub struct StatusTerminalAdapter<T> {
+    owner: Rc<T>,
     core: Rc<CoreService>,
     osc: OscRegistrar,
     esc: CommandRegistrar,
-    input_error: RefCell<Option<CoreError>>,
+    input_error: RefCell<Option<EmitError>>,
 }
+
+pub type NativeStatusTerminal = StatusTerminalAdapter<RefCell<CoreTerminal>>;
+pub type HeadlessStatusTerminal = StatusTerminalAdapter<xterm_core::headless::Terminal>;
 
 impl NativeStatusTerminal {
     /// Construct outside parser dispatch, without an outstanding engine borrow.
@@ -35,23 +40,61 @@ impl NativeStatusTerminal {
             (parser.osc.registrar(), parser.esc_registrar())
         };
         Self {
-            engine,
+            owner: engine,
             core,
             osc,
             esc,
             input_error: RefCell::new(None),
         }
     }
-    pub fn engine(&self) -> &Rc<RefCell<CoreTerminal>> {
-        &self.engine
+}
+
+impl HeadlessStatusTerminal {
+    pub fn from_terminal(
+        owner: Rc<xterm_core::headless::Terminal>,
+    ) -> Result<Self, xterm_core::headless::HeadlessError> {
+        let core = owner.with_state(|state| Rc::clone(&state.core))?;
+        let (osc, esc) = owner.addon_registrars()?;
+        Ok(Self {
+            owner,
+            core,
+            osc,
+            esc,
+            input_error: RefCell::new(None),
+        })
     }
-    /// The parser reports CallbackFailed. This retains its original input cause.
-    pub fn take_input_error(&self) -> Option<CoreError> {
+}
+
+impl StatusTerminalAdapter<CoreService> {
+    /// Private managed-add-on construction. Registration happens synchronously
+    /// while the host Terminal is borrowed by TerminalAddon::activate. Retaining
+    /// CoreService rather than Terminal avoids terminal -> addon -> terminal cycles.
+    pub(crate) fn for_activation(
+        terminal: &xterm_core::headless::Terminal,
+    ) -> Result<Self, xterm_core::headless::HeadlessError> {
+        let core = terminal.with_state(|state| Rc::clone(&state.core))?;
+        let (osc, esc) = terminal.addon_registrars()?;
+        Ok(Self {
+            owner: core.clone(),
+            core,
+            osc,
+            esc,
+            input_error: RefCell::new(None),
+        })
+    }
+}
+
+impl<T> StatusTerminalAdapter<T> {
+    pub fn owner(&self) -> &Rc<T> {
+        &self.owner
+    }
+    /// Retains the same typed input cause returned through parser dispatch.
+    pub fn take_input_error(&self) -> Option<EmitError> {
         self.input_error.borrow_mut().take()
     }
 }
 
-impl StatusTerminal for NativeStatusTerminal {
+impl<T> StatusTerminal for StatusTerminalAdapter<T> {
     fn register_osc_handler(&self, id: u16, callback: OscCallback) -> DisposableHandle {
         self.osc
             .register_handler(
@@ -60,7 +103,8 @@ impl StatusTerminal for NativeStatusTerminal {
                     callback(&data).into()
                 }))),
             )
-            // The adapter owns the engine, which owns this parser and registry.
+            // Public adapters retain the parser owner. The private managed path
+            // registers only during activation with a borrowed live Terminal.
             // Disposal clears handlers but does not drop that registry.
             .expect("owned engine keeps OSC parser registry alive")
     }
@@ -83,8 +127,9 @@ impl StatusTerminal for NativeStatusTerminal {
         {
             Ok(()) => Ok(()),
             Err(error) => {
-                *self.input_error.borrow_mut() = Some(error);
-                Err(EmitError)
+                let error = EmitError::callback(error);
+                *self.input_error.borrow_mut() = Some(error.clone());
+                Err(error)
             }
         }
     }

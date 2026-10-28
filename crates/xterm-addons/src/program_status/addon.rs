@@ -39,6 +39,7 @@ impl Inner {
 pub struct ProgramStatusAddon {
     inner: Rc<Inner>,
     registrations: DisposableStore,
+    terminals: RefCell<Vec<Rc<dyn StatusTerminal>>>,
 }
 
 impl ProgramStatusAddon {
@@ -89,6 +90,9 @@ impl ProgramStatusAddon {
                 Ok(false)
             }),
         )?);
+        if !self.registrations.is_disposed() {
+            self.terminals.borrow_mut().push(terminal);
+        }
         Ok(())
     }
 
@@ -113,6 +117,7 @@ impl Disposable for ProgramStatusAddon {
     fn dispose(&self) {
         self.inner.store.borrow_mut().clear("");
         self.registrations.dispose();
+        self.terminals.borrow_mut().clear();
         self.inner.change.dispose();
     }
 }

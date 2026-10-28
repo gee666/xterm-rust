@@ -30,6 +30,7 @@ impl ProgramStatusStore {
                 let mut record = record.clone();
                 if let Some(app) = self.effective_app(&record.id) {
                     record.effective_app = Some(app.to_owned());
+                    record.refresh_identity();
                 }
                 record
             })

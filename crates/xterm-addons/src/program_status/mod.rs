@@ -28,6 +28,9 @@ pub enum StatusKind {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct StatusRecord {
+    // Clones of a stored record retain JS object identity. Effective-app
+    // projections receive a fresh token when rebuilding a snapshot.
+    identity: std::rc::Rc<()>,
     pub id: String,
     pub state: StatusState,
     pub kind: Option<StatusKind>,
@@ -39,8 +42,17 @@ pub struct StatusRecord {
 }
 
 impl StatusRecord {
+    pub fn identity(&self) -> &std::rc::Rc<()> {
+        &self.identity
+    }
+
+    pub(super) fn refresh_identity(&mut self) {
+        self.identity = std::rc::Rc::new(());
+    }
+
     pub fn new(id: impl Into<String>, state: StatusState) -> Self {
         Self {
+            identity: std::rc::Rc::new(()),
             id: id.into(),
             state,
             kind: None,

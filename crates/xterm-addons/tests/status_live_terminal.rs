@@ -160,6 +160,40 @@ fn progress_and_status_cooperate_on_live_stream() {
     assert_eq!(text(&engine), "");
 }
 #[test]
+fn native_public_load_addon_uses_live_engine_and_releases_terminal_owner() {
+    let terminal = Rc::new(xterm_core::headless::Terminal::new(80, 24, 1000).unwrap());
+    let weak_terminal = Rc::downgrade(&terminal);
+    let status = Rc::new(ProgramStatusAddon::new());
+    let progress = Rc::new(ProgressAddon::new());
+    terminal.load_addon(status.clone()).unwrap();
+    terminal.load_addon(progress.clone()).unwrap();
+    let replies = Rc::new(RefCell::new(Vec::new()));
+    let capture = replies.clone();
+    terminal
+        .on_data()
+        .subscribe(move |data| capture.borrow_mut().push(data.clone()));
+    terminal
+        .write("\x1b]7501;state=done\x07\x1b]9;4;1;40\x07\x1b]7501;?\x07")
+        .unwrap();
+    assert_eq!(status.records().len(), 1);
+    assert_eq!(
+        progress.progress(),
+        ProgressState {
+            state: 1.,
+            value: 40.
+        }
+    );
+    assert_eq!(
+        *replies.borrow(),
+        vec!["\x1b]7501;?\x1b\\".encode_utf16().collect::<Vec<_>>()]
+    );
+    terminal.dispose().unwrap();
+    assert!(status.records().is_empty());
+    drop(terminal);
+    assert!(weak_terminal.upgrade().is_none());
+}
+
+#[test]
 fn activation_during_callback_registers_without_borrowing_engine() {
     let (engine, adapter, addon) = setup();
     let second = Rc::new(ProgramStatusAddon::new());
@@ -183,18 +217,21 @@ fn reply_failure_preserves_original_error_and_stops_dispatch() {
         .state()
         .core
         .on_data()
-        .try_subscribe(|_| Err(EmitError));
+        .try_subscribe(|_| Err(EmitError::ListenerArrayCleared));
     let error = engine
         .borrow_mut()
         .write("\x1b]7501;?\x07must-not-print")
         .unwrap_err();
     assert!(matches!(
         error,
-        TerminalError::Parse(ParseError::Dispatch(DispatchError::CallbackFailed))
+        TerminalError::Parse(ParseError::Dispatch(DispatchError::Callback(_)))
     ));
+    let input_error = adapter.take_input_error().unwrap();
     assert!(matches!(
-        adapter.take_input_error(),
-        Some(xterm_core::core_service::CoreError::Dispatch(EmitError))
+        input_error.callback_ref::<xterm_core::core_service::CoreError>(),
+        Some(xterm_core::core_service::CoreError::Dispatch(
+            EmitError::ListenerArrayCleared
+        ))
     ));
     assert_eq!(text(&engine), "");
 }
@@ -202,14 +239,18 @@ fn reply_failure_preserves_original_error_and_stops_dispatch() {
 #[test]
 fn listener_failure_stops_before_following_text_without_rolling_back_record() {
     let (engine, _adapter, addon) = setup();
-    addon.on_change().try_subscribe(|_| Err(EmitError));
+    addon
+        .on_change()
+        .try_subscribe(|_| Err(EmitError::ListenerArrayCleared));
     let error = engine
         .borrow_mut()
         .write("\x1b]7501;state=working\x07must-not-print")
         .unwrap_err();
     assert!(matches!(
         error,
-        TerminalError::Parse(ParseError::Dispatch(DispatchError::CallbackFailed))
+        TerminalError::Parse(ParseError::Dispatch(DispatchError::Callback(
+            EmitError::ListenerArrayCleared
+        )))
     ));
     assert_eq!(addon.records().len(), 1);
     assert_eq!(text(&engine), "");
