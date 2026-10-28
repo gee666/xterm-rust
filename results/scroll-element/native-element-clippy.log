@@ -1,0 +1,54 @@
+    Checking equivalent v1.0.3
+    Checking memchr v2.8.3
+    Checking allocator-api2 v0.2.21
+    Checking foldhash v0.1.5
+    Checking ryu-js v1.0.3
+    Checking adler2 v2.0.1
+    Checking itoa v1.0.18
+    Checking serde_core v1.0.229
+    Checking zmij v1.0.23
+    Checking miniz_oxide v0.8.9
+    Checking hashbrown v0.15.5
+    Checking regress v0.10.4
+    Checking serde_json v1.0.154
+    Checking xterm-core v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Dominic\crates\xterm-core)
+    Checking xterm-wasm-support v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Dominic\crates\xterm-wasm-support)
+    Checking xterm-addons v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Dominic\crates\xterm-addons)
+    Checking xterm-web v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Dominic\crates\xterm-web)
+error: float has excessive precision
+   --> crates\xterm-web\src\renderer\width_cache_tests.rs:131:19
+    |
+131 |         f64::from(1.23456789_f32)
+    |                   ^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#excessive_precision
+    = note: `-D clippy::excessive-precision` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::excessive_precision)]`
+help: consider changing the type or truncating it to
+    |
+131 |         f64::from(1.234_567_9_f32)
+    |                   ~~~~~~~~~~~~~~~
+
+error: could not compile `xterm-web` (lib test) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error[E0308]: mismatched types
+  --> crates\xterm-web\tests\support\cells.rs:18:25
+   |
+16 |                     extended: ExtendedAttrs::new(
+   |                               ------------------ arguments to this function are incorrect
+17 |                         number(&raw["ext"]) as u32,
+18 |                         number(&raw["url"]) as u32,
+   |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `u64`, found `u32`
+   |
+note: associated function defined here
+  --> C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Dominic\crates\xterm-core\src\buffer\extended.rs:23:12
+   |
+23 |     pub fn new(ext: u32, url_id: u64) -> Self {
+   |            ^^^
+help: you can convert a `u32` to a `u64`
+   |
+18 |                         (number(&raw["url"]) as u32).into(),
+   |                         +                          ++++++++
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `xterm-web` (test "character_joiner_upstream") due to 1 previous error

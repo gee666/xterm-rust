@@ -1,0 +1,79 @@
+    Checking once_cell v1.21.4
+    Checking cfg-if v1.0.5
+    Checking equivalent v1.0.3
+    Checking memchr v2.8.3
+    Checking allocator-api2 v0.2.21
+    Checking foldhash v0.1.5
+    Checking ryu-js v1.0.3
+    Checking adler2 v2.0.1
+    Checking itoa v1.0.18
+    Checking zmij v1.0.23
+    Checking serde_core v1.0.229
+    Checking wasm-bindgen v0.2.100
+    Checking miniz_oxide v0.8.9
+    Checking hashbrown v0.15.5
+    Checking js-sys v0.3.77
+    Checking regress v0.10.4
+    Checking serde_json v1.0.154
+    Checking xterm-core v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Dominic\crates\xterm-core)
+    Checking wasm-bindgen-futures v0.4.50
+    Checking web-sys v0.3.77
+    Checking wasm-bindgen-test v0.3.50
+    Checking xterm-addons v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Dominic\crates\xterm-addons)
+    Checking xterm-wasm-support v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Dominic\crates\xterm-wasm-support)
+    Checking xterm-web v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Dominic\crates\xterm-web)
+error: field `cursor_width` is never read
+ --> crates\xterm-web\src\renderer\options.rs:8:9
+  |
+4 | pub(super) struct RenderOptions {
+  |                   ------------- field in this struct
+...
+8 |     pub cursor_width: f64,
+  |         ^^^^^^^^^^^^
+  |
+  = note: `RenderOptions` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+  = note: `-D dead-code` implied by `-D warnings`
+  = help: to override `-D warnings` add `#[allow(dead_code)]`
+
+error: function `set_style` is never used
+  --> crates\xterm-web\src\scroll\fast_dom_node.rs:52:15
+   |
+52 | pub(crate) fn set_style(node: &HtmlElement, key: &str, value: &JsValue) -> Result<(), JsValue> {
+   |               ^^^^^^^^^
+
+error: function `set_style_with` is never used
+  --> crates\xterm-web\src\scroll\fast_dom_node.rs:55:15
+   |
+55 | pub(crate) fn set_style_with(
+   |               ^^^^^^^^^^^^^^
+
+error: fields `public_disposed` and `core_disposed` are never read
+  --> crates\xterm-web\src\terminal\mod.rs:65:9
+   |
+45 | pub(crate) struct Shared {
+   |                   ------ fields in this struct
+...
+65 |     pub public_disposed: Cell<bool>,
+   |         ^^^^^^^^^^^^^^^
+66 |     pub core_disposed: Cell<bool>,
+   |         ^^^^^^^^^^^^^
+
+error: very complex type used. Consider factoring parts into `type` definitions
+  --> crates\xterm-web\src\links\animation_queue.rs:40:15
+   |
+40 |     callback: RefCell<Option<Closure<dyn FnMut(f64)>>>,
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#type_complexity
+   = note: `-D clippy::type-complexity` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::type_complexity)]`
+
+error: very complex type used. Consider factoring parts into `type` definitions
+  --> crates\xterm-web\src\selection\dom.rs:70:19
+   |
+70 |     raf_callback: RefCell<Option<Closure<dyn FnMut(f64)>>>,
+   |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#type_complexity
+
+error: could not compile `xterm-web` (lib) due to 6 previous errors

@@ -1,0 +1,82 @@
+   Compiling xterm-web v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Dominic\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 1.67s
+     Running unittests src\lib.rs (target\debug\deps\xterm_web-c4f7b731165afe5a.exe)
+
+running 43 tests
+test input::clipboard::tests::upstream_brackets ... ok
+test input::clipboard::tests::utf16_and_option_matrix ... ok
+test input::composition::tests::upstream_same_length_conversion ... ok
+test input::composition::tests::upstream_different_length_conversion ... ok
+test input::clipboard::tests::upstream_escape_sanitization ... ok
+test input::composition::tests::utf16_selection_preserves_unpaired_surrogates_and_reversed_range ... ok
+test input::composition::tests::new_composition_cancels_pending_textarea_diff ... ok
+test contrast_cache::tests::signed_number_keys_do_not_alias_unsigned_attributes ... ok
+test char_size::tests::invalid_measurements_retain_last_size_and_changes_commit_before_event ... ok
+test input::composition::tests::upstream_complex_changes_with_following_character ... ok
+test input::composition::tests::upstream_complex_characters ... ok
+test input::clipboard::tests::upstream_line_endings ... ok
+test input::composition::tests::upstream_input_immediately_after_composition ... ok
+test input::composition::tests::upstream_middle_insertion_does_not_resend_suffix ... ok
+test input::composition::tests::modifiers_suppress_and_immediate_enter_cancels_deferred_send ... ok
+test input::composition::tests::upstream_simple_characters ... ok
+test input::composition::tests::standalone_229_diff_coalesces_and_handles_replace_and_delete ... ok
+test input::composition_geometry::tests::clamps_wrap_pending_cursor_and_minimum_textarea ... ok
+test input::keyboard::tests::kitty_repeat_release_and_legacy_fallback ... ok
+test renderer::geometry::tests::zero_metrics_and_negative_half_spacing_are_not_saturated ... ok
+test input::keyboard::tests::mac_option_is_meta_passed_only_on_mac_for_kitty ... ok
+test input::keyboard::tests::win32_priority_and_double_gating_matrix ... ok
+test input::composition::tests::upstream_multicharacters ... ok
+test renderer::geometry::tests::fractional_dpr_preserves_source_rounding_order ... ok
+test renderer::width_cache::tests::flat_values_round_only_on_subsequent_reads ... ok
+test renderer::width_cache::tests::disposed_cache_retains_cached_flat_values_but_cannot_measure ... ok
+test renderer::theme_css_utf16::tests::font_conversion_mutations_are_visible_only_to_later_color_rules ... ok
+test renderer::theme_css_utf16::tests::raw_color_units_are_not_replaced_or_recursively_decoded ... ok
+test renderer::width_cache::tests::nonpositive_nan_values_are_remeasured_and_suffix_collisions_are_retained ... ok
+test renderer::width_cache::tests::upstream_cache_values_and_clear ... ok
+test renderer::width_cache::tests::upstream_every_font_field_invalidates_and_unchanged_font_retains_entries ... ok
+test renderer::width_cache::tests::upstream_flat_and_holey_boundary ... ok
+test renderer::width_cache::tests::upstream_font_variants_and_arbitrary_strings ... ok
+test scroll::animation::tests::early_advance_and_exact_final_endpoint ... ok
+test scroll::animation::tests::long_animation_uses_two_edge_segments ... ok
+test scroll::scrollbar_state::tests::minimum_slider_can_exceed_track_and_desired_values_are_not_clamped ... ok
+test scroll::scrollbar_state::tests::opposite_size_is_deferred_but_clone_refreshes_it ... ok
+test scroll::scrollbar_state::tests::source_rounding_and_nan_propagation_are_not_rust_round_or_max ... ok
+test scroll::state::tests::bitwise_numbers_and_nan_comparisons_match_js ... ok
+test scroll::state::tests::raw_position_survives_clamping_and_dimension_growth ... ok
+test scroll::wheel_classifier::tests::first_integer_repeated_steps_and_diagonal_trackpad ... ok
+test scroll::wheel_classifier::tests::fractional_and_nonfinite_samples_are_not_integer_wheels ... ok
+test theme::css_text::tests::units_survive_nul_markers_and_lone_surrogates ... ok
+
+test result: ok. 43 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\scrollable.rs (target\debug\deps\scrollable-86a8a7f31f1f966b.exe)
+
+running 5 tests
+test dimensions_keep_raw_request_and_emit_precise_change_fields ... ok
+test event_callback_can_cancel_the_running_animation ... ok
+test identical_smooth_target_does_not_restart_or_cancel ... ok
+test scheduler_failures_retain_source_partial_state_and_cleanup_is_observable ... ok
+test smooth_tick_reuse_and_external_position_cancel ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\scrollbar_state_differential.rs (target\debug\deps\scrollbar_state_differential-460053b8307a7d81.exe)
+
+running 1 test
+test source_geometry_mutations_and_clones_match_1024_snapshots ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\scrollbar_visibility.rs (target\debug\deps\scrollbar_visibility-ba7fbcde0401638b.exe)
+
+running 7 tests
+test cancellation_failure_keeps_pending_and_visible_until_recovery ... ok
+test disposed_timer_errors_after_visible_commit_and_allows_source_hide_path ... ok
+test class_setters_reenter_without_borrow_panics_and_weak_dispatch_does_not_leak ... ok
+test request_failure_retains_source_committed_visible_flag ... ok
+test reveal_is_deferred_and_hide_uses_distinct_fade_rules ... ok
+test visibility_strings_do_not_coerce_to_known_numeric_modes ... ok
+test pending_reveal_uses_current_target_but_target_replacement_does_not_force_reveal ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

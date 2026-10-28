@@ -1,0 +1,27 @@
+   Compiling itoa v1.0.18
+   Compiling zmij v1.0.23
+   Compiling serde_core v1.0.229
+   Compiling serde_json v1.0.154
+   Compiling xterm-web v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Dominic\crates\xterm-web)
+error[E0308]: mismatched types
+  --> crates\xterm-web\tests\support\cells.rs:18:25
+   |
+16 |                     extended: ExtendedAttrs::new(
+   |                               ------------------ arguments to this function are incorrect
+17 |                         number(&raw["ext"]) as u32,
+18 |                         number(&raw["url"]) as u32,
+   |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `u64`, found `u32`
+   |
+note: associated function defined here
+  --> C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Dominic\crates\xterm-core\src\buffer\extended.rs:23:12
+   |
+23 |     pub fn new(ext: u32, url_id: u64) -> Self {
+   |            ^^^
+help: you can convert a `u32` to a `u64`
+   |
+18 |                         (number(&raw["url"]) as u32).into(),
+   |                         +                          ++++++++
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `xterm-web` (test "character_joiner_upstream") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
