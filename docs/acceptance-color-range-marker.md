@@ -30,9 +30,9 @@ Reference `src/common/buffer/BufferRange.ts` and all four original tests.
 
 1. Return `cols * (end.y - start.y) + (end.x - start.x + 1)` with JavaScript binary64 operation order. Test equal-row singleton and multi-column ranges, next-row ranges, multiple rows, zero columns and out-of-width columns.
 2. Reject only `start.y > end.y`, with the exact source error text and both coordinates. Do not add hidden x-order, positivity or bounds checks.
-3. Preserve zero and negative results for equal-row reversed columns. Preserve negative coordinates and negative column counts within the typed i32 domain. Test i32 extrema without intermediate signed overflow and compare their binary64 results to JavaScript.
-4. Document that fractional, non-finite and beyond-i32 JavaScript coordinates are not represented by the typed core API. Browser/API bindings need an explicit conversion policy, not an unchecked cast.
-5. Port all four upstream cases unchanged in expected values. Add deterministic differential valid/reversed rows, negative coordinates and boundaries. Save the seed and discovered/executed/pass/fail/unrun counts.
+3. Preserve zero and negative results for equal-row reversed columns. Preserve every JavaScript Number input, including negative/fractional coordinates and widths, i32/u32 boundaries, subnormals, huge finite values, infinities and NaNs. Keep the exact binary64 operation order. Test NaN row comparisons, infinity-times-zero and signed zero without adding integer validation.
+4. Coordinates use f64 and cover the JavaScript Number domain directly. Error interpolation uses the existing ryu-js dependency to preserve JavaScript exponent, infinity, NaN and negative-zero spelling. Bindings must not cast these values to integer indices before calling this helper.
+5. Port all four upstream cases unchanged in expected values. Add deterministic differential valid/reversed rows, negative and non-finite coordinates, every special value in each argument slot and random f64 bit patterns. Compare NaN by classification and all non-NaN results by bits. Save both seeds, counts and hashes.
 
 ## Markers
 

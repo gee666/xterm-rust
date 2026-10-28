@@ -10,8 +10,14 @@ use xterm_core::lifecycle::{to_disposable, DisposableHandle};
 
 fn range(x1: i32, y1: i32, x2: i32, y2: i32) -> BufferRange {
     BufferRange {
-        start: BufferPosition { x: x1, y: y1 },
-        end: BufferPosition { x: x2, y: y2 },
+        start: BufferPosition {
+            x: f64::from(x1),
+            y: f64::from(y1),
+        },
+        end: BufferPosition {
+            x: f64::from(x2),
+            y: f64::from(y2),
+        },
     }
 }
 
@@ -68,6 +74,49 @@ fn range_js_differential_fixture() {
                 fields[5].parse::<f64>().unwrap().to_bits(),
                 "line {line}"
             );
+        }
+    }
+}
+
+#[test]
+fn range_all_javascript_number_boundaries_match_the_original() {
+    let number = |text: &str| match text {
+        "NaN" => f64::NAN,
+        "Infinity" => f64::INFINITY,
+        "-Infinity" => f64::NEG_INFINITY,
+        _ => text.parse::<f64>().unwrap(),
+    };
+    for (index, row) in include_str!("fixtures/buffer-range-number-oracle.tsv")
+        .lines()
+        .enumerate()
+    {
+        let fields: Vec<_> = row.split('\t').collect();
+        let values: Vec<_> = fields[..5].iter().map(|value| number(value)).collect();
+        let range = BufferRange {
+            start: BufferPosition {
+                x: values[0],
+                y: values[1],
+            },
+            end: BufferPosition {
+                x: values[2],
+                y: values[3],
+            },
+        };
+        let actual = get_range_length(range, values[4]);
+        if let Some(expected) = fields[5].strip_prefix("error:") {
+            assert_eq!(
+                actual.unwrap_err().to_string(),
+                expected,
+                "numeric row{index}"
+            );
+        } else {
+            let actual = actual.unwrap();
+            let expected = number(fields[5]);
+            if expected.is_nan() {
+                assert!(actual.is_nan(), "numeric row{index}");
+            } else {
+                assert_eq!(actual.to_bits(), expected.to_bits(), "numeric row{index}");
+            }
         }
     }
 }

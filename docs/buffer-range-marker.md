@@ -5,14 +5,14 @@
 | Source | Rust |
 | --- | --- |
 | `IBufferRange` and coordinate objects | `buffer::range::{BufferRange, BufferPosition}` with public `start/end` and `x/y` |
-| `getRangeLength(range, cols)` | `get_range_length(BufferRange, i32) -> Result<f64, RangeError>` |
+| `getRangeLength(range, cols)` | `get_range_length(BufferRange, impl Into<f64>) -> Result<f64, RangeError>` |
 | `new Marker(line)` | `buffer::marker::Marker::new(i64)` |
 | marker `id`, `line`, `isDisposed` | `id() -> u64`, `line() -> i64`, `set_line(i64)`, `is_disposed()` |
 | marker `onDispose` | `on_dispose() -> Event<()>` |
 | marker `register(resource)` | `register(DisposableHandle) -> DisposableHandle` |
 | marker `dispose()` | `dispose() -> Result<(), EmitError>` |
 
-Ranges retain signed coordinates and perform the source binary64 formula in source operation order. Only reversed rows fail. Reversed columns, negative widths and coordinates are not silently validated away. `RangeError` retains the range and displays the exact source message. Coordinates and column counts outside i32, fractions and non-finite values are not represented by this typed core API. Future bindings must define conversion rather than cast unchecked.
+Range coordinates are f64 and preserve the full JavaScript Number domain. Only reversed rows fail. Fractions, signed zero, NaN, infinities, subnormals and large values use the original binary64 formula and operation order. `RangeError` retains the range; the existing ryu-js formatter preserves JavaScript number spelling in its exact error message. No integer normalization is applied.
 
 Markers use i64 lines so every u32 buffer row and the negative disposed sentinel are representable. Valid JS integer lines within its safe-number range are exact. Values outside the JavaScript safe-integer domain are not promised equivalent by this typed API. The line stays writable after disposal because it is a public mutable field upstream. Repeated disposal does not overwrite a line subsequently edited by a caller.
 
@@ -35,7 +35,7 @@ A fallible event listener returns `EmitError` and stops cleanup. Panic-based cal
 - The shared upstream marker callback trace, duplicate registration, reentrant disposal and late registration.
 - Live resource additions during cleanup, listener failure, listener/resource panics, event snapshot removal and weak ownership/drop checks.
 
-The ID precision-limit transition is tested as a pure allocator transition inside marker.rs, without mutating the global counter and interfering with parallel tests. The generated 1,149-line TSV exceeds the normal source-file line cap because it is deterministic oracle data, not implementation code.
+The ID precision-limit transition is tested as a pure allocator transition inside marker.rs, without mutating the global counter and interfering with parallel tests. The generated TSV fixtures exceed the normal source-file line cap because they are oracle data, not implementation code. All 1,149 integer and 3,680 Number-domain cases pass, including random f64 bit patterns.
 
 No standalone Marker.test.ts exists in this source. Buffer.test.ts contains three addMarker cases at lines 1158-1189, two marker reflow cases beginning at lines 489 and 551, and their assertions. Those are not claimed executed by utility tests. Task27 and criterion122 own their real Buffer integration and faithful migration.
 
@@ -51,4 +51,4 @@ rustfmt --edition 2021 --check crates/xterm-core/src/buffer/range.rs crates/xter
 
 The Node checker uses built-in TypeScript transformation on unmodified source copies under tmp/. It changes import plumbing and uses strict Node assertion adapters for the four original range assertions, without modifying original tests. Default mode verifies committed fixtures. `--write-fixtures` regenerates them when intentionally reviewing an upstream change. Source and fixture hashes, seed 1112690247, runtime and counts are retained under results/buffer-range-marker/.
 
-Observed execution is native Windows x64, Node v24.15.0 and Rust 1.85.1. The last native run passed 14 focused tests and the allocator transition test before the counter portability edit. Observed Rust 1.99 CI deprecated `AtomicU64::fetch_update`; the counter now uses a fixed mutex critical section compatible with the MSRV. That edit requires a fresh focused run after the coordinated disk pause. Earlier results must not be claimed as execution of the later mutex code. Linux/macOS and browser bindings remain unrun. No unsafe code is present in these modules. Full terminal equivalence is NOT PROVEN.
+Native Windows checks pass with Node 24.15.0 and Rust 1.85.1: 15 focused tests, the allocator test, four original assertions and 4,829 source range cases. Scoped Clippy and rustfmt pass. The mutex counter removes the deprecated atomic API reported by current-Rust CI. Raw Number/String marker lines and their browser bindings remain task 221, not a completed capability of this integer adapter. Linux/macOS and browser bindings remain unrun. No unsafe code is present in these modules. Full terminal equivalence is NOT PROVEN.
