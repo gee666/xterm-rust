@@ -4,6 +4,8 @@
 //! Lossless control fields. Invalid numeric text is present NaN, not absence;
 //! string fields retain UTF-16, including lone surrogates and empty values.
 
+use crate::image::numeric::parse_decimal_prefix;
+
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct KittyCommand {
     pub action: Option<Vec<u16>>,
@@ -70,40 +72,6 @@ pub fn parse_command(data: &[u16]) -> KittyCommand {
         }
     }
     command
-}
-
-fn whitespace(unit: u16) -> bool {
-    matches!(unit, 0x0009..=0x000d | 0x0020 | 0x00a0 | 0x1680 | 0x2000..=0x200a |
-        0x2028 | 0x2029 | 0x202f | 0x205f | 0x3000 | 0xfeff)
-}
-
-fn parse_decimal_prefix(value: &[u16]) -> f64 {
-    let start = value
-        .iter()
-        .position(|unit| !whitespace(*unit))
-        .unwrap_or(value.len());
-    let mut end = start;
-    if matches!(value.get(end), Some(43 | 45)) {
-        end += 1;
-    }
-    let digits = end;
-    while value.get(end).is_some_and(|unit| (48..=57).contains(unit)) {
-        end += 1;
-    }
-    if end == digits {
-        return f64::NAN;
-    }
-    // Accumulating directly in f64 rounds at every digit and differs from JS
-    // parseInt above 2^53. Parse the validated ASCII decimal once instead. This
-    // nonempty digit prefix with an optional ASCII sign is valid float syntax;
-    // overflow yields infinity, and a negative zero sign remains observable.
-    let decimal: String = value[start..end]
-        .iter()
-        .map(|unit| char::from(*unit as u8))
-        .collect();
-    decimal
-        .parse()
-        .expect("validated signed ASCII integer is valid binary64 syntax")
 }
 
 #[cfg(test)]

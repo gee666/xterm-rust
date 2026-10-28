@@ -1,19 +1,19 @@
 // Copyright (c) 2026 The xterm.js authors. All rights reserved.
 // Licensed under MIT. Port of addon-image/src/kitty/KittyImageStorage.ts.
 
-use super::number_map::NumberMap;
 use crate::image::encoded::EncodedBytes;
+pub use crate::image::number_map::NumberMapIterator as KittyMapIterator;
+use crate::image::number_map::{NumberMap, NumberMapView};
 use crate::image::storage::{
     AddImageOptions, CursorPosition, ImageLayer, ImageResource, ImageStorage, StorageError,
 };
-use std::cell::RefCell;
+use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
 use std::fmt;
 use std::rc::Rc;
 
-#[path = "storage_views.rs"]
-mod views;
-pub use views::{KittyImages, KittyMapIterator, KittyPlacements};
+pub type KittyImages = NumberMapView<Rc<KittyImageData>>;
+pub type KittyPlacements = NumberMapView<u64>;
 
 const MAX_STORED_IMAGES: usize = 256;
 pub type DeletedCallback = Rc<dyn Fn(u64) -> Result<(), StorageError>>;
@@ -61,8 +61,10 @@ pub struct KittyImageBytes {
 }
 #[derive(Clone, Debug)]
 pub struct KittyImageData {
-    pub id: f64,
-    pub bytes: KittyImageBytes,
+    pub id: Cell<f64>,
+    /// Source Map values remain mutable objects. A retained record observes edits
+    /// while its immutable encoded-byte handle still has Blob ownership semantics.
+    pub bytes: RefCell<KittyImageBytes>,
 }
 
 #[derive(Debug)]
@@ -94,7 +96,10 @@ impl Default for State {
     }
 }
 impl State {
-    fn evict_undisplayed(&mut self) {
+    fn evict_undisplayed(
+        &mut self,
+        retired: &mut Vec<Rc<KittyImageData>>,
+    ) -> Result<(), StorageError> {
         let mut cursor = None;
         while self.images.len() > MAX_STORED_IMAGES / 2 {
             let Some((ordinal, id, _)) = self.images.after(cursor) else {
@@ -102,16 +107,19 @@ impl State {
             };
             cursor = Some(ordinal);
             if !self.forward.contains(id) {
-                self.images.remove(id);
+                retired.try_reserve(1).map_err(StorageError::host)?;
+                if let Some(image) = self.images.remove(id) {
+                    retired.push(image);
+                }
             }
         }
+        Ok(())
     }
-    fn deleted(&mut self, storage_id: u64) {
-        if let Some(id) = self.reverse.get(&storage_id).copied() {
-            self.forward.remove(id);
-            self.reverse.remove(&storage_id);
-            self.images.remove(id);
-        }
+    fn deleted(&mut self, storage_id: u64) -> Option<Rc<KittyImageData>> {
+        let id = self.reverse.get(&storage_id).copied()?;
+        self.forward.remove(id);
+        self.reverse.remove(&storage_id);
+        self.images.remove(id)
     }
 }
 
@@ -120,10 +128,14 @@ pub struct KittyImageStorage {
     state: Rc<RefCell<State>>,
     previous: Option<DeletedCallback>,
     wrapped: DeletedCallback,
+    images_view: KittyImages,
+    placements_view: KittyPlacements,
 }
 impl KittyImageStorage {
     pub fn new(host: Rc<dyn KittyPlacementStorage>) -> Self {
         let state = Rc::new(RefCell::new(State::default()));
+        let images_view = NumberMapView::new(Rc::clone(&state), |state| &state.images);
+        let placements_view = NumberMapView::new(Rc::clone(&state), |state| &state.forward);
         let weak = Rc::downgrade(&state);
         let previous = host.on_deleted();
         let before = previous.clone();
@@ -131,12 +143,13 @@ impl KittyImageStorage {
             if let Some(before) = &before {
                 before(storage_id)?;
             }
-            if let Some(state) = weak.upgrade() {
-                state
-                    .try_borrow_mut()
-                    .map_err(borrowed)?
-                    .deleted(storage_id);
-            }
+            let retired = if let Some(state) = weak.upgrade() {
+                let mut state = state.try_borrow_mut().map_err(borrowed)?;
+                state.deleted(storage_id)
+            } else {
+                None
+            };
+            drop(retired);
             Ok(())
         });
         host.set_on_deleted(Some(Rc::clone(&wrapped)));
@@ -145,15 +158,21 @@ impl KittyImageStorage {
             state,
             previous,
             wrapped,
+            images_view,
+            placements_view,
         }
     }
 
     pub fn reset(&self) -> Result<(), StorageError> {
-        let mut state = self.state.try_borrow_mut().map_err(borrowed)?;
-        state.next_image_id = 1.0;
-        state.images.clear();
-        state.forward.clear();
-        state.reverse.clear();
+        let retired = {
+            let mut state = self.state.try_borrow_mut().map_err(borrowed)?;
+            state.next_image_id = 1.0;
+            let retired = state.images.drain_values();
+            state.forward.clear();
+            state.reverse.clear();
+            retired
+        };
+        drop(retired);
         Ok(())
     }
     fn restore_callback(&self) {
@@ -191,14 +210,23 @@ impl KittyImageStorage {
             state.forward.remove(id);
             state.reverse.remove(&old_storage);
         }
-        let mut state = self.state.try_borrow_mut().map_err(borrowed)?;
-        if !state.images.contains(id) && state.images.len() >= MAX_STORED_IMAGES {
-            state.evict_undisplayed();
-        }
-        state
-            .images
-            .set(id, Rc::new(KittyImageData { id, bytes }))
-            .map_err(StorageError::host)?;
+        let record = Rc::new(KittyImageData {
+            id: Cell::new(id),
+            bytes: RefCell::new(bytes),
+        });
+        let mut retired = Vec::new();
+        let replaced = {
+            let mut state = self.state.try_borrow_mut().map_err(borrowed)?;
+            if !state.images.contains(id) && state.images.len() >= MAX_STORED_IMAGES {
+                state.evict_undisplayed(&mut retired)?;
+            }
+            state
+                .images
+                .insert(id, Rc::clone(&record))
+                .map_err(StorageError::host)?
+        };
+        drop(replaced);
+        drop(retired);
         Ok(id)
     }
 
@@ -244,10 +272,9 @@ impl KittyImageStorage {
             .cloned())
     }
     pub fn delete_by_id(&self, id: f64) -> Result<(), StorageError> {
-        let storage_id = {
+        let (retired, storage_id) = {
             let mut state = self.state.try_borrow_mut().map_err(borrowed)?;
-            state.images.remove(id);
-            state.forward.get(id).copied()
+            (state.images.remove(id), state.forward.get(id).copied())
         };
         if let Some(storage_id) = storage_id {
             self.host.delete_image(storage_id)?;
@@ -255,14 +282,16 @@ impl KittyImageStorage {
             state.forward.remove(id);
             state.reverse.remove(&storage_id);
         }
+        drop(retired);
         Ok(())
     }
     pub fn delete_all(&self) -> Result<(), StorageError> {
-        self.state
+        let retired = self
+            .state
             .try_borrow_mut()
             .map_err(borrowed)?
             .images
-            .clear();
+            .drain_values();
         let mut cursor = None;
         loop {
             let next = self
@@ -278,20 +307,19 @@ impl KittyImageStorage {
             cursor = Some(ordinal);
             self.host.delete_image(storage_id)?;
         }
-        let mut state = self.state.try_borrow_mut().map_err(borrowed)?;
-        state.forward.clear();
-        state.reverse.clear();
+        {
+            let mut state = self.state.try_borrow_mut().map_err(borrowed)?;
+            state.forward.clear();
+            state.reverse.clear();
+        }
+        drop(retired);
         Ok(())
     }
     pub fn images(&self) -> KittyImages {
-        KittyImages {
-            state: Rc::clone(&self.state),
-        }
+        self.images_view.clone()
     }
     pub fn placements(&self) -> KittyPlacements {
-        KittyPlacements {
-            state: Rc::clone(&self.state),
-        }
+        self.placements_view.clone()
     }
     pub fn last_image_id(&self) -> Result<f64, StorageError> {
         Ok(self.state.try_borrow().map_err(borrowed)?.next_image_id - 1.0)
