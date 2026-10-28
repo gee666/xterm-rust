@@ -25,13 +25,13 @@ pub mod utf16;
 #[cfg(target_arch = "wasm32")]
 pub mod task_queue;
 #[cfg(target_arch = "wasm32")]
-pub mod font_set;
+pub use xterm_wasm_support::js_error;
 #[cfg(target_arch = "wasm32")]
-pub mod font_addons;
+pub use xterm_font_addons::{font_set, font_addons, local_fonts, ligatures_addon};
 #[cfg(target_arch = "wasm32")]
 pub mod utility_addons;
 #[cfg(target_arch = "wasm32")]
-pub use font_addons::{load_web_fonts, WebFontsAddon};
+pub use xterm_font_addons::{load_web_fonts, WebFontsAddon, LigaturesAddon};
 #[cfg(target_arch = "wasm32")]
 mod host;
 

@@ -1,6 +1,8 @@
 // Copyright (c) 2018 The xterm.js authors. All rights reserved. MIT license.
 //! Local-font discovery, independent of GSUB parsing. A browser terminal service
 //! owns this shared catalog; clones share cached metadata without global state.
+//! To match the source module-wide cache, browser assembly must share one
+//! application-scoped instance across terminals and addons.
 
 use crate::utf16::to_js_string;
 use js_sys::{Array, ArrayBuffer, Function, Object, Promise, Reflect, Uint8Array};
@@ -36,7 +38,8 @@ async fn await_value(value: JsValue) -> Result<JsValue, JsValue> {
 
 fn has_own(object: &JsValue, key: &JsValue) -> Result<bool, JsValue> {
     Ok(get(object, "hasOwnProperty")?
-        .dyn_into::<Function>()?
+        .dyn_into::<Function>()
+        .map_err(|_| js_sys::TypeError::new("fonts.hasOwnProperty is not a function"))?
         .call1(object, key)?
         .is_truthy())
 }
@@ -45,6 +48,8 @@ async fn permission(navigator: &JsValue) -> Result<(), JsValue> {
     let permissions = get(navigator, "permissions")?;
     let request = get(&permissions, "request")?;
     if request.is_undefined() || request.is_null() {
+        // Optional calls still participate in `await` when they yield undefined.
+        await_value(JsValue::UNDEFINED).await?;
         return Ok(());
     }
     let descriptor = Object::new();
@@ -87,8 +92,9 @@ async fn group_query(owner: &JsValue, name: &str) -> Result<JsValue, JsValue> {
 
 impl LocalFonts {
     async fn catalog(&self, global: &JsValue) -> Result<JsValue, JsValue> {
-        if let Some(cached) = self.cache.borrow().clone() {
-            return Ok(cached);
+        let cached = self.cache.borrow().clone();
+        if let Some(cached) = cached {
+            return await_value(cached).await;
         }
         let navigator = get(global, "navigator")?;
         let legacy =
@@ -118,21 +124,44 @@ impl LocalFonts {
                 Ok(Object::new().into())
             }
         };
-        let grouped = match grouped {
-            Ok(value) => value,
+        let catalog = match grouped {
+            Ok(value) => {
+                *self.cache.borrow_mut() = Some(value.clone());
+                value
+            }
             Err(error) => {
                 log_query_error(&error)?;
-                Object::new().into()
+                // Source uses ??= after a query error. A concurrent successful
+                // query must not be overwritten by this older failure.
+                self.cache
+                    .borrow_mut()
+                    .get_or_insert_with(|| Object::new().into())
+                    .clone()
             }
         };
-        // As in the source, permission failures are not cached, but query
-        // failures cache an empty catalog. Concurrent first calls may both query.
-        *self.cache.borrow_mut() = Some(grouped.clone());
-        Ok(grouped)
+        // Even an already cached Promise is awaited in the source, which
+        // introduces an observable promise reaction boundary before blob access.
+        await_value(catalog).await
     }
 
     pub async fn load(&self, family: &[u16]) -> Result<Option<LocalFont>, JsValue> {
         self.load_from(&js_sys::global(), family).await
+    }
+    pub async fn load_value(&self, family: &JsValue) -> Result<Option<LocalFont>, JsValue> {
+        self.load_value_from(&js_sys::global(), family).await
+    }
+    pub async fn load_value_from(
+        &self,
+        global: &JsValue,
+        family: &JsValue,
+    ) -> Result<Option<LocalFont>, JsValue> {
+        let fonts = self.catalog(global).await?;
+        // Source checks the string type only after the asynchronous catalog query.
+        let family = family
+            .clone()
+            .dyn_into::<js_sys::JsString>()
+            .map_err(|_| js_sys::Error::new("Font family must be a string"))?;
+        Self::resolve(fonts, &crate::utf16::from_js_string(&family)).await
     }
 
     /// An explicit environment also makes legacy/current browser branches
@@ -143,6 +172,9 @@ impl LocalFonts {
         family: &[u16],
     ) -> Result<Option<LocalFont>, JsValue> {
         let fonts = self.catalog(global).await?;
+        Self::resolve(fonts, family).await
+    }
+    async fn resolve(fonts: JsValue, family: &[u16]) -> Result<Option<LocalFont>, JsValue> {
         let families = parse_families(family).map_err(|error| -> JsValue {
             match error {
                 ParseError::UnterminatedString => js_sys::Error::new(&error.to_string()).into(),

@@ -6,5 +6,43 @@
   "cases": 10,
   "calls": 30,
   "fixtureSha256": "cc7576f66e662b4d92cb1bdbc0dfda58c23921bd9fb30b2e309f54815244e8ab",
-  "mode": "verify"
+  "mode": "verify",
+  "concurrentQuery": {
+    "queries": 2,
+    "firstBytes": [
+      4,
+      5
+    ],
+    "secondBytes": [
+      4,
+      5
+    ],
+    "logs": [
+      "Error: concurrent query failure"
+    ]
+  },
+  "optionalPermission": [
+    {
+      "calls": 1,
+      "trace": [
+        "microtask",
+        "query"
+      ],
+      "logs": [
+        "Error: controlled synchronous query failure"
+      ]
+    },
+    {
+      "calls": 2,
+      "trace": [
+        "microtask",
+        "query",
+        "query"
+      ],
+      "logs": [
+        "Error: controlled synchronous query failure",
+        "Error: controlled synchronous query failure"
+      ]
+    }
+  ]
 }

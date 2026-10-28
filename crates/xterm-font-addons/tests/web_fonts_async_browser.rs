@@ -5,7 +5,7 @@ use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_futures::JsFuture;
 use wasm_bindgen_test::*;
 use web_sys::FontFace;
-use xterm_web::{font_set::load_fonts, WebFontsAddon};
+use xterm_font_addons::{font_set::load_fonts, WebFontsAddon};
 
 wasm_bindgen_test_configure!(run_in_browser);
 
@@ -21,11 +21,7 @@ fn call(value: &JsValue, key: &str) {
 }
 
 fn face(name: &str) -> FontFace {
-    FontFace::new_with_u8_array(
-        name,
-        include_bytes!("fixtures/kongtext.regular.ttf"),
-    )
-    .unwrap()
+    FontFace::new_with_u8_array(name, include_bytes!("fixtures/kongtext.regular.ttf")).unwrap()
 }
 
 fn host(family: &str) -> JsValue {
@@ -130,10 +126,41 @@ async fn duplicate_descriptors_reuse_first_even_if_source_and_display_differ() {
 }
 
 #[wasm_bindgen_test(async)]
+async fn disposing_from_first_option_setter_preserves_second_write_typeerror() {
+    let document = web_sys::window().unwrap().document().unwrap();
+    document.fonts().clear();
+    document.fonts().add(&face("ReentrantWeb")).unwrap();
+    let addon = std::rc::Rc::new(WebFontsAddon::new(Some(false)));
+    let weak = std::rc::Rc::downgrade(&addon);
+    let dispose = wasm_bindgen::closure::Closure::wrap(Box::new(move || {
+        weak.upgrade().unwrap().dispose();
+    }) as Box<dyn FnMut()>);
+    let terminal = Function::new_with_args("dispose", "const writes=[];return {writes,options:{get fontFamily(){return 'ReentrantWeb'},set fontFamily(value){writes.push(value);dispose()}}};")
+        .call1(&JsValue::UNDEFINED, dispose.as_ref()).unwrap();
+    addon.activate(terminal.clone()).unwrap();
+    let error = JsFuture::from(addon.relayout()).await.unwrap_err();
+    assert_eq!(get(&error, "name"), "TypeError");
+    let writes = Array::from(&get(&terminal, "writes"));
+    assert_eq!(writes.length(), 1);
+    assert_eq!(writes.get(0), "monospace");
+    document.fonts().clear();
+}
+
+#[wasm_bindgen_test(async)]
 async fn family_lookup_is_case_sensitive_and_unquotes_registered_names() {
     let document = web_sys::window().unwrap().document().unwrap();
     document.fonts().clear();
-    document.fonts().add(&face("'CaseWeb'")).unwrap();
+    let registered = face("CaseWeb");
+    // Firefox CSS faces preserve a quote pair. WebKit treats quotes passed to
+    // the FontFace constructor as literal name content, so model the returned
+    // CSS attribute explicitly rather than constructing a different family.
+    Function::new_with_args(
+        "face",
+        "Object.defineProperty(face,'family',{configurable:true,get(){return \"'CaseWeb'\"}});",
+    )
+    .call1(&JsValue::UNDEFINED, registered.as_ref())
+    .unwrap();
+    document.fonts().add(&registered).unwrap();
     assert_eq!(
         load_fonts(&document, Some(&Array::of1(&"CaseWeb".into())))
             .await

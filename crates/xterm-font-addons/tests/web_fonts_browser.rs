@@ -5,7 +5,7 @@ use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_futures::JsFuture;
 use wasm_bindgen_test::*;
 use web_sys::{Document, FontFace};
-use xterm_web::{font_set::load_fonts, WebFontsAddon};
+use xterm_font_addons::{font_set::load_fonts, WebFontsAddon};
 
 wasm_bindgen_test_configure!(run_in_browser);
 
@@ -14,11 +14,7 @@ fn document() -> Document {
 }
 
 fn face(name: &str) -> FontFace {
-    FontFace::new_with_u8_array(
-        name,
-        include_bytes!("fixtures/kongtext.regular.ttf"),
-    )
-    .unwrap()
+    FontFace::new_with_u8_array(name, include_bytes!("fixtures/kongtext.regular.ttf")).unwrap()
 }
 
 fn requests(values: &[JsValue]) -> Array {
@@ -183,6 +179,7 @@ async fn default_initial_relayout_runs_after_ready() {
 #[wasm_bindgen_test]
 fn boundary_helpers_preserve_lone_surrogate_font_names() {
     let input = JsString::from_char_code(&[0x22, 0xD800, 0x22]);
-    let output = xterm_web::utf16::to_js_string(&xterm_web::utf16::from_js_string(&input));
+    let output =
+        xterm_font_addons::utf16::to_js_string(&xterm_font_addons::utf16::from_js_string(&input));
     assert!(Object::is(input.as_ref(), output.as_ref()));
 }

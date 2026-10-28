@@ -1,9 +1,10 @@
 #![cfg(target_arch = "wasm32")]
 
 use js_sys::{Function, Reflect};
-use wasm_bindgen::JsValue;
+use wasm_bindgen::{JsCast, JsValue};
+use wasm_bindgen_futures::JsFuture;
 use wasm_bindgen_test::*;
-use xterm_web::local_fonts::LocalFonts;
+use xterm_font_addons::local_fonts::LocalFonts;
 
 wasm_bindgen_test_configure!(run_in_browser);
 
@@ -75,6 +76,85 @@ async fn source_font_resolution_operation_traces_match_in_browser() {
 
 fn count(env: &JsValue, key: &str) -> f64 {
     Reflect::get(env, &key.into()).unwrap().as_f64().unwrap()
+}
+
+#[wasm_bindgen_test(async)]
+async fn concurrent_failed_query_reuses_the_other_calls_successful_catalog() {
+    let env = environment("let begin,fail;const started=new Promise(r=>begin=r);const pending=new Promise((_,reject)=>fail=()=>reject(new Error('concurrent query failure')));const env={navigator:{},queries:0,started,fail};env.window={queryLocalFonts:()=>{env.queries++;if(env.queries===1){begin();return pending}return Promise.resolve([{family:'Concurrent',blob:async()=>new Blob([new Uint8Array([4,5])])}])}};return env;");
+    let catalog = LocalFonts::default();
+    let other = catalog.clone();
+    let first_env = env.clone();
+    let first = wasm_bindgen_futures::future_to_promise(async move {
+        let font = other
+            .load_from(&first_env, &utf16("Concurrent"))
+            .await?
+            .ok_or_else(|| js_sys::Error::new("concurrent font unexpectedly missing"))?;
+        Ok(js_sys::Uint8Array::from(font.bytes.as_slice()).into())
+    });
+    JsFuture::from(property(&env, "started").unchecked_into::<js_sys::Promise>())
+        .await
+        .unwrap();
+    assert_eq!(
+        catalog
+            .load_from(&env, &utf16("Concurrent"))
+            .await
+            .unwrap()
+            .unwrap()
+            .bytes,
+        [4, 5]
+    );
+    property(&env, "fail")
+        .unchecked_into::<Function>()
+        .call0(&env)
+        .unwrap();
+    let first = JsFuture::from(first).await.unwrap();
+    assert_eq!(js_sys::Uint8Array::new(&first).to_vec(), [4, 5]);
+    assert_eq!(count(&env, "queries"), 2.0);
+}
+
+#[wasm_bindgen_test(async)]
+async fn optional_permission_await_and_concurrent_query_failure_match_source() {
+    use std::{
+        future::Future,
+        task::{Context, Waker},
+    };
+    let cases =
+        js_sys::JSON::parse(include_str!("fixtures/local-font-permission-trace.json")).unwrap();
+    for case in js_sys::Array::from(&cases) {
+        let count = property(&case, "calls").as_f64().unwrap() as usize;
+        let env=environment("const env={trace:[],navigator:{permissions:{}},window:{}};env.navigator.fonts={query(){env.trace.push('query');throw new Error('controlled synchronous query failure')}};queueMicrotask(()=>env.trace.push('microtask'));return env;");
+        let catalog = LocalFonts::default();
+        let family = utf16("Missing");
+        let mut futures: Vec<_> = (0..count)
+            .map(|_| Box::pin(catalog.load_from(&env, &family)))
+            .collect();
+        // Start every operation in the same turn before allowing the queued
+        // microtask to run. A missing await would synchronously query/cache now.
+        for future in &mut futures {
+            assert!(future
+                .as_mut()
+                .poll(&mut Context::from_waker(Waker::noop()))
+                .is_pending());
+        }
+        for future in futures {
+            assert!(future.await.unwrap().is_none());
+        }
+        let actual = js_sys::JSON::stringify(&property(&env, "trace")).unwrap();
+        let expected = js_sys::JSON::stringify(&property(&case, "trace")).unwrap();
+        assert_eq!(actual, expected);
+    }
+}
+
+#[wasm_bindgen_test(async)]
+async fn nonstring_family_errors_only_after_query_and_reuses_catalog() {
+    let env=environment("const env={navigator:{},queries:0};env.window={queryLocalFonts:async()=>{env.queries++;return []}};return env;");
+    let catalog = LocalFonts::default();
+    for family in [JsValue::from_f64(1.0), JsValue::NULL] {
+        let error = catalog.load_value_from(&env, &family).await.err().unwrap();
+        assert_eq!(property(&error, "name"), "Error");
+        assert_eq!(property(&error, "message"), "Font family must be a string");
+    }
+    assert_eq!(count(&env, "queries"), 1.0);
 }
 
 #[wasm_bindgen_test(async)]
