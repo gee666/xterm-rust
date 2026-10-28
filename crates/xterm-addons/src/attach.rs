@@ -84,14 +84,14 @@ pub type DataCallback = Rc<dyn Fn(&[u16]) -> Result<(), AttachError>>;
 /// Browser implementations must use ArrayBuffer, not Blob, for binary messages.
 pub trait AttachSocket {
     fn use_array_buffer(&self) -> Result<(), AttachError>;
-    fn state(&self) -> SocketState;
+    fn state(&self) -> Result<SocketState, AttachError>;
     fn send(&self, data: SocketMessage) -> Result<(), AttachError>;
     fn listen(
         &self,
         event: SocketEvent,
         callback: SocketCallback,
     ) -> Result<DisposableHandle, AttachError>;
-    fn warn_closing(&self);
+    fn warn_closing(&self) -> Result<(), AttachError>;
 }
 
 pub trait AttachTerminal {
@@ -111,10 +111,19 @@ impl AttachAddon {
         socket: Rc<dyn AttachSocket>,
         bidirectional: Option<bool>,
     ) -> Result<Self, AttachError> {
+        Self::with_options(socket, || Ok(bidirectional))
+    }
+
+    /// Socket configuration precedes dynamic option reads in JavaScript.
+    pub fn with_options(
+        socket: Rc<dyn AttachSocket>,
+        options: impl FnOnce() -> Result<Option<bool>, AttachError>,
+    ) -> Result<Self, AttachError> {
         socket.use_array_buffer()?;
+        let bidirectional = options()?.unwrap_or(true);
         Ok(Self {
             socket,
-            bidirectional: bidirectional.unwrap_or(true),
+            bidirectional,
             disposables: Rc::default(),
         })
     }
@@ -138,7 +147,7 @@ impl AttachAddon {
                 let socket = socket
                     .upgrade()
                     .ok_or_else(|| AttachError::Adapter("attached socket was dropped".into()))?;
-                send(&*socket, SocketMessage::Text(data.to_vec()))
+                send(&*socket, || SocketMessage::Text(data.to_vec()))
             }));
             self.disposables.borrow_mut().push(data);
             let socket = Rc::downgrade(&self.socket);
@@ -147,8 +156,9 @@ impl AttachAddon {
                     .upgrade()
                     .ok_or_else(|| AttachError::Adapter("attached socket was dropped".into()))?;
                 // JS charCodeAt reads UTF-16 units, then masks each to one byte.
-                let data = data.iter().map(|unit| (unit & 255) as u8).collect();
-                send(&*socket, SocketMessage::Binary(data))
+                send(&*socket, || {
+                    SocketMessage::Binary(data.iter().map(|unit| (unit & 255) as u8).collect())
+                })
             }));
             self.disposables.borrow_mut().push(binary);
         }
@@ -190,12 +200,15 @@ fn dispose_all(disposables: &RefCell<Vec<DisposableHandle>>) {
     }
 }
 
-fn send(socket: &dyn AttachSocket, data: SocketMessage) -> Result<(), AttachError> {
-    match socket.state() {
-        SocketState::Open => socket.send(data),
+fn send(
+    socket: &dyn AttachSocket,
+    data: impl FnOnce() -> SocketMessage,
+) -> Result<(), AttachError> {
+    match socket.state()? {
+        SocketState::Open => socket.send(data()),
         SocketState::Connecting => Err(AttachError::Connecting),
         SocketState::Closing => {
-            socket.warn_closing();
+            socket.warn_closing()?;
             Ok(())
         }
         SocketState::Closed => Err(AttachError::Closed),

@@ -47,14 +47,16 @@ impl FitTerminal for BrowserFitTerminal {
         if dimensions.css.cell.width == 0.0 || dimensions.css.cell.height == 0.0 {
             return Ok(None);
         }
-        let parent = style(&parent)?;
-        let element = style(&element)?;
         let scrollbar = (self.scrollbar)()?;
+        let parent = style(&parent)?;
+        let parent_height = parent.get_property_value("height").map_err(error)?;
+        let parent_width = parent.get_property_value("width").map_err(error)?;
+        let element = style(&element)?;
         Ok(Some(FitMeasurements {
             cell_width: dimensions.css.cell.width,
             cell_height: dimensions.css.cell.height,
-            parent_width: parent.get_property_value("width").map_err(error)?,
-            parent_height: parent.get_property_value("height").map_err(error)?,
+            parent_width,
+            parent_height,
             padding: [
                 element.get_property_value("padding-top").map_err(error)?,
                 element

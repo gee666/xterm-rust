@@ -107,6 +107,17 @@ struct NoWake;
 impl Wake for NoWake {
     fn wake(self: Arc<Self>) {}
 }
+fn settle(engine: &Rc<RefCell<CoreTerminal>>) {
+    let pending = engine.borrow_mut().take_pending().unwrap();
+    let HandlerResult::PendingFallible(mut future) = pending else {
+        panic!("expected fallible clipboard future");
+    };
+    let waker = Waker::from(Arc::new(NoWake));
+    let Poll::Ready(result) = future.as_mut().poll(&mut Context::from_waker(&waker)) else {
+        panic!("provider fixture resolves first poll");
+    };
+    engine.borrow_mut().resume(result.unwrap()).unwrap();
+}
 #[test]
 fn clipboard_async_parser_pause_reply_precedes_next_da1() {
     let engine = Rc::new(RefCell::new(CoreTerminal::new(80, 24, 1000).unwrap()));
@@ -122,20 +133,36 @@ fn clipboard_async_parser_pause_reply_precedes_next_da1() {
         Err(TerminalError::Pending)
     ));
     assert!(replies(&mut engine.borrow_mut()).is_empty());
-    let pending = engine.borrow_mut().take_pending().unwrap();
-    let HandlerResult::PendingFallible(mut future) = pending else {
-        panic!("expected fallible clipboard future");
-    };
-    let waker = Waker::from(Arc::new(NoWake));
-    let Poll::Ready(result) = future.as_mut().poll(&mut Context::from_waker(&waker)) else {
-        panic!("provider fixture resolves first poll");
-    };
-    engine.borrow_mut().resume(result.unwrap()).unwrap();
+    settle(&engine);
     assert_eq!(
         replies(&mut engine.borrow_mut()),
         [
             "\x1b]52;c;aGVsbG8=\x07".encode_utf16().collect::<Vec<_>>(),
             "\x1b[?1;2c".encode_utf16().collect()
         ]
+    );
+}
+#[test]
+fn pending_clipboard_reply_uses_latest_activation_without_replaying_input() {
+    let first = Rc::new(RefCell::new(CoreTerminal::new(80, 24, 1000).unwrap()));
+    let second = Rc::new(RefCell::new(CoreTerminal::new(80, 24, 1000).unwrap()));
+    let original = Rc::new(NativeUtilityTerminal::new(first.clone()));
+    let replacement = Rc::new(NativeUtilityTerminal::new(second.clone()));
+    let provider = Rc::new(Provider {
+        value: RefCell::new("hello".encode_utf16().collect()),
+        asynchronous: true,
+    });
+    let addon = ClipboardAddon::new(provider, None);
+    addon.activate(original.clone());
+    assert!(matches!(
+        first.borrow_mut().write("\x1b]52;c;?\x07"),
+        Err(TerminalError::Pending)
+    ));
+    addon.activate(replacement.clone());
+    settle(&first);
+    assert!(replies(&mut first.borrow_mut()).is_empty());
+    assert_eq!(
+        replies(&mut second.borrow_mut()),
+        ["\x1b]52;c;aGVsbG8=\x07".encode_utf16().collect::<Vec<_>>()]
     );
 }
