@@ -1,0 +1,26 @@
+    Blocking waiting for file lock on build directory
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0624]: method `primitive` is private
+   --> crates\xterm-core\src\options\value.rs:127:42
+    |
+127 |             Self::Object(value) => value.primitive(CoercionHint::Number)?.number()?,
+    |                                          ^^^^^^^^^ private method
+    |
+   ::: crates\xterm-core\src\options\object.rs:86:5
+    |
+86  |     fn primitive(&self, hint: CoercionHint) -> Result<OptionValue, OptionError> {
+    |     --------------------------------------------------------------------------- private method defined here
+
+error[E0624]: method `primitive` is private
+   --> crates\xterm-core\src\options\value.rs:138:49
+    |
+138 |             Self::Object(value) => return value.primitive(CoercionHint::String)?.text_utf16(),
+    |                                                 ^^^^^^^^^ private method
+    |
+   ::: crates\xterm-core\src\options\object.rs:86:5
+    |
+86  |     fn primitive(&self, hint: CoercionHint) -> Result<OptionValue, OptionError> {
+    |     --------------------------------------------------------------------------- private method defined here
+
+For more information about this error, try `rustc --explain E0624`.
+error: could not compile `xterm-core` (lib) due to 2 previous errors
