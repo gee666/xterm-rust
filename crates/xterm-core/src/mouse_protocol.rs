@@ -1,6 +1,7 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved.
 // Licensed under MIT. Adapted from common/services/MouseStateService.ts.
 
+use std::cell::{Cell, RefCell};
 use std::fmt;
 use std::ops::BitOr;
 use std::rc::Rc;
@@ -143,12 +144,43 @@ impl BitOr for MouseEventTypes {
 
 pub type MouseRestriction = Rc<dyn Fn(&mut MouseEvent) -> bool>;
 /// Encodings return UTF-16 because JavaScript strings can contain lone surrogates.
-pub type MouseEncoding = Rc<dyn Fn(&MouseEvent) -> Vec<u16>>;
+pub type MouseEncoding = Rc<dyn Fn(&mut MouseEvent) -> Vec<u16>>;
 
 #[derive(Clone)]
 pub struct MouseProtocol {
     pub events: MouseEventTypes,
     pub restrict: MouseRestriction,
+}
+
+/// Shared mutable object identity for a retained JavaScript protocol object.
+/// Setters release borrows before dropping replaced callback captures.
+pub struct SharedMouseProtocol {
+    events: Cell<MouseEventTypes>,
+    restrict: RefCell<MouseRestriction>,
+}
+impl SharedMouseProtocol {
+    pub fn new(protocol: MouseProtocol) -> Self {
+        Self {
+            events: Cell::new(protocol.events),
+            restrict: RefCell::new(protocol.restrict),
+        }
+    }
+    pub fn events(&self) -> MouseEventTypes {
+        self.events.get()
+    }
+    pub fn set_events(&self, events: MouseEventTypes) {
+        self.events.set(events);
+    }
+    pub fn set_restriction(&self, restrict: MouseRestriction) {
+        let previous = self.restrict.replace(restrict);
+        drop(previous);
+    }
+    pub(super) fn snapshot(&self) -> MouseProtocol {
+        MouseProtocol {
+            events: self.events.get(),
+            restrict: Rc::clone(&self.restrict.borrow()),
+        }
+    }
 }
 
 pub(super) fn default_protocols() -> Vec<(String, MouseProtocol)> {
@@ -275,7 +307,7 @@ fn encode_sgr(event: &MouseEvent, pixels: bool) -> Vec<u16> {
 
 pub(super) fn default_encodings() -> Vec<(String, MouseEncoding)> {
     vec![
-        ("DEFAULT".into(), Rc::new(encode_default)),
+        ("DEFAULT".into(), Rc::new(|event| encode_default(event))),
         ("SGR".into(), Rc::new(|event| encode_sgr(event, false))),
         (
             "SGR_PIXELS".into(),

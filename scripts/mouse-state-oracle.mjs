@@ -105,14 +105,45 @@ for (let index = 0; index < 4096; index++) {
     ctrl: !!(random() & 1), alt: !!(random() & 1), shift: !!(random() & 1)
   });
 }
+// Source-derived assertions for custom contracts absent from the original cases.
+const customOutcomes = [];
+function customCase(name, run) { run(); customOutcomes.push({ name, status: 'passed' }); }
+customCase('custom encoding mutates the original event', () => {
+  const service = new MouseStateService();
+  service.addEncoding('MUTABLE', event => { event.col = 7.5; event.ctrl = true; event.button = -1; return '\\ud800'; });
+  service.activeEncoding = 'MUTABLE';
+  const event = { col: 1, row: 1, x: 0, y: 0, button: 0, action: 1 };
+  assert.equal(service.encodeMouseEvent(event), '\\ud800');
+  assert.equal(event.col, 7.5); assert.equal(event.ctrl, true); assert.equal(event.button, -1);
+});
+customCase('protocol object identity remains live across services', () => {
+  const first = new MouseStateService(); const second = new MouseStateService();
+  const protocol = { events: 1, restrict: () => true };
+  for (const service of [first, second]) { service.addProtocol('SHARED', protocol); service.activeProtocol = 'SHARED'; assert(service.areMouseEventsActive); }
+  protocol.events = 0; protocol.restrict = event => { event.row = 9; return false; };
+  for (const service of [first, second]) { const event = { row: 1 }; assert.equal(service.areMouseEventsActive, false); assert.equal(service.restrictMouseEvent(event), false); assert.equal(event.row, 9); }
+});
+customCase('protocol replacement finishes the captured current callback', () => {
+  const service = new MouseStateService();
+  const protocol = { events: 1, restrict: () => { protocol.restrict = () => false; return true; } };
+  service.addProtocol('SHARED', protocol); service.activeProtocol = 'SHARED';
+  assert.equal(service.restrictMouseEvent({}), true); assert.equal(service.restrictMouseEvent({}), false);
+});
+customCase('activation callback preserves thrown error identity and state', () => {
+  const service = new MouseStateService(); const failure = new Error('original host failure');
+  service.onProtocolChange(() => { throw failure; });
+  assert.throws(() => { service.activeProtocol = 'ANY'; }, error => error === failure);
+  assert.equal(service.activeProtocol, 'ANY');
+});
 const fixture = 'crates/xterm-core/tests/fixtures/mouse-state.tsv';
 const corpus = `${rows.join('\n')}\n`;
 await mkdir(path.dirname(fixture), { recursive: true });
 if (process.argv.includes('--generate')) await writeFile(fixture, corpus);
-else assert.equal(await readFile(fixture, 'utf8'), corpus, 'Mouse corpus differs from unchanged source');
+else assert.equal((await readFile(fixture, 'utf8')).replace(/\r\n/g, '\n'), corpus, 'Mouse corpus differs from unchanged source');
 const report = {
   node: process.version, platform: process.platform, sourceHashes: hashes, seed, traces: rows.length,
   corpusSha256: createHash('sha256').update(corpus).digest('hex'),
+  customAssertions: { executed: customOutcomes.length, passed: customOutcomes.length, outcomes: customOutcomes },
   schema: ['protocol', 'encoding', 'col', 'row', 'x', 'y', 'button', 'action', 'ctrl', 'alt', 'shift',
     'accepted', 'resultCtrl', 'resultAlt', 'resultShift', 'utf16HexUnits'],
   upstream: { discovered: outcomes.length, executed: outcomes.length, passed: outcomes.filter(test => test.status === 'passed').length,

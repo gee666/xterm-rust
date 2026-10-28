@@ -9,7 +9,7 @@
 mod protocol;
 pub use protocol::{
     InvalidMouseCode, MouseAction, MouseButton, MouseEncoding, MouseEvent, MouseEventTypes,
-    MouseProtocol, MouseRestriction,
+    MouseProtocol, MouseRestriction, SharedMouseProtocol,
 };
 
 use crate::event::{EmitError, Emitter, Event};
@@ -35,7 +35,14 @@ impl fmt::Display for MouseStateError {
         }
     }
 }
-impl std::error::Error for MouseStateError {}
+impl std::error::Error for MouseStateError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Dispatch(error) => Some(error),
+            _ => None,
+        }
+    }
+}
 impl From<EmitError> for MouseStateError {
     fn from(error: EmitError) -> Self {
         Self::Dispatch(error)
@@ -43,7 +50,7 @@ impl From<EmitError> for MouseStateError {
 }
 
 struct State<W> {
-    protocols: Vec<(String, MouseProtocol)>,
+    protocols: Vec<(String, Rc<SharedMouseProtocol>)>,
     encodings: Vec<(String, MouseEncoding)>,
     active_protocol: String,
     active_encoding: String,
@@ -68,7 +75,10 @@ impl<W> MouseStateService<W> {
     pub fn new() -> Self {
         Self {
             state: RefCell::new(State {
-                protocols: protocol::default_protocols(),
+                protocols: protocol::default_protocols()
+                    .into_iter()
+                    .map(|(name, protocol)| (name, Rc::new(SharedMouseProtocol::new(protocol))))
+                    .collect(),
                 encodings: protocol::default_encodings(),
                 active_protocol: "NONE".into(),
                 active_encoding: "DEFAULT".into(),
@@ -101,23 +111,37 @@ impl<W> MouseStateService<W> {
     }
 
     pub fn add_protocol(&self, name: impl Into<String>, protocol: MouseProtocol) {
+        self.add_shared_protocol(name, Rc::new(SharedMouseProtocol::new(protocol)));
+    }
+
+    /// Retain the same protocol object in one or several services. External edits
+    /// affect subsequent reads without replacing the active registration.
+    pub fn add_shared_protocol(&self, name: impl Into<String>, protocol: Rc<SharedMouseProtocol>) {
         let name = name.into();
-        let mut state = self.state.borrow_mut();
-        if let Some(entry) = state.protocols.iter_mut().find(|entry| entry.0 == name) {
-            entry.1 = protocol;
-        } else {
-            state.protocols.push((name, protocol));
-        }
+        let previous = {
+            let mut state = self.state.borrow_mut();
+            if let Some(entry) = state.protocols.iter_mut().find(|entry| entry.0 == name) {
+                Some(std::mem::replace(&mut entry.1, protocol))
+            } else {
+                state.protocols.push((name, protocol));
+                None
+            }
+        };
+        drop(previous);
     }
 
     pub fn add_encoding(&self, name: impl Into<String>, encoding: MouseEncoding) {
         let name = name.into();
-        let mut state = self.state.borrow_mut();
-        if let Some(entry) = state.encodings.iter_mut().find(|entry| entry.0 == name) {
-            entry.1 = encoding;
-        } else {
-            state.encodings.push((name, encoding));
-        }
+        let previous = {
+            let mut state = self.state.borrow_mut();
+            if let Some(entry) = state.encodings.iter_mut().find(|entry| entry.0 == name) {
+                Some(std::mem::replace(&mut entry.1, encoding))
+            } else {
+                state.encodings.push((name, encoding));
+                None
+            }
+        };
+        drop(previous);
     }
 
     pub fn active_protocol(&self) -> String {
@@ -135,7 +159,7 @@ impl<W> MouseStateService<W> {
                 .protocols
                 .iter()
                 .find(|entry| entry.0 == name)
-                .map(|entry| entry.1.events)
+                .map(|entry| entry.1.events())
                 .ok_or_else(|| MouseStateError::UnknownProtocol(name.into()))?;
             state.active_protocol = name.into();
             events
@@ -163,7 +187,7 @@ impl<W> MouseStateService<W> {
             .find(|entry| entry.0 == state.active_protocol)
             .expect("active protocol remains registered")
             .1
-            .clone()
+            .snapshot()
     }
 
     pub fn are_mouse_events_active(&self) -> bool {
@@ -184,7 +208,7 @@ impl<W> MouseStateService<W> {
         (self.active_mouse_protocol().restrict)(event)
     }
 
-    pub fn encode_mouse_event(&self, event: &MouseEvent) -> Vec<u16> {
+    pub fn encode_mouse_event(&self, event: &mut MouseEvent) -> Vec<u16> {
         let encoding = {
             let state = self.state.borrow();
             // The same registration invariant as active_mouse_protocol applies.
@@ -206,7 +230,8 @@ impl<W> MouseStateService<W> {
     }
 
     pub fn set_custom_wheel_event_handler(&self, handler: Option<WheelHandler<W>>) {
-        self.state.borrow_mut().wheel_handler = handler;
+        let previous = std::mem::replace(&mut self.state.borrow_mut().wheel_handler, handler);
+        drop(previous);
     }
 
     pub fn allow_custom_wheel_event(&self, event: &W) -> bool {

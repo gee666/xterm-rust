@@ -90,8 +90,8 @@ fn custom_restriction_and_encoder_can_replace_themselves_without_borrow_conflict
         }),
     );
     service.set_active_encoding("CUSTOM").unwrap();
-    assert_eq!(service.encode_mouse_event(&input()), [1]);
-    assert_eq!(service.encode_mouse_event(&input()), [2]);
+    assert_eq!(service.encode_mouse_event(&mut input()), [1]);
+    assert_eq!(service.encode_mouse_event(&mut input()), [2]);
 }
 
 #[test]

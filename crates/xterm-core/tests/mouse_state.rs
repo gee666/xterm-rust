@@ -116,7 +116,7 @@ fn upstream_restrict_and_encode_mouse_event() {
     let mut input = event();
     assert!(service.restrict_mouse_event(&mut input));
     assert_eq!(
-        service.encode_mouse_event(&input),
+        service.encode_mouse_event(&mut input),
         [0x1b, 0x5b, 0x4d, 0x20, 0x21, 0x21]
     );
 }
@@ -164,7 +164,7 @@ fn optional_modifiers_are_observable_and_x10_only_mutates_accepted_events() {
     service.set_active_protocol("OPTIONAL").unwrap();
     assert!(service.restrict_mouse_event(&mut input));
     assert_eq!(
-        service.encode_mouse_event(&input),
+        service.encode_mouse_event(&mut input),
         [0x1b, 0x5b, 0x4d, 0x20, 0x21, 0x21]
     );
     service.set_active_protocol("X10").unwrap();
@@ -200,15 +200,15 @@ fn active_overwrites_take_effect_without_notification_and_reset_retains_registry
     assert!(events.borrow().is_empty());
     assert!(service.are_mouse_events_active());
     assert!(service.restrict_mouse_event(&mut event()));
-    assert_eq!(service.encode_mouse_event(&event()), [0xd800, 0xdfff]);
+    assert_eq!(service.encode_mouse_event(&mut event()), [0xd800, 0xdfff]);
     service.set_active_protocol("X10").unwrap();
     service.set_active_encoding("CUSTOM").unwrap();
     service.reset().unwrap();
     assert_eq!(*events.borrow(), [Events::DOWN, Events::UP]);
     assert_eq!(service.active_encoding(), "DEFAULT");
-    assert_eq!(service.encode_mouse_event(&event()), [0xd800, 0xdfff]);
+    assert_eq!(service.encode_mouse_event(&mut event()), [0xd800, 0xdfff]);
     service.set_active_encoding("CUSTOM").unwrap();
-    assert_eq!(service.encode_mouse_event(&event()), [1]);
+    assert_eq!(service.encode_mouse_event(&mut event()), [1]);
 }
 
 #[test]
@@ -243,7 +243,7 @@ fn custom_callbacks_invoked_once_and_mutations_are_not_hidden() {
     let mut input = event();
     assert!(!service.restrict_mouse_event(&mut input));
     assert_eq!(count.get(), 1);
-    assert_eq!(service.encode_mouse_event(&input), [0xd800]);
+    assert_eq!(service.encode_mouse_event(&mut input), [0xd800]);
     assert_eq!(count.get(), 2);
 }
 
@@ -295,7 +295,7 @@ fn disposal_is_idempotent_stops_notifications_but_not_service_operations() {
     assert_eq!(count.get(), 0);
     assert!(service.restrict_mouse_event(&mut event()));
     assert_eq!(
-        service.encode_mouse_event(&event()),
+        service.encode_mouse_event(&mut event()),
         "\x1b[<0;1;1M".encode_utf16().collect::<Vec<_>>()
     );
     service.reset().unwrap();

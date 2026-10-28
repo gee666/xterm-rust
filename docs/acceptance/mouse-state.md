@@ -28,7 +28,7 @@ Call `encodeMouseEvent` independently, including on events rejected by restricti
 - Preserve lone surrogate code units, including `-10272 + 32 -> 0xd800` and `-8225 + 32 -> 0xdfff`. A Rust UTF-8 `String` cannot represent all outputs; expose `Vec<u16>` and document the binding conversion.
 - SGR is exactly `ESC[<code;col;rowM` or final `m` for UP on a non-wheel button. SGR_PIXELS uses x/y instead. Both have no coordinate limit and must retain JS formatting for NaN, infinities, fractions, large exponents, and negative zero. There is no coordinate +1 conversion in this service.
 - Every defined button/action and all modifier masks must match exact UTF-16 output in each encoder, including combinations not produced by a normal browser.
-- Custom encoders run exactly once, receive the unmodified active event, may return empty output or lone surrogates, and replace existing names without an activation change.
+- Custom encoders run exactly once, receive the original mutable event, may alter any representable field, return empty output or lone surrogates, and replace existing names without an activation change. The caller observes mutations after encoding.
 
 The checked-in corpus must include all 7,800 defined protocol/encoding/button/action/modifier combinations, numeric boundary rows, and 4,096 xorshift32 inputs at seed `0x6d0a5e`. After adding surrogate boundaries it has 12,226 rows. Never edit expected units manually.
 
@@ -37,9 +37,10 @@ The checked-in corpus must include all 7,800 defined protocol/encoding/button/ac
 - Construction installs protocols in source order NONE, X10, VT200, DRAG, ANY and encodings DEFAULT, SGR, SGR_PIXELS. Active values are NONE and DEFAULT. Mouse-events-active, default-encoding, pixel-encoding getters use the active registered values/names.
 - Setting a known protocol stores the active name before firing its advertised mask. Reassigning the same protocol still emits. Setting an encoding emits no protocol-change event.
 - Unknown protocol/encoding names return errors with exact text `unknown protocol "name"` or `unknown encoding "name"`. A rejected setter must leave both previous selections and event history unchanged.
-- `addProtocol` and `addEncoding` may overwrite defaults or active registrations without emitting activation events. Existing selected names then use the replacement behavior. Custom names can be selected normally.
+- `addProtocol` retains a mutable protocol object. External edits to its events or restriction affect every service retaining that same object. Rust's `add_shared_protocol` exposes that identity through `Rc<SharedMouseProtocol>` and setters; callbacks snapshot the current function before invoking it. `addProtocol` and `addEncoding` may overwrite defaults or active registrations without emitting activation events. Existing selected names then use the replacement behavior. Custom names can be selected normally.
 - Reentrant callbacks must not run while Rust holds a RefCell borrow or a lock. A protocol-change listener can inspect state and select another protocol. A custom restriction or encoder can replace its own registration; the current call finishes using its captured callback and the next call observes the replacement.
 - `reset` selects NONE first, emits its current advertised mask, then selects DEFAULT. It preserves custom registrations and wheel hooks, including overwritten NONE/DEFAULT entries.
+- A dispatch error propagates with its original concrete cause available through the Rust error source chain, not a fabricated listener-array error. Replaced callback captures drop outside service borrows so Rust cleanup can reenter safely.
 - A dispatch error propagates. Do not report a successful reset if a protocol listener interrupted it before the encoding reset step.
 
 ## Wheel hook and lifecycle
