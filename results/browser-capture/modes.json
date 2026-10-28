@@ -1,0 +1,32 @@
+{
+  "equivalence": "NOT PROVEN",
+  "candidate": "swarm/Sophie at 6feaacf",
+  "rootCheckpoint": "swarm/Xavier b956eeb merged into candidate",
+  "command": "WASM_BINDGEN=<wasm-bindgen 0.2.100> node tmp/run-browser-modes.mjs",
+  "runner": "Temporary driver calls the committed modes.cases.mjs runCase for every exported caseId. Each case runs independent reference and Rust pages in Chromium, Firefox and WebKit.",
+  "comparisons": {
+    "vt-28": "passed in all three browsers",
+    "vt-29": "passed in all three browsers",
+    "vt-30": "passed in all three browsers",
+    "vt-31": "passed in all three browsers",
+    "vt-34": "failed in all three browsers: reentrant queued write renders before parsing the queued R in Rust, unlike the source",
+    "vt-40": "passed in all three browsers",
+    "vt-41": "passed in all three browsers"
+  },
+  "comparisonDomain": "Complete cells, cursors, margins, buffers, event-time state/properties, replies, API snapshots and decoded RGBA frames. No comparison fields removed or normalized away.",
+  "rawResults": "Sophie worktree tmp/browser-modes/vt-*/; source and Rust captures, screenshots, RGBA and browser failure logs retained there",
+  "publicModesTests": {
+    "command": "WASM_TEST=wasm_terminal_modes node scripts/browser-host-check.mjs",
+    "result": "2 Rust tests passed in each of the three browsers",
+    "report": "results/browser-host/wasm_terminal_modes-results.json"
+  },
+  "native": {
+    "command": "cargo test --locked --all-targets --no-fail-fast -p xterm-core -p xterm-web -p xterm-addons -p xterm-wasm-support",
+    "passed": 1921,
+    "failed": 1,
+    "failure": "selection_service_differential case4297 retained malformed fixture. Accepted source-backed task273 repair is not yet included in this candidate.",
+    "log": "Sophie worktree tmp/native-integration.log"
+  },
+  "merge": "Not merged. Canonical helper flattened already-merged Root history and conflicted. Rebase aborted safely; post294 records the concrete issue. Native fixture repair also needs integration.",
+  "platforms": "Local Windows execution only for these results. No Linux/macOS pass claimed."
+}
