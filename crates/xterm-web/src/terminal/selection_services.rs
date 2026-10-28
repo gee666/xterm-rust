@@ -121,8 +121,8 @@ impl SelectionHost for WeakBrowserServices {
         self.data(&sequence.encode_utf16().collect::<Vec<_>>(), true)
     }
     fn redraw(&self, event: RedrawRequest) -> Result<(), JsValue> {
-        let renderer = self.upgrade()?.renderer.clone();
-        renderer.handle_selection_changed(
+        let services = self.upgrade()?;
+        services.render_service.handle_selection_changed(
             event.start.map(|point| [point.column, point.row]),
             event.end.map(|point| [point.column, point.row]),
             event.column_select_mode,
