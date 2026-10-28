@@ -188,7 +188,7 @@ impl OptionsService {
     /// Internal equivalent of writing rawOptions, bypassing validation/events.
     pub fn set_raw(&self, key: &str, value: OptionValue) -> Result<(), OptionError> {
         if let Some(store) = &self.raw_store {
-            return store.set(key, value);
+            return store.set_raw(key, value);
         }
         let previous = {
             let mut values = self.values.borrow_mut();

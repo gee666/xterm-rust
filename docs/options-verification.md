@@ -16,7 +16,7 @@ In `swarm/Athena`:
 
 - `cargo test -p xterm-core --test options_service --test options_boundary --test options_host_store --test options_properties`: 43 passed.
 - `node scripts/check-options.mjs`: original 10 cases / 22 assertions passed; 48 defaults and 31,961 differential output lines matched. Seed 1330664531.
-- `WASM_PACKAGE=xterm-wasm-support WASM_TEST=wasm_options node scripts/browser-host-check.mjs`: 15 passed in each of Chromium, Firefox and WebKit.
+- `WASM_PACKAGE=xterm-wasm-support WASM_TEST=wasm_options node scripts/browser-host-check.mjs`: 18 passed in each of Chromium, Firefox and WebKit.
 - The same browser command with `wasm_events`: 6 passed per browser. With `wasm_properties`: 1 passed per browser.
 - Scoped native and WASM Clippy passed with `-D warnings`; scoped formatting checks passed.
 
@@ -27,6 +27,7 @@ The original-case mapping is one-to-one in `tests/options_service.rs`: four cons
 ## Fixed findings and limits
 
 - Fixed lone-surrogate error text loss, missing coercion hints, swallowed host errors, immutable native default bags, and payload destruction under a storage borrow.
+- Fixed the missing initial raw-options spread. Own getter effects, exceptions, deleted data snapshots and later accessor enumerability now match the reference.
 - Fixed a test-harness global-prototype leak between the sequential reference and Rust runs. No assertion was removed.
 - Historical failed attempts remain under results/options and results/browser-host. Latest component summaries are `results/browser-host/xterm-wasm-support__*-results.json`.
 - Native property bags are acyclic data containers, not a general JS prototype heap. Actual host graphs use PropertyAccess and retain JS graph behavior.

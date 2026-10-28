@@ -1,49 +1,47 @@
-//! JS descriptor/prototype mechanics backed by Rust validation and event order.
+//! JS object mechanics backed by Rust validation and event order.
 #[path = "options_convert.rs"]
 mod convert;
+#[path = "options_store.rs"]
+mod store;
 use convert::ConversionCache;
 pub use convert::{error_to_js, from_js, into_js, operator_semantics, property_access};
-use js_sys::{Function, Object};
-use std::{cell::OnceCell, rc::Rc};
-// Source DEFAULT_OPTIONS shares object values across every shallow copy.
-thread_local! { static JS_DEFAULTS: OnceCell<Object> = const { OnceCell::new() }; }
+use js_sys::{Array, Function, Object};
+use std::{
+    cell::{OnceCell, RefCell},
+    rc::{Rc, Weak},
+};
+use store::JsOptionStore;
 use wasm_bindgen::{prelude::*, JsCast};
 use xterm_core::{
     headless::PublicOptions,
-    options::{OptionError, OptionValue, OptionsService, RawOptionsStore},
+    options::{OptionValue, OptionsService},
 };
+thread_local! { static JS_DEFAULTS:OnceCell<Object>=const{OnceCell::new()}; }
 
 #[wasm_bindgen(inline_js = "
+const optionOwners=new WeakMap();
 export function copyOptionsDefaults(template) { return {...template}; }
-export function initializeOptions(input, defaults, apply) {
-  for (const key in input) {
-    if (key in defaults) {
-      try { defaults[key] = apply(key, input[key]); }
-      catch (error) { console.error(error); }
-    }
+export function initializeOptions(input,defaults,apply) {
+  for(const key in input) if(key in defaults) {
+    try { defaults[key]=apply(key,input[key]); } catch(error) { console.error(error); }
   }
   return defaults;
 }
-export function optionMembership(template, key) { return key in template; }
-export function optionStrictEqual(left,right) { return left === right; }
-export function optionLayout(raw) {
-  const entries = [];
-  for (const key in raw) entries.push([key, Object.prototype.hasOwnProperty.call(raw, key)]);
-  return entries;
-}
-export function defineOption(target, key, enumerable, get, set) {
-  Object.defineProperty(target, key, {get, set, enumerable, configurable:enumerable});
-}
-export function publicOptions(core, checkReadonly) {
-  const view = {...core};
-  const getter = key => core[key];
-  const setter = (key,value) => { checkReadonly(key); core[key]=value; };
-  for (const key in core) Object.defineProperty(view,key,{get:getter.bind(null,key),set:setter.bind(null,key)});
+export function rawKeys(raw) { const keys=[];for(const key in raw)keys.push(key);return keys; }
+export function optionLayout(view) { return Object.getOwnPropertyNames(view).map(key=>[key,Object.getOwnPropertyDescriptor(view,key).enumerable]); }
+export function optionMembership(template,key) { return key in template; }
+export function optionStrictEqual(left,right) { return left===right; }
+export function defineOption(target,key,get,set) { Object.defineProperty(target,key,{get,set}); }
+export function defineNativeOption(target,key,enumerable,get,set) { Object.defineProperty(target,key,{get,set,enumerable,configurable:enumerable}); }
+export function publicOptions(core,checkReadonly,owner) {
+  const view={...core};
+  const getter=key=>core[key];
+  const setter=(key,value)=>{checkReadonly(key);core[key]=value;};
+  for(const key in core)Object.defineProperty(view,key,{get:getter.bind(null,key),set:setter.bind(null,key)});
+  optionOwners.set(view,owner);
   return view;
 }
-export function assignOptions(target, input) {
-  for (const key in input) target[key] = input[key];
-}
+export function assignOptions(target,input) { for(const key in input)target[key]=input[key]; }
 ")]
 extern "C" {
     #[wasm_bindgen(catch)]
@@ -55,7 +53,9 @@ extern "C" {
         apply: &Function,
     ) -> Result<Object, JsValue>;
     #[wasm_bindgen(catch)]
-    fn optionLayout(raw: &Object) -> Result<js_sys::Array, JsValue>;
+    fn rawKeys(raw: &Object) -> Result<Array, JsValue>;
+    #[wasm_bindgen(catch)]
+    fn optionLayout(view: &Object) -> Result<Array, JsValue>;
     #[wasm_bindgen(catch)]
     fn optionMembership(template: &Object, key: &str) -> Result<bool, JsValue>;
     fn optionStrictEqual(left: &JsValue, right: &JsValue) -> bool;
@@ -63,14 +63,73 @@ extern "C" {
     fn defineOption(
         target: &Object,
         key: &str,
+        get: &JsValue,
+        set: &JsValue,
+    ) -> Result<(), JsValue>;
+    #[wasm_bindgen(catch)]
+    fn defineNativeOption(
+        target: &Object,
+        key: &str,
         enumerable: bool,
         get: &JsValue,
         set: &JsValue,
     ) -> Result<(), JsValue>;
     #[wasm_bindgen(catch)]
-    fn assignOptions(target: &Object, input: &JsValue) -> Result<(), JsValue>;
+    fn publicOptions(core: &Object, check: &Function, owner: &JsValue) -> Result<Object, JsValue>;
     #[wasm_bindgen(catch)]
-    fn publicOptions(core: &Object, check_readonly: &Function) -> Result<Object, JsValue>;
+    fn assignOptions(target: &Object, input: &JsValue) -> Result<(), JsValue>;
+}
+type ServiceSlot = Rc<RefCell<Weak<OptionsService>>>;
+fn upgrade(slot: &ServiceSlot) -> Result<Rc<OptionsService>, JsValue> {
+    slot.borrow()
+        .upgrade()
+        .ok_or_else(|| js_sys::Error::new("options service released").into())
+}
+fn install_host_accessors(
+    view: &Object,
+    keys: &[String],
+    slot: &ServiceSlot,
+    cache: &Rc<ConversionCache>,
+) -> Result<(), JsValue> {
+    for key in keys {
+        let get_slot = slot.clone();
+        let get_key = key.clone();
+        let conversion = cache.clone();
+        let get = Closure::<dyn Fn() -> Result<JsValue, JsValue>>::new(move || {
+            conversion.convert(
+                &upgrade(&get_slot)?
+                    .get(&get_key)
+                    .map_err(|e| error_to_js(&e))?,
+            )
+        })
+        .into_js_value();
+        let set_slot = slot.clone();
+        let set_key = key.clone();
+        let set = Closure::<dyn Fn(JsValue) -> Result<(), JsValue>>::new(move |value: JsValue| {
+            upgrade(&set_slot)?
+                .set(&set_key, from_js_key(&set_key, &value)?)
+                .map_err(|e| error_to_js(&e))
+        })
+        .into_js_value();
+        defineOption(view, key, &get, &set)?;
+    }
+    Ok(())
+}
+fn layout(view: &Object) -> Result<Vec<(String, bool)>, JsValue> {
+    optionLayout(view)?
+        .iter()
+        .map(|entry| {
+            let pair = Array::from(&entry);
+            Ok((
+                pair.get(0)
+                    .as_string()
+                    .ok_or_else(|| js_sys::TypeError::new("invalid option key"))?,
+                pair.get(1)
+                    .as_bool()
+                    .ok_or_else(|| js_sys::TypeError::new("invalid option enumerability"))?,
+            ))
+        })
+        .collect()
 }
 
 pub fn constructor_options(input: &JsValue, is_mac: bool) -> Result<Rc<OptionsService>, JsValue> {
@@ -85,131 +144,72 @@ pub fn constructor_options(input: &JsValue, is_mac: bool) -> Result<Rc<OptionsSe
         }
         let template = Object::new();
         for key in service.keys() {
-            let value = cache.convert(&service.get(key).map_err(|e| error_to_js(&e))?)?;
-            convert::set_data(&template, key, &value)?;
+            convert::set_data(
+                &template,
+                key,
+                &cache.convert(&service.get(key).map_err(|e| error_to_js(&e))?)?,
+            )?;
         }
         cell.set(template.clone())
-            .map_err(|_| js_sys::Error::new("reentrant default options initialization"))?;
+            .map_err(|_| js_sys::Error::new("reentrant defaults initialization"))?;
         Ok(template)
     })?;
     for key in service.keys() {
-        let native = service.get(key).map_err(|e| error_to_js(&e))?;
-        let host = js_sys::Reflect::get(&template, &key.into())?;
-        cache.remember(&native, &host);
+        cache.remember(
+            &service.get(key).map_err(|e| error_to_js(&e))?,
+            &js_sys::Reflect::get(&template, &key.into())?,
+        );
     }
     let defaults = copyOptionsDefaults(&template)?;
-    convert::set_data(
-        &defaults,
-        "rightClickSelectsWord",
-        &JsValue::from_bool(is_mac),
-    )?;
+    convert::set_data(&defaults, "rightClickSelectsWord", &is_mac.into())?;
     let core = service.clone();
-    let conversion = Rc::new(cache);
-    let callback_conversion = conversion.clone();
+    let cache = Rc::new(cache);
+    let conversion = cache.clone();
     let apply = Closure::<dyn Fn(String, JsValue) -> Result<JsValue, JsValue>>::new(
         move |key: String, value: JsValue| {
-            let value = core
-                .sanitize_value(&key, from_js(&value)?)
-                .map_err(|e| error_to_js(&e))?;
-            callback_conversion.convert(&value)
+            conversion.convert(
+                &core
+                    .sanitize_value(&key, from_js(&value)?)
+                    .map_err(|e| error_to_js(&e))?,
+            )
         },
     );
     let raw = initializeOptions(input, &defaults, apply.as_ref().unchecked_ref())?;
     drop(apply);
-    let layout = optionLayout(&raw)?
+    // The source copies raw options before enumerating/installing accessors.
+    // Own getters can throw, delete fields or add fields during this spread.
+    let view = copyOptionsDefaults(&raw)?;
+    let keys = rawKeys(&raw)?
         .iter()
-        .map(|entry| {
-            let pair = js_sys::Array::from(&entry);
-            Ok((
-                pair.get(0)
-                    .as_string()
-                    .ok_or_else(|| js_sys::TypeError::new("invalid option layout key"))?,
-                pair.get(1)
-                    .as_bool()
-                    .ok_or_else(|| js_sys::TypeError::new("invalid option layout flag"))?,
-            ))
+        .map(|key| {
+            key.as_string()
+                .ok_or_else(|| js_sys::TypeError::new("invalid raw option key").into())
         })
-        .collect::<Result<Vec<_>, JsValue>>()?;
+        .collect::<Result<Vec<String>, JsValue>>()?;
+    let slot = Rc::new(RefCell::new(Weak::new()));
+    install_host_accessors(&view, &keys, &slot, &cache)?;
+    let final_layout = layout(&view)?;
     let service = Rc::try_unwrap(service)
-        .map_err(|_| js_sys::Error::new("constructor callback retained options service"))?;
-    Ok(Rc::new(service.with_raw_store(
+        .map_err(|_| js_sys::Error::new("constructor callback retained service"))?;
+    let service = Rc::new(service.with_raw_store(
         Rc::new(JsOptionStore {
             raw,
-            cache: conversion,
+            view,
+            accessors: keys.into_iter().collect(),
+            cache,
         }),
-        layout,
-    )))
+        final_layout,
+    ));
+    *slot.borrow_mut() = Rc::downgrade(&service);
+    Ok(service)
 }
-
 fn from_js_key(key: &str, value: &JsValue) -> Result<OptionValue, JsValue> {
-    if key == "logger" {
-        crate::logger::from_js(value)
-    } else if key == "logLevel" {
-        crate::logger::log_level_from_js(value)
-    } else {
-        from_js(value)
+    match key {
+        "logger" => crate::logger::from_js(value),
+        "logLevel" => crate::logger::log_level_from_js(value),
+        _ => from_js(value),
     }
 }
-
-struct JsOptionStore {
-    raw: Object,
-    cache: Rc<ConversionCache>,
-}
-impl RawOptionsStore for JsOptionStore {
-    fn strict_equal(
-        &self,
-        left: &OptionValue,
-        right: &OptionValue,
-    ) -> Result<Option<bool>, OptionError> {
-        let left = self
-            .cache
-            .convert(left)
-            .map_err(|e| OptionError::Dispatch(crate::js_error::callback_error(e)))?;
-        let right = self
-            .cache
-            .convert(right)
-            .map_err(|e| OptionError::Dispatch(crate::js_error::callback_error(e)))?;
-        Ok(Some(optionStrictEqual(&left, &right)))
-    }
-    fn validate_key(&self, key: &str) -> Result<Option<bool>, OptionError> {
-        JS_DEFAULTS.with(|defaults| {
-            let template = defaults
-                .get()
-                .expect("host store installed after default initialization");
-            optionMembership(template, key)
-                .map(Some)
-                .map_err(|error| OptionError::Dispatch(crate::js_error::callback_error(error)))
-        })
-    }
-    fn get(&self, key: &str) -> Result<OptionValue, OptionError> {
-        js_sys::Reflect::get(&self.raw, &key.into())
-            .and_then(|value| {
-                if key == "logger" {
-                    crate::logger::from_js_with_options(&value, &self.raw)
-                } else if key == "logLevel" {
-                    crate::logger::log_level_from_js(&value)
-                } else {
-                    from_js(&value)
-                }
-            })
-            .map_err(|error| OptionError::Dispatch(crate::js_error::callback_error(error)))
-    }
-    fn set(&self, key: &str, value: OptionValue) -> Result<(), OptionError> {
-        let value = self
-            .cache
-            .convert(&value)
-            .map_err(|error| OptionError::Dispatch(crate::js_error::callback_error(error)))?;
-        js_sys::Reflect::set(&self.raw, &key.into(), &value)
-            .map_err(|error| OptionError::Dispatch(crate::js_error::callback_error(error)))?
-            .then_some(())
-            .ok_or_else(|| {
-                OptionError::Dispatch(crate::js_error::callback_error(
-                    js_sys::TypeError::new("Cannot assign to read only option").into(),
-                ))
-            })
-    }
-}
-
 struct BindingState {
     options: PublicOptions,
     cache: ConversionCache,
@@ -220,46 +220,61 @@ pub struct OptionsBinding {
 }
 impl OptionsBinding {
     pub fn new(options: PublicOptions) -> Result<Self, JsValue> {
-        let core_view = Object::new();
         let state = Rc::new(BindingState {
             options,
             cache: ConversionCache::default(),
         });
-        for (key, enumerable) in state.options.service().property_layout() {
-            let get_key = key.clone();
-            let get_state = state.clone();
-            let get = Closure::<dyn Fn() -> Result<JsValue, JsValue>>::new(move || {
-                get_state.cache.convert(
-                    &get_state
-                        .options
-                        .get(&get_key)
-                        .map_err(|e| error_to_js(&e))?,
-                )
-            })
-            .into_js_value();
-            let set_key = key.clone();
-            let set_state = state.clone();
-            let set =
-                Closure::<dyn Fn(JsValue) -> Result<(), JsValue>>::new(move |value: JsValue| {
-                    set_state
-                        .options
-                        .service()
-                        .set(&set_key, from_js_key(&set_key, &value)?)
-                        .map_err(|error| error_to_js(&error))
+        let existing = state
+            .options
+            .service()
+            .host_options_view()
+            .map_err(|e| error_to_js(&e))?;
+        let core_view = if let Some(view) = existing {
+            into_js(&view)?
+                .dyn_into::<Object>()
+                .map_err(|_| js_sys::TypeError::new("invalid host options view"))?
+        } else {
+            let view = Object::new();
+            for (key, enumerable) in state.options.service().property_layout() {
+                let get_state = state.clone();
+                let get_key = key.clone();
+                let get = Closure::<dyn Fn() -> Result<JsValue, JsValue>>::new(move || {
+                    get_state.cache.convert(
+                        &get_state
+                            .options
+                            .get(&get_key)
+                            .map_err(|e| error_to_js(&e))?,
+                    )
                 })
                 .into_js_value();
-            // into_js_value transfers closure lifetime to JS GC, unlike forget.
-            // Captured state does not retain the options object itself.
-            defineOption(&core_view, &key, enumerable, &get, &set)?;
-        }
+                let set_state = state.clone();
+                let set_key = key.clone();
+                let set = Closure::<dyn Fn(JsValue) -> Result<(), JsValue>>::new(
+                    move |value: JsValue| {
+                        set_state
+                            .options
+                            .service()
+                            .set(&set_key, from_js_key(&set_key, &value)?)
+                            .map_err(|e| error_to_js(&e))
+                    },
+                )
+                .into_js_value();
+                defineNativeOption(&view, &key, enumerable, &get, &set)?;
+            }
+            view
+        };
         let check = Closure::<dyn Fn(String) -> Result<(), JsValue>>::new(|key: String| {
             crate::api::verify_mutable_option(&key)
-                .map_err(|error| js_sys::Error::new(&error.to_string()).into())
+                .map_err(|e| js_sys::Error::new(&e.to_string()).into())
         });
-        // JS owns public forwarding descriptors, including prototype changes
-        // caused by getters during the initial spread. Rust owns validation.
-        let object = publicOptions(&core_view, check.as_ref().unchecked_ref())?;
-        // The public setter retains this callback, so transfer it to JS GC.
+        // The JS-owned public view keeps the service alive without adding an
+        // own property or a service -> view -> service strong-reference loop.
+        let owner_state = state.clone();
+        let owner = Closure::<dyn Fn()>::new(move || {
+            let _ = &owner_state;
+        })
+        .into_js_value();
+        let object = publicOptions(&core_view, check.as_ref().unchecked_ref(), &owner)?;
         let _check = check.into_js_value();
         Ok(Self { object, state })
     }

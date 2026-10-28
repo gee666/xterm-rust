@@ -10,6 +10,53 @@ use xterm_wasm_support::options::{constructor_options, error_to_js, from_js, Opt
 wasm_bindgen_test_configure!(run_in_browser);
 
 #[wasm_bindgen_test]
+fn raw_own_getter_runs_in_initial_copy_before_public_copy() {
+    run(
+        r#"
+const trace=[];let reads=0;
+const proto={set toString(value){Object.defineProperty(this,'rows',{enumerable:true,configurable:true,get(){trace.push('rows:'+ ++reads);return reads;}});}};
+const input={};Object.defineProperty(input,'__proto__',{enumerable:true,value:proto});input.toString=7;
+return {input,trace};
+"#,
+        "return get('rows');",
+    );
+}
+
+#[wasm_bindgen_test]
+fn initial_copy_preserves_deleted_data_fields_and_added_accessor_flags() {
+    run(r#"
+const trace=[];
+const proto={set toString(value){Object.defineProperty(this,'rows',{enumerable:true,configurable:true,get(){delete this.rows;delete this.fontSize;this.extra=9;trace.push('copy');return 5;}});}};
+const input={};Object.defineProperty(input,'__proto__',{enumerable:true,value:proto});input.toString=7;
+return {input,trace};
+"#, "const original=get('rows');set('rows',-1);return [original,get('rows'),typeof get('fontSize')];");
+}
+
+#[wasm_bindgen_test]
+fn initial_raw_spread_exception_escapes_before_public_binding() {
+    let factory = Function::new_no_args(
+        r#"
+const marker={tag:'initial copy'};
+const proto={set toString(value){Object.defineProperty(this,'rows',{enumerable:true,configurable:true,get(){throw marker;}});}};
+const input={};Object.defineProperty(input,'__proto__',{enumerable:true,value:proto});input.toString=7;
+return {input,marker};
+"#,
+    );
+    let expected = factory.call0(&JsValue::UNDEFINED).unwrap();
+    let actual = factory.call0(&JsValue::UNDEFINED).unwrap();
+    let input = |context: &JsValue| Reflect::get(context, &"input".into()).unwrap();
+    assert_eq!(
+        referenceOptions(&input(&expected)).unwrap_err(),
+        Reflect::get(&expected, &"marker".into()).unwrap()
+    );
+    let failure = match constructor_options(&input(&actual), false) {
+        Err(error) => error,
+        Ok(_) => panic!("initial copy did not throw"),
+    };
+    assert_eq!(failure, Reflect::get(&actual, &"marker".into()).unwrap());
+}
+
+#[wasm_bindgen_test]
 fn inherited_input_order_and_unknown_getter_skipping() {
     run(
         r#"

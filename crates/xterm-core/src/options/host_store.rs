@@ -21,7 +21,19 @@ pub trait RawOptionsStore {
         Ok(None)
     }
     fn get(&self, key: &str) -> Result<OptionValue, OptionError>;
+    fn get_raw(&self, key: &str) -> Result<OptionValue, OptionError> {
+        self.get(key)
+    }
     fn set(&self, key: &str, value: OptionValue) -> Result<(), OptionError>;
+    fn set_raw(&self, key: &str, value: OptionValue) -> Result<(), OptionError> {
+        self.set(key, value)
+    }
+    fn uses_accessor(&self, _key: &str) -> Option<bool> {
+        None
+    }
+    fn options_view(&self) -> Result<Option<OptionValue>, OptionError> {
+        Ok(None)
+    }
 }
 
 /// Names inherited from Object.prototype pass the source's `key in defaults`
@@ -66,7 +78,9 @@ impl OptionsService {
 
     pub(super) fn read_value(&self, key: &str) -> Result<OptionValue, OptionError> {
         if let Some(store) = &self.raw_store {
-            self.validate_store_key(key, store.as_ref())?;
+            if store.uses_accessor(key) != Some(false) {
+                self.validate_store_key(key, store.as_ref())?;
+            }
             return store.get(key);
         }
         self.values
@@ -79,6 +93,9 @@ impl OptionsService {
 
     pub(super) fn write_value(&self, key: &str, value: OptionValue) -> Result<(), OptionError> {
         if let Some(store) = &self.raw_store {
+            if store.uses_accessor(key) == Some(false) {
+                return store.set(key, value);
+            }
             self.validate_store_key(key, store.as_ref())?;
             let value = self.sanitize_value(key, value)?;
             let current = store.get(key)?;
@@ -113,6 +130,19 @@ impl OptionsService {
                 .cloned()
                 .unwrap_or(OptionError::Dispatch(error))
         })
+    }
+
+    pub fn get_raw(&self, key: &str) -> Result<OptionValue, OptionError> {
+        match &self.raw_store {
+            Some(store) => store.get_raw(key),
+            None => self.read_value(key),
+        }
+    }
+    pub fn host_options_view(&self) -> Result<Option<OptionValue>, OptionError> {
+        match &self.raw_store {
+            Some(store) => store.options_view(),
+            None => Ok(None),
+        }
     }
 
     /// Attach a resolved host object after exactly one constructor sanitization
