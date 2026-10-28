@@ -1,0 +1,36 @@
+    Blocking waiting for file lock on build directory
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 4.27s
+     Running tests\headless_queue.rs (target\debug\deps\headless_queue-3722f15556953f21.exe)
+
+running 10 tests
+test dropping_pump_rejects_new_timers_without_leaking_queue_state ... ok
+test pending_local_future_is_not_busy_polled_and_wakes_on_demand ... ok
+test pending_parser_resumes_once_before_callback_and_later_chunks ... ok
+test rejected_handler_retains_typed_error_and_resumes_false_into_older_handler ... ok
+test reentrant_callback_appends_to_the_same_fifo_without_losing_input ... ok
+test dispose_cancels_queued_work_and_releases_host_timer ... ok
+test fifo_callbacks_precede_one_batched_parsed_notification ... ok
+test user_input_drives_the_source_low_latency_path_but_disabled_stdin_does_not ... ok
+test callback_error_is_returned_without_a_false_success_or_later_callback ... ok
+test writeln_bytes_and_crlf_callback_observe_completed_state ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\headless_queue_edges.rs (target\debug\deps\headless_queue_edges-c41d9af672b6ce79.exe)
+
+running 4 tests
+test earlier_timer_can_cancel_a_later_timer_in_the_same_host_poll ... ok
+test unchanged_headless_resize_keeps_queued_text_deferred ... ok
+test sync_flush_during_paused_handler_preserves_improper_continuation_error ... ok
+test resize_flushes_queued_text_and_callback_before_resizing_real_buffer ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\native_queue_differential.rs (target\debug\deps\native_queue_differential-6ba32305dde0326d.exe)
+
+running 1 test
+test real_native_queued_terminal_matches_original_headless_operation_traces ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
