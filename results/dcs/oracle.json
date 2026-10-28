@@ -74,9 +74,83 @@
     {
       "name": "callback registration mutates live list without repeated hook",
       "passed": true
+    },
+    {
+      "name": "resumed lower failure clears inner pause before reset",
+      "calls": [
+        "new:U:true",
+        "middle:U:true",
+        "middle:U:false",
+        "old:U:false",
+        "new:U:false"
+      ],
+      "passed": true
+    }
+  ],
+  "fallbackRegressions": [
+    {
+      "phase": "HOOK",
+      "identReports": [
+        11120,
+        11120,
+        11120,
+        0
+      ],
+      "preservedCause": true,
+      "passed": true
+    },
+    {
+      "phase": "PUT",
+      "identReports": [
+        11120,
+        11120,
+        11120,
+        11120,
+        0
+      ],
+      "preservedCause": true,
+      "passed": true
+    },
+    {
+      "phase": "UNHOOK",
+      "identReports": [
+        11120,
+        11120,
+        11120,
+        11120,
+        11120,
+        0
+      ],
+      "preservedCause": true,
+      "passed": true
+    }
+  ],
+  "rawStreamingRegressions": [
+    {
+      "phase": "HOOK",
+      "calls": [
+        "new:H",
+        "new:U:false",
+        "old:U:false"
+      ],
+      "preservedCause": true,
+      "passed": true
+    },
+    {
+      "phase": "PUT",
+      "calls": [
+        "new:H",
+        "old:H",
+        "new:P",
+        "new:U:false",
+        "old:U:false"
+      ],
+      "preservedCause": true,
+      "passed": true
     }
   ],
   "corpusSha256": "ce0acefee9f5685a8885246d67177c8459673bd26c8f0cb08f39f93de14582c6",
+  "fixtureRawSha256": "ce0acefee9f5685a8885246d67177c8459673bd26c8f0cb08f39f93de14582c6",
   "upstream": {
     "discovered": 20,
     "passed": 20,

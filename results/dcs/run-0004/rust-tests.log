@@ -1,0 +1,65 @@
+    Blocking waiting for file lock on build directory
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 9.98s
+     Running tests\dcs.rs (target\debug\deps\dcs-0b6087eba557f729.exe)
+
+running 35 tests
+test callback::async_resolution_clears_retained_data_and_params ... ok
+test add_dcs_handler ... ok
+test callback::aborts_at_payload_limit_plus_one ... ok
+test callback::called_once_on_success_sync_and_async ... ok
+test async_sync_async_all_run ... ok
+test add_dcs_handler_with_return_false ... ok
+test async_sync_async_first_handles_then_cleanup ... ok
+test callback::failed_callback_retains_payload_and_params_until_retry ... ok
+test callback::overflow_latch_clears_on_hook_and_empty_payload_is_valid ... ok
+test callback::not_called_on_abort_sync_and_async ... ok
+test callback::params_are_cloned_and_single_zero_is_canonicalized ... ok
+test callback::disposable_sync_and_async ... ok
+test callback::rejected_future_retains_data_until_successful_future_completion ... ok
+test callback::utf16_limit_and_lone_surrogates_are_preserved ... ok
+test callback::respects_return_false_sync_and_async ... ok
+test callback::works_up_to_payload_limit ... ok
+test clear_dcs_handler ... ok
+test clear_during_payload_keeps_original_active_list ... ok
+test dispose_handlers ... ok
+test duplicate_identity_disposal_removes_first_match_each_time ... ok
+test callback::failed_callback_stops_bubbling_and_reset_can_recover ... ok
+test implicit_hook_reset_enqueues_cleanup_without_losing_new_sequence ... ok
+test mutation::callback_registrar_mutates_the_live_list_without_reborrowing_parser ... ok
+test mutation::idle_and_dispose_fallback_identifiers_follow_upstream ... ok
+test mutation::registering_after_clear_does_not_replace_active_list ... ok
+test mutation::removed_active_index_returns_error_for_every_callback_loop ... ok
+test mutation::reset_failure_stops_older_cleanup_and_preserves_state_for_retry ... ok
+test reset_aborts_active_handlers_then_parser_can_be_reused ... ok
+test pending_cleanup_result_never_restarts_bubbling ... ok
+test reset_retains_async_cleanup_for_the_executor ... ok
+test reset_while_paused_skips_already_unhooked_handlers ... ok
+test set_dcs_handler ... ok
+test sync_async_sync_all_run ... ok
+test sync_async_sync_first_handles_then_cleanup ... ok
+test oracle::seeded_upstream_differential_traces ... ok
+
+test result: ok. 35 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests\escape_dcs.rs (target\debug\deps\escape_dcs-dbe6198d27af649b.exe)
+
+running 5 tests
+test callback_failure_stops_suffix_and_reset_recovers_outer_parser ... ok
+test removed_active_handler_error_propagates_through_the_outer_parser ... ok
+test rejected_dcs_future_stops_suffix_until_reset_and_saved_chunk_resumption ... ok
+test reset_while_dcs_pending_cleans_remaining_handler_and_resumes_suffix_once ... ok
+test outer_parser_dcs_reference_split_and_termination_matrix ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\handler_registry.rs (target\debug\deps\handler_registry-695cbaebf6056b1f.exe)
+
+running 4 tests
+test callback_can_own_its_token_without_a_strong_reference_cycle ... ok
+test clearing_lookup_detaches_only_lookup_and_weak_token_keeps_no_callback_alive ... ok
+test duplicate_tokens_remove_first_identity_per_disposal_not_equal_values ... ok
+test weak_registrar_allows_live_registration_but_never_extends_parser_lifetime ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

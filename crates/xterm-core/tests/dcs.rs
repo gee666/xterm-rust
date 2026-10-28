@@ -8,6 +8,8 @@ mod dcs_support;
 mod mutation;
 #[path = "dcs_cases/oracle.rs"]
 mod oracle;
+#[path = "dcs_cases/raw_errors.rs"]
+mod raw_errors;
 
 use dcs_support::*;
 use std::rc::Rc;

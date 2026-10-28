@@ -1,7 +1,7 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved.
 // Licensed under the MIT license. Port of DcsHandler in common/parser/DcsParser.ts.
 
-use super::{DcsHandlerTrait, HandlerResult, Params};
+use super::{DcsHandlerTrait, DispatchError, HandlerResult, Params};
 use crate::string_builder::LimitedStringBuilder;
 use crate::text_decoder::utf32_to_string;
 use std::cell::RefCell;
@@ -66,7 +66,7 @@ impl DcsHandler {
 }
 
 impl DcsHandlerTrait for DcsHandler {
-    fn hook(&mut self, params: &Params) {
+    fn hook(&mut self, params: &Params) -> Result<(), DispatchError> {
         let mut payload = self.payload.borrow_mut();
         payload.clear();
         // Upstream intentionally canonicalizes single zero or empty parameters,
@@ -74,13 +74,15 @@ impl DcsHandlerTrait for DcsHandler {
         if params.len() > 1 || params.values().first().is_some_and(|&value| value != 0) {
             payload.params = params.clone();
         }
+        Ok(())
     }
 
-    fn put(&mut self, data: &[u32]) {
+    fn put(&mut self, data: &[u32]) -> Result<(), DispatchError> {
         let mut payload = self.payload.borrow_mut();
         if !payload.hit_limit {
             payload.hit_limit = payload.data.append_utf16(&utf32_to_string(data));
         }
+        Ok(())
     }
 
     fn unhook(&mut self, success: bool) -> HandlerResult {

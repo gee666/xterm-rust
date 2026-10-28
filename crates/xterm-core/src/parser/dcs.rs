@@ -18,13 +18,14 @@ mod callback;
 pub use callback::DcsHandler;
 
 pub trait DcsHandlerTrait {
-    fn hook(&mut self, params: &Params);
-    fn put(&mut self, data: &[u32]);
+    fn hook(&mut self, params: &Params) -> Result<(), DispatchError>;
+    fn put(&mut self, data: &[u32]) -> Result<(), DispatchError>;
     fn unhook(&mut self, success: bool) -> HandlerResult;
 }
 
 pub type HandlerHandle = Rc<RefCell<dyn DcsHandlerTrait>>;
 type HandlerList = Rc<RefCell<Vec<HandlerHandle>>>;
+type FallbackHandler = Box<dyn FnMut(i32, DcsAction) -> Result<(), DispatchError>>;
 
 /// Reentrant registration without borrowing the active parser. The weak handle
 /// returns None after parser drop and cannot create a callback ownership cycle.
@@ -57,7 +58,7 @@ pub struct DcsParser {
     handlers: HandlerRegistry<i32, dyn DcsHandlerTrait>,
     active: HandlerList,
     ident: i32,
-    fallback: Option<Box<dyn FnMut(i32, DcsAction)>>,
+    fallback: Option<FallbackHandler>,
     pause: Option<Pause>,
     cleanup: Vec<HandlerResult>,
 }
@@ -82,7 +83,19 @@ impl DcsParser {
         self.handlers.clear(&ident);
     }
 
-    pub fn set_handler_fallback(&mut self, fallback: impl FnMut(i32, DcsAction) + 'static) {
+    pub fn set_handler_fallback(&mut self, mut fallback: impl FnMut(i32, DcsAction) + 'static) {
+        self.set_handler_fallback_checked(move |ident, action| {
+            fallback(ident, action);
+            Ok(())
+        });
+    }
+
+    /// Fallible host callbacks, including custom diagnostic loggers, stop the
+    /// current action before its following state cleanup when they throw.
+    pub fn set_handler_fallback_checked(
+        &mut self,
+        fallback: impl FnMut(i32, DcsAction) -> Result<(), DispatchError> + 'static,
+    ) {
         self.fallback = Some(Box::new(fallback));
     }
 
@@ -93,10 +106,11 @@ impl DcsParser {
         self.active = Rc::default();
     }
 
-    fn report(&mut self, action: DcsAction) {
+    fn report(&mut self, action: DcsAction) -> Result<(), DispatchError> {
         if let Some(fallback) = &mut self.fallback {
-            fallback(self.ident, action);
+            fallback(self.ident, action)?;
         }
+        Ok(())
     }
 
     fn at(&self, index: usize) -> Result<HandlerHandle, DispatchError> {
@@ -148,10 +162,10 @@ impl DcsParser {
         self.active = self.handlers.get(&ident);
         let count = self.active.borrow().len();
         if count == 0 {
-            self.report(DcsAction::Hook(params.clone()));
+            self.report(DcsAction::Hook(params.clone()))?;
         } else {
             for index in (0..count).rev() {
-                self.at(index)?.borrow_mut().hook(params);
+                self.at(index)?.borrow_mut().hook(params)?;
             }
         }
         Ok(())
@@ -161,10 +175,10 @@ impl DcsParser {
     pub fn put(&mut self, data: &[u32]) -> Result<(), DispatchError> {
         let count = self.active.borrow().len();
         if count == 0 {
-            self.report(DcsAction::Put(utf32_to_string(data)));
+            self.report(DcsAction::Put(utf32_to_string(data)))?;
         } else {
             for index in (0..count).rev() {
-                self.at(index)?.borrow_mut().put(data);
+                self.at(index)?.borrow_mut().put(data)?;
             }
         }
         Ok(())
@@ -179,10 +193,13 @@ impl DcsParser {
     ) -> Result<Option<HandlerResult>, DispatchError> {
         let count = self.active.borrow().len();
         if count == 0 {
-            self.report(DcsAction::Unhook(success));
+            self.report(DcsAction::Unhook(success))?;
             self.finish();
             return Ok(None);
         }
+        // JS clears its inner paused flag before resumed callbacks. If a lower
+        // callback throws, reset aborts the whole active list again; restoring
+        // this pause on error would silently change that source behavior.
         let (mut next, mut cleanup) = if let Some(pause) = self.pause.take() {
             (pause.next, pause.cleanup || previous_result)
         } else {

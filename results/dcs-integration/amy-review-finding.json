@@ -1,0 +1,41 @@
+{
+  "task": 100,
+  "reviewer": "Amy",
+  "status": "changes requested",
+  "finding": "C1 DCS restart while existing DCS active lacks a source corpus case. Driver drains reset cleanup only for explicit reset, not nested hook/reset from parse.",
+  "input": [
+    27,
+    80,
+    113,
+    65,
+    144,
+    113,
+    66,
+    156,
+    90
+  ],
+  "originalCallbackOrder": [
+    "h2",
+    "h1",
+    "h0",
+    "p2:65",
+    "p1:65",
+    "p0:65",
+    "e2:false",
+    "e0:false",
+    "h2",
+    "h1",
+    "h0",
+    "p2:66",
+    "p1:66",
+    "p0:66",
+    "e2:true",
+    "w",
+    "e1:false",
+    "e1:false",
+    "e0:false"
+  ],
+  "observed": "Original JS reference executed successfully, source callback order above. Native driver inspection identifies missing queued cleanup scheduling; owner will add failing regression and rerun.",
+  "reproducer": "node tmp/dcs-restart-review.mjs",
+  "resolution": "Add permanent nested C1 DCS corpus cases, drain cleanup before current pending and at matching per-chunk executor turns, regenerate expected values from unchanged source."
+}

@@ -43,11 +43,11 @@
       "sha256": "bd85a7f4b4cd95bb6f6d8941902ba9c922022b9d9f88fdc585f7182c5daef624"
     }
   ],
-  "streams": 15,
+  "streams": 17,
   "configurations": 3,
-  "traces": 657,
-  "parseCalls": 1695,
-  "pauses": 402,
+  "traces": 735,
+  "parseCalls": 1893,
+  "pauses": 454,
   "regressions": [
     {
       "name": "reset paused DCS resumes suffix exactly once",
@@ -91,9 +91,51 @@
         65
       ],
       "passed": true
+    },
+    {
+      "name": "raw HOOK fails immediately and retains source partial state",
+      "partialState": {
+        "state": 9,
+        "join": 77,
+        "collect": 0,
+        "params": [
+          0
+        ]
+      },
+      "calls": [
+        "new:H",
+        "new:U:false",
+        "old:U:false",
+        "PRINT"
+      ],
+      "preservedCause": true,
+      "passed": true
+    },
+    {
+      "name": "raw PUT fails immediately and retains source partial state",
+      "partialState": {
+        "state": 13,
+        "join": 77,
+        "collect": 0,
+        "params": [
+          0
+        ]
+      },
+      "calls": [
+        "new:H",
+        "old:H",
+        "new:P",
+        "new:U:false",
+        "old:U:false",
+        "PRINT"
+      ],
+      "preservedCause": true,
+      "passed": true
     }
   ],
-  "fixtureSha256": "29587ab73a5ea081165dc65ebf8199a0d2d795d6acb1f898a155dfad4af1dd76",
-  "fixtureBytes": 100599,
+  "fixtureSha256": "a09c241d47be40194bd990e9431eb6b8baa6e0fe1ad46e151c9c16a622024c30",
+  "fixtureCanonicalSha256": "a09c241d47be40194bd990e9431eb6b8baa6e0fe1ad46e151c9c16a622024c30",
+  "fixtureBytes": 114650,
+  "fixtureCanonicalBytes": 114650,
   "scope": "actual outer parser plus registered DCS, sync/async bubbling, all split boundaries, ordered callbacks and state snapshots"
 }

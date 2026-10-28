@@ -67,17 +67,19 @@ struct TestHandler {
 }
 
 impl DcsHandlerTrait for TestHandler {
-    fn hook(&mut self, params: &Params) {
+    fn hook(&mut self, params: &Params) -> Result<(), DispatchError> {
         self.reports
             .borrow_mut()
             .push(format!("{}:H:{}", self.label, params_text(params)));
+        Ok(())
     }
-    fn put(&mut self, data: &[u32]) {
+    fn put(&mut self, data: &[u32]) -> Result<(), DispatchError> {
         self.reports.borrow_mut().push(format!(
             "{}:P:{}",
             self.label,
             units(&xterm_core::text_decoder::utf32_to_string(data))
         ));
+        Ok(())
     }
     fn unhook(&mut self, success: bool) -> HandlerResult {
         let report = format!("{}:U:{success}", self.label);

@@ -1,0 +1,22 @@
+{
+  "finding": "DCS restart invokes implicit reset; old driver omitted pending cleanup scheduling",
+  "nativeReproduction": "observed ordered-callback mismatch before driver correction",
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "xterm-core",
+    "--test",
+    "escape_dcs",
+    "outer_parser_dcs_reference_split_and_termination_matrix"
+  ],
+  "exitCode": 101,
+  "signal": null,
+  "error": null,
+  "timedOut": false,
+  "terminationError": null,
+  "resourceError": null,
+  "elapsedMs": 2941.8238,
+  "status": "failed",
+  "log": "results/dcs-integration/restart-counterexample-native.log"
+}

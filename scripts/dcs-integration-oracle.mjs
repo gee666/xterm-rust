@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { escapeReference } from './escape-reference.mjs';
+import { canonicalTsvRecords } from './tsv-records.mjs';
 
 const reference = await escapeReference();
 const { EscapeSequenceParser } = reference.context;
@@ -46,7 +47,7 @@ async function trace(config, operations) {
   const snapshots = [];
   for (const operation of operations) {
     reports.length = 0;
-    if (operation === 'r') { parser.reset(); await Promise.resolve(); }
+    if (operation === 'r') parser.reset();
     else if (operation === 'd') parser.dispose();
     else {
       const data = Uint32Array.from(operation.slice(1).split(',').filter(Boolean).map(value => parseInt(value, 16)));
@@ -58,6 +59,9 @@ async function trace(config, operations) {
       } while (pending);
       parseCalls++;
     }
+    // Reset invoked by a nested DCS hook starts background cleanup even if this
+    // parse call is synchronous. Observe the same executor turn in both ports.
+    await reference.resolvedPromise(() => {});
     snapshots.push(`${parser.currentState}/${parser._collect >>> 0}/${params(parser._params)}/${parser.precedingJoinState}/${reports.join('|')}`);
   }
   fixtures.push(`${config}\t${operations.join('|')}\t${snapshots.join('~')}`);
@@ -68,6 +72,7 @@ const streams = [
   '\x1bPqpartial\x18Z', '\x1bPqpartial\x1aZ', '\x1bPqabc\x1b[31mZ',
   '\x1bP1;:2q\x1b\\Z', '\x1bP?1+q\ud800😀\x9cZ', '\x1bP1:2?+qignored\x9cZ',
   '\x1bPzunknown\x9cZ', '\x1bPq\x9cZ', '\x1bPqabc\x9c\x1bPqdef\x9cZ',
+  '\x1bPqA\x90qB\x9cZ', '\x90qA\x90?1+qB\x9cZ',
 ];
 for (const text of streams) {
   const data = Array.from(text, character => character.codePointAt(0));
@@ -137,15 +142,43 @@ for (const asynchronous of [false, true]) {
   assert.deepEqual(printed, [65]);
   regressions.push({ name: 'removed active index propagates error and reset recovers', printed, passed: true });
 }
+for (const phase of ['HOOK','PUT']) {
+  const parser = new EscapeSequenceParser();
+  const cause = new Error('exact raw failure');
+  const calls = [];
+  parser.precedingJoinState = 77;
+  parser.setPrintHandler(() => calls.push('PRINT'));
+  for (const name of ['old','new']) parser.registerDcsHandler({final:'q'}, {
+    hook() { calls.push(`${name}:H`); if (name === 'new' && phase === 'HOOK') throw cause; },
+    put() { calls.push(`${name}:P`); if (name === 'new' && phase === 'PUT') throw cause; },
+    unhook(success) { calls.push(`${name}:U:${success}`); return false; }
+  });
+  const data = Uint32Array.from([0x1b,0x50,0x71,65,66,0x9c,90]);
+  let observed;
+  try { parser.parse(data,data.length); } catch (error) { observed = error; }
+  assert.equal(observed,cause);
+  assert(!calls.some(value => value === 'PRINT' || value.includes(':U:')));
+  const partialState = {state:parser.currentState,join:parser.precedingJoinState,collect:parser._collect,params:Array.from(parser._params.toArray())};
+  assert.equal(partialState.state,phase === 'HOOK' ? reference.context.ParserState.DCS_ENTRY : reference.context.ParserState.DCS_PASSTHROUGH);
+  assert.deepEqual({...partialState,state:undefined},{state:undefined,join:77,collect:0,params:[0]});
+  parser.reset(); parser.clearDcsHandler({final:'q'}); parser.parse(Uint32Array.of(90),1);
+  assert.equal(calls.at(-1),'PRINT');
+  regressions.push({name:`raw ${phase} fails immediately and retains source partial state`,partialState,calls,preservedCause:true,passed:true});
+}
 const corpus = `${fixtures.join('\n')}\n`;
 const fixture = 'crates/xterm-core/tests/fixtures/escape-dcs.tsv';
 await mkdir('crates/xterm-core/tests/fixtures', { recursive: true });
 if (process.argv.includes('--generate')) await writeFile(fixture, corpus);
-else assert.equal(await readFile(fixture, 'utf8'), corpus, 'DCS integration trace drift');
+const fixtureBytes = await readFile(fixture);
+// TSV payloads are hex/numeric tokens; CRLF occurs only at record boundaries.
+// Preserve raw provenance while accepting Git's Windows checkout line endings.
+assert.equal(canonicalTsvRecords(fixtureBytes.toString('utf8')), corpus, 'DCS integration trace drift');
 const report = {
   node: process.version, platform: process.platform, sources,
   streams: streams.length, configurations: 3, traces: fixtures.length, parseCalls, pauses, regressions,
-  fixtureSha256: createHash('sha256').update(corpus).digest('hex'), fixtureBytes: Buffer.byteLength(corpus),
+  fixtureSha256: createHash('sha256').update(fixtureBytes).digest('hex'),
+  fixtureCanonicalSha256: createHash('sha256').update(corpus).digest('hex'),
+  fixtureBytes: fixtureBytes.length, fixtureCanonicalBytes: Buffer.byteLength(corpus),
   scope: 'actual outer parser plus registered DCS, sync/async bubbling, all split boundaries, ordered callbacks and state snapshots'
 };
 await mkdir('results/dcs-integration', { recursive: true });

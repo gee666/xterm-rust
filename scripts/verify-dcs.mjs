@@ -25,15 +25,21 @@ const inputs = [
   'crates/xterm-core/src/parser/dcs.rs', 'crates/xterm-core/src/parser/dcs_handler.rs',
   'crates/xterm-core/src/parser/handler.rs', 'crates/xterm-core/src/parser/handler_registry.rs',
   'crates/xterm-core/tests/handler_registry.rs', 'crates/xterm-core/tests/dcs.rs',
+  'crates/xterm-core/tests/dcs_fallback.rs',
+  ...['params', 'table', 'vt500_table', 'apc', 'osc', 'osc_handler'].map(name => `crates/xterm-core/src/parser/${name}.rs`),
+  'crates/xterm-core/src/input/text_decoder.rs', 'crates/xterm-core/src/lifecycle.rs',
+  'crates/xterm-core/src/string_builder.rs', 'crates/xterm-core/src/event.rs',
+  'crates/xterm-core/src/event/dispatch.rs',
   'crates/xterm-core/tests/escape_dcs.rs',
   ...['escape', 'escape_handlers', 'escape_parse', 'escape_resume'].map(name => `crates/xterm-core/src/parser/${name}.rs`),
   'crates/xterm-core/tests/dcs_support/mod.rs',
-  ...['callback', 'mutation', 'oracle'].map(name => `crates/xterm-core/tests/dcs_cases/${name}.rs`),
+  ...['callback', 'mutation', 'oracle', 'raw_errors'].map(name => `crates/xterm-core/tests/dcs_cases/${name}.rs`),
   'crates/xterm-core/tests/fixtures/dcs-oracle.tsv',
   'scripts/check-dcs.mjs', 'scripts/parser-oracle-common.mjs',
   'scripts/dcs-integration-oracle.mjs', 'scripts/escape-reference.mjs',
   'crates/xterm-core/tests/fixtures/escape-dcs.tsv',
-  'scripts/quality-process.mjs', 'scripts/verify-dcs.mjs'
+  'scripts/quality-process.mjs', 'scripts/verify-dcs.mjs',
+  'scripts/tsv-records.mjs', 'scripts/tsv-records.test.mjs'
 ];
 const report = {
   platform: process.platform, arch: process.arch, node: process.version,
@@ -60,14 +66,16 @@ for (const [name, command, args] of [
   await save();
 }
 const checks = [
+  ['record-endings', process.execPath, ['--test', 'scripts/tsv-records.test.mjs']],
   ['oracle', process.execPath, ['scripts/check-dcs.mjs']],
   ['integration-oracle', process.execPath, ['scripts/dcs-integration-oracle.mjs']],
   ['rustfmt', 'rustfmt', ['--edition', '2021', '--check',
     'crates/xterm-core/src/parser/dcs.rs', 'crates/xterm-core/src/parser/dcs_handler.rs',
     'crates/xterm-core/src/parser/handler_registry.rs', 'crates/xterm-core/tests/handler_registry.rs',
-    'crates/xterm-core/tests/dcs.rs', 'crates/xterm-core/tests/escape_dcs.rs']],
-  ['rust-tests', 'cargo', ['test', '-p', 'xterm-core', '--test', 'dcs', '--test', 'escape_dcs', '--test', 'handler_registry']],
-  ['clippy', 'cargo', ['clippy', '-p', 'xterm-core', '--test', 'dcs', '--test', 'escape_dcs', '--test', 'handler_registry', '--', '-D', 'warnings']]
+    'crates/xterm-core/tests/dcs.rs', 'crates/xterm-core/tests/dcs_fallback.rs',
+    'crates/xterm-core/tests/escape_dcs.rs']],
+  ['rust-tests', 'cargo', ['test', '-p', 'xterm-core', '--test', 'dcs', '--test', 'dcs_fallback', '--test', 'escape_dcs', '--test', 'handler_registry']],
+  ['clippy', 'cargo', ['clippy', '-p', 'xterm-core', '--test', 'dcs', '--test', 'dcs_fallback', '--test', 'escape_dcs', '--test', 'handler_registry', '--', '-D', 'warnings']]
 ];
 for (const [name, command, args] of checks) {
   const log = `${directory}/${name}.log`;

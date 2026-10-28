@@ -36,11 +36,13 @@ impl RemoveAll {
 }
 
 impl DcsHandlerTrait for RemoveAll {
-    fn hook(&mut self, _: &Params) {
+    fn hook(&mut self, _: &Params) -> Result<(), DispatchError> {
         self.remove(Stage::Hook);
+        Ok(())
     }
-    fn put(&mut self, _: &[u32]) {
+    fn put(&mut self, _: &[u32]) -> Result<(), DispatchError> {
         self.remove(Stage::Put);
+        Ok(())
     }
     fn unhook(&mut self, success: bool) -> HandlerResult {
         self.remove(if success { Stage::Unhook } else { Stage::Reset });
@@ -92,14 +94,16 @@ struct RegisterDuringHook {
     reports: Reports,
 }
 impl DcsHandlerTrait for RegisterDuringHook {
-    fn hook(&mut self, _: &Params) {
+    fn hook(&mut self, _: &Params) -> Result<(), DispatchError> {
         self.reports.borrow_mut().push("register:H".into());
         self.registrar
             .register_handler(IDENT, Rc::clone(&self.target))
             .unwrap();
+        Ok(())
     }
-    fn put(&mut self, _: &[u32]) {
+    fn put(&mut self, _: &[u32]) -> Result<(), DispatchError> {
         self.reports.borrow_mut().push("register:P".into());
+        Ok(())
     }
     fn unhook(&mut self, success: bool) -> HandlerResult {
         self.reports
@@ -144,8 +148,12 @@ fn callback_registrar_mutates_the_live_list_without_reborrowing_parser() {
 
 struct FailFirstReset(bool);
 impl DcsHandlerTrait for FailFirstReset {
-    fn hook(&mut self, _: &Params) {}
-    fn put(&mut self, _: &[u32]) {}
+    fn hook(&mut self, _: &Params) -> Result<(), DispatchError> {
+        Ok(())
+    }
+    fn put(&mut self, _: &[u32]) -> Result<(), DispatchError> {
+        Ok(())
+    }
     fn unhook(&mut self, _: bool) -> HandlerResult {
         if std::mem::replace(&mut self.0, false) {
             HandlerResult::Failed(DispatchError::CallbackFailed)

@@ -1,0 +1,21 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0053]: method `cancel` has an incompatible type for trait
+   --> crates\xterm-core\src\headless\native_queue.rs:94:43
+    |
+94  |     fn cancel(&self, handle: Self::Handle) {
+    |                                           ^ expected `Result<(), types::WriteError>`, found `()`
+    |
+note: type in trait
+   --> crates\xterm-core\src\input\write_buffer_types.rs:160:47
+    |
+160 |     fn cancel(&self, handle: Self::Handle) -> Result<(), WriteError>;
+    |                                               ^^^^^^^^^^^^^^^^^^^^^^
+    = note: expected signature `fn(&NativeWriteScheduler, _) -> Result<(), types::WriteError>`
+               found signature `fn(&NativeWriteScheduler, _) -> ()`
+help: change the output type to match the trait
+    |
+94  |     fn cancel(&self, handle: Self::Handle) -> Result<(), types::WriteError> {
+    |                                            ++++++++++++++++++++++++++++++++
+
+For more information about this error, try `rustc --explain E0053`.
+error: could not compile `xterm-core` (lib) due to 1 previous error

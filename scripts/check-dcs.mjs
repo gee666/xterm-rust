@@ -6,6 +6,7 @@ import { createHash } from 'node:crypto';
 import path from 'node:path';
 import vm from 'node:vm';
 import { parserOracle } from './parser-oracle-common.mjs';
+import { canonicalTsvRecords } from './tsv-records.mjs';
 
 const oracle = await parserOracle('Dcs');
 const { Parser: DcsParser, Params } = oracle.context;
@@ -118,6 +119,70 @@ const callbackRegressions = [];
   assert.deepEqual(calls, ['register:H', 'new:P:65', 'register:P', 'new:U:true', 'register:U:false']);
   callbackRegressions.push({ name: 'callback registration mutates live list without repeated hook', passed: true });
 }
+const fallbackRegressions = [];
+for (const phase of ['HOOK', 'PUT', 'UNHOOK']) {
+  const parser = new DcsParser();
+  const cause = new Error('exact diagnostic failure');
+  const reports = [];
+  let fail = true;
+  parser.setHandlerFallback((ident, action) => {
+    reports.push(ident);
+    if (action === phase && fail) { fail = false; throw cause; }
+  });
+  let observed;
+  const hook = () => parser.hook(0x2b70, Params.fromArray([1]));
+  try {
+    hook();
+    if (phase === 'PUT') parser.put(Uint32Array.of(65), 0, 1);
+    if (phase === 'UNHOOK') { parser.put(Uint32Array.of(65), 0, 1); parser.unhook(true); }
+  } catch (error) { observed = error; }
+  assert.equal(observed, cause, `fallback ${phase} must preserve exception identity`);
+  parser.put(Uint32Array.of(66), 0, 1);
+  parser.unhook(true);
+  parser.put(new Uint32Array(), 0, 0);
+  assert.equal(reports.at(-1), 0);
+  assert(reports.slice(0, -1).every(ident => ident === 0x2b70));
+  fallbackRegressions.push({ phase, identReports: reports, preservedCause: true, passed: true });
+}
+{
+  const parser = new DcsParser();
+  const cause = new Error('resumed failure');
+  const calls = [];
+  for (const [name,mode] of [['old','plain'],['middle','throw'],['new','pending']]) parser.registerHandler(0x2b70, {
+    hook() {}, put() {}, unhook(success) {
+      const report = () => { calls.push(`${name}:U:${success}`); return false; };
+      if (mode === 'pending') return oracle.resolvedPromise(report);
+      report(); if (mode === 'throw' && success) throw cause; return false;
+    }
+  });
+  parser.hook(0x2b70, Params.fromArray([1]));
+  assert.equal(await parser.unhook(true), false);
+  assert.throws(() => parser.unhook(true, false), error => error === cause);
+  assert.equal(parser._stack.paused, false);
+  parser.reset(); await oracle.resolvedPromise(() => {});
+  assert.deepEqual(calls, ['new:U:true','middle:U:true','middle:U:false','old:U:false','new:U:false']);
+  callbackRegressions.push({ name: 'resumed lower failure clears inner pause before reset', calls, passed: true });
+}
+const rawStreamingRegressions = [];
+for (const phase of ['HOOK', 'PUT']) {
+  const parser = new DcsParser();
+  const cause = new Error('exact raw failure');
+  const calls = [];
+  for (const name of ['old', 'new']) parser.registerHandler(0x2b70, {
+    hook() { calls.push(`${name}:H`); if (name === 'new' && phase === 'HOOK') throw cause; },
+    put() { calls.push(`${name}:P`); if (name === 'new' && phase === 'PUT') throw cause; },
+    unhook(success) { calls.push(`${name}:U:${success}`); return false; }
+  });
+  let observed;
+  try { parser.hook(0x2b70, Params.fromArray([1])); if (phase === 'PUT') parser.put(Uint32Array.of(65,66),0,2); }
+  catch (error) { observed = error; }
+  assert.equal(observed, cause);
+  const expected = phase === 'HOOK' ? ['new:H'] : ['new:H','old:H','new:P'];
+  assert.deepEqual(calls, expected);
+  parser.reset();
+  assert.deepEqual(calls, [...expected,'new:U:false','old:U:false']);
+  rawStreamingRegressions.push({ phase, calls, preservedCause: true, passed: true });
+}
 const seed = 0xdcc512;
 let state = seed;
 function next() {
@@ -183,10 +248,13 @@ const corpus = `${traces.join('\n')}\n`;
 const fixture = 'crates/xterm-core/tests/fixtures/dcs-oracle.tsv';
 await mkdir(path.dirname(fixture), { recursive: true });
 if (process.argv.includes('--generate')) await writeFile(fixture, corpus);
-else assert.equal(await readFile(fixture, 'utf8'), corpus, 'DCS corpus differs from upstream');
+const fixtureBytes = await readFile(fixture);
+// Numeric TSV fields contain no literal newlines; normalize record endings only.
+assert.equal(canonicalTsvRecords(fixtureBytes.toString('utf8')), corpus, 'DCS corpus differs from upstream');
 const report = {
-  node: process.version, sources: oracle.sources, seed, traces: traces.length, mutationRegressions, callbackRegressions,
+  node: process.version, sources: oracle.sources, seed, traces: traces.length, mutationRegressions, callbackRegressions, fallbackRegressions, rawStreamingRegressions,
   corpusSha256: createHash('sha256').update(corpus).digest('hex'),
+  fixtureRawSha256: createHash('sha256').update(fixtureBytes).digest('hex'),
   upstream: { ...oracle.baseline, executed: oracle.baseline.discovered, unrun: 0 }
 };
 await mkdir('results/dcs', { recursive: true });

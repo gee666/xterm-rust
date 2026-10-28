@@ -1,0 +1,244 @@
+{
+  "node": "v24.15.0",
+  "sources": [
+    {
+      "path": "source_repo/src/common/parser/Constants.ts",
+      "sha256": "b27193683d50f676cc2ad779fc8a5a5b4c0b38c2b0bb762168739c6d100942dd"
+    },
+    {
+      "path": "source_repo/src/common/input/TextDecoder.ts",
+      "sha256": "0368a7fddbb53502f86144b61d023f8d022f5ce973a1b01b59c552ec62631a1b"
+    },
+    {
+      "path": "source_repo/src/common/StringBuilder.ts",
+      "sha256": "1c5fb0677d84788609304e7ea1efc3f760ad5e8c43dc691ceb83b283f1286114"
+    },
+    {
+      "path": "source_repo/src/common/parser/Params.ts",
+      "sha256": "91bd52f527755b9cfc9e8ccd6e96aab49aa5554eb642d3a22a62120c3d12a25f"
+    },
+    {
+      "path": "source_repo/src/common/parser/DcsParser.ts",
+      "sha256": "37bfefb7aeb66bb25b58d48676b4e0471ea005b778431b449c994572a825d5e9"
+    },
+    {
+      "path": "source_repo/src/common/parser/DcsParser.test.ts",
+      "sha256": "785728ad34536bb58d5014cc208b460dd4aef9167fd78444c8f8ecf3a3be53f5"
+    }
+  ],
+  "seed": 14468370,
+  "traces": 512,
+  "mutationRegressions": [
+    {
+      "stage": "hook",
+      "error": "TypeError",
+      "message": "Cannot read properties of undefined (reading 'hook')",
+      "passed": true
+    },
+    {
+      "stage": "put",
+      "error": "TypeError",
+      "message": "Cannot read properties of undefined (reading 'put')",
+      "passed": true
+    },
+    {
+      "stage": "unhook",
+      "error": "TypeError",
+      "message": "Cannot read properties of undefined (reading 'unhook')",
+      "passed": true
+    },
+    {
+      "stage": "reset",
+      "error": "TypeError",
+      "message": "Cannot read properties of undefined (reading 'unhook')",
+      "passed": true
+    }
+  ],
+  "callbackRegressions": [
+    {
+      "name": "exception stops bubbling, reset recovers",
+      "passed": true
+    },
+    {
+      "name": "exception retains buffered data and Params",
+      "passed": true
+    },
+    {
+      "name": "rejected future retains data until successful resolution",
+      "passed": true
+    },
+    {
+      "name": "reset exception stops older cleanup, retry recovers",
+      "passed": true
+    },
+    {
+      "name": "callback registration mutates live list without repeated hook",
+      "passed": true
+    },
+    {
+      "name": "resumed lower failure clears inner pause before reset",
+      "calls": [
+        "new:U:true",
+        "middle:U:true",
+        "middle:U:false",
+        "old:U:false",
+        "new:U:false"
+      ],
+      "passed": true
+    }
+  ],
+  "fallbackRegressions": [
+    {
+      "phase": "HOOK",
+      "identReports": [
+        11120,
+        11120,
+        11120,
+        0
+      ],
+      "preservedCause": true,
+      "passed": true
+    },
+    {
+      "phase": "PUT",
+      "identReports": [
+        11120,
+        11120,
+        11120,
+        11120,
+        0
+      ],
+      "preservedCause": true,
+      "passed": true
+    },
+    {
+      "phase": "UNHOOK",
+      "identReports": [
+        11120,
+        11120,
+        11120,
+        11120,
+        11120,
+        0
+      ],
+      "preservedCause": true,
+      "passed": true
+    }
+  ],
+  "rawStreamingRegressions": [
+    {
+      "phase": "HOOK",
+      "calls": [
+        "new:H",
+        "new:U:false",
+        "old:U:false"
+      ],
+      "preservedCause": true,
+      "passed": true
+    },
+    {
+      "phase": "PUT",
+      "calls": [
+        "new:H",
+        "old:H",
+        "new:P",
+        "new:U:false",
+        "old:U:false"
+      ],
+      "preservedCause": true,
+      "passed": true
+    }
+  ],
+  "corpusSha256": "ce0acefee9f5685a8885246d67177c8459673bd26c8f0cb08f39f93de14582c6",
+  "fixtureRawSha256": "ce0acefee9f5685a8885246d67177c8459673bd26c8f0cb08f39f93de14582c6",
+  "upstream": {
+    "discovered": 20,
+    "passed": 20,
+    "failed": 0,
+    "skipped": 0,
+    "outcomes": [
+      {
+        "name": "DcsParser / handler registration / setDcsHandler",
+        "status": "passed"
+      },
+      {
+        "name": "DcsParser / handler registration / clearDcsHandler",
+        "status": "passed"
+      },
+      {
+        "name": "DcsParser / handler registration / addDcsHandler",
+        "status": "passed"
+      },
+      {
+        "name": "DcsParser / handler registration / addDcsHandler with return false",
+        "status": "passed"
+      },
+      {
+        "name": "DcsParser / handler registration / dispose handlers",
+        "status": "passed"
+      },
+      {
+        "name": "DcsParser / DcsHandlerFactory / should be called once on end(true)",
+        "status": "passed"
+      },
+      {
+        "name": "DcsParser / DcsHandlerFactory / should not be called on end(false)",
+        "status": "passed"
+      },
+      {
+        "name": "DcsParser / DcsHandlerFactory / should be disposable",
+        "status": "passed"
+      },
+      {
+        "name": "DcsParser / DcsHandlerFactory / should respect return false",
+        "status": "passed"
+      },
+      {
+        "name": "DcsParser / DcsHandlerFactory / should work up to payload limit",
+        "status": "passed"
+      },
+      {
+        "name": "DcsParser / DcsHandlerFactory / should abort for payload limit +1",
+        "status": "passed"
+      },
+      {
+        "name": "DcsParser - async tests / sync and async mixed / sync | async | sync / first should run, cleanup action for others",
+        "status": "passed"
+      },
+      {
+        "name": "DcsParser - async tests / sync and async mixed / sync | async | sync / all should run",
+        "status": "passed"
+      },
+      {
+        "name": "DcsParser - async tests / sync and async mixed / async | sync | async / first should run, cleanup action for others",
+        "status": "passed"
+      },
+      {
+        "name": "DcsParser - async tests / sync and async mixed / async | sync | async / all should run",
+        "status": "passed"
+      },
+      {
+        "name": "DcsParser - async tests / sync and async mixed / DcsHandlerFactory / should be called once on end(true)",
+        "status": "passed"
+      },
+      {
+        "name": "DcsParser - async tests / sync and async mixed / DcsHandlerFactory / should not be called on end(false)",
+        "status": "passed"
+      },
+      {
+        "name": "DcsParser - async tests / sync and async mixed / DcsHandlerFactory / should be disposable",
+        "status": "passed"
+      },
+      {
+        "name": "DcsParser - async tests / sync and async mixed / DcsHandlerFactory / should respect return false",
+        "status": "passed"
+      },
+      {
+        "name": "DcsParser - async tests / reset / should abort active handlers with unhook(false) when reset during payload",
+        "status": "passed"
+      }
+    ],
+    "executed": 20,
+    "unrun": 0
+  }
+}

@@ -140,15 +140,15 @@ fn utf16_limit_and_lone_surrogates_are_preserved() {
         output.borrow_mut().push((data.to_vec(), params.to_array()));
         HandlerResult::Ready(true)
     });
-    handler.hook(&params(&[0]));
-    handler.put(&[0x10000, 0xd800]);
+    handler.hook(&params(&[0])).unwrap();
+    handler.put(&[0x10000, 0xd800]).unwrap();
     assert!(resolve(handler.unhook(true)));
     assert_eq!(
         *calls.borrow(),
         [(vec![0xd800, 0xdc00, 0xd800], vec![ParamValue::Param(0)])]
     );
-    handler.hook(&params(&[0]));
-    handler.put(&[0x10000, 0x10000]);
+    handler.hook(&params(&[0])).unwrap();
+    handler.put(&[0x10000, 0x10000]).unwrap();
     assert!(!resolve(handler.unhook(true)));
     assert_eq!(calls.borrow().len(), 1);
 }
@@ -161,13 +161,13 @@ fn overflow_latch_clears_on_hook_and_empty_payload_is_valid() {
         output.borrow_mut().push((data.to_vec(), params.to_array()));
         HandlerResult::Ready(true)
     });
-    handler.hook(&params(&[1]));
-    handler.put(&[65, 66]);
-    handler.put(&[67]);
+    handler.hook(&params(&[1])).unwrap();
+    handler.put(&[65, 66]).unwrap();
+    handler.put(&[67]).unwrap();
     assert!(!resolve(handler.unhook(true)));
     assert!(calls.borrow().is_empty());
-    handler.hook(&Params::default());
-    handler.put(&[]);
+    handler.hook(&Params::default()).unwrap();
+    handler.put(&[]).unwrap();
     assert!(resolve(handler.unhook(true)));
     assert_eq!(
         *calls.borrow(),
@@ -183,10 +183,10 @@ fn async_resolution_clears_retained_data_and_params() {
         output.borrow_mut().push((data.to_vec(), params.to_array()));
         HandlerResult::Pending(Box::pin(async { true }))
     });
-    handler.hook(&params(&[1]));
-    handler.put(&[65]);
+    handler.hook(&params(&[1])).unwrap();
+    handler.put(&[65]).unwrap();
     let pending = handler.unhook(true);
-    handler.put(&[66]);
+    handler.put(&[66]).unwrap();
     assert!(resolve(pending));
     assert!(resolve(handler.unhook(true)));
     assert_eq!(
@@ -211,13 +211,13 @@ fn failed_callback_retains_payload_and_params_until_retry() {
             HandlerResult::Ready(true)
         }
     });
-    handler.hook(&params(&[1]));
-    handler.put(&[65]);
+    handler.hook(&params(&[1])).unwrap();
+    handler.put(&[65]).unwrap();
     assert!(matches!(
         handler.unhook(true),
         HandlerResult::Failed(DispatchError::CallbackFailed)
     ));
-    handler.put(&[66]);
+    handler.put(&[66]).unwrap();
     assert!(resolve(handler.unhook(true)));
     assert_eq!(
         *calls.borrow(),
@@ -262,13 +262,13 @@ fn rejected_future_retains_data_until_successful_future_completion() {
         };
         HandlerResult::PendingFallible(Box::pin(async move { result }))
     });
-    handler.hook(&params(&[1]));
-    handler.put(&[65]);
+    handler.hook(&params(&[1])).unwrap();
+    handler.put(&[65]).unwrap();
     assert_eq!(
         resolve_result(handler.unhook(true)),
         Err(DispatchError::CallbackFailed)
     );
-    handler.put(&[66]);
+    handler.put(&[66]).unwrap();
     assert_eq!(resolve_result(handler.unhook(true)), Ok(true));
     assert_eq!(resolve_result(handler.unhook(true)), Ok(true));
     assert_eq!(
@@ -290,12 +290,12 @@ fn params_are_cloned_and_single_zero_is_canonicalized() {
         HandlerResult::Ready(true)
     });
     let mut original = params(&[1, 2, 3]);
-    handler.hook(&original);
+    handler.hook(&original).unwrap();
     original.reset();
     resolve(handler.unhook(true));
     assert_eq!(calls.borrow()[0], params(&[1, 2, 3]).to_array());
     let zero = Params::from_array(&[ParamValue::Param(0), ParamValue::SubParams(vec![5])]).unwrap();
-    handler.hook(&zero);
+    handler.hook(&zero).unwrap();
     resolve(handler.unhook(true));
     assert_eq!(calls.borrow()[1], vec![ParamValue::Param(0)]);
     let original = Params::from_array(&[
@@ -304,7 +304,7 @@ fn params_are_cloned_and_single_zero_is_canonicalized() {
         ParamValue::Param(0),
     ])
     .unwrap();
-    handler.hook(&original);
+    handler.hook(&original).unwrap();
     resolve(handler.unhook(true));
     assert_eq!(calls.borrow()[2], original.to_array());
 }

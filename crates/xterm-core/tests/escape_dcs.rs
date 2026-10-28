@@ -44,15 +44,17 @@ struct Reporter {
     log: Log,
 }
 impl DcsHandlerTrait for Reporter {
-    fn hook(&mut self, value: &Params) {
+    fn hook(&mut self, value: &Params) -> Result<(), DispatchError> {
         self.log
             .borrow_mut()
             .push(format!("H:{}:{}", self.name, params(value)));
+        Ok(())
     }
-    fn put(&mut self, data: &[u32]) {
+    fn put(&mut self, data: &[u32]) -> Result<(), DispatchError> {
         self.log
             .borrow_mut()
             .push(format!("D:{}:{}", self.name, hex(data)));
+        Ok(())
     }
     fn unhook(&mut self, success: bool) -> HandlerResult {
         let message = format!("U:{}:{}", self.name, u8::from(success));
@@ -138,8 +140,17 @@ fn parse(parser: &mut EscapeSequenceParser, data: &[u32]) -> usize {
     let mut previous = None;
     let mut pauses = 0;
     while let Some(pending) = parser.parse(data, previous).unwrap() {
+        // A nested DCS hook can queue old cleanup before returning this pending
+        // callback. JS starts those promises eagerly in this creation order.
+        for cleanup in parser.take_cleanup() {
+            resolve(cleanup).unwrap();
+        }
         previous = Some(resolve(pending).unwrap());
         pauses += 1;
+    }
+    // Match the oracle's executor turn even when parsing completed synchronously.
+    for cleanup in parser.take_cleanup() {
+        resolve(cleanup).unwrap();
     }
     pauses
 }
@@ -192,7 +203,7 @@ fn outer_parser_dcs_reference_split_and_termination_matrix() {
         );
         traces += 1;
     }
-    assert_eq!((traces, calls, pauses), (657, 1695, 402));
+    assert_eq!((traces, calls, pauses), (735, 1893, 454));
 }
 #[test]
 fn reset_while_dcs_pending_cleans_remaining_handler_and_resumes_suffix_once() {

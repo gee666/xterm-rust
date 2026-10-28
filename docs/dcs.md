@@ -7,9 +7,9 @@
 | Upstream | Rust |
 | --- | --- |
 | `DcsParser` | `parser::dcs::DcsParser` |
-| `IDcsHandler` | `DcsHandlerTrait` behind `Rc<RefCell<dyn DcsHandlerTrait>>` |
+| `IDcsHandler` | `DcsHandlerTrait` behind `Rc<RefCell<dyn DcsHandlerTrait>>`; hook/put return `Result<(), DispatchError>` immediately on source exceptions |
 | `registerHandler`, returned disposable | `register_handler`, explicit `DisposableHandle::dispose` |
-| `clearHandler`, `setHandlerFallback` | `clear_handler`, `set_handler_fallback` |
+| `clearHandler`, `setHandlerFallback` | `clear_handler`, `set_handler_fallback`; checked fallbacks use `set_handler_fallback_checked` |
 | `hook`, `put`, `unhook`, `reset`, `dispose` | Same snake-case names; dispatch methods return `Result<_, DispatchError>` |
 | Packed identifier | `i32`, retaining JavaScript bitwise packing |
 | Fallback action and data | `DcsAction::{Hook(Params), Put(Vec<u16>), Unhook(bool)}` |
@@ -22,6 +22,10 @@
 `DcsParser::registrar()` provides a weak, callback-safe `DcsRegistrar`. Its register/clear methods return `None` only after parser drop; explicit parser disposal leaves it reusable. OSC, DCS and ESC/CSI use the same `handler::registry` implementation. Tokens capture weak list and handler identities so a callback can own its disposal token without a reference cycle. Tokens do not extend a detached callback's native lifetime.
 
 Registration handles have explicit disposal, not unregister-on-drop. Repeated disposal removes the first matching identity each time, including duplicate registrations. Clearing a registration lookup does not detach the list already selected by `hook`. Disposing the parser removes handlers without invoking their cleanup, as upstream does. Borrowing ends before list callbacks so handlers can dispose registration handles during dispatch. If that removes an index still needed by reverse traversal, Rust returns `DispatchError::ActiveHandlerRemoved`, matching the upstream TypeError rather than silently skipping it. The four hook/put/unhook/reset mutation counterexamples are retained in both languages.
+
+Raw streaming hook/put callbacks return `Result<(), DispatchError>` so decoder, logger and host reply exceptions stop at their actual source action rather than being deferred until unhook. Resumed unhook consumes the inner pause flag before calling lower handlers. If a lower handler throws, reset aborts the complete active list again, including a previously completed async handler; the source clears its paused flag at that exact point. The separate outer parser continuation frame still follows its own reset rules.
+
+Fallible fallback callbacks return their exact `DispatchError` immediately from hook/put/unhook, before any following cleanup. A failed unhook retains its identifier until retry or reset, matching the source exception boundary. Registered handlers do not fall back merely because every unhook result is false.
 
 Handlers run newest first. Every active handler receives hook and payload. A successful unhook result causes older handlers to receive `unhook(false)` for cleanup. A false result keeps bubbling. Pending cleanup must finish before invoking the next older handler. Reset skips handlers already unhooked before a pending result.
 
@@ -57,6 +61,6 @@ The oracle also emits 512 traces with seed `0xdcc512`. Each has four sequences a
 
 `node scripts/verify-dcs.mjs` captures exact commands, input hashes, toolchain versions and raw oracle/test/fmt/Clippy logs. Each invocation reserves a distinct `results/dcs/run-NNNN/` directory, writes an incomplete false summary before commands, retains failures, and rejects input changes during verification. `results/dcs/verification.json` mirrors the current invocation; use its `runDirectory` and hashes when citing evidence. The detailed source-branch checklist is `docs/acceptance/dcs.md`.
 
-The same verifier runs the real outer parser checks in `tests/escape_dcs.rs`. `scripts/dcs-integration-oracle.mjs` loads fresh read-only reference modules through the shared TypeScript/VM loader and compares 657 traces from 15 streams, three handler configurations, every split boundary, 1,695 decoded chunks and 402 pending continuations. It also retains four explicit reset/rejection/exception/mutation regressions. Callback order, payload batch boundaries, final parser state, collect, Params/subparams and preceding-join state are compared. The checklist is `docs/acceptance/dcs-integration.md`. Regenerate that fixture only with `node scripts/dcs-integration-oracle.mjs --generate`.
+The same verifier runs the real outer parser checks in `tests/escape_dcs.rs`. `scripts/dcs-integration-oracle.mjs` loads fresh read-only reference modules through the shared TypeScript/VM loader and compares 735 traces from 17 streams, three handler configurations, every split boundary, 1,893 decoded chunks and 454 pending continuations. It also retains six explicit reset/rejection/exception/mutation/raw-streaming partial-state regressions. Numeric TSV record comparisons accept LF or CRLF without changing payload tokens; raw fixture hashes remain distinct from canonical LF hashes. Callback order, payload batch boundaries, final parser state, collect, Params/subparams and preceding-join state are compared. Independent review found a missing C1 DCS restart case and lost queued-cleanup observation in the test driver. `results/dcs-integration/restart-counterexample.json` and its native log retain trace663 before correction. The driver now schedules prior cleanup before a current pending callback and after synchronous chunks at the same executor turns as JS. The checklist is `docs/acceptance/dcs-integration.md`. Regenerate that fixture only with `node scripts/dcs-integration-oracle.mjs --generate`.
 
 These commands run locally on native Windows. Counts and current pass/failure status are in each run's JSON and logs, not inferred from file existence or an older summary. Parser-only evidence does not establish complete terminal integration, browser behavior, native Linux/macOS results or full xterm equivalence.
