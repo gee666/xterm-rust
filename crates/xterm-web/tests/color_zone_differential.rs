@@ -96,7 +96,7 @@ fn all_2048_zone_operations_and_retained_identities_match_javascript() {
                         retained.remove(0);
                     }
                     retained.push(zone);
-                }
+                };
             }
             4 => store.add(line, None).unwrap(),
             _ => panic!("unexpected fixture operation"),

@@ -1,0 +1,47 @@
+warning: variant `Debug` is never constructed
+  --> crates\xterm-core\src\terminal\state.rs:15:5
+   |
+13 | pub(crate) enum CoreAction {
+   |                 ---------- variant in this enum
+14 |     Reply(Vec<u16>),
+15 |     Debug(Vec<u16>),
+   |     ^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: method `mode_debug` is never used
+  --> crates\xterm-core\src\terminal\state.rs:97:19
+   |
+48 | impl TerminalState {
+   | ------------------ method in this implementation
+...
+97 |     pub(crate) fn mode_debug(&mut self, text: &str) -> Result<(), TerminalError> {
+   |                   ^^^^^^^^^^
+
+warning: `xterm-core` (lib) generated 2 warnings
+   Compiling xterm-web v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web)
+error[E0597]: `zones` does not live long enough
+   --> crates\xterm-web\tests\color_zone_differential.rs:94:37
+    |
+93  |                 let zones = store.zones().unwrap();
+    |                     ----- binding `zones` declared here
+94  |                 if let Some(zone) = zones.borrow().first().cloned() {
+    |                                     ^^^^^---------
+    |                                     |
+    |                                     borrowed value does not live long enough
+    |                                     a temporary with access to the borrow is created here ...
+...
+100 |             }
+    |             -
+    |             |
+    |             `zones` dropped here while still borrowed
+    |             ... and the borrow might be used here, when that temporary is dropped and runs the destructor for type `Ref<'_, Vec<Rc<RefCell<ColorZone>>>>`
+    |
+help: consider adding semicolon after the expression so its temporaries are dropped sooner, before the local variables declared by the block are dropped
+    |
+99  |                 };
+    |                  +
+
+For more information about this error, try `rustc --explain E0597`.
+error: could not compile `xterm-web` (test "color_zone_differential") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

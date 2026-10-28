@@ -1,5 +1,56 @@
 // Copyright (c) 2022 The xterm.js authors. All rights reserved. MIT license.
 use super::*;
+/// Read-only handle to the original live bucket, not a copied value array.
+#[derive(Clone)]
+pub struct DecorationBucket {
+    bucket: Bucket,
+}
+impl DecorationBucket {
+    pub(super) fn new(bucket: Bucket) -> Self {
+        Self { bucket }
+    }
+    pub fn len(&self) -> usize {
+        self.bucket.borrow().len()
+    }
+    pub fn is_empty(&self) -> bool {
+        self.bucket.borrow().is_empty()
+    }
+    pub fn get(&self, index: usize) -> Option<Decoration> {
+        self.bucket.borrow().get(index).cloned()
+    }
+    pub fn ptr_eq(&self, other: &Self) -> bool {
+        Rc::ptr_eq(&self.bucket, &other.bucket)
+    }
+    pub fn iter(&self) -> DecorationBucketIterator {
+        DecorationBucketIterator {
+            bucket: self.clone(),
+            index: 0,
+            finished: false,
+        }
+    }
+}
+/// Array iteration observes mutations between next calls and stays exhausted.
+pub struct DecorationBucketIterator {
+    bucket: DecorationBucket,
+    index: usize,
+    finished: bool,
+}
+impl Iterator for DecorationBucketIterator {
+    type Item = Decoration;
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.finished {
+            return None;
+        }
+        let Some(decoration) = self.bucket.get(self.index) else {
+            self.finished = true;
+            return None;
+        };
+        self.index += 1;
+        Some(decoration)
+    }
+}
+impl std::iter::FusedIterator for DecorationBucketIterator {}
+
 enum LookupSource {
     Cache(DecorationLineCache),
     Service(DecorationService),

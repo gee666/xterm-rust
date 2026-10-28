@@ -14,7 +14,9 @@ use std::{
 };
 #[path = "decoration_cache.rs"]
 mod cache;
-pub use cache::{DecorationCellIterator, DecorationLineCache};
+pub use cache::{
+    DecorationBucket, DecorationBucketIterator, DecorationCellIterator, DecorationLineCache,
+};
 #[path = "decoration_service.rs"]
 mod service;
 pub use service::DecorationService;

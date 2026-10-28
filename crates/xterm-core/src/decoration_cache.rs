@@ -3,7 +3,7 @@ use super::*;
 use crate::circular_list::{CircularList, ListChange};
 #[path = "decoration_iterator.rs"]
 mod iterator;
-pub use iterator::DecorationCellIterator;
+pub use iterator::{DecorationBucket, DecorationBucketIterator, DecorationCellIterator};
 type Bucket = Rc<RefCell<Vec<Decoration>>>;
 type Buckets = Vec<(i64, Bucket)>;
 #[derive(Clone, Copy)]
@@ -95,8 +95,8 @@ impl DecorationLineCache {
             .retain(|d| !d.ptr_eq(decoration));
         self.remove_from_buckets(decoration);
     }
-    pub fn decorations_on_line(&self, line: i64) -> Option<Vec<Decoration>> {
-        self.bucket(line).map(|bucket| bucket.borrow().clone())
+    pub fn decorations_on_line(&self, line: i64) -> Option<DecorationBucket> {
+        self.bucket(line).map(DecorationBucket::new)
     }
     fn bucket(&self, line: i64) -> Option<Bucket> {
         self.state
