@@ -8,26 +8,27 @@ use xterm_core::task_queue::{CallbackKind, DebouncedIdleTask, Scheduler, TaskQue
 struct Host {
     clock: Rc<Cell<f64>>,
     events: Rc<RefCell<Vec<String>>>,
-    token: usize,
+    token: Cell<usize>,
 }
 impl Scheduler for Host {
     type Handle = usize;
     type Error = std::convert::Infallible;
-    fn request(&mut self, kind: CallbackKind) -> Result<usize, Self::Error> {
-        self.token += 1;
+    fn request(&self, kind: CallbackKind) -> Result<usize, Self::Error> {
+        self.token.set(self.token.get() + 1);
         self.events
             .borrow_mut()
-            .push(format!("request:{}:{kind:?}", self.token));
-        Ok(self.token)
+            .push(format!("request:{}:{kind:?}", self.token.get()));
+        Ok(self.token.get())
     }
-    fn cancel(&mut self, id: usize) {
+    fn cancel(&self, id: usize) {
         self.events.borrow_mut().push(format!("cancel:{id}"));
     }
     fn now(&self) -> f64 {
         self.clock.get()
     }
-    fn deadline_exceeded(&mut self, ms: f64) {
+    fn deadline_exceeded(&self, ms: f64) -> Result<(), Self::Error> {
         self.events.borrow_mut().push(format!("warn:{ms}"));
+        Ok(())
     }
 }
 #[test]

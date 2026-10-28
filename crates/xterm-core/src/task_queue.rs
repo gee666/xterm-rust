@@ -22,16 +22,16 @@ pub enum CallbackKind {
 pub trait Scheduler {
     type Handle;
     type Error;
-    fn request(&mut self, kind: CallbackKind) -> Result<Self::Handle, Self::Error>;
-    fn cancel(&mut self, handle: Self::Handle);
+    fn request(&self, kind: CallbackKind) -> Result<Self::Handle, Self::Error>;
+    fn cancel(&self, handle: Self::Handle);
     /// Releases a fired callback's resources without canceling a host callback
     /// which has already run. RAII handles may override this to disarm cleanup.
-    fn callback_fired(&mut self, handle: Self::Handle) {
+    fn callback_fired(&self, handle: Self::Handle) {
         drop(handle);
     }
     /// Milliseconds, matching performance.now().
     fn now(&self) -> f64;
-    fn deadline_exceeded(&mut self, milliseconds: f64);
+    fn deadline_exceeded(&self, milliseconds: f64) -> Result<(), Self::Error>;
 }
 
 type Task<S> = Rc<dyn Fn(&TaskQueue<S>) -> bool>;
@@ -39,13 +39,13 @@ struct State<S: Scheduler> {
     tasks: RefCell<Vec<Task<S>>>,
     index: Cell<usize>,
     pending: RefCell<Option<S::Handle>>,
-    scheduler: RefCell<S>,
+    scheduler: S,
     kind: CallbackKind,
 }
 impl<S: Scheduler> Drop for State<S> {
     fn drop(&mut self) {
         if let Some(handle) = self.pending.get_mut().take() {
-            self.scheduler.get_mut().cancel(handle);
+            self.scheduler.cancel(handle);
         }
     }
 }
@@ -89,7 +89,7 @@ impl<S: Scheduler> TaskQueue<S> {
                 tasks: RefCell::new(Vec::new()),
                 index: Cell::new(0),
                 pending: RefCell::new(None),
-                scheduler: RefCell::new(scheduler),
+                scheduler,
                 kind,
             }),
         }
@@ -129,7 +129,7 @@ impl<S: Scheduler> TaskQueue<S> {
     pub fn clear(&self) {
         let handle = self.state.pending.borrow_mut().take();
         if let Some(handle) = handle {
-            self.state.scheduler.borrow_mut().cancel(handle);
+            self.state.scheduler.cancel(handle);
         }
         self.state.index.set(0);
         self.state.tasks.borrow_mut().clear();
@@ -149,7 +149,7 @@ impl<S: Scheduler> TaskQueue<S> {
     pub fn process(&self, mut time_remaining: impl FnMut() -> f64) -> Result<(), S::Error> {
         let handle = self.state.pending.borrow_mut().take();
         if let Some(handle) = handle {
-            self.state.scheduler.borrow_mut().callback_fired(handle);
+            self.state.scheduler.callback_fired(handle);
         }
         let mut longest = 0.0_f64;
         let mut previous_remaining = time_remaining();
@@ -167,8 +167,7 @@ impl<S: Scheduler> TaskQueue<S> {
                     // JS Math.round ties towards +infinity, unlike f64::round.
                     self.state
                         .scheduler
-                        .borrow_mut()
-                        .deadline_exceeded((overrun + 0.5).floor().abs());
+                        .deadline_exceeded((overrun + 0.5).floor().abs())?;
                 }
                 return self.start();
             }
@@ -182,7 +181,7 @@ impl<S: Scheduler> TaskQueue<S> {
         self.process(|| js_max(0.0, end - self.now()))
     }
     fn now(&self) -> f64 {
-        self.state.scheduler.borrow().now()
+        self.state.scheduler.now()
     }
     fn current_task(&self) -> Option<Task<S>> {
         self.state
@@ -195,7 +194,7 @@ impl<S: Scheduler> TaskQueue<S> {
         if self.has_pending_callback() {
             return Ok(());
         }
-        let handle = self.state.scheduler.borrow_mut().request(self.state.kind)?;
+        let handle = self.state.scheduler.request(self.state.kind)?;
         *self.state.pending.borrow_mut() = Some(handle);
         Ok(())
     }
