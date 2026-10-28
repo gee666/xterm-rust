@@ -1,0 +1,36 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0061]: this function takes 2 arguments but 0 arguments were supplied
+   --> crates\xterm-core\tests\decoration_upstream.rs:6:52
+    |
+6   |     let buffer = Buffer::new(true, 80, 24, Rc::new(OptionsService::new())).unwrap();
+    |                                                    ^^^^^^^^^^^^^^^^^^^-- two arguments are missing
+    |
+note: associated function defined here
+   --> P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\mod.rs:116:12
+    |
+116 |     pub fn new<K: AsRef<str>>(
+    |            ^^^
+help: provide the arguments
+    |
+6   |     let buffer = Buffer::new(true, 80, 24, Rc::new(OptionsService::new(/* bool */, /* options */))).unwrap();
+    |                                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0308]: mismatched types
+   --> crates\xterm-core\tests\decoration_upstream.rs:88:31
+    |
+88  |     buffer.lines.splice(5, 0, vec![Rc::new(RefCell::new(blank))]).unwrap();
+    |                  ------       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&[Rc<RefCell<BufferLine>>]`, found `Vec<Rc<RefCell<Rc<RefCell<...>>>>>`
+    |                  |
+    |                  arguments to this method are incorrect
+    |
+    = note: expected reference `&[Rc<RefCell<BufferLine>>]`
+                  found struct `Vec<Rc<RefCell<Rc<RefCell<BufferLine>>>>>`
+note: method defined here
+   --> P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\circular_list.rs:160:12
+    |
+160 |     pub fn splice(
+    |            ^^^^^^
+
+Some errors have detailed explanations: E0061, E0308.
+For more information about an error, try `rustc --explain E0061`.
+error: could not compile `xterm-core` (test "decoration_upstream") due to 2 previous errors
