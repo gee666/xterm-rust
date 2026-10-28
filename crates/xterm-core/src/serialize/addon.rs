@@ -7,14 +7,11 @@ use super::{
 use crate::{
     headless::{HeadlessError, ModesSnapshot, MouseTrackingMode, Terminal},
     options::{OptionError, OptionValue},
-    public_api::{
-        addon_manager::TerminalAddon,
-        validation::{verify_proposed_api, ApiError},
-    },
+    public_api::{addon_manager::TerminalAddon, buffer::BufferNamespaceApi},
     terminal::{CoreTerminal, TerminalState},
 };
 use std::{
-    cell::RefCell,
+    cell::{OnceCell, RefCell},
     fmt,
     rc::{Rc, Weak},
 };
@@ -25,8 +22,8 @@ pub enum AddonSerializeError {
     TerminalReleased,
     Borrowed,
     SelectionUnavailable,
+    InvalidActiveBuffer,
     Options(OptionError),
-    Api(ApiError),
     Serialize(SerializeError),
 }
 impl fmt::Display for AddonSerializeError {
@@ -38,8 +35,10 @@ impl fmt::Display for AddonSerializeError {
             Self::SelectionUnavailable => {
                 f.write_str("this._terminal?.getSelectionPosition is not a function")
             }
+            Self::InvalidActiveBuffer => {
+                f.write_str("Active buffer is neither normal nor alternate")
+            }
             Self::Options(error) => error.fmt(f),
-            Self::Api(error) => error.fmt(f),
             Self::Serialize(error) => error.fmt(f),
         }
     }
@@ -48,12 +47,12 @@ impl std::error::Error for AddonSerializeError {
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
         match self {
             Self::Options(error) => Some(error),
-            Self::Api(error) => Some(error),
             Self::Serialize(error) => Some(error),
             Self::NotLoaded
             | Self::TerminalReleased
             | Self::Borrowed
-            | Self::SelectionUnavailable => None,
+            | Self::SelectionUnavailable
+            | Self::InvalidActiveBuffer => None,
         }
     }
 }
@@ -67,11 +66,12 @@ impl From<OptionError> for AddonSerializeError {
         Self::Options(value)
     }
 }
-impl From<ApiError> for AddonSerializeError {
-    fn from(value: ApiError) -> Self {
-        Self::Api(value)
+impl From<crate::buffer::BufferError> for AddonSerializeError {
+    fn from(value: crate::buffer::BufferError) -> Self {
+        Self::Serialize(value.into())
     }
 }
+type NamespaceCache = OnceCell<Rc<BufferNamespaceApi>>;
 
 /// The Rust host owns state lifetime. A weak link prevents cycles when option
 /// getters or event callbacks retain this addon. Explicit addon disposal still
@@ -80,25 +80,35 @@ impl From<ApiError> for AddonSerializeError {
 #[derive(Default)]
 pub struct SerializeAddon {
     state: RefCell<Option<Weak<RefCell<TerminalState>>>>,
+    namespace_cache: RefCell<Option<Weak<NamespaceCache>>>,
 }
 impl SerializeAddon {
     pub fn new() -> Self {
         Self::default()
     }
     pub fn activate_engine(&self, terminal: &CoreTerminal) -> Result<(), AddonSerializeError> {
-        *self
+        let mut target = self
             .state
             .try_borrow_mut()
-            .map_err(|_| AddonSerializeError::Borrowed)? =
-            Some(Rc::downgrade(&terminal.state_handle()));
+            .map_err(|_| AddonSerializeError::Borrowed)?;
+        let mut cache = self
+            .namespace_cache
+            .try_borrow_mut()
+            .map_err(|_| AddonSerializeError::Borrowed)?;
+        *target = Some(Rc::downgrade(&terminal.state_handle()));
+        *cache = None;
         Ok(())
     }
     pub fn serialize(&self, options: &SerializeOptions) -> Result<Vec<u16>, AddonSerializeError> {
         let handle = self.current_state()?;
+        // Source buffer access initializes the shared public namespace lazily.
+        let namespace = self.namespace(&handle)?;
         let state = handle
             .try_borrow()
             .map_err(|_| AddonSerializeError::Borrowed)?;
-        serialize_live_state(&state, options)
+        let output = serialize_live_state(&state, options);
+        drop(namespace);
+        output
     }
     pub fn serialize_as_html(
         &self,
@@ -107,18 +117,16 @@ impl SerializeAddon {
         let handle = self.current_state()?;
         // Theme property getters and option coercions can call back into the
         // terminal. Release its state borrow before invoking those host hooks.
-        let (terminal_options, active, cols, rows) = {
+        let (terminal_options, cols, rows) = {
             let state = handle
                 .try_borrow()
                 .map_err(|_| AddonSerializeError::Borrowed)?;
-            (
-                Rc::clone(&state.options),
-                state.buffers.active(),
-                state.cols(),
-                state.rows(),
-            )
+            (Rc::clone(&state.options), state.cols(), state.rows())
         };
-        verify_proposed_api(terminal_options.get("allowProposedApi")?.is_truthy())?;
+        let namespace = self.namespace(&handle)?;
+        let active = namespace
+            .active()
+            .map_err(|_| AddonSerializeError::InvalidActiveBuffer)?;
         if options.only_selection && options.range.is_none() {
             return Err(AddonSerializeError::SelectionUnavailable);
         }
@@ -127,11 +135,7 @@ impl SerializeAddon {
         // or switches buffers, without retaining a mutable resource borrow.
         let mut effective = options.clone();
         if effective.range.is_none() {
-            let length = active
-                .try_borrow()
-                .map_err(|_| AddonSerializeError::Borrowed)?
-                .lines
-                .len();
+            let length = active.len()?;
             let start = scrollback_start(length, rows, options.scrollback);
             effective.range = Some(if start < length {
                 HtmlRange {
@@ -165,12 +169,44 @@ impl SerializeAddon {
             font_size: HtmlFontSize::Text(terminal_options.get("fontSize")?.concat_utf16()?),
             ansi_colors: None,
         };
-        let buffer = active
-            .try_borrow()
-            .map_err(|_| AddonSerializeError::Borrowed)?;
+        let buffer = super::view::View::new(active)?;
         Ok(serialize_html(
-            &*buffer, cols, rows, None, &config, &effective,
+            &buffer, cols, rows, None, &config, &effective,
         )?)
+    }
+    fn namespace(
+        &self,
+        state: &Rc<RefCell<TerminalState>>,
+    ) -> Result<Rc<BufferNamespaceApi>, AddonSerializeError> {
+        let weak = self
+            .namespace_cache
+            .try_borrow()
+            .map_err(|_| AddonSerializeError::Borrowed)?
+            .clone();
+        if let Some(weak) = weak {
+            let cache = weak
+                .upgrade()
+                .ok_or(AddonSerializeError::TerminalReleased)?;
+            if let Some(view) = cache.get() {
+                return Ok(Rc::clone(view));
+            }
+            let buffers = Rc::clone(
+                &state
+                    .try_borrow()
+                    .map_err(|_| AddonSerializeError::Borrowed)?
+                    .buffers,
+            );
+            return Ok(Rc::clone(
+                cache.get_or_init(|| Rc::new(BufferNamespaceApi::new(buffers))),
+            ));
+        }
+        let buffers = Rc::clone(
+            &state
+                .try_borrow()
+                .map_err(|_| AddonSerializeError::Borrowed)?
+                .buffers,
+        );
+        Ok(Rc::new(BufferNamespaceApi::new(buffers)))
     }
     fn current_state(&self) -> Result<Rc<RefCell<TerminalState>>, AddonSerializeError> {
         self.state
@@ -203,7 +239,6 @@ pub fn serialize_live_html(
     selection: Option<CellRange>,
     config: &HtmlConfig,
 ) -> Result<Vec<u16>, AddonSerializeError> {
-    verify_proposed_api(state.options.get("allowProposedApi")?.is_truthy())?;
     let active = state.buffers.active();
     let active = active
         .try_borrow()
@@ -220,11 +255,16 @@ pub fn serialize_live_html(
 impl TerminalAddon<Terminal> for SerializeAddon {
     type Error = HeadlessError;
     fn activate(&self, terminal: &Terminal) -> Result<(), HeadlessError> {
-        *self
+        let mut target = self
             .state
             .try_borrow_mut()
-            .map_err(|_| HeadlessError::Borrowed)? =
-            Some(Rc::downgrade(&terminal.state_handle_for_addon()));
+            .map_err(|_| HeadlessError::Borrowed)?;
+        let mut cache = self
+            .namespace_cache
+            .try_borrow_mut()
+            .map_err(|_| HeadlessError::Borrowed)?;
+        *target = Some(Rc::downgrade(&terminal.state_handle_for_addon()));
+        *cache = Some(terminal.buffer_cache_for_addon());
         Ok(())
     }
     fn dispose(&self) -> Result<(), HeadlessError> {
@@ -240,7 +280,6 @@ pub fn serialize_live_state(
     state: &TerminalState,
     options: &SerializeOptions,
 ) -> Result<Vec<u16>, AddonSerializeError> {
-    verify_proposed_api(state.options.get("allowProposedApi")?.is_truthy())?;
     let normal = state.buffers.normal();
     let alt = state.buffers.alt();
     let active = state.buffers.active();

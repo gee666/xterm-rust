@@ -6,6 +6,7 @@ mod ansi;
 pub use addon::{serialize_live_html, serialize_live_state, AddonSerializeError, SerializeAddon};
 mod buffer;
 mod html;
+mod view;
 pub use html::serialize_html;
 mod style;
 mod terminal;
@@ -94,23 +95,50 @@ pub struct HtmlConfig {
     pub ansi_colors: Option<[String; 256]>,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug)]
 pub enum SerializeError {
     InvalidRange,
     BorrowedLine,
     MissingWrappedLine,
+    BufferView(std::rc::Rc<crate::buffer::BufferError>),
 }
-
+impl PartialEq for SerializeError {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Self::InvalidRange, Self::InvalidRange)
+            | (Self::BorrowedLine, Self::BorrowedLine)
+            | (Self::MissingWrappedLine, Self::MissingWrappedLine) => true,
+            // Transported callback errors retain identity, rather than matching
+            // unrelated failures just because their messages happen to agree.
+            (Self::BufferView(a), Self::BufferView(b)) => std::rc::Rc::ptr_eq(a, b),
+            _ => false,
+        }
+    }
+}
+impl Eq for SerializeError {}
+impl From<crate::buffer::BufferError> for SerializeError {
+    fn from(error: crate::buffer::BufferError) -> Self {
+        Self::BufferView(std::rc::Rc::new(error))
+    }
+}
 impl std::fmt::Display for SerializeError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_str(match self {
             Self::InvalidRange => "Invalid array length",
             Self::BorrowedLine => "buffer line already borrowed",
             Self::MissingWrappedLine => "Cannot read properties of undefined (reading 'isWrapped')",
+            Self::BufferView(error) => return error.fmt(f),
         })
     }
 }
-impl std::error::Error for SerializeError {}
+impl std::error::Error for SerializeError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::BufferView(error) => Some(error.as_ref()),
+            _ => None,
+        }
+    }
+}
 
 pub fn serialize_buffer(
     buffer: &dyn BufferAccess,

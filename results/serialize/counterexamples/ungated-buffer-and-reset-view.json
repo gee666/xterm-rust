@@ -1,0 +1,26 @@
+{
+  "discovery": "Post-acceptance source review; task 88 was reopened rather than treating earlier native green tests as full proof",
+  "sourceProof": "results/serialize/source-reset-ungated-cached.json",
+  "reproduction": "node scripts/serialize-cached-probes.mjs after a verified source reference bundle exists; no compiler or browser launch",
+  "sourcePaths": [
+    "source_repo/src/browser/public/Terminal.ts:97",
+    "source_repo/src/headless/public/Terminal.ts:87",
+    "source_repo/src/common/public/BufferNamespaceApi.ts",
+    "source_repo/src/common/public/BufferApiView.ts",
+    "source_repo/addons/addon-serialize/src/SerializeAddon.ts"
+  ],
+  "ungatedBuffer": {
+    "input": "Construct the original Terminal with default allowProposedApi=false, load SerializeAddon, write normal and serialize",
+    "sourceObserved": "success, output normal",
+    "nativeBeforeFix": "An invented verify_proposed_api check returned an error; a self-authored native test incorrectly expected that error",
+    "correction": "Remove the invented guard and replace the incorrect own expectation with positive source-backed assertions. Original source assertions remain unchanged."
+  },
+  "resetView": {
+    "input": "Write normal; options.theme.foreground getter calls terminal.reset(); serializeAsHTML with includeGlobalBackground=true",
+    "sourceObserved": "Two rows of ten blank cells; normal is absent",
+    "sourceMechanism": "Reset emits buffer activation; the shared BufferNamespaceApi reinitializes the same captured BufferApiView to the replacement normal buffer",
+    "nativeBeforeFix": "Raw BufferRef capture retained old normal cells; this was a static code finding, not a measured before-fix native replay",
+    "correction": "Lazily share the real public namespace cache and read through its captured view after header callbacks, without holding resource borrows across callbacks"
+  },
+  "verificationStatus": "Fresh source oracle passed for both default-false terminal classes and reset aliasing; corrected native 14 tests, Clippy, fmt and lower 3350-output/14-HTML regression all passed through controlled slots. See reset-current-evidence.json. Prior 13 passing native tests remain historical evidence, not proof of the corrected behavior."
+}

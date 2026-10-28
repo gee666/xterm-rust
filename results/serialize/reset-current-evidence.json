@@ -1,0 +1,31 @@
+{
+  "scope": "Reopened native serialize task 88: ungated buffers and shared-view reset aliasing",
+  "overallEquivalence": "NOT PROVEN",
+  "environment": { "platform": "native Windows x64", "rustc": "1.85.1", "node": "v24.15.0" },
+  "sourceFilesSha256": {
+    "crates/xterm-core/src/serialize/addon.rs": "b9364b3f5c501b2ef278b0fcc912cbb705cee4ca8a706baebc273bbacbf115dc",
+    "crates/xterm-core/src/serialize/view.rs": "f91d0832a6de00696d67a64de4fe63988024825983fbe5c79c12411a0a643794",
+    "crates/xterm-core/src/serialize/mod.rs": "308e8f5ce0eb2f99964e86aeffac8d9b3619cf4980c8d1907d713852342d9885",
+    "crates/xterm-core/tests/serialize_live_reset.rs": "17d3686707fd8a0577b3a725a4470837d3db4a6dc42b203a1932bacaebd1c1bd",
+    "scripts/serialize-live-oracle.mjs": "afbe5503dc2e2a2b899662e6d645e1f7f6862d4bd9509bf705037b425121558d"
+  },
+  "checks": [
+    { "name": "fresh unchanged-source oracle", "exitCode": 0, "roundTrips": 10, "headerCases": 3, "defaultFalseFlagClasses": ["browser", "headless"], "receipt": "results/build-slots/1793171109818-49396-19c50448-432d-46a0-aad4-31a0106da164/receipt.json", "raw": "results/serialize/live-source.json" },
+    { "name": "six live native integration targets", "exitCode": 0, "passed": 14, "failed": 0, "ignored": 0, "receipt": "results/build-slots/1793171127639-42132-d15d070e-53b2-4bfd-bba3-0af262390336/receipt.json" },
+    { "name": "six-target Clippy -D warnings", "exitCode": 0, "receipt": "results/build-slots/1793171159135-11916-27eba531-893a-42aa-93b7-59c66dd8022f/receipt.json" },
+    { "name": "lower-level HTML and exact source-output regression", "exitCode": 0, "passed": 16, "failed": 0, "ignored": 0, "exactOutputs": 3350, "htmlTests": 14, "receipt": "results/build-slots/1793171184016-3924-69791196-5bb8-46b5-95dc-9ed4ee916bd6/receipt.json" },
+    { "name": "scoped rustfmt", "exitCode": 0, "log": "results/serialize/reset-fmt.log" }
+  ],
+  "counterexamples": "results/serialize/counterexamples/ungated-buffer-and-reset-view.json",
+  "corrections": [
+    "Removed invented proposed-API rejection; the actual source buffer getter is ungated in both public terminal classes",
+    "Replaced raw BufferRef capture with reads through the actual lazily shared public BufferApiView, so reset activation can reinitialize its target",
+    "Retained the source's numeric range captured before header hooks while reading cells through the view afterward",
+    "Kept native host links weak and documented the Rust ownership boundary separately from JS GC/retention"
+  ],
+  "remaining": [
+    "Independent review of the reopened native task",
+    "Task 131 actual JS/WASM addon exports, live selection/theme and JS property/number/marker/lifetime/error/diagnostic behavior",
+    "Native Linux/macOS and release/full-workspace evidence"
+  ]
+}

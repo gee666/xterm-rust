@@ -78,13 +78,11 @@ fn reactivation_dispose_and_manager_handle_preserve_source_behavior() {
     );
 }
 #[test]
-fn proposed_api_gate_is_live_and_borrow_failures_are_recoverable() {
+fn buffer_serialization_is_ungated_and_borrow_failures_are_recoverable() {
     let t = Terminal::new(10, 2, 20).unwrap();
     let a = addon(&t);
-    assert!(matches!(
-        a.serialize(&SerializeOptions::default()),
-        Err(AddonSerializeError::Api(_))
-    ));
+    assert!(a.serialize(&SerializeOptions::default()).is_ok());
+    assert!(a.serialize_as_html(&HtmlOptions::default()).is_ok());
     t.options()
         .set("allowProposedApi", OptionValue::Bool(true))
         .unwrap();

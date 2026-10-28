@@ -7,7 +7,7 @@ use xterm_core::{
 };
 
 #[test]
-fn html_retains_original_buffer_and_range_across_header_reentrancy() {
+fn html_retains_public_view_kind_and_range_across_header_reentrancy() {
     let t = Rc::new(Terminal::new(10, 2, 20).unwrap());
     t.options()
         .set("allowProposedApi", OptionValue::Bool(true))
@@ -71,8 +71,9 @@ fn html_retains_original_buffer_and_range_across_header_reentrancy() {
         !output.contains("alt"),
         "source buffer captured before alternate activation"
     );
+    let later = String::from_utf16(&a.serialize_as_html(&HtmlOptions::default()).unwrap()).unwrap();
     assert!(
-        a.serialize_as_html(&HtmlOptions::default()).is_err(),
-        "later calls do observe changed proposed-API option"
+        later.contains("alt"),
+        "buffer is ungated even after allowProposedApi becomes false"
     );
 }

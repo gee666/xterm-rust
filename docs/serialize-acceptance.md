@@ -38,7 +38,7 @@ This is the task 37 checklist, not a claim that the addon passes. Reference file
 - HTML escaping preserves source's whole-cell behavior: a cell equal to ampersand or less-than is escaped; greater-than, quotes and combined strings follow the source exactly. Do not silently replace this with a different escaping policy.
 - HTML range overrides onlySelection and scrollback; startCol only applies to its first row and end is terminal cols. Explicit selection uses inclusive start coordinates and exclusive end column on final row. Cover multiline, empty and absent selection.
 - HTML scrollback uses the same clamp as ANSI. Verify active alternate buffer, zero rows and out-of-buffer ranges.
-- Rust public API and browser/WASM addon binding must call the Rust serializer with live terminal data. A detached fixture-only serializer is partial coverage, not a completed addon. Proposed API gating follows the terminal's buffer access behavior.
+- Rust public API and browser/WASM addon binding must call the Rust serializer with live terminal data. A detached fixture-only serializer is partial coverage, not a completed addon. Proposed API behavior follows the actual terminal buffer getter. Both source browser and headless getters are ungated; default false and later changes to allowProposedApi must not reject serialization. A reset inside a header getter must retarget the captured public BufferApiView through the shared namespace event, rather than retain an old raw Buffer.
 
 ## Required evidence
 

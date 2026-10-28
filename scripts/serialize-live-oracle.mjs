@@ -13,7 +13,8 @@ const bundle = path.join(temporary, 'reference.cjs');
 const built = await build({
   stdin: { resolveDir: root, sourcefile: 'serialize-live-oracle.ts', contents: [
     "export { Terminal } from './source_repo/src/browser/public/Terminal.ts';",
-    "export { SerializeAddon } from './source_repo/addons/addon-serialize/src/SerializeAddon.ts';"
+    "export { SerializeAddon } from './source_repo/addons/addon-serialize/src/SerializeAddon.ts';",
+    "export { Terminal as HeadlessTerminal } from './source_repo/src/headless/public/Terminal.ts';"
   ].join('\n') },
   absWorkingDir: root, bundle: true, platform: 'node', format: 'cjs', target: 'node24',
   tsconfig: 'source_repo/src/browser/tsconfig.json',
@@ -24,7 +25,7 @@ const sourceHashes = {};
 for (const file of Object.keys(built.metafile.inputs).filter(file => file.startsWith('source_repo/'))) {
   sourceHashes[file] = createHash('sha256').update(await readFile(path.join(root, file))).digest('hex');
 }
-const { Terminal, SerializeAddon } = require(bundle);
+const { Terminal, HeadlessTerminal, SerializeAddon } = require(bundle);
 const units = text => Array.from({ length: text.length }, (_, i) => text.charCodeAt(i));
 const write = (terminal, input) => new Promise(resolve => terminal.write(input, resolve));
 function buffer(value) {
@@ -107,6 +108,29 @@ const orderedHtml = orderedAddon.serializeAsHTML({ includeGlobalBackground: true
 assert.deepEqual(orderedTrace, ['old:foreground', 'new:background', 'fg:default', 'bg:default', 'font:default', 'size:default']);
 assert.equal(orderedHtml, "<html><body><!--StartFragment--><pre><div style='color: #112233; background-color: #445566; font-family: fancy; font-size: weirdpx;'><div><span>          </span></div><div><span>          </span></div></div></pre><!--EndFragment--></body></html>");
 orderedTerminal.dispose();
+const ungated = [];
+for (const [kind, Constructor] of [['browser', Terminal], ['headless', HeadlessTerminal]]) {
+  const terminal = new Constructor({ cols: 10, rows: 2 });
+  const addon = new SerializeAddon(); terminal.loadAddon(addon);
+  await write(terminal, 'ungated');
+  assert.equal(terminal.options.allowProposedApi, false);
+  assert.equal(addon.serialize(), 'ungated');
+  const html = addon.serializeAsHTML(); assert.ok(html.includes('ungated'));
+  terminal.options.allowProposedApi = true;
+  await write(terminal, '!'); terminal.options.allowProposedApi = false;
+  assert.equal(addon.serialize(), 'ungated!');
+  ungated.push({ kind, flag: terminal.options.allowProposedApi, ansi: units(addon.serialize()), html: units(html) });
+  terminal.dispose();
+}
+const resetTerminal = new Terminal({ cols: 10, rows: 2 });
+const resetAddon = new SerializeAddon(); resetTerminal.loadAddon(resetAddon);
+await write(resetTerminal, 'normal');
+resetTerminal.options.theme = { get foreground() { resetTerminal.reset(); return undefined; } };
+const resetHtml = resetAddon.serializeAsHTML({ includeGlobalBackground: true });
+assert.equal(resetHtml.match(/<div><span> {10}<\/span><\/div>/g)?.length, 2);
+assert.ok(!resetHtml.includes('normal'));
+await writeFile(path.join(root, 'crates/xterm-core/tests/fixtures/serialize-html-reset.tsv'), units(resetHtml).map(u => u.toString(16)).join(',') + '\n');
+resetTerminal.dispose();
 for (const [file, expected] of Object.entries(sourceHashes)) {
   const current = createHash('sha256').update(await readFile(path.join(root, file))).digest('hex');
   if (current !== expected) throw new Error(`Source changed while running: ${file}`);
@@ -114,6 +138,7 @@ for (const [file, expected] of Object.entries(sourceHashes)) {
 const result = { command: 'node scripts/serialize-live-oracle.mjs', node: process.version,
   platform: process.platform, sourceHashes, cases, reentrantHtml: units(reentrantHtml),
   headerOrder: { trace: orderedTrace, html: units(orderedHtml) },
+  ungated, resetHtml: units(resetHtml),
   scope: 'Ten deterministic source engine serialize/restore traces. A source loss is an expected compatibility result, not permission to change Rust output. Rust integration tests must retain corresponding assertions.' };
 await writeFile(path.join(root, 'results/serialize/live-source.json'), JSON.stringify(result, null, 2) + '\n');
 const hex = units => units.map(unit => unit.toString(16)).join(',');
