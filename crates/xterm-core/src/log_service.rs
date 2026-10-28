@@ -21,21 +21,34 @@ pub enum LogLevel {
     Off,
 }
 
+/// Host ToPropertyKey, where None represents a Symbol key. String conversion
+/// alone would incorrectly throw for Symbols instead of suppressing the level.
+pub type PropertyKeyResolver = dyn Fn() -> Result<Option<Vec<u16>>, OptionError>;
+#[derive(Clone)]
+pub struct LogPropertyKey(pub Rc<PropertyKeyResolver>);
+
 impl LogLevel {
     fn from_option(value: &OptionValue) -> Result<Option<Self>, OptionError> {
-        // JS object indexing performs ToPropertyKey, including adapter-owned
-        // objects whose primitive conversion returns a recognized level name.
-        Ok(
-            match String::from_utf16_lossy(&value.text_utf16()?).as_str() {
-                "trace" => Some(Self::Trace),
-                "debug" => Some(Self::Debug),
-                "info" => Some(Self::Info),
-                "warn" => Some(Self::Warn),
-                "error" => Some(Self::Error),
-                "off" => Some(Self::Off),
-                _ => None,
-            },
-        )
+        let key = if let OptionValue::Object(object) = value {
+            match object.payload::<LogPropertyKey>() {
+                Some(key) => (key.0)()?,
+                None => Some(value.text_utf16()?),
+            }
+        } else {
+            Some(value.text_utf16()?)
+        };
+        let Some(key) = key else {
+            return Ok(None);
+        };
+        Ok(match String::from_utf16_lossy(&key).as_str() {
+            "trace" => Some(Self::Trace),
+            "debug" => Some(Self::Debug),
+            "info" => Some(Self::Info),
+            "warn" => Some(Self::Warn),
+            "error" => Some(Self::Error),
+            "off" => Some(Self::Off),
+            _ => None,
+        })
     }
 }
 
@@ -149,7 +162,9 @@ impl LogService {
     /// option or prefix policy. An admitted call keeps its selected sink even
     /// if a callback replaces this endpoint while evaluating parameters.
     pub fn set_console_sink(&self, sink: Rc<dyn LogSink>) {
-        *self.console.borrow_mut() = sink;
+        let old = self.console.replace(sink);
+        // A host sink destructor may itself log or replace the endpoint.
+        drop(old);
     }
 
     /// None models an invalid raw JS log level, whose comparisons suppress logs.

@@ -1,25 +1,34 @@
 //! JS logging methods are bound before lazy parameters run. This module only
 //! adapts host values/calls; filtering, prefixes and ordering stay in Rust core.
-use crate::{js_error::JsCallbackError, terminal::options, utf16::to_js_string};
+use crate::{
+    js_error::{callback_error, JsCallbackError},
+    terminal::options,
+    utf16::{from_js_string, to_js_string},
+};
 use js_sys::{Array, JsString};
 use std::rc::Rc;
-use wasm_bindgen::prelude::*;
+use wasm_bindgen::{prelude::*, JsCast};
 use xterm_core::{
-    log_service::{BoundLogCall, CustomLogger, LogError, LogLevel, LogRecord, LogSink, LogValue},
-    options::{CoercionHint, OptionObject, OptionValue},
+    log_service::{
+        BoundLogCall, CustomLogger, LogError, LogLevel, LogPropertyKey, LogRecord, LogSink,
+        LogValue,
+    },
+    options::{CoercionHint, OptionError, OptionObject, OptionValue},
 };
 
 #[wasm_bindgen(inline_js = "
-export function xtermBindLogger(logger, method, options) { return logger[method].bind(options === undefined ? logger : options.logger); }
+export function xtermBindLogger(logger, method, fallback, options) { return logger[method].bind(options === undefined ? logger : options.logger) ?? console[fallback]; }
 export function xtermConsoleMethod(method) { return console[method]; }
 export function xtermInvokeLog(method, message, parameters) { method.call(console, message, ...parameters); }
 export function xtermLoggerTruthy(value) { return !!value; }
+export function xtermLogPropertyKey(value) { return Reflect.ownKeys({[value]:0})[0]; }
 ")]
 extern "C" {
     #[wasm_bindgen(catch)]
     fn xtermBindLogger(
         logger: &JsValue,
         method: &str,
+        fallback: &str,
         options: &JsValue,
     ) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch)]
@@ -31,6 +40,8 @@ extern "C" {
         parameters: &Array,
     ) -> Result<(), JsValue>;
     fn xtermLoggerTruthy(value: &JsValue) -> bool;
+    #[wasm_bindgen(catch)]
+    fn xtermLogPropertyKey(value: &JsValue) -> Result<JsValue, JsValue>;
 }
 
 fn host_error(value: JsValue) -> LogError {
@@ -75,7 +86,13 @@ struct JsLogger {
 impl JsLogger {
     fn bind(&self, level: LogLevel) -> Result<JsValue, LogError> {
         let options = self.options.clone().unwrap_or(JsValue::UNDEFINED);
-        xtermBindLogger(&self.value, method(level, true)?, &options).map_err(host_error)
+        xtermBindLogger(
+            &self.value,
+            method(level, true)?,
+            method(level, false)?,
+            &options,
+        )
+        .map_err(host_error)
     }
 }
 impl LogSink for JsLogger {
@@ -119,6 +136,42 @@ pub fn from_js_with_options(
     raw_options: &js_sys::Object,
 ) -> Result<OptionValue, JsValue> {
     convert(value, Some(raw_options.clone().into()))
+}
+
+/// Log-level lookup uses ToPropertyKey rather than template-string conversion.
+/// Symbol keys are valid and simply do not name one of the six source levels.
+pub fn log_level_from_js(value: &JsValue) -> Result<OptionValue, JsValue> {
+    let primitive = options::from_js(value)?;
+    if !matches!(primitive, OptionValue::Object(_)) {
+        return Ok(primitive);
+    }
+    let getter = primitive.clone();
+    let key_value = value.clone();
+    let key = LogPropertyKey(Rc::new(move || {
+        let key = xtermLogPropertyKey(&key_value)
+            .map_err(|error| OptionError::Dispatch(callback_error(error)))?;
+        if key.is_symbol() {
+            return Ok(None);
+        }
+        let key = key.dyn_into::<JsString>().map_err(|_| {
+            OptionError::Dispatch(callback_error(
+                js_sys::TypeError::new("ToPropertyKey returned neither a string nor a symbol")
+                    .into(),
+            ))
+        })?;
+        Ok(Some(from_js_string(&key)))
+    }));
+    Ok(OptionValue::Object(OptionObject::with_backing_value(
+        key,
+        value.clone(),
+        move |hint| match hint {
+            CoercionHint::Number => primitive.to_number().map(OptionValue::Number),
+            CoercionHint::String => primitive.to_utf16().map(OptionValue::String),
+        },
+        move |_, key| getter.get_property(key),
+        xtermLoggerTruthy(value),
+        |a, b| a == b,
+    )))
 }
 
 fn convert(value: &JsValue, raw_options: Option<JsValue>) -> Result<OptionValue, JsValue> {

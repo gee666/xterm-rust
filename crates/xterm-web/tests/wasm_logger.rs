@@ -108,6 +108,27 @@ try {
 }
 
 #[wasm_bindgen_test]
+fn overridden_bind_nullish_results_fall_back_to_console_without_a_prefix() {
+    run(
+        "return {logLevel:'trace'};",
+        r#"
+const original=console.log;const calls=[];
+console.log=function(message,...params){calls.push({message,params,thisValue:this});};
+try {
+ let logger;
+ const debug={bind(receiver){if(this!==debug||receiver!==logger)throw Error('bind receiver lost');return undefined;}};
+ const trace={bind(receiver){if(this!==trace||receiver!==logger)throw Error('trace bind receiver lost');return null;}};
+ logger={debug,trace};term.options.logger=logger;term.input('x',false);
+ if(calls.length!==2||calls[0].message!=='sending data "x"'||calls[1].message!=='sending data (codes)')throw Error('nullish bind fallback/prefix lost');
+ if(calls.some(call=>call.thisValue!==console))throw Error('fallback console context lost');
+ debug.bind=()=>0;let caught;try{term.input('invalid',false);}catch(error){caught=error;}
+ if(!(caught instanceof TypeError))throw Error('non-nullish bind value incorrectly fell back');
+} finally {console.log=original;}
+"#,
+    );
+}
+
+#[wasm_bindgen_test]
 fn logger_can_read_state_and_reenter_input_with_source_ordering() {
     run(
         "return {logLevel:'trace'};",
@@ -122,6 +143,32 @@ term.input('outer',false);
 const expected=['debug:sending data "outer"','debug:sending data "inner"','trace:sending data (codes)','data:inner','trace:sending data (codes)','data:outer'];
 if(JSON.stringify(calls)!==JSON.stringify(expected))throw Error('reentrant logger order '+JSON.stringify(calls));
 subscription.dispose();
+"#,
+    );
+}
+
+#[wasm_bindgen_test]
+fn log_level_property_keys_keep_symbols_and_string_hint_conversion() {
+    run(
+        "return {logLevel:Symbol('silent')};",
+        r#"
+if(typeof term.options.logLevel!=='symbol')throw Error('raw level Symbol lost');
+let logs=0;term.options.logger={debug(){logs++;},trace(){logs++;}};
+term.input('silent',false);if(logs!==0)throw Error('Symbol level was not suppressed');
+let conversions=0;
+const symbolLevel={[Symbol.toPrimitive](hint){if(hint!=='string')throw Error('wrong key hint');conversions++;return Symbol('key');}};
+term.options.logLevel=symbolLevel;
+if(conversions!==1||term.options.logLevel!==symbolLevel)throw Error('Symbol key conversion/identity lost');
+term.input('silent',false);if(logs!==0||conversions!==1)throw Error('Symbol level reevaluated');
+const traceLevel={[Symbol.toPrimitive](hint){if(hint!=='string')throw Error('wrong hint');conversions++;return 'trace';}};
+term.options.logLevel=traceLevel;term.input('visible',false);
+if(logs!==2||conversions!==2)throw Error('string level key routing lost');
+term.options.logLevel=traceLevel;if(conversions!==2)throw Error('unchanged level identity recoerced');
+term.options.logLevel=Symbol('silent-again');
+const marker={keyError:true};let caught;
+try{term.options.logLevel={[Symbol.toPrimitive](){throw marker;}};}catch(error){caught=error;}
+if(caught!==marker)throw Error('key conversion error identity lost');
+term.input('still silent',false);if(logs!==2)throw Error('failed level update changed old threshold');
 "#,
     );
 }
@@ -172,6 +219,57 @@ fn console_callable_failure_is_after_lazy_but_custom_bind_failure_is_before() {
         !evaluated.get(),
         "custom .bind validation precedes lazy parameters"
     );
+}
+
+#[wasm_bindgen_test]
+fn every_level_uses_its_custom_method_and_default_console_route() {
+    let fixture = Function::new_no_args(r#"
+const calls=[],logger={};
+for(const name of ['trace','debug','info','warn','error'])logger[name]=function(message){calls.push({name,message,thisValue:this});};
+return {calls,logger,install(){const old={};for(const name of ['log','info','warn','error']){old[name]=console[name];console[name]=function(message){calls.push({name,message,thisValue:this});};}return ()=>{for(const name of Object.keys(old))console[name]=old[name];};}};
+"#).call0(&JsValue::UNDEFINED).unwrap();
+    let value = Reflect::get(&fixture, &"logger".into()).unwrap();
+    let options = Rc::new(OptionsService::new(
+        false,
+        [
+            ("logLevel", "trace".into()),
+            ("logger", xterm_web::logger::from_js(&value).unwrap()),
+        ],
+    ));
+    let logger = LogService::new(Rc::clone(&options), xterm_web::logger::console_sink()).unwrap();
+    let levels = [
+        LogLevel::Trace,
+        LogLevel::Debug,
+        LogLevel::Info,
+        LogLevel::Warn,
+        LogLevel::Error,
+    ];
+    for level in levels {
+        logger.log(level, &[0xd800], vec![]).unwrap();
+    }
+    options
+        .set("logger", xterm_core::options::OptionValue::Null)
+        .unwrap();
+    let restore = Reflect::get(&fixture, &"install".into())
+        .unwrap()
+        .dyn_into::<Function>()
+        .unwrap()
+        .call0(&fixture)
+        .unwrap()
+        .dyn_into::<Function>()
+        .unwrap();
+    let results: Vec<_> = levels
+        .into_iter()
+        .map(|level| logger.log(level, &[0xd800], vec![]))
+        .collect();
+    restore.call0(&JsValue::UNDEFINED).unwrap();
+    assert!(results.iter().all(Result::is_ok));
+    Function::new_with_args("fixture", r#"
+const names=fixture.calls.map(call=>call.name);
+const expected=['trace','debug','info','warn','error','log','log','info','warn','error'];
+if(JSON.stringify(names)!==JSON.stringify(expected))throw Error('level method routing '+names);
+for(let i=0;i<10;i++){const call=fixture.calls[i];if(call.thisValue!==(i<5?fixture.logger:console))throw Error('method context');if(call.message!==(i<5?'\ud800':'xterm.js: \ud800'))throw Error('message/prefix');}
+"#).call1(&JsValue::UNDEFINED, &fixture).unwrap();
 }
 
 #[wasm_bindgen_test]
