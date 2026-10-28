@@ -1,0 +1,34 @@
+{
+  "reviewer": "Joyce",
+  "task": 36,
+  "sourceCommit": "bf71be8",
+  "scope": "Portable SearchEngine, SearchLineCache and SearchState only; full addon is task59",
+  "inspection": [
+    "Compared all Rust engine traversal, wrapped backtracking, forward/reverse literal and ECMAScript regex paths with source SearchEngine.ts",
+    "Checked UTF-16 indexing, malformed surrogate handling, contextual lowercase, whole-word delimiters and negative result coordinates",
+    "Compared cache initialization, invalidation, translation and caller-supplied TTL behavior with source SearchLineCache.ts",
+    "Compared missing versus false option state and highlighting decisions with source SearchState.ts",
+    "Inspected baseline and oracle scripts: original tests remain unchanged; observers capture actual source BufferLine inputs and return original results/errors",
+    "Checked test fixture parsing and complete expected UTF-16 term/row/column/span assertions"
+  ],
+  "observed": {
+    "node scripts/check-search.mjs": "failed only at shared-library Clippy stage; original86, retained corpus verification and Rust26 passed",
+    "cargo test -p xterm-core --test search_cache --test search_differential --test search_integration": { "exitCode": 0, "discovered": 26, "executed": 26, "passed": 26, "failed": 0, "ignored": 0, "log": "results/reviews/joyce-search/tests.log" },
+    "cargo clippy -p xterm-core --test search_cache --test search_differential --test search_integration -- -D warnings": { "exitCode": 101, "errors": ["headless/terminal.rs redundant closure", "sorted_list.rs type complexity"], "log": "results/reviews/joyce-search/clippy.log" },
+    "upstreamEngineTests": 58,
+    "upstreamCacheTests": 28,
+    "engineFixtures": 2200,
+    "translationFixtures": 6116,
+    "stateFixtures": 1024,
+    "seed": "0x5ea2c001"
+  },
+  "findings": [],
+  "integrationGaps": [
+    "Three automatic event invalidation assertions remain in task59",
+    "Two cache disposal assertions test portable clearing only, not host timers/listeners",
+    "SearchResultTracker, browser decoration and addon activation/selection/events remain task59",
+    "Workspace warning-free gates and native Linux/macOS/browser runtime evidence remain unproven"
+  ],
+  "verdict": "Accept scoped task36; shared-library lint errors are retained and owned separately, not hidden or represented as a pass",
+  "overallEquivalence": "NOT PROVEN"
+}
