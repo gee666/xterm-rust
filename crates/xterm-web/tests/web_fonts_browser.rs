@@ -16,7 +16,7 @@ fn document() -> Document {
 fn face(name: &str) -> FontFace {
     FontFace::new_with_u8_array(
         name,
-        include_bytes!("../../../source_repo/demo/fonts/kongtext.regular.ttf"),
+        include_bytes!("fixtures/kongtext.regular.ttf"),
     )
     .unwrap()
 }

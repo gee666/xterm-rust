@@ -16,6 +16,8 @@ Construction defaults initialRelayout to true. Activate schedules relayout after
 
 ## Ligature ranges, shaping and cache
 
+The method-by-method table/graph/cache cases are in `docs/ligature-shaping-acceptance.md`. That matrix records source quirks that conventional OpenType shaping must not silently correct.
+
 References `addon-ligatures/src/index.ts`, `LigaturesAddon.ts`, `font.ts`, and all `fontLigatures/` modules/tests. Default fallback list is the entire source list, sorted stably by descending UTF-16 length; an explicit empty list disables fallback. Match greedily at UTF-16 offsets and skip each matched range. Font resolution follows parsed families and stops at a generic family. Verify legacy navigator.fonts, permission denial/TypeError, modern queryLocalFonts, query failure, family first-face/blob selection, absent font and loading error. Font changes reset old shape data; stale async completion must not replace the current family. A found font refreshes every terminal row; no match does not refresh. Preserve GSUB lookup types 6 formats 1/2/3 and 8 format 1, coverage/class definitions, substitutions, contextual lookahead/backtrack, merging/flattening, and font cache limits/eviction. Compare all four supplied font fixtures with the original, retain seeded failing inputs, and test range clones cannot mutate cached entries.
 
 ## Ligature browser lifecycle

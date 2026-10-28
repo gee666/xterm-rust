@@ -1,0 +1,276 @@
+[
+  {
+    "name": "modern cache and first face",
+    "environment": "const env={navigator:{},queries:0,blobs:0};env.window={queryLocalFonts:async()=>{env.queries++;return [{family:'CodeFont',blob:async()=>{env.blobs++;return new Blob([new Uint8Array([1,2,3])])}},{family:'CodeFont',blob:async()=>new Blob([new Uint8Array([9])])}]}};return env;",
+    "calls": [
+      "CodeFont, monospace",
+      "CodeFont",
+      "monospace, CodeFont",
+      "\"CodeFont\""
+    ],
+    "results": [
+      {
+        "status": "font",
+        "bytes": [
+          1,
+          2,
+          3
+        ],
+        "cacheSize": 100000
+      },
+      {
+        "status": "font",
+        "bytes": [
+          1,
+          2,
+          3
+        ],
+        "cacheSize": 100000
+      },
+      {
+        "status": "none"
+      },
+      {
+        "status": "none"
+      }
+    ],
+    "counters": {
+      "queries": 1,
+      "blobs": 2
+    },
+    "logs": []
+  },
+  {
+    "name": "legacy TypeError permission and priority",
+    "environment": "const env={permissions:0,legacy:0,modern:0};env.navigator={permissions:{request:async()=>{env.permissions++;throw new TypeError('unsupported')}},fonts:{query:async()=>{env.legacy++;return [{family:'Legacy',blob:async()=>new Blob([new Uint8Array([7])])}]}}};env.window={queryLocalFonts:async()=>{env.modern++;return []}};return env;",
+    "calls": [
+      "Legacy",
+      "Legacy"
+    ],
+    "results": [
+      {
+        "status": "font",
+        "bytes": [
+          7
+        ],
+        "cacheSize": 100000
+      },
+      {
+        "status": "font",
+        "bytes": [
+          7
+        ],
+        "cacheSize": 100000
+      }
+    ],
+    "counters": {
+      "permissions": 1,
+      "legacy": 1,
+      "modern": 0
+    },
+    "logs": []
+  },
+  {
+    "name": "denial is retryable",
+    "environment": "const env={permissions:0,queries:0,window:{}};env.navigator={permissions:{request:async()=>{env.permissions++;return {state:'denied'}}},fonts:{query:async()=>{env.queries++;return []}}};return env;",
+    "calls": [
+      "CodeFont",
+      "CodeFont"
+    ],
+    "results": [
+      {
+        "status": "error",
+        "name": "Error",
+        "message": "Permission to access local fonts not granted."
+      },
+      {
+        "status": "error",
+        "name": "Error",
+        "message": "Permission to access local fonts not granted."
+      }
+    ],
+    "counters": {
+      "permissions": 2,
+      "queries": 0
+    },
+    "logs": []
+  },
+  {
+    "name": "query error caches empty",
+    "environment": "const env={navigator:{},queries:0};env.window={queryLocalFonts:async()=>{env.queries++;throw new Error('intentional query failure')}};return env;",
+    "calls": [
+      "CodeFont",
+      "CodeFont"
+    ],
+    "results": [
+      {
+        "status": "none"
+      },
+      {
+        "status": "none"
+      }
+    ],
+    "counters": {
+      "queries": 1
+    },
+    "logs": [
+      "Error: intentional query failure"
+    ]
+  },
+  {
+    "name": "missing blob stops and blob failure propagates",
+    "environment": "return {navigator:{},window:{queryLocalFonts:async()=>[{family:'NoBlob'},{family:'Broken',blob:async()=>{throw new Error('blob failure')}}]}};",
+    "calls": [
+      "NoBlob, Broken",
+      "Broken"
+    ],
+    "results": [
+      {
+        "status": "none"
+      },
+      {
+        "status": "error",
+        "name": "Error",
+        "message": "blob failure"
+      }
+    ],
+    "counters": {},
+    "logs": []
+  },
+  {
+    "name": "no APIs",
+    "environment": "return {navigator:{},window:{}};",
+    "calls": [
+      "Missing, sans-serif"
+    ],
+    "results": [
+      {
+        "status": "none"
+      }
+    ],
+    "counters": {},
+    "logs": []
+  },
+  {
+    "name": "absent legacy permissions ignored",
+    "environment": "return {navigator:{fonts:{query:async()=>[]}},window:{}};",
+    "calls": [
+      "Missing"
+    ],
+    "results": [
+      {
+        "status": "none"
+      }
+    ],
+    "counters": {},
+    "logs": []
+  },
+  {
+    "name": "primitive permission rejection ignored",
+    "environment": "const env={queries:0,window:{}};env.navigator={permissions:{request:async()=>{throw 'permission unavailable'}},fonts:{query:async()=>{env.queries++;return [{family:'CodeFont',blob:async()=>new Blob([new Uint8Array([5])])}]}}};return env;",
+    "calls": [
+      "CodeFont"
+    ],
+    "results": [
+      {
+        "status": "font",
+        "bytes": [
+          5
+        ],
+        "cacheSize": 100000
+      }
+    ],
+    "counters": {
+      "queries": 1
+    },
+    "logs": []
+  },
+  {
+    "name": "malformed CSS and codepoint errors",
+    "environment": "return {navigator:{},window:{}};",
+    "calls": [
+      "\"unterminated",
+      "\\110000",
+      "\\D800",
+      "CodeFont"
+    ],
+    "results": [
+      {
+        "status": "error",
+        "name": "Error",
+        "message": "Unterminated string"
+      },
+      {
+        "status": "error",
+        "name": "RangeError",
+        "message": "Invalid code point 1114112"
+      },
+      {
+        "status": "none"
+      },
+      {
+        "status": "none"
+      }
+    ],
+    "counters": {},
+    "logs": []
+  },
+  {
+    "name": "generic family boundaries and case",
+    "environment": "return {navigator:{},window:{queryLocalFonts:async()=>[{family:'CodeFont',blob:async()=>new Blob([new Uint8Array([8])])}]}};",
+    "calls": [
+      "serif, CodeFont",
+      "sans-serif, CodeFont",
+      "cursive, CodeFont",
+      "fantasy, CodeFont",
+      "monospace, CodeFont",
+      "system-ui, CodeFont",
+      "emoji, CodeFont",
+      "math, CodeFont",
+      "fangsong, CodeFont",
+      "SERIF, CodeFont",
+      "codefont"
+    ],
+    "results": [
+      {
+        "status": "none"
+      },
+      {
+        "status": "none"
+      },
+      {
+        "status": "none"
+      },
+      {
+        "status": "none"
+      },
+      {
+        "status": "none"
+      },
+      {
+        "status": "none"
+      },
+      {
+        "status": "none"
+      },
+      {
+        "status": "none"
+      },
+      {
+        "status": "none"
+      },
+      {
+        "status": "font",
+        "bytes": [
+          8
+        ],
+        "cacheSize": 100000
+      },
+      {
+        "status": "none"
+      }
+    ],
+    "counters": {},
+    "logs": []
+  }
+]
