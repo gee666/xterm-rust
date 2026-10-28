@@ -28,6 +28,12 @@ pub fn to_js_error(error: &(dyn Error + 'static)) -> JsValue {
             return value.0.clone();
         }
         if matches!(
+            cause.downcast_ref::<xterm_core::buffer::BufferError>(),
+            Some(xterm_core::buffer::BufferError::InvalidArrayLength)
+        ) {
+            return js_sys::RangeError::new(&cause.to_string()).into();
+        }
+        if matches!(
             cause.downcast_ref::<EmitError>(),
             Some(EmitError::ListenerArrayCleared)
         ) {
