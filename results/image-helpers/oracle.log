@@ -1,0 +1,83 @@
+{
+  "scope": "Native image header/metrics only; required live WASM/3browser image acceptance NOT PROVEN",
+  "status": "passed",
+  "node": "v24.15.0",
+  "typescript": "5.9.3",
+  "platform": "win32",
+  "originalTests": 16,
+  "originalAssertions": 134,
+  "originalReplayOperations": 539,
+  "tests": [
+    "IIPHeaderParser.test.ts: at once",
+    "IIPHeaderParser.test.ts: bytewise",
+    "IIPHeaderParser.test.ts: no File= starter",
+    "IIPHeaderParser.test.ts: empty key - error",
+    "IIPHeaderParser.test.ts: empty size value - set to 0",
+    "IIPHeaderParser.test.ts: empty name value - set to empty string",
+    "IIPHeaderParser.test.ts: empty size value - error",
+    "IIPHeaderParser.test.ts: FilePart sequence",
+    "IIPHeaderParser.test.ts: FilePart sequence - bytewise",
+    "IIPHeaderParser.test.ts: MultipartFile sequence",
+    "IIPHeaderParser.test.ts: MultipartFile sequence - bytewise",
+    "IIPHeaderParser.test.ts: FileEnd sequence",
+    "IIPHeaderParser.test.ts: FileEnd sequence - bytewise",
+    "IIPHeaderParser.test.ts: ReportCellSize sequence",
+    "IIPHeaderParser.test.ts: ReportCellSize sequence - bytewise",
+    "IIPMetrics.test.ts: bunch of testimages"
+  ],
+  "seed": 443424806,
+  "randomHeaderCases": 1000,
+  "randomMetricsCases": 1000,
+  "comparisons": 17483,
+  "mismatches": 0,
+  "negativeControls": [
+    {
+      "name": "header capacity 1024 to1023",
+      "rejected": true
+    },
+    {
+      "name": "decimal radix10 to9",
+      "rejected": true
+    },
+    {
+      "name": "end commits abort instead of end",
+      "rejected": true
+    },
+    {
+      "name": "PNG high byte shift24 to16",
+      "rejected": true
+    }
+  ],
+  "sourceHashes": {
+    "IIPHeaderParser.ts": "71448a48e7387e8eb0922426f254279df877d9f4708deed47c963331150bf266",
+    "IIPMetrics.ts": "15e400205f90bd2a9107104927fc7647568c60f65841d3f3fc2deeca14c66651",
+    "IIPHeaderParser.test.ts": "aec595a1651a37d5287143bc21b4dbf111387a0890e292fe1ef0da6c7e4b35cb",
+    "IIPMetrics.test.ts": "c1e6869314f7d0c9dd92099b46bce5e3d89424824a088fac859b3a258201a269"
+  },
+  "fixtureHashes": "38 original fixtures",
+  "implementation": [
+    {
+      "path": "crates/xterm-addons/src/image/header.rs",
+      "sha256": "ae6bd87607c168df55444e30ddf7cd9ddbc07ac2fa89c1fb69dec7242ece2b01"
+    },
+    {
+      "path": "crates/xterm-addons/src/image/header_codec.rs",
+      "sha256": "1bff7ace24c851033bb93cc63da7952d16d82cf5cc716353dbef5e7737c2c6f9"
+    },
+    {
+      "path": "crates/xterm-addons/src/image/metrics.rs",
+      "sha256": "d504ea8f59f98c6099095ab2d956caa04ce1e5fc6aef2c0c9231767e50f615cf"
+    },
+    {
+      "path": "crates/xterm-addons/tests/image_helper_support/mod.rs",
+      "sha256": "8341d6f3305fe69900e4e43a1ead134fcdb26f81e2ba88c2004c49d1b9a286a8"
+    },
+    {
+      "path": "scripts/image-helpers-oracle.mjs",
+      "sha256": "555cc969cb40d34a069b156681fd5ca156ec2d3dd531e465b7fb407bfe9025a5"
+    }
+  ],
+  "operationsSha256": "d3ea81b3278312a63846da8070816b9dcea2123d730849b8a21a6a09ea9080dc",
+  "outputsSha256": "a19d1006777b1d4d4fd831c728261f0435214e7e125e9e6628e3f0c50d535ed6",
+  "failures": []
+}

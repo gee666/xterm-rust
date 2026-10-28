@@ -73,7 +73,9 @@ fn node_base64(data: &[u16]) -> Vec<u8> {
     let mut bits = 0;
     let mut accumulator = 0_u32;
     for &code in data {
-        // Buffer's base64 reader accepts the URL alphabet and ignores junk.
+        // Buffer's UCS-2 base64 reader truncates units to bytes, accepts the URL
+        // alphabet and ignores junk. Browser atob must not apply this truncation.
+        let code = code & 255;
         if code == 61 {
             break;
         }
