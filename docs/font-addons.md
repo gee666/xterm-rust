@@ -1,6 +1,6 @@
 # Font addons
 
-Full font-addon equivalence is NOT PROVEN. Native shaping task119 and metadata resolver158 passed independent review. Task40 still needs real terminal joiner integration and ligature lifecycle tests; task235 covers unused-metadata constructor rejection.
+Full font-addon equivalence is NOT PROVEN. Native shaping task119 and metadata resolver158 passed independent review. Task40 still needs real terminal joiner integration and full original addon-suite evidence; task235 covers unused-metadata constructor rejection. Task274 adds source-trace ligature lifecycle and loading checks.
 
 ## Code
 
@@ -9,7 +9,7 @@ Full font-addon equivalence is NOT PROVEN. Native shaping task119 and metadata r
 - `font_set.rs` selects, deduplicates and loads actual FontFace objects.
 - `font_addons.rs` implements WebFontsAddon relayout and disposal.
 - `local_fonts.rs` implements legacy/modern discovery, permission handling, blob loading and shared metadata cache. Query APIs are explicitly mocked in component tests; promises and Blob run in browsers.
-- `ligatures_addon.rs`, `ligature_state.rs` and the small `ligature_host` browser adapter are task40 work in progress. They compile, but their addon-specific lifecycle and actual terminal integration are not yet tested.
+- `ligatures_addon.rs`, `ligature_state.rs` and the small `ligature_host` browser adapter implement the class and direct `enableLigatures` helper. Their addon lifecycle/load boundary now has source comparisons; actual terminal integration remains task40.
 
 ## Checks
 
@@ -19,6 +19,8 @@ Run in the worktree with Rust1.85.1 and Node24 on PATH:
 cargo test -p xterm-addons --lib ligatures::font
 cargo clippy -p xterm-addons --lib -- -D warnings
 node scripts/local-font-oracle.mjs
+node scripts/ligature-addon-oracle.mjs
+WASM_PACKAGE=xterm-font-addons WASM_TEST=ligatures_browser node scripts/browser-host-check.mjs
 WASM_PACKAGE=xterm-font-addons WASM_TEST=local_fonts_browser node scripts/browser-host-check.mjs
 WASM_PACKAGE=xterm-font-addons WASM_TEST=web_fonts_browser node scripts/browser-host-check.mjs
 WASM_PACKAGE=xterm-font-addons WASM_TEST=web_fonts_async_browser node scripts/browser-host-check.mjs
@@ -33,6 +35,7 @@ Observed results:
 - Native font backend:7 Rust tests pass, including2,540 source font/cache calls,217 directed graphs, original merge/range cases and six WOFF comparisons. Original JS suites pass449 tests and669 assertions.
 - Metadata:10 Rust/WASM tests pass in each Chromium, Firefox and WebKit. Source10-case/30-call oracle, concurrent cache case and optional-permission microtask traces pass. Independent review caught and then verified the fixed missing-await branch.
 - Web fonts:8 basic,6 asynchronous and4 ready/disposal tests pass in each browser. Initial relayout now waits for the automatic setter writes rather than triggering another relayout in the test.
+- Ligatures:4 Rust/WASM test functions pass in each browser. The shared source/Rust scenarios compare38 operation fields covering defaults/custom/live fallback arrays, UTF16 matching, shape-range clones, stale success/failure, malformed and missing families, registration/style errors and disposal. A real CSSStyleDeclaration test passes. Reentrant font-family reads initially exposed the mutable WASM callback guard; an immutable callback fixes recursion without holding state borrows across JS calls. See `docs/ligature-browser-verification.md`.
 - A WebKit test fixture was corrected: constructor quote characters are literal there, unlike Firefox's quoted CSS family attribute. The test now explicitly supplies the quoted attribute it intends to verify; implementation assertions remain unchanged.
 
 These are component results, not proof of full terminal/rendering integration or native Linux/macOS results. Use the existing GitHub workflow for native platform runs.

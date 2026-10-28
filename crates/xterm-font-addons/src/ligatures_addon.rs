@@ -16,6 +16,27 @@ thread_local! {
     static FONT_CATALOG: LocalFonts = LocalFonts::default();
 }
 
+/// Register the source joiner directly, without the addon's open/style policy.
+/// Omitted fallbacks mean an empty list, unlike the class constructor defaults.
+#[wasm_bindgen(js_name = enableLigatures)]
+pub fn enable_ligatures(terminal: JsValue, fallbacks: JsValue) -> Result<JsValue, JsValue> {
+    let patterns = if fallbacks.is_undefined() {
+        Array::new().into()
+    } else {
+        fallbacks
+    };
+    let term = terminal.clone();
+    let state = Rc::new(RefCell::new(JoinState::default()));
+    let catalog = FONT_CATALOG.with(Clone::clone);
+    // A terminal option getter or custom fallback coercion can invoke the
+    // joiner recursively. State borrows end before those JS boundaries.
+    let callback = Closure::wrap(Box::new(move |text: JsString| {
+        ligature_state::join(&term, &patterns, &state, &catalog, &text)
+    }) as Box<dyn Fn(JsString) -> Result<Array, JsValue>>)
+    .into_js_value();
+    host::register(&terminal, &callback)
+}
+
 #[wasm_bindgen]
 pub struct LigaturesAddon {
     fallbacks: JsValue,
@@ -47,16 +68,7 @@ impl LigaturesAddon {
             );
         }
         *self.terminal.borrow_mut() = Some(terminal.clone());
-        let term = terminal.clone();
-        let patterns = self.fallbacks.clone();
-        let state = Rc::new(RefCell::new(JoinState::default()));
-        let catalog = FONT_CATALOG.with(Clone::clone);
-        let callback = Closure::wrap(Box::new(move |text: JsString| {
-            ligature_state::join(&term, &patterns, &state, &catalog, &text)
-        })
-            as Box<dyn FnMut(JsString) -> Result<Array, JsValue>>)
-        .into_js_value();
-        let id = host::register(&terminal, &callback)?;
+        let id = enable_ligatures(terminal.clone(), self.fallbacks.clone())?;
         *self.joiner_id.borrow_mut() = id;
         host::set_features(&terminal, &self.features)
     }
