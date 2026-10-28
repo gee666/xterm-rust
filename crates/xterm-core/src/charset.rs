@@ -1,104 +1,156 @@
 // Copyright (c) 2016, 2019 The xterm.js authors. All rights reserved.
 // Licensed under the MIT license. See LICENSE.
 
-//! VT100 character maps and ISO 2022 designation state.
-//!
-//! Character maps use UTF-16 code units for both keys and replacements. A map
-//! replacement may contain several units, such as the Dutch `ij`. Consumers
-//! decide how to render that replacement; the map does not truncate it.
-
-use std::collections::{BTreeMap, TryReserveError};
-use std::error::Error;
-use std::fmt;
-use std::sync::{Arc, OnceLock};
+//! VT100 maps retain mutable object identity. A print run captures the handle,
+//! not its contents, so edits made by a callback affect the next lookup.
+use std::{
+    cell::{BorrowError, BorrowMutError, RefCell},
+    collections::{BTreeMap, TryReserveError},
+    error::Error,
+    fmt,
+    rc::Rc,
+};
 
 #[path = "charset_tables.rs"]
 mod tables;
 
-/// Shared, immutable character map. Clones preserve map identity.
-///
-/// Custom maps are accepted by [`CharsetService`] in addition to the built-ins.
-/// The terminal only looks up single UTF-16 units, so multi-unit JS object keys
-/// have no corresponding terminal lookup and are not represented here.
-pub type Charset = Arc<BTreeMap<u16, Vec<u16>>>;
+/// An explicit undefined property differs from a missing property in snapshots.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum CharsetValue {
+    Undefined,
+    Text(Vec<u16>),
+}
 
-/// US ASCII requires no replacement map in the upstream implementation.
+/// Shared UTF-16 map. Cloning shares identity; reads return owned data or a unit.
+/// No borrow guard escapes a public operation or crosses a terminal callback.
+#[derive(Clone, Debug, Default)]
+pub struct Charset {
+    entries: Rc<RefCell<BTreeMap<u16, CharsetValue>>>,
+}
+impl Charset {
+    pub fn new(entries: BTreeMap<u16, Vec<u16>>) -> Self {
+        Self {
+            entries: Rc::new(RefCell::new(
+                entries
+                    .into_iter()
+                    .map(|(key, value)| (key, CharsetValue::Text(value)))
+                    .collect(),
+            )),
+        }
+    }
+    pub fn ptr_eq(&self, other: &Self) -> bool {
+        Rc::ptr_eq(&self.entries, &other.entries)
+    }
+    /// Empty replacements and undefined values leave printing unchanged.
+    pub fn get_first(&self, key: u16) -> Result<Option<u16>, CharsetError> {
+        let entries = self.entries.try_borrow().map_err(CharsetError::Read)?;
+        Ok(match entries.get(&key) {
+            Some(CharsetValue::Text(value)) => value.first().copied(),
+            _ => None,
+        })
+    }
+    pub fn get(&self, key: u16) -> Result<Option<Vec<u16>>, CharsetError> {
+        let entries = self.entries.try_borrow().map_err(CharsetError::Read)?;
+        Ok(match entries.get(&key) {
+            Some(CharsetValue::Text(value)) => Some(value.clone()),
+            _ => None,
+        })
+    }
+    /// `None` assigns an own undefined property; use `remove` to delete it.
+    pub fn set(&self, key: u16, value: Option<Vec<u16>>) -> Result<(), CharsetError> {
+        self.entries
+            .try_borrow_mut()
+            .map_err(CharsetError::Write)?
+            .insert(
+                key,
+                value.map_or(CharsetValue::Undefined, CharsetValue::Text),
+            );
+        Ok(())
+    }
+    /// Returns whether a property existed, unlike JavaScript's delete operator.
+    pub fn remove(&self, key: u16) -> Result<bool, CharsetError> {
+        Ok(self
+            .entries
+            .try_borrow_mut()
+            .map_err(CharsetError::Write)?
+            .remove(&key)
+            .is_some())
+    }
+    pub fn snapshot(&self) -> Result<BTreeMap<u16, CharsetValue>, CharsetError> {
+        Ok(self
+            .entries
+            .try_borrow()
+            .map_err(CharsetError::Read)?
+            .clone())
+    }
+}
+
 pub const DEFAULT_CHARSET: Option<Charset> = None;
 
-/// Return the map selected by an upstream `CHARSETS` designator.
-///
-/// `B` and unknown designators return `None`, matching JS `undefined`. Aliases
-/// return the same shared map, not separately allocated equivalent maps.
+/// Aliases and repeated lookups share objects within this thread's realm.
+/// The core is !Send, like a JS terminal bound to a realm. A thread-local cache
+/// preserves shared mutable built-ins without imposing global locks or leaking
+/// allocations. A different native thread, like a JS worker, has its own maps.
 pub fn builtin_charset(designator: char) -> Option<Charset> {
-    static CHARSETS: OnceLock<BTreeMap<char, Charset>> = OnceLock::new();
-    CHARSETS
-        .get_or_init(tables::build_charsets)
-        .get(&designator)
-        .cloned()
+    thread_local! {
+        static CHARSETS: BTreeMap<char, Charset> = tables::build_charsets();
+    }
+    CHARSETS.with(|charsets| charsets.get(&designator).cloned())
 }
 
-/// Failure to grow the designated-charset array. The service remains unchanged.
 #[derive(Debug)]
 pub enum CharsetError {
-    /// `usize::MAX` cannot be represented as an array index with a length.
     LevelOverflow,
-    /// The requested array cannot be allocated.
     Allocation(TryReserveError),
+    Read(BorrowError),
+    Write(BorrowMutError),
 }
-
 impl fmt::Display for CharsetError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::LevelOverflow => f.write_str("charset index exceeds the array length range"),
             Self::Allocation(error) => write!(f, "cannot allocate designated charsets: {error}"),
+            Self::Read(error) => write!(f, "cannot read charset map: {error}"),
+            Self::Write(error) => write!(f, "cannot modify charset map: {error}"),
         }
     }
 }
-
 impl Error for CharsetError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
         match self {
             Self::LevelOverflow => None,
             Self::Allocation(error) => Some(error),
+            Self::Read(error) => Some(error),
+            Self::Write(error) => Some(error),
         }
     }
 }
 
-/// Designated maps and the currently invoked G level.
-///
-/// Levels use nonnegative Rust indices. Protocol callers normally use 0 through
-/// 3, but arbitrary array indices are retained for faithful service behavior.
-/// Unassigned slots are `None`, the equivalent of JS array holes/`undefined`.
+/// Levels are nonnegative indices; missing slots correspond to JS array holes.
 #[derive(Clone, Debug, Default)]
 pub struct CharsetService {
     pub charset: Option<Charset>,
     pub glevel: usize,
     charsets: Vec<Option<Charset>>,
 }
-
 impl CharsetService {
     pub fn charsets(&self) -> &[Option<Charset>] {
         &self.charsets
     }
-
-    /// Like the upstream array getter, direct edits do not update `charset`.
-    /// Use [`Self::set_g_charset`] when designation should update the active map.
+    /// Direct array edits do not refresh the separately selected active map.
     pub fn charsets_mut(&mut self) -> &mut Vec<Option<Charset>> {
         &mut self.charsets
     }
-
     pub fn reset(&mut self) {
         self.charset = None;
         self.charsets.clear();
         self.glevel = 0;
     }
-
     pub fn set_g_level(&mut self, g: usize) {
         self.glevel = g;
         self.charset = self.charsets.get(g).and_then(Clone::clone);
     }
-
-    /// Designate a map. Growth failures do not change any part of the service.
+    /// Failed growth does not change any part of the service.
     pub fn set_g_charset(
         &mut self,
         g: usize,
@@ -116,5 +168,25 @@ impl CharsetService {
             self.charset = charset;
         }
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn borrows_are_reported_and_never_escape_lookup_or_set() {
+        let map = Charset::new(BTreeMap::from([(u16::from(b'q'), vec![0x2500])]));
+        {
+            let _held = map.entries.borrow_mut();
+            assert!(matches!(
+                map.get_first(u16::from(b'q')),
+                Err(CharsetError::Read(_))
+            ));
+            assert!(matches!(map.set(0, None), Err(CharsetError::Write(_))));
+        }
+        assert_eq!(map.get_first(u16::from(b'q')).unwrap(), Some(0x2500));
+        map.set(u16::from(b'q'), Some(vec![0x41])).unwrap();
+        assert_eq!(map.get_first(u16::from(b'q')).unwrap(), Some(0x41));
     }
 }

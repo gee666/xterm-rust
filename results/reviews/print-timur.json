@@ -1,0 +1,25 @@
+{
+  "task": 153,
+  "reviewer": "Timur",
+  "implementationOwner": "Tecuichpo",
+  "scope": "PrintRun and REP callback boundaries. Charset handle implementation itself remains task211 for another independent reviewer.",
+  "inspection": [
+    "Compared print.rs and print_render.rs with InputHandler.ts print statements517-692, and repeat preparation/command routing with repeatPrecedingCharacter1655-1679.",
+    "Verified captured charset handle, columns, insert/wrap/a11y modes and attribute-object identity versus source-live rows, active buffer and hyperlink reads.",
+    "Checked that Unicode provider calls, pre-cell accessibility dispatch and scrolling execute without terminal/buffer/row/attribute borrows held.",
+    "Checked previous join-state commit, error partial state, wide-cell cleanup, forced wraps and REP sharing the callback-safe print path.",
+    "Read all five private tests for provider reentry, mode snapshots, old attribute-object retention, concrete callback failure and pre-cell REP observations. Weak captures avoid test reference cycles."
+  ],
+  "commands": [
+    { "receipt": "results/build-slots/1793174092247-10404-a7cfdb8d-2952-49f1-a979-8fbfa93c2988/receipt.json", "command": "cargo test -p xterm-core --lib terminal::print::tests", "status": "passed", "testsPassed": 5, "filteredOutUnrelated": 57 },
+    { "receipt": "results/build-slots/1793174146464-12652-567ca65e-d563-471d-8eab-9dc258ab65b7/receipt.json", "command": "cargo test -p xterm-core --test charset_terminal --test terminal_csi_editing --test terminal_csi_differential", "status": "passed", "testsPassed": 18, "charsetStateAndCallbackProfiles": 408, "orderedCharsetEventProfiles": 402 },
+    { "receipt": "results/build-slots/1793172131438-48372-8b092f11-5491-4bca-aaa6-0b8a12092db1/receipt.json", "command": "cargo clippy -p xterm-core --lib --test charset --test charset_edges --test charset_mutation --test charset_terminal --test serialize_differential -- -D warnings", "status": "passed", "scope": "Earlier integrated snapshot. Later unrelated buffer cleanup-owner warnings remain separate and are not claimed clean." }
+  ],
+  "platform": "Native Windows x64",
+  "findings": [
+    "Original queued-after-print accessibility behavior is replaced by actual pre-write callbacks.",
+    "Whole-run handle replacement and same-object edits retain their different source semantics under chunk variation.",
+    "docs/print-callbacks.md still contains older source-only/unrun wording and the previous test name; owner asked to refresh it to current receipts."
+  ],
+  "verdict": "Accept scoped print/REP implementation. Native charset task82 still needs its independent final evidence review; browser/WASM, release and other native platforms are not implied."
+}

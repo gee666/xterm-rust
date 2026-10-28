@@ -3,7 +3,6 @@
 // Four service tests below retain CharsetService.test.ts assertions.
 
 use std::collections::BTreeMap;
-use std::sync::Arc;
 use xterm_core::charset::{
     builtin_charset, Charset, CharsetError, CharsetService, DEFAULT_CHARSET,
 };
@@ -11,7 +10,7 @@ use xterm_core::charset::{
 fn same_map(actual: &Option<Charset>, expected: &Option<Charset>) -> bool {
     match (actual, expected) {
         (None, None) => true,
-        (Some(actual), Some(expected)) => Arc::ptr_eq(actual, expected),
+        (Some(actual), Some(expected)) => Charset::ptr_eq(actual, expected),
         _ => false,
     }
 }
@@ -68,10 +67,10 @@ fn every_ascii_mapping_matches_javascript() {
         let id = designator(columns[0]);
         let input = hex_unit(columns[1]);
         let charset = builtin_charset(id);
-        let actual = charset.as_ref().and_then(|map| map.get(&input));
+        let actual = charset.as_ref().and_then(|map| map.get(input).unwrap());
         let expected =
             (columns[2] != "-").then(|| columns[2].split(',').map(hex_unit).collect::<Vec<_>>());
-        assert_eq!(actual, expected.as_ref(), "map {id:?}, input {input:x}");
+        assert_eq!(actual, expected, "map {id:?}, input {input:x}");
         rows += 1;
     }
     assert_eq!(rows, 2176);
@@ -83,7 +82,7 @@ fn canonical(map: &Option<Charset>) -> Option<char> {
     map.as_ref().map(|map| {
         DESIGNATORS
             .chars()
-            .find(|&id| builtin_charset(id).is_some_and(|builtin| Arc::ptr_eq(map, &builtin)))
+            .find(|&id| builtin_charset(id).is_some_and(|builtin| Charset::ptr_eq(map, &builtin)))
             .unwrap()
     })
 }
@@ -143,39 +142,37 @@ fn aliases_share_identity_and_undefined_sets_have_no_map() {
     assert!(!same_map(&builtin_charset('A'), &builtin_charset('4')));
     for id in DESIGNATORS.chars() {
         if let Some(map) = builtin_charset(id) {
-            assert!(map.keys().all(|&unit| unit < 128));
+            assert!(map.snapshot().unwrap().keys().all(|&unit| unit < 128));
         }
     }
 }
 
 #[test]
 fn custom_maps_preserve_utf16_empty_values_and_identity() {
-    let charset = Arc::new(BTreeMap::from([
+    let charset = Charset::new(BTreeMap::from([
         (0x005b, vec![0x0069, 0x006a]),
         (0x0078, vec![]),
         (0xd800, vec![0xdc00, 0xd800]),
     ]));
     let mut service = CharsetService::default();
-    service
-        .set_g_charset(0, Some(Arc::clone(&charset)))
-        .unwrap();
-    assert!(Arc::ptr_eq(service.charset.as_ref().unwrap(), &charset));
+    service.set_g_charset(0, Some(charset.clone())).unwrap();
+    assert!(Charset::ptr_eq(service.charset.as_ref().unwrap(), &charset));
     assert_eq!(
-        service.charset.as_ref().unwrap().get(&0xd800),
-        Some(&vec![0xdc00, 0xd800])
+        service.charset.as_ref().unwrap().get(0xd800).unwrap(),
+        Some(vec![0xdc00, 0xd800])
     );
     assert_eq!(
-        service.charset.as_ref().unwrap().get(&0x0078),
-        Some(&vec![])
+        service.charset.as_ref().unwrap().get(0x0078).unwrap(),
+        Some(vec![])
     );
     assert_eq!(
-        service.charset.as_ref().unwrap().get(&0x005b),
-        Some(&vec![0x0069, 0x006a])
+        service.charset.as_ref().unwrap().get(0x005b).unwrap(),
+        Some(vec![0x0069, 0x006a])
     );
     let clone = service.clone();
     assert!(same_map(&service.charset, &clone.charset));
     service.reset();
-    assert!(Arc::ptr_eq(clone.charset.as_ref().unwrap(), &charset));
+    assert!(Charset::ptr_eq(clone.charset.as_ref().unwrap(), &charset));
 }
 
 #[test]

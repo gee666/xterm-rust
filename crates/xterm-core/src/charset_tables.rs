@@ -4,7 +4,6 @@
 
 use super::Charset;
 use std::collections::BTreeMap;
-use std::sync::Arc;
 
 // These are the xterm.js/vttest mappings, not alternative ISO 2022 tables.
 const DEC_SPECIAL: &[(char, &str)] = &[
@@ -173,7 +172,7 @@ pub(super) fn build_charsets() -> BTreeMap<char, Charset> {
         ("H7", SWEDISH),
         ("=", SWISS),
     ] {
-        let map = Arc::new(
+        let map = Charset::new(
             entries
                 .iter()
                 .map(|&(key, value)| {
@@ -185,7 +184,7 @@ pub(super) fn build_charsets() -> BTreeMap<char, Charset> {
                 .collect(),
         );
         for alias in aliases.chars() {
-            charsets.insert(alias, Arc::clone(&map));
+            charsets.insert(alias, map.clone());
         }
     }
     charsets

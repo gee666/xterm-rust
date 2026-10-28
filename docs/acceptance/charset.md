@@ -59,10 +59,12 @@ Required source paths: `Types.ts::ICharset`, `CharsetService.ts`, and `InputHand
 - Replacement values retain empty strings, embedded NUL, BMP units, supplementary pairs, and isolated high or low surrogate units without replacement-character conversion.
 - Keys are single UTF-16 units in Rust. A custom key containing a surrogate unit must remain representable. Arbitrary multi-unit JavaScript object keys have no single-unit terminal lookup and must be identified as a representation difference, not silently claimed as supported.
 - Designation, active selection and cloning a service retain shared map identity. Resetting one cloned service must not destroy the other service's selected map.
-- The Rust `Arc<BTreeMap<u16, Vec<u16>>>` representation is immutable. Documentation must disclose that JavaScript live map mutation through external aliases is not modeled. This difference must remain visible in the compatibility inventory; a unit-test pass cannot establish unrestricted JavaScript object equivalence.
+- The `Charset` handle must share live mutable object identity, not only immutable table data. A per-print-run captured handle observes property edits on that object, while replacing the active handle does not replace the captured object. `get_first`, `get`, `set`, `remove` and `snapshot` must release every map borrow before Unicode providers or user callbacks execute.
+- Preserve explicit undefined properties separately from absent properties and empty strings in snapshots. `Charset::clone` shares identity; returned lookup values and snapshots are owned copies. A source callback's in-place `q` edit must change the next mapped character even in one whole print run.
+- Built-in aliases and repeated lookup share maps within a thread-local realm. The non-Send core must not add global locking or leaked maps. Native threads have separate registries; browser worker proof is separate.
 - Do not convert map strings through Unicode scalar-only `String` on the raw API path. The later terminal-printing contract is separate.
 
-Existing evidence: `custom_maps_preserve_utf16_empty_values_and_identity` and `charset_edges.rs::custom_maps_preserve_all_raw_utf16_value_boundaries` cover empty and embedded-NUL replacements, valid supplementary pairs, lone high/low surrogates, surrogate keys, identity, clone retention and reset.
+Existing evidence: `custom_maps_preserve_utf16_empty_values_and_identity` and `charset_edges.rs::custom_maps_preserve_all_raw_utf16_value_boundaries` cover empty and embedded-NUL replacements, valid supplementary pairs, lone high/low surrogates, surrogate keys, identity, clone retention and reset. `charset_mutation.rs` adds shared selected/saved/cloned edits, undefined/empty/absent distinction, owned read results, live built-in aliases and native thread realms. `charset_terminal.rs` compares both handle replacement and in-place edits against actual source callback traces.
 
 ## CSET-ERROR: growth and failure atomicity
 
@@ -87,7 +89,7 @@ Existing evidence: `failed_growth_leaves_the_service_unchanged` covers both erro
 - An independent reviewer reads the source and Rust implementation, checks the original assertions, executes the commands, and retains their own findings. Teammate claims and configured CI are not runtime evidence.
 - Retain failing input rows as counterexamples; do not edit expected fixtures to make Rust pass. Report unrun integration/platform checks explicitly.
 
-Existing evidence: `results/charset/oracle.json`, `results/charset/independent-review.json`, reviewer logs and the separate acceptance reviews for tasks 20 and 21. `scripts/check-charset-oracle.mjs` confirms byte-identical regeneration and runs all sixteen real Rust tests against temporary source mutants for a map value, alias identity, active level, slot length and slot value. All five must fail through assertions, not compilation or process errors. Results are in `results/charset/oracle-controls.json`. Temporary executables are deleted after checking to conserve disk.
+Existing evidence: `results/charset/oracle.json`, `results/charset/independent-review.json`, reviewer logs and the separate acceptance reviews for tasks 20 and 21. `scripts/check-charset-oracle.mjs` confirms byte-identical regeneration and runs all twenty-one integration tests against temporary source mutants for a map value, alias identity, active level, slot length and slot value. All five must fail through assertions, not compilation or process errors. Results are in `results/charset/oracle-controls.json`. Temporary executables are deleted after checking to conserve disk.
 
 ## CSET-INTEGRATION: terminal sequences and printed results
 

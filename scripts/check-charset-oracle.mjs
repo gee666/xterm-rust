@@ -52,7 +52,8 @@ try {
   await writeFile(path.join(temp, 'lib.rs'), 'pub mod charset;\n');
   await copyFile(path.join(root, 'crates/xterm-core/tests/charset.rs'), path.join(temp, 'tests/upstream.rs'));
   await copyFile(path.join(root, 'crates/xterm-core/tests/charset_edges.rs'), path.join(temp, 'tests/edges.rs'));
-  await writeFile(path.join(temp, 'tests/charset.rs'), '#[path = "upstream.rs"] mod upstream;\n#[path = "edges.rs"] mod edges;\n');
+  await copyFile(path.join(root, 'crates/xterm-core/tests/charset_mutation.rs'), path.join(temp, 'tests/mutation.rs'));
+  await writeFile(path.join(temp, 'tests/charset.rs'), '#[path = "upstream.rs"] mod upstream;\n#[path = "edges.rs"] mod edges;\n#[path = "mutation.rs"] mod mutation;\n');
   for (const file of fixtureNames) {
     await copyFile(path.join(root, 'crates/xterm-core/tests/fixtures', file), path.join(temp, 'tests/fixtures', file));
   }
@@ -61,7 +62,7 @@ try {
   const cases = [
     { name: 'unmodified baseline' },
     { name: 'wrong map entry', tables: ["('a', \"▒\")", "('a', \"A\")"] },
-    { name: 'lost alias identity', tables: ['Arc::clone(&map)', '{ let original: Charset = Arc::clone(&map); Arc::new((*original).clone()) }'] },
+    { name: 'lost alias identity', tables: ['map.clone()', '{ let entries = map.snapshot().unwrap().into_iter().filter_map(|(key, value)| match value { super::CharsetValue::Text(text) => Some((key, text)), super::CharsetValue::Undefined => None }).collect(); Charset::new(entries) }'] },
     { name: 'wrong active level', service: ['self.glevel = g;', 'self.glevel = g.wrapping_add(1);'] },
     { name: 'wrong slot length', service: ['self.charsets.resize_with(len, || None);', 'self.charsets.resize_with(len + 1, || None);'] },
     { name: 'wrong slot value', service: ['self.charsets[g] = charset.clone();', 'self.charsets[g] = None;'] }
@@ -79,7 +80,7 @@ try {
       '--extern', `xterm_core=${library}`, '-o', executable]);
     const rejected = mutation.name !== 'unmodified baseline';
     const run = command(executable, [], rejected);
-    if (!rejected) assert.match(run.stdout, /16 passed; 0 failed;/);
+    if (!rejected) assert.match(run.stdout, /21 passed; 0 failed;/);
     report.controls.push({ name: mutation.name, expectedFailure: rejected, status: run.status,
       result: run.stdout.match(/test result: .*$/m)?.[0] });
   }

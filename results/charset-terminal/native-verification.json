@@ -1,0 +1,27 @@
+{
+  "tasks": [82, 211],
+  "platform": "Windows x64",
+  "scope": "Live charset source/Rust engine and typed mutable map contract, not browser rendering or full workspace equivalence.",
+  "checks": [
+    { "receipt": "results/build-slots/1793171115101-39292-e9eff845-12c3-4edf-9b7a-6eda823096a5/receipt.json", "command": "node scripts/charset-terminal-oracle.mjs --generate", "status": "passed", "sourceStateCases": 134, "stateProfiles": 402, "callbackProfiles": 6, "totalSourceRuns": 408 },
+    { "receipt": "results/build-slots/1793171184772-42860-41830766-f85e-4086-8c1c-2794ad53bcc1/receipt.json", "command": "cargo test -p xterm-core --test charset --test charset_edges --test charset_mutation --test charset_terminal --test serialize_differential", "status": "passed", "charsetIntegrationTests": 21, "liveEngineTests": 2, "liveStateAndCallbackProfiles": 408, "orderedEventProfiles": 402, "serializerTests": 2, "serializerCases": 3350, "ignored": 0 },
+    { "receipt": "results/build-slots/1793171310405-228-769346b9-12da-4aad-9a6a-a6d520bd3185/receipt.json", "command": "node scripts/check-charset-oracle.mjs", "status": "passed", "originalSourceTests": 4, "mapRows": 2176, "serviceOperations": 4107, "staticBaselineTests": 21, "sourceMutantsRejected": 5, "deterministicFixtures": true },
+    { "receipt": "results/build-slots/1793171410737-47168-2753d3e9-1297-4c86-b736-bd53697889c6/receipt.json", "command": "cargo test -p xterm-core --lib charset::tests", "status": "failed", "reason": "Unrelated NativeWriteScheduler.cancel return type lagged the current WriteScheduler trait. Failed attempt retained." },
+    { "receipt": "results/build-slots/1793172116042-23056-e3be2a49-2586-41ae-a1f8-5cd21059f6b3/receipt.json", "command": "cargo test -p xterm-core --lib charset::tests", "status": "passed", "unitTests": 1, "filteredOutUnrelatedTests": 58 },
+    { "receipt": "results/build-slots/1793171478698-5836-2b165a3e-81a2-49fd-ae0f-41541ea2f025/receipt.json", "command": "cargo clippy -p xterm-core --lib --test charset --test charset_edges --test charset_mutation --test charset_terminal --test serialize_differential -- -D warnings", "status": "failed", "reason": "Same unrelated scheduler signature migration; no suppression used." },
+    { "receipt": "results/build-slots/1793172131438-48372-8b092f11-5491-4bca-aaa6-0b8a12092db1/receipt.json", "command": "cargo clippy -p xterm-core --lib --test charset --test charset_edges --test charset_mutation --test charset_terminal --test serialize_differential -- -D warnings", "status": "passed" },
+    { "receipt": "results/build-slots/1793172202463-46960-9e68889f-0090-4531-bb6e-1526c3e856bb/receipt.json", "command": "cargo check -p xterm-web --target wasm32-unknown-unknown --features acceptance-hooks", "status": "failed", "reason": "WASM integration errors in width-measurer, scheduler and browser scroll/service methods. No Charset-specific compiler error reported; not claimed as a passing web build." }
+  ],
+  "format": { "status": "passed", "command": "rustfmt --edition 2021 --check crates/xterm-core/src/charset.rs crates/xterm-core/src/charset_tables.rs crates/xterm-core/tests/charset.rs crates/xterm-core/tests/charset_edges.rs crates/xterm-core/tests/charset_mutation.rs crates/xterm-core/tests/charset_terminal.rs crates/xterm-core/tests/support/charset_trace.rs" },
+  "counterexamples": [
+    { "issue": "Default charset selection incorrectly erased G1-G3 and slot length", "initialFailingProfiles": 9, "retained": "results/charset-terminal/failures/default-charset-before-fix.txt", "resolvedInCurrentNativeRun": true },
+    { "issue": "Accessibility callback ran after the print run rather than before each cell", "contract": "crates/xterm-core/tests/fixtures/charset-callback.tsv", "resolvedInCurrentNativeRun": true },
+    { "issue": "Captured immutable map could not observe in-place property edits", "contract": "crates/xterm-core/tests/fixtures/charset-mutation.tsv", "resolvedInCurrentNativeRun": true }
+  ],
+  "remaining": [
+    "Independent task153 and task211 acceptance plus final native82 evidence review.",
+    "Actual Rust-backed WASM/browser charset run task133, including worker realms.",
+    "Native Linux/macOS execution, release/full-workspace immutable-snapshot checks and broader equivalence are not implied."
+  ],
+  "overallEquivalence": "NOT PROVEN"
+}

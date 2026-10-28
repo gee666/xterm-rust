@@ -1,13 +1,12 @@
 //! Directed gaps from docs/acceptance/charset.md, separate from the original tests.
 
 use std::collections::BTreeMap;
-use std::sync::Arc;
-use xterm_core::charset::{builtin_charset, Charset, CharsetError, CharsetService};
+use xterm_core::charset::{builtin_charset, Charset, CharsetError, CharsetService, CharsetValue};
 
 fn same_map(a: &Option<Charset>, b: &Option<Charset>) -> bool {
     match (a, b) {
         (None, None) => true,
-        (Some(a), Some(b)) => Arc::ptr_eq(a, b),
+        (Some(a), Some(b)) => Charset::ptr_eq(a, b),
         _ => false,
     }
 }
@@ -107,14 +106,24 @@ fn custom_maps_preserve_all_raw_utf16_value_boundaries() {
         (0xd800, vec![0xffff]),
         (0xffff, vec![]),
     ]);
-    let map = Arc::new(entries.clone());
+    let map = Charset::new(entries.clone());
+    let expected = entries
+        .into_iter()
+        .map(|(key, value)| (key, CharsetValue::Text(value)))
+        .collect::<BTreeMap<_, _>>();
     let mut service = CharsetService::default();
-    service.set_g_charset(0, Some(Arc::clone(&map))).unwrap();
-    assert_eq!(service.charset.as_deref(), Some(&entries));
+    service.set_g_charset(0, Some(map.clone())).unwrap();
+    assert_eq!(
+        service.charset.as_ref().unwrap().snapshot().unwrap(),
+        expected
+    );
     let clone = service.clone();
     service.reset();
-    assert_eq!(clone.charset.as_deref(), Some(&entries));
-    assert!(Arc::ptr_eq(clone.charset.as_ref().unwrap(), &map));
+    assert_eq!(
+        clone.charset.as_ref().unwrap().snapshot().unwrap(),
+        expected
+    );
+    assert!(Charset::ptr_eq(clone.charset.as_ref().unwrap(), &map));
 }
 
 #[test]

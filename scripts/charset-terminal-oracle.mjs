@@ -29,7 +29,7 @@ const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 for (const file of Object.keys(built.metafile.inputs).filter(file => file.startsWith('source_repo/'))) hashes[file] = sha(await readFile(path.join(root, file)));
 const { Terminal, CHARSETS } = require(bundle);
 const ids = Object.keys(CHARSETS).sort();
-const custom = { '!': '', '?': 'ij', '#': '\u0000x', '@': '\ud83d\ude00', '[': '\ud800', ']': '\udc00', '~': 'z' };
+const custom = { '!': '', '?': 'ij', '#': '\u0000x', '@': '\ud83d\ude00', '[': '\ud800', ']': '\udc00', '~': 'z', q: '─' };
 function canonical(map) {
   if (map === undefined) return '-';
   if (map === custom) return 'custom';
@@ -69,6 +69,7 @@ add('wide-wrapping', '\x1b(0abcdefg中q\x1b(B😀', { cols: 8 });
 add('custom-map-first-unit-and-empty', '!?#@[]~\u00ad\x7f\u0080', { custom: true });
 add('custom-map-save-clone-identity', '\x1b7?\x1b(B?\x1b8?', { custom: true });
 const lines = [];
+const eventRows = [];
 const sourceLogs = [];
 const logger = (id, profile) => Object.fromEntries(['trace', 'debug', 'info', 'warn', 'error'].map(level =>
   [level, (...args) => sourceLogs.push({ id, profile, level, args })]));
@@ -80,7 +81,17 @@ for (let id = 0; id < cases.length; id++) {
     const t = new Terminal({ cols: test.cols, rows: test.rows, scrollback: 10, allowProposedApi: true, screenReaderMode: true, logger: logger(id, profile) });
     if (test.custom) t._core._charsetService.setgCharset(0, custom);
     const a11y = [];
-    t._core._inputHandler.onA11yChar(char => a11y.push(hex(char)));
+    const events = [];
+    t.onBell(() => events.push('B'));
+    t.onBinary(data => events.push('Y' + hex(data)));
+    t.onResize(event => events.push(`Z${event.cols}:${event.rows}`));
+    t.onCursorMove(() => events.push('C'));
+    t.onLineFeed(() => events.push('L'));
+    t.onScroll(y => events.push(`S${y}`));
+    t.onData(data => events.push('D' + hex(data)));
+    t.onTitleChange(title => events.push('T' + hex(title)));
+    t._core.onRender(event => events.push(`R${event.start}:${event.end}`));
+    t._core._inputHandler.onA11yChar(char => { a11y.push(hex(char)); events.push('A' + hex(char)); });
     const chunks = profile === 'string' ? [test.text] : profile === 'units'
       ? Array.from({ length: test.text.length }, (_, i) => test.text[i])
       : Array.from(Buffer.from(test.text, 'utf8'), byte => Uint8Array.of(byte));
@@ -89,32 +100,48 @@ for (let id = 0; id < cases.length; id++) {
     const actual = [snapshot(t), service(t), saved(t._core.buffers.normal), saved(t._core.buffers.alt), a11y.join(';')].join('\t');
     if (expected === undefined) expected = actual;
     else assert.equal(actual, expected, `Source partition drift ${test.name} ${profile}`);
+    eventRows.push([id, profile, events.join('/')].join('\t'));
     t.dispose();
   }
   lines.push([id, test.name, test.cols, test.rows, test.custom ? 1 : 0, hex(test.text), expected].join('\t'));
 }
-const callbackRows = [];
-const callbackInput = '\x1b(0qq';
-for (const profile of ['string', 'units', 'bytes']) {
-  const t = new Terminal({ cols: 8, rows: 3, scrollback: 10, allowProposedApi: true, screenReaderMode: true, logger: logger('callback', profile) });
-  const observations = [];
-  t._core._inputHandler.onA11yChar(char => {
-    const b = t._core.buffer;
-    const atCursor = b.lines.get(b.ybase + b.y)?.getCell(b.x)?.getChars();
-    observations.push([hex(char), b.x, b.y, atCursor === undefined ? 'missing' : hex(atCursor), service(t)].join('/'));
-    if (observations.length === 1) t._core._charsetService.setgCharset(0, CHARSETS.A);
-  });
-  const chunks = profile === 'string' ? [callbackInput] : profile === 'units' ? callbackInput.split('')
-    : Array.from(Buffer.from(callbackInput, 'utf8'), byte => Uint8Array.of(byte));
-  await new Promise(resolve => chunks.forEach((chunk, i) => t.write(chunk, i === chunks.length - 1 ? resolve : undefined)));
-  sourceWrites += chunks.length;
-  callbackRows.push([profile, hex(callbackInput), observations.join(';'), snapshot(t), service(t)].join('\t'));
-  t.dispose();
+const eventsFixture = 'crates/xterm-core/tests/fixtures/charset-terminal-events.tsv';
+const eventsText = eventRows.join('\n') + '\n';
+if (process.argv.includes('--generate')) await writeFile(path.join(root, eventsFixture), eventsText);
+else assert.equal(await readFile(path.join(root, eventsFixture), 'utf8'), eventsText, 'Charset event fixture drift');
+const callbackData = {};
+for (const action of ['replace', 'edit']) {
+  const callbackRows = [];
+  const input = action === 'replace' ? '\x1b(0qq' : 'qq';
+  for (const profile of ['string', 'units', 'bytes']) {
+    custom.q = '─';
+    const t = new Terminal({ cols: 8, rows: 3, scrollback: 10, allowProposedApi: true, screenReaderMode: true, logger: logger(action, profile) });
+    if (action === 'edit') t._core._charsetService.setgCharset(0, custom);
+    const observations = [];
+    t._core._inputHandler.onA11yChar(char => {
+      const b = t._core.buffer;
+      const atCursor = b.lines.get(b.ybase + b.y)?.getCell(b.x)?.getChars();
+      observations.push([hex(char), b.x, b.y, atCursor === undefined ? 'missing' : hex(atCursor), service(t)].join('/'));
+      if (observations.length === 1) {
+        if (action === 'edit') custom.q = 'X';
+        else t._core._charsetService.setgCharset(0, CHARSETS.A);
+      }
+    });
+    const chunks = profile === 'string' ? [input] : profile === 'units' ? input.split('')
+      : Array.from(Buffer.from(input, 'utf8'), byte => Uint8Array.of(byte));
+    await new Promise(resolve => chunks.forEach((chunk, i) => t.write(chunk, i === chunks.length - 1 ? resolve : undefined)));
+    sourceWrites += chunks.length;
+    callbackRows.push([profile, hex(input), observations.join(';'), snapshot(t), service(t)].join('\t'));
+    t.dispose();
+  }
+  custom.q = '─';
+  const fixture = action === 'replace' ? 'crates/xterm-core/tests/fixtures/charset-callback.tsv'
+    : 'crates/xterm-core/tests/fixtures/charset-mutation.tsv';
+  const text = callbackRows.join('\n') + '\n';
+  if (process.argv.includes('--generate')) await writeFile(path.join(root, fixture), text);
+  else assert.equal(await readFile(path.join(root, fixture), 'utf8'), text, `Charset ${action} fixture drift`);
+  callbackData[action] = { fixture, sha256: sha(text), cases: callbackRows.length };
 }
-const callbackFixture = 'crates/xterm-core/tests/fixtures/charset-callback.tsv';
-const callbackText = callbackRows.join('\n') + '\n';
-if (process.argv.includes('--generate')) await writeFile(path.join(root, callbackFixture), callbackText);
-else assert.equal(await readFile(path.join(root, callbackFixture), 'utf8'), callbackText, 'Charset callback fixture drift');
 const fixture = 'crates/xterm-core/tests/fixtures/charset-terminal.tsv';
 const text = lines.join('\n') + '\n';
 if (process.argv.includes('--generate')) await writeFile(path.join(root, fixture), text);
@@ -122,8 +149,9 @@ else assert.equal(await readFile(path.join(root, fixture), 'utf8'), text, 'Chars
 for (const [file, expected] of Object.entries(hashes)) assert.equal(sha(await readFile(path.join(root, file))), expected, `Reference changed ${file}`);
 const report = { command: `node scripts/charset-terminal-oracle.mjs${process.argv.includes('--generate') ? ' --generate' : ''}`,
   node: process.version, platform: process.platform, arch: process.arch, sourceHashes: hashes,
-  cases: cases.length, sourceProfiles: 3, sourceRuns: cases.length * 3 + 3, stateRuns: cases.length * 3,
-  callbackRuns: 3, sourceWrites, fixture, fixtureSha256: sha(text), callbackFixture, callbackSha256: sha(callbackText), sourceLogs,
+  cases: cases.length, sourceProfiles: 3, sourceRuns: cases.length * 3 + 6, stateRuns: cases.length * 3,
+  callbackRuns: 6, sourceWrites, fixture, fixtureSha256: sha(text), eventsFixture, eventsSha256: sha(eventsText),
+  callbackData, sourceLogs,
   custom: Object.fromEntries(Object.entries(custom).map(([key, value]) => [hex(key), hex(value)])),
   scope: 'Actual headless source parser/buffers/charsets/saved state/a11y under whole UTF16, split UTF16 and split UTF8. Rust native comparison and browser proof are separate.' };
 await writeFile(path.join(results, 'oracle.json'), JSON.stringify(report, null, 2) + '\n');

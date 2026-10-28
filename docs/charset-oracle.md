@@ -3,9 +3,9 @@
 `source_repo/src/common/data/Charsets.ts` and `services/CharsetService.ts` remain the reference. Run from the repository root with Node.js 24.15.0 or newer:
 
 ```sh
-node scripts/charset-oracle.mjs
-node scripts/check-charset-oracle.mjs
-cargo test -p xterm-core --test charset --test charset_edges
+node scripts/build-slot.mjs --owner charset-source --lane native -- node scripts/charset-oracle.mjs
+node scripts/build-slot.mjs --owner charset-controls --lane native -- node scripts/check-charset-oracle.mjs
+node scripts/build-slot.mjs --owner charset-tests --lane native -- cargo test -p xterm-core --test charset --test charset_edges --test charset_mutation
 ```
 
 The Node script writes temporary import-resolved modules under `tmp/charset-oracle/`. It removes interface-only import lines from copies of the two source modules. It does not change implementation statements. The original test body keeps every assertion. Only its imports change to use the temporary source copies and Node's equivalent strict assertions instead of Chai. The harness implements this suite's synchronous `describe`, `beforeEach`, and `it` hooks. It does not claim to run unrelated upstream suites.
@@ -41,6 +41,6 @@ Regenerate fixtures from the script. Do not hand-edit expected values to accommo
 
 ## Negative controls and directed edges
 
-`scripts/check-charset-oracle.mjs` regenerates both fixtures twice and checks byte-identical SHA-256 hashes. It then compiles the same Rust component and all sixteen tests under `tmp/charset-negative-controls/`, with one source mutation at a time. Wrong map contents, lost alias identity, wrong active level, wrong slot length and wrong designated value must each trigger test assertion failures. Compile errors and process failures do not count as successful detection. The unchanged component must still pass all sixteen tests, including the six directed edge cases. Exact subprocess results are retained in `results/charset/oracle-controls.json`. This small std-only check reuses one temporary build location and removes executables and libraries after completion.
+`scripts/check-charset-oracle.mjs` regenerates both fixtures twice and checks byte-identical SHA-256 hashes. It then compiles the same Rust component and all twenty-one integration tests under `tmp/charset-negative-controls/`, with one source mutation at a time. Wrong map contents, lost alias identity, wrong active level, wrong slot length and wrong designated value must each trigger test assertion failures. Compile errors and process failures do not count as successful detection. The unchanged component must still pass all twenty-one integration tests, including six directed edge cases and five mutable-map/realm cases. Exact subprocess results are retained in `results/charset/oracle-controls.json`. This small std-only check reuses one temporary build location and removes executables and libraries after completion.
 
-`tests/charset_edges.rs` adds six directed tests for complete pairwise map identity, non-ASCII unknown designators, initial/G0-G3 behavior, sparse overwrite, direct public/array edits, repeated reset/reuse, complete raw UTF-16 replacement boundaries and multi-slot allocation-failure recovery. These complement the original ten tests. See [acceptance/charset.md](acceptance/charset.md) for the full checklist and the separate, still-required live terminal/browser integration gate.
+`tests/charset_edges.rs` adds six directed tests for complete pairwise map identity, non-ASCII unknown designators, initial/G0-G3 behavior, sparse overwrite, direct public/array edits, repeated reset/reuse, complete raw UTF-16 replacement boundaries and multi-slot allocation-failure recovery. These complement the original ten tests. `charset_mutation.rs` adds five tests for shared edits, explicit undefined values, owned snapshots, live built-in aliases and native thread realms. A separate library unit checks fallible borrow errors. See [acceptance/charset.md](acceptance/charset.md) for the full checklist and the separate, still-required live terminal/browser integration gate.
