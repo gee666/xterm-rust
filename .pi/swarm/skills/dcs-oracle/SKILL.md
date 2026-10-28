@@ -11,7 +11,7 @@ Run from the repository root with Node.js 24.15 or later and Rust 1.85.1 or late
 node scripts/verify-dcs.mjs
 ```
 
-This runs all 20 unchanged upstream DcsParser.test.ts bodies, verifies a 512-trace corpus with seed 0xdcc512, runs Rust tests, checks formatting for owned DCS files, and runs focused warning-free Clippy. It writes commands, platform, toolchain and raw logs to results/dcs/. docs/dcs.md records Rust binding and async executor obligations.
+This runs all 20 unchanged upstream DcsParser.test.ts bodies, verifies 512 standalone traces at seed 0xdcc512 and 657 real escape-parser traces, runs DCS/integration/shared-registry Rust tests, checks owned formatting, and runs warning-free focused Clippy. Each run reserves results/dcs/run-NNNN/ and records commands, input hashes, platform, toolchain, counts and failures. An interrupted run remains incomplete and false. docs/dcs.md records Rust binding and async executor obligations.
 
 To intentionally regenerate the corpus from unchanged upstream behavior:
 

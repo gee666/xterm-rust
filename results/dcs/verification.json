@@ -2,7 +2,7 @@
   "platform": "win32",
   "arch": "x64",
   "node": "v24.15.0",
-  "runDirectory": "results/dcs/run-0002",
+  "runDirectory": "results/dcs/run-0003",
   "inputs": [
     {
       "path": "Cargo.toml",
@@ -46,7 +46,7 @@
     },
     {
       "path": "crates/xterm-core/src/parser/escape.rs",
-      "sha256": "2acb601d60957982f5e26d5454ff14c8559451b775a1fb60f67367c534573de0"
+      "sha256": "5772e095f659547660e07ffd2edfc88fd1b0a32c97adbb2f4da8ef1a497cf2eb"
     },
     {
       "path": "crates/xterm-core/src/parser/escape_handlers.rs",
@@ -121,9 +121,9 @@
       "timedOut": false,
       "terminationError": null,
       "resourceError": null,
-      "elapsedMs": 36.3897,
+      "elapsedMs": 32.4256,
       "status": "passed",
-      "log": "results/dcs/run-0002/rustc-version.log",
+      "log": "results/dcs/run-0003/rustc-version.log",
       "output": "rustc 1.85.1 (4eb161250 2025-03-15)\nbinary: rustc\ncommit-hash: 4eb161250e340c8f48f66e2b929ef4a5bed7c181\ncommit-date: 2025-03-15\nhost: x86_64-pc-windows-msvc\nrelease: 1.85.1\nLLVM version: 19.1.7\n"
     },
     "cargo": {
@@ -137,9 +137,9 @@
       "timedOut": false,
       "terminationError": null,
       "resourceError": null,
-      "elapsedMs": 30.72269999999999,
+      "elapsedMs": 30.383199999999995,
       "status": "passed",
-      "log": "results/dcs/run-0002/cargo-version.log",
+      "log": "results/dcs/run-0003/cargo-version.log",
       "output": "cargo 1.85.1 (d73d2caf9 2024-12-31)\n"
     }
   },
@@ -156,9 +156,9 @@
       "timedOut": false,
       "terminationError": null,
       "resourceError": null,
-      "elapsedMs": 208.7669,
+      "elapsedMs": 203.4735,
       "status": "passed",
-      "log": "results/dcs/run-0002/oracle.log"
+      "log": "results/dcs/run-0003/oracle.log"
     },
     {
       "name": "integration-oracle",
@@ -172,9 +172,9 @@
       "timedOut": false,
       "terminationError": null,
       "resourceError": null,
-      "elapsedMs": 135.40209999999996,
+      "elapsedMs": 117.24089999999995,
       "status": "passed",
-      "log": "results/dcs/run-0002/integration-oracle.log"
+      "log": "results/dcs/run-0003/integration-oracle.log"
     },
     {
       "name": "rustfmt",
@@ -196,9 +196,9 @@
       "timedOut": false,
       "terminationError": null,
       "resourceError": null,
-      "elapsedMs": 57.642600000000016,
+      "elapsedMs": 53.22219999999999,
       "status": "passed",
-      "log": "results/dcs/run-0002/rustfmt.log"
+      "log": "results/dcs/run-0003/rustfmt.log"
     },
     {
       "name": "rust-tests",
@@ -214,15 +214,15 @@
         "--test",
         "handler_registry"
       ],
-      "exitCode": 101,
+      "exitCode": 0,
       "signal": null,
       "error": null,
       "timedOut": false,
       "terminationError": null,
       "resourceError": null,
-      "elapsedMs": 1344.799,
-      "status": "failed",
-      "log": "results/dcs/run-0002/rust-tests.log"
+      "elapsedMs": 859.1619000000001,
+      "status": "passed",
+      "log": "results/dcs/run-0003/rust-tests.log"
     },
     {
       "name": "clippy",
@@ -241,20 +241,42 @@
         "-D",
         "warnings"
       ],
-      "exitCode": 101,
+      "exitCode": 0,
       "signal": null,
       "error": null,
       "timedOut": false,
       "terminationError": null,
       "resourceError": null,
-      "elapsedMs": 1468.5232999999998,
-      "status": "failed",
-      "log": "results/dcs/run-0002/clippy.log"
+      "elapsedMs": 346.38909999999987,
+      "status": "passed",
+      "log": "results/dcs/run-0003/clippy.log"
     }
   ],
   "complete": true,
-  "passed": false,
+  "passed": true,
   "scope": "DCS and real escape-parser DCS integration only; no full equivalence or other-platform runtime claim",
   "changedInputs": [],
-  "rustTestSuites": []
+  "rustTestSuites": [
+    {
+      "passed": 35,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filtered": 0
+    },
+    {
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filtered": 0
+    },
+    {
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filtered": 0
+    }
+  ]
 }
