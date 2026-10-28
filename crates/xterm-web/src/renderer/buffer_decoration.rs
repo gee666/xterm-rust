@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. MIT license.
 //! Live buffer decorations. Geometry and lifecycle run in Rust against real DOM nodes.
-use crate::{api::RenderDimensions, js_error};
+use crate::{api::RenderDimensions, js_error, links::debounce::RenderRange};
 use std::{
     cell::{Cell, RefCell},
     rc::Rc,
@@ -11,7 +11,6 @@ use xterm_core::{
     buffer::BufferSet,
     decoration::{Decoration, DecorationService},
     event::Event,
-    headless::RenderEvent,
     lifecycle::{Disposable, DisposableStore},
 };
 #[path = "buffer_decoration_microtask.rs"]
@@ -31,7 +30,7 @@ pub struct BufferDecorationHost {
     pub decorations: Rc<DecorationService>,
     pub dimensions: Rc<dyn Fn() -> Result<RenderDimensions, JsValue>>,
     pub add_refresh_callback: AddDecorationRefresh,
-    pub viewport_changed: Event<RenderEvent>,
+    pub viewport_changed: Event<RenderRange>,
     pub dimensions_changed: Event<RenderDimensions>,
     pub dpr_changed: Event<f64>,
 }

@@ -9,13 +9,12 @@ use xterm_core::{
     buffer::BufferSet,
     decoration::{Decoration, DecorationOptions, DecorationService},
     event::Emitter,
-    headless::RenderEvent,
     lifecycle::DisposableHandle,
     options::{OptionValue, OptionsService},
 };
 use xterm_web::{
     api::{RenderDimensions, Size},
-    links::browser_debounce::BrowserRenderDebouncer,
+    links::{browser_debounce::BrowserRenderDebouncer, debounce::RenderRange},
     renderer::buffer_decoration::{
         bind_microtasks, BufferDecorationHost, BufferDecorationRenderer,
     },
@@ -25,7 +24,7 @@ pub struct Fixture {
     pub buffers: Rc<BufferSet>,
     pub decorations: Rc<DecorationService>,
     pub dimensions: Rc<Cell<RenderDimensions>>,
-    pub viewport: Emitter<RenderEvent>,
+    pub viewport: Emitter<RenderRange>,
     pub changed: Emitter<RenderDimensions>,
     pub dpr: Emitter<f64>,
     screen: HtmlElement,
@@ -101,7 +100,10 @@ impl Fixture {
     }
     pub fn refresh(&self) {
         self.viewport
-            .fire(&RenderEvent { start: 0, end: 23 })
+            .fire(&RenderRange {
+                start: 0.0,
+                end: 23.0,
+            })
             .unwrap();
     }
 }
@@ -125,6 +127,16 @@ pub fn element(decoration: &Decoration) -> HtmlElement {
 pub fn property(element: &HtmlElement, name: &str) -> String {
     element.style().get_property_value(name).unwrap()
 }
+pub fn snapshot(decoration: &Decoration) -> serde_json::Value {
+    if decoration.element().is_none() {
+        return serde_json::Value::Null;
+    }
+    snapshot_node(&element(decoration))
+}
+pub fn snapshot_node(node: &HtmlElement) -> serde_json::Value {
+    serde_json::json!({"className":node.class_name(),"width":property(node,"width"),"height":property(node,"height"),"top":property(node,"top"),"lineHeight":property(node,"line-height"),"left":property(node,"left"),"right":property(node,"right"),"display":property(node,"display"),"connected":node.is_connected()})
+}
+
 pub async fn frame() {
     let window = web_sys::window().unwrap();
     let next = js_sys::Promise::new(&mut |resolve, _| {

@@ -14,6 +14,71 @@ use support::{element, frame, microtask, property, Fixture};
 wasm_bindgen_test_configure!(run_in_browser);
 
 #[wasm_bindgen_test(async)]
+async fn replay_all_eight_actual_source_dom_observations() {
+    let expected: serde_json::Value =
+        serde_json::from_str(include_str!("fixtures/buffer-decoration.json")).unwrap();
+    let fixture = Fixture::new();
+    fixture.buffers.normal().borrow_mut().ydisp = 2;
+    let decoration = fixture.register(5, |o| {
+        o.x = Some(3.0);
+        o.width = Some(2.0);
+        o.height = Some(2);
+        o.anchor = Some(DecorationAnchor::Right);
+        o.layer = Some(DecorationLayer::Top);
+    });
+    let seen = Rc::new(RefCell::new(Vec::new()));
+    let output = seen.clone();
+    decoration.on_render().subscribe(move |handle| {
+        output.borrow_mut().push(support::snapshot_node(
+            handle.downcast_ref::<web_sys::HtmlElement>().unwrap(),
+        ))
+    });
+    let record = |name: &str, d: &xterm_core::decoration::Decoration| serde_json::json!({"name":name,"style":support::snapshot(d),"renderEvents":seen.borrow().clone()});
+    let mut actual = Vec::new();
+    frame().await;
+    actual.push(record("created", &decoration));
+    {
+        let options = decoration.options();
+        let mut o = options.borrow_mut();
+        o.width = Some(0.0);
+        o.height = Some(0);
+        o.x = Some(0.0);
+        o.anchor = Some(DecorationAnchor::Left);
+        o.layer = Some(DecorationLayer::Bottom);
+    }
+    fixture.changed.fire(&fixture.dimensions.get()).unwrap();
+    frame().await;
+    actual.push(record("zero-defaults", &decoration));
+    {
+        let options = decoration.options();
+        let mut o = options.borrow_mut();
+        o.width = Some(3.0);
+        o.height = Some(3);
+        o.x = Some(2.0);
+    }
+    fixture.changed.fire(&fixture.dimensions.get()).unwrap();
+    frame().await;
+    actual.push(record("anchor-update", &decoration));
+    fixture.buffers.normal().borrow_mut().ydisp = 7;
+    fixture.refresh();
+    actual.push(record("off-viewport", &decoration));
+    fixture.buffers.activate_alt_buffer(None).unwrap();
+    fixture.refresh();
+    actual.push(record("alternate", &decoration));
+    fixture.buffers.activate_normal_buffer().unwrap();
+    fixture.buffers.normal().borrow_mut().ydisp = 0;
+    fixture.refresh();
+    actual.push(record("normal", &decoration));
+    decoration.marker().dispose().unwrap();
+    actual.push(record("disposed-marker", &decoration));
+    let pending = fixture.register(1, |_| {});
+    fixture.renderer.dispose();
+    frame().await;
+    actual.push(record("detached-pending-frame", &pending));
+    assert_eq!(serde_json::Value::Array(actual), expected);
+}
+
+#[wasm_bindgen_test(async)]
 async fn live_geometry_layers_element_handle_and_dimension_callback_order() {
     let fixture = Fixture::new();
     fixture.buffers.normal().borrow_mut().ydisp = 2;
