@@ -126,7 +126,11 @@ fn mutable_tail_reads_after_resume_but_decoded_prefix_does_not_replay() {
         Err(TerminalError::Pending)
     ));
     assert_eq!(row(&terminal), vec![65]);
-    assert_eq!(*source.ranges.borrow(), [0..MAX_PARSE_BUFFER_LENGTH]);
+    {
+        let ranges = source.ranges.borrow();
+        assert_eq!(ranges.len(), 1);
+        assert_eq!(ranges[0], 0..MAX_PARSE_BUFFER_LENGTH);
+    }
     source.bytes.borrow_mut()[100] = b'X';
     source.bytes.borrow_mut()[MAX_PARSE_BUFFER_LENGTH] = b'Z';
     let pending = terminal.take_pending().unwrap();

@@ -11,6 +11,8 @@ mod external_errors;
 mod external_payloads;
 #[path = "write_buffer_cases/host_reentry.rs"]
 mod host_reentry;
+#[path = "write_buffer_cases/length_errors.rs"]
+mod length_errors;
 #[path = "write_buffer_cases/parser_bridge.rs"]
 mod parser_bridge;
 #[path = "write_buffer_cases/resizable_payload.rs"]
