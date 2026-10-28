@@ -224,10 +224,8 @@ impl FastDomNode {
 
     fn dimension(&self, property: Property, value: &V) -> Result<(), JsValue> {
         let value = if let V::Number(number) = value {
-            Cow::Owned(V::from(format!(
-                "{}px",
-                ryu_js::Buffer::new().format(*number)
-            )))
+            let text = format!("{}px", ryu_js::Buffer::new().format(*number));
+            Cow::Owned(V::from(text.as_str()))
         } else {
             Cow::Borrowed(value)
         };
