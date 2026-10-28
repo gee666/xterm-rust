@@ -1,8 +1,9 @@
 // Copyright (c) 2026 xterm-rust contributors. Licensed under MIT.
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { readLocalFile } from './local-file.mjs';
+import { validateCaseCounts } from './case-counts.mjs';
 const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 const fields = ['discovered', 'executed', 'passed', 'failed', 'pending', 'skipped', 'unrun'];
 function validateCounts(counts, label) {
@@ -16,10 +17,7 @@ function validateCounts(counts, label) {
 
 /** Validate the current completed baseline, never silently reuse a historic pass. */
 export async function loadBaseline(root, pointerPath, referenceManifest) {
-  const read = async relative => {
-    assert(typeof relative === 'string' && relative.length && !path.isAbsolute(relative) && !relative.split(/[\\/]/).includes('..'), `Unsafe baseline path: ${relative}`);
-    return readFile(path.join(root, relative));
-  };
+  const read = relative => readLocalFile(root, relative, 'baseline');
   const pointer = JSON.parse(await read(pointerPath));
   assert.equal(pointer.status, 'passed', 'Latest baseline is not passed');
   assert(pointer.runId && pointer.summary && !path.isAbsolute(pointer.summary) && !pointer.summary.split(/[\\/]/).includes('..'), 'Invalid baseline pointer');
@@ -55,6 +53,7 @@ export async function loadBaseline(root, pointerPath, referenceManifest) {
   const rawBytes = await read(summary.rawReport);
   assert.equal(digest(rawBytes), summary.rawReportSha256, 'Baseline raw report hash mismatch');
   const raw = JSON.parse(rawBytes);
+  const registrations = JSON.parse(await read(summary.registrationReport));
   validateCounts(summary.totals, 'totals');
   assert.equal(new Set(summary.suites.map(s => s.source)).size, summary.suites.length, 'Duplicate baseline suite');
   const expectedSuites = referenceManifest.map(row => row.path.replace(/^source_repo\//, '')).filter(p => /^(src|addons\/[^/]+\/src)\/.*\.test\.ts$/.test(p)).sort();
@@ -62,5 +61,6 @@ export async function loadBaseline(root, pointerPath, referenceManifest) {
   for (const suite of summary.suites) validateCounts(suite, suite.source);
   for (const field of fields) assert.equal(summary.suites.reduce((sum, suite) => sum + suite[field], 0), summary.totals[field], `Baseline suite total mismatch: ${field}`);
   for (const [rawKey, totalKey] of [['tests', 'discovered'], ['passes', 'passed'], ['failures', 'failed'], ['pending', 'pending']]) assert.equal(raw.stats[rawKey], summary.totals[totalKey], `Baseline raw stats mismatch: ${rawKey}`);
-  return { summary, summaryPath, evidencePaths: [pointerPath, summaryPath, summary.reference.manifest, summary.rawReport, ...commandLogs] };
+  validateCaseCounts(summary, raw, registrations);
+  return { summary, summaryPath, evidencePaths: [pointerPath, summaryPath, summary.reference.manifest, summary.rawReport, summary.registrationReport, ...commandLogs] };
 }

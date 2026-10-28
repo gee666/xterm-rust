@@ -1,0 +1,62 @@
+{
+  "scope": "Compatibility metadata validation only; full equivalence NOT PROVEN",
+  "status": "passed",
+  "environment": {
+    "node": "v24.15.0",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "commands": [
+    {
+      "argv": [
+        "node",
+        "scripts/compatibility-inventory.mjs"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "log": "results/compatibility-check/runs/1793149856-25324/generate.log"
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/compatibility-inventory.mjs",
+        "--check"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "log": "results/compatibility-check/runs/1793149856-25324/check.log"
+    },
+    {
+      "argv": [
+        "node",
+        "--test",
+        "scripts/compatibility-inventory.test.mjs"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "log": "results/compatibility-check/runs/1793149856-25324/tests.log"
+    }
+  ],
+  "tests": {
+    "executed": 8,
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0
+  },
+  "sourceHashes": {
+    "scripts/compatibility-inventory.mjs": "29def4a8e29e862bde43937fcfe56d2b5cfcf63687fd1d08d042ca2aaac6766a",
+    "scripts/compatibility-inventory.test.mjs": "1f3422553f681967f37243c51dee2e255e2f2b74ad2fe7b0e9d2191d9235de03",
+    "tools/compatibility/baseline.mjs": "d5012563ea42f2e5903e64ac4499e659fba3a9714880951fc61972e013aafba6",
+    "tools/compatibility/case-counts.mjs": "7aa069b7cebe0615a92a5581d01eff8099819da0443ed36c792b34e2f5ec1516",
+    "tools/compatibility/reference.mjs": "431aa2348e16ad5f37f2b8d098ae55a95a1a0aa2397f05b54d514efe9eb6c3cc",
+    "tools/compatibility/mappings.json": "2beaaad28ca42dcfbb60283499ced7ae415fd1ea86e5252eb16c3567c00cf26c",
+    "tools/compatibility/behavior-criteria.json": "f1eeba8533474c71eeaeb923d6c987ea0371549356008bdb2c0ec31f956eb5c1",
+    "tools/compatibility/package-lock.json": "8262c3903a9c7442781a6503aac1da61fd65aef8bfef4b509fe6a449d853480d"
+  },
+  "summarySha256": "c0423fe8abaa7817555e6332867a7eacbf90870803d9fe297bc0220b6007bb1b",
+  "evidenceManifestSha256": "ffcdf47eee18b5da1f1dea94da9d89b3a4ab52dcffe7dd2fc75b8f56affa61a7",
+  "limitations": [
+    "No original/Rust terminal/browser execution by this command",
+    "Source/API mappings still partial and final142required"
+  ]
+}

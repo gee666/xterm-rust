@@ -1,15 +1,16 @@
 // Copyright (c) 2026 xterm-rust contributors. Licensed under MIT.
 import assert from 'node:assert/strict';
-import { createHash } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { readFile, readdir, mkdir, writeFile, rm, symlink } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import test from 'node:test';
 import { loadBaseline } from '../tools/compatibility/baseline.mjs';
+import { listReferenceFiles } from '../tools/compatibility/reference.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const generator = path.join(root, 'scripts/compatibility-inventory.mjs');
-const output = 'tmp/compatibility-validation';
+const output = `tmp/compatibility-validation-${randomUUID()}`;
 const load = async name => JSON.parse(await readFile(path.join(root, `results/compatibility/${name}.json`), 'utf8'));
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const run = (args, cwd = root) => spawnSync(process.execPath, [generator, ...args], { cwd, encoding: 'utf8', timeout: 60_000, maxBuffer: 4 * 1024 * 1024 });
@@ -19,7 +20,7 @@ async function diskFiles(relative) {
   const paths = [];
   for (const item of await readdir(path.join(root, relative), { withFileTypes: true })) {
     const p = `${relative}/${item.name}`;
-    if (item.isDirectory() && p !== 'source_repo/demo/dist' && !['.git', 'node_modules', 'out', 'out-test', 'out-esbuild', 'out-esbuild-test', 'lib', 'coverage'].includes(item.name)) paths.push(...await diskFiles(p));
+    if (item.isDirectory() && !['source_repo/demo/dist', 'source_repo/headless/lib-headless'].includes(p) && !['.git', 'node_modules', 'out', 'out-test', 'out-esbuild', 'out-esbuild-test', 'lib', 'coverage'].includes(item.name)) paths.push(...await diskFiles(p));
     if (item.isFile()) paths.push(p);
   }
   return paths.sort();
@@ -41,6 +42,21 @@ test('every reference path/hash, production module, fixture and addon is indexed
   const addons = await load('addons');
   assert.deepEqual(addons.map(a => a.name).sort(), (await readdir(path.join(root, 'source_repo/addons'), { withFileTypes: true })).filter(d => d.isDirectory()).map(d => d.name).sort());
   assert.equal(addons.length, 14);
+});
+
+test('generated headless/demo outputs are excluded by exact path, not by source folder name', async () => {
+  const fixture = path.join(root, `tmp/compatibility-exclusion-fixture-${randomUUID()}`);
+  const files = [
+    'source_repo/headless/lib-headless/generated.ts', 'source_repo/demo/dist/generated.ts',
+    'source_repo/src/lib-headless/keep.ts', 'source_repo/src/dist/keep.ts', 'source_repo/src/real.ts'
+  ];
+  try {
+    for (const file of files) {
+      await mkdir(path.dirname(path.join(fixture, file)), { recursive: true });
+      await writeFile(path.join(fixture, file), 'fixture');
+    }
+    assert.deepEqual(await listReferenceFiles(fixture), files.slice(2).sort());
+  } finally { await rm(fixture, { recursive: true }); }
 });
 
 test('all API signatures point to exact source, overload identities and categories survive', async () => {
@@ -67,6 +83,13 @@ test('all API signatures point to exact source, overload identities and categori
     assert(terminal.some(a => a.name === 'onData' && a.category === 'event'));
   }
   assert(apis.some(a => a.name === '<call>' && a.kind === 'CallSignature'));
+  const headless = apis.filter(a => a.module === '@xterm/headless');
+  assert(headless.every(a => a.behaviorCriteria.length > 0));
+  const logLevel = headless.find(a => a.name === 'LogLevel');
+  assert(logLevel.behaviorCriteria.includes(23));
+  assert(!logLevel.behaviorCriteria.includes(235), 'Mode criteria must not be stamped onto unrelated headless declarations');
+  const declarationModule = (await load('modules')).find(m => m.source === 'source_repo/typings/xterm-headless.d.ts');
+  assert.equal(declarationModule.acceptanceGap, null);
 });
 
 test('suite support, conditional renderer cases and skip annotation semantics survive', async () => {
@@ -171,7 +194,7 @@ test('duplicate mappings, unknown source, absent evidence and output escape are 
   unknown.modules[0].source = 'source_repo/src/nonexistent.ts';
   await reject(unknown, /Unknown module mapping/);
   const absent = structuredClone(original);
-  absent.modules[0].evidence = ['tmp/compatibility-validation/no-such-evidence.json'];
+  absent.modules[0].evidence = [`${output}/no-such-evidence.json`];
   await reject(absent, /ENOENT/);
   for (const invalid of ['../outside', '/outside', 'C:/outside', 'a\\b', './file', 'a//b']) {
     const escaped = structuredClone(original);
@@ -198,7 +221,7 @@ test('duplicate mappings, unknown source, absent evidence and output escape are 
 });
 
 test('failed, incomplete, altered and stale baseline evidence cannot advertise recorded passes', async () => {
-  const dir = 'tmp/compatibility-baseline-validation';
+  const dir = `tmp/compatibility-baseline-validation-${randomUUID()}`;
   await mkdir(path.join(root, dir), { recursive: true });
   const latest = JSON.parse(await readFile(path.join(root, 'results/upstream-baseline/latest.json'), 'utf8'));
   const original = JSON.parse(await readFile(path.join(root, 'results/upstream-baseline', latest.summary), 'utf8'));
@@ -221,7 +244,11 @@ test('failed, incomplete, altered and stale baseline evidence cannot advertise r
     [s => { s.rawReportSha256 = '0'.repeat(64); }, /raw report hash mismatch/],
     [s => { s.suites[0].passed++; }, /execution mismatch/],
     [s => { s.suites.push(s.suites[0]); }, /Duplicate baseline suite/],
-    [s => { s.suites.pop(); }, /suite set incomplete/]
+    [s => { s.suites.pop(); }, /suite set incomplete/],
+    [s => {
+      const [from, to] = s.suites.filter(row => row.passed > 0);
+      for (const field of ['discovered', 'executed', 'passed']) { from[field]--; to[field]++; }
+    }, /case attribution mismatch/]
   ];
   for (const [mutate, expected] of mutations) {
     const summary = structuredClone(original);
@@ -229,6 +256,23 @@ test('failed, incomplete, altered and stale baseline evidence cannot advertise r
     await writeFixture(summary);
     await assert.rejects(loadBaseline(root, pointerPath, manifest), expected);
   }
+  const registrations = JSON.parse(await readFile(path.join(root, original.registrationReport), 'utf8'));
+  const wrongRegistration = structuredClone(original);
+  wrongRegistration.registrationReport = `${dir}/bad-registration.json`;
+  registrations[0].title = 'invented registration title';
+  await writeFile(path.join(root, wrongRegistration.registrationReport), JSON.stringify(registrations));
+  await writeFixture(wrongRegistration);
+  await assert.rejects(loadBaseline(root, pointerPath, manifest), /registration cases differ/);
+  const changedRaw = JSON.parse(await readFile(path.join(root, original.rawReport), 'utf8'));
+  changedRaw.passes[0].fullTitle = changedRaw.passes[1].fullTitle;
+  changedRaw.passes[0].file = changedRaw.passes[1].file;
+  const rawBytes = JSON.stringify(changedRaw);
+  const wrongOutcomes = structuredClone(original);
+  wrongOutcomes.rawReport = `${dir}/bad-outcomes.json`;
+  wrongOutcomes.rawReportSha256 = hash(rawBytes);
+  await writeFile(path.join(root, wrongOutcomes.rawReport), rawBytes);
+  await writeFixture(wrongOutcomes);
+  await assert.rejects(loadBaseline(root, pointerPath, manifest), /raw case outcomes differ/);
   await writeFixture(original, { ...latest, status: 'failed', summary: 'summary.json' });
   await assert.rejects(loadBaseline(root, pointerPath, manifest), /Latest baseline is not passed/);
   await writeFixture(original, { ...latest, summary: '../outside.json' });

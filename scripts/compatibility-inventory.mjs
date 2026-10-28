@@ -3,10 +3,12 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
-import { readdir, readFile, writeFile, mkdir, lstat } from 'node:fs/promises';
+import { readdir, readFile, writeFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadBaseline } from '../tools/compatibility/baseline.mjs';
+import { readLocalFile, validateLocalFile } from '../tools/compatibility/local-file.mjs';
+import { listReferenceFiles, EXCLUDED_NAMES as excluded, EXCLUDED_PATHS as excludedPaths } from '../tools/compatibility/reference.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const require = createRequire(new URL('../tools/compatibility/package.json', import.meta.url));
 const ts = require('typescript');
@@ -19,32 +21,9 @@ const baselinePointer = args.find(a => a.startsWith('--baseline='))?.slice(11) ?
 assert(baselinePointer === 'results/upstream-baseline/latest.json' || /^tmp\/[\w/-]+\.json$/.test(baselinePointer), 'Alternative baseline must be under tmp/');
 assert(outputDir === 'results/compatibility' || /^tmp\/[\w/-]+$/.test(outputDir), 'Alternative output must be under tmp/');
 assert(mappingsPath === 'tools/compatibility/mappings.json' || /^tmp\/[\w/-]+\.json$/.test(mappingsPath), 'Alternative mappings must be under tmp/');
-const read = p => readFile(path.join(root, p), 'utf8');
+const read = async p => (await readLocalFile(root, p)).toString('utf8');
 const digest = bytes => createHash('sha256').update(bytes).digest('hex');
-async function validateMappedFile(p) {
-  assert(typeof p === 'string' && !p.includes('\\') && !p.includes(':') && !path.posix.isAbsolute(p)
-    && p.split('/').every(part => part && part !== '.' && part !== '..'), `Invalid mapped path: ${p}`);
-  let current = root;
-  for (const part of p.split('/')) {
-    current = path.join(current, part);
-    assert(!(await lstat(current)).isSymbolicLink(), `Mapped file must not be linked: ${p}`);
-  }
-  assert((await lstat(current)).isFile(), `Mapped path must be a regular file: ${p}`);
-}
-const excluded = new Set(['.git', 'node_modules', 'out', 'out-test', 'out-esbuild', 'out-esbuild-test', 'lib', 'coverage']);
-const excludedPaths = new Set(['source_repo/demo/dist']);
-async function walk(dir) {
-  const directory = await lstat(path.join(root, dir));
-  assert(directory.isDirectory() && !directory.isSymbolicLink(), `Reference directory must not be linked: ${dir}`);
-  const files = [];
-  for (const entry of (await readdir(path.join(root, dir), { withFileTypes: true })).sort((a, b) => a.name.localeCompare(b.name, 'en'))) {
-    const name = `${dir}/${entry.name}`;
-    if (entry.isSymbolicLink()) throw new Error(`Reference symlink requires explicit policy: ${name}`);
-    if (entry.isDirectory()) { if (!excluded.has(entry.name) && !excludedPaths.has(name)) files.push(...await walk(name)); }
-    else if (entry.isFile()) files.push(name);
-  }
-  return files.sort();
-}
+const validateMappedFile = p => validateLocalFile(root, p);
 const family = p => p.startsWith('source_repo/addons/') ? p.split('/').slice(1, 3).join('/')
   : p.startsWith('source_repo/src/') ? p.split('/').slice(2, 3).join('/')
     : p.split('/')[1];
@@ -57,7 +36,7 @@ const lineAt = (sf, node) => sf.getLineAndCharacterOfPosition(node.getStart(sf))
 const docOf = node => (node.jsDoc ?? []).map(d => d.getText()).join('\n');
 const modifiers = node => (node.modifiers ?? []).map(m => m.getText());
 const nameOf = (sf, node) => node.name?.getText(sf) ?? (ts.isConstructorDeclaration(node) ? 'constructor' : ts.isCallSignatureDeclaration(node) ? '<call>' : ts.isConstructSignatureDeclaration(node) ? '<new>' : '<index>');
-const referenceFiles = await walk('source_repo');
+const referenceFiles = await listReferenceFiles(root);
 const entries = JSON.parse(await read(mappingsPath));
 const behaviorRules = JSON.parse(await read('tools/compatibility/behavior-criteria.json'));
 const criteriaIndexPath = 'results/acceptance/criteria-index.json';
@@ -67,7 +46,7 @@ for (const criterion of criteriaIndex.criteria.filter(c => c.id > 11 && ![50, 51
   // directory, glob or similarly named file is not a source contract mapping.
   const sources = criterion.source.match(/source_repo\/[\w/.-]+\.tsx?\b/g) ?? [];
   const document = `${criterion.source} ${criterion.body} ${criterion.verification}`.match(/docs\/[\w/.-]+\.md\b/)?.[0] ?? criteriaIndexPath;
-  for (const source of new Set(sources)) if (referenceFiles.includes(source)) behaviorRules.push({ source, criterionIds: [criterion.id], document });
+  for (const source of new Set(sources)) if (referenceFiles.includes(source)) behaviorRules.push({ source, criterionIds: [criterion.id], document, moduleOnly: source.endsWith('.d.ts') });
 }
 const mappingDocuments = ['docs/utility-addons-criteria-map.json', 'docs/font-addon-source-map.json', 'docs/acceptance/unicode-text-sources.json', 'docs/browser-input-source-map.md'];
 const utilityMap = JSON.parse(await read(mappingDocuments[0]));
@@ -86,8 +65,9 @@ for (const rule of behaviorRules) {
   await validateMappedFile(rule.document);
 }
 const acceptanceFor = (source, title = '') => {
-  const rules = behaviorRules.filter(r => r.source === source && (!r.pattern || new RegExp(r.pattern).test(title)));
-  return { behaviorCriteria: [...new Set(rules.flatMap(r => r.criterionIds))].sort((a, b) => a - b),
+  const rules = behaviorRules.filter(r => r.source === source && (!r.moduleOnly || !title) && (!r.pattern || new RegExp(r.pattern).test(title)));
+  return { acceptanceMappingLevel: rules.length ? rules.some(r => r.pattern) ? 'contract-pattern' : 'source-file-checklist' : 'unmapped',
+    behaviorCriteria: [...new Set(rules.flatMap(r => r.criterionIds))].sort((a, b) => a - b),
     acceptanceDocuments: [...new Set(rules.map(r => r.document))],
     acceptanceGap: rules.length ? null : 'No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.' };
 };
@@ -162,6 +142,18 @@ for (const p of declarations) {
     if (ts.isVariableDeclaration(node) && node.type && ts.isTypeLiteralNode(node.type)) node.type.members.forEach(n => visit(n, [...scope, name], docs));
   }
   visit(sf);
+}
+// A declaration module can be fully assigned without one blanket criterion.
+// Aggregate only its already-scoped member ownership, never stamp that union
+// back onto individual declarations or infer their implementation/test status.
+for (const module of modules.filter(m => m.source.endsWith('.d.ts') && m.acceptanceGap)) {
+  const members = apis.filter(api => api.source === module.source);
+  if (members.length && members.every(api => !api.acceptanceGap)) {
+    module.acceptanceMappingLevel = 'per-declaration-aggregation';
+    module.behaviorCriteria = [...new Set(members.flatMap(api => api.behaviorCriteria))].sort((a, b) => a - b);
+    module.acceptanceDocuments = [...new Set(members.flatMap(api => api.acceptanceDocuments))].sort();
+    module.acceptanceGap = null;
+  }
 }
 const testFiles = referenceFiles.filter(p => p.endsWith('.ts') && (/\.(test|benchmark)\.ts$/.test(p) || p.includes('/test/')));
 for (const source of originalBySource.keys()) assert(testFiles.includes(source), `Baseline suite omitted by inventory: ${source}`);
