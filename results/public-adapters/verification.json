@@ -1,0 +1,74 @@
+{
+  "scope": "Focused adapters only. Full equivalence NOT PROVEN; terminal/browser binding and native platform gates are separate.",
+  "timestamp": "2026-10-28T00:03:50.752Z",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+  "inputs": {
+    "crates/xterm-core/tests/public_addon_manager.rs": "3b4f37dc5eeacc116fe9e380673619fcc3502dffc7b421c07b585f05a4a8da72",
+    "crates/xterm-core/tests/public_addon_reentrancy.rs": "81c4a78e8392fe60122832303d26da879be8e575b907e54fc83f37aeb668e940",
+    "crates/xterm-core/tests/public_buffer_api.rs": "061850f5a92db8588628997e0bf9d6f55631a6c479d8779e35bb9f5f3d9bd573",
+    "crates/xterm-core/tests/public_parser_api.rs": "538be950049c08d047d835ee3a983b4706d603e06b1ffa5dfc3b169aff8089cc",
+    "crates/xterm-core/tests/public_parser_guard.rs": "378d0b0b3838082b5ce329519ac40f42cd7d0e79eb266f6c189f23841834e6d8",
+    "crates/xterm-core/tests/public_adapter_terminal.rs": "2b4d73de5af829594e9b9d92b941c152a62bc8f7f6c5a76c4d52202afa85bd6e",
+    "crates/xterm-core/src/public_api/addon_manager.rs": "3e0328494ada7baa688d91738dd0289c48ffe38530a69df1d4cc432c2a391c4b",
+    "crates/xterm-core/src/public_api/buffer.rs": "7f3412fe9faa5b208b9b1ca3be126b14bd0853ecd4003230e2d4d28c18911698",
+    "crates/xterm-core/src/public_api/parser.rs": "d3ccbe1ea19810356bd0db76a6723aeb098e69577e83a95d52d9046c783976c6",
+    "crates/xterm-core/src/public_api/mod.rs": "faaa76ac9ad2103b8def9c8e60425f738caa35b1788deb0454cf3ed674367fb4",
+    "scripts/check-public-adapters.mjs": "6e8ca0069b7acd0e6acba5f644f7278cbeaeca35ae865ec4ca4fd3274d261d3e",
+    "scripts/public-addon-oracle.mjs": "0bff4c4c0666cb84e1bc83b0f417d8b5128d4243a6c1d3b30fd722f80e3fcf12",
+    "scripts/public-buffer-oracle.mjs": "6cf0abf3df838038a00f6519bea330984dc923336b8e3f6bcc3951554ae04332"
+  },
+  "commands": [
+    {
+      "command": "C:\\nvm4w\\nodejs\\node.exe",
+      "args": [
+        "scripts/public-addon-oracle.mjs"
+      ],
+      "status": 0,
+      "signal": null,
+      "log": "command-1.log"
+    },
+    {
+      "command": "C:\\nvm4w\\nodejs\\node.exe",
+      "args": [
+        "scripts/public-buffer-oracle.mjs"
+      ],
+      "status": 0,
+      "signal": null,
+      "log": "command-2.log"
+    },
+    {
+      "command": "C:\\Users\\user\\.cargo\\bin\\cargo.exe",
+      "args": [
+        "test",
+        "-p",
+        "xterm-core",
+        "--test",
+        "public_addon_manager",
+        "--test",
+        "public_addon_reentrancy",
+        "--test",
+        "public_buffer_api",
+        "--test",
+        "public_parser_api",
+        "--test",
+        "public_parser_guard",
+        "--test",
+        "public_adapter_terminal"
+      ],
+      "status": 101,
+      "signal": null,
+      "log": "command-3.log"
+    }
+  ],
+  "rust": {
+    "discovered": 22,
+    "executed": 0,
+    "passed": 0,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 22,
+    "cases": []
+  }
+}
