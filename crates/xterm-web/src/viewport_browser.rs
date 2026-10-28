@@ -6,6 +6,9 @@ mod bindings;
 mod options;
 #[path = "viewport_styles.rs"]
 mod styles;
+#[cfg(test)]
+#[path = "viewport_browser_tests.rs"]
+mod tests;
 
 use super::{SyncCallback, ViewportController, ViewportError, ViewportHost};
 use crate::{
