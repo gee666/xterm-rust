@@ -27,7 +27,7 @@ fn requests(values: &[JsValue]) -> Array {
 
 fn host(family: &str) -> JsValue {
     // This records the public option setter, not an xterm.js implementation.
-    Function::new_with_args("family", "const writes = []; let current = family; return {writes, options: {get fontFamily(){return current}, set fontFamily(value){writes.push(value); current=value}}};")
+    Function::new_with_args("family", "const writes = []; let current = family, complete; const done = new Promise(resolve => complete = resolve); return {writes, done, options: {get fontFamily(){return current}, set fontFamily(value){writes.push(value); current=value; if(writes.length===2) complete()}}};")
         .call1(&JsValue::UNDEFINED, &JsValue::from_str(family)).unwrap()
 }
 
@@ -169,10 +169,13 @@ async fn default_initial_relayout_runs_after_ready() {
     let addon = WebFontsAddon::new(None);
     assert!(addon.initial_relayout());
     addon.activate(terminal.clone()).unwrap();
-    // An explicit relayout gives an event-driven completion boundary. Both
-    // operations await the same ready promise, without timing sleeps.
-    JsFuture::from(addon.relayout()).await.unwrap();
-    assert!(writes(&terminal).length() >= 2);
+    // Observe the second option assignment itself, without triggering another
+    // relayout that could hide a broken initialRelayout path.
+    let done = Reflect::get(&terminal, &"done".into())
+        .unwrap()
+        .unchecked_into::<js_sys::Promise>();
+    JsFuture::from(done).await.unwrap();
+    assert_eq!(writes(&terminal).length(), 2);
     addon.dispose();
     document.fonts().clear();
 }

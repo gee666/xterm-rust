@@ -2,8 +2,13 @@
 //! Browser-independent decisions made by the web-fonts addon.
 
 pub fn unquote(family: &[u16]) -> &[u16] {
-    if family.len() >= 2 && matches!(family[0], 0x22 | 0x27) && family.last() == family.first() {
-        &family[1..family.len() - 1]
+    if !family.is_empty() && matches!(family[0], 0x22 | 0x27) && family.last() == family.first() {
+        // JS slice(1, -1) is empty even for a one-code-unit quote.
+        if family.len() < 2 {
+            &[]
+        } else {
+            &family[1..family.len() - 1]
+        }
     } else {
         family
     }

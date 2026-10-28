@@ -104,6 +104,36 @@ fn fallback_is_longest_first_nonoverlapping_and_utf16_indexed() {
 }
 
 #[test]
+fn source_web_family_helpers_match_every_seeded_utf16_value() {
+    let corpus = include_str!("fixtures/font-family.tsv");
+    let mut rows = 0;
+    for (index, row) in corpus.lines().enumerate() {
+        let fields: Vec<_> = row.split('\t').collect();
+        assert_eq!(fields.len(), 5);
+        let input = decode_hex(fields[0]);
+        assert_eq!(
+            unquote(&input),
+            decode_hex(fields[1]),
+            "unquote row {index}"
+        );
+        assert_eq!(quote(&input), decode_hex(fields[2]), "quote row {index}");
+        let split: Vec<_> = if fields[3].is_empty() {
+            Vec::new()
+        } else {
+            fields[3].split(',').map(decode_hex).collect()
+        };
+        assert_eq!(split_family(&input), split, "split row {index}");
+        assert_eq!(
+            create_family(&split),
+            decode_hex(fields[4]),
+            "create row {index}"
+        );
+        rows += 1;
+    }
+    assert_eq!(rows, 4115);
+}
+
+#[test]
 fn web_family_splitting_deliberately_differs_from_css_parser() {
     assert_eq!(
         split_family(&utf16("  'A B' , C,\u{feff}\"D\" ,")),
@@ -115,7 +145,9 @@ fn web_family_splitting_deliberately_differs_from_css_parser() {
         vec![utf16("'A"), utf16("B'")]
     );
     assert_eq!(unquote(&[0x22, 0xD800, 0x22]), [0xD800]);
-    assert_eq!(unquote(&[0x22]), [0x22]);
+    assert_eq!(unquote(&[0x22]), []);
+    assert_eq!(unquote(&[0x27]), []);
+    assert_eq!(unquote(&[0x22, 0x22]), []);
 }
 
 #[test]

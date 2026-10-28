@@ -89,6 +89,14 @@ for (let i = 0; i < 4096; i++) {
 }
 const fallbackFixture = path.join(root, 'crates/xterm-addons/tests/fixtures/font-fallback.tsv');
 await checkFixture(fallbackFixture, fallbackCases.map(([text, patterns, ranges]) => [hex(text), patterns.map(hex).join(','), ranges.map(range => range.join(':')).join(',')].join('\t')).join('\n') + '\n');
+const webSourcePath = 'source_repo/addons/addon-web-fonts/src/WebFontsAddon.ts';
+const webSource = await fs.readFile(webSourcePath, 'utf8');
+const helperCode = stripTypeScriptTypes(webSource.slice(webSource.indexOf('function unquote'), webSource.indexOf('function hashFontFace')));
+const helpers = new Function(helperCode + '; return {unquote, quote, splitFamily, createFamily};')();
+const helperInputs = ['', '\"', "'", '\"\"', "''", '7mono', '-7mono', '--mono', '-mono', 'A B', 'a\\nb', 'a\\n2', 'a\\r-1', 'é', '😀', '\\uD800', ' a , b ,', "'A,B'", '\\uFEFFa\\u00A0'];
+for (let i = 0; i < 4096; i++) helperInputs.push(String.fromCharCode(...Array.from({ length: random() % 40 }, () => alphabet[random() % alphabet.length])));
+const helperFixture = path.join(root, 'crates/xterm-addons/tests/fixtures/font-family.tsv');
+await checkFixture(helperFixture, helperInputs.map(input => [hex(input), hex(helpers.unquote(input)), hex(helpers.quote(input)), helpers.splitFamily(input).map(hex).join(','), hex(helpers.createFamily(helpers.splitFamily(input)))].join('\t')).join('\n') + '\n');
 const report = {
   node: process.version,
   seed: '0xF017CA5E',
@@ -98,6 +106,7 @@ const report = {
   fixtureMode: generate ? 'generate' : 'verify',
   corpus: { rows: globalThis.fontCases.length, random: 8192, fixture: path.relative(root, fixture), sha256: createHash('sha256').update(await fs.readFile(fixture)).digest('hex') },
   fallback: { rows: fallbackCases.length, random: 4096, defaultPatterns: defaultList.length, fixture: path.relative(root, fallbackFixture), sources: [fallbackSourcePath, addonSourcePath].map((file, i) => ({ file, sha256: createHash('sha256').update(i ? addonSource : fallbackSource).digest('hex') })) },
+  webFamilies: { rows: helperInputs.length, random: 4096, fixture: path.relative(root, helperFixture), source: webSourcePath, sha256: createHash('sha256').update(webSource).digest('hex') },
   notProven: ['GSUB shaping', 'browser font access', 'ligature lifecycle', 'three-browser web-font relayout', 'native Linux/macOS']
 };
 await fs.writeFile(path.join(results, 'parser-oracle.json'), JSON.stringify(report, null, 2) + '\n');
