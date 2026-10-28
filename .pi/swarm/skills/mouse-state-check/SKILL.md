@@ -25,4 +25,4 @@ node scripts/check-mouse-state.mjs
 
 This includes `mouse_state`, `mouse_callbacks` and independently written `mouse_differential` tests. It writes `results/mouse-state/verification.json` and per-command logs, enforces a 512 MiB free-space preflight, preserves shared build profiles, and fails honestly on any shared-module build or lint error.
 
-The corpus is behavioral evidence for the mouse service, not for DOM event routing or the full terminal.
+A separate `scripts/mouse-raw-button-oracle.mjs` checks 4,200 signed-button rows against unchanged source, including DOM button -1 and int32 extremes. The full checker invokes both source oracles and 21 Rust tests per profile. The corpora are behavioral evidence for the mouse service, not for DOM event routing or the full terminal.

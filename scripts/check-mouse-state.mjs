@@ -38,6 +38,7 @@ const nodeVersion = run('node-version', process.execPath, ['--version']).trim();
 const rustVersion = run('rust-version', rustc, ['--version']).trim();
 const cargoVersion = run('cargo-version', cargo, ['--version']).trim();
 run('oracle-replay', process.execPath, ['scripts/mouse-state-oracle.mjs']);
+run('raw-button-oracle', process.execPath, ['scripts/mouse-raw-button-oracle.mjs']);
 run('rustfmt', rustfmt, ['--check', '--edition', '2021', ...files]);
 const testArgs = ['-p', 'xterm-core', '--test', 'mouse_state', '--test', 'mouse_callbacks', '--test', 'mouse_differential'];
 const debug = run('debug-tests', cargo, ['test', ...testArgs]);
@@ -57,14 +58,15 @@ const report = {
   implementationHashes: Object.fromEntries(files.map(file =>
     [file, createHash('sha256').update(readFileSync(path.join(root, file))).digest('hex')])),
   sourceHashes: oracle.sourceHashes, upstream: oracle.upstream,
-  differential: { seed: oracle.seed, traces: oracle.traces, corpusSha256: oracle.corpusSha256 },
+  differential: { seed: oracle.seed, traces: oracle.traces, corpusSha256: oracle.corpusSha256,
+    rawButtons: JSON.parse(readFileSync(path.join(directory, 'raw-buttons-oracle.json'), 'utf8')) },
   rust: { debug: counts(debug), release: counts(release), upstreamMapped: 8, targetedAdditional: 11,
-    differentialTests: 1 },
+    differentialTests: 2 },
   commands,
   scope: 'MouseStateService only. DOM input, terminal DEC mouse modes, transport and native Linux/macOS are not established by this report.'
 };
 writeFileSync(path.join(directory, 'verification.json'), `${JSON.stringify(report, null, 2)}\n`);
 console.log(JSON.stringify(report, null, 2));
 assert(commands.every(command => command.passed), 'one or more scoped mouse checks failed; inspect retained logs');
-assert.equal(report.rust.debug.passed, 20);
-assert.equal(report.rust.release.passed, 20);
+assert.equal(report.rust.debug.passed, 21);
+assert.equal(report.rust.release.passed, 21);

@@ -6,8 +6,8 @@ use std::ops::BitOr;
 use std::rc::Rc;
 
 /// Button numbers are protocol values, including the eight auxiliary buttons.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[repr(u8)]
+#[derive(Clone, Copy, Debug)]
+#[repr(i32)]
 pub enum MouseButton {
     Left = 0,
     Middle = 1,
@@ -22,7 +22,37 @@ pub enum MouseButton {
     Aux6 = 13,
     Aux7 = 14,
     Aux8 = 15,
+    /// DOM button values such as -1 must retain JS bitwise encoding behavior.
+    Raw(i32),
 }
+
+impl MouseButton {
+    pub fn raw_value(self) -> i32 {
+        match self {
+            Self::Left => 0,
+            Self::Middle => 1,
+            Self::Right => 2,
+            Self::None => 3,
+            Self::Wheel => 4,
+            Self::Aux1 => 8,
+            Self::Aux2 => 9,
+            Self::Aux3 => 10,
+            Self::Aux4 => 11,
+            Self::Aux5 => 12,
+            Self::Aux6 => 13,
+            Self::Aux7 => 14,
+            Self::Aux8 => 15,
+            Self::Raw(value) => value,
+        }
+    }
+}
+
+impl PartialEq for MouseButton {
+    fn eq(&self, other: &Self) -> bool {
+        self.raw_value() == other.raw_value()
+    }
+}
+impl Eq for MouseButton {}
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
@@ -168,6 +198,9 @@ const WHEEL_CODE: u8 = 64;
 const AUXILIARY_HIGH_CODE: u8 = 128;
 const ENCODING_BIAS: f64 = 32.0;
 const MAX_ENCODED_BYTE: f64 = 255.0;
+const BUTTON_LOW_BITS: u8 = 3;
+const AUXILIARY_GROUP_BIT: u8 = 4;
+const EXTENDED_GROUP_BIT: u8 = 8;
 
 fn event_code(event: &MouseEvent, sgr: bool) -> u8 {
     let mut code = if event.ctrl == Some(true) { CTRL } else { 0 }
@@ -176,18 +209,20 @@ fn event_code(event: &MouseEvent, sgr: bool) -> u8 {
     if event.button == MouseButton::Wheel {
         code |= WHEEL_CODE | event.action as u8;
     } else {
-        let button = event.button as u8;
-        code |= button & MouseButton::None as u8;
-        if button & MouseButton::Wheel as u8 != 0 {
+        // Only low button bits participate. The low two's-complement byte
+        // retains JS ToInt32 masking for negative DOM button values as well.
+        let button = event.button.raw_value().to_le_bytes()[0];
+        code |= button & BUTTON_LOW_BITS;
+        if button & AUXILIARY_GROUP_BIT != 0 {
             code |= WHEEL_CODE;
         }
-        if button & MouseButton::Aux1 as u8 != 0 {
+        if button & EXTENDED_GROUP_BIT != 0 {
             code |= AUXILIARY_HIGH_CODE;
         }
         if event.action == MouseAction::Move {
             code |= MouseAction::Move as u8;
         } else if event.action == MouseAction::Up && !sgr {
-            code |= MouseButton::None as u8;
+            code |= BUTTON_LOW_BITS;
         }
     }
     code
