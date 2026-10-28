@@ -23,6 +23,10 @@ pub mod dom_listener;
 #[cfg(target_arch = "wasm32")]
 pub mod utf16;
 #[cfg(target_arch = "wasm32")]
+pub mod js_error;
+#[cfg(target_arch = "wasm32")]
+pub mod logger;
+#[cfg(target_arch = "wasm32")]
 pub mod task_queue;
 #[cfg(target_arch = "wasm32")]
 pub mod font_set;

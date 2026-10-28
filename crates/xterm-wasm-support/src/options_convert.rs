@@ -6,12 +6,12 @@ use crate::{
 use js_sys::{JsString, Object};
 use std::{
     cell::RefCell,
-    collections::BTreeMap,
     rc::{Rc, Weak},
 };
 use wasm_bindgen::prelude::*;
 use xterm_core::options::{
-    CoercionHint, NumericSemantics, OptionError, OptionObject, OptionValue as V, WindowsPty,
+    CoercionHint, NativeProperties, NumericSemantics, OptionError, OptionObject, OptionValue as V,
+    PropertyAccess, WindowsPty,
 };
 
 #[wasm_bindgen(inline_js = "
@@ -203,9 +203,9 @@ pub fn into_js(value: &V) -> Result<JsValue, JsValue> {
                 return Ok(value.clone());
             }
             let object = Object::new();
-            if let Some(entries) = value.payload::<BTreeMap<String, V>>() {
-                for (key, value) in entries {
-                    set_data(&object, key, &into_js(value)?)?;
+            if let Some(entries) = value.payload::<Rc<NativeProperties>>() {
+                for (key, value) in entries.snapshot() {
+                    set_data(&object, &key, &into_js(&value)?)?;
                 }
             } else if let Some(pty) = value.payload::<WindowsPty>() {
                 if let Some(backend) = &pty.backend {

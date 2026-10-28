@@ -8,6 +8,7 @@
 mod defaults;
 mod host_store;
 mod object;
+mod properties;
 mod validation;
 mod value;
 
@@ -16,13 +17,14 @@ use crate::lifecycle::{Disposable, DisposableHandle};
 pub use defaults::default_options;
 pub use host_store::RawOptionsStore;
 pub use object::{CoercionError, CoercionHint, NumericSemantics, OptionObject};
+pub use properties::{NativeProperties, PropertyAccess};
 use std::cell::{Cell, RefCell};
 use std::fmt;
 use std::rc::Rc;
 pub use value::OptionValue;
 
-/// Typed payload for the windowsPty object at the native/browser adapter boundary.
-/// Absence differs from zero; consumers preserve upstream truthiness checks.
+/// Native configuration builder for a mutable windowsPty data bag. Absence
+/// differs from zero; consumers preserve source truthiness checks.
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct WindowsPty {
     pub backend: Option<String>,
@@ -31,24 +33,14 @@ pub struct WindowsPty {
 
 impl From<WindowsPty> for OptionValue {
     fn from(value: WindowsPty) -> Self {
-        Self::Object(OptionObject::with_properties(
-            value,
-            |_| Ok(Self::from("[object Object]")),
-            |pty, key| {
-                Ok(match key {
-                    "backend" => pty
-                        .backend
-                        .as_deref()
-                        .map(Self::from)
-                        .unwrap_or(Self::Undefined),
-                    "buildNumber" => pty
-                        .build_number
-                        .map(Self::Number)
-                        .unwrap_or(Self::Undefined),
-                    _ => Self::Undefined,
-                })
-            },
-        ))
+        let mut properties = Vec::new();
+        if let Some(backend) = value.backend {
+            properties.push(("backend", Self::from(backend.as_str())));
+        }
+        if let Some(build) = value.build_number {
+            properties.push(("buildNumber", Self::Number(build)));
+        }
+        Self::property_map(properties)
     }
 }
 

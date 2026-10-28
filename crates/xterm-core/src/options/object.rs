@@ -1,8 +1,7 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved.
 // Licensed under the MIT license.
-use super::{OptionError, OptionValue};
+use super::{properties::PropertyStorage, OptionError, OptionValue, PropertyAccess};
 use std::any::Any;
-type PropertyGetter = dyn Fn(&dyn Any, &str) -> Result<OptionValue, OptionError>;
 type Equality = dyn Fn(&OptionObject, &OptionObject) -> bool;
 
 /// Relational/arithmetic JS operators differ from ToNumber for BigInt. A host
@@ -33,7 +32,7 @@ pub struct OptionObject {
     payload: Box<dyn Any>,
     backing: Option<Box<dyn Any>>,
     to_primitive: Box<dyn Fn(CoercionHint) -> Result<OptionValue, OptionError>>,
-    property_getter: Box<PropertyGetter>,
+    pub(super) properties: PropertyStorage,
     truthy: bool,
     equal: Option<Box<Equality>>,
     numeric: Option<Rc<dyn NumericSemantics>>,
@@ -101,7 +100,7 @@ impl OptionObject {
             truthy: true,
             equal: None,
             numeric: None,
-            property_getter: Box::new(move |payload, key| {
+            properties: PropertyStorage::ReadOnly(Box::new(move |payload, key| {
                 // This object owns exactly the T boxed by this constructor.
                 get(
                     payload
@@ -109,7 +108,7 @@ impl OptionObject {
                         .expect("property getter payload type"),
                     key,
                 )
-            }),
+            })),
         })
     }
 
@@ -157,14 +156,14 @@ impl OptionObject {
                     _ => false,
                 }
             })),
-            property_getter: Box::new(move |payload, key| {
+            properties: PropertyStorage::ReadOnly(Box::new(move |payload, key| {
                 get(
                     payload
                         .downcast_ref::<T>()
                         .expect("property getter payload type"),
                     key,
                 )
-            }),
+            })),
         })
     }
 
@@ -191,14 +190,14 @@ impl OptionObject {
                     _ => false,
                 }
             })),
-            property_getter: Box::new(move |payload, key| {
+            properties: PropertyStorage::ReadOnly(Box::new(move |payload, key| {
                 get(
                     payload
                         .downcast_ref::<T>()
                         .expect("property getter payload type"),
                     key,
                 )
-            }),
+            })),
         })
     }
 
@@ -283,7 +282,23 @@ impl OptionObject {
     }
 
     pub fn get_property(&self, key: &str) -> Result<OptionValue, OptionError> {
-        (self.property_getter)(self.payload.as_ref(), key)
+        self.properties.get(self.payload.as_ref(), key)
+    }
+
+    pub fn with_property_access<T: Any>(
+        payload: T,
+        to_primitive: impl Fn(CoercionHint) -> Result<OptionValue, OptionError> + 'static,
+        properties: Rc<dyn PropertyAccess>,
+    ) -> Rc<Self> {
+        Rc::new(Self {
+            payload: Box::new(payload),
+            backing: None,
+            to_primitive: Box::new(to_primitive),
+            properties: PropertyStorage::Mutable(properties),
+            truthy: true,
+            equal: None,
+            numeric: None,
+        })
     }
 
     pub fn plain<T: Any>(payload: T) -> Rc<Self> {

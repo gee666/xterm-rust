@@ -27,11 +27,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let encoded = match &value {
                     V::Object(object) => {
                         if let Some(entries) =
-                            object.payload::<std::collections::BTreeMap<String, V>>()
+                            object.payload::<std::rc::Rc<xterm_core::options::NativeProperties>>()
                         {
                             format!(
                                 "o:{{{}}}",
                                 entries
+                                    .snapshot()
                                     .iter()
                                     .map(|(key, value)| format!("{key}={}", encode(value)))
                                     .collect::<Vec<_>>()

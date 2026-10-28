@@ -1,9 +1,8 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved.
 // Licensed under the MIT license.
 
-use super::{CoercionError, CoercionHint, OptionObject};
+use super::{CoercionError, CoercionHint, NativeProperties, OptionObject};
 use std::any::Any;
-use std::collections::BTreeMap;
 use std::rc::Rc;
 
 /// Values accepted at the JS options boundary. UTF-16 strings retain lone
@@ -59,15 +58,29 @@ impl OptionValue {
     /// A structured options bag. Missing properties return JS undefined. For
     /// dynamic objects, use OptionObject::with_properties instead.
     pub fn property_map<K: Into<String>>(entries: impl IntoIterator<Item = (K, Self)>) -> Self {
-        let entries: BTreeMap<String, Self> = entries
-            .into_iter()
-            .map(|(key, value)| (key.into(), value))
-            .collect();
-        Self::Object(OptionObject::with_properties(
-            entries,
+        let properties = NativeProperties::new(entries);
+        Self::Object(OptionObject::with_property_access(
+            properties.clone(),
             |_| Ok(Self::from("[object Object]")),
-            |entries, key| Ok(entries.get(key).cloned().unwrap_or(Self::Undefined)),
+            properties,
         ))
+    }
+
+    pub fn empty_object() -> Self {
+        Self::property_map(std::iter::empty::<(&str, Self)>())
+    }
+
+    pub fn set_property(&self, key: &str, value: Self) -> Result<(), super::OptionError> {
+        match self {
+            Self::Object(object) => object.set_property(key, value),
+            _ => Err(CoercionError::new("property assignment requires an object").into()),
+        }
+    }
+    pub fn delete_property(&self, key: &str) -> Result<bool, super::OptionError> {
+        match self {
+            Self::Object(object) => object.delete_property(key),
+            _ => Err(CoercionError::new("property deletion requires an object").into()),
+        }
     }
 
     /// Read nested options. JS boxes primitive values; strings additionally
