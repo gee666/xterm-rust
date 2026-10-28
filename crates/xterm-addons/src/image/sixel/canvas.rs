@@ -129,7 +129,9 @@ impl SixelDecoder {
         if self.mode == SixelMode::Undecided || self.width() == 0 || self.height() == 0 {
             return Ok(Vec::new());
         }
-        let width = usize::try_from(self.width()).map_err(|_| DecodeError::InvalidDimensions)?;
+        // A negative JS-view width gives the source a huge subarray and its
+        // typed-array set rejects the copy before returning image pixels.
+        let width = usize::try_from(self.width()).map_err(|_| DecodeError::CanvasBounds)?;
         let height = usize::try_from(self.height()).map_err(|_| DecodeError::InvalidDimensions)?;
         let length = width.checked_mul(height).ok_or(DecodeError::Arithmetic)?;
         let current_width = if self.mode == SixelMode::Truncated {

@@ -1,0 +1,33 @@
+{
+  "reviewer": "Nuwa",
+  "task": 218,
+  "scope": "Static safety review and synthetic filesystem tests only, not operational approval or migration proof",
+  "files": [
+    "scripts/target-relocation.mjs",
+    "scripts/relocate-target-windows.mjs",
+    "scripts/quality-idle.mjs",
+    "scripts/target-relocation.test.mjs"
+  ],
+  "command": "node --test scripts/target-relocation.test.mjs",
+  "result": {
+    "passed": 10,
+    "failed": 0
+  },
+  "inspectedInvariants": [
+    "Real source cache marker and no nested links/nonregular files",
+    "Fresh destination and source/destination overlap rejection",
+    "Coordinated pause, both lane leases, fresh idle checks, no termination of unknown processes",
+    "Full hashes/modes/nanosecond mtime manifests before source rename and backup cleanup",
+    "Same-volume rename rollback while preserving unknown canonical entries",
+    "Promotion commit boundary preserves verified canonical copy on partial backup-cleanup failure",
+    "Token-checked lease/pause cleanup and fail-closed manual-recovery state",
+    "Control file hashes and Cargo metadata realpath checks, no source/auth/profile move"
+  ],
+  "findings": [],
+  "limitations": [
+    "Synthetic copy adapter normalizes timestamps; actual robocopy fidelity requires full real-cache manifest verification.",
+    "No actual target/cache, maintenance lease or --apply operation was invoked.",
+    "Independent final operational reviewer/coordinator approval remains required."
+  ],
+  "rawLog": "tmp/nuwa-target-relocation-review.log"
+}

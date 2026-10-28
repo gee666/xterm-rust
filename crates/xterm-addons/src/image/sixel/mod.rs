@@ -248,9 +248,10 @@ impl SixelDecoder {
     }
 
     pub fn image(&mut self) -> Result<RgbaImage, DecodeError> {
+        // data8 evaluates data32 before reading the final byte-view dimensions.
+        let pixels = self.pixels()?;
         let width = u32::try_from(self.width()).map_err(|_| DecodeError::InvalidDimensions)?;
         let height = u32::try_from(self.height()).map_err(|_| DecodeError::InvalidDimensions)?;
-        let pixels = self.pixels()?;
         let length = pixels.len().checked_mul(4).ok_or(DecodeError::Arithmetic)?;
         let mut rgba = Vec::new();
         rgba.try_reserve_exact(length)

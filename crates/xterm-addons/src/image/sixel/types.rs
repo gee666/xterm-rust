@@ -65,6 +65,7 @@ pub enum DecodeError {
     MemoryLimit,
     Allocation,
     InvalidDimensions,
+    CanvasBounds,
     InvalidColor,
     PaletteZero,
     MemoryAccess,
@@ -79,6 +80,7 @@ impl fmt::Display for DecodeError {
             Self::MemoryLimit => "image exceeds memory limit",
             Self::Allocation => "cannot allocate SIXEL pixel storage",
             Self::InvalidDimensions => "invalid SIXEL raster dimensions",
+            Self::CanvasBounds => "offset is out of bounds",
             Self::InvalidColor => "table index is out of bounds",
             Self::PaletteZero => "remainder by zero",
             Self::MemoryAccess => "memory access out of bounds",
@@ -91,9 +93,11 @@ impl DecodeError {
     pub(super) fn js_name(self) -> &'static str {
         match self {
             Self::InvalidColor | Self::PaletteZero | Self::MemoryAccess => "RuntimeError",
-            Self::Allocation | Self::InvalidDimensions | Self::Arithmetic | Self::Raster(_) => {
-                "RangeError"
-            }
+            Self::Allocation
+            | Self::InvalidDimensions
+            | Self::CanvasBounds
+            | Self::Arithmetic
+            | Self::Raster(_) => "RangeError",
             Self::PaletteTooLarge | Self::MemoryLimit => "Error",
         }
     }

@@ -1,0 +1,58 @@
+{
+  "reviewer": "Nuwa",
+  "task": 23,
+  "scope": "UnicodeService and borrowed UnicodeApi native implementation, original service assertions and differential evidence",
+  "environment": {
+    "platform": "native Windows x86_64",
+    "rust": "1.85.1",
+    "node": "v24.15.0"
+  },
+  "reviewed": [
+    "crates/xterm-core/src/unicode_service.rs",
+    "crates/xterm-core/tests/unicode_service.rs",
+    "crates/xterm-core/tests/unicode_service_differential.rs",
+    "source_repo/src/common/services/UnicodeService.ts",
+    "source_repo/src/common/public/UnicodeApi.ts",
+    "scripts/unicode-service-oracle.mjs",
+    "scripts/oracle-fixture.mjs",
+    "docs/acceptance/unicode-core.md"
+  ],
+  "results": {
+    "originalServiceTests": {
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0
+    },
+    "nativeDebug": {
+      "passed": 20,
+      "failed": 0,
+      "ignored": 0
+    },
+    "nativeRelease": {
+      "passed": 20,
+      "failed": 0,
+      "ignored": 0
+    },
+    "privateOverflow": {
+      "passed": 1,
+      "failed": 0,
+      "filtered": 17
+    },
+    "widthInputs": 4106,
+    "registryOperations": 531,
+    "clippy": "passed with -D warnings",
+    "fixtureVerification": "both TSV fixtures matched actual unchanged JavaScript"
+  },
+  "resolvedFindings": [
+    "Normal oracle mode now verifies committed fixtures instead of silently overwriting them; explicit --generate is required.",
+    "Both width and registry fixture hashes are recorded.",
+    "Directed count updated to 15 after callback-payload case.",
+    "UTF-8 native version-name domain is documented; lossless JS UTF-16 binding remains a separate explicit gate."
+  ],
+  "verdict": "accept focused native task",
+  "limitations": [
+    "Not a whole-workspace or browser equivalence verdict.",
+    "Native Linux/macOS runtime and real terminal/browser proposed-API bindings remain separate work."
+  ],
+  "rawLogs": "results/reviews/nuwa-unicode-service/"
+}
