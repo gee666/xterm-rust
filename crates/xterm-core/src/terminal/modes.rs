@@ -2,6 +2,7 @@
 // Port of InputHandler standard/private mode setters and resets.
 use super::{TerminalError, TerminalEvent, TerminalState};
 use crate::{charset::DEFAULT_CHARSET, options::OptionValue, parser::params::Params};
+use std::rc::Rc;
 
 impl TerminalState {
     pub(crate) fn dispatch_mode(
@@ -94,11 +95,7 @@ impl TerminalState {
             25 => self.core.is_cursor_hidden.set(!enabled),
             45 => self.core.dec_private_modes.borrow_mut().reverse_wraparound = enabled,
             66 => {
-                self.mode_debug(if enabled {
-                    "Serial port requested application keypad."
-                } else {
-                    "Switching back to normal keypad."
-                })?;
+                // The CSI adapter logs before borrowing terminal state.
                 self.core.dec_private_modes.borrow_mut().application_keypad = enabled;
                 self.events.borrow_mut().push(TerminalEvent::SyncScrollBar);
             }
@@ -121,10 +118,8 @@ impl TerminalState {
                     self.events.borrow_mut().push(TerminalEvent::SendFocus);
                 }
             }
-            1005 | 1015 => self.mode_debug(&format!(
-                "{} {mode} not supported (see #2507)",
-                if enabled { "DECSET" } else { "DECRST" }
-            ))?,
+            // Unsupported modes are logged by the CSI adapter outside borrows.
+            1005 | 1015 => {}
             1006 | 1016 => {
                 let encoding = if !enabled {
                     "DEFAULT"
@@ -152,7 +147,10 @@ impl TerminalState {
             2026 => {
                 self.core.dec_private_modes.borrow_mut().synchronized_output = enabled;
                 if !enabled {
-                    self.dirty_all();
+                    self.events.borrow_mut().push(TerminalEvent::Render {
+                        start: 0,
+                        end: self.rows() - 1,
+                    });
                 }
             }
             2031 if self.mode_option("vtExtensions", "colorSchemeQuery", true)? => {
@@ -183,6 +181,7 @@ impl TerminalState {
                 kitty.flags = kitty.main_flags;
             }
         }
+        let previous_buffer = self.buffers.active();
         if enabled {
             self.buffers
                 .activate_alt_buffer(Some(&self.erase_attributes()))
@@ -195,8 +194,17 @@ impl TerminalState {
                 self.restore_cursor()?;
             }
         }
+        let active = self.buffers.active();
+        if !Rc::ptr_eq(&previous_buffer, &active) {
+            let buffer = active.borrow();
+            self.dirty_row(buffer.scroll_top);
+            self.dirty_row(buffer.scroll_bottom);
+        }
         self.core.is_cursor_initialized.set(true);
-        self.dirty_all();
+        self.events.borrow_mut().push(TerminalEvent::Render {
+            start: 0,
+            end: self.rows() - 1,
+        });
         self.events.borrow_mut().push(TerminalEvent::SyncScrollBar);
         Ok(())
     }
