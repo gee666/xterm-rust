@@ -1,0 +1,86 @@
+{
+  "reviewer": "Isaac",
+  "task": 149,
+  "scope": "Current terminal constructor/parser/control/lifecycle/resize/error checkpoint only",
+  "overallEquivalence": "NOT PROVEN",
+  "historicalCommit": "4068d85 not treated as current proof",
+  "sourceReference": [
+    "source_repo/src/common/CoreTerminal.ts",
+    "source_repo/src/common/InputHandler.ts",
+    "source_repo/src/headless/Terminal.ts"
+  ],
+  "commands": [
+    {
+      "command": "node scripts/terminal-engine-oracle.mjs",
+      "exitCode": 0,
+      "log": "results/terminal-review/source-oracle.log",
+      "traces": 172,
+      "snapshots": 1114,
+      "seed": "0x4354524d",
+      "fixtureDrift": false
+    },
+    {
+      "command": "cargo test -p xterm-core --test terminal_review --test terminal_engine --test terminal_engine_differential --test decoration_upstream --test decoration_differential --test decoration_edges --test decoration_review_edges",
+      "exitCode": 0,
+      "log": "results/terminal-review/current-core.log",
+      "engineDirected": 8,
+      "engineDifferential": 1,
+      "reviewRegressions": 6,
+      "decorationTests": 21
+    },
+    {
+      "command": "cargo test --release -p xterm-core --test terminal_review --test terminal_engine --test terminal_engine_differential --test decoration_upstream --test decoration_differential --test decoration_edges --test decoration_review_edges -p xterm-web --test color_zone_store --test color_zone_differential",
+      "exitCode": 0,
+      "log": "results/terminal-review/release.log",
+      "totalTests": 47
+    },
+    {
+      "command": "cargo clippy -p xterm-core --test terminal_review --test terminal_engine --test terminal_engine_differential --test decoration_upstream --test decoration_differential --test decoration_edges --test decoration_review_edges -- -D warnings",
+      "exitCode": 0,
+      "log": "results/terminal-review/core-clippy-clean.log"
+    },
+    {
+      "command": "rustfmt --edition 2021 --check scoped source/test files",
+      "exitCode": 0,
+      "log": "results/terminal-review/fmt.log"
+    }
+  ],
+  "findings": [
+    "Terminal state/buffer borrows crossed resize/clear/dispose callbacks; fixed by service handle snapshots, shared marker cleanup and live buffer reacquisition",
+    "Reset attributes were reset after buffer activation instead of before; source order restored using shared reset phases",
+    "Resize converted typed callback error identity to string; now BufferState retains original Rc callback cause",
+    "Event callback retaining state created an ownership cycle after disposal; callback slot now cleared and dropped outside borrows"
+  ],
+  "regressions": "crates/xterm-core/tests/terminal_review.rs, all six pass in debug and release",
+  "resourceMonitoring": [
+    "results/terminal-review/controlled-native.json",
+    "results/terminal-review/controlled-quality.json",
+    "results/terminal-review/controlled-lint.json"
+  ],
+  "inputSnapshot": {
+    "wholeWorkspaceUnchangedDuringLastLint": false,
+    "receipt": "results/terminal-review/controlled-lint.json",
+    "meaning": "Concurrent input changes prevent an immutable whole-workspace pass claim. The executed scoped native tests/lint are retained checkpoint observations."
+  },
+  "projection": {
+    "included": [
+      "both buffers and every active packed cell/UTF16/extended word",
+      "cursor,viewport,margins,insert mode and listed private modes",
+      "ordered subscribed source events"
+    ],
+    "excluded": [
+      "saved cursor/charset arrays",
+      "tab stops",
+      "markers",
+      "mouse service state",
+      "decoder internal state",
+      "complete addon/browser state"
+    ]
+  },
+  "unrun": [
+    "complete parent task28 equivalence",
+    "actual Rust browser E2E",
+    "native Linux/macOS runtime from this review"
+  ],
+  "independentReviewNeeded": "This review artifact requires another agent acceptance; implementation parent28 remains in progress."
+}

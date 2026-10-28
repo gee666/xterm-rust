@@ -1,0 +1,30 @@
+    Checking xterm-addons v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons)
+error: operator precedence can trip the unwary
+   --> crates\xterm-addons\src\image\base64.rs:274:14
+    |
+274 |         1 => digit >> 4 | ((digit << 4) & 255) << 8,
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: consider parenthesizing your expression: `(digit >> 4) | (((digit << 4) & 255) << 8)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#precedence
+    = note: `-D clippy::precedence` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::precedence)]`
+
+error: operator precedence can trip the unwary
+   --> crates\xterm-addons\src\image\base64.rs:275:14
+    |
+275 |         2 => (digit >> 2) << 8 | ((digit << 6) & 255) << 16,
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: consider parenthesizing your expression: `((digit >> 2) << 8) | (((digit << 6) & 255) << 16)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#precedence
+
+error: manual `!RangeInclusive::contains` implementation
+  --> crates\xterm-addons\src\image\storage\budget.rs:10:12
+   |
+10 |         if megabytes < 0.5 || megabytes > 1000.0 {
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: use: `!(0.5..=1000.0).contains(&megabytes)`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#manual_range_contains
+   = note: `-D clippy::manual-range-contains` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::manual_range_contains)]`
+
+error: could not compile `xterm-addons` (lib) due to 3 previous errors

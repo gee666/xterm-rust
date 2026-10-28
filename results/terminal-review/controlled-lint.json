@@ -1,0 +1,123 @@
+{
+  "records": [
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "xterm-core",
+        "--test",
+        "terminal_review",
+        "--test",
+        "terminal_engine",
+        "--test",
+        "terminal_engine_differential",
+        "--test",
+        "decoration_upstream",
+        "--test",
+        "decoration_differential",
+        "--test",
+        "decoration_edges",
+        "--test",
+        "decoration_review_edges",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 2332.6911,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "xterm-web",
+        "--test",
+        "color_zone_store",
+        "--test",
+        "color_zone_differential",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 638.3499999999999,
+      "status": "failed"
+    }
+  ],
+  "observations": [
+    {
+      "at": 1793148423727,
+      "bytes": 1931825152
+    },
+    {
+      "at": 1793148424740,
+      "bytes": 1931804672
+    },
+    {
+      "at": 1793148425740,
+      "bytes": 1931792384
+    },
+    {
+      "at": 1793148426060,
+      "bytes": 1931776000
+    },
+    {
+      "at": 1793148426061,
+      "bytes": 1931776000
+    },
+    {
+      "at": 1793148426699,
+      "bytes": 1931751424
+    }
+  ],
+  "before": {
+    "sha256": "2c4b871bd109c8ee38cf8f893136c225e9256122823ece59e90015b7c2e20b75",
+    "files": 1019,
+    "unsafeCandidates": [
+      {
+        "path": "crates/xterm-core/src/instantiation.rs",
+        "line": 3,
+        "text": "//! Shared service values and constructor argument resolution without unsafe code."
+      },
+      {
+        "path": "crates/xterm-web/src/status_addons/coercion.rs",
+        "line": 4,
+        "text": "//! Static wasm-bindgen snippets avoid requiring eval or unsafe-eval CSP rules."
+      }
+    ]
+  },
+  "after": {
+    "sha256": "13ffabb4ec6046b560295b70d70b624160b6a3cfdaa1581746d27afb03d25589",
+    "files": 1019,
+    "unsafeCandidates": [
+      {
+        "path": "crates/xterm-core/src/instantiation.rs",
+        "line": 3,
+        "text": "//! Shared service values and constructor argument resolution without unsafe code."
+      },
+      {
+        "path": "crates/xterm-web/src/status_addons/coercion.rs",
+        "line": 4,
+        "text": "//! Static wasm-bindgen snippets avoid requiring eval or unsafe-eval CSP rules."
+      }
+    ]
+  },
+  "unchanged": false
+}

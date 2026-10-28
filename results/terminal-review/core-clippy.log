@@ -1,0 +1,12 @@
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error: redundant pattern matching, consider using `is_pending()`
+   --> crates\xterm-core\src\headless\native_queue.rs:130:20
+    |
+130 |             if let Poll::Pending=task.future.as_mut().poll(&mut context) {
+    |             -------^^^^^^^^^^^^^---------------------------------------- help: try: `if task.future.as_mut().poll(&mut context).is_pending()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#redundant_pattern_matching
+    = note: `-D clippy::redundant-pattern-matching` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::redundant_pattern_matching)]`
+
+error: could not compile `xterm-core` (lib) due to 1 previous error

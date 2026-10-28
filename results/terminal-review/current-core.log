@@ -1,0 +1,80 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 2.97s
+     Running tests\decoration_differential.rs (target\debug\deps\decoration_differential-c3d20b660513be9b.exe)
+
+running 1 test
+test all_1024_seeded_operations_match_actual_javascript ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running tests\decoration_edges.rs (target\debug\deps\decoration_edges-8a381073f21d0c70.exe)
+
+running 8 tests
+test disposed_marker_rejection_defaults_and_layer_boundaries ... ok
+test completed_cell_iterator_stays_done_when_bucket_later_grows ... ok
+test lookup_traverses_live_bucket_while_service_iterator_is_a_snapshot ... ok
+test render_handle_identity_and_listener_errors_propagate ... ok
+test attach_replaces_listeners_clear_cancels_work_and_batches_sync_requests ... ok
+test lazy_colors_cache_absence_success_and_retry_failed_parse ... ok
+test disposal_event_order_and_marker_invalidation ... ok
+test live_buffer_activation_replaces_cache_subscriptions ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\decoration_review_edges.rs (target\debug\deps\decoration_review_edges-7fded97d28e2368c.exe)
+
+running 2 tests
+test cold_cell_iterator_observes_registration_before_first_next ... ok
+test held_readonly_bucket_observes_removal_without_becoming_a_snapshot ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\decoration_upstream.rs (target\debug\deps\decoration_upstream-02e946f98dd399a5.exe)
+
+running 10 tests
+test should_return_absence_for_lines_without_indexed_decorations ... ok
+test should_find_height_on_subsequent_lines_iterator ... ok
+test should_find_height_on_subsequent_lines_callback ... ok
+test should_set_is_disposed_to_true_after_dispose ... ok
+test should_not_find_decoration_outside_x_range ... ok
+test should_find_decoration_at_its_marker_line ... ok
+test should_keep_lookups_correct_after_buffer_trim ... ok
+test should_remove_decoration_when_marker_trimmed_off_buffer ... ok
+test should_keep_multiline_index_after_actual_line_insert ... ok
+test should_find_multiline_with_single_line_decorations_elsewhere ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\terminal_engine.rs (target\debug\deps\terminal_engine-33ce983da1ada8f2.exe)
+
+running 8 tests
+test print_wrap_scroll_and_explicit_linefeed ... ok
+test control_input_does_not_echo_and_preserves_events ... ok
+test clear_at_first_row_and_dispose_are_real_operations ... ok
+test direct_reset_retains_parser_partial_sequence ... ok
+test event_callback_observes_action_time_and_can_reset_before_next_print ... ok
+test replies_follow_parse_order_and_do_not_print ... ok
+test charset_designation_shift_and_saved_cursor ... ok
+test decoder_boundaries_wide_combining_and_bom ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\terminal_engine_differential.rs (target\debug\deps\terminal_engine_differential-17f2d661c644af63.exe)
+
+running 1 test
+test both_buffers_cells_modes_and_ordered_events_match_real_source_traces ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests\terminal_review.rs (target\debug\deps\terminal_review-89e62e735275a9cb.exe)
+
+running 6 tests
+test dispose_releases_event_callback_that_captures_state ... ok
+test clear_marker_observer_can_read_live_terminal_state_and_buffer ... ok
+test dispose_marker_observer_can_mutate_live_terminal_state ... ok
+test resize_observer_can_read_live_terminal_state ... ok
+test resize_preserves_callback_error_identity ... ok
+test reset_activation_observer_sees_default_attributes ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
