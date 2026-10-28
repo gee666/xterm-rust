@@ -32,9 +32,19 @@ const report = {
   commands: [], gaps: [], featurePolicy: 'default, no-default, all, and each named feature individually'
 };
 async function checkDisk(stage) {
-  const observation = await diskHeadroom(root, minFreeMiB);
-  report.disk.observations.push({ stage, observedAt: new Date().toISOString(), ...observation });
-  requireHeadroom(observation);
+  for (const [path, location] of [[root, 'repository'], [join(root, 'target'), 'shared-target']]) {
+    let observation;
+    try { observation = await diskHeadroom(path, minFreeMiB); }
+    catch (error) {
+      if (location === 'shared-target' && error.code === 'ENOENT') {
+        report.disk.observations.push({ stage, location, observedAt: new Date().toISOString(), status: 'not-created', policy: 'repository reserve applies until shared target exists' });
+        continue;
+      }
+      throw error;
+    }
+    report.disk.observations.push({ stage, location, observedAt: new Date().toISOString(), ...observation });
+    requireHeadroom(observation);
+  }
 }
 async function run(id, command, commandArgs) {
   await checkDisk(`before-${id}`);
@@ -84,16 +94,16 @@ try {
   // duplicate target/<host>/ tree merely to restate the verified native host.
   await run('fmt', 'cargo', ['fmt', '--all', '--', '--check']);
   await run('clippy-all-features', 'cargo', ['clippy', ...workspace, '--all-targets', '--all-features', '--', '-D', 'warnings']);
-  await run('test-all-features', 'cargo', ['test', ...workspace, '--all-targets', '--all-features']);
-  await run('doctest-all-features', 'cargo', ['test', ...workspace, '--doc', '--all-features']);
+  await run('test-all-features', 'cargo', ['test', ...workspace, '--no-fail-fast', '--all-targets', '--all-features']);
+  await run('doctest-all-features', 'cargo', ['test', ...workspace, '--no-fail-fast', '--doc', '--all-features']);
   await run('build-release', 'cargo', ['build', ...workspace, '--release', '--all-targets', '--all-features']);
-  await run('test-default', 'cargo', ['test', ...workspace, '--all-targets']);
-  await run('test-no-default-features', 'cargo', ['test', ...workspace, '--all-targets', '--no-default-features']);
+  await run('test-default', 'cargo', ['test', ...workspace, '--no-fail-fast', '--all-targets']);
+  await run('test-no-default-features', 'cargo', ['test', ...workspace, '--no-fail-fast', '--all-targets', '--no-default-features']);
   await run('clippy-no-default-features', 'cargo', ['clippy', ...workspace, '--all-targets', '--no-default-features', '--', '-D', 'warnings']);
   for (const pkg of packages) {
     for (const feature of Object.keys(pkg.features).filter(value => value !== 'default').sort()) {
       const label = `${pkg.name}-${feature}`.replace(/[^\w.-]/g, '_');
-      await run(`feature-${label}`, 'cargo', ['test', '--locked', '-p', pkg.name, '--all-targets', '--no-default-features', '--features', feature]);
+      await run(`feature-${label}`, 'cargo', ['test', '--locked', '-p', pkg.name, '--no-fail-fast', '--all-targets', '--no-default-features', '--features', feature]);
     }
   }
   if (wasm) {

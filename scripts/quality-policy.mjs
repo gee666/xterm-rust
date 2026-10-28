@@ -1,6 +1,7 @@
 import { resolve, relative, sep, join } from 'node:path';
 import { mkdir, lstat } from 'node:fs/promises';
 import { DEFAULT_MIN_FREE_MIB } from './quality-resources.mjs';
+import { stripVTControlCharacters } from 'node:util';
 
 export function parseOptions(args, platform, architecture) {
   const options = { destination: `results/quality/${platform}-${architecture}-${Date.now()}`, timeoutMs: 300_000, wasm: false, minFreeMiB: DEFAULT_MIN_FREE_MIB };
@@ -64,8 +65,17 @@ export function assertSharedTarget(root, actual, platform) {
   if (canonical(actual) !== canonical(resolve(root, 'target'))) throw new Error('Cargo metadata target_directory differs from repository shared target/');
 }
 export function testCounts(log) {
-  return [...log.matchAll(/test result: (?:ok|FAILED)\. (\d+) passed; (\d+) failed; (\d+) ignored; (\d+) measured; (\d+) filtered out/g)].map(match => ({
-    passed: Number(match[1]), failed: Number(match[2]), ignored: Number(match[3]),
-    measured: Number(match[4]), filteredOut: Number(match[5])
-  }));
+  const counts = [];
+  let suite = null;
+  for (const line of stripVTControlCharacters(log).split('\n')) {
+    const header = line.match(/^\s*(?:Running\s+(.+)|Doc-tests\s+(.+))$/);
+    if (header) suite = (header[1] ?? `Doc-tests ${header[2]}`).trim();
+    const match = line.match(/test result: (?:ok|FAILED)\. (\d+) passed; (\d+) failed; (\d+) ignored; (\d+) measured; (\d+) filtered out/);
+    if (match) counts.push({
+      ...(suite ? { suite } : {}),
+      passed: Number(match[1]), failed: Number(match[2]), ignored: Number(match[3]),
+      measured: Number(match[4]), filteredOut: Number(match[5])
+    });
+  }
+  return counts;
 }

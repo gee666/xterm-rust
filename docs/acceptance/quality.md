@@ -12,7 +12,7 @@ These checks apply to the implemented workspace. They do not establish completio
 
 ## Q2. Builds, tests and features
 
-- Workspace tests run all targets with all features, default features and no default features, with exact commands and test-summary counts retained in logs.
+- Workspace tests run all targets with all features, default features and no default features, with exact commands and test-summary counts retained in logs. Use --no-fail-fast so a failing test binary does not erase execution of independent binaries. Retain suite identities and parse counts after removing ANSI control sequences, while preserving raw logs.
 - Doctests run separately with all features. `--all-targets` does not replace doctests.
 - Release builds include all targets and all features. Debug-only success is insufficient.
 - Cargo metadata inventories every workspace member, declared MSRV, default feature and named feature. Each named feature runs separately with defaults disabled; default/no-default/all-feature configurations also run.
@@ -65,9 +65,9 @@ These checks apply to the implemented workspace. They do not establish completio
 
 ## Q8. Shared disk and resumed-run safety
 
-- Preserve `.cargo/config.toml` from705104c, with development/test debug=0 and incremental=false. Assertions and release settings remain unchanged.
+- Preserve `.cargo/config.toml` from 705104c, with development/test debug=0 and incremental=false. Assertions and release settings remain unchanged.
 - Do not create a duplicate native target/host directory or an alternate Cargo target directory merely to run quality checks. Reject inherited CARGO_TARGET_DIR, profile overrides and incremental values other than zero. Explicit CARGO_INCREMENTAL=0 from the CI toolchain action is allowed because it preserves the shared policy. Record it.
-- Observe free space before and after every subprocess and once per second during long commands. Default minimum headroom is1024 MiB; explicit choices cannot go below256 MiB.
+- Observe free space before and after every subprocess and once per second during long commands. Default minimum headroom is 1024 MiB; explicit choices cannot go below 256 MiB.
 - If space is insufficient before a command, retain the failing observation and do not start it. If it crosses the threshold during execution, terminate that process tree and retain resource/termination errors.
 - A probe failure is a failed resource check, not permission to proceed. No automated cleanup, source deletion, evidence deletion or other owner's process termination is allowed.
-- Unit tests simulate low space without filling the drive and check exact resource failure/state. Preserve the existing45-agent task graph and review history; no duplicate swarm run.
+- Unit tests simulate low space without filling the drive and check exact resource failure/state. Preserve the existing 45-agent task graph and review history; no duplicate swarm run.

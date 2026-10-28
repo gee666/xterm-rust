@@ -79,4 +79,8 @@ test('test counts preserve failures, ignored and filtered cases per suite', () =
     { passed: 1, failed: 1, ignored: 0, measured: 0, filteredOut: 0 }
   ]);
   assert.deepEqual(testCounts('compilation failed, no suite executed'), []);
+  assert.deepEqual(testCounts('  Running tests/lifecycle.rs (target/test)\n' +
+    'test result: \u001b[32mok\u001b[0m. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out'), [
+    { suite: 'tests/lifecycle.rs (target/test)', passed: 9, failed: 0, ignored: 0, measured: 0, filteredOut: 0 }
+  ]);
 });
