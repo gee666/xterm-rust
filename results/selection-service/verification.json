@@ -1,0 +1,47 @@
+{
+  "platform": "Windows native",
+  "status": "partial; browser equivalence not established",
+  "native": {
+    "command": "cargo test -p xterm-web --test selection_model --test selection_service --test selection_service_differential",
+    "exitCode": 0,
+    "tests": {
+      "selection_model": 23,
+      "selection_service": 6,
+      "selection_service_differential": 1
+    },
+    "passed": 30,
+    "failed": 0,
+    "ignored": 0,
+    "fixtureTraces": 4297,
+    "fixtureRevision": "previous corpus before word-drag expansion; no claim that current fixture ran",
+    "currentExpectedTraceCount": 4298,
+    "currentRunStatus": "unrun during coordinated build pause"
+  },
+  "clippy": {
+    "command": "cargo clippy -p xterm-web --test selection_model --test selection_service --test selection_service_differential --example selection_oracle -- -D warnings",
+    "exitCode": 0,
+    "currentRunStatus": "previous passing snapshot; current follow-up unrun"
+  },
+  "source": {
+    "command": "node scripts/selection-service-oracle.mjs --generate",
+    "unitCases": 26,
+    "passed": 26,
+    "upstreamOperationTraces": 201,
+    "randomCases": 4096,
+    "seed": 1579075344,
+    "currentTraceCount": 4297,
+    "extraRetainedNativeRegression": 1
+  },
+  "wasm": {
+    "command": "cargo test -p xterm-web --target wasm32-unknown-unknown --test wasm_selection --no-run",
+    "exitCode": 101,
+    "status": "failed; latest root protocol/input/host API integration errors retained in wasm-build.log",
+    "browserTests": "unrun; disk pause"
+  },
+  "notes": [
+    "Source-only tests execute the actual original SelectionService.test.ts assertions; its upstream subclass disables DOM/refresh.",
+    "Native replay is not evidence that DOM scheduling or real Terminal integration passed.",
+    "Remaining resource pause is operational coordination, not a criterion blocker or implemented-feature substitute."
+  ],
+  "currentStatus": "rerun-required after reviewed lazy-arithmetic fix, word-cell read optimization, word-drag corpus expansion and scheduling-error regression"
+}

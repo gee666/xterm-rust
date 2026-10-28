@@ -1,0 +1,36 @@
+// Copyright (c) 2026 xterm-rust contributors. Licensed under MIT.
+// Read-only reference loader for scoped oracle scripts, never used by the port.
+import fs from 'node:fs';
+import path from 'node:path';
+import { createRequire } from 'node:module';
+import { createHash } from 'node:crypto';
+
+export function sourceLoader() {
+  const root = process.cwd();
+  const source = path.join(root, 'source_repo');
+  const require = createRequire(path.join(source, 'package.json'));
+  const ts = require('typescript');
+  const cache = new Map();
+  const hashes = new Map();
+  function load(filename) {
+    filename = path.resolve(filename);
+    if (cache.has(filename)) return cache.get(filename).exports;
+    const text = fs.readFileSync(filename, 'utf8');
+    hashes.set(path.relative(root, filename).replaceAll('\\', '/'), createHash('sha256').update(text).digest('hex'));
+    const module = { exports: {} };
+    cache.set(filename, module);
+    const code = ts.transpileModule(text, { compilerOptions: {
+      target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS,
+      experimentalDecorators: true, esModuleInterop: false
+    }}).outputText;
+    const localRequire = id => {
+      const candidate = id.startsWith('.') ? path.resolve(path.dirname(filename), id)
+        : /^(common|browser|headless)\//.test(id) ? path.join(source, 'src', id) : undefined;
+      if (candidate && fs.existsSync(candidate + '.ts')) return load(candidate + '.ts');
+      return require(id);
+    };
+    new Function('require', 'module', 'exports', code)(localRequire, module, module.exports);
+    return module.exports;
+  }
+  return { load, hashes, typescript: ts.version };
+}

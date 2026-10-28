@@ -1,0 +1,45 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+   Compiling xterm-addons v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons)
+   Compiling xterm-web v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web)
+error[E0432]: unresolved import `xterm_core::color::color`
+ --> crates\xterm-web\src\terminal\protocols.rs:4:36
+  |
+4 | use xterm_core::{color::{channels, color, rgb}, input::xparse_color::to_rgb_string,
+  |                                    ^^^^^
+  |                                    |
+  |                                    no `color` in `color`
+  |                                    help: a similar name exists in the module (notice the capitalization): `Color`
+  |
+  = help: consider importing this module instead:
+          xterm_core::color
+
+error[E0407]: method `report_error` is not a member of trait `BrowserInputServices`
+   --> crates\xterm-web\src\terminal\input_services.rs:123:5
+    |
+123 | /     fn report_error(&self, error: JsValue) {
+124 | |         if let Some(services) = self.0.upgrade() { services.report_error(error); }
+125 | |         else {
+...   |
+131 | |     }
+    | |_____^ not a member of trait `BrowserInputServices`
+
+error[E0599]: no method named `handle_touch_scroll` found for struct `std::rc::Rc<BrowserServices>` in the current scope
+   --> crates\xterm-web\src\terminal\input_services.rs:118:25
+    |
+118 |         self.upgrade()?.handle_touch_scroll(translation_y)
+    |                         ^^^^^^^^^^^^^^^^^^^ method not found in `Rc<BrowserServices>`
+
+error[E0624]: method `text_utf16` is private
+   --> crates\xterm-web\src\terminal\selection_services.rs:49:41
+    |
+49  |                 .and_then(|value| value.text_utf16())
+    |                                         ^^^^^^^^^^ private method
+    |
+   ::: P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\value.rs:150:5
+    |
+150 |     pub(crate) fn text_utf16(&self) -> Result<Vec<u16>, super::OptionError> {
+    |     ----------------------------------------------------------------------- private method defined here
+
+Some errors have detailed explanations: E0407, E0432, E0599, E0624.
+For more information about an error, try `rustc --explain E0407`.
+error: could not compile `xterm-web` (lib) due to 4 previous errors

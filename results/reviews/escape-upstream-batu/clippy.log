@@ -1,0 +1,19 @@
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error: variant `Service` is never constructed
+   --> crates\xterm-core\src\decoration_cache.rs:317:49
+    |
+317 | enum LookupSource { Cache(DecorationLineCache), Service(DecorationService) }
+    |      ------------ variant in this enum          ^^^^^^^
+    |
+    = note: `-D dead-code` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(dead_code)]`
+
+error: method `retain_service` is never used
+   --> crates\xterm-core\src\decoration_cache.rs:330:19
+    |
+329 | impl DecorationCellIterator {
+    | --------------------------- method in this implementation
+330 |     pub(super) fn retain_service(mut self, service: DecorationService) -> Self {
+    |                   ^^^^^^^^^^^^^^
+
+error: could not compile `xterm-core` (lib) due to 2 previous errors
