@@ -1,7 +1,7 @@
 // Copyright (c) 2026 xterm-rust contributors. Licensed under MIT.
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { readFile, readdir, mkdir, writeFile, rm } from 'node:fs/promises';
+import { readFile, readdir, mkdir, writeFile, rm, symlink } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -166,6 +166,25 @@ test('duplicate mappings, unknown source, absent evidence and output escape are 
   const absent = structuredClone(original);
   absent.modules[0].evidence = ['tmp/compatibility-validation/no-such-evidence.json'];
   await reject(absent, /ENOENT/);
+  for (const invalid of ['../outside', '/outside', 'C:/outside', 'a\\b', './file', 'a//b']) {
+    const escaped = structuredClone(original);
+    escaped.modules[0].evidence = [invalid];
+    await reject(escaped, /Invalid mapped path/);
+  }
+  await mkdir(path.join(root, output, 'evidence-target'));
+  await writeFile(path.join(root, output, 'evidence-target/file.txt'), 'private fixture');
+  await symlink(path.join(root, output, 'evidence-target'), path.join(root, output, 'evidence-linked'), process.platform === 'win32' ? 'junction' : 'dir');
+  const linked = structuredClone(original);
+  linked.modules[0].evidence = [`${output}/evidence-linked/file.txt`];
+  await reject(linked, /Mapped file must not be linked/);
+  const project = path.join(root, output, 'root-project');
+  await mkdir(path.join(project, 'scripts'), { recursive: true });
+  await mkdir(path.join(project, 'tools'));
+  await writeFile(path.join(project, 'scripts/compatibility-inventory.mjs'), await readFile(generator));
+  const linkType = process.platform === 'win32' ? 'junction' : 'dir';
+  await symlink(path.join(root, 'tools/compatibility'), path.join(project, 'tools/compatibility'), linkType);
+  await symlink(path.join(root, 'source_repo'), path.join(project, 'source_repo'), linkType);
+  bad(spawnSync(process.execPath, ['scripts/compatibility-inventory.mjs'], { cwd: project, encoding: 'utf8', timeout: 60_000 }), /Reference directory must not be linked/);
   bad(run(['--out=../outside']), /Alternative output must be under tmp/);
   bad(run(['--mappings=../outside.json']), /Alternative mappings must be under tmp/);
   await rm(path.join(root, output), { recursive: true });

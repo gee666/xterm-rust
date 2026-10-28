@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
-import { readdir, readFile, writeFile, mkdir, access } from 'node:fs/promises';
+import { readdir, readFile, writeFile, mkdir, lstat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadBaseline } from '../tools/compatibility/baseline.mjs';
@@ -21,9 +21,21 @@ assert(outputDir === 'results/compatibility' || /^tmp\/[\w/-]+$/.test(outputDir)
 assert(mappingsPath === 'tools/compatibility/mappings.json' || /^tmp\/[\w/-]+\.json$/.test(mappingsPath), 'Alternative mappings must be under tmp/');
 const read = p => readFile(path.join(root, p), 'utf8');
 const digest = bytes => createHash('sha256').update(bytes).digest('hex');
+async function validateMappedFile(p) {
+  assert(typeof p === 'string' && !p.includes('\\') && !p.includes(':') && !path.posix.isAbsolute(p)
+    && p.split('/').every(part => part && part !== '.' && part !== '..'), `Invalid mapped path: ${p}`);
+  let current = root;
+  for (const part of p.split('/')) {
+    current = path.join(current, part);
+    assert(!(await lstat(current)).isSymbolicLink(), `Mapped file must not be linked: ${p}`);
+  }
+  assert((await lstat(current)).isFile(), `Mapped path must be a regular file: ${p}`);
+}
 const excluded = new Set(['.git', 'node_modules', 'out', 'out-test', 'out-esbuild', 'out-esbuild-test', 'lib', 'coverage']);
 const excludedPaths = new Set(['source_repo/demo/dist']);
 async function walk(dir) {
+  const directory = await lstat(path.join(root, dir));
+  assert(directory.isDirectory() && !directory.isSymbolicLink(), `Reference directory must not be linked: ${dir}`);
   const files = [];
   for (const entry of (await readdir(path.join(root, dir), { withFileTypes: true })).sort((a, b) => a.name.localeCompare(b.name, 'en'))) {
     const name = `${dir}/${entry.name}`;
@@ -71,7 +83,7 @@ for (const line of (await read(mappingDocuments[3])).split('\n')) {
 for (const rule of behaviorRules) {
   assert(referenceFiles.includes(rule.source), `Unknown behavior rule source: ${rule.source}`);
   assert(rule.criterionIds.length && rule.criterionIds.every(id => Number.isInteger(id) && id > 0));
-  await access(path.join(root, rule.document));
+  await validateMappedFile(rule.document);
 }
 const acceptanceFor = (source, title = '') => {
   const rules = behaviorRules.filter(r => r.source === source && (!r.pattern || new RegExp(r.pattern).test(title)));
@@ -83,7 +95,7 @@ assert.equal(new Set(entries.modules.map(m => m.source)).size, entries.modules.l
 const moduleMappings = new Map(entries.modules.map(m => [m.source, m]));
 const evidencePaths = new Set([criteriaIndexPath, ...mappingDocuments]);
 for (const entry of [...entries.modules, ...entries.apiOwners]) {
-  for (const p of [...entry.implementation, ...entry.tests, ...entry.evidence]) { await access(path.join(root, p)); evidencePaths.add(p); }
+  for (const p of [...entry.implementation, ...entry.tests, ...entry.evidence]) { await validateMappedFile(p); evidencePaths.add(p); }
   assert(entry.binding && entry.gap && entry.command, 'Mappings need binding, gap, and executable command');
 }
 const manifest = [];
