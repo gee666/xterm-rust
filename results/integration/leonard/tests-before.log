@@ -1,0 +1,117 @@
+   Compiling adler2 v2.0.1
+   Compiling itoa v1.0.18
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling xterm-core v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Leonard\crates\xterm-core)
+   Compiling xterm-wasm-support v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Leonard\crates\xterm-wasm-support)
+   Compiling miniz_oxide v0.8.9
+   Compiling xterm-addons v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Leonard\crates\xterm-addons)
+   Compiling serde_json v1.0.154
+   Compiling xterm-web v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Leonard\crates\xterm-web)
+error[E0433]: failed to resolve: could not find `webgl` in `xterm_web`
+ --> crates\xterm-web\tests\webgl_cases\cache.rs:8:16
+  |
+8 | use xterm_web::webgl::cache::{AtlasCache, AtlasResource, CacheError};
+  |                ^^^^^ could not find `webgl` in `xterm_web`
+
+error[E0433]: failed to resolve: could not find `webgl` in `xterm_web`
+ --> crates\xterm-web\tests\webgl_cases\config.rs:6:16
+  |
+6 | use xterm_web::webgl::config::{
+  |                ^^^^^ could not find `webgl` in `xterm_web`
+
+error[E0433]: failed to resolve: could not find `webgl` in `xterm_web`
+ --> crates\xterm-web\tests\webgl_cases\math.rs:4:16
+  |
+4 | use xterm_web::webgl::math::{
+  |                ^^^^^ could not find `webgl` in `xterm_web`
+
+error[E0433]: failed to resolve: could not find `webgl` in `xterm_web`
+ --> crates\xterm-web\tests\webgl_cases\model.rs:3:16
+  |
+3 | use xterm_web::webgl::model::{
+  |                ^^^^^ could not find `webgl` in `xterm_web`
+
+error[E0433]: failed to resolve: could not find `webgl` in `xterm_web`
+ --> crates\xterm-web\tests\webgl_cases\typed_array.rs:3:16
+  |
+3 | use xterm_web::webgl::typed_array::{slice, slice_fallback};
+  |                ^^^^^ could not find `webgl` in `xterm_web`
+
+error[E0433]: failed to resolve: could not find `webgl` in `xterm_web`
+ --> crates\xterm-web\tests\webgl_support\mod.rs:7:5
+  |
+7 |     webgl::config::{AtlasConfig, AtlasDimensions, AtlasOptions, ConfigFactory, FontWeight},
+  |     ^^^^^ could not find `webgl` in `xterm_web`
+
+error[E0433]: failed to resolve: could not find `webgl` in `xterm_web`
+  --> crates\xterm-web\tests\webgl_cases\cache.rs:33:28
+   |
+33 | fn create(_: Rc<xterm_web::webgl::config::AtlasConfig>) -> Result<Rc<Atlas>, &'static str> {
+   |                            ^^^^^ could not find `webgl` in `xterm_web`
+   |
+help: consider importing this module
+   |
+3  + use crate::config;
+   |
+help: if you import `config`, refer to it directly
+   |
+33 - fn create(_: Rc<xterm_web::webgl::config::AtlasConfig>) -> Result<Rc<Atlas>, &'static str> {
+33 + fn create(_: Rc<config::AtlasConfig>) -> Result<Rc<Atlas>, &'static str> {
+   |
+
+error[E0433]: failed to resolve: could not find `webgl` in `xterm_web`
+  --> crates\xterm-web\tests\webgl_cases\renderer_utils.rs:90:42
+   |
+90 |     let combined = i64::from((xterm_web::webgl::model::COMBINED_CHAR_BIT_MASK | 0x100) as i32);
+   |                                          ^^^^^ could not find `webgl` in `xterm_web`
+   |
+help: consider importing this module
+   |
+3  + use crate::model;
+   |
+help: if you import `model`, refer to it directly
+   |
+90 -     let combined = i64::from((xterm_web::webgl::model::COMBINED_CHAR_BIT_MASK | 0x100) as i32);
+90 +     let combined = i64::from((model::COMBINED_CHAR_BIT_MASK | 0x100) as i32);
+   |
+
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `xterm-web` (test "webgl") due to 8 previous errors
+warning: build failed, waiting for other jobs to finish...
+error[E0432]: unresolved import `xterm_web::search_host`
+  --> crates\xterm-web\tests\search_support\mod.rs:20:5
+   |
+20 |     search_host::SearchTerminal,
+   |     ^^^^^^^^^^^ could not find `search_host` in `xterm_web`
+
+error[E0432]: unresolved import `xterm_web::character_joiner`
+ --> crates\xterm-web\tests\character_joiner_upstream.rs:4:16
+  |
+4 | use xterm_web::character_joiner::CharacterJoinerService;
+  |                ^^^^^^^^^^^^^^^^ could not find `character_joiner` in `xterm_web`
+
+error[E0308]: mismatched types
+  --> crates\xterm-web\tests\support\cells.rs:18:25
+   |
+16 |                     extended: ExtendedAttrs::new(
+   |                               ------------------ arguments to this function are incorrect
+17 |                         number(&raw["ext"]) as u32,
+18 |                         number(&raw["url"]) as u32,
+   |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `u64`, found `u32`
+   |
+note: associated function defined here
+  --> C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Leonard\crates\xterm-core\src\buffer\extended.rs:23:12
+   |
+23 |     pub fn new(ext: u32, url_id: u64) -> Self {
+   |            ^^^
+help: you can convert a `u32` to a `u64`
+   |
+18 |                         (number(&raw["url"]) as u32).into(),
+   |                         +                          ++++++++
+
+Some errors have detailed explanations: E0308, E0432.
+For more information about an error, try `rustc --explain E0308`.
+error: could not compile `xterm-web` (test "character_joiner_upstream") due to 2 previous errors
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `xterm-web` (test "search_addon") due to 1 previous error

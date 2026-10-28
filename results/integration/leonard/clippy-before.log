@@ -1,0 +1,44 @@
+    Checking equivalent v1.0.3
+    Checking allocator-api2 v0.2.21
+    Checking memchr v2.8.3
+    Checking foldhash v0.1.5
+    Checking ryu-js v1.0.3
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+    Checking adler2 v2.0.1
+   Compiling serde_json v1.0.154
+    Checking itoa v1.0.18
+    Checking miniz_oxide v0.8.9
+    Checking hashbrown v0.15.5
+    Checking regress v0.10.4
+    Checking xterm-core v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Leonard\crates\xterm-core)
+    Checking xterm-addons v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Leonard\crates\xterm-addons)
+    Checking xterm-wasm-support v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Leonard\crates\xterm-wasm-support)
+error: use of `format!` to build up a string from an iterator
+   --> crates\xterm-core\tests\move_to_cell.rs:189:19
+    |
+189 |           let hex = actual
+    |  ___________________^
+190 | |             .as_bytes()
+191 | |             .iter()
+192 | |             .map(|byte| format!("{byte:02x}"))
+193 | |             .collect::<String>();
+    | |________________________________^
+    |
+help: call `fold` instead
+   --> crates\xterm-core\tests\move_to_cell.rs:192:14
+    |
+192 |             .map(|byte| format!("{byte:02x}"))
+    |              ^^^
+help: ... and use the `write!` macro here
+   --> crates\xterm-core\tests\move_to_cell.rs:192:25
+    |
+192 |             .map(|byte| format!("{byte:02x}"))
+    |                         ^^^^^^^^^^^^^^^^^^^^^
+    = note: this can be written more efficiently by appending to a `String` directly
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#format_collect
+    = note: `-D clippy::format-collect` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::format_collect)]`
+
+error: could not compile `xterm-core` (test "move_to_cell") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

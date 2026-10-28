@@ -1,0 +1,58 @@
+   Compiling allocator-api2 v0.2.21
+   Compiling foldhash v0.1.5
+   Compiling equivalent v1.0.3
+   Compiling memchr v2.8.3
+   Compiling ryu-js v1.0.3
+   Compiling hashbrown v0.15.5
+   Compiling regress v0.10.4
+   Compiling xterm-core v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Leonard\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 10.16s
+     Running tests\core_services_integration.rs (target\debug\deps\core_services_integration-47d36332f7106566.exe)
+
+running 6 tests
+test disposal_disconnects_retained_services_and_drop_releases_engine_state ... ok
+test opaque_logger_errors_reach_the_terminal_caller_without_data_dispatch ... ok
+test parser_modes_and_terminal_reset_use_the_same_shared_core_state ... ok
+test parser_replies_and_logger_callbacks_can_observe_engine_without_borrow_panics ... ok
+test actual_input_and_binary_forwarding_obey_disable_stdin_and_user_origin ... ok
+test actual_scrollback_input_orders_scroll_user_and_data_with_live_options ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\headless_disposal_contract.rs (target\debug\deps\headless_disposal_contract-adee46eac7be1baa.exe)
+
+running 3 tests
+test marker_disposal_observes_source_service_phases ... ok
+test reentrant_disposal_clears_commands_immediately_but_preserves_print_and_later_registrations ... ok
+test nine_public_post_disposal_outcomes_follow_source_instead_of_blanket_rejection ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\headless_reset_host.rs (target\debug\deps\headless_reset_host-700f90da76cb938c.exe)
+
+running 2 tests
+test default_headless_reset_remains_functional_without_a_host_override ... ok
+test host_reset_runs_before_notification_without_a_second_default_reset ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\input_diagnostics.rs (target\debug\deps\input_diagnostics-9558dcce2ee4cb72.exe)
+
+running 2 tests
+test abort_getter_runs_after_logger_and_preserves_original_error ... ok
+test logger_can_set_abort_with_source_truthiness ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\windows_wrapping_order.rs (target\debug\deps\windows_wrapping_order-70079629ffe9d9f3.exe)
+
+running 6 tests
+test linefeed_error_stops_before_later_workaround ... ok
+test reset_rechecks_mutated_windows_pty_object ... ok
+test changing_policy_inside_linefeed_keeps_snapshot_traversal ... ok
+test disposal_removes_hook_before_clearing_the_active_emitter ... ok
+test linefeed_registration_and_toggle_order_matches_original ... ok
+test csi_priority_consumption_and_reenabled_order_match_original ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+

@@ -1,0 +1,28 @@
+    Checking xterm-core v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Leonard\crates\xterm-core)
+error: very complex type used. Consider factoring parts into `type` definitions
+  --> crates\xterm-core\tests\event_context.rs:12:15
+   |
+12 |     let weak: Rc<RefCell<Option<Weak<RefCell<Vec<i32>>>>>> = Rc::default();
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#type_complexity
+   = note: `-D clippy::type-complexity` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::type_complexity)]`
+
+error: an array of `Range` that is only one element
+   --> crates\xterm-core\tests\input_handler_bounded.rs:129:41
+    |
+129 |     assert_eq!(*source.ranges.borrow(), [0..MAX_PARSE_BUFFER_LENGTH]);
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#single_range_in_vec_init
+    = note: `-D clippy::single-range-in-vec-init` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::single_range_in_vec_init)]`
+help: if you wanted a `Vec` that contains the entire range, try
+    |
+129 |     assert_eq!(*source.ranges.borrow(), (0..MAX_PARSE_BUFFER_LENGTH).collect::<std::vec::Vec<usize>>());
+    |                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error: could not compile `xterm-core` (test "input_handler_bounded") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `xterm-core` (test "event_context") due to 1 previous error

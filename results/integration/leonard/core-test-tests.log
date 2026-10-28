@@ -1,0 +1,40 @@
+   Compiling xterm-core v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Leonard\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 0.49s
+     Running tests\event_context.rs (target\debug\deps\event_context-195b594bc85f8ce2.exe)
+
+running 8 tests
+test any_and_forward_keep_the_source_context ... ok
+test different_converter_keys_do_not_alias_same_result_type ... ok
+test first_completed_recursive_conversion_wins_without_a_borrow_conflict ... ok
+test listeners_share_mutable_value_and_no_root_survives_fire ... ok
+test map_and_filter_map_create_fresh_output_contexts ... ok
+test nested_fires_get_independent_contexts_and_restore_outer_value ... ok
+test roots_drop_on_errors_and_panics_without_poisoning_the_emitter ... ok
+test failed_conversion_is_not_cached_and_keeps_original_cause ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\input_handler_bounded.rs (target\debug\deps\input_handler_bounded-cafbeddf76abff11.exe)
+
+running 4 tests
+test retained_fixed_storage_keeps_unused_tail_between_short_writes ... ok
+test overflow_guard_is_explicit_safety_deviation_and_keeps_source_prefix_cursor ... ok
+test mutable_tail_reads_after_resume_but_decoded_prefix_does_not_replay ... ok
+test original_seven_parse_storage_and_logical_length_pairs ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s
+
+     Running tests\move_to_cell.rs (target\debug\deps\move_to_cell-0dd88909034df292.exe)
+
+running 8 tests
+test source_normal_directional_sequences ... ok
+test source_alt_cursor_across_rows ... ok
+test source_application_cursor_sequences ... ok
+test native_borrow_conflicts_are_errors_and_huge_normal_output_is_checked ... ok
+test source_normal_row_wrapping_sequences ... ok
+test normal_zero_scrollback_uses_the_unscrollable_branch ... ok
+test move_01_differential_corpus ... ok
+test move_02_differential_corpus ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
