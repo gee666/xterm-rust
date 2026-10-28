@@ -102,4 +102,3 @@ await withArtifactServer({directory:work,css:await readFile(resolve(root,'crates
 report.status='passed';
 } catch(error) { report.status='failed';report.error=error.stack??String(error);throw error; }
 finally { await writeFile(output,JSON.stringify(report,null,2)+'\n'); }
-

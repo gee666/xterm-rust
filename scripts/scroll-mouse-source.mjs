@@ -58,4 +58,3 @@ await withArtifactServer({directory:work,css:'',html:'<!doctype html><body></bod
 report.status='passed';
 } catch(error) { report.status='failed';report.error=error.stack??String(error);throw error; }
 finally { await writeFile(output,JSON.stringify(report,null,2)+'\n'); }
-
