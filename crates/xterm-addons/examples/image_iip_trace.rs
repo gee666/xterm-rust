@@ -126,9 +126,15 @@ fn main() -> Result<(), Box<dyn Error>> {
                 match handler.prepare_end(success)? {
                     EndPreparation::Complete(completed) => effects = completed,
                     EndPreparation::Geometry(token) => {
-                        if input["resetDuringGeometry"] == true { handler.reset(); }
-                        if input["throwDuringGeometry"] == true { error = Some("geometry getter threw"); }
-                        else { effects = handler.finish_geometry(token, &geometry(&input["geometry"])?)?; }
+                        if input["resetDuringGeometry"] == true {
+                            handler.reset();
+                        }
+                        if input["throwDuringGeometry"] == true {
+                            error = Some("geometry getter threw");
+                        } else {
+                            effects =
+                                handler.finish_geometry(token, &geometry(&input["geometry"])?)?;
+                        }
                     }
                 }
             }
