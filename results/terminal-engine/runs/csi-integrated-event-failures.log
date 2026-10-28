@@ -1,0 +1,64 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+warning: fields `truthy` and `equal` are never read
+  --> crates\xterm-core\src\options\object.rs:17:5
+   |
+13 | pub struct OptionObject {
+   |            ------------ fields in this struct
+...
+17 |     truthy: bool,
+   |     ^^^^^^
+18 |     equal: Option<Box<Equality>>,
+   |     ^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: methods `truthy` and `equals` are never used
+   --> crates\xterm-core\src\options\object.rs:105:19
+    |
+43  | impl OptionObject {
+    | ----------------- methods in this implementation
+...
+105 |     pub(super) fn truthy(&self) -> bool { self.truthy }
+    |                   ^^^^^^
+106 |     pub(super) fn equals(&self, other: &Self) -> bool {
+    |                   ^^^^^^
+
+warning: `xterm-core` (lib) generated 2 warnings
+    Finished `test` profile [unoptimized] target(s) in 2.61s
+     Running tests\terminal_engine_differential.rs (target\debug\deps\terminal_engine_differential-17f2d661c644af63.exe)
+
+running 1 test
+test both_buffers_cells_modes_and_ordered_events_match_real_source_traces ... FAILED
+
+failures:
+
+---- both_buffers_cells_modes_and_ordered_events_match_real_source_traces stdout ----
+line 44 case directed-21 operation W 1b,5b,3f,31,30,34,39,68,41,4c,54 error None
+expected 5,3,1,0,0,0,0,0,0,1,0,0,0,0,0,0|4,2,0,0,0,2/0:4194409,0,0,69,0,0;4194414,0,0,6e,0,0;4194409,0,0,69,0,0;4194420,0,0,74,0,0;4194409,0,0,69,0,0/1:4194401,0,0,61,0,0;4194412,0,0,6c,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0/0:4194420,0,0,74,0,0;4194405,0,0,65,0,0;4194424,0,0,78,0,0;4194420,0,0,74,0,0;4194304,0,0,,0,0|2,2,0,0,0,2/0:4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0/0:4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194369,0,0,41,0,0/1:4194380,0,0,4c,0,0;4194388,0,0,54,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0
+actual   5,3,1,0,0,0,0,0,0,1,0,0,0,0,0,0|4,2,0,0,0,2/0:4194409,0,0,69,0,0;4194414,0,0,6e,0,0;4194409,0,0,69,0,0;4194420,0,0,74,0,0;4194409,0,0,69,0,0/1:4194401,0,0,61,0,0;4194412,0,0,6c,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0/0:4194420,0,0,74,0,0;4194405,0,0,65,0,0;4194424,0,0,78,0,0;4194420,0,0,74,0,0;4194304,0,0,,0,0|2,2,0,0,0,2/0:4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0/0:4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194369,0,0,41,0,0/1:4194380,0,0,4c,0,0;4194388,0,0,54,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0
+events expected S0/R0:2/S0/C/R0:2 actual S0/S0/C/R0:2
+
+line 46 case directed-22 operation W 1b,5b,3f,31,30,34,39,6c error None
+expected 5,3,0,0,0,0,0,0,0,1,0,0,0,0,0,0|0,0,0,0,0,2/0:4194409,0,0,69,0,0;4194414,0,0,6e,0,0;4194409,0,0,69,0,0;4194420,0,0,74,0,0;4194409,0,0,69,0,0/1:4194401,0,0,61,0,0;4194412,0,0,6c,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0/0:4194420,0,0,74,0,0;4194405,0,0,65,0,0;4194424,0,0,78,0,0;4194420,0,0,74,0,0;4194304,0,0,,0,0|0,0,0,0,0,2/
+actual   5,3,0,0,0,0,0,0,0,1,0,0,0,0,0,0|0,0,0,0,0,2/0:4194409,0,0,69,0,0;4194414,0,0,6e,0,0;4194409,0,0,69,0,0;4194420,0,0,74,0,0;4194409,0,0,69,0,0/1:4194401,0,0,61,0,0;4194412,0,0,6c,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0/0:4194420,0,0,74,0,0;4194405,0,0,65,0,0;4194424,0,0,78,0,0;4194420,0,0,74,0,0;4194304,0,0,,0,0|0,0,0,0,0,2/
+events expected R0:2/C/R0:2 actual C/R0:2
+
+line 104 case seed-1 operation W 1b,5b,3f,31,30,34,39,68,41,4c,54 error None
+expected 6,1,1,0,0,0,0,0,0,1,0,0,0,0,0,0|1,0,0,0,0,0/0:4203776,0,0,2500,0,0;4194419,0,0,73,0,0;4194401,0,0,61,0,0;4194422,0,0,76,0,0;4194405,0,0,65,0,0;4194404,0,0,64,0,0|4,0,0,0,0,0/0:4194304,0,0,,0,0;4194369,0,0,41,0,0;4194380,0,0,4c,0,0;4194388,0,0,54,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0
+actual   6,1,1,0,0,0,0,0,0,1,0,0,0,0,0,0|1,0,0,0,0,0/0:4203776,0,0,2500,0,0;4194419,0,0,73,0,0;4194401,0,0,61,0,0;4194422,0,0,76,0,0;4194405,0,0,65,0,0;4194404,0,0,64,0,0|4,0,0,0,0,0/0:4194304,0,0,,0,0;4194369,0,0,41,0,0;4194380,0,0,4c,0,0;4194388,0,0,54,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0
+events expected S0/R0:0/C/R0:0 actual S0/C/R0:0
+
+
+thread 'both_buffers_cells_modes_and_ordered_events_match_real_source_traces' panicked at crates\xterm-core\tests\terminal_engine_differential.rs:163:5:
+assertion `left == right` failed: full-state differential failed; retained results/terminal-engine/rust-failures.txt
+  left: 33
+ right: 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    both_buffers_cells_modes_and_ordered_events_match_real_source_traces
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+error: test failed, to rerun pass `-p xterm-core --test terminal_engine_differential`

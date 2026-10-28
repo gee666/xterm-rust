@@ -1,0 +1,40 @@
+    Blocking waiting for file lock on build directory
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 5.64s
+     Running tests\terminal_engine_differential.rs (target\debug\deps\terminal_engine_differential-17f2d661c644af63.exe)
+
+running 1 test
+test both_buffers_cells_modes_and_ordered_events_match_real_source_traces ... FAILED
+
+failures:
+
+---- both_buffers_cells_modes_and_ordered_events_match_real_source_traces stdout ----
+line 22 case directed-10 operation W 1b,5b,32,3b,32,48,40 error None
+expected 5,3,0,0,0,0,0,0,0,1,0,0,0,0,0,0|2,1,0,0,0,2/0:4194409,0,0,69,0,0;4194414,0,0,6e,0,0;4194409,0,0,69,0,0;4194420,0,0,74,0,0;4194409,0,0,69,0,0/1:4194401,0,0,61,0,0;4194368,0,0,40,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0/0:4194420,0,0,74,0,0;4194405,0,0,65,0,0;4194424,0,0,78,0,0;4194420,0,0,74,0,0;4194304,0,0,,0,0|0,0,0,0,0,2/
+actual   5,3,0,0,0,0,0,0,0,1,0,0,0,0,0,0|5,2,0,0,0,2/0:4194409,0,0,69,0,0;4194414,0,0,6e,0,0;4194409,0,0,69,0,0;4194420,0,0,74,0,0;4194409,0,0,69,0,0/1:4194401,0,0,61,0,0;4194412,0,0,6c,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0/0:4194420,0,0,74,0,0;4194405,0,0,65,0,0;4194424,0,0,78,0,0;4194420,0,0,74,0,0;4194368,0,0,40,0,0|0,0,0,0,0,2/
+events expected C/R1:2 actual C/R2:2
+
+line 26 case directed-12 operation W 1b,5b,32,4a error None
+expected 5,3,0,0,0,0,0,0,0,1,0,0,0,0,0,0|4,2,0,0,0,2/0:4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0/0:4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0/0:4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0|0,0,0,0,0,2/
+actual   5,3,0,0,0,0,0,0,0,1,0,0,0,0,0,0|4,2,0,0,0,2/0:4194409,0,0,69,0,0;4194414,0,0,6e,0,0;4194409,0,0,69,0,0;4194420,0,0,74,0,0;4194409,0,0,69,0,0/1:4194401,0,0,61,0,0;4194412,0,0,6c,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0/0:4194420,0,0,74,0,0;4194405,0,0,65,0,0;4194424,0,0,78,0,0;4194420,0,0,74,0,0;4194304,0,0,,0,0|0,0,0,0,0,2/
+events expected R0:2 actual R2:2
+
+line 32 case directed-15 operation W 1b,5b,32,4c error None
+expected 5,3,0,0,0,0,0,0,0,1,0,0,0,0,0,0|0,2,0,0,0,2/0:4194409,0,0,69,0,0;4194414,0,0,6e,0,0;4194409,0,0,69,0,0;4194420,0,0,74,0,0;4194409,0,0,69,0,0/1:4194401,0,0,61,0,0;4194412,0,0,6c,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0/0:4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0|0,0,0,0,0,2/
+actual   5,3,0,0,0,0,0,0,0,1,0,0,0,0,0,0|4,2,0,0,0,2/0:4194409,0,0,69,0,0;4194414,0,0,6e,0,0;4194409,0,0,69,0,0;4194420,0,0,74,0,0;4194409,0,0,69,0,0/1:4194401,0,0,61,0,0;4194412,0,0,6c,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0;4194304,0,0,,0,0/0:4194420,0,0,74,0,0;4194405,0,0,65,0,0;4194424,0,0,78,0,0;4194420,0,0,74,0,0;4194304,0,0,,0,0|0,0,0,0,0,2/
+events expected C/R2:2 actual R2:2
+
+
+thread 'both_buffers_cells_modes_and_ordered_events_match_real_source_traces' panicked at crates\xterm-core\tests\terminal_engine_differential.rs:60:5:
+assertion `left == right` failed: full-state differential failed; retained results/terminal-engine/rust-failures.txt
+  left: 336
+ right: 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    both_buffers_cells_modes_and_ordered_events_match_real_source_traces
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+error: test failed, to rerun pass `-p xterm-core --test terminal_engine_differential`
