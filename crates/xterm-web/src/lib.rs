@@ -14,6 +14,7 @@ pub mod theme;
 pub mod contrast_cache;
 pub mod renderer;
 pub mod char_size;
+pub mod character_joiner;
 #[cfg(target_arch = "wasm32")]
 pub mod char_size_browser;
 
