@@ -89,7 +89,15 @@ impl fmt::Display for CoreError {
         }
     }
 }
-impl std::error::Error for CoreError {}
+impl std::error::Error for CoreError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        Some(match self {
+            Self::Option(error) => error,
+            Self::Log(error) => error,
+            Self::Dispatch(error) => error,
+        })
+    }
+}
 impl From<OptionError> for CoreError {
     fn from(error: OptionError) -> Self {
         Self::Option(error)

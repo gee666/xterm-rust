@@ -1,0 +1,54 @@
+    Blocking waiting for file lock on build directory
+warning: unused import: `Disposable`
+ --> crates\xterm-core\src\headless\queued.rs:4:17
+  |
+4 |     lifecycle::{Disposable, DisposableHandle},
+  |                 ^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: `xterm-core` (lib) generated 1 warning
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 6.06s
+     Running tests\core_service.rs (target\debug\deps\core_service-ec1c98d2f065c8cf.exe)
+
+running 11 tests
+test callback_failure_retains_original_typed_cause ... ok
+test disposing_owner_during_event_and_dropping_owner_clears_listeners ... ok
+test defaults_reset_all_modes_and_independent_instances ... ok
+test option_truthiness_matches_js_conditions ... ok
+test failures_stop_later_events_and_disposal_clears_all_emitters ... ok
+test reentrant_send_and_option_changes_preserve_entry_check ... ok
+test cursor_initialization_uses_nullish_fallback_without_losing_raw_identity ... ok
+test upstream_reset_preserves_cursor_initialized_both_values ... ok
+test strings_and_lazy_code_units_are_exact_utf16 ... ok
+test upstream_cursor_initialization_defaults_and_option ... ok
+test all_disable_user_scroll_viewport_branches_and_live_updates ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\core_services_integration.rs (target\debug\deps\core_services_integration-47d36332f7106566.exe)
+
+running 6 tests
+test opaque_logger_errors_reach_the_terminal_caller_without_data_dispatch ... ok
+test disposal_disconnects_retained_services_and_drop_releases_engine_state ... ok
+test actual_input_and_binary_forwarding_obey_disable_stdin_and_user_origin ... ok
+test parser_replies_and_logger_callbacks_can_observe_engine_without_borrow_panics ... ok
+test actual_scrollback_input_orders_scroll_user_and_data_with_live_options ... ok
+test parser_modes_and_terminal_reset_use_the_same_shared_core_state ... FAILED
+
+failures:
+
+---- parser_modes_and_terminal_reset_use_the_same_shared_core_state stdout ----
+
+thread 'parser_modes_and_terminal_reset_use_the_same_shared_core_state' panicked at crates\xterm-core\tests\core_services_integration.rs:139:5:
+assertion failed: terminal.drain_events().contains(&TerminalEvent::RequestReset)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    parser_modes_and_terminal_reset_use_the_same_shared_core_state
+
+test result: FAILED. 5 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-core --test core_services_integration`

@@ -85,7 +85,15 @@ impl fmt::Display for LogError {
         }
     }
 }
-impl std::error::Error for LogError {}
+impl std::error::Error for LogError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Option(error) => Some(error),
+            Self::Host(error) => Some(error.as_ref()),
+            Self::InvalidLogger | Self::Sink(_) => None,
+        }
+    }
+}
 impl From<OptionError> for LogError {
     fn from(error: OptionError) -> Self {
         Self::Option(error)

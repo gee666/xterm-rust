@@ -3,6 +3,7 @@
 mod service_support;
 use service_support::Harness;
 use std::cell::{Cell, RefCell};
+use std::error::Error as _;
 use std::rc::Rc;
 use xterm_core::core_service::{
     BufferPosition, CoreError, CursorStyle, DecPrivateModes, KittyKeyboardState, Modes,
@@ -284,6 +285,17 @@ fn callback_failure_retains_original_typed_cause() {
         )))
     });
     let error = h.core.trigger_data_event(&[], true).unwrap_err();
+    assert_eq!(
+        error
+            .source()
+            .unwrap()
+            .source()
+            .unwrap()
+            .downcast_ref::<std::io::Error>()
+            .unwrap()
+            .to_string(),
+        "original callback failure"
+    );
     let CoreError::Dispatch(error) = error else {
         panic!("wrong failure category");
     };
