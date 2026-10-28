@@ -5,7 +5,13 @@ import {createRequire} from 'node:module';
 import {createHash} from 'node:crypto';
 import {mkdirSync,readFileSync,writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
-const root=resolve(import.meta.dirname,'..'),require=createRequire(resolve(root,'source_repo/package.json'));
+const root=resolve(import.meta.dirname,'..');
+const receipt=resolve(root,'results/input-handler-async/traces.json'),startedAt=new Date().toISOString();
+mkdirSync(resolve(root,'results/input-handler-async'),{recursive:true});
+writeFileSync(receipt,JSON.stringify({status:'incomplete',startedAt,scope:'InputHandler async lifecycle traces',overallEquivalence:'NOT PROVEN'})+'\n');
+process.on('uncaughtExceptionMonitor',error=>writeFileSync(receipt,JSON.stringify({status:'failed',startedAt,error:String(error?.stack??error),overallEquivalence:'NOT PROVEN'})+'\n'));
+const {verifyOrGenerate}=await import('./oracle-fixture.mjs');
+const require=createRequire(resolve(root,'source_repo/package.json'));
 const {build}=require('esbuild');const output=resolve(root,'tmp/input-handler-async/terminal.cjs');
 mkdirSync(resolve(root,'tmp/input-handler-async'),{recursive:true});
 const bundle=await build({absWorkingDir:root,entryPoints:['source_repo/src/headless/public/Terminal.ts'],outfile:output,bundle:true,platform:'node',format:'cjs',target:'node24',tsconfig:'source_repo/src/headless/tsconfig.json',metafile:true,logLevel:'silent'});
@@ -49,6 +55,6 @@ try{
   }finally{terminal.dispose();process.removeListener('uncaughtException',onError);}
  }
 }finally{globalThis.setTimeout=originalTimeout;globalThis.clearTimeout=originalClear;Object.defineProperty(globalThis,'performance',performance);}
-const fixture='crates/xterm-core/tests/fixtures/input-handler-async.tsv';writeFileSync(resolve(root,fixture),rows.join('\n')+'\n');
-const report={scope:'Six real terminal OSC pause/lifecycle traces, three observations each',overallEquivalence:'NOT PROVEN',node:process.version,platform:process.platform,sourceHashes,scenarios:6,observations:rows.length,errors,fixture,fixtureSha256:createHash('sha256').update(readFileSync(resolve(root,fixture))).digest('hex'),unrun:['Rust replay until executed','Native Linux/macOS runtime','Other InputHandler and browser suites']};
+const fixture='crates/xterm-core/tests/fixtures/input-handler-async.tsv';await verifyOrGenerate(resolve(root,fixture),rows.join('\n')+'\n',process.argv.includes('--generate'));
+const report={status:'passed',startedAt,completedAt:new Date().toISOString(),scope:'Six real terminal OSC pause/lifecycle traces, three observations each',overallEquivalence:'NOT PROVEN',node:process.version,platform:process.platform,sourceHashes,scenarios:6,observations:rows.length,errors,fixture,fixtureSha256:createHash('sha256').update(readFileSync(resolve(root,fixture))).digest('hex'),unrun:['Rust replay until executed','Native Linux/macOS runtime','Other InputHandler and browser suites']};
 mkdirSync(resolve(root,'results/input-handler-async'),{recursive:true});writeFileSync(resolve(root,'results/input-handler-async/traces.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));

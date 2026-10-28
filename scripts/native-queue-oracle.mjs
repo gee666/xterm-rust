@@ -6,6 +6,11 @@ import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 const root=resolve(import.meta.dirname,'..');
+const receipt=resolve(root,'results/native-queue-review/oracle.json'),startedAt=new Date().toISOString();
+mkdirSync(resolve(root,'results/native-queue-review'),{recursive:true});
+writeFileSync(receipt,JSON.stringify({status:'incomplete',startedAt,scope:'Native queue source traces',overallEquivalence:'NOT PROVEN'})+'\n');
+process.on('uncaughtExceptionMonitor',error=>writeFileSync(receipt,JSON.stringify({status:'failed',startedAt,error:String(error?.stack??error),overallEquivalence:'NOT PROVEN'})+'\n'));
+const {verifyOrGenerate}=await import('./oracle-fixture.mjs');
 const require=createRequire(resolve(root,'source_repo/package.json'));
 const {build}=require('esbuild');
 const output=resolve(root,'tmp/native-queue-oracle/terminal.cjs');
@@ -56,8 +61,8 @@ try {
  }
 } finally {globalThis.setTimeout=originalTimeout;globalThis.clearTimeout=originalClear;Object.defineProperty(globalThis,'performance',performance);}
 const fixture='crates/xterm-core/tests/fixtures/native-queue.tsv';
-writeFileSync(resolve(root,fixture),rows.join('\n')+'\n');
-const report={scope:'Five real headless queue integration traces',overallEquivalence:'NOT PROVEN',node:process.version,platform:process.platform,esbuild:require('esbuild/package.json').version,sourceHashes,scenarios:ops.length,steps:rows.length,fixture,fixtureSha256:createHash('sha256').update(readFileSync(resolve(root,fixture))).digest('hex'),unrun:['Browser queue adapter','Native Linux/macOS runtime','Randomized full-terminal equivalence']};
+await verifyOrGenerate(resolve(root,fixture),rows.join('\n')+'\n',process.argv.includes('--generate'));
+const report={status:'passed',startedAt,completedAt:new Date().toISOString(),scope:'Five real headless queue integration traces',overallEquivalence:'NOT PROVEN',node:process.version,platform:process.platform,esbuild:require('esbuild/package.json').version,sourceHashes,scenarios:ops.length,steps:rows.length,fixture,fixtureSha256:createHash('sha256').update(readFileSync(resolve(root,fixture))).digest('hex'),unrun:['Browser queue adapter','Native Linux/macOS runtime','Randomized full-terminal equivalence']};
 mkdirSync(resolve(root,'results/native-queue-review'),{recursive:true});
 writeFileSync(resolve(root,'results/native-queue-review/oracle.json'),JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify(report,null,2));

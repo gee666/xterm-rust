@@ -6,6 +6,11 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 const root=resolve(import.meta.dirname,'..');
+const receipt=resolve(root,'results/write-buffer/oracle.json'),startedAt=new Date().toISOString();
+mkdirSync(resolve(root,'results/write-buffer'),{recursive:true});
+writeFileSync(receipt,JSON.stringify({status:'incomplete',startedAt,scope:'WriteBuffer only',overallEquivalence:'NOT PROVEN'})+'\n');
+process.on('uncaughtExceptionMonitor',error=>writeFileSync(receipt,JSON.stringify({status:'failed',startedAt,error:String(error?.stack??error),overallEquivalence:'NOT PROVEN'})+'\n'));
+const {verifyOrGenerate}=await import('./oracle-fixture.mjs');
 const temp=resolve(root,'tmp/write-buffer-oracle'); mkdirSync(temp,{recursive:true});
 const sourceHashes={};
 function read(path) {
@@ -105,8 +110,8 @@ try {
  assert.deepEqual(externalViews.resized,{seen:[[65,66,67,68]],pending:-1,offset:1,chunks:2});
 } finally {globalThis.setTimeout=originalTimeout;globalThis.clearTimeout=originalClear;Object.defineProperty(globalThis,'performance',performanceDescriptor);}
 const fixture='crates/xterm-core/tests/fixtures/write-buffer-traces.tsv';
-writeFileSync(resolve(root,fixture),rows.join('\n')+'\n');
-const report={scope:'WriteBuffer only',overallEquivalence:'NOT PROVEN',node:process.version,platform:process.platform,sourceHashes,
+await verifyOrGenerate(resolve(root,fixture),rows.join('\n')+'\n',process.argv.includes('--generate'));
+const report={status:outcomes.every(t=>t.status==='passed')?'passed':'failed',startedAt,completedAt:new Date().toISOString(),scope:'WriteBuffer only',overallEquivalence:'NOT PROVEN',node:process.version,platform:process.platform,sourceHashes,
  seed:'0x5717eb0f',traces:128,steps:rows.length,counts,rejectionOrder,externalViews,fixture,fixtureSha256:createHash('sha256').update(readFileSync(resolve(root,fixture))).digest('hex'),
  baseline:{discovered:tests.length,executed:outcomes.length,passed:outcomes.filter(t=>t.status==='passed').length,failed:outcomes.filter(t=>t.status==='failed').length,outcomes},
  unrun:['Native Linux/macOS runtime','Integrated terminal/browser scheduling','Async future differential traces, covered by controlled Rust tests only']};
