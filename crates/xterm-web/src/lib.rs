@@ -10,6 +10,7 @@ pub mod selection;
 pub mod theme;
 pub mod contrast_cache;
 pub mod renderer;
+pub mod webgl;
 pub mod char_size;
 #[cfg(target_arch = "wasm32")]
 pub mod char_size_browser;
