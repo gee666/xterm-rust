@@ -66,13 +66,15 @@ fn original_print_execute_and_esc_set_clear_handlers() {
 
 struct Raw(Rc<RefCell<Vec<Event>>>);
 impl DcsHandlerTrait for Raw {
-    fn hook(&mut self, params: &Params) {
+    fn hook(&mut self, params: &Params) -> Result<(), xterm_core::parser::handler::DispatchError> {
         self.0.borrow_mut().push(Event::DcsHook(params.to_array()));
+        Ok(())
     }
-    fn put(&mut self, codes: &[u32]) {
+    fn put(&mut self, codes: &[u32]) -> Result<(), xterm_core::parser::handler::DispatchError> {
         self.0
             .borrow_mut()
             .push(Event::DcsPut(text(&utf32_to_string(codes))));
+        Ok(())
     }
     fn unhook(&mut self, success: bool) -> HandlerResult {
         self.0.borrow_mut().push(Event::DcsEnd(success));
@@ -80,13 +82,15 @@ impl DcsHandlerTrait for Raw {
     }
 }
 impl OscHandlerTrait for Raw {
-    fn start(&mut self) {
+    fn start(&mut self) -> Result<(), xterm_core::parser::handler::DispatchError> {
         self.0.borrow_mut().push(Event::ApcStart);
+        Ok(())
     }
-    fn put(&mut self, codes: &[u32]) {
+    fn put(&mut self, codes: &[u32]) -> Result<(), xterm_core::parser::handler::DispatchError> {
         self.0
             .borrow_mut()
             .push(Event::ApcPut(text(&utf32_to_string(codes))));
+        Ok(())
     }
     fn end(&mut self, success: bool) -> HandlerResult {
         self.0.borrow_mut().push(Event::ApcEnd(success));
