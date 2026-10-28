@@ -53,6 +53,7 @@ use std::{
     rc::Rc,
 };
 pub use window::window_option_allowed;
+pub(crate) use windows_heuristics::dispose as dispose_windows_wrapping;
 
 pub type EventHandler = Rc<dyn Fn(TerminalEvent) -> Result<(), crate::event::EmitError>>;
 /// Host virtual reset action. It calls ordinary reset, not request_reset_state.
@@ -88,6 +89,10 @@ impl CoreTerminal {
     pub fn parser_mut(&mut self) -> &mut EscapeSequenceParser {
         &mut self.parser
     }
+    /// The common emitter, including option-time Windows workaround hooks.
+    pub fn on_line_feed(&self) -> crate::event::Event<()> {
+        self.state.borrow().line_feed.event()
+    }
     pub fn cols(&self) -> usize {
         self.state.borrow().cols()
     }
@@ -120,6 +125,7 @@ impl CoreTerminal {
         if self.disposed {
             return Ok(());
         }
+        self.dispose_common_events()?;
         let slot = Rc::clone(
             &self
                 .state
@@ -162,6 +168,7 @@ impl CoreTerminal {
     /// Finalize reentrant host disposal without revisiting shared services or
     /// markers that callers registered after that traversal returned.
     pub fn finish_dispose_after_shared_services(&mut self) -> Result<(), TerminalError> {
+        self.dispose_common_events()?;
         let slot = Rc::clone(
             &self
                 .state
@@ -177,6 +184,18 @@ impl CoreTerminal {
         }
         operations::clear_reset_request_handler(&self.state)?;
         self.finish_parser_dispose();
+        Ok(())
+    }
+    fn dispose_common_events(&self) -> Result<(), TerminalError> {
+        dispose_windows_wrapping(&self.state)?;
+        let line_feed = Rc::clone(
+            &self
+                .state
+                .try_borrow()
+                .map_err(|_| TerminalError::Borrowed)?
+                .line_feed,
+        );
+        line_feed.dispose();
         Ok(())
     }
     fn finish_parser_dispose(&mut self) {

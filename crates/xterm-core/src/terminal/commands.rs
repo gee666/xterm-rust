@@ -24,12 +24,7 @@ pub(super) fn register(
         parser.register_csi_handler(
             FunctionIdentifier::new(final_byte),
             command(
-                move |s, p| {
-                    if final_byte == "H" {
-                        s.update_windows_wrapping()?;
-                    }
-                    s.dispatch_csi(final_byte, p, false).map(|_| ())
-                },
+                move |s, p| s.dispatch_csi(final_byte, p, false).map(|_| ()),
                 Rc::clone(state),
             ),
         )?;

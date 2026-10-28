@@ -21,7 +21,7 @@ pub(super) struct Events {
     binary: Emitter<Vec<u16>>,
     cursor_move: Emitter<()>,
     data: Emitter<Vec<u16>>,
-    line_feed: Emitter<()>,
+    line_feed: std::rc::Rc<Emitter<()>>,
     render: Emitter<RenderEvent>,
     resize: Emitter<ResizeEvent>,
     scroll: Emitter<usize>,
@@ -31,6 +31,12 @@ pub(super) struct Events {
     all: Emitter<TerminalEvent>,
 }
 impl Events {
+    pub fn with_line_feed(line_feed: std::rc::Rc<Emitter<()>>) -> Self {
+        Self {
+            line_feed,
+            ..Self::default()
+        }
+    }
     pub fn bell(&self) -> Event<()> {
         self.bell.event()
     }
@@ -91,7 +97,9 @@ impl Events {
             TerminalEvent::Binary(data) => self.binary.fire(data)?,
             TerminalEvent::CursorMove => self.cursor_move.fire(&())?,
             TerminalEvent::Data(data) => self.data.fire(data)?,
-            TerminalEvent::LineFeed => self.line_feed.fire(&())?,
+            // The core emitter includes option-time Windows listeners and public
+            // subscriptions in one registration order. Do not forward it twice.
+            TerminalEvent::LineFeed => {}
             TerminalEvent::Render { start, end } => self.render.fire(&RenderEvent {
                 start: *start,
                 end: *end,
