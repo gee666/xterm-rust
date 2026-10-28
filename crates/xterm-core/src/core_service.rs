@@ -13,6 +13,9 @@ use std::cell::{Cell, RefCell};
 use std::fmt;
 use std::rc::Rc;
 
+mod mode_capture;
+pub use mode_capture::PrivateModesCapture;
+
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct Modes {
     pub insert_mode: bool,
@@ -129,7 +132,11 @@ impl CursorInitialization {
         self.0.borrow().is_truthy()
     }
     pub fn set(&self, value: bool) {
-        *self.0.borrow_mut() = value.into();
+        self.replace(value);
+    }
+    pub fn replace(&self, value: bool) -> bool {
+        let previous = self.0.replace(value.into());
+        previous.is_truthy()
     }
     pub fn value(&self) -> OptionValue {
         self.0.borrow().clone()
@@ -145,6 +152,7 @@ pub struct CoreService {
     options: Rc<OptionsService>,
     logger: Rc<LogService>,
     buffer_position: Box<dyn Fn() -> BufferPosition>,
+    private_modes_captures: mode_capture::ModeCaptures,
     data: Emitter<Vec<u16>>,
     user_input: Emitter<()>,
     binary: Emitter<Vec<u16>>,
@@ -166,6 +174,7 @@ impl CoreService {
             options,
             logger,
             buffer_position: Box::new(buffer_position),
+            private_modes_captures: RefCell::new(Vec::new()),
             data: Emitter::new(),
             user_input: Emitter::new(),
             binary: Emitter::new(),
@@ -175,6 +184,7 @@ impl CoreService {
 
     /// Cursor flags and listener identities deliberately survive terminal reset.
     pub fn reset(&self) {
+        self.freeze_private_modes_captures();
         *self.modes.borrow_mut() = Modes::default();
         *self.dec_private_modes.borrow_mut() = DecPrivateModes::default();
         *self.kitty_keyboard.borrow_mut() = KittyKeyboardState::default();

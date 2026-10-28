@@ -42,8 +42,10 @@ fn cursor_initialization_uses_nullish_fallback_without_losing_raw_identity() {
             .unwrap();
         h.core.reset();
         assert_eq!(h.core.is_cursor_initialized.value(), raw);
-        h.core.is_cursor_initialized.set(true);
+        assert_eq!(h.core.is_cursor_initialized.replace(true), raw.is_truthy());
         assert_eq!(h.core.is_cursor_initialized.value(), true.into());
+        assert!(h.core.is_cursor_initialized.replace(false));
+        assert_eq!(h.core.is_cursor_initialized.value(), false.into());
     }
 }
 
