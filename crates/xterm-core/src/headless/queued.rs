@@ -28,10 +28,10 @@ impl QueuedTerminal {
         let service = terminal.with_state(|state| Rc::clone(&state.buffer_service))?;
         let logger = terminal.with_state(|state| Rc::downgrade(&state.logger))?;
         let cleanup_host = pump.scheduler();
-        let factory: CleanupFactory = Rc::new(move |buffer| {
-            native_cleanup::attach(buffer, &cleanup_host, &logger)
-        });
-        let cleanup = service.install_cleanup_factory(factory)
+        let factory: CleanupFactory =
+            Rc::new(move |buffer| native_cleanup::attach(buffer, &cleanup_host, &logger));
+        let cleanup = service
+            .install_cleanup_factory(factory)
             .map_err(crate::terminal::TerminalError::from)?;
         let target = Rc::downgrade(&terminal);
         let pending = Cell::new(false);
