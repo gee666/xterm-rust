@@ -16,4 +16,6 @@ pub mod logger;
 #[cfg(target_arch = "wasm32")]
 pub mod options;
 #[cfg(target_arch = "wasm32")]
+pub mod mouse_fields;
+#[cfg(target_arch = "wasm32")]
 pub mod utf16;

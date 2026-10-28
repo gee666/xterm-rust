@@ -14,6 +14,7 @@ pub mod headless;
 pub mod instantiation;
 pub mod lifecycle;
 pub mod log_service;
+pub mod mouse_fields;
 pub mod mouse_state;
 pub mod multi_key_map;
 pub mod options;

@@ -1,0 +1,22 @@
+{
+  "task": 157,
+  "reviewer": "Elizabeth",
+  "reviewedCommit": "22d1104",
+  "verdict": "accepted",
+  "scope": "Native Windows finite rich-state print/control corpus. No browser, other OS runtime, arbitrary custom charset, asynchronous queue or full equivalence claim.",
+  "inspected": ["scripts/full-trace-capture.mjs", "scripts/full-trace-codec.mjs", "scripts/full-trace-runner.mjs", "scripts/full-trace-source.mjs", "scripts/full-trace-scenarios.mjs", "crates/xterm-core/examples/full_trace.rs", "crates/xterm-core/tests/support/full_trace_snapshot.rs"],
+  "commands": [
+    {"command": "node --test scripts/full-trace-capture.test.mjs", "passed": 6, "failed": 0},
+    {"command": "cargo test -p xterm-core --test reverse_index_render", "passed": 1, "failed": 0},
+    {"command": "node scripts/acceptance-oracle.mjs --case vt-23 --timeout-ms 180000", "comparisons": 2544, "receipt": "results/acceptance-runs/vt-23/1793177549006-cb7036fa-df5e-49fa-b8e5-3c57180def0b/receipt.json"},
+    {"command": "node scripts/acceptance-oracle.mjs --case vt-24 --timeout-ms 180000", "comparisons": 888, "receipt": "results/acceptance-runs/vt-24/1793177583227-51edc5dc-1004-45fb-82e6-6f3d67f57c49/receipt.json"},
+    {"command": "node scripts/acceptance-oracle.mjs --case vt-44 --timeout-ms 180000", "comparisons": 2256, "receipt": "results/acceptance-runs/vt-44/1793177595884-280d54bf-c3b4-40b4-b24c-1cf30bb68ab3/receipt.json"},
+    {"command": "node scripts/acceptance-oracle.mjs --case vt-45 --timeout-ms 180000", "comparisons": 1880, "receipt": "results/acceptance-runs/vt-45/1793177623018-7cdf9f9f-813c-4672-b007-5a8ef1ac0195/receipt.json"},
+    {"command": "node scripts/acceptance-oracle.mjs --case vt-46 --timeout-ms 180000", "comparisons": 750, "receipt": "results/acceptance-runs/vt-46/1793177645608-d499f589-ac92-4ff6-9024-c649851f1789/receipt.json"}
+  ],
+  "receiptRoot": "C:/Users/user/.xterm-rust-target/7144d30a1fc3-worktrees/Alaric",
+  "totalComparisons": 8318,
+  "failed": 0,
+  "skippedRuntimes": 0,
+  "findings": "Strict snapshot parser retains UTF-16, packed fields and saved metadata; native/reference consume identical input independently; captures precede equality; actual artifact is pinned and hashed after execution. Explicitly excluded queue/browser/color domains remain separate gates."
+}
