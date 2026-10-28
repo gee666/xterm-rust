@@ -1,6 +1,5 @@
 use xterm_web::api::{
-    verify_integers, verify_mutable_option, verify_positive_integers,
-    verify_proposed_api, ApiError,
+    verify_integers, verify_mutable_option, verify_positive_integers, verify_proposed_api, ApiError,
 };
 
 #[test]
@@ -12,7 +11,10 @@ fn integer_boundary_matches_number_semantics() {
         assert_eq!(verify_integers(&[value]), Err(ApiError::IntegerRequired));
     }
     assert_eq!(verify_integers(&[]), Ok(()));
-    assert_eq!(verify_integers(&[1.0, 2.5, 3.0]), Err(ApiError::IntegerRequired));
+    assert_eq!(
+        verify_integers(&[1.0, 2.5, 3.0]),
+        Err(ApiError::IntegerRequired)
+    );
 }
 
 #[test]
