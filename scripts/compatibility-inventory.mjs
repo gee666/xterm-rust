@@ -177,14 +177,14 @@ for (const p of testFiles) {
   function visit(node, parents = []) {
     if (ts.isCallExpression(node) || ts.isNewExpression(node)) {
       const callees = calleeNames(node.expression, sf);
-      const callee = callees.find(c => /^(test\.describe|describe|context|suite|it|test|specify|perfContext|RuntimeCase)(\.(skip|only|serial|parallel|concurrent|todo))*$/.test(c));
+      const callee = callees.find(c => /^(test\.describe|describe|context|suite|it|test|specify|perfContext|RuntimeCase|ThroughputRuntimeCase)(\.(skip|only|serial|parallel|concurrent|todo))*$/.test(c));
       const args = node.arguments ?? [];
       // Playwright test.skip(condition, reason) is a runtime annotation, not registration.
       const registration = args.length > 0 && (ts.isStringLiteralLike(args[0]) || ts.isTemplateExpression(args[0]) || (args[1] && (ts.isArrowFunction(args[1]) || ts.isFunctionExpression(args[1]))));
       if (callee && registration) {
         const title = args[0].getText(sf);
         const isSuite = /^(test\.describe|describe|context|suite|perfContext)(\.|$)/.test(callee);
-        definitions.push({ line: lineAt(sf, node), callee, alternativeCallees: callees, kind: isSuite ? 'suite' : callee === 'RuntimeCase' ? 'benchmark' : 'test', title, parents,
+        definitions.push({ line: lineAt(sf, node), callee, alternativeCallees: callees, kind: isSuite ? 'suite' : callee.endsWith('RuntimeCase') ? 'benchmark' : 'test', title, parents,
           staticTitle: ts.isStringLiteralLike(args[0]), skipped: /\.(skip|todo)\b/.test(callee), conditionalCallee: callees.length > 1,
           ...acceptanceFor(p, [...parents, title].join(' / ')) });
         ts.forEachChild(node, n => visit(n, isSuite ? [...parents, title] : parents));
@@ -218,7 +218,8 @@ const summary = { schemaVersion: 1, equivalence: 'NOT PROVEN', parser: `typescri
     apis: apis.length, apiCategories: countBy(apis, 'category'), apiStatuses: countBy(apis, 'status'), moduleStatuses: countBy(modules, 'status'),
     testFiles: suites.length, suiteKinds: countBy(suites, 'kind'), staticTestDefinitions: suites.reduce((sum, s) => sum + s.staticTestDefinitions, 0), fixtures: fixtures.length, addons: addons.length,
     modulesWithoutFocusedCriteria: modules.filter(m => m.acceptanceGap).length, apisWithoutFocusedCriteria: apis.filter(a => a.acceptanceGap).length,
-    casesWithoutFocusedCriteria: suites.flatMap(s => s.definitions).filter(d => d.kind === 'test' && d.acceptanceGap).length },
+    casesWithoutFocusedCriteria: suites.flatMap(s => s.definitions).filter(d => d.kind === 'test' && d.acceptanceGap).length,
+    staticBenchmarkDefinitions: suites.flatMap(s => s.definitions).filter(d => d.kind === 'benchmark').length },
   families: Object.keys(countBy(modules, 'family')).map(f => ({ family: f, modules: modules.filter(m => m.family === f).length, partial: modules.filter(m => m.family === f && m.status === 'partial').length,
     missing: modules.filter(m => m.family === f && m.status === 'missing').length, suites: suites.filter(s => s.family === f).length })),
   limitations: ['Static test-definition counts are not runtime case/assertion counts; loops and helpers may generate cases.', 'Source hashes establish this local reference, not a claimed public revision.',

@@ -83,6 +83,8 @@ test('suite support, conditional renderer cases and skip annotation semantics su
   assert(terminal.definitions.every(d => d.callee !== 'test.fail'));
   const eventBenchmark = suites.find(s => s.source.endsWith('/Event.benchmark.ts'));
   assert(eventBenchmark.definitions.some(d => d.kind === 'benchmark'));
+  const throughput = suites.find(s => s.source.endsWith('/Terminal.benchmark.ts'));
+  assert(throughput.definitions.some(d => d.kind === 'benchmark' && d.callee === 'ThroughputRuntimeCase'));
   for (const suite of suites) {
     assert.equal(suite.execution.rust.passed, null, 'Inventory must not invent Rust runtime results');
     const original = suite.execution.original;
