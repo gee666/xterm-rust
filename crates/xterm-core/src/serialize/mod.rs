@@ -1,7 +1,9 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved. MIT license.
 //! Serialization reads live Rust buffer cells. Output is UTF-16 to preserve JS
 //! strings, including lone surrogates; callers choose their encoding at the edge.
+mod addon;
 mod ansi;
+pub use addon::{serialize_live_html, serialize_live_state, AddonSerializeError, SerializeAddon};
 mod buffer;
 mod html;
 pub use html::serialize_html;

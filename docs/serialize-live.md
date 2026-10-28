@@ -1,0 +1,33 @@
+# Native serialize integration
+
+Task 88 connects the Rust serializer to the real `headless::Terminal` and `CoreTerminal`. `serialize::SerializeAddon` implements `TerminalAddon<headless::Terminal>` and can also activate directly on a `CoreTerminal`. It stores a shared terminal state handle, not copied buffers or a wrapper calling JavaScript.
+
+`serialize_live_state` borrows current normal/alternate buffers, dimensions, current input attributes, active margins and service modes for each call. `serialize_live_html` accepts a browser host's actual selection and parsed palette. The native `serialize_as_html` method reads live font/theme options and uses the source headless palette fallback. Raw font and global theme strings use UTF-16, including unpaired surrogates. Theme getters run only when global background is requested. State borrows are released before host getters/coercions execute. The original active buffer and range are captured before those hooks, so synchronous resize, reset, alternate activation or addon reactivation cannot redirect an in-progress serialization. A proposed-API change from inside a header getter affects later calls, not the already-checked operation.
+
+Activation does not require proposed APIs. Serialization checks the current `allowProposedApi` option because source serialization first reads the gated buffer API. Before activation both methods report `Cannot use addon until it has been loaded`. Re-activation replaces the state handle. Source addon disposal has no registrations to remove and retains its terminal, so raw disposal deliberately keeps serialization usable. The managed addon handle removes the manager entry. A retained state does not own an addon manager and creates no terminal-manager-addon ownership cycle.
+
+Native mutable-borrow conflicts return typed errors and do not silently serialize missing cells. The source headless terminal has no selection-position method; `only_selection` without an explicit range reports that missing-method failure. Browser hosts supply their actual selection through `serialize_live_html`, not through a fabricated native selection.
+
+## Live evidence
+
+Run:
+
+```sh
+node scripts/serialize-live-oracle.mjs
+cargo test -p xterm-core --test serialize_live --test serialize_live_callbacks --test serialize_live_reentrancy
+cargo clippy -p xterm-core --test serialize_live --test serialize_live_callbacks --test serialize_live_reentrancy -- -D warnings
+```
+
+The test file covers activation errors, live write visibility, reactivation, raw and managed disposal, live proposed-API changes, borrow-error recovery, resize/reset/scrollback options, current HTML theme/font and all original ANSI cursor/range/underline/color/margin/visibility assertions using actual Rust writes. Deterministic restore traces cover ASCII, Unicode and combining text, colors, cursor gaps, wrapping, scrollback, alternate screen, modes and extended underline colors.
+
+The JS runner compiles the unchanged source browser terminal and serialize addon, runs ten source engine serialize/restore traces, and records exact serialized UTF-16 plus complete observed before/after buffer cells, cursor, margins and modes under `results/serialize/live-source.json`. Rust consumes the identical inputs and exact serialized outputs from `tests/fixtures/serialize-live.tsv`. It compares restored full cell/width/code/attribute/wrap layouts, both buffers, cursor, scrollback/viewport positions, margins, active buffer, modes and current input attributes. The JS runner hashes all bundled reference inputs and verifies they remain unchanged. An additional exact HTML fixture exercises a reentrant header getter switching buffers, resizing and disabling proposed APIs. Source public writes are asynchronous, while the native API is synchronous, so this source callback invokes the unchanged InputHandler.parse operation directly to match the native call timing. This is documented engine-level parity, not a claim that Rust synchronous writes emulate the JavaScript event loop. Tests also retain and check getter errors instead of returning successful empty fragments.
+
+## Preserve the source margin/cursor loss
+
+A first Rust test assumed every serialization was lossless and failed for `CSI 2;4 r`, `CSI 3;3 H`, then `margin`. The source itself serializes the content followed by `CSI 2;4 r`. Applying that final DECSTBM homes the cursor. Original cursor `(8, 2)` becomes `(0, 0)` while margins remain `(1, 3)`.
+
+Do not append a cursor fix to the Rust output. That would differ from upstream. Both the local JS runner and Timur's independent source check confirmed this behavior, with raw source evidence in `results/serialize/live-source.json` and `source-roundtrip-margins.json`. The original failed Rust assertion remains in `live-initial.log`.
+
+The regression now asserts exact source ANSI, exact source cursor before and after, and all other full-state fields. The source runner asserts no other observed fields change before writing the fixture, and the Rust test asserts exactly one known loss at case 7. This is source compatibility, not a claim of lossless restoration for arbitrary terminals.
+
+Task 131 separately owns actual browser/WASM addon exports, JavaScript number/marker options and error classes, selection/theme integration, original browser assertions and three-browser round trips. Native checks do not complete those requirements. Native Linux/macOS evidence is also separate. Overall equivalence remains NOT PROVEN.

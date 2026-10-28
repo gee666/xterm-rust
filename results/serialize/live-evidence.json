@@ -1,0 +1,22 @@
+{
+  "scope": "Task 88 native live serializer integration, not browser/WASM bindings",
+  "overallEquivalence": "NOT PROVEN",
+  "platform": "native Windows x64",
+  "node": "v24.15.0",
+  "rustc": "1.85.1",
+  "commands": [
+    { "command": "node scripts/serialize-live-oracle.mjs", "exitCode": 0, "sourceEngineRoundTrips": 10, "sourceHeaderReentrancyCases": 1, "log": "results/serialize/live-source.log", "raw": "results/serialize/live-source.json" },
+    { "command": "cargo test -p xterm-core --test serialize_live --test serialize_live_callbacks --test serialize_live_reentrancy", "exitCode": 0, "passed": 11, "failed": 0, "ignored": 0, "log": "results/serialize/live-tests.log" },
+    { "command": "cargo clippy -p xterm-core --test serialize_live --test serialize_live_callbacks --test serialize_live_reentrancy -- -D warnings", "exitCode": 0, "log": "results/serialize/live-clippy.log" },
+    { "command": "rustfmt --edition 2021 --check crates/xterm-core/src/serialize/addon.rs crates/xterm-core/tests/serialize_live.rs crates/xterm-core/tests/serialize_live_callbacks.rs crates/xterm-core/tests/serialize_live_reentrancy.rs crates/xterm-core/tests/support/serialize_live_snapshot.rs", "exitCode": 0, "log": "results/serialize/live-fmt.log" }
+  ],
+  "referenceAssertions": "All original ANSI cursor/style/range/underline/color/margin/visibility assertions are exercised through real Rust writes. HTML selection/browser assertions are not native coverage and remain task 131.",
+  "sourceQuirk": "Source final DECSTBM restores margins but homes the cursor. Case 7 retains that exact before/after difference. The initial over-strong lossless assertion is retained in live-initial.log, and subsequent tests compare exact source ANSI and restored-source state rather than omit the case.",
+  "callbackTiming": "Native writes are synchronous. The source reentrant HTML fixture calls unchanged InputHandler.parse directly to match native call timing; it is not public JavaScript write-event-loop equivalence.",
+  "remaining": [
+    "Release integration rerun paused by shared disk resource gate below 1 GiB free",
+    "Native Linux/macOS runtime not executed here",
+    "Task 131 owns actual browser/WASM addon class, JS number/marker/error representation, live selection/theme and three-browser tests",
+    "Overall complete xterm.js equivalence remains unproven"
+  ]
+}
