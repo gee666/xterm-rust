@@ -11,7 +11,7 @@ pub struct DomOptions {
     pub allow_transparency: bool,
     pub disable_stdin: bool,
     pub is_chrome_os: bool,
-    pub prompt_label: String,
+    pub prompt_label: JsValue,
     pub document_override: Option<Document>,
 }
 
@@ -21,7 +21,7 @@ impl Default for DomOptions {
             allow_transparency: false,
             disable_stdin: false,
             is_chrome_os: false,
-            prompt_label: "Terminal input".into(),
+            prompt_label: JsValue::from_str("Terminal input"),
             document_override: None,
         }
     }
@@ -56,9 +56,10 @@ impl BrowserDom {
         let viewport = div(&document, "xterm-viewport")?;
         let screen = div(&document, "xterm-screen")?;
         let helpers = div(&document, "xterm-helpers")?;
-        let textarea: HtmlTextAreaElement = document.create_element("textarea")?.dyn_into()?;
+        let textarea: HtmlTextAreaElement = document.create_element("textarea")?.unchecked_into();
         textarea.set_class_name("xterm-helper-textarea");
-        textarea.set_attribute("aria-label", &options.prompt_label)?;
+        let set_attribute: js_sys::Function = js_sys::Reflect::get(&textarea, &"setAttribute".into())?.dyn_into()?;
+        set_attribute.call2(&textarea, &"aria-label".into(), &options.prompt_label)?;
         if !options.is_chrome_os {
             textarea.set_attribute("aria-multiline", "false")?;
         }
@@ -126,7 +127,7 @@ impl Drop for BrowserDom {
 }
 
 fn div(document: &Document, class_name: &str) -> Result<HtmlElement, JsValue> {
-    let element: HtmlElement = document.create_element("div")?.dyn_into()?;
+    let element: HtmlElement = document.create_element("div")?.unchecked_into();
     element.set_class_name(class_name);
     Ok(element)
 }
