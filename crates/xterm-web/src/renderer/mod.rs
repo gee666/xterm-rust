@@ -30,3 +30,4 @@ pub mod theme_css;
 pub mod theme_css_utf16;
 pub mod utils;
 pub mod width_cache;
+pub mod raw_font;
