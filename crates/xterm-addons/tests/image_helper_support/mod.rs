@@ -39,7 +39,7 @@ pub fn apply(parser: &mut HeaderParser, operation: &Value) -> Result<Value, Box<
             parser.reset();
             0
         }
-        "end" => parser.end().source_code(),
+        "end" => parser.end().source_code()?,
         "parse" => {
             let data = operation["data"]
                 .as_array()
@@ -53,12 +53,10 @@ pub fn apply(parser: &mut HeaderParser, operation: &Value) -> Result<Value, Box<
                 .collect::<Result<Vec<_>, _>>()?;
             let start = usize::try_from(operation["start"].as_u64().ok_or("missing start")?)?;
             let end = usize::try_from(operation["end"].as_u64().ok_or("missing end")?)?;
-            parser.parse(&data, start, end)?.source_code()
+            parser.parse(&data, start, end)?.source_code()?
         }
         "metrics" => {
-            let file_data;
-            let encoded_data;
-            let input = if let Some(file) = operation["file"].as_str() {
+            let data = if let Some(file) = operation["file"].as_str() {
                 if std::path::Path::new(file)
                     .file_name()
                     .and_then(|s| s.to_str())
@@ -67,23 +65,20 @@ pub fn apply(parser: &mut HeaderParser, operation: &Value) -> Result<Value, Box<
                     return Err("invalid image fixture basename".into());
                 }
                 let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-                    .join("../../source_repo/addons/addon-image/fixture/testimages");
-                file_data = std::fs::read(root.join(file))?;
-                encoded_data = json!(file_data);
-                &encoded_data
+                    .join("tests/fixtures/image-metrics");
+                std::fs::read(root.join(file))?
             } else {
-                &operation["data"]
+                operation["data"]
+                    .as_array()
+                    .ok_or("missing data")?
+                    .iter()
+                    .map(|byte| {
+                        byte.as_u64()
+                            .ok_or("bad byte")
+                            .and_then(|byte| u8::try_from(byte).map_err(|_| "large byte"))
+                    })
+                    .collect::<Result<Vec<_>, _>>()?
             };
-            let data = input
-                .as_array()
-                .ok_or("missing data")?
-                .iter()
-                .map(|byte| {
-                    byte.as_u64()
-                        .ok_or("bad byte")
-                        .and_then(|byte| u8::try_from(byte).map_err(|_| "large byte"))
-                })
-                .collect::<Result<Vec<_>, _>>()?;
             let result = image_type(&data);
             return Ok(
                 json!({"mime":result.mime.mime(),"width":result.width,"height":result.height}),

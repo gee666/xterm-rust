@@ -124,6 +124,16 @@ fn source_prototype_keys_and_unknown_value_copy() {
 }
 #[test]
 fn checked_range_and_pixel_allocation_boundaries() {
+    assert_eq!(ParseOutcome::NeedMore.source_code().unwrap(), -2);
+    assert_eq!(ParseOutcome::Rejected.source_code().unwrap(), -1);
+    assert_eq!(ParseOutcome::Payload(0).source_code().unwrap(), 0);
+    #[cfg(target_pointer_width = "64")]
+    assert!(ParseOutcome::Payload(usize::MAX).source_code().is_err());
+    #[cfg(target_pointer_width = "32")]
+    assert_eq!(
+        ParseOutcome::Payload(usize::MAX).source_code().unwrap(),
+        4_294_967_295
+    );
     let mut parser = HeaderParser::default();
     assert!(parser.parse(&[1], 0, 2).is_err());
     assert!(parser.parse(&[1], 1, 0).is_err());

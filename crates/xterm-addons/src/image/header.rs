@@ -112,14 +112,22 @@ pub enum ParseOutcome {
     Payload(usize),
 }
 impl ParseOutcome {
-    pub fn source_code(self) -> i64 {
+    pub fn source_code(self) -> Result<i64, SourceCodeError> {
         match self {
-            Self::NeedMore => -2,
-            Self::Rejected => -1,
-            Self::Payload(offset) => offset as i64,
+            Self::NeedMore => Ok(-2),
+            Self::Rejected => Ok(-1),
+            Self::Payload(offset) => i64::try_from(offset).map_err(|_| SourceCodeError),
         }
     }
 }
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct SourceCodeError;
+impl fmt::Display for SourceCodeError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str("IIP payload offset exceeds the source-code integer range")
+    }
+}
+impl std::error::Error for SourceCodeError {}
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct HeaderRangeError;
 impl fmt::Display for HeaderRangeError {

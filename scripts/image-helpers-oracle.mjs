@@ -71,6 +71,11 @@ function executeTestFile(file){
 }
 executeTestFile('IIPHeaderParser.test.ts');executeTestFile('IIPMetrics.test.ts');
 collectingOriginal=false;
+for(const [name,fixture] of Object.entries(fixtureHashes)) {
+ const copied=fs.readFileSync(path.join(root,'crates/xterm-addons/tests/fixtures/image-metrics',name));
+ assert.equal(copied.length,fixture.bytes,`vendored fixture size differs: ${name}`);
+ assert.equal(digest(copied),fixture.sha256,`vendored fixture bytes differ: ${name}`);
+}
 fs.mkdirSync(path.join(root,'crates/xterm-addons/tests/fixtures'),{recursive:true});
 fs.writeFileSync(path.join(root,'crates/xterm-addons/tests/fixtures/image-helpers-upstream.json'),JSON.stringify(original)+'\n');
 let parser=new native.HeaderParser();
