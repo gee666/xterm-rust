@@ -34,7 +34,14 @@ impl<E: fmt::Display> fmt::Display for AddonError<E> {
         }
     }
 }
-impl<E: std::error::Error + 'static> std::error::Error for AddonError<E> {}
+impl<E: std::error::Error + 'static> std::error::Error for AddonError<E> {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Callback(error) => Some(error),
+            Self::NotLoaded | Self::TraversalInvalidated => None,
+        }
+    }
+}
 
 type EntryList<T, E> = RefCell<Vec<Rc<Entry<T, E>>>>;
 type Entries<T, E> = Rc<EntryList<T, E>>;

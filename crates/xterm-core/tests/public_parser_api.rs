@@ -83,7 +83,8 @@ fn all_five_public_handler_families_bubble_newest_first_and_stop_on_true() {
                         api.add_osc_handler(1234.0, move |data| {
                             assert_eq!(data, "payload".encode_utf16().collect::<Vec<_>>());
                             callback()
-                        });
+                        })
+                        .unwrap();
                     }
                     4 => {
                         api.register_apc_handler(FunctionIdentifier::new("Z"), move |data| {
@@ -149,7 +150,8 @@ fn pending_public_handlers_pause_then_resume_before_following_print() {
                             .unwrap();
                     }
                     3 => {
-                        api.register_osc_handler(666.0, move |_| callback());
+                        api.register_osc_handler(666.0, move |_| callback())
+                            .unwrap();
                     }
                     4 => {
                         api.register_apc_handler(FunctionIdentifier::new("Z"), move |_| callback())

@@ -122,7 +122,8 @@ fn every_public_parser_family_works_through_utf8_and_utf16_terminal_chunks() {
                                 .unwrap();
                         }
                         3 => {
-                            api.register_osc_handler(666.0, move |_| callback());
+                            api.register_osc_handler(666.0, move |_| callback())
+                                .unwrap();
                         }
                         4 => {
                             api.register_apc_handler(FunctionIdentifier::new("Z"), move |_| {

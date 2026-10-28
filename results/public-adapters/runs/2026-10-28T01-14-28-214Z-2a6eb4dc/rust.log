@@ -1,0 +1,70 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 3.01s
+     Running tests\public_adapter_terminal.rs (target\debug\deps\public_adapter_terminal-60c1b5b59aaa1174.exe)
+
+running 3 tests
+test source_load_addon_assertions_use_actual_public_terminal ... ok
+test buffer_namespace_survives_actual_writes_alt_switch_and_reset ... ok
+test every_public_parser_family_works_through_utf8_and_utf16_terminal_chunks ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\public_addon_manager.rs (target\debug\deps\public_addon_manager-edd501874bee5f4e.exe)
+
+running 8 tests
+test activation_failure_keeps_registration_for_cleanup ... ok
+test callback_error_source_remains_downcastable ... ok
+test reverse_order_and_direct_idempotent_disposal ... ok
+test cleanup_failure_marks_before_call_and_retains_failed_record ... ok
+test recursive_self_disposal_runs_once_without_borrow_panic ... ok
+test upstream_activation_receives_terminal ... ok
+test callbacks_can_load_addons_without_borrowing_registry ... ok
+test upstream_dispose_all_loaded_addons ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\public_addon_reentrancy.rs (target\debug\deps\public_addon_reentrancy-c0a85d78db845154.exe)
+
+running 3 tests
+test nested_manager_disposal_preserves_upstream_invalidated_index_error ... ok
+test weak_callback_route_does_not_keep_manager_alive ... ok
+test removed_lower_index_leaves_disposed_registration_at_captured_splice_index ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\public_buffer_api.rs (target\debug\deps\public_buffer_api-4bff8c99adbb5805.exe)
+
+running 2 tests
+test views_are_live_and_return_real_lines_and_independent_zero_cells ... ok
+test namespace_events_share_view_identity_refresh_on_reset_and_stop_on_disposal ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\public_parser_api.rs (target\debug\deps\public_parser_api-19dc5ba159942cf9.exe)
+
+running 5 tests
+test csi_gets_owned_nested_parameter_snapshots_and_removable_alias ... ok
+test invalid_identifiers_are_rejected_without_registration ... ok
+test apc_payload_is_utf16_without_identifier_and_survives_all_chunk_splits ... ok
+test all_five_public_handler_families_bubble_newest_first_and_stop_on_true ... ok
+test pending_public_handlers_pause_then_resume_before_following_print ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\public_parser_guard.rs (target\debug\deps\public_parser_guard-c97fe0ac4d2c39e6.exe)
+
+running 2 tests
+test window_guard_error_preserves_cause_and_stops_following_print ... ok
+test bare_window_csi_guard_is_live_and_consumes_blocked_custom_sequences ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\public_parser_reentrant.rs (target\debug\deps\public_parser_reentrant-8ed97b611157bb65.exe)
+
+running 3 tests
+test dropped_parser_bundle_reports_error_instead_of_a_successful_registration ... ok
+test all_five_public_callbacks_can_register_without_borrowing_active_engine ... ok
+test callbacks_can_dispose_their_own_public_token_in_every_family ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

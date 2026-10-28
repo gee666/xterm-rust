@@ -171,6 +171,22 @@ fn recursive_self_disposal_runs_once_without_borrow_panic() {
 }
 
 #[test]
+fn callback_error_source_remains_downcastable() {
+    use std::error::Error;
+    let error = AddonError::Callback(std::io::Error::new(
+        std::io::ErrorKind::PermissionDenied,
+        "addon callback",
+    ));
+    let source = error
+        .source()
+        .unwrap()
+        .downcast_ref::<std::io::Error>()
+        .unwrap();
+    assert_eq!(source.kind(), std::io::ErrorKind::PermissionDenied);
+    assert_eq!(source.to_string(), "addon callback");
+}
+
+#[test]
 fn callbacks_can_load_addons_without_borrowing_registry() {
     let manager = AddonManager::new();
     let captured = manager.clone();

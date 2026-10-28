@@ -4,7 +4,9 @@
 //! terminal; retained line handles have the same stale-reference caveat as JS.
 
 use crate::{
-    buffer::{buffer_set::BufferRef, Buffer, BufferError, BufferLine, BufferSet, CellData, LineRef},
+    buffer::{
+        buffer_set::BufferRef, Buffer, BufferError, BufferLine, BufferSet, CellData, LineRef,
+    },
     event::{EmitError, Emitter, Event},
     lifecycle::{Disposable, DisposableHandle},
 };
@@ -13,7 +15,9 @@ use std::{cell::RefCell, fmt, rc::Rc};
 /// A signed public cell lookup, used by native and JavaScript adapters.
 /// Unlike circular buffer line lookup, BufferLine.getCell checks its bounds.
 pub fn get_cell_signed(line: &BufferLine, index: i64) -> Option<CellData> {
-    usize::try_from(index).ok().and_then(|index| line.get_cell(index))
+    usize::try_from(index)
+        .ok()
+        .and_then(|index| line.get_cell(index))
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

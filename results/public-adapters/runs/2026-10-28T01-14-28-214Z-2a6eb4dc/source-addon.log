@@ -1,0 +1,12 @@
+
+
+  AddonManager
+    loadAddon
+      ✔ should call addon constructor
+    dispose
+      ✔ should dispose all loaded addons
+
+
+  2 passing (2ms)
+
+{"source":"source_repo/src/common/public/AddonManager.ts","node":"v24.15.0","status":"passed","checks":28,"observations":[{"case":"direct-and-reverse-disposal","log":["activate:a","activate:b","activate:c","dispose:b","dispose:c","dispose:a"]},{"case":"cleanup-failure-retains-disposed-record","log":["c","b","a"],"remaining":1},{"case":"activation-failure-retains-registration","cleaned":1},{"case":"recursive-self-disposal","calls":1},{"case":"load-during-disposal","remaining":0},{"case":"nested-manager-invalidates-index","log":["c","b","a"],"remaining":1},{"case":"remove-lower-captured-splice-index","remaining":1},{"case":"dynamic-apply-and-nonfunction-type-errors","applyCalls":1,"failedDisposedRecords":1}],"upstream":{"discovered":2,"executed":2,"passed":2,"failed":0,"skipped":0,"unrun":0,"cases":[{"title":"AddonManager loadAddon should call addon constructor","status":"passed"},{"title":"AddonManager dispose should dispose all loaded addons","status":"passed"}]},"hashes":{"AddonManager.ts":"b815df3b09908a3d651c0cfe93e00efe29551eb5119946755efa7f375877992c","AddonManager.test.ts":"9e214f3d654f2e92922b90a40153b8c22cb736e9926d07a2c2e4654c306b2e4f"},"scope":"The two original AddonManager cases and directed source observations. Does not execute headless/browser suites or prove terminal/browser equivalence."}
