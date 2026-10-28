@@ -59,8 +59,12 @@ impl ColorRef {
                 color.raw_css = None;
             }
             Err(_) => {
-                let projection: String =
-                    units.iter().map(|unit| format!("\\u{unit:04x}")).collect();
+                use std::fmt::Write;
+                let mut projection = String::new();
+                for unit in &units {
+                    // Writing built-in numeric formatting to String is infallible.
+                    write!(projection, "\\u{unit:04x}").expect("String formatting cannot fail");
+                }
                 color.value.css = projection.clone();
                 color.raw_css = Some((projection, units));
             }
