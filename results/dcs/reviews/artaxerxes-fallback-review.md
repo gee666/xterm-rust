@@ -1,0 +1,9 @@
+# Independent checked-DCS fallback review
+
+For task 206 I inspected the checked fallback setter, legacy adapter, report boundary, hook/put/unhook state ordering and disposal behavior in `src/parser/dcs.rs`, plus all three `tests/dcs_fallback.rs` tests. The checked API propagates a typed DispatchError before the same state cleanup that a JavaScript throw prevents. It does not turn errors into false bubbling or a successful no-op. The legacy void callback delegates to the checked path without changing its existing signature.
+
+I independently ran the existing native `dcs_fallback-c1430d82f7b8f130.exe`. Three tests passed with zero ignored tests. These check all three fallback phases, exact shared callback cause identity, continued identifier state after a failure, successful cleanup, no fallback for registered handlers and disposal reuse. This was execution of the retained test artifact, not a new current-tree Cargo build under the low-space guard.
+
+I reused `parserOracle('Dcs')` to execute the unchanged original Params/DCS implementation and all 20 original DcsParser test bodies. All source baseline cases passed. Three additional independent source probes threw the same sentinel object during HOOK, PUT and UNHOOK, then checked retained identifier state, recovery and the eventual zero identifier. Each matched the Rust regression's expected sequence. Exact source hashes, native executable hash, source cases and baseline outcomes are in `artaxerxes-fallback-source.json`; native output is `artaxerxes-fallback-tests.log`. Node's experimental type-erasure warning was retained, not suppressed.
+
+Accept task 206's scoped fallible-fallback change. Task 100's broader outer-parser oracle review is separate and has a requested CRLF fixture correction. Full terminal logger/public-API, browser/WASM and release/native-platform evidence remain separate work. This review does not establish overall equivalence.
