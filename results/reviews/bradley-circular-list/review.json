@@ -1,0 +1,29 @@
+{
+  "task": 12,
+  "reviewer": "Bradley",
+  "verdict": "changes requested",
+  "command": "PATH=/c/Users/user/.cargo/bin:$PATH node scripts/build-slot.mjs --owner Bradley-review12 --lane native --wait-ms 120000 --timeout-ms 240000 -- node scripts/check-events-and-circular-list.mjs",
+  "runId": "2026-10-28T07-39-06-301Z-1728204b-f9e9-4771-ac26-b7b8893776f9",
+  "existingChecks": {
+    "rustPassed": 93,
+    "originalPassed": 26,
+    "originalAssertions": 95,
+    "circularSnapshots": 20047,
+    "eventTraces": 10008,
+    "mismatches": 0
+  },
+  "finding": "The original CircularList.set accepts Number indices that create fractional/subnormal/NaN array properties. Native storage exposes only integer set/set_signed, and get_number rejects all fractional/nonfinite remainders. The full Number-index state cannot be represented or read.",
+  "sourceProbe": "number-property-counterexample.json",
+  "sourceBehavior": [
+    "new CircularList(4); set(0.5,11); get(0.5) returns11",
+    "set(Number.MIN_VALUE,12); get(Number.MIN_VALUE) returns12",
+    "set(NaN,77); get(NaN),get(Infinity),get(-Infinity) all return77",
+    "setting unchanged capacity retains those properties; changing capacity discards them"
+  ],
+  "implementationInspection": [
+    "src/circular_list/storage.rs uses HashMap<i128,T> and has no numeric setter",
+    "get_number immediately returnsNone for fractional/nonfinite physical indices"
+  ],
+  "requiredChange": "Add faithful Number-index set/read property storage and regression/differential cases for these states. Keep the existing93 tests and original assertions intact. Documented native invalid-size boundaries do not cover this missing Number-index API behavior.",
+  "scope": "Utility review only; Buffer/browser and overall equivalence remain NOT PROVEN. The new probe executed unchanged source only; the unsupported Rust setter was established by interface/code inspection, not falsely reported as an executed Rust call."
+}
