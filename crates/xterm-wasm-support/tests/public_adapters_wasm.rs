@@ -99,12 +99,13 @@ fn original_callback_exceptions_keep_identity_and_partial_cleanup_state() {
     let log = Array::new();
     let terminal = terminal_object();
     let error: JsValue = js_sys::Object::new().into();
+    let undefined = JsValue::UNDEFINED;
     for (label, throw) in [("a", false), ("b", true), ("c", false)] {
         let item = addon(
             label,
             &log,
             &JsValue::UNDEFINED,
-            if throw { &error } else { &JsValue::UNDEFINED },
+            if throw { &error } else { &undefined },
         );
         manager.load_addon(&terminal, &item).unwrap();
     }
@@ -193,8 +194,6 @@ fn record_literals_bypass_inherited_setters_and_primitive_load_failure_keeps_rec
         .unwrap_err()
         .is_instance_of::<js_sys::TypeError>());
 }
-
-
 
 #[wasm_bindgen_test]
 fn self_disposal_and_saved_method_after_manager_drop_keep_source_semantics() {

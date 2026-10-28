@@ -44,7 +44,7 @@ impl WebBufferCell {
         }
     }
 }
-#[wasm_bindgen]
+#[wasm_bindgen(js_class = BufferCell)]
 impl WebBufferCell {
     #[wasm_bindgen(js_name = getChars)]
     pub fn get_chars(&self) -> JsValue {
@@ -102,8 +102,14 @@ impl WebBufferCell {
         self.data.borrow().metadata().is_invisible()
     }
     #[wasm_bindgen(js_name = isStrikethrough)]
-    pub fn is_strikethrough(&self) -> u32 {
-        self.data.borrow().metadata().is_strikethrough()
+    pub fn is_strikethrough(&self) -> i32 {
+        i32::from_ne_bytes(
+            self.data
+                .borrow()
+                .metadata()
+                .is_strikethrough()
+                .to_ne_bytes(),
+        )
     }
     #[wasm_bindgen(js_name = isOverline)]
     pub fn is_overline(&self) -> u32 {

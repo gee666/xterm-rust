@@ -1,10 +1,7 @@
 // Copyright (c) 2018-2026 The xterm.js authors. All rights reserved. MIT license.
 //! Live JavaScript buffer views over the Rust buffer namespace.
 use super::buffer_cell::WebBufferCell;
-use crate::{
-    js_error::to_js_error,
-    utf16::to_js_string,
-};
+use crate::{js_error::to_js_error, utf16::to_js_string};
 use js_sys::{Function, JsString, Reflect};
 use std::{
     cell::RefCell,
@@ -55,10 +52,10 @@ impl WebBufferNamespace {
         let alternate: JsValue = WebBufferView::new(native.alternate()).into();
         let normal_event = normal.clone();
         let alternate_event = alternate.clone();
-        let on_change=super::events::callable(native.on_buffer_change(),move |view| {
+        let on_change = super::events::callable(native.on_buffer_change(), move |view| {
             Ok(match view.buffer_type() {
-                BufferType::Normal=>normal_event.clone(),
-                BufferType::Alternate=>alternate_event.clone(),
+                BufferType::Normal => normal_event.clone(),
+                BufferType::Alternate => alternate_event.clone(),
             })
         });
         Ok(Self {
@@ -70,7 +67,7 @@ impl WebBufferNamespace {
         })
     }
 }
-#[wasm_bindgen]
+#[wasm_bindgen(js_class = BufferNamespace)]
 impl WebBufferNamespace {
     #[wasm_bindgen(getter)]
     pub fn normal(&self) -> JsValue {
@@ -109,7 +106,7 @@ impl WebBufferView {
         }
     }
 }
-#[wasm_bindgen]
+#[wasm_bindgen(js_class = BufferView)]
 impl WebBufferView {
     #[wasm_bindgen(getter, js_name = type)]
     pub fn buffer_type(&self) -> String {
@@ -184,7 +181,7 @@ impl WebBufferView {
 pub struct WebBufferLine {
     native: LineRef,
 }
-#[wasm_bindgen]
+#[wasm_bindgen(js_class = BufferLine)]
 impl WebBufferLine {
     #[wasm_bindgen(getter, js_name = isWrapped)]
     pub fn is_wrapped(&self) -> Result<bool, JsValue> {

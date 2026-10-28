@@ -85,7 +85,7 @@ impl Default for BrowserAddonManager {
 impl BrowserAddonManager {
     pub fn new() -> Self {
         let route = Closure::wrap(
-            Box::new(dispose_entry) as Box<dyn FnMut(JsValue, Array) -> Result<(), JsValue>>
+            Box::new(dispose_entry) as Box<dyn Fn(JsValue, Array) -> Result<(), JsValue>>
         );
         Self {
             entries: RefCell::new(EntriesOwner::Rust(empty_entries())),

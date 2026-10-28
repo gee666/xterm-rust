@@ -72,6 +72,12 @@ fn javascript_buffer_and_line_identities_are_live_and_cell_targets_are_reused() 
         Some("abc")
     );
     assert!(call(&line, "getCell", &[(-1).into()]).is_undefined());
+    terminal.write("\x1b[9mS").unwrap();
+    let styled = call(&line, "getCell", &[3.into()]);
+    assert_eq!(
+        call(&styled, "isStrikethrough", &[]).as_f64(),
+        Some(-2147483648.0)
+    );
 }
 
 #[wasm_bindgen_test]
