@@ -14,6 +14,7 @@ impl AttachTerminal for BrowserAttachTerminal {
         let data = match data {
             SocketMessage::Text(data) => WriteData::Text(data),
             SocketMessage::Binary(data) => WriteData::Bytes(data),
+            SocketMessage::View(data) => WriteData::External(data),
         };
         (self.writer)(data)
             .map_err(|error| AttachError::host(crate::js_error::JsCallbackError(error)))

@@ -76,11 +76,11 @@ impl DomRenderer {
         let owns_metrics = metrics.is_none();
         let metrics = match metrics {
             Some(metrics) => metrics,
-            None => Rc::new(CharSizeService::new(
+            None => CharSizeService::with_options(
                 &dom.document,
                 &dom.helpers,
-                options.font.clone(),
-            )?),
+                Rc::clone(&options_service),
+            )?,
         };
         if owns_metrics {
             metrics.measure()?;

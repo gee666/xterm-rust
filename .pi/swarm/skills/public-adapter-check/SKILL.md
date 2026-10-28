@@ -1,14 +1,15 @@
 ---
 name: public-adapter-check
-description: Use when checking common public buffer/parser/addon adapters against original addon assertions and focused Rust integration tests, retaining failure logs and exact case counts.
+description: Use when checking common public buffer, parser and addon adapters against source assertions and real Rust consumers.
 ---
 
 # Public adapter checks
 
-Run `node scripts/check-public-adapters.mjs` from the repository root with a tool timeout above 120 seconds. The script bounds each child at 120 seconds, finds Cargo through CARGO, CARGO_HOME or the user's cargo bin, and writes non-secret logs plus accounting to `results/public-adapters/verification.json`.
+Run focused commands in your worktree. See the shared worktree skill for setup and merge-back.
 
-It first runs `scripts/public-addon-oracle.mjs`, which bundles unchanged reference AddonManager source and its original two-case suite with the existing esbuild/Mocha dependencies under source_repo/node_modules. Generated output goes only under root tmp/. The script records source hashes, original case titles and directed assertion checks, including reentrant index failures. No original assertion is removed.
+- `node scripts/check-public-adapters.mjs` runs the two source oracles and seven explicit native test targets. `node --test scripts/check-public-adapters.test.mjs` checks its startup failure handling without a compiler.
+- `node scripts/public-parser-identifiers-oracle.mjs --reuse-built` verifies the 195 getter/proxy observations. It verifies embedded source-map contents before reusing the original generated JS. Omit `--reuse-built` to build the original reference afresh.
+- `WASM_TEST=public_adapters_wasm node scripts/browser-host-check.mjs` runs the grouped Rust/WASM cases in Chromium, Firefox and WebKit. Actual Terminal DOM assertions stay in xterm-web.
+- `node scripts/public-parser-browser.mjs` executes unchanged source Parser.test.ts and Terminal.test.ts loadAddon assertions against the Rust facade. Its transport fixture and omitted unrelated Unicode-graphemes setup are documented in the report.
 
-Then it runs actual xterm-core integration tests `public_addon_manager`, `public_addon_reentrancy`, `public_buffer_api` and `public_parser_api`. Compile errors are command failures with zero executed cases and all discovered cases unrun, never passes. Native buffer tests use the real BufferSet and parser tests the real EscapeSequenceParser.
-
-See `docs/acceptance/public-adapters.md` for completion gates. This command does not claim original headless/browser groups, WASM bindings, all Unicode/number boundaries or Linux/macOS execution passed. Retain those as explicit gaps until separate observed evidence exists. Preserve `.cargo/config.toml` and monitor free disk before building.
+Regenerate golden data only with the appropriate oracle's `--generate` flag. Do not edit expected values to make a test pass. The source oracle is not Rust coverage, and component tests do not prove the whole terminal. Report the command, result and any concrete remaining failure briefly. See `docs/public-adapters.md` and `docs/acceptance/public-adapters.md`.

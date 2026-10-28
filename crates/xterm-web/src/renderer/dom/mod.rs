@@ -137,11 +137,7 @@ impl DomRenderer {
             .borrow_mut()
             .set_font(options.font.clone())
             .map_err(width_error)?;
-        let font_changed = self.options.borrow().font != options.font;
-        *self.options.borrow_mut() = options.clone();
-        if font_changed && self.owns_metrics {
-            self.metrics.set_font(options.font)?;
-        }
+        *self.options.borrow_mut() = options;
         let cols = self
             .terminal
             .cols()

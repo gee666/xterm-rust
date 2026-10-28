@@ -1,13 +1,57 @@
-use std::{cell::RefCell, rc::Rc};
+use std::{
+    cell::{Cell, RefCell},
+    rc::{Rc, Weak},
+};
 use xterm_core::{
-    buffer::{BufferError, BufferSet},
+    buffer::{constants::bg_flags, Buffer, BufferError, BufferSet},
     lifecycle::Disposable,
     options::OptionsService,
-    public_api::{BufferNamespaceApi, BufferType},
+    public_api::{BufferApiView, BufferNamespaceApi, BufferType},
 };
 
 fn core() -> Rc<BufferSet> {
     Rc::new(BufferSet::new(5, 3, Rc::new(OptionsService::default())).unwrap())
+}
+
+struct ReentrantPayload {
+    view: Weak<BufferApiView>,
+    observed: Rc<Cell<Option<usize>>>,
+}
+impl Drop for ReentrantPayload {
+    fn drop(&mut self) {
+        self.observed
+            .set(Some(self.view.upgrade().unwrap().cursor_x().unwrap()));
+    }
+}
+
+#[test]
+fn init_releases_old_payload_after_publishing_new_backing_without_a_borrow() {
+    let options = Rc::new(OptionsService::default());
+    let mut old = Buffer::new(false, 5, 1, options.clone()).unwrap();
+    old.fill_viewport_rows(None).unwrap();
+    let old = Rc::new(RefCell::new(old));
+    let view = Rc::new(BufferApiView::new(old.clone(), BufferType::Normal));
+    let observed = Rc::new(Cell::new(None));
+    {
+        let mut cell = old.borrow().get_null_cell(None);
+        cell.bg |= bg_flags::HAS_EXTENDED;
+        cell.extended.set_payload(Some(Rc::new(ReentrantPayload {
+            view: Rc::downgrade(&view),
+            observed: observed.clone(),
+        })));
+        old.borrow()
+            .lines
+            .get(0)
+            .unwrap()
+            .borrow_mut()
+            .set_cell(0, &cell);
+    }
+    drop(old);
+    assert_eq!(observed.get(), None);
+    let mut replacement = Buffer::new(false, 5, 1, options).unwrap();
+    replacement.x = 2;
+    view.init(Rc::new(RefCell::new(replacement)));
+    assert_eq!(observed.get(), Some(2));
 }
 
 #[test]

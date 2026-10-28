@@ -173,3 +173,61 @@ async fn real_trailing_timer_renders_without_polling_or_sleep() {
     assert_eq!(JsFuture::from(completed).await.unwrap().as_f64(), Some(6.0));
     d.dispose().unwrap();
 }
+
+#[wasm_bindgen_test]
+fn frame_request_and_cancel_read_current_owner_window() {
+    let main = web_sys::window().unwrap();
+    let document = main.document().unwrap();
+    let iframe: web_sys::HtmlIFrameElement = document
+        .create_element("iframe")
+        .unwrap()
+        .dyn_into()
+        .unwrap();
+    document.body().unwrap().append_child(&iframe).unwrap();
+    let child = iframe.content_window().unwrap();
+    let log = js_sys::Array::new();
+    let _log = PropertyRestore::set(main.as_ref(), "__frameLog", log.as_ref());
+    let main_request =
+        Function::new_no_args("globalThis.__frameLog.push('main-request');return 91;");
+    let child_request =
+        Function::new_no_args("globalThis.__frameLog.push('child-request');return 92;");
+    let main_cancel =
+        Function::new_with_args("id", "globalThis.__frameLog.push('main-cancel:'+id);");
+    let child_cancel =
+        Function::new_with_args("id", "globalThis.__frameLog.push('child-cancel:'+id);");
+    let _main_request = PropertyRestore::set(
+        main.as_ref(),
+        "requestAnimationFrame",
+        main_request.as_ref(),
+    );
+    let _child_request = PropertyRestore::set(
+        child.as_ref(),
+        "requestAnimationFrame",
+        child_request.as_ref(),
+    );
+    let _main_cancel =
+        PropertyRestore::set(main.as_ref(), "cancelAnimationFrame", main_cancel.as_ref());
+    let _child_cancel = PropertyRestore::set(
+        child.as_ref(),
+        "cancelAnimationFrame",
+        child_cancel.as_ref(),
+    );
+    let d = BrowserRenderDebouncer::new(main.clone(), |_| panic!("mock host must not dispatch"));
+    d.refresh(None, None, 5.0).unwrap();
+    d.set_window(child.clone());
+    d.dispose().unwrap();
+    d.refresh(None, None, 5.0).unwrap();
+    d.set_window(main);
+    d.dispose().unwrap();
+    let events: Vec<_> = log.iter().map(|value| value.as_string().unwrap()).collect();
+    assert_eq!(
+        events,
+        vec![
+            "main-request",
+            "child-cancel:91",
+            "child-request",
+            "main-cancel:92"
+        ]
+    );
+    iframe.remove();
+}

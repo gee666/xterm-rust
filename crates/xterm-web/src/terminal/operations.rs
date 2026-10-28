@@ -1,31 +1,24 @@
 use super::Terminal;
 use crate::{api::verify_integers, js_error::{JsCallbackError, to_js_error}, utf16::from_js_string};
-use js_sys::{Function, JsString, Uint8Array};
+use js_sys::{Function, JsString};
 use std::rc::Rc;
 use wasm_bindgen::{prelude::*, JsCast};
 use web_sys::FocusOptions;
-use xterm_core::input::write_buffer::{WriteCallback, WriteData, WriteError, WritePayload};
+use xterm_core::input::write_buffer::{WriteCallback, WriteData, WriteError};
 use crate::write_scheduler::BrowserWriteScheduler;
-
-#[derive(Debug)]
-pub(crate) struct ByteView(pub Uint8Array);
-impl WritePayload for ByteView {
-    fn len(&self) -> usize { self.0.length() as usize }
-    fn as_any(&self) -> &dyn std::any::Any { self }
-}
 
 fn data(value: JsValue) -> Result<WriteData, JsValue> {
     if value.is_string() {
         Ok(WriteData::Text(from_js_string(&value.unchecked_into::<JsString>())))
-    } else if let Some(bytes) = value.dyn_ref::<Uint8Array>() {
-        Ok(WriteData::External(Rc::new(ByteView(bytes.clone()))))
     } else {
-        Err(js_sys::TypeError::new("write requires a string or Uint8Array").into())
+        // The source's Uint8Array annotation is a TypeScript cast. A realm-local
+        // instanceof check would reject valid byte views from an iframe.
+        Ok(WriteData::External(Rc::new(crate::byte_view::ByteView(value))))
     }
 }
 fn callback(value: Option<Function>) -> Option<WriteCallback<BrowserWriteScheduler>> {
-    value.map(|callback| Rc::new(move |_: &_| {
-        callback.call0(&JsValue::UNDEFINED).map(|_| ())
+    value.filter(|callback| callback.is_truthy()).map(|callback| Rc::new(move |_: &_| {
+        crate::byte_view::complete_write(callback.as_ref())
             .map_err(|error| WriteError::external(JsCallbackError(error)))
     }) as WriteCallback<BrowserWriteScheduler>)
 }

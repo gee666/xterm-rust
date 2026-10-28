@@ -80,17 +80,10 @@ impl Terminal {
         let options = options::OptionsBinding::new(native.options().clone())?;
         let parse = Rc::clone(&native);
         let awaiting = Cell::new(false);
-        let writer = WriteBuffer::new(BrowserWriteScheduler::new(&window)?, move |_, data, resume| {
+        let writer = WriteBuffer::new_owned(BrowserWriteScheduler::new(&window)?, move |_, data, resume| {
             let resume = if awaiting.get() { resume } else { None };
-            let result = match data {
-                xterm_core::input::write_buffer::WriteData::External(payload) if resume.is_none() => {
-                    let view = payload.as_any().downcast_ref::<operations::ByteView>()
-                        .ok_or_else(|| xterm_core::input::write_buffer::WriteError::Action("Unrecognized browser byte view".into()))?;
-                    let bytes = xterm_core::input::write_buffer::WriteData::Bytes(view.0.to_vec());
-                    parse.parse_write_data(&bytes, resume)
-                }
-                _ => parse.parse_write_data(data, resume),
-            };
+            let source = data.into_parse_source()?;
+            let result = parse.parse_write_source(source, resume);
             for cleanup in parse.take_cleanup().map_err(xterm_core::input::write_buffer::WriteError::external)? {
                 wasm_bindgen_futures::spawn_local(async move {
                     if let Err(error) = cleanup.resolve().await {
@@ -156,7 +149,7 @@ impl Terminal {
 }
 
 pub(crate) fn byte_view_payload(value: js_sys::Uint8Array) -> Rc<dyn xterm_core::input::write_buffer::WritePayload> {
-    Rc::new(operations::ByteView(value))
+    crate::byte_view::ByteView::from_view(value)
 }
 
 impl Terminal {

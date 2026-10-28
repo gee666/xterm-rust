@@ -1,5 +1,5 @@
 // Copyright (c) 2022-2026 The xterm.js authors. All rights reserved. MIT license.
-use super::{Link, Position, Range};
+use super::{Link, Range, RangePosition};
 use std::convert::Infallible;
 use xterm_core::buffer::BufferLine;
 
@@ -186,10 +186,13 @@ fn wrapped_range<B: OscBuffer + ?Sized>(
         end_y += 1;
     }
     Ok(Range {
-        start: Position {
-            x: start_x + 1,
-            y: start_y,
+        start: RangePosition {
+            x: start_x as u64 + 1,
+            y: start_y as u64,
         },
-        end: Position { x: end_x, y: end_y },
+        end: RangePosition {
+            x: end_x as u64,
+            y: end_y as u64,
+        },
     })
 }

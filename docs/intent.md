@@ -11,3 +11,7 @@ Deliver a reproducible, warning-free Rust workspace, maintained dependency resol
 Completion requires demonstrated acceptance criteria, accepted independent reviews, working deliverables, and committed source. A small passing suite cannot prove full equivalence. Mark overall equivalence NOT PROVEN while any required coverage or runtime evidence is missing. If an external resource prevents progress, identify the exact missing resource, attempted resolutions, retained work, and concrete unblock steps rather than claiming success.
 
 Do not change `AGENTS.md`, user-owned startup files, source assertions, or credentials. Keep temporary files under repository-root `tmp/`; every shell command needs a timeout.
+
+## Current working method
+
+The user now requires isolated per-agent git worktrees and branches, independent small Cargo targets, and parallel builds instead of the global build-slot queue. Rebase on main, build and test changed crates, then fast-forward main; branch owners resolve conflicts. Share downloaded dependencies and remove each worktree target after merge. Use GitHub Actions for observed Windows, Linux and macOS results. Keep main compiling, finish working code and real upstream tests, and keep reviews and evidence short. Infrastructure is justified only when it removes a real bottleneck.

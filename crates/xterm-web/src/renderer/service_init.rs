@@ -110,23 +110,6 @@ impl RenderService {
                 }),
         );
         let weak = Rc::downgrade(self);
-        // CharSizeService's source font watcher precedes RenderService's general
-        // option listener. The shared metrics instance must update first.
-        self.listeners
-            .add(self.options.on_option_change().try_subscribe(move |key| {
-                if matches!(*key, "fontFamily" | "fontSize") {
-                    if let Some(service) = weak.upgrade() {
-                        let font = super::super::options::read_font(&service.options)
-                            .map_err(xterm_core::event::EmitError::callback)?;
-                        service
-                            .metrics
-                            .set_font(font)
-                            .map_err(crate::js_error::callback_error)?;
-                    }
-                }
-                Ok(())
-            }));
-        let weak = Rc::downgrade(self);
         self.listeners
             .add(self.options.on_option_change().try_subscribe(move |_| {
                 if let Some(service) = weak.upgrade() {

@@ -41,7 +41,12 @@ fn other_method(other: &JsValue, name: &str) -> Result<JsValue, JsValue> {
     })?;
     function.call0(other)
 }
-#[wasm_bindgen]
+// Argument evaluation keeps the source's own getter before the foreign getter.
+fn same_number(own: f64, other: JsValue) -> bool {
+    other.as_f64() == Some(own)
+}
+
+#[wasm_bindgen(js_class = BufferCell)]
 impl WebBufferCell {
     #[wasm_bindgen(js_name = isUnderline)]
     pub fn is_underline(&self) -> Result<u32, JsValue> {
@@ -120,16 +125,29 @@ impl WebBufferCell {
     }
     #[wasm_bindgen(js_name = attributesEquals)]
     pub fn attributes_equals(&self, other: JsValue) -> Result<bool, JsValue> {
-        if JsValue::from(self.get_fg_color_mode()) != other_method(&other, "getFgColorMode")?
-            || JsValue::from(self.get_fg_color()) != other_method(&other, "getFgColor")?
-            || JsValue::from(self.get_bg_color_mode()) != other_method(&other, "getBgColorMode")?
-            || JsValue::from(self.get_bg_color()) != other_method(&other, "getBgColor")?
-            || JsValue::from(self.is_inverse()) != other_method(&other, "isInverse")?
-            || JsValue::from(self.is_bold()) != other_method(&other, "isBold")?
+        if !same_number(
+            f64::from(self.get_fg_color_mode()),
+            other_method(&other, "getFgColorMode")?,
+        ) || !same_number(
+            f64::from(self.get_fg_color()),
+            other_method(&other, "getFgColor")?,
+        ) || !same_number(
+            f64::from(self.get_bg_color_mode()),
+            other_method(&other, "getBgColorMode")?,
+        ) || !same_number(
+            f64::from(self.get_bg_color()),
+            other_method(&other, "getBgColor")?,
+        ) || !same_number(
+            f64::from(self.is_inverse()),
+            other_method(&other, "isInverse")?,
+        ) || !same_number(f64::from(self.is_bold()), other_method(&other, "isBold")?)
         {
             return Ok(false);
         }
-        if JsValue::from(self.is_underline()?) != other_method(&other, "isUnderline")? {
+        if !same_number(
+            f64::from(self.is_underline()?),
+            other_method(&other, "isUnderline")?,
+        ) {
             return Ok(false);
         }
         if self.is_underline()? != 0 {
@@ -139,29 +157,39 @@ impl WebBufferCell {
             let own_default = self.is_underline_color_default()?;
             let other_default = other_method(&other, "isUnderlineColorDefault")?;
             if !(own_default && other_default.is_truthy()) {
-                if JsValue::from_bool(own_default) != other_default {
+                if other_default.as_bool() != Some(own_default) {
                     return Ok(false);
                 }
-                if JsValue::from(self.get_underline_color()?)
-                    != other_method(&other, "getUnderlineColor")?
-                {
+                if !same_number(
+                    f64::from(self.get_underline_color()?),
+                    other_method(&other, "getUnderlineColor")?,
+                ) {
                     return Ok(false);
                 }
-                if JsValue::from(self.get_underline_color_mode()?)
-                    != other_method(&other, "getUnderlineColorMode")?
-                {
+                if !same_number(
+                    f64::from(self.get_underline_color_mode()?),
+                    other_method(&other, "getUnderlineColorMode")?,
+                ) {
                     return Ok(false);
                 }
             }
         }
-        Ok(
-            JsValue::from(self.is_overline()) == other_method(&other, "isOverline")?
-                && JsValue::from(self.is_blink()) == other_method(&other, "isBlink")?
-                && JsValue::from(self.is_invisible()) == other_method(&other, "isInvisible")?
-                && JsValue::from(self.is_italic()) == other_method(&other, "isItalic")?
-                && JsValue::from(self.is_dim()) == other_method(&other, "isDim")?
-                && JsValue::from(self.is_strikethrough())
-                    == other_method(&other, "isStrikethrough")?,
-        )
+        Ok(same_number(
+            f64::from(self.is_overline()),
+            other_method(&other, "isOverline")?,
+        ) && same_number(f64::from(self.is_blink()), other_method(&other, "isBlink")?)
+            && same_number(
+                f64::from(self.is_invisible()),
+                other_method(&other, "isInvisible")?,
+            )
+            && same_number(
+                f64::from(self.is_italic()),
+                other_method(&other, "isItalic")?,
+            )
+            && same_number(f64::from(self.is_dim()), other_method(&other, "isDim")?)
+            && same_number(
+                f64::from(self.is_strikethrough()),
+                other_method(&other, "isStrikethrough")?,
+            ))
     }
 }

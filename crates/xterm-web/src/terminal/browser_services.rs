@@ -69,8 +69,7 @@ impl BrowserServices {
         let core_browser = CoreBrowserService::new(&dom.textarea, &window, &dom.document)?;
         let options = shared.native.with_state(|state| Rc::clone(&state.options))
             .map_err(|error| crate::js_error::to_js_error(&error))?;
-        let font = crate::renderer::options::read_font(&options).map_err(|error| crate::js_error::to_js_error(&error))?;
-        let metrics = Rc::new(CharSizeService::new(&dom.document, &dom.helpers, font)?);
+        let metrics = CharSizeService::with_options(&dom.document, &dom.helpers, Rc::clone(&options))?;
         let parser = Rc::new(CanvasColorParser::new(&dom.document)?);
         let value = options.get("theme").map_err(|error| crate::js_error::to_js_error(&error))?;
         let theme_value = Theme::from_option_value(&value).map_err(|error| crate::js_error::to_js_error(&error))?;

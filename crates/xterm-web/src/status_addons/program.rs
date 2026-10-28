@@ -146,6 +146,24 @@ impl ProgramStatusAddon {
     }
     pub fn dispose(&self) {
         self.addon.dispose();
+        let current = self.addon.records();
+        let mut cache = self.snapshot.borrow_mut();
+        if !cache
+            .native
+            .as_ref()
+            .is_some_and(|old| Rc::ptr_eq(old, &current))
+        {
+            // A saved onChange function can outlive this wrapper. Do not let
+            // its conversion cache retain records that disposal removed.
+            cache.native = None;
+            cache.js = JsValue::UNDEFINED;
+            cache.records.clear();
+        }
+    }
+}
+impl Drop for ProgramStatusAddon {
+    fn drop(&mut self) {
+        self.dispose();
     }
 }
 impl Default for ProgramStatusAddon {
