@@ -1,0 +1,106 @@
+{
+  "seed": "0xb0ffef10",
+  "command": "node scripts/buffer-reflow-oracle.mjs",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+  "reference": {
+    "source_repo/src/common/buffer/BufferReflow.ts": "d2fa77716bd3190c5f2fbe2510fbae7218da8cf14fc55a48143c450802ccefe3",
+    "source_repo/src/common/buffer/Constants.ts": "0342c709b580e7a7c62fffb61bab359f93511b82529f5a155374797ca4799f21",
+    "source_repo/src/common/buffer/AttributeData.ts": "09a9dc9693200cd7c34a98af3c1fc97b47b4354828cb02a76ab561a03515748a",
+    "source_repo/src/common/input/TextDecoder.ts": "0368a7fddbb53502f86144b61d023f8d022f5ce973a1b01b59c552ec62631a1b",
+    "source_repo/src/common/buffer/CellData.ts": "d0dfcbf310a949d8bdf4172f9896a6f143d3abf4e0dc68b896dec6612b82d992",
+    "source_repo/src/common/buffer/BufferLine.ts": "409958425629c5592bd4813272b00b480e6a723985ea28f24125a7a72ef95bdf",
+    "source_repo/src/common/Lifecycle.ts": "e00016aae991e24137ab066778912414f4af959f2b26baecf47ec542ad313a83",
+    "source_repo/src/common/Event.ts": "aa374272c5ec5c0d6992d6072687211a94676b086a2505b0414ddd20cf57d641",
+    "source_repo/src/common/CircularList.ts": "558ae3c18862469de29c2f77e06c31c44c2cddaa25fd6e69059bf2176efc54f6"
+  },
+  "fixture": {
+    "path": "crates/xterm-core/tests/fixtures/buffer-reflow.tsv",
+    "sha256": "6edb25c674ce973a5c0a37071363b50bf52bd85f346d411be695c6bfb098da06"
+  },
+  "upstream": {
+    "discovered": 7,
+    "mapped": 7,
+    "executed": 7,
+    "passed": 7,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0
+  },
+  "rustTests": {
+    "mappedUpstreamCases": 7,
+    "mappedEdgeCases": 9,
+    "differentialTests": 1,
+    "executed": 0,
+    "passed": 0,
+    "failed": 0,
+    "ignored": 0,
+    "compilationStatus": 101,
+    "log": "results/buffer-reflow/check-1.log"
+  },
+  "rustSources": {
+    "crates/xterm-core/src/buffer/reflow.rs": "91aa95808550cac58cb68a9f3b005fcc9bbc1cc40dafd0af8cf3b820590d3e83",
+    "crates/xterm-core/tests/buffer_reflow_upstream.rs": "00b9b4c21392dea86ddc50c904c727f740db7fcef52b333bbe187e55847c734a",
+    "crates/xterm-core/tests/buffer_reflow_edges.rs": "b8acbf3aeb9a65853aee786fbd5eaf52a1c0b21404d4c871fc01af6f5c856ede",
+    "crates/xterm-core/tests/buffer_reflow_differential.rs": "c91004a0136ba640c1df7b308c0ab9196731ced3c3aaefba92ba619cc21a2a9b"
+  },
+  "differential": {
+    "cases": 3000,
+    "widening": 1500,
+    "shrinking": 1500,
+    "compared": "All raw cells, UTF-16 text, widths, fg/bg, extended attributes/URL, trims, wraps, removal ranges, layouts, callback-time lengths, and surviving row identity/order."
+  },
+  "checks": [
+    {
+      "command": "C:\\Users\\user\\AppData\\Local\\nvm\\v24.15.0\\node.exe scripts/buffer-baseline.mjs",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 314.99420000000003,
+      "status": 0,
+      "processStatus": "passed"
+    },
+    {
+      "command": "cargo test -p xterm-core --test buffer_reflow_upstream --test buffer_reflow_edges --test buffer_reflow_differential",
+      "exitCode": 101,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1367.5011000000002,
+      "status": 101,
+      "processStatus": "failed"
+    }
+  ],
+  "status": "failed",
+  "overallEquivalence": "NOT PROVEN",
+  "limitations": [
+    "Scoped helpers only; full Buffer resize/parser/addon integration belongs to other tasks.",
+    "No native Linux/macOS runtime or browser evidence is provided by this Windows run.",
+    "Width-one wide-cell helper input returns an error rather than upstream infinite loop."
+  ]
+}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: buffer reflow checks failed; inspect retained fixtures and logs
+
+'failed' !== 'passed'
+
+    at file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/scripts/buffer-reflow-oracle.mjs:143:8
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'failed',
+  expected: 'passed',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.15.0

@@ -1,0 +1,130 @@
+    Blocking waiting for file lock on build directory
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0599]: no method named `get_property` found for enum `options::value::OptionValue` in the current scope
+   --> crates\xterm-core\src\terminal\modes.rs:43:46
+    |
+43  |         let value = self.options.get(group)?.get_property(key)?;
+    |                                              ^^^^^^^^^^^^ method not found in `OptionValue`
+    |
+   ::: crates\xterm-core\src\options\value.rs:109:1
+    |
+109 | pub enum OptionValue {
+    | -------------------- method `get_property` not found for this enum
+    |
+note: the method `get_property` exists on the type `std::rc::Rc<options::value::OptionObject>`
+   --> crates\xterm-core\src\options\value.rs:75:5
+    |
+75  |     pub fn get_property(&self, key: &str) -> Result<OptionValue, super::OptionError> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0277]: `?` couldn't convert the error to `terminal::error::TerminalError`
+  --> crates\xterm-core\src\terminal\modes.rs:67:88
+   |
+67 |                 self.buffer_service.resize(if enabled { 132 } else { 80 }, self.rows())?;
+   |                                                                                        ^ the trait `std::convert::From<buffer::screen::BufferError>` is not implemented for `terminal::error::TerminalError`
+   |
+   = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+   = help: the following other types implement trait `std::convert::From<T>`:
+             `terminal::error::TerminalError` implements `std::convert::From<core_service::CoreError>`
+             `terminal::error::TerminalError` implements `std::convert::From<log_service::LogError>`
+             `terminal::error::TerminalError` implements `std::convert::From<mouse_state::MouseStateError>`
+             `terminal::error::TerminalError` implements `std::convert::From<options::OptionError>`
+             `terminal::error::TerminalError` implements `std::convert::From<parser::escape::IdentifierError>`
+             `terminal::error::TerminalError` implements `std::convert::From<parser::escape::ParseError>`
+             `terminal::error::TerminalError` implements `std::convert::From<unicode_service::UnicodeServiceError>`
+   = note: required for `std::result::Result<(), terminal::error::TerminalError>` to implement `std::ops::FromResidual<std::result::Result<std::convert::Infallible, buffer::screen::BufferError>>`
+
+error[E0599]: no method named `mode_debug` found for mutable reference `&mut terminal::state::TerminalState` in the current scope
+  --> crates\xterm-core\src\terminal\modes.rs:81:22
+   |
+81 |                 self.mode_debug(if enabled { "Serial port requested application keypad." }
+   |                 -----^^^^^^^^^^ method not found in `&mut TerminalState`
+
+error[E0599]: no method named `mode_debug` found for mutable reference `&mut terminal::state::TerminalState` in the current scope
+  --> crates\xterm-core\src\terminal\modes.rs:96:33
+   |
+96 |             1005 | 1015 => self.mode_debug(&format!("{} {mode} not supported (see #2507)",
+   |                            -----^^^^^^^^^^ method not found in `&mut TerminalState`
+
+error[E0277]: `?` couldn't convert the error to `terminal::error::TerminalError`
+   --> crates\xterm-core\src\terminal\modes.rs:135:77
+    |
+135 |             self.buffers.activate_alt_buffer(Some(&self.erase_attributes()))?;
+    |                                                                             ^ the trait `std::convert::From<buffer::screen::BufferError>` is not implemented for `terminal::error::TerminalError`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+    = help: the following other types implement trait `std::convert::From<T>`:
+              `terminal::error::TerminalError` implements `std::convert::From<core_service::CoreError>`
+              `terminal::error::TerminalError` implements `std::convert::From<log_service::LogError>`
+              `terminal::error::TerminalError` implements `std::convert::From<mouse_state::MouseStateError>`
+              `terminal::error::TerminalError` implements `std::convert::From<options::OptionError>`
+              `terminal::error::TerminalError` implements `std::convert::From<parser::escape::IdentifierError>`
+              `terminal::error::TerminalError` implements `std::convert::From<parser::escape::ParseError>`
+              `terminal::error::TerminalError` implements `std::convert::From<unicode_service::UnicodeServiceError>`
+    = note: required for `std::result::Result<(), terminal::error::TerminalError>` to implement `std::ops::FromResidual<std::result::Result<std::convert::Infallible, buffer::screen::BufferError>>`
+
+error[E0277]: `?` couldn't convert the error to `terminal::error::TerminalError`
+   --> crates\xterm-core\src\terminal\modes.rs:137:50
+    |
+137 |             self.buffers.activate_normal_buffer()?;
+    |                                                  ^ the trait `std::convert::From<buffer::screen::BufferError>` is not implemented for `terminal::error::TerminalError`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+    = help: the following other types implement trait `std::convert::From<T>`:
+              `terminal::error::TerminalError` implements `std::convert::From<core_service::CoreError>`
+              `terminal::error::TerminalError` implements `std::convert::From<log_service::LogError>`
+              `terminal::error::TerminalError` implements `std::convert::From<mouse_state::MouseStateError>`
+              `terminal::error::TerminalError` implements `std::convert::From<options::OptionError>`
+              `terminal::error::TerminalError` implements `std::convert::From<parser::escape::IdentifierError>`
+              `terminal::error::TerminalError` implements `std::convert::From<parser::escape::ParseError>`
+              `terminal::error::TerminalError` implements `std::convert::From<unicode_service::UnicodeServiceError>`
+    = note: required for `std::result::Result<(), terminal::error::TerminalError>` to implement `std::ops::FromResidual<std::result::Result<std::convert::Infallible, buffer::screen::BufferError>>`
+
+error[E0597]: `engine` does not live long enough
+  --> crates\xterm-core\src\headless\terminal.rs:66:18
+   |
+62 |         let engine = self
+   |             ------ binding `engine` declared here
+...
+66 |         Ok(read(&engine.state()))
+   |                  ^^^^^^--------
+   |                  |
+   |                  borrowed value does not live long enough
+   |                  a temporary with access to the borrow is created here ...
+67 |     }
+   |     -
+   |     |
+   |     `engine` dropped here while still borrowed
+   |     ... and the borrow might be used here, when that temporary is dropped and runs the destructor for type `std::cell::Ref<'_, terminal::state::TerminalState>`
+   |
+   = note: the temporary is part of an expression at the end of a block;
+           consider forcing this temporary to be dropped sooner, before the block's local variables are dropped
+help: for example, you could save the expression's value in a new local variable `x` and then make `x` be the expression at the end of the block
+   |
+66 |         let x = Ok(read(&engine.state())); x
+   |         +++++++                          +++
+
+error[E0004]: non-exhaustive patterns: `parser::handler::HandlerResult::PendingFallible(_)` not covered
+  --> crates\xterm-core\src\parser\dcs_handler.rs:95:15
+   |
+95 |         match result {
+   |               ^^^^^^ pattern `parser::handler::HandlerResult::PendingFallible(_)` not covered
+   |
+note: `parser::handler::HandlerResult` defined here
+  --> crates\xterm-core\src\parser\handler.rs:36:10
+   |
+36 | pub enum HandlerResult {
+   |          ^^^^^^^^^^^^^
+...
+41 |     PendingFallible(Pin<Box<dyn Future<Output = Result<bool, DispatchError>>>>),
+   |     --------------- not covered
+   = note: the matched value is of type `parser::handler::HandlerResult`
+help: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern or an explicit pattern as shown
+   |
+108~             },
+109+             parser::handler::HandlerResult::PendingFallible(_) => todo!()
+   |
+
+Some errors have detailed explanations: E0004, E0277, E0597, E0599.
+For more information about an error, try `rustc --explain E0004`.
+error: could not compile `xterm-core` (lib) due to 8 previous errors

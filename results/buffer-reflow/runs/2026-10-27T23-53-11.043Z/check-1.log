@@ -1,0 +1,14 @@
+{
+  "command": "cargo test -p xterm-core --test buffer_reflow_upstream --test buffer_reflow_edges --test buffer_reflow_differential",
+  "exitCode": 101,
+  "signal": null,
+  "error": null,
+  "timedOut": false,
+  "terminationError": null,
+  "resourceError": null,
+  "elapsedMs": 11270.5007,
+  "status": 101,
+  "processStatus": "failed",
+  "stdout": "    Blocking waiting for file lock on build directory\n   Compiling xterm-core v0.1.0 (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\crates\\xterm-core)\nerror[E0599]: no method named `utf16` found for enum `OptionValue` in the current scope\n   --> crates\\xterm-core\\src\\terminal\\replies.rs:8:48\n    |\n8   |         let term=self.options.get(\"termName\")?.utf16()?;\n    |                                                ^^^^^\n    |\n   ::: crates\\xterm-core\\src\\options\\value.rs:109:1\n    |\n109 | pub enum OptionValue {\n    | -------------------- method `utf16` not found for this enum\n    |\nhelp: there is a method `text_utf16` with a similar name\n    |\n8   |         let term=self.options.get(\"termName\")?.text_utf16()?;\n    |                                                ~~~~~~~~~~\n\nerror[E0004]: non-exhaustive patterns: `&TerminalEvent::ColorSchemeQuery` and `&TerminalEvent::WindowReport(_)` not covered\n  --> crates\\xterm-core\\src\\headless\\events.rs:67:15\n   |\n67 |         match &event {\n   |               ^^^^^^ patterns `&TerminalEvent::ColorSchemeQuery` and `&TerminalEvent::WindowReport(_)` not covered\n   |\nnote: `TerminalEvent` defined here\n  --> crates\\xterm-core\\src\\terminal\\events.rs:7:10\n   |\n7  | pub enum TerminalEvent {\n   |          ^^^^^^^^^^^^^\n...\n12 |     ColorSchemeQuery,\n   |     ---------------- not covered\n13 |     WindowReport(WindowReport),\n   |     ------------ not covered\n   = note: the matched value is of type `&TerminalEvent`\nhelp: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern, a match arm with multiple or-patterns as shown, or multiple match arms\n   |\n88 ~             | TerminalEvent::SendFocus => {},\n89 +             &TerminalEvent::ColorSchemeQuery | &TerminalEvent::WindowReport(_) => todo!()\n   |\n\nSome errors have detailed explanations: E0004, E0599.\nFor more information about an error, try `rustc --explain E0004`.\nerror: could not compile `xterm-core` (lib) due to 2 previous errors\n",
+  "stderr": ""
+}
