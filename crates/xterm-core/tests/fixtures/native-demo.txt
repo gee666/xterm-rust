@@ -1,0 +1,31 @@
+# Every assertion reads the live Rust terminal, not text echoed by this script.
+sample
+assert-size 40 8
+assert-line 0 red green
+assert-fg 0 0 1
+assert-fg 4 0 2
+assert-cell 1 1 😀
+assert-width 1 1 1
+assert-cell 2 1 界
+assert-width 2 1 2
+assert-cell 4 1 e\u0301
+assert-line 2 cursor: XYZ
+assert-cursor 11 2
+input hi\r\uD800
+assert-output hi\r\uD800
+reset
+assert-line 0 
+assert-cursor 0 0
+resize 8 4
+write abcdefghijkl\r\n
+assert-line 0 abcdefgh
+assert-line 1 ijkl
+assert-cursor 0 2
+resize 12 4
+assert-size 12 4
+assert-line 0 abcdefghijkl
+assert-line 1 
+assert-cursor 0 1
+serialize
+show
+quit

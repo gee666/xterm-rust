@@ -1,0 +1,34 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 0.51s
+     Running unittests examples\native.rs (target\debug\examples\native-f12e6d67b17d9f7b.exe)
+
+running 5 tests
+test escape::tests::malformed_sequences_return_errors ... ok
+test escape::tests::decodes_controls_utf16_pairs_and_literal_unicode ... ok
+test commands::tests::input_is_outbound_not_echo_and_bad_commands_are_atomic ... ok
+test commands::tests::resize_reflows_actual_rows_and_script_observes_state ... FAILED
+test commands::tests::sample_checks_real_cells_colors_unicode_and_cursor_overwrite ... FAILED
+
+failures:
+
+---- commands::tests::resize_reflows_actual_rows_and_script_observes_state stdout ----
+
+thread 'commands::tests::resize_reflows_actual_rows_and_script_observes_state' panicked at crates\xterm-core\examples\native\commands.rs:203:35:
+called `Result::unwrap()` on an `Err` value: "line 0: expected UTF-16 [97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108], got [97, 98, 99, 100, 101, 102, 103, 104]"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- commands::tests::sample_checks_real_cells_colors_unicode_and_cursor_overwrite stdout ----
+
+thread 'commands::tests::sample_checks_real_cells_colors_unicode_and_cursor_overwrite' panicked at crates\xterm-core\examples\native\commands.rs:157:35:
+called `Result::unwrap()` on an `Err` value: "assert-width: expected 2, got 1"
+
+
+failures:
+    commands::tests::resize_reflows_actual_rows_and_script_observes_state
+    commands::tests::sample_checks_real_cells_colors_unicode_and_cursor_overwrite
+
+test result: FAILED. 3 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-core --example native`
