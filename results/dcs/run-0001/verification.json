@@ -1,0 +1,256 @@
+{
+  "platform": "win32",
+  "arch": "x64",
+  "node": "v24.15.0",
+  "runDirectory": "results/dcs/run-0001",
+  "inputs": [
+    {
+      "path": "Cargo.toml",
+      "sha256": "9cf738a8b991fdf7d4a7782870c3c367c4249bdf7cb89a35462148f49e69308b"
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256": "cee6bc94e6a6f17c5a5066fcd4e72ce17102e8a68fb210cde65595eeeaac92ce"
+    },
+    {
+      "path": ".cargo/config.toml",
+      "sha256": "096a7c635c6976ce9add7f36059c0551935fd1655b208dee9691a352be3f0c5c"
+    },
+    {
+      "path": "crates/xterm-core/src/parser/dcs.rs",
+      "sha256": "240e93f1031ceae3c8fb322702097dd04182225307ebc3efe275607a8370cb89"
+    },
+    {
+      "path": "crates/xterm-core/src/parser/dcs_handler.rs",
+      "sha256": "02ca346643f828d4ea88532a89d482e4c18400909fbdc73bf037f92b33042217"
+    },
+    {
+      "path": "crates/xterm-core/src/parser/handler.rs",
+      "sha256": "6b0aa0367ad00cf72081214ec758dceb0b0a62e8ea35ec389db0a3153ea545f3"
+    },
+    {
+      "path": "crates/xterm-core/src/parser/handler_registry.rs",
+      "sha256": "d3aae8eee9c898a44980f46368097e0e2d8f3858e58210d19fc05821fbf910f4"
+    },
+    {
+      "path": "crates/xterm-core/tests/handler_registry.rs",
+      "sha256": "432504840fec3b594e11f9328511d565103184a2628c8747bfa13f222f30fc09"
+    },
+    {
+      "path": "crates/xterm-core/tests/dcs.rs",
+      "sha256": "2fdba79e0f6f688baa66b1b98c50cd4d563533f45cc46d2c50912b3a46fb40ff"
+    },
+    {
+      "path": "crates/xterm-core/tests/escape_dcs.rs",
+      "sha256": "02836d4af4694898523e3f66834c7d7c87b3b593908f049570d2972470d2ddf7"
+    },
+    {
+      "path": "crates/xterm-core/src/parser/escape.rs",
+      "sha256": "2acb601d60957982f5e26d5454ff14c8559451b775a1fb60f67367c534573de0"
+    },
+    {
+      "path": "crates/xterm-core/src/parser/escape_handlers.rs",
+      "sha256": "c9103d6c75549e6395833870bd4cd94a7cd12ebf2189eade2173879826b47268"
+    },
+    {
+      "path": "crates/xterm-core/src/parser/escape_parse.rs",
+      "sha256": "5e81fc8f7f52c36e64a2b42efb6fb0bef781bb9fd70f2689249788da28dbbc6a"
+    },
+    {
+      "path": "crates/xterm-core/src/parser/escape_resume.rs",
+      "sha256": "6ede98b708e7cf9c5cf613e334d632ab0ef841c5b3857e5b6db3bf640b8e7de7"
+    },
+    {
+      "path": "crates/xterm-core/tests/dcs_support/mod.rs",
+      "sha256": "c1b84fc8eb70eb2033ae0910b95274cc23a99e5b1b1fb4ebefd0e3ad6d21cb35"
+    },
+    {
+      "path": "crates/xterm-core/tests/dcs_cases/callback.rs",
+      "sha256": "acd32c89cc7f9389275f80a9131cb8f5801868c5c8c6002b8ceb05200a55589a"
+    },
+    {
+      "path": "crates/xterm-core/tests/dcs_cases/mutation.rs",
+      "sha256": "3c27797f40f34fa5be6811e1e17563bb13a7fd0a039765438142296fce6ed1cb"
+    },
+    {
+      "path": "crates/xterm-core/tests/dcs_cases/oracle.rs",
+      "sha256": "94a7bf213fc6b5a5509d8e063329f99b5938d8e46df06cc4c83e59e57301396e"
+    },
+    {
+      "path": "crates/xterm-core/tests/fixtures/dcs-oracle.tsv",
+      "sha256": "ce0acefee9f5685a8885246d67177c8459673bd26c8f0cb08f39f93de14582c6"
+    },
+    {
+      "path": "scripts/check-dcs.mjs",
+      "sha256": "ab6c365ef3f1453ae6f189d991d7531b79b236b2785419b5d7b21a51f8d1ef0d"
+    },
+    {
+      "path": "scripts/parser-oracle-common.mjs",
+      "sha256": "ad53c1d84cfbdcf2ecfa533ccaf2265c9bc6389d176a74bb34834553405a50a5"
+    },
+    {
+      "path": "scripts/dcs-integration-oracle.mjs",
+      "sha256": "94053cdf4bb08e82b1b0e5314a1407a5c61d41d35be21f0874df71173c2137c6"
+    },
+    {
+      "path": "crates/xterm-core/tests/fixtures/escape-dcs.tsv",
+      "sha256": "29587ab73a5ea081165dc65ebf8199a0d2d795d6acb1f898a155dfad4af1dd76"
+    },
+    {
+      "path": "scripts/quality-process.mjs",
+      "sha256": "4b5fd273f76113af15e88f579d0ce97d5468fcf3700be340713baf48727f8598"
+    },
+    {
+      "path": "scripts/verify-dcs.mjs",
+      "sha256": "5ebf93751d86d10e4f0d47e2ac45663c71ed7d56279217c4ef23862c1c495624"
+    }
+  ],
+  "toolchains": {
+    "rustc": {
+      "command": [
+        "rustc",
+        "-Vv"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 33.61789999999999,
+      "status": "passed",
+      "log": "results/dcs/run-0001/rustc-version.log",
+      "output": "rustc 1.85.1 (4eb161250 2025-03-15)\nbinary: rustc\ncommit-hash: 4eb161250e340c8f48f66e2b929ef4a5bed7c181\ncommit-date: 2025-03-15\nhost: x86_64-pc-windows-msvc\nrelease: 1.85.1\nLLVM version: 19.1.7\n"
+    },
+    "cargo": {
+      "command": [
+        "cargo",
+        "-V"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 32.50559999999999,
+      "status": "passed",
+      "log": "results/dcs/run-0001/cargo-version.log",
+      "output": "cargo 1.85.1 (d73d2caf9 2024-12-31)\n"
+    }
+  },
+  "outcomes": [
+    {
+      "name": "oracle",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/check-dcs.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 227.69500000000002,
+      "status": "passed",
+      "log": "results/dcs/run-0001/oracle.log"
+    },
+    {
+      "name": "integration-oracle",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/dcs-integration-oracle.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 126.70679999999999,
+      "status": "passed",
+      "log": "results/dcs/run-0001/integration-oracle.log"
+    },
+    {
+      "name": "rustfmt",
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2021",
+        "--check",
+        "crates/xterm-core/src/parser/dcs.rs",
+        "crates/xterm-core/src/parser/dcs_handler.rs",
+        "crates/xterm-core/src/parser/handler_registry.rs",
+        "crates/xterm-core/tests/handler_registry.rs",
+        "crates/xterm-core/tests/dcs.rs",
+        "crates/xterm-core/tests/escape_dcs.rs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 58.17790000000008,
+      "status": "passed",
+      "log": "results/dcs/run-0001/rustfmt.log"
+    },
+    {
+      "name": "rust-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-core",
+        "--test",
+        "dcs",
+        "--test",
+        "escape_dcs",
+        "--test",
+        "handler_registry"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 2142.958,
+      "status": "failed",
+      "log": "results/dcs/run-0001/rust-tests.log"
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "xterm-core",
+        "--test",
+        "dcs",
+        "--test",
+        "escape_dcs",
+        "--test",
+        "handler_registry",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 2520.2725,
+      "status": "failed",
+      "log": "results/dcs/run-0001/clippy.log"
+    }
+  ],
+  "complete": true,
+  "passed": false,
+  "scope": "DCS and real escape-parser DCS integration only; no full equivalence or other-platform runtime claim",
+  "changedInputs": [],
+  "rustTestSuites": []
+}

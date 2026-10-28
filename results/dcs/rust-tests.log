@@ -1,0 +1,55 @@
+    Blocking waiting for file lock on build directory
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0631]: type mismatch in function arguments
+  --> crates\xterm-core\src\buffer\screen_options.rs:15:22
+   |
+15 |             .map_err(crate::options::OptionError::Coercion)?;
+   |              ------- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected due to this
+   |              |
+   |              required by a bound introduced by this call
+   |
+  ::: crates\xterm-core\src\options\mod.rs:34:5
+   |
+34 |     Coercion(CoercionError),
+   |     -------- found signature defined here
+   |
+   = note: expected function signature `fn(OptionError) -> _`
+              found function signature `fn(CoercionError) -> _`
+note: required by a bound in `Result::<T, E>::map_err`
+  --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\core\src\result.rs:853:5
+help: consider wrapping the function in a closure
+   |
+15 |             .map_err(|arg0: OptionError| crate::options::OptionError::Coercion(/* CoercionError */))?;
+   |                      +++++++++++++++++++                                      +++++++++++++++++++++
+
+error[E0599]: no method named `set_signed` found for struct `CircularList` in the current scope
+   --> crates\xterm-core\src\buffer\screen_reflow_smaller.rs:193:32
+    |
+193 |                     self.lines.set_signed(target, Some(line.clone()))?;
+    |                                ^^^^^^^^^^ method not found in `CircularList<Rc<RefCell<BufferLine>>>`
+    |
+   ::: crates\xterm-core\src\circular_list.rs:56:1
+    |
+56  | pub struct CircularList<T> {
+    | -------------------------- method `set_signed` not found for this struct
+
+error[E0599]: no method named `set_signed` found for struct `CircularList` in the current scope
+   --> crates\xterm-core\src\buffer\screen_reflow_smaller.rs:212:28
+    |
+212 |                 self.lines.set_signed(target, line)?;
+    |                            ^^^^^^^^^^ method not found in `CircularList<Rc<RefCell<BufferLine>>>`
+    |
+   ::: crates\xterm-core\src\circular_list.rs:56:1
+    |
+56  | pub struct CircularList<T> {
+    | -------------------------- method `set_signed` not found for this struct
+
+error[E0599]: no method named `text` found for reference `&OptionValue` in the current scope
+  --> crates\xterm-core\src\log_service.rs:28:21
+   |
+28 |         match value.text().as_str() {
+   |                     ^^^^ method not found in `&OptionValue`
+
+Some errors have detailed explanations: E0599, E0631.
+For more information about an error, try `rustc --explain E0599`.
+error: could not compile `xterm-core` (lib) due to 4 previous errors

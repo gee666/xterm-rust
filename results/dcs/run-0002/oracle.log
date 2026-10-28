@@ -1,0 +1,64 @@
+(node:40384) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{
+  "node": "v24.15.0",
+  "seed": 14468370,
+  "traces": 512,
+  "mutationRegressions": [
+    {
+      "stage": "hook",
+      "error": "TypeError",
+      "message": "Cannot read properties of undefined (reading 'hook')",
+      "passed": true
+    },
+    {
+      "stage": "put",
+      "error": "TypeError",
+      "message": "Cannot read properties of undefined (reading 'put')",
+      "passed": true
+    },
+    {
+      "stage": "unhook",
+      "error": "TypeError",
+      "message": "Cannot read properties of undefined (reading 'unhook')",
+      "passed": true
+    },
+    {
+      "stage": "reset",
+      "error": "TypeError",
+      "message": "Cannot read properties of undefined (reading 'unhook')",
+      "passed": true
+    }
+  ],
+  "callbackRegressions": [
+    {
+      "name": "exception stops bubbling, reset recovers",
+      "passed": true
+    },
+    {
+      "name": "exception retains buffered data and Params",
+      "passed": true
+    },
+    {
+      "name": "rejected future retains data until successful resolution",
+      "passed": true
+    },
+    {
+      "name": "reset exception stops older cleanup, retry recovers",
+      "passed": true
+    },
+    {
+      "name": "callback registration mutates live list without repeated hook",
+      "passed": true
+    }
+  ],
+  "corpusSha256": "ce0acefee9f5685a8885246d67177c8459673bd26c8f0cb08f39f93de14582c6",
+  "upstream": {
+    "discovered": 20,
+    "passed": 20,
+    "failed": 0,
+    "skipped": 0,
+    "executed": 20,
+    "unrun": 0
+  }
+}
