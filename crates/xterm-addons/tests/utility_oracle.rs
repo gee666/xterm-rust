@@ -48,7 +48,7 @@ fn base64_matches_source_utf16_and_malformed_utf8() {
 fn fit_matches_source_css_scrollbar_and_geometry() {
     let corpus = corpus();
     let cases = corpus["fit"].as_array().unwrap();
-    assert_eq!(cases.len(), 512);
+    assert_eq!(cases.len(), 513);
     for (i, case) in cases.iter().enumerate() {
         let m = &case["m"];
         let measurements = FitMeasurements {
@@ -165,12 +165,12 @@ fn web_link_window_and_utf16_mapping_match_source() {
             assert_eq!(actual.text, units(&expected["text"]), "links case {i}");
             for (position, name) in [(actual.range.start, "start"), (actual.range.end, "end")] {
                 assert_eq!(
-                    position.x as u64,
+                    position.x,
                     expected["range"][name]["x"].as_u64().unwrap(),
                     "links case {i}"
                 );
                 assert_eq!(
-                    position.y as u64,
+                    position.y,
                     expected["range"][name]["y"].as_u64().unwrap(),
                     "links case {i}"
                 );

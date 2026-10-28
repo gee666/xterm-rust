@@ -2,7 +2,7 @@
 // Licensed under MIT. Rust web-links addon to browser linkifier bridge.
 use crate::links::{
     browser_linkifier::{BrowserLink, BrowserLinkProvider, BrowserProviders, LinkReply},
-    Link, Position, Range,
+    Link, Range, RangePosition,
 };
 use std::rc::Rc;
 use wasm_bindgen::JsValue;
@@ -33,11 +33,11 @@ impl BrowserLinkProvider for ProviderBridge {
                 data: Rc::new(Link {
                     text: link.text,
                     range: Range {
-                        start: Position {
+                        start: RangePosition {
                             x: link.range.start.x,
                             y: link.range.start.y,
                         },
-                        end: Position {
+                        end: RangePosition {
                             x: link.range.end.x,
                             y: link.range.end.y,
                         },

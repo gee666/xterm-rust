@@ -25,31 +25,46 @@ fn nullish(value: &OptionValue) -> bool {
 }
 fn scrollbar(weak: &Weak<Shared>) -> Result<ScrollbarOptions, FitError> {
     let shared = shared(weak)?;
-    let options = shared.native.options();
-    let scrollback = match options.get("scrollback").map_err(FitError::host)? {
-        OptionValue::Number(n) => n,
-        _ => f64::NAN,
+    let options = shared.options.object();
+    let get = |key: &str| -> Result<OptionValue, FitError> {
+        let value = Reflect::get(&options, &key.into())
+            .map_err(|error| FitError::host(crate::js_error::JsCallbackError(error)))?;
+        crate::terminal::options::from_js(&value)
+            .map_err(|error| FitError::host(crate::js_error::JsCallbackError(error)))
     };
-    let value = options.get("scrollbar").map_err(FitError::host)?;
-    let (show, width) = if nullish(&value) {
-        (None, None)
+    // The public descriptors can be redefined. Read in source order and do not
+    // evaluate the width getter when scrollback or scrollbar visibility wins.
+    let value = get("scrollbar")?;
+    let show = if nullish(&value) {
+        None
     } else {
         let show = value
             .get_property("showScrollbar")
             .map_err(FitError::host)?;
-        let width = value.get_property("width").map_err(FitError::host)?;
-        (
-            if nullish(&show) {
-                None
-            } else {
-                Some(show.is_truthy())
-            },
+        if nullish(&show) {
+            None
+        } else {
+            Some(show.is_truthy())
+        }
+    };
+    let scrollback = match get("scrollback")? {
+        OptionValue::Number(n) => n,
+        _ => f64::NAN,
+    };
+    let width = if scrollback == 0.0 || show == Some(false) {
+        None
+    } else {
+        let value = get("scrollbar")?;
+        if nullish(&value) {
+            None
+        } else {
+            let width = value.get_property("width").map_err(FitError::host)?;
             if nullish(&width) {
                 None
             } else {
-                Some(width.number().map_err(FitError::host)?)
-            },
-        )
+                Some(width.to_number().map_err(FitError::host)?)
+            }
+        }
     };
     Ok(ScrollbarOptions {
         scrollback,
@@ -75,13 +90,9 @@ impl FitAddon {
                     .and_then(|shared| shared.dom.borrow().as_ref().map(|dom| dom.element.clone()))
             }),
             dimensions: Rc::new(move || {
-                dimensions.upgrade().and_then(|shared| {
-                    shared
-                        .services
-                        .borrow()
-                        .as_ref()
-                        .map(|services| services.renderer.dimensions())
-                })
+                dimensions
+                    .upgrade()
+                    .and_then(|shared| Terminal { shared }.render_dimensions())
             }),
             scrollbar: Rc::new(move || scrollbar(&options)),
             resize: Rc::new(move |dimensions| {
