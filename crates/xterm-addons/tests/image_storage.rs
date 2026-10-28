@@ -1,5 +1,7 @@
 #[path = "image_storage_cases/budget.rs"]
 mod budget;
+#[path = "image_storage_cases/differential.rs"]
+mod differential;
 #[path = "image_storage_cases/lifecycle.rs"]
 mod lifecycle;
 #[path = "image_storage_cases/placement.rs"]

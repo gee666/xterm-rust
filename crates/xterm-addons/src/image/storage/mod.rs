@@ -124,6 +124,15 @@ impl ImageStorage {
     pub fn image_count(&self) -> usize {
         self.inner.images.borrow().len()
     }
+    /// Read-only insertion-order identifiers, including nested placement order.
+    pub fn image_ids(&self) -> Vec<u64> {
+        let mut cursor = None;
+        let mut ids = Vec::new();
+        while let Some((id, _)) = self.next_image(&mut cursor) {
+            ids.push(id);
+        }
+        ids
+    }
     pub fn image_spec(&self, id: u64) -> Option<Rc<ImageSpec>> {
         self.inner.images.borrow().get(id as f64).cloned()
     }
