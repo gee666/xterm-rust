@@ -16,7 +16,8 @@ impl Strategy {
         let context: OffscreenCanvasRenderingContext2d = canvas
             .get_context("2d")?
             .ok_or_else(|| js_sys::Error::new("Canvas 2D context is unavailable"))?
-            .dyn_into()?;
+            // This is the interface specified for an OffscreenCanvas 2D context.
+            .unchecked_into();
         let metrics = context.measure_text("W")?;
         for field in ["width", "fontBoundingBoxAscent", "fontBoundingBoxDescent"] {
             if !js_sys::Reflect::has(metrics.as_ref(), &JsValue::from_str(field))? {
@@ -26,7 +27,9 @@ impl Strategy {
         Ok(Self::Metrics(context))
     }
     fn dom(document: &Document, parent: &HtmlElement) -> Result<Self, JsValue> {
-        let element: HtmlElement = document.create_element("span")?.dyn_into()?;
+        // The HTML document creates a span with HTMLElement methods. Its
+        // constructor can live in a different realm than this module.
+        let element: HtmlElement = document.create_element("span")?.unchecked_into();
         element.set_class_name("xterm-char-measure-element");
         element.set_text_content(Some(&"W".repeat(MEASURE_REPEAT)));
         element.set_attribute("aria-hidden", "true")?;

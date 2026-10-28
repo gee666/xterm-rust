@@ -13,7 +13,9 @@ pub struct CanvasColorParser {
 }
 impl CanvasColorParser {
     pub fn new(document: &Document) -> Result<Self, JsValue> {
-        let canvas: HtmlCanvasElement = document.create_element("canvas")?.dyn_into()?;
+        // The HTML document creates a canvas with this WebIDL interface, even
+        // when its constructor belongs to a different iframe realm.
+        let canvas: HtmlCanvasElement = document.create_element("canvas")?.unchecked_into();
         canvas.set_width(1);
         canvas.set_height(1);
         let options = js_sys::Object::new();
@@ -25,7 +27,9 @@ impl CanvasColorParser {
         let context: CanvasRenderingContext2d = canvas
             .get_context_with_context_options("2d", &options)?
             .ok_or_else(|| js_sys::Error::new("Canvas 2D context is unavailable"))?
-            .dyn_into()?;
+            // Successful getContext('2d') is a CanvasRenderingContext2D. A
+            // parent-realm instanceof check rejects valid iframe contexts.
+            .unchecked_into();
         context.set_global_composite_operation("copy")?;
         let litmus = context.create_linear_gradient(0.0, 0.0, 1.0, 1.0);
         Ok(Self { context, litmus })

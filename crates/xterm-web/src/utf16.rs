@@ -3,20 +3,21 @@
 //! wasm-bindgen's String conversion replaces lone surrogates. Terminal payloads
 //! must instead use JsString and raw UTF-16 code units.
 
-use js_sys::{Array, JsString};
+use js_sys::JsString;
+pub use xterm_wasm_support::utf16::{from_js_string, to_js_string};
+use wasm_bindgen::prelude::*;
 
-/// Keep variadic String.fromCharCode calls below browser argument-count limits.
-/// This is an implementation chunk size, not a terminal payload limit.
-const CHAR_CODE_CHUNK: usize = 4096;
-
-pub fn from_js_string(value: &JsString) -> Vec<u16> {
-    value.iter().collect()
+#[wasm_bindgen(
+    inline_js = "export function xtermSetTextContent(node, text) { 'use strict'; node.textContent = text; }"
+)]
+extern "C" {
+    #[wasm_bindgen(catch, js_name = xtermSetTextContent)]
+    fn assign_text_content(node: &web_sys::Node, text: &JsString) -> Result<(), JsValue>;
 }
 
-pub fn to_js_string(value: &[u16]) -> JsString {
-    let chunks = Array::new();
-    for chunk in value.chunks(CHAR_CODE_CHUNK) {
-        chunks.push(&JsString::from_char_code(chunk));
-    }
-    chunks.join("")
+/// Preserve strict assignment failures and raw UTF-16 without a Rust String.
+/// Release caller-owned RefCell guards before entry, since host setters may reenter.
+pub fn set_text_content(node: &web_sys::Node, text: JsString) -> Result<(), JsValue> {
+    assign_text_content(node, &text)
 }
+
