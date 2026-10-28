@@ -24,7 +24,11 @@ fn line(term: &Terminal) -> String {
     result
 }
 fn host() -> QueuedTerminal {
-    QueuedTerminal::new(Rc::new(Terminal::new(20, 3, 10).unwrap())).unwrap()
+    QueuedTerminal::with_pump(
+        Rc::new(Terminal::new(20, 3, 10).unwrap()),
+        NativeWritePump::with_clock(|| 100.0),
+    )
+    .unwrap()
 }
 #[test]
 fn fifo_callbacks_precede_one_batched_parsed_notification() {
@@ -110,6 +114,7 @@ fn pending_parser_resumes_once_before_callback_and_later_chunks() {
                 }))
             })
         })
+        .unwrap()
         .unwrap();
     let called = Rc::new(Cell::new(false));
     let output = Rc::clone(&called);
@@ -139,15 +144,19 @@ fn rejected_handler_retains_typed_error_and_resumes_false_into_older_handler() {
     let output = Rc::clone(&older);
     host.terminal()
         .with_parser(|parser| {
-            parser.register_osc_handler(999.0, move |_| {
-                output.set(true);
-                HandlerResult::Ready(true)
-            });
-            parser.register_osc_handler(999.0, |_| {
-                HandlerResult::PendingFallible(Box::pin(async {
-                    Err(DispatchError::CallbackFailed)
-                }))
-            });
+            parser
+                .register_osc_handler(999.0, move |_| {
+                    output.set(true);
+                    HandlerResult::Ready(true)
+                })
+                .unwrap();
+            parser
+                .register_osc_handler(999.0, |_| {
+                    HandlerResult::PendingFallible(Box::pin(async {
+                        Err(DispatchError::CallbackFailed)
+                    }))
+                })
+                .unwrap();
         })
         .unwrap();
     host.write(WriteData::text("\x1b]999;x\x07B"), None)
@@ -237,8 +246,10 @@ fn pending_local_future_is_not_busy_polled_and_wakes_on_demand() {
     let waker = Rc::new(RefCell::new(None));
     let polls = Rc::new(Cell::new(0));
     let (r, w, p) = (Rc::clone(&ready), Rc::clone(&waker), Rc::clone(&polls));
+    let first = Cell::new(true);
     let queue = WriteBuffer::new(pump.scheduler(), move |_, _, resume| {
-        if resume.is_some_and(|value| !value) {
+        if !first.replace(false) {
+            assert_eq!(resume, Some(true));
             return Ok(WriteAction::Complete);
         }
         Ok(WriteAction::Pending(Box::pin(WaitForWake {
@@ -256,6 +267,8 @@ fn pending_local_future_is_not_busy_polled_and_wakes_on_demand() {
     waker.borrow_mut().take().unwrap().wake();
     pump.poll().unwrap();
     assert_eq!(polls.get(), 2);
+    assert_eq!(queue.pending_units(), 0.0);
+    assert_eq!(pump.pending_tasks(), 0);
     queue.dispose();
 }
 #[test]

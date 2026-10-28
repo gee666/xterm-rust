@@ -1,10 +1,22 @@
 use super::{HeadlessError, Terminal};
 use crate::{
-    input::write_buffer::{WriteAction, WriteData, WriteError},
+    input::{
+        parse_source::ParseInputSource,
+        write_buffer::{WriteAction, WriteData, WriteError},
+    },
     terminal::{TerminalError, TerminalEvent},
 };
+use std::rc::Rc;
 
 impl Terminal {
+    /// Retains a live source across a parser pause. The caller still owns future
+    /// driving through take_pending/resume; this does not consume that future.
+    pub fn write_source(&self, source: Rc<dyn ParseInputSource>) -> Result<(), HeadlessError> {
+        if self.is_disposed()? {
+            return Ok(());
+        }
+        self.operate(|engine| engine.write_source(source))
+    }
     pub fn take_cleanup(
         &self,
     ) -> Result<Vec<crate::parser::handler::HandlerResult>, HeadlessError> {
@@ -14,21 +26,39 @@ impl Terminal {
             .map_err(|_| HeadlessError::Borrowed)?
             .take_cleanup())
     }
-    /// Parse once or resume the same decoded chunk. Queue hosts own completion
-    /// callbacks and batched writeParsed events, rather than individual parses.
+    /// Borrowed compatibility entrypoint. Native vectors snapshot once; external
+    /// byte views keep their shared allocation through the optional source trait.
+    /// A continuation never inspects or converts the supplied input again.
     pub fn parse_write_data(
         &self,
         data: &WriteData,
         resume: Option<bool>,
     ) -> Result<WriteAction, WriteError> {
-        let result = self.events.with_queued_parse(|| match resume {
-            Some(result) => self.resume(result),
-            None => match data {
-                WriteData::Text(text) => self.write_utf16(text),
-                WriteData::Bytes(bytes) => self.write_bytes(bytes),
-                WriteData::External(_) => Err(HeadlessError::HostPayloadRequiresConversion),
-            },
-        });
+        if let Some(result) = resume {
+            return self.resume_queued(result);
+        }
+        self.parse_write_source(Rc::new(data.clone()).into_parse_source()?, None)
+    }
+    /// Owned queue entrypoint. A live source is read only as the core requests
+    /// bounded chunks, including after an async handler mutates a remaining tail.
+    pub fn parse_write_source(
+        &self,
+        source: Rc<dyn ParseInputSource>,
+        resume: Option<bool>,
+    ) -> Result<WriteAction, WriteError> {
+        if let Some(result) = resume {
+            return self.resume_queued(result);
+        }
+        let result = self
+            .events
+            .with_queued_parse(|| self.operate(|engine| engine.write_source(source)));
+        self.queue_result(result)
+    }
+    fn resume_queued(&self, result: bool) -> Result<WriteAction, WriteError> {
+        let result = self.events.with_queued_parse(|| self.resume(result));
+        self.queue_result(result)
+    }
+    fn queue_result(&self, result: Result<(), HeadlessError>) -> Result<WriteAction, WriteError> {
         match result {
             Ok(()) => Ok(WriteAction::Complete),
             Err(HeadlessError::Engine(TerminalError::Pending)) => {

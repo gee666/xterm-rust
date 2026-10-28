@@ -6,6 +6,28 @@ use crate::{
 };
 use std::rc::Rc;
 
+pub(super) fn registrations(
+    engine: &mut crate::terminal::CoreTerminal,
+    state: &Rc<std::cell::RefCell<crate::terminal::TerminalState>>,
+) -> crate::public_api::ParserRegistrations {
+    let state = Rc::downgrade(state);
+    crate::public_api::ParserRegistrations::new(engine.parser_mut()).with_window_option_guard(
+        move |params| {
+            let state = state
+                .upgrade()
+                .ok_or_else(|| crate::event::EmitError::callback(TerminalError::Disposed))?;
+            let options = {
+                let state = state
+                    .try_borrow()
+                    .map_err(crate::event::EmitError::callback)?;
+                Rc::clone(&state.options)
+            };
+            crate::terminal::window_option_allowed(&options, params)
+                .map_err(crate::event::EmitError::callback)
+        },
+    )
+}
+
 impl Terminal {
     /// Addons retain Weak handles when their lifetime may outlast the terminal.
     pub fn state_handle_for_addon(&self) -> Rc<std::cell::RefCell<crate::terminal::TerminalState>> {
@@ -21,12 +43,17 @@ impl Terminal {
         ),
         HeadlessError,
     > {
-        let mut engine = self
-            .engine
-            .try_borrow_mut()
-            .map_err(|_| HeadlessError::Borrowed)?;
-        let parser = engine.parser_mut();
-        Ok((parser.osc.registrar(), parser.esc_registrar()))
+        Ok((
+            self.parser_registrations.osc_registrar(),
+            self.parser_registrations.esc_registrar(),
+        ))
+    }
+    /// Addons can retain the lazy slot without creating the namespace during
+    /// activation or changing buffer-event registration order.
+    pub fn buffer_cache_for_addon(
+        &self,
+    ) -> std::rc::Weak<std::cell::OnceCell<Rc<BufferNamespaceApi>>> {
+        Rc::downgrade(&self.buffer_cache)
     }
     pub fn buffer(&self) -> Result<Rc<BufferNamespaceApi>, HeadlessError> {
         if let Some(buffer) = self.buffer_cache.get() {
@@ -44,22 +71,7 @@ impl Terminal {
         &self,
         action: impl FnOnce(&mut ParserApi<'_>) -> R,
     ) -> Result<R, HeadlessError> {
-        let mut engine = self
-            .engine
-            .try_borrow_mut()
-            .map_err(|_| HeadlessError::Borrowed)?;
-        let state = Rc::downgrade(&self.state);
-        let mut parser = ParserApi::with_window_option_guard(engine.parser_mut(), move |params| {
-            let state = state
-                .upgrade()
-                .ok_or_else(|| crate::event::EmitError::callback(TerminalError::Disposed))?;
-            let state = state
-                .try_borrow()
-                .map_err(crate::event::EmitError::callback)?;
-            state
-                .window_option_allowed(params)
-                .map_err(crate::event::EmitError::callback)
-        });
+        let mut parser = ParserApi::from_registrations(&self.parser_registrations);
         Ok(action(&mut parser))
     }
     /// Native marker lists are owned snapshots of shared marker identities, not

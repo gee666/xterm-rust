@@ -21,11 +21,13 @@ pub struct Terminal {
     pub(super) engine: RefCell<CoreTerminal>,
     options: PublicOptions,
     disposed: std::cell::Cell<bool>,
+    deferred_parser_disposal: std::cell::Cell<bool>,
     dispose_request: crate::event::Emitter<()>,
     pub(super) events: Rc<Events>,
     pub(super) state: Rc<RefCell<TerminalState>>,
     addons: AddonManager<Terminal, HeadlessError>,
-    pub(super) buffer_cache: OnceCell<Rc<crate::public_api::buffer::BufferNamespaceApi>>,
+    pub(super) parser_registrations: crate::public_api::ParserRegistrations,
+    pub(super) buffer_cache: Rc<OnceCell<Rc<crate::public_api::buffer::BufferNamespaceApi>>>,
 }
 impl Terminal {
     pub fn new(cols: usize, rows: usize, scrollback: usize) -> Result<Self, HeadlessError> {
@@ -39,34 +41,34 @@ impl Terminal {
         // Construction events precede public listener registration upstream.
         engine.drain_events();
         let state = engine.state_handle();
+        let parser_registrations = super::views::registrations(&mut engine, &state);
         let events = Rc::new(Events::default());
         let output = Rc::clone(&events);
-        let shared_state = Rc::downgrade(&state);
-        engine.set_event_handler(Some(Rc::new(move |event| {
-            if event == TerminalEvent::RequestReset {
-                if let Some(state) = shared_state.upgrade() {
-                    state
-                        .try_borrow_mut()
-                        .map_err(crate::event::EmitError::callback)?
-                        .reset_state()
-                        .map_err(crate::event::EmitError::callback)?;
-                }
-            }
-            output.dispatch(event)
-        })));
+        engine.set_event_handler(Some(Rc::new(move |event| output.dispatch(event))));
         Ok(Self {
             engine: RefCell::new(engine),
             options,
             disposed: std::cell::Cell::new(false),
+            deferred_parser_disposal: std::cell::Cell::new(false),
             dispose_request: crate::event::Emitter::new(),
             events,
             state,
             addons: AddonManager::new(),
-            buffer_cache: OnceCell::new(),
+            parser_registrations,
+            buffer_cache: Rc::new(OnceCell::new()),
         })
     }
     pub fn options(&self) -> &PublicOptions {
         &self.options
+    }
+    /// Native embeddings can drain the default captured diagnostics or install
+    /// a live console sink through the shared LogService before parsing.
+    pub fn drain_logs(&self) -> Result<Vec<crate::log_service::LogRecord>, HeadlessError> {
+        Ok(self
+            .engine
+            .try_borrow_mut()
+            .map_err(|_| HeadlessError::Borrowed)?
+            .drain_logs())
     }
     pub fn cols(&self) -> Result<usize, HeadlessError> {
         self.with_state(|state| state.cols())
@@ -93,12 +95,21 @@ impl Terminal {
             .map_err(|_| HeadlessError::Borrowed)
     }
     pub fn write(&self, text: &str) -> Result<(), HeadlessError> {
-        self.write_utf16(&text.encode_utf16().collect::<Vec<_>>())
+        if self.disposed.get() {
+            return Ok(());
+        }
+        self.operate(|engine| engine.write(text))
     }
     pub fn write_utf16(&self, text: &[u16]) -> Result<(), HeadlessError> {
+        if self.disposed.get() {
+            return Ok(());
+        }
         self.operate(|engine| engine.write_utf16(text))
     }
     pub fn write_bytes(&self, bytes: &[u8]) -> Result<(), HeadlessError> {
+        if self.disposed.get() {
+            return Ok(());
+        }
         self.operate(|engine| engine.write_bytes(bytes))
     }
     /// Completion follows parsing and forwarded notifications. This native
@@ -109,6 +120,9 @@ impl Terminal {
         callback: impl FnOnce(&Self) -> Result<(), HeadlessError>,
     ) -> Result<(), HeadlessError> {
         self.write(text)?;
+        if self.disposed.get() {
+            return Ok(());
+        }
         callback(self)
     }
     pub fn write_bytes_with_callback(
@@ -117,6 +131,9 @@ impl Terminal {
         callback: impl FnOnce(&Self) -> Result<(), HeadlessError>,
     ) -> Result<(), HeadlessError> {
         self.write_bytes(bytes)?;
+        if self.disposed.get() {
+            return Ok(());
+        }
         callback(self)
     }
     pub fn writeln(&self, text: &str) -> Result<(), HeadlessError> {
@@ -133,6 +150,9 @@ impl Terminal {
         callback: impl FnOnce(&Self) -> Result<(), HeadlessError>,
     ) -> Result<(), HeadlessError> {
         self.writeln(text)?;
+        if self.disposed.get() {
+            return Ok(());
+        }
         callback(self)
     }
     pub fn input(&self, data: &[u16], was_user_input: bool) -> Result<(), HeadlessError> {
@@ -147,7 +167,7 @@ impl Terminal {
             .map_err(TerminalError::from)?;
         self.flush_notifications()
     }
-    fn flush_notifications(&self) -> Result<(), HeadlessError> {
+    pub(super) fn flush_notifications(&self) -> Result<(), HeadlessError> {
         let queue = self.with_state(|state| Rc::clone(&state.events))?;
         let events = std::mem::take(&mut *queue.borrow_mut());
         for event in events {
@@ -159,7 +179,7 @@ impl Terminal {
         if cols == self.cols()? && rows == self.rows()? {
             return Ok(());
         }
-        if self.engine.try_borrow_mut().is_err() {
+        if self.disposed.get() || self.engine.try_borrow_mut().is_err() {
             if cols > i32::MAX as usize || rows > i32::MAX as usize {
                 return Err(TerminalError::InvalidDimensions.into());
             }
@@ -167,43 +187,24 @@ impl Terminal {
             service
                 .resize(cols.max(2), rows.max(1))
                 .map_err(TerminalError::from)?;
-            self.state
-                .try_borrow_mut()
-                .map_err(|_| HeadlessError::Borrowed)?
-                .dirty_all();
             return self.flush_notifications();
         }
         self.operate(|engine| engine.resize(cols, rows))
     }
     pub fn clear(&self) -> Result<(), HeadlessError> {
-        self.operate(CoreTerminal::clear)
+        if !self.disposed.get() && self.engine.try_borrow_mut().is_ok() {
+            return self.operate(CoreTerminal::clear);
+        }
+        crate::terminal::clear_state_handle(&self.state)?;
+        self.flush_notifications()
     }
     pub fn reset(&self) -> Result<(), HeadlessError> {
-        if self.engine.try_borrow_mut().is_ok() {
+        if !self.disposed.get() && self.engine.try_borrow_mut().is_ok() {
             return self.operate(CoreTerminal::reset);
         }
         // A synchronous parser callback may reset terminal state without
         // resetting or borrowing the parser currently executing that callback.
-        self.state
-            .try_borrow_mut()
-            .map_err(|_| HeadlessError::Borrowed)?
-            .reset_state()
-            .map_err(Into::into)
-    }
-    pub fn scroll_lines(&self, amount: i64) -> Result<(), HeadlessError> {
-        self.operate(|engine| engine.scroll_lines(amount))
-    }
-    pub fn scroll_pages(&self, count: i64) -> Result<(), HeadlessError> {
-        self.operate(|engine| engine.scroll_pages(count))
-    }
-    pub fn scroll_to_top(&self) -> Result<(), HeadlessError> {
-        self.operate(CoreTerminal::scroll_to_top)
-    }
-    pub fn scroll_to_bottom(&self) -> Result<(), HeadlessError> {
-        self.operate(CoreTerminal::scroll_to_bottom)
-    }
-    pub fn scroll_to_line(&self, line: usize) -> Result<(), HeadlessError> {
-        self.operate(|engine| engine.scroll_to_line(line))
+        crate::terminal::reset_state_handle(&self.state).map_err(Into::into)
     }
     pub fn take_pending(
         &self,
@@ -227,34 +228,38 @@ impl Terminal {
         if self.disposed.replace(true) {
             return Ok(());
         }
-        self.dispose_request.fire(&())?;
+        self.events.dispose_core();
         if let Ok(mut engine) = self.engine.try_borrow_mut() {
             engine.dispose()?;
         } else {
             // The active parser finishes its current chunk upstream. Dispose
             // shared services now; parser ownership is released after that call.
-            let (core, logger, mouse, unicode, buffers) = self.with_state(|state| {
+            let (options, logger, buffers, core, mouse, unicode) = self.with_state(|state| {
                 (
-                    Rc::clone(&state.core),
+                    Rc::clone(&state.options),
                     Rc::clone(&state.logger),
+                    Rc::clone(&state.buffer_service),
+                    Rc::clone(&state.core),
                     Rc::clone(&state.mouse),
                     Rc::clone(&state.unicode),
-                    Rc::clone(&state.buffer_service),
                 )
             })?;
             use crate::lifecycle::Disposable;
-            core.dispose();
+            options.dispose();
             logger.dispose();
+            buffers.dispose().map_err(TerminalError::from)?;
+            core.dispose();
             mouse.dispose();
             unicode.dispose();
-            buffers.dispose().map_err(TerminalError::from)?;
+            self.deferred_parser_disposal.set(true);
         }
+        self.dispose_request.fire(&())?;
+        crate::lifecycle::Disposable::dispose(&self.dispose_request);
         self.events.dispose();
         self.addons.dispose()?;
         if let Some(buffer) = self.buffer_cache.get() {
             crate::lifecycle::Disposable::dispose(buffer.as_ref());
         }
-        self.events.dispose();
         Ok(())
     }
     pub fn is_disposed(&self) -> Result<bool, HeadlessError> {
@@ -273,8 +278,8 @@ impl Terminal {
                 .try_borrow_mut()
                 .map_err(|_| HeadlessError::Borrowed)?;
             let result = action(&mut engine);
-            if self.disposed.get() {
-                engine.dispose()?;
+            if self.deferred_parser_disposal.replace(false) {
+                engine.finish_dispose_after_shared_services()?;
             }
             (result, engine.drain_events())
         };

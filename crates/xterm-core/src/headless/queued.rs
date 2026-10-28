@@ -20,11 +20,13 @@ pub struct QueuedTerminal {
 }
 impl QueuedTerminal {
     pub fn new(terminal: Rc<Terminal>) -> Result<Self, HeadlessError> {
-        let pump = NativeWritePump::new();
+        Self::with_pump(terminal, NativeWritePump::new())
+    }
+    pub fn with_pump(terminal: Rc<Terminal>, pump: NativeWritePump) -> Result<Self, HeadlessError> {
         let target = Rc::downgrade(&terminal);
         let pending = Cell::new(false);
         let cleanup_scheduler = pump.scheduler();
-        let queue = WriteBuffer::new(pump.scheduler(), move |_, data, result| {
+        let queue = WriteBuffer::new_owned(pump.scheduler(), move |_, data, result| {
             let terminal = target
                 .upgrade()
                 .ok_or_else(|| WriteError::Action("native terminal was dropped".into()))?;
@@ -41,10 +43,15 @@ impl QueuedTerminal {
             } else {
                 None
             };
-            let action = terminal.parse_write_data(data, resume);
+            let action = if let Some(result) = resume {
+                terminal.parse_write_data(&data, Some(result))
+            } else {
+                data.into_parse_source()
+                    .and_then(|source| terminal.parse_write_source(source, None))
+            };
             for cleanup in terminal.take_cleanup().map_err(WriteError::external)? {
-                let mut scheduler = cleanup_scheduler.clone();
-                let mut errors = cleanup_scheduler.clone();
+                let scheduler = cleanup_scheduler.clone();
+                let errors = cleanup_scheduler.clone();
                 scheduler.spawn(Box::pin(async move {
                     if let Err(error) = cleanup.resolve().await {
                         errors.report_error(WriteError::external(error));
@@ -70,10 +77,13 @@ impl QueuedTerminal {
             }
         });
         let weak = queue.downgrade();
-        let terminal_dispose = terminal.on_dispose_request().subscribe(move |_| {
+        let terminal_dispose = terminal.on_dispose_request().try_subscribe(move |_| {
             if let Some(queue) = weak.upgrade() {
-                queue.dispose();
+                queue
+                    .try_dispose()
+                    .map_err(crate::event::EmitError::callback)?;
             }
+            Ok(())
         });
         Ok(Self {
             terminal,
@@ -120,10 +130,8 @@ impl QueuedTerminal {
             .map_err(WriteError::external)
     }
     pub fn dispose(&self) -> Result<(), HeadlessError> {
-        self.queue.dispose();
-        self.parsed.dispose();
-        self.input.dispose();
-        self.terminal_dispose.dispose();
+        // The terminal closes its write buffer after source service cleanup.
+        // Cancelling here first would change marker-disposal callback behavior.
         self.terminal.dispose()
     }
 }

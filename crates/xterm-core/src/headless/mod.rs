@@ -6,6 +6,7 @@ mod native_queue;
 mod options_view;
 mod queue_bridge;
 mod queued;
+mod scroll;
 mod terminal;
 mod views;
 pub use error::HeadlessError;

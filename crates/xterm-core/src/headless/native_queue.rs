@@ -1,5 +1,6 @@
 //! Explicit native event pump for the portable WriteBuffer. No thread, sleep or
-//! global executor is created. The owner polls ready work and handles each error.
+//! global executor is created. Wakes use a standard-library FIFO so readiness
+//! order is retained and ready continuations precede the next timer callback.
 use crate::input::write_buffer::{WeakWriteBuffer, WriteError, WriteScheduler};
 use std::{
     cell::RefCell,
@@ -9,35 +10,55 @@ use std::{
     rc::Rc,
     sync::{
         atomic::{AtomicBool, Ordering},
+        mpsc::{self, Receiver, Sender, TryRecvError},
         Arc,
     },
-    task::{Context, Poll, Wake, Waker},
+    task::{Context, Wake, Waker},
     time::Instant,
 };
 
-struct Ready(AtomicBool);
+struct Ready {
+    id: u64,
+    queue: Sender<u64>,
+    queued: AtomicBool,
+}
+impl Ready {
+    fn enqueue(&self) {
+        if !self.queued.swap(true, Ordering::AcqRel) && self.queue.send(self.id).is_err() {
+            // A retained waker may outlive the owning pump. With no receiver,
+            // this is cancellation, not permission to execute work inline.
+            self.queued.store(false, Ordering::Release);
+        }
+    }
+}
 impl Wake for Ready {
     fn wake(self: Arc<Self>) {
-        self.0.store(true, Ordering::Release);
+        self.enqueue();
     }
     fn wake_by_ref(self: &Arc<Self>) {
-        self.0.store(true, Ordering::Release);
+        self.enqueue();
     }
 }
 struct LocalFuture {
     future: Pin<Box<dyn Future<Output = ()>>>,
     ready: Arc<Ready>,
 }
-struct Timer {
-    queue: WeakWriteBuffer<NativeWriteScheduler>,
-    last_time: f64,
-    result: bool,
+enum Timer {
+    Write {
+        queue: WeakWriteBuffer<NativeWriteScheduler>,
+        last_time: f64,
+        result: bool,
+    },
+    Callback(Box<dyn FnOnce() -> Result<(), WriteError>>),
 }
 struct State {
-    origin: Instant,
+    clock: Rc<dyn Fn() -> f64>,
     next_id: u64,
+    next_future_id: u64,
     timers: BTreeMap<u64, Timer>,
-    futures: Vec<LocalFuture>,
+    futures: BTreeMap<u64, LocalFuture>,
+    ready_tx: Sender<u64>,
+    ready_rx: Receiver<u64>,
     errors: Vec<WriteError>,
     closed: bool,
 }
@@ -47,14 +68,8 @@ struct State {
 pub struct NativeWriteScheduler {
     state: Rc<RefCell<State>>,
 }
-impl WriteScheduler for NativeWriteScheduler {
-    type Handle = u64;
-    fn request(
-        &mut self,
-        queue: WeakWriteBuffer<Self>,
-        last_time: f64,
-        promise_result: bool,
-    ) -> Result<Self::Handle, WriteError> {
+impl NativeWriteScheduler {
+    fn schedule(&self, timer: Timer) -> Result<u64, WriteError> {
         let mut state = self.state.borrow_mut();
         if state.closed {
             return Err(WriteError::Schedule("native write pump is closed".into()));
@@ -63,23 +78,46 @@ impl WriteScheduler for NativeWriteScheduler {
         state.next_id = id
             .checked_add(1)
             .ok_or_else(|| WriteError::Schedule("native timer identifier exhausted".into()))?;
-        state.timers.insert(
-            id,
-            Timer {
-                queue,
-                last_time,
-                result: promise_result,
-            },
-        );
+        state.timers.insert(id, timer);
         Ok(id)
     }
-    fn cancel(&mut self, handle: Self::Handle) {
-        self.state.borrow_mut().timers.remove(&handle);
+    /// Portable native task adapters share write timers' FIFO and error channel.
+    pub fn request_callback(
+        &self,
+        callback: impl FnOnce() -> Result<(), WriteError> + 'static,
+    ) -> Result<u64, WriteError> {
+        self.schedule(Timer::Callback(Box::new(callback)))
+    }
+    /// Native timer removal cannot fail. Drop captures outside the state borrow
+    /// because their owners may cancel or request another timer during Drop.
+    pub fn cancel_timer(&self, handle: u64) {
+        let removed = self.state.borrow_mut().timers.remove(&handle);
+        drop(removed);
+    }
+}
+impl WriteScheduler for NativeWriteScheduler {
+    type Handle = u64;
+    fn request(
+        &self,
+        queue: WeakWriteBuffer<Self>,
+        last_time: f64,
+        promise_result: bool,
+    ) -> Result<Self::Handle, WriteError> {
+        self.schedule(Timer::Write {
+            queue,
+            last_time,
+            result: promise_result,
+        })
+    }
+    fn cancel(&self, handle: Self::Handle) -> Result<(), WriteError> {
+        self.cancel_timer(handle);
+        Ok(())
     }
     fn now(&self) -> f64 {
-        self.state.borrow().origin.elapsed().as_secs_f64() * 1000.0
+        let clock = Rc::clone(&self.state.borrow().clock);
+        clock()
     }
-    fn spawn(&mut self, future: Pin<Box<dyn Future<Output = ()>>>) {
+    fn spawn(&self, future: Pin<Box<dyn Future<Output = ()>>>) {
         let mut state = self.state.borrow_mut();
         if state.closed {
             state.errors.push(WriteError::Schedule(
@@ -87,20 +125,33 @@ impl WriteScheduler for NativeWriteScheduler {
             ));
             return;
         }
-        state.futures.push(LocalFuture {
-            future,
-            ready: Arc::new(Ready(AtomicBool::new(true))),
+        let id = state.next_future_id;
+        let Some(next) = id.checked_add(1) else {
+            state.errors.push(WriteError::Schedule(
+                "native future identifier exhausted".into(),
+            ));
+            return;
+        };
+        state.next_future_id = next;
+        let ready = Arc::new(Ready {
+            id,
+            queue: state.ready_tx.clone(),
+            queued: AtomicBool::new(false),
         });
+        ready.enqueue();
+        state.futures.insert(id, LocalFuture { future, ready });
     }
-    fn report_error(&mut self, error: WriteError) {
+    fn report_error(&self, error: WriteError) {
         self.state.borrow_mut().errors.push(error);
     }
 }
 
-/// A single poll executes only the timers ready at its start, then polls ready
-/// local futures once. Newly requested timers wait for the next host poll.
-/// Future wakers only mark readiness; they never reenter the terminal inline.
-/// Dropping the pump cancels its owned timers/futures and breaks pending cycles.
+/// A poll snapshots ready timers, drains ready continuations before and between
+/// those timers, and leaves newly requested timers for the next host poll.
+/// Futures are polled only after a wake, never retried merely for being Pending.
+/// Like JavaScript microtasks, a user continuation that continually wakes itself
+/// can starve timers. The pump does not invent a sleep or silently discard it.
+/// Dropping the pump cancels owned timers/futures and breaks pending cycles.
 pub struct NativeWritePump {
     state: Rc<RefCell<State>>,
 }
@@ -111,12 +162,22 @@ impl Default for NativeWritePump {
 }
 impl NativeWritePump {
     pub fn new() -> Self {
+        let origin = Instant::now();
+        Self::with_clock(move || origin.elapsed().as_secs_f64() * 1000.0)
+    }
+    /// Host clock in milliseconds. Controlled source comparisons must inject the
+    /// same clock rather than relying on OS preemption around the 12ms budget.
+    pub fn with_clock(clock: impl Fn() -> f64 + 'static) -> Self {
+        let (ready_tx, ready_rx) = mpsc::channel();
         Self {
             state: Rc::new(RefCell::new(State {
-                origin: Instant::now(),
+                clock: Rc::new(clock),
                 next_id: 0,
+                next_future_id: 0,
                 timers: BTreeMap::new(),
-                futures: Vec::new(),
+                futures: BTreeMap::new(),
+                ready_tx,
+                ready_rx,
                 errors: Vec::new(),
                 closed: false,
             })),
@@ -132,47 +193,86 @@ impl NativeWritePump {
         state.timers.len() + state.futures.len()
     }
     pub fn poll(&self) -> Result<usize, Vec<WriteError>> {
+        self.check_errors()?;
         let timers: Vec<_> = self.state.borrow().timers.keys().copied().collect();
-        let mut executed = 0;
+        let mut executed = self.poll_ready_futures();
+        self.check_errors()?;
         for id in timers {
-            // Keep not-yet-fired timers in live storage so an earlier callback
-            // can cancel a later timer from this same poll batch.
-            let Some(timer) = self.state.borrow_mut().timers.remove(&id) else {
-                continue;
-            };
-            if let Some(queue) = timer.queue.upgrade() {
-                executed += 1;
-                if let Err(error) = queue.process(timer.last_time, timer.result) {
+            // Live storage lets an earlier callback cancel a later timer from
+            // this same batch. Never hold its borrow across dispatch.
+            let timer = self.state.borrow_mut().timers.remove(&id);
+            if let Some(timer) = timer {
+                let result = match timer {
+                    Timer::Write {
+                        queue,
+                        last_time,
+                        result,
+                    } => queue.upgrade().map(|queue| {
+                        executed += 1;
+                        queue.process(last_time, result)
+                    }),
+                    Timer::Callback(callback) => {
+                        executed += 1;
+                        Some(callback())
+                    }
+                };
+                if let Some(Err(error)) = result {
                     self.state.borrow_mut().errors.push(error);
                 }
             }
+            self.check_errors()?;
+            executed += self.poll_ready_futures();
+            self.check_errors()?;
         }
-        let futures = std::mem::take(&mut self.state.borrow_mut().futures);
-        let mut pending = Vec::new();
-        for mut task in futures {
-            if task.ready.0.swap(false, Ordering::AcqRel) {
-                executed += 1;
-                let waker = Waker::from(Arc::clone(&task.ready));
-                let mut context = Context::from_waker(&waker);
-                if let Poll::Ready(()) = task.future.as_mut().poll(&mut context) {
-                    continue;
-                }
-            }
-            pending.push(task);
-        }
-        self.state.borrow_mut().futures.extend(pending);
+        Ok(executed)
+    }
+    fn check_errors(&self) -> Result<(), Vec<WriteError>> {
         let errors = std::mem::take(&mut self.state.borrow_mut().errors);
         if errors.is_empty() {
-            Ok(executed)
+            Ok(())
         } else {
             Err(errors)
         }
     }
+    fn poll_ready_futures(&self) -> usize {
+        let mut executed = 0;
+        loop {
+            let ready = self.state.borrow().ready_rx.try_recv();
+            let id = match ready {
+                Ok(id) => id,
+                Err(TryRecvError::Empty) => break,
+                Err(TryRecvError::Disconnected) => {
+                    self.state.borrow_mut().errors.push(WriteError::Schedule(
+                        "native wake queue disconnected".into(),
+                    ));
+                    break;
+                }
+            };
+            let task = self.state.borrow_mut().futures.remove(&id);
+            // A future may complete while an already-queued wake remains.
+            let Some(mut task) = task else {
+                continue;
+            };
+            task.ready.queued.store(false, Ordering::Release);
+            let waker = Waker::from(Arc::clone(&task.ready));
+            let mut context = Context::from_waker(&waker);
+            executed += 1;
+            if task.future.as_mut().poll(&mut context).is_pending() {
+                self.state.borrow_mut().futures.insert(id, task);
+            }
+            // Surface the uncaught error before running its separately queued
+            // false continuation. Remaining work stays owned for the next poll.
+            if !self.state.borrow().errors.is_empty() {
+                break;
+            }
+        }
+        executed
+    }
 }
 impl Drop for NativeWritePump {
     fn drop(&mut self) {
-        // Drop futures outside a RefCell borrow: captured queue owners may cancel
-        // their timers during destruction and therefore borrow this same state.
+        // Captured queue owners may cancel timers during destruction. Release
+        // futures only after the state borrow ends to permit that reentrancy.
         let (timers, futures) = {
             let mut state = self.state.borrow_mut();
             state.closed = true;

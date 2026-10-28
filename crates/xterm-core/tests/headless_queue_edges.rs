@@ -16,7 +16,7 @@ fn earlier_timer_can_cancel_a_later_timer_in_the_same_host_poll() {
     let target = Rc::clone(&cancelled);
     let host = Rc::clone(&scheduler);
     let first = WriteBuffer::new(pump.scheduler(), move |_, _, _| {
-        host.borrow_mut().cancel(target.get().unwrap());
+        host.borrow_mut().cancel(target.get().unwrap())?;
         Ok(WriteAction::Complete)
     });
     first.write(WriteData::text("a"), None).unwrap();
@@ -40,6 +40,7 @@ fn sync_flush_during_paused_handler_preserves_improper_continuation_error() {
                 HandlerResult::Pending(Box::pin(std::future::pending()))
             })
         })
+        .unwrap()
         .unwrap();
     host.write(WriteData::text("\x1b]999;payload\x07B"), None)
         .unwrap();

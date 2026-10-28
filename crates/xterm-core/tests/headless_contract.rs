@@ -53,6 +53,7 @@ fn pa03_direct_reset_keeps_partial_parser_sequence_and_registration() {
             HandlerResult::Ready(true)
         })
     })
+    .unwrap()
     .unwrap();
     term.write("\x1b]999;A").unwrap();
     term.reset().unwrap();
@@ -94,6 +95,57 @@ fn pa04_public_input_allows_nested_data_callbacks_without_engine_borrow_panics()
     term.input_binary(&[255]).unwrap();
     assert_eq!(calls.borrow().len(), 2);
     assert!(line(&term).is_empty());
+}
+#[test]
+fn native_default_diagnostics_are_observable_and_drainable() {
+    use xterm_core::log_service::{LogLevel, LogValue};
+    let term = Terminal::new(8, 3, 10).unwrap();
+    term.options()
+        .set("logLevel", OptionValue::from("debug"))
+        .unwrap();
+    term.write("\x1b[999m").unwrap();
+    let logs = term.drain_logs().unwrap();
+    assert_eq!(logs.len(), 2);
+    assert_eq!(logs[0].level, LogLevel::Debug);
+    assert_eq!(
+        String::from_utf16(&logs[0].message).unwrap(),
+        "xterm.js: parsing data  \"\x1b[999m\""
+    );
+    assert_eq!(logs[1].level, LogLevel::Debug);
+    assert_eq!(
+        String::from_utf16(&logs[1].message).unwrap(),
+        "xterm.js: Unknown SGR attribute: %d."
+    );
+    match &logs[1].parameters[0] {
+        LogValue::Value(value) => assert_eq!(value, &OptionValue::Number(999.0)),
+        other => panic!("unexpected diagnostic argument {other:?}"),
+    }
+    assert!(term.drain_logs().unwrap().is_empty());
+}
+#[test]
+fn pa06_scroll_listener_can_scroll_again_without_parser_or_state_borrow() {
+    let term = Rc::new(Terminal::new(8, 3, 10).unwrap());
+    term.write("\n\n\n\n\n\n\n").unwrap();
+    let events = Rc::new(RefCell::new(Vec::new()));
+    let output = Rc::clone(&events);
+    let target = Rc::downgrade(&term);
+    term.on_scroll().subscribe(move |position| {
+        output.borrow_mut().push(*position);
+        if *position > 0 {
+            target.upgrade().unwrap().scroll_to_top().unwrap();
+        }
+    });
+    term.scroll_lines(-1).unwrap();
+    assert_eq!(*events.borrow(), [4, 0]);
+    assert_eq!(
+        term.buffer()
+            .unwrap()
+            .active()
+            .unwrap()
+            .viewport_y()
+            .unwrap(),
+        0
+    );
 }
 #[test]
 fn pa02_unicode_addons_gate_at_actual_terminal_activation_and_restore_retained_service() {

@@ -16,7 +16,6 @@ pub enum HeadlessError {
     Unicode(UnicodeServiceError),
     Addon(Box<AddonError<HeadlessError>>),
     Borrowed,
-    HostPayloadRequiresConversion,
 }
 impl fmt::Display for HeadlessError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -28,9 +27,6 @@ impl fmt::Display for HeadlessError {
             Self::Unicode(error) => error.fmt(f),
             Self::Addon(error) => error.fmt(f),
             Self::Borrowed => f.write_str("terminal is already borrowed"),
-            Self::HostPayloadRequiresConversion => {
-                f.write_str("host payload must be converted by its adapter before native parsing")
-            }
         }
     }
 }
@@ -43,7 +39,7 @@ impl std::error::Error for HeadlessError {
             Self::Dispatch(error) => Some(error),
             Self::Unicode(error) => Some(error),
             Self::Addon(error) => Some(error.as_ref()),
-            Self::Borrowed | Self::HostPayloadRequiresConversion => None,
+            Self::Borrowed => None,
         }
     }
 }

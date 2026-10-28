@@ -119,17 +119,22 @@ impl Events {
         }
         self.all.fire(&event)
     }
-    pub fn dispose(&self) {
-        self.bell.dispose();
+    /// CoreTerminal field emitters are registered before constructor services.
+    /// Headless-specific bell/cursor/title emitters are registered afterward.
+    pub fn dispose_core(&self) {
         self.binary.dispose();
-        self.cursor_move.dispose();
         self.data.dispose();
         self.line_feed.dispose();
         self.render.dispose();
         self.resize.dispose();
         self.scroll.dispose();
-        self.title.dispose();
         self.write_parsed.dispose();
         self.all.dispose();
+    }
+    pub fn dispose(&self) {
+        self.dispose_core();
+        self.bell.dispose();
+        self.cursor_move.dispose();
+        self.title.dispose();
     }
 }
