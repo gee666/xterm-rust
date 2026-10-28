@@ -26,7 +26,10 @@ impl PartialEq for OptionValue {
             (Self::Bool(a), Self::Bool(b)) => a == b,
             (Self::Number(a), Self::Number(b)) => a == b,
             (Self::String(a), Self::String(b)) => a == b,
-            (Self::Object(a), Self::Object(b)) => a.equals(b).unwrap_or_else(|| Rc::ptr_eq(a, b)),
+            (Self::Object(a), Self::Object(b)) => {
+                a.has_custom_equality() == b.has_custom_equality()
+                    && a.equals(b).unwrap_or_else(|| Rc::ptr_eq(a, b))
+            }
             _ => false,
         }
     }

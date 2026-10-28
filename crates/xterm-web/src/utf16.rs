@@ -4,8 +4,8 @@
 //! must instead use JsString and raw UTF-16 code units.
 
 use js_sys::JsString;
-pub use xterm_wasm_support::utf16::{from_js_string, to_js_string};
 use wasm_bindgen::prelude::*;
+pub use xterm_wasm_support::utf16::{from_js_string, to_js_string};
 
 #[wasm_bindgen(
     inline_js = "export function xtermSetTextContent(node, text) { 'use strict'; node.textContent = text; }"
@@ -20,4 +20,3 @@ extern "C" {
 pub fn set_text_content(node: &web_sys::Node, text: JsString) -> Result<(), JsValue> {
     assign_text_content(node, &text)
 }
-

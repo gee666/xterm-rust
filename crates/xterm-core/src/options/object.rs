@@ -152,7 +152,7 @@ impl OptionObject {
             truthy,
             numeric,
             equal: Some(Box::new(move |a, b| {
-                match (a.payload::<T>(), b.payload::<T>()) {
+                match (a.comparison_payload::<T>(), b.comparison_payload::<T>()) {
                     (Some(a), Some(b)) => equal(a, b),
                     _ => false,
                 }
@@ -186,7 +186,7 @@ impl OptionObject {
             to_primitive: Box::new(to_primitive),
             truthy,
             equal: Some(Box::new(move |a, b| {
-                match (a.payload::<U>(), b.payload::<U>()) {
+                match (a.comparison_payload::<U>(), b.comparison_payload::<U>()) {
                     (Some(a), Some(b)) => equal(a, b),
                     _ => false,
                 }
@@ -200,6 +200,38 @@ impl OptionObject {
                 )
             }),
         })
+    }
+
+    /// The newly constructed Rc has not escaped and no callback has run, so
+    /// adding operator policy cannot fail due to aliases or weak references.
+    pub fn with_numeric_backing_value<T: Any, U: Any>(
+        payload: T,
+        backing: U,
+        to_primitive: impl Fn(CoercionHint) -> Result<OptionValue, OptionError> + 'static,
+        get: impl Fn(&T, &str) -> Result<OptionValue, OptionError> + 'static,
+        truthy: bool,
+        equal: impl Fn(&U, &U) -> bool + 'static,
+        numeric: Rc<dyn NumericSemantics>,
+    ) -> Rc<Self> {
+        let mut object =
+            Self::with_backing_value(payload, backing, to_primitive, get, truthy, equal);
+        Rc::get_mut(&mut object)
+            .expect("fresh adapter object has one owner and no weak references")
+            .numeric = Some(numeric);
+        object
+    }
+
+    pub(super) fn has_custom_equality(&self) -> bool {
+        self.equal.is_some()
+    }
+    fn comparison_payload<T: Any>(&self) -> Option<&T> {
+        match &self.backing {
+            Some(backing) => backing.downcast_ref(),
+            None => self.payload.downcast_ref(),
+        }
+    }
+    pub fn backing<T: Any>(&self) -> Option<&T> {
+        self.backing.as_ref().and_then(|value| value.downcast_ref())
     }
 
     pub(super) fn add_left(&self, rhs: &OptionValue) -> Option<Result<OptionValue, OptionError>> {

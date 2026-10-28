@@ -1,0 +1,20 @@
+[package]
+name = "xterm-wasm-support"
+description = "DOM-free WASM value, option, error and subscription adapters"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+xterm-core = { path = "../xterm-core" }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen = "=0.2.100"
+js-sys = "=0.3.77"
+
+[target.'cfg(target_arch = "wasm32")'.dev-dependencies]
+wasm-bindgen-test = "=0.3.50"
+
+[lints]
+workspace = true

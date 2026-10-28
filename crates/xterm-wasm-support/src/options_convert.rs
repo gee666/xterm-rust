@@ -3,7 +3,7 @@ use crate::{
     js_error::{callback_error, to_js_error},
     utf16::{from_js_string, to_js_string},
 };
-use js_sys::{JsString, Object, Reflect};
+use js_sys::{JsString, Object};
 use std::{
     cell::RefCell,
     collections::BTreeMap,
@@ -15,16 +15,21 @@ use xterm_core::options::{
 };
 
 #[wasm_bindgen(inline_js = "
+export function optionData(target, key, value) { Object.defineProperty(target,key,{value,writable:true,enumerable:true,configurable:true}); }
 export function optionNumber(value) { return +value; }
 export function optionLess(value, rhs) { return value < rhs; }
 export function optionLessEqual(value, rhs) { return value <= rhs; }
 export function optionMultiply(value, rhs) { return value * rhs; }
 export function optionString(value) { return `${value}`; }
+export function optionConcat(value) { return '' + value; }
+export function optionAdd(left, right) { return left + right; }
 export function optionTruthy(value) { return !!value; }
 export function optionProperty(value, key) { return Reflect.get(Object(value), key); }
 export function optionError(message, type) { return type ? new TypeError(message) : new Error(message); }
 ")]
 extern "C" {
+    #[wasm_bindgen(catch)]
+    fn optionData(target: &Object, key: &JsString, value: &JsValue) -> Result<(), JsValue>;
     #[wasm_bindgen(catch)]
     fn optionNumber(value: &JsValue) -> Result<f64, JsValue>;
     #[wasm_bindgen(catch)]
@@ -35,10 +40,18 @@ extern "C" {
     fn optionMultiply(value: &JsValue, rhs: f64) -> Result<f64, JsValue>;
     #[wasm_bindgen(catch)]
     fn optionString(value: &JsValue) -> Result<JsString, JsValue>;
+    #[wasm_bindgen(catch)]
+    fn optionConcat(value: &JsValue) -> Result<JsString, JsValue>;
+    #[wasm_bindgen(catch)]
+    fn optionAdd(left: &JsValue, right: &JsValue) -> Result<JsValue, JsValue>;
     fn optionTruthy(value: &JsValue) -> bool;
     #[wasm_bindgen(catch)]
     fn optionProperty(value: &JsValue, key: &JsString) -> Result<JsValue, JsValue>;
     fn optionError(message: &JsString, type_error: bool) -> JsValue;
+}
+
+pub fn set_data(target: &Object, key: &str, value: &JsValue) -> Result<(), JsValue> {
+    optionData(target, &JsString::from(key), value)
 }
 
 pub fn error_to_js(error: &OptionError) -> JsValue {
@@ -52,7 +65,34 @@ pub fn error_to_js(error: &OptionError) -> JsValue {
 }
 
 struct JsNumeric(JsValue);
+/// Reuse exact host operators for a typed adapter with the same backing value.
+pub fn operator_semantics(value: &JsValue) -> Rc<dyn NumericSemantics> {
+    Rc::new(JsNumeric(value.clone()))
+}
 impl NumericSemantics for JsNumeric {
+    fn add_left(&self, rhs: &V) -> Option<Result<V, OptionError>> {
+        Some(
+            into_js(rhs)
+                .and_then(|rhs| optionAdd(&self.0, &rhs))
+                .and_then(|result| from_js(&result))
+                .map_err(|error| OptionError::Dispatch(callback_error(error))),
+        )
+    }
+    fn add_right(&self, lhs: &V) -> Option<Result<V, OptionError>> {
+        Some(
+            into_js(lhs)
+                .and_then(|lhs| optionAdd(&lhs, &self.0))
+                .and_then(|result| from_js(&result))
+                .map_err(|error| OptionError::Dispatch(callback_error(error))),
+        )
+    }
+    fn concat_utf16(&self) -> Option<Result<Vec<u16>, OptionError>> {
+        Some(
+            optionConcat(&self.0)
+                .map(|value| from_js_string(&value))
+                .map_err(|error| OptionError::Dispatch(callback_error(error))),
+        )
+    }
     fn less_than(&self, rhs: f64) -> Result<bool, OptionError> {
         optionLess(&self.0, rhs).map_err(|e| OptionError::Dispatch(callback_error(e)))
     }
@@ -102,18 +142,32 @@ pub fn from_js(value: &JsValue) -> Result<V, JsValue> {
         },
         optionTruthy(value),
         |a, b| a == b,
-        Rc::new(JsNumeric(value.clone())),
+        operator_semantics(value),
     )))
 }
 
 #[derive(Default)]
 pub struct ConversionCache(RefCell<Vec<(Weak<OptionObject>, JsValue)>>);
 impl ConversionCache {
+    pub fn remember(&self, value: &V, host: &JsValue) {
+        if let V::Object(object) = value {
+            let key = Rc::downgrade(object);
+            let mut entries = self.0.borrow_mut();
+            entries.retain(|(existing, _)| {
+                existing.strong_count() > 0 && !Weak::ptr_eq(existing, &key)
+            });
+            entries.push((key, host.clone()));
+        }
+    }
+
     pub fn convert(&self, value: &V) -> Result<JsValue, JsValue> {
         let V::Object(object) = value else {
             return into_js(value);
         };
-        if let Some(value) = object.payload::<JsValue>() {
+        if let Some(value) = object
+            .backing::<JsValue>()
+            .or_else(|| object.payload::<JsValue>())
+        {
             return Ok(value.clone());
         }
         self.0
@@ -142,20 +196,23 @@ pub fn into_js(value: &V) -> Result<JsValue, JsValue> {
         V::Number(value) => JsValue::from_f64(*value),
         V::String(value) => to_js_string(value).into(),
         V::Object(value) => {
-            if let Some(value) = value.payload::<JsValue>() {
+            if let Some(value) = value
+                .backing::<JsValue>()
+                .or_else(|| value.payload::<JsValue>())
+            {
                 return Ok(value.clone());
             }
             let object = Object::new();
             if let Some(entries) = value.payload::<BTreeMap<String, V>>() {
                 for (key, value) in entries {
-                    Reflect::set(&object, &JsValue::from_str(key), &into_js(value)?)?;
+                    set_data(&object, key, &into_js(value)?)?;
                 }
             } else if let Some(pty) = value.payload::<WindowsPty>() {
                 if let Some(backend) = &pty.backend {
-                    Reflect::set(&object, &"backend".into(), &backend.as_str().into())?;
+                    set_data(&object, "backend", &backend.as_str().into())?;
                 }
                 if let Some(build) = pty.build_number {
-                    Reflect::set(&object, &"buildNumber".into(), &build.into())?;
+                    set_data(&object, "buildNumber", &build.into())?;
                 }
             } else if value.payload::<()>().is_none() {
                 return Err(js_sys::TypeError::new(

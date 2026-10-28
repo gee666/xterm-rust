@@ -6,11 +6,19 @@ edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 
+[features]
+default = []
+# Read-only engine state snapshots for source differential/browser acceptance tests.
+acceptance-hooks = ["dep:serde_json"]
+
 [lib]
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
+serde_json = { version = "1", optional = true }
 xterm-core = { path = "../xterm-core" }
+xterm-wasm-support = { path = "../xterm-wasm-support" }
+ryu-js = "=1.0.3"
 xterm-addons = { path = "../xterm-addons" }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
@@ -26,8 +34,14 @@ web-sys = { version = "=0.3.77", features = [
   "FontFace", "FontFaceSet", "FontFaceLoadStatus", "FocusOptions",
   "CanvasGradient", "ImageData", "OffscreenCanvas", "OffscreenCanvasRenderingContext2d",
   "WebSocket", "BinaryType", "MessageEvent", "Clipboard", "ClipboardEvent", "DataTransfer",
-  "IdleDeadline", "console", "HtmlCollection", "Location", "UiEvent"
+  "IdleDeadline", "console", "AddEventListenerOptions", "HtmlCollection", "Location", "UiEvent", "HtmlIFrameElement", "PointerEvent", "PointerEventInit", "DomRectList", "IntersectionObserver", "IntersectionObserverEntry", "MediaQueryList", "MediaQueryListEvent",
+  "WebGl2RenderingContext", "WebGlShader", "WebGlProgram", "WebGlBuffer", "WebGlTexture",
+  "WebGlUniformLocation", "WebGlVertexArrayObject", "WebGlContextEvent",
+  "ResizeObserver", "ResizeObserverEntry", "ResizeObserverSize", "DomRectReadOnly", "Path2d", "TouchEvent", "Touch", "TouchList", "CustomEvent", "CustomEventInit", "Selection", "Text", "NodeList"
 ] }
+
+[dev-dependencies]
+serde_json = "1"
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
 wasm-bindgen-test = "=0.3.50"
