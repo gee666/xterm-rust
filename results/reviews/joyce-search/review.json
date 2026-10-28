@@ -23,6 +23,13 @@
     "seed": "0x5ea2c001"
   },
   "findings": [],
+  "laterCounterexample": {
+    "reportedBy": "Blake and Jeremiah after this review",
+    "task": 36,
+    "status": "reopened for implementation fix",
+    "gap": "Upstream public getLine exposes ring aliases for unbounded rows. Slice-only SearchBuffer lookup misses those aliases, including a capacity-one negative wrapped-row recursion/RangeError path.",
+    "priorCorpus": "The previously passing 2200 engine cases did not establish this boundary. Keep them unchanged and add counterexample fixtures before rereview."
+  },
   "integrationGaps": [
     "Three automatic event invalidation assertions remain in task59",
     "Two cache disposal assertions test portable clearing only, not host timers/listeners",

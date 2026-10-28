@@ -9,6 +9,9 @@ pub mod keyboard_dispatch_types;
 pub mod mouse_coords;
 pub mod mouse_policy;
 pub mod mouse_wheel;
+pub mod touch;
+#[cfg(target_arch = "wasm32")]
+mod touch_dom;
 
 #[cfg(target_arch = "wasm32")]
 pub mod dom;
