@@ -1,0 +1,131 @@
+{
+  "command": "node scripts/buffer-service-oracle.mjs",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "overallEquivalence": "NOT PROVEN",
+  "sourceHashes": {
+    "source_repo/src/common/Lifecycle.ts": "e00016aae991e24137ab066778912414f4af959f2b26baecf47ec542ad313a83",
+    "source_repo/src/common/Event.ts": "aa374272c5ec5c0d6992d6072687211a94676b086a2505b0414ddd20cf57d641",
+    "source_repo/src/common/CircularList.ts": "558ae3c18862469de29c2f77e06c31c44c2cddaa25fd6e69059bf2176efc54f6",
+    "source_repo/src/common/TaskQueue.ts": "3a3c33a8d50aa767a7eaf355980ad6d53c1e9fc5acc287b14eabe0a72720142a",
+    "source_repo/src/common/buffer/Constants.ts": "0342c709b580e7a7c62fffb61bab359f93511b82529f5a155374797ca4799f21",
+    "source_repo/src/common/buffer/AttributeData.ts": "09a9dc9693200cd7c34a98af3c1fc97b47b4354828cb02a76ab561a03515748a",
+    "source_repo/src/common/input/TextDecoder.ts": "0368a7fddbb53502f86144b61d023f8d022f5ce973a1b01b59c552ec62631a1b",
+    "source_repo/src/common/buffer/CellData.ts": "d0dfcbf310a949d8bdf4172f9896a6f143d3abf4e0dc68b896dec6612b82d992",
+    "source_repo/src/common/buffer/BufferLine.ts": "409958425629c5592bd4813272b00b480e6a723985ea28f24125a7a72ef95bdf",
+    "source_repo/src/common/buffer/BufferReflow.ts": "d2fa77716bd3190c5f2fbe2510fbae7218da8cf14fc55a48143c450802ccefe3",
+    "source_repo/src/common/buffer/Marker.ts": "3a6dc8fe7e791de49b825faba6c47093d73427bddf80fa6dd4069b8a90aac88d",
+    "source_repo/src/common/data/Charsets.ts": "64fe88d37beb2cc7c60a18d23fb4033e24f19b56b7f481fc656f8e912faac725",
+    "source_repo/src/common/buffer/Buffer.ts": "b299d8dfdd75deee31807a94c9417093b0c0a0f1714e5553779052602b32e4af",
+    "source_repo/src/common/buffer/BufferSet.ts": "3a2cc96d786e65bbfd1c7dc0c60653ce0062eb9c6f58a0e89214b1660ba5722c",
+    "source_repo/src/common/services/ServiceRegistry.ts": "a467a496d3f1f26130c55809c587e1a7aeaa56d91e22be60af4182db6bb89171",
+    "source_repo/src/common/services/Services.ts": "617002157a8f7946b2245db9d795e2808d5d843171e84bb6917a80c0fe6e9a4b",
+    "source_repo/src/common/services/UnicodeService.ts": "dae3733c0a07bfe55f264ea749e3df61b3b4505830e4e685183771497c292811",
+    "source_repo/src/common/Platform.ts": "be5ab9b1d1056e892b656732b375600178864e60281fc6a218480ac19c1f845a",
+    "source_repo/src/common/services/OptionsService.ts": "2cef872a29730441e2de5ef31a224872d9d1fb99be069d409febc8c9a7e41a09",
+    "source_repo/src/common/input/UnicodeV6.ts": "526041b7d903ef88bf031825dde557a7f6d4b3e156be984fb524c66d02ac412e",
+    "source_repo/src/common/TestUtils.test.ts": "a1f20abc213a9a5f7611989c7eb74b1ad5f6810a733d5e491c29ff7f8b126034",
+    "source_repo/src/common/buffer/BufferSet.test.ts": "4e1c4ac639118df08d96782401f4677956ba45e432e401d417ccaa5b1c6b2fd5",
+    "source_repo/src/common/services/BufferService.ts": "8c418b27ef5893691a32d7770c2cf7d0a305803624ae1969f463d7484c893966",
+    "source_repo/src/common/services/BufferService.test.ts": "594464798e1c6326a5bd4ba9a278986a616ad8c7626c5d21cf8fad8a18e3226e"
+  },
+  "suites": [
+    {
+      "tests": "source_repo/src/common/buffer/BufferSet.test.ts",
+      "discovered": 6,
+      "executed": 6,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0,
+      "outcomes": [
+        {
+          "name": "BufferSet constructor should create two different buffers: alt and normal",
+          "status": "passed"
+        },
+        {
+          "name": "BufferSet activateNormalBuffer should set the normal buffer as the currently active buffer",
+          "status": "passed"
+        },
+        {
+          "name": "BufferSet activateAltBuffer should set the alt buffer as the currently active buffer",
+          "status": "passed"
+        },
+        {
+          "name": "BufferSet cursor handling when swapping buffers should keep the cursor stationary when activating alt buffer",
+          "status": "passed"
+        },
+        {
+          "name": "BufferSet cursor handling when swapping buffers should keep the cursor stationary when activating normal buffer",
+          "status": "passed"
+        },
+        {
+          "name": "BufferSet markers should clear the markers when the buffer is switched",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "tests": "source_repo/src/common/services/BufferService.test.ts",
+      "discovered": 7,
+      "executed": 7,
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0,
+      "outcomes": [
+        {
+          "name": "BufferService scroll should decrement ydisp when the buffer is full and the user has scrolled up",
+          "status": "passed"
+        },
+        {
+          "name": "BufferService scroll should not advance ydisp with ybase while the user has scrolled up and the buffer is not full",
+          "status": "passed"
+        },
+        {
+          "name": "BufferService scroll should follow ybase with ydisp when the user is not scrolling",
+          "status": "passed"
+        },
+        {
+          "name": "BufferService scroll should scroll within DECSTBM margins without affecting lines outside the region",
+          "status": "passed"
+        },
+        {
+          "name": "BufferService scrollLines should move ydisp and set isUserScrolling when scrolling up",
+          "status": "passed"
+        },
+        {
+          "name": "BufferService scrollLines should not scroll above the top of the buffer",
+          "status": "passed"
+        },
+        {
+          "name": "BufferService scrollLines should clear isUserScrolling when scrolling to the bottom",
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "directedChecks": [
+    "dispose failure marks owner before callbacks; repeated dispose does not resume",
+    "reset after disposal replaces raw fields without disposing old buffer again"
+  ],
+  "seed": 99070207,
+  "traces": 64,
+  "steps": 64,
+  "operations": {
+    "scroll": 341,
+    "display": 342,
+    "margins": 343,
+    "cursor": 344,
+    "alt": 343,
+    "normal": 342,
+    "resize": 341,
+    "reset": 340,
+    "scrollback": 340,
+    "tabs": 340,
+    "write": 340,
+    "user": 340
+  },
+  "fixtureSha256": "4e48eb4cfce26e7d22fc2748fb66b194e9eb6d59c3fca31245c60c587b21a99d",
+  "scope": "Original JS BufferSet/BufferService tests and deterministic fixtures. Rust replay is a separate check."
+}

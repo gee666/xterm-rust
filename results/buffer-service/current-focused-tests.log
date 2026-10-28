@@ -1,0 +1,124 @@
+    Blocking waiting for file lock on build directory
+warning: unused `Result` that must be used
+   --> crates\xterm-core\src\headless\terminal.rs:218:9
+    |
+218 | /         self.engine
+219 | |             .try_borrow_mut()
+220 | |             .map_err(|_| HeadlessError::Borrowed)?
+221 | |             .dispose();
+    | |______________________^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+    = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+    |
+218 |         let _ = self.engine
+    |         +++++++
+
+warning: `xterm-core` (lib) generated 1 warning
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 1.62s
+     Running tests\buffer_service_differential.rs (target\debug\deps\buffer_service_differential-18becbe52add033c.exe)
+
+running 1 test
+test all_seeded_buffer_set_and_service_operations_match_javascript ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+     Running tests\buffer_service_edges.rs (target\debug\deps\buffer_service_edges-52af3b1f1687d859.exe)
+
+running 10 tests
+test display_clamp_suppression_and_scrolling_flag_boundaries ... ok
+test option_callback_errors_are_propagated_and_original_cause_retained ... ok
+test live_options_rebuild_tabs_resize_history_and_stop_after_dispose ... ok
+test reset_replaces_identities_and_disposes_old_markers_before_activation ... ok
+test activation_noops_fill_clear_markers_and_event_order ... ok
+test cached_blank_attributes_and_wrapped_flag_follow_latest_scroll ... ok
+test activation_callbacks_can_switch_back_synchronously ... ok
+test dimensions_commit_before_resize_events_and_unchanged_resizes_still_emit ... ok
+test disposal_failure_marks_owner_disposed_before_later_calls ... ok
+test constructor_minimum_and_js_falsy_or_numeric_coercion ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\buffer_service_upstream.rs (target\debug\deps\buffer_service_upstream-82a94b2a6d4c1c26.exe)
+
+running 7 tests
+test tracking_display_follows_base_when_full ... ok
+test scroll_up_at_top_leaves_scroll_flag_false ... ok
+test full_scrolled_buffer_decrements_display_without_changing_base ... ok
+test nonfull_scrolled_buffer_does_not_advance_display ... ok
+test scroll_to_bottom_clears_user_scrolling ... ok
+test scrolling_within_margins_keeps_outside_rows ... ok
+test scroll_up_changes_display_and_emits_position ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\buffer_set_upstream.rs (target\debug\deps\buffer_set_upstream-7ee041438446de7f.exe)
+
+running 6 tests
+test constructor_creates_distinct_normal_and_alt_buffers ... ok
+test activating_normal_sets_it_active ... ok
+test activating_alt_sets_it_active ... ok
+test cursor_stays_stationary_when_activating_alt ... ok
+test cursor_stays_stationary_when_activating_normal ... ok
+test markers_clear_on_switch_to_normal ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\keyboard_edges.rs (target\debug\deps\keyboard_edges-06d620784c3c0082.exe)
+
+running 9 tests
+test cancellation_is_requested_only_for_the_upstream_branches ... ok
+test control_shift_punctuation_keeps_alt_and_meta_branch_precedence ... ok
+test dead_keys_slice_one_code_unit_and_use_pinned_unicode_lowercase ... ok
+test control_punctuation_and_ios_ctrl_c ... ok
+test meta_arrows_are_not_sent_but_home_and_function_keys_are ... ok
+test numeric_boundaries_and_control_alphabet_are_exact ... ok
+test insert_and_page_keys_ignore_only_the_documented_modifiers ... ok
+test page_and_select_actions_preserve_priority ... ok
+test utf16_key_length_and_identity ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\keyboard_upstream.rs (target\debug\deps\keyboard_upstream-80c4c6988cca996a.exe)
+
+running 1 test
+test every_upstream_keyboard_assertion ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\osc.rs (target\debug\deps\osc-5776e1d61b21962c.exe)
+
+running 7 tests
+test reset_payload_and_resume_after_reset ... ok
+test identifier_parsing ... ok
+test factory_success_abort_dispose_and_bubble ... ok
+test reset_retains_async_cleanup_futures ... ok
+test registration_clear_and_disposal ... ok
+test factory_exact_limit_and_limit_plus_one ... ok
+test bubbling_and_mixed_sync_async_cleanup ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\osc_differential.rs (target\debug\deps\osc_differential-3b590c1ed1244995.exe)
+
+running 1 test
+test randomized_registration_lifecycle_and_streaming_matches_javascript ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests\osc_edges.rs (target\debug\deps\osc_edges-ba86f489f2c2bd1c.exe)
+
+running 8 tests
+test utf16_lone_surrogates_and_astral_units_count_toward_limit ... ok
+test repeated_disposal_removes_next_equal_identity_registration ... ok
+test empty_and_illegal_identifier_boundaries ... ok
+test zero_limit_overflow_ignores_later_chunks_and_recovers_after_start ... ok
+test reset_while_paused_cleans_only_lower_handlers_and_preserves_owned_future ... ok
+test live_removal_during_every_callback_stage_returns_recoverable_error ... ok
+test clearing_registry_does_not_replace_active_handler_list ... ok
+test numeric_identifier_preserves_javascript_float_rounding_and_overflow ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
