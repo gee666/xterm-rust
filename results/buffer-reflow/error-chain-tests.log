@@ -1,0 +1,50 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+warning: method `with_queued_parse` is never used
+  --> crates\xterm-core\src\headless\events.rs:67:12
+   |
+33 | impl Events {
+   | ----------- method in this implementation
+...
+67 |     pub fn with_queued_parse<T>(&self, action: impl FnOnce() -> T) -> T {
+   |            ^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `xterm-core` (lib) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 2.75s
+     Running tests\buffer_reflow_differential.rs (target\debug\deps\buffer_reflow_differential-b61717fa270bef22.exe)
+
+running 1 test
+test seeded_full_cell_layout_and_identity_snapshots ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.72s
+
+     Running tests\buffer_reflow_edges.rs (target\debug\deps\buffer_reflow_edges-92165830e4a859ba.exe)
+
+running 10 tests
+test invalid_layout_and_columns_are_errors ... ok
+test layout_emits_adjusted_deletions_before_identity_preserving_reorder ... ok
+test caller_held_borrows_report_errors_instead_of_panicking ... ok
+test empty_and_unwrapped_rows_do_not_mutate ... ok
+test layout_propagates_disposal_during_event_dispatch ... ok
+test layout_reentrant_listener_can_inspect_and_mutate_storage ... ok
+test wide_gap_excluded_only_before_wide_start ... ok
+test width_one_supports_narrow_cells_and_rejects_wide_zero_progress ... ok
+test layout_retains_callback_error_identity_and_source_chain ... ok
+test widening_preserves_extended_attribute_object_identity ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\buffer_reflow_upstream.rs (target\debug\deps\buffer_reflow_upstream-ef535e950a092ef8.exe)
+
+running 7 tests
+test mixed_wide_and_single ... ok
+test large_wide_line ... ok
+test cursor_block_skipped_unless_enabled ... ok
+test small_wide_line ... ok
+test cursor_outside_wrapped_block ... ok
+test trailing_null_space ... ok
+test wrapped_wide_and_single ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

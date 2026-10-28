@@ -31,7 +31,15 @@ impl fmt::Display for ReflowError {
         }
     }
 }
-impl std::error::Error for ReflowError {}
+impl std::error::Error for ReflowError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Dispatch(error) => Some(error),
+            Self::Storage(error) => Some(error),
+            _ => None,
+        }
+    }
+}
 impl From<CircularListError> for ReflowError {
     fn from(error: CircularListError) -> Self {
         Self::Storage(error)

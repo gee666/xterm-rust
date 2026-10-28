@@ -85,6 +85,27 @@ fn layout_propagates_disposal_during_event_dispatch() {
     assert_eq!(lines.len(), 8);
 }
 #[test]
+fn layout_retains_callback_error_identity_and_source_chain() {
+    use std::error::Error;
+    let lines = list();
+    let original = EmitError::callback(std::io::Error::other("marker callback failed"));
+    let captured = original.clone();
+    lines
+        .on_delete_emitter
+        .event()
+        .try_subscribe(move |_| Err(captured.clone()));
+    let error = reflow_larger_create_new_layout(&lines, &[(1, 1)]).unwrap_err();
+    assert_eq!(error, ReflowError::Dispatch(original));
+    let dispatch = error.source().unwrap().downcast_ref::<EmitError>().unwrap();
+    let root = dispatch
+        .source()
+        .unwrap()
+        .downcast_ref::<std::io::Error>()
+        .unwrap();
+    assert_eq!(root.to_string(), "marker callback failed");
+    assert_eq!(lines.len(), 8);
+}
+#[test]
 fn layout_reentrant_listener_can_inspect_and_mutate_storage() {
     let lines = list();
     let weak = Rc::downgrade(&lines);

@@ -1,0 +1,32 @@
+{
+  "task": 62,
+  "reviewer": "Timur",
+  "scope": "Reopened oracle startup integrity fix only; previous algorithm review by Blake retained.",
+  "sourceSha256": "6723024ab910a74abfc46bae373fa6e248e8a93f63c00d9b551ad03e9fb9493e",
+  "method": "Same oracle body with only root/import paths redirected to isolated tmp roots; no source or shared results changed.",
+  "reports": [
+    {
+      "scenario": "missing-dependency",
+      "status": 1,
+      "stderr": "node:internal/modules/esm/resolve:271\r\n    throw new ERR_MODULE_NOT_FOUND(\r\n          ^\r\n\r\nError [ERR_MODULE_NOT_FOUND]: Cannot find module 'P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\buffer-reflow-startup-review\\missing-dependency\\source_repo\\node_modules\\esbuild\\lib\\main.js' imported from P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\buffer-reflow-startup-review\\missing-dependency\\probe.mjs\r\n    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\r\n    at moduleResolve (node:internal/modules/esm/resolve:861:10)\r\n    at defaultResolve (node:internal/modules/esm/resolve:988:11)\r\n    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\r\n    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\r\n    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\r\n    at #resolve (node:internal/modules/esm/loader:679:17)\r\n    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\r\n    at node:internal/modules/esm/loader:628:32\r\n    at TracingChannel.tracePromise (node:diagnostics_channel:362:14) {\r\n  code: 'ERR_MODULE_NOT_FOUND',\r\n  url: 'file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/buffer-reflow-startup-review/missing-dependency/source_repo/node_modules/esbuild/lib/main.js'\r\n}\r\n\r\nNode.js v24.15.0\r\n",
+      "retainedReport": {
+        "status": "incomplete",
+        "command": "node scripts/buffer-reflow-oracle.mjs",
+        "started": "2026-10-28T00:07:05.719Z",
+        "overallEquivalence": "NOT PROVEN"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "blocked-temp-directory",
+      "status": 1,
+      "stderr": "node:fs:1350\r\n  const result = binding.mkdir(\r\n                         ^\r\n\r\nError: EEXIST: file already exists, mkdir 'P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\buffer-reflow-startup-review\\blocked-temp-directory\\tmp\\buffer-reflow-oracle'\r\n    at mkdirSync (node:fs:1350:26)\r\n    at file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/buffer-reflow-startup-review/blocked-temp-directory/probe.mjs:14:1\r\n    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)\r\n    at async node:internal/modules/esm/loader:639:26\r\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\r\n  errno: -4075,\r\n  code: 'EEXIST',\r\n  syscall: 'mkdir',\r\n  path: 'P:\\\\workshop\\\\Windows_Worshop\\\\oira666\\\\xterm-rust\\\\tmp\\\\buffer-reflow-startup-review\\\\blocked-temp-directory\\\\tmp\\\\buffer-reflow-oracle'\r\n}\r\n\r\nNode.js v24.15.0\r\n",
+      "retainedReport": {
+        "status": "passed",
+        "sentinel": "stale previous run"
+      },
+      "passed": false
+    }
+  ],
+  "passed": false
+}
