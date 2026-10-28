@@ -1,0 +1,185 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+warning: unused import: `KittyCommand`
+ --> crates\xterm-addons\src\image\kitty\handler.rs:4:37
+  |
+4 | use super::command::{parse_command, KittyCommand};
+  |                                     ^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: struct `DecoderSnapshot` is never constructed
+  --> crates\xterm-addons\src\image\kitty\handler_types.rs:60:12
+   |
+60 | pub struct DecoderSnapshot {
+   |            ^^^^^^^^^^^^^^^
+   |
+   = note: `DecoderSnapshot` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` on by default
+
+warning: function `decoder_snapshot` is never used
+  --> crates\xterm-addons\src\image\kitty\handler_types.rs:66:8
+   |
+66 | pub fn decoder_snapshot(decoder: &DecoderRef) -> Result<DecoderSnapshot, StorageError> {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: struct `KittyDiagnostics` is never constructed
+  --> crates\xterm-addons\src\image\kitty\handler_types.rs:75:12
+   |
+75 | pub struct KittyDiagnostics {
+   |            ^^^^^^^^^^^^^^^^
+   |
+   = note: `KittyDiagnostics` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: method `is_empty` is never used
+  --> crates\xterm-addons\src\image\number_map.rs:55:12
+   |
+51 | impl<T> NumberMap<T> {
+   | -------------------- method in this implementation
+...
+55 |     pub fn is_empty(&self) -> bool {
+   |            ^^^^^^^^
+
+warning: `xterm-addons` (lib) generated 5 warnings (run `cargo fix --lib -p xterm-addons` to apply 1 suggestion)
+    Checking xterm-web v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web)
+error[E0432]: unresolved import `crate::input::dom::mouse::MouseSnapshot`
+ --> crates\xterm-web\src\terminal\input_mouse.rs:3:44
+  |
+3 |     dom::mouse::{MouseHost, MouseReadHost, MouseSnapshot},
+  |                                            ^^^^^^^^^^^^^ no `MouseSnapshot` in `input::dom::mouse`
+
+error[E0407]: method `mouse_snapshot` is not a member of trait `MouseReadHost`
+  --> crates\xterm-web\src\terminal\input_mouse.rs:16:5
+   |
+16 | /     fn mouse_snapshot(&self) -> Result<MouseSnapshot, JsValue> {
+17 | |         let [cell_width, cell_height] = self.mouse_cell_size()?;
+18 | |         let [canvas_width, canvas_height] = self.mouse_canvas_size()?;
+19 | |         Ok(MouseSnapshot {
+...  |
+39 | |         })
+40 | |     }
+   | |_____^ not a member of trait `MouseReadHost`
+
+error[E0053]: method `cancel` has an incompatible type for trait
+  --> crates\xterm-web\src\write_scheduler.rs:49:43
+   |
+49 |     fn cancel(&self, handle: Self::Handle) { cancel_write(&handle.token); }
+   |                                           ^ expected `Result<(), WriteError>`, found `()`
+   |
+   = note: expected signature `fn(&BrowserWriteScheduler, WriteTimer) -> Result<(), WriteError>`
+              found signature `fn(&BrowserWriteScheduler, WriteTimer) -> ()`
+help: change the output type to match the trait
+   |
+49 |     fn cancel(&self, handle: Self::Handle) -> Result<(), WriteError> { cancel_write(&handle.token); }
+   |                                            +++++++++++++++++++++++++
+
+error[E0053]: method `mouse_scroll_sensitivity` has an incompatible type for trait
+  --> crates\xterm-web\src\terminal\input_mouse.rs:63:43
+   |
+63 |     fn mouse_scroll_sensitivity(&self) -> Result<f64, JsValue> {
+   |                                           ^^^^^^^^^^^^^^^^^^^^ expected `wasm_bindgen::JsValue`, found `f64`
+   |
+note: type in trait
+  --> crates\xterm-web\src\input\dom\mouse_read.rs:12:43
+   |
+12 |     fn mouse_scroll_sensitivity(&self) -> Result<JsValue, JsValue>;
+   |                                           ^^^^^^^^^^^^^^^^^^^^^^^^
+   = note: expected signature `fn(&EngineInputHost) -> Result<wasm_bindgen::JsValue, _>`
+              found signature `fn(&EngineInputHost) -> Result<f64, _>`
+help: change the output type to match the trait
+   |
+63 |     fn mouse_scroll_sensitivity(&self) -> Result<wasm_bindgen::JsValue, wasm_bindgen::JsValue> {
+   |                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0053]: method `mouse_fast_scroll_sensitivity` has an incompatible type for trait
+  --> crates\xterm-web\src\terminal\input_mouse.rs:66:48
+   |
+66 |     fn mouse_fast_scroll_sensitivity(&self) -> Result<f64, JsValue> {
+   |                                                ^^^^^^^^^^^^^^^^^^^^ expected `wasm_bindgen::JsValue`, found `f64`
+   |
+note: type in trait
+  --> crates\xterm-web\src\input\dom\mouse_read.rs:13:48
+   |
+13 |     fn mouse_fast_scroll_sensitivity(&self) -> Result<JsValue, JsValue>;
+   |                                                ^^^^^^^^^^^^^^^^^^^^^^^^
+   = note: expected signature `fn(&EngineInputHost) -> Result<wasm_bindgen::JsValue, _>`
+              found signature `fn(&EngineInputHost) -> Result<f64, _>`
+help: change the output type to match the trait
+   |
+66 |     fn mouse_fast_scroll_sensitivity(&self) -> Result<wasm_bindgen::JsValue, wasm_bindgen::JsValue> {
+   |                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0308]: arguments to this method are incorrect
+   --> crates\xterm-web\src\terminal\browser_events.rs:49:44
+    |
+49  |                 if request.sync { services.render_rows(request.start, request.end).map_err(callback_error)?; }
+    |                                            ^^^^^^^^^^^ -------------  ----------- expected `usize`, found `f64`
+    |                                                        |
+    |                                                        expected `usize`, found `f64`
+    |
+note: method defined here
+   --> crates\xterm-web\src\terminal\browser_services.rs:119:12
+    |
+119 |     pub fn render_rows(&self, start: usize, end: usize) -> Result<(), JsValue> {
+    |            ^^^^^^^^^^^        ------------  ----------
+
+error[E0599]: no method named `queue_viewport_sync` found for reference `&BrowserServices` in the current scope
+  --> crates\xterm-web\src\terminal\browser_events.rs:73:50
+   |
+73 |             TerminalEvent::SyncScrollBar => self.queue_viewport_sync(),
+   |                                                  ^^^^^^^^^^^^^^^^^^^ method not found in `&BrowserServices`
+
+error[E0599]: no method named `queue_viewport_sync` found for reference `&BrowserServices` in the current scope
+  --> crates\xterm-web\src\terminal\browser_events.rs:94:14
+   |
+94 |         self.queue_viewport_sync()
+   |              ^^^^^^^^^^^^^^^^^^^ method not found in `&BrowserServices`
+
+error[E0599]: no method named `scroll_lines` found for struct `std::rc::Rc<BrowserServices>` in the current scope
+   --> crates\xterm-web\src\terminal\accessibility_host.rs:138:25
+    |
+138 |         self.upgrade()?.scroll_lines(i64::from(amount), false)
+    |                         ^^^^^^^^^^^^ method not found in `Rc<BrowserServices>`
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `scroll_lines`, perhaps you need to implement one of them:
+            candidate #1: `AccessibilityHost`
+            candidate #2: `selection::dom::SelectionHost`
+
+error[E0599]: no method named `handle_touch_scroll` found for struct `std::rc::Rc<BrowserServices>` in the current scope
+   --> crates\xterm-web\src\terminal\input_services.rs:204:25
+    |
+204 |         self.upgrade()?.handle_touch_scroll(translation_y)
+    |                         ^^^^^^^^^^^^^^^^^^^ method not found in `Rc<BrowserServices>`
+
+error[E0599]: no method named `scroll_lines` found for struct `std::rc::Rc<BrowserServices>` in the current scope
+  --> crates\xterm-web\src\terminal\selection_services.rs:96:25
+   |
+96 |         self.upgrade()?.scroll_lines(amount, suppress_scroll_event)
+   |                         ^^^^^^^^^^^^ method not found in `Rc<BrowserServices>`
+   |
+   = help: items from traits can only be used if the trait is implemented and in scope
+   = note: the following traits define an item `scroll_lines`, perhaps you need to implement one of them:
+           candidate #1: `AccessibilityHost`
+           candidate #2: `selection::dom::SelectionHost`
+
+error[E0308]: `?` operator has incompatible types
+  --> crates\xterm-web\src\terminal\input_mouse.rs:28:41
+   |
+28 |                     scroll_sensitivity: self.mouse_scroll_sensitivity()?,
+   |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `f64`, found `JsValue`
+   |
+   = note: `?` operator cannot convert from `wasm_bindgen::JsValue` to `f64`
+
+error[E0308]: `?` operator has incompatible types
+  --> crates\xterm-web\src\terminal\input_mouse.rs:29:46
+   |
+29 |                     fast_scroll_sensitivity: self.mouse_fast_scroll_sensitivity()?,
+   |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `f64`, found `JsValue`
+   |
+   = note: `?` operator cannot convert from `wasm_bindgen::JsValue` to `f64`
+
+Some errors have detailed explanations: E0053, E0308, E0407, E0432, E0599.
+For more information about an error, try `rustc --explain E0053`.
+error: could not compile `xterm-web` (lib) due to 13 previous errors

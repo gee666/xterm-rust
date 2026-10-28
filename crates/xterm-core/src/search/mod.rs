@@ -4,9 +4,12 @@
 //! Positions and terms use UTF-16, not Rust byte indices. Terminal subscriptions,
 //! selection mutation and browser decorations belong to the addon adapter.
 mod cache;
+mod coordinates;
 mod engine;
 mod matching;
+mod ring;
 mod state;
+pub use ring::with_buffer;
 
 pub use cache::{LineCacheEntry, SearchLineCache, CACHE_TTL_MS};
 pub use engine::SearchEngine;
@@ -51,6 +54,13 @@ pub enum SearchError {
     InvalidColumn { col: isize, cols: usize },
     InvalidRegex(String),
     InvalidCacheEntry,
+    WrappedLineRecursion,
+    WrappedTranslationCycle,
+    RowTraversalCycle,
+    IndexOverflow,
+    InvalidCellData,
+    BorrowedLine,
+    Storage(crate::circular_list::CircularListError),
 }
 
 impl fmt::Display for SearchError {
@@ -61,13 +71,35 @@ impl fmt::Display for SearchError {
                 write!(f, "Invalid col: {col} to search in terminal of {cols} cols")
             }
             Self::InvalidRegex(message) => write!(f, "Invalid regular expression: {message}"),
+            Self::WrappedLineRecursion => f.write_str("Maximum call stack size exceeded"),
+            Self::WrappedTranslationCycle => {
+                f.write_str("Wrapped search translation would traverse the same ring indefinitely")
+            }
+            Self::RowTraversalCycle => f.write_str(
+                "search row traversal would not progress under JavaScript Number arithmetic",
+            ),
+            Self::IndexOverflow => {
+                f.write_str("search coordinate exceeds the native signed index range")
+            }
+            Self::InvalidCellData => {
+                f.write_str("search buffer cell has incomplete UTF-16 metadata")
+            }
+            Self::BorrowedLine => f.write_str("search buffer line is already borrowed"),
+            Self::Storage(error) => error.fmt(f),
             Self::InvalidCacheEntry => {
                 f.write_str("search cache offsets must start at zero and be ordered within text")
             }
         }
     }
 }
-impl Error for SearchError {}
+impl Error for SearchError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        match self {
+            Self::Storage(error) => Some(error),
+            _ => None,
+        }
+    }
+}
 
 /// Immutable view of the active buffer, including its scrollback and blank rows.
 /// Construct a fresh view after terminal mutations and invalidate the cache on
@@ -76,6 +108,7 @@ impl Error for SearchError {}
 enum Lines<'a> {
     Slice(&'a [BufferLine]),
     References(&'a [&'a BufferLine]),
+    Lookup(&'a dyn Fn(isize) -> Option<&'a BufferLine>),
 }
 
 #[derive(Clone, Copy)]
@@ -83,6 +116,7 @@ pub struct SearchBuffer<'a> {
     lines: Lines<'a>,
     cols: usize,
     end: isize,
+    ring_capacity: Option<usize>,
 }
 
 impl<'a> SearchBuffer<'a> {
@@ -92,6 +126,7 @@ impl<'a> SearchBuffer<'a> {
             lines: Lines::Slice(lines),
             cols,
             end,
+            ring_capacity: None,
         })
     }
     /// Use references obtained from live ring-buffer borrow guards without
@@ -102,6 +137,29 @@ impl<'a> SearchBuffer<'a> {
             lines: Lines::References(lines),
             cols,
             end,
+            ring_capacity: None,
+        })
+    }
+    /// The source public view delegates signed indices to its ring, including
+    /// negative and beyond-length reads. The host holds immutable guards for all
+    /// allocated slots while the lookup is used. Capacity bounds forward cycles.
+    pub fn from_ring_lookup(
+        length: usize,
+        cols: usize,
+        capacity: usize,
+        lookup: &'a dyn Fn(isize) -> Option<&'a BufferLine>,
+    ) -> Result<Self, SearchError> {
+        let end = Self::validate(length, cols, true)?;
+        // Retained ring slots can have old widths after alternate-buffer resize.
+        // Source BufferApiView exposes them; per-cell access handles short rows.
+        if capacity == 0 {
+            return Err(SearchError::InvalidDimensions);
+        }
+        Ok(Self {
+            lines: Lines::Lookup(lookup),
+            cols,
+            end,
+            ring_capacity: Some(capacity),
         })
     }
     fn validate(len: usize, cols: usize, uniform: bool) -> Result<isize, SearchError> {
@@ -126,10 +184,12 @@ impl<'a> SearchBuffer<'a> {
         self.end == 0
     }
     pub fn line(&self, row: isize) -> Option<&'a BufferLine> {
-        let index = usize::try_from(row).ok()?;
         match self.lines {
-            Lines::Slice(lines) => lines.get(index),
-            Lines::References(lines) => lines.get(index).copied(),
+            Lines::Slice(lines) => usize::try_from(row).ok().and_then(|index| lines.get(index)),
+            Lines::References(lines) => usize::try_from(row)
+                .ok()
+                .and_then(|index| lines.get(index).copied()),
+            Lines::Lookup(lookup) => lookup(row),
         }
     }
 }

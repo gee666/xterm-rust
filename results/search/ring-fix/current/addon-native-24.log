@@ -1,0 +1,88 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on build directory
+warning: unused import: `KittyCommand`
+ --> crates\xterm-addons\src\image\kitty\handler.rs:4:37
+  |
+4 | use super::command::{parse_command, KittyCommand};
+  |                                     ^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: struct `DecoderSnapshot` is never constructed
+  --> crates\xterm-addons\src\image\kitty\handler_types.rs:60:12
+   |
+60 | pub struct DecoderSnapshot {
+   |            ^^^^^^^^^^^^^^^
+   |
+   = note: `DecoderSnapshot` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` on by default
+
+warning: function `decoder_snapshot` is never used
+  --> crates\xterm-addons\src\image\kitty\handler_types.rs:66:8
+   |
+66 | pub fn decoder_snapshot(decoder: &DecoderRef) -> Result<DecoderSnapshot, StorageError> {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: struct `KittyDiagnostics` is never constructed
+  --> crates\xterm-addons\src\image\kitty\handler_types.rs:75:12
+   |
+75 | pub struct KittyDiagnostics {
+   |            ^^^^^^^^^^^^^^^^
+   |
+   = note: `KittyDiagnostics` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: method `is_empty` is never used
+  --> crates\xterm-addons\src\image\number_map.rs:55:12
+   |
+51 | impl<T> NumberMap<T> {
+   | -------------------- method in this implementation
+...
+55 |     pub fn is_empty(&self) -> bool {
+   |            ^^^^^^^^
+
+warning: `xterm-addons` (lib) generated 5 warnings (run `cargo fix --lib -p xterm-addons` to apply 1 suggestion)
+warning: method `name` is never used
+  --> crates\xterm-web\src\renderer\theme_css_rules.rs:24:12
+   |
+23 | impl OptionField {
+   | ---------------- method in this implementation
+24 |     pub fn name(self) -> &'static str {
+   |            ^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `xterm-web` (lib) generated 1 warning
+   Compiling xterm-web v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 3.47s
+     Running tests\search_addon.rs (target\debug\deps\search_addon-5352eef902210881.exe)
+
+running 24 tests
+test tracker::result_event_can_reenter_tracker_reset_without_a_live_results_borrow ... ok
+test tracker::tracker_preserves_slice_order_and_ignores_term_in_identity ... ok
+test use_before_activation_errors_without_search_events ... ok
+test clocks::cache_ttl_refreshes_last_access_without_replacing_every_timer ... ok
+test ranges::negative_decoration_width_reaches_public_guard_not_a_successful_noop ... ok
+test on_before_search_can_mutate_the_same_options_object ... ok
+test clocks::disposal_cancels_debounce_and_cache_and_removes_actual_decorations ... ok
+test clocks::parsed_writes_refresh_at_200ms_and_replace_pending_refresh ... ok
+test active_styles_preserve_source_false_argument_and_border_once ... ok
+test tracker::selected_decoration_disposes_its_marker_and_subscription_once ... ok
+test tracker::selected_replacement_inside_disposal_is_cleared_like_source_assignment ... ok
+test original_only_one_overview_marker_per_buffer_line ... ok
+test ranges::expanding_lowercase_at_last_column_preserves_zero_width_first_range ... ok
+test decorations::a_throwing_live_border_getter_retains_error_identity_and_existing_style ... ok
+test decorations::borders_are_read_live_at_each_render_even_after_first_outline_assignment ... ok
+test clearing_and_result_events_are_reentrant_without_internal_borrows ... ok
+test selections_decorations_result_indices_and_event_order_share_real_services ... ok
+test tracker::selected_failure_retains_original_error_and_tracker_until_retry ... ok
+test original_wrapped_match_decoration_ranges_and_overview_rows ... ok
+test clocks::disposal_from_result_callback_does_not_retain_a_mutable_borrow ... ok
+test unchanged_term_option_change_preserves_source_highlight_order_bug ... ok
+test clearing_decorations_does_not_clear_selection_despite_typing_comment ... ok
+test clocks::linefeed_cursor_and_resize_each_cancel_the_live_cache_timer ... ok
+test fractional_and_nonfinite_limits_retain_slice_and_highlight_distinction ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+

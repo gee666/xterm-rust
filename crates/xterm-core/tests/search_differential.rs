@@ -155,7 +155,8 @@ fn actual_cell_wrapped_translation_corpus() {
         let lines = lines(fields[1], cols);
         let buffer = SearchBuffer::new(&lines, cols).unwrap();
         let result =
-            SearchLineCache::translate(buffer, fields[2].parse().unwrap(), fields[3] == "1");
+            SearchLineCache::translate(buffer, fields[2].parse().unwrap(), fields[3] == "1")
+                .unwrap();
         assert_eq!(
             hex(&result.text),
             fields[4],

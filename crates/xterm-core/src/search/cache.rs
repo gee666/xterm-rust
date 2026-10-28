@@ -1,5 +1,5 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
-use super::SearchBuffer;
+use super::{SearchBuffer, SearchError};
 use std::collections::BTreeMap;
 
 pub const CACHE_TTL_MS: u64 = 15_000;
@@ -47,12 +47,26 @@ impl SearchLineCache {
             self.invalidate();
         }
     }
-    pub fn translate(buffer: SearchBuffer<'_>, mut row: isize, trim_right: bool) -> LineCacheEntry {
+    pub fn translate(
+        buffer: SearchBuffer<'_>,
+        mut row: isize,
+        trim_right: bool,
+    ) -> Result<LineCacheEntry, SearchError> {
         let mut text = Vec::new();
+        let mut traversed = 0;
         let mut offsets = vec![0];
         while let Some(line) = buffer.line(row) {
-            let next = buffer.line(row.saturating_add(1));
+            let next_row = row.checked_add(1).ok_or(SearchError::IndexOverflow)?;
+            let next = buffer.line(next_row);
             let wraps = next.is_some_and(|l| l.is_wrapped);
+            traversed += 1;
+            if wraps
+                && buffer
+                    .ring_capacity
+                    .is_some_and(|capacity| traversed >= capacity)
+            {
+                return Err(SearchError::WrappedTranslationCycle);
+            }
             let mut string = line.translate_to_string(!wraps && trim_right, None, None, None);
             if wraps {
                 let last = line.len().checked_sub(1);
@@ -68,8 +82,8 @@ impl SearchLineCache {
                 break;
             }
             offsets.push(text.len());
-            row = row.saturating_add(1);
+            row = next_row;
         }
-        LineCacheEntry { text, offsets }
+        Ok(LineCacheEntry { text, offsets })
     }
 }

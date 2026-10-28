@@ -1,5 +1,6 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
 use super::{
+    coordinates::{buffer_cols_to_string_offset, string_length_to_buffer_size},
     matching, SearchBuffer, SearchError, SearchLineCache, SearchOptions, SearchPosition,
     SearchResult, SearchSelection,
 };
@@ -83,7 +84,12 @@ impl<'buffer, 'cache> SearchEngine<'buffer, 'cache> {
             )?;
         }
         if result.is_none() && start_row != 0 {
-            result = self.scan(term, 0..start_row.min(self.buffer.end), 0, options, false)?;
+            let end = if self.buffer.ring_capacity.is_some() {
+                start_row
+            } else {
+                start_row.min(self.buffer.end)
+            };
+            result = self.scan(term, 0..end, 0, options, false)?;
         }
         if result.is_none() {
             if let Some(selection) = selection {
@@ -134,20 +140,36 @@ impl<'buffer, 'cache> SearchEngine<'buffer, 'cache> {
         }
         if result.is_none() {
             position.col = position.col.max(self.buffer.cols as isize);
-            for row in (0..start_row.min(self.buffer.end)).rev() {
+            let end = if self.buffer.ring_capacity.is_some() {
+                start_row
+            } else {
+                start_row.min(self.buffer.end)
+            };
+            for row in (0..end).rev() {
                 position.row = row;
                 result = self.find_in_line(term, &mut position, options, true)?;
                 if result.is_some() {
                     break;
                 }
+                if self.buffer.ring_capacity.is_some() && row as f64 - 1.0 == row as f64 {
+                    return Err(SearchError::RowTraversalCycle);
+                }
             }
         }
         if result.is_none() && start_row != last_row {
-            for row in (start_row.max(0)..self.buffer.end).rev() {
+            let first = if self.buffer.ring_capacity.is_some() {
+                start_row
+            } else {
+                start_row.max(0)
+            };
+            for row in (first..self.buffer.end).rev() {
                 position.row = row;
                 result = self.find_in_line(term, &mut position, options, true)?;
                 if result.is_some() {
                     break;
+                }
+                if self.buffer.ring_capacity.is_some() && row as f64 - 1.0 == row as f64 {
+                    return Err(SearchError::RowTraversalCycle);
                 }
             }
         }
@@ -161,10 +183,24 @@ impl<'buffer, 'cache> SearchEngine<'buffer, 'cache> {
         options: &SearchOptions,
         reverse: bool,
     ) -> Result<Option<SearchResult>, SearchError> {
-        for row in rows.start.max(0)..rows.end.min(self.buffer.end) {
+        let first = if self.buffer.ring_capacity.is_some() {
+            rows.start
+        } else {
+            rows.start.max(0)
+        };
+        let end = if self.buffer.ring_capacity.is_some() {
+            rows.end
+        } else {
+            rows.end.min(self.buffer.end)
+        };
+        for row in first..end {
             let mut position = SearchPosition { row, col };
             if let Some(found) = self.find_in_line(term, &mut position, options, reverse)? {
                 return Ok(Some(found));
+            }
+            let number = row as f64;
+            if self.buffer.ring_capacity.is_some() && number + 1.0 == number {
+                return Err(SearchError::RowTraversalCycle);
             }
         }
         Ok(None)
@@ -179,16 +215,28 @@ impl<'buffer, 'cache> SearchEngine<'buffer, 'cache> {
         // Iteration replaces upstream recursion on arbitrarily long wrapped
         // lines, retaining the same accumulated starting column.
         while self.buffer.line(position.row).is_some_and(|l| l.is_wrapped) {
-            position.col = position.col.saturating_add(self.buffer.cols as isize);
+            let row_number = position.row as f64;
+            if !reverse && (self.buffer.ring_capacity == Some(1) || row_number - 1.0 == row_number)
+            {
+                return Err(SearchError::WrappedLineRecursion);
+            }
+            position.col = position
+                .col
+                .checked_add(self.buffer.cols as isize)
+                .ok_or(SearchError::IndexOverflow)?;
             if reverse {
                 return Ok(None);
             }
-            position.row = position.row.saturating_sub(1);
+            let previous = row_number - 1.0;
+            if previous < isize::MIN as f64 || previous >= -(isize::MIN as f64) {
+                return Err(SearchError::IndexOverflow);
+            }
+            position.row = previous as isize;
         }
         let row = position.row;
         if self.cache.get(row).is_none() {
             self.cache
-                .set(row, SearchLineCache::translate(self.buffer, row, true));
+                .set(row, SearchLineCache::translate(self.buffer, row, true)?);
         }
         // init always precedes searches and set inserted this row above.
         let entry = self.cache.get(row).expect("initialized search cache entry");
@@ -201,78 +249,50 @@ impl<'buffer, 'cache> SearchEngine<'buffer, 'cache> {
         {
             return Err(SearchError::InvalidCacheEntry);
         }
-        let offset = self.buffer_cols_to_string_offset(row, position.col);
+        let offset = buffer_cols_to_string_offset(self.buffer, row, position.col)?;
         let Some((index, matched)) = matching::find(term, &entry.text, offset, options, reverse)?
         else {
             return Ok(None);
         };
+        let match_end = index
+            .checked_add(matched.len())
+            .ok_or(SearchError::IndexOverflow)?;
         let mut start_row = 0;
         while start_row < entry.offsets.len() - 1 && index >= entry.offsets[start_row + 1] {
             start_row += 1;
         }
         let mut end_row = start_row;
-        while end_row < entry.offsets.len() - 1
-            && index + matched.len() >= entry.offsets[end_row + 1]
-        {
+        while end_row < entry.offsets.len() - 1 && match_end >= entry.offsets[end_row + 1] {
             end_row += 1;
         }
-        let start = self.string_length_to_buffer_size(
-            row + start_row as isize,
-            index - entry.offsets[start_row],
-        );
-        let end = self.string_length_to_buffer_size(
-            row + end_row as isize,
-            index + matched.len() - entry.offsets[end_row],
-        );
-        let size = end + (self.buffer.cols * (end_row - start_row)) as isize - start;
+        let first_row = row
+            .checked_add(start_row as isize)
+            .ok_or(SearchError::IndexOverflow)?;
+        let last_row = row
+            .checked_add(end_row as isize)
+            .ok_or(SearchError::IndexOverflow)?;
+        let start =
+            string_length_to_buffer_size(self.buffer, first_row, index - entry.offsets[start_row])?;
+        let end = string_length_to_buffer_size(
+            self.buffer,
+            last_row,
+            match_end - entry.offsets[end_row],
+        )?;
+        let span = self
+            .buffer
+            .cols
+            .checked_mul(end_row - start_row)
+            .and_then(|n| isize::try_from(n).ok())
+            .ok_or(SearchError::IndexOverflow)?;
+        let size = end
+            .checked_add(span)
+            .and_then(|end| end.checked_sub(start))
+            .ok_or(SearchError::IndexOverflow)?;
         Ok(Some(SearchResult {
             term: matched,
             col: start,
-            row: row + start_row as isize,
+            row: first_row,
             size,
         }))
-    }
-    fn string_length_to_buffer_size(&self, row: isize, offset: usize) -> isize {
-        let mut offset = offset as isize;
-        let Some(line) = self.buffer.line(row) else {
-            return 0;
-        };
-        let mut i = 0;
-        while (i as isize) < offset {
-            let Some(cell) = line.get_cell(i) else { break };
-            let length = cell.get_chars().len();
-            if length > 1 {
-                offset -= (length - 1) as isize;
-            }
-            if line.get_width(i + 1) == Some(0) {
-                offset += 1;
-            }
-            i += 1;
-        }
-        offset
-    }
-    fn buffer_cols_to_string_offset(&self, mut row: isize, mut cols: isize) -> usize {
-        let mut offset = 0;
-        while cols > 0 {
-            let Some(line) = self.buffer.line(row) else {
-                break;
-            };
-            for i in 0..(cols as usize).min(self.buffer.cols) {
-                let Some(cell) = line.get_cell(i) else { break };
-                if cell.get_width() != 0 {
-                    offset += if cell.get_code() == Some(0) {
-                        1
-                    } else {
-                        cell.get_chars().len()
-                    };
-                }
-            }
-            row += 1;
-            if self.buffer.line(row).is_some_and(|l| !l.is_wrapped) {
-                break;
-            }
-            cols -= self.buffer.cols as isize;
-        }
-        offset
     }
 }

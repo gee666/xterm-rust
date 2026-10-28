@@ -11,7 +11,7 @@ Source: `SearchEngine.ts` and `SearchEngine.test.ts`.
 - Forward search tests first row at the supplied column, later rows from column zero, and stops at `baseY + rows`. It does not wrap in plain `find`.
 - `findNextWithSelection` starts at zero without selection. It starts at selection end for an unchanged cached term and selection start for a changed term. It scans later rows, wraps earlier rows and finally retries the previous selection row from zero. A single match is returned again.
 - `findPreviousWithSelection` starts at the last row and terminal width without selection. With a changed term it attempts rightward expansion from selection start before reverse search from selection end. With an unchanged term it searches before selection start. It scans earlier rows and then wraps from the bottom.
-- Forward search starting on a wrapped row backs up to the first row and accumulates columns. Reverse search skips wrapped continuation rows while accumulating columns. Long runs must not use recursive stack growth.
+- Forward search starting on a wrapped row backs up and accumulates columns. Reverse search skips continuation rows while accumulating columns. Actual BufferApiView reads preserve negative/beyond-length cyclic aliases and stale physical slots. The observed wrapped capacity-one cycle returns typed RangeError behavior, not None, a native panic or an unbounded loop. Keep the exact seed/trace in results/buffer-terminal/search-ring-regression.md. Finite long runs must not exhaust the native stack.
 - Literal search covers case-sensitive/insensitive matching, match before/at/after the offset, overlapping candidates in reverse, original requested term in result and no accidental Unicode case-fold matching.
 - Whole-word boundaries use the exact punctuation/space constant from upstream, not Rust word boundaries. Test beginning/end of line, every delimiter, underscore, tab, non-ASCII neighbors and rejected first candidate even if a later candidate would satisfy whole-word rules.
 - Regex search covers valid/invalid patterns, `g` versus `gi`, captures/backreferences/lookahead/lookbehind, anchors relative to the sliced search text, greedy/non-greedy matching, overlapping reverse candidates, empty forward match rejection, empty reverse candidates, astral pairs and lone surrogate matching without the Unicode flag. Invalid patterns propagate an error, not an empty result.
@@ -26,7 +26,7 @@ Source: `SearchLineCache.ts` and `SearchLineCache.test.ts`.
 - A nonwrapped line honors trim-right. Only the final row of a wrapped line is trimmed. Full-width rows, content with trailing spaces, null cells, CJK, astral and combined cells translate exactly like the source buffer API.
 - For a null width-one last cell immediately before a wrapped width-two first cell, remove exactly the artificial blank and adjust later UTF-16 line offsets. Do not remove an actual final character or a null before a narrow cell.
 - TTL is exactly 15,000 milliseconds since the most recent init call. Check 14,999, 15,000, refreshed deadline and repeated expiry. Test clocks explicitly, without sleeps.
-- Line feed, cursor movement and resize each invalidate all entries; disposal clears timers/subscriptions and cache and is idempotent. Portable cache invalidation tests alone do not cover terminal event wiring.
+- Line feed, cursor movement and resize each invalidate all entries; disposal clears timers/subscriptions and cache and is idempotent. Portable cache invalidation tests alone do not cover terminal event wiring. Translation over a ring must detect a complete wrapped cycle and return a typed error instead of looping forever; bounded fixture views must retain their original behavior.
 
 ## C. Search state and result tracking
 
@@ -47,7 +47,7 @@ Sources: `SearchAddon.ts`, `DecorationManager.ts`, `DecorationManager.test.ts`, 
 - Successful search selects the exact cell span, scrolls only if outside the viewport and centers using floor(rows/2). `noScroll` preserves viewport. Missing result clears selection and selected decoration.
 - Write/resize debounces refresh by 200 milliseconds, replaces a pending refresh, performs incremental previous search with no scrolling and cannot run after disposal.
 - Decorations split a wrapped match into per-row ranges, compute marker offset from baseY/cursorY, use active top/inactive bottom layer and matching background/border/ruler options. Ruler highlights are deduplicated by row. Marker and decoration disposal clear each other without double disposal. Partial creation failures preserve source cleanup semantics.
-- Render callbacks apply the two source CSS classes and optional outline exactly. Confirm actual Rust-backed browser output and selection on Chromium, Firefox and WebKit, not a recorded decoration command list alone.
+- Render callbacks apply styles exactly. Source _createResultDecorations passes false to _applyStyles even for active matches, so ordinary searches add only xterm-find-result-decoration, not the unreachable active CSS class. Border properties are read live when render fires, even if the class already exists; outline is assigned only on the first class addition. Retain the raw color object and thrown getter identity. Confirm actual Rust-backed output and selection on Chromium, Firefox and WebKit, not a decoration command log.
 
 ## E. Evidence
 

@@ -1,0 +1,41 @@
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0432]: unresolved import `iteration::KeyItem`
+ --> crates\xterm-core\src\sorted_list.rs:9:50
+  |
+9 | pub use iteration::{IterationContext, KeyCursor, KeyItem};
+  |                                                  ^^^^^^^ no `KeyItem` in `sorted_list::iteration`
+
+error[E0308]: mismatched types
+  --> crates\xterm-core\src\sorted_list\iteration.rs:65:54
+   |
+65 |             self.iteration_context.0.set(self.search(cursor.key));
+   |                                               ------ ^^^^^^^^^^ expected `&SortedKey`, found `f64`
+   |                                               |
+   |                                               arguments to this method are incorrect
+   |
+note: method defined here
+  --> crates\xterm-core\src\sorted_list\lookup.rs:3:19
+   |
+3  |     pub(super) fn search(&self, key: &SortedKey) -> Result<usize, SortedListError> {
+   |                   ^^^^^^        ---------------
+
+error[E0308]: mismatched types
+  --> crates\xterm-core\src\sorted_list\iteration.rs:65:42
+   |
+65 |             self.iteration_context.0.set(self.search(cursor.key));
+   |                                      --- ^^^^^^^^^^^^^^^^^^^^^^^ expected `usize`, found `Result<usize, SortedListError>`
+   |                                      |
+   |                                      arguments to this method are incorrect
+   |
+   = note: expected type `usize`
+              found enum `std::result::Result<usize, sorted_list::SortedListError>`
+note: method defined here
+  --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\core\src\cell.rs:428:12
+help: use the `?` operator to extract the `std::result::Result<usize, sorted_list::SortedListError>` value, propagating a `Result::Err` value to the caller
+   |
+65 |             self.iteration_context.0.set(self.search(cursor.key)?);
+   |                                                                 +
+
+Some errors have detailed explanations: E0308, E0432.
+For more information about an error, try `rustc --explain E0308`.
+error: could not compile `xterm-core` (lib) due to 3 previous errors
