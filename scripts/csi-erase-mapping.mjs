@@ -34,7 +34,18 @@ for(const path of sourceFiles) {
           else if(line===1534)rustTest='original_browser_decsca_content_assertions';
           if(rustTest)status='native-assertions-mapped-actual-browser-unrun';
         }
-        if(rustTest)rows.push({source:path,line,name:[...suites,name].join(' / '),rustFile,rustTest,status});
+        if(rustTest) {
+          const assertions=[];
+          function calls(child) {
+            if(ts.isCallExpression(child)) {
+              const call=child.expression.getText(syntax);
+              if(call.startsWith('assert.')||call==='pollFor')assertions.push({line:syntax.getLineAndCharacterOfPosition(child.getStart(syntax)).line+1,call,source:child.getText(syntax)});
+            }
+            ts.forEachChild(child,calls);
+          }
+          ts.forEachChild(node.arguments[1],calls);
+          rows.push({source:path,line,name:[...suites,name].join(' / '),rustFile,rustTest,status,assertions});
+        }
       }
     }
     ts.forEachChild(node,child=>visit(child,suites));
@@ -45,5 +56,8 @@ for(const row of rows)assert((await readFile(row.rustFile,'utf8')).includes(`fn 
 const common=rows.filter(row=>row.source.includes('/common/'));
 const browser=rows.filter(row=>row.source.includes('/playwright/'));
 assert.equal(common.length,22);assert.equal(browser.length,6);
-const report={sources,typescript:ts.version,commonSourceCases:common.length,commonFullyMapped:common.filter(row=>row.status==='assertions-mapped').length,commonPartial:common.filter(row=>row.status!=='assertions-mapped').length,browserSourceCases:browser.length,browserNativeAssertionMappings:browser.length,browserActualExecution:'UNRUN in this scoped result; source/Rust-backed browser matrix has separate tasks',sourceFixtureInventory:['t0054-ECH','t0055-EL','t0056-ED','t0057-ED3','t0091-alt_screen_ED3'],fixtureNote:'EL is explicitly skipped by original Terminal2.test.ts, which skips all PTY cases on Windows. Native ONLCR replay is a separate check, not native PTY or browser proof.',rows};
+const rawBaseline=await readFile('results/csi-erase/original-input-handler.json','utf8');
+const baselineStart=rawBaseline.indexOf('{');assert(baselineStart>=0,'missing original reporter object');
+const baseline=JSON.parse(rawBaseline.slice(baselineStart)).stats;
+const report={sources,typescript:ts.version,originalUnitBaseline:baseline,staticCommonAssertionSites:common.reduce((n,row)=>n+row.assertions.length,0),staticBrowserAssertionSites:browser.reduce((n,row)=>n+row.assertions.length,0),assertionCountNote:'Static call sites, not dynamic assertion execution counts; loop expansions remain explicit in source and Rust tests.',commonSourceCases:common.length,commonFullyMapped:common.filter(row=>row.status==='assertions-mapped').length,commonPartial:common.filter(row=>row.status!=='assertions-mapped').length,browserSourceCases:browser.length,browserNativeAssertionMappings:browser.length,browserActualExecution:'UNRUN in this scoped result; source/Rust-backed browser matrix has separate tasks',sourceFixtureInventory:['t0054-ECH','t0055-EL','t0056-ED','t0057-ED3','t0091-alt_screen_ED3'],fixtureNote:'EL is explicitly skipped by original Terminal2.test.ts, which skips all PTY cases on Windows. Native ONLCR replay is a separate check, not native PTY or browser proof.',rows};
 await mkdir('results/csi-erase',{recursive:true});await writeFile('results/csi-erase/mapping.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({common:report.commonSourceCases,fullyMapped:report.commonFullyMapped,partial:report.commonPartial,browserNative:report.browserNativeAssertionMappings}));

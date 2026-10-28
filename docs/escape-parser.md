@@ -26,7 +26,7 @@ Disposable tokens require explicit disposal. Dropping a token does not unregiste
 
 `set_action_boundary_handler` is a Rust adapter hook. It delivers queued events after completed synchronous actions and before later codepoints. Pending actions are flushed by the adapter after parse returns, keeping future ownership explicit even if an event listener fails. Core parsing does not select an executor, hold a terminal-state borrow across a callback or spawn detached tasks.
 
-Custom tables retain upstream fast-path bypasses. A missing entry in a short table maps to IGNORE/GROUND, matching JavaScript's undefined-to-zero bitwise coercion. Invalid caller-defined PARAM mappings return typed errors instead of accepting arbitrary digit values. A custom string-end transition that combines into an invalid state also returns an error. Normal VT500 input never takes these boundary errors. Rust state enums cannot represent arbitrary invalid numeric states. These invalid-configuration boundaries are explicit, not evidence of arbitrary custom-table equivalence.
+Custom tables retain upstream fast-path bypasses. A missing entry in a short table maps to IGNORE/GROUND, matching JavaScript's undefined-to-zero bitwise coercion. Raw mutation of packed custom tables, unknown action/state codes and non-decimal PARAM behavior still need a coherent numeric contract under task 178. The current typed parser rejects PARAM values outside decimal digits and cannot represent arbitrary state numbers. Normal VT500 input never takes those paths. These remaining source gaps are explicit, not evidence of arbitrary custom-table equivalence.
 
 ## Verification
 

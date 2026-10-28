@@ -1,0 +1,757 @@
+{
+  "sources": [
+    {
+      "path": "source_repo/src/common/InputHandler.test.ts",
+      "sha256": "39d741e6d922ef84bcd61b7702a127c48587a5bb7786f60a4c5a6628ad5a9e9c"
+    },
+    {
+      "path": "source_repo/test/playwright/InputHandler.test.ts",
+      "sha256": "b6f9c34ae8312890694f559b8d1e00deb24c828660fa544034fcaf46fc9cc2b5"
+    }
+  ],
+  "typescript": "5.9.3",
+  "originalUnitBaseline": {
+    "suites": 42,
+    "tests": 194,
+    "passes": 194,
+    "pending": 0,
+    "failures": 0,
+    "start": "2026-10-28T00:23:50.121Z",
+    "end": "2026-10-28T00:23:50.212Z",
+    "duration": 91
+  },
+  "staticCommonAssertionSites": 65,
+  "staticBrowserAssertionSites": 22,
+  "assertionCountNote": "Static call sites, not dynamic assertion execution counts; loop expansions remain explicit in source and Rust tests.",
+  "commonSourceCases": 22,
+  "commonFullyMapped": 21,
+  "commonPartial": 1,
+  "browserSourceCases": 6,
+  "browserNativeAssertionMappings": 6,
+  "browserActualExecution": "UNRUN in this scoped result; source/Rust-backed browser matrix has separate tasks",
+  "sourceFixtureInventory": [
+    "t0054-ECH",
+    "t0055-EL",
+    "t0056-ED",
+    "t0057-ED3",
+    "t0091-alt_screen_ED3"
+  ],
+  "fixtureNote": "EL is explicitly skipped by original Terminal2.test.ts, which skips all PTY cases on Windows. Native ONLCR replay is a separate check, not native PTY or browser proof.",
+  "rows": [
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 398,
+      "name": "InputHandler / regression tests / eraseInLine",
+      "rustFile": "crates/xterm-core/tests/csi_erase_upstream.rs",
+      "rustTest": "original_erase_in_line_assertions",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 420,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.lines.get(0)!.translateToString(false), 'a'.repeat(70) + '          ')"
+        },
+        {
+          "line": 426,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.lines.get(1)!.translateToString(false), ' '.repeat(70) + ' aaaaaaaaa')"
+        },
+        {
+          "line": 432,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.lines.get(2)!.translateToString(false), ' '.repeat(bufferService.cols))"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 435,
+      "name": "InputHandler / regression tests / eraseInLine reflow",
+      "rustFile": "crates/xterm-core/tests/csi_erase_upstream.rs",
+      "rustTest": "original_erase_in_line_reflow_assertions",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 457,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.lines.get(2)!.isWrapped, true)"
+        },
+        {
+          "line": 465,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.lines.get(2)!.isWrapped, true)"
+        },
+        {
+          "line": 469,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.lines.get(2)!.isWrapped, false)"
+        },
+        {
+          "line": 476,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.lines.get(2)!.isWrapped, true)"
+        },
+        {
+          "line": 483,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.lines.get(2)!.isWrapped, false)"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 485,
+      "name": "InputHandler / regression tests / ED2 with scrollOnEraseInDisplay turned on",
+      "rustFile": "crates/xterm-core/tests/csi_erase_upstream.rs",
+      "rustTest": "original_ed2_scroll_on_erase_assertions",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 503,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.rows + 2, bufferService.buffer.lines.length)"
+        },
+        {
+          "line": 504,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.ybase, 2)"
+        },
+        {
+          "line": 505,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.lines.get(0)?.translateToString(), aLine)"
+        },
+        {
+          "line": 506,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.lines.get(1)?.translateToString(), aLine)"
+        },
+        {
+          "line": 514,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.rows * 2 + 2, bufferService.buffer.lines.length)"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 516,
+      "name": "InputHandler / regression tests / eraseInDisplay",
+      "rustFile": "crates/xterm-core/tests/csi_erase_upstream.rs",
+      "rustTest": "original_erase_in_display_assertions_and_wrap_cases",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 536,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(termContent(bufferService, false), [\r\n        'a'.repeat(bufferService.cols),\r\n        'a'.repeat(bufferService.cols),\r\n        'a'.repeat(bufferService.cols),\r\n        'a'.repeat(bufferService.cols),\r\n        'a'.repeat(bufferService.cols),\r\n        'a'.repeat(40) + ' '.repeat(bufferService.cols - 40),\r\n        ' '.repeat(bufferService.cols)\r\n      ])"
+        },
+        {
+          "line": 545,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(termContent(bufferService, true), [\r\n        'a'.repeat(bufferService.cols),\r\n        'a'.repeat(bufferService.cols),\r\n        'a'.repeat(bufferService.cols),\r\n        'a'.repeat(bufferService.cols),\r\n        'a'.repeat(bufferService.cols),\r\n        'a'.repeat(40),\r\n        ''\r\n      ])"
+        },
+        {
+          "line": 564,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(termContent(bufferService, false), [\r\n        ' '.repeat(bufferService.cols),\r\n        ' '.repeat(bufferService.cols),\r\n        ' '.repeat(bufferService.cols),\r\n        ' '.repeat(bufferService.cols),\r\n        ' '.repeat(bufferService.cols),\r\n        ' '.repeat(41) + 'a'.repeat(bufferService.cols - 41),\r\n        'a'.repeat(bufferService.cols)\r\n      ])"
+        },
+        {
+          "line": 573,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(termContent(bufferService, true), [\r\n        '',\r\n        '',\r\n        '',\r\n        '',\r\n        '',\r\n        ' '.repeat(41) + 'a'.repeat(bufferService.cols - 41),\r\n        'a'.repeat(bufferService.cols)\r\n      ])"
+        },
+        {
+          "line": 592,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(termContent(bufferService, false), [\r\n        ' '.repeat(bufferService.cols),\r\n        ' '.repeat(bufferService.cols),\r\n        ' '.repeat(bufferService.cols),\r\n        ' '.repeat(bufferService.cols),\r\n        ' '.repeat(bufferService.cols),\r\n        ' '.repeat(bufferService.cols),\r\n        ' '.repeat(bufferService.cols)\r\n      ])"
+        },
+        {
+          "line": 601,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(termContent(bufferService, true), [\r\n        '',\r\n        '',\r\n        '',\r\n        '',\r\n        '',\r\n        '',\r\n        ''\r\n      ])"
+        },
+        {
+          "line": 620,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.lines.get(2)!.isWrapped, true)"
+        },
+        {
+          "line": 624,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.lines.get(2)!.isWrapped, false)"
+        },
+        {
+          "line": 635,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.lines.get(2)!.isWrapped, true)"
+        },
+        {
+          "line": 639,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.lines.get(2)!.isWrapped, false)"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 1456,
+      "name": "InputHandler / cursor positioning / should clamp cursor into addressable range / ECH",
+      "rustFile": "crates/xterm-core/tests/csi_erase_cases.rs",
+      "rustTest": "original_ech_last_cell_and_large_positive_cursor_restriction",
+      "status": "partial-negative-private-coordinate-task152",
+      "assertions": [
+        {
+          "line": 1460,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getCursor(bufferService), [9, 9])"
+        },
+        {
+          "line": 1464,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getCursor(bufferService), [0, 0])"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 1466,
+      "name": "InputHandler / cursor positioning / should clamp cursor into addressable range / ECH - should delete last cell",
+      "rustFile": "crates/xterm-core/tests/csi_erase_cases.rs",
+      "rustTest": "original_ech_last_cell_and_large_positive_cursor_restriction",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 1468,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.lines.get(0)!.translateToString(false), '012345678 ')"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 1771,
+      "name": "InputHandler / should correctly reset cells taken by wide chars / EL",
+      "rustFile": "crates/xterm-core/tests/csi_erase_cases.rs",
+      "rustTest": "original_wide_el_cell_repairs",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 1773,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getLines(bufferService), ['￥￥ #', '￥￥￥￥￥', '￥￥￥￥￥', '￥￥￥￥￥', ''])"
+        },
+        {
+          "line": 1775,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getLines(bufferService), ['￥￥ #', '      ￥￥', '￥￥￥￥￥', '￥￥￥￥￥', ''])"
+        },
+        {
+          "line": 1777,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getLines(bufferService), ['￥￥ #', '      ￥￥', '      ￥￥', '￥￥￥￥￥', ''])"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 1797,
+      "name": "InputHandler / should correctly reset cells taken by wide chars / ECH",
+      "rustFile": "crates/xterm-core/tests/csi_erase_cases.rs",
+      "rustTest": "original_wide_ech_cell_repairs",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 1799,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getLines(bufferService), ['￥￥  ￥￥', '￥￥￥￥￥', '￥￥￥￥￥', '￥￥￥￥￥', ''])"
+        },
+        {
+          "line": 1801,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getLines(bufferService), ['￥￥  ￥￥', '￥￥    ￥', '￥￥￥￥￥', '￥￥￥￥￥', ''])"
+        },
+        {
+          "line": 1803,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getLines(bufferService), ['￥￥  ￥￥', '￥￥    ￥', '￥￥    ￥', '￥￥￥￥￥', ''])"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 2317,
+      "name": "InputHandler / EL/ED cursor at buffer.cols / cursor should stay at cols / does not overflow / EL0",
+      "rustFile": "crates/xterm-core/tests/csi_erase_cases.rs",
+      "rustTest": "original_pending_wrap_ed_el_cursor_positions_and_rows",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 2319,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.x, 10)"
+        },
+        {
+          "line": 2320,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getLines(bufferService), ['#'.repeat(10), '', '', '', ''])"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 2322,
+      "name": "InputHandler / EL/ED cursor at buffer.cols / cursor should stay at cols / does not overflow / EL1",
+      "rustFile": "crates/xterm-core/tests/csi_erase_cases.rs",
+      "rustTest": "original_pending_wrap_ed_el_cursor_positions_and_rows",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 2324,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.x, 10)"
+        },
+        {
+          "line": 2325,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getLines(bufferService), ['', '', '', '', ''])"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 2327,
+      "name": "InputHandler / EL/ED cursor at buffer.cols / cursor should stay at cols / does not overflow / EL2",
+      "rustFile": "crates/xterm-core/tests/csi_erase_cases.rs",
+      "rustTest": "original_pending_wrap_ed_el_cursor_positions_and_rows",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 2329,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.x, 10)"
+        },
+        {
+          "line": 2330,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getLines(bufferService), ['', '', '', '', ''])"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 2332,
+      "name": "InputHandler / EL/ED cursor at buffer.cols / cursor should stay at cols / does not overflow / ED0",
+      "rustFile": "crates/xterm-core/tests/csi_erase_cases.rs",
+      "rustTest": "original_pending_wrap_ed_el_cursor_positions_and_rows",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 2334,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.x, 10)"
+        },
+        {
+          "line": 2335,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getLines(bufferService), ['#'.repeat(10), '', '', '', ''])"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 2337,
+      "name": "InputHandler / EL/ED cursor at buffer.cols / cursor should stay at cols / does not overflow / ED1",
+      "rustFile": "crates/xterm-core/tests/csi_erase_cases.rs",
+      "rustTest": "original_pending_wrap_ed_el_cursor_positions_and_rows",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 2339,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.x, 10)"
+        },
+        {
+          "line": 2340,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getLines(bufferService), ['', '', '', '', ''])"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 2342,
+      "name": "InputHandler / EL/ED cursor at buffer.cols / cursor should stay at cols / does not overflow / ED2",
+      "rustFile": "crates/xterm-core/tests/csi_erase_cases.rs",
+      "rustTest": "original_pending_wrap_ed_el_cursor_positions_and_rows",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 2344,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.x, 10)"
+        },
+        {
+          "line": 2345,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getLines(bufferService), ['', '', '', '', ''])"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 2347,
+      "name": "InputHandler / EL/ED cursor at buffer.cols / cursor should stay at cols / does not overflow / ED3",
+      "rustFile": "crates/xterm-core/tests/csi_erase_cases.rs",
+      "rustTest": "original_pending_wrap_ed_el_cursor_positions_and_rows",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 2349,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.x, 10)"
+        },
+        {
+          "line": 2350,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getLines(bufferService), ['#'.repeat(10), '', '', '', ''])"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 2386,
+      "name": "InputHandler / EL/ED cursor at buffer.cols / following sequence keeps working / cursor never advances beyond cols",
+      "rustFile": "crates/xterm-core/tests/csi_erase_cases.rs",
+      "rustTest": "original_following_sequences_never_advance_past_columns",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 2389,
+          "call": "assert.equal",
+          "source": "assert.equal(bufferService.buffer.x <= bufferService.cols, true)"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 2401,
+      "name": "InputHandler / ED3 - erase saved lines / should stop locking the viewport when the scrollback the user scrolled into is erased",
+      "rustFile": "crates/xterm-core/tests/csi_erase_cases.rs",
+      "rustTest": "original_ed3_unlocks_normal_viewport_and_future_scroll_follows_bottom",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 2406,
+          "call": "assert.strictEqual",
+          "source": "assert.strictEqual(bufferService.isUserScrolling, true)"
+        },
+        {
+          "line": 2410,
+          "call": "assert.strictEqual",
+          "source": "assert.strictEqual(bufferService.isUserScrolling, false)"
+        },
+        {
+          "line": 2411,
+          "call": "assert.strictEqual",
+          "source": "assert.strictEqual(bufferService.buffer.ybase, 0)"
+        },
+        {
+          "line": 2412,
+          "call": "assert.strictEqual",
+          "source": "assert.strictEqual(bufferService.buffer.ydisp, 0)"
+        },
+        {
+          "line": 2418,
+          "call": "assert.strictEqual",
+          "source": "assert.strictEqual(bufferService.buffer.ydisp, bufferService.buffer.ybase)"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 2420,
+      "name": "InputHandler / ED3 - erase saved lines / should not reset the scroll position when erasing scrollback on a resized alt buffer",
+      "rustFile": "crates/xterm-core/tests/csi_erase_cases.rs",
+      "rustTest": "original_alt_ed3_preserves_normal_user_viewport_after_resizing",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 2435,
+          "call": "assert.strictEqual",
+          "source": "assert.strictEqual(bufferService.isUserScrolling, true)"
+        },
+        {
+          "line": 2436,
+          "call": "assert.strictEqual",
+          "source": "assert.strictEqual(bufferService.buffer.ydisp, ydisp)"
+        },
+        {
+          "line": 2440,
+          "call": "assert.strictEqual",
+          "source": "assert.strictEqual(bufferService.isUserScrolling, true)"
+        },
+        {
+          "line": 2441,
+          "call": "assert.strictEqual",
+          "source": "assert.strictEqual(bufferService.buffer.ydisp, ydisp)"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 2446,
+      "name": "InputHandler / DECSCA and DECSED/DECSEL / default is unprotected",
+      "rustFile": "crates/xterm-core/tests/csi_erase_cases.rs",
+      "rustTest": "original_decsca_default_and_selective_line_display_erasure",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 2449,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getLines(bufferService, 2), ['', ''])"
+        },
+        {
+          "line": 2452,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getLines(bufferService, 2), ['', ''])"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 2454,
+      "name": "InputHandler / DECSCA and DECSED/DECSEL / DECSCA 1 with DECSEL",
+      "rustFile": "crates/xterm-core/tests/csi_erase_cases.rs",
+      "rustTest": "original_decsca_default_and_selective_line_display_erasure",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 2457,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getLines(bufferService, 2), ['   lineerase', ''])"
+        },
+        {
+          "line": 2460,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getLines(bufferService, 2), ['', ''])"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 2462,
+      "name": "InputHandler / DECSCA and DECSED/DECSEL / DECSCA 1 with DECSED",
+      "rustFile": "crates/xterm-core/tests/csi_erase_cases.rs",
+      "rustTest": "original_decsca_default_and_selective_line_display_erasure",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 2465,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getLines(bufferService, 2), ['   displayerase', ''])"
+        },
+        {
+          "line": 2468,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(getLines(bufferService, 2), ['', ''])"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/src/common/InputHandler.test.ts",
+      "line": 2470,
+      "name": "InputHandler / DECSCA and DECSED/DECSEL / DECRQSS reports correct DECSCA state",
+      "rustFile": "crates/xterm-core/tests/csi_erase_cases.rs",
+      "rustTest": "original_decrqss_reports_protection_default_set_and_reset",
+      "status": "assertions-mapped",
+      "assertions": [
+        {
+          "line": 2476,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(sendStack.pop(), '\\x1bP1$r0\"q\\x1b\\\\')"
+        },
+        {
+          "line": 2480,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(sendStack.pop(), '\\x1bP1$r1\"q\\x1b\\\\')"
+        },
+        {
+          "line": 2484,
+          "call": "assert.deepEqual",
+          "source": "assert.deepEqual(sendStack.pop(), '\\x1bP1$r0\"q\\x1b\\\\')"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/test/playwright/InputHandler.test.ts",
+      "line": 114,
+      "name": "InputHandler Integration Tests / CSI / CSI Ps J - ED: Erase in Display, VT100",
+      "rustFile": "crates/xterm-core/tests/csi_erase_playwright_assertions.rs",
+      "rustTest": "original_browser_ed_and_decsed_content_assertions",
+      "status": "native-assertions-mapped-actual-browser-unrun",
+      "assertions": [
+        {
+          "line": 119,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => getLinesAsArray(3), ['abc', 'd', ''])"
+        },
+        {
+          "line": 123,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => getLinesAsArray(3), ['abc', 'd', ''])"
+        },
+        {
+          "line": 127,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => getLinesAsArray(3), ['', '  f', 'ghi'])"
+        },
+        {
+          "line": 131,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => ctx.proxy.buffer.active.length, 5)"
+        },
+        {
+          "line": 132,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => getLinesAsArray(5), ['   4', '    5', 'abc', 'def', 'ghi'])"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/test/playwright/InputHandler.test.ts",
+      "line": 134,
+      "name": "InputHandler Integration Tests / CSI / CSI ? Ps J - DECSED: Erase in Display, VT220",
+      "rustFile": "crates/xterm-core/tests/csi_erase_playwright_assertions.rs",
+      "rustTest": "original_browser_ed_and_decsed_content_assertions",
+      "status": "native-assertions-mapped-actual-browser-unrun",
+      "assertions": [
+        {
+          "line": 139,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => getLinesAsArray(3), ['abc', 'd', ''])"
+        },
+        {
+          "line": 143,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => getLinesAsArray(3), ['abc', 'd', ''])"
+        },
+        {
+          "line": 147,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => getLinesAsArray(3), ['', '  f', 'ghi'])"
+        },
+        {
+          "line": 151,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => ctx.proxy.buffer.active.length, 5)"
+        },
+        {
+          "line": 152,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => getLinesAsArray(5), ['   4', '    5', 'abc', 'def', 'ghi'])"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/test/playwright/InputHandler.test.ts",
+      "line": 154,
+      "name": "InputHandler Integration Tests / CSI / CSI Ps K - EL: Erase in Line, VT100",
+      "rustFile": "crates/xterm-core/tests/csi_erase_playwright_assertions.rs",
+      "rustTest": "original_browser_el_and_decsel_content_assertions",
+      "status": "native-assertions-mapped-actual-browser-unrun",
+      "assertions": [
+        {
+          "line": 158,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => getLinesAsArray(1), ['ab'])"
+        },
+        {
+          "line": 162,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => getLinesAsArray(1), ['ab'])"
+        },
+        {
+          "line": 166,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => getLinesAsArray(1), ['   de'])"
+        },
+        {
+          "line": 170,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => getLinesAsArray(1), [''])"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/test/playwright/InputHandler.test.ts",
+      "line": 172,
+      "name": "InputHandler Integration Tests / CSI / CSI ? Ps K - DECSEL: Erase in Line, VT220",
+      "rustFile": "crates/xterm-core/tests/csi_erase_playwright_assertions.rs",
+      "rustTest": "original_browser_el_and_decsel_content_assertions",
+      "status": "native-assertions-mapped-actual-browser-unrun",
+      "assertions": [
+        {
+          "line": 176,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => getLinesAsArray(1), ['ab'])"
+        },
+        {
+          "line": 180,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => getLinesAsArray(1), ['ab'])"
+        },
+        {
+          "line": 184,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => getLinesAsArray(1), ['   de'])"
+        },
+        {
+          "line": 188,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => getLinesAsArray(1), [''])"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/test/playwright/InputHandler.test.ts",
+      "line": 249,
+      "name": "InputHandler Integration Tests / CSI / CSI Ps X - ECH: Erase Ps Character(s) (default = 1)",
+      "rustFile": "crates/xterm-core/tests/csi_erase_playwright_assertions.rs",
+      "rustTest": "original_browser_ech_content_assertions",
+      "status": "native-assertions-mapped-actual-browser-unrun",
+      "assertions": [
+        {
+          "line": 251,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => getLinesAsArray(1), [' bcdef'])"
+        },
+        {
+          "line": 254,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => getLinesAsArray(1), ['   def'])"
+        }
+      ]
+    },
+    {
+      "source": "source_repo/test/playwright/InputHandler.test.ts",
+      "line": 1534,
+      "name": "InputHandler Integration Tests / CSI / CSI Ps \" q - Select character protection attribute (DECSCA), VT220.",
+      "rustFile": "crates/xterm-core/tests/csi_erase_playwright_assertions.rs",
+      "rustTest": "original_browser_decsca_content_assertions",
+      "status": "native-assertions-mapped-actual-browser-unrun",
+      "assertions": [
+        {
+          "line": 1539,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => getLinesAsArray(1), ['PROTopen'])"
+        },
+        {
+          "line": 1541,
+          "call": "pollFor",
+          "source": "pollFor(ctx.page, () => getLinesAsArray(1), ['PROT'])"
+        }
+      ]
+    }
+  ]
+}
