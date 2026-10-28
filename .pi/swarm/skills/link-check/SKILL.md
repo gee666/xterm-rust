@@ -25,4 +25,6 @@ The WASM runner owns a temporary HTTP server and closes it plus each browser in 
 
 Preserve source quirks: a new single-cell run at trimmed EOL does not flush, and wrapped-range probing mutates the same work cell held by the outer scan. See `results/links/counterexample-shared-work-cell.json`.
 
+Use the `worktree` skill for a private branch and Cargo target. Build only the needed crates, run tests in parallel, and merge only a tested branch. The old global build-slot queue is retired. Keep evidence to the command and result.
+
 Read `docs/links.md` for exact current gaps and `docs/link-acceptance.md` for full acceptance. Native helper tests are not proof of full DOM/terminal integration. Never edit expected fixtures to conceal a mismatch.
