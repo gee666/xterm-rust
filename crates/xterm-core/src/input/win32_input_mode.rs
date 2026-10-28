@@ -1,11 +1,12 @@
 // Copyright (c) 2026 The xterm.js authors. All rights reserved.
 // Licensed under the MIT license. Ported from common/input/Win32InputMode.ts.
 
-//! Win32 keyboard protocol encoding, independent of the host operating system.
-//!
-//! Scan codes intentionally use upstream's approximate US layout, not the host
-//! layout. `key` contains UTF-16 units because JS counts an astral key as two
-//! units and therefore does not emit it as a single-character Unicode value.
+//! Win32 protocol encoding with source-ordered, fallible event field access.
+//! The fixed scan-code table intentionally uses upstream's approximate US layout.
+//! Inherited object-map coercions remain tracked by tasks 184/185 and
+//! docs/keyboard-map-lookup.md; this module does not establish full equivalence.
+
+use super::keyboard_event_source::{code_point_at_zero, number_is_truthy, KeyboardEventSource};
 
 #[path = "win32_key_codes.rs"]
 mod key_codes;
@@ -23,8 +24,6 @@ pub mod control_key_state {
     pub const ENHANCED_KEY: u16 = 256;
 }
 
-// Both keyboard policies share event and result contracts. The aliases retain
-// the initial Win32 API names without duplicating browser event representation.
 pub use super::keyboard::{
     KeyboardEvent as Win32KeyboardEvent, KeyboardResult as Win32KeyboardResult, KeyboardResultType,
 };
@@ -34,18 +33,41 @@ pub use super::keyboard::{
 pub struct Win32InputMode;
 
 impl Win32InputMode {
-    /// Encode a keydown or keyup with the original cancellation semantics.
+    /// Borrowed native events cannot throw; use the same live-field policy.
     pub fn evaluate_keyboard_event(
         &self,
         event: &Win32KeyboardEvent<'_>,
         is_key_down: bool,
     ) -> Win32KeyboardResult {
-        let vk = key_codes::virtual_key(event.code).unwrap_or(event.key_code);
-        let sc = key_codes::scan_code(event.code);
-        let uc = unicode_char(event);
+        match self.try_evaluate_keyboard_event(event, is_key_down) {
+            Ok(result) => result,
+            Err(never) => match never {},
+        }
+    }
+
+    /// Read fields at their source expressions, preserving getter failures and
+    /// repeated reads instead of caching an event snapshot before callbacks.
+    pub fn try_evaluate_keyboard_event<E: KeyboardEventSource + ?Sized>(
+        &self,
+        event: &E,
+        is_key_down: bool,
+    ) -> Result<Win32KeyboardResult, E::Error> {
+        let vk = if let Some(vk) = key_codes::virtual_key(&event.code()?) {
+            f64::from(vk)
+        } else {
+            let code = event.key_code()?;
+            if number_is_truthy(code) {
+                code
+            } else {
+                0.0
+            }
+        };
+        let sc = key_codes::scan_code(&event.code()?);
+        let uc = unicode_char(event)?;
         let kd = u8::from(is_key_down);
-        let cs = control_state(event);
-        Win32KeyboardResult {
+        let cs = control_state(event)?;
+        let vk = ryu_js::Buffer::new().format(vk).to_owned();
+        Ok(Win32KeyboardResult {
             result_type: KeyboardResultType::SendKey,
             cancel: true,
             key: Some(
@@ -53,59 +75,74 @@ impl Win32InputMode {
                     .encode_utf16()
                     .collect(),
             ),
-        }
+        })
     }
 }
 
-fn unicode_char(event: &Win32KeyboardEvent<'_>) -> u16 {
-    let ctrl_only = event.ctrl_key && !event.alt_key && !event.meta_key;
-    // Avoid lossy conversion: a single unpaired surrogate is a legal JS key.
-    if event.key.iter().copied().eq("Enter".encode_utf16()) {
-        return if ctrl_only { 0x0a } else { 0x0d };
+fn equals(key: &[u16], value: &str) -> bool {
+    key.iter().copied().eq(value.encode_utf16())
+}
+
+fn unicode_char<E: KeyboardEventSource + ?Sized>(event: &E) -> Result<u32, E::Error> {
+    if event.ctrl_key()? && !event.alt_key()? && !event.meta_key()? {
+        if equals(&event.key()?, "Enter") {
+            return Ok(10);
+        }
+        if equals(&event.key()?, "Backspace") {
+            return Ok(127);
+        }
     }
-    if event.key.iter().copied().eq("Backspace".encode_utf16()) {
-        return if ctrl_only { 0x7f } else { 0x08 };
-    }
-    if event.key.iter().copied().eq("Tab".encode_utf16()) {
-        return 0x09;
-    }
-    if event.key.iter().copied().eq("Escape".encode_utf16()) {
-        return 0x1b;
-    }
-    let [codepoint] = event.key else {
-        return 0;
+    let control = event.key()?;
+    let code = if equals(&control, "Enter") {
+        Some(13)
+    } else if equals(&control, "Backspace") {
+        Some(8)
+    } else if equals(&control, "Tab") {
+        Some(9)
+    } else if equals(&control, "Escape") {
+        Some(27)
+    } else {
+        None
     };
-    if ctrl_only {
-        match codepoint {
-            0x41..=0x5a => return codepoint - 0x40,
-            0x61..=0x7a => return codepoint - 0x60,
-            _ => {}
-        }
+    if let Some(code) = code {
+        return Ok(code);
     }
-    *codepoint
+    if event.key()?.len() == 1 {
+        let code = code_point_at_zero(&event.key()?).unwrap_or(0);
+        if event.ctrl_key()? && !event.alt_key()? && !event.meta_key()? {
+            if (0x41..=0x5a).contains(&code) {
+                return Ok(code - 0x40);
+            }
+            if (0x61..=0x7a).contains(&code) {
+                return Ok(code - 0x60);
+            }
+        }
+        return Ok(code);
+    }
+    Ok(0)
 }
 
-fn control_state(event: &Win32KeyboardEvent<'_>) -> u16 {
+fn control_state<E: KeyboardEventSource + ?Sized>(event: &E) -> Result<u16, E::Error> {
     use control_key_state::*;
-    let mut state = if event.shift_key { SHIFT_PRESSED } else { 0 };
-    if event.ctrl_key {
-        state |= if event.code.iter().copied().eq("ControlRight".encode_utf16()) {
+    let mut state = if event.shift_key()? { SHIFT_PRESSED } else { 0 };
+    if event.ctrl_key()? {
+        state |= if equals(&event.code()?, "ControlRight") {
             RIGHT_CTRL_PRESSED
         } else {
             LEFT_CTRL_PRESSED
         };
     }
-    if event.alt_key {
-        state |= if event.code.iter().copied().eq("AltRight".encode_utf16()) {
+    if event.alt_key()? {
+        state |= if equals(&event.code()?, "AltRight") {
             RIGHT_ALT_PRESSED
         } else {
             LEFT_ALT_PRESSED
         };
     }
-    if key_codes::is_enhanced(event.code) {
+    if key_codes::is_enhanced(&event.code()?) {
         state |= ENHANCED_KEY;
     }
-    state
+    Ok(state)
 }
 
 #[cfg(test)]

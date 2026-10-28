@@ -35,23 +35,32 @@ impl KeyboardReadHost for GetterHost {
         self.record("scroll");
         Ok(false)
     }
-    fn alt_graph_state(&self, _: &DispatchKeyEvent<'_>) -> Result<bool, Self::Error> {
+    fn alt_graph_state(
+        &self,
+        _: &dyn KeyEventSource<Error = Self::Error>,
+    ) -> Result<bool, Self::Error> {
         self.record("altgraph");
         Err("AltGraph getter")
     }
 }
 impl KeyboardHost for GetterHost {
-    fn custom_key_handler(&self, _: &DispatchKeyEvent<'_>) -> Result<bool, Self::Error> {
+    fn custom_key_handler(
+        &self,
+        _: &dyn KeyEventSource<Error = Self::Error>,
+    ) -> Result<bool, Self::Error> {
         self.record("custom");
         Ok(!self.veto)
     }
-    fn composition_key_down(&self, _: &DispatchKeyEvent<'_>) -> Result<bool, Self::Error> {
+    fn composition_key_down(
+        &self,
+        _: &dyn KeyEventSource<Error = Self::Error>,
+    ) -> Result<bool, Self::Error> {
         self.record("composition");
         Ok(false)
     }
     fn perform(
         &self,
-        _: Option<&DispatchKeyEvent<'_>>,
+        _: Option<&dyn KeyEventSource<Error = Self::Error>>,
         _: KeyboardAction<'_>,
     ) -> Result<(), Self::Error> {
         Err("no effect permitted on this rejected route")

@@ -60,7 +60,10 @@ impl KeyboardReadHost for Host {
     }
 }
 impl KeyboardHost for Host {
-    fn custom_key_handler(&self, _: &DispatchKeyEvent<'_>) -> Result<bool, Self::Error> {
+    fn custom_key_handler(
+        &self,
+        _: &dyn KeyEventSource<Error = Self::Error>,
+    ) -> Result<bool, Self::Error> {
         if self.has_custom.get() {
             self.actions.borrow_mut().push("custom".into());
             Ok(self.accepted.get())
@@ -68,13 +71,16 @@ impl KeyboardHost for Host {
             Ok(true)
         }
     }
-    fn composition_key_down(&self, _: &DispatchKeyEvent<'_>) -> Result<bool, Self::Error> {
+    fn composition_key_down(
+        &self,
+        _: &dyn KeyEventSource<Error = Self::Error>,
+    ) -> Result<bool, Self::Error> {
         self.actions.borrow_mut().push("composition".into());
         Ok(self.composition.get())
     }
     fn perform(
         &self,
-        _: Option<&DispatchKeyEvent<'_>>,
+        _: Option<&dyn KeyEventSource<Error = Self::Error>>,
         action: KeyboardAction<'_>,
     ) -> Result<(), Self::Error> {
         self.actions.borrow_mut().push(action_name(action));

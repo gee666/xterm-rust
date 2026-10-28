@@ -185,10 +185,13 @@ const hash = name => createHash('sha256').update(read(name)).digest('hex');
 const hashes = Object.fromEntries([sourcePath, ...sources].map(name => [name, hash(name)]));
 const productionPaths = [
   'crates/xterm-core/src/input/keyboard.rs', 'crates/xterm-core/src/input/keyboard_lowercase.rs',
+  'crates/xterm-core/src/input/keyboard_policy.rs', 'crates/xterm-core/src/input/keyboard_default.rs',
+  'crates/xterm-core/src/input/keyboard_uppercase.rs', 'crates/xterm-core/src/input/keyboard_event_source.rs',
   'crates/xterm-core/src/input/kitty_keyboard.rs', 'crates/xterm-core/src/input/kitty_keyboard/keys.rs',
   'crates/xterm-core/src/input/kitty_keyboard/inherited.rs', 'crates/xterm-core/src/input/win32_input_mode.rs',
+  'crates/xterm-core/src/input/kitty_keyboard/live.rs', 'crates/xterm-core/src/input/kitty_keyboard/live_fields.rs',
   'crates/xterm-web/src/input/keyboard.rs', 'crates/xterm-web/src/input/keyboard_dispatch.rs',
-  'crates/xterm-web/src/input/keyboard_dispatch_types.rs'
+  'crates/xterm-web/src/input/keyboard_dispatch_types.rs', 'crates/xterm-web/src/input/keyboard_event.rs'
 ];
 const productionHashes = Object.fromEntries(productionPaths.map(name => [name, hash(name)]));
 writeFileSync(path.join(resultDir, focused ? 'focused-oracle.json' : 'oracle.json'), JSON.stringify({ command: `node scripts/keyboard-dispatch-oracle.mjs${focused ? ' --focused' : ''}`, buildScope: focused?.scope || 'Full xterm-web Cargo example build',

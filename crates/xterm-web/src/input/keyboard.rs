@@ -26,6 +26,55 @@ impl KeyboardModes {
         self.kitty_extension && kitty_keyboard::should_use_protocol(self.kitty_flags)
     }
 
+    /// Source-ordered, fallible counterpart for mutable browser event fields.
+    pub fn try_key_down<E: super::keyboard_dispatch_types::KeyEventSource + ?Sized>(
+        self,
+        event: &E,
+    ) -> Result<KeyboardResult, E::Error> {
+        if self.use_win32() {
+            Win32InputMode.try_evaluate_keyboard_event(event, true)
+        } else if self.use_kitty() {
+            kitty_keyboard::try_evaluate(
+                event,
+                self.kitty_flags,
+                if event.repeat()? {
+                    EventType::Repeat
+                } else {
+                    EventType::Press
+                },
+                self.is_mac && self.mac_option_is_meta,
+            )
+        } else {
+            xterm_core::input::keyboard::try_evaluate_keyboard_event(
+                event,
+                self.application_cursor_keys,
+                self.is_mac,
+                self.mac_option_is_meta,
+            )
+        }
+    }
+
+    pub fn try_key_up<E: super::keyboard_dispatch_types::KeyEventSource + ?Sized>(
+        self,
+        event: &E,
+    ) -> Result<Option<KeyboardResult>, E::Error> {
+        if self.use_win32() {
+            Win32InputMode
+                .try_evaluate_keyboard_event(event, false)
+                .map(Some)
+        } else if self.use_kitty() && self.kitty_flags & flags::REPORT_EVENT_TYPES != 0 {
+            kitty_keyboard::try_evaluate(
+                event,
+                self.kitty_flags,
+                EventType::Release,
+                self.is_mac && self.mac_option_is_meta,
+            )
+            .map(Some)
+        } else {
+            Ok(None)
+        }
+    }
+
     pub fn key_down(self, event: &KeyboardEvent<'_>, repeat: bool) -> KeyboardResult {
         if self.use_win32() {
             Win32InputMode.evaluate_keyboard_event(event, true)

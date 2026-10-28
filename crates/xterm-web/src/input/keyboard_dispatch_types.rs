@@ -3,6 +3,9 @@
 
 use super::keyboard::KeyboardModes;
 use xterm_core::input::keyboard::{KeyboardEvent, KeyboardResult};
+#[path = "keyboard_event.rs"]
+mod event;
+pub use event::{EventNumber, KeyEventSource, StaticKeyEvent};
 
 /// DOM event category. The adapter supplies the actual event's category.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -90,20 +93,23 @@ pub trait KeyboardReadHost {
     fn use_win32(&self) -> Result<bool, Self::Error> {
         Ok(self.snapshot()?.modes.use_win32())
     }
-    fn alt_graph_state(&self, event: &DispatchKeyEvent<'_>) -> Result<bool, Self::Error> {
-        Ok(event.alt_graph)
+    fn alt_graph_state(
+        &self,
+        event: &dyn KeyEventSource<Error = Self::Error>,
+    ) -> Result<bool, Self::Error> {
+        event.alt_graph()
     }
     fn evaluate_key_down(
         &self,
-        event: &DispatchKeyEvent<'_>,
+        event: &dyn KeyEventSource<Error = Self::Error>,
     ) -> Result<KeyboardResult, Self::Error> {
-        Ok(self.snapshot()?.modes.key_down(&event.key, event.repeat))
+        self.snapshot()?.modes.try_key_down(event)
     }
     fn evaluate_key_up(
         &self,
-        event: &DispatchKeyEvent<'_>,
+        event: &dyn KeyEventSource<Error = Self::Error>,
     ) -> Result<Option<KeyboardResult>, Self::Error> {
-        Ok(self.snapshot()?.modes.key_up(&event.key))
+        self.snapshot()?.modes.try_key_up(event)
     }
 }
 
@@ -111,14 +117,20 @@ pub trait KeyboardReadHost {
 /// Shared-reference hooks allow synchronous reentry through an Rc.
 pub trait KeyboardHost: KeyboardReadHost {
     /// Returns true when no custom handler exists or it does not veto.
-    fn custom_key_handler(&self, event: &DispatchKeyEvent<'_>) -> Result<bool, Self::Error>;
+    fn custom_key_handler(
+        &self,
+        event: &dyn KeyEventSource<Error = Self::Error>,
+    ) -> Result<bool, Self::Error>;
     /// Called only when Mac Option-as-Meta does not bypass composition.
-    fn composition_key_down(&self, event: &DispatchKeyEvent<'_>) -> Result<bool, Self::Error>;
+    fn composition_key_down(
+        &self,
+        event: &dyn KeyEventSource<Error = Self::Error>,
+    ) -> Result<bool, Self::Error>;
     /// Cancel means preventDefault followed by stopPropagation. The original
     /// event is absent only for input-event text, which has no keyboard event.
     fn perform(
         &self,
-        event: Option<&DispatchKeyEvent<'_>>,
+        event: Option<&dyn KeyEventSource<Error = Self::Error>>,
         action: KeyboardAction<'_>,
     ) -> Result<(), Self::Error>;
 }

@@ -3,7 +3,7 @@
 // Licensed under MIT. Runs the unmodified upstream assertions after TS erasure.
 import assert from 'node:assert/strict';
 import { stripTypeScriptTypes } from 'node:module';
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import vm from 'node:vm';
@@ -113,6 +113,8 @@ for (let i = 0; i < 10000; i++) {
 
 const runner = `#[path = ${JSON.stringify(path.join(root, 'crates/xterm-core/src/input/keyboard.rs').replaceAll('\\', '/'))}]
 pub mod keyboard;
+#[path = ${JSON.stringify(path.join(root, 'crates/xterm-core/src/input/keyboard_event_source.rs').replaceAll('\\', '/'))}]
+pub mod keyboard_event_source;
 #[path = ${JSON.stringify(path.join(root, 'crates/xterm-core/src/input/win32_input_mode.rs').replaceAll('\\', '/'))}]
 pub mod win32_input_mode;
 use std::io::{self, BufRead};
@@ -142,7 +144,13 @@ function run(command, args, options = {}) {
   return result;
 }
 const rustc = process.env.RUSTC || 'rustc';
-run(rustc, ['--edition=2021', runnerPath, '-o', binary]);
+// Live numeric fields use the workspace's existing JS-compatible formatter.
+run(process.env.CARGO || 'cargo', ['build', '-p', 'ryu-js']);
+const dependencies = path.join(process.env.CARGO_TARGET_DIR || path.join(root, 'target'), 'debug/deps');
+const candidates = readdirSync(dependencies).filter(name => /^libryu_js-.*\.rlib$/.test(name));
+assert.ok(process.env.RYU_JS_RLIB || candidates.length === 1, 'set RYU_JS_RLIB when several cached ryu-js libraries exist');
+const ryu = process.env.RYU_JS_RLIB || path.join(dependencies, candidates[0]);
+run(rustc, ['--edition=2021', '-L', `dependency=${dependencies}`, '--extern', `ryu_js=${ryu}`, runnerPath, '-o', binary]);
 const rows = cases.map(c => eventRow(c.event, c.down, c.result, c.name));
 const actual = run(binary, [], { input: rows.join('\n') + '\n' }).stdout.trimEnd().split(/\r?\n/);
 assert.equal(actual.length, cases.length);

@@ -1,0 +1,37 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+warning: function `fill_viewport_rows_owned` is never used
+  --> crates\xterm-core\src\buffer\screen_shared.rs:52:15
+   |
+52 | pub(super) fn fill_viewport_rows_owned(buffer: &mut Buffer, attr: Option<&AttributeData>) -> Result<(), BufferError> {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `xterm-core` (lib) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 3.03s
+     Running tests\kitty_edges.rs (target\debug\deps\kitty_edges-b3137068d4f7f5ee.exe)
+
+running 5 tests
+test inherited_object_names_follow_plain_object_lookup ... ok
+test shifted_physical_key_uses_first_lowercase_utf16_unit ... ok
+test associated_text_repeat_omits_event_suffix_but_release_does_not ... ok
+test utf16_length_is_not_unicode_scalar_count ... ok
+test numpad_retains_upstream_lexical_parse_int_behavior ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\kitty_upstream.rs (target\debug\deps\kitty_upstream-fab219a2db3f8de8.exe)
+
+running 2 tests
+test upstream_protocol_enablement_assertions ... ok
+test upstream_evaluation_assertions ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\protocol_live.rs (target\debug\deps\protocol_live-76201ec2b7e37973.exe)
+
+running 1 test
+test complete_protocol_getter_traces_and_exact_error_identity_match_source ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.48s
+

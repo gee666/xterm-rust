@@ -35,14 +35,15 @@ export function focusedBuild(root, resultDir) {
     const ryu = process.env.RYU_JS_RLIB || path.join(dependencies, candidates[0]);
     const corePath = path.join(dir, 'core.rs');
     // A #[path] inclusion changes Rust's inferred submodule directory. Adjust
-    // only those two paths in a temporary copy, never production logic.
+    // only those submodule paths in a temporary copy, never production logic.
     const kittyPath = path.join(dir, 'kitty.rs');
     let kittySource = readFileSync(path.join(root, 'crates/xterm-core/src/input/kitty_keyboard.rs'), 'utf8');
-    for (const name of ['keys', 'inherited']) kittySource = kittySource.replace(`mod ${name};`,
+    for (const name of ['keys', 'inherited', 'live', 'live_fields']) kittySource = kittySource.replace(`mod ${name};`,
       `#[path=${quotePath(`crates/xterm-core/src/input/kitty_keyboard/${name}.rs`)}] mod ${name};`);
     writeFileSync(kittyPath, kittySource);
     writeFileSync(corePath, 'pub mod input {\n' + [
       module('keyboard', 'crates/xterm-core/src/input/keyboard.rs'),
+      module('keyboard_event_source', 'crates/xterm-core/src/input/keyboard_event_source.rs'),
       `#[path=${JSON.stringify(kittyPath.replaceAll('\\', '/'))}] pub mod kitty_keyboard;`,
       module('win32_input_mode', 'crates/xterm-core/src/input/win32_input_mode.rs')
     ].join('\n') + '\n}\n');

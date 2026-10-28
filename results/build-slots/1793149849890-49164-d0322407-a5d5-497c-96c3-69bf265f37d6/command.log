@@ -1,0 +1,20 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+warning: function `fill_viewport_rows_owned` is never used
+  --> crates\xterm-core\src\buffer\screen_shared.rs:52:15
+   |
+52 | pub(super) fn fill_viewport_rows_owned(buffer: &mut Buffer, attr: Option<&AttributeData>) -> Result<(), BufferError> {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+   Compiling xterm-addons v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons)
+error[E0432]: unresolved import `crate::image::encoded`
+ --> crates\xterm-addons\src\image\kitty\storage.rs:5:19
+  |
+5 | use crate::image::encoded::EncodedBytes;
+  |                   ^^^^^^^ could not find `encoded` in `image`
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `xterm-addons` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+warning: `xterm-core` (lib) generated 1 warning

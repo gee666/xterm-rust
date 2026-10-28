@@ -1,13 +1,13 @@
 // Copyright (c) 2025 The xterm.js authors. All rights reserved.
 // Licensed under MIT. Ported from browser/CoreBrowserTerminal.ts input methods.
 
-//! Ordered browser keyboard effects. Cell state permits synchronous callback
-//! reentry without a mutable dispatcher borrow or a lock held across callbacks.
-
-use std::cell::Cell;
-use xterm_core::input::keyboard::KeyboardResultType;
-
+//! Synchronous state/effects and live event reads, with no borrow held over a callback.
 pub use super::keyboard_dispatch_types::*;
+use std::{cell::Cell, convert::Infallible};
+use xterm_core::input::{
+    keyboard::KeyboardResultType,
+    keyboard_event_source::{number_is_truthy, to_uint16},
+};
 
 #[derive(Debug, Default)]
 pub struct KeyboardDispatch {
@@ -26,11 +26,32 @@ impl KeyboardDispatch {
             unprocessed_dead_key: self.unprocessed_dead_key.get(),
         }
     }
-
-    /// None is JavaScript's undefined return, distinct from false and true.
     pub fn key_down<H: KeyboardHost>(
         &self,
         event: &DispatchKeyEvent<'_>,
+        host: &H,
+    ) -> Result<Option<bool>, H::Error> {
+        self.key_down_source(&StaticKeyEvent::<H::Error>::new(event), host)
+    }
+    pub fn key_up<H: KeyboardHost>(
+        &self,
+        event: &DispatchKeyEvent<'_>,
+        host: &H,
+    ) -> Result<(), H::Error> {
+        self.key_up_source(&StaticKeyEvent::<H::Error>::new(event), host)
+    }
+    pub fn key_press<H: KeyboardHost>(
+        &self,
+        event: &DispatchKeyEvent<'_>,
+        host: &H,
+    ) -> Result<bool, H::Error> {
+        self.key_press_source(&StaticKeyEvent::<H::Error>::new(event), host)
+    }
+
+    /// None is JavaScript's undefined return, distinct from false and true.
+    pub fn key_down_source<H: KeyboardHost>(
+        &self,
+        event: &dyn KeyEventSource<Error = H::Error>,
         host: &H,
     ) -> Result<Option<bool>, H::Error> {
         self.key_down_handled.set(false);
@@ -38,7 +59,7 @@ impl KeyboardDispatch {
         if !host.custom_key_handler(event)? {
             return Ok(Some(false));
         }
-        let ignore_composition = host.is_mac()? && host.mac_option_is_meta()? && event.key.alt_key;
+        let ignore_composition = host.is_mac()? && host.mac_option_is_meta()? && event.alt_key()?;
         if !ignore_composition && !host.composition_key_down(event)? {
             if host.scroll_on_user_input()? {
                 let (ybase, ydisp) = host.scroll_position()?;
@@ -49,7 +70,7 @@ impl KeyboardDispatch {
             return Ok(Some(false));
         }
         if !ignore_composition
-            && (equals(event.key.key, "Dead") || equals(event.key.key, "AltGraph"))
+            && (equals(&event.key()?, "Dead") || equals(&event.key()?, "AltGraph"))
         {
             self.unprocessed_dead_key.set(true);
         }
@@ -72,7 +93,7 @@ impl KeyboardDispatch {
         if result.result_type == KeyboardResultType::SelectAll {
             host.perform(Some(event), KeyboardAction::SelectAll)?;
         }
-        if third_level_shift(host, event)? {
+        if third_level_shift_source(host, event)? {
             return Ok(Some(true));
         }
         if result.cancel {
@@ -83,11 +104,13 @@ impl KeyboardDispatch {
         };
         if !host.use_kitty()?
             && !host.use_win32()?
-            && !event.key.ctrl_key
-            && !event.key.alt_key
-            && !event.key.meta_key
-            && event.key.key.len() == 1
-            && (65..=90).contains(&event.key.key[0])
+            && !event.key()?.is_empty()
+            && !event.ctrl_key()?
+            && !event.alt_key()?
+            && !event.meta_key()?
+            && event.key()?.len() == 1
+            && first_unit(&event.key()?) >= 65.0
+            && first_unit(&event.key()?) <= 90.0
         {
             return Ok(Some(true));
         }
@@ -98,7 +121,7 @@ impl KeyboardDispatch {
         if key == [3] || key == [13] {
             host.perform(Some(event), KeyboardAction::ClearTextarea)?;
         }
-        let modifier_only = host.use_win32()? && modifier_key_only(event);
+        let modifier_only = host.use_win32()? && modifier_key_only_source(event)?;
         host.perform(Some(event), KeyboardAction::OnKey(key))?;
         host.perform(Some(event), KeyboardAction::ShowCursor)?;
         host.perform(
@@ -108,7 +131,7 @@ impl KeyboardDispatch {
                 user_input: !modifier_only,
             },
         )?;
-        if !host.screen_reader_mode()? || event.key.alt_key || event.key.ctrl_key {
+        if !host.screen_reader_mode()? || event.alt_key()? || event.ctrl_key()? {
             host.perform(Some(event), KeyboardAction::Cancel)?;
             return Ok(Some(false));
         }
@@ -116,21 +139,21 @@ impl KeyboardDispatch {
         Ok(None)
     }
 
-    pub fn key_up<H: KeyboardHost>(
+    pub fn key_up_source<H: KeyboardHost>(
         &self,
-        event: &DispatchKeyEvent<'_>,
+        event: &dyn KeyEventSource<Error = H::Error>,
         host: &H,
     ) -> Result<(), H::Error> {
         self.key_down_seen.set(false);
         if !host.custom_key_handler(event)? {
             return Ok(());
         }
-        if !modifier_key_only(event) {
+        if !modifier_key_only_source(event)? {
             host.perform(Some(event), KeyboardAction::Focus)?;
         }
         if let Some(result) = host.evaluate_key_up(event)? {
             if let Some(key) = result.key.as_deref().filter(|key| !key.is_empty()) {
-                let modifier_only = host.use_win32()? && modifier_key_only(event);
+                let modifier_only = host.use_win32()? && modifier_key_only_source(event)?;
                 host.perform(
                     Some(event),
                     KeyboardAction::Data {
@@ -145,29 +168,31 @@ impl KeyboardDispatch {
         Ok(())
     }
 
-    pub fn key_press<H: KeyboardHost>(
+    pub fn key_press_source<H: KeyboardHost>(
         &self,
-        event: &DispatchKeyEvent<'_>,
+        event: &dyn KeyEventSource<Error = H::Error>,
         host: &H,
     ) -> Result<bool, H::Error> {
         self.key_press_handled.set(false);
         if self.key_down_handled.get() || !host.custom_key_handler(event)? {
             return Ok(false);
         }
-        let code = match (event.char_code, event.which) {
-            (Some(code), _) if code != 0 => code,
-            (_, None) => event.key.key_code,
-            (None, Some(code)) if code != 0 => code,
-            _ => return Ok(false),
+        let code = if event.char_code()?.truthy() {
+            event.char_code()?
+        } else if event.which()? == EventNumber::Null || event.which()? == EventNumber::Undefined {
+            EventNumber::Number(event.key_code()?)
+        } else if !event.which()?.is_zero() && !event.char_code()?.is_zero() {
+            event.which()?
+        } else {
+            return Ok(false);
         };
-        if code == 0
-            || ((event.key.alt_key || event.key.ctrl_key || event.key.meta_key)
-                && !third_level_shift(host, event)?)
+        if !code.truthy()
+            || ((event.alt_key()? || event.ctrl_key()? || event.meta_key()?)
+                && !third_level_shift_source(host, event)?)
         {
             return Ok(false);
         }
-        // String.fromCharCode applies ToUint16, not Unicode scalar validation.
-        let key = [code as u16];
+        let key = [to_uint16(code.to_number())];
         host.perform(Some(event), KeyboardAction::OnKey(&key))?;
         host.perform(Some(event), KeyboardAction::ShowCursor)?;
         host.perform(
@@ -213,24 +238,47 @@ pub fn third_level_shift<H: KeyboardHost>(
     host: &H,
     event: &DispatchKeyEvent<'_>,
 ) -> Result<bool, H::Error> {
-    let key = &event.key;
-    let third_level = (host.is_mac()?
+    third_level_shift_source(host, &StaticKeyEvent::<H::Error>::new(event))
+}
+pub fn third_level_shift_source<H: KeyboardHost>(
+    host: &H,
+    event: &dyn KeyEventSource<Error = H::Error>,
+) -> Result<bool, H::Error> {
+    let third = (host.is_mac()?
         && !host.mac_option_is_meta()?
-        && key.alt_key
-        && !key.ctrl_key
-        && !key.meta_key)
-        || (host.is_windows()? && key.alt_key && key.ctrl_key && !key.meta_key)
+        && event.alt_key()?
+        && !event.ctrl_key()?
+        && !event.meta_key()?)
+        || (host.is_windows()? && event.alt_key()? && event.ctrl_key()? && !event.meta_key()?)
         || (host.is_windows()? && host.alt_graph_state(event)?);
-    Ok(
-        third_level
-            && (event.kind == KeyEventKind::Press || key.key_code == 0 || key.key_code > 47),
-    )
+    if event.is_key_press()? {
+        return Ok(third);
+    }
+    Ok(third && (!number_is_truthy(event.key_code()?) || event.key_code()? > 47.0))
 }
 
 pub fn modifier_key_only(event: &DispatchKeyEvent<'_>) -> bool {
-    matches!(event.key.key_code, 16 | 17 | 18 | 91 | 92 | 93 | 224) || equals(event.key.key, "Meta")
+    match modifier_key_only_source(&StaticKeyEvent::<Infallible>::new(event)) {
+        Ok(value) => value,
+        Err(never) => match never {},
+    }
 }
-
+pub fn modifier_key_only_source<E>(event: &dyn KeyEventSource<Error = E>) -> Result<bool, E> {
+    Ok(event.key_code()? == 16.0
+        || event.key_code()? == 17.0
+        || event.key_code()? == 18.0
+        || event.key_code()? == 91.0
+        || event.key_code()? == 92.0
+        || event.key_code()? == 93.0
+        || event.key_code()? == 224.0
+        || equals(&event.key()?, "Meta"))
+}
 fn equals(units: &[u16], text: &str) -> bool {
     units.iter().copied().eq(text.encode_utf16())
+}
+fn first_unit(units: &[u16]) -> f64 {
+    units
+        .first()
+        .map(|unit| f64::from(*unit))
+        .unwrap_or(f64::NAN)
 }

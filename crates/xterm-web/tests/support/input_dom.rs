@@ -16,6 +16,8 @@ use xterm_web::{
     },
 };
 
+pub type CustomKeyCallback = Rc<dyn Fn(&KeyboardEvent) -> Result<bool, JsValue>>;
+
 #[derive(Default)]
 pub struct Host {
     pub options: Cell<InputOptions>,
@@ -24,11 +26,12 @@ pub struct Host {
     pub effects: RefCell<Vec<String>>,
     pub selection: RefCell<Vec<u16>>,
     pub veto: Cell<bool>,
+    pub custom_key: RefCell<Option<CustomKeyCallback>>,
     pub disabled: Cell<bool>,
-    pub errors: RefCell<Vec<JsValue>>,
     pub mouse: Rc<xterm_core::mouse_state::MouseStateService>,
     pub on_key: RefCell<Option<Rc<dyn Fn()>>>,
     pub data_error: RefCell<Option<JsValue>>,
+    pub option_changes: xterm_core::event::Emitter<&'static str>,
 }
 
 impl KeyboardReadHost for Host {
@@ -42,8 +45,13 @@ impl InputHost for Host {
     fn options(&self) -> Result<InputOptions, JsValue> {
         Ok(self.options.get())
     }
-    fn custom_key_handler(&self, _: &KeyboardEvent) -> Result<bool, JsValue> {
-        Ok(!self.veto.get())
+    fn custom_key_handler(&self, event: &KeyboardEvent) -> Result<bool, JsValue> {
+        let callback = self.custom_key.borrow().clone();
+        if let Some(callback) = callback {
+            callback(event)
+        } else {
+            Ok(!self.veto.get())
+        }
     }
     fn keyboard_effect(
         &self,
@@ -98,9 +106,6 @@ impl InputHost for Host {
         self.effects.borrow_mut().push("sync-textarea".into());
         Ok(())
     }
-    fn report_error(&self, error: JsValue) {
-        self.errors.borrow_mut().push(error);
-    }
 }
 
 pub struct Setup {
@@ -128,11 +133,6 @@ impl Setup {
 impl Drop for Setup {
     fn drop(&mut self) {
         self.input.dispose().unwrap();
-        assert!(
-            self.host.errors.borrow().is_empty(),
-            "DOM input error: {:?}",
-            self.host.errors.borrow()
-        );
         self.parent.remove();
     }
 }

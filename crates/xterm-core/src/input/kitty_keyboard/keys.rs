@@ -95,9 +95,9 @@ fn lookup(units: &[u16], entries: &[(&str, u32)]) -> Option<u32> {
         .find_map(|(text, code)| equals(units, text).then_some(*code))
 }
 
-pub(super) fn legacy(key: &[u16]) -> Option<(u32, &'static str, bool)> {
+pub(super) fn letter(key: &[u16]) -> Option<&'static str> {
     if let Some(suffix) = inherited_name(key) {
-        return Some((1, suffix, false));
+        return Some(suffix);
     }
     for (text, letter) in [
         ("ArrowUp", "A"),
@@ -108,14 +108,25 @@ pub(super) fn legacy(key: &[u16]) -> Option<(u32, &'static str, bool)> {
         ("End", "F"),
     ] {
         if equals(key, text) {
-            return Some((1, letter, false));
+            return Some(letter);
         }
+    }
+    None
+}
+
+pub(super) fn ss3(key: &[u16]) -> Option<&'static str> {
+    if let Some(suffix) = inherited_name(key) {
+        return Some(suffix);
     }
     for (text, letter) in [("F1", "P"), ("F2", "Q"), ("F3", "R"), ("F4", "S")] {
         if equals(key, text) {
-            return Some((1, letter, true));
+            return Some(letter);
         }
     }
+    None
+}
+
+pub(super) fn tilde(key: &[u16]) -> Option<u32> {
     lookup(
         key,
         &[
@@ -133,14 +144,9 @@ pub(super) fn legacy(key: &[u16]) -> Option<(u32, &'static str, bool)> {
             ("F12", 24),
         ],
     )
-    .map(|code| (code, "~", false))
 }
 
-pub(super) fn numpad(code: &[u16]) -> Option<f64> {
-    if !starts_with(code, "Numpad") {
-        return None;
-    }
-    let suffix = &code[6..];
+pub(super) fn numpad_suffix(suffix: &[u16]) -> Option<f64> {
     // Upstream uses lexical string comparisons followed by parseInt rather
     // than checking a single digit. Retain even unusual synthetic DOM codes.
     if suffix >= [u16::from(b'0')].as_slice() && suffix <= [u16::from(b'9')].as_slice() {

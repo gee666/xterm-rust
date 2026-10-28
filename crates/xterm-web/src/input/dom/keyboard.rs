@@ -2,11 +2,14 @@
 // Licensed under MIT. Adapted from browser/CoreBrowserTerminal.ts.
 
 use super::{composition, listen, set_value, InputBindings, State};
+#[path = "key_event.rs"]
+mod key_event;
 use crate::input::keyboard_dispatch::{
-    DispatchKeyEvent, KeyEventKind, KeyboardAction, KeyboardHost, KeyboardReadHost,
-    KeyboardSnapshot, TextInputEvent,
+    KeyEventKind, KeyEventSource, KeyboardAction, KeyboardHost, KeyboardReadHost, KeyboardSnapshot,
+    TextInputEvent,
 };
 use crate::utf16::from_js_string;
+use key_event::LiveKeyEvent;
 use std::rc::Rc;
 use wasm_bindgen::{JsCast, JsValue};
 use web_sys::{InputEvent, KeyboardEvent};
@@ -20,38 +23,20 @@ pub(super) fn bind(bindings: &mut InputBindings) -> Result<(), JsValue> {
     ] {
         listen(bindings, area.as_ref(), name, true, move |state, event| {
             let event: KeyboardEvent = event.dyn_into()?;
-            let key = js_string_property(event.as_ref(), "key")?;
-            let code = js_string_property(event.as_ref(), "code")?;
-            let dispatch = DispatchKeyEvent {
-                key: xterm_core::input::keyboard::KeyboardEvent {
-                    key_code: event.key_code(),
-                    key: &key,
-                    code: &code,
-                    shift_key: event.shift_key(),
-                    alt_key: event.alt_key(),
-                    ctrl_key: event.ctrl_key(),
-                    meta_key: event.meta_key(),
-                },
-                kind,
-                repeat: event.repeat(),
-                // Read getModifierState only when the source asks for AltGraph.
-                alt_graph: false,
-                char_code: Some(event.char_code()),
-                which: Some(event.which()),
-            };
+            let source = LiveKeyEvent(&event);
             let adapter = Adapter {
                 state,
                 event: Some(&event),
             };
             match kind {
                 KeyEventKind::Down => {
-                    state.keyboard.key_down(&dispatch, &adapter)?;
+                    state.keyboard.key_down_source(&source, &adapter)?;
                 }
                 KeyEventKind::Up => {
-                    state.keyboard.key_up(&dispatch, &adapter)?;
+                    state.keyboard.key_up_source(&source, &adapter)?;
                 }
                 KeyEventKind::Press => {
-                    state.keyboard.key_press(&dispatch, &adapter)?;
+                    state.keyboard.key_press_source(&source, &adapter)?;
                 }
             }
             Ok(())
@@ -76,12 +61,6 @@ pub(super) fn bind(bindings: &mut InputBindings) -> Result<(), JsValue> {
         Ok(())
     })?;
     Ok(())
-}
-
-fn js_string_property(object: &JsValue, name: &str) -> Result<Vec<u16>, JsValue> {
-    let value =
-        js_sys::Reflect::get(object, &JsValue::from_str(name))?.dyn_into::<js_sys::JsString>()?;
-    Ok(from_js_string(&value))
 }
 
 struct Adapter<'a> {
@@ -123,43 +102,36 @@ impl KeyboardReadHost for Adapter<'_> {
     }
     fn evaluate_key_down(
         &self,
-        event: &DispatchKeyEvent<'_>,
+        event: &dyn KeyEventSource<Error = JsValue>,
     ) -> Result<xterm_core::keyboard::KeyboardResult, JsValue> {
         self.state.host.evaluate_key_down(event)
     }
     fn evaluate_key_up(
         &self,
-        event: &DispatchKeyEvent<'_>,
+        event: &dyn KeyEventSource<Error = JsValue>,
     ) -> Result<Option<xterm_core::keyboard::KeyboardResult>, JsValue> {
         self.state.host.evaluate_key_up(event)
-    }
-    fn alt_graph_state(&self, _: &DispatchKeyEvent<'_>) -> Result<bool, JsValue> {
-        let event = self
-            .event
-            .ok_or_else(|| js_sys::Error::new("Missing keyboard event"))?;
-        let method = js_sys::Reflect::get(event.as_ref(), &JsValue::from_str("getModifierState"))?
-            .dyn_into::<js_sys::Function>()?;
-        Ok(method
-            .call1(event.as_ref(), &JsValue::from_str("AltGraph"))?
-            .is_truthy())
     }
 }
 
 impl KeyboardHost for Adapter<'_> {
-    fn custom_key_handler(&self, _: &DispatchKeyEvent<'_>) -> Result<bool, JsValue> {
+    fn custom_key_handler(&self, _: &dyn KeyEventSource<Error = JsValue>) -> Result<bool, JsValue> {
         self.state.host.custom_key_handler(
             self.event
                 .ok_or_else(|| js_sys::Error::new("Missing keyboard event"))?,
         )
     }
 
-    fn composition_key_down(&self, event: &DispatchKeyEvent<'_>) -> Result<bool, JsValue> {
-        composition::keydown(self.state, event.key.key_code)
+    fn composition_key_down(
+        &self,
+        event: &dyn KeyEventSource<Error = JsValue>,
+    ) -> Result<bool, JsValue> {
+        composition::keydown_source(self.state, event)
     }
 
     fn perform(
         &self,
-        _: Option<&DispatchKeyEvent<'_>>,
+        _: Option<&dyn KeyEventSource<Error = JsValue>>,
         action: KeyboardAction<'_>,
     ) -> Result<(), JsValue> {
         match action {

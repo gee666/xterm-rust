@@ -40,15 +40,21 @@ impl KeyboardReadHost for CallbackHost<'_> {
     }
 }
 impl KeyboardHost for CallbackHost<'_> {
-    fn custom_key_handler(&self, event: &DispatchKeyEvent<'_>) -> Result<bool, Self::Error> {
+    fn custom_key_handler(
+        &self,
+        event: &dyn KeyEventSource<Error = Self::Error>,
+    ) -> Result<bool, Self::Error> {
         self.base.custom_key_handler(event)
     }
-    fn composition_key_down(&self, event: &DispatchKeyEvent<'_>) -> Result<bool, Self::Error> {
+    fn composition_key_down(
+        &self,
+        event: &dyn KeyEventSource<Error = Self::Error>,
+    ) -> Result<bool, Self::Error> {
         self.base.composition_key_down(event)
     }
     fn perform(
         &self,
-        event: Option<&DispatchKeyEvent<'_>>,
+        event: Option<&dyn KeyEventSource<Error = Self::Error>>,
         action: KeyboardAction<'_>,
     ) -> Result<(), Self::Error> {
         self.base.perform(event, action)?;
