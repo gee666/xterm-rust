@@ -16,7 +16,7 @@ node scripts/demo-e2e.mjs --case demo-05
 node scripts/demo-e2e.mjs --case demo-06
 ```
 
-The default runtime command builds the debug Rust library. `--no-build` is only for an already built matching library. `--grep PATTERN` explicitly selects a smaller scope. Omitting `--project` retains every original browser project.
+The default runtime command builds the debug Rust library. `--no-build` requires a passing local build report whose Cargo-input digest and WASM/binding bytes still match. A stale package or older report without that provenance is rejected. Rebuild once after upgrading the helper. `--grep PATTERN` explicitly selects a smaller scope. Omitting `--project` retains every original browser project.
 
 The runner reads original TypeScript tests directly through Playwright. It changes the fixture's engine script and server address, not assertions, browser projects or test settings. A classic deferred script compiles actual WASM asynchronously. A per-navigation pending image delays the load event until bindings are published. This avoids Chromium's 8 MB synchronous compilation limit without changing original assertions or browser flags. Its embedded WASM bundle is test transport, not the production distribution or a size benchmark.
 

@@ -6,6 +6,7 @@ import { randomUUID } from 'node:crypto';
 import { runCommand } from './quality-process.mjs';
 import { startDemoServer } from './serve-demo.mjs';
 import { testCounts } from './e2e/upstream-config.mjs';
+import { artifactIdentity, sourceIdentity, verifyBuiltPackage } from './e2e/build-identity.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const options = { case: 'demo-05', timeout: 300000, build: true, list: false };
@@ -30,7 +31,7 @@ await mkdir(output, { recursive: true });
 await mkdir(temporary, { recursive: true });
 const env = { ...process.env, TMP: temporary, TEMP: temporary, TMPDIR: temporary, CI: '1', FORCE_COLOR: '0' };
 const report = { status: 'failed', case: options.case, implementation: 'Rust WASM demo', platform: process.platform,
-  node: process.version, mode: options.list ? 'discovery only' : 'runtime', counts: null, errors: [],
+  node: process.version, mode: options.list ? 'discovery only' : 'runtime', counts: null, errors: [], commands: [],
   scope: 'Demo control integration only. Not full source-suite or cross-platform equivalence.' };
 const controller = new AbortController();
 const interrupt = () => controller.abort(new Error('Demo E2E interrupted'));
@@ -41,13 +42,24 @@ async function resources() {
   if (disk.bavail * disk.bsize < 1024n ** 3n) throw new Error('Demo E2E needs 1 GiB free');
 }
 try {
+  report.source = await sourceIdentity(root);
+  const fixtureFiles = ['scripts/demo-e2e.mjs', 'scripts/serve-demo.mjs', 'scripts/demo-e2e/support.cjs',
+    'scripts/demo-e2e/addon-probes.cjs', `scripts/demo-e2e/${options.case}.spec.cjs`,
+    'browser/demo/index.html', 'browser/demo/app.mjs', 'browser/demo/controls.mjs', 'browser/demo/addons.mjs',
+    'browser/demo/themes.mjs', 'browser/demo/demo.css'];
+  report.fixture = await artifactIdentity(root, fixtureFiles);
   if (!options.list && options.build) {
     const result = await runCommand(process.execPath, ['scripts/build-demo.mjs', '--debug'], {
       cwd: root, env, log: join(output, 'build.log'), timeoutMs: options.timeout,
       resourceCheck: resources, signal: controller.signal });
+    report.commands.push({ stage: 'build', ...result, log: 'build.log' });
     if (result.status !== 'passed') throw new Error('Actual WASM build failed; see build.log');
   }
-  if (!options.list) server = await startDemoServer({ port: 0, timeoutMs: options.timeout + 30000, webSocket: true });
+  if (!options.list) {
+    report.build = await verifyBuiltPackage(root, report.source);
+    report.bindings = await artifactIdentity(root, ['browser/xterm.mjs', 'browser/xterm.css']);
+    server = await startDemoServer({ port: 0, timeoutMs: options.timeout + 30000, webSocket: true });
+  }
   const config = join(temporary, 'playwright.cjs');
   const originalConfig = join(root, 'source_repo/test/playwright/playwright.config.ts');
   await writeFile(config, `const loaded = require(${JSON.stringify(originalConfig)});
@@ -67,11 +79,16 @@ module.exports = { ...original, testDir: ${JSON.stringify(join(root, 'scripts/de
   const result = await runCommand(process.execPath, command, { cwd: root,
     env: { ...env, PLAYWRIGHT_JSON_OUTPUT_FILE: rawFile }, log: join(output, 'playwright.log'),
     timeoutMs: options.timeout, resourceCheck: resources, signal: controller.signal });
+  report.commands.push({ stage: 'playwright', ...result, log: 'playwright.log' });
   const raw = JSON.parse(await readFile(rawFile, 'utf8'));
   report.counts = testCounts(raw); report.errors = raw.errors ?? []; report.stats = raw.stats;
   if (!report.counts.discovered) throw new Error('No demo tests discovered');
   if (!options.list && !report.counts.executed) throw new Error('No demo assertions executed');
   if (result.status !== 'passed' || report.errors.length || controller.signal.aborted) throw new Error('Demo assertions failed or execution interrupted');
+  if ((await sourceIdentity(root)).sha256 !== report.source.sha256
+      || JSON.stringify(await artifactIdentity(root, fixtureFiles)) !== JSON.stringify(report.fixture)) {
+    throw new Error('Source or fixture changed during execution');
+  }
   report.status = options.list ? 'discovered, not executed' : 'passed';
 } catch (error) { report.errors.push(String(error.stack ?? error)); process.exitCode = 1; }
 finally {

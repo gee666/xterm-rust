@@ -7,6 +7,7 @@ import { runCommand } from './quality-process.mjs';
 import { startFixtureServer } from './e2e/fixture-server.mjs';
 import { configForRust, testCounts } from './e2e/upstream-config.mjs';
 import { buildBootstrap } from './e2e/build-bootstrap.mjs';
+import { artifactIdentity, sourceIdentity, verifyBuiltPackage } from './e2e/build-identity.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const options = { suite: 'core', timeout: 300000, list: false, build: true };
@@ -40,7 +41,7 @@ await mkdir(output, { recursive: true }); await mkdir(temporary, { recursive: tr
 const environment = { ...process.env, TMP: temporary, TEMP: temporary, TMPDIR: temporary };
 const report = { status: 'failed', engine: 'Rust WASM', suite: options.suite, project: options.project ?? 'all original projects',
   mode: options.list ? 'discovery only' : 'runtime', platform: process.platform, node: process.version,
-  counts: null, errors: [], scope: 'This run does not establish complete terminal or cross-platform equivalence.' };
+  counts: null, errors: [], commands: [], scope: 'This run does not establish complete terminal or cross-platform equivalence.' };
 async function diskCheck() {
   const disk = await statfs(root, { bigint: true });
   if (disk.bavail * disk.bsize < 1024n ** 3n) throw new Error('E2E needs 1 GiB free');
@@ -50,12 +51,20 @@ const controller = new AbortController();
 const interrupt = () => controller.abort(new Error('E2E interrupted'));
 process.once('SIGINT', interrupt); process.once('SIGTERM', interrupt);
 try {
+  report.source = await sourceIdentity(root);
+  report.reference = await artifactIdentity(reference, ['demo/test.html', configuration]);
+  const fixtureFiles = ['scripts/e2e-upstream.mjs', 'scripts/e2e/fixture-server.mjs', 'scripts/e2e/test-page.mjs',
+    'scripts/e2e/build-bootstrap.mjs', 'scripts/e2e/upstream-config.mjs', 'crates/xterm-web/assets/xterm.css'];
+  report.fixture = await artifactIdentity(root, fixtureFiles);
   if (!options.list && options.build) {
     const result = await runCommand(process.execPath, ['scripts/build-demo.mjs', '--debug'], {
       cwd: root, env: environment, log: join(output, 'build.log'), timeoutMs: options.timeout, resourceCheck: diskCheck, signal: controller.signal });
+    report.commands.push({ stage: 'build', ...result, log: 'build.log' });
     if (result.status !== 'passed') throw new Error(`Rust debug build failed. See ${join(output, 'build.log')}`);
   }
   if (!options.list) {
+    report.build = await verifyBuiltPackage(root, report.source);
+    report.bindings = await artifactIdentity(root, ['browser/xterm.mjs']);
     const bootstrapFile = join(temporary, 'rust-test-page.js');
     await buildBootstrap({ root, referenceRoot: reference, outputFile: bootstrapFile });
     server = await startFixtureServer({ root, packageRoot: join(root, 'browser/pkg'), bootstrapFile, referenceRoot: reference,
@@ -73,6 +82,7 @@ try {
   const result = await runCommand(process.execPath, command, { cwd: reference,
     env: { ...environment, CI: '1', FORCE_COLOR: '0', PLAYWRIGHT_JSON_OUTPUT_FILE: rawFile },
     log: join(output, 'playwright.log'), timeoutMs: options.timeout, resourceCheck: diskCheck, signal: controller.signal });
+  report.commands.push({ stage: 'playwright', ...result, log: 'playwright.log' });
   const raw = JSON.parse(await readFile(rawFile, 'utf8'));
   report.counts = testCounts(raw);
   report.errors = raw.errors ?? [];
@@ -81,6 +91,10 @@ try {
   if (!options.list && !report.counts.executed) throw new Error('No Rust-backed browser assertions executed');
   if (controller.signal.aborted) throw controller.signal.reason;
   if (result.status !== 'passed' || report.errors.length) throw new Error('Original Playwright assertions failed against Rust');
+  if ((await sourceIdentity(root)).sha256 !== report.source.sha256
+      || JSON.stringify(await artifactIdentity(root, fixtureFiles)) !== JSON.stringify(report.fixture)) {
+    throw new Error('Source or fixture changed during execution');
+  }
   report.status = options.list ? 'discovered, not executed' : 'passed';
 } catch (error) { report.errors.push(String(error.stack ?? error)); process.exitCode = 1; }
 finally {
