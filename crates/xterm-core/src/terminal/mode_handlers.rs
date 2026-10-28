@@ -122,6 +122,22 @@ pub(super) fn query(prefix: Option<&'static str>, shared: Shared) -> CommandHand
                 } else {
                     option_flag(&options, "vtExtensions", "win32InputMode", false)?
                 })
+            } else if matches!((prefix.is_some(), mode), (false, 20) | (true, 12)) {
+                let options = Rc::clone(
+                    &shared
+                        .try_borrow()
+                        .map_err(|_| TerminalError::Borrowed)?
+                        .options,
+                );
+                Some(
+                    options
+                        .get(if prefix.is_some() {
+                            "cursorBlink"
+                        } else {
+                            "convertEol"
+                        })?
+                        .is_truthy(),
+                )
             } else {
                 None
             };

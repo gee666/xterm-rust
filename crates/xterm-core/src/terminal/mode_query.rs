@@ -28,7 +28,7 @@ impl TerminalState {
     ) -> Result<(), TerminalError> {
         let mode = params.values().first().copied().unwrap_or(0);
         let value = if ansi {
-            self.ansi_mode_status(mode)?
+            self.ansi_mode_status(mode, gate)?
         } else {
             let modes =
                 captured_modes.unwrap_or_else(|| self.core.dec_private_modes.borrow().clone());
@@ -40,12 +40,12 @@ impl TerminalState {
         ))
     }
 
-    fn ansi_mode_status(&self, mode: i32) -> Result<u8, TerminalError> {
+    fn ansi_mode_status(&self, mode: i32, gate: Option<bool>) -> Result<u8, TerminalError> {
         Ok(match mode {
             2 => PERMANENTLY_RESET,
             4 => status(self.core.modes.borrow().insert_mode),
             12 => PERMANENTLY_SET,
-            20 => status(self.option_bool("convertEol")?),
+            20 => status(gate == Some(true)),
             _ => NOT_RECOGNIZED,
         })
     }
@@ -68,7 +68,7 @@ impl TerminalState {
             7 => status(modes.wraparound),
             8 => PERMANENTLY_SET,
             9 => status(self.mouse.active_protocol() == "X10"),
-            12 => status(self.option_bool("cursorBlink")?),
+            12 => status(gate == Some(true)),
             25 => status(!self.core.is_cursor_hidden.get()),
             45 => status(modes.reverse_wraparound),
             66 => status(modes.application_keypad),
