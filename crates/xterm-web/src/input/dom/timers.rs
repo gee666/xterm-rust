@@ -10,7 +10,7 @@ struct Timer {
     completed: Rc<Cell<bool>>,
     // The closure must outlive the browser's registration, until it fires or
     // clearTimeout removes that registration.
-    _callback: Closure<dyn FnMut()>,
+    _callback: Closure<dyn FnMut() -> Result<(), JsValue>>,
 }
 
 pub(super) struct TimerQueue {
@@ -26,7 +26,10 @@ impl TimerQueue {
         }
     }
 
-    pub fn schedule(&self, callback: impl FnOnce() + 'static) -> Result<(), JsValue> {
+    pub fn schedule(
+        &self,
+        callback: impl FnOnce() -> Result<(), JsValue> + 'static,
+    ) -> Result<(), JsValue> {
         // Do not remove a completed closure from inside its own callback.
         // Pruning on the next registration bounds retained callbacks without
         // Closure::forget or self-owning reference cycles.
@@ -37,11 +40,10 @@ impl TimerQueue {
         let completed_callback = completed.clone();
         let mut callback = Some(callback);
         let closure = Closure::wrap(Box::new(move || {
-            if let Some(callback) = callback.take() {
-                callback();
-            }
+            let result = callback.take().map_or(Ok(()), |callback| callback());
             completed_callback.set(true);
-        }) as Box<dyn FnMut()>);
+            result
+        }) as Box<dyn FnMut() -> Result<(), JsValue>>);
         let id = self
             .window
             .set_timeout_with_callback_and_timeout_and_arguments_0(

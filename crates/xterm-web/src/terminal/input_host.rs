@@ -10,7 +10,7 @@ use crate::{
     dom::BrowserDom,
     input::{
         composition_geometry::CursorGeometry,
-        dom::{InputHost, InputOptions, OverlayLayout},
+        dom::{InputHost, OverlayLayout},
         keyboard_dispatch::KeyboardAction,
     },
 };
@@ -33,21 +33,13 @@ pub struct InputPlatform {
     pub firefox: bool,
 }
 
-#[derive(Clone, Copy, Debug)]
-pub struct RenderInputMetrics {
-    pub valid: bool,
-    pub cell_width: f64,
-    pub cell_height: f64,
-    pub canvas_width: f64,
-    pub canvas_height: f64,
-    pub device_cell_height: f64,
-    pub dpr: f64,
-}
-
 /// The coordinator delegates each method to its actual renderer, selection,
 /// gesture and event services. Methods are synchronous and may reenter input.
 pub trait BrowserInputServices {
-    fn metrics(&self) -> Result<RenderInputMetrics, JsValue>;
+    fn retain_host(&self) -> Result<Rc<dyn std::any::Any>, JsValue>;
+    fn render_dimensions(&self) -> Result<crate::api::RenderDimensions, JsValue>;
+    fn valid_char_size(&self) -> Result<bool, JsValue>;
+    fn dpr(&self) -> Result<f64, JsValue>;
     fn has_selection(&self) -> Result<bool, JsValue>;
     fn selection_text(&self) -> Result<Vec<u16>, JsValue>;
     fn select_all(&self) -> Result<(), JsValue>;
@@ -64,7 +56,6 @@ pub trait BrowserInputServices {
         &self,
         screen: &web_sys::HtmlElement,
     ) -> Result<xterm_core::lifecycle::DisposableHandle, JsValue>;
-    fn report_error(&self, error: JsValue);
 }
 
 pub struct EngineInputHost {
@@ -127,24 +118,32 @@ impl EngineInputHost {
 }
 
 impl InputHost for EngineInputHost {
-    fn options(&self) -> Result<InputOptions, JsValue> {
-        Ok(InputOptions {
-            bracketed_paste: self
-                .core
-                .dec_private_modes
-                .try_borrow()
-                .map_err(error)?
-                .bracketed_paste_mode,
-            ignore_bracketed_paste: self
-                .options
-                .get("ignoreBracketedPasteMode")
-                .map_err(error)?
-                == OptionValue::Bool(true),
-            screen_reader: self.option_bool("screenReaderMode")?,
-            right_click_selects_word: self.option_bool("rightClickSelectsWord")?,
-            is_firefox: self.platform.firefox,
-            is_linux: self.platform.linux,
-        })
+    fn retain_host(&self) -> Result<Option<Rc<dyn std::any::Any>>, JsValue> {
+        self.services.retain_host().map(Some)
+    }
+    fn bracketed_paste(&self) -> Result<bool, JsValue> {
+        Ok(self
+            .core
+            .dec_private_modes
+            .try_borrow()
+            .map_err(error)?
+            .bracketed_paste_mode)
+    }
+    fn ignore_bracketed_paste(&self) -> Result<bool, JsValue> {
+        Ok(self
+            .options
+            .get("ignoreBracketedPasteMode")
+            .map_err(error)?
+            == OptionValue::Bool(true))
+    }
+    fn right_click_selects_word(&self) -> Result<bool, JsValue> {
+        self.option_bool("rightClickSelectsWord")
+    }
+    fn is_firefox(&self) -> Result<bool, JsValue> {
+        Ok(self.platform.firefox)
+    }
+    fn is_linux(&self) -> Result<bool, JsValue> {
+        Ok(self.platform.linux)
     }
 
     fn custom_key_handler(&self, event: &KeyboardEvent) -> Result<bool, JsValue> {
@@ -183,7 +182,7 @@ impl InputHost for EngineInputHost {
     }
 
     fn overlay_layout(&self) -> Result<OverlayLayout, JsValue> {
-        let metrics = self.services.metrics()?;
+        let dimensions = self.services.render_dimensions()?;
         let buffer = self.buffer.buffer();
         let (x, y, in_viewport) = {
             let buffer = buffer.try_borrow().map_err(error)?;
@@ -195,8 +194,8 @@ impl InputHost for EngineInputHost {
                 y,
                 cols: self.buffer.cols(),
                 in_viewport,
-                cell_width: metrics.cell_width,
-                cell_height: metrics.cell_height,
+                cell_width: dimensions.css.cell.width,
+                cell_height: dimensions.css.cell.height,
                 overlay_width: 0.0,
                 overlay_height: 0.0,
             },
@@ -224,7 +223,7 @@ impl InputHost for EngineInputHost {
     }
 
     fn sync_textarea(&self) -> Result<(), JsValue> {
-        let metrics = self.services.metrics()?;
+        let dimensions = self.services.render_dimensions()?;
         let buffer = self.buffer.buffer();
         let (x, y, width) = {
             let buffer = buffer.try_borrow().map_err(error)?;
@@ -244,18 +243,15 @@ impl InputHost for EngineInputHost {
         };
         let style = self.dom.textarea.style();
         for (key, value) in [
-            ("left", x as f64 * metrics.cell_width),
-            ("top", y as f64 * metrics.cell_height),
-            ("width", f64::from(width) * metrics.cell_width),
-            ("height", metrics.cell_height),
-            ("line-height", metrics.cell_height),
+            ("left", x as f64 * dimensions.css.cell.width),
+            ("top", y as f64 * dimensions.css.cell.height),
+            ("width", f64::from(width) * dimensions.css.cell.width),
+            ("height", dimensions.css.cell.height),
+            ("line-height", dimensions.css.cell.height),
         ] {
             style.set_property(key, &format!("{value}px"))?;
         }
         style.set_property("z-index", "-5")
-    }
-    fn report_error(&self, value: JsValue) {
-        self.services.report_error(value);
     }
 }
 
