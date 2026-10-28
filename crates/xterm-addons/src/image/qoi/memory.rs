@@ -56,6 +56,11 @@ impl QoiDecoder {
     }
 }
 fn memory_length(pages: f64) -> Result<usize, QoiError> {
+    // WebAssembly converts the page argument to unsigned long before checking
+    // its separate 65,536-page memory limit, including Memory.grow arguments.
+    if pages > f64::from(u32::MAX) {
+        return Err(QoiError::MemoryArgument);
+    }
     if !pages.is_finite() || !(0.0..=MAX_PAGES).contains(&pages) {
         return Err(QoiError::MemorySize);
     }

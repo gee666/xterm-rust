@@ -16,6 +16,7 @@ pub enum QoiError {
     Allocation(TryReserveError),
     MemorySize,
     MemoryInitial,
+    MemoryArgument,
     MemoryImport,
     MemoryAccess,
     InputOffset,
@@ -28,6 +29,9 @@ impl fmt::Display for QoiError {
             Self::Allocation(e) => e.fmt(f),
             Self::MemorySize => f.write_str("invalid QOI memory size"),
             Self::MemoryInitial => f.write_str("invalid QOI initial memory pages"),
+            Self::MemoryArgument => {
+                f.write_str("QOI memory page argument exceeds unsigned-long range")
+            }
             Self::MemoryImport => f.write_str("QOI decoder memory import requires one page"),
             Self::MemoryAccess => f.write_str("memory access out of bounds"),
             Self::InputOffset => f.write_str("offset is out of bounds"),
@@ -49,7 +53,7 @@ impl QoiError {
     pub fn js_name(&self) -> &'static str {
         match self {
             Self::MemoryAccess => "RuntimeError",
-            Self::MemoryInitial => "TypeError",
+            Self::MemoryInitial | Self::MemoryArgument => "TypeError",
             Self::MemoryImport => "LinkError",
             _ => "RangeError",
         }
