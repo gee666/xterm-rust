@@ -1,0 +1,169 @@
+//! Lossless option values between the portable service and JavaScript.
+use crate::{
+    js_error::{callback_error, to_js_error},
+    utf16::{from_js_string, to_js_string},
+};
+use js_sys::{JsString, Object, Reflect};
+use std::{
+    cell::RefCell,
+    collections::BTreeMap,
+    rc::{Rc, Weak},
+};
+use wasm_bindgen::prelude::*;
+use xterm_core::options::{
+    CoercionHint, NumericSemantics, OptionError, OptionObject, OptionValue as V, WindowsPty,
+};
+
+#[wasm_bindgen(inline_js = "
+export function optionNumber(value) { return +value; }
+export function optionLess(value, rhs) { return value < rhs; }
+export function optionLessEqual(value, rhs) { return value <= rhs; }
+export function optionMultiply(value, rhs) { return value * rhs; }
+export function optionString(value) { return `${value}`; }
+export function optionTruthy(value) { return !!value; }
+export function optionProperty(value, key) { return Reflect.get(Object(value), key); }
+export function optionError(message, type) { return type ? new TypeError(message) : new Error(message); }
+")]
+extern "C" {
+    #[wasm_bindgen(catch)]
+    fn optionNumber(value: &JsValue) -> Result<f64, JsValue>;
+    #[wasm_bindgen(catch)]
+    fn optionLess(value: &JsValue, rhs: f64) -> Result<bool, JsValue>;
+    #[wasm_bindgen(catch)]
+    fn optionLessEqual(value: &JsValue, rhs: f64) -> Result<bool, JsValue>;
+    #[wasm_bindgen(catch)]
+    fn optionMultiply(value: &JsValue, rhs: f64) -> Result<f64, JsValue>;
+    #[wasm_bindgen(catch)]
+    fn optionString(value: &JsValue) -> Result<JsString, JsValue>;
+    fn optionTruthy(value: &JsValue) -> bool;
+    #[wasm_bindgen(catch)]
+    fn optionProperty(value: &JsValue, key: &JsString) -> Result<JsValue, JsValue>;
+    fn optionError(message: &JsString, type_error: bool) -> JsValue;
+}
+
+pub fn error_to_js(error: &OptionError) -> JsValue {
+    match error {
+        OptionError::Invalid(_) | OptionError::UnknownKey(_) => {
+            optionError(&to_js_string(&error.message_utf16()), false)
+        }
+        OptionError::Coercion(_) => optionError(&to_js_string(&error.message_utf16()), true),
+        OptionError::Dispatch(_) => to_js_error(error),
+    }
+}
+
+struct JsNumeric(JsValue);
+impl NumericSemantics for JsNumeric {
+    fn less_than(&self, rhs: f64) -> Result<bool, OptionError> {
+        optionLess(&self.0, rhs).map_err(|e| OptionError::Dispatch(callback_error(e)))
+    }
+    fn less_equal(&self, rhs: f64) -> Result<bool, OptionError> {
+        optionLessEqual(&self.0, rhs).map_err(|e| OptionError::Dispatch(callback_error(e)))
+    }
+    fn multiply(&self, rhs: f64) -> Result<f64, OptionError> {
+        optionMultiply(&self.0, rhs).map_err(|e| OptionError::Dispatch(callback_error(e)))
+    }
+}
+
+pub fn from_js(value: &JsValue) -> Result<V, JsValue> {
+    if value.is_undefined() {
+        return Ok(V::Undefined);
+    }
+    if value.is_null() {
+        return Ok(V::Null);
+    }
+    if let Some(value) = value.as_bool() {
+        return Ok(V::Bool(value));
+    }
+    if let Some(value) = value.as_f64() {
+        return Ok(V::Number(value));
+    }
+    if value.is_string() {
+        return Ok(V::String(from_js_string(&JsString::from(value.clone()))));
+    }
+    let payload = value.clone();
+    let primitive = payload.clone();
+    // Symbol/BigInt stay opaque host values. Unary plus and template conversion
+    // preserve the source's TypeErrors; truthiness/equality retain JS semantics.
+    Ok(V::Object(OptionObject::with_numeric_value_semantics(
+        payload,
+        move |hint| {
+            match hint {
+                CoercionHint::Number => optionNumber(&primitive).map(V::Number),
+                CoercionHint::String => {
+                    optionString(&primitive).map(|s| V::String(from_js_string(&s)))
+                }
+            }
+            .map_err(|error| OptionError::Dispatch(callback_error(error)))
+        },
+        |payload, key| {
+            optionProperty(payload, &JsString::from(key))
+                .and_then(|value| from_js(&value))
+                .map_err(|error| OptionError::Dispatch(callback_error(error)))
+        },
+        optionTruthy(value),
+        |a, b| a == b,
+        Rc::new(JsNumeric(value.clone())),
+    )))
+}
+
+#[derive(Default)]
+pub struct ConversionCache(RefCell<Vec<(Weak<OptionObject>, JsValue)>>);
+impl ConversionCache {
+    pub fn convert(&self, value: &V) -> Result<JsValue, JsValue> {
+        let V::Object(object) = value else {
+            return into_js(value);
+        };
+        if let Some(value) = object.payload::<JsValue>() {
+            return Ok(value.clone());
+        }
+        self.0
+            .borrow_mut()
+            .retain(|(key, _)| key.strong_count() > 0);
+        if let Some(value) = self.0.borrow().iter().find_map(|(key, value)| {
+            key.upgrade()
+                .filter(|key| Rc::ptr_eq(key, object))
+                .map(|_| value.clone())
+        }) {
+            return Ok(value);
+        }
+        let value = into_js(value)?;
+        self.0
+            .borrow_mut()
+            .push((Rc::downgrade(object), value.clone()));
+        Ok(value)
+    }
+}
+
+pub fn into_js(value: &V) -> Result<JsValue, JsValue> {
+    Ok(match value {
+        V::Undefined => JsValue::UNDEFINED,
+        V::Null => JsValue::NULL,
+        V::Bool(value) => JsValue::from_bool(*value),
+        V::Number(value) => JsValue::from_f64(*value),
+        V::String(value) => to_js_string(value).into(),
+        V::Object(value) => {
+            if let Some(value) = value.payload::<JsValue>() {
+                return Ok(value.clone());
+            }
+            let object = Object::new();
+            if let Some(entries) = value.payload::<BTreeMap<String, V>>() {
+                for (key, value) in entries {
+                    Reflect::set(&object, &JsValue::from_str(key), &into_js(value)?)?;
+                }
+            } else if let Some(pty) = value.payload::<WindowsPty>() {
+                if let Some(backend) = &pty.backend {
+                    Reflect::set(&object, &"backend".into(), &backend.as_str().into())?;
+                }
+                if let Some(build) = pty.build_number {
+                    Reflect::set(&object, &"buildNumber".into(), &build.into())?;
+                }
+            } else if value.payload::<()>().is_none() {
+                return Err(js_sys::TypeError::new(
+                    "Native option payload has no JavaScript representation",
+                )
+                .into());
+            }
+            object.into()
+        }
+    })
+}

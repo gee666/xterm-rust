@@ -45,7 +45,7 @@ pub(super) fn sanitize(key: &'static str, mut value: V) -> Result<V, OptionError
         }
         "lineHeight" | "tabStopWidth" => lower_bound(key, &value, 1.0, false)?,
         "minimumContrastRatio" => {
-            let n = value.number()? * 10.0;
+            let n = value.multiply(10.0)?;
             // JS Math.round rounds ties toward +Infinity, unlike f64::round.
             let rounded = if n.is_finite() {
                 n.floor() + f64::from(n - n.floor() >= 0.5)
@@ -86,8 +86,12 @@ pub(super) fn sanitize(key: &'static str, mut value: V) -> Result<V, OptionError
 }
 
 fn lower_bound(key: &str, value: &V, bound: f64, inclusive: bool) -> Result<(), OptionError> {
-    let number = value.number()?;
-    if number < bound || (inclusive && number == bound) {
+    let rejected = if inclusive {
+        value.less_equal(bound)?
+    } else {
+        value.less_than(bound)?
+    };
+    if rejected {
         let relation = if inclusive {
             "less than or equal to"
         } else {

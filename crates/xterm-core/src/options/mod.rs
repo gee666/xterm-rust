@@ -6,16 +6,20 @@
 //! Engine consumers should validate the type they require before using a value.
 //! Platform detection is supplied by adapters through `is_mac`.
 mod defaults;
+mod host_store;
+mod object;
 mod validation;
 mod value;
 
 use crate::event::{EmitError, Emitter, Event};
 use crate::lifecycle::{Disposable, DisposableHandle};
 pub use defaults::default_options;
+pub use host_store::RawOptionsStore;
+pub use object::{CoercionError, CoercionHint, NumericSemantics, OptionObject};
 use std::cell::RefCell;
 use std::fmt;
 use std::rc::Rc;
-pub use value::{CoercionError, CoercionHint, OptionObject, OptionValue};
+pub use value::OptionValue;
 
 /// Typed payload for the windowsPty object at the native/browser adapter boundary.
 /// Absence differs from zero; consumers preserve upstream truthiness checks.
@@ -67,7 +71,15 @@ impl fmt::Display for OptionError {
         }
     }
 }
-impl std::error::Error for OptionError {}
+impl std::error::Error for OptionError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Coercion(error) => Some(error),
+            Self::Dispatch(error) => Some(error),
+            _ => None,
+        }
+    }
+}
 
 impl OptionError {
     /// Lossless host error text, including JavaScript lone surrogates. Display
@@ -100,16 +112,9 @@ pub struct OptionsService {
     values: Rc<RefCell<Values>>,
     changes: Emitter<&'static str>,
     diagnostics: Vec<OptionError>,
-    dispatch_errors: Rc<RefCell<Vec<Option<OptionError>>>>,
-}
-
-// A frame per fire preserves nested/caught callback errors. Drop also removes
-// the frame if a Rust callback unwinds, without catching or hiding that panic.
-struct DispatchFrame<'a>(&'a RefCell<Vec<Option<OptionError>>>);
-impl Drop for DispatchFrame<'_> {
-    fn drop(&mut self) {
-        self.0.borrow_mut().pop();
-    }
+    raw_store: Option<Rc<dyn RawOptionsStore>>,
+    property_layout: Option<Vec<(String, bool)>>,
+    dispose_error: RefCell<Option<OptionError>>,
 }
 
 impl OptionsService {
@@ -125,13 +130,19 @@ impl OptionsService {
                     Ok(value) => *current = value,
                     Err(error) => diagnostics.push(error),
                 }
+            } else if let Some(key) =
+                host_store::prototype_key(key.as_ref()).filter(|key| *key != "__proto__")
+            {
+                values.push((key, value));
             }
         }
         Self {
             values: Rc::new(RefCell::new(values)),
             changes: Emitter::new(),
             diagnostics,
-            dispatch_errors: Rc::new(RefCell::new(Vec::new())),
+            raw_store: None,
+            property_layout: None,
+            dispose_error: RefCell::new(None),
         }
     }
 
@@ -141,10 +152,21 @@ impl OptionsService {
 
     /// Includes all defaults, in upstream Object.keys order.
     pub fn keys(&self) -> Vec<&'static str> {
+        if let Some(layout) = &self.property_layout {
+            return layout
+                .iter()
+                .filter(|(_, enumerable)| *enumerable)
+                .filter_map(|(key, _)| self.key(key).ok())
+                .collect();
+        }
         self.values.borrow().iter().map(|(key, _)| *key).collect()
     }
 
     pub fn get(&self, key: &str) -> Result<OptionValue, OptionError> {
+        let key = self.key(key)?;
+        if let Some(store) = &self.raw_store {
+            return store.get(key);
+        }
         self.values
             .borrow()
             .iter()
@@ -158,7 +180,14 @@ impl OptionsService {
     pub fn set(&self, key: &str, value: OptionValue) -> Result<(), OptionError> {
         let key = self.key(key)?;
         let value = validation::sanitize(key, value)?;
-        let changed = {
+        let changed = if let Some(store) = &self.raw_store {
+            if store.get(key)? == value {
+                false
+            } else {
+                store.set(key, value)?;
+                true
+            }
+        } else {
             let mut values = self.values.borrow_mut();
             // key() checked existence, and this service never removes keys.
             let (_, current) = values
@@ -173,24 +202,21 @@ impl OptionsService {
             }
         };
         if changed {
-            self.dispatch_errors.borrow_mut().push(None);
-            let _frame = DispatchFrame(&self.dispatch_errors);
-            let result = self.changes.fire(&key);
-            if let Some(error) = self
-                .dispatch_errors
-                .borrow_mut()
-                .last_mut()
-                .and_then(Option::take)
-            {
-                return Err(error);
-            }
-            result.map_err(OptionError::Dispatch)?;
+            self.changes.fire(&key).map_err(|error| {
+                error
+                    .callback_ref::<OptionError>()
+                    .cloned()
+                    .unwrap_or(OptionError::Dispatch(error))
+            })?;
         }
         Ok(())
     }
 
     /// Internal equivalent of writing rawOptions, bypassing validation/events.
     pub fn set_raw(&self, key: &str, value: OptionValue) -> Result<(), OptionError> {
+        if let Some(store) = &self.raw_store {
+            return store.set(key, value);
+        }
         let mut values = self.values.borrow_mut();
         let (_, current) = values
             .iter_mut()
@@ -221,18 +247,9 @@ impl OptionsService {
         &self,
         listener: impl Fn(&'static str) -> Result<(), OptionError> + 'static,
     ) -> DisposableHandle {
-        let errors = Rc::downgrade(&self.dispatch_errors);
-        self.changes.event().try_subscribe(move |key| {
-            if let Err(error) = listener(key) {
-                if let Some(errors) = errors.upgrade() {
-                    if let Some(frame) = errors.borrow_mut().last_mut() {
-                        *frame = Some(error);
-                    }
-                }
-                return Err(EmitError);
-            }
-            Ok(())
-        })
+        self.changes
+            .event()
+            .try_subscribe(move |key| listener(key).map_err(EmitError::callback))
     }
 
     pub fn try_on_specific_option_change(
@@ -242,8 +259,12 @@ impl OptionsService {
     ) -> Result<DisposableHandle, OptionError> {
         let key = self.key(key)?;
         let values = Rc::downgrade(&self.values);
+        let store = self.raw_store.as_ref().map(Rc::downgrade);
         Ok(self.try_on_option_change(move |changed| {
             if changed == key {
+                if let Some(store) = store.as_ref().and_then(std::rc::Weak::upgrade) {
+                    return listener(store.get(key)?);
+                }
                 if let Some(values) = values.upgrade() {
                     let value = values
                         .borrow()
@@ -276,6 +297,15 @@ impl OptionsService {
     }
 
     fn key(&self, key: &str) -> Result<&'static str, OptionError> {
+        if self
+            .property_layout
+            .as_ref()
+            .is_some_and(|layout| layout.iter().any(|(name, _)| name == key))
+        {
+            if let Some(key) = host_store::prototype_key(key) {
+                return Ok(key);
+            }
+        }
         self.values
             .borrow()
             .iter()
@@ -293,12 +323,7 @@ impl Default for OptionsService {
 
 impl Disposable for OptionsService {
     fn dispose(&self) {
-        self.changes.dispose();
-        for (key, value) in self.values.borrow_mut().iter_mut() {
-            if matches!(*key, "linkHandler" | "documentOverride") {
-                *value = OptionValue::Null;
-            }
-        }
+        *self.dispose_error.borrow_mut() = self.try_dispose().err();
     }
 }
 impl Drop for OptionsService {

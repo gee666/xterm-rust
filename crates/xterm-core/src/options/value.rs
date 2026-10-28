@@ -1,106 +1,10 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved.
 // Licensed under the MIT license.
 
+use super::{CoercionError, CoercionHint, OptionObject};
 use std::any::Any;
 use std::collections::BTreeMap;
-type PropertyGetter = dyn Fn(&dyn Any, &str) -> Result<OptionValue, CoercionError>;
-use std::fmt;
 use std::rc::Rc;
-
-/// An adapter-owned object. Clones preserve identity and ownership. A browser
-/// adapter can retain a DOM document, logger, callback, or structured JS object.
-/// Numeric/string coercion is supplied by that adapter, not guessed by the core.
-pub struct OptionObject {
-    payload: Box<dyn Any>,
-    to_primitive: Box<dyn Fn(CoercionHint) -> Result<OptionValue, CoercionError>>,
-    property_getter: Box<PropertyGetter>,
-}
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum CoercionHint {
-    Number,
-    String,
-}
-
-/// Host conversion failures retain lossless JS error text. The host adapter
-/// invokes JS ToPrimitive using the supplied hint and forwards thrown errors.
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct CoercionError(pub Vec<u16>);
-impl CoercionError {
-    pub fn new(message: &str) -> Self {
-        Self(message.encode_utf16().collect())
-    }
-}
-impl fmt::Display for CoercionError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str(&String::from_utf16_lossy(&self.0))
-    }
-}
-impl std::error::Error for CoercionError {}
-
-impl OptionObject {
-    pub fn new<T: Any>(
-        payload: T,
-        to_primitive: impl Fn(CoercionHint) -> Result<OptionValue, CoercionError> + 'static,
-    ) -> Rc<Self> {
-        Rc::new(Self {
-            payload: Box::new(payload),
-            to_primitive: Box::new(to_primitive),
-            property_getter: Box::new(|_, _| Ok(OptionValue::Undefined)),
-        })
-    }
-
-    /// Supply property access for structured payloads or JS getters. The getter
-    /// can retain interior mutability and propagate host exceptions losslessly.
-    pub fn with_properties<T: Any>(
-        payload: T,
-        to_primitive: impl Fn(CoercionHint) -> Result<OptionValue, CoercionError> + 'static,
-        get: impl Fn(&T, &str) -> Result<OptionValue, CoercionError> + 'static,
-    ) -> Rc<Self> {
-        Rc::new(Self {
-            payload: Box::new(payload),
-            to_primitive: Box::new(to_primitive),
-            property_getter: Box::new(move |payload, key| {
-                // This object owns exactly the T boxed by this constructor.
-                get(
-                    payload
-                        .downcast_ref::<T>()
-                        .expect("property getter payload type"),
-                    key,
-                )
-            }),
-        })
-    }
-
-    pub fn get_property(&self, key: &str) -> Result<OptionValue, super::OptionError> {
-        (self.property_getter)(self.payload.as_ref(), key).map_err(Into::into)
-    }
-
-    pub fn plain<T: Any>(payload: T) -> Rc<Self> {
-        Self::new(payload, |_| Ok(OptionValue::from("[object Object]")))
-    }
-
-    fn primitive(&self, hint: CoercionHint) -> Result<OptionValue, CoercionError> {
-        let primitive = (self.to_primitive)(hint)?;
-        if matches!(primitive, OptionValue::Object(_)) {
-            Err(CoercionError::new(
-                "Cannot convert object to primitive value",
-            ))
-        } else {
-            Ok(primitive)
-        }
-    }
-
-    pub fn payload<T: Any>(&self) -> Option<&T> {
-        self.payload.downcast_ref()
-    }
-}
-
-impl fmt::Debug for OptionObject {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("OptionObject").finish_non_exhaustive()
-    }
-}
 
 /// Values accepted at the JS options boundary. UTF-16 strings retain lone
 /// surrogates. Numbers retain NaN, infinities, and signed zero. Object equality
@@ -122,7 +26,7 @@ impl PartialEq for OptionValue {
             (Self::Bool(a), Self::Bool(b)) => a == b,
             (Self::Number(a), Self::Number(b)) => a == b,
             (Self::String(a), Self::String(b)) => a == b,
-            (Self::Object(a), Self::Object(b)) => Rc::ptr_eq(a, b),
+            (Self::Object(a), Self::Object(b)) => Rc::ptr_eq(a, b) || a.equals(b),
             _ => false,
         }
     }
@@ -198,8 +102,38 @@ impl OptionValue {
             Self::Bool(value) => *value,
             Self::Number(value) => *value != 0.0 && !value.is_nan(),
             Self::String(value) => !value.is_empty(),
-            Self::Object(_) => true,
+            Self::Object(value) => value.truthy(),
         }
+    }
+
+    pub(crate) fn less_than(&self, rhs: f64) -> Result<bool, super::OptionError> {
+        match self {
+            Self::Object(value) => value.less_than(rhs),
+            _ => Ok(self.number()? < rhs),
+        }
+    }
+    pub(crate) fn less_equal(&self, rhs: f64) -> Result<bool, super::OptionError> {
+        match self {
+            Self::Object(value) => value.less_equal(rhs),
+            _ => Ok(self.number()? <= rhs),
+        }
+    }
+    pub(crate) fn multiply(&self, rhs: f64) -> Result<f64, super::OptionError> {
+        match self {
+            Self::Object(value) => value.multiply(rhs),
+            _ => Ok(self.number()? * rhs),
+        }
+    }
+
+    /// ECMAScript ToNumber at a host boundary, including fallible Number-hint
+    /// object conversion. Strings use JS whitespace and numeric grammar.
+    pub fn to_number(&self) -> Result<f64, super::OptionError> {
+        self.number()
+    }
+
+    /// ECMAScript string conversion with String hint and lossless UTF-16.
+    pub fn to_utf16(&self) -> Result<Vec<u16>, super::OptionError> {
+        self.text_utf16()
     }
 
     pub(crate) fn number(&self) -> Result<f64, super::OptionError> {
