@@ -44,7 +44,7 @@ impl Terminal {
         let state = engine.state_handle();
         let parser_registrations = super::views::registrations(&mut engine, &state);
         let parser_disposal = engine.parser_mut().disposal_handle();
-        let events = Rc::new(Events::default());
+        let events = Rc::new(Events::with_line_feed(Rc::clone(&state.borrow().line_feed)));
         let output = Rc::clone(&events);
         engine.set_event_handler(Some(Rc::new(move |event| output.dispatch(event))));
         Ok(Self {
@@ -231,6 +231,10 @@ impl Terminal {
         if self.disposed.replace(true) {
             return Ok(());
         }
+        // Removing the Windows listener first copies the active LF listener
+        // array. Disposing the emitter must clear the new array, not that
+        // callback traversal, including when the parser owns the engine.
+        crate::terminal::dispose_windows_wrapping(&self.state)?;
         self.events.dispose_core();
         if let Ok(mut engine) = self.engine.try_borrow_mut() {
             engine.dispose()?;

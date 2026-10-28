@@ -160,9 +160,7 @@ pub fn reset_state_handle(
         "cols",
         crate::options::OptionValue::Number(service.cols() as f64),
     )?;
-    wrapping.set(super::controls::windows_heuristics_enabled(
-        &options.get("windowsPty")?,
-    )?);
+    wrapping.update(&options.get("windowsPty")?)?;
     shared
         .try_borrow_mut()
         .map_err(|_| TerminalError::Borrowed)?

@@ -1,5 +1,4 @@
 // Copyright (c) 2014-2026 The xterm.js authors. All rights reserved. MIT license.
-pub(super) use super::windows_heuristics::enabled as windows_heuristics_enabled;
 use super::{TerminalError, TerminalEvent, TerminalState};
 use std::{cell::RefCell, rc::Rc};
 
@@ -44,9 +43,14 @@ pub fn line_feed_state(shared: &Rc<RefCell<TerminalState>>) -> Result<(), Termin
         }
         state.dirty_row(b.y);
         drop(b);
-        state.update_windows_wrapping()?;
-        state.events.borrow_mut().push(TerminalEvent::LineFeed);
     }
+    let line_feed = Rc::clone(&shared.borrow().line_feed);
+    line_feed.fire(&()).map_err(TerminalError::Event)?;
+    shared
+        .borrow()
+        .events
+        .borrow_mut()
+        .push(TerminalEvent::LineFeed);
     super::dispatch_events(shared)
 }
 
@@ -91,19 +95,6 @@ impl TerminalState {
                 b.tabs.insert(x);
             }
             _ => {}
-        }
-        Ok(())
-    }
-    pub(crate) fn update_windows_wrapping(&self) -> Result<(), TerminalError> {
-        if self.windows_wrapping.get() {
-            let active = self.active_buffer();
-            let b = active.try_borrow().map_err(|_| TerminalError::Borrowed)?;
-            crate::windows_mode::update_windows_mode_wrapped_state(
-                &b.lines,
-                b.ybase,
-                b.y,
-                self.cols(),
-            );
         }
         Ok(())
     }

@@ -1,6 +1,6 @@
 // Copyright (c) 2014-2026 The xterm.js authors. All rights reserved. MIT license.
 //! Typed service construction and ownership, separate from streaming execution.
-use super::{controls, register, CoreTerminal, TerminalError, TerminalEvent, TerminalState};
+use super::{register, CoreTerminal, TerminalError, TerminalEvent, TerminalState};
 use crate::{
     buffer::BufferService,
     charset::CharsetService,
@@ -101,9 +101,13 @@ impl CoreTerminal {
                 },
             )
         }));
-        let windows_wrapping = Rc::new(std::cell::Cell::new(controls::windows_heuristics_enabled(
-            &options.get("windowsPty")?,
-        )?));
+        let mut parser = EscapeSequenceParser::new();
+        let line_feed = Rc::new(crate::event::Emitter::new());
+        let windows_wrapping = Rc::new(super::windows_heuristics::WindowsWrapping::new(
+            Rc::clone(&service),
+            Rc::clone(&line_feed),
+            parser.csi_registrar(),
+        ));
         let wrapping = Rc::downgrade(&windows_wrapping);
         let option_ref = Rc::downgrade(&options);
         listeners.push(options.on_option_change().try_subscribe(move |changed| {
@@ -111,14 +115,13 @@ impl CoreTerminal {
                 return Ok(());
             }
             if let (Some(wrapping), Some(options)) = (wrapping.upgrade(), option_ref.upgrade()) {
-                wrapping.set(
-                    controls::windows_heuristics_enabled(
+                wrapping
+                    .update(
                         &options
                             .get("windowsPty")
                             .map_err(crate::event::EmitError::callback)?,
                     )
-                    .map_err(crate::event::EmitError::callback)?,
-                );
+                    .map_err(crate::event::EmitError::callback)?;
             }
             Ok(())
         }));
@@ -148,14 +151,16 @@ impl CoreTerminal {
             error: None,
             dirty: None,
             preceding_join_state: Rc::default(),
-            windows_wrapping,
+            line_feed,
+            windows_wrapping: Rc::clone(&windows_wrapping),
             pending_replies: Default::default(),
         }));
-        let mut parser = EscapeSequenceParser::new();
         state.borrow_mut().preceding_join_state = Rc::clone(&parser.preceding_join_state);
         register::register(&mut parser, &state)?;
         let logger = Rc::clone(&state.borrow().logger);
         super::diagnostics::install_fallbacks(&mut parser, logger);
+        let options = Rc::clone(&state.borrow().options);
+        windows_wrapping.update(&options.get("windowsPty")?)?;
         Ok(Self {
             state,
             parser,

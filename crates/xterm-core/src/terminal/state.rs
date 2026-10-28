@@ -32,7 +32,8 @@ pub struct TerminalState {
     pub(crate) error: Option<TerminalError>,
     pub(crate) dirty: Option<(usize, usize)>,
     pub(crate) preceding_join_state: Rc<std::cell::Cell<u32>>,
-    pub(crate) windows_wrapping: Rc<std::cell::Cell<bool>>,
+    pub(crate) line_feed: Rc<crate::event::Emitter<()>>,
+    pub(super) windows_wrapping: Rc<super::windows_heuristics::WindowsWrapping>,
     pub(crate) pending_replies: std::collections::VecDeque<Vec<u16>>,
 }
 impl std::ops::Deref for TerminalState {
