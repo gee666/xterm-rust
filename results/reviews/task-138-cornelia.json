@@ -1,0 +1,14 @@
+{
+  "task": 138,
+  "reviewer": "Cornelia",
+  "status": "accepted",
+  "scope": "Well-formed native theme CSS generation only. Task 170 retains raw/lazy coercion and task 32 retains actual DOM/browser lifecycle and computed-style proof.",
+  "sourceReview": ["source_repo/src/browser/renderer/dom/DomRenderer.ts", "crates/xterm-web/src/renderer/theme_css.rs", "crates/xterm-web/src/renderer/theme_css_rules.rs", "crates/xterm-web/tests/theme_css.rs", "scripts/check-theme-css.mjs"],
+  "checks": [
+    { "command": "cargo test -p xterm-web --test theme_css", "passed": 2, "failed": 0, "ignored": 0, "fullStringCases": 73, "lease": "results/build-slots/1793173264371-14632-18b2bf30-e1fc-490f-a831-488decb4e38a" },
+    { "command": "node scripts/check-theme-css.mjs", "status": "passed", "sourceCases": 73, "seed": 3311141121, "fixtureRewrite": false, "lease": "results/build-slots/1793173306971-4612-7c3a1342-039b-4d12-9932-f8ac0609b300" },
+    { "command": "rustfmt --edition 2021 --check --config skip_children=true crates/xterm-web/src/renderer/theme_css.rs crates/xterm-web/src/renderer/theme_css_rules.rs crates/xterm-web/tests/theme_css.rs", "status": "passed" },
+    { "command": "cargo clippy -p xterm-web --lib --test theme_css -- -D warnings", "status": "failed in prerequisite core", "reason": "Unwired cleanup_owner fields/methods in core buffer modules stopped Clippy before the CSS helper. No warning was suppressed and this is not a clean-lint claim.", "lease": "results/build-slots/1793173307176-40004-c2e02af7-11ae-4216-aab9-30b3855e9185" }
+  ],
+  "findings": "Canonical generator matches complete original _injectCss strings, rule/selector order, whitespace, id isolation, cursor animations, palette lengths 0/1/2/16/256/300, direct CSS versus computed RGBA and JS numeric spellings. Scoped native function is accepted; shared raw reader and browser completion are not inferred."
+}
