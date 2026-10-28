@@ -1,0 +1,53 @@
+    Blocking waiting for file lock on build directory
+warning: unused `Result` that must be used
+   --> crates\xterm-core\src\headless\terminal.rs:218:9
+    |
+218 | /         self.engine
+219 | |             .try_borrow_mut()
+220 | |             .map_err(|_| HeadlessError::Borrowed)?
+221 | |             .dispose();
+    | |______________________^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+    = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+    |
+218 |         let _ = self.engine
+    |         +++++++
+
+warning: `xterm-core` (lib) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 0.78s
+     Running tests\osc.rs (target\debug\deps\osc-5776e1d61b21962c.exe)
+
+running 7 tests
+test registration_clear_and_disposal ... ok
+test identifier_parsing ... ok
+test reset_payload_and_resume_after_reset ... ok
+test bubbling_and_mixed_sync_async_cleanup ... ok
+test factory_exact_limit_and_limit_plus_one ... ok
+test reset_retains_async_cleanup_futures ... ok
+test factory_success_abort_dispose_and_bubble ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\osc_differential.rs (target\debug\deps\osc_differential-3b590c1ed1244995.exe)
+
+running 1 test
+test randomized_registration_lifecycle_and_streaming_matches_javascript ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests\osc_edges.rs (target\debug\deps\osc_edges-ba86f489f2c2bd1c.exe)
+
+running 8 tests
+test empty_and_illegal_identifier_boundaries ... ok
+test clearing_registry_does_not_replace_active_handler_list ... ok
+test reset_while_paused_cleans_only_lower_handlers_and_preserves_owned_future ... ok
+test live_removal_during_every_callback_stage_returns_recoverable_error ... ok
+test repeated_disposal_removes_next_equal_identity_registration ... ok
+test utf16_lone_surrogates_and_astral_units_count_toward_limit ... ok
+test numeric_identifier_preserves_javascript_float_rounding_and_overflow ... ok
+test zero_limit_overflow_ignores_later_chunks_and_recovers_after_start ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

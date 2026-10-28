@@ -1,0 +1,55 @@
+{
+  "reviewer": "Boleslav",
+  "task": 15,
+  "scope": "Portable OSC parser, whole-payload adapter, shared handler results/registry and faithful source/assertion mapping",
+  "inspected": [
+    "source_repo/src/common/parser/OscParser.ts",
+    "crates/xterm-core/src/parser/osc.rs",
+    "crates/xterm-core/src/parser/osc_handler.rs",
+    "crates/xterm-core/src/parser/osc_registry.rs",
+    "crates/xterm-core/src/parser/handler.rs",
+    "crates/xterm-core/src/parser/handler_registry.rs",
+    "crates/xterm-core/tests/osc_edges.rs",
+    "crates/xterm-core/tests/osc_failures.rs",
+    "crates/xterm-core/tests/osc_registry.rs",
+    "docs/osc.md"
+  ],
+  "commands": [
+    {
+      "command": "node scripts/check-osc.mjs",
+      "status": "passed",
+      "log": "results/osc/boleslav-oracle.log",
+      "originalTests": 23,
+      "syntheticChecks": 12,
+      "traces": 512,
+      "stepsPerTrace": 96
+    },
+    {
+      "command": "cargo test -p xterm-core --test osc --test osc_edges --test osc_differential --test osc_failures --test osc_registry",
+      "status": "passed",
+      "tests": 25,
+      "log": "results/osc/boleslav-current-tests.log"
+    },
+    {
+      "command": "rustfmt --edition 2021 --check [inspected OSC and shared registry Rust source files]",
+      "status": "passed",
+      "log": "results/osc/boleslav-fmt.log"
+    },
+    {
+      "command": "cargo clippy -p xterm-core --lib --test osc --test osc_edges --test osc_differential --test osc_failures --test osc_registry -- -D warnings",
+      "status": "failed-unrelated-shared-modules",
+      "log": "results/osc/boleslav-current-clippy.log",
+      "failures": [
+        "headless/events.rs with_queued_parse dead code",
+        "input/move_to_cell.rs comparison_chain"
+      ]
+    }
+  ],
+  "findings": [],
+  "notes": [
+    "Compared f64 identifier operation order, live handler mutation/duplicate disposal, pause/reset cleanup, source failure retention and generic registry Weak ownership.",
+    "No borrow of registration collections spans callbacks; callback/future errors retain actual causes and do not bubble as false.",
+    "Original suite and generated corpus are component evidence, not full terminal/browser/native platform equivalence.",
+    "Prior shared compile failures retained in boleslav-prior-shared-failure.log. Workspace quality remains a separate incomplete gate."
+  ]
+}
