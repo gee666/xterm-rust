@@ -1,0 +1,150 @@
+{
+  "scope": "Native demo only; full terminal equivalence NOT PROVEN",
+  "environment": {
+    "node": "v24.15.0",
+    "platform": "win32",
+    "architecture": "x64",
+    "rustflags": null,
+    "cargoEncodedRustflags": null,
+    "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+    "targetDirectory": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\target",
+    "resolvedTargetOs": "windows"
+  },
+  "commands": [
+    {
+      "command": [
+        "rustc",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 34.159400000000005,
+      "status": "passed",
+      "expected": "success",
+      "log": "results/demos/native/runs/2026-10-28T01-09-47-568Z-ef68747c-227d-4317-a1d6-7c006d13c6a3/rustc.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "metadata",
+        "--locked",
+        "--no-deps",
+        "--format-version",
+        "1"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 39.2928,
+      "status": "passed",
+      "expected": "success",
+      "log": "results/demos/native/runs/2026-10-28T01-09-47-568Z-ef68747c-227d-4317-a1d6-7c006d13c6a3/metadata.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "rustc",
+        "--locked",
+        "-p",
+        "xterm-core",
+        "--lib",
+        "--",
+        "--print",
+        "cfg"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 78.2387,
+      "status": "passed",
+      "expected": "success",
+      "log": "results/demos/native/runs/2026-10-28T01-09-47-568Z-ef68747c-227d-4317-a1d6-7c006d13c6a3/target-cfg.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "xterm-core",
+        "--example",
+        "native"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 655.0611000000001,
+      "status": "passed",
+      "expected": "success",
+      "log": "results/demos/native/runs/2026-10-28T01-09-47-568Z-ef68747c-227d-4317-a1d6-7c006d13c6a3/unit.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "-p",
+        "xterm-core",
+        "--example",
+        "native",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 2436.2477,
+      "status": "failed",
+      "expected": "success",
+      "log": "results/demos/native/runs/2026-10-28T01-09-47-568Z-ef68747c-227d-4317-a1d6-7c006d13c6a3/clippy.log"
+    }
+  ],
+  "negativeChecks": [],
+  "status": "failed",
+  "gaps": [],
+  "sourceBefore": {
+    "sha256": "dc3b3247dd1837fb617fcc9ac270723353128a04802f3ceba9f66367d4043ee8",
+    "files": 1115,
+    "unsafeCandidates": [
+      {
+        "path": "crates/xterm-core/src/instantiation.rs",
+        "line": 3,
+        "text": "//! Shared service values and constructor argument resolution without unsafe code."
+      },
+      {
+        "path": "crates/xterm-web/src/status_addons/coercion.rs",
+        "line": 4,
+        "text": "//! Static wasm-bindgen snippets avoid requiring eval or unsafe-eval CSP rules."
+      }
+    ]
+  },
+  "error": "AssertionError [ERR_ASSERTION]: clippy: inspect retained log\n\n'failed' !== 'passed'\n\n    at success (file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/scripts/check-native-demo.mjs:35:10)\n    at async file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/scripts/check-native-demo.mjs:81:3",
+  "runId": "2026-10-28T01-09-47-568Z-ef68747c-227d-4317-a1d6-7c006d13c6a3"
+}

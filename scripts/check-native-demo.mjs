@@ -13,7 +13,10 @@ const relative = value => path.relative(root, value).split(path.sep).join('/');
 const report = { scope: 'Native demo only; full terminal equivalence NOT PROVEN',
   environment: { node: process.version, platform: process.platform, architecture: process.arch,
     rustflags: process.env.RUSTFLAGS ?? null, cargoEncodedRustflags: process.env.CARGO_ENCODED_RUSTFLAGS ?? null },
-  commands: [], negativeChecks: [], status: 'incomplete', gaps: [] };
+  commands: [], negativeChecks: [], failedChecks: [], status: 'incomplete', gaps: [] };
+const plannedChecks = ['rustc', 'metadata', 'target-cfg', 'unit', 'clippy', 'format', 'build',
+  'script-plain', 'script-ansi', 'interactive', 'stdin-eof', 'help',
+  ...['unknown', 'escape', 'zero-cols', 'zero-rows', 'budget', 'assertion'].map(name => `negative-${name}`)];
 const reserveMiB = 1024;
 let runtime;
 async function checkDisk() {
@@ -26,7 +29,7 @@ async function run(name, command, args, expected = 'success') {
   const log = path.join(attempt.directory, `${name}.log`);
   const result = await runtime.runCommand(command, args, { cwd: root, env: process.env, log,
     timeoutMs: 120000, resourceCheck: checkDisk });
-  report.commands.push({ ...result, expected, log: relative(log) });
+  report.commands.push({ ...result, id: name, expected, log: relative(log) });
   persistEvidence(attempt, report);
   return { result, output: await readFile(log, 'utf8') };
 }
@@ -34,6 +37,15 @@ async function success(name, command, args) {
   const runResult = await run(name, command, args);
   assert.equal(runResult.result.status, 'passed', `${name}: inspect retained log`);
   return runResult.output;
+}
+// A lint/test failure must remain a failure, but need not hide independent CLI
+// observations. Build/setup/interruption failures still prevent unsafe execution.
+async function gate(name, command, args) {
+  const checked = await run(name, command, args);
+  if (checked.result.status !== 'passed') report.failedChecks.push(name);
+  if (checked.result.resourceError || checked.result.timedOut || checked.result.aborted || checked.result.terminationError) {
+    throw new Error(`${name}: interrupted; no further commands started`);
+  }
 }
 async function interactive(executable) {
   await checkDisk();
@@ -48,15 +60,18 @@ async function interactive(executable) {
   for (const [name, text] of [['interactive-input.txt', input], ['interactive-stdout.log', stdout], ['interactive-stderr.log', stderr]]) {
     await writeFile(path.join(attempt.directory, name), text);
   }
-  report.commands.push({ command: [executable, '--plain'], expected: 'success with one rejected interactive command',
+  report.commands.push({ id: 'interactive', command: [executable, '--plain'], expected: 'success with one rejected interactive command',
     exitCode: result.status, signal: result.signal, error: result.error?.message ?? null,
     timedOut: result.error?.code === 'ETIMEDOUT', elapsedMs: performance.now() - started,
     status: result.status === 0 && !result.error && !result.signal ? 'passed' : 'failed',
     log: relative(path.join(attempt.directory, 'interactive-stdout.log')) });
   persistEvidence(attempt, report);
   assert(!result.error && result.status === 0 && !result.signal, 'Interactive command pipe failed');
-  assert.equal(stderr.trim().split(/\r?\n/).length, 1, 'Only the deliberately unknown command should fail');
-  assert(stderr.includes('unknown command'));
+  const errorLines = stderr.split(/\r?\n/).filter(line => line.startsWith('error: '));
+  assert.equal(errorLines.length, 1, 'Only the deliberately unknown command should fail');
+  assert(errorLines[0].includes('unknown command'));
+  assert(!stderr.includes('[core:Error]'), 'Valid interactive input must not hide an engine error diagnostic');
+  report.interactiveDiagnosticLines = stderr.split(/\r?\n/).filter(line => line.startsWith('[core:')).length;
   for (const name of ['assert-line', 'assert-output', 'assert-size']) assert(stdout.includes(`ok ${name}`));
   assert(stdout.includes('Assertions: 3; disposed: true'), 'Interactive errors must not prevent later checks or cleanup');
   report.interactiveChecks = { recoveredCommandErrors: 1, successfulStateAssertions: 3, disposed: true };
@@ -77,12 +92,13 @@ try {
   report.environment.targetDirectory = metadata.target_directory;
   const cfg = await success('target-cfg', cargo, ['rustc', '--locked', '-p', 'xterm-core', '--lib', '--', '--print', 'cfg']);
   report.environment.resolvedTargetOs = runtime.assertResolvedTarget(process.platform, cfg);
-  await success('unit', cargo, ['test', '--locked', '-p', 'xterm-core', '--example', 'native']);
-  await success('clippy', cargo, ['clippy', '--locked', '-p', 'xterm-core', '--example', 'native', '--', '-D', 'warnings']);
-  await success('format', 'rustfmt', ['--edition', '2021', '--check',
+  await gate('unit', cargo, ['test', '--locked', '-p', 'xterm-core', '--example', 'native']);
+  await gate('clippy', cargo, ['clippy', '--locked', '-p', 'xterm-core', '--example', 'native', '--', '-D', 'warnings']);
+  await gate('format', 'rustfmt', ['--edition', '2021', '--check',
     'crates/xterm-core/examples/native.rs', 'crates/xterm-core/examples/native/commands.rs',
     'crates/xterm-core/examples/native/checks.rs', 'crates/xterm-core/examples/native/view.rs',
-    'crates/xterm-core/examples/native/escape.rs', 'crates/xterm-core/examples/native/arguments.rs']);
+    'crates/xterm-core/examples/native/escape.rs', 'crates/xterm-core/examples/native/arguments.rs',
+    'crates/xterm-core/examples/native/diagnostics.rs']);
   const build = await success('build', cargo, ['build', '--locked', '-p', 'xterm-core', '--example', 'native', '--message-format=json-render-diagnostics']);
   const artifacts = build.split(/\r?\n/).filter(line => line.startsWith('{')).map(line => JSON.parse(line))
     .filter(message => message.reason === 'compiler-artifact' && message.target.name === 'native' &&
@@ -128,13 +144,15 @@ try {
   report.sourceAfter = await runtime.snapshot(root);
   report.sourceStable = report.sourceBefore.sha256 === report.sourceAfter.sha256;
   if (!report.sourceStable) report.gaps.push('Shared source changed during execution; repeat on a stable snapshot before final acceptance.');
-  report.status = report.sourceStable ? 'passed' : 'incomplete';
+  report.status = report.failedChecks.length ? 'failed' : report.sourceStable ? 'passed' : 'incomplete';
 } catch (error) {
   report.status = 'failed';
   report.error = String(error.stack);
 } finally {
+  report.unrunChecks = plannedChecks.filter(name => !report.commands.some(command => command.id === name));
   persistEvidence(attempt, report);
 }
 console.log(JSON.stringify({ status: report.status, runId: attempt.id,
-  summary: relative(path.join(attempt.directory, 'summary.json')), gaps: report.gaps, error: report.error }, null, 2));
+  summary: relative(path.join(attempt.directory, 'summary.json')), failedChecks: report.failedChecks,
+  unrunChecks: report.unrunChecks, gaps: report.gaps, error: report.error }, null, 2));
 if (report.status !== 'passed') process.exitCode = 1;

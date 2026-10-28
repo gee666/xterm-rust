@@ -2,7 +2,7 @@
 //! Commands are shared by the interactive loop and deterministic script mode.
 #[path = "checks.rs"]
 mod checks;
-use super::{escape, view};
+use super::{diagnostics, escape, view};
 use std::{cell::RefCell, error::Error, rc::Rc};
 use xterm_core::{headless::Terminal, lifecycle::DisposableHandle};
 
@@ -40,6 +40,12 @@ impl Demo {
             return Err("cell budget is smaller than initial viewport".into());
         }
         let terminal = Terminal::new(INITIAL_COLS, INITIAL_ROWS, SCROLLBACK)?;
+        if let Err(error) = diagnostics::install(&terminal) {
+            return match terminal.dispose() {
+                Ok(()) => Err(error),
+                Err(cleanup) => Err(format!("{error}; cleanup also failed: {cleanup}").into()),
+            };
+        }
         let outbound = Rc::new(RefCell::new(Vec::new()));
         let capture = Rc::clone(&outbound);
         let subscription = terminal.on_data().subscribe(move |data| {
@@ -178,12 +184,14 @@ mod tests {
             "resize 4",
             "reset x",
             "write \\xGG",
+            "input partial\\xGG",
             "bogus",
         ] {
             assert!(demo.execute(command).is_err(), "{command}");
         }
         demo.execute("assert-size 40 8").unwrap();
         demo.execute("assert-cursor 0 0").unwrap();
+        demo.execute("assert-output hi\\r\\uD800").unwrap();
         assert!(demo.execute("assert-cell 100 0 x").is_err());
         assert!(demo.execute("assert-line 100 x").is_err());
         assert!(demo.execute("assert-size 1 1").is_err());

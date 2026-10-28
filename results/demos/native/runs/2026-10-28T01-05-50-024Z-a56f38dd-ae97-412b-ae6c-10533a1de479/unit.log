@@ -1,0 +1,98 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0053]: method `request` has an incompatible type for trait
+   --> crates\xterm-core\src\headless\native_queue.rs:71:9
+    |
+71  |         &self,
+    |         ^^^^^ types differ in mutability
+    |
+note: type in trait
+   --> crates\xterm-core\src\input\write_buffer_types.rs:143:9
+    |
+143 |         &mut self,
+    |         ^^^^^^^^^
+    = note: expected signature `fn(&mut NativeWriteScheduler, WeakWriteBuffer<_>, _, _) -> Result<_, _>`
+               found signature `fn(&NativeWriteScheduler, WeakWriteBuffer<_>, _, _) -> Result<_, _>`
+help: change the self-receiver type to match the trait
+    |
+71  |         &mut self,
+    |         ~~~~~~~~~
+
+error[E0053]: method `cancel` has an incompatible type for trait
+   --> crates\xterm-core\src\headless\native_queue.rs:94:15
+    |
+94  |     fn cancel(&self, handle: Self::Handle) {
+    |               ^^^^^ types differ in mutability
+    |
+note: type in trait
+   --> crates\xterm-core\src\input\write_buffer_types.rs:148:15
+    |
+148 |     fn cancel(&mut self, handle: Self::Handle);
+    |               ^^^^^^^^^
+    = note: expected signature `fn(&mut NativeWriteScheduler, _)`
+               found signature `fn(&NativeWriteScheduler, _)`
+help: change the self-receiver type to match the trait
+    |
+94  |     fn cancel(&mut self, handle: Self::Handle) {
+    |               ~~~~~~~~~
+
+error[E0053]: method `spawn` has an incompatible type for trait
+   --> crates\xterm-core\src\headless\native_queue.rs:101:14
+    |
+101 |     fn spawn(&self, future: Pin<Box<dyn Future<Output = ()>>>) {
+    |              ^^^^^ types differ in mutability
+    |
+note: type in trait
+   --> crates\xterm-core\src\input\write_buffer_types.rs:155:14
+    |
+155 |     fn spawn(&mut self, future: Pin<Box<dyn Future<Output = ()>>>);
+    |              ^^^^^^^^^
+    = note: expected signature `fn(&mut NativeWriteScheduler, std::pin::Pin<_>)`
+               found signature `fn(&NativeWriteScheduler, std::pin::Pin<_>)`
+help: change the self-receiver type to match the trait
+    |
+101 |     fn spawn(&mut self, future: Pin<Box<dyn Future<Output = ()>>>) {
+    |              ~~~~~~~~~
+
+error[E0053]: method `report_error` has an incompatible type for trait
+   --> crates\xterm-core\src\headless\native_queue.rs:125:21
+    |
+125 |     fn report_error(&self, error: WriteError) {
+    |                     ^^^^^ types differ in mutability
+    |
+note: type in trait
+   --> crates\xterm-core\src\input\write_buffer_types.rs:156:21
+    |
+156 |     fn report_error(&mut self, error: WriteError);
+    |                     ^^^^^^^^^
+    = note: expected signature `fn(&mut NativeWriteScheduler, types::WriteError)`
+               found signature `fn(&NativeWriteScheduler, types::WriteError)`
+help: change the self-receiver type to match the trait
+    |
+125 |     fn report_error(&mut self, error: WriteError) {
+    |                     ~~~~~~~~~
+
+error[E0596]: cannot borrow `errors` as mutable, as it is not declared as mutable
+  --> crates\xterm-core\src\headless\queued.rs:52:25
+   |
+52 |                         errors.report_error(WriteError::external(error));
+   |                         ^^^^^^ cannot borrow as mutable
+   |
+help: consider changing this to be mutable
+   |
+49 |                 let mut errors = cleanup_scheduler.clone();
+   |                     +++
+
+error[E0596]: cannot borrow `scheduler` as mutable, as it is not declared as mutable
+  --> crates\xterm-core\src\headless\queued.rs:50:17
+   |
+50 |                 scheduler.spawn(Box::pin(async move {
+   |                 ^^^^^^^^^ cannot borrow as mutable
+   |
+help: consider changing this to be mutable
+   |
+48 |                 let mut scheduler = cleanup_scheduler.clone();
+   |                     +++
+
+Some errors have detailed explanations: E0053, E0596.
+For more information about an error, try `rustc --explain E0053`.
+error: could not compile `xterm-core` (lib) due to 6 previous errors

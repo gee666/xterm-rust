@@ -5,6 +5,8 @@
 mod arguments;
 #[path = "native/commands.rs"]
 mod commands;
+#[path = "native/diagnostics.rs"]
+mod diagnostics;
 #[path = "native/escape.rs"]
 mod escape;
 #[path = "native/view.rs"]
