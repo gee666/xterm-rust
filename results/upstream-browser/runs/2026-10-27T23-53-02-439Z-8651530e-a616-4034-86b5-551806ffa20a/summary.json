@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "mode": "runtime",
+  "environment": {
+    "node": "v24.15.0",
+    "platform": "win32",
+    "arch": "x64",
+    "playwright": "1.60.0"
+  },
+  "sourceWrapper": {
+    "path": "source_repo/bin/test_integration.js",
+    "sha256": "557035afe8fcc07c78a2afd61a33f2c0699dae3a2300b004465e34528da2fcd2"
+  },
+  "configInventory": [
+    "core",
+    "addon-attach",
+    "addon-clipboard",
+    "addon-fit",
+    "addon-image",
+    "addon-program-status",
+    "addon-progress",
+    "addon-search",
+    "addon-serialize",
+    "addon-unicode-graphemes",
+    "addon-unicode11",
+    "addon-web-fonts",
+    "addon-web-links",
+    "addon-webgl"
+  ],
+  "selectedProject": "all original projects",
+  "serverAdapter": "Direct node demo/start.js, original testDir resolved explicitly; original assertions/projects unchanged.",
+  "referenceBefore": {
+    "files": 776,
+    "mismatches": []
+  },
+  "suites": [
+    {
+      "name": "addon-unicode11",
+      "sourceConfig": "addons/addon-unicode11/test/playwright.config.ts",
+      "generatedConfig": "addons/addon-unicode11/out-esbuild-test/playwright.config.js",
+      "command": {
+        "command": [
+          "node",
+          "node_modules/@playwright/test/cli.js",
+          "test",
+          "--config=..\\tmp\\upstream-browser-config\\2026-10-27T23-53-02-439Z-8651530e-a616-4034-86b5-551806ffa20a\\addon-unicode11.cjs",
+          "--reporter=json",
+          "--workers=2",
+          "--retries=0",
+          "--global-timeout=45000",
+          "--output=../results/upstream-browser/runs/2026-10-27T23-53-02-439Z-8651530e-a616-4034-86b5-551806ffa20a/addon-unicode11-all-runtime-artifacts"
+        ],
+        "exitCode": 1,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "terminationError": null,
+        "resourceError": null,
+        "elapsedMs": 45475.102900000005,
+        "status": "failed",
+        "cwd": "source_repo"
+      },
+      "log": "results/upstream-browser/runs/2026-10-27T23-53-02-439Z-8651530e-a616-4034-86b5-551806ffa20a/addon-unicode11-all-runtime.log",
+      "raw": "results/upstream-browser/runs/2026-10-27T23-53-02-439Z-8651530e-a616-4034-86b5-551806ffa20a/addon-unicode11-all-runtime.json",
+      "tests": [
+        {
+          "source": "../test/Unicode11Addon.test.ts",
+          "title": "Unicode11Addon.test.js / Unicode11Addon / wcwidth V11 emoji test",
+          "project": "Chromium",
+          "expectedStatus": "passed",
+          "results": [
+            {
+              "workerIndex": 0,
+              "parallelIndex": 0,
+              "status": "passed",
+              "duration": 13,
+              "errors": [],
+              "stdout": [],
+              "stderr": [],
+              "retry": 0,
+              "startTime": "2026-10-27T23:53:03.572Z",
+              "annotations": [],
+              "attachments": []
+            }
+          ],
+          "outcome": "expected"
+        },
+        {
+          "source": "../test/Unicode11Addon.test.ts",
+          "title": "Unicode11Addon.test.js / Unicode11Addon / wcwidth V11 emoji test",
+          "project": "FirefoxStable",
+          "expectedStatus": "passed",
+          "results": [
+            {
+              "workerIndex": 1,
+              "parallelIndex": 1,
+              "status": "passed",
+              "duration": 14,
+              "errors": [],
+              "stdout": [],
+              "stderr": [],
+              "retry": 0,
+              "startTime": "2026-10-27T23:53:03.577Z",
+              "annotations": [],
+              "attachments": []
+            }
+          ],
+          "outcome": "expected"
+        },
+        {
+          "source": "../test/Unicode11Addon.test.ts",
+          "title": "Unicode11Addon.test.js / Unicode11Addon / wcwidth V11 emoji test",
+          "project": "WebKit",
+          "expectedStatus": "passed",
+          "results": [
+            {
+              "workerIndex": 2,
+              "parallelIndex": 0,
+              "status": "passed",
+              "duration": 17,
+              "errors": [],
+              "stdout": [],
+              "stderr": [],
+              "retry": 0,
+              "startTime": "2026-10-27T23:53:04.739Z",
+              "annotations": [],
+              "attachments": []
+            }
+          ],
+          "outcome": "expected"
+        }
+      ],
+      "rawStats": {
+        "startTime": "2026-10-27T23:53:03.040Z",
+        "duration": 45005.117,
+        "expected": 3,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "errors": [
+        {
+          "message": "Timed out waiting 45s for the teardown for plugin setup to run"
+        }
+      ],
+      "projects": {
+        "Chromium": {
+          "discovered": 1,
+          "executed": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "unrun": 0
+        },
+        "FirefoxStable": {
+          "discovered": 1,
+          "executed": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "unrun": 0
+        },
+        "WebKit": {
+          "discovered": 1,
+          "executed": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "unrun": 0
+        }
+      }
+    }
+  ],
+  "status": "failed",
+  "scope": "Original JavaScript only. Discovery alone executes no browser tests. Rust-backed and other native-platform evidence remain separate.",
+  "referenceAfter": {
+    "files": 776,
+    "mismatches": []
+  },
+  "runId": "2026-10-27T23-53-02-439Z-8651530e-a616-4034-86b5-551806ffa20a"
+}

@@ -1,0 +1,110 @@
+
+Running 3 tests using 2 workers
+FFF
+
+  1) [Chromium] › addons\addon-unicode11\test\Unicode11Addon.test.ts:28:3 › Unicode11Addon › wcwidth V11 emoji test 
+
+    Error: page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL
+    Call log:
+    [2m  - navigating to "/test", waiting until "load"[22m
+
+
+       at ..\..\..\test\playwright\TestUtils.ts:29
+
+      27 |   page.on('console', e => console.log(`[${browser.browserType().name()}:${e.type()}]`, e));
+      28 |   page.on('pageerror', e => console.error(`[${browser.browserType().name()}]`, e));
+    > 29 |   await page.goto('/test');
+         |              ^
+      30 |   const proxy = new TerminalProxy(page);
+      31 |   proxy.initPage();
+      32 |   return {
+        at createTestContext (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:29:14)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-unicode11\test\Unicode11Addon.test.ts:12:9
+
+    TypeError: Cannot read properties of undefined (reading 'page')
+
+      13 |   await openTerminal(ctx);
+      14 | });
+    > 15 | test.afterAll(async () => await ctx.page.close());
+         |                                     ^
+      16 |
+      17 | test.describe('Unicode11Addon', () => {
+      18 |
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-unicode11\test\Unicode11Addon.test.ts:15:37
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-58-18-222Z-6dfa3637-ecce-47f2-b478-db6eb3fed742\addon-unicode11-all-runtime-artifacts\Unicode11Addon-Unicode11Addon-wcwidth-V11-emoji-test-Chromium\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-58-18-222Z-6dfa3637-ecce-47f2-b478-db6eb3fed742\addon-unicode11-all-runtime-artifacts\Unicode11Addon-Unicode11Addon-wcwidth-V11-emoji-test-Chromium\error-context.md
+
+  2) [FirefoxStable] › addons\addon-unicode11\test\Unicode11Addon.test.ts:28:3 › Unicode11Addon › wcwidth V11 emoji test 
+
+    Error: page.goto: Protocol error (Page.navigate): Invalid url: "/test"
+    Call log:
+    [2m  - navigating to "/test", waiting until "load"[22m
+
+
+       at ..\..\..\test\playwright\TestUtils.ts:29
+
+      27 |   page.on('console', e => console.log(`[${browser.browserType().name()}:${e.type()}]`, e));
+      28 |   page.on('pageerror', e => console.error(`[${browser.browserType().name()}]`, e));
+    > 29 |   await page.goto('/test');
+         |              ^
+      30 |   const proxy = new TerminalProxy(page);
+      31 |   proxy.initPage();
+      32 |   return {
+        at createTestContext (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:29:14)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-unicode11\test\Unicode11Addon.test.ts:12:9
+
+    TypeError: Cannot read properties of undefined (reading 'page')
+
+      13 |   await openTerminal(ctx);
+      14 | });
+    > 15 | test.afterAll(async () => await ctx.page.close());
+         |                                     ^
+      16 |
+      17 | test.describe('Unicode11Addon', () => {
+      18 |
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-unicode11\test\Unicode11Addon.test.ts:15:37
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-58-18-222Z-6dfa3637-ecce-47f2-b478-db6eb3fed742\addon-unicode11-all-runtime-artifacts\Unicode11Addon-Unicode11Addon-wcwidth-V11-emoji-test-FirefoxStable\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-58-18-222Z-6dfa3637-ecce-47f2-b478-db6eb3fed742\addon-unicode11-all-runtime-artifacts\Unicode11Addon-Unicode11Addon-wcwidth-V11-emoji-test-FirefoxStable\error-context.md
+
+  3) [WebKit] › addons\addon-unicode11\test\Unicode11Addon.test.ts:28:3 › Unicode11Addon › wcwidth V11 emoji test 
+
+    Error: page.goto: Protocol error (Playwright.navigate): Cannot navigate to invalid URL
+    Call log:
+    [2m  - navigating to "/test", waiting until "load"[22m
+
+
+       at ..\..\..\test\playwright\TestUtils.ts:29
+
+      27 |   page.on('console', e => console.log(`[${browser.browserType().name()}:${e.type()}]`, e));
+      28 |   page.on('pageerror', e => console.error(`[${browser.browserType().name()}]`, e));
+    > 29 |   await page.goto('/test');
+         |              ^
+      30 |   const proxy = new TerminalProxy(page);
+      31 |   proxy.initPage();
+      32 |   return {
+        at createTestContext (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:29:14)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-unicode11\test\Unicode11Addon.test.ts:12:9
+
+    TypeError: Cannot read properties of undefined (reading 'page')
+
+      13 |   await openTerminal(ctx);
+      14 | });
+    > 15 | test.afterAll(async () => await ctx.page.close());
+         |                                     ^
+      16 |
+      17 | test.describe('Unicode11Addon', () => {
+      18 |
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-unicode11\test\Unicode11Addon.test.ts:15:37
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-58-18-222Z-6dfa3637-ecce-47f2-b478-db6eb3fed742\addon-unicode11-all-runtime-artifacts\Unicode11Addon-Unicode11Addon-wcwidth-V11-emoji-test-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-58-18-222Z-6dfa3637-ecce-47f2-b478-db6eb3fed742\addon-unicode11-all-runtime-artifacts\Unicode11Addon-Unicode11Addon-wcwidth-V11-emoji-test-WebKit\error-context.md
+
+  3 failed
+    [Chromium] › addons\addon-unicode11\test\Unicode11Addon.test.ts:28:3 › Unicode11Addon › wcwidth V11 emoji test 
+    [FirefoxStable] › addons\addon-unicode11\test\Unicode11Addon.test.ts:28:3 › Unicode11Addon › wcwidth V11 emoji test 
+    [WebKit] › addons\addon-unicode11\test\Unicode11Addon.test.ts:28:3 › Unicode11Addon › wcwidth V11 emoji test 

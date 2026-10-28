@@ -20,4 +20,6 @@ Each attempt is retained under `results/upstream-baseline/runs/<id>/`. Read `lat
 
 For the supplied source, expect 2,460 discovered, 2,389 executed/passed, 71 upstream pending and no failures. The wrapper's skipped count is zero; original pending cases remain separate and are never counted as passed. Two `.test.ts` files provide helpers but register no cases. Never equate original JavaScript execution with Rust assertion migration.
 
+For original browser discovery/runtime, use `node scripts/upstream-browser-baseline.mjs` and `node scripts/upstream-browser-baseline.mjs --run --timeout-ms=300000`, then `node scripts/upstream-browser-analyze.mjs`. Read `docs/upstream-browser-baseline.md` first for demo build prerequisites, exact failure counts, owned server handling and immutable runtime/derived receipt paths. Analysis success does not turn an original failed baseline into a pass.
+
 See `docs/acceptance/upstream-baseline.md`. Preserve pending records, source hashes and failures. Do not use stale JSON after a failed build or runner exit, edit source assertions, or overwrite expected data to hide mismatches.

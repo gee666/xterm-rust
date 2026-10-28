@@ -1,0 +1,216 @@
+
+Running 27 tests using 2 workers
+·F·FF··FFF···FF···F······F·
+
+  1) [Chromium] › addons\addon-fit\test\FitAddon.test.ts:49:5 › FitAddon › proposeDimensions › default 
+
+    AssertionError: The expression evaluated to a falsy value:
+
+      (dimensions.cols < 88)
+
+
+      51 |       const dimensions: {cols: number, rows: number} = await ctx.page.evaluate(`window.fit.proposeDimensions()`);
+      52 |       ok(dimensions.cols > 85);
+    > 53 |       ok(dimensions.cols < 88);
+         |       ^
+      54 |       ok(dimensions.rows > 24);
+      55 |       ok(dimensions.rows < 29);
+      56 |     });
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-fit\test\FitAddon.test.ts:53:7
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-fit-all-runtime-artifacts\FitAddon-FitAddon-proposeDimensions-default-Chromium\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-fit-all-runtime-artifacts\FitAddon-FitAddon-proposeDimensions-default-Chromium\error-context.md
+
+  2) [Chromium] › addons\addon-fit\test\FitAddon.test.ts:58:5 › FitAddon › proposeDimensions › width 
+
+    AssertionError: The expression evaluated to a falsy value:
+
+      (dimensions.cols < 111)
+
+
+      60 |       const dimensions: {cols: number, rows: number} = await ctx.page.evaluate(`window.fit.proposeDimensions()`);
+      61 |       ok(dimensions.cols > 108);
+    > 62 |       ok(dimensions.cols < 111);
+         |       ^
+      63 |       ok(dimensions.rows > 24);
+      64 |       ok(dimensions.rows < 29);
+      65 |     });
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-fit\test\FitAddon.test.ts:62:7
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-fit-all-runtime-artifacts\FitAddon-FitAddon-proposeDimensions-width-Chromium\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-fit-all-runtime-artifacts\FitAddon-FitAddon-proposeDimensions-width-Chromium\error-context.md
+
+  3) [Chromium] › addons\addon-fit\test\FitAddon.test.ts:94:5 › FitAddon › fit › default ───────────
+
+    AssertionError: The expression evaluated to a falsy value:
+
+      (cols < 88)
+
+
+       98 |       const rows: number = await ctx.proxy.rows;
+       99 |       ok(cols > 85);
+    > 100 |       ok(cols < 88);
+          |       ^
+      101 |       ok(rows > 24);
+      102 |       ok(rows < 29);
+      103 |     });
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-fit\test\FitAddon.test.ts:100:7
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-fit-all-runtime-artifacts\FitAddon-FitAddon-fit-default-Chromium\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-fit-all-runtime-artifacts\FitAddon-FitAddon-fit-default-Chromium\error-context.md
+
+  4) [Chromium] › addons\addon-fit\test\FitAddon.test.ts:105:5 › FitAddon › fit › width ────────────
+
+    AssertionError: The expression evaluated to a falsy value:
+
+      (cols < 111)
+
+
+      109 |       const rows: number = await ctx.proxy.rows;
+      110 |       ok(cols > 108);
+    > 111 |       ok(cols < 111);
+          |       ^
+      112 |       ok(rows > 24);
+      113 |       ok(rows < 29);
+      114 |     });
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-fit\test\FitAddon.test.ts:111:7
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-fit-all-runtime-artifacts\FitAddon-FitAddon-fit-width-Chromium\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-fit-all-runtime-artifacts\FitAddon-FitAddon-fit-width-Chromium\error-context.md
+
+  5) [Chromium] › addons\addon-fit\test\FitAddon.test.ts:123:5 › FitAddon › fit › same dimensions ──
+
+    AssertionError: Expected values to be strictly equal:
+
+    95 !== 98
+
+
+      128 |       // Calling fit() again at the same container size should not throw
+      129 |       await ctx.page.evaluate(`window.fit.fit()`);
+    > 130 |       strictEqual(await ctx.proxy.cols, cols);
+          |       ^
+      131 |       strictEqual(await ctx.proxy.rows, rows);
+      132 |     });
+      133 |   });
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-fit\test\FitAddon.test.ts:130:7
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-fit-all-runtime-artifacts\FitAddon-FitAddon-fit-same-dimensions-Chromium\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-fit-all-runtime-artifacts\FitAddon-FitAddon-fit-same-dimensions-Chromium\error-context.md
+
+  6) [FirefoxStable] › addons\addon-fit\test\FitAddon.test.ts:49:5 › FitAddon › proposeDimensions › default 
+
+    AssertionError: The expression evaluated to a falsy value:
+
+      (dimensions.cols < 88)
+
+
+      51 |       const dimensions: {cols: number, rows: number} = await ctx.page.evaluate(`window.fit.proposeDimensions()`);
+      52 |       ok(dimensions.cols > 85);
+    > 53 |       ok(dimensions.cols < 88);
+         |       ^
+      54 |       ok(dimensions.rows > 24);
+      55 |       ok(dimensions.rows < 29);
+      56 |     });
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-fit\test\FitAddon.test.ts:53:7
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-fit-all-runtime-artifacts\FitAddon-FitAddon-proposeDimensions-default-FirefoxStable\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-fit-all-runtime-artifacts\FitAddon-FitAddon-proposeDimensions-default-FirefoxStable\error-context.md
+
+  7) [FirefoxStable] › addons\addon-fit\test\FitAddon.test.ts:58:5 › FitAddon › proposeDimensions › width 
+
+    AssertionError: The expression evaluated to a falsy value:
+
+      (dimensions.cols < 111)
+
+
+      60 |       const dimensions: {cols: number, rows: number} = await ctx.page.evaluate(`window.fit.proposeDimensions()`);
+      61 |       ok(dimensions.cols > 108);
+    > 62 |       ok(dimensions.cols < 111);
+         |       ^
+      63 |       ok(dimensions.rows > 24);
+      64 |       ok(dimensions.rows < 29);
+      65 |     });
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-fit\test\FitAddon.test.ts:62:7
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-fit-all-runtime-artifacts\FitAddon-FitAddon-proposeDimensions-width-FirefoxStable\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-fit-all-runtime-artifacts\FitAddon-FitAddon-proposeDimensions-width-FirefoxStable\error-context.md
+
+  8) [FirefoxStable] › addons\addon-fit\test\FitAddon.test.ts:94:5 › FitAddon › fit › default ──────
+
+    AssertionError: The expression evaluated to a falsy value:
+
+      (cols < 88)
+
+
+       98 |       const rows: number = await ctx.proxy.rows;
+       99 |       ok(cols > 85);
+    > 100 |       ok(cols < 88);
+          |       ^
+      101 |       ok(rows > 24);
+      102 |       ok(rows < 29);
+      103 |     });
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-fit\test\FitAddon.test.ts:100:7
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-fit-all-runtime-artifacts\FitAddon-FitAddon-fit-default-FirefoxStable\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-fit-all-runtime-artifacts\FitAddon-FitAddon-fit-default-FirefoxStable\error-context.md
+
+  9) [FirefoxStable] › addons\addon-fit\test\FitAddon.test.ts:105:5 › FitAddon › fit › width ───────
+
+    AssertionError: The expression evaluated to a falsy value:
+
+      (cols < 111)
+
+
+      109 |       const rows: number = await ctx.proxy.rows;
+      110 |       ok(cols > 108);
+    > 111 |       ok(cols < 111);
+          |       ^
+      112 |       ok(rows > 24);
+      113 |       ok(rows < 29);
+      114 |     });
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-fit\test\FitAddon.test.ts:111:7
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-fit-all-runtime-artifacts\FitAddon-FitAddon-fit-width-FirefoxStable\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-fit-all-runtime-artifacts\FitAddon-FitAddon-fit-width-FirefoxStable\error-context.md
+
+  10) [FirefoxStable] › addons\addon-fit\test\FitAddon.test.ts:123:5 › FitAddon › fit › same dimensions 
+
+    AssertionError: Expected values to be strictly equal:
+
+    95 !== 92
+
+
+      128 |       // Calling fit() again at the same container size should not throw
+      129 |       await ctx.page.evaluate(`window.fit.fit()`);
+    > 130 |       strictEqual(await ctx.proxy.cols, cols);
+          |       ^
+      131 |       strictEqual(await ctx.proxy.rows, rows);
+      132 |     });
+      133 |   });
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-fit\test\FitAddon.test.ts:130:7
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-fit-all-runtime-artifacts\FitAddon-FitAddon-fit-same-dimensions-FirefoxStable\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-fit-all-runtime-artifacts\FitAddon-FitAddon-fit-same-dimensions-FirefoxStable\error-context.md
+
+  10 failed
+    [Chromium] › addons\addon-fit\test\FitAddon.test.ts:49:5 › FitAddon › proposeDimensions › default 
+    [Chromium] › addons\addon-fit\test\FitAddon.test.ts:58:5 › FitAddon › proposeDimensions › width 
+    [Chromium] › addons\addon-fit\test\FitAddon.test.ts:94:5 › FitAddon › fit › default ────────────
+    [Chromium] › addons\addon-fit\test\FitAddon.test.ts:105:5 › FitAddon › fit › width ─────────────
+    [Chromium] › addons\addon-fit\test\FitAddon.test.ts:123:5 › FitAddon › fit › same dimensions ───
+    [FirefoxStable] › addons\addon-fit\test\FitAddon.test.ts:49:5 › FitAddon › proposeDimensions › default 
+    [FirefoxStable] › addons\addon-fit\test\FitAddon.test.ts:58:5 › FitAddon › proposeDimensions › width 
+    [FirefoxStable] › addons\addon-fit\test\FitAddon.test.ts:94:5 › FitAddon › fit › default ───────
+    [FirefoxStable] › addons\addon-fit\test\FitAddon.test.ts:105:5 › FitAddon › fit › width ────────
+    [FirefoxStable] › addons\addon-fit\test\FitAddon.test.ts:123:5 › FitAddon › fit › same dimensions 
+  17 passed (15.6s)

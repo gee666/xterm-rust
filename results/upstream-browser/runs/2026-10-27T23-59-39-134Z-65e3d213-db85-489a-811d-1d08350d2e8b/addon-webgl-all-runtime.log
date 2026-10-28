@@ -1,0 +1,2531 @@
+
+Running 213 tests using 2 workers
+[chromium:warning] [.WebGL-0x6e2c001a8800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[chromium:warning] [.WebGL-0x3304001b0800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[chromium:warning] [.WebGL-0x6e2c001a8800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[chromium:warning] [.WebGL-0x3304001b0800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[chromium:warning] [.WebGL-0x6e2c001a8800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[chromium:warning] [.WebGL-0x3304001b0200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[chromium:warning] [.WebGL-0x3304001b0200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[chromium:warning] [.WebGL-0x6e2c001a8800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+·········°·······°····················°··°··············°····°°°····°°°°·······°
+°··°··°°·°····°····················°··°·············°····F···°°°°··°°TFFFF°FFFFF
+FF°·FFFFFFFFFFFFFFFFFF°FF°FFFFFFFFFFFFF°FFFFFFF°°°°F
+Timed out waiting 285s for the test suite to run
+
+Timed out waiting 285s for the teardown for test suite to run
+
+
+  1) [WebKit] › test\playwright\SharedRendererTests.ts:30:9 › WebGL Renderer Integration Tests › colors › foreground 0-15 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [1,2,3,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:43:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   1,
+    [31m-[39m   2,
+    [31m-[39m   3,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:43:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-af5c6-ests-colors-foreground-0-15-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-af5c6-ests-colors-foreground-0-15-WebKit\error-context.md
+
+  2) [WebKit] › test\playwright\SharedRendererTests.ts:54:7 › WebGL Renderer Integration Tests › foreground 0-7 drawBoldTextInBrightColors 
+
+    [31mTest timeout of 10000ms exceeded.[39m
+
+    Error: locator.screenshot: Target page, context or browser has been closed
+    Call log:
+    [2m  - taking element screenshot[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+
+
+      1525 | async function getFrameDetails(ctx: ITestContext): Promise<{ cols: number, rows: number, decoded: IImage32 }> {
+      1526 |   const screenshotOptions: LocatorScreenshotOptions | undefined = process.env.DEBUG ? { path: 'out-esbuild-test/playwright/screenshot.png' } : undefined;
+    > 1527 |   const buffer = await ctx.page.locator('#terminal-container .xterm-screen').screenshot(screenshotOptions);
+           |                                                                              ^
+      1528 |   frameDetails = {
+      1529 |     cols: await ctx.proxy.cols,
+      1530 |     rows: await ctx.proxy.rows,
+        at getFrameDetails (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1527:78)
+        at getCellColor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1515:26)
+        at evalOrFn (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1387:33)
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:535:87)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-3feb4--drawBoldTextInBrightColors-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-3feb4--drawBoldTextInBrightColors-WebKit\error-context.md
+
+  3) [WebKit] › test\playwright\SharedRendererTests.ts:80:7 › WebGL Renderer Integration Tests › background 0-15 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [1,2,3,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:93:18
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   1,
+    [31m-[39m   2,
+    [31m-[39m   3,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:93:18
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-5a953-ation-Tests-background-0-15-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-5a953-ation-Tests-background-0-15-WebKit\error-context.md
+
+  4) [WebKit] › test\playwright\SharedRendererTests.ts:103:7 › WebGL Renderer Integration Tests › foreground 0-15 inverse 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [1,2,3,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:116:18
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   1,
+    [31m-[39m   2,
+    [31m-[39m   3,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:116:18
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-065bb-sts-foreground-0-15-inverse-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-065bb-sts-foreground-0-15-inverse-WebKit\error-context.md
+
+  5) [WebKit] › test\playwright\SharedRendererTests.ts:126:7 › WebGL Renderer Integration Tests › background 0-15 inverse 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [1,2,3,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:139:18
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   1,
+    [31m-[39m   2,
+    [31m-[39m   3,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:139:18
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-5527a-sts-background-0-15-inverse-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-5527a-sts-background-0-15-inverse-WebKit\error-context.md
+
+  6) [WebKit] › test\playwright\SharedRendererTests.ts:149:7 › WebGL Renderer Integration Tests › foreground 0-15 invisible 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:162:18
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:162:18
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-068fe-s-foreground-0-15-invisible-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-068fe-s-foreground-0-15-invisible-WebKit\error-context.md
+
+  7) [WebKit] › test\playwright\SharedRendererTests.ts:197:7 › WebGL Renderer Integration Tests › foreground 0-15 bright 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [1,2,3,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:210:18
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   1,
+    [31m-[39m   2,
+    [31m-[39m   3,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:210:18
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-eb1f3-ests-foreground-0-15-bright-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-eb1f3-ests-foreground-0-15-bright-WebKit\error-context.md
+
+  8) [WebKit] › test\playwright\SharedRendererTests.ts:220:7 › WebGL Renderer Integration Tests › background 0-15 bright 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [1,2,3,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:233:18
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   1,
+    [31m-[39m   2,
+    [31m-[39m   3,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:233:18
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-eb61c-ests-background-0-15-bright-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-eb61c-ests-background-0-15-bright-WebKit\error-context.md
+
+  9) [WebKit] › test\playwright\SharedRendererTests.ts:243:7 › WebGL Renderer Integration Tests › foreground 16-255 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:258:22
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:258:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-ed8f4-ion-Tests-foreground-16-255-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-ed8f4-ion-Tests-foreground-16-255-WebKit\error-context.md
+
+  10) [WebKit] › test\playwright\SharedRendererTests.ts:263:7 › WebGL Renderer Integration Tests › background 16-255 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:278:22
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:278:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-c2902-ion-Tests-background-16-255-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-c2902-ion-Tests-background-16-255-WebKit\error-context.md
+
+  11) [WebKit] › test\playwright\SharedRendererTests.ts:283:7 › WebGL Renderer Integration Tests › foreground 16-255 inverse 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:298:22
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:298:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-830a8-s-foreground-16-255-inverse-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-830a8-s-foreground-16-255-inverse-WebKit\error-context.md
+
+  12) [WebKit] › test\playwright\SharedRendererTests.ts:303:7 › WebGL Renderer Integration Tests › background 16-255 inverse 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:318:22
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:318:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-083a7-s-background-16-255-inverse-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-083a7-s-background-16-255-inverse-WebKit\error-context.md
+
+  13) [WebKit] › test\playwright\SharedRendererTests.ts:323:7 › WebGL Renderer Integration Tests › foreground 16-255 invisible 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:334:22
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:334:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-88933-foreground-16-255-invisible-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-88933-foreground-16-255-invisible-WebKit\error-context.md
+
+  14) [WebKit] › test\playwright\SharedRendererTests.ts:395:7 › WebGL Renderer Integration Tests › background 16-255 dim 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:410:22
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:410:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-187c6-Tests-background-16-255-dim-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-187c6-Tests-background-16-255-dim-WebKit\error-context.md
+
+  15) [WebKit] › test\playwright\SharedRendererTests.ts:415:7 › WebGL Renderer Integration Tests › foreground true color red 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:428:22
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:428:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-a674b-s-foreground-true-color-red-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-a674b-s-foreground-true-color-red-WebKit\error-context.md
+
+  16) [WebKit] › test\playwright\SharedRendererTests.ts:433:7 › WebGL Renderer Integration Tests › background true color red 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:446:22
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:446:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-f25af-s-background-true-color-red-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-f25af-s-background-true-color-red-WebKit\error-context.md
+
+  17) [WebKit] › test\playwright\SharedRendererTests.ts:451:7 › WebGL Renderer Integration Tests › foreground true color green 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:464:22
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:464:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-6f0e1-foreground-true-color-green-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-6f0e1-foreground-true-color-green-WebKit\error-context.md
+
+  18) [WebKit] › test\playwright\SharedRendererTests.ts:469:7 › WebGL Renderer Integration Tests › background true color green 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:482:22
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:482:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-10b16-background-true-color-green-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-10b16-background-true-color-green-WebKit\error-context.md
+
+  19) [WebKit] › test\playwright\SharedRendererTests.ts:487:7 › WebGL Renderer Integration Tests › foreground true color blue 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:500:22
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:500:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-85c2a--foreground-true-color-blue-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-85c2a--foreground-true-color-blue-WebKit\error-context.md
+
+  20) [WebKit] › test\playwright\SharedRendererTests.ts:505:7 › WebGL Renderer Integration Tests › background true color blue 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:518:22
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:518:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-4604b--background-true-color-blue-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-4604b--background-true-color-blue-WebKit\error-context.md
+
+  21) [WebKit] › test\playwright\SharedRendererTests.ts:523:7 › WebGL Renderer Integration Tests › foreground true color grey 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:536:22
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:536:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-81a56--foreground-true-color-grey-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-81a56--foreground-true-color-grey-WebKit\error-context.md
+
+  22) [WebKit] › test\playwright\SharedRendererTests.ts:541:7 › WebGL Renderer Integration Tests › background true color grey 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:554:22
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:554:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-c0fb1--background-true-color-grey-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-c0fb1--background-true-color-grey-WebKit\error-context.md
+
+  23) [WebKit] › test\playwright\SharedRendererTests.ts:559:7 › WebGL Renderer Integration Tests › foreground true color red inverse 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:572:22
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:572:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-71ace-ound-true-color-red-inverse-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-71ace-ound-true-color-red-inverse-WebKit\error-context.md
+
+  24) [WebKit] › test\playwright\SharedRendererTests.ts:577:7 › WebGL Renderer Integration Tests › background true color red inverse 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:590:22
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:590:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-b138e-ound-true-color-red-inverse-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-b138e-ound-true-color-red-inverse-WebKit\error-context.md
+
+  25) [WebKit] › test\playwright\SharedRendererTests.ts:595:7 › WebGL Renderer Integration Tests › foreground true color green inverse 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:608:22
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:608:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-72722-nd-true-color-green-inverse-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-72722-nd-true-color-green-inverse-WebKit\error-context.md
+
+  26) [WebKit] › test\playwright\SharedRendererTests.ts:613:7 › WebGL Renderer Integration Tests › background true color green inverse 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:626:22
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:626:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-fd3fb-nd-true-color-green-inverse-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-fd3fb-nd-true-color-green-inverse-WebKit\error-context.md
+
+  27) [WebKit] › test\playwright\SharedRendererTests.ts:631:7 › WebGL Renderer Integration Tests › foreground true color blue inverse 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:644:22
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:644:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-95137-und-true-color-blue-inverse-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-95137-und-true-color-blue-inverse-WebKit\error-context.md
+
+  28) [WebKit] › test\playwright\SharedRendererTests.ts:649:7 › WebGL Renderer Integration Tests › background true color blue inverse 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:662:22
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:662:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-167cf-und-true-color-blue-inverse-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-167cf-und-true-color-blue-inverse-WebKit\error-context.md
+
+  29) [WebKit] › test\playwright\SharedRendererTests.ts:667:7 › WebGL Renderer Integration Tests › foreground true color grey inverse 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:680:22
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:680:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-b5d05-und-true-color-grey-inverse-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-b5d05-und-true-color-grey-inverse-WebKit\error-context.md
+
+  30) [WebKit] › test\playwright\SharedRendererTests.ts:685:7 › WebGL Renderer Integration Tests › background true color grey inverse 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:698:22
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:698:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-438a8-und-true-color-grey-inverse-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-438a8-und-true-color-grey-inverse-WebKit\error-context.md
+
+  31) [WebKit] › test\playwright\SharedRendererTests.ts:703:7 › WebGL Renderer Integration Tests › foreground true color grey invisible 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:715:22
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:715:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-6f8f4-d-true-color-grey-invisible-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-6f8f4-d-true-color-grey-invisible-WebKit\error-context.md
+
+  32) [WebKit] › test\playwright\SharedRendererTests.ts:742:9 › WebGL Renderer Integration Tests › minimumContrastRatio › should adjust 0-15 colors on black background 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [46,52,54,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:770:20
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   46,
+    [31m-[39m   52,
+    [31m-[39m   54,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:770:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-1ef4d--colors-on-black-background-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-1ef4d--colors-on-black-background-WebKit\error-context.md
+
+  33) [WebKit] › test\playwright\SharedRendererTests.ts:810:9 › WebGL Renderer Integration Tests › minimumContrastRatio › should adjust 0-15 colors on white background 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [77,77,77,255] (actual) !== [46,52,54,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:839:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   77,
+    [32m+[39m   77,
+    [32m+[39m   77,
+    [31m-[39m   46,
+    [31m-[39m   52,
+    [31m-[39m   54,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:839:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-ea87e--colors-on-white-background-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-ea87e--colors-on-white-background-WebKit\error-context.md
+
+  34) [WebKit] › test\playwright\SharedRendererTests.ts:962:9 › WebGL Renderer Integration Tests › selectionBackground › should resolve the inverse foreground color based on the original background color, not the selection 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,77,13,255] (actual) !== [0,255,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:970:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   77,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [39m    255,
+    [31m-[39m   0,
+    [31m-[39m   255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:970:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-c80ed-und-color-not-the-selection-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-c80ed-und-color-not-the-selection-WebKit\error-context.md
+
+  35) [WebKit] › test\playwright\SharedRendererTests.ts:983:9 › WebGL Renderer Integration Tests › selectionInactiveBackground › should render the inactive selection when not focused 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [128,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:994:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   128,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:994:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-1357e--selection-when-not-focused-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-1357e--selection-when-not-focused-WebKit\error-context.md
+
+  36) [WebKit] › test\playwright\SharedRendererTests.ts:1009:9 › WebGL Renderer Integration Tests › selection blending › background 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [64,13,13,255] (actual) !== [230,128,128,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1021:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   64,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   230,
+    [31m-[39m   128,
+    [31m-[39m   128,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1021:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-cdcb4-lection-blending-background-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-cdcb4-lection-blending-background-WebKit\error-context.md
+
+  37) [WebKit] › test\playwright\SharedRendererTests.ts:1026:9 › WebGL Renderer Integration Tests › selection blending › powerline decorative symbols 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [77,77,77,255] (actual) !== [255,255,255,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1040:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   77,
+    [32m+[39m   77,
+    [32m+[39m   77,
+    [39m    255,
+    [31m-[39m   255,
+    [31m-[39m   255,
+    [31m-[39m   255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1040:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-d837e-owerline-decorative-symbols-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-d837e-owerline-decorative-symbols-WebKit\error-context.md
+
+  38) [WebKit] › test\playwright\SharedRendererTests.ts:1051:9 › WebGL Renderer Integration Tests › allowTransparency › transparent background inverse 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [77,29,29,255] (actual) !== [255,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1059:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   77,
+    [32m+[39m   29,
+    [32m+[39m   29,
+    [39m    255,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1059:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-b4495-nsparent-background-inverse-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-b4495-nsparent-background-inverse-WebKit\error-context.md
+
+  39) [WebKit] › test\playwright\SharedRendererTests.ts:1064:9 › WebGL Renderer Integration Tests › selectionForeground › transparent background inverse 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [255,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1072:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [39m    255,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1072:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-679e1-nsparent-background-inverse-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-679e1-nsparent-background-inverse-WebKit\error-context.md
+
+  40) [WebKit] › test\playwright\SharedRendererTests.ts:1077:9 › WebGL Renderer Integration Tests › decoration color overrides › foregroundColor 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,77,255] (actual) !== [255,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1088:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   77,
+    [39m    255,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1088:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-831d6-r-overrides-foregroundColor-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-831d6-r-overrides-foregroundColor-WebKit\error-context.md
+
+  41) [WebKit] › test\playwright\SharedRendererTests.ts:1090:9 › WebGL Renderer Integration Tests › decoration color overrides › foregroundColor should ignore inverse 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,77,255] (actual) !== [255,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1101:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   77,
+    [39m    255,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1101:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-7148c-Color-should-ignore-inverse-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-7148c-Color-should-ignore-inverse-WebKit\error-context.md
+
+  42) [WebKit] › test\playwright\SharedRendererTests.ts:1103:9 › WebGL Renderer Integration Tests › decoration color overrides › foregroundColor should ignore inverse (only fg on decoration) 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [255,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1114:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [39m    255,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1114:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-c42ee-erse-only-fg-on-decoration--WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-c42ee-erse-only-fg-on-decoration--WebKit\error-context.md
+
+  43) [WebKit] › test\playwright\SharedRendererTests.ts:1117:9 › WebGL Renderer Integration Tests › decoration color overrides › backgroundColor 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,77,255] (actual) !== [0,0,255,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1128:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   77,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255,
+    [31m-[39m   255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1128:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-c5ffa-r-overrides-backgroundColor-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-c5ffa-r-overrides-backgroundColor-WebKit\error-context.md
+
+  44) [WebKit] › test\playwright\SharedRendererTests.ts:1130:9 › WebGL Renderer Integration Tests › decoration color overrides › backgroundColor should ignore inverse 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,77,255] (actual) !== [0,0,255,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1141:20
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   77,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255,
+    [31m-[39m   255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1141:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-d77a0-Color-should-ignore-inverse-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-d77a0-Color-should-ignore-inverse-WebKit\error-context.md
+
+  45) [WebKit] › test\playwright\SharedRendererTests.ts:1143:9 › WebGL Renderer Integration Tests › decoration color overrides › backgroundColor should ignore inverse (only bg on decoration) 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1154:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1154:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-2da59-erse-only-bg-on-decoration--WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-2da59-erse-only-bg-on-decoration--WebKit\error-context.md
+
+  46) [WebKit] › test\playwright\SharedRendererTests.ts:1160:9 › WebGL Renderer Integration Tests › regression tests › #4736: inactive selection background should replace regular cell background color 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [255,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1171:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [39m    255,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1171:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-d1757-gular-cell-background-color-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-d1757-gular-cell-background-color-WebKit\error-context.md
+
+  47) [WebKit] › test\playwright\SharedRendererTests.ts:1196:46 › WebGL Renderer Integration Tests › regression tests › #4759: minimum contrast ratio should be respected on inverse text 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [26,26,26,255] (actual) !== [51,51,51,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1204:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   26,
+    [32m+[39m   26,
+    [32m+[39m   26,
+    [31m-[39m   51,
+    [31m-[39m   51,
+    [31m-[39m   51,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1204:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-92595-e-respected-on-inverse-text-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-92595-e-respected-on-inverse-text-WebKit\error-context.md
+
+  48) [WebKit] › test\playwright\SharedRendererTests.ts:1211:9 › WebGL Renderer Integration Tests › regression tests › #4759: minimum contrast ratio should be respected on selected inverse text 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [34,34,34,255] (actual) !== [85,85,85,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1221:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   34,
+    [32m+[39m   34,
+    [32m+[39m   34,
+    [31m-[39m   85,
+    [31m-[39m   85,
+    [31m-[39m   85,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1221:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-35556-ed-on-selected-inverse-text-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-35556-ed-on-selected-inverse-text-WebKit\error-context.md
+
+  49) [WebKit] › test\playwright\SharedRendererTests.ts:1231:9 › WebGL Renderer Integration Tests › regression tests › #4773: block cursor should render when the cell is selected 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,77,255] (actual) !== [0,0,255,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1239:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   77,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255,
+    [31m-[39m   255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1239:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-4b76e-r-when-the-cell-is-selected-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-4b76e-r-when-the-cell-is-selected-WebKit\error-context.md
+
+  50) [WebKit] › test\playwright\SharedRendererTests.ts:1241:9 › WebGL Renderer Integration Tests › regression tests › #4799: cursor should be in the correct position 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [0,0,255,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1259:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [39m    0,
+    [39m    0,
+    [31m-[39m   0,
+    [39m    255,
+    [32m+[39m   255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1259:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-1b088--be-in-the-correct-position-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-1b088--be-in-the-correct-position-WebKit\error-context.md
+
+  51) [WebKit] › test\playwright\SharedRendererTests.ts:1262:9 › WebGL Renderer Integration Tests › regression tests › #4917 The selection should not be displayed if it is not within the scope of the viewport. 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1274:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1274:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-0d3d2--the-scope-of-the-viewport--WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-0d3d2--the-scope-of-the-viewport--WebKit\error-context.md
+
+  52) [WebKit] › test\playwright\SharedRendererTests.ts:1276:9 › WebGL Renderer Integration Tests › regression tests › #5241 cursor with alpha should blend color with background color 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [128,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1282:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   128,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1282:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-005c5-color-with-background-color-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-005c5-color-with-background-color-WebKit\error-context.md
+
+  53) [WebKit] › test\playwright\SharedRendererTests.ts:1284:9 › WebGL Renderer Integration Tests › regression tests › #5241 cursorAccent with alpha should blend color with background color 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [77,77,77,255] (actual) !== [128,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1292:20
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   77,
+    [32m+[39m   77,
+    [32m+[39m   77,
+    [31m-[39m   128,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1292:20
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-6153b-color-with-background-color-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-6153b-color-with-background-color-WebKit\error-context.md
+
+  54) [WebKit] › test\playwright\SharedRendererTests.ts:1484:11 › WebGL Renderer Integration Tests › standalone tests › regression tests › #4790: cursor should not be displayed before focusing 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: [13,13,13,255] (actual) !== [0,0,0,255] (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1489:22
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at processImmediate (node:internal/timers:472:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [32m+[39m   13,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [31m-[39m   0,
+    [39m    255
+    [39m  ]
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\SharedRendererTests.ts:1489:22
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-78f8a-e-displayed-before-focusing-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-webgl-all-runtime-artifacts\WebglRenderer-WebGL-Render-78f8a-e-displayed-before-focusing-WebKit\error-context.md
+
+  54 failed
+    [WebKit] › test\playwright\SharedRendererTests.ts:30:9 › WebGL Renderer Integration Tests › colors › foreground 0-15 
+    [WebKit] › test\playwright\SharedRendererTests.ts:54:7 › WebGL Renderer Integration Tests › foreground 0-7 drawBoldTextInBrightColors 
+    [WebKit] › test\playwright\SharedRendererTests.ts:80:7 › WebGL Renderer Integration Tests › background 0-15 
+    [WebKit] › test\playwright\SharedRendererTests.ts:103:7 › WebGL Renderer Integration Tests › foreground 0-15 inverse 
+    [WebKit] › test\playwright\SharedRendererTests.ts:126:7 › WebGL Renderer Integration Tests › background 0-15 inverse 
+    [WebKit] › test\playwright\SharedRendererTests.ts:149:7 › WebGL Renderer Integration Tests › foreground 0-15 invisible 
+    [WebKit] › test\playwright\SharedRendererTests.ts:197:7 › WebGL Renderer Integration Tests › foreground 0-15 bright 
+    [WebKit] › test\playwright\SharedRendererTests.ts:220:7 › WebGL Renderer Integration Tests › background 0-15 bright 
+    [WebKit] › test\playwright\SharedRendererTests.ts:243:7 › WebGL Renderer Integration Tests › foreground 16-255 
+    [WebKit] › test\playwright\SharedRendererTests.ts:263:7 › WebGL Renderer Integration Tests › background 16-255 
+    [WebKit] › test\playwright\SharedRendererTests.ts:283:7 › WebGL Renderer Integration Tests › foreground 16-255 inverse 
+    [WebKit] › test\playwright\SharedRendererTests.ts:303:7 › WebGL Renderer Integration Tests › background 16-255 inverse 
+    [WebKit] › test\playwright\SharedRendererTests.ts:323:7 › WebGL Renderer Integration Tests › foreground 16-255 invisible 
+    [WebKit] › test\playwright\SharedRendererTests.ts:395:7 › WebGL Renderer Integration Tests › background 16-255 dim 
+    [WebKit] › test\playwright\SharedRendererTests.ts:415:7 › WebGL Renderer Integration Tests › foreground true color red 
+    [WebKit] › test\playwright\SharedRendererTests.ts:433:7 › WebGL Renderer Integration Tests › background true color red 
+    [WebKit] › test\playwright\SharedRendererTests.ts:451:7 › WebGL Renderer Integration Tests › foreground true color green 
+    [WebKit] › test\playwright\SharedRendererTests.ts:469:7 › WebGL Renderer Integration Tests › background true color green 
+    [WebKit] › test\playwright\SharedRendererTests.ts:487:7 › WebGL Renderer Integration Tests › foreground true color blue 
+    [WebKit] › test\playwright\SharedRendererTests.ts:505:7 › WebGL Renderer Integration Tests › background true color blue 
+    [WebKit] › test\playwright\SharedRendererTests.ts:523:7 › WebGL Renderer Integration Tests › foreground true color grey 
+    [WebKit] › test\playwright\SharedRendererTests.ts:541:7 › WebGL Renderer Integration Tests › background true color grey 
+    [WebKit] › test\playwright\SharedRendererTests.ts:559:7 › WebGL Renderer Integration Tests › foreground true color red inverse 
+    [WebKit] › test\playwright\SharedRendererTests.ts:577:7 › WebGL Renderer Integration Tests › background true color red inverse 
+    [WebKit] › test\playwright\SharedRendererTests.ts:595:7 › WebGL Renderer Integration Tests › foreground true color green inverse 
+    [WebKit] › test\playwright\SharedRendererTests.ts:613:7 › WebGL Renderer Integration Tests › background true color green inverse 
+    [WebKit] › test\playwright\SharedRendererTests.ts:631:7 › WebGL Renderer Integration Tests › foreground true color blue inverse 
+    [WebKit] › test\playwright\SharedRendererTests.ts:649:7 › WebGL Renderer Integration Tests › background true color blue inverse 
+    [WebKit] › test\playwright\SharedRendererTests.ts:667:7 › WebGL Renderer Integration Tests › foreground true color grey inverse 
+    [WebKit] › test\playwright\SharedRendererTests.ts:685:7 › WebGL Renderer Integration Tests › background true color grey inverse 
+    [WebKit] › test\playwright\SharedRendererTests.ts:703:7 › WebGL Renderer Integration Tests › foreground true color grey invisible 
+    [WebKit] › test\playwright\SharedRendererTests.ts:742:9 › WebGL Renderer Integration Tests › minimumContrastRatio › should adjust 0-15 colors on black background 
+    [WebKit] › test\playwright\SharedRendererTests.ts:810:9 › WebGL Renderer Integration Tests › minimumContrastRatio › should adjust 0-15 colors on white background 
+    [WebKit] › test\playwright\SharedRendererTests.ts:962:9 › WebGL Renderer Integration Tests › selectionBackground › should resolve the inverse foreground color based on the original background color, not the selection 
+    [WebKit] › test\playwright\SharedRendererTests.ts:983:9 › WebGL Renderer Integration Tests › selectionInactiveBackground › should render the inactive selection when not focused 
+    [WebKit] › test\playwright\SharedRendererTests.ts:1009:9 › WebGL Renderer Integration Tests › selection blending › background 
+    [WebKit] › test\playwright\SharedRendererTests.ts:1026:9 › WebGL Renderer Integration Tests › selection blending › powerline decorative symbols 
+    [WebKit] › test\playwright\SharedRendererTests.ts:1051:9 › WebGL Renderer Integration Tests › allowTransparency › transparent background inverse 
+    [WebKit] › test\playwright\SharedRendererTests.ts:1064:9 › WebGL Renderer Integration Tests › selectionForeground › transparent background inverse 
+    [WebKit] › test\playwright\SharedRendererTests.ts:1077:9 › WebGL Renderer Integration Tests › decoration color overrides › foregroundColor 
+    [WebKit] › test\playwright\SharedRendererTests.ts:1090:9 › WebGL Renderer Integration Tests › decoration color overrides › foregroundColor should ignore inverse 
+    [WebKit] › test\playwright\SharedRendererTests.ts:1103:9 › WebGL Renderer Integration Tests › decoration color overrides › foregroundColor should ignore inverse (only fg on decoration) 
+    [WebKit] › test\playwright\SharedRendererTests.ts:1117:9 › WebGL Renderer Integration Tests › decoration color overrides › backgroundColor 
+    [WebKit] › test\playwright\SharedRendererTests.ts:1130:9 › WebGL Renderer Integration Tests › decoration color overrides › backgroundColor should ignore inverse 
+    [WebKit] › test\playwright\SharedRendererTests.ts:1143:9 › WebGL Renderer Integration Tests › decoration color overrides › backgroundColor should ignore inverse (only bg on decoration) 
+    [WebKit] › test\playwright\SharedRendererTests.ts:1160:9 › WebGL Renderer Integration Tests › regression tests › #4736: inactive selection background should replace regular cell background color 
+    [WebKit] › test\playwright\SharedRendererTests.ts:1196:46 › WebGL Renderer Integration Tests › regression tests › #4759: minimum contrast ratio should be respected on inverse text 
+    [WebKit] › test\playwright\SharedRendererTests.ts:1211:9 › WebGL Renderer Integration Tests › regression tests › #4759: minimum contrast ratio should be respected on selected inverse text 
+    [WebKit] › test\playwright\SharedRendererTests.ts:1231:9 › WebGL Renderer Integration Tests › regression tests › #4773: block cursor should render when the cell is selected 
+    [WebKit] › test\playwright\SharedRendererTests.ts:1241:9 › WebGL Renderer Integration Tests › regression tests › #4799: cursor should be in the correct position 
+    [WebKit] › test\playwright\SharedRendererTests.ts:1262:9 › WebGL Renderer Integration Tests › regression tests › #4917 The selection should not be displayed if it is not within the scope of the viewport. 
+    [WebKit] › test\playwright\SharedRendererTests.ts:1276:9 › WebGL Renderer Integration Tests › regression tests › #5241 cursor with alpha should blend color with background color 
+    [WebKit] › test\playwright\SharedRendererTests.ts:1284:9 › WebGL Renderer Integration Tests › regression tests › #5241 cursorAccent with alpha should blend color with background color 
+    [WebKit] › test\playwright\SharedRendererTests.ts:1484:11 › WebGL Renderer Integration Tests › standalone tests › regression tests › #4790: cursor should not be displayed before focusing 
+  37 skipped
+  1 did not run
+  121 passed (4.8m)
+  2 errors were not a part of any test, see above for details

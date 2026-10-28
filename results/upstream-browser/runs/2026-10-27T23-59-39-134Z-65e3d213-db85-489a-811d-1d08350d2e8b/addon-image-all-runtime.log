@@ -1,0 +1,247 @@
+
+Running 639 tests using 2 workers
+···························°·[chromium:warning] IIP: error during BASE64 decoding
+··········F···········F····························
+························°··[firefox:warning] IIP: error during BASE64 decoding
+············F··················F·····················
+················································································
+················································································
+············································F·················°····F············
+·········F··················°····[webkit:warning] IIP: error during BASE64 decoding
+·······························F···············
+················································································
+···············································································
+
+  1) [Chromium] › addons\addon-image\test\ImageAddon.test.ts:404:7 › ImageAddon › IIP - resizing › palette.png: N --> width=20 height=5 preserveAspectRatio=0 
+
+    AssertionError: Expected values to be strictly deep-equal:
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   165,
+    [31m-[39m   160,
+    [39m    90
+    [39m  ]
+
+
+      407 |         await ctx.proxy.write(`\x1b]1337;File=inline=1;size=${size};${header}:${payload}\x07`);
+      408 |         const dim = await getDimensions();
+    > 409 |         deepStrictEqual(await getOrigSize(1), [dim.cellWidth * 20, dim.cellHeight * 5]);
+          |         ^
+      410 |       });
+      411 |       test(name + ': Npx --> width=320px height=160px preserveAspectRatio=0', async () => {
+      412 |         // pixel based resize
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-image\test\ImageAddon.test.ts:409:9
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-image-all-runtime-artifacts\ImageAddon-ImageAddon-IIP--66317-ght-5-preserveAspectRatio-0-Chromium\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-image-all-runtime-artifacts\ImageAddon-ImageAddon-IIP--66317-ght-5-preserveAspectRatio-0-Chromium\error-context.md
+
+  2) [Chromium] › addons\addon-image\test\ImageAddon.test.ts:404:7 › ImageAddon › IIP - resizing › palette.qoi: N --> width=20 height=5 preserveAspectRatio=0 
+
+    AssertionError: Expected values to be strictly deep-equal:
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   165,
+    [31m-[39m   160,
+    [39m    90
+    [39m  ]
+
+
+      407 |         await ctx.proxy.write(`\x1b]1337;File=inline=1;size=${size};${header}:${payload}\x07`);
+      408 |         const dim = await getDimensions();
+    > 409 |         deepStrictEqual(await getOrigSize(1), [dim.cellWidth * 20, dim.cellHeight * 5]);
+          |         ^
+      410 |       });
+      411 |       test(name + ': Npx --> width=320px height=160px preserveAspectRatio=0', async () => {
+      412 |         // pixel based resize
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-image\test\ImageAddon.test.ts:409:9
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-image-all-runtime-artifacts\ImageAddon-ImageAddon-IIP--828ea-ght-5-preserveAspectRatio-0-Chromium\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-image-all-runtime-artifacts\ImageAddon-ImageAddon-IIP--828ea-ght-5-preserveAspectRatio-0-Chromium\error-context.md
+
+  3) [FirefoxStable] › addons\addon-image\test\ImageAddon.test.ts:404:7 › ImageAddon › IIP - resizing › palette.png: N --> width=20 height=5 preserveAspectRatio=0 
+
+    AssertionError: Expected values to be strictly deep-equal:
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   165,
+    [31m-[39m   160,
+    [39m    90
+    [39m  ]
+
+
+      407 |         await ctx.proxy.write(`\x1b]1337;File=inline=1;size=${size};${header}:${payload}\x07`);
+      408 |         const dim = await getDimensions();
+    > 409 |         deepStrictEqual(await getOrigSize(1), [dim.cellWidth * 20, dim.cellHeight * 5]);
+          |         ^
+      410 |       });
+      411 |       test(name + ': Npx --> width=320px height=160px preserveAspectRatio=0', async () => {
+      412 |         // pixel based resize
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-image\test\ImageAddon.test.ts:409:9
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-image-all-runtime-artifacts\ImageAddon-ImageAddon-IIP--66317-ght-5-preserveAspectRatio-0-FirefoxStable\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-image-all-runtime-artifacts\ImageAddon-ImageAddon-IIP--66317-ght-5-preserveAspectRatio-0-FirefoxStable\error-context.md
+
+  4) [FirefoxStable] › addons\addon-image\test\ImageAddon.test.ts:404:7 › ImageAddon › IIP - resizing › palette.qoi: N --> width=20 height=5 preserveAspectRatio=0 
+
+    AssertionError: Expected values to be strictly deep-equal:
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   165,
+    [31m-[39m   160,
+    [39m    90
+    [39m  ]
+
+
+      407 |         await ctx.proxy.write(`\x1b]1337;File=inline=1;size=${size};${header}:${payload}\x07`);
+      408 |         const dim = await getDimensions();
+    > 409 |         deepStrictEqual(await getOrigSize(1), [dim.cellWidth * 20, dim.cellHeight * 5]);
+          |         ^
+      410 |       });
+      411 |       test(name + ': Npx --> width=320px height=160px preserveAspectRatio=0', async () => {
+      412 |         // pixel based resize
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-image\test\ImageAddon.test.ts:409:9
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-image-all-runtime-artifacts\ImageAddon-ImageAddon-IIP--828ea-ght-5-preserveAspectRatio-0-FirefoxStable\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-image-all-runtime-artifacts\ImageAddon-ImageAddon-IIP--828ea-ght-5-preserveAspectRatio-0-FirefoxStable\error-context.md
+
+  5) [WebKit] › addons\addon-image\test\ImageAddon.test.ts:169:5 › ImageAddon › scrolling & cursor modes › testdata default (scrolling with VT240 cursor pos) 
+
+    AssertionError: Expected values to be strictly deep-equal:
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [39m    0,
+    [32m+[39m   0
+    [31m-[39m   4
+    [39m  ]
+
+
+      170 |       const dim = await getDimensions();
+      171 |       await ctx.proxy.write(SIXEL_SEQ_0);
+    > 172 |       deepStrictEqual(await getCursor(), [0, Math.floor(TESTDATA.height/dim.cellHeight)]);
+          |       ^
+      173 |       // moved to right by 10 cells
+      174 |       await ctx.proxy.write('#'.repeat(10) + SIXEL_SEQ_0);
+      175 |       deepStrictEqual(await getCursor(), [10, Math.floor(TESTDATA.height/dim.cellHeight) * 2]);
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-image\test\ImageAddon.test.ts:172:7
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-image-all-runtime-artifacts\ImageAddon-ImageAddon-scro-3c8ea-ling-with-VT240-cursor-pos--WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-image-all-runtime-artifacts\ImageAddon-ImageAddon-scro-3c8ea-ling-with-VT240-cursor-pos--WebKit\error-context.md
+
+  6) [WebKit] › addons\addon-image\test\ImageAddon.test.ts:199:5 › ImageAddon › image lifecycle & eviction › onImageAdded fires for each image 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: 0 (actual) !== 1 (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-image\test\ImageAddon.test.ts:205:13
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+
+    0 !== 1
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-image\test\ImageAddon.test.ts:205:13
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-image\test\ImageAddon.test.ts:205:7
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-image-all-runtime-artifacts\ImageAddon-ImageAddon-imag-104ce-eAdded-fires-for-each-image-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-image-all-runtime-artifacts\ImageAddon-ImageAddon-imag-104ce-eAdded-fires-for-each-image-WebKit\error-context.md
+
+  7) [WebKit] › addons\addon-image\test\ImageAddon.test.ts:260:5 › ImageAddon › image lifecycle & eviction › clear alternate images on buffer change 
+
+    AssertionError: The expression evaluated to a falsy value:
+
+      (Math.abs((await ctx.page.evaluate("window.imageAddon.storageUsage")) - 640 * 80 * 4 / 1e6) < 0.05)
+
+
+      261 |       strictEqual(await ctx.page.evaluate('window.imageAddon.storageUsage'), 0);
+      262 |       await ctx.proxy.write('\x1b[?1049h' + SIXEL_SEQ_0);
+    > 263 |       ok(Math.abs((await ctx.page.evaluate<number>('window.imageAddon.storageUsage')) - 640 * 80 * 4 / 1000000) < 0.05);
+          |       ^
+      264 |       await ctx.proxy.write('\x1b[?1049l');
+      265 |       strictEqual(await ctx.page.evaluate('window.imageAddon.storageUsage'), 0);
+      266 |     });
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-image\test\ImageAddon.test.ts:263:7
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-image-all-runtime-artifacts\ImageAddon-ImageAddon-imag-a8709-ate-images-on-buffer-change-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-image-all-runtime-artifacts\ImageAddon-ImageAddon-imag-a8709-ate-images-on-buffer-change-WebKit\error-context.md
+
+  8) [WebKit] › addons\addon-image\test\ImageAddon.test.ts:440:5 › ImageAddon › text overwrite removes tiles › sixel 
+
+    AssertionError: pollFor max duration exceeded.
+    Last comparison: false (actual) !== true (expected)
+    Stack: Error: 
+
+       at ..\..\..\test\playwright\TestUtils.ts:531
+
+      529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {
+      530 |   options ??= {};
+    > 531 |   options.stack ??= new Error().stack;
+          |                     ^
+      532 |   if (preFn) {
+      533 |     await preFn();
+      534 |   }
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at assertTextClearsTiles (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-image\test\ImageAddon.test.ts:491:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-image\test\ImageAddon.test.ts:441:7
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3045:9
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2537:11
+        at TimeoutManager.withRunnable (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:1816:14)
+        at TestInfoImpl._runWithTimeout (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2535:7)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3043:7
+        at WorkerMain._runTest (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:3016:5)
+        at WorkerMain.runTestGroup (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\worker\workerProcessEntry.js:2911:9)
+        at process.<anonymous> (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\node_modules\playwright\lib\common\index.js:1955:25)
+
+    false !== true
+
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:531:21)
+        at assertTextClearsTiles (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-image\test\ImageAddon.test.ts:491:9)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-image\test\ImageAddon.test.ts:441:7
+        at pollFor (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:556:22)
+        at assertTextClearsTiles (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-image\test\ImageAddon.test.ts:491:3)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-image\test\ImageAddon.test.ts:441:7
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-image-all-runtime-artifacts\ImageAddon-ImageAddon-text-overwrite-removes-tiles-sixel-WebKit\error-context.md
+
+    Error Context: ..\results\upstream-browser\runs\2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b\addon-image-all-runtime-artifacts\ImageAddon-ImageAddon-text-overwrite-removes-tiles-sixel-WebKit\error-context.md
+
+  8 failed
+    [Chromium] › addons\addon-image\test\ImageAddon.test.ts:404:7 › ImageAddon › IIP - resizing › palette.png: N --> width=20 height=5 preserveAspectRatio=0 
+    [Chromium] › addons\addon-image\test\ImageAddon.test.ts:404:7 › ImageAddon › IIP - resizing › palette.qoi: N --> width=20 height=5 preserveAspectRatio=0 
+    [FirefoxStable] › addons\addon-image\test\ImageAddon.test.ts:404:7 › ImageAddon › IIP - resizing › palette.png: N --> width=20 height=5 preserveAspectRatio=0 
+    [FirefoxStable] › addons\addon-image\test\ImageAddon.test.ts:404:7 › ImageAddon › IIP - resizing › palette.qoi: N --> width=20 height=5 preserveAspectRatio=0 
+    [WebKit] › addons\addon-image\test\ImageAddon.test.ts:169:5 › ImageAddon › scrolling & cursor modes › testdata default (scrolling with VT240 cursor pos) 
+    [WebKit] › addons\addon-image\test\ImageAddon.test.ts:199:5 › ImageAddon › image lifecycle & eviction › onImageAdded fires for each image 
+    [WebKit] › addons\addon-image\test\ImageAddon.test.ts:260:5 › ImageAddon › image lifecycle & eviction › clear alternate images on buffer change 
+    [WebKit] › addons\addon-image\test\ImageAddon.test.ts:440:5 › ImageAddon › text overwrite removes tiles › sixel 
+  4 skipped
+  627 passed (1.3m)

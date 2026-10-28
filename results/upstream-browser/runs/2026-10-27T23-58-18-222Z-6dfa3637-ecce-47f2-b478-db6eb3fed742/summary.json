@@ -1,0 +1,324 @@
+{
+  "schemaVersion": 1,
+  "mode": "runtime",
+  "environment": {
+    "node": "v24.15.0",
+    "platform": "win32",
+    "arch": "x64",
+    "playwright": "1.60.0"
+  },
+  "sourceWrapper": {
+    "path": "source_repo/bin/test_integration.js",
+    "sha256": "557035afe8fcc07c78a2afd61a33f2c0699dae3a2300b004465e34528da2fcd2"
+  },
+  "configInventory": [
+    "core",
+    "addon-attach",
+    "addon-clipboard",
+    "addon-fit",
+    "addon-image",
+    "addon-program-status",
+    "addon-progress",
+    "addon-search",
+    "addon-serialize",
+    "addon-unicode-graphemes",
+    "addon-unicode11",
+    "addon-web-fonts",
+    "addon-web-links",
+    "addon-webgl"
+  ],
+  "selectedProject": "all original projects",
+  "serverAdapter": "Owned node demo/start.js; original webServer disabled in temporary config; same original testDir, assertions and projects.",
+  "referenceBefore": {
+    "files": 776,
+    "mismatches": []
+  },
+  "suites": [
+    {
+      "name": "addon-unicode11",
+      "sourceConfig": "addons/addon-unicode11/test/playwright.config.ts",
+      "generatedConfig": "addons/addon-unicode11/out-esbuild-test/playwright.config.js",
+      "command": {
+        "command": [
+          "node",
+          "node_modules/@playwright/test/cli.js",
+          "test",
+          "--config=..\\tmp\\upstream-browser-config\\2026-10-27T23-58-18-222Z-6dfa3637-ecce-47f2-b478-db6eb3fed742\\addon-unicode11.cjs",
+          "--reporter=json",
+          "--workers=2",
+          "--retries=0",
+          "--global-timeout=45000",
+          "--output=../results/upstream-browser/runs/2026-10-27T23-58-18-222Z-6dfa3637-ecce-47f2-b478-db6eb3fed742/addon-unicode11-all-runtime-artifacts"
+        ],
+        "exitCode": 1,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "terminationError": null,
+        "resourceError": null,
+        "elapsedMs": 2103.676,
+        "status": "failed",
+        "cwd": "source_repo"
+      },
+      "log": "results/upstream-browser/runs/2026-10-27T23-58-18-222Z-6dfa3637-ecce-47f2-b478-db6eb3fed742/addon-unicode11-all-runtime.log",
+      "raw": "results/upstream-browser/runs/2026-10-27T23-58-18-222Z-6dfa3637-ecce-47f2-b478-db6eb3fed742/addon-unicode11-all-runtime.json",
+      "tests": [
+        {
+          "source": "../test/Unicode11Addon.test.ts",
+          "title": "Unicode11Addon.test.js / Unicode11Addon / wcwidth V11 emoji test",
+          "project": "Chromium",
+          "expectedStatus": "passed",
+          "results": [
+            {
+              "workerIndex": 0,
+              "parallelIndex": 0,
+              "status": "failed",
+              "duration": 0,
+              "error": {
+                "message": "Error: page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n\u001b[2m  - navigating to \"/test\", waiting until \"load\"\u001b[22m\n",
+                "stack": "Error: page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n\u001b[2m  - navigating to \"/test\", waiting until \"load\"\u001b[22m\n\n    at createTestContext (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts:29:14)\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-unicode11\\test\\Unicode11Addon.test.ts:12:9",
+                "location": {
+                  "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts",
+                  "column": 14,
+                  "line": 29
+                },
+                "snippet": "   at ..\\..\\..\\test\\playwright\\TestUtils.ts:29\n\n  27 |   page.on('console', e => console.log(`[${browser.browserType().name()}:${e.type()}]`, e));\n  28 |   page.on('pageerror', e => console.error(`[${browser.browserType().name()}]`, e));\n> 29 |   await page.goto('/test');\n     |              ^\n  30 |   const proxy = new TerminalProxy(page);\n  31 |   proxy.initPage();\n  32 |   return {"
+              },
+              "errors": [
+                {
+                  "location": {
+                    "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts",
+                    "column": 14,
+                    "line": 29
+                  },
+                  "message": "Error: page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n\u001b[2m  - navigating to \"/test\", waiting until \"load\"\u001b[22m\n\n\n   at ..\\..\\..\\test\\playwright\\TestUtils.ts:29\n\n  27 |   page.on('console', e => console.log(`[${browser.browserType().name()}:${e.type()}]`, e));\n  28 |   page.on('pageerror', e => console.error(`[${browser.browserType().name()}]`, e));\n> 29 |   await page.goto('/test');\n     |              ^\n  30 |   const proxy = new TerminalProxy(page);\n  31 |   proxy.initPage();\n  32 |   return {\n    at createTestContext (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts:29:14)\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-unicode11\\test\\Unicode11Addon.test.ts:12:9"
+                },
+                {
+                  "location": {
+                    "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-unicode11\\test\\Unicode11Addon.test.ts",
+                    "column": 37,
+                    "line": 15
+                  },
+                  "message": "TypeError: Cannot read properties of undefined (reading 'page')\n\n  13 |   await openTerminal(ctx);\n  14 | });\n> 15 | test.afterAll(async () => await ctx.page.close());\n     |                                     ^\n  16 |\n  17 | test.describe('Unicode11Addon', () => {\n  18 |\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-unicode11\\test\\Unicode11Addon.test.ts:15:37"
+                }
+              ],
+              "stdout": [],
+              "stderr": [],
+              "retry": 0,
+              "startTime": "2026-10-27T23:58:19.226Z",
+              "annotations": [],
+              "attachments": [
+                {
+                  "name": "error-context",
+                  "contentType": "text/markdown",
+                  "path": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\results\\upstream-browser\\runs\\2026-10-27T23-58-18-222Z-6dfa3637-ecce-47f2-b478-db6eb3fed742\\addon-unicode11-all-runtime-artifacts\\Unicode11Addon-Unicode11Addon-wcwidth-V11-emoji-test-Chromium\\error-context.md"
+                },
+                {
+                  "name": "error-context",
+                  "contentType": "text/markdown",
+                  "path": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\results\\upstream-browser\\runs\\2026-10-27T23-58-18-222Z-6dfa3637-ecce-47f2-b478-db6eb3fed742\\addon-unicode11-all-runtime-artifacts\\Unicode11Addon-Unicode11Addon-wcwidth-V11-emoji-test-Chromium\\error-context.md"
+                }
+              ],
+              "errorLocation": {
+                "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts",
+                "column": 14,
+                "line": 29
+              }
+            }
+          ],
+          "outcome": "unexpected"
+        },
+        {
+          "source": "../test/Unicode11Addon.test.ts",
+          "title": "Unicode11Addon.test.js / Unicode11Addon / wcwidth V11 emoji test",
+          "project": "FirefoxStable",
+          "expectedStatus": "passed",
+          "results": [
+            {
+              "workerIndex": 1,
+              "parallelIndex": 1,
+              "status": "failed",
+              "duration": 0,
+              "error": {
+                "message": "Error: page.goto: Protocol error (Page.navigate): Invalid url: \"/test\"\nCall log:\n\u001b[2m  - navigating to \"/test\", waiting until \"load\"\u001b[22m\n",
+                "stack": "Error: page.goto: Protocol error (Page.navigate): Invalid url: \"/test\"\nCall log:\n\u001b[2m  - navigating to \"/test\", waiting until \"load\"\u001b[22m\n\n    at createTestContext (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts:29:14)\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-unicode11\\test\\Unicode11Addon.test.ts:12:9",
+                "location": {
+                  "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts",
+                  "column": 14,
+                  "line": 29
+                },
+                "snippet": "   at ..\\..\\..\\test\\playwright\\TestUtils.ts:29\n\n  27 |   page.on('console', e => console.log(`[${browser.browserType().name()}:${e.type()}]`, e));\n  28 |   page.on('pageerror', e => console.error(`[${browser.browserType().name()}]`, e));\n> 29 |   await page.goto('/test');\n     |              ^\n  30 |   const proxy = new TerminalProxy(page);\n  31 |   proxy.initPage();\n  32 |   return {"
+              },
+              "errors": [
+                {
+                  "location": {
+                    "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts",
+                    "column": 14,
+                    "line": 29
+                  },
+                  "message": "Error: page.goto: Protocol error (Page.navigate): Invalid url: \"/test\"\nCall log:\n\u001b[2m  - navigating to \"/test\", waiting until \"load\"\u001b[22m\n\n\n   at ..\\..\\..\\test\\playwright\\TestUtils.ts:29\n\n  27 |   page.on('console', e => console.log(`[${browser.browserType().name()}:${e.type()}]`, e));\n  28 |   page.on('pageerror', e => console.error(`[${browser.browserType().name()}]`, e));\n> 29 |   await page.goto('/test');\n     |              ^\n  30 |   const proxy = new TerminalProxy(page);\n  31 |   proxy.initPage();\n  32 |   return {\n    at createTestContext (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts:29:14)\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-unicode11\\test\\Unicode11Addon.test.ts:12:9"
+                },
+                {
+                  "location": {
+                    "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-unicode11\\test\\Unicode11Addon.test.ts",
+                    "column": 37,
+                    "line": 15
+                  },
+                  "message": "TypeError: Cannot read properties of undefined (reading 'page')\n\n  13 |   await openTerminal(ctx);\n  14 | });\n> 15 | test.afterAll(async () => await ctx.page.close());\n     |                                     ^\n  16 |\n  17 | test.describe('Unicode11Addon', () => {\n  18 |\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-unicode11\\test\\Unicode11Addon.test.ts:15:37"
+                }
+              ],
+              "stdout": [],
+              "stderr": [],
+              "retry": 0,
+              "startTime": "2026-10-27T23:58:19.225Z",
+              "annotations": [],
+              "attachments": [
+                {
+                  "name": "error-context",
+                  "contentType": "text/markdown",
+                  "path": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\results\\upstream-browser\\runs\\2026-10-27T23-58-18-222Z-6dfa3637-ecce-47f2-b478-db6eb3fed742\\addon-unicode11-all-runtime-artifacts\\Unicode11Addon-Unicode11Addon-wcwidth-V11-emoji-test-FirefoxStable\\error-context.md"
+                },
+                {
+                  "name": "error-context",
+                  "contentType": "text/markdown",
+                  "path": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\results\\upstream-browser\\runs\\2026-10-27T23-58-18-222Z-6dfa3637-ecce-47f2-b478-db6eb3fed742\\addon-unicode11-all-runtime-artifacts\\Unicode11Addon-Unicode11Addon-wcwidth-V11-emoji-test-FirefoxStable\\error-context.md"
+                }
+              ],
+              "errorLocation": {
+                "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts",
+                "column": 14,
+                "line": 29
+              }
+            }
+          ],
+          "outcome": "unexpected"
+        },
+        {
+          "source": "../test/Unicode11Addon.test.ts",
+          "title": "Unicode11Addon.test.js / Unicode11Addon / wcwidth V11 emoji test",
+          "project": "WebKit",
+          "expectedStatus": "passed",
+          "results": [
+            {
+              "workerIndex": 2,
+              "parallelIndex": 0,
+              "status": "failed",
+              "duration": 0,
+              "error": {
+                "message": "Error: page.goto: Protocol error (Playwright.navigate): Cannot navigate to invalid URL\nCall log:\n\u001b[2m  - navigating to \"/test\", waiting until \"load\"\u001b[22m\n",
+                "stack": "Error: page.goto: Protocol error (Playwright.navigate): Cannot navigate to invalid URL\nCall log:\n\u001b[2m  - navigating to \"/test\", waiting until \"load\"\u001b[22m\n\n    at createTestContext (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts:29:14)\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-unicode11\\test\\Unicode11Addon.test.ts:12:9",
+                "location": {
+                  "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts",
+                  "column": 14,
+                  "line": 29
+                },
+                "snippet": "   at ..\\..\\..\\test\\playwright\\TestUtils.ts:29\n\n  27 |   page.on('console', e => console.log(`[${browser.browserType().name()}:${e.type()}]`, e));\n  28 |   page.on('pageerror', e => console.error(`[${browser.browserType().name()}]`, e));\n> 29 |   await page.goto('/test');\n     |              ^\n  30 |   const proxy = new TerminalProxy(page);\n  31 |   proxy.initPage();\n  32 |   return {"
+              },
+              "errors": [
+                {
+                  "location": {
+                    "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts",
+                    "column": 14,
+                    "line": 29
+                  },
+                  "message": "Error: page.goto: Protocol error (Playwright.navigate): Cannot navigate to invalid URL\nCall log:\n\u001b[2m  - navigating to \"/test\", waiting until \"load\"\u001b[22m\n\n\n   at ..\\..\\..\\test\\playwright\\TestUtils.ts:29\n\n  27 |   page.on('console', e => console.log(`[${browser.browserType().name()}:${e.type()}]`, e));\n  28 |   page.on('pageerror', e => console.error(`[${browser.browserType().name()}]`, e));\n> 29 |   await page.goto('/test');\n     |              ^\n  30 |   const proxy = new TerminalProxy(page);\n  31 |   proxy.initPage();\n  32 |   return {\n    at createTestContext (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts:29:14)\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-unicode11\\test\\Unicode11Addon.test.ts:12:9"
+                },
+                {
+                  "location": {
+                    "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-unicode11\\test\\Unicode11Addon.test.ts",
+                    "column": 37,
+                    "line": 15
+                  },
+                  "message": "TypeError: Cannot read properties of undefined (reading 'page')\n\n  13 |   await openTerminal(ctx);\n  14 | });\n> 15 | test.afterAll(async () => await ctx.page.close());\n     |                                     ^\n  16 |\n  17 | test.describe('Unicode11Addon', () => {\n  18 |\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-unicode11\\test\\Unicode11Addon.test.ts:15:37"
+                }
+              ],
+              "stdout": [],
+              "stderr": [],
+              "retry": 0,
+              "startTime": "2026-10-27T23:58:19.786Z",
+              "annotations": [],
+              "attachments": [
+                {
+                  "name": "error-context",
+                  "contentType": "text/markdown",
+                  "path": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\results\\upstream-browser\\runs\\2026-10-27T23-58-18-222Z-6dfa3637-ecce-47f2-b478-db6eb3fed742\\addon-unicode11-all-runtime-artifacts\\Unicode11Addon-Unicode11Addon-wcwidth-V11-emoji-test-WebKit\\error-context.md"
+                },
+                {
+                  "name": "error-context",
+                  "contentType": "text/markdown",
+                  "path": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\results\\upstream-browser\\runs\\2026-10-27T23-58-18-222Z-6dfa3637-ecce-47f2-b478-db6eb3fed742\\addon-unicode11-all-runtime-artifacts\\Unicode11Addon-Unicode11Addon-wcwidth-V11-emoji-test-WebKit\\error-context.md"
+                }
+              ],
+              "errorLocation": {
+                "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts",
+                "column": 14,
+                "line": 29
+              }
+            }
+          ],
+          "outcome": "unexpected"
+        }
+      ],
+      "rawStats": {
+        "startTime": "2026-10-27T23:58:18.882Z",
+        "duration": 1690.7709999999997,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 3,
+        "flaky": 0
+      },
+      "errors": [],
+      "projects": {
+        "Chromium": {
+          "discovered": 1,
+          "executed": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0,
+          "unrun": 0
+        },
+        "FirefoxStable": {
+          "discovered": 1,
+          "executed": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0,
+          "unrun": 0
+        },
+        "WebKit": {
+          "discovered": 1,
+          "executed": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0,
+          "unrun": 0
+        }
+      }
+    }
+  ],
+  "status": "failed",
+  "scope": "Original JavaScript only. Discovery alone executes no browser tests. Rust-backed and other native-platform evidence remain separate.",
+  "server": {
+    "command": [
+      "C:\\nvm4w\\nodejs\\node.exe",
+      "demo/start.js"
+    ],
+    "pid": 4916,
+    "exitCode": 1,
+    "signal": null,
+    "ready": true,
+    "readinessProbes": 1,
+    "timedOut": false,
+    "error": null,
+    "resourceError": null,
+    "loggingError": null,
+    "terminationError": null,
+    "elapsedMs": 2410.2476,
+    "status": "stopped"
+  },
+  "referenceAfter": {
+    "files": 776,
+    "mismatches": []
+  },
+  "runId": "2026-10-27T23-58-18-222Z-6dfa3637-ecce-47f2-b478-db6eb3fed742"
+}
