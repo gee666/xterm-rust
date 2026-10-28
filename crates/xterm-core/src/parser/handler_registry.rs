@@ -6,6 +6,9 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::hash::Hash;
 use std::rc::{Rc, Weak};
+#[path = "handler_slots.rs"]
+mod slots;
+pub use slots::{ActiveSlot, CallbackHandle, CallbackSlot};
 
 pub type HandlerHandle<H> = Rc<RefCell<H>>;
 pub type HandlerList<H> = Rc<RefCell<Vec<HandlerHandle<H>>>>;
@@ -35,11 +38,15 @@ impl<K: Eq + Hash, H: ?Sized + 'static> HandlerRegistry<K, H> {
     }
 
     pub fn clear(&self, key: &K) {
-        self.entries.borrow_mut().remove(key);
+        let removed = self.entries.borrow_mut().remove(key);
+        drop(removed);
     }
 
     pub fn clear_all(&self) {
-        self.entries.borrow_mut().clear();
+        // Dropping a native callback may release user-owned resources. Do not
+        // retain a registry borrow across their destructors or reentrant work.
+        let removed = std::mem::take(&mut *self.entries.borrow_mut());
+        drop(removed);
     }
 
     pub fn get(&self, key: &K) -> HandlerList<H> {
@@ -75,7 +82,16 @@ impl<K: Eq + Hash, H: ?Sized + 'static> Registrar<K, H> {
 
     /// Clearing an absent key succeeds while the owning parser remains alive.
     pub fn clear(&self, key: &K) -> Option<()> {
-        self.entries.upgrade()?.borrow_mut().remove(key);
+        let entries = self.entries.upgrade()?;
+        let removed = entries.borrow_mut().remove(key);
+        drop(removed);
+        Some(())
+    }
+
+    pub fn clear_all(&self) -> Option<()> {
+        let entries = self.entries.upgrade()?;
+        let removed = std::mem::take(&mut *entries.borrow_mut());
+        drop(removed);
         Some(())
     }
 }

@@ -2,7 +2,7 @@
   "platform": "win32",
   "arch": "x64",
   "node": "v24.15.0",
-  "runDirectory": "results/dcs/run-0007",
+  "runDirectory": "results/dcs/run-0009",
   "inputs": [
     {
       "path": "Cargo.toml",
@@ -18,7 +18,7 @@
     },
     {
       "path": "crates/xterm-core/src/parser/dcs.rs",
-      "sha256": "2f8893a1d32d788313d4346c5ffbba2159004f8775bb95eb187b8b596e147b16"
+      "sha256": "8308dbde166144719bf6e17c308aab7154c9734fb889aed2550cd8865ef4aaaa"
     },
     {
       "path": "crates/xterm-core/src/parser/dcs_handler.rs",
@@ -30,15 +30,23 @@
     },
     {
       "path": "crates/xterm-core/src/parser/handler_registry.rs",
-      "sha256": "d3aae8eee9c898a44980f46368097e0e2d8f3858e58210d19fc05821fbf910f4"
+      "sha256": "237d7b1ae8d098c8b2159522bbb8fe9055bc00b1afd0c8bb47e0257e18a52b1b"
+    },
+    {
+      "path": "crates/xterm-core/src/parser/handler_slots.rs",
+      "sha256": "ad7e68eb97d4b5cf3eb3c4c8b731466afeb49a060f41152885a416d53e98cb08"
+    },
+    {
+      "path": "crates/xterm-core/src/parser/dcs_control.rs",
+      "sha256": "6e7a4dd7c2e85cfc9497b0f4873ba7a60040af8651117dac43181670b3f6185b"
     },
     {
       "path": "crates/xterm-core/tests/handler_registry.rs",
-      "sha256": "432504840fec3b594e11f9328511d565103184a2628c8747bfa13f222f30fc09"
+      "sha256": "a25409e09821bf0f6aa2b9b4af2868725371c30e6c588a9ab1436bf96db5eb3c"
     },
     {
       "path": "crates/xterm-core/tests/dcs.rs",
-      "sha256": "1f8f1cd0f0da517f13e0d01e988105d84c5b391c02cbabd15ad80180bcc4b396"
+      "sha256": "4fceb190e2eb6c5a070ec09ba546a0857796bb9e9b486a1bacf3c5503682f919"
     },
     {
       "path": "crates/xterm-core/tests/dcs_fallback.rs",
@@ -129,12 +137,16 @@
       "sha256": "454c1804e43e5e7764b88f9c8066b87ad698afc8aca6b60b2f053496cf43d163"
     },
     {
+      "path": "crates/xterm-core/tests/dcs_cases/disposal.rs",
+      "sha256": "498dc57fbf990dbd165196bb0b3f3c89a91c5e18fe5c3b27199b8b62be536864"
+    },
+    {
       "path": "crates/xterm-core/tests/fixtures/dcs-oracle.tsv",
       "sha256": "ce0acefee9f5685a8885246d67177c8459673bd26c8f0cb08f39f93de14582c6"
     },
     {
       "path": "scripts/check-dcs.mjs",
-      "sha256": "6519b6d38392feda138f858c310af0b7e3072364f052dcb429095ef125c3d1a1"
+      "sha256": "53b80aa9cbfec1c4dae9ad90880012613b9ae840efd7849e0cca2bcdb7cb5fe2"
     },
     {
       "path": "scripts/parser-oracle-common.mjs",
@@ -158,7 +170,7 @@
     },
     {
       "path": "scripts/verify-dcs.mjs",
-      "sha256": "94fcc23440db222c9514a7c48fe17de3ad973fc4f46528c8d0bb7c20d2fb84bf"
+      "sha256": "2b1cf4b3db68679c843a876a8109fea5ec94867301409ee97c24792f15d30078"
     },
     {
       "path": "scripts/tsv-records.mjs",
@@ -183,9 +195,9 @@
       "timedOut": false,
       "terminationError": null,
       "resourceError": null,
-      "elapsedMs": 34.690200000000004,
+      "elapsedMs": 38.2078,
       "status": "passed",
-      "log": "results/dcs/run-0007/rustc-version.log",
+      "log": "results/dcs/run-0009/rustc-version.log",
       "output": "rustc 1.85.1 (4eb161250 2025-03-15)\nbinary: rustc\ncommit-hash: 4eb161250e340c8f48f66e2b929ef4a5bed7c181\ncommit-date: 2025-03-15\nhost: x86_64-pc-windows-msvc\nrelease: 1.85.1\nLLVM version: 19.1.7\n"
     },
     "cargo": {
@@ -201,9 +213,9 @@
       "timedOut": false,
       "terminationError": null,
       "resourceError": null,
-      "elapsedMs": 32.6357,
+      "elapsedMs": 35.973299999999995,
       "status": "passed",
-      "log": "results/dcs/run-0007/cargo-version.log",
+      "log": "results/dcs/run-0009/cargo-version.log",
       "output": "cargo 1.85.1 (d73d2caf9 2024-12-31)\n"
     }
   },
@@ -211,7 +223,7 @@
     {
       "name": "record-endings",
       "command": [
-        "C:\\nvm4w\\nodejs\\node.exe",
+        "C:\\Users\\user\\AppData\\Local\\nvm\\v24.15.0\\node.exe",
         "--test",
         "scripts/tsv-records.test.mjs"
       ],
@@ -223,14 +235,14 @@
       "timedOut": false,
       "terminationError": null,
       "resourceError": null,
-      "elapsedMs": 99.9665,
+      "elapsedMs": 111.5874,
       "status": "passed",
-      "log": "results/dcs/run-0007/record-endings.log"
+      "log": "results/dcs/run-0009/record-endings.log"
     },
     {
       "name": "oracle",
       "command": [
-        "C:\\nvm4w\\nodejs\\node.exe",
+        "C:\\Users\\user\\AppData\\Local\\nvm\\v24.15.0\\node.exe",
         "scripts/check-dcs.mjs"
       ],
       "exitCode": 0,
@@ -241,14 +253,14 @@
       "timedOut": false,
       "terminationError": null,
       "resourceError": null,
-      "elapsedMs": 215.58069999999998,
+      "elapsedMs": 230.65130000000002,
       "status": "passed",
-      "log": "results/dcs/run-0007/oracle.log"
+      "log": "results/dcs/run-0009/oracle.log"
     },
     {
       "name": "integration-oracle",
       "command": [
-        "C:\\nvm4w\\nodejs\\node.exe",
+        "C:\\Users\\user\\AppData\\Local\\nvm\\v24.15.0\\node.exe",
         "scripts/dcs-integration-oracle.mjs"
       ],
       "exitCode": 0,
@@ -259,9 +271,9 @@
       "timedOut": false,
       "terminationError": null,
       "resourceError": null,
-      "elapsedMs": 124.18059999999997,
+      "elapsedMs": 134.67209999999994,
       "status": "passed",
-      "log": "results/dcs/run-0007/integration-oracle.log"
+      "log": "results/dcs/run-0009/integration-oracle.log"
     },
     {
       "name": "rustfmt",
@@ -286,9 +298,9 @@
       "timedOut": false,
       "terminationError": null,
       "resourceError": null,
-      "elapsedMs": 62.26419999999996,
+      "elapsedMs": 67.79779999999994,
       "status": "passed",
-      "log": "results/dcs/run-0007/rustfmt.log"
+      "log": "results/dcs/run-0009/rustfmt.log"
     },
     {
       "name": "rust-tests",
@@ -306,7 +318,7 @@
         "--test",
         "handler_registry"
       ],
-      "exitCode": 0,
+      "exitCode": 101,
       "signal": null,
       "error": null,
       "aborted": false,
@@ -314,9 +326,9 @@
       "timedOut": false,
       "terminationError": null,
       "resourceError": null,
-      "elapsedMs": 4170.2039,
-      "status": "passed",
-      "log": "results/dcs/run-0007/rust-tests.log"
+      "elapsedMs": 2055.2284,
+      "status": "failed",
+      "log": "results/dcs/run-0009/rust-tests.log"
     },
     {
       "name": "clippy",
@@ -337,7 +349,7 @@
         "-D",
         "warnings"
       ],
-      "exitCode": 0,
+      "exitCode": 101,
       "signal": null,
       "error": null,
       "aborted": false,
@@ -345,43 +357,14 @@
       "timedOut": false,
       "terminationError": null,
       "resourceError": null,
-      "elapsedMs": 3055.8160000000007,
-      "status": "passed",
-      "log": "results/dcs/run-0007/clippy.log"
+      "elapsedMs": 2186.765,
+      "status": "failed",
+      "log": "results/dcs/run-0009/clippy.log"
     }
   ],
   "complete": true,
-  "passed": true,
+  "passed": false,
   "scope": "DCS and real escape-parser DCS integration only; no full equivalence or other-platform runtime claim",
   "changedInputs": [],
-  "rustTestSuites": [
-    {
-      "passed": 38,
-      "failed": 0,
-      "ignored": 0,
-      "measured": 0,
-      "filtered": 0
-    },
-    {
-      "passed": 3,
-      "failed": 0,
-      "ignored": 0,
-      "measured": 0,
-      "filtered": 0
-    },
-    {
-      "passed": 5,
-      "failed": 0,
-      "ignored": 0,
-      "measured": 0,
-      "filtered": 0
-    },
-    {
-      "passed": 4,
-      "failed": 0,
-      "ignored": 0,
-      "measured": 0,
-      "filtered": 0
-    }
-  ]
+  "rustTestSuites": []
 }

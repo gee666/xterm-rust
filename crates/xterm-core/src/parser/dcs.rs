@@ -5,7 +5,7 @@
 //! unhook or reset. Await a returned future and pass its result to `unhook`
 //! with the same success flag. Identifiers retain the source's packed i32 bits.
 
-use super::handler::registry::{HandlerRegistry, Registrar};
+use super::handler::registry::Registrar;
 use super::handler::{DispatchError, HandlerResult};
 use super::params::Params;
 use crate::lifecycle::DisposableHandle;
@@ -16,6 +16,10 @@ use std::rc::Rc;
 #[path = "dcs_handler.rs"]
 mod callback;
 pub use callback::DcsHandler;
+#[path = "dcs_control.rs"]
+mod control;
+use control::Control;
+pub use control::DcsDisposalHandle;
 
 pub trait DcsHandlerTrait {
     fn hook(&mut self, params: &Params) -> Result<(), DispatchError>;
@@ -24,8 +28,6 @@ pub trait DcsHandlerTrait {
 }
 
 pub type HandlerHandle = Rc<RefCell<dyn DcsHandlerTrait>>;
-type HandlerList = Rc<RefCell<Vec<HandlerHandle>>>;
-type FallbackHandler = Box<dyn FnMut(i32, DcsAction) -> Result<(), DispatchError>>;
 
 /// Reentrant registration without borrowing the active parser. The weak handle
 /// returns None after parser drop and cannot create a callback ownership cycle.
@@ -55,10 +57,8 @@ struct Pause {
 
 #[derive(Default)]
 pub struct DcsParser {
-    handlers: HandlerRegistry<i32, dyn DcsHandlerTrait>,
-    active: HandlerList,
+    control: Rc<Control>,
     ident: i32,
-    fallback: Option<FallbackHandler>,
     pause: Option<Pause>,
     cleanup: Vec<HandlerResult>,
 }
@@ -71,16 +71,20 @@ impl DcsParser {
     /// Disposal removes the first matching identity, including duplicates.
     /// Dropping the returned handle does not unregister the handler.
     pub fn register_handler(&mut self, ident: i32, handler: HandlerHandle) -> DisposableHandle {
-        self.handlers.register(ident, handler)
+        self.control.register(ident, handler)
     }
 
     pub fn registrar(&self) -> DcsRegistrar {
-        DcsRegistrar(self.handlers.registrar())
+        DcsRegistrar(self.control.registrar())
+    }
+
+    pub fn disposal_handle(&self) -> DcsDisposalHandle {
+        DcsDisposalHandle::new(&self.control)
     }
 
     /// Remove future lookup without detaching an already active handler list.
     pub fn clear_handler(&mut self, ident: i32) {
-        self.handlers.clear(&ident);
+        self.control.clear_handler(ident);
     }
 
     pub fn set_handler_fallback(&mut self, mut fallback: impl FnMut(i32, DcsAction) + 'static) {
@@ -96,29 +100,20 @@ impl DcsParser {
         &mut self,
         fallback: impl FnMut(i32, DcsAction) -> Result<(), DispatchError> + 'static,
     ) {
-        self.fallback = Some(Box::new(fallback));
+        self.control.set_fallback(Box::new(fallback));
     }
 
     /// Match explicit upstream disposal, which does not call active handlers.
     pub fn dispose(&mut self) {
-        self.handlers.clear_all();
-        self.fallback = None;
-        self.active = Rc::default();
+        self.control.dispose();
     }
 
     fn report(&mut self, action: DcsAction) -> Result<(), DispatchError> {
-        if let Some(fallback) = &mut self.fallback {
-            fallback(self.ident, action)?;
-        }
-        Ok(())
+        self.control.report(self.ident, action)
     }
 
     fn at(&self, index: usize) -> Result<HandlerHandle, DispatchError> {
-        self.active
-            .borrow()
-            .get(index)
-            .cloned()
-            .ok_or(DispatchError::ActiveHandlerRemoved)
+        self.control.at(index)
     }
 
     /// Abort remaining handlers. Previously returned futures are caller-owned.
@@ -128,7 +123,7 @@ impl DcsParser {
         let end = self
             .pause
             .as_ref()
-            .map_or_else(|| self.active.borrow().len(), |pause| pause.next);
+            .map_or_else(|| self.control.active_len(), |pause| pause.next);
         for index in (0..end).rev() {
             let handler = self.at(index)?;
             let result = handler.borrow_mut().unhook(false);
@@ -152,15 +147,15 @@ impl DcsParser {
 
     fn finish(&mut self) {
         self.pause = None;
-        self.active = Rc::default();
+        self.control.clear_active();
         self.ident = 0;
     }
 
     pub fn hook(&mut self, ident: i32, params: &Params) -> Result<(), DispatchError> {
         self.reset()?;
         self.ident = ident;
-        self.active = self.handlers.get(&ident);
-        let count = self.active.borrow().len();
+        self.control.select(ident);
+        let count = self.control.active_len();
         if count == 0 {
             self.report(DcsAction::Hook(params.clone()))?;
         } else {
@@ -173,7 +168,7 @@ impl DcsParser {
 
     /// Pass a slice to represent the upstream `start..end` range.
     pub fn put(&mut self, data: &[u32]) -> Result<(), DispatchError> {
-        let count = self.active.borrow().len();
+        let count = self.control.active_len();
         if count == 0 {
             self.report(DcsAction::Put(utf32_to_string(data)))?;
         } else {
@@ -191,7 +186,7 @@ impl DcsParser {
         success: bool,
         previous_result: bool,
     ) -> Result<Option<HandlerResult>, DispatchError> {
-        let count = self.active.borrow().len();
+        let count = self.control.active_len();
         if count == 0 {
             self.report(DcsAction::Unhook(success))?;
             self.finish();

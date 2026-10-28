@@ -183,6 +183,43 @@ for (const phase of ['HOOK', 'PUT']) {
   assert.deepEqual(calls, [...expected,'new:U:false','old:U:false']);
   rawStreamingRegressions.push({ phase, calls, preservedCause: true, passed: true });
 }
+const disposalRegressions = [];
+for (const phase of ['HOOK','PUT','UNHOOK','RESET']) {
+  const parser = new DcsParser();
+  const current = method => { if(method===phase) parser.dispose(); };
+  parser.registerHandler(0x2b70,{hook(){},put(){},unhook(){return false;}});
+  parser.registerHandler(0x2b70,{
+    hook(){current('HOOK');},put(){current('PUT');},unhook(success){current(success?'UNHOOK':'RESET');return false;}
+  });
+  assert.throws(()=>{
+    parser.hook(0x2b70,Params.fromArray([1]));
+    if(phase==='PUT') parser.put(Uint32Array.of(65),0,1);
+    if(phase==='UNHOOK') parser.unhook(true);
+    if(phase==='RESET') parser.reset();
+  },{name:'TypeError'});
+  disposalRegressions.push({phase,error:'TypeError',passed:true});
+}
+{
+  const parser=new DcsParser(); const calls=[];
+  const fresh={hook(p){calls.push(`new:H:${p.toArray()}`);},put(data){calls.push(`new:P:${data[0]}`);},unhook(success){calls.push(`new:U:${success}`);return true;}};
+  parser.registerHandler(0x2b70,{hook(){calls.push('H');parser.dispose();parser.registerHandler(0x2b70,fresh);},put(){calls.push('old:P');},unhook(){return false;}});
+  parser.hook(0x2b70,Params.fromArray([1]));parser.put(Uint32Array.of(65),0,1);
+  assert.deepEqual(calls,['H']);
+  parser.hook(0x2b70,Params.fromArray([2]));parser.put(Uint32Array.of(66),0,1);parser.unhook(true);
+  assert.deepEqual(calls,['H','new:H:2','new:P:66','new:U:true']);
+  parser.dispose();parser.hook(0x2b70,Params.fromArray([3]));parser.put(Uint32Array.of(67),0,1);
+  assert.equal(calls.length,4);
+  disposalRegressions.push({phase:'post-dispose-registration',calls,passed:true});
+}
+{
+  const parser=new DcsParser();const calls=[];
+  parser.setHandlerFallback((id)=>{calls.push(`fallback:${id}`);parser.dispose();parser.registerHandler(0x2b70,{hook(){calls.push('new:H');},put(){calls.push('new:P');},unhook(){return true;}});});
+  parser.hook(0x2b70,Params.fromArray([1]));parser.put(Uint32Array.of(65),0,1);
+  assert.deepEqual(calls,['fallback:11120']);
+  parser.hook(0x2b70,Params.fromArray([2]));parser.put(Uint32Array.of(66),0,1);
+  assert.deepEqual(calls,['fallback:11120','new:H','new:P']);
+  disposalRegressions.push({phase:'fallback-self-dispose',calls,passed:true});
+}
 const seed = 0xdcc512;
 let state = seed;
 function next() {
@@ -252,7 +289,7 @@ const fixtureBytes = await readFile(fixture);
 // Numeric TSV fields contain no literal newlines; normalize record endings only.
 assert.equal(canonicalTsvRecords(fixtureBytes.toString('utf8')), corpus, 'DCS corpus differs from upstream');
 const report = {
-  node: process.version, sources: oracle.sources, seed, traces: traces.length, mutationRegressions, callbackRegressions, fallbackRegressions, rawStreamingRegressions,
+  node: process.version, sources: oracle.sources, seed, traces: traces.length, mutationRegressions, callbackRegressions, fallbackRegressions, rawStreamingRegressions, disposalRegressions,
   corpusSha256: createHash('sha256').update(corpus).digest('hex'),
   fixtureRawSha256: createHash('sha256').update(fixtureBytes).digest('hex'),
   upstream: { ...oracle.baseline, executed: oracle.baseline.discovered, unrun: 0 }

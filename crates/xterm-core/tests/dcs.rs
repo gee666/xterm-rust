@@ -4,6 +4,8 @@
 #[path = "dcs_cases/callback.rs"]
 mod callback;
 mod dcs_support;
+#[path = "dcs_cases/disposal.rs"]
+mod disposal;
 #[path = "dcs_cases/mutation.rs"]
 mod mutation;
 #[path = "dcs_cases/oracle.rs"]
