@@ -32,7 +32,9 @@ Logs: `results/reviews/lola/acceptance-runner-tests.log`, `acceptance-artifacts-
 
 ## Worktree tooling task 245
 
-Read the create/isolation/target-cleanup implementation and the review probe. Independently ran `node --test scripts/worktree.test.mjs`: four passed, including an actual tiny crate build/test/fast-forward and target removal. Log: `results/reviews/lola/worktree-tests.log`. The separate create probe needed refresh after creation began precreating its target. Timur was notified; the old review document still said its tests were unrun. No unsafe raw removal of a worktree containing the shared reference junction was attempted.
+Read the create/isolation/target-cleanup implementation and the review probe. Independently ran `node --test scripts/worktree.test.mjs`: four passed, including an actual tiny crate build/test/fast-forward and target removal. Log: `results/reviews/lola/worktree-tests.log`.
+
+After the separate probe was refreshed for precreated targets and physical reference copies, `node tmp/review-worktree-create.mjs` passed isolation, shared Cargo registry, safe reference copies, reuse, name/disk refusal, target-only deletion and linked-target refusal. Task 245 was accepted as this scoped independent review. The LF-to-CRLF carry defect remains task 243 work, not a passing result. Old worktrees with reference junctions still require unlink-first cleanup; no unsafe raw removal of such a worktree was attempted.
 
 ## Cell and adapter coverage votes
 
