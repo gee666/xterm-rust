@@ -61,7 +61,7 @@ fn all_source_wasm_pixel_and_memory_observations_match() {
             "source operation {index}"
         );
     }
-    assert_eq!(cases.len(), 1325);
+    assert_eq!(cases.len(), 1329);
 }
 #[test]
 fn source_palette_qoi_decodes_to_the_original_rgba_bytes() {
@@ -94,6 +94,23 @@ fn release_keeps_source_page_boundary_and_signed_dimensions() {
         vec![0; 8]
     );
 }
+#[test]
+fn oversized_initial_and_growth_arguments_fail_before_allocating() {
+    let huge = image(16_777_216, 16_777_216, &[0]);
+    let mut decoder = QoiDecoder::new(4_194_304.0);
+    assert!(matches!(
+        decoder.decode(&huge),
+        Err(QoiError::MemoryArgument)
+    ));
+    assert_eq!(decoder.memory_usage(), 0);
+    decoder.decode(&image(1, 1, &[255, 1, 2, 3, 4])).unwrap();
+    assert!(matches!(
+        decoder.decode(&huge),
+        Err(QoiError::MemoryArgument)
+    ));
+    assert_eq!(decoder.memory_usage(), 65_536);
+}
+
 #[test]
 fn invalid_initial_pages_are_a_recoverable_type_error_not_a_panic() {
     let mut decoder = QoiDecoder::new(0.0);

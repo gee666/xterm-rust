@@ -17,6 +17,8 @@ let decoder=new Decoder(4194304);const cases=[];
 function runs(data){const result=[];for(let offset=0;offset+3<data.length;offset+=4){const word=(data[offset]|data[offset+1]<<8|data[offset+2]<<16|data[offset+3]<<24)>>>0;const last=result.at(-1);if(last&&last[0]===word)last[1]++;else result.push([word,1]);}return result;}
 function record(operation){let pixels=[],error=null;try{if(operation.op==='new')decoder=new Decoder(operation.keep);else if(operation.op==='release')decoder.release();else{const data=operation.file==='palette.qoi'?paletteEncoded:operation.file?fs.readFileSync(path.join(root,'source_repo/addons/addon-image/fixture/testimages',operation.file)):Uint8Array.from(operation.data);pixels=runs(decoder.decode(data));}}catch(cause){error=cause.name;}cases.push({operation,expected:{width:decoder.width,height:decoder.height,memory:decoder._mem?.buffer.byteLength??0,initialized:!!decoder._inst,pixels,error}});}
 function image(width,height,body=[],magic='qoif'){const bytes=Buffer.alloc(14+body.length+8);bytes.write(magic,0);bytes.writeInt32BE(width,4);bytes.writeInt32BE(height,8);bytes[12]=4;bytes.set(body,14);bytes[bytes.length-1]=1;return Array.from(bytes);}
+record({op:'new',keep:4194304});record({op:'decode',data:image(16777216,16777216,[0])});
+record({op:'decode',data:image(1,1,[255,1,2,3,4])});record({op:'decode',data:image(16777216,16777216,[0])});
 record({op:'new',keep:4194304});record({op:'decode',file:'dice.qoi'});record({op:'decode',file:'palette.qoi'});
 for(const keep of[0,65535,65536,4194304]){
  record({op:'new',keep});
