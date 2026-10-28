@@ -1,0 +1,98 @@
+error: couldn't read \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\native\commands.rs: The system cannot find the file specified. (os error 2)
+ --> \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\native.rs:4:1
+  |
+4 | mod commands;
+  | ^^^^^^^^^^^^^
+
+Error writing files: failed to resolve mod `commands`: \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\native\commands.rs does not exist
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\line.rs:6:
+ };
+ use std::{cell::RefCell, collections::BTreeMap};
+ 
+[32m+#[cfg(test)]
+[0m[32m+#[path = "line_buffer_cleanup_tests.rs"]
+[0m[32m+mod buffer_cleanup_tests;
+[0m #[path = "line_edit.rs"]
+ mod edit;
+ #[cfg(test)]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\line.rs:12:
+ #[path = "line_storage_tests.rs"]
+ mod storage_tests;
+[31m-#[cfg(test)]
+[0m[31m-#[path = "line_buffer_cleanup_tests.rs"]
+[0m[31m-mod buffer_cleanup_tests;
+[0m #[path = "line_text.rs"]
+ mod text;
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\core_service.rs:285:
+         )))
+     });
+     let error = h.core.trigger_data_event(&[], true).unwrap_err();
+[31m-    assert_eq!(error.source().unwrap().source().unwrap().downcast_ref::<std::io::Error>().unwrap().to_string(), "original callback failure");
+[0m[32m+    assert_eq!(
+[0m[32m+        error
+[0m[32m+            .source()
+[0m[32m+            .unwrap()
+[0m[32m+            .source()
+[0m[32m+            .unwrap()
+[0m[32m+            .downcast_ref::<std::io::Error>()
+[0m[32m+            .unwrap()
+[0m[32m+            .to_string(),
+[0m[32m+        "original callback failure"
+[0m[32m+    );
+[0m     let CoreError::Dispatch(error) = error else {
+         panic!("wrong failure category");
+     };
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\terminal_engine_differential.rs:1:
+ // Copyright (c) 2014-2026 The xterm.js authors. All rights reserved. MIT license.
+[31m-#[path="support/terminal_snapshot.rs"] mod projection;
+[0m[31m-use projection::{snapshot,events,parse_hex};
+[0m[31m-use xterm_core::terminal::CoreTerminal;
+[0m[32m+#[path = "support/terminal_snapshot.rs"]
+[0m[32m+mod projection;
+[0m[32m+use projection::{events, parse_hex, snapshot};
+[0m use std::path::PathBuf;
+[32m+use xterm_core::terminal::CoreTerminal;
+[0m 
+ #[test]
+ fn both_buffers_cells_modes_and_ordered_events_match_real_source_traces() {
+Error writing files: failed to resolve mod `options`: \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\terminal\options.rs does not exist
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\wasm_input.rs:40:
+     );
+     setup.dom.element.dispatch_event(&copy).unwrap();
+     assert!(copy.default_prevented());
+[31m-    let copied = copy.dyn_ref::<web_sys::ClipboardEvent>().unwrap().clipboard_data().unwrap();
+[0m[32m+    let copied = copy
+[0m[32m+        .dyn_ref::<web_sys::ClipboardEvent>()
+[0m[32m+        .unwrap()
+[0m[32m+        .clipboard_data()
+[0m[32m+        .unwrap();
+[0m     assert_eq!(copied.get_data("text/plain").unwrap(), "selected 😀");
+     clipboard.set_data("text/plain", "one\ntwo").unwrap();
+     let paste = event(
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\web_fonts_async_browser.rs:21:
+ }
+ 
+ fn face(name: &str) -> FontFace {
+[31m-    FontFace::new_with_u8_array(
+[0m[31m-        name,
+[0m[31m-        include_bytes!("fixtures/kongtext.regular.ttf"),
+[0m[31m-    )
+[0m[31m-    .unwrap()
+[0m[32m+    FontFace::new_with_u8_array(name, include_bytes!("fixtures/kongtext.regular.ttf")).unwrap()
+[0m }
+ 
+ fn host(family: &str) -> JsValue {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\web_fonts_browser.rs:14:
+ }
+ 
+ fn face(name: &str) -> FontFace {
+[31m-    FontFace::new_with_u8_array(
+[0m[31m-        name,
+[0m[31m-        include_bytes!("fixtures/kongtext.regular.ttf"),
+[0m[31m-    )
+[0m[31m-    .unwrap()
+[0m[32m+    FontFace::new_with_u8_array(name, include_bytes!("fixtures/kongtext.regular.ttf")).unwrap()
+[0m }
+ 
+ fn requests(values: &[JsValue]) -> Array {
