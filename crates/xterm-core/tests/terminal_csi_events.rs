@@ -3,12 +3,7 @@ use std::{
     cell::{Cell, RefCell},
     rc::Rc,
 };
-use xterm_core::{
-    buffer::BufferError,
-    circular_list::CircularListError,
-    event::EmitError,
-    terminal::{CoreTerminal, TerminalError},
-};
+use xterm_core::{event::EmitError, terminal::CoreTerminal};
 fn rows(t: &CoreTerminal) -> Vec<Vec<u16>> {
     let b = t.state().active_buffer();
     let b = b.borrow();
@@ -90,19 +85,29 @@ fn deletion_failure_preserves_exact_callback_error_and_partial_state() {
         .event()
         .try_subscribe(move |_| Err(captured.clone()));
     let error = t.write("\x1b[L").unwrap_err();
-    match &error {
-        TerminalError::BufferState(BufferError::List(CircularListError::Dispatch(actual))) => {
-            assert_eq!(actual, &original)
-        }
-        other => panic!("lost callback identity: {other:?}"),
-    }
+    // Parse/dispatch context is allowed; it must retain the same callback Rc,
+    // not merely another error with the same message or type.
+    let mut found_original = false;
     let mut source = &error as &dyn Error;
-    while let Some(next) = source.source() {
-        source = next;
+    loop {
+        if let Some(actual) = source.downcast_ref::<EmitError>() {
+            found_original |= actual == &original;
+        }
+        match source.source() {
+            Some(next) => source = next,
+            None => break,
+        }
     }
-    assert_eq!(
-        source.downcast_ref::<std::io::Error>().unwrap().to_string(),
-        "deletion callback failed"
+    assert!(
+        found_original,
+        "lost exact callback error identity: {error:?}"
     );
+    let expected = original.callback_ref::<std::io::Error>().unwrap();
+    let actual = source.downcast_ref::<std::io::Error>().unwrap();
+    assert!(
+        std::ptr::eq(actual, expected),
+        "replaced original callback cause"
+    );
+    assert_eq!(actual.to_string(), "deletion callback failed");
     assert_eq!(active.borrow().lines.len(), 3);
 }

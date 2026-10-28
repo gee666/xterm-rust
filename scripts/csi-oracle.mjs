@@ -68,12 +68,13 @@ for (const trace of traces) {
 const fixture = 'crates/xterm-core/tests/fixtures/csi-terminal.tsv';
 const contents = rows.join('\n') + '\n';
 if (process.argv.includes('--generate')) writeFileSync(resolve(root, fixture), contents);
-else assert.equal(readFileSync(resolve(root, fixture), 'utf8'), contents, 'CSI source fixture drift');
+else assert.equal(readFileSync(resolve(root, fixture), 'utf8').replace(/\r\n/g, '\n'), contents, 'CSI source fixture drift');
 const report = { command: 'node scripts/csi-oracle.mjs' + (process.argv.includes('--generate') ? ' --generate' : ''),
   status: 'passed', node: process.version, platform: process.platform, seed: `0x${seed.toString(16)}`,
   commandFamilies: commands, directedTraces: commands.length * 5, seededTraces: 64,
   traces: traces.length, snapshots: rows.length, fixture,
-  fixtureSha256: createHash('sha256').update(contents).digest('hex'),
+  fixtureSha256: createHash('sha256').update(readFileSync(resolve(root, fixture))).digest('hex'),
+  canonicalFixtureSha256: createHash('sha256').update(contents).digest('hex'),
   sourceHashes: Object.fromEntries(Object.keys(built.metafile.inputs).filter(path => path.startsWith('source_repo/'))
     .map(path => [path, createHash('sha256').update(readFileSync(resolve(root, path))).digest('hex')])),
   compared: 'Both buffers, every cell/codepoint/width/fg/bg/extended attrs/URL/UTF16 string/wrap, cursor/base/display/margins, modes/current attrs and ordered move/render/scroll/data/bell/linefeed/title events.',
