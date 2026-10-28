@@ -1,0 +1,95 @@
+{
+  "sourcePath": "source_repo/src/common/parser/EscapeSequenceParser.test.ts",
+  "sourceSha256": "dd1ea180ec271a2807435f73108b1398d5252e85def8f1f0ade57c6ac1a3434a",
+  "rustPath": "crates/xterm-core/tests/escape_async.rs",
+  "rustSha256": "7a411f397ef5354b5851b0c0605515bcadf9150c694fcebed7cfed1321e1c568",
+  "originalAsyncTests": 14,
+  "mappedRustFunctions": 7,
+  "contract": "Callback order, exact original full/chunked RESULT, pause kind/position/handler index, true/false bubbling, disposal and reset assertions are executed in Rust. JavaScript promises map to caller-driven Rust futures.",
+  "mapping": [
+    {
+      "name": "sync handlers keep being parsed in sync mode",
+      "sourceLine": 2119,
+      "rustPath": "crates/xterm-core/tests/escape_async.rs",
+      "rustTest": "sync_handlers_keep_sync_mode_and_produce_original_result"
+    },
+    {
+      "name": "correct result on sync parse call",
+      "sourceLine": 2125,
+      "rustPath": "crates/xterm-core/tests/escape_async.rs",
+      "rustTest": "sync_handlers_keep_sync_mode_and_produce_original_result"
+    },
+    {
+      "name": "correct result on async parse call",
+      "sourceLine": 2130,
+      "rustPath": "crates/xterm-core/tests/escape_async.rs",
+      "rustTest": "sync_handlers_keep_sync_mode_and_produce_original_result"
+    },
+    {
+      "name": "sync parse call does not work anymore",
+      "sourceLine": 2155,
+      "rustPath": "crates/xterm-core/tests/escape_async.rs",
+      "rustTest": "async_handlers_require_continuation_and_remain_failed_until_reset"
+    },
+    {
+      "name": "improper continuation should throw",
+      "sourceLine": 2162,
+      "rustPath": "crates/xterm-core/tests/escape_async.rs",
+      "rustTest": "async_handlers_require_continuation_and_remain_failed_until_reset"
+    },
+    {
+      "name": "reset during async pause continues at next codepoint in chunk",
+      "sourceLine": 2180,
+      "rustPath": "crates/xterm-core/tests/escape_async.rs",
+      "rustTest": "reset_during_async_pause_continues_at_next_codepoint_in_same_chunk"
+    },
+    {
+      "name": "correct result on awaited parse call",
+      "sourceLine": 2212,
+      "rustPath": "crates/xterm-core/tests/escape_async.rs",
+      "rustTest": "awaited_parse_preserves_original_results_and_exact_stack_positions"
+    },
+    {
+      "name": "correct result on chunked awaited parse calls",
+      "sourceLine": 2225,
+      "rustPath": "crates/xterm-core/tests/escape_async.rs",
+      "rustTest": "one_codepoint_chunks_preserve_original_callback_splitting"
+    },
+    {
+      "name": "multiple async SGR handlers",
+      "sourceLine": 2272,
+      "rustPath": "crates/xterm-core/tests/escape_async.rs",
+      "rustTest": "multiple_async_handlers_bubble_suppress_and_dispose_in_all_five_families"
+    },
+    {
+      "name": "multiple async ESC handlers",
+      "sourceLine": 2340,
+      "rustPath": "crates/xterm-core/tests/escape_async.rs",
+      "rustTest": "multiple_async_handlers_bubble_suppress_and_dispose_in_all_five_families"
+    },
+    {
+      "name": "sync/async SGR mixed",
+      "sourceLine": 2405,
+      "rustPath": "crates/xterm-core/tests/escape_async.rs",
+      "rustTest": "mixed_sync_async_sgr_handlers_keep_original_order_and_stack_positions"
+    },
+    {
+      "name": "multiple async OSC handlers",
+      "sourceLine": 2467,
+      "rustPath": "crates/xterm-core/tests/escape_async.rs",
+      "rustTest": "multiple_async_handlers_bubble_suppress_and_dispose_in_all_five_families"
+    },
+    {
+      "name": "multiple async DCS handlers",
+      "sourceLine": 2533,
+      "rustPath": "crates/xterm-core/tests/escape_async.rs",
+      "rustTest": "multiple_async_handlers_bubble_suppress_and_dispose_in_all_five_families"
+    },
+    {
+      "name": "multiple async APC handlers",
+      "sourceLine": 2599,
+      "rustPath": "crates/xterm-core/tests/escape_async.rs",
+      "rustTest": "multiple_async_handlers_bubble_suppress_and_dispose_in_all_five_families"
+    }
+  ]
+}
