@@ -1,0 +1,82 @@
+running 8 tests
+test raw_utf16 ... ok
+test layer_hint ... ok
+test failed_conversion ... ok
+test failed_assignment ... ok
+test dimensions ... ok
+test class_toggle ... ok
+test class_reentry ... ok
+test attributes ... FAIL
+
+failures:
+
+---- attributes output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable executed
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.__rust_start_panic@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[34786]:0x7becad
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.rust_panic@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[31045]:0x7b6038
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[9470]:0x612590
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[12028]:0x67d9e8
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[34373]:0x7be23f
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.rust_begin_unwind@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[23272]:0x786d77
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[23273]:0x786da4
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.core::result::unwrap_failed::ha18832984acbf380@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[14412]:0x6d0e44
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_fast_dom_differential::check::h23910bed1e21a739@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[5948]:0x54096d
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_fast_dom_differential::attributes::h742966debc682879@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[27538]:0x7a7a87
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.core::ops::function::FnOnce::call_once::h85d1af06c3358c78@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[22812]:0x781b25
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h749dff6c16424a0a@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[9137]:0x6021b3
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h39c09a65d8273c06@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[12036]:0x67dedb
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[19518]:0x74e301
+        __wbg_adapter_907@http://127.0.0.1:53471/suite.js:538:10
+        cb0@http://127.0.0.1:53471/suite.js:4187:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:53471/suite.js:4192:30
+        handleError@http://127.0.0.1:53471/suite.js:140:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:53471/suite.js:4180:76
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[5737]:0x531209
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::h22e75ecd252dfc37@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[11018]:0x6563af
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::hde5121290d52746e@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[13735]:0x6ba3a8
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::hd3a21b66b5019e73@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[1524]:0x327ae1
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[671]:0x1b9768
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[3119]:0x43c36e
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[1456]:0x3162b0
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[3097]:0x439984
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[2799]:0x413447
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[17545]:0x724f8e
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[14346]:0x6cec7a
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.closure2356 externref shim@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[27840]:0x7a954f
+        __wbg_adapter_112@http://127.0.0.1:53471/suite.js:534:10
+        real@http://127.0.0.1:53471/suite.js:206:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:53471/suite.js:3807:23
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[34470]:0x7be5f3
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[27451]:0x7a716e
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[4778]:0x4e516a
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::{{closure}}::h95b28db559806c13@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[31410]:0x7b7151
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_bindgen_futures::queue::Queue::with::h9bd5fdd801f7dec4@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[27452]:0x7a7181
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::h42fed9c117de84b9@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[2424]:0x3dc0ad
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_bindgen_futures::spawn_local::h3dc491f304d42e44@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[10231]:0x6348fe
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::h15c44db32e5b7614@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[7921]:0x5c166d
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_bindgen::convert::closures::invoke2_mut::hba2fa4cbb261e43e@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[16164]:0x70348d
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.closure2379 externref shim@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[24876]:0x79631a
+        __wbg_adapter_1014@http://127.0.0.1:53471/suite.js:546:10
+        cb0@http://127.0.0.1:53471/suite.js:3607:28
+        __wbg_get_imports/imports.wbg.__wbg_new_23a2665fac83c611@http://127.0.0.1:53471/suite.js:3612:25
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.__wbg_new_23a2665fac83c611 externref shim@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[27514]:0x7a7815
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.js_sys::Promise::new::hf39a358a769dc6ed@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[11448]:0x6671da
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_bindgen_futures::future_to_promise::h65257425de8480bc@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[9095]:0x5fffed
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_bindgen_test::__rt::Context::run::he8da95eeed777e80@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[1189]:0x2c6de6
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasmbindgentestcontext_run@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[8368]:0x5da536
+        wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasmbindgentestcontext_run externref shim@http://127.0.0.1:53471/suite_bg.wasm:wasm-function[27837]:0x7a94fe
+        run@http://127.0.0.1:53471/suite.js:2607:26
+        globalThis.testRun<@debugger eval code line 302 > eval:11:42
+        async*@debugger eval code line 302 > eval:14:11
+        evaluate@debugger eval code:304:16
+        @debugger eval code:1:44
+        @debugger eval code:1:62
+
+failures:
+
+    attributes
+
+test result: FAILED. 7 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.02s
+

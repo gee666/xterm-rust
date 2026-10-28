@@ -1,0 +1,32 @@
+running 8 tests
+test raw_utf16 ... ok
+test layer_hint ... ok
+test failed_conversion ... ok
+test failed_assignment ... ok
+test dimensions ... ok
+test class_toggle ... ok
+test class_reentry ... ok
+test attributes ... FAIL
+
+failures:
+
+---- attributes output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at wasm_fast_dom_differential-351bd3051234cdc4.wasm.__rust_start_panic (http://127.0.0.1:53471/suite_bg.wasm:wasm-function[34786]:0x7becad)
+            at wasm_fast_dom_differential-351bd3051234cdc4.wasm.rust_panic (http://127.0.0.1:53471/suite_bg.wasm:wasm-function[31045]:0x7b6038)
+            at wasm_fast_dom_differential-351bd3051234cdc4.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:53471/suite_bg.wasm:wasm-function[9470]:0x612590)
+            at wasm_fast_dom_differential-351bd3051234cdc4.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:53471/suite_bg.wasm:wasm-function[12028]:0x67d9e8)
+            at wasm_fast_dom_differential-351bd3051234cdc4.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:53471/suite_bg.wasm:wasm-function[34373]:0x7be23f)
+            at wasm_fast_dom_differential-351bd3051234cdc4.wasm.rust_begin_unwind (http://127.0.0.1:53471/suite_bg.wasm:wasm-function[23272]:0x786d77)
+            at wasm_fast_dom_differential-351bd3051234cdc4.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:53471/suite_bg.wasm:wasm-function[23273]:0x786da4)
+            at wasm_fast_dom_differential-351bd3051234cdc4.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:53471/suite_bg.wasm:wasm-function[14412]:0x6d0e44)
+            at wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_fast_dom_differential::check::h23910bed1e21a739 (http://127.0.0.1:53471/suite_bg.wasm:wasm-function[5948]:0x54096d)
+            at wasm_fast_dom_differential-351bd3051234cdc4.wasm.wasm_fast_dom_differential::attributes::h742966debc682879 (http://127.0.0.1:53471/suite_bg.wasm:wasm-function[27538]:0x7a7a87)
+
+failures:
+
+    attributes
+
+test result: FAILED. 7 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.02s
+

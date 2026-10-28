@@ -1,0 +1,162 @@
+{
+  "status": "failed",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "source": "source_repo/src/browser/scrollable/fastDomNode.ts",
+  "sourceSha256": "5d4bab96071d8a289cfab909d429005a082522d07215a740cb0fbad83a100102",
+  "fixture": "crates/xterm-web/tests/fixtures/fast-dom-cases.mjs",
+  "fixtureSha256": "5e13982de74d1de1508064981121a6fa8de8a76056cd050464b5dc0066d80c1c",
+  "command": [
+    "C:\\nvm4w\\nodejs\\node.exe",
+    "C:\\Users\\user\\.xterm-rust-target\\7144d30a1fc3-worktrees\\Margaret\\scripts\\fast-dom-source-check.mjs"
+  ],
+  "esbuild": "0.28.1",
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "cases": [
+        {
+          "name": "dimensions",
+          "status": "passed",
+          "assertions": 41
+        },
+        {
+          "name": "failed_assignment",
+          "status": "passed",
+          "assertions": 4
+        },
+        {
+          "name": "failed_conversion",
+          "status": "passed",
+          "assertions": 5
+        },
+        {
+          "name": "class_reentry",
+          "status": "passed",
+          "assertions": 4
+        },
+        {
+          "name": "class_toggle",
+          "status": "passed",
+          "assertions": 6
+        },
+        {
+          "name": "attributes",
+          "status": "failed",
+          "error": "TypeError: Cannot assign to read only property 'setAttribute' of object '#<HTMLDivElement>'\n    at runFastCase (http://127.0.0.1:54344/suite.mjs:279:27)\n    at eval (eval at evaluate (:302:30), <anonymous>:4:64)\n    at Array.map (<anonymous>)\n    at eval (eval at evaluate (:302:30), <anonymous>:3:28)\n    at async <anonymous>:328:30"
+        },
+        {
+          "name": "raw_utf16",
+          "status": "passed",
+          "assertions": 5
+        },
+        {
+          "name": "layer_hint",
+          "status": "passed",
+          "assertions": 5
+        }
+      ],
+      "errors": [],
+      "version": "148.0.7778.96"
+    },
+    {
+      "name": "firefox",
+      "status": "failed",
+      "cases": [
+        {
+          "name": "dimensions",
+          "status": "passed",
+          "assertions": 41
+        },
+        {
+          "name": "failed_assignment",
+          "status": "passed",
+          "assertions": 4
+        },
+        {
+          "name": "failed_conversion",
+          "status": "passed",
+          "assertions": 5
+        },
+        {
+          "name": "class_reentry",
+          "status": "passed",
+          "assertions": 4
+        },
+        {
+          "name": "class_toggle",
+          "status": "passed",
+          "assertions": 6
+        },
+        {
+          "name": "attributes",
+          "status": "failed",
+          "error": "runFastCase@http://127.0.0.1:54344/suite.mjs:279:9\n@debugger eval code line 302 > eval:4:64\n@debugger eval code line 302 > eval:3:28\nasync*evaluate@debugger eval code:304:16\n@debugger eval code:1:44\n@debugger eval code:1:62\n"
+        },
+        {
+          "name": "raw_utf16",
+          "status": "passed",
+          "assertions": 5
+        },
+        {
+          "name": "layer_hint",
+          "status": "passed",
+          "assertions": 5
+        }
+      ],
+      "errors": [],
+      "version": "150.0.2"
+    },
+    {
+      "name": "webkit",
+      "status": "failed",
+      "cases": [
+        {
+          "name": "dimensions",
+          "status": "passed",
+          "assertions": 41
+        },
+        {
+          "name": "failed_assignment",
+          "status": "passed",
+          "assertions": 4
+        },
+        {
+          "name": "failed_conversion",
+          "status": "passed",
+          "assertions": 5
+        },
+        {
+          "name": "class_reentry",
+          "status": "passed",
+          "assertions": 4
+        },
+        {
+          "name": "class_toggle",
+          "status": "passed",
+          "assertions": 6
+        },
+        {
+          "name": "attributes",
+          "status": "failed",
+          "error": "runFastCase@http://127.0.0.1:54344/suite.mjs:279:13\n@\nmap@[native code]\n@\n@"
+        },
+        {
+          "name": "raw_utf16",
+          "status": "passed",
+          "assertions": 5
+        },
+        {
+          "name": "layer_hint",
+          "status": "passed",
+          "assertions": 5
+        }
+      ],
+      "errors": [],
+      "version": "26.4"
+    }
+  ],
+  "bundleSha256": "d148d0281cf9f8b39ab825f57e66776ef6fcf778ed062f3b02c9ee8d6bdc9bd0",
+  "finishedAt": "2026-10-28T17:05:07.571Z"
+}
