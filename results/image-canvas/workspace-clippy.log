@@ -1,0 +1,28 @@
+    Checking allocator-api2 v0.2.21
+    Checking foldhash v0.1.5
+    Checking memchr v2.8.3
+    Checking equivalent v1.0.3
+    Checking ryu-js v1.0.3
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling serde_json v1.0.154
+    Checking adler2 v2.0.1
+    Checking itoa v1.0.18
+    Checking miniz_oxide v0.8.9
+    Checking hashbrown v0.15.5
+    Checking regress v0.10.4
+    Checking xterm-core v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Harper\crates\xterm-core)
+    Checking xterm-addons v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Harper\crates\xterm-addons)
+    Checking xterm-wasm-support v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Harper\crates\xterm-wasm-support)
+error: very complex type used. Consider factoring parts into `type` definitions
+  --> crates\xterm-core\tests\event_context.rs:12:15
+   |
+12 |     let weak: Rc<RefCell<Option<Weak<RefCell<Vec<i32>>>>>> = Rc::default();
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#type_complexity
+   = note: `-D clippy::type-complexity` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::type_complexity)]`
+
+error: could not compile `xterm-core` (test "event_context") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

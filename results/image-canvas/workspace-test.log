@@ -1,0 +1,125 @@
+   Compiling allocator-api2 v0.2.21
+   Compiling foldhash v0.1.5
+   Compiling equivalent v1.0.3
+   Compiling memchr v2.8.3
+   Compiling ryu-js v1.0.3
+   Compiling adler2 v2.0.1
+   Compiling itoa v1.0.18
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling miniz_oxide v0.8.9
+   Compiling hashbrown v0.15.5
+   Compiling regress v0.10.4
+   Compiling serde_json v1.0.154
+   Compiling xterm-core v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Harper\crates\xterm-core)
+   Compiling xterm-addons v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Harper\crates\xterm-addons)
+   Compiling xterm-wasm-support v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Harper\crates\xterm-wasm-support)
+   Compiling xterm-web v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Harper\crates\xterm-web)
+error[E0433]: failed to resolve: could not find `scroll` in `xterm_web`
+ --> crates\xterm-web\tests\scrollbar_visibility.rs:6:16
+  |
+6 | use xterm_web::scroll::visibility::{VisibilityController, VisibilityError};
+  |                ^^^^^^ could not find `scroll` in `xterm_web`
+
+error[E0432]: unresolved import `xterm_web::scroll`
+ --> crates\xterm-web\tests\scrollbar_visibility.rs:7:16
+  |
+7 | use xterm_web::scroll::ScrollbarVisibility;
+  |                ^^^^^^ could not find `scroll` in `xterm_web`
+
+error[E0432]: unresolved import `xterm_web::search_host`
+  --> crates\xterm-web\tests\search_support\mod.rs:20:5
+   |
+20 |     search_host::SearchTerminal,
+   |     ^^^^^^^^^^^ could not find `search_host` in `xterm_web`
+
+error[E0282]: type annotations needed for `std::rc::Weak<_, _>`
+   --> crates\xterm-web\tests\scrollbar_visibility.rs:204:9
+    |
+204 |     let weak = Rc::downgrade(&value);
+    |         ^^^^
+...
+208 |                 weak.upgrade().unwrap().set_is_needed(false).unwrap();
+    |                                         ------------- type must be known at this point
+    |
+help: consider giving `weak` an explicit type, where the type for type parameter `T` is specified
+    |
+204 |     let weak: std::rc::Weak<T, A> = Rc::downgrade(&value);
+    |             +++++++++++++++++++++
+
+Some errors have detailed explanations: E0282, E0432, E0433.
+For more information about an error, try `rustc --explain E0282`.
+error: could not compile `xterm-web` (test "scrollbar_visibility") due to 3 previous errors
+warning: build failed, waiting for other jobs to finish...
+error[E0433]: failed to resolve: could not find `webgl` in `xterm_web`
+ --> crates\xterm-web\tests\webgl_cases\cache.rs:8:16
+  |
+8 | use xterm_web::webgl::cache::{AtlasCache, AtlasResource, CacheError};
+  |                ^^^^^ could not find `webgl` in `xterm_web`
+
+error[E0433]: failed to resolve: could not find `webgl` in `xterm_web`
+ --> crates\xterm-web\tests\webgl_cases\config.rs:6:16
+  |
+6 | use xterm_web::webgl::config::{
+  |                ^^^^^ could not find `webgl` in `xterm_web`
+
+error[E0433]: failed to resolve: could not find `webgl` in `xterm_web`
+ --> crates\xterm-web\tests\webgl_cases\math.rs:4:16
+  |
+4 | use xterm_web::webgl::math::{
+  |                ^^^^^ could not find `webgl` in `xterm_web`
+
+error[E0433]: failed to resolve: could not find `webgl` in `xterm_web`
+ --> crates\xterm-web\tests\webgl_cases\model.rs:3:16
+  |
+3 | use xterm_web::webgl::model::{
+  |                ^^^^^ could not find `webgl` in `xterm_web`
+
+error[E0433]: failed to resolve: could not find `webgl` in `xterm_web`
+ --> crates\xterm-web\tests\webgl_cases\typed_array.rs:3:16
+  |
+3 | use xterm_web::webgl::typed_array::{slice, slice_fallback};
+  |                ^^^^^ could not find `webgl` in `xterm_web`
+
+error[E0433]: failed to resolve: could not find `webgl` in `xterm_web`
+ --> crates\xterm-web\tests\webgl_support\mod.rs:7:5
+  |
+7 |     webgl::config::{AtlasConfig, AtlasDimensions, AtlasOptions, ConfigFactory, FontWeight},
+  |     ^^^^^ could not find `webgl` in `xterm_web`
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `xterm-web` (test "search_addon") due to 1 previous error
+error[E0433]: failed to resolve: could not find `webgl` in `xterm_web`
+  --> crates\xterm-web\tests\webgl_cases\cache.rs:33:28
+   |
+33 | fn create(_: Rc<xterm_web::webgl::config::AtlasConfig>) -> Result<Rc<Atlas>, &'static str> {
+   |                            ^^^^^ could not find `webgl` in `xterm_web`
+   |
+help: consider importing this module
+   |
+3  + use crate::config;
+   |
+help: if you import `config`, refer to it directly
+   |
+33 - fn create(_: Rc<xterm_web::webgl::config::AtlasConfig>) -> Result<Rc<Atlas>, &'static str> {
+33 + fn create(_: Rc<config::AtlasConfig>) -> Result<Rc<Atlas>, &'static str> {
+   |
+
+error[E0433]: failed to resolve: could not find `webgl` in `xterm_web`
+  --> crates\xterm-web\tests\webgl_cases\renderer_utils.rs:90:42
+   |
+90 |     let combined = i64::from((xterm_web::webgl::model::COMBINED_CHAR_BIT_MASK | 0x100) as i32);
+   |                                          ^^^^^ could not find `webgl` in `xterm_web`
+   |
+help: consider importing this module
+   |
+3  + use crate::model;
+   |
+help: if you import `model`, refer to it directly
+   |
+90 -     let combined = i64::from((xterm_web::webgl::model::COMBINED_CHAR_BIT_MASK | 0x100) as i32);
+90 +     let combined = i64::from((model::COMBINED_CHAR_BIT_MASK | 0x100) as i32);
+   |
+
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `xterm-web` (test "webgl") due to 8 previous errors

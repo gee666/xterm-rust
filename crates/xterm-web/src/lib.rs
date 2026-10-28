@@ -7,6 +7,8 @@
 pub const XTERM_CSS: &str = include_str!("../assets/xterm.css");
 
 pub mod accessibility;
+#[cfg(target_arch = "wasm32")]
+pub mod image;
 pub mod api;
 pub mod char_size;
 #[cfg(target_arch = "wasm32")]

@@ -1,0 +1,1691 @@
+    Checking xterm-web v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\tmp\worktrees\Harper\crates\xterm-web)
+error[E0432]: unresolved import `crate::js_error`
+ --> crates\xterm-web\src\links\native_osc.rs:7:12
+  |
+7 | use crate::js_error::to_js_error;
+  |            ^^^^^^^^
+  |            |
+  |            unresolved import
+  |            help: a similar path exists: `xterm_wasm_support::js_error`
+
+error[E0432]: unresolved import `crate::js_error`
+ --> crates\xterm-web\src\selection\dom_subscriptions.rs:3:12
+  |
+3 | use crate::js_error::callback_error;
+  |            ^^^^^^^^
+  |            |
+  |            unresolved import
+  |            help: a similar path exists: `xterm_wasm_support::js_error`
+
+error[E0432]: unresolved import `crate::js_error`
+ --> crates\xterm-web\src\renderer\buffer_decoration.rs:3:36
+  |
+3 | use crate::{api::RenderDimensions, js_error, links::debounce::RenderRange};
+  |                                    ^^^^^^^^ no `js_error` in the root
+  |
+  = help: consider importing this module instead:
+          xterm_wasm_support::js_error
+
+error[E0432]: unresolved import `crate::character_joiner`
+  --> crates\xterm-web\src\renderer\dom\mod.rs:21:5
+   |
+21 |     character_joiner::CharacterJoinerService, dom::BrowserDom, theme::ThemeService,
+   |     ^^^^^^^^^^^^^^^^ could not find `character_joiner` in the crate root
+
+error[E0432]: unresolved import `crate::terminal`
+ --> crates\xterm-web\src\utility_addons\bindings.rs:7:5
+  |
+7 |     terminal::Terminal,
+  |     ^^^^^^^^
+  |     |
+  |     unresolved import
+  |     help: a similar path exists: `xterm_core::terminal`
+
+error[E0432]: unresolved import `crate::terminal`
+ --> crates\xterm-web\src\utility_addons\fit_bindings.rs:3:12
+  |
+3 | use crate::terminal::{Shared, Terminal};
+  |            ^^^^^^^^
+  |            |
+  |            unresolved import
+  |            help: a similar path exists: `xterm_core::terminal`
+
+error[E0432]: unresolved import `crate::terminal`
+ --> crates\xterm-web\src\utility_addons\link_bindings.rs:3:13
+  |
+3 | use crate::{terminal::Terminal, utf16::to_js_string};
+  |             ^^^^^^^^
+  |             |
+  |             unresolved import
+  |             help: a similar path exists: `xterm_core::terminal`
+
+error[E0425]: cannot find function `keydown_source` in module `composition`
+   --> crates\xterm-web\src\input\dom\keyboard.rs:132:22
+    |
+132 |         composition::keydown_source(self.state, event)
+    |                      ^^^^^^^^^^^^^^ not found in `composition`
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\input\dom\mouse_subscriptions.rs:15:41
+   |
+15 |                         .map_err(crate::js_error::callback_error)?;
+   |                                         ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+15 |                         .map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+   |                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+2  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+15 -                         .map_err(crate::js_error::callback_error)?;
+15 +                         .map_err(js_error::callback_error)?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\input\dom\mouse_subscriptions.rs:16:67
+   |
+16 |                     sync_protocol(&state, *events).map_err(crate::js_error::callback_error)?;
+   |                                                                   ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+16 |                     sync_protocol(&state, *events).map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+   |                                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+2  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+16 -                     sync_protocol(&state, *events).map_err(crate::js_error::callback_error)?;
+16 +                     sync_protocol(&state, *events).map_err(js_error::callback_error)?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\input\dom\mouse_subscriptions.rs:29:41
+   |
+29 |                         .map_err(crate::js_error::callback_error)?;
+   |                                         ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+29 |                         .map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+   |                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+2  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+29 -                         .map_err(crate::js_error::callback_error)?;
+29 +                         .map_err(js_error::callback_error)?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\input\dom\mouse_subscriptions.rs:32:41
+   |
+32 |                         .map_err(crate::js_error::callback_error)?;
+   |                                         ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+32 |                         .map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+   |                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+2  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+32 -                         .map_err(crate::js_error::callback_error)?;
+32 +                         .map_err(js_error::callback_error)?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\input\dom\mouse.rs:110:39
+    |
+110 |             .map_err(|failure| crate::js_error::to_js_error(&failure))?;
+    |                                       ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+110 |             .map_err(|failure| crate::xterm_wasm_support::js_error::to_js_error(&failure))?;
+    |                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+19  + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+110 -             .map_err(|failure| crate::js_error::to_js_error(&failure))?;
+110 +             .map_err(|failure| js_error::to_js_error(&failure))?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\selection\dom.rs:241:12
+    |
+241 |     crate::js_error::to_js_error(&error)
+    |            ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+241 |     crate::xterm_wasm_support::js_error::to_js_error(&error)
+    |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+10  + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+241 -     crate::js_error::to_js_error(&error)
+241 +     js_error::to_js_error(&error)
+    |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\renderer\buffer_decoration_microtask.rs:20:63
+   |
+20 |             schedule(decorations.line_cache()).map_err(crate::js_error::callback_error)?;
+   |                                                               ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+20 |             schedule(decorations.line_cache()).map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+   |                                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+2  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+20 -             schedule(decorations.line_cache()).map_err(crate::js_error::callback_error)?;
+20 +             schedule(decorations.line_cache()).map_err(js_error::callback_error)?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\renderer\buffer_decoration_microtask.rs:41:34
+   |
+41 |             Err(error) => crate::js_error::to_js_error(&error),
+   |                                  ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+41 |             Err(error) => crate::xterm_wasm_support::js_error::to_js_error(&error),
+   |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+2  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+41 -             Err(error) => crate::js_error::to_js_error(&error),
+41 +             Err(error) => js_error::to_js_error(&error),
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\renderer\dom\blink.rs:14:45
+   |
+14 |                         .map_err(|e| crate::js_error::to_js_error(&e))?;
+   |                                             ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+14 |                         .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+   |                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+1  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+14 -                         .map_err(|e| crate::js_error::to_js_error(&e))?;
+14 +                         .map_err(|e| js_error::to_js_error(&e))?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\renderer\dom\blink.rs:22:45
+   |
+22 |                         .map_err(|e| crate::js_error::to_js_error(&e))?;
+   |                                             ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+22 |                         .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+   |                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+1  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+22 -                         .map_err(|e| crate::js_error::to_js_error(&e))?;
+22 +                         .map_err(|e| js_error::to_js_error(&e))?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\renderer\dom\create.rs:11:33
+   |
+11 |             .map_err(|e| crate::js_error::to_js_error(&e))?;
+   |                                 ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+11 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+   |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+1  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+11 -             .map_err(|e| crate::js_error::to_js_error(&e))?;
+11 +             .map_err(|e| js_error::to_js_error(&e))?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\renderer\dom\create.rs:13:33
+   |
+13 |             .map_err(|e| crate::js_error::to_js_error(&e))?;
+   |                                 ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+13 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+   |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+1  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+13 -             .map_err(|e| crate::js_error::to_js_error(&e))?;
+13 +             .map_err(|e| js_error::to_js_error(&e))?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\renderer\dom\create.rs:73:33
+   |
+73 |             .map_err(|e| crate::js_error::to_js_error(&e))?;
+   |                                 ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+73 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+   |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+1  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+73 -             .map_err(|e| crate::js_error::to_js_error(&e))?;
+73 +             .map_err(|e| js_error::to_js_error(&e))?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\renderer\dom\create.rs:75:70
+   |
+75 |             RenderOptions::read(&options_service).map_err(|e| crate::js_error::to_js_error(&e))?;
+   |                                                                      ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+75 |             RenderOptions::read(&options_service).map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+   |                                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+1  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+75 -             RenderOptions::read(&options_service).map_err(|e| crate::js_error::to_js_error(&e))?;
+75 +             RenderOptions::read(&options_service).map_err(|e| js_error::to_js_error(&e))?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\dom\create.rs:147:33
+    |
+147 |             .map_err(|e| crate::js_error::to_js_error(&e))?;
+    |                                 ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+147 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+    |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+1   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+147 -             .map_err(|e| crate::js_error::to_js_error(&e))?;
+147 +             .map_err(|e| js_error::to_js_error(&e))?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\dom\create.rs:151:33
+    |
+151 |             .map_err(|e| crate::js_error::to_js_error(&e))?;
+    |                                 ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+151 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+    |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+1   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+151 -             .map_err(|e| crate::js_error::to_js_error(&e))?;
+151 +             .map_err(|e| js_error::to_js_error(&e))?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\renderer\dom\draw.rs:51:33
+   |
+51 |             .map_err(|e| crate::js_error::to_js_error(&e))?;
+   |                                 ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+51 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+   |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+1  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+51 -             .map_err(|e| crate::js_error::to_js_error(&e))?;
+51 +             .map_err(|e| js_error::to_js_error(&e))?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\renderer\dom\draw.rs:55:33
+   |
+55 |             .map_err(|e| crate::js_error::to_js_error(&e))?;
+   |                                 ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+55 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+   |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+1  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+55 -             .map_err(|e| crate::js_error::to_js_error(&e))?;
+55 +             .map_err(|e| js_error::to_js_error(&e))?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\renderer\dom\draw.rs:91:33
+   |
+91 |             .map_err(|e| crate::js_error::to_js_error(&e))?;
+   |                                 ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+91 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+   |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+1  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+91 -             .map_err(|e| crate::js_error::to_js_error(&e))?;
+91 +             .map_err(|e| js_error::to_js_error(&e))?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\renderer\dom\draw.rs:95:33
+   |
+95 |             .map_err(|e| crate::js_error::to_js_error(&e))?;
+   |                                 ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+95 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+   |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+1  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+95 -             .map_err(|e| crate::js_error::to_js_error(&e))?;
+95 +             .map_err(|e| js_error::to_js_error(&e))?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\renderer\dom\layout.rs:82:33
+   |
+82 |             .map_err(|e| crate::js_error::to_js_error(&e))?;
+   |                                 ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+82 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+   |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+1  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+82 -             .map_err(|e| crate::js_error::to_js_error(&e))?;
+82 +             .map_err(|e| js_error::to_js_error(&e))?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\renderer\dom\layout.rs:86:33
+   |
+86 |             .map_err(|e| crate::js_error::to_js_error(&e))?;
+   |                                 ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+86 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+   |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+1  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+86 -             .map_err(|e| crate::js_error::to_js_error(&e))?;
+86 +             .map_err(|e| js_error::to_js_error(&e))?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\dom\layout.rs:106:33
+    |
+106 |             .map_err(|e| crate::js_error::to_js_error(&e))?;
+    |                                 ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+106 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+    |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+1   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+106 -             .map_err(|e| crate::js_error::to_js_error(&e))?;
+106 +             .map_err(|e| js_error::to_js_error(&e))?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\dom\layout.rs:121:33
+    |
+121 |             .map_err(|e| crate::js_error::to_js_error(&e))?;
+    |                                 ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+121 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+    |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+1   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+121 -             .map_err(|e| crate::js_error::to_js_error(&e))?;
+121 +             .map_err(|e| js_error::to_js_error(&e))?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\dom\layout.rs:140:33
+    |
+140 |             .map_err(|e| crate::js_error::to_js_error(&e))?;
+    |                                 ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+140 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+    |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+1   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+140 -             .map_err(|e| crate::js_error::to_js_error(&e))?;
+140 +             .map_err(|e| js_error::to_js_error(&e))?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\renderer\dom\styles.rs:10:33
+   |
+10 |         .map_err(|error| crate::js_error::to_js_error(&error))?;
+   |                                 ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+10 |         .map_err(|error| crate::xterm_wasm_support::js_error::to_js_error(&error))?;
+   |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+1  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+10 -         .map_err(|error| crate::js_error::to_js_error(&error))?;
+10 +         .map_err(|error| js_error::to_js_error(&error))?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\renderer\dom\mod.rs:87:45
+   |
+87 | ...                   .map_err(crate::js_error::callback_error)?;
+   |                                       ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+87 |                             .map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+   |                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+9  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+87 -                             .map_err(crate::js_error::callback_error)?;
+87 +                             .map_err(js_error::callback_error)?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\renderer\dom\mod.rs:98:41
+   |
+98 |                         .map_err(crate::js_error::callback_error)?;
+   |                                         ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+98 |                         .map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+   |                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+9  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+98 -                         .map_err(crate::js_error::callback_error)?;
+98 +                         .map_err(js_error::callback_error)?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\dom\mod.rs:109:45
+    |
+109 | ...                   .map_err(crate::js_error::callback_error)?;
+    |                                       ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+109 |                             .map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+    |                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+9   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+109 -                             .map_err(crate::js_error::callback_error)?;
+109 +                             .map_err(js_error::callback_error)?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\dom\mod.rs:135:33
+    |
+135 |             .map_err(|e| crate::js_error::to_js_error(&e))?;
+    |                                 ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+135 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+    |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+9   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+135 -             .map_err(|e| crate::js_error::to_js_error(&e))?;
+135 +             .map_err(|e| js_error::to_js_error(&e))?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\dom\mod.rs:148:33
+    |
+148 |             .map_err(|e| crate::js_error::to_js_error(&e))?;
+    |                                 ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+148 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+    |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+9   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+148 -             .map_err(|e| crate::js_error::to_js_error(&e))?;
+148 +             .map_err(|e| js_error::to_js_error(&e))?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\dom\mod.rs:152:33
+    |
+152 |             .map_err(|e| crate::js_error::to_js_error(&e))?;
+    |                                 ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+152 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+    |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+9   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+152 -             .map_err(|e| crate::js_error::to_js_error(&e))?;
+152 +             .map_err(|e| js_error::to_js_error(&e))?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\renderer\service_init.rs:21:33
+   |
+21 |             .map_err(|e| crate::js_error::to_js_error(&e))?;
+   |                                 ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+21 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+   |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+1  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+21 -             .map_err(|e| crate::js_error::to_js_error(&e))?;
+21 +             .map_err(|e| js_error::to_js_error(&e))?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\renderer\service_init.rs:86:41
+   |
+86 |                         .map_err(crate::js_error::callback_error)?;
+   |                                         ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+86 |                         .map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+   |                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+1  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+86 -                         .map_err(crate::js_error::callback_error)?;
+86 +                         .map_err(js_error::callback_error)?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\renderer\service_init.rs:96:41
+   |
+96 |                         .map_err(crate::js_error::callback_error)?;
+   |                                         ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+96 |                         .map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+   |                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+1  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+96 -                         .map_err(crate::js_error::callback_error)?;
+96 +                         .map_err(js_error::callback_error)?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\service_init.rs:107:56
+    |
+107 |                         service.clear().map_err(crate::js_error::callback_error)?;
+    |                                                        ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+107 |                         service.clear().map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+    |                                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+1   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+107 -                         service.clear().map_err(crate::js_error::callback_error)?;
+107 +                         service.clear().map_err(js_error::callback_error)?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\service_init.rs:124:45
+    |
+124 | ...                   .map_err(crate::js_error::callback_error)?;
+    |                                       ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+124 |                             .map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+    |                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+1   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+124 -                             .map_err(crate::js_error::callback_error)?;
+124 +                             .map_err(js_error::callback_error)?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\service_init.rs:135:41
+    |
+135 |                         .map_err(crate::js_error::callback_error)?;
+    |                                         ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+135 |                         .map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+    |                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+1   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+135 -                         .map_err(crate::js_error::callback_error)?;
+135 +                         .map_err(js_error::callback_error)?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\service_init.rs:145:41
+    |
+145 |                         .map_err(crate::js_error::callback_error)?;
+    |                                         ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+145 |                         .map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+    |                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+1   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+145 -                         .map_err(crate::js_error::callback_error)?;
+145 +                         .map_err(js_error::callback_error)?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\service_init.rs:158:41
+    |
+158 |                         .map_err(crate::js_error::callback_error)?;
+    |                                         ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+158 |                         .map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+    |                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+1   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+158 -                         .map_err(crate::js_error::callback_error)?;
+158 +                         .map_err(js_error::callback_error)?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\service_init.rs:180:56
+    |
+180 |                         service.clear().map_err(crate::js_error::callback_error)?;
+    |                                                        ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+180 |                         service.clear().map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+    |                                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+1   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+180 -                         service.clear().map_err(crate::js_error::callback_error)?;
+180 +                         service.clear().map_err(js_error::callback_error)?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\service_init.rs:183:45
+    |
+183 | ...                   .map_err(crate::js_error::callback_error)?;
+    |                                       ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+183 |                             .map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+    |                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+1   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+183 -                             .map_err(crate::js_error::callback_error)?;
+183 +                             .map_err(js_error::callback_error)?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\service_init.rs:186:45
+    |
+186 | ...                   .map_err(crate::js_error::callback_error)?;
+    |                                       ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+186 |                             .map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+    |                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+1   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+186 -                             .map_err(crate::js_error::callback_error)?;
+186 +                             .map_err(js_error::callback_error)?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\service_init.rs:199:45
+    |
+199 | ...                   .map_err(crate::js_error::callback_error)?;
+    |                                       ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+199 |                             .map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+    |                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+1   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+199 -                             .map_err(crate::js_error::callback_error)?;
+199 +                             .map_err(js_error::callback_error)?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\service_init.rs:210:41
+    |
+210 |                         .map_err(crate::js_error::callback_error)?;
+    |                                         ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+210 |                         .map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+    |                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+1   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+210 -                         .map_err(crate::js_error::callback_error)?;
+210 +                         .map_err(js_error::callback_error)?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\service_init.rs:222:45
+    |
+222 | ...                   .map_err(crate::js_error::callback_error)?;
+    |                                       ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+222 |                             .map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+    |                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+1   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+222 -                             .map_err(crate::js_error::callback_error)?;
+222 +                             .map_err(js_error::callback_error)?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\service.rs:118:45
+    |
+118 | ...                   .map_err(crate::js_error::callback_error)?;
+    |                                       ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+118 |                             .map_err(crate::xterm_wasm_support::js_error::callback_error)?;
+    |                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+10  + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+118 -                             .map_err(crate::js_error::callback_error)?;
+118 +                             .map_err(js_error::callback_error)?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\service.rs:179:37
+    |
+179 |                 .map_err(|e| crate::js_error::to_js_error(&e))?;
+    |                                     ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+179 |                 .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+    |                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+10  + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+179 -                 .map_err(|e| crate::js_error::to_js_error(&e))?;
+179 +                 .map_err(|e| js_error::to_js_error(&e))?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\service.rs:183:33
+    |
+183 |             .map_err(|e| crate::js_error::to_js_error(&e))?;
+    |                                 ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+183 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+    |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+10  + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+183 -             .map_err(|e| crate::js_error::to_js_error(&e))?;
+183 +             .map_err(|e| js_error::to_js_error(&e))?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\renderer\service.rs:218:33
+    |
+218 |             .map_err(|e| crate::js_error::to_js_error(&e))
+    |                                 ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+218 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))
+    |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+10  + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+218 -             .map_err(|e| crate::js_error::to_js_error(&e))
+218 +             .map_err(|e| js_error::to_js_error(&e))
+    |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\utility_addons\attach_terminal.rs:19:55
+   |
+19 |             .map_err(|error| AttachError::host(crate::js_error::JsCallbackError(error)))
+   |                                                       ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+19 |             .map_err(|error| AttachError::host(crate::xterm_wasm_support::js_error::JsCallbackError(error)))
+   |                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+2  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+19 -             .map_err(|error| AttachError::host(crate::js_error::JsCallbackError(error)))
+19 +             .map_err(|error| AttachError::host(js_error::JsCallbackError(error)))
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\utility_addons\bindings.rs:32:37
+   |
+32 |             .map_err(|error| crate::js_error::to_js_error(&error))?;
+   |                                     ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+32 |             .map_err(|error| crate::xterm_wasm_support::js_error::to_js_error(&error))?;
+   |                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+2  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+32 -             .map_err(|error| crate::js_error::to_js_error(&error))?;
+32 +             .map_err(|error| js_error::to_js_error(&error))?;
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\utility_addons\bindings.rs:48:37
+   |
+48 |             .map_err(|error| crate::js_error::to_js_error(&error))
+   |                                     ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+48 |             .map_err(|error| crate::xterm_wasm_support::js_error::to_js_error(&error))
+   |                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+2  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+48 -             .map_err(|error| crate::js_error::to_js_error(&error))
+48 +             .map_err(|error| js_error::to_js_error(&error))
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\utility_addons\bindings.rs:56:44
+   |
+56 |     clipboard::ClipboardError::host(crate::js_error::JsCallbackError(error))
+   |                                            ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+56 |     clipboard::ClipboardError::host(crate::xterm_wasm_support::js_error::JsCallbackError(error))
+   |                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+2  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+56 -     clipboard::ClipboardError::host(crate::js_error::JsCallbackError(error))
+56 +     clipboard::ClipboardError::host(js_error::JsCallbackError(error))
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\utility_addons\clipboard.rs:19:33
+   |
+19 |     ClipboardError::host(crate::js_error::JsCallbackError(value))
+   |                                 ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+19 |     ClipboardError::host(crate::xterm_wasm_support::js_error::JsCallbackError(value))
+   |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+3  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+19 -     ClipboardError::host(crate::js_error::JsCallbackError(value))
+19 +     ClipboardError::host(js_error::JsCallbackError(value))
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\utility_addons\fit.rs:23:27
+   |
+23 |     FitError::host(crate::js_error::JsCallbackError(value))
+   |                           ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+23 |     FitError::host(crate::xterm_wasm_support::js_error::JsCallbackError(value))
+   |                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+3  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+23 -     FitError::host(crate::js_error::JsCallbackError(value))
+23 +     FitError::host(js_error::JsCallbackError(value))
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\utility_addons\fit_bindings.rs:93:60
+   |
+93 |                     .map_err(|error| FitError::host(crate::js_error::JsCallbackError(error)))
+   |                                                            ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+93 |                     .map_err(|error| FitError::host(crate::xterm_wasm_support::js_error::JsCallbackError(error)))
+   |                                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+2  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+93 -                     .map_err(|error| FitError::host(crate::js_error::JsCallbackError(error)))
+93 +                     .map_err(|error| FitError::host(js_error::JsCallbackError(error)))
+   |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\utility_addons\fit_bindings.rs:104:37
+    |
+104 |             .map_err(|error| crate::js_error::to_js_error(&error))?
+    |                                     ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+104 |             .map_err(|error| crate::xterm_wasm_support::js_error::to_js_error(&error))?
+    |                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+2   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+104 -             .map_err(|error| crate::js_error::to_js_error(&error))?
+104 +             .map_err(|error| js_error::to_js_error(&error))?
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\utility_addons\fit_bindings.rs:121:37
+    |
+121 |             .map_err(|error| crate::js_error::to_js_error(&error))
+    |                                     ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+121 |             .map_err(|error| crate::xterm_wasm_support::js_error::to_js_error(&error))
+    |                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+2   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+121 -             .map_err(|error| crate::js_error::to_js_error(&error))
+121 +             .map_err(|error| js_error::to_js_error(&error))
+    |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\utility_addons\link_bindings.rs:16:28
+   |
+16 |     LinkError::host(crate::js_error::JsCallbackError(value))
+   |                            ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+16 |     LinkError::host(crate::xterm_wasm_support::js_error::JsCallbackError(value))
+   |                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+2  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+16 -     LinkError::host(crate::js_error::JsCallbackError(value))
+16 +     LinkError::host(js_error::JsCallbackError(value))
+   |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\utility_addons\link_bindings.rs:128:61
+    |
+128 |         let regex = regex(&self.options).map_err(|e| crate::js_error::to_js_error(&e))?;
+    |                                                             ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+128 |         let regex = regex(&self.options).map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+    |                                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+2   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+128 -         let regex = regex(&self.options).map_err(|e| crate::js_error::to_js_error(&e))?;
+128 +         let regex = regex(&self.options).map_err(|e| js_error::to_js_error(&e))?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+   --> crates\xterm-web\src\utility_addons\link_bindings.rs:145:33
+    |
+145 |             .map_err(|e| crate::js_error::to_js_error(&e))?;
+    |                                 ^^^^^^^^ unresolved import
+    |
+help: a similar path exists
+    |
+145 |             .map_err(|e| crate::xterm_wasm_support::js_error::to_js_error(&e))?;
+    |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+    |
+2   + use xterm_wasm_support::js_error;
+    |
+help: if you import `js_error`, refer to it directly
+    |
+145 -             .map_err(|e| crate::js_error::to_js_error(&e))?;
+145 +             .map_err(|e| js_error::to_js_error(&e))?;
+    |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\utility_addons\matcher.rs:11:28
+   |
+11 |     LinkError::host(crate::js_error::JsCallbackError(value))
+   |                            ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+11 |     LinkError::host(crate::xterm_wasm_support::js_error::JsCallbackError(value))
+   |                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+3  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+11 -     LinkError::host(crate::js_error::JsCallbackError(value))
+11 +     LinkError::host(js_error::JsCallbackError(value))
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\utility_addons\open_link.rs:38:28
+   |
+38 |     LinkError::host(crate::js_error::JsCallbackError(value))
+   |                            ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+38 |     LinkError::host(crate::xterm_wasm_support::js_error::JsCallbackError(value))
+   |                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+3  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+38 -     LinkError::host(crate::js_error::JsCallbackError(value))
+38 +     LinkError::host(js_error::JsCallbackError(value))
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\utility_addons\provider.rs:23:12
+   |
+23 |     crate::js_error::to_js_error(&error)
+   |            ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+23 |     crate::xterm_wasm_support::js_error::to_js_error(&error)
+   |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+3  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+23 -     crate::js_error::to_js_error(&error)
+23 +     js_error::to_js_error(&error)
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\utility_addons\socket.rs:13:30
+   |
+13 |     AttachError::host(crate::js_error::JsCallbackError(value))
+   |                              ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+13 |     AttachError::host(crate::xterm_wasm_support::js_error::JsCallbackError(value))
+   |                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+3  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+13 -     AttachError::host(crate::js_error::JsCallbackError(value))
+13 +     AttachError::host(js_error::JsCallbackError(value))
+   |
+
+error[E0433]: failed to resolve: unresolved import
+  --> crates\xterm-web\src\utility_addons\socket.rs:16:12
+   |
+16 |     crate::js_error::to_js_error(&error)
+   |            ^^^^^^^^ unresolved import
+   |
+help: a similar path exists
+   |
+16 |     crate::xterm_wasm_support::js_error::to_js_error(&error)
+   |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: consider importing this module
+   |
+3  + use xterm_wasm_support::js_error;
+   |
+help: if you import `js_error`, refer to it directly
+   |
+16 -     crate::js_error::to_js_error(&error)
+16 +     js_error::to_js_error(&error)
+   |
+
+error[E0053]: method `cancel` has an incompatible type for trait
+  --> crates\xterm-web\src\task_queue.rs:76:15
+   |
+76 |     fn cancel(&mut self, handle: Self::Handle) {
+   |               ^^^^^^^^^ types differ in mutability
+   |
+   = note: expected signature `fn(&BrowserScheduler, BrowserCallback)`
+              found signature `fn(&mut BrowserScheduler, BrowserCallback)`
+help: change the self-receiver type to match the trait
+   |
+76 |     fn cancel(&self, handle: Self::Handle) {
+   |               ~~~~~
+
+error[E0046]: not all trait items implemented, missing: `Error`
+  --> crates\xterm-web\src\task_queue.rs:39:1
+   |
+39 | impl Scheduler for BrowserScheduler {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ missing `Error` in implementation
+   |
+   = help: implement the missing item: `type Error = /* Type */;`
+
+error[E0599]: no function or associated item named `new_reentrant_fallible` found for struct `dom_listener::DomListener` in the current scope
+   --> crates\xterm-web\src\input\touch_dom.rs:103:45
+    |
+103 |                 let listener = DomListener::new_reentrant_fallible(
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^ function or associated item not found in `DomListener`
+    |
+   ::: crates\xterm-web\src\dom_listener.rs:9:1
+    |
+9   | pub struct DomListener {
+    | ---------------------- function or associated item `new_reentrant_fallible` not found for this struct
+    |
+note: if you're trying to build a new `dom_listener::DomListener`, consider using `dom_listener::DomListener::new` which returns `Result<dom_listener::DomListener, wasm_bindgen::JsValue>`
+   --> crates\xterm-web\src\dom_listener.rs:17:5
+    |
+17  | /     pub fn new(
+18  | |         target: &EventTarget,
+19  | |         event_type: &str,
+20  | |         capture: bool,
+21  | |         callback: impl FnMut(Event) + 'static,
+22  | |     ) -> Result<Self, JsValue> {
+    | |______________________________^
+
+error[E0599]: no method named `retain_host` found for struct `std::rc::Rc<(dyn InputHost + 'static)>` in the current scope
+  --> crates\xterm-web\src\input\dom\mouse_subscriptions.rs:14:26
+   |
+12 |                       let _receiver = state
+   |  _____________________________________-
+13 | |                         .host
+14 | |                         .retain_host()
+   | |                         -^^^^^^^^^^^ method not found in `Rc<dyn InputHost>`
+   | |_________________________|
+   |
+
+error[E0599]: no method named `retain_host` found for struct `std::rc::Rc<(dyn InputHost + 'static)>` in the current scope
+  --> crates\xterm-web\src\input\dom\mouse_subscriptions.rs:28:26
+   |
+26 |                       let _receiver = state
+   |  _____________________________________-
+27 | |                         .host
+28 | |                         .retain_host()
+   | |                         -^^^^^^^^^^^ method not found in `Rc<dyn InputHost>`
+   | |_________________________|
+   |
+
+error[E0599]: no method named `retain_host` found for struct `std::rc::Rc<(dyn InputHost + 'static)>` in the current scope
+  --> crates\xterm-web\src\input\dom\mouse.rs:84:30
+   |
+84 |         let _receiver = host.retain_host()?;
+   |                              ^^^^^^^^^^^ method not found in `Rc<dyn InputHost>`
+
+error[E0599]: no function or associated item named `new_reentrant_fallible` found for struct `dom_listener::DomListener` in the current scope
+   --> crates\xterm-web\src\input\dom\mouse.rs:257:18
+    |
+257 |     DomListener::new_reentrant_fallible(
+    |                  ^^^^^^^^^^^^^^^^^^^^^^ function or associated item not found in `DomListener`
+    |
+   ::: crates\xterm-web\src\dom_listener.rs:9:1
+    |
+9   | pub struct DomListener {
+    | ---------------------- function or associated item `new_reentrant_fallible` not found for this struct
+    |
+note: if you're trying to build a new `dom_listener::DomListener`, consider using `dom_listener::DomListener::new` which returns `Result<dom_listener::DomListener, wasm_bindgen::JsValue>`
+   --> crates\xterm-web\src\dom_listener.rs:17:5
+    |
+17  | /     pub fn new(
+18  | |         target: &EventTarget,
+19  | |         event_type: &str,
+20  | |         capture: bool,
+21  | |         callback: impl FnMut(Event) + 'static,
+22  | |     ) -> Result<Self, JsValue> {
+    | |______________________________^
+
+error[E0599]: no method named `retain_host` found for struct `std::rc::Rc<(dyn InputHost + 'static)>` in the current scope
+   --> crates\xterm-web\src\input\dom\mouse.rs:265:48
+    |
+265 |                     let _receiver = state.host.retain_host()?;
+    |                                                ^^^^^^^^^^^ method not found in `Rc<dyn InputHost>`
+
+error[E0599]: no method named `sync_options` found for struct `mouse::MouseBindings` in the current scope
+   --> crates\xterm-web\src\input\dom\mod.rs:128:20
+    |
+128 |         self.mouse.sync_options()
+    |                    ^^^^^^^^^^^^ method not found in `MouseBindings`
+    |
+   ::: crates\xterm-web\src\input\dom\mouse.rs:74:1
+    |
+74  | pub struct MouseBindings {
+    | ------------------------ method `sync_options` not found for this struct
+
+error[E0599]: no function or associated item named `new_reentrant_fallible` found for struct `dom_listener::DomListener` in the current scope
+   --> crates\xterm-web\src\input\dom\mod.rs:196:42
+    |
+196 |     bindings.listeners.push(DomListener::new_reentrant_fallible(
+    |                                          ^^^^^^^^^^^^^^^^^^^^^^ function or associated item not found in `DomListener`
+    |
+   ::: crates\xterm-web\src\dom_listener.rs:9:1
+    |
+9   | pub struct DomListener {
+    | ---------------------- function or associated item `new_reentrant_fallible` not found for this struct
+    |
+note: if you're trying to build a new `dom_listener::DomListener`, consider using `dom_listener::DomListener::new` which returns `Result<dom_listener::DomListener, wasm_bindgen::JsValue>`
+   --> crates\xterm-web\src\dom_listener.rs:17:5
+    |
+17  | /     pub fn new(
+18  | |         target: &EventTarget,
+19  | |         event_type: &str,
+20  | |         capture: bool,
+21  | |         callback: impl FnMut(Event) + 'static,
+22  | |     ) -> Result<Self, JsValue> {
+    | |______________________________^
+
+error[E0599]: no function or associated item named `new_reentrant_fallible` found for struct `dom_listener::DomListener` in the current scope
+   --> crates\xterm-web\src\links\browser_linkifier.rs:127:41
+    |
+127 |             listeners.push(DomListener::new_reentrant_fallible(
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^ function or associated item not found in `DomListener`
+    |
+   ::: crates\xterm-web\src\dom_listener.rs:9:1
+    |
+9   | pub struct DomListener {
+    | ---------------------- function or associated item `new_reentrant_fallible` not found for this struct
+    |
+note: if you're trying to build a new `dom_listener::DomListener`, consider using `dom_listener::DomListener::new` which returns `Result<dom_listener::DomListener, wasm_bindgen::JsValue>`
+   --> crates\xterm-web\src\dom_listener.rs:17:5
+    |
+17  | /     pub fn new(
+18  | |         target: &EventTarget,
+19  | |         event_type: &str,
+20  | |         capture: bool,
+21  | |         callback: impl FnMut(Event) + 'static,
+22  | |     ) -> Result<Self, JsValue> {
+    | |______________________________^
+
+error[E0599]: no function or associated item named `new_reentrant_fallible` found for struct `dom_listener::DomListener` in the current scope
+  --> crates\xterm-web\src\renderer\dom\blink.rs:35:58
+   |
+35 |         let listener = crate::dom_listener::DomListener::new_reentrant_fallible(
+   |                                                          ^^^^^^^^^^^^^^^^^^^^^^ function or associated item not found in `DomListener`
+   |
+  ::: crates\xterm-web\src\dom_listener.rs:9:1
+   |
+9  | pub struct DomListener {
+   | ---------------------- function or associated item `new_reentrant_fallible` not found for this struct
+   |
+note: if you're trying to build a new `dom_listener::DomListener`, consider using `dom_listener::DomListener::new` which returns `Result<dom_listener::DomListener, wasm_bindgen::JsValue>`
+  --> crates\xterm-web\src\dom_listener.rs:17:5
+   |
+17 | /     pub fn new(
+18 | |         target: &EventTarget,
+19 | |         event_type: &str,
+20 | |         capture: bool,
+21 | |         callback: impl FnMut(Event) + 'static,
+22 | |     ) -> Result<Self, JsValue> {
+   | |______________________________^
+
+error[E0282]: type annotations needed
+   --> crates\xterm-web\src\renderer\dom\draw.rs:118:60
+    |
+118 |             let joins = self.joiners.get_joined_characters(Some(Rc::clone(&line)));
+    |                                                            ^^^^ cannot infer type of the type parameter `T` declared on the enum `Option`
+...
+199 |                     &line.borrow(),
+    |                           ------ type must be known at this point
+    |
+help: consider specifying the generic argument
+    |
+118 |             let joins = self.joiners.get_joined_characters(Some::<std::rc::Rc<T, A>>(Rc::clone(&line)));
+    |                                                                +++++++++++++++++++++
+
+error[E0599]: no function or associated item named `source_idle_with_logger` found for struct `task_queue::BrowserTaskQueue` in the current scope
+   --> crates\xterm-web\src\renderer\service_init.rs:25:47
+    |
+25  |         let paused_resize = BrowserTaskQueue::source_idle_with_logger(logger)?;
+    |                                               ^^^^^^^^^^^^^^^^^^^^^^^ function or associated item not found in `BrowserTaskQueue`
+    |
+   ::: crates\xterm-web\src\task_queue.rs:94:1
+    |
+94  | pub struct BrowserTaskQueue {
+    | --------------------------- function or associated item `source_idle_with_logger` not found for this struct
+    |
+note: if you're trying to build a new `task_queue::BrowserTaskQueue` consider using one of the following associated functions:
+      task_queue::BrowserTaskQueue::priority
+      task_queue::BrowserTaskQueue::idle
+   --> crates\xterm-web\src\task_queue.rs:99:5
+    |
+99  |     pub fn priority(window: &Window) -> Result<Self, JsValue> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+103 |     pub fn idle(window: &Window) -> Result<Self, JsValue> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0599]: no function or associated item named `try_new_with_window_source` found for struct `browser_debounce::BrowserRenderDebouncer` in the current scope
+  --> crates\xterm-web\src\renderer\service_init.rs:55:37
+   |
+55 |             BrowserRenderDebouncer::try_new_with_window_source(Rc::clone(&window), move |range| {
+   |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^ function or associated item not found in `BrowserRenderDebouncer`
+   |
+  ::: crates\xterm-web\src\links\browser_debounce.rs:39:1
+   |
+39 | pub struct BrowserRenderDebouncer {
+   | --------------------------------- function or associated item `try_new_with_window_source` not found for this struct
+   |
+note: if you're trying to build a new `browser_debounce::BrowserRenderDebouncer` consider using one of the following associated functions:
+      browser_debounce::BrowserRenderDebouncer::new
+      browser_debounce::BrowserRenderDebouncer::try_new
+  --> crates\xterm-web\src\links\browser_debounce.rs:44:5
+   |
+44 |       pub fn new(window: Window, render: impl Fn(RenderRange) + 'static) -> Self {
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+50 | /     pub fn try_new(
+51 | |         window: Window,
+52 | |         render: impl Fn(RenderRange) -> Result<(), JsValue> + 'static,
+53 | |     ) -> Self {
+   | |_____________^
+
+error[E0277]: the `?` operator can only be applied to values that implement `Try`
+  --> crates\xterm-web\src\renderer\service_observer.rs:63:13
+   |
+63 |             self.paused_resize.flush()?;
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^ the `?` operator cannot be applied to type `()`
+   |
+   = help: the trait `Try` is not implemented for `()`
+
+error[E0599]: no method named `enqueue_try` found for struct `task_queue::BrowserTaskQueue` in the current scope
+   --> crates\xterm-web\src\renderer\service.rs:250:32
+    |
+250 |             self.paused_resize.enqueue_try(move |_| {
+    |             -------------------^^^^^^^^^^^
+    |
+   ::: crates\xterm-web\src\task_queue.rs:94:1
+    |
+94  | pub struct BrowserTaskQueue {
+    | --------------------------- method `enqueue_try` not found for this struct
+    |
+help: there is a method `enqueue` with a similar name
+    |
+250 |             self.paused_resize.enqueue(move |_| {
+    |                                ~~~~~~~
+
+error[E0609]: no field `dom` on type `std::rc::Rc<_, _>`
+  --> crates\xterm-web\src\utility_addons\fit_bindings.rs:75:47
+   |
+75 |                     .and_then(|shared| shared.dom.borrow().as_ref().map(|dom| dom.element.clone()))
+   |                                               ^^^ unknown field
+
+error[E0282]: type annotations needed for `std::rc::Weak<_, _>`
+   --> crates\xterm-web\src\utility_addons\link_bindings.rs:130:13
+    |
+130 |         let native = Rc::downgrade(&terminal.shared_native());
+    |             ^^^^^^
+...
+138 |                     .with_state(LinkSnapshot::from_state)
+    |                      ---------- type must be known at this point
+    |
+help: consider giving `native` an explicit type, where the type for type parameter `T` is specified
+    |
+130 |         let native: std::rc::Weak<T, A> = Rc::downgrade(&terminal.shared_native());
+    |                   +++++++++++++++++++++
+
+Some errors have detailed explanations: E0046, E0053, E0277, E0282, E0425, E0432, E0433, E0599, E0609.
+For more information about an error, try `rustc --explain E0046`.
+error: could not compile `xterm-web` (lib) due to 94 previous errors
