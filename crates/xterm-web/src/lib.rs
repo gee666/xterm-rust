@@ -4,6 +4,8 @@
 //! unsupported terminal APIs are not exported as successful placeholders.
 
 pub mod api;
+pub mod search_host;
+pub mod webgl;
 pub mod input;
 pub mod links;
 pub mod selection;
