@@ -85,8 +85,6 @@ impl DomRenderer {
         if owns_metrics {
             metrics.measure()?;
         }
-        let mut widths = WidthCache::new(CanvasWidthMeasurer::new(&dom.document)?);
-        widths.set_font(options.font.clone()).map_err(width_error)?;
         let row_container = element(&dom.document, "div", "xterm-rows")?;
         row_container
             .style()
@@ -130,7 +128,7 @@ impl DomRenderer {
             joiners,
             decoration,
             metrics,
-            widths: RefCell::new(widths),
+            widths: OnceCell::new(),
             options: RefCell::new(options),
             options_service,
             listeners: DisposableStore::new(),
@@ -153,6 +151,7 @@ impl DomRenderer {
         renderer.screen.append_child(&renderer.dimensions_style)?;
         renderer.screen.append_child(&renderer.theme_style)?;
         renderer.update_dimensions(cols, rows)?;
+        renderer.subscribe();
         renderer.inject_css()?;
         renderer
             .element
@@ -162,7 +161,6 @@ impl DomRenderer {
         renderer
             .screen
             .append_child(&renderer.selection_container)?;
-        renderer.set_default_spacing()?;
         let focused = match &renderer.browser {
             Some(browser) => browser.is_focused()?,
             None => dom
@@ -172,7 +170,19 @@ impl DomRenderer {
         };
         renderer.focused.set(focused);
         renderer.initialize_blink()?;
-        renderer.subscribe();
+        // Source creates the canvases only after injecting CSS and installing
+        // its listeners. Font conversion can call back into those listeners.
+        renderer
+            .widths
+            .set(SourceCanvasCache::new(CanvasWidthMeasurer::new(
+                &dom.document,
+            )?))
+            .map_err(|_| js_sys::Error::new("width cache already initialized"))?;
+        renderer
+            .widths()?
+            .set_font_from_options(&renderer.options_service)
+            .map_err(width_error)?;
+        renderer.set_default_spacing()?;
         Ok(renderer)
     }
 }

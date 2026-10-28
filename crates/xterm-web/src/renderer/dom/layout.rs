@@ -19,7 +19,7 @@ impl DomRenderer {
         Ok(())
     }
     pub(super) fn update_dimensions(&self, cols: usize, rows: usize) -> Result<(), JsValue> {
-        let options = self.options.borrow();
+        let options = self.options.borrow().clone();
         let dimensions = super::super::geometry::dimensions(
             self.metrics.state.size(),
             self.browser_dpr()?,
@@ -60,8 +60,7 @@ impl DomRenderer {
     pub(super) fn set_default_spacing(&self) -> Result<(), JsValue> {
         let spacing = self.dimensions.get().css.cell.width
             - self
-                .widths
-                .borrow_mut()
+                .widths()?
                 .get(&[u16::from(b'W')], false, false)
                 .map_err(width_error)?;
         self.spacing.set(spacing);
@@ -85,7 +84,7 @@ impl DomRenderer {
             .rows()
             .map_err(|e| crate::js_error::to_js_error(&e))?;
         self.update_dimensions(cols, rows)?;
-        self.widths.borrow_mut().clear();
+        self.widths()?.clear();
         self.set_default_spacing()
     }
     pub fn handle_device_pixel_ratio_change(&self) -> Result<(), JsValue> {

@@ -30,7 +30,7 @@ enum FontSource {
     Live(Rc<OptionsService>),
 }
 impl FontSource {
-    fn value(&self, property: FontProperty) -> Result<OptionValue, JsValue> {
+    fn value(&self, property: FontProperty) -> Result<OptionValue, OptionError> {
         match self {
             Self::Snapshot(font) => {
                 let font = font.borrow();
@@ -39,25 +39,21 @@ impl FontSource {
                     FontProperty::Size => OptionValue::Number(font.size),
                 })
             }
-            Self::Live(options) => options
-                .get(match property {
-                    FontProperty::Family => "fontFamily",
-                    FontProperty::Size => "fontSize",
-                })
-                .map_err(|error| js_error::to_js_error(&error)),
+            Self::Live(options) => options.get(match property {
+                FontProperty::Family => "fontFamily",
+                FontProperty::Size => "fontSize",
+            }),
         }
     }
-    fn text(&self, property: FontProperty) -> Result<Vec<u16>, JsValue> {
-        self.value(property)?
-            .to_utf16()
-            .map_err(|error| js_error::to_js_error(&error))
-    }
     fn metrics_font(&self) -> Result<Vec<u16>, JsValue> {
-        // Size conversion may mutate the family before its subsequent lookup.
-        let mut text = self.text(FontProperty::Size)?;
-        text.extend("px ".encode_utf16());
-        text.extend(self.text(FontProperty::Family)?);
-        Ok(text)
+        crate::renderer::raw_font::text_metrics_font(|key| {
+            self.value(if key == "fontSize" {
+                FontProperty::Size
+            } else {
+                FontProperty::Family
+            })
+        })
+        .map_err(|error| js_error::to_js_error(&error))
     }
 }
 enum Strategy {
@@ -124,12 +120,17 @@ impl Strategy {
                 let style = js_sys::Reflect::get(element.as_ref(), &JsValue::from_str("style"))?;
                 // Preserve the raw value: WebIDL conversion belongs to the chosen
                 // setter, not an earlier Rust string projection.
-                let family =
-                    xterm_wasm_support::options::into_js(&font.value(FontProperty::Family)?)?;
+                let family = xterm_wasm_support::options::into_js(
+                    &font
+                        .value(FontProperty::Family)
+                        .map_err(|error| js_error::to_js_error(&error))?,
+                )?;
                 crate::utf16::set_property(&style, "fontFamily", &family)?;
                 let style = js_sys::Reflect::get(element.as_ref(), &JsValue::from_str("style"))?;
-                let mut size = font.text(FontProperty::Size)?;
-                size.extend("px".encode_utf16());
+                let size = font
+                    .value(FontProperty::Size)
+                    .and_then(|value| crate::renderer::raw_font::font_size(&value))
+                    .map_err(|error| js_error::to_js_error(&error))?;
                 crate::utf16::set_property(
                     &style,
                     "fontSize",

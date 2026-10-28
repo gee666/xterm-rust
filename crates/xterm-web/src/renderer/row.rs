@@ -35,7 +35,7 @@ impl RowFactory {
         &self,
         line: &BufferLine,
         context: RowContext<'_>,
-        widths: &mut WidthCache<M>,
+        widths: &WidthCache<M>,
     ) -> Result<RenderedRow, RowError<M::Error>> {
         let options = context.options;
         let colors = context.colors;
@@ -103,7 +103,8 @@ impl RowFactory {
                     classes.push("xterm-blink-hidden".into());
                 }
             }
-            let decorations = (context.decorations)(x, options.row).map_err(RowError::Decoration)?;
+            let decorations =
+                (context.decorations)(x, options.row).map_err(RowError::Decoration)?;
             let mut chars = if cell.chars.is_empty() {
                 vec![32]
             } else {

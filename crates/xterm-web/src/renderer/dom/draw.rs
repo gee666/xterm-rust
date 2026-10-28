@@ -203,7 +203,7 @@ impl DomRenderer {
                         joined_ranges: &joins,
                         decorations: &decorations,
                     },
-                    &mut self.widths.borrow_mut(),
+                    self.widths()?,
                 )
                 .map_err(row_error)?;
             let spans = create_spans(&self.document, &rendered.spans)?;
