@@ -13,6 +13,9 @@ const temporary = resolve(root, 'tmp/buffer-reflow-oracle');
 const output = resolve(root, 'results/buffer-reflow');
 mkdirSync(temporary, { recursive: true });
 mkdirSync(output, { recursive: true });
+writeFileSync(resolve(output, 'report.json'), JSON.stringify({ status: 'incomplete',
+  command: 'node scripts/buffer-reflow-oracle.mjs', started: new Date().toISOString(),
+  overallEquivalence: 'NOT PROVEN' }, null, 2) + '\n');
 const { build } = await import(pathToFileURL(resolve(root, 'source_repo/node_modules/esbuild/lib/main.js')));
 const bundle = resolve(temporary, 'reference.mjs');
 const built = await build({
