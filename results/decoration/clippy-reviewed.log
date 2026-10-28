@@ -1,0 +1,32 @@
+    Blocking waiting for file lock on build directory
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error: unused import: `Disposable`
+ --> crates\xterm-core\src\headless\queued.rs:4:17
+  |
+4 |     lifecycle::{Disposable, DisposableHandle},
+  |                 ^^^^^^^^^^
+  |
+  = note: `-D unused-imports` implied by `-D warnings`
+  = help: to override `-D warnings` add `#[allow(unused_imports)]`
+
+error: unneeded `return` statement
+  --> crates\xterm-core\src\headless\queue_bridge.rs:21:21
+   |
+21 | /                     return Err(HeadlessError::Engine(TerminalError::Buffer(
+22 | |                         "host payload must be converted by its adapter before native parsing"
+23 | |                             .into(),
+24 | |                     )))
+   | |_______________________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_return
+   = note: `-D clippy::needless-return` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::needless_return)]`
+help: remove `return`
+   |
+21 ~                     Err(HeadlessError::Engine(TerminalError::Buffer(
+22 +                         "host payload must be converted by its adapter before native parsing"
+23 +                             .into(),
+24 +                     )))
+   |
+
+error: could not compile `xterm-core` (lib) due to 2 previous errors

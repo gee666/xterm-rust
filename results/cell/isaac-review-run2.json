@@ -55,6 +55,11 @@
       "exitCode": 101,
       "log": "results/decoration/clippy-reviewed.log",
       "failureScope": "Shared headless queued.rs unused import and queue_bridge.rs needless return, outside task73"
+    },
+    {
+      "command": "cargo clippy -p xterm-core --test decoration_upstream --test decoration_differential --test decoration_edges --test cell_upstream --test cell_differential --test cell_branches --test cell_extended -- -D warnings",
+      "exitCode": 0,
+      "log": "results/decoration/clippy-clean.log"
     }
   ],
   "findings": [
@@ -76,7 +81,7 @@
     }
   ],
   "limitations": [
-    "No project-wide clean Clippy claim",
+    "Focused cell/decoration Clippy clean; no project-wide clean Clippy claim",
     "Full workspace quality remains task47",
     "Native Windows only; Linux/macOS runtime unrun in this review",
     "Browser bindings and full terminal integration not established"

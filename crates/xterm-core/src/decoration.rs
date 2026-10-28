@@ -25,6 +25,11 @@ pub enum DecorationLayer {
     Top,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum DecorationAnchor {
+    Left,
+    Right,
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum OverviewPosition {
     Full,
     Left,
@@ -41,6 +46,7 @@ pub struct OverviewRulerOptions {
 #[derive(Clone)]
 pub struct DecorationOptions {
     pub marker: Marker,
+    pub anchor: Option<DecorationAnchor>,
     pub x: Option<f64>,
     pub width: Option<f64>,
     pub height: Option<u32>,
@@ -53,6 +59,7 @@ impl DecorationOptions {
     pub fn new(marker: Marker) -> Self {
         Self {
             marker,
+            anchor: None,
             x: None,
             width: None,
             height: None,
