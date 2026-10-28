@@ -103,6 +103,17 @@ in wasm_search_addon, and an excessive-precision literal in width-cache tests.
 The complete diagnostics are retained in `all-wasm-clippy.log`; task47 owns
 these workspace quality gaps. No warnings or assertions were suppressed.
 
+Independent review reran both baseline suites using the existing original
+build, checked all 776 reference hashes and reran both Rust suites plus the
+component/native/lint checks. The review passed. Its fresh baseline receipts
+are `results/upstream-browser/runs/2026-10-28T17-35-14-102Z-82259d93-76ad-4760-81fe-d88143d466bf/`
+and `2026-10-28T17-35-20-181Z-89352d1a-ecc1-4a37-b096-f187d269787d/`.
+The first worktree baseline attempt lacked generated server output; that failed
+attempt remains retained rather than reported as an assertion failure.
+Gated integration passed native changed-crate/dependent/workspace tests and
+applicable WASM checks, then merged to main at `6baaf5f`. The retained log is
+`results/unicode-browser-internal/merge.log`.
+
 These results close the missing internal-width setup failure from task144.
 They do not close task31, task46, Fit geometry, complete internal API coverage,
 the full E01-E05 matrix or native Linux/macOS verification. Full equivalence
