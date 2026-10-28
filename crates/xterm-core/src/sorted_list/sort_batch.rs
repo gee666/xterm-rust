@@ -3,7 +3,10 @@ use std::cmp::Ordering;
 // ECMAScript leaves inconsistent-comparator ordering implementation-defined.
 // Match the observed V8 initial-run and binary insertion behavior for small
 // batches, without passing an invalid comparator to Rust's total-order sort.
-pub(super) fn with_unordered_keys<T>(values: &mut [T], key: &impl Fn(&T) -> f64) {
+/// Stable source-number ordering for comparators containing NaN. This follows
+/// the observed small-batch V8 rule; ECMAScript leaves inconsistent comparison
+/// order implementation-defined. Use ordinary stable sorting for total keys.
+pub fn with_unordered_keys<T>(values: &mut [T], key: &impl Fn(&T) -> f64) {
     let compare = |a: &T, b: &T| {
         (key(a) - key(b))
             .partial_cmp(&0.0)
