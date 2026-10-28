@@ -11,6 +11,7 @@ pub mod number_map;
 pub mod numeric;
 pub mod options;
 pub mod policy;
+pub mod qoi;
 pub mod sixel;
 pub mod storage;
 pub mod types;
