@@ -18,8 +18,11 @@ pub(super) fn change(state: &Rc<State>, event: Event) -> Result<(), JsValue> {
     if height == 0.0 || height.is_nan() {
         return Ok(());
     }
+    let before = state.policy.wheel_state().touch_accumulator();
     let translation = values::number(&event, "translationY")?;
-    let lines = state.policy.consume_touch(translation, Some(height));
+    let lines = state
+        .policy
+        .consume_touch_from(before, translation, Some(height));
     if lines == 0.0 {
         return Ok(());
     }

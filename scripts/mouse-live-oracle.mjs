@@ -88,10 +88,19 @@ const fixture = rows.map(row => [row.name, row.trace.join(','), row.data.length]
 const fixturePath = path.join(root, 'crates/xterm-web/tests/fixtures/mouse-live.tsv');
 if (process.argv.includes('--generate')) writeFileSync(fixturePath, fixture);
 else assert.equal(readFileSync(fixturePath, 'utf8'), fixture, 'source live-read fixture drift requires reviewed --generate');
+const buttonValues = [-Infinity, -(2 ** 53), -4294967297.5, -4294967296, -2147483648.5,
+  -1.5, -0.5, -0, 0, 0.5, 1, 1.5, 2.9, 3, 3.5, 4, 4.5, 2147483647.9,
+  2147483648, 4294967295, 4294967296, 4294967297.5, 2 ** 53, Number.MAX_VALUE, Infinity, NaN];
+const buttonRows = buttonValues.map(value => [Object.is(value, -0) ? '-0' : String(value), value | 0,
+  Number(value === value), Number(Object.is(value, -0)), Number(value === 3), Number(value === 4)].join('\t'));
+const buttonPath = path.join(root, 'crates/xterm-core/tests/fixtures/mouse-button-numeric.tsv');
+const buttonFixture = buttonRows.join('\n') + '\n';
+if (process.argv.includes('--generate')) writeFileSync(buttonPath, buttonFixture);
+else assert.equal(readFileSync(buttonPath, 'utf8'), buttonFixture, 'numeric button source drift');
 const directory = path.join(root, 'results/mouse-live'); mkdirSync(directory, { recursive: true });
 const report = { command: 'node scripts/mouse-live-oracle.mjs', node: process.version, platform: process.platform,
   sourceHashes: Object.fromEntries(files.map(file => [file, createHash('sha256').update(readFileSync(path.join(root, file))).digest('hex')])),
-  originalSuitesExecuted: 0, directedSourceCases: rows.length, rows,
+  originalSuitesExecuted: 0, directedSourceCases: rows.length, rows, numericButtonCases: buttonRows.length,
   scope: 'Unchanged MouseService/MouseCoords methods with event/host read observers. Internal plain render values grouped to host read methods; complete original suites are task85. Rust/live browser comparison is separate.' };
 writeFileSync(path.join(directory, 'source.json'), JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify({ sourceCases: rows.length, fixture: path.relative(root, fixturePath) }));

@@ -102,7 +102,7 @@ fn passive_wheel(state: &Rc<State>, event: Event) -> Result<(), JsValue> {
     }
     let height = state.host.mouse_device_cell_height()?;
     let dpr = state.host.mouse_dpr()?;
-    if report::consume_wheel(state, &event, height, dpr)? != 0.0 {
+    if !values::strict_zero(&report::consume_wheel(state, &event, height, dpr)?) {
         let application = state.host.mouse_application_cursor()?;
         let up = values::less(&values::get(&event, "deltaY")?, 0.0)?;
         state.host.mouse_output(MouseOutput::UserData(

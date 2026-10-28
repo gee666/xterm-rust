@@ -2,7 +2,10 @@
 //! controlled separately so DOM listener, veto and disposal effects are asserted.
 #[path = "input_dom.rs"]
 pub mod input;
+#[path = "mouse_snapshot.rs"]
+mod snapshot;
 use input::Host as InputTestHost;
+use snapshot::MouseSnapshot;
 use std::{
     cell::{Cell, RefCell},
     rc::Rc,
@@ -15,8 +18,8 @@ use xterm_core::{
 };
 use xterm_web::input::{
     dom::{
-        mouse::{MouseHost, MouseReadHost, MouseSnapshot},
-        InputHost, InputOptions, OverlayLayout,
+        mouse::{MouseHost, MouseReadHost},
+        InputHost, OverlayLayout,
     },
     keyboard_dispatch::{KeyboardAction, KeyboardReadHost, KeyboardSnapshot},
     mouse_policy::{MouseOutput, MouseRouting},
@@ -41,6 +44,8 @@ pub struct Host {
     pub focus_calls: Cell<usize>,
     pub touch_scroll: RefCell<Vec<f64>>,
     pub gesture_disposals: Rc<Cell<usize>>,
+    pub slow_value: RefCell<Option<JsValue>>,
+    pub fast_value: RefCell<Option<JsValue>>,
 }
 impl Host {
     pub fn new() -> Self {
@@ -76,6 +81,8 @@ impl Host {
             focus_calls: Cell::new(0),
             touch_scroll: RefCell::new(Vec::new()),
             gesture_disposals: Rc::new(Cell::new(0)),
+            slow_value: RefCell::new(None),
+            fast_value: RefCell::new(None),
         }
     }
     fn read(&self, key: &'static str) -> Result<MouseSnapshot, JsValue> {
@@ -91,9 +98,6 @@ impl Host {
     }
 }
 impl MouseReadHost for Host {
-    fn mouse_snapshot(&self) -> Result<MouseSnapshot, JsValue> {
-        Err(js_sys::Error::new("observer forbids aggregate mouse snapshot").into())
-    }
     fn mouse_require_alt(&self) -> Result<bool, JsValue> {
         Ok(self.read("require-alt")?.routing.require_alt)
     }
@@ -109,15 +113,21 @@ impl MouseReadHost for Host {
     fn mouse_rows(&self) -> Result<f64, JsValue> {
         Ok(self.read("rows")?.routing.rows)
     }
-    fn mouse_scroll_sensitivity(&self) -> Result<f64, JsValue> {
-        Ok(self.read("slow")?.routing.wheel_options.scroll_sensitivity)
+    fn mouse_scroll_sensitivity(&self) -> Result<JsValue, JsValue> {
+        let snapshot = self.read("slow")?;
+        let raw = self.slow_value.borrow().clone();
+        Ok(raw.unwrap_or_else(|| snapshot.routing.wheel_options.scroll_sensitivity.into()))
     }
-    fn mouse_fast_scroll_sensitivity(&self) -> Result<f64, JsValue> {
-        Ok(self
-            .read("fast")?
-            .routing
-            .wheel_options
-            .fast_scroll_sensitivity)
+    fn mouse_fast_scroll_sensitivity(&self) -> Result<JsValue, JsValue> {
+        let snapshot = self.read("fast")?;
+        let raw = self.fast_value.borrow().clone();
+        Ok(raw.unwrap_or_else(|| {
+            snapshot
+                .routing
+                .wheel_options
+                .fast_scroll_sensitivity
+                .into()
+        }))
     }
     fn mouse_device_cell_height(&self) -> Result<Option<f64>, JsValue> {
         Ok(self.read("device-height")?.routing.device_cell_height)
@@ -210,8 +220,20 @@ impl KeyboardReadHost for Host {
 }
 
 impl InputHost for Host {
-    fn options(&self) -> Result<InputOptions, JsValue> {
-        self.input.options()
+    fn bracketed_paste(&self) -> Result<bool, JsValue> {
+        self.input.bracketed_paste()
+    }
+    fn ignore_bracketed_paste(&self) -> Result<bool, JsValue> {
+        self.input.ignore_bracketed_paste()
+    }
+    fn right_click_selects_word(&self) -> Result<bool, JsValue> {
+        self.input.right_click_selects_word()
+    }
+    fn is_firefox(&self) -> Result<bool, JsValue> {
+        self.input.is_firefox()
+    }
+    fn is_linux(&self) -> Result<bool, JsValue> {
+        self.input.is_linux()
     }
     fn custom_key_handler(&self, event: &KeyboardEvent) -> Result<bool, JsValue> {
         self.input.custom_key_handler(event)

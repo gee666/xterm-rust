@@ -10,7 +10,7 @@ use xterm_web::dom_listener::DomListener;
 
 pub(super) type Getter = Closure<dyn Fn() -> Result<JsValue, JsValue>>;
 pub(super) fn getter(
-    event: &Event,
+    event: &JsValue,
     name: &str,
     read: impl Fn() -> Result<JsValue, JsValue> + 'static,
 ) -> Getter {
@@ -23,18 +23,27 @@ pub(super) fn getter(
     );
     closure
 }
-fn activate(setup: &Setup) {
+pub(super) fn number_object(
+    read: impl Fn() -> Result<JsValue, JsValue> + 'static,
+) -> (JsValue, Getter) {
+    let value = js_sys::Object::new();
+    let conversion = Closure::wrap(Box::new(read) as Box<dyn Fn() -> Result<JsValue, JsValue>>);
+    js_sys::Reflect::set(&value, &"valueOf".into(), conversion.as_ref()).unwrap();
+    (value.into(), conversion)
+}
+
+pub(super) fn activate(setup: &Setup) {
     setup.host.input.mouse.set_active_protocol("ANY").unwrap();
     setup.host.input.mouse.set_active_encoding("SGR").unwrap();
     setup.host.reads.borrow_mut().clear();
 }
 
-struct ErrorTrap {
-    errors: Rc<RefCell<Vec<JsValue>>>,
+pub(super) struct ErrorTrap {
+    pub(super) errors: Rc<RefCell<Vec<JsValue>>>,
     _listener: DomListener,
 }
 impl ErrorTrap {
-    fn new() -> Self {
+    pub(super) fn new() -> Self {
         let errors = Rc::new(RefCell::new(Vec::new()));
         let captured = errors.clone();
         let listener = DomListener::new_reentrant_fallible(
@@ -169,7 +178,7 @@ fn inactive_and_pointer_paths_skip_unrelated_host_reads() {
         .unwrap();
     assert_eq!(setup.host.input.data.borrow().len(), 1);
     let reads = setup.host.reads.borrow();
-    for key in ["fast", "slow", "dpr", "device-height", "snapshot"] {
+    for key in ["fast", "slow", "dpr", "device-height"] {
         assert!(!reads.contains(&key));
     }
 }

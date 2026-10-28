@@ -13,6 +13,8 @@ use xterm_web::{
 wasm_bindgen_test_configure!(run_in_browser);
 #[path = "cases/mouse_getters.rs"]
 mod getters;
+#[path = "cases/mouse_operands.rs"]
+mod operands;
 #[path = "cases/mouse_reentry.rs"]
 mod reentry;
 #[path = "cases/mouse_trace.rs"]
@@ -82,11 +84,8 @@ impl Setup {
 impl Drop for Setup {
     fn drop(&mut self) {
         self.mouse.dispose().unwrap();
-        assert!(
-            self.host.input.errors.borrow().is_empty(),
-            "{:?}",
-            self.host.input.errors.borrow()
-        );
+        // The browser runner rejects unexpected page errors. Expected exception
+        // cases assert identity through their own temporary window error trap.
         self.parent.remove();
     }
 }

@@ -9,6 +9,10 @@ pub(super) fn bind(state: &Rc<State>) -> (DisposableHandle, DisposableHandle) {
         .try_subscribe(move |events| {
             if let Some(state) = weak.upgrade() {
                 if !state.disposed.get() {
+                    let _receiver = state
+                        .host
+                        .retain_host()
+                        .map_err(crate::js_error::callback_error)?;
                     sync_protocol(&state, *events).map_err(crate::js_error::callback_error)?;
                 }
             }
@@ -19,6 +23,10 @@ pub(super) fn bind(state: &Rc<State>) -> (DisposableHandle, DisposableHandle) {
         if *key == "mouseEventsRequireAlt" {
             if let Some(state) = weak.upgrade() {
                 if !state.disposed.get() {
+                    let _receiver = state
+                        .host
+                        .retain_host()
+                        .map_err(crate::js_error::callback_error)?;
                     sync_mode(&state)
                         .and_then(|()| alt::sync(&state))
                         .map_err(crate::js_error::callback_error)?;

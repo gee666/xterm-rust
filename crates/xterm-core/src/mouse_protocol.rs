@@ -25,9 +25,13 @@ pub enum MouseButton {
     Aux8 = 15,
     /// DOM button values such as -1 must retain JS bitwise encoding behavior.
     Raw(i32),
+    /// Live DOM getters can produce fractional/nonfinite JS numbers. Preserve
+    /// these for strict comparisons and move debounce until bitwise encoding.
+    RawNumber(f64),
 }
 
 impl MouseButton {
+    /// JavaScript ToInt32 projection for protocol bit operations only.
     pub fn raw_value(self) -> i32 {
         match self {
             Self::Left => 0,
@@ -44,16 +48,35 @@ impl MouseButton {
             Self::Aux7 => 14,
             Self::Aux8 => 15,
             Self::Raw(value) => value,
+            Self::RawNumber(value) => to_int32(value),
         }
+    }
+
+    pub fn numeric_value(self) -> f64 {
+        match self {
+            Self::RawNumber(value) => value,
+            _ => f64::from(self.raw_value()),
+        }
+    }
+}
+
+fn to_int32(value: f64) -> i32 {
+    if !value.is_finite() || value == 0.0 {
+        return 0;
+    }
+    let unsigned = value.trunc().rem_euclid(4_294_967_296.0);
+    if unsigned >= 2_147_483_648.0 {
+        (unsigned - 4_294_967_296.0) as i32
+    } else {
+        unsigned as i32
     }
 }
 
 impl PartialEq for MouseButton {
     fn eq(&self, other: &Self) -> bool {
-        self.raw_value() == other.raw_value()
+        self.numeric_value() == other.numeric_value()
     }
 }
-impl Eq for MouseButton {}
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]

@@ -11,9 +11,9 @@ const result = path.join(root, 'results/mouse-live', new Date().toISOString().re
 await mkdir(result, { recursive: true });
 const fixed = ['Cargo.toml', 'Cargo.lock', '.cargo/config.toml', 'crates/xterm-core/Cargo.toml',
   'crates/xterm-web/Cargo.toml', 'crates/xterm-addons/Cargo.toml',
-  'crates/xterm-web/src/dom_listener.rs', 'crates/xterm-web/src/js_error.rs',
+  'crates/xterm-web/src/dom_listener.rs', 'crates/xterm-web/src/js_error.rs', 'crates/xterm-web/src/input/dom/mod.rs',
   'crates/xterm-web/src/input/mouse_coords.rs', 'crates/xterm-web/src/input/mouse_policy.rs', 'crates/xterm-web/src/input/mouse_wheel.rs',
-  'crates/xterm-web/tests/wasm_mouse.rs', 'crates/xterm-web/tests/support/mouse_dom.rs',
+  'crates/xterm-web/tests/wasm_mouse.rs', 'crates/xterm-web/tests/support/mouse_dom.rs', 'crates/xterm-web/tests/support/mouse_snapshot.rs',
   'crates/xterm-web/tests/support/input_dom.rs', 'crates/xterm-web/tests/support/input_mouse_host.rs',
   'crates/xterm-web/tests/fixtures/mouse-live.tsv', 'scripts/mouse-live-oracle.mjs', 'scripts/check-mouse-live.mjs'];
 const groups = [

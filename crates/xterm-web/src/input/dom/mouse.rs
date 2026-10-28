@@ -4,6 +4,8 @@
 mod alt;
 #[path = "mouse_events.rs"]
 mod events;
+#[path = "mouse_geometry.rs"]
+mod geometry;
 #[path = "mouse_read.rs"]
 mod read;
 #[path = "mouse_report.rs"]
@@ -14,13 +16,11 @@ mod subscriptions;
 mod touch;
 #[path = "mouse_values.rs"]
 mod values;
+use geometry::report_coords;
 pub use read::MouseReadHost;
 
 use super::InputHost;
-use crate::input::{
-    mouse_coords::{parse_css_padding, MouseGeometry, ReportCoords},
-    mouse_policy::{MouseOutput, MousePolicy, MouseRouting},
-};
+use crate::input::mouse_policy::{MouseOutput, MousePolicy};
 use crate::{dom::BrowserDom, dom_listener::DomListener};
 use std::{
     cell::{Cell, RefCell},
@@ -34,18 +34,6 @@ use xterm_core::{
 };
 
 const ENABLE_MOUSE_EVENTS: &str = "enable-mouse-events";
-
-#[derive(Clone, Copy, Debug)]
-pub struct MouseSnapshot {
-    pub routing: MouseRouting,
-    pub valid_char_size: bool,
-    pub css_cell_width: f64,
-    pub css_cell_height: f64,
-    pub css_canvas_width: f64,
-    pub css_canvas_height: f64,
-    pub has_scrollback: bool,
-    pub application_cursor: bool,
-}
 
 /// All methods observe live state. Implementors must use the terminal's shared
 /// unit-payload mouse service, not a second service with independent modes.
@@ -93,6 +81,7 @@ pub struct MouseBindings {
 
 impl MouseBindings {
     pub fn new(dom: &BrowserDom, host: Rc<dyn InputHost>) -> Result<Self, JsValue> {
+        let _receiver = host.retain_host()?;
         let service = host.mouse_service()?;
         let state = Rc::new(State {
             element: dom.element.clone(),
@@ -257,37 +246,6 @@ fn sync_protocol(state: &Rc<State>, requested: MouseEventTypes) -> Result<(), Js
     Ok(())
 }
 
-fn report_coords(state: &State, event: &web_sys::Event) -> Result<Option<ReportCoords>, JsValue> {
-    let fallback = web_sys::window().ok_or_else(|| error("Mouse input requires a window"))?;
-    let window =
-        crate::links::dom_helpers::get_window(Some(state.screen.as_ref()), None, &fallback);
-    let rect = state.screen.get_bounding_client_rect();
-    let style = window
-        .get_computed_style(&state.screen)?
-        .ok_or_else(|| error("Mouse screen has no computed style"))?;
-    let left_padding = parse_css_padding(&style.get_property_value("padding-left")?);
-    let top_padding = parse_css_padding(&style.get_property_value("padding-top")?);
-    let x = values::number(event, "clientX")? - rect.left() - left_padding;
-    let y = values::number(event, "clientY")? - rect.top() - top_padding;
-    if !state.host.mouse_valid_char_size()? {
-        return Ok(None);
-    }
-    let [canvas_width, canvas_height] = state.host.mouse_canvas_size()?;
-    let [cell_width, cell_height] = state.host.mouse_cell_size()?;
-    Ok(MouseGeometry {
-        rect_left: 0.0,
-        rect_top: 0.0,
-        padding_left: 0.0,
-        padding_top: 0.0,
-        valid_char_size: true,
-        cell_width,
-        cell_height,
-        canvas_width,
-        canvas_height,
-    }
-    .report_coords(x, y))
-}
-
 fn listen(
     state: &Rc<State>,
     target: &web_sys::EventTarget,
@@ -304,6 +262,7 @@ fn listen(
         move |event| {
             if let Some(state) = weak.upgrade() {
                 if !state.disposed.get() {
+                    let _receiver = state.host.retain_host()?;
                     return callback(&state, event);
                 }
             }

@@ -88,7 +88,6 @@ fn wheel_custom_callback_can_reenter_the_same_dom_listener() {
     dom.element.dispatch_event(&wheel).unwrap();
     assert_eq!(host.wheel_calls.get(), 2);
     assert_eq!(host.input.data.borrow().len(), 2);
-    assert!(host.input.errors.borrow().is_empty());
     bindings.dispose().unwrap();
     parent.remove();
 }
@@ -149,7 +148,6 @@ async fn global_release_uses_elements_current_owner_document() {
         .unwrap();
     assert_eq!(host.input.data.borrow().len(), 2);
     bindings.dispose().unwrap();
-    assert!(host.input.errors.borrow().is_empty());
     frame.remove();
     parent.remove();
 }

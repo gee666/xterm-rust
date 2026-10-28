@@ -12,9 +12,8 @@ fn raw_button(event: &Event) -> Result<Option<MouseButton>, JsValue> {
     if value.is_undefined() {
         return Ok(None);
     }
-    // DOM button is a signed short. Keep negative legacy button values and the
-    // source's bitwise conversion at the Rust enum boundary.
-    Ok(Some(MouseButton::Raw(values::int_value(&value)?)))
+    // Do not apply ToInt32 before source range checks or move debounce.
+    Ok(Some(MouseButton::RawNumber(values::number_value(&value)?)))
 }
 
 pub(super) fn send(state: &State, event: &Event) -> Result<bool, JsValue> {
@@ -60,7 +59,7 @@ pub(super) fn send(state: &State, event: &Event) -> Result<bool, JsValue> {
             }
             let height = state.host.mouse_device_cell_height()?;
             let dpr = state.host.mouse_dpr()?;
-            if consume_wheel(state, event, height, dpr)? == 0.0 {
+            if values::strict_zero(&consume_wheel(state, event, height, dpr)?) {
                 return Ok(false);
             }
             (
@@ -77,7 +76,7 @@ pub(super) fn send(state: &State, event: &Event) -> Result<bool, JsValue> {
     let Some(button) = button else {
         return Ok(false);
     };
-    if button.raw_value() > MouseButton::Wheel.raw_value() {
+    if button.numeric_value() > MouseButton::Wheel.numeric_value() {
         return Ok(false);
     }
     if button != MouseButton::Wheel
@@ -109,34 +108,40 @@ pub(super) fn consume_wheel(
     event: &Event,
     height: Option<f64>,
     dpr: Option<f64>,
-) -> Result<f64, JsValue> {
+) -> Result<JsValue, JsValue> {
     if values::strict_zero(&values::get(event, "deltaY")?) || values::truth(event, "shiftKey")? {
-        return Ok(0.0);
+        return Ok(0.into());
     }
     let (Some(height), Some(dpr)) = (height, dpr) else {
-        return Ok(0.0);
+        return Ok(0.into());
     };
     let amount = values::get(event, "deltaY")?;
     let mut amount = if values::truth(event, "altKey")?
         || values::truth(event, "ctrlKey")?
         || values::truth(event, "shiftKey")?
     {
-        values::multiply(&amount, state.host.mouse_fast_scroll_sensitivity()?)?
-            * state.host.mouse_scroll_sensitivity()?
+        let fast = state.host.mouse_fast_scroll_sensitivity()?;
+        let first = values::multiply(&amount, &fast)?;
+        let slow = state.host.mouse_scroll_sensitivity()?;
+        values::multiply(&first, &slow)?
     } else {
-        values::multiply(&amount, state.host.mouse_scroll_sensitivity()?)?
+        let slow = state.host.mouse_scroll_sensitivity()?;
+        values::multiply(&amount, &slow)?
     };
     if values::get(event, "deltaMode")?.as_f64() == Some(f64::from(WheelEvent::DOM_DELTA_PIXEL)) {
-        // Source's +0.0 normalizes a negative-zero pixel divisor.
-        amount /= height / dpr + 0.0;
+        // Number division rejects a BigInt before trackpad reads, as source does.
+        let divided = values::divide(&amount, &JsValue::from_f64(height / dpr + 0.0))?;
+        let mut numeric = divided
+            .as_f64()
+            .ok_or_else(|| error("Pixel division must produce a number"))?;
         if values::number(event, "deltaY")?.abs() < TRACKPAD_THRESHOLD {
-            amount *= TRACKPAD_MULTIPLIER;
+            numeric *= TRACKPAD_MULTIPLIER;
         }
-        amount = state.policy.consume_wheel_pixels(amount);
+        amount = JsValue::from_f64(state.policy.consume_wheel_pixels(numeric));
     } else if values::get(event, "deltaMode")?.as_f64()
         == Some(f64::from(WheelEvent::DOM_DELTA_PAGE))
     {
-        amount *= state.host.mouse_rows()?;
+        amount = values::multiply(&amount, &JsValue::from_f64(state.host.mouse_rows()?))?;
     }
     Ok(amount)
 }
