@@ -21,11 +21,12 @@ wasm_bindgen_test_configure!(run_in_browser);
 
 struct FixtureMeasurer(Value);
 impl WidthMeasurer for FixtureMeasurer {
+    type Font = Font;
     type Error = Infallible;
-    fn configure(&mut self, _: &Font) -> Result<(), Infallible> {
+    fn configure_variant(&self, _: &Font, _: FontVariant) -> Result<(), Infallible> {
         Ok(())
     }
-    fn measure(&mut self, text: &[u16], variant: FontVariant) -> Result<f64, Infallible> {
+    fn measure(&self, text: &[u16], variant: FontVariant) -> Result<f64, Infallible> {
         let text = String::from_utf16(text).unwrap();
         Ok(self.0[variant as usize][text].as_f64().unwrap_or(5.0))
     }
