@@ -1,0 +1,30 @@
+{
+  "task": 37,
+  "reviewer": "Timur",
+  "owner": "Vikramaditya",
+  "platform": "Windows x64",
+  "environment": { "node": "v24.15.0", "rustc": "1.85.1", "cargo": "1.85.1", "esbuild": "0.28.1", "mocha": "11.7.6" },
+  "inspection": [
+    "Compared ansi.rs, style.rs and terminal.rs against StringSerializeHandler and SerializeAddon source methods.",
+    "Inspected all style color/flag/underline branches, pending-null flushes, forced wrapping, BCE source-cell retention, cursor order, normal/alternate orchestration, modes and scroll margins.",
+    "Inspected BufferAccess for real Buffer, RefCell borrow-error propagation, native focused tests and the typed representation of source errors.",
+    "Reviewed and rejected the first implementation for a real out-of-buffer range failure. Source snapshot1254 expected TypeError; Rust incorrectly returned content.",
+    "Re-inspected the distinct MissingWrappedLine enum/display and row_end next-line check after the fix; expected fixtures were not changed."
+  ],
+  "commands": [
+    { "command": "node scripts/serialize-oracle.mjs", "exitCode": 0, "originalCases": 44, "originalAssertionCalls": 60, "passed": 44, "failed": 0, "pending": 0, "skipped": 0, "unrun": 0, "log": "results/serialize/oracle-run.log" },
+    { "command": "cargo test -p xterm-core --test serialize_differential --test serialize_ansi --test serialize_native --test serialize_html --test serialize_html_edges", "exitCode": 0, "testsPassed": 33, "differentialCases": 3334, "ansiCases": 1663, "htmlCases": 1671, "log": "results/serialize/rust-differential.log" },
+    { "command": "cargo test -p xterm-core --release --test serialize_differential", "exitCode": 0, "testsPassed": 2, "differentialCases": 3334, "log": "results/serialize/rust-differential-release.log" },
+    { "command": "cargo clippy -p xterm-core --lib --test serialize_differential -- -D warnings", "exitCode": 0, "log": "results/serialize/oracle-clippy.log" },
+    { "command": "rustfmt --edition 2021 --check crates/xterm-core/tests/serialize_differential.rs crates/xterm-core/tests/support/serialize_fixture.rs", "exitCode": 0 }
+  ],
+  "fixtureSha256": "8c5b6c73f1fa72b012d855504e0a46514e4fbce3f8e47b4ff59c3dede7615d2e",
+  "seed": 98703889,
+  "counterexample": { "id": 1254, "input": "results/serialize/failures/case-1254.tsv", "before": "results/serialize/failures/case-1254-result.tsv", "resolved": true },
+  "verdict": "Accept ANSI component scope. Every tested exact source result, including the previously failing range case, now matches in debug and release.",
+  "remaining": [
+    "Task88 must verify activation/disposal, Rust engine round-trips, browser/WASM addon wiring and original engine assertions.",
+    "Native Linux/macOS and three-browser runtime evidence are not implied by Windows component checks.",
+    "Full xterm.js equivalence is NOT PROVEN."
+  ]
+}
