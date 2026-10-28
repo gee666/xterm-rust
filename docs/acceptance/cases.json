@@ -1,0 +1,2194 @@
+{
+  "scope": "Declared User acceptance contracts, not test results",
+  "cases": [
+    {
+      "id": "async-01",
+      "criterionId": 377,
+      "criterionRevision": 1,
+      "title": "TimeoutTimer cancels replaces and rejects disposed reuse",
+      "source": "source_repo/src/common/Async.ts TimeoutTimer",
+      "body": "Drive setIfNotSet/cancelAndSet/cancel with fake timers, including reentrant rescheduling in runner. Only source-selected callback fires; token clears before callback and disposed setters throw the exact source error.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case async-01. Run cited unchanged JS behavior/tests and the Rust implementation on identical clock/operation traces; compare returns, errors, post-state and ordered events; reject zero cases.",
+      "adapter": "async-timers.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "returns",
+        "errors",
+        "postState",
+        "events"
+      ]
+    },
+    {
+      "id": "async-02",
+      "criterionId": 378,
+      "criterionRevision": 1,
+      "title": "MicrotaskTimer coalesces cancellation and reentrant sets",
+      "source": "source_repo/src/common/Async.ts MicrotaskTimer",
+      "body": "Set twice in one turn, cancel then set before old microtask runs, set from runner and dispose while pending. Match actual source microtask order/coalescing, including cancel-then-set behavior; disposed set throws.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case async-02. Run cited unchanged JS behavior/tests and the Rust implementation on identical clock/operation traces; compare returns, errors, post-state and ordered events; reject zero cases.",
+      "adapter": "async-timers.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "returns",
+        "errors",
+        "postState",
+        "events"
+      ]
+    },
+    {
+      "id": "async-03",
+      "criterionId": 379,
+      "criterionRevision": 1,
+      "title": "IntervalTimer keeps cancellation in its originating window",
+      "source": "source_repo/src/common/Async.ts IntervalTimer",
+      "body": "Replace intervals across two window contexts, cancel from runner and dispose, then attempt reuse. Match callbacks, context-specific clearInterval handle and disposed error; no old-window tick after cancellation.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case async-03. Run cited unchanged JS behavior/tests and the Rust implementation on identical clock/operation traces; compare returns, errors, post-state and ordered events; reject zero cases.",
+      "adapter": "async-timers.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "returns",
+        "errors",
+        "postState",
+        "events"
+      ]
+    },
+    {
+      "id": "async-04",
+      "criterionId": 380,
+      "criterionRevision": 1,
+      "title": "Disposable timeout obeys store and exception ordering",
+      "source": "source_repo/src/common/Async.ts timeout/disposableTimeout",
+      "body": "Schedule timeout/disposableTimeout at default/custom delay, dispose directly or via store before/after fire and throw from handler. Match source callback/store cleanup order and timeout promise completion; exceptions must not become a false pass.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case async-04. Run cited unchanged JS behavior/tests and the Rust implementation on identical clock/operation traces; compare returns, errors, post-state and ordered events; reject zero cases.",
+      "adapter": "async-timers.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "returns",
+        "errors",
+        "postState",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-01",
+      "criterionId": 328,
+      "criterionRevision": 1,
+      "title": "WebGL activation waits for open and restores renderer",
+      "source": "source_repo/addons/addon-webgl/src/WebglAddon.ts activate",
+      "body": "Load before/after open, dispose before open and after activation. Match onWillOpen activation, renderer replacement and default-renderer restoration/resize; terminal-first disposal must not resurrect the renderer.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-01. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-02",
+      "criterionId": 329,
+      "criterionRevision": 1,
+      "title": "WebGL context options and unavailable-GPU errors match",
+      "source": "source_repo/addons/addon-webgl/src/WebglAddon.ts constructor; src/WebglRenderer.ts",
+      "body": "Create with customGlyphs/preserveDrawingBuffer omitted/true/false, missing WebGL2 and Safari<16 capability metadata. Match source context attributes, defaults and precise error; never report DOM fallback as passing WebGL.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-02. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-03",
+      "criterionId": 330,
+      "criterionRevision": 1,
+      "title": "WebGL context loss emits and releases source resources",
+      "source": "source_repo/addons/addon-webgl/src/WebglRenderer.ts context lifecycle; src/WebglAddon.ts",
+      "body": "Lose WebGL context during rendering and while idle, restore/recreate where source does, then dispose. Match onContextLoss timing, redraw behavior, listeners and GPU resource lifetime without a hidden JS engine.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-03. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-04",
+      "criterionId": 331,
+      "criterionRevision": 1,
+      "title": "WebGL atlas public events forward canvas identity",
+      "source": "source_repo/addons/addon-webgl/src/WebglAddon.ts atlas API; src/TextureAtlas.ts",
+      "body": "Observe textureAtlas before activation, after glyph insertion, page addition/removal and clearTextureAtlas. Match exact canvas identity and ordered change/add/remove event payloads; disposed subscribers receive no later events.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-04. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-05",
+      "criterionId": 332,
+      "criterionRevision": 1,
+      "title": "WebGL shared renderer suite checks Rust pixels",
+      "source": "source_repo/addons/addon-webgl/test/WebglRenderer.test.ts; ../../test/playwright/SharedRendererTests.ts",
+      "body": "Run SharedRendererTests against Rust WebGL for every registered color/style/cursor/selection case. Exact upstream assertion results must match, not only DOM text; retain conditional browser applicability and per-case evidence.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-05. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-06",
+      "criterionId": 333,
+      "criterionRevision": 1,
+      "title": "Atlas config equality includes device and color fields",
+      "source": "source_repo/addons/addon-webgl/src/CharAtlasUtils.ts configEquals; src/CharAtlasUtils.test.ts",
+      "body": "Change one config field at a time, including max texture, device cell/char sizes, DPR, fonts, contrast, transparency and every ANSI entry. Expect configEquals parity and cache invalidation only when upstream considers unequal.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-06. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-07",
+      "criterionId": 334,
+      "criterionRevision": 1,
+      "title": "Atlas sharing keeps independent terminal ownership",
+      "source": "source_repo/addons/addon-webgl/src/CharAtlasCache.ts",
+      "body": "Create two equal-config terminals, change one config, dispose each in either order and reacquire. Match atlas sharing/replacement and final-owner disposal; one terminal must never free another's live atlas.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-07. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-08",
+      "criterionId": 335,
+      "criterionRevision": 1,
+      "title": "Atlas merging updates every terminal glyph reference",
+      "source": "source_repo/addons/addon-webgl/src/TextureAtlas.ts _mergePages; src/GlyphRenderer.ts; test/WebglSharedAtlasGarble.test.ts merging",
+      "body": "Repeat WebglSharedAtlasGarble merge case with two active terminals. Terminal B must retain correct pixels after A forces page merges, including previously cached glyphs and page-index/layout-version changes.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-08. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-09",
+      "criterionId": 336,
+      "criterionRevision": 1,
+      "title": "Clearing a shared atlas cannot garble another terminal",
+      "source": "source_repo/addons/addon-webgl/src/TextureAtlas.ts clearTexture; src/GlyphRenderer.ts; test/WebglSharedAtlasGarble.test.ts clear",
+      "body": "Run the second WebglSharedAtlasGarble case. A clears the shared atlas while B retains old model entries; B's subsequent frame must revalidate glyphs and match upstream visible pixels without manual reset.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-09. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-10",
+      "criterionId": 337,
+      "criterionRevision": 1,
+      "title": "Atlas page-cap eviction works when merging cannot help",
+      "source": "source_repo/addons/addon-webgl/src/TextureAtlas.ts _createNewPage/_evictAllPages; test/WebglAtlasOverflow.test.ts normal pages",
+      "body": "Force nonmergeable normal atlas pages to the upstream page cap, then add another glyph. Expect bounded pages, source eviction/version/events and correct redraw instead of adding unbounded textures or stale page indices.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-10. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-11",
+      "criterionId": 338,
+      "criterionRevision": 1,
+      "title": "Oversized glyph allocation respects atlas page cap",
+      "source": "source_repo/addons/addon-webgl/src/TextureAtlas.ts _drawToCache; test/WebglAtlasOverflow.test.ts oversized glyph",
+      "body": "At the page cap, draw an oversized/long joined glyph requiring its own page. Source eviction must happen before adding the page; page dimensions stay within device limits and the next draw uses valid UV/page coordinates.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-11. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-12",
+      "criterionId": 339,
+      "criterionRevision": 1,
+      "title": "Alternate-screen churn preserves primary GPU glyphs",
+      "source": "source_repo/addons/addon-webgl/src/TextureAtlas.ts; src/GlyphRenderer.ts; test/WebglAtlasStress.test.ts",
+      "body": "Replay WebglAtlasStress TUI trace with repeated normal/alternate switches and atlas page churn. Primary text and glyph pixels must survive without corruption, leaks or cumulative page growth.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-12. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-13",
+      "criterionId": 340,
+      "criterionRevision": 1,
+      "title": "Custom glyphs remain valid after document adoption",
+      "source": "source_repo/addons/addon-webgl/src/customGlyphs/CustomGlyphRasterizer.ts; test/WebglCustomGlyphs.test.ts",
+      "body": "Draw pattern glyphs, adopt terminal into another same-origin document, then redraw. Match the preserved custom-glyph adoption test and use valid main-realm/offscreen canvases without stale document resources.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-13. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-14",
+      "criterionId": 341,
+      "criterionRevision": 1,
+      "title": "Pattern canvas creation follows OffscreenCanvas fallback",
+      "source": "source_repo/addons/addon-webgl/src/customGlyphs/CustomGlyphRasterizer.ts; src/customGlyphs/CustomGlyphRasterizer.test.ts",
+      "body": "With OffscreenCanvas available/unavailable, invoke createPatternCanvas. Prefer offscreen without DOM factory, otherwise use the main-realm DOM factory; preserve original call-count and canvas assertions.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-14. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-15",
+      "criterionId": 342,
+      "criterionRevision": 1,
+      "title": "Custom glyph ranges rasterize continuous source shapes",
+      "source": "source_repo/addons/addon-webgl/src/customGlyphs/CustomGlyphDefinitions.ts; src/customGlyphs/CustomGlyphRasterizer.ts; typings/addon-webgl.d.ts customGlyphs",
+      "body": "With customGlyphs on/off, exercise box/block/braille/powerline/progress/git and U+1FB00 ranges at fractional DPR, lineHeight and letterSpacing. Match source geometry/pixel assertions, joins and font fallback for unsupported codepoints.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-15. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-16",
+      "criterionId": 343,
+      "criterionRevision": 1,
+      "title": "Glyph cache distinguishes combined text and attributes",
+      "source": "source_repo/addons/addon-webgl/src/TextureAtlas.ts _getFromCacheMap/_drawToCache; src/GlyphRenderer.ts",
+      "body": "Draw same codepoint/combined UTF-16 text under different fg/bg/ext and restrictToCellHeight. Match cache identity, raster bbox/offset/clip, empty glyph and long ligature behavior with no collisions or lost continuation cells.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-16. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-17",
+      "criterionId": 344,
+      "criterionRevision": 1,
+      "title": "GPU color resolution preserves decoration precedence",
+      "source": "source_repo/addons/addon-webgl/src/CellColorResolver.ts; src/TextureAtlas.ts",
+      "body": "Overlap bottom/top decorations, selection and inverse cells with RGB/indexed/default colors. Match CellColorResolver's fg/bg/underline color precedence and source packed result before rasterization.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-17. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-18",
+      "criterionId": 345,
+      "criterionRevision": 1,
+      "title": "GPU contrast distinguishes dim and excluded glyphs",
+      "source": "source_repo/addons/addon-webgl/src/TextureAtlas.ts _getForegroundColor/_getMinimumContrastColor",
+      "body": "Render dim/bold/inverse, transparent background and contrast-exempt glyphs at ratios 1 and >1. Match separate dim/normal contrast cache results, bright palette routing and exact upstream color adjustment.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-18. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-19",
+      "criterionId": 346,
+      "criterionRevision": 1,
+      "title": "GPU underline and strikethrough preserve raster geometry",
+      "source": "source_repo/addons/addon-webgl/src/TextureAtlas.ts _drawToCache; ../../test/playwright/SharedRendererTests.ts",
+      "body": "Render all upstream underline styles/colors and strikethrough with wide/joined glyphs at odd/even DPR widths. Match source line positions, clipping and padding without bleeding into neighboring cells.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-19. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-20",
+      "criterionId": 347,
+      "criterionRevision": 1,
+      "title": "GPU resize and device-pixel changes reallocate correctly",
+      "source": "source_repo/addons/addon-webgl/src/DevicePixelObserver.ts; src/WebglRenderer.ts handleResize",
+      "body": "Resize terminal, change DPR/font/cell size and trigger DevicePixelObserver entries including unavailable devicePixelContentBoxSize. Match canvas/device dimensions, viewport, atlas invalidation and redrawn pixel positions.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-20. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-21",
+      "criterionId": 348,
+      "criterionRevision": 1,
+      "title": "GPU render model clears stale wide and joined cells",
+      "source": "source_repo/addons/addon-webgl/src/RenderModel.ts; src/GlyphRenderer.ts; src/WebglRenderer.ts",
+      "body": "Overwrite wide/combined/joined cells with narrow text, scroll and switch buffers. Match RenderModel clears, cell indices, selection model and incremental dirty rows so old quads or backgrounds cannot remain visible.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-21. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-22",
+      "criterionId": 349,
+      "criterionRevision": 1,
+      "title": "GPU rectangle batching preserves background and cursor",
+      "source": "source_repo/addons/addon-webgl/src/RectangleRenderer.ts; src/WebglRenderer.ts",
+      "body": "Render runs of equal/different backgrounds, transparent cells and cursor block/bar/underline with focus changes. Match RectangleRenderer batch bounds, draw ordering and pixel result at clipping edges.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-22. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-23",
+      "criterionId": 350,
+      "criterionRevision": 1,
+      "title": "GPU cursor blink and links cancel owned work",
+      "source": "source_repo/addons/addon-webgl/src/CursorBlinkStateManager.ts; src/renderLayer/LinkRenderLayer.ts",
+      "body": "Drive cursor blink pause/resume/restart, link hover/leave, resize and dispose with a virtual clock. Match source timing, underline pixels, pointer bounds and canceled callbacks after renderer replacement.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-23. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-24",
+      "criterionId": 351,
+      "criterionRevision": 1,
+      "title": "GPU typed-array slices preserve JavaScript boundaries",
+      "source": "source_repo/addons/addon-webgl/src/TypedArray.ts; src/TypedArray.test.ts",
+      "body": "Port all TypedArray.slice cases for nine element types, negative/omitted/out-of-range start/end and empty slices. Returned elements and independent backing storage must match source, including floating-point values.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-24. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "gpu-25",
+      "criterionId": 352,
+      "criterionRevision": 1,
+      "title": "GPU shader buffer cleanup preserves repeated reloads",
+      "source": "source_repo/addons/addon-webgl/src/WebglUtils.ts; src/GlyphRenderer.ts; src/RectangleRenderer.ts",
+      "body": "Create/render/dispose/reload WebGL addons repeatedly with failed shader/program creation and link failures injected. Match source errors and resource cleanup; no leaked buffers/textures/programs, dead callbacks or successful no-op rendering.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case gpu-25. Compare unchanged JS with Rust-backed WebGL2 using cited assertions and pixel/state/event captures; apply upstream browser skips explicitly; reject zero tests.",
+      "adapter": "webgl.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "state",
+        "events"
+      ]
+    },
+    {
+      "id": "img-01",
+      "criterionId": 280,
+      "criterionRevision": 1,
+      "title": "Image option defaults follow runtime, not stale typings",
+      "source": "source_repo/addons/addon-image/src/ImageAddon.ts DEFAULT_OPTIONS; test/ImageAddon.test.ts ctor options",
+      "body": "Construct with no options, then override each flag/limit independently. Expect runtime defaults pixelLimit=16777216, palette=4096 and sequence limits=33554432; overrides leave other defaults unchanged.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-01. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-02",
+      "criterionId": 281,
+      "criterionRevision": 1,
+      "title": "Image activation preserves size-report option policy",
+      "source": "source_repo/addons/addon-image/src/ImageAddon.ts activate; typings/addon-image.d.ts enableSizeReports",
+      "body": "Activate with enableSizeReports true/false. True enables windowOptions 14/16/18 reports; false preserves caller settings. Disposal must not restore the old settings.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-02. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-03",
+      "criterionId": 282,
+      "criterionRevision": 1,
+      "title": "Image support flags gate protocol registration",
+      "source": "source_repo/addons/addon-image/src/ImageAddon.ts activate",
+      "body": "Disable sixelSupport, iipSupport and kittySupport separately. DCS q, OSC1337 and APC G must dispatch only to enabled handlers; unrelated fallbacks stay callable.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-03. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-04",
+      "criterionId": 283,
+      "criterionRevision": 1,
+      "title": "Image reset restores protocol settings but not storageLimit",
+      "source": "source_repo/addons/addon-image/src/ImageAddon.ts reset",
+      "body": "Change palette, DEC80 and storageLimit, add images, then reset via API, RIS and DECSTR. Clear storage/pending protocols, restore constructor palette/scroll policy, preserve runtime storageLimit; return false to continue reset dispatch.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-04. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-05",
+      "criterionId": 284,
+      "criterionRevision": 1,
+      "title": "SIXEL DEC80 switches scrolling with source polarity",
+      "source": "source_repo/addons/addon-image/src/ImageAddon.ts _decset/_decrst; test/ImageAddon.test.ts scrolling & cursor modes",
+      "body": "Send CSI ?80h then CSI ?80l around palette.sixel. Set disables SIXEL scrolling, reset enables it. Cursor row and buffer scroll must equal the upstream VT240/340 fixture results.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-05. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-06",
+      "criterionId": 285,
+      "criterionRevision": 1,
+      "title": "SIXEL advertises the exact primary device attributes",
+      "source": "source_repo/addons/addon-image/src/ImageAddon.ts _da1",
+      "body": "With sixelSupport=true, CSI c/0c replies ESC[?62;4;9;22c. Nonzero DA parameter is consumed without that reply; disabled support preserves the next core handler.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-06. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-07",
+      "criterionId": 286,
+      "criterionRevision": 1,
+      "title": "Graphics palette queries preserve status and limits",
+      "source": "source_repo/addons/addon-image/src/ImageAddon.ts _xtermGraphicsAttributes",
+      "body": "Exercise CSI ?1;1S, ?1;2S, ?1;3;4096S, 4097 and colon subparams, ?1;4S and invalid actions. Expect source success/action-error replies, constructor-default reset and no accepted oversized palette.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-07. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-08",
+      "criterionId": 287,
+      "criterionRevision": 1,
+      "title": "Graphics geometry queries honor pixel-limit boundaries",
+      "source": "source_repo/addons/addon-image/src/ImageAddon.ts _xtermGraphicsAttributes",
+      "body": "Query CSI ?2;1S and ?2;4S with measured/unmeasured canvas and area below/equal/above pixelLimit. Expect rounded CSS dimensions below limit, floor(sqrt(pixelLimit)) square otherwise; ReGIS/unknown item returns item error.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-08. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-09",
+      "criterionId": 288,
+      "criterionRevision": 1,
+      "title": "SIXEL split streams decode the same palette pixels",
+      "source": "source_repo/addons/addon-image/src/SixelHandler.ts; fixture/palette.sixel",
+      "body": "Replay palette.sixel as one write, bytewise and at every DCS boundary. Expect identical RGBA tiles, palette selection, repeat/raster handling and terminal cursor/scroll trace, not merely a successful parser return.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-09. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-10",
+      "criterionId": 289,
+      "criterionRevision": 1,
+      "title": "SIXEL transparency uses the active inverse background",
+      "source": "source_repo/addons/addon-image/src/SixelHandler.ts hook/extractActiveBg",
+      "body": "Decode identical SIXEL with P2=1/0 under default, indexed, RGB and inverse SGR backgrounds, including before open. Expect transparent fill only for P2=1 and source-equivalent selected background/endian RGBA otherwise.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-10. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-11",
+      "criterionId": 290,
+      "criterionRevision": 1,
+      "title": "SIXEL size overflow aborts without corrupting next image",
+      "source": "source_repo/addons/addon-image/src/SixelHandler.ts put/unhook",
+      "body": "Feed exactly sixelSizeLimit and one extra unit, decode errors, CAN/SUB and unhook(false), then a valid image. Expect source abort/release behavior, no rejected tiles, and successful recovery with correct cursor.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-11. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-12",
+      "criterionId": 291,
+      "criterionRevision": 1,
+      "title": "SIXEL empty raster preserves source cursor movement",
+      "source": "source_repo/addons/addon-image/src/SixelHandler.ts unhook; src/SixelImageStorage.ts",
+      "body": "Feed width=0 with nonzero raster height, empty raster and ordinary image at the bottom margin with scrolling on/off. Match advanceCursor and final cursor/buffer results, including no stored canvas for empty width.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-12. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-13",
+      "criterionId": 292,
+      "criterionRevision": 1,
+      "title": "IIP headers parse identically across chunk boundaries",
+      "source": "source_repo/addons/addon-image/src/IIPHeaderParser.ts; src/IIPHeaderParser.test.ts",
+      "body": "Parse File=, FilePart=, MultipartFile=, FileEnd and ReportCellSize at once and bytewise. Match field types, data-start offsets and terminal parser state; preserve the original HeaderParser assertions.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-13. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-14",
+      "criterionId": 293,
+      "criterionRevision": 1,
+      "title": "IIP malformed header fields abort at source boundaries",
+      "source": "source_repo/addons/addon-image/src/IIPHeaderParser.ts; src/IIPHeaderParser.test.ts",
+      "body": "Exercise missing starter, empty key, empty/nonnumeric size, empty name, illegal characters, unknown fields and 1024/1025-character fields. Match accepted fields, abort state and reset recovery exactly, including JS numeric parsing.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-14. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-15",
+      "criterionId": 294,
+      "criterionRevision": 1,
+      "title": "Image metrics identify every supplied format fixture",
+      "source": "source_repo/addons/addon-image/src/IIPMetrics.ts; src/IIPMetrics.test.ts; fixture/testimages",
+      "body": "Run IIPMetrics testimages across PNG/JPEG/GIF/QOI, VP8/VP8L/VP8X WebP and AVIF. MIME and dimensions must equal each preserved fixture assertion, including EXIF JPEG and odd AVIF dimensions.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-15. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-16",
+      "criterionId": 295,
+      "criterionRevision": 1,
+      "title": "Image metrics reject truncated or invalid headers",
+      "source": "source_repo/addons/addon-image/src/IIPMetrics.ts imageType/jpgSize",
+      "body": "Test 0/31/32-byte inputs, bad PNG IHDR, JPEG missing SOF/truncation, bad VP8 signatures and AVIF ispe outside scan limit. Expect source unsupported or zero-dimension result without panic or out-of-bounds read.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-16. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-17",
+      "criterionId": 296,
+      "criterionRevision": 1,
+      "title": "IIP base64 failures do not mutate terminal cells",
+      "source": "source_repo/addons/addon-image/src/IIPHandler.ts put/end",
+      "body": "Feed bad alphabet/padding/separators, exact/over iipSizeLimit, inline=0, unknown image format and success=false, then valid File=. Match warnings/abort and ensure no rejected image, cursor advance or placeholder.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-17. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-18",
+      "criterionId": 297,
+      "criterionRevision": 1,
+      "title": "IIP size metadata remains optional and informative",
+      "source": "source_repo/addons/addon-image/src/IIPHandler.ts; test/ImageAddon.test.ts size params is optional/informative",
+      "body": "Transmit the same PNG with absent, exact and inaccurate size metadata. Expected displayed pixels and cursor equal upstream, rather than enforcing the obsolete declaration comment that size is required.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-18. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-19",
+      "criterionId": 298,
+      "criterionRevision": 1,
+      "title": "IIP multipart assembly preserves cancellation rules",
+      "source": "source_repo/addons/addon-image/src/IIPHandler.ts _isMultipart/_abortMulti; test/ImageAddon.test.ts FilePart support",
+      "body": "Replay MultipartFile/FilePart/FileEnd with chunks, empty parts, malformed parts, stray FileEnd and intervening File=. Only complete valid payload adds one image; intervening other sequence cancels the old transfer exactly as upstream.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-19. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-20",
+      "criterionId": 299,
+      "criterionRevision": 1,
+      "title": "IIP cell-size report uses CSS metrics and three decimals",
+      "source": "source_repo/addons/addon-image/src/IIPHandler.ts end REPORTCELLSIZE",
+      "body": "Request OSC1337;ReportCellSize before/after measurement and at fractional DPR. Expect ESC]1337;ReportCellSize=h;w;scale ST with three decimals and source default-cell fallback, emitted as non-user input.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-20. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-21",
+      "criterionId": 300,
+      "criterionRevision": 1,
+      "title": "IIP resizing converts cell pixel and percent dimensions",
+      "source": "source_repo/addons/addon-image/src/IIPHandler.ts _resize/_dim; test/ImageAddon.test.ts IIP - resizing",
+      "body": "Render each source image with width=20,height=5; 320px/160px; 50%/30%; auto and one omitted dimension. Expected floored dimensions and aspect-ratio policy equal source, including viewport-fit downscale without upscale.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-21. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-22",
+      "criterionId": 301,
+      "criterionRevision": 1,
+      "title": "IIP pixel limits reject both decode and resized overflow",
+      "source": "source_repo/addons/addon-image/src/IIPHandler.ts end",
+      "body": "Exercise zero dimensions and original/resized area just below, equal to and above pixelLimit. Only source-accepted images allocate stored canvases; rejected images leave buffer and cursor unchanged.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-22. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-23",
+      "criterionId": 302,
+      "criterionRevision": 1,
+      "title": "IIP image decoding retains actual format pixels",
+      "source": "source_repo/addons/addon-image/src/IIPHandler.ts end; test/ImageAddon.test.ts IIP support - testimages/IIP - QOI support",
+      "body": "Render palette PNG/QOI and supplied spinfox/GIF/JPEG/PNG fixtures. QOI and PNG palette bytes must match exactly; other outputs match upstream assertions, including first-frame/static decode and decode rejection.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-23. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-24",
+      "criterionId": 303,
+      "criterionRevision": 1,
+      "title": "Image storage limit evicts FIFO synchronously",
+      "source": "source_repo/addons/addon-image/src/ImageStorage.ts setLimit/_evictOldest; test/ImageAddon.test.ts storageLimit",
+      "body": "Set storageLimit below 0.5, at 0.5, at 1000 and above 1000 MB; grow then lower it under pressure. Match RangeError boundaries, FIFO victims and immediate storageUsage before setter returns, counting RGBA pixels*4.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-24. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-25",
+      "criterionId": 304,
+      "criterionRevision": 1,
+      "title": "Image added events fire once after accepted storage",
+      "source": "source_repo/addons/addon-image/src/ImageStorage.ts addImage; src/ImageAddon.ts onImageAdded; test/ImageAddon.test.ts onImageAdded",
+      "body": "Write two valid images, then an invalid/aborted image. Expect one onImageAdded per accepted image, source-visible storage state in callbacks, stable subscription disposal and no event for rejected data.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-25. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-26",
+      "criterionId": 305,
+      "criterionRevision": 1,
+      "title": "Image scrollback trim frees the last referenced image",
+      "source": "source_repo/addons/addon-image/src/ImageStorage.ts; test/ImageAddon.test.ts delete image once scrolled off",
+      "body": "Render image spanning several lines, trim first/some/last markers, and scroll entirely off. Storage survives while source retains references and is released at the same trim transition; usage and placeholders match.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-26. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-27",
+      "criterionId": 306,
+      "criterionRevision": 1,
+      "title": "Alternate-buffer image cleanup preserves normal images",
+      "source": "source_repo/addons/addon-image/src/ImageStorage.ts wipeAlternate/_evictOnAlternate; test/ImageAddon.test.ts alternate images/manual eviction",
+      "body": "Store normal and alternate images, switch buffers repeatedly and manually evict alternate entries. Only source-selected alternate images disappear; no skipped entry during map mutation and no loss of normal buffer tiles.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-27. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-28",
+      "criterionId": 307,
+      "criterionRevision": 1,
+      "title": "Text overwrite removes image tile references correctly",
+      "source": "source_repo/addons/addon-image/src/ImageStorage.ts _writeToCell/render; test/ImageAddon.test.ts text overwrite removes tiles",
+      "body": "Overwrite first/last/all tiles of SIXEL and IIP with text and erase operations. Expect source cell extended attributes, tile counts, remaining pixels and final storage deletion, with no stale full-image overlay.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-28. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-29",
+      "criterionId": 308,
+      "criterionRevision": 1,
+      "title": "Image viewport resize extends and clips the same tiles",
+      "source": "source_repo/addons/addon-image/src/ImageStorage.ts viewportResize; src/ImageRenderer.ts",
+      "body": "Resize narrower/wider and change cell metrics/DPR with partial images at the right/bottom edge. Match source tile IDs, empty extensions, clipping and rendered positions, preserving normal/alternate ownership.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-29. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-30",
+      "criterionId": 309,
+      "criterionRevision": 1,
+      "title": "Image cell accessors return original and cropped canvases",
+      "source": "source_repo/addons/addon-image/src/ImageStorage.ts getImageAtBufferCell/extractTileAtBufferCell; typings/addon-image.d.ts",
+      "body": "Call getImageAtBufferCell/extractTileAtBufferCell before activation, on empty/out-of-range cells, and first/edge image tiles. Match undefined versus canvas, original identity, tile dimensions and RGBA cropping.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-30. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-31",
+      "criterionId": 310,
+      "criterionRevision": 1,
+      "title": "Image placeholders toggle without reviving evicted data",
+      "source": "source_repo/addons/addon-image/src/ImageAddon.ts getters/showPlaceholder; src/ImageRenderer.ts",
+      "body": "Evict an image, toggle showPlaceholder true/false repeatedly and render. Match source placeholder pixels/refresh behavior, preserve missing image state and return -1 storageUsage/storageLimit before activation.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-31. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-32",
+      "criterionId": 311,
+      "criterionRevision": 1,
+      "title": "Image disposal detaches parser render and resize hooks",
+      "source": "source_repo/addons/addon-image/src/ImageAddon.ts dispose; src/ImageRenderer.ts dispose",
+      "body": "Load/dispose addon before/after images and while decode is pending, then send protocols/resize/render. Match upstream post-dispose callbacks and retained state, remove owned resources/listeners, and do not dispose the terminal.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-32. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-33",
+      "criterionId": 312,
+      "criterionRevision": 1,
+      "title": "Kitty command parsing preserves absent and empty fields",
+      "source": "source_repo/addons/addon-image/src/kitty/KittyGraphicsTypes.ts; src/kitty/KittyGraphicsTypes.test.ts",
+      "body": "Parse every control key with missing '=', empty values, repeated/unknown keys, negative z, C=0, p and I, and parseInt suffixes. Match undefined, empty string and numeric results from parseKittyCommand, not Rust defaults.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-33. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-34",
+      "criterionId": 313,
+      "criterionRevision": 1,
+      "title": "Kitty transmit stores pixels without accidental display",
+      "source": "source_repo/addons/addon-image/src/kitty/KittyGraphicsHandler.ts _handleTransmit/_handleTransmitDisplay; test/KittyGraphics.test.ts",
+      "body": "Send 1x1 black/3x1 RGB PNG with a=t, a=T, omitted a and a=. Expect stored-only for t/default, display for T and ignored empty action; match explicit/auto IDs, RGBA and cursor.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-34. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-35",
+      "criterionId": 314,
+      "criterionRevision": 1,
+      "title": "Kitty chunk continuations retain first-chunk identity",
+      "source": "source_repo/addons/addon-image/src/kitty/KittyGraphicsHandler.ts put/end; test/KittyGraphics.test.ts",
+      "body": "Split payload over two/three APCs with m=1 then m=0 and omit i on later chunks or all chunks. Expect byte-identical assembly, source ID selection, exactly one final response when appropriate, and no early display.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-35. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-36",
+      "criterionId": 315,
+      "criterionRevision": 1,
+      "title": "Kitty chunk size limits count the entire transmission",
+      "source": "source_repo/addons/addon-image/src/kitty/KittyGraphicsHandler.ts _streamPayload/end; test/KittyGraphics.test.ts",
+      "body": "Send multiple individually-small chunks crossing kittySizeLimit and interleave IDs. Match source abort, release and pending-map state; later valid transfers must not reuse rejected bytes or corrupt other IDs.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-36. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-37",
+      "criterionId": 316,
+      "criterionRevision": 1,
+      "title": "Kitty query validates without storing or displaying",
+      "source": "source_repo/addons/addon-image/src/kitty/KittyGraphicsHandler.ts _handleQuery; test/KittyGraphics.test.ts",
+      "body": "Use a=q with empty payload, valid PNG, invalid base64 and raw RGB lacking dimensions. Expect exact OK/EINVAL response framing and no image storage, tile/cursor change or image-added event.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-37. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-38",
+      "criterionId": 317,
+      "criterionRevision": 1,
+      "title": "Kitty quiet flags suppress only the specified replies",
+      "source": "source_repo/addons/addon-image/src/kitty/KittyGraphicsHandler.ts _sendResponse; test/KittyGraphics.test.ts",
+      "body": "Exercise q=0/1/2 for successful/failed transmit, display, query and placement, with and without i. q=1 suppresses OK only; q=2 suppresses errors too; no-ID rules and exact APC reply bytes match source.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-38. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-39",
+      "criterionId": 318,
+      "criterionRevision": 1,
+      "title": "Kitty rejects conflicting image id and image number",
+      "source": "source_repo/addons/addon-image/src/kitty/KittyGraphicsHandler.ts put/_handleNoPayloadCommand; test/KittyGraphics.test.ts",
+      "body": "Send both i and I with/without payload and quiet=0/2. Expect source EINVAL text and no storage/display mutation, including no-payload conflict path.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-39. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-40",
+      "criterionId": 319,
+      "criterionRevision": 1,
+      "title": "Kitty rejects file and shared-memory transmission",
+      "source": "source_repo/addons/addon-image/src/kitty/KittyGraphicsHandler.ts _handleTransmit/_handleQuery; test/KittyGraphics.test.ts",
+      "body": "Exercise t=f/s/t/d and omitted t in query, transmit and transmit+display with/without i. Only direct transport follows the source success path; others yield correct EINVAL/silence and perform no filesystem access.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-40. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-41",
+      "criterionId": 320,
+      "criterionRevision": 1,
+      "title": "Kitty delete selectors remove targeted stored images",
+      "source": "source_repo/addons/addon-image/src/kitty/KittyGraphicsHandler.ts _handleDelete; test/KittyGraphics.test.ts",
+      "body": "Send a=d with d=i/I/a/A, absent id, unsupported selector and default selector. Match selected handler/storage removals and canvas pixel clearing; unrelated IDs and placements survive targeted deletion.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-41. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-42",
+      "criterionId": 321,
+      "criterionRevision": 1,
+      "title": "Kitty deletion aborts only the matching pending uploads",
+      "source": "source_repo/addons/addon-image/src/kitty/KittyGraphicsHandler.ts _handleDelete/_cleanupAllPending; test/KittyGraphics.test.ts",
+      "body": "Delete one ID or all during m=1 transfers, then send continuation chunks. Deleted bytes must never reassemble; targeted deletion preserves other pending IDs and matches source map/decoder cleanup.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-42. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-43",
+      "criterionId": 322,
+      "criterionRevision": 1,
+      "title": "Kitty placement reuses image data and reports missing ids",
+      "source": "source_repo/addons/addon-image/src/kitty/KittyGraphicsHandler.ts _handlePlacement; test/KittyGraphics.test.ts",
+      "body": "Transmit-only, place twice with a=p, then place missing/absent IDs. Expect independent displayed placements with reusable stored data, exact OK/ENOENT and source no-ID silence.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-43. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-44",
+      "criterionId": 323,
+      "criterionRevision": 1,
+      "title": "Kitty placement geometry preserves crop and offsets",
+      "source": "source_repo/addons/addon-image/src/kitty/KittyGraphicsHandler.ts _decodeAndDisplay; test/KittyGraphics.test.ts",
+      "body": "Place multicolor-200x100.png with c/r, x/y source crop, w/h source extent and X/Y subcell offsets including invalid/empty crop. Match source pixel rectangle, padding, scaling and error/cursor effects.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-44. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-45",
+      "criterionId": 324,
+      "criterionRevision": 1,
+      "title": "Kitty placement cursor movement honors C=1",
+      "source": "source_repo/addons/addon-image/src/kitty/KittyGraphicsHandler.ts _decodeAndDisplay; source_repo/addons/addon-image/src/kitty/KittyImageStorage.ts; test/KittyGraphics.test.ts",
+      "body": "Display at bottom/right boundaries with C omitted, C=0 and C=1. Default advances and scrolls exactly as source; C=1 preserves cursor while displaying the same image tiles.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-45. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-46",
+      "criterionId": 325,
+      "criterionRevision": 1,
+      "title": "Kitty raw RGB RGBA and compression decode faithfully",
+      "source": "source_repo/addons/addon-image/src/kitty/KittyGraphicsHandler.ts _createBitmap/_decompressZlib; test/KittyGraphics.test.ts",
+      "body": "Transmit f=24/32/100 with exact/short pixel bytes, missing dimensions, valid deflate/deflate-raw and invalid compression. Match decoded RGBA, alpha and precise source error/silence, with no rejected partial placement.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-46. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-47",
+      "criterionId": 326,
+      "criterionRevision": 1,
+      "title": "Kitty placement layers and ids preserve response routing",
+      "source": "source_repo/addons/addon-image/src/kitty/KittyGraphicsHandler.ts _handlePlacement/_sendResponse; test/KittyGraphics.test.ts",
+      "body": "Place same image with positive/zero/negative z and distinct p. Match foreground/background draw order and response p field for successful/missing placement; clearing one image removes all source-linked displays.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-47. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "img-48",
+      "criterionId": 327,
+      "criterionRevision": 1,
+      "title": "Kitty control overflow reset and abort are recoverable",
+      "source": "source_repo/addons/addon-image/src/kitty/KittyGraphicsHandler.ts put/reset/dispose; test/KittyGraphics.test.ts",
+      "body": "Feed control data at 512/513 units, aborted APC, reset/dispose during pending uploads, then valid command. Match source partial-state and release behavior, with no old payload emitted as text or joined into a new image.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case img-48. Replay cited JS assertions and Rust-backed WASM; compare pixels, buffer, cursor and replies in applicable Chromium/Firefox/WebKit; fail on mismatch or zero tests.",
+      "adapter": "image.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "pixels",
+        "buffer",
+        "cursor",
+        "replies",
+        "events"
+      ]
+    },
+    {
+      "id": "move-01",
+      "criterionId": 375,
+      "criterionRevision": 1,
+      "title": "Alt-click normal buffer emits horizontal cursor keys only",
+      "source": "source_repo/src/browser/input/MoveToCell.ts; source_repo/src/browser/input/MoveToCell.test.ts",
+      "body": "For same row and targets above/below across row ends, generate moveToCellSequence in normal buffer with applicationCursor false/true. Expect exact CSI/SS3 repeated arrows from original tests, never direct vertical movement.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case move-01. Run cited unchanged JS behavior/tests and the Rust implementation on identical clock/operation traces; compare returns, errors, post-state and ordered events; reject zero cases.",
+      "adapter": "move-to-cell.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "returns",
+        "errors",
+        "postState",
+        "events"
+      ]
+    },
+    {
+      "id": "move-02",
+      "criterionId": 376,
+      "criterionRevision": 1,
+      "title": "Alt-click alternate buffer counts wrapped Unicode rows",
+      "source": "source_repo/src/browser/input/MoveToCell.ts; source_repo/src/browser/input/MoveToCell.test.ts",
+      "body": "Move above/below/same wrapped logical row across wide/combined/non-BMP text in alternate buffer. Match source reset-to-unwrapped-row, vertical skip and UTF-16 horizontal arrow count, with no sequence for unchanged location.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case move-02. Run cited unchanged JS behavior/tests and the Rust implementation on identical clock/operation traces; compare returns, errors, post-state and ordered events; reject zero cases.",
+      "adapter": "move-to-cell.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "returns",
+        "errors",
+        "postState",
+        "events"
+      ]
+    },
+    {
+      "id": "vt-22",
+      "criterionId": 353,
+      "criterionRevision": 1,
+      "title": "Reverse-wrap backspace never escapes source margins",
+      "source": "source_repo/src/common/InputHandler.ts backspace; source_repo/src/common/InputHandler.test.ts BS with reverseWraparound",
+      "body": "At x=0 on wrapped/unwrapped rows, run BS under DEC45/1045 and both disabled, including first row and margins. Match source cursor, scroll-region restrictions and wrap flags exactly.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-22. Replay cited upstream tests/operation traces against JS and Rust Terminal; compare full cells, cursor, margins, both buffers, events and exact replies; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies"
+      ]
+    },
+    {
+      "id": "vt-23",
+      "criterionId": 354,
+      "criterionRevision": 1,
+      "title": "Printing at right edge repairs early wide-character wraps",
+      "source": "source_repo/src/common/InputHandler.ts print; source_repo/src/common/InputHandler.test.ts print regressions",
+      "body": "Print ASCII/wide/combined text at cols-1/cols with wrap on/off and insert mode. Match blanked cells to the right on early wrap, continuation widths, linefeed/scroll and no infinite loop on zero-width clusters.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-23. Replay cited upstream tests/operation traces against JS and Rust Terminal; compare full cells, cursor, margins, both buffers, events and exact replies; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies"
+      ]
+    },
+    {
+      "id": "vt-24",
+      "criterionId": 355,
+      "criterionRevision": 1,
+      "title": "Soft hyphen printing follows upstream stripping behavior",
+      "source": "source_repo/src/common/InputHandler.ts print; source_repo/src/common/InputHandler.test.ts should strip soft hyphens",
+      "body": "Write U+00AD alone and between ASCII/combining/wide text, including split writes at right margin. Match source stripped cells, cursor, REP predecessor and accessibility output instead of displaying an extra glyph.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-24. Replay cited upstream tests/operation traces against JS and Rust Terminal; compare full cells, cursor, margins, both buffers, events and exact replies; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies"
+      ]
+    },
+    {
+      "id": "vt-28",
+      "criterionId": 356,
+      "criterionRevision": 2,
+      "title": "Browser DEC47 switches renderer state in source event order",
+      "source": "source_repo/src/common/InputHandler.ts setModePrivate/resetModePrivate; source_repo/src/common/InputHandler.test.ts DECSET/DECRST 47",
+      "body": "Send ?47h/l repeatedly through actual WASM Terminal after rendering both buffers. Compare Rust/JS buffer-change callbacks, visible cells, refresh and scrollbar requests at each callback; source native-only mode tests do not establish browser ordering.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-28. In Chromium/Firefox/WebKit compare unchanged JS with actual Rust-backed WASM using the same browser actions; assert exact replies, callback order and live buffer/render/API state; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies",
+        "render",
+        "api",
+        "callbacks"
+      ]
+    },
+    {
+      "id": "vt-29",
+      "criterionId": 357,
+      "criterionRevision": 2,
+      "title": "Browser DEC1047 redraw preserves source clear policy",
+      "source": "source_repo/src/common/InputHandler.ts setModePrivate/resetModePrivate; source_repo/src/common/InputHandler.test.ts DECSET/DECRST 1047",
+      "body": "Render colored alternate content, switch via ?1047h/l through WASM and repeat activation. Match upstream displayed cells, blank attributes, render ranges and synchronous callback snapshots; do not assume 1047 differs from 47 or clears on every call.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-29. In Chromium/Firefox/WebKit compare unchanged JS with actual Rust-backed WASM using the same browser actions; assert exact replies, callback order and live buffer/render/API state; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies",
+        "render",
+        "api",
+        "callbacks"
+      ]
+    },
+    {
+      "id": "vt-30",
+      "criterionId": 358,
+      "criterionRevision": 2,
+      "title": "Browser DEC1048 restores live cursor without buffer events",
+      "source": "source_repo/src/common/InputHandler.ts setModePrivate/resetModePrivate; source_repo/src/common/InputHandler.test.ts DECSET/DECRST 1048",
+      "body": "Through browser writes, set/save cursor with ?1048h, mutate attributes/origin/wrap and restore with ?1048l. Compare source cursor/textarea placement and callback-time Rust API state; no invented buffer switch or duplicate change event.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-30. In Chromium/Firefox/WebKit compare unchanged JS with actual Rust-backed WASM using the same browser actions; assert exact replies, callback order and live buffer/render/API state; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies",
+        "render",
+        "api",
+        "callbacks"
+      ]
+    },
+    {
+      "id": "vt-31",
+      "criterionId": 359,
+      "criterionRevision": 2,
+      "title": "Browser DEC1049 restores selection and rendered buffer state",
+      "source": "source_repo/src/common/InputHandler.ts setModePrivate/resetModePrivate; source_repo/src/common/InputHandler.test.ts DECSET/DECRST 1049",
+      "body": "While observing live browser buffer/render/selection events, repeat ?1049h/l with distinct per-buffer saved cursor and colored erase attrs. Match original callback order and visible old/new cells; no stale alt display or selection from disconnected state.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-31. In Chromium/Firefox/WebKit compare unchanged JS with actual Rust-backed WASM using the same browser actions; assert exact replies, callback order and live buffer/render/API state; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies",
+        "render",
+        "api",
+        "callbacks"
+      ]
+    },
+    {
+      "id": "vt-32",
+      "criterionId": 360,
+      "criterionRevision": 1,
+      "title": "Cursor save and restore retain origin and wrap modes",
+      "source": "source_repo/src/common/InputHandler.ts saveCursor/restoreCursor; source_repo/src/common/InputHandler.test.ts DECSC/DECRC",
+      "body": "Use ESC7/8 and CSI s/u before/after cursor, SGR and DECOM/DECAWM changes, resize and buffer switch. Match source cursor/attributes/modes and default restore behavior; charset-specific checks remain criterion188.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-32. Replay cited upstream tests/operation traces against JS and Rust Terminal; compare full cells, cursor, margins, both buffers, events and exact replies; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies"
+      ]
+    },
+    {
+      "id": "vt-33",
+      "criterionId": 361,
+      "criterionRevision": 1,
+      "title": "DECSTR soft reset differs from RIS full reset",
+      "source": "source_repo/src/common/InputHandler.ts softReset/fullReset; source_repo/test/playwright/InputHandler.test.ts",
+      "body": "With nondefault modes/margins/attributes, history, alternate buffer and pending parser data, compare CSI !p and ESC c. Match exactly which source state resets/persists and ordered reset/refresh events, without discarding pending writes incorrectly.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-33. Replay cited upstream tests/operation traces against JS and Rust Terminal; compare full cells, cursor, margins, both buffers, events and exact replies; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies"
+      ]
+    },
+    {
+      "id": "vt-34",
+      "criterionId": 362,
+      "criterionRevision": 2,
+      "title": "Browser DECRQM replies retain WASM event ordering",
+      "source": "source_repo/src/common/InputHandler.ts requestMode; source_repo/test/playwright/InputHandler.test.ts",
+      "body": "Query ?Ps$p and Ps$p through browser writes before/after mode changes, with disableStdin on/off and a reentrant onData listener. Match JS reply UTF-16, callback-time modes/API state and suffix processing; native CoreService tests alone do not pass.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-34. In Chromium/Firefox/WebKit compare unchanged JS with actual Rust-backed WASM using the same browser actions; assert exact replies, callback order and live buffer/render/API state; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies",
+        "render",
+        "api",
+        "callbacks"
+      ]
+    },
+    {
+      "id": "vt-35",
+      "criterionId": 363,
+      "criterionRevision": 1,
+      "title": "Device status reports use source coordinates and framing",
+      "source": "source_repo/src/common/InputHandler.ts deviceStatus/deviceStatusPrivate; source_repo/test/playwright/InputHandler.test.ts",
+      "body": "Send CSI 5n/6n and private ?6n with origin mode, nonzero margins and x=cols; also unknown requests. Match exact DSR/CPR replies and absence of side effects or replies for unsupported requests.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-35. Replay cited upstream tests/operation traces against JS and Rust Terminal; compare full cells, cursor, margins, both buffers, events and exact replies; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies"
+      ]
+    },
+    {
+      "id": "vt-36",
+      "criterionId": 364,
+      "criterionRevision": 1,
+      "title": "Primary secondary and version replies match upstream bytes",
+      "source": "source_repo/src/common/InputHandler.ts sendDeviceAttributesPrimary/sendDeviceAttributesSecondary/sendXtVersion; source_repo/test/playwright/InputHandler.test.ts",
+      "body": "Send CSI c, >c, >q with default/zero/nonzero params and configured terminal name. Match DA1/DA2/XTVERSION strings and no-reply branches byte-for-byte; this checks core replies, not image-addon DA override.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-36. Replay cited upstream tests/operation traces against JS and Rust Terminal; compare full cells, cursor, margins, both buffers, events and exact replies; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies"
+      ]
+    },
+    {
+      "id": "vt-37",
+      "criterionId": 365,
+      "criterionRevision": 2,
+      "title": "DECRQSS preserves fixed reports and rejects unknown keys",
+      "source": "source_repo/src/common/InputHandler.ts requestStatusString; source_repo/test/playwright/InputHandler.test.ts",
+      "body": "Request DCS $q for m/r/ q/\"q/\"p and unknown/empty keys after state changes. Preserve upstream quirks: SGR always reports 0m and conformance 61;1\"p; margins/style/protection and exact success/failure DCS bytes match source.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-37. Replay cited upstream tests/operation traces against JS and Rust Terminal; compare full cells, cursor, margins, both buffers, events and exact replies; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies"
+      ]
+    },
+    {
+      "id": "vt-38",
+      "criterionId": 366,
+      "criterionRevision": 1,
+      "title": "Title and icon operations retain independent stack state",
+      "source": "source_repo/src/common/InputHandler.ts setTitle/setIconName/windowOptions; source_repo/test/playwright/InputHandler.test.ts",
+      "body": "Use OSC0/1/2 Unicode titles, CSI22/23 title/icon push/pop, empty stacks and overflow beyond source depth. Match title/icon values, stack eviction and ordered title events without leaking controls to display.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-38. Replay cited upstream tests/operation traces against JS and Rust Terminal; compare full cells, cursor, margins, both buffers, events and exact replies; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies"
+      ]
+    },
+    {
+      "id": "vt-39",
+      "criterionId": 367,
+      "criterionRevision": 1,
+      "title": "Window operations honor each permission before effects",
+      "source": "source_repo/src/common/InputHandler.ts windowOptions; source_repo/test/playwright/InputHandler.test.ts",
+      "body": "Toggle each windowOptions permission and send CSI t query/change requests with omitted/invalid params. Match allowed reports, resize/title side effects and silent denied operations against source, including pre-open behavior.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-39. Replay cited upstream tests/operation traces against JS and Rust Terminal; compare full cells, cursor, margins, both buffers, events and exact replies; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies"
+      ]
+    },
+    {
+      "id": "vt-40",
+      "criterionId": 368,
+      "criterionRevision": 2,
+      "title": "Browser Kitty negotiation drives the real key encoder",
+      "source": "source_repo/src/common/InputHandler.ts kittyKeyboardSet/Push/Pop/Query; source_repo/test/playwright/InputHandler.test.ts",
+      "body": "Through WASM writes enable/disable Kitty, push/query/pop flags and switch buffers; then dispatch a real key event. Match JS negotiated reply, actual CSI-u/legacy key bytes and callback order, including empty-pop reset and repeated buffer activation.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-40. In Chromium/Firefox/WebKit compare unchanged JS with actual Rust-backed WASM using the same browser actions; assert exact replies, callback order and live buffer/render/API state; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies",
+        "render",
+        "api",
+        "callbacks"
+      ]
+    },
+    {
+      "id": "vt-41",
+      "criterionId": 369,
+      "criterionRevision": 2,
+      "title": "Browser private modes update real pointer and focus routes",
+      "source": "source_repo/src/common/InputHandler.ts setModePrivate/resetModePrivate; source_repo/test/playwright/InputHandler.test.ts",
+      "body": "Write mode changes for 9/1000/1002/1003, 1006/1016 and 1004 through WASM; dispatch press/move/release/focus events after each. Match upstream listener activation/removal and exact reports, including resetting an inactive mutually-exclusive mode.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-41. In Chromium/Firefox/WebKit compare unchanged JS with actual Rust-backed WASM using the same browser actions; assert exact replies, callback order and live buffer/render/API state; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies",
+        "render",
+        "api",
+        "callbacks"
+      ]
+    },
+    {
+      "id": "vt-42",
+      "criterionId": 370,
+      "criterionRevision": 2,
+      "title": "DECALN fills source cells without inventing a full reset",
+      "source": "source_repo/src/common/InputHandler.ts screenAlignmentPattern; source_repo/test/playwright/InputHandler.test.ts",
+      "body": "Write ESC #8 into colored/wrapped content with history and nondefault margins. Match E cells, attributes, cursor/margins and scrollback treatment from upstream; no unrelated addon or parser state reset.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-42. Replay cited upstream tests/operation traces against JS and Rust Terminal; compare full cells, cursor, margins, both buffers, events and exact replies; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies"
+      ]
+    },
+    {
+      "id": "vt-43",
+      "criterionId": 371,
+      "criterionRevision": 1,
+      "title": "DECSCUSR updates only source-defined cursor style options",
+      "source": "source_repo/src/common/InputHandler.ts setCursorStyle; source_repo/src/common/InputHandler.test.ts",
+      "body": "Send CSI Ps SP q with omitted/0..6/unsupported Ps after custom cursor settings. Match style/blink option changes, event order and unsupported branch from original setCursorStyle assertions.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-43. Run cited unchanged JS behavior/tests and the Rust implementation on identical clock/operation traces; compare returns, errors, post-state and ordered events; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies"
+      ]
+    },
+    {
+      "id": "vt-44",
+      "criterionId": 372,
+      "criterionRevision": 1,
+      "title": "LF VT FF preserve scroll margins and convertEol semantics",
+      "source": "source_repo/src/common/InputHandler.ts lineFeed",
+      "body": "At inside/outside/bottom margins with x=cols, run LF/VT/FF with convertEol true/false on normal/alternate buffers. Match source row scroll, x reset/clamp, wrap flags and linefeed/scroll/a11y event ordering.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-44. Run cited unchanged JS behavior/tests and the Rust implementation on identical clock/operation traces; compare returns, errors, post-state and ordered events; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies"
+      ]
+    },
+    {
+      "id": "vt-45",
+      "criterionId": 373,
+      "criterionRevision": 1,
+      "title": "IND NEL and reverse index preserve boundary row contents",
+      "source": "source_repo/src/common/InputHandler.ts index/nextLine/reverseIndex",
+      "body": "Compare ESC D/E/M and C1 IND/NEL at top/bottom margins and outside region. Match source insertion/deletion, blank erase attrs, cursor column policy and scrollback effects for each control.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-45. Run cited unchanged JS behavior/tests and the Rust implementation on identical clock/operation traces; compare returns, errors, post-state and ordered events; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies"
+      ]
+    },
+    {
+      "id": "vt-46",
+      "criterionId": 374,
+      "criterionRevision": 1,
+      "title": "BEL and carriage return preserve event and cursor semantics",
+      "source": "source_repo/src/common/InputHandler.ts bell/carriageReturn",
+      "body": "BEL emits exactly the source bell event without display changes. CR at normal/right-margin positions homes x only; repeat with Unicode preceding and pending wrap, comparing events and REP/dirty state.",
+      "verification": "Required: node scripts/acceptance-oracle.mjs --case vt-46. Run cited unchanged JS behavior/tests and the Rust implementation on identical clock/operation traces; compare returns, errors, post-state and ordered events; reject zero cases.",
+      "adapter": "terminal.mjs",
+      "engines": [
+        "native"
+      ],
+      "fields": [
+        "cells",
+        "cursor",
+        "margins",
+        "normal",
+        "alternate",
+        "events",
+        "replies"
+      ]
+    }
+  ]
+}
