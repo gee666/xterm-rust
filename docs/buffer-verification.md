@@ -29,7 +29,7 @@ There are 22 direct integration tests, including a second public observation of 
 
 `node scripts/buffer-resize-oracle.mjs` instruments only the Buffer resize entry point in a temporary bundle. All original test assertions still run. The observer records the input immediately before each call and the result immediately afterward. The uninstrumented baseline runs separately to detect accidental changes in assertion outcomes.
 
-The fixture contains 86 original resize calls plus 128 traces of 8 randomized resize calls, 1,110 transitions total. The xorshift32 seed is `0xb0ff67`. Inputs include normal and alternate buffers, empty/content cells, Unicode and lone surrogates, combined strings, attributes, extended attributes and hyperlinks, changing host dimensions, cursor and saved positions, scrollback, display tracking, scroll regions, marker insertion, ConPTY/WinPTY and missing/zero/build-21,375/build-21,376 options.
+The fixture contains 86 original resize calls plus 128 traces of 8 randomized resize calls and one directed regression, 1,111 transitions total. The directed case verifies that an empty first wrapped row can produce source `savedY=-1`; Rust preserves that signed value instead of returning an arithmetic-overflow error. The xorshift32 seed is `0xb0ff67`. Inputs include normal and alternate buffers, empty/content cells, Unicode and lone surrogates, combined strings, attributes, extended attributes and hyperlinks, changing host dimensions, cursor and saved positions, scrollback, display tracking, scroll regions, marker insertion, ConPTY/WinPTY and missing/zero/build-21,375/build-21,376 options.
 
 Each input and output records:
 
@@ -45,7 +45,7 @@ The checked-in TSV intentionally exceeds the 350-line source limit. It is genera
 
 ## Additional boundaries
 
-`tests/buffer_screen_edges.rs` checks zero-size rejection without mutation, scratch-cell extended-attribute sharing/default reset, live host width, partial viewport fill, saved state and marker lifetime across clear, cursor viewport bounds, tab exclusion/clamping/incremental setup, invalid tab widths, a one-column buffer, missing-row translation, half-open deletion ranges and callback-driven marker disposal.
+`tests/buffer_screen_edges.rs` checks zero-size rejection without mutation, scratch-cell extended-attribute sharing/default reset, live host width, partial viewport fill, saved state and marker lifetime across clear, cursor viewport bounds, tab exclusion/clamping/incremental setup, invalid tab widths, a one-column buffer, missing-row translation, half-open deletion ranges and callback-driven marker disposal. A first draft expected callback-driven disposal to empty the marker list. Direct execution of the original source disproved that guess: disposing the second marker changes its line to -1 before the clear loop reaches it, so the original retains that disposed entry. The oracle now explicitly asserts this behavior, and Rust preserves it.
 
 The exact memory test runs as a child of BufferLine's test module to observe private retained storage without adding a production diagnostic API. Vec storage length models the original ArrayBuffer's retained cell count; logical line length models its typed-array view. It checks exactly 80 * 3 * 4 bytes before cleanup and 39 * 3 * 4 afterward, preserving every original assertion. Allocator spare capacity is not claimed to match JavaScript engine allocation.
 

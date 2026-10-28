@@ -1,5 +1,6 @@
 // Copyright (c) 2026 xterm-rust contributors. Licensed under MIT.
 // Observe every original Buffer resize call while all upstream assertions run.
+import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -147,6 +148,24 @@ for (let trace = 0; trace < 128; trace++) {
   }
   buffer.dispose();
 }
+title = 'directed empty first wrapped row with savedY zero';
+const emptyWrapped = new Buffer(true, new MockOptionsService({ scrollback: 1, reflowCursorLine: true }),
+  new MockBufferService(7, 5), new MockLogService());
+emptyWrapped.fillViewportRows();
+emptyWrapped.setWrapped(0, true);
+emptyWrapped.resize(4, 5);
+assert.equal(emptyWrapped.savedY, -1);
+emptyWrapped.dispose();
+const reentrant = new Buffer(true, new MockOptionsService(), new MockBufferService(4, 5), new MockLogService());
+const first = reentrant.addMarker(1);
+const second = reentrant.addMarker(1);
+first.onDispose(() => second.dispose());
+reentrant.clearMarkers(1);
+assert.equal(first.isDisposed, true);
+assert.equal(second.isDisposed, true);
+assert.equal(reentrant.markers.length, 1);
+assert.equal(reentrant.markers[0], second);
+reentrant.dispose();
 delete globalThis.__captureBufferResize;
 const fixture = 'crates/xterm-core/tests/fixtures/buffer-resize.tsv';
 mkdirSync(resolve(root, 'crates/xterm-core/tests/fixtures'), { recursive: true });
@@ -158,11 +177,13 @@ for (const file of Object.keys(built.metafile.inputs).filter(p => p.startsWith('
 const report = { command: 'node scripts/buffer-resize-oracle.mjs', node: process.version,
   platform: process.platform, overallEquivalence: 'NOT PROVEN', sourceHashes,
   fixture, fixtureSha256: createHash('sha256').update(readFileSync(resolve(root, fixture))).digest('hex'),
+  supplemental: { reentrantClearMarkers: 'passed; disposed second marker remains because its line becomes -1 before the loop reaches it',
+    emptyWrappedSavedY: 'passed; resizing empty first wrapped row preserves source savedY=-1' }, indices: { directedEmptyWrapped: cases.length - 1 },
   baseline: { discovered: runner.total, passed: runner.stats.passes, failed: failures,
     skipped: runner.stats.pending, executed: runner.stats.tests - runner.stats.pending,
     unrun: runner.total - runner.stats.tests, outcomes },
   resizeCalls: cases.length, originalResizeCalls, seed: '0xb0ff67',
-  randomizedTraces: 128, randomizedResizeCalls: cases.length - originalResizeCalls, cases,
+  randomizedTraces: 128, randomizedResizeCalls: 1024, directedResizeCalls: 1, cases,
   limitations: ['Resize snapshots do not port non-resize assertions; see Rust upstream tests.',
     'Cleanup backing-memory assertions require separate Rust observation.',
     'Snapshot input hydration does not prove preceding operation ordering.',

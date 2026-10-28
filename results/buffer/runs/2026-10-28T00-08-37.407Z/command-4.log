@@ -1,0 +1,65 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+warning: method `with_queued_parse` is never used
+  --> crates\xterm-core\src\headless\events.rs:67:12
+   |
+33 | impl Events {
+   | ----------- method in this implementation
+...
+67 |     pub fn with_queued_parse<T>(&self, action: impl FnOnce() -> T) -> T {
+   |            ^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `xterm-core` (lib) generated 1 warning
+    Finished `release` profile [optimized] target(s) in 5.47s
+     Running tests\buffer_resize_differential.rs (target\release\deps\buffer_resize_differential-166a1316259b6256.exe)
+
+running 1 test
+test original_and_seeded_resizes_preserve_state_cells_identity_markers_and_events ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running tests\buffer_screen_edges.rs (target\release\deps\buffer_screen_edges-75eeb66431730737.exe)
+
+running 10 tests
+test cursor_viewport_uses_base_display_and_exclusive_bottom ... ok
+test blank_line_uses_live_host_width_not_last_buffer_resize ... ok
+test disposal_callback_can_dispose_another_marker_without_a_buffer_borrow ... ok
+test clear_preserves_saved_state_and_source_marker_lifetime ... ok
+test zero_dimensions_reject_without_mutation ... ok
+test deletion_disposes_half_open_range_and_shifts_only_later_markers ... ok
+test single_column_tabs_and_missing_translation ... ok
+test tab_stops_exclude_start_clamp_and_default_to_cursor ... ok
+test scratch_cells_share_extended_attributes_but_default_resets_them ... ok
+test fill_does_not_pad_a_partially_filled_viewport ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\buffer_screen_upstream.rs (target\release\deps\buffer_screen_upstream-a9461859724b0e80.exe)
+
+running 22 tests
+test constructor_capacity_is_rows_plus_scrollback ... ok
+test marker_disposes_when_trimmed_out ... ok
+test idle_cleanup_realigns_retained_storage_after_shrink ... ok
+test translate_single_width_emoji ... ok
+test marker_calls_on_dispose ... ok
+test nonwrapped_last ... ok
+test nonwrapped_middle ... ok
+test nonwrapped_first ... ok
+test constructor_scroll_bottom_is_rows_minus_one ... ok
+test fill_viewport_has_exact_dimensions_and_blank_cells ... ok
+test translate_cutoff_wide_character_includes_it ... ok
+test translate_ascii_section ... ok
+test translate_double_width_emoji ... ok
+test marker_line_adjusts_when_trimmed ... ok
+test wrapped_first ... ok
+test wrapped_last ... ok
+test wrapped_middle_both_ways ... ok
+test wrapped_middle_down ... ok
+test wrapped_middle_up ... ok
+test wrapped_to_first_row ... ok
+test translate_skips_wide_placeholder ... ok
+test wrapped_to_last_row ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

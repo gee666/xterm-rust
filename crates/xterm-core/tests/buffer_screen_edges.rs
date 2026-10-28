@@ -210,5 +210,10 @@ fn disposal_callback_can_dispose_another_marker_without_a_buffer_borrow() {
     buffer.clear_markers(1).unwrap();
     assert!(first.is_disposed());
     assert!(second.is_disposed());
+    // The original Buffer skips the second marker after the callback changes
+    // its line to -1. Preserve the disposed entry, not an improved empty list.
+    assert_eq!(buffer.markers.borrow().len(), 1);
+    assert!(buffer.markers.borrow()[0].ptr_eq(&second));
+    buffer.clear_all_markers().unwrap();
     assert!(buffer.markers.borrow().is_empty());
 }

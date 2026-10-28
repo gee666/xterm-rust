@@ -1,0 +1,40 @@
+    Blocking waiting for file lock on build directory
+warning: unused `Result` that must be used
+   --> crates\xterm-core\src\headless\terminal.rs:218:9
+    |
+218 | /         self.engine
+219 | |             .try_borrow_mut()
+220 | |             .map_err(|_| HeadlessError::Borrowed)?
+221 | |             .dispose();
+    | |______________________^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+    = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+    |
+218 |         let _ = self.engine
+    |         +++++++
+
+warning: `xterm-core` (lib) generated 1 warning
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 1.20s
+     Running tests\buffer_resize_differential.rs (target\debug\deps\buffer_resize_differential-fa76f5f51983df6b.exe)
+
+running 1 test
+test original_and_seeded_resizes_preserve_state_cells_identity_markers_and_events ... FAILED
+
+failures:
+
+---- original_and_seeded_resizes_preserve_state_cells_identity_markers_and_events stdout ----
+
+thread 'original_and_seeded_resizes_preserve_state_cells_identity_markers_and_events' panicked at crates\xterm-core\tests\buffer_resize_differential.rs:74:37:
+case 96: seed 0xb0ff67 trace 1 step 2 -> 4x1: buffer size arithmetic overflow
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    original_and_seeded_resizes_preserve_state_cells_identity_markers_and_events
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+
+error: test failed, to rerun pass `-p xterm-core --test buffer_resize_differential`

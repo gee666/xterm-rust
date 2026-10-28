@@ -1,0 +1,310 @@
+error: couldn't read \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\native\commands.rs: The system cannot find the file specified. (os error 2)
+ --> \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\native.rs:4:1
+  |
+4 | mod commands;
+  | ^^^^^^^^^^^^^
+
+Error writing files: failed to resolve mod `commands`: \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\examples\native\commands.rs does not exist
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\line.rs:6:
+ };
+ use std::{cell::RefCell, collections::BTreeMap};
+ 
+[32m+#[cfg(test)]
+[0m[32m+#[path = "line_buffer_cleanup_tests.rs"]
+[0m[32m+mod buffer_cleanup_tests;
+[0m #[path = "line_edit.rs"]
+ mod edit;
+ #[cfg(test)]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\line.rs:12:
+ #[path = "line_storage_tests.rs"]
+ mod storage_tests;
+[31m-#[cfg(test)]
+[0m[31m-#[path = "line_buffer_cleanup_tests.rs"]
+[0m[31m-mod buffer_cleanup_tests;
+[0m #[path = "line_text.rs"]
+ mod text;
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\headless\events.rs:65:
+         self.all.event()
+     }
+     pub fn with_queued_parse<T>(&self, action: impl FnOnce() -> T) -> T {
+[31m-        struct Restore<'a> { flag: &'a std::cell::Cell<bool>, previous: bool }
+[0m[31m-        impl Drop for Restore<'_> { fn drop(&mut self) { self.flag.set(self.previous); } }
+[0m[31m-        let _restore = Restore { flag: &self.suppress_parsed, previous: self.suppress_parsed.replace(true) };
+[0m[32m+        struct Restore<'a> {
+[0m[32m+            flag: &'a std::cell::Cell<bool>,
+[0m[32m+            previous: bool,
+[0m[32m+        }
+[0m[32m+        impl Drop for Restore<'_> {
+[0m[32m+            fn drop(&mut self) {
+[0m[32m+                self.flag.set(self.previous);
+[0m[32m+            }
+[0m[32m+        }
+[0m[32m+        let _restore = Restore {
+[0m[32m+            flag: &self.suppress_parsed,
+[0m[32m+            previous: self.suppress_parsed.replace(true),
+[0m[32m+        };
+[0m         action()
+     }
+     pub fn dispatch(&self, event: TerminalEvent) -> Result<(), EmitError> {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\headless\events.rs:74:
+         // The source WriteBuffer owns parsed notifications after completion
+         // callbacks and batching. A queued parse must not invent one per chunk.
+[31m-        if event == TerminalEvent::WriteParsed && self.suppress_parsed.get() { return Ok(()); }
+[0m[32m+        if event == TerminalEvent::WriteParsed && self.suppress_parsed.get() {
+[0m[32m+            return Ok(());
+[0m[32m+        }
+[0m         match &event {
+             TerminalEvent::Bell => self.bell.fire(&())?,
+             TerminalEvent::Binary(data) => self.binary.fire(data)?,
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\headless\options_view.rs:52:
+     pub fn get(&self, key: &str) -> Result<OptionValue, OptionError> {
+         self.service.get(key)
+     }
+[31m-    pub fn service(&self) -> Rc<OptionsService> { Rc::clone(&self.service) }
+[0m[32m+    pub fn service(&self) -> Rc<OptionsService> {
+[0m[32m+        Rc::clone(&self.service)
+[0m[32m+    }
+[0m     pub fn keys(&self) -> Vec<&'static str> {
+         self.service.keys()
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\headless\terminal.rs:133:
+     }
+     pub fn input(&self, data: &[u16], was_user_input: bool) -> Result<(), HeadlessError> {
+         let core = self.with_state(|state| Rc::clone(&state.core))?;
+[31m-        core.trigger_data_event(data, was_user_input).map_err(TerminalError::from)?;
+[0m[32m+        core.trigger_data_event(data, was_user_input)
+[0m[32m+            .map_err(TerminalError::from)?;
+[0m         self.flush_notifications()
+     }
+     pub fn input_binary(&self, data: &[u16]) -> Result<(), HeadlessError> {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\headless\terminal.rs:140:
+         let core = self.with_state(|state| Rc::clone(&state.core))?;
+[31m-        core.trigger_binary_event(data).map_err(TerminalError::from)?;
+[0m[32m+        core.trigger_binary_event(data)
+[0m[32m+            .map_err(TerminalError::from)?;
+[0m         self.flush_notifications()
+     }
+     fn flush_notifications(&self) -> Result<(), HeadlessError> {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\headless\terminal.rs:145:
+         let queue = self.with_state(|state| Rc::clone(&state.events))?;
+         let events = std::mem::take(&mut *queue.borrow_mut());
+[31m-        for event in events { self.events.dispatch(event)?; }
+[0m[32m+        for event in events {
+[0m[32m+            self.events.dispatch(event)?;
+[0m[32m+        }
+[0m         Ok(())
+     }
+     pub fn resize(&self, cols: usize, rows: usize) -> Result<(), HeadlessError> {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\serialize\addon.rs:1:
+ // Copyright (c) 2019 The xterm.js authors. All rights reserved. MIT license.
+ use super::{
+[31m-    serialize_html, serialize_terminal, CellRange, HtmlConfig, HtmlOptions, MouseTracking, SerializeError, SerializeModes, SerializeOptions,
+[0m[31m-    SerializeState,
+[0m[32m+    serialize_html, serialize_terminal, CellRange, HtmlConfig, HtmlOptions, MouseTracking,
+[0m[32m+    SerializeError, SerializeModes, SerializeOptions, SerializeState,
+[0m };
+ use crate::{
+     headless::{HeadlessError, ModesSnapshot, MouseTrackingMode, Terminal},
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\serialize\addon.rs:28:
+         match self {
+             Self::NotLoaded => f.write_str("Cannot use addon until it has been loaded"),
+             Self::Borrowed => f.write_str("terminal is already borrowed"),
+[31m-            Self::SelectionUnavailable => f.write_str("this._terminal?.getSelectionPosition is not a function"),
+[0m[32m+            Self::SelectionUnavailable => {
+[0m[32m+                f.write_str("this._terminal?.getSelectionPosition is not a function")
+[0m[32m+            }
+[0m             Self::Options(error) => error.fmt(f),
+             Self::Api(error) => error.fmt(f),
+             Self::Serialize(error) => error.fmt(f),
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\serialize\addon.rs:77:
+             .map_err(|_| AddonSerializeError::Borrowed)?;
+         serialize_live_state(&state, options)
+     }
+[31m-    pub fn serialize_as_html(&self, options: &HtmlOptions) -> Result<Vec<u16>,AddonSerializeError> {
+[0m[31m-        let handle=self.current_state()?;
+[0m[31m-        let state=handle.try_borrow().map_err(|_|AddonSerializeError::Borrowed)?;
+[0m[32m+    pub fn serialize_as_html(
+[0m[32m+        &self,
+[0m[32m+        options: &HtmlOptions,
+[0m[32m+    ) -> Result<Vec<u16>, AddonSerializeError> {
+[0m[32m+        let handle = self.current_state()?;
+[0m[32m+        let state = handle
+[0m[32m+            .try_borrow()
+[0m[32m+            .map_err(|_| AddonSerializeError::Borrowed)?;
+[0m         verify_proposed_api(state.options.get("allowProposedApi")?.is_truthy())?;
+[31m-        if options.only_selection && options.range.is_none() { return Err(AddonSerializeError::SelectionUnavailable); }
+[0m[31m-        let theme=state.options.get("theme")?;
+[0m[31m-        let config=HtmlConfig {
+[0m[31m-            foreground: theme_color(&theme,"foreground")?,background:theme_color(&theme,"background")?,
+[0m[31m-            font_family:state.options.get("fontFamily")?.to_utf16()?,
+[0m[31m-            font_size:state.options.get("fontSize")?.to_number()?,ansi_colors:None,
+[0m[32m+        if options.only_selection && options.range.is_none() {
+[0m[32m+            return Err(AddonSerializeError::SelectionUnavailable);
+[0m[32m+        }
+[0m[32m+        let theme = state.options.get("theme")?;
+[0m[32m+        let config = HtmlConfig {
+[0m[32m+            foreground: theme_color(&theme, "foreground")?,
+[0m[32m+            background: theme_color(&theme, "background")?,
+[0m[32m+            font_family: state.options.get("fontFamily")?.to_utf16()?,
+[0m[32m+            font_size: state.options.get("fontSize")?.to_number()?,
+[0m[32m+            ansi_colors: None,
+[0m         };
+[31m-        serialize_live_html(&state,options,None,&config)
+[0m[32m+        serialize_live_html(&state, options, None, &config)
+[0m     }
+[31m-    fn current_state(&self)->Result<Rc<RefCell<TerminalState>>,AddonSerializeError> {
+[0m[31m-        self.state.try_borrow().map_err(|_|AddonSerializeError::Borrowed)?
+[0m[31m-            .as_ref().cloned().ok_or(AddonSerializeError::NotLoaded)
+[0m[32m+    fn current_state(&self) -> Result<Rc<RefCell<TerminalState>>, AddonSerializeError> {
+[0m[32m+        self.state
+[0m[32m+            .try_borrow()
+[0m[32m+            .map_err(|_| AddonSerializeError::Borrowed)?
+[0m[32m+            .as_ref()
+[0m[32m+            .cloned()
+[0m[32m+            .ok_or(AddonSerializeError::NotLoaded)
+[0m     }
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\serialize\addon.rs:99:
+[31m-fn theme_color(theme:&OptionValue,key:&str)->Result<Option<Vec<u16>>,OptionError> {
+[0m[31m-    if matches!(theme,OptionValue::Null|OptionValue::Undefined) {return Ok(None);}
+[0m[31m-    let value=theme.get_property(key)?;
+[0m[31m-    if matches!(value,OptionValue::Null|OptionValue::Undefined) {Ok(None)} else {value.to_utf16().map(Some)}
+[0m[32m+fn theme_color(theme: &OptionValue, key: &str) -> Result<Option<Vec<u16>>, OptionError> {
+[0m[32m+    if matches!(theme, OptionValue::Null | OptionValue::Undefined) {
+[0m[32m+        return Ok(None);
+[0m[32m+    }
+[0m[32m+    let value = theme.get_property(key)?;
+[0m[32m+    if matches!(value, OptionValue::Null | OptionValue::Undefined) {
+[0m[32m+        Ok(None)
+[0m[32m+    } else {
+[0m[32m+        value.to_utf16().map(Some)
+[0m[32m+    }
+[0m }
+ 
+ /// Browser hosts supply their actual selection and parsed theme palette. Native
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\serialize\addon.rs:106:
+ /// headless hosts use the default palette and have no selection API.
+[31m-pub fn serialize_live_html(state:&TerminalState, options:&HtmlOptions,selection:Option<CellRange>,config:&HtmlConfig)->Result<Vec<u16>,AddonSerializeError> {
+[0m[32m+pub fn serialize_live_html(
+[0m[32m+    state: &TerminalState,
+[0m[32m+    options: &HtmlOptions,
+[0m[32m+    selection: Option<CellRange>,
+[0m[32m+    config: &HtmlConfig,
+[0m[32m+) -> Result<Vec<u16>, AddonSerializeError> {
+[0m     verify_proposed_api(state.options.get("allowProposedApi")?.is_truthy())?;
+[31m-    let active=state.buffers.active();
+[0m[31m-    let active=active.try_borrow().map_err(|_|AddonSerializeError::Borrowed)?;
+[0m[31m-    Ok(serialize_html(&*active,state.cols(),state.rows(),selection,config,options)?)
+[0m[32m+    let active = state.buffers.active();
+[0m[32m+    let active = active
+[0m[32m+        .try_borrow()
+[0m[32m+        .map_err(|_| AddonSerializeError::Borrowed)?;
+[0m[32m+    Ok(serialize_html(
+[0m[32m+        &*active,
+[0m[32m+        state.cols(),
+[0m[32m+        state.rows(),
+[0m[32m+        selection,
+[0m[32m+        config,
+[0m[32m+        options,
+[0m[32m+    )?)
+[0m }
+ impl TerminalAddon<Terminal> for SerializeAddon {
+     type Error = HeadlessError;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\modes.rs:152:
+             2026 => {
+                 self.core.dec_private_modes.borrow_mut().synchronized_output = enabled;
+                 if !enabled {
+[31m-                    self.events.borrow_mut().push(TerminalEvent::Render { start: 0, end: self.rows() - 1 });
+[0m[32m+                    self.events.borrow_mut().push(TerminalEvent::Render {
+[0m[32m+                        start: 0,
+[0m[32m+                        end: self.rows() - 1,
+[0m[32m+                    });
+[0m                 }
+             }
+             2031 if self.mode_option("vtExtensions", "colorSchemeQuery", true)? => {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\modes.rs:196:
+             }
+         }
+         self.core.is_cursor_initialized.set(true);
+[31m-        self.events.borrow_mut().push(TerminalEvent::Render { start: 0, end: self.rows() - 1 });
+[0m[32m+        self.events.borrow_mut().push(TerminalEvent::Render {
+[0m[32m+            start: 0,
+[0m[32m+            end: self.rows() - 1,
+[0m[32m+        });
+[0m         self.events.borrow_mut().push(TerminalEvent::SyncScrollBar);
+         Ok(())
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\core_service.rs:285:
+         )))
+     });
+     let error = h.core.trigger_data_event(&[], true).unwrap_err();
+[31m-    assert_eq!(error.source().unwrap().source().unwrap().downcast_ref::<std::io::Error>().unwrap().to_string(), "original callback failure");
+[0m[32m+    assert_eq!(
+[0m[32m+        error
+[0m[32m+            .source()
+[0m[32m+            .unwrap()
+[0m[32m+            .source()
+[0m[32m+            .unwrap()
+[0m[32m+            .downcast_ref::<std::io::Error>()
+[0m[32m+            .unwrap()
+[0m[32m+            .to_string(),
+[0m[32m+        "original callback failure"
+[0m[32m+    );
+[0m     let CoreError::Dispatch(error) = error else {
+         panic!("wrong failure category");
+     };
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\terminal_engine_differential.rs:1:
+ // Copyright (c) 2014-2026 The xterm.js authors. All rights reserved. MIT license.
+[31m-#[path="support/terminal_snapshot.rs"] mod projection;
+[0m[31m-use projection::{snapshot,events,parse_hex};
+[0m[31m-use xterm_core::terminal::CoreTerminal;
+[0m[32m+#[path = "support/terminal_snapshot.rs"]
+[0m[32m+mod projection;
+[0m[32m+use projection::{events, parse_hex, snapshot};
+[0m use std::path::PathBuf;
+[32m+use xterm_core::terminal::CoreTerminal;
+[0m 
+ #[test]
+ fn both_buffers_cells_modes_and_ordered_events_match_real_source_traces() {
+Error writing files: failed to resolve mod `options`: \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\terminal\options.rs does not exist
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\wasm_input.rs:40:
+     );
+     setup.dom.element.dispatch_event(&copy).unwrap();
+     assert!(copy.default_prevented());
+[31m-    let copied = copy.dyn_ref::<web_sys::ClipboardEvent>().unwrap().clipboard_data().unwrap();
+[0m[32m+    let copied = copy
+[0m[32m+        .dyn_ref::<web_sys::ClipboardEvent>()
+[0m[32m+        .unwrap()
+[0m[32m+        .clipboard_data()
+[0m[32m+        .unwrap();
+[0m     assert_eq!(copied.get_data("text/plain").unwrap(), "selected 😀");
+     clipboard.set_data("text/plain", "one\ntwo").unwrap();
+     let paste = event(
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\web_fonts_async_browser.rs:21:
+ }
+ 
+ fn face(name: &str) -> FontFace {
+[31m-    FontFace::new_with_u8_array(
+[0m[31m-        name,
+[0m[31m-        include_bytes!("fixtures/kongtext.regular.ttf"),
+[0m[31m-    )
+[0m[31m-    .unwrap()
+[0m[32m+    FontFace::new_with_u8_array(name, include_bytes!("fixtures/kongtext.regular.ttf")).unwrap()
+[0m }
+ 
+ fn host(family: &str) -> JsValue {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\web_fonts_browser.rs:14:
+ }
+ 
+ fn face(name: &str) -> FontFace {
+[31m-    FontFace::new_with_u8_array(
+[0m[31m-        name,
+[0m[31m-        include_bytes!("fixtures/kongtext.regular.ttf"),
+[0m[31m-    )
+[0m[31m-    .unwrap()
+[0m[32m+    FontFace::new_with_u8_array(name, include_bytes!("fixtures/kongtext.regular.ttf")).unwrap()
+[0m }
+ 
+ fn requests(values: &[JsValue]) -> Array {

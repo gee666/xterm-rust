@@ -16,7 +16,7 @@ pub struct LineSnapshot<'a> {
 }
 #[derive(Debug)]
 pub struct Snapshot<'a> {
-    pub state: Vec<usize>,
+    pub state: Vec<i64>,
     pub lines: Vec<LineSnapshot<'a>>,
     pub markers: Vec<(i64, bool)>,
 }
@@ -31,7 +31,7 @@ pub struct Case<'a> {
     pub after: Snapshot<'a>,
     pub events: &'a str,
 }
-fn numbers(text: &str) -> Vec<usize> {
+fn numbers(text: &str) -> Vec<i64> {
     text.split('\t').map(|n| n.parse().unwrap()).collect()
 }
 fn snapshot<'a>(rows: &mut impl Iterator<Item = &'a str>) -> Snapshot<'a> {
@@ -39,7 +39,7 @@ fn snapshot<'a>(rows: &mut impl Iterator<Item = &'a str>) -> Snapshot<'a> {
     let (_, state) = row.split_once('\t').unwrap();
     let state = numbers(state);
     let mut lines = Vec::new();
-    for _ in 0..state[14] {
+    for _ in 0..usize::try_from(state[14]).unwrap() {
         let row: Vec<_> = rows.next().unwrap().split('\t').collect();
         assert_eq!(row[0], "line");
         lines.push(LineSnapshot {
@@ -116,6 +116,7 @@ fn decode_cell(text: &str) -> CellData {
 }
 pub fn hydrate(case: &Case<'_>) -> (Buffer, Vec<Rc<RefCell<BufferLine>>>) {
     let state = &case.before.state;
+    let unsigned = |index: usize| usize::try_from(state[index]).unwrap();
     let options = Rc::new(OptionsService::default());
     for (key, value) in [
         ("scrollback", case.options[0]),
@@ -140,10 +141,10 @@ pub fn hydrate(case: &Case<'_>) -> (Buffer, Vec<Rc<RefCell<BufferLine>>>) {
             }),
         )
         .unwrap();
-    let mut buffer = Buffer::new(state[4] == 1, state[0], state[1], options).unwrap();
-    buffer.host_dimensions.cols.set(state[2]);
-    buffer.host_dimensions.rows.set(state[3]);
-    buffer.lines.set_max_length(state[5]).unwrap();
+    let mut buffer = Buffer::new(state[4] == 1, unsigned(0), unsigned(1), options).unwrap();
+    buffer.host_dimensions.cols.set(unsigned(2));
+    buffer.host_dimensions.rows.set(unsigned(3));
+    buffer.lines.set_max_length(unsigned(5)).unwrap();
     let mut identities = Vec::new();
     for expected in &case.before.lines {
         let cells: Vec<_> = if expected.cells == "-" {
@@ -159,14 +160,14 @@ pub fn hydrate(case: &Case<'_>) -> (Buffer, Vec<Rc<RefCell<BufferLine>>>) {
         buffer.lines.push(line.clone()).unwrap();
         identities.push(line);
     }
-    buffer.x = state[6];
-    buffer.y = state[7];
-    buffer.ybase = state[8];
-    buffer.ydisp = state[9];
-    buffer.saved_x = state[10];
+    buffer.x = unsigned(6);
+    buffer.y = unsigned(7);
+    buffer.ybase = unsigned(8);
+    buffer.ydisp = unsigned(9);
+    buffer.saved_x = unsigned(10);
     buffer.saved_y = state[11];
-    buffer.scroll_top = state[12];
-    buffer.scroll_bottom = state[13];
+    buffer.scroll_top = unsigned(12);
+    buffer.scroll_bottom = unsigned(13);
     for (line, disposed) in &case.before.markers {
         assert!(!disposed, "input contains only active marker references");
         buffer.add_marker(*line);
@@ -208,24 +209,29 @@ pub fn assert_snapshot(
     expected: &Snapshot<'_>,
     label: &str,
 ) {
+    let signed = |value: usize| i64::try_from(value).unwrap();
     let state = [
-        buffer.cols(),
-        buffer.rows(),
-        buffer.host_dimensions.cols.get(),
-        buffer.host_dimensions.rows.get(),
-        expected.state[4],
-        buffer.lines.max_length(),
-        buffer.x,
-        buffer.y,
-        buffer.ybase,
-        buffer.ydisp,
-        buffer.saved_x,
+        signed(buffer.cols()),
+        signed(buffer.rows()),
+        signed(buffer.host_dimensions.cols.get()),
+        signed(buffer.host_dimensions.rows.get()),
+        i64::from(buffer.has_scrollback()),
+        signed(buffer.lines.max_length()),
+        signed(buffer.x),
+        signed(buffer.y),
+        signed(buffer.ybase),
+        signed(buffer.ydisp),
+        signed(buffer.saved_x),
         buffer.saved_y,
-        buffer.scroll_top,
-        buffer.scroll_bottom,
-        buffer.lines.len(),
+        signed(buffer.scroll_top),
+        signed(buffer.scroll_bottom),
+        signed(buffer.lines.len()),
     ];
-    assert_eq!(state.as_slice(), expected.state, "{label}: state");
+    let mut expected_state = expected.state.clone();
+    // The fixture retains the immutable constructor flag. The public source
+    // getter additionally requires capacity greater than the current rows.
+    expected_state[4] = i64::from(expected.state[4] == 1 && expected.state[5] > expected.state[1]);
+    assert_eq!(state.as_slice(), expected_state, "{label}: state");
     for (y, expected) in expected.lines.iter().enumerate() {
         let line = buffer.lines.get(y).unwrap();
         let actual_id = identities

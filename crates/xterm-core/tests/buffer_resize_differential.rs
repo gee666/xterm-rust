@@ -9,8 +9,8 @@ fn original_and_seeded_resizes_preserve_state_cells_identity_markers_and_events(
     let cases = snapshot::cases(include_str!("fixtures/buffer-resize.tsv"));
     assert_eq!(
         cases.len(),
-        1110,
-        "86 original calls plus 128 traces of 8 seeded calls"
+        1111,
+        "86 original calls, 128 traces of 8 seeded calls and one directed regression"
     );
     assert_eq!(
         cases

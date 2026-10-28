@@ -1,0 +1,1146 @@
+{
+  "command": "node scripts/check-buffer.mjs --debug-only",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "attempt": "2026-10-27T23-58-32.530Z",
+  "status": "failed",
+  "overallEquivalence": "NOT PROVEN",
+  "sourceHashes": {
+    "source_repo/src/common/Lifecycle.ts": "e00016aae991e24137ab066778912414f4af959f2b26baecf47ec542ad313a83",
+    "source_repo/src/common/Event.ts": "aa374272c5ec5c0d6992d6072687211a94676b086a2505b0414ddd20cf57d641",
+    "source_repo/src/common/CircularList.ts": "558ae3c18862469de29c2f77e06c31c44c2cddaa25fd6e69059bf2176efc54f6",
+    "source_repo/src/common/TaskQueue.ts": "3a3c33a8d50aa767a7eaf355980ad6d53c1e9fc5acc287b14eabe0a72720142a",
+    "source_repo/src/common/buffer/Constants.ts": "0342c709b580e7a7c62fffb61bab359f93511b82529f5a155374797ca4799f21",
+    "source_repo/src/common/buffer/AttributeData.ts": "09a9dc9693200cd7c34a98af3c1fc97b47b4354828cb02a76ab561a03515748a",
+    "source_repo/src/common/input/TextDecoder.ts": "0368a7fddbb53502f86144b61d023f8d022f5ce973a1b01b59c552ec62631a1b",
+    "source_repo/src/common/buffer/CellData.ts": "d0dfcbf310a949d8bdf4172f9896a6f143d3abf4e0dc68b896dec6612b82d992",
+    "source_repo/src/common/buffer/BufferLine.ts": "409958425629c5592bd4813272b00b480e6a723985ea28f24125a7a72ef95bdf",
+    "source_repo/src/common/buffer/BufferReflow.ts": "d2fa77716bd3190c5f2fbe2510fbae7218da8cf14fc55a48143c450802ccefe3",
+    "source_repo/src/common/buffer/Marker.ts": "3a6dc8fe7e791de49b825faba6c47093d73427bddf80fa6dd4069b8a90aac88d",
+    "source_repo/src/common/data/Charsets.ts": "64fe88d37beb2cc7c60a18d23fb4033e24f19b56b7f481fc656f8e912faac725",
+    "source_repo/src/common/buffer/Buffer.ts": "b299d8dfdd75deee31807a94c9417093b0c0a0f1714e5553779052602b32e4af",
+    "source_repo/src/common/services/ServiceRegistry.ts": "a467a496d3f1f26130c55809c587e1a7aeaa56d91e22be60af4182db6bb89171",
+    "source_repo/src/common/services/Services.ts": "617002157a8f7946b2245db9d795e2808d5d843171e84bb6917a80c0fe6e9a4b",
+    "source_repo/src/common/services/UnicodeService.ts": "dae3733c0a07bfe55f264ea749e3df61b3b4505830e4e685183771497c292811",
+    "source_repo/src/common/Platform.ts": "be5ab9b1d1056e892b656732b375600178864e60281fc6a218480ac19c1f845a",
+    "source_repo/src/common/services/OptionsService.ts": "2cef872a29730441e2de5ef31a224872d9d1fb99be069d409febc8c9a7e41a09",
+    "source_repo/src/common/buffer/BufferSet.ts": "3a2cc96d786e65bbfd1c7dc0c60653ce0062eb9c6f58a0e89214b1660ba5722c",
+    "source_repo/src/common/input/UnicodeV6.ts": "526041b7d903ef88bf031825dde557a7f6d4b3e156be984fb524c66d02ac412e",
+    "source_repo/src/common/TestUtils.test.ts": "a1f20abc213a9a5f7611989c7eb74b1ad5f6810a733d5e491c29ff7f8b126034",
+    "source_repo/src/common/buffer/Buffer.test.ts": "c7972068ea9281a2e2a5bf2eaf5c42bcc555b31188dc6368ce790d504cc07dc2"
+  },
+  "rustHashesBefore": {
+    "scripts/buffer-baseline.mjs": "29787e1eb954b0f8f7f3de96c5f22559be8d3fdd09d0b79ad9208a996118d61e",
+    "scripts/buffer-resize-oracle.mjs": "a0da7209a740b7ac8893c546eaf47aa017d83ca4b1d84a948ccc04a9c7030cb1",
+    "scripts/check-buffer.mjs": "7b479b0f0725075e278e4f7a8e00beb6a7b885daa359f3a4ab3178e6e950c0e9",
+    "crates/xterm-core/tests/buffer_resize_differential.rs": "6db8c8ebeeb5e8f945853fec23d9e77094c9428a75a1173f99e25da6079dd472",
+    "crates/xterm-core/tests/buffer_screen_upstream.rs": "24bad92888b339a16d3f1d1990844c1c62cafb210ee220faaa26d11319e473ec",
+    "crates/xterm-core/tests/buffer_screen_edges.rs": "a48e8ba06eff52205294df7f220ff19ed48ecbc53839d1a4ecf6fe7ff2b194be",
+    "crates/xterm-core/tests/support/buffer_snapshot.rs": "338a2dd49f84eed225b97823dabf26588bba749764745677d98d08169f26a85b",
+    "crates/xterm-core/src/buffer/attributes.rs": "8e91e059bd0e0e353d5b6179b869b17bb75be85b9c680768ddff917a7f74ac66",
+    "crates/xterm-core/src/buffer/buffer_set.rs": "afae949bc8854b7b59d55e0b54adbbfc3de14dd84b21b88f158c7f269a82fd27",
+    "crates/xterm-core/src/buffer/cell.rs": "52bdef9deadcdb4010ac1afeb19a8711120184e15de48b862497fb6c8c226daa",
+    "crates/xterm-core/src/buffer/cleanup.rs": "562130065b9514857279caab319edf539cb22aece6adcdfd55f3e23cb88734e8",
+    "crates/xterm-core/src/buffer/constants.rs": "70623dbf0d49f5532a56f3ea1c7fc2de6b7ce30c0e41b9ccdc33927491defbac",
+    "crates/xterm-core/src/buffer/extended.rs": "f9f5b0a1acd65722d173f28a256fd47face0b86f59ff12ec511f2c5516d15e47",
+    "crates/xterm-core/src/buffer/line.rs": "5c6f54ba1338d1f2e704f9230df33030dbf16395549ef705302b44f2a7985df4",
+    "crates/xterm-core/src/buffer/line_buffer_cleanup_tests.rs": "b3ce67d315167e7266aa7ff65685271a6e83c729ecabbc233f8dec00a894656b",
+    "crates/xterm-core/src/buffer/line_edit.rs": "28a7ceb0ce686157489425bf0dbc7660fc04d1d472e2b97b5651f3cfddf74df9",
+    "crates/xterm-core/src/buffer/line_storage_tests.rs": "9060432041ebac64fd176d4ad13caf98a0cf8f8fadab7f4c296d414050996324",
+    "crates/xterm-core/src/buffer/line_text.rs": "36606e32d3d3ad35f70aa6dc3211c743961debe29e43089a42a64de7299a6e9a",
+    "crates/xterm-core/src/buffer/marker.rs": "bcdca03aa9b77969ffc5add24523e2085388c1b9d3ed386e0d9cc8b6426410f6",
+    "crates/xterm-core/src/buffer/mod.rs": "267fc3052408a39dd6d1b9169b98a52879941436fc05586d679cc991f563c75c",
+    "crates/xterm-core/src/buffer/range.rs": "eead3ef738e92a5f36e32cfbfc7c1103b33aae313d77bd2cc2e013507f72ad9b",
+    "crates/xterm-core/src/buffer/reflow.rs": "91aa95808550cac58cb68a9f3b005fcc9bbc1cc40dafd0af8cf3b820590d3e83",
+    "crates/xterm-core/src/buffer/screen.rs": "130e56d98216bab406a4582f56e88fa7a006a8fe200f430e3bcd711c8e399c87",
+    "crates/xterm-core/src/buffer/screen_markers.rs": "aa89ecd855cc62eed5d0992e8efbaef3e7a3ec19e2d558914cfdb8bd9b41de77",
+    "crates/xterm-core/src/buffer/screen_navigation.rs": "5b7813e4cc019195382ed0e2489b9bd40034eeaf857f2f65bf7a851a7209020d",
+    "crates/xterm-core/src/buffer/screen_options.rs": "ff2cb7bed2213f76deb5fff9e132af735b6fe0ab1d8a5706d15764665c7784ae",
+    "crates/xterm-core/src/buffer/screen_reflow.rs": "394a4ad46bee67fe80600179c5df86d0bbb8d5dc66c12b3d3fcccc8f46232ff9",
+    "crates/xterm-core/src/buffer/screen_reflow_smaller.rs": "bfb9977c0f4e0edbaafc648dffebc9c297e7d6da042f2b386bef284377b48cf4",
+    "crates/xterm-core/src/buffer/screen_resize.rs": "e9785d9b8527d364c5554cac8792bcf3e2c2aff696c566f5887d16c696454ce0",
+    "crates/xterm-core/src/buffer/service.rs": "d6a08f95117341a9fd967194755464c166cc2fedc1269d3a20be3f1349a88633"
+  },
+  "rustHashesAfter": {
+    "scripts/buffer-baseline.mjs": "29787e1eb954b0f8f7f3de96c5f22559be8d3fdd09d0b79ad9208a996118d61e",
+    "scripts/buffer-resize-oracle.mjs": "a0da7209a740b7ac8893c546eaf47aa017d83ca4b1d84a948ccc04a9c7030cb1",
+    "scripts/check-buffer.mjs": "7b479b0f0725075e278e4f7a8e00beb6a7b885daa359f3a4ab3178e6e950c0e9",
+    "crates/xterm-core/tests/buffer_resize_differential.rs": "6db8c8ebeeb5e8f945853fec23d9e77094c9428a75a1173f99e25da6079dd472",
+    "crates/xterm-core/tests/buffer_screen_upstream.rs": "24bad92888b339a16d3f1d1990844c1c62cafb210ee220faaa26d11319e473ec",
+    "crates/xterm-core/tests/buffer_screen_edges.rs": "a48e8ba06eff52205294df7f220ff19ed48ecbc53839d1a4ecf6fe7ff2b194be",
+    "crates/xterm-core/tests/support/buffer_snapshot.rs": "338a2dd49f84eed225b97823dabf26588bba749764745677d98d08169f26a85b",
+    "crates/xterm-core/src/buffer/attributes.rs": "8e91e059bd0e0e353d5b6179b869b17bb75be85b9c680768ddff917a7f74ac66",
+    "crates/xterm-core/src/buffer/buffer_set.rs": "8805804b3f82d94e57a17cea1213899841df470f4795f45b7f57ce866efec312",
+    "crates/xterm-core/src/buffer/cell.rs": "52bdef9deadcdb4010ac1afeb19a8711120184e15de48b862497fb6c8c226daa",
+    "crates/xterm-core/src/buffer/cleanup.rs": "562130065b9514857279caab319edf539cb22aece6adcdfd55f3e23cb88734e8",
+    "crates/xterm-core/src/buffer/constants.rs": "70623dbf0d49f5532a56f3ea1c7fc2de6b7ce30c0e41b9ccdc33927491defbac",
+    "crates/xterm-core/src/buffer/extended.rs": "f9f5b0a1acd65722d173f28a256fd47face0b86f59ff12ec511f2c5516d15e47",
+    "crates/xterm-core/src/buffer/line.rs": "5c6f54ba1338d1f2e704f9230df33030dbf16395549ef705302b44f2a7985df4",
+    "crates/xterm-core/src/buffer/line_buffer_cleanup_tests.rs": "b3ce67d315167e7266aa7ff65685271a6e83c729ecabbc233f8dec00a894656b",
+    "crates/xterm-core/src/buffer/line_edit.rs": "28a7ceb0ce686157489425bf0dbc7660fc04d1d472e2b97b5651f3cfddf74df9",
+    "crates/xterm-core/src/buffer/line_storage_tests.rs": "9060432041ebac64fd176d4ad13caf98a0cf8f8fadab7f4c296d414050996324",
+    "crates/xterm-core/src/buffer/line_text.rs": "36606e32d3d3ad35f70aa6dc3211c743961debe29e43089a42a64de7299a6e9a",
+    "crates/xterm-core/src/buffer/marker.rs": "bcdca03aa9b77969ffc5add24523e2085388c1b9d3ed386e0d9cc8b6426410f6",
+    "crates/xterm-core/src/buffer/mod.rs": "267fc3052408a39dd6d1b9169b98a52879941436fc05586d679cc991f563c75c",
+    "crates/xterm-core/src/buffer/range.rs": "eead3ef738e92a5f36e32cfbfc7c1103b33aae313d77bd2cc2e013507f72ad9b",
+    "crates/xterm-core/src/buffer/reflow.rs": "91aa95808550cac58cb68a9f3b005fcc9bbc1cc40dafd0af8cf3b820590d3e83",
+    "crates/xterm-core/src/buffer/screen.rs": "130e56d98216bab406a4582f56e88fa7a006a8fe200f430e3bcd711c8e399c87",
+    "crates/xterm-core/src/buffer/screen_markers.rs": "aa89ecd855cc62eed5d0992e8efbaef3e7a3ec19e2d558914cfdb8bd9b41de77",
+    "crates/xterm-core/src/buffer/screen_navigation.rs": "5b7813e4cc019195382ed0e2489b9bd40034eeaf857f2f65bf7a851a7209020d",
+    "crates/xterm-core/src/buffer/screen_options.rs": "ff2cb7bed2213f76deb5fff9e132af735b6fe0ab1d8a5706d15764665c7784ae",
+    "crates/xterm-core/src/buffer/screen_reflow.rs": "394a4ad46bee67fe80600179c5df86d0bbb8d5dc66c12b3d3fcccc8f46232ff9",
+    "crates/xterm-core/src/buffer/screen_reflow_smaller.rs": "bfb9977c0f4e0edbaafc648dffebc9c297e7d6da042f2b386bef284377b48cf4",
+    "crates/xterm-core/src/buffer/screen_resize.rs": "e9785d9b8527d364c5554cac8792bcf3e2c2aff696c566f5887d16c696454ce0",
+    "crates/xterm-core/src/buffer/service.rs": "93cafc455792c0dc37c1c83943256124052506486f268d538d4ffd42e47b3057"
+  },
+  "changedDuringRun": [
+    "crates/xterm-core/src/buffer/buffer_set.rs",
+    "crates/xterm-core/src/buffer/service.rs"
+  ],
+  "originalSuite": {
+    "discovered": 61,
+    "mapped": 61,
+    "baseline": {
+      "discovered": 61,
+      "passed": 61,
+      "failed": 0,
+      "skipped": 0,
+      "executed": 61,
+      "unrun": 0,
+      "outcomes": [
+        {
+          "name": "Buffer constructor should create a CircularList with max length equal to rows + scrollback, for its lines",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer constructor should set the Buffer's scrollBottom value equal to the terminal's rows -1",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer fillViewportRows should fill the buffer with blank lines based on the size of the viewport",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer getWrappedRangeForLine non-wrapped should return a single row for the first row",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer getWrappedRangeForLine non-wrapped should return a single row for a middle row",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer getWrappedRangeForLine non-wrapped should return a single row for the last row",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer getWrappedRangeForLine wrapped should return a range for the first row",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer getWrappedRangeForLine wrapped should return a range for a middle row wrapping upwards",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer getWrappedRangeForLine wrapped should return a range for a middle row wrapping downwards",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer getWrappedRangeForLine wrapped should return a range for a middle row wrapping both ways",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer getWrappedRangeForLine wrapped should return a range for the last row",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer getWrappedRangeForLine wrapped should return a range for a row that wraps upward to first row",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer getWrappedRangeForLine wrapped should return a range for a row that wraps downward to last row",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize column size is reduced should trim the data in the buffer",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize column size is increased should add pad columns",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize row size reduced should trim blank lines from the end",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize row size reduced should move the viewport down when it's at the end",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize row size reduced no scrollback should trim from the top of the buffer when the cursor reaches the bottom",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize row size increased empty buffer should add blank lines to end",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize row size increased filled buffer should show more of the buffer above",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize row size increased filled buffer should show more of the buffer below when the viewport is at the top of the buffer",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize row size increased Windows ConPTY should not adjust ybase or ydisp when growing rows",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize row and column increased should resize properly",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should not wrap empty lines",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should shrink row length",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should wrap and unwrap lines",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should gate reflow on ConPTY buildNumber 21376",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should unwrap lines on ConPTY builds with reflow support",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should reflow wrapped lines containing the cursor when reflowCursorLine is enabled",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should not reflow wrapped lines containing the cursor by default",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should discard parts of wrapped lines that go out of the scrollback",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should remove the correct amount of rows when reflowing larger",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should transfer combined char data over to reflowed lines",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should adjust markers when reflowing",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should dispose markers whose rows are trimmed during a reflow",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should correctly reflow wrapped lines that end in 0 space (via tab char)",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should wrap wide characters correctly when reflowing larger",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should correctly reflow wrapped lines that end in 0 space (via tab char)",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow should wrap wide characters correctly when reflowing smaller",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowLarger cases viewport not yet filled should move the cursor up and add empty lines",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowLarger cases viewport filled, scrollback remaining ybase === 0 should move the cursor up and add empty lines",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowLarger cases viewport filled, scrollback remaining ybase !== 0 && ydisp === ybase should adjust the viewport and keep ydisp = ybase",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowLarger cases viewport filled, scrollback remaining ybase !== 0 && ydisp !== ybase should keep ydisp at the same value",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowLarger cases viewport filled, no scrollback remaining ybase !== 0 && ydisp === ybase should trim lines and keep ydisp = ybase",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowLarger cases viewport filled, no scrollback remaining ybase !== 0 && ydisp !== ybase should trim lines and not change ydisp",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowSmaller cases viewport not yet filled should move the cursor down",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowSmaller cases viewport filled, scrollback remaining ybase === 0 should trim the top",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowSmaller cases viewport filled, scrollback remaining ybase !== 0 && ydisp === ybase should adjust the viewport and keep ydisp = ybase",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowSmaller cases viewport filled, scrollback remaining ybase !== 0 && ydisp !== ybase should keep ydisp at the same value",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowSmaller cases viewport filled, no scrollback remaining ybase !== 0 && ydisp === ybase should trim lines and keep ydisp = ybase",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer resize reflow reflowSmaller cases viewport filled, no scrollback remaining ybase !== 0 && ydisp !== ybase should trim lines and not change ydisp",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer buffer marked to have no scrollback should always have a scrollback of 0",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer addMarker should adjust a marker line when the buffer is trimmed",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer addMarker should dispose of a marker if it is trimmed off the buffer",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer addMarker should call onDispose",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer translateBufferLineToString should handle selecting a section of ascii text",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer translateBufferLineToString should handle a cut-off double width character by including it",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer translateBufferLineToString should handle a zero width character in the middle of the string by not including it",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer translateBufferLineToString should handle single width emojis",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer translateBufferLineToString should handle double width emojis",
+          "status": "passed"
+        },
+        {
+          "name": "Buffer memory cleanup after shrinking should realign memory from idle task execution",
+          "status": "passed"
+        }
+      ]
+    }
+  },
+  "resizeOracle": {
+    "originalCalls": 86,
+    "randomizedCalls": 1024,
+    "seed": "0xb0ff67",
+    "traces": 128,
+    "fixture": "crates/xterm-core/tests/fixtures/buffer-resize.tsv",
+    "fixtureSha256": "2222cad55c5cf5d8e91d465e7962b940344b1fb1ada9429723dd33d0fd1736c6"
+  },
+  "mapping": [
+    {
+      "ordinal": 0,
+      "sourceName": "Buffer constructor should create a CircularList with max length equal to rows + scrollback, for its lines",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "constructor_capacity_is_rows_plus_scrollback"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 1,
+      "sourceName": "Buffer constructor should set the Buffer's scrollBottom value equal to the terminal's rows -1",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "constructor_scroll_bottom_is_rows_minus_one"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 2,
+      "sourceName": "Buffer fillViewportRows should fill the buffer with blank lines based on the size of the viewport",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "fill_viewport_has_exact_dimensions_and_blank_cells"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 3,
+      "sourceName": "Buffer getWrappedRangeForLine non-wrapped should return a single row for the first row",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "nonwrapped_first"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 4,
+      "sourceName": "Buffer getWrappedRangeForLine non-wrapped should return a single row for a middle row",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "nonwrapped_middle"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 5,
+      "sourceName": "Buffer getWrappedRangeForLine non-wrapped should return a single row for the last row",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "nonwrapped_last"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 6,
+      "sourceName": "Buffer getWrappedRangeForLine wrapped should return a range for the first row",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "wrapped_first"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 7,
+      "sourceName": "Buffer getWrappedRangeForLine wrapped should return a range for a middle row wrapping upwards",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "wrapped_middle_up"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 8,
+      "sourceName": "Buffer getWrappedRangeForLine wrapped should return a range for a middle row wrapping downwards",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "wrapped_middle_down"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 9,
+      "sourceName": "Buffer getWrappedRangeForLine wrapped should return a range for a middle row wrapping both ways",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "wrapped_middle_both_ways"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 10,
+      "sourceName": "Buffer getWrappedRangeForLine wrapped should return a range for the last row",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "wrapped_last"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 11,
+      "sourceName": "Buffer getWrappedRangeForLine wrapped should return a range for a row that wraps upward to first row",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "wrapped_to_first_row"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 12,
+      "sourceName": "Buffer getWrappedRangeForLine wrapped should return a range for a row that wraps downward to last row",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "wrapped_to_last_row"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 13,
+      "sourceName": "Buffer resize column size is reduced should trim the data in the buffer",
+      "directTest": null,
+      "resizeFixtureCases": [
+        0
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 14,
+      "sourceName": "Buffer resize column size is increased should add pad columns",
+      "directTest": null,
+      "resizeFixtureCases": [
+        1
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 15,
+      "sourceName": "Buffer resize row size reduced should trim blank lines from the end",
+      "directTest": null,
+      "resizeFixtureCases": [
+        2
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 16,
+      "sourceName": "Buffer resize row size reduced should move the viewport down when it's at the end",
+      "directTest": null,
+      "resizeFixtureCases": [
+        3
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 17,
+      "sourceName": "Buffer resize row size reduced no scrollback should trim from the top of the buffer when the cursor reaches the bottom",
+      "directTest": null,
+      "resizeFixtureCases": [
+        4
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 18,
+      "sourceName": "Buffer resize row size increased empty buffer should add blank lines to end",
+      "directTest": null,
+      "resizeFixtureCases": [
+        5
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 19,
+      "sourceName": "Buffer resize row size increased filled buffer should show more of the buffer above",
+      "directTest": null,
+      "resizeFixtureCases": [
+        6
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 20,
+      "sourceName": "Buffer resize row size increased filled buffer should show more of the buffer below when the viewport is at the top of the buffer",
+      "directTest": null,
+      "resizeFixtureCases": [
+        7
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 21,
+      "sourceName": "Buffer resize row size increased Windows ConPTY should not adjust ybase or ydisp when growing rows",
+      "directTest": null,
+      "resizeFixtureCases": [
+        8
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 22,
+      "sourceName": "Buffer resize row and column increased should resize properly",
+      "directTest": null,
+      "resizeFixtureCases": [
+        9
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 23,
+      "sourceName": "Buffer resize reflow should not wrap empty lines",
+      "directTest": null,
+      "resizeFixtureCases": [
+        10
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 24,
+      "sourceName": "Buffer resize reflow should shrink row length",
+      "directTest": null,
+      "resizeFixtureCases": [
+        11
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 25,
+      "sourceName": "Buffer resize reflow should wrap and unwrap lines",
+      "directTest": null,
+      "resizeFixtureCases": [
+        12,
+        13,
+        14
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 26,
+      "sourceName": "Buffer resize reflow should gate reflow on ConPTY buildNumber 21376",
+      "directTest": null,
+      "resizeFixtureCases": [
+        15,
+        16,
+        17,
+        18
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 27,
+      "sourceName": "Buffer resize reflow should unwrap lines on ConPTY builds with reflow support",
+      "directTest": null,
+      "resizeFixtureCases": [
+        19,
+        20,
+        21
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 28,
+      "sourceName": "Buffer resize reflow should reflow wrapped lines containing the cursor when reflowCursorLine is enabled",
+      "directTest": null,
+      "resizeFixtureCases": [
+        22,
+        23,
+        24
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 29,
+      "sourceName": "Buffer resize reflow should not reflow wrapped lines containing the cursor by default",
+      "directTest": null,
+      "resizeFixtureCases": [
+        25,
+        26,
+        27
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 30,
+      "sourceName": "Buffer resize reflow should discard parts of wrapped lines that go out of the scrollback",
+      "directTest": null,
+      "resizeFixtureCases": [
+        28,
+        29,
+        30,
+        31
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 31,
+      "sourceName": "Buffer resize reflow should remove the correct amount of rows when reflowing larger",
+      "directTest": null,
+      "resizeFixtureCases": [
+        32,
+        33,
+        34
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 32,
+      "sourceName": "Buffer resize reflow should transfer combined char data over to reflowed lines",
+      "directTest": null,
+      "resizeFixtureCases": [
+        35,
+        36
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 33,
+      "sourceName": "Buffer resize reflow should adjust markers when reflowing",
+      "directTest": null,
+      "resizeFixtureCases": [
+        37,
+        38,
+        39
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 34,
+      "sourceName": "Buffer resize reflow should dispose markers whose rows are trimmed during a reflow",
+      "directTest": null,
+      "resizeFixtureCases": [
+        40,
+        41,
+        42
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 35,
+      "sourceName": "Buffer resize reflow should correctly reflow wrapped lines that end in 0 space (via tab char)",
+      "directTest": null,
+      "resizeFixtureCases": [
+        43,
+        44,
+        45
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 36,
+      "sourceName": "Buffer resize reflow should wrap wide characters correctly when reflowing larger",
+      "directTest": null,
+      "resizeFixtureCases": [
+        46,
+        47,
+        48
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 37,
+      "sourceName": "Buffer resize reflow should correctly reflow wrapped lines that end in 0 space (via tab char)",
+      "directTest": null,
+      "resizeFixtureCases": [
+        49,
+        50,
+        51
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 38,
+      "sourceName": "Buffer resize reflow should wrap wide characters correctly when reflowing smaller",
+      "directTest": null,
+      "resizeFixtureCases": [
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 39,
+      "sourceName": "Buffer resize reflow reflowLarger cases viewport not yet filled should move the cursor up and add empty lines",
+      "directTest": null,
+      "resizeFixtureCases": [
+        59,
+        60
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 40,
+      "sourceName": "Buffer resize reflow reflowLarger cases viewport filled, scrollback remaining ybase === 0 should move the cursor up and add empty lines",
+      "directTest": null,
+      "resizeFixtureCases": [
+        61,
+        62
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 41,
+      "sourceName": "Buffer resize reflow reflowLarger cases viewport filled, scrollback remaining ybase !== 0 && ydisp === ybase should adjust the viewport and keep ydisp = ybase",
+      "directTest": null,
+      "resizeFixtureCases": [
+        63,
+        64
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 42,
+      "sourceName": "Buffer resize reflow reflowLarger cases viewport filled, scrollback remaining ybase !== 0 && ydisp !== ybase should keep ydisp at the same value",
+      "directTest": null,
+      "resizeFixtureCases": [
+        65,
+        66
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 43,
+      "sourceName": "Buffer resize reflow reflowLarger cases viewport filled, no scrollback remaining ybase !== 0 && ydisp === ybase should trim lines and keep ydisp = ybase",
+      "directTest": null,
+      "resizeFixtureCases": [
+        67,
+        68
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 44,
+      "sourceName": "Buffer resize reflow reflowLarger cases viewport filled, no scrollback remaining ybase !== 0 && ydisp !== ybase should trim lines and not change ydisp",
+      "directTest": null,
+      "resizeFixtureCases": [
+        69,
+        70
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 45,
+      "sourceName": "Buffer resize reflow reflowSmaller cases viewport not yet filled should move the cursor down",
+      "directTest": null,
+      "resizeFixtureCases": [
+        71,
+        72
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 46,
+      "sourceName": "Buffer resize reflow reflowSmaller cases viewport filled, scrollback remaining ybase === 0 should trim the top",
+      "directTest": null,
+      "resizeFixtureCases": [
+        73,
+        74
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 47,
+      "sourceName": "Buffer resize reflow reflowSmaller cases viewport filled, scrollback remaining ybase !== 0 && ydisp === ybase should adjust the viewport and keep ydisp = ybase",
+      "directTest": null,
+      "resizeFixtureCases": [
+        75,
+        76
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 48,
+      "sourceName": "Buffer resize reflow reflowSmaller cases viewport filled, scrollback remaining ybase !== 0 && ydisp !== ybase should keep ydisp at the same value",
+      "directTest": null,
+      "resizeFixtureCases": [
+        77,
+        78
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 49,
+      "sourceName": "Buffer resize reflow reflowSmaller cases viewport filled, no scrollback remaining ybase !== 0 && ydisp === ybase should trim lines and keep ydisp = ybase",
+      "directTest": null,
+      "resizeFixtureCases": [
+        79,
+        80
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 50,
+      "sourceName": "Buffer resize reflow reflowSmaller cases viewport filled, no scrollback remaining ybase !== 0 && ydisp !== ybase should trim lines and not change ydisp",
+      "directTest": null,
+      "resizeFixtureCases": [
+        81,
+        82
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 51,
+      "sourceName": "Buffer buffer marked to have no scrollback should always have a scrollback of 0",
+      "directTest": null,
+      "resizeFixtureCases": [
+        83,
+        84
+      ],
+      "mapped": true
+    },
+    {
+      "ordinal": 52,
+      "sourceName": "Buffer addMarker should adjust a marker line when the buffer is trimmed",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "marker_line_adjusts_when_trimmed"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 53,
+      "sourceName": "Buffer addMarker should dispose of a marker if it is trimmed off the buffer",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "marker_disposes_when_trimmed_out"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 54,
+      "sourceName": "Buffer addMarker should call onDispose",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "marker_calls_on_dispose"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 55,
+      "sourceName": "Buffer translateBufferLineToString should handle selecting a section of ascii text",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "translate_ascii_section"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 56,
+      "sourceName": "Buffer translateBufferLineToString should handle a cut-off double width character by including it",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "translate_cutoff_wide_character_includes_it"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 57,
+      "sourceName": "Buffer translateBufferLineToString should handle a zero width character in the middle of the string by not including it",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "translate_skips_wide_placeholder"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 58,
+      "sourceName": "Buffer translateBufferLineToString should handle single width emojis",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "translate_single_width_emoji"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 59,
+      "sourceName": "Buffer translateBufferLineToString should handle double width emojis",
+      "directTest": {
+        "path": "crates/xterm-core/tests/buffer_screen_upstream.rs",
+        "name": "translate_double_width_emoji"
+      },
+      "resizeFixtureCases": [],
+      "mapped": true
+    },
+    {
+      "ordinal": 60,
+      "sourceName": "Buffer memory cleanup after shrinking should realign memory from idle task execution",
+      "directTest": {
+        "path": "crates/xterm-core/src/buffer/line_buffer_cleanup_tests.rs",
+        "name": "original_buffer_idle_cleanup_preserves_then_realigns_exact_backing_bytes"
+      },
+      "resizeFixtureCases": [
+        85
+      ],
+      "mapped": true
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/buffer-baseline.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 297.5707,
+      "status": "passed",
+      "log": "results/buffer/runs/2026-10-27T23-58-32.530Z/command-0.log"
+    },
+    {
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/buffer-resize-oracle.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 422.9263,
+      "status": "passed",
+      "log": "results/buffer/runs/2026-10-27T23-58-32.530Z/command-1.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-core",
+        "--test",
+        "buffer_resize_differential",
+        "--test",
+        "buffer_screen_upstream",
+        "--test",
+        "buffer_screen_edges"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 3298.5558,
+      "status": "failed",
+      "log": "results/buffer/runs/2026-10-27T23-58-32.530Z/command-2.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-core",
+        "--lib",
+        "original_buffer_idle_cleanup_preserves_then_realigns_exact_backing_bytes"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1528.6306,
+      "status": "failed",
+      "log": "results/buffer/runs/2026-10-27T23-58-32.530Z/command-3.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "xterm-core",
+        "--test",
+        "buffer_resize_differential",
+        "--test",
+        "buffer_screen_upstream",
+        "--test",
+        "buffer_screen_edges",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 2328.3139,
+      "status": "failed",
+      "log": "results/buffer/runs/2026-10-27T23-58-32.530Z/command-4.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 719.1546000000008,
+      "status": "failed",
+      "log": "results/buffer/runs/2026-10-27T23-58-32.530Z/command-5.log"
+    }
+  ],
+  "rustCounts": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-core",
+        "--test",
+        "buffer_resize_differential",
+        "--test",
+        "buffer_screen_upstream",
+        "--test",
+        "buffer_screen_edges"
+      ],
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "status": "failed"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-core",
+        "--lib",
+        "original_buffer_idle_cleanup_preserves_then_realigns_exact_backing_bytes"
+      ],
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "status": "failed"
+    }
+  ],
+  "limitations": [
+    "Resize hydration compares each transition, not the preceding terminal operation sequence.",
+    "Random corpus uses width-one cells including Unicode and malformed UTF-16. Original source cases cover wide cells.",
+    "Full terminal/parser/addon and host scheduler integration belong to tasks27/79/99.",
+    "Native Linux/macOS and browser runtime are unrun by this scoped Windows command.",
+    "Workspace-wide quality checks are independent, and passing scoped checks alone does not satisfy full equivalence."
+  ]
+}
