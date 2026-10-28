@@ -105,8 +105,11 @@ export async function createWorktree({cwd,agent,base,main,copyOwned:owned=[]}) {
   agent=agentName(agent);const repo=repository(cwd,main);base=path.resolve(base??await defaultBase(repo.primary));
   if(owned.length)await carrySelection(repo.root,owned);
   await ensureSpace(base);await ensureSpace(repo.primary);await localExcludes(repo.root);
-  const directory=path.join(base,agent);const branch=`swarm/${agent}`;
-  const existing=worktrees(repo.root).find(item=>path.resolve(item.directory)===directory);
+  const branch=`swarm/${agent}`;
+  const registered=worktrees(repo.root);
+  const byBranch=registered.find(item=>item.branch===`refs/heads/${branch}`);
+  const directory=byBranch?path.resolve(byBranch.directory):path.join(base,agent);
+  const existing=registered.find(item=>path.resolve(item.directory)===directory);
   if(existing) {
     if(existing.branch!==`refs/heads/${branch}`)throw new Error(`${directory} belongs to ${existing.branch}`);
   } else if(hasRef(repo.root,`refs/heads/${branch}`))git(repo.root,'worktree','add',directory,branch);
@@ -190,7 +193,7 @@ export function affectedPackages(metadata,packages) {
 }
 function cleanNewFiles(cwd) {
   const files=git(cwd,'ls-files','--others','--exclude-standard','-z').split('\0').filter(Boolean)
-    .filter(file=>!['target','tmp','source_repo'].some(name=>file===name||file.startsWith(`${name}/`)));
+    .filter(file=>!['target','tmp','source_repo','results'].some(name=>file===name||file.startsWith(`${name}/`)));
   if(files.length)throw new Error(`Commit new source files before merging: ${files.slice(0,8).join(', ')}`);
 }
 export async function deletePrivateTarget(directory) {
@@ -223,6 +226,10 @@ export async function mergeWorktree({cwd,main,check=run}) {
   check(cargo,['check','--locked','--workspace'],directory,{inherit:true,env});
   const wasm=affected.filter(pkg=>pkg.name.includes('web')||pkg.name.includes('wasm')||(pkg.dependencies??[]).some(dep=>['wasm-bindgen','web-sys'].includes(dep.name)));
   if(wasm.length)check(cargo,['check','--locked','--target','wasm32-unknown-unknown','--lib',...wasm.flatMap(pkg=>['-p',pkg.name])],directory,{inherit:true,env});
+  // Tests may refresh tracked result reports. The branch was clean before the
+  // run, so restore only these generated outputs, never source or user edits.
+  const reports=git(directory,'diff','--name-only','-z','--','results/').split('\0').filter(Boolean);
+  if(reports.length)git(directory,'restore','--worktree','--',...reports);
   cleanTracked(directory);cleanNewFiles(directory);cleanTracked(repo.primary);
   if(git(directory,'rev-parse',repo.main)!==base)throw new Error('Main advanced during your parallel build; rerun merge to rebase and retest');
   if(git(directory,'rev-parse','HEAD')!==head)throw new Error('Agent branch changed during tests; rerun merge and test the new commit');

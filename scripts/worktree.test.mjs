@@ -87,6 +87,24 @@ test('creator rejects a linked target without deleting or following it',async t=
   assert.equal(await readFile(path.join(outside,'keep.txt'),'utf8'),'keep');
 });
 
+test('successful tests may refresh reports without hiding source changes',async t=>{
+  const {root,tree}=await fixture(t);
+  await mkdir(path.join(root,'results'),{recursive:true});
+  await writeFile(path.join(root,'results','report.txt'),'baseline');
+  run('git',['add','results/report.txt'],root);run('git',['commit','-m','tracked report'],root);
+  await writeFile(path.join(tree.directory,'src/lib.rs'),'pub fn value()->u8 {2}\n');commit(tree.directory,'agent source');
+  const check=(command,args,cwd)=>{
+    if(args[0]==='metadata')return JSON.stringify({workspace_members:['sample'],packages:[{id:'sample',name:'worktree_sample',manifest_path:path.join(cwd,'Cargo.toml')}]});
+    if(args[0]==='test') {
+      run('git',['diff','--quiet'],cwd);
+      return run(process.execPath,['-e','require("node:fs").writeFileSync("results/report.txt","test output")'],cwd);
+    }
+    return '';
+  };
+  await mergeWorktree({cwd:tree.directory,check});
+  assert.equal(await readFile(path.join(root,'results','report.txt'),'utf8'),'baseline');
+  assert.equal(run('git',['diff','--name-only'],tree.directory),'');
+});
 test('names and package selection reject unsafe paths and include manifest-wide changes',()=>{
   for(const name of ['../other','a/b','CON',''])assert.throws(()=>agentName(name));
   const cwd=path.resolve('tmp/example');const metadata={workspace_members:['a','b'],packages:[
