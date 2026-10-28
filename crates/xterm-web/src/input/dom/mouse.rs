@@ -4,12 +4,21 @@
 mod alt;
 #[path = "mouse_events.rs"]
 mod events;
+#[path = "mouse_read.rs"]
+mod read;
+#[path = "mouse_report.rs"]
+mod report;
 #[path = "mouse_subscriptions.rs"]
 mod subscriptions;
+#[path = "mouse_touch.rs"]
+mod touch;
+#[path = "mouse_values.rs"]
+mod values;
+pub use read::MouseReadHost;
 
 use super::InputHost;
 use crate::input::{
-    mouse_coords::{parse_css_padding, MouseGeometry},
+    mouse_coords::{parse_css_padding, MouseGeometry, ReportCoords},
     mouse_policy::{MouseOutput, MousePolicy, MouseRouting},
 };
 use crate::{dom::BrowserDom, dom_listener::DomListener};
@@ -40,9 +49,8 @@ pub struct MouseSnapshot {
 
 /// All methods observe live state. Implementors must use the terminal's shared
 /// unit-payload mouse service, not a second service with independent modes.
-pub trait MouseHost {
+pub trait MouseHost: MouseReadHost {
     fn mouse_service(&self) -> Result<Rc<MouseStateService<()>>, JsValue>;
-    fn mouse_snapshot(&self) -> Result<MouseSnapshot, JsValue>;
     fn mouse_protocol_log(&self, events: MouseEventTypes) -> Result<(), JsValue>;
     fn mouse_option_changes(&self) -> xterm_core::event::Event<&'static str>;
     fn allow_custom_wheel(&self, event: &WheelEvent) -> Result<bool, JsValue>;
@@ -73,15 +81,14 @@ struct State {
     requested: Cell<MouseEventTypes>,
     dynamic: RefCell<Dynamic>,
     disposed: Cell<bool>,
-    protocol_error: RefCell<Option<JsValue>>,
 }
 
 pub struct MouseBindings {
     state: Rc<State>,
-    fixed: Vec<DomListener>,
-    subscription: Option<DisposableHandle>,
-    option_subscription: Option<DisposableHandle>,
-    gesture: Option<DisposableHandle>,
+    fixed: RefCell<Vec<DomListener>>,
+    subscription: RefCell<Option<DisposableHandle>>,
+    option_subscription: RefCell<Option<DisposableHandle>>,
+    gesture: RefCell<Option<DisposableHandle>>,
 }
 
 impl MouseBindings {
@@ -97,82 +104,58 @@ impl MouseBindings {
             requested: Cell::new(MouseEventTypes::NONE),
             dynamic: RefCell::new(Dynamic::default()),
             disposed: Cell::new(false),
-            protocol_error: RefCell::new(None),
         });
-        let mut bindings = Self {
+        let bindings = Self {
             state,
-            fixed: Vec::new(),
-            subscription: None,
-            option_subscription: None,
-            gesture: None,
+            fixed: RefCell::new(Vec::new()),
+            subscription: RefCell::new(None),
+            option_subscription: RefCell::new(None),
+            gesture: RefCell::new(None),
         };
         let (protocol, options) = subscriptions::bind(&bindings.state);
-        bindings.subscription = Some(protocol);
-        bindings.option_subscription = Some(options);
+        *bindings.subscription.borrow_mut() = Some(protocol);
+        *bindings.option_subscription.borrow_mut() = Some(options);
         // Upstream assigns activeProtocol to itself, notifying all subscribers.
         service
             .set_active_protocol(&service.active_protocol())
-            .map_err(|failure| {
-                bindings
-                    .take_protocol_error()
-                    .unwrap_or_else(|| error(failure))
-            })?;
-        events::bind_fixed(&mut bindings)?;
+            .map_err(|failure| crate::js_error::to_js_error(&failure))?;
+        events::bind_fixed(&bindings)?;
         Ok(bindings)
-    }
-
-    /// The coordinator drains this after a protocol-changing engine operation.
-    /// If the engine returned MouseStateError::Dispatch, rethrow this original
-    /// JS value rather than replacing a callback/getter exception with a string.
-    pub fn take_protocol_error(&self) -> Option<JsValue> {
-        self.state.protocol_error.borrow_mut().take()
-    }
-
-    /// Invoke after mouseEventsRequireAlt changes, as well as protocol changes.
-    pub fn sync_options(&self) -> Result<(), JsValue> {
-        if self.state.disposed.get() {
-            return Err(error("Mouse input is disposed"));
-        }
-        sync_mode(&self.state)?;
-        alt::sync(&self.state)
     }
 
     pub fn reset(&self) {
         self.state.policy.reset();
     }
 
-    pub fn dispose(&mut self) -> Result<(), JsValue> {
+    pub fn dispose(&self) -> Result<(), JsValue> {
         self.state.disposed.set(true);
-        if let Some(subscription) = self.subscription.take() {
+        let subscription = self.subscription.borrow_mut().take();
+        if let Some(subscription) = subscription {
             subscription.dispose();
         }
-        if let Some(options) = self.option_subscription.take() {
+        let options = self.option_subscription.borrow_mut().take();
+        if let Some(options) = options {
             options.dispose();
         }
-        if let Some(gesture) = self.gesture.take() {
+        let gesture = self.gesture.borrow_mut().take();
+        if let Some(gesture) = gesture {
             gesture.dispose();
         }
-        for listener in &mut self.fixed {
+        let mut listeners = self.fixed.replace(Vec::new());
+        for listener in &mut listeners {
             listener.dispose()?;
         }
-        self.fixed.clear();
         clear_dynamic(&self.state)
     }
 }
 
 impl Drop for MouseBindings {
     fn drop(&mut self) {
-        self.state.disposed.set(true);
-        if let Some(subscription) = self.subscription.take() {
-            subscription.dispose();
-        }
-        if let Some(options) = self.option_subscription.take() {
-            options.dispose();
-        }
-        if let Some(gesture) = self.gesture.take() {
-            gesture.dispose();
-        }
-        // Listener fields own their closures and remove built-in listeners on drop.
+        // Every listener was registered against a validated built-in EventTarget.
+        // Native removal cannot fail; explicit dispose propagates overridden-host
+        // exceptions while Drop is the same final safeguard as DomListener.
+        self.dispose()
+            .expect("validated native mouse listener cleanup cannot fail");
     }
 }
 
@@ -216,8 +199,7 @@ fn clear_dynamic(state: &State) -> Result<(), JsValue> {
 
 fn sync_mode(state: &State) -> Result<(), JsValue> {
     let active = state.service.are_mouse_events_active();
-    let require_alt = state.host.mouse_snapshot()?.routing.require_alt;
-    if active && !require_alt {
+    if active && !state.host.mouse_require_alt()? {
         state.element.class_list().add_1(ENABLE_MOUSE_EVENTS)?;
         state.host.set_mouse_selection_enabled(false)?;
     } else {
@@ -275,29 +257,35 @@ fn sync_protocol(state: &Rc<State>, requested: MouseEventTypes) -> Result<(), Js
     Ok(())
 }
 
-fn geometry(state: &State, snapshot: MouseSnapshot) -> Result<MouseGeometry, JsValue> {
+fn report_coords(state: &State, event: &web_sys::Event) -> Result<Option<ReportCoords>, JsValue> {
+    let fallback = web_sys::window().ok_or_else(|| error("Mouse input requires a window"))?;
+    let window =
+        crate::links::dom_helpers::get_window(Some(state.screen.as_ref()), None, &fallback);
     let rect = state.screen.get_bounding_client_rect();
-    let document = state
-        .screen
-        .owner_document()
-        .unwrap_or_else(|| state.document.clone());
-    let window = document
-        .default_view()
-        .ok_or_else(|| error("Mouse input requires a document window"))?;
     let style = window
         .get_computed_style(&state.screen)?
         .ok_or_else(|| error("Mouse screen has no computed style"))?;
+    let left_padding = parse_css_padding(&style.get_property_value("padding-left")?);
+    let top_padding = parse_css_padding(&style.get_property_value("padding-top")?);
+    let x = values::number(event, "clientX")? - rect.left() - left_padding;
+    let y = values::number(event, "clientY")? - rect.top() - top_padding;
+    if !state.host.mouse_valid_char_size()? {
+        return Ok(None);
+    }
+    let [canvas_width, canvas_height] = state.host.mouse_canvas_size()?;
+    let [cell_width, cell_height] = state.host.mouse_cell_size()?;
     Ok(MouseGeometry {
-        rect_left: rect.left(),
-        rect_top: rect.top(),
-        padding_left: parse_css_padding(&style.get_property_value("padding-left")?),
-        padding_top: parse_css_padding(&style.get_property_value("padding-top")?),
-        valid_char_size: snapshot.valid_char_size,
-        cell_width: snapshot.css_cell_width,
-        cell_height: snapshot.css_cell_height,
-        canvas_width: snapshot.css_canvas_width,
-        canvas_height: snapshot.css_canvas_height,
-    })
+        rect_left: 0.0,
+        rect_top: 0.0,
+        padding_left: 0.0,
+        padding_top: 0.0,
+        valid_char_size: true,
+        cell_width,
+        cell_height,
+        canvas_width,
+        canvas_height,
+    }
+    .report_coords(x, y))
 }
 
 fn listen(

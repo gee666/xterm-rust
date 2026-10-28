@@ -11,8 +11,12 @@ use xterm_web::{
     input::dom::mouse::MouseBindings,
 };
 wasm_bindgen_test_configure!(run_in_browser);
+#[path = "cases/mouse_getters.rs"]
+mod getters;
 #[path = "cases/mouse_reentry.rs"]
 mod reentry;
+#[path = "cases/mouse_trace.rs"]
+mod trace;
 
 struct Setup {
     parent: HtmlElement,
@@ -89,7 +93,7 @@ impl Drop for Setup {
 
 #[wasm_bindgen_test]
 fn global_drag_release_cleanup_focus_and_forced_selection() {
-    let mut setup = Setup::new();
+    let setup = Setup::new();
     setup.host.input.mouse.set_active_protocol("ANY").unwrap();
     setup.host.input.mouse.set_active_encoding("SGR").unwrap();
     assert!(!setup.host.selection_enabled.get());

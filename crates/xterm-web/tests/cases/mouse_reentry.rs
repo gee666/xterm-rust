@@ -5,17 +5,19 @@ use super::support;
 fn protocol_callback_failure_commits_mode_then_stops_dom_updates() {
     let setup = super::Setup::new();
     setup.host.fail_snapshot.set(true);
-    assert!(setup.host.input.mouse.set_active_protocol("ANY").is_err());
+    let failure = setup
+        .host
+        .input
+        .mouse
+        .set_active_protocol("ANY")
+        .unwrap_err();
     assert_eq!(setup.host.input.mouse.active_protocol(), "ANY");
     assert!(!setup
         .dom
         .element
         .class_list()
         .contains("enable-mouse-events"));
-    let error = setup
-        .mouse
-        .take_protocol_error()
-        .expect("preserve original JS getter exception");
+    let error = xterm_web::js_error::to_js_error(&failure);
     assert_eq!(
         js_sys::Reflect::get(&error, &"message".into())
             .unwrap()
@@ -30,7 +32,6 @@ fn protocol_callback_failure_commits_mode_then_stops_dom_updates() {
         .element
         .class_list()
         .contains("enable-mouse-events"));
-    assert!(setup.mouse.take_protocol_error().is_none());
 }
 
 use std::{cell::Cell, rc::Rc};
@@ -53,7 +54,7 @@ fn wheel_custom_callback_can_reenter_the_same_dom_listener() {
     document.body().unwrap().append_child(&parent).unwrap();
     let dom = BrowserDom::new(&parent, &DomOptions::default()).unwrap();
     let host = Rc::new(Host::new());
-    let mut bindings = MouseBindings::new(&dom, host.clone()).unwrap();
+    let bindings = MouseBindings::new(&dom, host.clone()).unwrap();
     host.input.mouse.set_active_protocol("ANY").unwrap();
     host.input.mouse.set_active_encoding("SGR").unwrap();
     let rect = dom.screen.get_bounding_client_rect();
@@ -103,7 +104,7 @@ async fn global_release_uses_elements_current_owner_document() {
     document.body().unwrap().append_child(&parent).unwrap();
     let dom = BrowserDom::new(&parent, &DomOptions::default()).unwrap();
     let host = Rc::new(Host::new());
-    let mut bindings = MouseBindings::new(&dom, host.clone()).unwrap();
+    let bindings = MouseBindings::new(&dom, host.clone()).unwrap();
     host.input.mouse.set_active_protocol("ANY").unwrap();
     host.input.mouse.set_active_encoding("SGR").unwrap();
     let frame = document.create_element("iframe").unwrap();

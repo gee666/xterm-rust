@@ -1,12 +1,6 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
 use super::*;
 
-fn failure(state: &State, error: JsValue) -> xterm_core::event::EmitError {
-    let callback_error = crate::js_error::callback_error(error.clone());
-    *state.protocol_error.borrow_mut() = Some(error);
-    callback_error
-}
-
 pub(super) fn bind(state: &Rc<State>) -> (DisposableHandle, DisposableHandle) {
     let weak = Rc::downgrade(state);
     let protocol = state
@@ -15,7 +9,7 @@ pub(super) fn bind(state: &Rc<State>) -> (DisposableHandle, DisposableHandle) {
         .try_subscribe(move |events| {
             if let Some(state) = weak.upgrade() {
                 if !state.disposed.get() {
-                    sync_protocol(&state, *events).map_err(|error| failure(&state, error))?;
+                    sync_protocol(&state, *events).map_err(crate::js_error::callback_error)?;
                 }
             }
             Ok(())
@@ -27,7 +21,7 @@ pub(super) fn bind(state: &Rc<State>) -> (DisposableHandle, DisposableHandle) {
                 if !state.disposed.get() {
                     sync_mode(&state)
                         .and_then(|()| alt::sync(&state))
-                        .map_err(|error| failure(&state, error))?;
+                        .map_err(crate::js_error::callback_error)?;
                 }
             }
         }

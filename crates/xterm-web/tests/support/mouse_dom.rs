@@ -15,7 +15,7 @@ use xterm_core::{
 };
 use xterm_web::input::{
     dom::{
-        mouse::{MouseHost, MouseSnapshot},
+        mouse::{MouseHost, MouseReadHost, MouseSnapshot},
         InputHost, InputOptions, OverlayLayout,
     },
     keyboard_dispatch::{KeyboardAction, KeyboardReadHost, KeyboardSnapshot},
@@ -30,6 +30,9 @@ pub struct Host {
     pub option_changes: xterm_core::event::Emitter<&'static str>,
     pub snapshot: Cell<MouseSnapshot>,
     pub fail_snapshot: Cell<bool>,
+    pub fail_read: Cell<Option<&'static str>>,
+    pub reads: RefCell<Vec<&'static str>>,
+    pub trace: Rc<RefCell<Vec<String>>>,
     pub veto: Cell<bool>,
     pub force_selection: Cell<bool>,
     pub selection_enabled: Cell<bool>,
@@ -62,6 +65,9 @@ impl Host {
                 application_cursor: false,
             }),
             fail_snapshot: Cell::new(false),
+            fail_read: Cell::new(None),
+            reads: RefCell::new(Vec::new()),
+            trace: Rc::new(RefCell::new(Vec::new())),
             veto: Cell::new(false),
             force_selection: Cell::new(false),
             selection_enabled: Cell::new(true),
@@ -72,16 +78,72 @@ impl Host {
             gesture_disposals: Rc::new(Cell::new(0)),
         }
     }
-}
-impl MouseHost for Host {
-    fn mouse_service(&self) -> Result<Rc<MouseStateService>, JsValue> {
-        Ok(self.input.mouse.clone())
-    }
-    fn mouse_snapshot(&self) -> Result<MouseSnapshot, JsValue> {
+    fn read(&self, key: &'static str) -> Result<MouseSnapshot, JsValue> {
+        self.reads.borrow_mut().push(key);
+        self.trace.borrow_mut().push(format!("host:{key}"));
         if self.fail_snapshot.get() {
             return Err(js_sys::Error::new("snapshot getter failed").into());
         }
+        if self.fail_read.get() == Some(key) {
+            return Err(js_sys::Error::new(&format!("unexpected mouse read: {key}")).into());
+        }
         Ok(self.snapshot.get())
+    }
+}
+impl MouseReadHost for Host {
+    fn mouse_snapshot(&self) -> Result<MouseSnapshot, JsValue> {
+        Err(js_sys::Error::new("observer forbids aggregate mouse snapshot").into())
+    }
+    fn mouse_require_alt(&self) -> Result<bool, JsValue> {
+        Ok(self.read("require-alt")?.routing.require_alt)
+    }
+    fn mouse_has_scrollback(&self) -> Result<bool, JsValue> {
+        Ok(self.read("has-scrollback")?.has_scrollback)
+    }
+    fn mouse_application_cursor(&self) -> Result<bool, JsValue> {
+        Ok(self.read("application-cursor")?.application_cursor)
+    }
+    fn mouse_cols(&self) -> Result<f64, JsValue> {
+        Ok(self.read("cols")?.routing.cols)
+    }
+    fn mouse_rows(&self) -> Result<f64, JsValue> {
+        Ok(self.read("rows")?.routing.rows)
+    }
+    fn mouse_scroll_sensitivity(&self) -> Result<f64, JsValue> {
+        Ok(self.read("slow")?.routing.wheel_options.scroll_sensitivity)
+    }
+    fn mouse_fast_scroll_sensitivity(&self) -> Result<f64, JsValue> {
+        Ok(self
+            .read("fast")?
+            .routing
+            .wheel_options
+            .fast_scroll_sensitivity)
+    }
+    fn mouse_device_cell_height(&self) -> Result<Option<f64>, JsValue> {
+        Ok(self.read("device-height")?.routing.device_cell_height)
+    }
+    fn mouse_dpr(&self) -> Result<Option<f64>, JsValue> {
+        Ok(self.read("dpr")?.routing.dpr)
+    }
+    fn mouse_valid_char_size(&self) -> Result<bool, JsValue> {
+        Ok(self.read("valid")?.valid_char_size)
+    }
+    fn mouse_canvas_size(&self) -> Result<[f64; 2], JsValue> {
+        let s = self.read("canvas")?;
+        Ok([s.css_canvas_width, s.css_canvas_height])
+    }
+    fn mouse_cell_size(&self) -> Result<[f64; 2], JsValue> {
+        let s = self.read("cell")?;
+        Ok([s.css_cell_width, s.css_cell_height])
+    }
+    fn mouse_css_cell_height(&self) -> Result<Option<f64>, JsValue> {
+        Ok(Some(self.read("css-height")?.css_cell_height))
+    }
+}
+
+impl MouseHost for Host {
+    fn mouse_service(&self) -> Result<Rc<MouseStateService>, JsValue> {
+        Ok(self.input.mouse.clone())
     }
     fn mouse_protocol_log(
         &self,
@@ -98,6 +160,7 @@ impl MouseHost for Host {
     }
     fn allow_custom_wheel(&self, event: &WheelEvent) -> Result<bool, JsValue> {
         self.wheel_calls.set(self.wheel_calls.get() + 1);
+        self.trace.borrow_mut().push("veto".into());
         let hook = self.wheel_hook.borrow().clone();
         if let Some(hook) = hook {
             hook(event);
@@ -116,6 +179,13 @@ impl MouseHost for Host {
         Ok(())
     }
     fn mouse_output(&self, output: MouseOutput) -> Result<(), JsValue> {
+        self.trace.borrow_mut().push(
+            match &output {
+                MouseOutput::Binary(_) => "binary",
+                MouseOutput::UserData(_) => "data",
+            }
+            .into(),
+        );
         match output {
             MouseOutput::Binary(data) => self.input.data.borrow_mut().push((data, false)),
             MouseOutput::UserData(data) => self.input.data.borrow_mut().push((data, true)),
@@ -170,8 +240,5 @@ impl InputHost for Host {
     }
     fn right_click_select(&self, event: &MouseEvent) -> Result<(), JsValue> {
         self.input.right_click_select(event)
-    }
-    fn report_error(&self, error: JsValue) {
-        self.input.report_error(error);
     }
 }

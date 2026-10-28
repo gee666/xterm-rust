@@ -1,22 +1,16 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
 use super::*;
-use web_sys::{Event, KeyboardEvent};
+use web_sys::Event;
 
 fn active(state: &State) -> Result<bool, JsValue> {
-    Ok(state.service.are_mouse_events_active() && state.host.mouse_snapshot()?.routing.require_alt)
+    Ok(state.service.are_mouse_events_active() && state.host.mouse_require_alt()?)
 }
 
 fn modifier(state: &Rc<State>, event: Event) -> Result<(), JsValue> {
     if !active(state)? {
         return Ok(());
     }
-    let held = if let Some(key) = event.dyn_ref::<KeyboardEvent>() {
-        key.get_modifier_state("Alt")
-    } else if let Some(mouse) = event.dyn_ref::<MouseEvent>() {
-        mouse.get_modifier_state("Alt")
-    } else {
-        return Err(error("Alt cursor requires a keyboard or mouse event"));
-    };
+    let held = values::alt_modifier(&event)?;
     state
         .element
         .class_list()
