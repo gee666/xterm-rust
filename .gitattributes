@@ -1,6 +1,16 @@
+# Keep implementation hashes stable across native checkout environments.
+*.rs text eol=lf
+*.toml text eol=lf
+*.lock text eol=lf
+*.mjs text eol=lf
+*.js text eol=lf
+*.ts text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
 # Hash inventories and raw evidence must survive checkout byte-for-byte.
-/docs/baseline/source-manifest.json -text
-/docs/baseline/reference-manifest.json -text
+/docs/baseline/** -text
 /results/** -text
 # Oracle fixtures include encoded streams and expected-byte hashes.
 *.tsv -text

@@ -1,0 +1,31 @@
+{
+  "command": "git -c core.autocrlf=true checkout-index --force --prefix=tmp/chloe-eol-checkout/ -- SELECTED_FILES",
+  "passed": false,
+  "scope": "No source/reference/AGENTS edits; compare selected indexed blobs with Windows-style checkout",
+  "cases": [
+    {
+      "path": "crates/xterm-core/tests/fixtures/collections-dynamic.tsv",
+      "passed": true,
+      "expected_bytes": 86147,
+      "actual_bytes": 86147,
+      "expected_sha256": "2b978b3a030ea90f63047f7a2edf79e2e01eb29786c667c537a8204a3deff16a",
+      "actual_sha256": "2b978b3a030ea90f63047f7a2edf79e2e01eb29786c667c537a8204a3deff16a"
+    },
+    {
+      "path": "results/collections/dynamic-oracle.json",
+      "passed": true,
+      "expected_bytes": 943,
+      "actual_bytes": 943,
+      "expected_sha256": "21e71d4269e69a1ddc713c817153d8f247fce0bd1e9326c50acd1a5b19508925",
+      "actual_sha256": "21e71d4269e69a1ddc713c817153d8f247fce0bd1e9326c50acd1a5b19508925"
+    },
+    {
+      "path": "docs/baseline/source-loc.json",
+      "passed": false,
+      "expected_bytes": 2002,
+      "actual_bytes": 2097,
+      "expected_sha256": "e5fb9be3912787d37539b53f4f8ed7087c07cfa96b359a1d4e544480b3b58f83",
+      "actual_sha256": "cc6a9c5c3723674df7fcba57b62abd2b8d2bc5f2ea780438cf60bdefde6ca2d5"
+    }
+  ]
+}

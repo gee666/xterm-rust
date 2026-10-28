@@ -39,8 +39,10 @@ pub mod windows_mode;
 
 pub mod input {
     pub mod keyboard;
+    pub mod keyboard_event_source;
     pub mod kitty_keyboard;
     pub mod move_to_cell;
+    pub mod parse_source;
     pub mod text_decoder;
     pub mod win32_input_mode;
     pub mod write_buffer;
@@ -48,6 +50,10 @@ pub mod input {
 }
 // Keep the first integrations' root names as aliases of the same modules.
 pub use input::{keyboard, text_decoder, win32_input_mode};
+
+pub mod data {
+    pub mod escape_sequences;
+}
 
 pub mod parser {
     pub mod apc;
