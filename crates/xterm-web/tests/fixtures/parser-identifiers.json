@@ -1,0 +1,2731 @@
+[
+  {
+    "name": "literal-csi",
+    "log": [],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "tracked-csi",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "invalid-prefix-before-intermediate-throw",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:prefix",
+      "get:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "prefix must be in range 0x3c .. 0x3f"
+    }
+  },
+  {
+    "name": "final-changes-after-length-check",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "window-check-z-packed-t",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "window-check-t-packed-z",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "reentrant-property-registers-esc",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer",
+      "nested"
+    ],
+    "error": null
+  },
+  {
+    "name": "tracked-dcs",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "tracked-esc",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-prefix-clears",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-setter-keeps-prefix",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "apc-read-only-prefix",
+    "log": [],
+    "calls": [],
+    "error": {
+      "kind": "TypeError",
+      "message": null
+    }
+  },
+  {
+    "name": "apc-proxy-denies-set",
+    "log": [
+      "proxy-set:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "TypeError",
+      "message": null
+    }
+  },
+  {
+    "name": "dcs-intermediate-grows-after-check",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "final-getter-throws",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "sentinel"
+    }
+  },
+  {
+    "name": "prefix-live-length",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "intermediate-live-loop-length",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "prefix-char-code-nan",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "unpaired-final",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be in range 64 .. 126"
+    }
+  },
+  {
+    "name": "dcs-prefix-length-error-precedence",
+    "log": [
+      "get:prefix",
+      "get:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "only one byte as prefix supported"
+    }
+  },
+  {
+    "name": "esc-low-final",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "prototype-csi",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "proxy-csi",
+    "log": [
+      "proxy-get:final",
+      "get:final",
+      "proxy-get:prefix",
+      "get:prefix",
+      "proxy-get:prefix",
+      "get:prefix",
+      "proxy-get:prefix",
+      "get:prefix",
+      "proxy-get:intermediates",
+      "get:intermediates",
+      "proxy-get:intermediates",
+      "get:intermediates",
+      "proxy-get:intermediates",
+      "get:intermediates",
+      "proxy-get:intermediates",
+      "get:intermediates",
+      "proxy-get:intermediates",
+      "get:intermediates",
+      "proxy-get:final",
+      "get:final",
+      "proxy-get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "csi-prefix-absent",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "csi-prefix-null",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "csi-prefix-false",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "csi-prefix-zero",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "csi-prefix-nan",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "csi-prefix-infinity",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:prefix",
+      "get:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "TypeError",
+      "message": null
+    }
+  },
+  {
+    "name": "csi-prefix-string",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "csi-prefix-low",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:prefix",
+      "get:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "prefix must be in range 0x3c .. 0x3f"
+    }
+  },
+  {
+    "name": "csi-prefix-minimum",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "csi-prefix-equal",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "csi-prefix-greater",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "csi-prefix-too-high",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:prefix",
+      "get:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "prefix must be in range 0x3c .. 0x3f"
+    }
+  },
+  {
+    "name": "csi-prefix-two",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "only one byte as prefix supported"
+    }
+  },
+  {
+    "name": "csi-prefix-boxed",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "csi-prefix-symbol",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:prefix",
+      "get:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "TypeError",
+      "message": null
+    }
+  },
+  {
+    "name": "csi-prefix-number",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:prefix",
+      "get:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "TypeError",
+      "message": null
+    }
+  },
+  {
+    "name": "csi-intermediate-empty",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "csi-intermediate-minimum",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "csi-intermediate-maximum",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "csi-intermediate-low",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "intermediate must be in range 0x20 .. 0x2f"
+    }
+  },
+  {
+    "name": "csi-intermediate-high",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "intermediate must be in range 0x20 .. 0x2f"
+    }
+  },
+  {
+    "name": "csi-intermediate-two",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "csi-intermediate-three",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "only two bytes as intermediates are supported"
+    }
+  },
+  {
+    "name": "csi-intermediate-unpaired",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "intermediate must be in range 0x20 .. 0x2f"
+    }
+  },
+  {
+    "name": "csi-intermediate-boxed",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "csi-intermediate-number",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "csi-intermediate-false",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "csi-final-empty",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be a single byte"
+    }
+  },
+  {
+    "name": "csi-final-before-esc",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be in range 64 .. 126"
+    }
+  },
+  {
+    "name": "csi-final-esc-low",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be in range 64 .. 126"
+    }
+  },
+  {
+    "name": "csi-final-before-csi",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be in range 64 .. 126"
+    }
+  },
+  {
+    "name": "csi-final-csi-low",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "csi-final-upper",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "csi-final-one",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "csi-final-high",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be in range 64 .. 126"
+    }
+  },
+  {
+    "name": "csi-final-two",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be a single byte"
+    }
+  },
+  {
+    "name": "csi-final-astral",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be a single byte"
+    }
+  },
+  {
+    "name": "csi-final-unpaired",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be in range 64 .. 126"
+    }
+  },
+  {
+    "name": "csi-final-absent",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "TypeError",
+      "message": null
+    }
+  },
+  {
+    "name": "csi-final-null",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "TypeError",
+      "message": null
+    }
+  },
+  {
+    "name": "csi-final-false",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be a single byte"
+    }
+  },
+  {
+    "name": "csi-final-number",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be a single byte"
+    }
+  },
+  {
+    "name": "csi-final-boxed",
+    "log": [
+      "get:final",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "dcs-prefix-absent",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "dcs-prefix-null",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "dcs-prefix-false",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "dcs-prefix-zero",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "dcs-prefix-nan",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "dcs-prefix-infinity",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "TypeError",
+      "message": null
+    }
+  },
+  {
+    "name": "dcs-prefix-string",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "dcs-prefix-low",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "prefix must be in range 0x3c .. 0x3f"
+    }
+  },
+  {
+    "name": "dcs-prefix-minimum",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "dcs-prefix-equal",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "dcs-prefix-greater",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "dcs-prefix-too-high",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "prefix must be in range 0x3c .. 0x3f"
+    }
+  },
+  {
+    "name": "dcs-prefix-two",
+    "log": [
+      "get:prefix",
+      "get:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "only one byte as prefix supported"
+    }
+  },
+  {
+    "name": "dcs-prefix-boxed",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "dcs-prefix-symbol",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "TypeError",
+      "message": null
+    }
+  },
+  {
+    "name": "dcs-prefix-number",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "TypeError",
+      "message": null
+    }
+  },
+  {
+    "name": "dcs-intermediate-empty",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "dcs-intermediate-minimum",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "dcs-intermediate-maximum",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "dcs-intermediate-low",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "intermediate must be in range 0x20 .. 0x2f"
+    }
+  },
+  {
+    "name": "dcs-intermediate-high",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "intermediate must be in range 0x20 .. 0x2f"
+    }
+  },
+  {
+    "name": "dcs-intermediate-two",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "dcs-intermediate-three",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "only two bytes as intermediates are supported"
+    }
+  },
+  {
+    "name": "dcs-intermediate-unpaired",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "intermediate must be in range 0x20 .. 0x2f"
+    }
+  },
+  {
+    "name": "dcs-intermediate-boxed",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "dcs-intermediate-number",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "dcs-intermediate-false",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "dcs-final-empty",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be a single byte"
+    }
+  },
+  {
+    "name": "dcs-final-before-esc",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be in range 64 .. 126"
+    }
+  },
+  {
+    "name": "dcs-final-esc-low",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be in range 64 .. 126"
+    }
+  },
+  {
+    "name": "dcs-final-before-csi",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be in range 64 .. 126"
+    }
+  },
+  {
+    "name": "dcs-final-csi-low",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "dcs-final-upper",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "dcs-final-one",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "dcs-final-high",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be in range 64 .. 126"
+    }
+  },
+  {
+    "name": "dcs-final-two",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be a single byte"
+    }
+  },
+  {
+    "name": "dcs-final-astral",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be a single byte"
+    }
+  },
+  {
+    "name": "dcs-final-unpaired",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be in range 64 .. 126"
+    }
+  },
+  {
+    "name": "dcs-final-absent",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "TypeError",
+      "message": null
+    }
+  },
+  {
+    "name": "dcs-final-null",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "TypeError",
+      "message": null
+    }
+  },
+  {
+    "name": "dcs-final-false",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be a single byte"
+    }
+  },
+  {
+    "name": "dcs-final-number",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be a single byte"
+    }
+  },
+  {
+    "name": "dcs-final-boxed",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "esc-prefix-absent",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "esc-prefix-null",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "esc-prefix-false",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "esc-prefix-zero",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "esc-prefix-nan",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "esc-prefix-infinity",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "TypeError",
+      "message": null
+    }
+  },
+  {
+    "name": "esc-prefix-string",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "esc-prefix-low",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "prefix must be in range 0x3c .. 0x3f"
+    }
+  },
+  {
+    "name": "esc-prefix-minimum",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "esc-prefix-equal",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "esc-prefix-greater",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "esc-prefix-too-high",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "prefix must be in range 0x3c .. 0x3f"
+    }
+  },
+  {
+    "name": "esc-prefix-two",
+    "log": [
+      "get:prefix",
+      "get:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "only one byte as prefix supported"
+    }
+  },
+  {
+    "name": "esc-prefix-boxed",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "esc-prefix-symbol",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "TypeError",
+      "message": null
+    }
+  },
+  {
+    "name": "esc-prefix-number",
+    "log": [
+      "get:prefix",
+      "get:prefix",
+      "get:prefix"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "TypeError",
+      "message": null
+    }
+  },
+  {
+    "name": "esc-intermediate-empty",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "esc-intermediate-minimum",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "esc-intermediate-maximum",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "esc-intermediate-low",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "intermediate must be in range 0x20 .. 0x2f"
+    }
+  },
+  {
+    "name": "esc-intermediate-high",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "intermediate must be in range 0x20 .. 0x2f"
+    }
+  },
+  {
+    "name": "esc-intermediate-two",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "esc-intermediate-three",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "only two bytes as intermediates are supported"
+    }
+  },
+  {
+    "name": "esc-intermediate-unpaired",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "intermediate must be in range 0x20 .. 0x2f"
+    }
+  },
+  {
+    "name": "esc-intermediate-boxed",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "esc-intermediate-number",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "esc-intermediate-false",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "esc-final-empty",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be a single byte"
+    }
+  },
+  {
+    "name": "esc-final-before-esc",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be in range 48 .. 126"
+    }
+  },
+  {
+    "name": "esc-final-esc-low",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "esc-final-before-csi",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "esc-final-csi-low",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "esc-final-upper",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "esc-final-one",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "esc-final-high",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be in range 48 .. 126"
+    }
+  },
+  {
+    "name": "esc-final-two",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be a single byte"
+    }
+  },
+  {
+    "name": "esc-final-astral",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be a single byte"
+    }
+  },
+  {
+    "name": "esc-final-unpaired",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be in range 48 .. 126"
+    }
+  },
+  {
+    "name": "esc-final-absent",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "TypeError",
+      "message": null
+    }
+  },
+  {
+    "name": "esc-final-null",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "TypeError",
+      "message": null
+    }
+  },
+  {
+    "name": "esc-final-false",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be a single byte"
+    }
+  },
+  {
+    "name": "esc-final-number",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be a single byte"
+    }
+  },
+  {
+    "name": "esc-final-boxed",
+    "log": [
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-prefix-absent",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-prefix-null",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-prefix-false",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-prefix-zero",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-prefix-nan",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-prefix-infinity",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-prefix-string",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-prefix-low",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-prefix-minimum",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-prefix-equal",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-prefix-greater",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-prefix-too-high",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-prefix-two",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-prefix-boxed",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-prefix-symbol",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-prefix-number",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-intermediate-empty",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-intermediate-minimum",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "apc-intermediate-maximum",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "apc-intermediate-low",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "intermediate must be in range 0x20 .. 0x2f"
+    }
+  },
+  {
+    "name": "apc-intermediate-high",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "intermediate must be in range 0x20 .. 0x2f"
+    }
+  },
+  {
+    "name": "apc-intermediate-two",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "apc-intermediate-three",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "only two bytes as intermediates are supported"
+    }
+  },
+  {
+    "name": "apc-intermediate-unpaired",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "intermediate must be in range 0x20 .. 0x2f"
+    }
+  },
+  {
+    "name": "apc-intermediate-boxed",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "apc-intermediate-number",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:intermediates",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-intermediate-false",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-final-empty",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be a single byte"
+    }
+  },
+  {
+    "name": "apc-final-before-esc",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be in range 48 .. 126"
+    }
+  },
+  {
+    "name": "apc-final-esc-low",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "apc-final-before-csi",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "apc-final-csi-low",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "apc-final-upper",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": null
+  },
+  {
+    "name": "apc-final-one",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  },
+  {
+    "name": "apc-final-high",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be in range 48 .. 126"
+    }
+  },
+  {
+    "name": "apc-final-two",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be a single byte"
+    }
+  },
+  {
+    "name": "apc-final-astral",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be a single byte"
+    }
+  },
+  {
+    "name": "apc-final-unpaired",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be in range 48 .. 126"
+    }
+  },
+  {
+    "name": "apc-final-absent",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "TypeError",
+      "message": null
+    }
+  },
+  {
+    "name": "apc-final-null",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "TypeError",
+      "message": null
+    }
+  },
+  {
+    "name": "apc-final-false",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be a single byte"
+    }
+  },
+  {
+    "name": "apc-final-number",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final"
+    ],
+    "calls": [],
+    "error": {
+      "kind": "Error",
+      "message": "final must be a single byte"
+    }
+  },
+  {
+    "name": "apc-final-boxed",
+    "log": [
+      "set:prefix:undefined",
+      "get:prefix",
+      "get:intermediates",
+      "get:final",
+      "get:final"
+    ],
+    "calls": [
+      "outer"
+    ],
+    "error": null
+  }
+]

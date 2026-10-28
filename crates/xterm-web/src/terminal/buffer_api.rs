@@ -1,8 +1,8 @@
 // Copyright (c) 2018-2026 The xterm.js authors. All rights reserved. MIT license.
 //! Live JavaScript buffer views over the Rust buffer namespace.
-use super::{buffer_cell::WebBufferCell, parser_api::ApiDisposable};
+use super::buffer_cell::WebBufferCell;
 use crate::{
-    js_error::{callback_error, to_js_error},
+    js_error::to_js_error,
     utf16::to_js_string,
 };
 use js_sys::{Function, JsString, Reflect};
@@ -11,10 +11,9 @@ use std::{
     collections::HashMap,
     rc::{Rc, Weak},
 };
-use wasm_bindgen::{prelude::*, JsCast};
+use wasm_bindgen::prelude::*;
 use xterm_core::{
     buffer::{BufferLine, LineRef},
-    event::Event,
     headless::Terminal,
     public_api::{
         line_numbers::{
@@ -49,42 +48,19 @@ pub struct WebBufferNamespace {
     // Namespace ownership keeps the terminal engine alive, as source _core does.
     _terminal: Rc<Terminal>,
 }
-fn subscribe_change(
-    event: &Event<Rc<BufferApiView>>,
-    normal: JsValue,
-    alternate: JsValue,
-    callback: Function,
-) -> ApiDisposable {
-    ApiDisposable::new(event.try_subscribe(move |view| {
-        let value = match view.buffer_type() {
-            BufferType::Normal => &normal,
-            BufferType::Alternate => &alternate,
-        };
-        callback
-            .call1(&JsValue::UNDEFINED, value)
-            .map(|_| ())
-            .map_err(callback_error)
-    }))
-}
 impl WebBufferNamespace {
     pub fn new(terminal: Rc<Terminal>) -> Result<Self, JsValue> {
         let native = terminal.buffer().map_err(|error| to_js_error(&error))?;
         let normal: JsValue = WebBufferView::new(native.normal()).into();
         let alternate: JsValue = WebBufferView::new(native.alternate()).into();
-        let event = native.on_buffer_change();
         let normal_event = normal.clone();
         let alternate_event = alternate.clone();
-        let registration = Closure::wrap(Box::new(move |callback: Function| -> JsValue {
-            subscribe_change(
-                &event,
-                normal_event.clone(),
-                alternate_event.clone(),
-                callback,
-            )
-            .into()
-        }) as Box<dyn FnMut(Function) -> JsValue>);
-        // A Closure always converts to a JS function. JS owns its finalization.
-        let on_change = registration.into_js_value().unchecked_into::<Function>();
+        let on_change=super::events::callable(native.on_buffer_change(),move |view| {
+            Ok(match view.buffer_type() {
+                BufferType::Normal=>normal_event.clone(),
+                BufferType::Alternate=>alternate_event.clone(),
+            })
+        });
         Ok(Self {
             normal,
             alternate,
@@ -92,14 +68,6 @@ impl WebBufferNamespace {
             on_change,
             _terminal: terminal,
         })
-    }
-    pub fn on_buffer_change(&self, callback: Function) -> ApiDisposable {
-        subscribe_change(
-            &self.native.on_buffer_change(),
-            self.normal.clone(),
-            self.alternate.clone(),
-            callback,
-        )
     }
 }
 #[wasm_bindgen]
