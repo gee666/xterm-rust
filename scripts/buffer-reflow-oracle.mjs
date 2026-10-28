@@ -122,7 +122,7 @@ const report = { seed: `0x${seed.toString(16)}`, command: 'node scripts/buffer-r
     sha256: createHash('sha256').update(readFileSync(fixture)).digest('hex') },
   upstream: { discovered: sourceSuite.discovered, mapped: 7, executed: sourceSuite.executed,
     passed: sourceSuite.passed, failed: sourceSuite.failed, skipped: sourceSuite.skipped, unrun: sourceSuite.unrun },
-  rustTests: { mappedUpstreamCases: 7, mappedEdgeCases: 10, differentialTests: 1,
+  rustTests: { mappedUpstreamCases: 7, mappedEdgeCases: 11, differentialTests: 1,
     executed: rustCounts.passed + rustCounts.failed, ...rustCounts,
     compilationStatus: checks[1].status, log: 'results/buffer-reflow/check-1.log' },
   rustSources: Object.fromEntries(['src/buffer/reflow.rs', 'tests/buffer_reflow_upstream.rs',

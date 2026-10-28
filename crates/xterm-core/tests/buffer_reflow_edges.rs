@@ -135,10 +135,11 @@ fn invalid_layout_and_columns_are_errors() {
         );
         assert_eq!(lines.len(), 8);
     }
-    assert_eq!(
-        reflow_larger_apply_new_layout(&lines, &[8]),
-        Err(ReflowError::InvalidRange)
-    );
+    // Layout reads keep CircularList's cyclic semantics, even past length.
+    let first = lines.get(0).unwrap();
+    reflow_larger_apply_new_layout(&lines, &[8]).unwrap();
+    assert_eq!(lines.len(), 1);
+    assert!(Rc::ptr_eq(&first, &lines.get(0).unwrap()));
     let rows = vec![lines.get(0).unwrap()];
     for new in [0, 7] {
         assert_eq!(
@@ -154,6 +155,22 @@ fn invalid_layout_and_columns_are_errors() {
         get_wrapped_line_trimmed_length(&[], 0, 6),
         Err(ReflowError::MissingLine)
     );
+}
+#[test]
+fn deletion_observer_can_replace_list_before_layout_application() {
+    let original = list();
+    let holder = Rc::new(RefCell::new(original.clone()));
+    let captured = Rc::downgrade(&holder);
+    original.on_delete_emitter.event().subscribe(move |_| {
+        *captured.upgrade().unwrap().borrow_mut() = Rc::new(CircularList::new(8).unwrap());
+    });
+    let result = reflow_larger_create_new_layout(&original, &[(1, 2)]).unwrap();
+    assert_eq!(result.layout, [0, 3, 4, 5, 6, 7]);
+    let replacement = holder.borrow().clone();
+    reflow_larger_apply_new_layout(&replacement, &result.layout).unwrap();
+    assert_eq!(replacement.len(), 6);
+    assert!((0..6).all(|i| replacement.get(i).is_none()));
+    assert_eq!(original.len(), 8);
 }
 #[test]
 fn wide_gap_excluded_only_before_wide_start() {

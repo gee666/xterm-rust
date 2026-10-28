@@ -265,22 +265,16 @@ pub fn reflow_larger_create_new_layout(
     Ok(result)
 }
 
-/// Snapshot references before reordering, preserving JavaScript object identity.
+/// Snapshot slots before reordering, preserving object identity and empty slots.
+/// A deletion observer can replace the buffer's list before this call, so layout
+/// indices deliberately retain CircularList's cyclic, out-of-length reads.
 pub fn reflow_larger_apply_new_layout(
     lines: &CircularList<LineRef>,
     new_layout: &[usize],
 ) -> Result<(), ReflowError> {
-    let reordered = new_layout
-        .iter()
-        .map(|&i| {
-            if i >= lines.len() {
-                return Err(ReflowError::InvalidRange);
-            }
-            lines.get(i).ok_or(ReflowError::MissingLine)
-        })
-        .collect::<Result<Vec<_>, _>>()?;
+    let reordered: Vec<_> = new_layout.iter().map(|&i| lines.get(i)).collect();
     for (i, line) in reordered.into_iter().enumerate() {
-        lines.set(i, Some(line))?;
+        lines.set(i, line)?;
     }
     lines.set_length(new_layout.len());
     Ok(())

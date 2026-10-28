@@ -12,7 +12,7 @@ The five helper contracts are:
 
 Widening callers resize physical rows before invoking the helper, matching source Buffer. The faithful upstream tests also cover direct calls without that preparation, preserving the source's bounded cell-copy behavior.
 
-`ReflowError` reports invalid columns/ranges, missing rows, caller-held incompatible row borrows, storage failures and listener dispatch failures. No error is suppressed. One-column ASCII shrinking is supported. A wide character at a one-column wrap returns `InvalidColumns` rather than entering the source helper's non-progressing loop. Public terminal dimensions have a separate minimum of two columns. Invalid removal ranges are rejected before events; invalid layout indices are rejected before rearrangement. Partial cell movement before a later error is not transactional.
+`ReflowError` reports invalid columns/ranges, missing rows, caller-held incompatible row borrows, storage failures and listener dispatch failures. No error is suppressed. One-column ASCII shrinking is supported. A wide character at a one-column wrap returns `InvalidColumns` rather than entering the source helper's non-progressing loop. Public terminal dimensions have a separate minimum of two columns. Invalid removal ranges are rejected before events. Layout reads preserve CircularList's cyclic and empty-slot semantics, including when a deletion callback replaces the containing buffer's list before application. Partial cell movement before a later error is not transactional.
 
 ## Evidence
 
@@ -23,6 +23,8 @@ The Rust tests are:
 - `buffer_reflow_upstream.rs`, all seven source helper test cases and their assertions.
 - `buffer_reflow_edges.rs`, event timing, error propagation, reentrancy, row and extended-attribute identity, empty/unwrapped data, width-one behavior and explicit invalid-input boundaries.
 - `buffer_reflow_differential.rs`, 3,000 deterministic cases using seed `0xb0ffef10`. Half widen, half shrink. Widening compares full raw cells, UTF-16 strings including lone surrogates, widths, foreground/background, extended attributes/URL, trim/wrap metadata, removals/layouts, callback-time list lengths and surviving row identities. Shrinking compares exact destination lengths.
+
+Startup failure guards are checked with `node scripts/check-oracle-startup.mjs --reflow`, using isolated temporary roots for missing dependencies and a blocked temporary directory. Source-legal deletion-callback replacement is retained in `results/buffer-reflow/callback-replacement-source.json`; applying a precomputed layout to the replacement list must preserve empty slots, not reject those rows.
 
 The generated fixture `tests/fixtures/buffer-reflow.tsv` intentionally exceeds the source-file line limit. It retains every deterministic oracle input and expected result for reproducible diagnostics. The fixture is data, not handwritten implementation. Raw results and source hashes are in `results/buffer-reflow/`; always read the recorded status rather than assuming concurrent workspace builds passed.
 
