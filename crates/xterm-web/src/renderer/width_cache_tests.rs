@@ -136,7 +136,7 @@ fn flat_values_round_only_on_subsequent_reads() {
     assert_eq!(cache.get(&[97], false, false).unwrap(), 1.23456789);
     assert_eq!(
         cache.get(&[97], false, false).unwrap(),
-        f64::from(1.23456789_f32)
+        f64::from(1.234_567_9_f32)
     );
     assert_eq!(
         cache.state.borrow().measurer.as_ref().unwrap().calls.get(),
