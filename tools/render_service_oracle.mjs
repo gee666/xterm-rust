@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { createHash } from 'node:crypto';
-import { withRenderHarness } from '../crates/xterm-web/tests/support/render_service_host.js';
+import { withRenderHarness } from '../crates/xterm-web/tests/support/render_service_host.mjs';
 if (process.argv.slice(2).some(arg => arg !== '--write-fixtures')) throw new Error('Usage: node tools/render_service_oracle.mjs [--write-fixtures]');
 const require = createRequire(path.resolve('source_repo/package.json'));
 const base = path.resolve('source_repo/out-esbuild');

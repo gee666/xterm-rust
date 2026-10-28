@@ -21,7 +21,7 @@ use xterm_web::{
     theme::ThemeService,
 };
 wasm_bindgen_test_configure!(run_in_browser);
-#[wasm_bindgen(module = "/tests/support/render_service_host.js")]
+#[wasm_bindgen(module = "/tests/support/render_service_host.mjs")]
 extern "C" {
     #[wasm_bindgen(catch,js_name=withRenderHarness)]
     fn with_harness(callback: &js_sys::Function) -> Result<JsValue, JsValue>;
