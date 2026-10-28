@@ -21,6 +21,7 @@ Run from this worktree. Environment is native Windows MSVC, Rust/Cargo1.85.1, LL
 - `cargo test --locked -p xterm-core --no-default-features --all-targets`: 1478 passed across221 test/example suites, `core-no-default-tests.log`.
 - `cargo test --locked -p xterm-core --doc`: one passed, `core-doctests.log`.
 - `cargo test --locked -p xterm-core --release --test core_services_integration --test input_diagnostics --test windows_wrapping_order`: 14 passed across three suites, `release-tests.log`.
+- `cargo test --locked -p xterm-core --release --all-targets --all-features`: 1478 passed across221 test/example suites, `core-release-all-tests.log`.
 
 The first short coordination post mistakenly said29 focused tests. Counting the actual retained transcript gives19, as reported above.
 
