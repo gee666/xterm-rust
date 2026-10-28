@@ -37,10 +37,12 @@ impl EscapeSequenceParser {
                 index = next;
                 continue;
             }
+            // A short custom Uint16Array returns undefined outside its bounds.
+            // Upstream bitwise access coerces that value to IGNORE/GROUND.
             let mut transition = self
                 .transitions
                 .for_codepoint(code, self.current_state)
-                .ok_or(ParseError::MissingTransition)?;
+                .unwrap_or(Transition::new(ParserAction::Ignore, ParserState::Ground));
             use ParserAction::*;
             match transition.action {
                 Print | OscPut | DcsPut | ApcPut => {

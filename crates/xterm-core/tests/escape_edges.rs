@@ -319,3 +319,18 @@ fn callback_error_source_chain_retains_original_host_error() {
     assert!(std::ptr::eq(source, original.as_ref()));
     assert_eq!(source.to_string(), "host sentinel");
 }
+
+#[test]
+fn short_custom_table_missing_entries_match_js_undefined_bitwise_coercion() {
+    let table = xterm_core::parser::table::TransitionTable::new(10);
+    let mut parser = EscapeSequenceParser::with_transitions(table);
+    parser.current_state = ParserState::Escape;
+    parser.preceding_join_state.set(123);
+    let printed = Rc::new(Cell::new(false));
+    let flag = Rc::clone(&printed);
+    parser.set_print_handler(move |_| flag.set(true));
+    assert!(parser.parse(&data("A"), None).unwrap().is_none());
+    assert_eq!(parser.current_state, ParserState::Ground);
+    assert_eq!(parser.preceding_join_state.get(), 123);
+    assert!(!printed.get());
+}

@@ -180,7 +180,7 @@ impl TerminalState {
                     if Rc::ptr_eq(&active, &self.buffers.normal()) {
                         self.buffer_service.is_user_scrolling.set(false);
                     }
-                    self.events.borrow_mut().push(TerminalEvent::Scroll(0));
+                    self.events.borrow_mut().push(TerminalEvent::InputScroll(0));
                 }
             }
             _ => {}

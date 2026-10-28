@@ -13,7 +13,17 @@ const build = esbuild.buildSync({
   entryPoints: ['source_repo/src/common/parser/EscapeSequenceParser.ts'],
   bundle: true, write: false, format: 'esm', platform: 'node', metafile: true,
 });
-const { EscapeSequenceParser } = await import(`data:text/javascript;base64,${Buffer.from(build.outputFiles[0].contents).toString('base64')}`);
+const { EscapeSequenceParser, TransitionTable } = await import(`data:text/javascript;base64,${Buffer.from(build.outputFiles[0].contents).toString('base64')}`);
+// A supported short custom table exercises JavaScript undefined-to-zero access.
+const shortTable = new EscapeSequenceParser(new TransitionTable(10));
+shortTable.currentState = 1;
+shortTable.precedingJoinState = 123;
+let printed = false;
+shortTable.setPrintHandler(() => { printed = true; });
+assert.equal(shortTable.parse(Uint32Array.of(65), 1), undefined);
+assert.equal(shortTable.currentState, 0);
+assert.equal(shortTable.precedingJoinState, 123);
+assert.equal(printed, false);
 const sourcePaths = Object.keys(build.metafile.inputs).sort();
 const sources = await Promise.all(sourcePaths.map(async path => ({ path, sha256: createHash('sha256').update(await readFile(path)).digest('hex') })));
 const hex = values => Array.from(values, value => value.toString(16)).join(',');
@@ -87,7 +97,7 @@ if (process.argv.includes('--generate')) {
   await writeFile(fixturePath, corpus);
 } else assert.equal((await readFile(fixturePath, 'utf8')).replace(/\r\n/g, '\n'), corpus, 'escape parser fixture differs from unchanged JS source');
 const summary = { node: process.version, platform: process.platform, esbuild: esbuild.version, sources,
-  seed, matrixCases, randomizedCases, parseCalls: writes, fixtures: fixtures.length,
+  seed, matrixCases, randomizedCases, parseCalls: writes, fixtures: fixtures.length, customTableAssertions: 4,
   fixtureSha256: createHash('sha256').update(corpus).digest('hex'), fixtureBytes: Buffer.byteLength(corpus),
   status: process.argv.includes('--generate') ? 'generated' : 'matched',
   scope: 'full state, collect, Params/subparams, precedingJoinState, fallback/error callback order and boundaries; registrations/async have separate tests' };

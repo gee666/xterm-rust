@@ -1,0 +1,21 @@
+{
+  "seed": "0xe2a5e111",
+  "cases": [
+    {
+      "trace": 205,
+      "row": 979,
+      "operation": "CSI 3 J",
+      "expectedPublicEvents": "M0:-1/R3:3",
+      "actualPublicEvents": "M0:-1/S0/R3:3",
+      "sourceReason": "common/CoreTerminal does not forward InputHandler.onScroll; browser/CoreBrowserTerminal listens privately to refresh selection and queue viewport sync.",
+      "status": "fixing internal versus public event distinction"
+    },
+    {
+      "row": 0,
+      "kind": "Rust driver mistake",
+      "expectedRustQueueAfterLiveHandler": "empty",
+      "oldAdditionalAssertion": "compared drained queue with events already delivered to callback",
+      "resolution": "driver now asserts empty after delivery; unchanged source event fixture remains fully compared"
+    }
+  ]
+}
