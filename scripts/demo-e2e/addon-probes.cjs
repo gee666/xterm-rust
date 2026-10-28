@@ -81,13 +81,13 @@ async function probe(page, name, phase) {
   } else if (name === 'web-fonts') {
     const font = readFileSync(resolve(__dirname, '../../source_repo/addons/addon-ligatures/fonts/FiraCode-Regular.otf')).toString('base64');
     const loaded = await page.evaluate(async font => {
-      const face = new FontFace('E2E Fira', `url(data:font/otf;base64,${font})`);
-      demo.terminal.options.fontFamily = '"E2E Fira", monospace';
+      const face = new FontFace('E2EFira', `url(data:font/otf;base64,${font})`);
+      demo.terminal.options.fontFamily = '"E2EFira", monospace';
       const fonts = await demo.addons.get('web-fonts').loadFonts([face]);
       await demo.addons.get('web-fonts').relayout();
       return fonts.map(font => ({ family: font.family, status: font.status }));
     }, font);
-    expect(loaded).toEqual([{ family: 'E2E Fira', status: 'loaded' }]);
+    expect(loaded).toEqual([{ family: 'E2EFira', status: 'loaded' }]);
     await fresh(page, 'font => !=');
     await expect(page.locator('.xterm-rows')).toContainText('font');
   } else if (name === 'ligatures') {
@@ -97,10 +97,12 @@ async function probe(page, name, phase) {
   } else if (name === 'web-links') {
     await page.context().route('https://example.com/**', route => route.fulfill({ body: 'E2E link target' }));
     await fresh(page, 'https://example.com/');
+    await page.locator('.xterm-screen').scrollIntoViewIfNeeded();
     const box = await page.locator('.xterm-screen').boundingBox();
     const dimensions = await page.evaluate(() => [demo.terminal.cols, demo.terminal.rows]);
     const x = box.x + box.width / dimensions[0] * 3, y = box.y + box.height / dimensions[1] / 2;
     await page.mouse.move(x, y);
+    await expect(page.locator('.xterm-cursor-pointer')).toBeVisible();
     const popupPromise = page.waitForEvent('popup');
     await page.mouse.click(x, y);
     const popup = await popupPromise;

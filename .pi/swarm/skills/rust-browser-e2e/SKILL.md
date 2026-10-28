@@ -18,6 +18,6 @@ node scripts/demo-e2e.mjs --case demo-06
 
 The default runtime command builds the debug Rust library. `--no-build` is only for an already built matching library. `--grep PATTERN` explicitly selects a smaller scope. Omitting `--project` retains every original browser project.
 
-The runner reads original TypeScript tests directly through Playwright. It changes the fixture's engine script and server address, not assertions, browser projects or test settings. A classic deferred script initializes the actual WASM synchronously so source constructors are available when page navigation completes. Its embedded WASM bundle is test transport, not the production distribution or a size benchmark.
+The runner reads original TypeScript tests directly through Playwright. It changes the fixture's engine script and server address, not assertions, browser projects or test settings. A classic deferred script compiles actual WASM asynchronously. A per-navigation pending image delays the load event until bindings are published. This avoids Chromium's 8 MB synchronous compilation limit without changing original assertions or browser flags. Its embedded WASM bundle is test transport, not the production distribution or a size benchmark.
 
 Logs, Playwright JSON and failures are under `results/e2e/upstream/`. Configs and child temporary files are under root `tmp/e2e/`. Zero discovered tests, zero executed runtime cases, build errors and test errors fail. Discovery is not execution. Server and child cleanup are bounded; no global build lease is needed.

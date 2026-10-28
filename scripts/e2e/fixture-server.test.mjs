@@ -27,11 +27,13 @@ async function fixture(callback) {
   } finally { if (server) await server.close(); await rm(directory, { recursive: true, force: true }); }
 }
 
-test('changes only the original fixture engine script', () => {
-  const replacement = '<script src="/rust-test-page.js" defer></script>';
-  assert.equal(rustFixtureHtml(original), original.replace('<script src="/dist/client-bundle.js" defer></script>', replacement));
-  assert.throws(() => rustFixtureHtml('<html></html>'), /exactly once/);
-  assert.throws(() => rustFixtureHtml(original + original), /exactly once/);
+test('preserves the fixture except Rust script and explicit navigation readiness', () => {
+  const token = '00000000-0000-0000-0000-000000000000';
+  const replacement = `<img src="/rust-ready?token=${token}" hidden alt=""><script src="/rust-test-page.js" data-rust-ready="${token}" defer></script>`;
+  assert.equal(rustFixtureHtml(original, token), original.replace('<script src="/dist/client-bundle.js" defer></script>', replacement));
+  assert.throws(() => rustFixtureHtml('<html></html>', token), /exactly once/);
+  assert.throws(() => rustFixtureHtml(original + original, token), /exactly once/);
+  assert.throws(() => rustFixtureHtml(original, '<script>'), /token/);
 });
 test('serves Rust module, binary, canonical CSS, fonts and original image data', async () => fixture(async ({ server }) => {
   for (const [route, body, type] of [
@@ -43,7 +45,9 @@ test('serves Rust module, binary, canonical CSS, fonts and original image data',
     assert.equal(response.status, 200, route); assert.equal(response.headers.get('content-type'), type);
     assert.equal(await response.text(), body);
   }
-  assert.equal(await (await fetch(server.origin + '/test')).text(), rustFixtureHtml(original));
+  const html = await (await fetch(server.origin + '/test')).text();
+  const token = html.match(/data-rust-ready="([a-f0-9-]+)"/)[1];
+  assert.equal(html, rustFixtureHtml(original, token));
   const head = await fetch(server.origin + '/pkg/xterm_web_bg.wasm', { method: 'HEAD' });
   assert.equal(head.status, 200); assert.equal(head.headers.get('content-length'), '4'); assert.equal(await head.text(), '');
 }));
@@ -64,6 +68,26 @@ test('rejects a package symlink that escapes its declared asset root', async () 
 test('closing the server is idempotent and disconnects the listener', async () => fixture(async ({ server }) => {
   await server.close(); await server.close();
   await assert.rejects(fetch(server.origin + '/test'));
+}));
+test('navigation readiness waits for its own bootstrap and cannot release another page', async () => fixture(async ({ server }) => {
+  const first = await (await fetch(server.origin + '/test')).text();
+  const second = await (await fetch(server.origin + '/test')).text();
+  const token = first.match(/data-rust-ready="([a-f0-9-]+)"/)[1];
+  const other = second.match(/data-rust-ready="([a-f0-9-]+)"/)[1];
+  assert.notEqual(token, other);
+  const image = fetch(`${server.origin}/rust-ready?token=${token}`);
+  assert.equal((await fetch(`${server.origin}/rust-ready?token=${other}`, { method: 'POST' })).status, 204);
+  assert.equal((await fetch(`${server.origin}/rust-ready?token=${token}`, { method: 'POST' })).status, 204);
+  assert.equal((await image).status, 200);
+  assert.equal((await fetch(`${server.origin}/rust-ready?token=${other}`)).status, 200);
+  assert.equal((await fetch(`${server.origin}/rust-ready?token=${token}`, { method: 'POST' })).status, 404);
+}));
+test('failed initialization is retained and releases the failed navigation', async () => fixture(async ({ server }) => {
+  const html = await (await fetch(server.origin + '/test')).text();
+  const token = html.match(/data-rust-ready="([a-f0-9-]+)"/)[1];
+  await fetch(`${server.origin}/rust-ready?token=${token}&failed=1`, { method: 'POST' });
+  assert.equal((await fetch(`${server.origin}/rust-ready?token=${token}`)).status, 500);
+  assert.deepEqual(server.failures, ['Rust bootstrap initialization failed']);
 }));
 test('refuses unbounded or invalid server lifetime', async () => {
   for (const timeoutMs of [0, -1, Infinity, NaN]) {

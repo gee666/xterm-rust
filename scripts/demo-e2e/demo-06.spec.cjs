@@ -6,7 +6,7 @@ const addons = ['attach', 'clipboard', 'fit', 'image', 'ligatures', 'program-sta
 
 for (const name of addons) test(`${name} load, reload, behavior and unload use the visible session`, async ({ page, context, browserName }, info) => {
   if (name === 'clipboard' && browserName === 'chromium') await context.grantPermissions(['clipboard-read', 'clipboard-write']);
-  const previousVersion = await page.evaluate(() => demo.terminal.unicode.activeVersion);
+  const previousVersion = name.startsWith('unicode') ? await page.evaluate(() => demo.terminal.unicode.activeVersion) : undefined;
   const initialCanvases = await page.locator('.xterm canvas').count();
   if (name === 'ligatures') await page.evaluate(() => {
     window.joinerCalls = [];

@@ -89,6 +89,8 @@ finally {
     try { await server.close(); } catch (error) { report.errors.push(String(error)); process.exitCode = 1; report.status = 'failed'; }
     report.requests = server.requests;
     report.serverErrors = server.failures;
+    report.runtimes = server.runtimes;
+    if (server.failures.length) { report.status = 'failed'; process.exitCode = 1; }
   }
 }
 await writeFile(join(output, 'summary.json'), `${JSON.stringify(report, null, 2)}\n`);

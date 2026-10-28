@@ -1,5 +1,6 @@
 // Original test fixture layout with only the engine bootstrap replaced by Rust.
 import { createServer } from 'node:http';
+import { randomUUID } from 'node:crypto';
 import { readFile, realpath, stat } from 'node:fs/promises';
 import { resolve, join, relative, isAbsolute, extname } from 'node:path';
 
@@ -10,10 +11,11 @@ const types = { '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'te
 const sourceData = new Set(['.ttf', '.otf', '.woff', '.woff2', '.png', '.jpg', '.jpeg',
   '.gif', '.webp', '.bmp', '.txt', '.json', '.iip', '.sixel', '.bin', '.blob']);
 
-export function rustFixtureHtml(original) {
+export function rustFixtureHtml(original, token) {
+  if (!/^[a-f0-9-]{36}$/.test(token)) throw new Error('Invalid fixture readiness token');
   const bundle = /<script\s+src="\/dist\/client-bundle\.js"\s+defer><\/script>/g;
   if ([...original.matchAll(bundle)].length !== 1) throw new Error('Expected the original test fixture engine script exactly once');
-  return original.replace(bundle, '<script src="/rust-test-page.js" defer></script>');
+  return original.replace(bundle, `<img src="/rust-ready?token=${token}" hidden alt=""><script src="/rust-test-page.js" data-rust-ready="${token}" defer></script>`);
 }
 
 function inside(root, file) {
@@ -33,7 +35,16 @@ export async function startFixtureServer({ root, packageRoot, bootstrapFile, ref
   const reference = await realpath(referenceRoot);
   const browser = await realpath(join(root, 'browser'));
   const pkg = await realpath(packageRoot);
-  const fixture = rustFixtureHtml(await readFile(join(reference, 'demo/test.html'), 'utf8'));
+  const original = await readFile(join(reference, 'demo/test.html'), 'utf8');
+  const gates = new Map();
+  const pixel = Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64');
+  function finishGate(token, gate) {
+    if (gate.state === 'pending' || !gate.response) return;
+    clearTimeout(gate.timer);
+    gate.entry.status = gate.state === 'ready' ? 200 : 500;
+    gate.response.writeHead(gate.entry.status, { 'Content-Type': 'image/gif', 'Cache-Control': 'no-store' }).end(pixel);
+    gates.delete(token);
+  }
   const files = new Map([
     ['/xterm.mjs', join(browser, 'xterm.mjs')],
     ['/xterm.css', join(root, 'crates/xterm-web/assets/xterm.css')],
@@ -41,16 +52,41 @@ export async function startFixtureServer({ root, packageRoot, bootstrapFile, ref
   ]);
   const requests = [];
   const failures = [];
+  const runtimes = [];
   const server = createServer(async (request, response) => {
     const entry = { method: request.method, url: request.url, status: 0 };
     requests.push(entry);
     try {
+      const url = new URL(request.url, 'http://127.0.0.1');
+      const pathname = decodeURIComponent(url.pathname);
+      if (pathname === '/rust-ready') {
+        const token = url.searchParams.get('token'), gate = gates.get(token);
+        if (!gate) { entry.status = 404; response.writeHead(404).end('Unknown readiness token'); return; }
+        if (request.method === 'POST') {
+          gate.state = url.searchParams.has('failed') ? 'failed' : 'ready';
+          if (gate.state === 'failed') failures.push('Rust bootstrap initialization failed');
+          runtimes.push({ state: gate.state, missingBindings: (url.searchParams.get('missing') ?? '').split(',').filter(Boolean) });
+          finishGate(token, gate);
+          entry.status = 204; response.writeHead(204).end(); return;
+        }
+        if (request.method === 'GET' && !gate.response) {
+          gate.response = response; gate.entry = entry; finishGate(token, gate); return;
+        }
+        entry.status = 405; response.writeHead(405).end(); return;
+      }
       if (!['GET', 'HEAD'].includes(request.method)) { entry.status = 405; response.writeHead(405).end(); return; }
-      const pathname = decodeURIComponent(new URL(request.url, 'http://127.0.0.1').pathname);
       if (pathname === '/test') {
+        if (gates.size >= 64) throw new Error('Too many pending Rust fixture navigations');
+        const token = randomUUID();
+        const gate = { state: 'pending', response: undefined, timer: undefined };
+        gate.timer = setTimeout(() => {
+          failures.push('Rust fixture initialization timed out'); gate.state = 'failed';
+          finishGate(token, gate); gates.delete(token);
+        }, Math.min(timeoutMs, 30000));
+        gates.set(token, gate);
         entry.status = 200;
         response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' })
-          .end(request.method === 'HEAD' ? undefined : fixture);
+          .end(request.method === 'HEAD' ? undefined : rustFixtureHtml(original, token));
         return;
       }
       let asset;
@@ -84,6 +120,8 @@ export async function startFixtureServer({ root, packageRoot, bootstrapFile, ref
   function close() {
     if (!closing) {
       clearTimeout(timer);
+      for (const gate of gates.values()) clearTimeout(gate.timer);
+      gates.clear();
       closing = new Promise((done, reject) => {
         server.closeAllConnections(); server.close(error => error ? reject(error) : done());
       });
@@ -92,5 +130,5 @@ export async function startFixtureServer({ root, packageRoot, bootstrapFile, ref
   }
   timer = setTimeout(() => { close().catch(error => failures.push(String(error))); }, timeoutMs);
   const address = server.address();
-  return { origin: `http://127.0.0.1:${address.port}`, requests, failures, close };
+  return { origin: `http://127.0.0.1:${address.port}`, requests, failures, runtimes, close };
 }
