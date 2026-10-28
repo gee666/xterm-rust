@@ -1,0 +1,85 @@
+warning: fields `token` and `resource` are never read
+ --> crates\xterm-core\src\buffer\cleanup_owner.rs:6:5
+  |
+5 | struct Owner {
+  |        ----- fields in this struct
+6 |     token: Rc<()>,
+  |     ^^^^^
+7 |     resource: Box<dyn Any>,
+  |     ^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: field `owner` is never read
+  --> crates\xterm-core\src\buffer\cleanup_owner.rs:12:5
+   |
+11 | pub(crate) struct CleanupOwnerSlot {
+   |                   ---------------- field in this struct
+12 |     owner: RefCell<Option<Owner>>,
+   |     ^^^^^
+   |
+   = note: `CleanupOwnerSlot` has a derived impl for the trait `Default`, but this is intentionally ignored during dead code analysis
+
+warning: methods `is_owned_by`, `install`, and `take_if_owned` are never used
+  --> crates\xterm-core\src\buffer\cleanup_owner.rs:15:19
+   |
+14 | impl CleanupOwnerSlot {
+   | --------------------- methods in this implementation
+15 |     pub(crate) fn is_owned_by(&self, token: &Rc<()>) -> bool {
+   |                   ^^^^^^^^^^^
+...
+20 |     pub(crate) fn install(&self, token: &Rc<()>, resource: Box<dyn Any>) {
+   |                   ^^^^^^^
+...
+26 |     pub(crate) fn take_if_owned(&self, token: &Rc<()>) -> Option<Box<dyn Any>> {
+   |                   ^^^^^^^^^^^^^
+
+warning: field `cleanup_owner` is never read
+   --> crates\xterm-core\src\buffer\screen.rs:146:5
+    |
+116 | pub struct Buffer {
+    |            ------ field in this struct
+...
+146 |     cleanup_owner: Rc<CleanupOwnerSlot>,
+    |     ^^^^^^^^^^^^^
+
+warning: method `cleanup_owner_slot` is never used
+   --> crates\xterm-core\src\buffer\screen.rs:195:19
+    |
+148 | impl Buffer {
+    | ----------- method in this implementation
+...
+195 |     pub(crate) fn cleanup_owner_slot(&self) -> Rc<CleanupOwnerSlot> {
+    |                   ^^^^^^^^^^^^^^^^^^
+
+warning: `xterm-core` (lib) generated 5 warnings
+warning: method `is_empty` is never used
+  --> crates\xterm-addons\src\image\number_map.rs:55:12
+   |
+51 | impl<T> NumberMap<T> {
+   | -------------------- method in this implementation
+...
+55 |     pub fn is_empty(&self) -> bool {
+   |            ^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `xterm-addons` (lib) generated 1 warning
+   Compiling xterm-web v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 0.52s
+     Running tests\color_zone_store.rs (target\debug\deps\color_zone_store-97daca33977aaae8.exe)
+
+running 10 tests
+test all_positions_distinguish_absence_from_full_and_color_identity ... ok
+test fractional_nan_negative_padding_and_nonfinite_lines_follow_js ... ok
+test missing_settings_padding_and_mutable_padding_identity ... ok
+test first_matching_zone_extends_without_coalescing_later_zones ... ok
+test borrowed_external_objects_are_recoverable_errors_not_panics ... ok
+test getter_trims_pool_and_list_identity_and_lone_surrogates_survive ... ok
+test should_not_merge_non_adjacent_zones ... ok
+test external_zone_mutations_remain_visible_to_merging ... ok
+test should_merge_adjacent_zones ... ok
+test should_reuse_zone_objects ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

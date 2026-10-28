@@ -1,0 +1,21 @@
+{
+  "task": 146,
+  "reviewer": "Cornelia",
+  "status": "accepted",
+  "scope": "ColorZoneStore algorithm and identity only. Actual overview canvas and browser integration remain tasks 32 and 193.",
+  "sourceReview": [
+    "source_repo/src/browser/decorations/ColorZoneStore.ts",
+    "crates/xterm-web/src/renderer/color_zone_store.rs",
+    "crates/xterm-web/tests/color_zone_store.rs",
+    "crates/xterm-web/tests/color_zone_differential.rs",
+    "scripts/color-zone-oracle.mjs"
+  ],
+  "checks": [
+    { "command": "cargo test -p xterm-web --test color_zone_store", "passed": 10, "failed": 0, "ignored": 0, "lease": "results/build-slots/1793172924739-45608-4dddea97-08e7-44e2-b20e-0edca4e445c0" },
+    { "command": "cargo test -p xterm-web --test color_zone_differential", "passed": 1, "failed": 0, "ignored": 0, "operations": 2048, "lease": "results/build-slots/1793173040289-31628-74c234a8-93d3-4d61-af18-2c104d70a586" },
+    { "command": "node scripts/color-zone-oracle.mjs", "originalCases": 3, "passed": 3, "failed": 0, "skipped": 0, "unrun": 0, "fixtureDrift": false, "lease": "results/build-slots/1793173043569-49444-cc7c844b-d4bc-42c0-b656-bba67c4a899f" }
+  ],
+  "seed": "0xc01020ae",
+  "fixtureSha256": "194bd56da4c1dc3498a2836ec426c8ce56250436b0e4d939a790d5787cd3e1ab",
+  "findings": "Independent source comparison confirms first matching zone only, absence versus full-position distinction, missing padding NaN semantics, active-list and zone identity, pool trimming cursor behavior, clear/reuse, exact UTF-16 colors and signed-zero min/max. All 11 native tests and all source/oracle checks reran successfully on Windows. No browser or other native platform claim is made."
+}
