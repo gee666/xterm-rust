@@ -34,7 +34,10 @@ async function command(executable, args, log) {
   await writeFile(resolve(results, 'commands.json'), JSON.stringify(commands, null, 2) + '\n');
   if (record.status !== 'passed') throw new Error(`Command failed; see ${results}/${log}`);
 }
-await command(cargo, ['test', '-p', 'xterm-web', '--target', 'wasm32-unknown-unknown',
+const packageName = process.env.WASM_PACKAGE ?? 'xterm-web';
+if (!/^[a-z0-9_-]+$/.test(packageName)) throw new Error('Invalid WASM_PACKAGE name');
+const manifestArgs = process.env.WASM_MANIFEST ? ['--manifest-path', resolve(process.env.WASM_MANIFEST)] : [];
+await command(cargo, ['test', ...manifestArgs, '-p', packageName, '--target', 'wasm32-unknown-unknown',
   '--test', testName, '--no-run', '--message-format=json'], `${testName}-build.log`);
 const messages = (await readFile(resolve(results, `${testName}-build.log`), 'utf8')).split('\n')
   .filter(line => line.startsWith('{')).map(line => JSON.parse(line));
@@ -73,7 +76,9 @@ await new Promise((ready, reject) => {
   server.listen(0, '127.0.0.1', ready);
 });
 const report = { testName, platform: process.platform, node: process.version,
-  date: new Date().toISOString(), componentOnly: true, commands, browsers: [] };
+  date: new Date().toISOString(), componentOnly: true, packageName,
+  isolatedManifest: process.env.WASM_MANIFEST ?? null,
+  prelude: process.env.WASM_PRELUDE ?? null, commands, browsers: [] };
 try {
   const address = server.address();
   for (const name of (process.env.BROWSERS ?? 'chromium,firefox,webkit').split(',')) {
@@ -89,6 +94,7 @@ try {
       page.on('pageerror', error => entry.errors.push(error.stack ?? error.message));
       page.on('console', event => entry.console.push({ type: event.type(), text: event.text() }));
       await page.goto(`http://127.0.0.1:${address.port}/`);
+      if (process.env.WASM_PRELUDE) await page.addScriptTag({ content: await readFile(resolve(process.env.WASM_PRELUDE), 'utf8') });
       await page.evaluate(() => {
         globalThis.__wbg_test_invoke = callback => callback();
         globalThis.testRun = (async () => {

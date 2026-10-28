@@ -1,0 +1,166 @@
+{
+  "testName": "image_canvas_browser",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-10-28T16:45:26.091Z",
+  "componentOnly": true,
+  "packageName": "xterm-web-image-check",
+  "isolatedManifest": "C:\\Users\\user\\.xterm-rust-target\\7144d30a1fc3-worktrees\\Integration\\tmp\\worktrees\\Harper\\tmp\\image-canvas\\component\\Cargo.toml",
+  "prelude": "C:\\Users\\user\\.xterm-rust-target\\7144d30a1fc3-worktrees\\Integration\\tmp\\worktrees\\Harper\\tmp\\image-canvas\\source-renderer.js",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "C:\\Users\\user\\.xterm-rust-target\\7144d30a1fc3-worktrees\\Integration\\tmp\\worktrees\\Harper\\tmp\\image-canvas\\component\\Cargo.toml",
+        "-p",
+        "xterm-web-image-check",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "image_canvas_browser",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 910.64,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "C:\\Users\\user\\.xterm-rust-target\\7144d30a1fc3-worktrees\\Integration\\tmp\\worktrees\\Harper\\target\\wasm32-unknown-unknown\\debug\\deps\\image_canvas_browser-961ad50a37dcf750.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "C:\\Users\\user\\.xterm-rust-target\\7144d30a1fc3-worktrees\\Integration\\tmp\\worktrees\\Harper\\tmp\\browser-host\\image_canvas_browser",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 374.5494000000001,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "passed",
+      "tests": [
+        "__wbgt__image_canvas_browser::image_canvas_failures::draw_and_bitmap_close_errors_keep_thrown_js_identity_and_partial_state",
+        "__wbgt__image_canvas_browser::image_canvas_failures::no_2d_context_removes_new_layer_without_reporting_it_present",
+        "__wbgt__image_canvas_browser::image_canvas_failures::pending_placeholder_bitmap_uses_source_late_assignment_and_close_order",
+        "__wbgt__image_canvas_browser::image_canvas_failures::rescale_and_extract_context_failure_preserves_original_resource",
+        "__wbgt__image_canvas_browser::image_canvas_failures::unavailable_primitives_follow_original_fallbacks",
+        "__wbgt__image_canvas_browser::layer_order_isolation_clear_and_idempotent_removal_match_source",
+        "__wbgt__image_canvas_browser::missing_metrics_suppress_drawing_and_extraction_without_changing_specs",
+        "__wbgt__image_canvas_browser::placeholder_checkerboard_matches_source_pixels",
+        "__wbgt__image_canvas_browser::primitives_use_real_local_documents_and_rgba_bytes",
+        "__wbgt__image_canvas_browser::real_bitmaps_convert_pixels_and_storage_closes_original_once",
+        "__wbgt__image_canvas_browser::real_storage_tiles_render_extract_and_return_original_identity",
+        "__wbgt__image_canvas_browser::seeded_fractional_crop_rescale_and_extract_pixels_match_unchanged_source",
+        "__wbgt__image_canvas_browser::unchanged_dimensions_do_not_clear_canvas_but_changed_dimensions_do"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "warning",
+          "text": "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently"
+        },
+        {
+          "type": "warning",
+          "text": "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently"
+        },
+        {
+          "type": "warning",
+          "text": "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently"
+        },
+        {
+          "type": "warning",
+          "text": "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 13 tests\ntest unchanged_dimensions_do_not_clear_canvas_but_changed_dimensions_do ... ok\ntest seeded_fractional_crop_rescale_and_extract_pixels_match_unchanged_source ... ok\ntest real_storage_tiles_render_extract_and_return_original_identity ... ok\ntest real_bitmaps_convert_pixels_and_storage_closes_original_once ... ok\ntest primitives_use_real_local_documents_and_rgba_bytes ... ok\ntest placeholder_checkerboard_matches_source_pixels ... ok\ntest missing_metrics_suppress_drawing_and_extraction_without_changing_specs ... ok\ntest layer_order_isolation_clear_and_idempotent_removal_match_source ... ok\ntest image_canvas_failures::unavailable_primitives_follow_original_fallbacks ... ok\ntest image_canvas_failures::rescale_and_extract_context_failure_preserves_original_resource ... ok\ntest image_canvas_failures::pending_placeholder_bitmap_uses_source_late_assignment_and_close_order ... ok\ntest image_canvas_failures::no_2d_context_removes_new_layer_without_reporting_it_present ... ok\ntest image_canvas_failures::draw_and_bitmap_close_errors_keep_thrown_js_identity_and_partial_state ... ok\n\ntest result: ok. 13 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.12s\n\n",
+      "counts": {
+        "passed": 13,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "firefox",
+      "status": "passed",
+      "tests": [
+        "__wbgt__image_canvas_browser::image_canvas_failures::draw_and_bitmap_close_errors_keep_thrown_js_identity_and_partial_state",
+        "__wbgt__image_canvas_browser::image_canvas_failures::no_2d_context_removes_new_layer_without_reporting_it_present",
+        "__wbgt__image_canvas_browser::image_canvas_failures::pending_placeholder_bitmap_uses_source_late_assignment_and_close_order",
+        "__wbgt__image_canvas_browser::image_canvas_failures::rescale_and_extract_context_failure_preserves_original_resource",
+        "__wbgt__image_canvas_browser::image_canvas_failures::unavailable_primitives_follow_original_fallbacks",
+        "__wbgt__image_canvas_browser::layer_order_isolation_clear_and_idempotent_removal_match_source",
+        "__wbgt__image_canvas_browser::missing_metrics_suppress_drawing_and_extraction_without_changing_specs",
+        "__wbgt__image_canvas_browser::placeholder_checkerboard_matches_source_pixels",
+        "__wbgt__image_canvas_browser::primitives_use_real_local_documents_and_rgba_bytes",
+        "__wbgt__image_canvas_browser::real_bitmaps_convert_pixels_and_storage_closes_original_once",
+        "__wbgt__image_canvas_browser::real_storage_tiles_render_extract_and_return_original_identity",
+        "__wbgt__image_canvas_browser::seeded_fractional_crop_rescale_and_extract_pixels_match_unchanged_source",
+        "__wbgt__image_canvas_browser::unchanged_dimensions_do_not_clear_canvas_but_changed_dimensions_do"
+      ],
+      "errors": [],
+      "console": [],
+      "version": "150.0.2",
+      "output": "running 13 tests\ntest unchanged_dimensions_do_not_clear_canvas_but_changed_dimensions_do ... ok\ntest seeded_fractional_crop_rescale_and_extract_pixels_match_unchanged_source ... ok\ntest real_storage_tiles_render_extract_and_return_original_identity ... ok\ntest real_bitmaps_convert_pixels_and_storage_closes_original_once ... ok\ntest primitives_use_real_local_documents_and_rgba_bytes ... ok\ntest placeholder_checkerboard_matches_source_pixels ... ok\ntest missing_metrics_suppress_drawing_and_extraction_without_changing_specs ... ok\ntest layer_order_isolation_clear_and_idempotent_removal_match_source ... ok\ntest image_canvas_failures::unavailable_primitives_follow_original_fallbacks ... ok\ntest image_canvas_failures::rescale_and_extract_context_failure_preserves_original_resource ... ok\ntest image_canvas_failures::pending_placeholder_bitmap_uses_source_late_assignment_and_close_order ... ok\ntest image_canvas_failures::no_2d_context_removes_new_layer_without_reporting_it_present ... ok\ntest image_canvas_failures::draw_and_bitmap_close_errors_keep_thrown_js_identity_and_partial_state ... ok\n\ntest result: ok. 13 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.27s\n\n",
+      "counts": {
+        "passed": 13,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "webkit",
+      "status": "passed",
+      "tests": [
+        "__wbgt__image_canvas_browser::image_canvas_failures::draw_and_bitmap_close_errors_keep_thrown_js_identity_and_partial_state",
+        "__wbgt__image_canvas_browser::image_canvas_failures::no_2d_context_removes_new_layer_without_reporting_it_present",
+        "__wbgt__image_canvas_browser::image_canvas_failures::pending_placeholder_bitmap_uses_source_late_assignment_and_close_order",
+        "__wbgt__image_canvas_browser::image_canvas_failures::rescale_and_extract_context_failure_preserves_original_resource",
+        "__wbgt__image_canvas_browser::image_canvas_failures::unavailable_primitives_follow_original_fallbacks",
+        "__wbgt__image_canvas_browser::layer_order_isolation_clear_and_idempotent_removal_match_source",
+        "__wbgt__image_canvas_browser::missing_metrics_suppress_drawing_and_extraction_without_changing_specs",
+        "__wbgt__image_canvas_browser::placeholder_checkerboard_matches_source_pixels",
+        "__wbgt__image_canvas_browser::primitives_use_real_local_documents_and_rgba_bytes",
+        "__wbgt__image_canvas_browser::real_bitmaps_convert_pixels_and_storage_closes_original_once",
+        "__wbgt__image_canvas_browser::real_storage_tiles_render_extract_and_return_original_identity",
+        "__wbgt__image_canvas_browser::seeded_fractional_crop_rescale_and_extract_pixels_match_unchanged_source",
+        "__wbgt__image_canvas_browser::unchanged_dimensions_do_not_clear_canvas_but_changed_dimensions_do"
+      ],
+      "errors": [],
+      "console": [],
+      "version": "26.4",
+      "output": "running 13 tests\ntest unchanged_dimensions_do_not_clear_canvas_but_changed_dimensions_do ... ok\ntest seeded_fractional_crop_rescale_and_extract_pixels_match_unchanged_source ... ok\ntest real_storage_tiles_render_extract_and_return_original_identity ... ok\ntest real_bitmaps_convert_pixels_and_storage_closes_original_once ... ok\ntest primitives_use_real_local_documents_and_rgba_bytes ... ok\ntest placeholder_checkerboard_matches_source_pixels ... ok\ntest missing_metrics_suppress_drawing_and_extraction_without_changing_specs ... ok\ntest layer_order_isolation_clear_and_idempotent_removal_match_source ... ok\ntest image_canvas_failures::unavailable_primitives_follow_original_fallbacks ... ok\ntest image_canvas_failures::rescale_and_extract_context_failure_preserves_original_resource ... ok\ntest image_canvas_failures::pending_placeholder_bitmap_uses_source_late_assignment_and_close_order ... ok\ntest image_canvas_failures::no_2d_context_removes_new_layer_without_reporting_it_present ... ok\ntest image_canvas_failures::draw_and_bitmap_close_errors_keep_thrown_js_identity_and_partial_state ... ok\n\ntest result: ok. 13 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.28s\n\n",
+      "counts": {
+        "passed": 13,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ]
+}

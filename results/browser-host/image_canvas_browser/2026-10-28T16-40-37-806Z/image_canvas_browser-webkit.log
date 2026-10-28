@@ -1,0 +1,173 @@
+running 13 tests
+test unchanged_dimensions_do_not_clear_canvas_but_changed_dimensions_do ... ok
+test seeded_fractional_crop_rescale_and_extract_pixels_match_unchanged_source ... ok
+test real_storage_tiles_render_extract_and_return_original_identity ... ok
+test real_bitmaps_convert_pixels_and_storage_closes_original_once ... ok
+test primitives_use_real_local_documents_and_rgba_bytes ... ok
+test placeholder_checkerboard_matches_source_pixels ... ok
+test missing_metrics_suppress_drawing_and_extraction_without_changing_specs ... ok
+test layer_order_isolation_clear_and_idempotent_removal_match_source ... ok
+test image_canvas_failures::unavailable_primitives_follow_original_fallbacks ... ok
+test image_canvas_failures::rescale_and_extract_context_failure_preserves_original_resource ... FAIL
+test image_canvas_failures::pending_placeholder_bitmap_uses_source_late_assignment_and_close_order ... FAIL
+test image_canvas_failures::no_2d_context_removes_new_layer_without_reporting_it_present ... FAIL
+test image_canvas_failures::draw_and_bitmap_close_errors_keep_thrown_js_identity_and_partial_state ... FAIL
+
+failures:
+
+---- image_canvas_failures::rescale_and_extract_context_failure_preserves_original_resource output ----
+    JS exception that was thrown:
+        RuntimeError: Unreachable code should not be executed (evaluating 'wasm.wasm_bindgen__convert__closures__invoke0_mut__h6ccbabcefd85a5b8(arg0, arg1)')
+        12449@wasm-function[12449]
+        11064@wasm-function[11064]
+        3536@wasm-function[3536]
+        4465@wasm-function[4465]
+        12276@wasm-function[12276]
+        8286@wasm-function[8286]
+        8287@wasm-function[8287]
+        5148@wasm-function[5148]
+        3924@wasm-function[3924]
+        313@wasm-function[313]
+        8096@wasm-function[8096]
+        3411@wasm-function[3411]
+        4475@wasm-function[4475]
+        wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@image_canvas_browser-961ad50a37dcf750.wasm:wasm-function[6802]
+        __wbg_adapter_72@http://127.0.0.1:52954/suite.js:279:73
+        cb0@http://127.0.0.1:52954/suite.js:755:44
+        @
+        @http://127.0.0.1:52954/suite.js:760:30
+        handleError@http://127.0.0.1:52954/suite.js:91:23
+        wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@image_canvas_browser-961ad50a37dcf750.wasm:wasm-function[2074]
+        4089@wasm-function[4089]
+        4938@wasm-function[4938]
+        571@wasm-function[571]
+        195@wasm-function[195]
+        1200@wasm-function[1200]
+        543@wasm-function[543]
+        1189@wasm-function[1189]
+        1089@wasm-function[1089]
+        6178@wasm-function[6178]
+        5115@wasm-function[5115]
+        9750@wasm-function[9750]
+        __wbg_adapter_34@http://127.0.0.1:52954/suite.js:275:35
+        real@http://127.0.0.1:52954/suite.js:123:21
+
+---- image_canvas_failures::pending_placeholder_bitmap_uses_source_late_assignment_and_close_order output ----
+    JS exception that was thrown:
+        RuntimeError: Unreachable code should not be executed (evaluating 'wasm.wasm_bindgen__convert__closures__invoke0_mut__h6ccbabcefd85a5b8(arg0, arg1)')
+        12449@wasm-function[12449]
+        11064@wasm-function[11064]
+        3536@wasm-function[3536]
+        4465@wasm-function[4465]
+        12276@wasm-function[12276]
+        8286@wasm-function[8286]
+        8287@wasm-function[8287]
+        5148@wasm-function[5148]
+        3924@wasm-function[3924]
+        260@wasm-function[260]
+        937@wasm-function[937]
+        4467@wasm-function[4467]
+        wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@image_canvas_browser-961ad50a37dcf750.wasm:wasm-function[6802]
+        __wbg_adapter_72@http://127.0.0.1:52954/suite.js:279:73
+        cb0@http://127.0.0.1:52954/suite.js:755:44
+        @
+        @http://127.0.0.1:52954/suite.js:760:30
+        handleError@http://127.0.0.1:52954/suite.js:91:23
+        wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@image_canvas_browser-961ad50a37dcf750.wasm:wasm-function[2074]
+        4093@wasm-function[4093]
+        4935@wasm-function[4935]
+        580@wasm-function[580]
+        195@wasm-function[195]
+        1200@wasm-function[1200]
+        543@wasm-function[543]
+        1189@wasm-function[1189]
+        1089@wasm-function[1089]
+        6178@wasm-function[6178]
+        5115@wasm-function[5115]
+        9750@wasm-function[9750]
+        __wbg_adapter_34@http://127.0.0.1:52954/suite.js:275:35
+        real@http://127.0.0.1:52954/suite.js:123:21
+
+---- image_canvas_failures::no_2d_context_removes_new_layer_without_reporting_it_present output ----
+    JS exception that was thrown:
+        RuntimeError: Unreachable code should not be executed (evaluating 'wasm.wasm_bindgen__convert__closures__invoke0_mut__h6ccbabcefd85a5b8(arg0, arg1)')
+        12449@wasm-function[12449]
+        11064@wasm-function[11064]
+        3536@wasm-function[3536]
+        4465@wasm-function[4465]
+        12276@wasm-function[12276]
+        8286@wasm-function[8286]
+        8287@wasm-function[8287]
+        5148@wasm-function[5148]
+        3924@wasm-function[3924]
+        772@wasm-function[772]
+        8093@wasm-function[8093]
+        3415@wasm-function[3415]
+        4469@wasm-function[4469]
+        wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@image_canvas_browser-961ad50a37dcf750.wasm:wasm-function[6802]
+        __wbg_adapter_72@http://127.0.0.1:52954/suite.js:279:73
+        cb0@http://127.0.0.1:52954/suite.js:755:44
+        @
+        @http://127.0.0.1:52954/suite.js:760:30
+        handleError@http://127.0.0.1:52954/suite.js:91:23
+        wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@image_canvas_browser-961ad50a37dcf750.wasm:wasm-function[2074]
+        4096@wasm-function[4096]
+        4941@wasm-function[4941]
+        578@wasm-function[578]
+        195@wasm-function[195]
+        1200@wasm-function[1200]
+        543@wasm-function[543]
+        1189@wasm-function[1189]
+        1089@wasm-function[1089]
+        6178@wasm-function[6178]
+        5115@wasm-function[5115]
+        9750@wasm-function[9750]
+        __wbg_adapter_34@http://127.0.0.1:52954/suite.js:275:35
+        real@http://127.0.0.1:52954/suite.js:123:21
+
+---- image_canvas_failures::draw_and_bitmap_close_errors_keep_thrown_js_identity_and_partial_state output ----
+    JS exception that was thrown:
+        RuntimeError: Unreachable code should not be executed (evaluating 'wasm.wasm_bindgen__convert__closures__invoke0_mut__h6ccbabcefd85a5b8(arg0, arg1)')
+        12449@wasm-function[12449]
+        11064@wasm-function[11064]
+        3536@wasm-function[3536]
+        4465@wasm-function[4465]
+        12276@wasm-function[12276]
+        8286@wasm-function[8286]
+        8287@wasm-function[8287]
+        5148@wasm-function[5148]
+        image_canvas_browser::image_canvas_support::eval::h9faac7175158f213@image_canvas_browser-961ad50a37dcf750.wasm:wasm-function[3924]
+        230@wasm-function[230]
+        8094@wasm-function[8094]
+        3412@wasm-function[3412]
+        4477@wasm-function[4477]
+        wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@image_canvas_browser-961ad50a37dcf750.wasm:wasm-function[6802]
+        __wbg_adapter_72@http://127.0.0.1:52954/suite.js:279:73
+        cb0@http://127.0.0.1:52954/suite.js:755:44
+        @
+        @http://127.0.0.1:52954/suite.js:760:30
+        handleError@http://127.0.0.1:52954/suite.js:91:23
+        wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@image_canvas_browser-961ad50a37dcf750.wasm:wasm-function[2074]
+        4094@wasm-function[4094]
+        4930@wasm-function[4930]
+        575@wasm-function[575]
+        195@wasm-function[195]
+        1200@wasm-function[1200]
+        543@wasm-function[543]
+        1189@wasm-function[1189]
+        1089@wasm-function[1089]
+        6178@wasm-function[6178]
+        5115@wasm-function[5115]
+        9750@wasm-function[9750]
+        __wbg_adapter_34@http://127.0.0.1:52954/suite.js:275:35
+        real@http://127.0.0.1:52954/suite.js:123:21
+
+failures:
+
+    image_canvas_failures::rescale_and_extract_context_failure_preserves_original_resource
+    image_canvas_failures::pending_placeholder_bitmap_uses_source_late_assignment_and_close_order
+    image_canvas_failures::no_2d_context_removes_new_layer_without_reporting_it_present
+    image_canvas_failures::draw_and_bitmap_close_errors_keep_thrown_js_identity_and_partial_state
+
+test result: FAILED. 9 passed; 4 failed; 0 ignored; 0 filtered out; finished in 0.28s
+

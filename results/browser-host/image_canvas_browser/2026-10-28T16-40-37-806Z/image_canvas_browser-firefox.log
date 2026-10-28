@@ -1,0 +1,485 @@
+running 13 tests
+test unchanged_dimensions_do_not_clear_canvas_but_changed_dimensions_do ... ok
+test seeded_fractional_crop_rescale_and_extract_pixels_match_unchanged_source ... ok
+test real_storage_tiles_render_extract_and_return_original_identity ... ok
+test real_bitmaps_convert_pixels_and_storage_closes_original_once ... ok
+test primitives_use_real_local_documents_and_rgba_bytes ... ok
+test placeholder_checkerboard_matches_source_pixels ... ok
+test missing_metrics_suppress_drawing_and_extraction_without_changing_specs ... ok
+test layer_order_isolation_clear_and_idempotent_removal_match_source ... ok
+test image_canvas_failures::unavailable_primitives_follow_original_fallbacks ... ok
+test image_canvas_failures::rescale_and_extract_context_failure_preserves_original_resource ... FAIL
+test image_canvas_failures::pending_placeholder_bitmap_uses_source_late_assignment_and_close_order ... FAIL
+test image_canvas_failures::no_2d_context_removes_new_layer_without_reporting_it_present ... FAIL
+test image_canvas_failures::draw_and_bitmap_close_errors_keep_thrown_js_identity_and_partial_state ... FAIL
+
+failures:
+
+---- image_canvas_failures::rescale_and_extract_context_failure_preserves_original_resource output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable executed
+        image_canvas_browser-961ad50a37dcf750.wasm.__rust_start_panic@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12449]:0x2db69c
+        image_canvas_browser-961ad50a37dcf750.wasm.rust_panic@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11064]:0x2d8619
+        image_canvas_browser-961ad50a37dcf750.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[3536]:0x24bb88
+        image_canvas_browser-961ad50a37dcf750.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4465]:0x27272f
+        image_canvas_browser-961ad50a37dcf750.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12276]:0x2db2aa
+        image_canvas_browser-961ad50a37dcf750.wasm.rust_begin_unwind@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8286]:0x2c85a7
+        image_canvas_browser-961ad50a37dcf750.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8287]:0x2c85d3
+        image_canvas_browser-961ad50a37dcf750.wasm.core::result::unwrap_failed::ha18832984acbf380@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5148]:0x28a021
+        image_canvas_browser-961ad50a37dcf750.wasm.image_canvas_browser::image_canvas_support::eval::h9faac7175158f213@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[3924]:0x25cf6e
+        image_canvas_browser-961ad50a37dcf750.wasm.image_canvas_browser::image_canvas_failures::rescale_and_extract_context_failure_preserves_original_resource::h8b51953b2a170e1d@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[313]:0xded54
+        image_canvas_browser-961ad50a37dcf750.wasm.core::ops::function::FnOnce::call_once::hac02eec4c7b2f40f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8096]:0x2c6427
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h7b2e593ff13a028d@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[3411]:0x2459ce
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h86ae580cd7862bf9@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4475]:0x272d57
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6802]:0x2b244f
+        __wbg_adapter_72@http://127.0.0.1:52954/suite.js:279:10
+        cb0@http://127.0.0.1:52954/suite.js:755:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:52954/suite.js:760:30
+        handleError@http://127.0.0.1:52954/suite.js:91:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:52954/suite.js:748:76
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[2074]:0x1f4d87
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::h6c4b9d714155c7c4@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4089]:0x263e45
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::ha1a04e276075111c@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4938]:0x2831c9
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::h2e099a5289355a79@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[571]:0x134a8a
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[195]:0x93e7d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1200]:0x1a2d93
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[543]:0x12d7b6
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1189]:0x1a18e3
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1089]:0x1949e8
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6178]:0x2a554a
+        image_canvas_browser-961ad50a37dcf750.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5115]:0x288f88
+        image_canvas_browser-961ad50a37dcf750.wasm.closure860 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9750]:0x2d3359
+        __wbg_adapter_34@http://127.0.0.1:52954/suite.js:275:10
+        real@http://127.0.0.1:52954/suite.js:123:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:52954/suite.js:646:23
+        image_canvas_browser-961ad50a37dcf750.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12290]:0x2db32d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9610]:0x2d26b3
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1769]:0x1dcb9d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::push_task::hed54b62c8a63136f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11201]:0x2d8c5d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::{{closure}}::h1bc235cd2ffabe9f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11203]:0x2d8c73
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::with::hdbd18b987237042a@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9612]:0x2d26e9
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::h9f138db513920fdf@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12254]:0x2db1e2
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::wake::ha0a8116bd20324a1@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4226]:0x2693a6
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::into_raw_waker::raw_wake::h7cd0464b561f844e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[10310]:0x2d5a8b
+        image_canvas_browser-961ad50a37dcf750.wasm.core::task::wake::Waker::wake::h14e3bd6775d5e60c@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[7317]:0x2bb46d
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::finish::h3ec7387b4cde006e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[854]:0x16fc28
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::{{closure}}::hcef9282b9bac11dc@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5978]:0x2a0ae0
+        image_canvas_browser-961ad50a37dcf750.wasm.core::ops::function::FnOnce::call_once::h7c8524434abbe90b@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5715]:0x29a2ae
+        image_canvas_browser-961ad50a37dcf750.wasm.<T as wasm_bindgen::closure::WasmClosureFnOnce<A,R>>::into_fn_mut::{{closure}}::h64b0b01977ad41e4@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8272]:0x2c8337
+        image_canvas_browser-961ad50a37dcf750.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5115]:0x288f88
+        image_canvas_browser-961ad50a37dcf750.wasm.closure860 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9750]:0x2d3359
+        __wbg_adapter_34@http://127.0.0.1:52954/suite.js:275:10
+        real@http://127.0.0.1:52954/suite.js:123:20
+        promise callback*__wbg_get_imports/imports.wbg.__wbg_then_48b406749878a531@http://127.0.0.1:52954/suite.js:734:26
+        image_canvas_browser-961ad50a37dcf750.wasm.__wbg_then_48b406749878a531 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8867]:0x2cdc18
+        image_canvas_browser-961ad50a37dcf750.wasm.js_sys::Promise::then2::h7b08f2f14140ca21@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5083]:0x287f10
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::ha4dc543ce1f01629@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[537]:0x12bf17
+        image_canvas_browser-961ad50a37dcf750.wasm.image_canvas_browser::image_canvas_failures::unavailable_primitives_follow_original_fallbacks::{{closure}}::hdbc251ee6466f2a4@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[238]:0xb4521
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h9e2f737c9ec512d3@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1268]:0x1aad2a
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h79a2b509c9aa8b30@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4472]:0x272b71
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6802]:0x2b244f
+        __wbg_adapter_72@http://127.0.0.1:52954/suite.js:279:10
+        cb0@http://127.0.0.1:52954/suite.js:755:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:52954/suite.js:760:30
+        handleError@http://127.0.0.1:52954/suite.js:91:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:52954/suite.js:748:76
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[2074]:0x1f4d87
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::h1403524fd5d9673f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4086]:0x263c50
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::h03e3a51674b44b39@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4929]:0x282cd4
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::hcf7da5e63b0e4e9a@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[579]:0x1369c2
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[195]:0x93e7d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1200]:0x1a2d93
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[543]:0x12d7b6
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1189]:0x1a18e3
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1089]:0x1949e8
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6178]:0x2a554a
+        image_canvas_browser-961ad50a37dcf750.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5115]:0x288f88
+        image_canvas_browser-961ad50a37dcf750.wasm.closure860 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9750]:0x2d3359
+        __wbg_adapter_34@http://127.0.0.1:52954/suite.js:275:10
+        real@http://127.0.0.1:52954/suite.js:123:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:52954/suite.js:646:23
+        image_canvas_browser-961ad50a37dcf750.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12290]:0x2db32d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9610]:0x2d26b3
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1769]:0x1dcb9d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::push_task::hed54b62c8a63136f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11201]:0x2d8c5d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::{{closure}}::h1bc235cd2ffabe9f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11203]:0x2d8c73
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::with::hdbd18b987237042a@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9612]:0x2d26e9
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::h9f138db513920fdf@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12254]:0x2db1e2
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::wake::ha0a8116bd20324a1@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4226]:0x2693a6
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::into_raw_waker::raw_wake::h7cd0464b561f844e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[10310]:0x2d5a8b
+        image_canvas_browser-961ad50a37dcf750.wasm.core::task::wake::Waker::wake::h14e3bd6775d5e60c@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[7317]:0x2bb46d
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::finish::h3ec7387b4cde006e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[854]:0x16fc28
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::{{closure}}::hcef9282b9bac11dc@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5978]:0x2a0ae0
+        image_canvas_browser-961ad50a37dcf750.wasm.core::ops::function::FnOnce::call_once::h7c8524434abbe90b@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5715]:0x29a2ae
+        image_canvas_browser-961ad50a37dcf750.wasm.<T as wasm_bindgen::closure::WasmClosureFnOnce<A,R>>::into_fn_mut::{{closure}}::h64b0b01977ad41e4@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8272]:0x2c8337
+        image_canvas_browser-961ad50a37dcf750.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5115]:0x288f88
+        image_canvas_browser-961ad50a37dcf750.wasm.closure860 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9750]:0x2d3359
+        __wbg_adapter_34@http://127.0.0.1:52954/suite.js:275:10
+        real@http://127.0.0.1:52954/suite.js:123:20
+        promise callback*__wbg_get_imports/imports.wbg.__wbg_then_48b406749878a531@http://127.0.0.1:52954/suite.js:734:26
+        image_canvas_browser-961ad50a37dcf750.wasm.__wbg_then_48b406749878a531 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8867]:0x2cdc18
+        image_canvas_browser-961ad50a37dcf750.wasm.js_sys::Promise::then2::h7b08f2f14140ca21@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5083]:0x287f10
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::ha4dc543ce1f01629@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[537]:0x12bf17
+        image_canvas_browser-961ad50a37dcf750.wasm.image_canvas_browser::real_bitmaps_convert_pixels_and_storage_closes_original_once::{{closure}}::h41e9c17ee31cb538@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[208]:0x9e6d5
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h11fc0705b07f8f7b@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1054]:0x18fc8a
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h85ef9fd75c850b0e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4474]:0x272cb5
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6802]:0x2b244f
+        __wbg_adapter_72@http://127.0.0.1:52954/suite.js:279:10
+        cb0@http://127.0.0.1:52954/suite.js:755:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+
+---- image_canvas_failures::pending_placeholder_bitmap_uses_source_late_assignment_and_close_order output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable executed
+        image_canvas_browser-961ad50a37dcf750.wasm.__rust_start_panic@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12449]:0x2db69c
+        image_canvas_browser-961ad50a37dcf750.wasm.rust_panic@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11064]:0x2d8619
+        image_canvas_browser-961ad50a37dcf750.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[3536]:0x24bb88
+        image_canvas_browser-961ad50a37dcf750.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4465]:0x27272f
+        image_canvas_browser-961ad50a37dcf750.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12276]:0x2db2aa
+        image_canvas_browser-961ad50a37dcf750.wasm.rust_begin_unwind@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8286]:0x2c85a7
+        image_canvas_browser-961ad50a37dcf750.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8287]:0x2c85d3
+        image_canvas_browser-961ad50a37dcf750.wasm.core::result::unwrap_failed::ha18832984acbf380@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5148]:0x28a021
+        image_canvas_browser-961ad50a37dcf750.wasm.image_canvas_browser::image_canvas_support::eval::h9faac7175158f213@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[3924]:0x25cf6e
+        image_canvas_browser-961ad50a37dcf750.wasm.image_canvas_browser::image_canvas_failures::pending_placeholder_bitmap_uses_source_late_assignment_and_close_order::{{closure}}::h860e033a1bc676a6@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[260]:0xc221e
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h1ef0ddb72784d504@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[937]:0x17dd60
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h39fc21f6dc75c10d@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4467]:0x272847
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6802]:0x2b244f
+        __wbg_adapter_72@http://127.0.0.1:52954/suite.js:279:10
+        cb0@http://127.0.0.1:52954/suite.js:755:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:52954/suite.js:760:30
+        handleError@http://127.0.0.1:52954/suite.js:91:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:52954/suite.js:748:76
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[2074]:0x1f4d87
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::hc2fb167b7968dd43@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4093]:0x2640e1
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::h7a7429815ebd0a75@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4935]:0x283022
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::hf13cf5c52f6b1900@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[580]:0x136da9
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[195]:0x93e7d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1200]:0x1a2d93
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[543]:0x12d7b6
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1189]:0x1a18e3
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1089]:0x1949e8
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6178]:0x2a554a
+        image_canvas_browser-961ad50a37dcf750.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5115]:0x288f88
+        image_canvas_browser-961ad50a37dcf750.wasm.closure860 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9750]:0x2d3359
+        __wbg_adapter_34@http://127.0.0.1:52954/suite.js:275:10
+        real@http://127.0.0.1:52954/suite.js:123:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:52954/suite.js:646:23
+        image_canvas_browser-961ad50a37dcf750.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12290]:0x2db32d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9610]:0x2d26b3
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1769]:0x1dcb9d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::push_task::hed54b62c8a63136f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11201]:0x2d8c5d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::{{closure}}::h1bc235cd2ffabe9f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11203]:0x2d8c73
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::with::hdbd18b987237042a@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9612]:0x2d26e9
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::h9f138db513920fdf@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12254]:0x2db1e2
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::wake::ha0a8116bd20324a1@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4226]:0x2693a6
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::into_raw_waker::raw_wake::h7cd0464b561f844e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[10310]:0x2d5a8b
+        image_canvas_browser-961ad50a37dcf750.wasm.core::task::wake::Waker::wake::h14e3bd6775d5e60c@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[7317]:0x2bb46d
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::finish::h3ec7387b4cde006e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[854]:0x16fc28
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::{{closure}}::hcef9282b9bac11dc@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5978]:0x2a0ae0
+        image_canvas_browser-961ad50a37dcf750.wasm.core::ops::function::FnOnce::call_once::h7c8524434abbe90b@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5715]:0x29a2ae
+        image_canvas_browser-961ad50a37dcf750.wasm.<T as wasm_bindgen::closure::WasmClosureFnOnce<A,R>>::into_fn_mut::{{closure}}::h64b0b01977ad41e4@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8272]:0x2c8337
+        image_canvas_browser-961ad50a37dcf750.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5115]:0x288f88
+        image_canvas_browser-961ad50a37dcf750.wasm.closure860 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9750]:0x2d3359
+        __wbg_adapter_34@http://127.0.0.1:52954/suite.js:275:10
+        real@http://127.0.0.1:52954/suite.js:123:20
+        promise callback*__wbg_get_imports/imports.wbg.__wbg_then_48b406749878a531@http://127.0.0.1:52954/suite.js:734:26
+        image_canvas_browser-961ad50a37dcf750.wasm.__wbg_then_48b406749878a531 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8867]:0x2cdc18
+        image_canvas_browser-961ad50a37dcf750.wasm.js_sys::Promise::then2::h7b08f2f14140ca21@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5083]:0x287f10
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::ha4dc543ce1f01629@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[537]:0x12bf17
+        image_canvas_browser-961ad50a37dcf750.wasm.image_canvas_browser::image_canvas_failures::unavailable_primitives_follow_original_fallbacks::{{closure}}::hdbc251ee6466f2a4@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[238]:0xb4521
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h9e2f737c9ec512d3@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1268]:0x1aad2a
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h79a2b509c9aa8b30@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4472]:0x272b71
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6802]:0x2b244f
+        __wbg_adapter_72@http://127.0.0.1:52954/suite.js:279:10
+        cb0@http://127.0.0.1:52954/suite.js:755:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:52954/suite.js:760:30
+        handleError@http://127.0.0.1:52954/suite.js:91:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:52954/suite.js:748:76
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[2074]:0x1f4d87
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::h1403524fd5d9673f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4086]:0x263c50
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::h03e3a51674b44b39@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4929]:0x282cd4
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::hcf7da5e63b0e4e9a@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[579]:0x1369c2
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[195]:0x93e7d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1200]:0x1a2d93
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[543]:0x12d7b6
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1189]:0x1a18e3
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1089]:0x1949e8
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6178]:0x2a554a
+        image_canvas_browser-961ad50a37dcf750.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5115]:0x288f88
+        image_canvas_browser-961ad50a37dcf750.wasm.closure860 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9750]:0x2d3359
+        __wbg_adapter_34@http://127.0.0.1:52954/suite.js:275:10
+        real@http://127.0.0.1:52954/suite.js:123:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:52954/suite.js:646:23
+        image_canvas_browser-961ad50a37dcf750.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12290]:0x2db32d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9610]:0x2d26b3
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1769]:0x1dcb9d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::push_task::hed54b62c8a63136f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11201]:0x2d8c5d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::{{closure}}::h1bc235cd2ffabe9f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11203]:0x2d8c73
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::with::hdbd18b987237042a@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9612]:0x2d26e9
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::h9f138db513920fdf@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12254]:0x2db1e2
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::wake::ha0a8116bd20324a1@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4226]:0x2693a6
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::into_raw_waker::raw_wake::h7cd0464b561f844e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[10310]:0x2d5a8b
+        image_canvas_browser-961ad50a37dcf750.wasm.core::task::wake::Waker::wake::h14e3bd6775d5e60c@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[7317]:0x2bb46d
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::finish::h3ec7387b4cde006e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[854]:0x16fc28
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::{{closure}}::hcef9282b9bac11dc@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5978]:0x2a0ae0
+        image_canvas_browser-961ad50a37dcf750.wasm.core::ops::function::FnOnce::call_once::h7c8524434abbe90b@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5715]:0x29a2ae
+        image_canvas_browser-961ad50a37dcf750.wasm.<T as wasm_bindgen::closure::WasmClosureFnOnce<A,R>>::into_fn_mut::{{closure}}::h64b0b01977ad41e4@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8272]:0x2c8337
+        image_canvas_browser-961ad50a37dcf750.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5115]:0x288f88
+        image_canvas_browser-961ad50a37dcf750.wasm.closure860 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9750]:0x2d3359
+        __wbg_adapter_34@http://127.0.0.1:52954/suite.js:275:10
+        real@http://127.0.0.1:52954/suite.js:123:20
+        promise callback*__wbg_get_imports/imports.wbg.__wbg_then_48b406749878a531@http://127.0.0.1:52954/suite.js:734:26
+        image_canvas_browser-961ad50a37dcf750.wasm.__wbg_then_48b406749878a531 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8867]:0x2cdc18
+        image_canvas_browser-961ad50a37dcf750.wasm.js_sys::Promise::then2::h7b08f2f14140ca21@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5083]:0x287f10
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::ha4dc543ce1f01629@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[537]:0x12bf17
+        image_canvas_browser-961ad50a37dcf750.wasm.image_canvas_browser::real_bitmaps_convert_pixels_and_storage_closes_original_once::{{closure}}::h41e9c17ee31cb538@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[208]:0x9e6d5
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h11fc0705b07f8f7b@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1054]:0x18fc8a
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h85ef9fd75c850b0e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4474]:0x272cb5
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6802]:0x2b244f
+        __wbg_adapter_72@http://127.0.0.1:52954/suite.js:279:10
+        cb0@http://127.0.0.1:52954/suite.js:755:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+
+---- image_canvas_failures::no_2d_context_removes_new_layer_without_reporting_it_present output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable executed
+        image_canvas_browser-961ad50a37dcf750.wasm.__rust_start_panic@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12449]:0x2db69c
+        image_canvas_browser-961ad50a37dcf750.wasm.rust_panic@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11064]:0x2d8619
+        image_canvas_browser-961ad50a37dcf750.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[3536]:0x24bb88
+        image_canvas_browser-961ad50a37dcf750.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4465]:0x27272f
+        image_canvas_browser-961ad50a37dcf750.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12276]:0x2db2aa
+        image_canvas_browser-961ad50a37dcf750.wasm.rust_begin_unwind@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8286]:0x2c85a7
+        image_canvas_browser-961ad50a37dcf750.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8287]:0x2c85d3
+        image_canvas_browser-961ad50a37dcf750.wasm.core::result::unwrap_failed::ha18832984acbf380@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5148]:0x28a021
+        image_canvas_browser-961ad50a37dcf750.wasm.image_canvas_browser::image_canvas_support::eval::h9faac7175158f213@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[3924]:0x25cf6e
+        image_canvas_browser-961ad50a37dcf750.wasm.image_canvas_browser::image_canvas_failures::no_2d_context_removes_new_layer_without_reporting_it_present::h0921d39e11948cf6@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[772]:0x160cae
+        image_canvas_browser-961ad50a37dcf750.wasm.core::ops::function::FnOnce::call_once::h231626635e144d65@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8093]:0x2c63a7
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::hf2be839747500243@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[3415]:0x245d12
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h5b14c16f6bf20f9a@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4469]:0x27298b
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6802]:0x2b244f
+        __wbg_adapter_72@http://127.0.0.1:52954/suite.js:279:10
+        cb0@http://127.0.0.1:52954/suite.js:755:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:52954/suite.js:760:30
+        handleError@http://127.0.0.1:52954/suite.js:91:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:52954/suite.js:748:76
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[2074]:0x1f4d87
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::hf759039130bb1261@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4096]:0x2642d6
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::hf6b2ddebc974e774@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4941]:0x283370
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::hae4940c210a5f194@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[578]:0x1365db
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[195]:0x93e7d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1200]:0x1a2d93
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[543]:0x12d7b6
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1189]:0x1a18e3
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1089]:0x1949e8
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6178]:0x2a554a
+        image_canvas_browser-961ad50a37dcf750.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5115]:0x288f88
+        image_canvas_browser-961ad50a37dcf750.wasm.closure860 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9750]:0x2d3359
+        __wbg_adapter_34@http://127.0.0.1:52954/suite.js:275:10
+        real@http://127.0.0.1:52954/suite.js:123:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:52954/suite.js:646:23
+        image_canvas_browser-961ad50a37dcf750.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12290]:0x2db32d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9610]:0x2d26b3
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1769]:0x1dcb9d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::push_task::hed54b62c8a63136f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11201]:0x2d8c5d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::{{closure}}::h1bc235cd2ffabe9f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11203]:0x2d8c73
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::with::hdbd18b987237042a@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9612]:0x2d26e9
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::h9f138db513920fdf@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12254]:0x2db1e2
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::wake::ha0a8116bd20324a1@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4226]:0x2693a6
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::into_raw_waker::raw_wake::h7cd0464b561f844e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[10310]:0x2d5a8b
+        image_canvas_browser-961ad50a37dcf750.wasm.core::task::wake::Waker::wake::h14e3bd6775d5e60c@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[7317]:0x2bb46d
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::finish::h3ec7387b4cde006e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[854]:0x16fc28
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::{{closure}}::hcef9282b9bac11dc@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5978]:0x2a0ae0
+        image_canvas_browser-961ad50a37dcf750.wasm.core::ops::function::FnOnce::call_once::h7c8524434abbe90b@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5715]:0x29a2ae
+        image_canvas_browser-961ad50a37dcf750.wasm.<T as wasm_bindgen::closure::WasmClosureFnOnce<A,R>>::into_fn_mut::{{closure}}::h64b0b01977ad41e4@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8272]:0x2c8337
+        image_canvas_browser-961ad50a37dcf750.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5115]:0x288f88
+        image_canvas_browser-961ad50a37dcf750.wasm.closure860 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9750]:0x2d3359
+        __wbg_adapter_34@http://127.0.0.1:52954/suite.js:275:10
+        real@http://127.0.0.1:52954/suite.js:123:20
+        promise callback*__wbg_get_imports/imports.wbg.__wbg_then_48b406749878a531@http://127.0.0.1:52954/suite.js:734:26
+        image_canvas_browser-961ad50a37dcf750.wasm.__wbg_then_48b406749878a531 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8867]:0x2cdc18
+        image_canvas_browser-961ad50a37dcf750.wasm.js_sys::Promise::then2::h7b08f2f14140ca21@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5083]:0x287f10
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::ha4dc543ce1f01629@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[537]:0x12bf17
+        image_canvas_browser-961ad50a37dcf750.wasm.image_canvas_browser::image_canvas_failures::unavailable_primitives_follow_original_fallbacks::{{closure}}::hdbc251ee6466f2a4@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[238]:0xb4521
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h9e2f737c9ec512d3@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1268]:0x1aad2a
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h79a2b509c9aa8b30@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4472]:0x272b71
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6802]:0x2b244f
+        __wbg_adapter_72@http://127.0.0.1:52954/suite.js:279:10
+        cb0@http://127.0.0.1:52954/suite.js:755:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:52954/suite.js:760:30
+        handleError@http://127.0.0.1:52954/suite.js:91:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:52954/suite.js:748:76
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[2074]:0x1f4d87
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::h1403524fd5d9673f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4086]:0x263c50
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::h03e3a51674b44b39@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4929]:0x282cd4
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::hcf7da5e63b0e4e9a@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[579]:0x1369c2
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[195]:0x93e7d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1200]:0x1a2d93
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[543]:0x12d7b6
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1189]:0x1a18e3
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1089]:0x1949e8
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6178]:0x2a554a
+        image_canvas_browser-961ad50a37dcf750.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5115]:0x288f88
+        image_canvas_browser-961ad50a37dcf750.wasm.closure860 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9750]:0x2d3359
+        __wbg_adapter_34@http://127.0.0.1:52954/suite.js:275:10
+        real@http://127.0.0.1:52954/suite.js:123:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:52954/suite.js:646:23
+        image_canvas_browser-961ad50a37dcf750.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12290]:0x2db32d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9610]:0x2d26b3
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1769]:0x1dcb9d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::push_task::hed54b62c8a63136f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11201]:0x2d8c5d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::{{closure}}::h1bc235cd2ffabe9f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11203]:0x2d8c73
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::with::hdbd18b987237042a@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9612]:0x2d26e9
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::h9f138db513920fdf@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12254]:0x2db1e2
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::wake::ha0a8116bd20324a1@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4226]:0x2693a6
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::into_raw_waker::raw_wake::h7cd0464b561f844e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[10310]:0x2d5a8b
+        image_canvas_browser-961ad50a37dcf750.wasm.core::task::wake::Waker::wake::h14e3bd6775d5e60c@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[7317]:0x2bb46d
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::finish::h3ec7387b4cde006e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[854]:0x16fc28
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::{{closure}}::hcef9282b9bac11dc@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5978]:0x2a0ae0
+        image_canvas_browser-961ad50a37dcf750.wasm.core::ops::function::FnOnce::call_once::h7c8524434abbe90b@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5715]:0x29a2ae
+        image_canvas_browser-961ad50a37dcf750.wasm.<T as wasm_bindgen::closure::WasmClosureFnOnce<A,R>>::into_fn_mut::{{closure}}::h64b0b01977ad41e4@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8272]:0x2c8337
+        image_canvas_browser-961ad50a37dcf750.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5115]:0x288f88
+        image_canvas_browser-961ad50a37dcf750.wasm.closure860 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9750]:0x2d3359
+        __wbg_adapter_34@http://127.0.0.1:52954/suite.js:275:10
+        real@http://127.0.0.1:52954/suite.js:123:20
+        promise callback*__wbg_get_imports/imports.wbg.__wbg_then_48b406749878a531@http://127.0.0.1:52954/suite.js:734:26
+        image_canvas_browser-961ad50a37dcf750.wasm.__wbg_then_48b406749878a531 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8867]:0x2cdc18
+        image_canvas_browser-961ad50a37dcf750.wasm.js_sys::Promise::then2::h7b08f2f14140ca21@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5083]:0x287f10
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::ha4dc543ce1f01629@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[537]:0x12bf17
+        image_canvas_browser-961ad50a37dcf750.wasm.image_canvas_browser::real_bitmaps_convert_pixels_and_storage_closes_original_once::{{closure}}::h41e9c17ee31cb538@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[208]:0x9e6d5
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h11fc0705b07f8f7b@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1054]:0x18fc8a
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h85ef9fd75c850b0e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4474]:0x272cb5
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6802]:0x2b244f
+        __wbg_adapter_72@http://127.0.0.1:52954/suite.js:279:10
+        cb0@http://127.0.0.1:52954/suite.js:755:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+
+---- image_canvas_failures::draw_and_bitmap_close_errors_keep_thrown_js_identity_and_partial_state output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable executed
+        image_canvas_browser-961ad50a37dcf750.wasm.__rust_start_panic@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12449]:0x2db69c
+        image_canvas_browser-961ad50a37dcf750.wasm.rust_panic@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11064]:0x2d8619
+        image_canvas_browser-961ad50a37dcf750.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[3536]:0x24bb88
+        image_canvas_browser-961ad50a37dcf750.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4465]:0x27272f
+        image_canvas_browser-961ad50a37dcf750.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12276]:0x2db2aa
+        image_canvas_browser-961ad50a37dcf750.wasm.rust_begin_unwind@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8286]:0x2c85a7
+        image_canvas_browser-961ad50a37dcf750.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8287]:0x2c85d3
+        image_canvas_browser-961ad50a37dcf750.wasm.core::result::unwrap_failed::ha18832984acbf380@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5148]:0x28a021
+        image_canvas_browser-961ad50a37dcf750.wasm.image_canvas_browser::image_canvas_support::eval::h9faac7175158f213@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[3924]:0x25cf6e
+        image_canvas_browser-961ad50a37dcf750.wasm.image_canvas_browser::image_canvas_failures::draw_and_bitmap_close_errors_keep_thrown_js_identity_and_partial_state::h27b39049fed19e3f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[230]:0xaed37
+        image_canvas_browser-961ad50a37dcf750.wasm.core::ops::function::FnOnce::call_once::h5106bec5f43c26df@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8094]:0x2c63d2
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h9612b31aa09fa612@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[3412]:0x245a9f
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::ha0e41568d9dfb4d6@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4477]:0x272e9b
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6802]:0x2b244f
+        __wbg_adapter_72@http://127.0.0.1:52954/suite.js:279:10
+        cb0@http://127.0.0.1:52954/suite.js:755:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:52954/suite.js:760:30
+        handleError@http://127.0.0.1:52954/suite.js:91:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:52954/suite.js:748:76
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[2074]:0x1f4d87
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::hc6cdf42b64a3c69e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4094]:0x264188
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::h07b47a8502c20246@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4930]:0x282d61
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::h5bb1a3c52af49b4c@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[575]:0x135a26
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[195]:0x93e7d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1200]:0x1a2d93
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[543]:0x12d7b6
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1189]:0x1a18e3
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1089]:0x1949e8
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6178]:0x2a554a
+        image_canvas_browser-961ad50a37dcf750.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5115]:0x288f88
+        image_canvas_browser-961ad50a37dcf750.wasm.closure860 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9750]:0x2d3359
+        __wbg_adapter_34@http://127.0.0.1:52954/suite.js:275:10
+        real@http://127.0.0.1:52954/suite.js:123:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:52954/suite.js:646:23
+        image_canvas_browser-961ad50a37dcf750.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12290]:0x2db32d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9610]:0x2d26b3
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1769]:0x1dcb9d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::push_task::hed54b62c8a63136f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11201]:0x2d8c5d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::{{closure}}::h1bc235cd2ffabe9f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11203]:0x2d8c73
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::with::hdbd18b987237042a@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9612]:0x2d26e9
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::h9f138db513920fdf@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12254]:0x2db1e2
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::wake::ha0a8116bd20324a1@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4226]:0x2693a6
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::into_raw_waker::raw_wake::h7cd0464b561f844e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[10310]:0x2d5a8b
+        image_canvas_browser-961ad50a37dcf750.wasm.core::task::wake::Waker::wake::h14e3bd6775d5e60c@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[7317]:0x2bb46d
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::finish::h3ec7387b4cde006e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[854]:0x16fc28
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::{{closure}}::hcef9282b9bac11dc@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5978]:0x2a0ae0
+        image_canvas_browser-961ad50a37dcf750.wasm.core::ops::function::FnOnce::call_once::h7c8524434abbe90b@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5715]:0x29a2ae
+        image_canvas_browser-961ad50a37dcf750.wasm.<T as wasm_bindgen::closure::WasmClosureFnOnce<A,R>>::into_fn_mut::{{closure}}::h64b0b01977ad41e4@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8272]:0x2c8337
+        image_canvas_browser-961ad50a37dcf750.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5115]:0x288f88
+        image_canvas_browser-961ad50a37dcf750.wasm.closure860 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9750]:0x2d3359
+        __wbg_adapter_34@http://127.0.0.1:52954/suite.js:275:10
+        real@http://127.0.0.1:52954/suite.js:123:20
+        promise callback*__wbg_get_imports/imports.wbg.__wbg_then_48b406749878a531@http://127.0.0.1:52954/suite.js:734:26
+        image_canvas_browser-961ad50a37dcf750.wasm.__wbg_then_48b406749878a531 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8867]:0x2cdc18
+        image_canvas_browser-961ad50a37dcf750.wasm.js_sys::Promise::then2::h7b08f2f14140ca21@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5083]:0x287f10
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::ha4dc543ce1f01629@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[537]:0x12bf17
+        image_canvas_browser-961ad50a37dcf750.wasm.image_canvas_browser::image_canvas_failures::unavailable_primitives_follow_original_fallbacks::{{closure}}::hdbc251ee6466f2a4@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[238]:0xb4521
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h9e2f737c9ec512d3@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1268]:0x1aad2a
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h79a2b509c9aa8b30@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4472]:0x272b71
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6802]:0x2b244f
+        __wbg_adapter_72@http://127.0.0.1:52954/suite.js:279:10
+        cb0@http://127.0.0.1:52954/suite.js:755:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:52954/suite.js:760:30
+        handleError@http://127.0.0.1:52954/suite.js:91:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:52954/suite.js:748:76
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[2074]:0x1f4d87
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::h1403524fd5d9673f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4086]:0x263c50
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::h03e3a51674b44b39@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4929]:0x282cd4
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::hcf7da5e63b0e4e9a@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[579]:0x1369c2
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[195]:0x93e7d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1200]:0x1a2d93
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[543]:0x12d7b6
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1189]:0x1a18e3
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1089]:0x1949e8
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6178]:0x2a554a
+        image_canvas_browser-961ad50a37dcf750.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5115]:0x288f88
+        image_canvas_browser-961ad50a37dcf750.wasm.closure860 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9750]:0x2d3359
+        __wbg_adapter_34@http://127.0.0.1:52954/suite.js:275:10
+        real@http://127.0.0.1:52954/suite.js:123:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:52954/suite.js:646:23
+        image_canvas_browser-961ad50a37dcf750.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12290]:0x2db32d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9610]:0x2d26b3
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1769]:0x1dcb9d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::push_task::hed54b62c8a63136f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11201]:0x2d8c5d
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::{{closure}}::h1bc235cd2ffabe9f@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11203]:0x2d8c73
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::queue::Queue::with::hdbd18b987237042a@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9612]:0x2d26e9
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::h9f138db513920fdf@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[12254]:0x2db1e2
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::wake::ha0a8116bd20324a1@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4226]:0x2693a6
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_futures::task::singlethread::Task::into_raw_waker::raw_wake::h7cd0464b561f844e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[10310]:0x2d5a8b
+        image_canvas_browser-961ad50a37dcf750.wasm.core::task::wake::Waker::wake::h14e3bd6775d5e60c@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[7317]:0x2bb46d
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::finish::h3ec7387b4cde006e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[854]:0x16fc28
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::{{closure}}::hcef9282b9bac11dc@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5978]:0x2a0ae0
+        image_canvas_browser-961ad50a37dcf750.wasm.core::ops::function::FnOnce::call_once::h7c8524434abbe90b@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5715]:0x29a2ae
+        image_canvas_browser-961ad50a37dcf750.wasm.<T as wasm_bindgen::closure::WasmClosureFnOnce<A,R>>::into_fn_mut::{{closure}}::h64b0b01977ad41e4@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8272]:0x2c8337
+        image_canvas_browser-961ad50a37dcf750.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5115]:0x288f88
+        image_canvas_browser-961ad50a37dcf750.wasm.closure860 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9750]:0x2d3359
+        __wbg_adapter_34@http://127.0.0.1:52954/suite.js:275:10
+        real@http://127.0.0.1:52954/suite.js:123:20
+        promise callback*__wbg_get_imports/imports.wbg.__wbg_then_48b406749878a531@http://127.0.0.1:52954/suite.js:734:26
+        image_canvas_browser-961ad50a37dcf750.wasm.__wbg_then_48b406749878a531 externref shim@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[8867]:0x2cdc18
+        image_canvas_browser-961ad50a37dcf750.wasm.js_sys::Promise::then2::h7b08f2f14140ca21@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[5083]:0x287f10
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::ha4dc543ce1f01629@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[537]:0x12bf17
+        image_canvas_browser-961ad50a37dcf750.wasm.image_canvas_browser::real_bitmaps_convert_pixels_and_storage_closes_original_once::{{closure}}::h41e9c17ee31cb538@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[208]:0x9e6d5
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h11fc0705b07f8f7b@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[1054]:0x18fc8a
+        image_canvas_browser-961ad50a37dcf750.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h85ef9fd75c850b0e@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4474]:0x272cb5
+        image_canvas_browser-961ad50a37dcf750.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6802]:0x2b244f
+        __wbg_adapter_72@http://127.0.0.1:52954/suite.js:279:10
+        cb0@http://127.0.0.1:52954/suite.js:755:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+
+failures:
+
+    image_canvas_failures::rescale_and_extract_context_failure_preserves_original_resource
+    image_canvas_failures::pending_placeholder_bitmap_uses_source_late_assignment_and_close_order
+    image_canvas_failures::no_2d_context_removes_new_layer_without_reporting_it_present
+    image_canvas_failures::draw_and_bitmap_close_errors_keep_thrown_js_identity_and_partial_state
+
+test result: FAILED. 9 passed; 4 failed; 0 ignored; 0 filtered out; finished in 0.32s
+

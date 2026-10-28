@@ -3,6 +3,8 @@
 //! This crate is an incomplete port. Its DOM host is not a complete terminal;
 //! unsupported terminal APIs are not exported as successful placeholders.
 
+#[cfg(target_arch = "wasm32")]
+pub mod image;
 pub mod api;
 pub mod input;
 pub mod links;
