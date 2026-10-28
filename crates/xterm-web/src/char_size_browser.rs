@@ -15,6 +15,10 @@ extern "C" {
     #[wasm_bindgen(catch, js_name = xtermMeasureNumber)]
     fn measure_number(value: &JsValue) -> Result<f64, JsValue>;
 }
+#[cfg(test)]
+#[path = "char_size_browser_tests.rs"]
+mod tests;
+
 const MEASURE_REPEAT: usize = 32;
 #[derive(Clone, Copy)]
 enum FontProperty {
