@@ -4,7 +4,7 @@
 use super::super::keyboard_event_source::{to_uint16, KeyboardEventSource};
 use super::{
     cursor_key, equals, special_key, tilde_key, utf16, with_alt, KeyboardResult,
-    KeyboardResultType, DEL, ESC,
+    KeyboardResultType, BS, CR, DEL, ESC, ETX, HT,
 };
 #[path = "keyboard_default.rs"]
 mod default;
@@ -31,7 +31,7 @@ pub fn try_evaluate_keyboard_event<E: KeyboardEventSource + ?Sized>(
             mobile_arrow(event)?.map(|letter| cursor_key(letter, 0, application_cursor_mode))
         }
         Some(8) => Some(with_alt(
-            if event.ctrl_key()? { 8 } else { DEL },
+            if event.ctrl_key()? { BS } else { DEL },
             event.alt_key()?,
         )),
         Some(9) => {
@@ -39,14 +39,14 @@ pub fn try_evaluate_keyboard_event<E: KeyboardEventSource + ?Sized>(
                 Some(utf16("\x1b[Z"))
             } else {
                 result.cancel = true;
-                Some(vec![9])
+                Some(vec![HT])
             }
         }
         Some(13) => {
             let key = if equals(&event.key()?, "c") && event.ctrl_key()? {
-                vec![3]
+                vec![ETX]
             } else {
-                with_alt(13, event.alt_key()?)
+                with_alt(CR, event.alt_key()?)
             };
             result.cancel = true;
             Some(key)

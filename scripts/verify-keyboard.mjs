@@ -178,7 +178,7 @@ for (let i = 0; i < 20000; i++) {
   const key = i % 3 ? keys[random() % keys.length] : String.fromCharCode(random() & 0xffff, random() & 0xffff);
   add(keyCode, key, codes[random() % codes.length], modifiers, flags, 'seeded malformed keys');
 }
-const runner = `#[path = ${JSON.stringify(path.join(root, 'crates/xterm-core/src/input/keyboard_event_source.rs').replaceAll('\\\\', '/'))}]
+const runner = `#[path = ${JSON.stringify(path.join(root, 'crates/xterm-core/src/input/keyboard_event_source.rs').replaceAll('\\', '/'))}]
 mod keyboard_event_source;
 #[path = ${JSON.stringify(path.join(root, 'crates/xterm-core/src/input/keyboard.rs').replaceAll('\\', '/'))}]
 mod keyboard;

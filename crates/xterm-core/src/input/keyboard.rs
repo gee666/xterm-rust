@@ -45,6 +45,13 @@ pub struct KeyboardResult {
     pub key: Option<Vec<u16>>,
 }
 
+const BS: u16 = 0x08;
+const HT: u16 = 0x09;
+const CR: u16 = 0x0d;
+const ETX: u16 = 0x03;
+const FS: u16 = 0x1c;
+const GS: u16 = 0x1d;
+const SPACE: u16 = 0x20;
 const ESC: u16 = 0x1b;
 const DEL: u16 = 0x7f;
 const NUL: u16 = 0;

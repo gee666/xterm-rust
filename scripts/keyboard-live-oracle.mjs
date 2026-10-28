@@ -98,7 +98,12 @@ const fixture=rows.join('\n')+'\n';const path=resolve(root,'crates/xterm-core/te
 if(process.argv.includes('--generate')) writeFileSync(path,fixture);
 else assert.equal(readFileSync(path,'utf8'),fixture,'live getter fixture drift; review before --generate');
 mkdirSync(resolve(root,'results/keyboard-live'),{recursive:true});
+const implementationHashes={};
+for(const file of ['keyboard.rs','keyboard_policy.rs','keyboard_default.rs','keyboard_lowercase.rs','keyboard_uppercase.rs','keyboard_event_source.rs']) {
+  const path=`crates/xterm-core/src/input/${file}`;
+  implementationHashes[path]=createHash('sha256').update(readFileSync(resolve(root,path))).digest('hex');
+}
 const report={command:'node scripts/keyboard-live-oracle.mjs',node:process.version,unicode:process.versions.unicode,platform:process.platform,
-  sourceHashes:hashes,seed,successfulCases:inputs.length,throwBoundaryCases:failures,totalCases:rows.length,getterReads,
+  sourceHashes:hashes,implementationHashes,seed,successfulCases:inputs.length,throwBoundaryCases:failures,totalCases:rows.length,getterReads,
   fixtureSha256:createHash('sha256').update(fixture).digest('hex'),scope:'Original JS live evaluator only; Rust replay and actual browser DOM integration are separate gates.'};
 writeFileSync(resolve(root,'results/keyboard-live/oracle.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));

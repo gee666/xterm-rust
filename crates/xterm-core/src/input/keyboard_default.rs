@@ -2,8 +2,8 @@
 // Copyright (c) 2012-2013, Christopher Jeffrey (MIT License)
 // Licensed under MIT. Default-key branch of common/input/Keyboard.ts.
 use super::super::{
-    equals, key_mapping, lowercase, uppercase, KeyboardResult, KeyboardResultType, DEL, ESC, NUL,
-    RS, US,
+    equals, key_mapping, lowercase, uppercase, KeyboardResult, KeyboardResultType, DEL, ESC, FS,
+    GS, NUL, RS, SPACE, US,
 };
 use super::{to_uint16, KeyboardEventSource};
 
@@ -58,7 +58,7 @@ fn control_key<E: KeyboardEventSource + ?Sized>(event: &E) -> Result<Option<Vec<
     } else if event.key_code()? == 32.0 {
         NUL
     } else if event.key_code()? >= 51.0 && event.key_code()? <= 55.0 {
-        to_uint16(event.key_code()? - 51.0 + 27.0)
+        to_uint16(event.key_code()? - 51.0 + f64::from(ESC))
     } else if event.key_code()? == 56.0 {
         DEL
     } else if equals(&event.key()?, "/") {
@@ -66,9 +66,9 @@ fn control_key<E: KeyboardEventSource + ?Sized>(event: &E) -> Result<Option<Vec<
     } else if event.key_code()? == 219.0 {
         ESC
     } else if event.key_code()? == 220.0 {
-        0x1c
+        FS
     } else if event.key_code()? == 221.0 {
-        0x1d
+        GS
     } else {
         return Ok(None);
     };
@@ -99,7 +99,7 @@ fn alt_key<E: KeyboardEventSource + ?Sized>(
         }
         Ok(Some(key))
     } else if event.key_code()? == 32.0 {
-        Ok(Some(vec![ESC, if event.ctrl_key()? { NUL } else { 32 }]))
+        Ok(Some(vec![ESC, if event.ctrl_key()? { NUL } else { SPACE }]))
     } else if equals(&event.key()?, "Dead") && event.code()?.starts_with(&[75, 101, 121]) {
         let code = event.code()?;
         let mut key = vec![ESC];
