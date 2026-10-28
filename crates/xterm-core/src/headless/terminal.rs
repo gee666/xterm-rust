@@ -251,6 +251,7 @@ impl Terminal {
             core.dispose();
             mouse.dispose();
             unicode.dispose();
+            self.set_reset_request_handler(None)?;
             self.deferred_parser_disposal.set(true);
         }
         self.dispose_request.fire(&())?;

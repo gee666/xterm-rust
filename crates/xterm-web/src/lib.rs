@@ -36,6 +36,8 @@ pub mod dom_listener;
 #[cfg(target_arch = "wasm32")]
 pub mod font_addons;
 #[cfg(target_arch = "wasm32")]
+pub mod buffer_cleanup;
+#[cfg(target_arch = "wasm32")]
 pub mod font_set;
 #[cfg(target_arch = "wasm32")]
 pub mod local_fonts;
