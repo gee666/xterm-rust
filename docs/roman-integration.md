@@ -51,4 +51,10 @@ Logs are retained under results/integration/roman. Browser summary copies there 
 - The first full WASM library run failed in all engines at viewport_browser_tests.rs166 and285. A clean detached main e720ce8 baseline reproduced both failures in Chromium, excluding these font changes. Joyce confirmed missing production dependencies from the preceding viewport integration and reopened251. The original failures, error-formatting failure and timeout receipts are retained. No tests were skipped or weakened.
 - Full workspace cargo fmt still fails Windows error206 from command-line length. A first direct formatting attempt also included non-Rust files and failed; the corrected Rust-only check passed. Both logs remain. This does not count as a full workspace formatting pass.
 
-Final post-rebase browser and canonical merge results will be recorded below. Missing complete renderer/theme parity, global formatting, supported feature matrix and observed native Linux/macOS runs remain open project work.
+## Canonical integration
+
+The existing `node scripts/worktree-merge.mjs` gate landed this contribution in main99a394d. It built and tested all four crates, passing1962 native tests in348 targets with zero failures or ignored tests, then passed affected all-target checks, workspace checks and WASM library checks. The gate removed its owned private target. Its raw log is results/integration/roman/gated-merge-final.log.
+
+Two earlier gates passed compilation and tests but correctly refused to overwrite main after concurrent documentation and image integrations advanced it. Their retained refusal is not a test failure. Rebase and the final gate preserved those concurrent changes. No global queue, profile change or unrelated worktree reset was used.
+
+Full WASM library runtime still awaits the independently owned251 dependency correction. The scoped font/browser tests above pass, but neither the canonical compile gate nor standalone cache tests count as a complete library runtime pass. Missing complete renderer/theme parity, global formatting, supported feature matrix and observed native Linux/macOS runs remain open project work.
