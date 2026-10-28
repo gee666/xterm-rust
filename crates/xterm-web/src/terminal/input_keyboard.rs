@@ -2,11 +2,11 @@
 use super::{error, EngineInputHost};
 use crate::input::{
     keyboard::KeyboardModes,
-    keyboard_dispatch::{DispatchKeyEvent, KeyboardReadHost, KeyboardSnapshot},
+    keyboard_dispatch::{KeyEventSource, KeyboardReadHost, KeyboardSnapshot},
 };
 use wasm_bindgen::JsValue;
 use xterm_core::input::{
-    keyboard::{evaluate_keyboard_event, KeyboardResult},
+    keyboard::{try_evaluate_keyboard_event, KeyboardResult},
     kitty_keyboard::{self, flags, EventType},
     win32_input_mode::Win32InputMode,
 };
@@ -85,22 +85,25 @@ impl KeyboardReadHost for EngineInputHost {
                 .map_err(error)?
                 .win32_input_mode)
     }
-    fn evaluate_key_down(&self, event: &DispatchKeyEvent<'_>) -> Result<KeyboardResult, JsValue> {
+    fn evaluate_key_down(
+        &self,
+        event: &dyn KeyEventSource<Error = JsValue>,
+    ) -> Result<KeyboardResult, JsValue> {
         if self.use_win32()? {
-            return Ok(Win32InputMode.evaluate_keyboard_event(&event.key, true));
+            return Win32InputMode.try_evaluate_keyboard_event(event, true);
         }
         let flags = self.kitty_flags()?;
         if self.use_kitty()? {
-            Ok(kitty_keyboard::evaluate(
-                &event.key,
+            kitty_keyboard::try_evaluate(
+                event,
                 flags,
-                if event.repeat {
+                if event.repeat()? {
                     EventType::Repeat
                 } else {
                     EventType::Press
                 },
                 self.platform.mac && self.mac_option_is_meta()?,
-            ))
+            )
         } else {
             let application_cursor = self
                 .core
@@ -108,31 +111,32 @@ impl KeyboardReadHost for EngineInputHost {
                 .try_borrow()
                 .map_err(error)?
                 .application_cursor_keys;
-            Ok(evaluate_keyboard_event(
-                &event.key,
+            try_evaluate_keyboard_event(
+                event,
                 application_cursor,
                 self.platform.mac,
                 self.mac_option_is_meta()?,
-            ))
+            )
         }
     }
     fn evaluate_key_up(
         &self,
-        event: &DispatchKeyEvent<'_>,
+        event: &dyn KeyEventSource<Error = JsValue>,
     ) -> Result<Option<KeyboardResult>, JsValue> {
         if self.use_win32()? {
-            return Ok(Some(
-                Win32InputMode.evaluate_keyboard_event(&event.key, false),
-            ));
+            return Win32InputMode
+                .try_evaluate_keyboard_event(event, false)
+                .map(Some);
         }
         let flags = self.kitty_flags()?;
         if self.use_kitty()? && flags & flags::REPORT_EVENT_TYPES != 0 {
-            Ok(Some(kitty_keyboard::evaluate(
-                &event.key,
+            kitty_keyboard::try_evaluate(
+                event,
                 flags,
                 EventType::Release,
                 self.platform.mac && self.mac_option_is_meta()?,
-            )))
+            )
+            .map(Some)
         } else {
             Ok(None)
         }
