@@ -78,6 +78,66 @@ function bufferSnapshot(buffer) {
     buffer.lines.length, buffer.lines.maxLength, +buffer.hasScrollback,
     Object.keys(buffer.tabs).filter(key => buffer.tabs[key]).map(Number).sort((a,b) => a-b).join(','), rows.join('|')].join('~');
 }
+const reentrantRows = [];
+function checkpoint(service, tag) {
+  const set = service.buffers;
+  const kind = service.buffer === set.normal ? 'n' : service.buffer === set.alt ? 'a' : 'old';
+  return [tag, service.cols, service.rows, +service.isUserScrolling, kind,
+    bufferSnapshot(set.normal), bufferSnapshot(set.alt), bufferSnapshot(service.buffer)].join('#');
+}
+function fullService() {
+  const service = new BufferService(new OptionsService({cols:4,rows:3,scrollback:1}),new MockLogService());
+  while (!service.buffer.lines.isFull) service.scroll(new AttributeData());
+  for (let row=0;row<service.buffer.lines.length;row++) service.buffer.lines.get(row).setCellFromCodepoint(0,65+row,1,new AttributeData());
+  return service;
+}
+{
+  const service=fullService(); const buffer=service.buffer; const out=[];
+  const save=tag=>out.push(checkpoint(service,tag)); const marker=buffer.addMarker(0);
+  marker.onDispose(()=>{ save('marker'); buffer.x=2; buffer.ydisp=0; service.isUserScrolling=true; save('changed'); });
+  service.onScroll(()=>save('scroll')); service.scroll(new AttributeData()); save('final');
+  assert.equal(marker.line,-1); assert.equal(marker.isDisposed,true);
+  reentrantRows.push(['trim-read-write',out.join('^')].join('\t'));
+}
+{
+  const service=fullService(); const out=[]; const save=tag=>out.push(checkpoint(service,tag)); let nested=false;
+  service.buffer.lines.onTrim(()=>{ save('trim'); if (!nested) { nested=true; service.scroll(new AttributeData(),true); save('nested-return'); } });
+  service.onScroll(()=>save('scroll')); service.scroll(new AttributeData()); save('final');
+  reentrantRows.push(['nested-scroll',out.join('^')].join('\t'));
+}
+{
+  const service=new BufferService(new OptionsService({cols:4,rows:3,scrollback:1}),new MockLogService());
+  service.buffers.activateAltBuffer(); const alt=service.buffers.alt; alt.x=3; alt.y=1;
+  const out=[]; const save=tag=>out.push(checkpoint(service,tag)); const marker=alt.addMarker(1);
+  marker.onDispose(()=>{ save('marker'); alt.x=8; service.buffers.normal.y=2;
+    const added=alt.addMarker(2); added.onDispose(()=>save('added-marker')); save('changed'); });
+  service.onScroll(()=>save('scroll')); service.buffers.activateNormalBuffer(); save('final');
+  assert.equal(alt.markers.length,0);
+  reentrantRows.push(['activation-marker',out.join('^')].join('\t'));
+}
+{
+  const service=new BufferService(new OptionsService({cols:4,rows:3,scrollback:1}),new MockLogService());
+  const old=service.buffer; const out=[]; const save=tag=>out.push(checkpoint(service,tag)); const marker=old.addMarker(0);
+  marker.onDispose(()=>{ save('marker'); service.buffers.normal.x=3; old.x=2; save('changed'); });
+  service.onScroll(()=>save('scroll')); service.reset(); save('final');
+  reentrantRows.push(['reset-marker',out.join('^')].join('\t'));
+}
+{
+  const service=fullService(); const out=[]; const save=tag=>out.push(checkpoint(service,tag)); let activated=false;
+  service.buffer.lines.onTrim(()=>{ save('trim'); if(!activated) {activated=true; service.buffers.activateAltBuffer(); save('activated');} });
+  service.onScroll(()=>save('scroll')); service.scroll(new AttributeData()); save('final');
+  reentrantRows.push(['trim-activation',out.join('^')].join('\t'));
+}
+{
+  const service=fullService(); const out=[]; const save=tag=>out.push(checkpoint(service,tag)); let resized=false;
+  service.buffer.lines.onTrim(()=>{ save('trim'); if(!resized) {resized=true; service.resize(6,4); save('resized');} });
+  service.onResize(()=>save('resize')); service.onScroll(()=>save('scroll')); service.scroll(new AttributeData()); save('final');
+  reentrantRows.push(['trim-resize',out.join('^')].join('\t'));
+}
+const reentrantFixture=reentrantRows.join('\n')+'\n';
+const reentrantPath=resolve(root,'crates/xterm-core/tests/fixtures/buffer-service-reentrant.tsv');
+if(process.argv.includes('--generate')) writeFileSync(reentrantPath,reentrantFixture);
+else assert.equal(readFileSync(reentrantPath,'utf8'),reentrantFixture,'reentry fixture drift');
 const seed = 0x5e7b0ff;
 let state = seed;
 function random() { state ^= state << 13; state ^= state >>> 17; state ^= state << 5; return state >>> 0; }
@@ -126,6 +186,8 @@ else assert.equal(readFileSync(fixturePath, 'utf8'), fixture, 'fixture drift; re
 const report = { command: 'node scripts/buffer-service-oracle.mjs', node: process.version, platform: process.platform,
   overallEquivalence: 'NOT PROVEN', sourceHashes, suites, directedChecks, seed, traces: 64, steps: 64, operations: counts,
   fixtureSha256: createHash('sha256').update(fixture).digest('hex'),
+  reentrantCases: reentrantRows.map(row=>row.split('\t')[0]),
+  reentrantSha256: createHash('sha256').update(reentrantFixture).digest('hex'),
   scope: 'Original JS BufferSet/BufferService tests and deterministic fixtures. Rust replay is a separate check.' };
 writeFileSync(resolve(output, 'oracle.json'), JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify({ tests: suites.reduce((n,s) => n+s.passed, 0), traceSteps: traces.length, seed }));

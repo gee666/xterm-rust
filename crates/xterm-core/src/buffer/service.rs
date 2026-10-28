@@ -100,10 +100,8 @@ impl BufferService {
 
     pub fn scroll(&self, erase_attr: &AttributeData, is_wrapped: bool) -> Result<(), BufferError> {
         let active = self.buffer();
-        let display = {
-            let mut buffer = active
-                .try_borrow_mut()
-                .map_err(|_| BufferError::BorrowedLine)?;
+        let (new_line, lines, top, bottom, full_screen, trim) = {
+            let buffer = active.try_borrow().map_err(|_| BufferError::BorrowedLine)?;
             let cached = self.cached_blank_line.borrow().clone();
             let new_line = if let Some(line) = cached {
                 let reusable = {
@@ -132,31 +130,53 @@ impl BufferService {
                 .ybase
                 .checked_add(buffer.scroll_bottom)
                 .ok_or(BufferError::SizeOverflow)?;
-            if buffer.scroll_top == 0 {
-                let trim = buffer.lines.is_full();
-                if bottom.checked_add(1) == Some(buffer.lines.len()) {
-                    if trim {
-                        let recycled = buffer
-                            .lines
-                            .recycle()?
-                            .ok_or(BufferError::MissingLine(bottom))?;
-                        let source = new_line
-                            .try_borrow()
-                            .map_err(|_| BufferError::BorrowedLine)?;
-                        recycled
-                            .try_borrow_mut()
-                            .map_err(|_| BufferError::BorrowedLine)?
-                            .copy_from(&source, true);
-                    } else {
-                        buffer.lines.push(clone_blank(&new_line)?)?;
-                    }
+            (
+                new_line,
+                buffer.lines.share(),
+                top,
+                bottom,
+                buffer.scroll_top == 0,
+                buffer.lines.is_full(),
+            )
+        };
+        // List mutation emits synchronous trim/insert callbacks. Keep the Buffer
+        // entirely unborrowed so observers can inspect or mutate its partial state.
+        if full_screen {
+            if bottom.checked_add(1) == Some(lines.len()) {
+                if trim {
+                    let recycled = lines.recycle()?.ok_or(BufferError::MissingLine(bottom))?;
+                    let source = new_line
+                        .try_borrow()
+                        .map_err(|_| BufferError::BorrowedLine)?;
+                    recycled
+                        .try_borrow_mut()
+                        .map_err(|_| BufferError::BorrowedLine)?
+                        .copy_from(&source, true);
                 } else {
-                    buffer.lines.splice(
-                        bottom.checked_add(1).ok_or(BufferError::SizeOverflow)?,
-                        0,
-                        &[clone_blank(&new_line)?],
-                    )?;
+                    lines.push(clone_blank(&new_line)?)?;
                 }
+            } else {
+                lines.splice(
+                    bottom.checked_add(1).ok_or(BufferError::SizeOverflow)?,
+                    0,
+                    &[clone_blank(&new_line)?],
+                )?;
+            }
+        } else {
+            let height = bottom
+                .checked_sub(top)
+                .and_then(|n| n.checked_add(1))
+                .ok_or(BufferError::InvalidDimensions)?;
+            let start = isize::try_from(top.checked_add(1).ok_or(BufferError::SizeOverflow)?)
+                .map_err(|_| BufferError::SizeOverflow)?;
+            lines.shift_elements(start, height - 1, -1)?;
+            lines.set(bottom, Some(clone_blank(&new_line)?))?;
+        }
+        let display = {
+            let mut buffer = active
+                .try_borrow_mut()
+                .map_err(|_| BufferError::BorrowedLine)?;
+            if full_screen {
                 if !trim {
                     buffer.ybase = buffer
                         .ybase
@@ -171,15 +191,6 @@ impl BufferService {
                 } else if self.is_user_scrolling.get() {
                     buffer.ydisp = buffer.ydisp.saturating_sub(1);
                 }
-            } else {
-                let height = bottom
-                    .checked_sub(top)
-                    .and_then(|n| n.checked_add(1))
-                    .ok_or(BufferError::InvalidDimensions)?;
-                let start = isize::try_from(top.checked_add(1).ok_or(BufferError::SizeOverflow)?)
-                    .map_err(|_| BufferError::SizeOverflow)?;
-                buffer.lines.shift_elements(start, height - 1, -1)?;
-                buffer.lines.set(bottom, Some(clone_blank(&new_line)?))?;
             }
             if !self.is_user_scrolling.get() {
                 buffer.ydisp = buffer.ybase;

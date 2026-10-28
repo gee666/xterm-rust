@@ -101,17 +101,13 @@ impl BufferSet {
         let normal = make_buffer(true, &self.state.dimensions, &self.state.options)?;
         let old = self.state.normal.replace(Rc::clone(&normal));
         if !self.state.disposed.get() {
-            old.try_borrow_mut()
-                .map_err(|_| BufferError::BorrowedLine)?
-                .dispose()?;
+            Buffer::dispose_shared(&old)?;
         }
         normal.borrow_mut().fill_viewport_rows(None)?;
         let alt = make_buffer(false, &self.state.dimensions, &self.state.options)?;
         let old = self.state.alt.replace(Rc::clone(&alt));
         if !self.state.disposed.get() {
-            old.try_borrow_mut()
-                .map_err(|_| BufferError::BorrowedLine)?
-                .dispose()?;
+            Buffer::dispose_shared(&old)?;
         }
         *self.state.active.borrow_mut() = Rc::clone(&normal);
         self.fire_activation(normal, alt)?;
@@ -131,13 +127,10 @@ impl BufferSet {
             normal.x = alt.x;
             normal.y = alt.y;
         }
-        {
-            let mut alt = alt
-                .try_borrow_mut()
-                .map_err(|_| BufferError::BorrowedLine)?;
-            alt.clear_all_markers()?;
-            alt.clear()?;
-        }
+        Buffer::clear_all_markers_shared(&alt)?;
+        alt.try_borrow_mut()
+            .map_err(|_| BufferError::BorrowedLine)?
+            .clear()?;
         *self.state.active.borrow_mut() = Rc::clone(&normal);
         self.fire_activation(normal, alt)
     }
@@ -185,14 +178,8 @@ impl BufferSet {
         if self.state.disposed.replace(true) {
             return Ok(());
         }
-        self.normal()
-            .try_borrow_mut()
-            .map_err(|_| BufferError::BorrowedLine)?
-            .dispose()?;
-        self.alt()
-            .try_borrow_mut()
-            .map_err(|_| BufferError::BorrowedLine)?
-            .dispose()?;
+        Buffer::dispose_shared(&self.normal())?;
+        Buffer::dispose_shared(&self.alt())?;
         self.state.activate.dispose();
         for listener in &self.option_listeners {
             listener.dispose();
