@@ -57,19 +57,33 @@ pub fn install_error_handler(
     });
 }
 
-pub fn log_error_state(logger: &LogService, state: &ParsingState<'_>, params: LogValue) -> Result<bool, LogError> {
-    let position = u32::try_from(state.position).map_err(|_| LogError::Sink("parser diagnostic position exceeds uint32".into()))?;
+pub fn log_error_state(
+    logger: &LogService,
+    state: &ParsingState<'_>,
+    params: LogValue,
+) -> Result<bool, LogError> {
+    let position = u32::try_from(state.position)
+        .map_err(|_| LogError::Sink("parser diagnostic position exceeds uint32".into()))?;
     let abort = Rc::new(LogProperty::new(false.into()));
     let fields = vec![
         ("position".into(), number(f64::from(position))),
         ("code".into(), number(f64::from(state.code))),
-        ("currentState".into(), number(f64::from(state.current_state as u8))),
-        ("collect".into(), number(f64::from(i32::from_ne_bytes(state.collect.to_ne_bytes())))),
+        (
+            "currentState".into(),
+            number(f64::from(state.current_state as u8)),
+        ),
+        (
+            "collect".into(),
+            number(f64::from(i32::from_ne_bytes(state.collect.to_ne_bytes()))),
+        ),
         ("params".into(), params),
         ("abort".into(), LogValue::Property(Rc::clone(&abort))),
     ];
-    logger.log(LogLevel::Error, &"Parsing error: ".encode_utf16().collect::<Vec<_>>(),
-        vec![LogParameter::Value(LogValue::Object(fields))])?;
+    logger.log(
+        LogLevel::Error,
+        &"Parsing error: ".encode_utf16().collect::<Vec<_>>(),
+        vec![LogParameter::Value(LogValue::Object(fields))],
+    )?;
     // A JS logger may install an accessor here. Read it after the logging call,
     // matching the parser's return-state.abort access and preserving its throw.
     abort.get().map(|value| value.is_truthy())
