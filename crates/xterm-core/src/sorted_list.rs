@@ -6,17 +6,31 @@
 use std::cmp::Ordering;
 use std::fmt;
 
-/// JavaScript's negative array-length RangeError during a deletion flush.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub struct InvalidArrayLength;
+mod iteration;
+mod sort_batch;
+pub use iteration::{IterationContext, KeyCursor};
 
-impl fmt::Display for InvalidArrayLength {
+/// Recoverable JavaScript failures exposed by deferred batch operations.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum SortedListError {
+    InvalidArrayLength,
+    KeyAccess(String),
+}
+
+pub use SortedListError::InvalidArrayLength;
+
+impl fmt::Display for SortedListError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str("Invalid array length")
+        match self {
+            Self::InvalidArrayLength => f.write_str("Invalid array length"),
+            Self::KeyAccess(message) => f.write_str(message),
+        }
     }
 }
 
-impl std::error::Error for InvalidArrayLength {}
+impl std::error::Error for SortedListError {}
+
+type UndefinedKeyPredicate<T> = Box<dyn Fn(&T) -> bool>;
 
 /// A list with numeric keys and deferred insertion/deletion batches.
 ///
@@ -29,6 +43,9 @@ pub struct SortedList<T, F> {
     inserted: Vec<T>,
     deleted: Vec<usize>,
     deletion_flush_failed: bool,
+    iteration_context: IterationContext,
+    undefined_key_error: Option<String>,
+    undefined_key: Option<UndefinedKeyPredicate<T>>,
     key: F,
 }
 
@@ -39,8 +56,27 @@ impl<T, F: Fn(&T) -> f64> SortedList<T, F> {
             inserted: Vec::new(),
             deleted: Vec::new(),
             deletion_flush_failed: false,
+            iteration_context: IterationContext::default(),
+            undefined_key_error: None,
+            undefined_key: None,
             key,
         }
+    }
+
+    /// Configure the error thrown by a JS getter such as `entry => entry.key`
+    /// when an exhausted pending batch passes `undefined` to that getter.
+    /// Scalar identity getters instead return undefined, the default behavior.
+    pub fn with_undefined_key_error(mut self, message: impl Into<String>) -> Self {
+        self.undefined_key_error = Some(message.into());
+        self
+    }
+
+    /// Distinguish JS undefined from NaN for getters represented by Option.
+    /// Both compare unordered, but deletion of undefined returns before search
+    /// and therefore must not change the shared iteration work index.
+    pub fn with_undefined_key(mut self, predicate: impl Fn(&T) -> bool + 'static) -> Self {
+        self.undefined_key = Some(Box::new(predicate));
+        self
     }
 
     pub fn clear(&mut self) {
@@ -50,7 +86,7 @@ impl<T, F: Fn(&T) -> f64> SortedList<T, F> {
         self.deletion_flush_failed = false;
     }
 
-    pub fn insert(&mut self, value: T) -> Result<(), InvalidArrayLength> {
+    pub fn insert(&mut self, value: T) -> Result<(), SortedListError> {
         self.flush_deleted()?;
         self.inserted.push(value);
         Ok(())
@@ -61,24 +97,46 @@ impl<T, F: Fn(&T) -> f64> SortedList<T, F> {
     /// Like JavaScript strict equality, `NaN` keys never match. The equality
     /// predicate lets callers retain reference identity instead of structural
     /// equality for objects.
-    pub fn delete_by(&mut self, value: &T, equal: impl Fn(&T, &T) -> bool) -> bool {
-        self.flush_inserted();
+    pub fn delete_by(
+        &mut self,
+        value: &T,
+        equal: impl Fn(&T, &T) -> bool,
+    ) -> Result<bool, SortedListError> {
+        self.flush_inserted()?;
+        if self.values.is_empty() {
+            return Ok(false);
+        }
         let key = (self.key)(value);
+        if self
+            .undefined_key
+            .as_ref()
+            .is_some_and(|predicate| predicate(value))
+        {
+            return Ok(false);
+        }
         let mut index = self.search(key);
+        self.iteration_context.0.set(index);
+        if index >= self.values.len() {
+            if let Some(message) = &self.undefined_key_error {
+                return Err(SortedListError::KeyAccess(message.clone()));
+            }
+            return Ok(false);
+        }
         while let Some(candidate) = self.values.get(index) {
             if (self.key)(candidate) != key {
                 break;
             }
             if equal(candidate, value) {
                 self.deleted.push(index);
-                return true;
+                return Ok(true);
             }
             index += 1;
+            self.iteration_context.0.set(index);
         }
-        false
+        Ok(false)
     }
 
-    pub fn delete(&mut self, value: &T) -> bool
+    pub fn delete(&mut self, value: &T) -> Result<bool, SortedListError>
     where
         T: PartialEq,
     {
@@ -90,7 +148,7 @@ impl<T, F: Fn(&T) -> f64> SortedList<T, F> {
     pub fn get_key_iterator(
         &mut self,
         key: f64,
-    ) -> Result<impl Iterator<Item = &T>, InvalidArrayLength> {
+    ) -> Result<impl Iterator<Item = &T>, SortedListError> {
         self.flush()?;
         let start = self.search(key);
         let get_key = &self.key;
@@ -103,7 +161,7 @@ impl<T, F: Fn(&T) -> f64> SortedList<T, F> {
         &mut self,
         key: f64,
         mut callback: impl FnMut(&T),
-    ) -> Result<(), InvalidArrayLength> {
+    ) -> Result<(), SortedListError> {
         for value in self.get_key_iterator(key)? {
             callback(value);
         }
@@ -112,7 +170,7 @@ impl<T, F: Fn(&T) -> f64> SortedList<T, F> {
 
     /// Snapshot of the list, allowing mutation while visiting its values.
     /// Use reference-counted entries when cloning must preserve object identity.
-    pub fn values(&mut self) -> Result<std::vec::IntoIter<T>, InvalidArrayLength>
+    pub fn values(&mut self) -> Result<std::vec::IntoIter<T>, SortedListError>
     where
         T: Clone,
     {
@@ -120,29 +178,21 @@ impl<T, F: Fn(&T) -> f64> SortedList<T, F> {
         Ok(self.values.clone().into_iter())
     }
 
-    pub fn flush(&mut self) -> Result<(), InvalidArrayLength> {
-        self.flush_inserted();
+    pub fn flush(&mut self) -> Result<(), SortedListError> {
+        self.flush_inserted()?;
         self.flush_deleted()
     }
 
-    fn flush_inserted(&mut self) {
+    fn flush_inserted(&mut self) -> Result<(), SortedListError> {
         if self.inserted.is_empty() {
-            return;
+            return Ok(());
         }
         let key = &self.key;
         if self.inserted.iter().any(|value| key(value).is_nan()) {
-            // JS treats a NaN comparison as equal. That is not a total order,
-            // so Rust's standard sort may panic. Insertion sort tolerates the
-            // inconsistent comparator without inventing an order for NaN.
-            for index in 1..self.inserted.len() {
-                let mut position = index;
-                while position > 0
-                    && key(&self.inserted[position]) < key(&self.inserted[position - 1])
-                {
-                    self.inserted.swap(position, position - 1);
-                    position -= 1;
-                }
-            }
+            // JS treats NaN comparisons as equal, an inconsistent comparator
+            // that Rust's standard sort may reject. Use a stable binary sort
+            // with the same initial-run rule as the observed V8 oracle.
+            sort_batch::with_unordered_keys(&mut self.inserted, key);
         } else {
             self.inserted.sort_by(|a, b| {
                 (key(a) - key(b))
@@ -150,23 +200,51 @@ impl<T, F: Fn(&T) -> f64> SortedList<T, F> {
                     .unwrap_or(Ordering::Equal)
             });
         }
-        let mut added = std::mem::take(&mut self.inserted).into_iter().peekable();
-        let old = std::mem::take(&mut self.values);
-        self.values.reserve(old.len() + added.len());
-        for value in old {
-            while added.peek().is_some_and(|next| key(next) <= key(&value)) {
-                // `peek` proved the next entry exists. `for` would consume the
-                // first entry belonging after this old value.
-                if let Some(next) = added.next() {
-                    self.values.push(next);
+        // Plan before moving values so a failing JS undefined getter retains
+        // the old array and the sorted pending batch, exactly as upstream.
+        let total = self
+            .values
+            .len()
+            .checked_add(self.inserted.len())
+            .ok_or(InvalidArrayLength)?;
+        let mut from_added = Vec::with_capacity(total);
+        let (mut old, mut added) = (0, 0);
+        while from_added.len() < total {
+            let choose_added = if old >= self.values.len() {
+                true
+            } else if let Some(next) = self.inserted.get(added) {
+                key(next) <= key(&self.values[old])
+            } else {
+                if let Some(message) = &self.undefined_key_error {
+                    return Err(SortedListError::KeyAccess(message.clone()));
                 }
+                false
+            };
+            from_added.push(choose_added);
+            if choose_added {
+                added += 1;
+            } else {
+                old += 1;
             }
+        }
+        let mut old = std::mem::take(&mut self.values).into_iter();
+        let mut added = std::mem::take(&mut self.inserted).into_iter();
+        self.values.reserve(from_added.len());
+        for choose_added in from_added {
+            // Each plan entry increments one bounded source index, and there
+            // are exactly old.len()+added.len() entries, so neither is exhausted.
+            let value = if choose_added {
+                added.next()
+            } else {
+                old.next()
+            }
+            .expect("merge plan selects one existing source entry");
             self.values.push(value);
         }
-        self.values.extend(added);
+        Ok(())
     }
 
-    fn flush_deleted(&mut self) -> Result<(), InvalidArrayLength> {
+    fn flush_deleted(&mut self) -> Result<(), SortedListError> {
         if self.deleted.is_empty() || self.deletion_flush_failed {
             return Ok(());
         }
@@ -198,7 +276,9 @@ impl<T, F: Fn(&T) -> f64> SortedList<T, F> {
         let mut min = 0;
         let mut max = self.values.len();
         while min < max {
-            let mid = min + (max - min) / 2;
+            // The source uses inclusive max and chooses the left midpoint.
+            // Keep that choice for mutable or non-total keys too.
+            let mid = min + (max - min - 1) / 2;
             let mid_key = (self.key)(&self.values[mid]);
             if mid_key > key {
                 max = mid;

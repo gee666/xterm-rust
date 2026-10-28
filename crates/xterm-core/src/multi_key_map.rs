@@ -8,23 +8,35 @@ use std::collections::HashMap;
 /// A JavaScript property key. Numbers and their ECMAScript decimal string
 /// representation address the same entry, including `-0` and `"0"`.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
-pub struct PropertyKey(String);
+pub struct PropertyKey(Vec<u16>);
 
 impl From<&str> for PropertyKey {
     fn from(value: &str) -> Self {
-        Self(value.to_owned())
+        Self(value.encode_utf16().collect())
     }
 }
 
 impl From<String> for PropertyKey {
     fn from(value: String) -> Self {
+        Self::from(value.as_str())
+    }
+}
+
+impl From<&[u16]> for PropertyKey {
+    fn from(value: &[u16]) -> Self {
+        Self(value.to_vec())
+    }
+}
+
+impl From<Vec<u16>> for PropertyKey {
+    fn from(value: Vec<u16>) -> Self {
         Self(value)
     }
 }
 
 impl From<f64> for PropertyKey {
     fn from(value: f64) -> Self {
-        Self(ryu_js::Buffer::new().format(value).to_owned())
+        Self::from(ryu_js::Buffer::new().format(value))
     }
 }
 

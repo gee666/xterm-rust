@@ -25,7 +25,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
             "D" => println!(
                 "{}",
-                list.delete(&parts.next().ok_or_else(missing)?.parse()?)
+                list.delete(&parts.next().ok_or_else(missing)?.parse()?)?
             ),
             "C" => list.clear(),
             "V" => match list.values() {

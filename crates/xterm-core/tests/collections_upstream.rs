@@ -50,7 +50,7 @@ fn sorted_delete() {
         (5, vec![2]),
         (2, vec![]),
     ] {
-        list.delete(&value);
+        list.delete(&value).unwrap();
         assert_eq!(list.values().unwrap().collect::<Vec<_>>(), expected);
     }
 }
@@ -117,7 +117,7 @@ fn sorted_values_snapshot_survives_mutation() {
     let mut visited = Vec::new();
     for value in list.values().unwrap() {
         visited.push(value);
-        list.delete(&value);
+        list.delete(&value).unwrap();
     }
     assert_eq!(visited, [1, 2, 3, 4]);
 }
@@ -216,8 +216,8 @@ fn sorted_identity_and_batch_order() {
         list.values().unwrap().map(|v| v.1).collect::<Vec<_>>(),
         ["c", "a", "b"]
     );
-    assert!(!list.delete_by(&Rc::new((1, "a")), Rc::ptr_eq));
-    assert!(list.delete_by(&a, Rc::ptr_eq));
+    assert!(!list.delete_by(&Rc::new((1, "a")), Rc::ptr_eq).unwrap());
+    assert!(list.delete_by(&a, Rc::ptr_eq).unwrap());
     assert_eq!(
         list.values().unwrap().map(|v| v.1).collect::<Vec<_>>(),
         ["c", "b"]
@@ -225,16 +225,16 @@ fn sorted_identity_and_batch_order() {
     let mut visited = Vec::new();
     list.for_each_by_key(1.0, |v| visited.push(v.1)).unwrap();
     assert_eq!(visited, ["c", "b"]);
-    assert!(!list.delete_by(&a, Rc::ptr_eq));
+    assert!(!list.delete_by(&a, Rc::ptr_eq).unwrap());
 }
 
 #[test]
 fn sorted_clear_cancels_pending_deletes_and_inserts() {
     let mut list = SortedList::new(|e: &i32| f64::from(*e));
     list.insert(1).unwrap();
-    assert!(list.delete(&1));
+    assert!(list.delete(&1).unwrap());
     list.clear();
     list.insert(2).unwrap();
-    assert!(!list.delete(&3));
+    assert!(!list.delete(&3).unwrap());
     assert_eq!(list.values().unwrap().collect::<Vec<_>>(), [2]);
 }
