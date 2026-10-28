@@ -1,6 +1,6 @@
 # Mouse work status
 
-Both tasks remain unfinished and owned by Wallada. Implementation is retained; neither task is marked accepted or externally blocked.
+Both tasks remain unfinished and are released for a fresh integration validator. Implementation is committed through0ec2973, with checker simplification69e5055. Neither task is marked accepted or externally blocked.
 
 ## Task110
 
