@@ -50,7 +50,7 @@ Evidence is `callback_failures_match_unchanged_typescript_state_and_order` and `
 
 ## LC5. Rust ownership and review
 
-- DisposableStore, MutableDisposable and embedded DisposableOwner clean up on drop exactly once after successful explicit cleanup.
+- Default DisposableStore, MutableDisposable and embedded DisposableOwner clean up on drop exactly once after successful explicit cleanup. DisposableStore::new_explicit releases stored handles without invoking their disposal callbacks at drop; explicit disposal still deduplicates and is idempotent. EventUtils.any uses this mode so an ignored returned handle does not unsubscribe. Test both policies and capture release.
 - Register forwards object identity; no browser or platform dependency or unsafe operation is introduced.
 - Callbacks must not form Rc cycles with owners. Tests use Weak owner references for reentrancy. Drop callbacks must not panic.
 - Document composition in place of inheritance and deterministic drop cleanup as deliberate language mappings. Do not represent JavaScript GC as deterministic disposal.

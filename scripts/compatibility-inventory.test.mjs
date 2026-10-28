@@ -6,6 +6,7 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import test from 'node:test';
+import { loadBaseline } from '../tools/compatibility/baseline.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const generator = path.join(root, 'scripts/compatibility-inventory.mjs');
 const output = 'tmp/compatibility-validation';
@@ -18,7 +19,7 @@ async function diskFiles(relative) {
   const paths = [];
   for (const item of await readdir(path.join(root, relative), { withFileTypes: true })) {
     const p = `${relative}/${item.name}`;
-    if (item.isDirectory() && !['.git', 'node_modules', 'out', 'out-test', 'out-esbuild', 'out-esbuild-test', 'lib', 'coverage'].includes(item.name)) paths.push(...await diskFiles(p));
+    if (item.isDirectory() && p !== 'source_repo/demo/dist' && !['.git', 'node_modules', 'out', 'out-test', 'out-esbuild', 'out-esbuild-test', 'lib', 'coverage'].includes(item.name)) paths.push(...await diskFiles(p));
     if (item.isFile()) paths.push(p);
   }
   return paths.sort();
@@ -26,6 +27,7 @@ async function diskFiles(relative) {
 
 test('every reference path/hash, production module, fixture and addon is indexed', async () => {
   const manifest = await load('manifest');
+  assert.equal(manifest.length, 776, 'Generated outputs must not alter the retained source anchor');
   assert.deepEqual(manifest.map(m => m.path), await diskFiles('source_repo'));
   for (const row of manifest) {
     const bytes = await readFile(path.join(root, row.path));
@@ -132,7 +134,12 @@ test('non-root generation/check works and every changed artifact fails stale che
   }
   const mappingPath = `${output}/stable-mappings.json`;
   await writeFile(path.join(root, mappingPath), JSON.stringify(mapping));
-  const args = [`--out=${output}`, `--mappings=${mappingPath}`];
+  const latest = JSON.parse(await readFile(path.join(root, 'results/upstream-baseline/latest.json'), 'utf8'));
+  const baseline = await readFile(path.join(root, 'results/upstream-baseline', latest.summary));
+  await writeFile(path.join(root, output, 'baseline-summary.json'), baseline);
+  const baselinePath = `${output}/latest.json`;
+  await writeFile(path.join(root, baselinePath), JSON.stringify({ ...latest, summary: 'baseline-summary.json' }));
+  const args = [`--out=${output}`, `--mappings=${mappingPath}`, `--baseline=${baselinePath}`];
   ok(run(args, path.join(root, 'tools/compatibility')));
   ok(run([...args, '--check']));
   for (const filename of ['manifest.json', 'modules.json', 'apis.json', 'suites.json', 'fixtures.json', 'summary.json', 'evidence-manifest.json']) {
@@ -162,4 +169,46 @@ test('duplicate mappings, unknown source, absent evidence and output escape are 
   bad(run(['--out=../outside']), /Alternative output must be under tmp/);
   bad(run(['--mappings=../outside.json']), /Alternative mappings must be under tmp/);
   await rm(path.join(root, output), { recursive: true });
+});
+
+test('failed, incomplete, altered and stale baseline evidence cannot advertise recorded passes', async () => {
+  const dir = 'tmp/compatibility-baseline-validation';
+  await mkdir(path.join(root, dir), { recursive: true });
+  const latest = JSON.parse(await readFile(path.join(root, 'results/upstream-baseline/latest.json'), 'utf8'));
+  const original = JSON.parse(await readFile(path.join(root, 'results/upstream-baseline', latest.summary), 'utf8'));
+  const manifest = await load('manifest');
+  const pointerPath = `${dir}/latest.json`;
+  const writeFixture = async (summary, pointer = { ...latest, summary: 'summary.json' }) => {
+    await writeFile(path.join(root, dir, 'summary.json'), JSON.stringify(summary));
+    await writeFile(path.join(root, pointerPath), JSON.stringify(pointer));
+  };
+  await writeFixture(original);
+  await loadBaseline(root, pointerPath, manifest);
+  const mutations = [
+    [s => { s.status = 'failed'; }, /summary is not passed/],
+    [s => { s.runId = 'stale'; }, /runId mismatch/],
+    [s => { s.commands[0].exitCode = 1; }, /command failed/],
+    [s => { s.commands[0].timedOut = true; }, /timed out/],
+    [s => { s.reference.after.mismatches.push('changed'); }, /reference mismatch/],
+    [s => { s.reference.manifestSha256 = '0'.repeat(64); }, /manifest hash mismatch/],
+    [s => { s.rawReportSha256 = '0'.repeat(64); }, /raw report hash mismatch/],
+    [s => { s.suites[0].passed++; }, /execution mismatch/],
+    [s => { s.suites.push(s.suites[0]); }, /Duplicate baseline suite/],
+    [s => { s.suites.pop(); }, /suite total mismatch/]
+  ];
+  for (const [mutate, expected] of mutations) {
+    const summary = structuredClone(original);
+    mutate(summary);
+    await writeFixture(summary);
+    await assert.rejects(loadBaseline(root, pointerPath, manifest), expected);
+  }
+  await writeFixture(original, { ...latest, status: 'failed', summary: 'summary.json' });
+  await assert.rejects(loadBaseline(root, pointerPath, manifest), /Latest baseline is not passed/);
+  await writeFixture(original, { ...latest, summary: '../outside.json' });
+  await assert.rejects(loadBaseline(root, pointerPath, manifest), /Invalid baseline pointer/);
+  await writeFixture(original);
+  const alteredSource = structuredClone(manifest);
+  alteredSource[0].sha256 = '0'.repeat(64);
+  await assert.rejects(loadBaseline(root, pointerPath, alteredSource), /source hash mismatch/);
+  await rm(path.join(root, dir), { recursive: true });
 });

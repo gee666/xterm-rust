@@ -6,25 +6,29 @@ import { createRequire } from 'node:module';
 import { readdir, readFile, writeFile, mkdir, access } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadBaseline } from '../tools/compatibility/baseline.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const require = createRequire(new URL('../tools/compatibility/package.json', import.meta.url));
 const ts = require('typescript');
 const args = process.argv.slice(2);
-assert(args.every(a => a === '--check' || a.startsWith('--out=') || a.startsWith('--mappings=')), 'Usage: compatibility-inventory.mjs [--check] [--out=tmp/name] [--mappings=tmp/name.json]');
+assert(args.every(a => a === '--check' || a.startsWith('--out=') || a.startsWith('--mappings=') || a.startsWith('--baseline=')), 'Usage: compatibility-inventory.mjs [--check] [--out=tmp/name] [--mappings=tmp/name.json] [--baseline=tmp/latest.json]');
 const checking = args.includes('--check');
 const outputDir = args.find(a => a.startsWith('--out='))?.slice(6) ?? 'results/compatibility';
 const mappingsPath = args.find(a => a.startsWith('--mappings='))?.slice(11) ?? 'tools/compatibility/mappings.json';
+const baselinePointer = args.find(a => a.startsWith('--baseline='))?.slice(11) ?? 'results/upstream-baseline/latest.json';
+assert(baselinePointer === 'results/upstream-baseline/latest.json' || /^tmp\/[\w/-]+\.json$/.test(baselinePointer), 'Alternative baseline must be under tmp/');
 assert(outputDir === 'results/compatibility' || /^tmp\/[\w/-]+$/.test(outputDir), 'Alternative output must be under tmp/');
 assert(mappingsPath === 'tools/compatibility/mappings.json' || /^tmp\/[\w/-]+\.json$/.test(mappingsPath), 'Alternative mappings must be under tmp/');
 const read = p => readFile(path.join(root, p), 'utf8');
 const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 const excluded = new Set(['.git', 'node_modules', 'out', 'out-test', 'out-esbuild', 'out-esbuild-test', 'lib', 'coverage']);
+const excludedPaths = new Set(['source_repo/demo/dist']);
 async function walk(dir) {
   const files = [];
   for (const entry of (await readdir(path.join(root, dir), { withFileTypes: true })).sort((a, b) => a.name.localeCompare(b.name, 'en'))) {
     const name = `${dir}/${entry.name}`;
     if (entry.isSymbolicLink()) throw new Error(`Reference symlink requires explicit policy: ${name}`);
-    if (entry.isDirectory()) { if (!excluded.has(entry.name)) files.push(...await walk(name)); }
+    if (entry.isDirectory()) { if (!excluded.has(entry.name) && !excludedPaths.has(name)) files.push(...await walk(name)); }
     else if (entry.isFile()) files.push(name);
   }
   return files.sort();
@@ -44,6 +48,26 @@ const nameOf = (sf, node) => node.name?.getText(sf) ?? (ts.isConstructorDeclarat
 const referenceFiles = await walk('source_repo');
 const entries = JSON.parse(await read(mappingsPath));
 const behaviorRules = JSON.parse(await read('tools/compatibility/behavior-criteria.json'));
+const criteriaIndexPath = 'results/acceptance/criteria-index.json';
+const criteriaIndex = JSON.parse(await read(criteriaIndexPath));
+for (const criterion of criteriaIndex.criteria.filter(c => c.id > 11 && ![50, 51, 52, 53].includes(c.id))) {
+  // Only the author's exact source-file references are imported. A task title,
+  // directory, glob or similarly named file is not a source contract mapping.
+  const sources = criterion.source.match(/source_repo\/[\w/.-]+\.tsx?\b/g) ?? [];
+  const document = `${criterion.source} ${criterion.body} ${criterion.verification}`.match(/docs\/[\w/.-]+\.md\b/)?.[0] ?? criteriaIndexPath;
+  for (const source of new Set(sources)) if (referenceFiles.includes(source)) behaviorRules.push({ source, criterionIds: [criterion.id], document });
+}
+const mappingDocuments = ['docs/utility-addons-criteria-map.json', 'docs/font-addon-source-map.json', 'docs/acceptance/unicode-text-sources.json', 'docs/browser-input-source-map.md'];
+const utilityMap = JSON.parse(await read(mappingDocuments[0]));
+for (const row of utilityMap) behaviorRules.push({ source: `source_repo/${row.source}`, criterionIds: [row.criterion], document: 'docs/utility-addons-acceptance.md' });
+const fontMap = JSON.parse(await read(mappingDocuments[1]));
+for (const row of fontMap.entries) behaviorRules.push({ source: row.source, criterionIds: row.criteria, document: fontMap.matrix });
+const unicodeMap = JSON.parse(await read(mappingDocuments[2]));
+for (const [id, sources] of Object.entries(unicodeMap)) for (const source of sources) behaviorRules.push({ source, criterionIds: [Number(id)], document: 'docs/acceptance/unicode-text.md' });
+for (const line of (await read(mappingDocuments[3])).split('\n')) {
+  const match = /^Criterion (\d+):/.exec(line);
+  if (match) for (const source of line.match(/source_repo\/[\w/.-]+\.ts\b/g) ?? []) behaviorRules.push({ source, criterionIds: [Number(match[1])], document: 'docs/browser-input-acceptance.md' });
+}
 for (const rule of behaviorRules) {
   assert(referenceFiles.includes(rule.source), `Unknown behavior rule source: ${rule.source}`);
   assert(rule.criterionIds.length && rule.criterionIds.every(id => Number.isInteger(id) && id > 0));
@@ -57,24 +81,25 @@ const acceptanceFor = (source, title = '') => {
 };
 assert.equal(new Set(entries.modules.map(m => m.source)).size, entries.modules.length, 'Duplicate module mapping');
 const moduleMappings = new Map(entries.modules.map(m => [m.source, m]));
-const evidencePaths = new Set();
+const evidencePaths = new Set([criteriaIndexPath, ...mappingDocuments]);
 for (const entry of [...entries.modules, ...entries.apiOwners]) {
   for (const p of [...entry.implementation, ...entry.tests, ...entry.evidence]) { await access(path.join(root, p)); evidencePaths.add(p); }
   assert(entry.binding && entry.gap && entry.command, 'Mappings need binding, gap, and executable command');
-}
-const originalBaselinePath = 'results/upstream-baseline/summary.json';
-const originalBaseline = JSON.parse(await read(originalBaselinePath));
-evidencePaths.add(originalBaselinePath);
-const originalBySource = new Map(originalBaseline.suites.map(s => [`source_repo/${s.source}`, s]));
-const evidenceManifest = [];
-for (const p of [...evidencePaths].sort()) {
-  const bytes = await readFile(path.join(root, p));
-  evidenceManifest.push({ path: p, bytes: bytes.length, sha256: digest(bytes) });
 }
 const manifest = [];
 for (const p of referenceFiles) {
   const bytes = await readFile(path.join(root, p));
   manifest.push({ path: p, bytes: bytes.length, sha256: digest(bytes) });
+}
+const baseline = await loadBaseline(root, baselinePointer, manifest);
+const originalBaseline = baseline.summary;
+const originalBaselinePath = baseline.summaryPath;
+for (const p of baseline.evidencePaths) evidencePaths.add(p);
+const originalBySource = new Map(originalBaseline.suites.map(s => [`source_repo/${s.source}`, s]));
+const evidenceManifest = [];
+for (const p of [...evidencePaths].sort()) {
+  const bytes = await readFile(path.join(root, p));
+  evidenceManifest.push({ path: p, bytes: bytes.length, sha256: digest(bytes) });
 }
 const production = referenceFiles.filter(p => /\.(ts|tsx|css)$/.test(p) && !/\.(test|benchmark)\.ts$/.test(p)
   && (/^source_repo\/src\//.test(p) || /^source_repo\/addons\/[^/]+\/(src|typings)\//.test(p) || /^source_repo\/(typings|css)\//.test(p)));
@@ -177,7 +202,7 @@ const addons = (await readdir(path.join(root, 'source_repo/addons'), { withFileT
 const countBy = (rows, key) => Object.fromEntries([...new Set(rows.map(r => r[key]))].sort().map(k => [k, rows.filter(r => r[key] === k).length]));
 const summary = { schemaVersion: 1, equivalence: 'NOT PROVEN', parser: `typescript ${ts.version}`,
   sourceVersion: JSON.parse(await read('source_repo/package.json')).version, referenceManifestSha256: digest(JSON.stringify(manifest)),
-  exclusionPolicy: [...excluded].sort(), counts: { referenceFiles: manifest.length, productionModules: modules.length, declarationFiles: declarations.length,
+  exclusionPolicy: [...excluded].sort(), excludedPaths: [...excludedPaths], originalBaseline: { pointer: baselinePointer, summary: originalBaselinePath, runId: originalBaseline.runId }, counts: { referenceFiles: manifest.length, productionModules: modules.length, declarationFiles: declarations.length,
     apis: apis.length, apiCategories: countBy(apis, 'category'), apiStatuses: countBy(apis, 'status'), moduleStatuses: countBy(modules, 'status'),
     testFiles: suites.length, suiteKinds: countBy(suites, 'kind'), staticTestDefinitions: suites.reduce((sum, s) => sum + s.staticTestDefinitions, 0), fixtures: fixtures.length, addons: addons.length,
     modulesWithoutFocusedCriteria: modules.filter(m => m.acceptanceGap).length, apisWithoutFocusedCriteria: apis.filter(a => a.acceptanceGap).length,

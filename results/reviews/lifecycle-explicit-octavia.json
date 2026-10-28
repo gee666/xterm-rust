@@ -1,0 +1,28 @@
+{
+  "reviewer": "Octavia",
+  "task": 116,
+  "inspected": ["source_repo/src/common/Lifecycle.ts", "source_repo/src/common/Event.ts", "crates/xterm-core/src/lifecycle.rs", "crates/xterm-core/src/event.rs", "crates/xterm-core/tests/lifecycle_explicit.rs", "crates/xterm-core/tests/event_edges.rs", "crates/xterm-core/tests/event_errors.rs", "scripts/check-events-and-circular-list.mjs"],
+  "verdict": "accept scoped explicit-only lifetime implementation",
+  "findings": [
+    "Default store RAII behavior is unchanged. Explicit-only stores release handles at drop without calling dispose.",
+    "Event.any returns the explicit-only store itself, preserving deduplication, idempotence and ignored-handle subscription lifetime.",
+    "Four focused tests verify default/explicit drops, explicit identity/idempotence, ignored Event.any handles and weak-capture release.",
+    "No unsafe code or production dependency is introduced. Updated lifecycle documentation distinguishes the two native policies."
+  ],
+  "observed": {
+    "platform": "native Windows x64",
+    "command": "node scripts/check-events-and-circular-list.mjs --isolated",
+    "buildMode": "existing exact utility module rustc runner under tmp, no duplicate Cargo target; not a workspace-quality pass",
+    "rustTestsPassed": 70,
+    "focusedExplicitStoreTestsIncluded": 4,
+    "originalCases": 26,
+    "originalAssertions": 95,
+    "directedSourceCases": 12,
+    "eventTraces": 10008,
+    "circularSnapshots": 20022,
+    "targetedRustfmt": "passed",
+    "globalCargoRetry": "failed on concurrently edited terminal operations saved_y signedness, failure retained"
+  },
+  "logs": ["results/reviews/event-octavia-oracle.log", "results/reviews/event-octavia-isolated.log", "results/reviews/lifecycle-explicit-octavia-cargo.log", "results/reviews/lifecycle-explicit-octavia-fmt.log", "results/events-circular-list/verification-isolated.json"],
+  "scopeLimit": "This checks Event/lifecycle utilities only. Sophie independently reviewed Event14. Workspace, terminal, browser and native Linux/macOS gates remain separate."
+}
