@@ -9,6 +9,9 @@ use xterm_web::input::mouse_policy::{
 };
 use xterm_web::input::mouse_wheel::WheelOptions;
 
+#[cfg(target_arch = "wasm32")]
+wasm_bindgen_test::wasm_bindgen_test_configure!(run_in_browser);
+
 fn routing() -> MouseRouting {
     MouseRouting {
         cols: 500.0,
@@ -66,7 +69,8 @@ fn payload(text: &str) -> MouseOutput {
     MouseOutput::UserData(text.encode_utf16().collect())
 }
 
-#[test]
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
+#[cfg_attr(not(target_arch = "wasm32"), test)]
 fn upstream_alt_required_report_strips_only_nonwheel_alt() {
     let service = service();
     let policy = MousePolicy::new();
@@ -98,7 +102,8 @@ fn upstream_alt_required_report_strips_only_nonwheel_alt() {
     assert_eq!(reports[1], payload("\x1b[<73;1;1M"));
 }
 
-#[test]
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
+#[cfg_attr(not(target_arch = "wasm32"), test)]
 fn move_buttons_priority_fallback_override_and_invalid_button_pairs() {
     let service = service();
     for (buttons, code) in [
@@ -154,7 +159,8 @@ fn move_buttons_priority_fallback_override_and_invalid_button_pairs() {
     );
 }
 
-#[test]
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
+#[cfg_attr(not(target_arch = "wasm32"), test)]
 fn wheel_veto_zero_shift_and_missing_coordinates_do_not_consume_state() {
     let service = service();
     let policy = MousePolicy::new();
@@ -183,7 +189,8 @@ fn wheel_veto_zero_shift_and_missing_coordinates_do_not_consume_state() {
     assert_eq!(policy.wheel_state().partial_scroll(), 0.0);
 }
 
-#[test]
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
+#[cfg_attr(not(target_arch = "wasm32"), test)]
 fn empty_encoding_still_commits_last_event_and_reset_clears_it() {
     let service = service();
     service.set_active_encoding("DEFAULT").unwrap();
@@ -216,7 +223,8 @@ fn empty_encoding_still_commits_last_event_and_reset_clears_it() {
         .unwrap());
 }
 
-#[test]
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
+#[cfg_attr(not(target_arch = "wasm32"), test)]
 fn output_failure_does_not_commit_cache_and_nested_output_sees_old_cache() {
     let service = service();
     let policy = MousePolicy::new();
@@ -249,7 +257,8 @@ fn output_failure_does_not_commit_cache_and_nested_output_sees_old_cache() {
         .unwrap());
 }
 
-#[test]
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
+#[cfg_attr(not(target_arch = "wasm32"), test)]
 fn source_mutable_encoder_updates_event_before_cache_commit() {
     let service = service();
     service.add_encoding(

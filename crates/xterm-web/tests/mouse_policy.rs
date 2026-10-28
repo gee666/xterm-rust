@@ -5,6 +5,9 @@ use xterm_web::input::mouse_coords::{parse_css_padding, MouseGeometry};
 use xterm_web::input::mouse_policy::{MouseOutput, MousePolicy};
 use xterm_web::input::mouse_wheel::{cursor_sequence, WheelInput, WheelOptions, WheelState};
 
+#[cfg(target_arch = "wasm32")]
+wasm_bindgen_test::wasm_bindgen_test_configure!(run_in_browser);
+
 fn number(text: &str) -> f64 {
     text.parse().unwrap()
 }
@@ -73,7 +76,8 @@ fn compare_event(actual: &MouseEvent, expected: &MouseEvent, row: usize) {
     );
 }
 
-#[test]
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
+#[cfg_attr(not(target_arch = "wasm32"), test)]
 fn every_original_trigger_invocation_matches_report_and_mutation() {
     let mut previous = "";
     let mut policy = MousePolicy::new();
@@ -125,7 +129,8 @@ fn every_original_trigger_invocation_matches_report_and_mutation() {
     assert_eq!(count, 1562);
 }
 
-#[test]
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
+#[cfg_attr(not(target_arch = "wasm32"), test)]
 fn every_source_coordinate_snapshot_matches_ieee_and_padding_semantics() {
     let mut count = 0;
     for (row, text) in include_str!("fixtures/browser-mouse-coords.tsv")
@@ -175,7 +180,8 @@ fn every_source_coordinate_snapshot_matches_ieee_and_padding_semantics() {
     assert_eq!(count, 1024);
 }
 
-#[test]
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
+#[cfg_attr(not(target_arch = "wasm32"), test)]
 fn every_source_wheel_operation_preserves_partial_accumulator() {
     let mut state = WheelState::default();
     let mut count = 0;
@@ -214,7 +220,8 @@ fn every_source_wheel_operation_preserves_partial_accumulator() {
     assert_eq!(count, 2522);
 }
 
-#[test]
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
+#[cfg_attr(not(target_arch = "wasm32"), test)]
 fn every_source_touch_operation_preserves_accumulator_and_cursor_output() {
     let mut state = WheelState::default();
     let mut count = 0;
@@ -263,7 +270,8 @@ fn geometry() -> MouseGeometry {
     }
 }
 
-#[test]
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
+#[cfg_attr(not(target_arch = "wasm32"), test)]
 fn upstream_clicked_cell() {
     let g = geometry();
     assert_eq!(g.coords(5.0, 10.0, 10.0, 10.0, false), Some([1.0, 1.0]));
@@ -272,7 +280,8 @@ fn upstream_clicked_cell() {
     assert_eq!(g.coords(11.0, 20.0, 10.0, 10.0, false), Some([2.0, 1.0]));
 }
 
-#[test]
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
+#[cfg_attr(not(target_arch = "wasm32"), test)]
 fn upstream_viewport_bounds() {
     let g = geometry();
     assert_eq!(g.coords(-1.0, -1.0, 10.0, 10.0, false), Some([1.0, 1.0]));

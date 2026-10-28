@@ -59,7 +59,7 @@ fn compare_corpus(corpus: &str, expected_count: usize, require_surrogates: bool)
             "coordinate mutation on row {index}"
         );
         // Encoding is independently callable upstream, even for rejected events.
-        let actual = service.encode_mouse_event(&event);
+        let actual = service.encode_mouse_event(&mut event);
         let expected = units(fields[15]);
         assert_eq!(actual, expected, "encoding row {index}: {row}");
         surrogate_outputs +=

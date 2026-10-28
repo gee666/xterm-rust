@@ -3,8 +3,8 @@
 
 const DOM_DELTA_PIXEL: f64 = 0.0;
 const DOM_DELTA_PAGE: f64 = 2.0;
-const TRACKPAD_THRESHOLD: f64 = 50.0;
-const TRACKPAD_MULTIPLIER: f64 = 0.3;
+pub const TRACKPAD_THRESHOLD: f64 = 50.0;
+pub const TRACKPAD_MULTIPLIER: f64 = 0.3;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub struct WheelInput {
@@ -77,14 +77,21 @@ impl WheelState {
             if input.delta_y.abs() < TRACKPAD_THRESHOLD {
                 amount *= TRACKPAD_MULTIPLIER;
             }
-            self.partial_scroll += amount;
-            amount = self.partial_scroll.abs().floor()
-                * if self.partial_scroll > 0.0 { 1.0 } else { -1.0 };
-            self.partial_scroll %= 1.0;
+            amount = self.accumulate_pixels(amount);
         } else if input.delta_mode == DOM_DELTA_PAGE {
             amount *= options.rows;
         }
         amount
+    }
+
+    /// Commit already-scaled pixels only after the DOM adapter finishes its
+    /// fallible, source-ordered property reads. No host callback runs here.
+    pub fn accumulate_pixels(&mut self, amount: f64) -> f64 {
+        self.partial_scroll += amount;
+        let whole =
+            self.partial_scroll.abs().floor() * if self.partial_scroll > 0.0 { 1.0 } else { -1.0 };
+        self.partial_scroll %= 1.0;
+        whole
     }
 
     pub fn touch_start(&mut self) {

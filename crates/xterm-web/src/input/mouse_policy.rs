@@ -117,6 +117,9 @@ impl MousePolicy {
             .borrow_mut()
             .consume_touch(translation_y, cell_height)
     }
+    pub fn consume_wheel_pixels(&self, amount: f64) -> f64 {
+        self.wheel.borrow_mut().accumulate_pixels(amount)
+    }
     pub fn consume_wheel(&self, input: WheelInput, routing: MouseRouting) -> f64 {
         self.wheel.borrow_mut().consume(
             input,

@@ -40,7 +40,7 @@ for (const protocol of ['NONE', 'X10', 'VT200', 'DRAG', 'ANY']) {
 const fixture = 'crates/xterm-core/tests/fixtures/mouse-raw-buttons.tsv';
 const text = rows.join('\n') + '\n';
 if (process.argv.includes('--generate')) writeFileSync(path.join(root, fixture), text);
-else if (readFileSync(path.join(root, fixture), 'utf8') !== text) throw new Error('raw mouse fixture drift');
+else if (readFileSync(path.join(root, fixture), 'utf8').replaceAll('\r\n', '\n') !== text) throw new Error('raw mouse fixture drift');
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 const hashes = Object.fromEntries(Object.keys(built.metafile.inputs).map(file =>
   [file, sha256(readFileSync(path.join(root, file)))]));
@@ -48,7 +48,8 @@ const directory = path.join(root, 'results/mouse-state');
 mkdirSync(directory, { recursive: true });
 writeFileSync(path.join(directory, 'raw-buttons-oracle.json'), JSON.stringify({
   node: process.version, platform: process.platform, esbuild: esbuild.version,
-  sourceHashes: hashes, buttons, rows: rows.length, fixture, fixtureSha256: sha256(text),
+  sourceHashes: hashes, buttons, rows: rows.length, fixture,
+  fixtureSha256: sha256(readFileSync(path.join(root, fixture))), canonicalSha256: sha256(text),
   scope: 'Raw signed/bitwise mouse button compatibility only; not browser routing or terminal equivalence.'
 }, null, 2) + '\n');
 console.log(JSON.stringify({ rows: rows.length, buttons, status: 'passed unchanged-source corpus check' }));
