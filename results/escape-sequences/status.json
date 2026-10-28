@@ -1,0 +1,21 @@
+{
+  "task": 216,
+  "sourceDeclarationsCompared": 67,
+  "groups": {
+    "C0": 34,
+    "C1": 32,
+    "C1ESCAPED": 1
+  },
+  "sourceStatus": "matched",
+  "fmt": "focused check passed",
+  "nativeTestsDeclared": 3,
+  "nativeTestsExecuted": 0,
+  "nativeStatus": "unrun pending >=1GiB headroom and controlled build slot",
+  "rootExport": "Chloe confirmed data::escape_sequences inline public export",
+  "notes": "A source-text match is not a native build/test or whole-port pass.",
+  "commands": [
+    "node scripts/escape-sequences-oracle.mjs",
+    "cargo test -p xterm-core --test escape_sequence_constants",
+    "cargo clippy -p xterm-core --test escape_sequence_constants -- -D warnings"
+  ]
+}
