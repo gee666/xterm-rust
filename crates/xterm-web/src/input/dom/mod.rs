@@ -4,6 +4,7 @@
 mod clipboard;
 mod composition;
 mod keyboard;
+pub mod mouse;
 mod timers;
 
 use std::cell::{Cell, RefCell};
@@ -13,7 +14,7 @@ use web_sys::{HtmlElement, HtmlTextAreaElement};
 
 use super::composition::{Composition, Textarea};
 use super::composition_geometry::CursorGeometry;
-use super::keyboard_dispatch::{KeyboardAction, KeyboardDispatch, KeyboardSnapshot};
+use super::keyboard_dispatch::{KeyboardAction, KeyboardDispatch, KeyboardReadHost};
 use crate::dom::BrowserDom;
 use crate::dom_listener::DomListener;
 use crate::utf16::{from_js_string, to_js_string};
@@ -32,7 +33,7 @@ pub struct InputOptions {
 #[derive(Clone, Debug)]
 pub struct OverlayLayout {
     pub cursor: CursorGeometry,
-    pub font_family: String,
+    pub font_family: Vec<u16>,
     pub font_size: f64,
 }
 
@@ -40,9 +41,8 @@ pub struct OverlayLayout {
 /// selection/render services. Callbacks may reenter the terminal. No input
 /// RefCell borrow is held across these calls. The core's data path enforces
 /// disableStdin, user-input ordering and scroll-on-input as upstream does.
-pub trait InputHost {
-    fn options(&self) -> InputOptions;
-    fn keyboard_snapshot(&self) -> KeyboardSnapshot;
+pub trait InputHost: mouse::MouseHost + KeyboardReadHost<Error = JsValue> {
+    fn options(&self) -> Result<InputOptions, JsValue>;
     fn custom_key_handler(&self, event: &web_sys::KeyboardEvent) -> Result<bool, JsValue>;
     /// Handles selection/scroll/cursor/onKey effects, not local DOM cancellation
     /// or engine data. InputBindings handles those before calling this method.
@@ -51,12 +51,12 @@ pub trait InputHost {
         event: Option<&web_sys::KeyboardEvent>,
         action: KeyboardAction<'_>,
     ) -> Result<(), JsValue>;
-    fn overlay_layout(&self) -> OverlayLayout;
-    fn data(&self, data: &[u16], user_input: bool);
-    fn has_selection(&self) -> bool;
-    fn selection_text(&self) -> Vec<u16>;
+    fn overlay_layout(&self) -> Result<OverlayLayout, JsValue>;
+    fn data(&self, data: &[u16], user_input: bool) -> Result<(), JsValue>;
+    fn has_selection(&self) -> Result<bool, JsValue>;
+    fn selection_text(&self) -> Result<Vec<u16>, JsValue>;
     fn sync_textarea(&self) -> Result<(), JsValue>;
-    fn right_click_select(&self, event: &web_sys::MouseEvent);
+    fn right_click_select(&self, event: &web_sys::MouseEvent) -> Result<(), JsValue>;
     fn report_error(&self, error: JsValue);
 }
 
@@ -77,6 +77,7 @@ struct State {
 pub struct InputBindings {
     state: Rc<State>,
     listeners: Vec<DomListener>,
+    mouse: mouse::MouseBindings,
 }
 
 impl InputBindings {
@@ -95,9 +96,11 @@ impl InputBindings {
             timers: TimerQueue::new(window),
             disposed: Cell::new(false),
         });
+        let mouse = mouse::MouseBindings::new(dom, state.host.clone())?;
         let mut bindings = Self {
             state,
             listeners: Vec::new(),
+            mouse,
         };
         clipboard::bind(&mut bindings, dom)?;
         composition::bind(&mut bindings)?;
@@ -121,8 +124,17 @@ impl InputBindings {
         self.state.composition.borrow().is_composing
     }
 
+    pub fn sync_mouse_options(&self) -> Result<(), JsValue> {
+        self.mouse.sync_options()
+    }
+
+    pub fn reset_mouse(&self) {
+        self.mouse.reset();
+    }
+
     pub fn dispose(&mut self) -> Result<(), JsValue> {
         self.state.disposed.set(true);
+        self.mouse.dispose()?;
         self.state.timers.clear();
         for listener in &mut self.listeners {
             listener.dispose()?;
@@ -181,16 +193,19 @@ fn listen(
     callback: impl Fn(&Rc<State>, web_sys::Event) -> Result<(), JsValue> + 'static,
 ) -> Result<(), JsValue> {
     let state = Rc::downgrade(&bindings.state);
-    bindings
-        .listeners
-        .push(DomListener::new(target, name, capture, move |event| {
+    bindings.listeners.push(DomListener::new_reentrant_fallible(
+        target,
+        name,
+        capture,
+        None,
+        move |event| {
             if let Some(state) = state.upgrade() {
                 if !state.disposed.get() {
-                    if let Err(error) = callback(&state, event) {
-                        state.host.report_error(error);
-                    }
+                    return callback(&state, event);
                 }
             }
-        })?);
+            Ok(())
+        },
+    )?);
     Ok(())
 }

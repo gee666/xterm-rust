@@ -1,3 +1,6 @@
+#[path = "input_mouse_host.rs"]
+mod mouse_host;
+
 use std::{
     cell::{Cell, RefCell},
     rc::Rc,
@@ -9,7 +12,7 @@ use xterm_web::{
     input::{
         composition_geometry::CursorGeometry,
         dom::{InputBindings, InputHost, InputOptions, OverlayLayout},
-        keyboard_dispatch::{KeyboardAction, KeyboardSnapshot},
+        keyboard_dispatch::{KeyboardAction, KeyboardReadHost, KeyboardSnapshot},
     },
 };
 
@@ -23,14 +26,21 @@ pub struct Host {
     pub veto: Cell<bool>,
     pub disabled: Cell<bool>,
     pub errors: RefCell<Vec<JsValue>>,
+    pub mouse: Rc<xterm_core::mouse_state::MouseStateService>,
+    pub on_key: RefCell<Option<Rc<dyn Fn()>>>,
+    pub data_error: RefCell<Option<JsValue>>,
+}
+
+impl KeyboardReadHost for Host {
+    type Error = JsValue;
+    fn snapshot(&self) -> Result<KeyboardSnapshot, JsValue> {
+        Ok(self.keyboard.get())
+    }
 }
 
 impl InputHost for Host {
-    fn options(&self) -> InputOptions {
-        self.options.get()
-    }
-    fn keyboard_snapshot(&self) -> KeyboardSnapshot {
-        self.keyboard.get()
+    fn options(&self) -> Result<InputOptions, JsValue> {
+        Ok(self.options.get())
     }
     fn custom_key_handler(&self, _: &KeyboardEvent) -> Result<bool, JsValue> {
         Ok(!self.veto.get())
@@ -41,10 +51,16 @@ impl InputHost for Host {
         action: KeyboardAction<'_>,
     ) -> Result<(), JsValue> {
         self.effects.borrow_mut().push(format!("{action:?}"));
+        if matches!(action, KeyboardAction::OnKey(_)) {
+            let callback = self.on_key.borrow().clone();
+            if let Some(callback) = callback {
+                callback();
+            }
+        }
         Ok(())
     }
-    fn overlay_layout(&self) -> OverlayLayout {
-        OverlayLayout {
+    fn overlay_layout(&self) -> Result<OverlayLayout, JsValue> {
+        Ok(OverlayLayout {
             cursor: CursorGeometry {
                 in_viewport: true,
                 x: 80,
@@ -55,23 +71,28 @@ impl InputHost for Host {
                 overlay_width: 0.0,
                 overlay_height: 0.0,
             },
-            font_family: "monospace".into(),
+            font_family: "monospace".encode_utf16().collect(),
             font_size: 15.0,
-        }
+        })
     }
-    fn data(&self, data: &[u16], user_input: bool) {
+    fn data(&self, data: &[u16], user_input: bool) -> Result<(), JsValue> {
+        if let Some(error) = self.data_error.borrow().clone() {
+            return Err(error);
+        }
         if !self.disabled.get() {
             self.data.borrow_mut().push((data.to_vec(), user_input));
         }
+        Ok(())
     }
-    fn has_selection(&self) -> bool {
-        !self.selection.borrow().is_empty()
+    fn has_selection(&self) -> Result<bool, JsValue> {
+        Ok(!self.selection.borrow().is_empty())
     }
-    fn selection_text(&self) -> Vec<u16> {
-        self.selection.borrow().clone()
+    fn selection_text(&self) -> Result<Vec<u16>, JsValue> {
+        Ok(self.selection.borrow().clone())
     }
-    fn right_click_select(&self, _: &MouseEvent) {
+    fn right_click_select(&self, _: &MouseEvent) -> Result<(), JsValue> {
         self.effects.borrow_mut().push("right-click-select".into());
+        Ok(())
     }
     fn sync_textarea(&self) -> Result<(), JsValue> {
         self.effects.borrow_mut().push("sync-textarea".into());

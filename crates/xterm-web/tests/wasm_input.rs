@@ -40,7 +40,12 @@ fn actual_clipboard_events_copy_selection_paste_once_and_stop_bubbling() {
     );
     setup.dom.element.dispatch_event(&copy).unwrap();
     assert!(copy.default_prevented());
-    assert_eq!(clipboard.get_data("text/plain").unwrap(), "selected 😀");
+    let copied = copy
+        .dyn_ref::<web_sys::ClipboardEvent>()
+        .unwrap()
+        .clipboard_data()
+        .unwrap();
+    assert_eq!(copied.get_data("text/plain").unwrap(), "selected 😀");
     clipboard.set_data("text/plain", "one\ntwo").unwrap();
     let paste = event(
         "ClipboardEvent",
@@ -112,7 +117,7 @@ fn context_menu_positions_focuses_and_selects_actual_textarea() {
     assert_eq!(setup.dom.textarea.selection_end().unwrap(), Some(14));
     assert_eq!(
         setup.dom.document.active_element().unwrap(),
-        setup.dom.textarea
+        web_sys::Element::from(setup.dom.textarea.clone())
     );
     assert_eq!(*setup.host.effects.borrow(), vec!["right-click-select"]);
 }

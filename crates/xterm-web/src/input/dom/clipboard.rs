@@ -15,13 +15,13 @@ pub(super) fn bind(bindings: &mut InputBindings, dom: &BrowserDom) -> Result<(),
         "copy",
         false,
         |state, event| {
-            if !state.host.has_selection() {
+            if !state.host.has_selection()? {
                 return Ok(());
             }
             let event: ClipboardEvent = event.dyn_into()?;
             // Upstream always prevents default, even when clipboardData is absent.
             if let Some(data) = event.clipboard_data() {
-                let text = to_js_string(&state.host.selection_text());
+                let text = to_js_string(&state.host.selection_text()?);
                 set_clipboard_data(&data, &text)?;
             }
             event.prevent_default();
@@ -39,7 +39,7 @@ pub(super) fn bind(bindings: &mut InputBindings, dom: &BrowserDom) -> Result<(),
             Ok(())
         })?;
     }
-    let firefox = bindings.state.host.options().is_firefox;
+    let firefox = bindings.state.host.options()?.is_firefox;
     listen(
         bindings,
         dom.element.as_ref(),
@@ -51,16 +51,16 @@ pub(super) fn bind(bindings: &mut InputBindings, dom: &BrowserDom) -> Result<(),
                 return Ok(());
             }
             move_textarea(state, &event)?;
-            if state.host.options().right_click_selects_word {
-                state.host.right_click_select(&event);
+            if state.host.options()?.right_click_selects_word {
+                state.host.right_click_select(&event)?;
             }
-            let selection = state.host.selection_text();
+            let selection = state.host.selection_text()?;
             set_value(&state.textarea, &selection)?;
             state.textarea.select();
             Ok(())
         },
     )?;
-    if bindings.state.host.options().is_linux {
+    if bindings.state.host.options()?.is_linux {
         listen(
             bindings,
             dom.element.as_ref(),
@@ -100,13 +100,13 @@ fn move_textarea(state: &State, event: &MouseEvent) -> Result<(), JsValue> {
 }
 
 pub(super) fn paste(state: &Rc<State>, text: &[u16]) -> Result<(), JsValue> {
-    let options = state.host.options();
+    let options = state.host.options()?;
     let text = super::super::clipboard::paste(
         text,
         options.bracketed_paste,
         options.ignore_bracketed_paste,
     );
-    state.host.data(&text, true);
+    state.host.data(&text, true)?;
     set_value(&state.textarea, &[])
 }
 

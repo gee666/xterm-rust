@@ -17,7 +17,9 @@ pub(super) fn bind(bindings: &mut InputBindings) -> Result<(), JsValue> {
         "compositionstart",
         false,
         |state, _| {
-            state.host.sync_textarea()?;
+            if !state.composition.borrow().is_composing {
+                state.host.sync_textarea()?;
+            }
             state
                 .composition
                 .borrow_mut()
@@ -79,7 +81,7 @@ pub(super) fn keydown(state: &Rc<State>, code: u32) -> Result<bool, JsValue> {
         state.overlay.class_list().remove_1("active")?;
     }
     if let Some(data) = data {
-        state.host.data(&data, true);
+        state.host.data(&data, true)?;
     }
     if let Some(action) = deferred {
         schedule(state, action)?;
@@ -101,7 +103,7 @@ fn schedule(state: &Rc<State>, action: Deferred) -> Result<(), JsValue> {
                     .borrow_mut()
                     .run_deferred(action, &snapshot);
                 if let Some(data) = data {
-                    state.host.data(&data, true);
+                    state.host.data(&data, true)?;
                 }
                 Ok::<_, JsValue>(())
             })();
@@ -116,7 +118,7 @@ pub(super) fn update_elements(state: &Rc<State>, recurse: bool) -> Result<(), Js
     if !state.composition.borrow().is_composing {
         return Ok(());
     }
-    let layout = state.host.overlay_layout();
+    let layout = state.host.overlay_layout()?;
     if layout.cursor.in_viewport {
         // Overlay bounds must be measured after its cursor/font styles are set.
         let cursor = layout.cursor;
@@ -135,7 +137,17 @@ pub(super) fn update_elements(state: &Rc<State>, recurse: bool) -> Result<(), Js
             ("top", format!("{}px", cursor.y as f64 * cursor.cell_height)),
             ("height", format!("{}px", cursor.cell_height)),
             ("line-height", format!("{}px", cursor.cell_height)),
-            ("font-family", layout.font_family),
+        ] {
+            style.set_property(key, &value)?;
+        }
+        let set_property = js_sys::Reflect::get(style.as_ref(), &JsValue::from_str("setProperty"))?
+            .dyn_into::<js_sys::Function>()?;
+        set_property.call2(
+            style.as_ref(),
+            &JsValue::from_str("font-family"),
+            &to_js_string(&layout.font_family),
+        )?;
+        for (key, value) in [
             ("font-size", format!("{}px", layout.font_size)),
             (
                 "max-width",

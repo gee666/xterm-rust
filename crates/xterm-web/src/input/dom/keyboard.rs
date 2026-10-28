@@ -3,7 +3,8 @@
 
 use super::{composition, listen, set_value, InputBindings, State};
 use crate::input::keyboard_dispatch::{
-    DispatchKeyEvent, KeyEventKind, KeyboardAction, KeyboardHost, KeyboardSnapshot, TextInputEvent,
+    DispatchKeyEvent, KeyEventKind, KeyboardAction, KeyboardHost, KeyboardReadHost,
+    KeyboardSnapshot, TextInputEvent,
 };
 use crate::utf16::from_js_string;
 use std::rc::Rc;
@@ -33,7 +34,8 @@ pub(super) fn bind(bindings: &mut InputBindings) -> Result<(), JsValue> {
                 },
                 kind,
                 repeat: event.repeat(),
-                alt_graph: event.get_modifier_state("AltGraph"),
+                // Read getModifierState only when the source asks for AltGraph.
+                alt_graph: false,
                 char_code: Some(event.char_code()),
                 which: Some(event.which()),
             };
@@ -87,12 +89,63 @@ struct Adapter<'a> {
     event: Option<&'a KeyboardEvent>,
 }
 
-impl KeyboardHost for Adapter<'_> {
+impl KeyboardReadHost for Adapter<'_> {
     type Error = JsValue;
-    fn snapshot(&self) -> KeyboardSnapshot {
-        self.state.host.keyboard_snapshot()
+    fn snapshot(&self) -> Result<KeyboardSnapshot, JsValue> {
+        self.state.host.snapshot()
     }
+    fn is_mac(&self) -> Result<bool, JsValue> {
+        self.state.host.is_mac()
+    }
+    fn is_windows(&self) -> Result<bool, JsValue> {
+        self.state.host.is_windows()
+    }
+    fn mac_option_is_meta(&self) -> Result<bool, JsValue> {
+        self.state.host.mac_option_is_meta()
+    }
+    fn scroll_on_user_input(&self) -> Result<bool, JsValue> {
+        self.state.host.scroll_on_user_input()
+    }
+    fn scroll_position(&self) -> Result<(u32, u32), JsValue> {
+        self.state.host.scroll_position()
+    }
+    fn rows(&self) -> Result<u32, JsValue> {
+        self.state.host.rows()
+    }
+    fn screen_reader_mode(&self) -> Result<bool, JsValue> {
+        self.state.host.screen_reader_mode()
+    }
+    fn use_kitty(&self) -> Result<bool, JsValue> {
+        self.state.host.use_kitty()
+    }
+    fn use_win32(&self) -> Result<bool, JsValue> {
+        self.state.host.use_win32()
+    }
+    fn evaluate_key_down(
+        &self,
+        event: &DispatchKeyEvent<'_>,
+    ) -> Result<xterm_core::keyboard::KeyboardResult, JsValue> {
+        self.state.host.evaluate_key_down(event)
+    }
+    fn evaluate_key_up(
+        &self,
+        event: &DispatchKeyEvent<'_>,
+    ) -> Result<Option<xterm_core::keyboard::KeyboardResult>, JsValue> {
+        self.state.host.evaluate_key_up(event)
+    }
+    fn alt_graph_state(&self, _: &DispatchKeyEvent<'_>) -> Result<bool, JsValue> {
+        let event = self
+            .event
+            .ok_or_else(|| js_sys::Error::new("Missing keyboard event"))?;
+        let method = js_sys::Reflect::get(event.as_ref(), &JsValue::from_str("getModifierState"))?
+            .dyn_into::<js_sys::Function>()?;
+        Ok(method
+            .call1(event.as_ref(), &JsValue::from_str("AltGraph"))?
+            .is_truthy())
+    }
+}
 
+impl KeyboardHost for Adapter<'_> {
     fn custom_key_handler(&self, _: &DispatchKeyEvent<'_>) -> Result<bool, JsValue> {
         self.state.host.custom_key_handler(
             self.event
@@ -121,9 +174,11 @@ impl KeyboardHost for Adapter<'_> {
                 set_value(&self.state.textarea, &[])?;
             }
             KeyboardAction::Focus => {
-                self.state.textarea.focus()?;
+                let options = web_sys::FocusOptions::new();
+                options.set_prevent_scroll(true);
+                self.state.textarea.focus_with_options(&options)?;
             }
-            KeyboardAction::Data { key, user_input } => self.state.host.data(key, user_input),
+            KeyboardAction::Data { key, user_input } => self.state.host.data(key, user_input)?,
             effect => self.state.host.keyboard_effect(self.event, effect)?,
         }
         Ok(())
