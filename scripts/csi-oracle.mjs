@@ -6,6 +6,7 @@ import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { hex, snapshot } from './terminal-snapshot.mjs';
+import { canonicalTsvRecords } from './tsv-records.mjs';
 const root = resolve(import.meta.dirname, '..');
 const require = createRequire(resolve(root, 'source_repo/package.json'));
 const { build } = require('esbuild');
@@ -68,7 +69,7 @@ for (const trace of traces) {
 const fixture = 'crates/xterm-core/tests/fixtures/csi-terminal.tsv';
 const contents = rows.join('\n') + '\n';
 if (process.argv.includes('--generate')) writeFileSync(resolve(root, fixture), contents);
-else assert.equal(readFileSync(resolve(root, fixture), 'utf8').replace(/\r\n/g, '\n'), contents, 'CSI source fixture drift');
+else assert.equal(canonicalTsvRecords(readFileSync(resolve(root, fixture), 'utf8')), contents, 'CSI source fixture drift');
 const report = { command: 'node scripts/csi-oracle.mjs' + (process.argv.includes('--generate') ? ' --generate' : ''),
   status: 'passed', node: process.version, platform: process.platform, seed: `0x${seed.toString(16)}`,
   commandFamilies: commands, directedTraces: commands.length * 5, seededTraces: 64,

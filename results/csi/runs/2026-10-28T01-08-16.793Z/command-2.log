@@ -1,0 +1,83 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+warning: function `fill_viewport_rows_owned` is never used
+  --> crates\xterm-core\src\buffer\screen_shared.rs:52:15
+   |
+52 | pub(super) fn fill_viewport_rows_owned(buffer: &mut Buffer, attr: Option<&AttributeData>) -> Result<(), BufferError> {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `xterm-core` (lib) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 3.09s
+     Running tests\terminal_csi_cursor.rs (target\debug\deps\terminal_csi_cursor-796676ba0395eb86.exe)
+
+running 16 tests
+test cursor_previous_line ... ok
+test scroll_margin_clamps_bottom ... ok
+test cursor_backward ... ok
+test scroll_margin_defaults ... ok
+test cursor_up ... ok
+test scroll_margin_homes_cursor ... ok
+test cursor_position ... ok
+test cursor_position_origin_and_scroll_margins ... ok
+test scroll_margin_rejects_top_at_or_below_bottom ... ok
+test vertical_absolute ... ok
+test cursor_next_line ... ok
+test cursor_forward_and_horizontal_relative ... ok
+test horizontal_absolute_aliases ... ok
+test cursor_down_and_vertical_relative ... ok
+test pending_wrap_edit_deletes_last_cell ... ok
+test clamp_positive_out_of_range_cursor ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\terminal_csi_differential.rs (target\debug\deps\terminal_csi_differential-70ea564ce48a174c.exe)
+
+running 1 test
+test every_csi_family_matches_real_terminal_cells_modes_and_events ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+     Running tests\terminal_csi_editing.rs (target\debug\deps\terminal_csi_editing-763154df94479496.exe)
+
+running 15 tests
+test delete_characters_repairs_wide_boundaries ... ok
+test scroll_up ... ok
+test scroll_left ... ok
+test repeat_without_predecessor ... ok
+test scroll_right ... ok
+test delete_lines_within_margins ... ok
+test intervening_sequence_resets_repeat ... ok
+test scroll_down ... ok
+test insert_lines_within_margins ... ok
+test repeat_preceding_grapheme ... ok
+test insert_characters_repairs_wide_boundaries ... ok
+test insert_and_delete_lines_outside_margins ... ok
+test insert_and_delete_characters_regression ... ok
+test delete_columns ... ok
+test insert_columns ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\terminal_csi_events.rs (target\debug\deps\terminal_csi_events-c931c1586296f0bc.exe)
+
+running 3 tests
+test scroll_up_reads_live_margins_after_delete_observers ... ok
+test deletion_failure_preserves_exact_callback_error_and_partial_state ... FAILED
+test insert_delete_lines_allow_buffer_observers_to_mutate_cursor ... ok
+
+failures:
+
+---- deletion_failure_preserves_exact_callback_error_and_partial_state stdout ----
+
+thread 'deletion_failure_preserves_exact_callback_error_and_partial_state' panicked at crates\xterm-core\tests\terminal_csi_events.rs:97:18:
+lost callback identity: Parse(Dispatch(Callback(Callback(BufferState(List(Dispatch(Callback(Custom { kind: Other, error: "deletion callback failed" }))))))))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    deletion_failure_preserves_exact_callback_error_and_partial_state
+
+test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-core --test terminal_csi_events`

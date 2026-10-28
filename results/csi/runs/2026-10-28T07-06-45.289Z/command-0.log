@@ -1,0 +1,68 @@
+
+
+  InputHandler
+    SL/SR/DECIC/DECDC
+      ✔ SL (scrollLeft)
+      ✔ SR (scrollRight)
+      ✔ insertColumns (DECIC)
+      ✔ deleteColumns (DECDC)
+    regression tests
+      ✔ insertChars
+      ✔ deleteChars
+    print
+      ✔ should repeat preceding grapheme cluster via REP
+      ✔ should not repeat when REP has no preceding join state
+      ✔ should not repeat after an intervening escape sequence
+    cursor positioning
+      ✔ cursor forward (CUF)
+      ✔ cursor backward (CUB)
+      ✔ cursor down (CUD)
+      ✔ cursor up (CUU)
+      ✔ cursor next line (CNL)
+      ✔ cursor previous line (CPL)
+      ✔ cursor character absolute (CHA)
+      ✔ cursor position (CUP)
+      ✔ cursor position (CUP) with DECOM and scroll margins
+      ✔ horizontal position absolute (HPA)
+      ✔ horizontal position relative (HPR)
+      ✔ vertical position absolute (VPA)
+      ✔ vertical position relative (VPR)
+      should clamp cursor into addressable range
+        ✔ CUF
+        ✔ CUB
+        ✔ CUD
+        ✔ CUU
+        ✔ CNL
+        ✔ CPL
+        ✔ CHA
+        ✔ CUP
+        ✔ HPA
+        ✔ HPR
+        ✔ VPA
+        ✔ VPR
+        ✔ DCH
+        ✔ DCH - should delete last cell
+        ✔ ECH
+        ✔ ECH - should delete last cell
+        ✔ ICH
+        ✔ ICH - should delete last cell
+    DECSTBM - scroll margins
+      ✔ should default to whole viewport
+      ✔ should clamp bottom
+      ✔ should only apply for top < bottom
+      ✔ should home cursor
+    scroll margins
+      ✔ scrollUp
+      ✔ scrollDown
+      ✔ insertLines - out of margins
+      ✔ insertLines - within margins
+      ✔ deleteLines - out of margins
+      ✔ deleteLines - within margins
+    should correctly reset cells taken by wide chars
+      ✔ ICH
+      ✔ DCH
+
+
+  52 passing (30ms)
+
+{"original":{"discovered":52,"executed":52,"passed":52,"failed":0,"skipped":0,"unrun":0},"migration":{"mapped":37,"partial":15,"unmapped":0,"negativeInternalCursorAssertionsUnrun":15}}

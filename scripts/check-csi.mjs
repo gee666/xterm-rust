@@ -17,7 +17,7 @@ function rustFiles(directory) {
   });
 }
 const tracked = ['Cargo.toml', 'Cargo.lock', '.cargo/config.toml', 'scripts/check-csi.mjs', 'scripts/csi-baseline.mjs',
-  'scripts/csi-oracle.mjs', 'scripts/terminal-snapshot.mjs', 'scripts/quality-process.mjs', 'scripts/quality-resources.mjs',
+  'scripts/csi-oracle.mjs', 'scripts/terminal-snapshot.mjs', 'scripts/tsv-records.mjs', 'scripts/quality-process.mjs', 'scripts/quality-resources.mjs',
   'crates/xterm-core/tests/support/terminal_snapshot.rs', 'crates/xterm-core/tests/fixtures/csi-terminal.tsv',
   ...['cursor','editing','events','differential'].map(name => `crates/xterm-core/tests/terminal_csi_${name}.rs`)]
   .map(path => resolve(root, path)).concat(rustFiles(resolve(root, 'crates/xterm-core/src')));
