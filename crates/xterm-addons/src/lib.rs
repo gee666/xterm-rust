@@ -12,6 +12,7 @@ pub mod native_status;
 pub mod native_utility;
 pub mod program_status;
 pub mod progress;
+pub mod search;
 pub mod status_terminal;
 pub mod web_fonts;
 pub mod web_link_provider;

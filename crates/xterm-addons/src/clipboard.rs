@@ -11,14 +11,42 @@ use std::pin::Pin;
 use std::rc::Rc;
 use xterm_core::lifecycle::{Disposable, DisposableHandle};
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct ClipboardError(pub String);
-impl fmt::Display for ClipboardError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str(&self.0)
+#[derive(Clone, Debug)]
+pub enum ClipboardError {
+    Message(String),
+    Host(Rc<dyn std::error::Error>),
+}
+impl ClipboardError {
+    pub fn host(error: impl std::error::Error + 'static) -> Self {
+        Self::Host(Rc::new(error))
     }
 }
-impl std::error::Error for ClipboardError {}
+impl PartialEq for ClipboardError {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Self::Message(a), Self::Message(b)) => a == b,
+            (Self::Host(a), Self::Host(b)) => Rc::ptr_eq(a, b),
+            _ => false,
+        }
+    }
+}
+impl Eq for ClipboardError {}
+impl fmt::Display for ClipboardError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Message(message) => f.write_str(message),
+            Self::Host(error) => error.fmt(f),
+        }
+    }
+}
+impl std::error::Error for ClipboardError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Host(error) => Some(error.as_ref()),
+            Self::Message(_) => None,
+        }
+    }
+}
 
 pub enum Completion<T> {
     Ready(Result<T, ClipboardError>),
@@ -89,7 +117,7 @@ impl ClipboardAddon {
         let target = Rc::downgrade(&terminal);
         let callback = Rc::new(move |data: &[u16]| {
             let Some(target) = target.upgrade() else {
-                return Completion::Ready(Err(ClipboardError(
+                return Completion::Ready(Err(ClipboardError::Message(
                     "clipboard terminal was dropped".into(),
                 )));
             };

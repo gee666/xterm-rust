@@ -1,11 +1,12 @@
     Blocking waiting for file lock on build directory
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
    Compiling xterm-addons v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons)
-    Finished `test` profile [unoptimized] target(s) in 4.01s
+    Finished `test` profile [unoptimized] target(s) in 6.01s
      Running tests\utility_attach.rs (target\debug\deps\utility_attach-32aad82f6649e41d.exe)
 
 running 4 tests
-test exact_socket_states_and_binary_utf16_masking ... ok
 test attachment_does_not_form_socket_terminal_ownership_cycle ... ok
+test exact_socket_states_and_binary_utf16_masking ... ok
 test source_attach_string_and_utf8_payload_methods ... ok
 test unidirectional_close_error_dispose_and_drop_remove_all_listeners ... ok
 
@@ -17,7 +18,16 @@ running 2 tests
 test clipboard_provider_rejections_are_not_success ... ok
 test clipboard_source_provider_order_and_exact_osc_replies ... ok
 
-test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.71s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.48s
+
+     Running tests\utility_live_terminal.rs (target\debug\deps\utility_live_terminal-7e65277f86c0d27d.exe)
+
+running 3 tests
+test clipboard_async_parser_pause_reply_precedes_next_da1 ... ok
+test attach_real_parser_keeps_utf8_split_across_messages_and_ansi ... ok
+test clipboard_real_osc_parser_chunk_boundaries_replies_and_disposal ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
 
      Running tests\utility_oracle.rs (target\debug\deps\utility_oracle-ebf39bd43ac8a712.exe)
 
@@ -26,5 +36,5 @@ test fit_matches_source_css_scrollbar_and_geometry ... ok
 test base64_matches_source_utf16_and_malformed_utf8 ... ok
 test web_link_window_and_utf16_mapping_match_source ... ok
 
-test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.80s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.61s
 

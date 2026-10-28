@@ -98,11 +98,11 @@ struct RejectProvider;
 impl ClipboardProvider for RejectProvider {
     fn read_text(&self, _: &[u16]) -> Completion<Vec<u16>> {
         Completion::Pending(Box::pin(async {
-            Err(ClipboardError("permission denied".into()))
+            Err(ClipboardError::Message("permission denied".into()))
         }))
     }
     fn write_text(&self, _: &[u16], _: &[u16]) -> Completion<()> {
-        Completion::Ready(Err(ClipboardError("permission denied".into())))
+        Completion::Ready(Err(ClipboardError::Message("permission denied".into())))
     }
 }
 #[test]
@@ -119,7 +119,10 @@ fn clipboard_provider_rejections_are_not_success() {
             Completion::Ready(value) => value,
             Completion::Pending(future) => settle(future),
         };
-        assert_eq!(result, Err(ClipboardError("permission denied".into())));
+        assert_eq!(
+            result,
+            Err(ClipboardError::Message("permission denied".into()))
+        );
         assert!(terminal.0.borrow().is_empty());
     }
 }

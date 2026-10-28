@@ -10,10 +10,10 @@ use xterm_core::lifecycle::{to_disposable, DisposableHandle};
 
 pub struct BrowserSocket(pub WebSocket);
 fn error(value: JsValue) -> AttachError {
-    AttachError::Adapter(format!("{value:?}"))
+    AttachError::host(crate::js_error::JsCallbackError(value))
 }
 fn js_error(error: AttachError) -> JsValue {
-    js_sys::Error::new(&error.to_string()).into()
+    crate::js_error::to_js_error(&error)
 }
 impl AttachSocket for BrowserSocket {
     fn use_array_buffer(&self) -> Result<(), AttachError> {

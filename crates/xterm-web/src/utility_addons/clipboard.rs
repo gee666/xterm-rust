@@ -16,7 +16,7 @@ impl BrowserClipboardProvider {
     }
 }
 fn error(value: JsValue) -> ClipboardError {
-    ClipboardError(format!("{value:?}"))
+    ClipboardError::host(crate::js_error::JsCallbackError(value))
 }
 impl ClipboardProvider for BrowserClipboardProvider {
     fn read_text(&self, _selection: &[u16]) -> Completion<Vec<u16>> {

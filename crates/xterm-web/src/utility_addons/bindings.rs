@@ -29,7 +29,7 @@ impl AttachAddon {
             Some(Reflect::get(&options, &"bidirectional".into())?.as_bool() != Some(false))
         };
         let addon = attach::AttachAddon::new(Rc::new(BrowserSocket(socket)), bidirectional)
-            .map_err(|e| js_sys::Error::new(&e.to_string()))?;
+            .map_err(|error| crate::js_error::to_js_error(&error))?;
         Ok(Self {
             addon,
             terminals: RefCell::default(),
@@ -44,7 +44,7 @@ impl AttachAddon {
         });
         self.addon
             .activate(host.clone())
-            .map_err(|e| js_sys::Error::new(&e.to_string()))?;
+            .map_err(|error| crate::js_error::to_js_error(&error))?;
         self.terminals.borrow_mut().push(host);
         Ok(())
     }
@@ -54,7 +54,7 @@ impl AttachAddon {
 }
 
 fn clipboard_error(error: JsValue) -> clipboard::ClipboardError {
-    clipboard::ClipboardError(format!("{error:?}"))
+    clipboard::ClipboardError::host(crate::js_error::JsCallbackError(error))
 }
 fn call(
     object: &JsValue,

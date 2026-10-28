@@ -15,7 +15,8 @@ impl AttachTerminal for BrowserAttachTerminal {
             SocketMessage::Text(data) => WriteData::Text(data),
             SocketMessage::Binary(data) => WriteData::Bytes(data),
         };
-        (self.writer)(data).map_err(|error| AttachError::Adapter(format!("{error:?}")))
+        (self.writer)(data)
+            .map_err(|error| AttachError::host(crate::js_error::JsCallbackError(error)))
     }
     fn on_data(&self, callback: DataCallback) -> DisposableHandle {
         self.native.on_data(callback)

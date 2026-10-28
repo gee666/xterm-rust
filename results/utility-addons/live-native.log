@@ -1,33 +1,14 @@
     Blocking waiting for file lock on build directory
-warning: associated function `clear_markers_shared` is never used
-  --> crates\xterm-core\src\buffer\screen_shared.rs:20:19
-   |
-11 | impl Buffer {
-   | ----------- associated function in this implementation
-...
-20 |     pub(crate) fn clear_markers_shared(
-   |                   ^^^^^^^^^^^^^^^^^^^^
-   |
-   = note: `#[warn(dead_code)]` on by default
-
-warning: function `clear_markers_on_line` is never used
-  --> crates\xterm-core\src\buffer\screen_shared.rs:44:15
-   |
-44 | pub(super) fn clear_markers_on_line(
-   |               ^^^^^^^^^^^^^^^^^^^^^
-
-warning: method `with_queued_parse` is never used
-  --> crates\xterm-core\src\headless\events.rs:67:12
-   |
-33 | impl Events {
-   | ----------- method in this implementation
-...
-67 |     pub fn with_queued_parse<T>(&self, action: impl FnOnce() -> T) -> T {
-   |            ^^^^^^^^^^^^^^^^^
-
-warning: `xterm-core` (lib) generated 3 warnings
    Compiling xterm-addons v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons)
-    Finished `test` profile [unoptimized] target(s) in 10.88s
+    Finished `test` profile [unoptimized] target(s) in 7.50s
+     Running tests\utility_clipboard.rs (target\debug\deps\utility_clipboard-7b3e0b82e3b33af3.exe)
+
+running 2 tests
+test clipboard_provider_rejections_are_not_success ... ok
+test clipboard_source_provider_order_and_exact_osc_replies ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.48s
+
      Running tests\utility_live_terminal.rs (target\debug\deps\utility_live_terminal-7e65277f86c0d27d.exe)
 
 running 3 tests

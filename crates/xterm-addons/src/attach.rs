@@ -31,13 +31,32 @@ pub enum SocketEvent {
     Error,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug)]
 pub enum AttachError {
     Connecting,
     Closed,
     UnexpectedState,
     Adapter(String),
+    Host(Rc<dyn std::error::Error>),
 }
+impl AttachError {
+    pub fn host(error: impl std::error::Error + 'static) -> Self {
+        Self::Host(Rc::new(error))
+    }
+}
+impl PartialEq for AttachError {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Self::Connecting, Self::Connecting)
+            | (Self::Closed, Self::Closed)
+            | (Self::UnexpectedState, Self::UnexpectedState) => true,
+            (Self::Adapter(a), Self::Adapter(b)) => a == b,
+            (Self::Host(a), Self::Host(b)) => Rc::ptr_eq(a, b),
+            _ => false,
+        }
+    }
+}
+impl Eq for AttachError {}
 
 impl fmt::Display for AttachError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -46,10 +65,18 @@ impl fmt::Display for AttachError {
             Self::Closed => f.write_str("Attach addon socket is closed"),
             Self::UnexpectedState => f.write_str("Unexpected socket state"),
             Self::Adapter(message) => f.write_str(message),
+            Self::Host(error) => error.fmt(f),
         }
     }
 }
-impl std::error::Error for AttachError {}
+impl std::error::Error for AttachError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Host(error) => Some(error.as_ref()),
+            _ => None,
+        }
+    }
+}
 
 pub type SocketCallback = Rc<dyn Fn(Option<SocketMessage>) -> Result<(), AttachError>>;
 pub type DataCallback = Rc<dyn Fn(&[u16]) -> Result<(), AttachError>>;

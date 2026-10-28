@@ -94,7 +94,7 @@ impl ClipboardTerminal for NativeUtilityTerminal {
     fn input(&self, data: &[u16], user: bool) -> Result<(), ClipboardError> {
         self.core
             .trigger_data_event(data, user)
-            .map_err(|error| ClipboardError(error.to_string()))
+            .map_err(ClipboardError::host)
     }
 }
 impl AttachTerminal for NativeUtilityTerminal {
