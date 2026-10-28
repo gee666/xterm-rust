@@ -54,7 +54,9 @@ fn buffer(b: &Buffer) -> String {
     result
 }
 pub fn snapshot(t: &CoreTerminal) -> String {
-    let s = t.state();
+    snapshot_state(&t.state())
+}
+pub fn snapshot_state(s: &xterm_core::terminal::TerminalState) -> String {
     let m = s.core.dec_private_modes.borrow();
     let a = &s.attributes;
     let normal = s.buffers.normal();
@@ -84,16 +86,19 @@ pub fn snapshot(t: &CoreTerminal) -> String {
 pub fn events(t: &mut CoreTerminal) -> String {
     t.drain_events()
         .into_iter()
-        .filter_map(|e| match e {
-            TerminalEvent::Bell => Some("B".to_owned()),
-            TerminalEvent::CursorMove => Some("C".to_owned()),
-            TerminalEvent::LineFeed => Some("L".to_owned()),
-            TerminalEvent::Scroll(y) => Some(format!("S{y}")),
-            TerminalEvent::Data(text) => Some(format!("D{}", hex(&text))),
-            TerminalEvent::TitleChange(text) => Some(format!("T{}", hex(&text))),
-            TerminalEvent::Render { start, end } => Some(format!("R{start}:{end}")),
-            _ => None,
-        })
+        .filter_map(|e| event(&e))
         .collect::<Vec<_>>()
         .join("/")
+}
+pub fn event(e: &TerminalEvent) -> Option<String> {
+    match e {
+        TerminalEvent::Bell => Some("B".to_owned()),
+        TerminalEvent::CursorMove => Some("C".to_owned()),
+        TerminalEvent::LineFeed => Some("L".to_owned()),
+        TerminalEvent::Scroll(y) => Some(format!("S{y}")),
+        TerminalEvent::Data(text) => Some(format!("D{}", hex(text))),
+        TerminalEvent::TitleChange(text) => Some(format!("T{}", hex(text))),
+        TerminalEvent::Render { start, end } => Some(format!("R{start}:{end}")),
+        _ => None,
+    }
 }
