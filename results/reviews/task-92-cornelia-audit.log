@@ -1,0 +1,46 @@
+{
+  "reviewer": "Cornelia",
+  "task": 92,
+  "status": "accepted",
+  "date": "2026-10-28T07:35:24.093Z",
+  "scope": "Original JavaScript unit baseline and evidence-pointer integrity only, not Rust/browser equivalence",
+  "sourceReview": [
+    "scripts/upstream-baseline.mjs",
+    "scripts/upstream-baseline-utils.mjs",
+    "scripts/upstream-baseline.test.mjs",
+    "scripts/upstream-registration.cjs",
+    "docs/upstream-baseline.md"
+  ],
+  "command": "node scripts/build-slot.mjs --owner Cornelia-review92 --lane native --wait-ms 300000 --timeout-ms 600000 -- node scripts/upstream-baseline.mjs",
+  "lease": "results/build-slots/1793172545894-37624-ffb59809-7595-4bda-a23d-9bebbc85c14e",
+  "baseline": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+  "reviewAuditNote": "Initial local audit expected TAP markers; Node 24 emitted the spec reporter. Only the audit format matcher changed; all six original guard tests passed.",
+  "counts": {
+    "discovered": 2460,
+    "executed": 2389,
+    "passed": 2389,
+    "failed": 0,
+    "pending": 71,
+    "skipped": 0,
+    "unrun": 0
+  },
+  "modules": {
+    "inventoried": 73,
+    "testBearing": 71,
+    "noRegisteredCases": [
+      "src/browser/TestUtils.test.ts",
+      "src/common/TestUtils.test.ts"
+    ]
+  },
+  "guards": {
+    "passed": 6,
+    "failed": 0
+  },
+  "hashes": {
+    "files": 776,
+    "beforeMismatches": 0,
+    "afterMismatches": 0,
+    "rawSha256": "03ef3be0a70380df45a7f834f83bb687a602347b436d16729c8a6544576055d7"
+  },
+  "finding": "The current owned wx pointer lock and runId completion guard prevent an older completion from replacing a newer failed/incomplete/passed pointer. Six guards and complete baseline reran successfully. Histories and intact source assertions are retained."
+}
