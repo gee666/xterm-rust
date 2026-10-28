@@ -11,4 +11,6 @@ Fresh final commands run locally on native Windows x64, rustc/cargo 1.85.1 and N
 
 Logs are core-services-tests.log, core-services-oracle.log, core-services-clippy.log and core-services-fmt.log in this directory. The failed-command fmt log records my initial nonexistent path mistake and is not an implementation defect. Earlier attempts hit concurrent engine/Event/Buffer API migrations; only the final successful rerun supports acceptance. Source/implementation hashes and operation digest are in results/core-services/summary.json and the captured oracle log.
 
+Rereview after reopening: Bharata found the source chain was not exposed through Rust Error::source. The patch adds only CoreError and LogError source forwarding, plus an identity traversal assertion. I independently compared the production diff against efd34c5 and reran all20 service tests and scoped warning-denied Clippy, both exit0. Logs are core-services-rereview-tests.log and core-services-rereview-clippy.log. This does not alter event/log ordering.
+
 No unsafe code or new dependency in these modules. Callback paths release borrows before sinks/listeners, preserve UTF16, and propagate actual callback errors. Actual terminal/browser integration is task68, not proved by this service acceptance. No claim of full xterm equivalence, workspace-wide checks or Linux/macOS/browser runtime evidence is made.
