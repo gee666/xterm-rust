@@ -4,6 +4,11 @@
 mod animation;
 #[path = "touch_events.rs"]
 mod events;
+#[path = "touch_reads.rs"]
+mod reads;
+#[path = "touch_targets.rs"]
+mod targets;
+use targets::Targets;
 
 use super::touch::{Inertia, TapCount, TouchData};
 use crate::{
@@ -30,21 +35,17 @@ thread_local! {
     static NO_TOUCH: DisposableHandle = Rc::new(xterm_core::lifecycle::NoopDisposable);
 }
 
-type TouchRecord = Rc<RefCell<TouchData<Option<EventTarget>>>>;
-struct Target {
-    id: u64,
-    element: HtmlElement,
-}
-
+type TouchRecord = Rc<RefCell<TouchData<JsValue>>>;
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+struct TouchId(u64);
 /// Share one context per document through RuntimeContext. Listener closures keep
 /// only Weak context references, and each registration token removes its own node.
 pub struct GestureContext {
     document: Document,
     touch_device: bool,
-    targets: RefCell<Vec<Target>>,
-    ignores: RefCell<Vec<Target>>,
-    active: RefCell<HashMap<i32, TouchRecord>>,
-    next_id: Cell<u64>,
+    targets: RefCell<Targets>,
+    ignores: RefCell<Targets>,
+    active: RefCell<HashMap<TouchId, TouchRecord>>,
     tap_count: RefCell<TapCount>,
     dispatched: Cell<bool>,
     listeners: RefCell<Vec<DomListener>>,
@@ -75,10 +76,9 @@ impl GestureContext {
         let context = Rc::new(Self {
             document,
             touch_device,
-            targets: RefCell::new(Vec::new()),
-            ignores: RefCell::new(Vec::new()),
+            targets: RefCell::new(Targets::default()),
+            ignores: RefCell::new(Targets::default()),
             active: RefCell::new(HashMap::new()),
-            next_id: Cell::new(0),
             tap_count: RefCell::new(TapCount::default()),
             dispatched: Cell::new(false),
             listeners: RefCell::new(Vec::new()),
@@ -114,52 +114,43 @@ impl GestureContext {
     }
 
     pub fn add_target(self: &Rc<Self>, element: &HtmlElement) -> Result<DisposableHandle, JsValue> {
-        self.register(element, false)
+        Ok(self.register(element, false))
     }
     pub fn ignore_target(
         self: &Rc<Self>,
         element: &HtmlElement,
     ) -> Result<DisposableHandle, JsValue> {
-        self.register(element, true)
+        Ok(self.register(element, true))
     }
     pub fn is_touch_device(&self) -> bool {
         self.touch_device
     }
 
-    fn register(
-        self: &Rc<Self>,
-        element: &HtmlElement,
-        ignored: bool,
-    ) -> Result<DisposableHandle, JsValue> {
+    fn register(self: &Rc<Self>, element: &HtmlElement, ignored: bool) -> DisposableHandle {
         if !self.touch_device {
-            return Ok(NO_TOUCH.with(Rc::clone));
+            return NO_TOUCH.with(Rc::clone);
         }
-        let id = self
-            .next_id
-            .get()
-            .checked_add(1)
-            .ok_or_else(|| error("Gesture registration limit exceeded"))?;
-        self.next_id.set(id);
         let entries = if ignored {
             &self.ignores
         } else {
             &self.targets
         };
-        entries.borrow_mut().push(Target {
-            id,
-            element: element.clone(),
-        });
+        let target = Rc::downgrade(&entries.borrow_mut().push(element.clone()));
         let weak = Rc::downgrade(self);
-        Ok(to_disposable(move || {
-            if let Some(context) = weak.upgrade() {
+        let removed = Cell::new(false);
+        to_disposable(move || {
+            if removed.replace(true) {
+                return;
+            }
+            if let (Some(context), Some(target)) = (weak.upgrade(), target.upgrade()) {
                 let entries = if ignored {
                     &context.ignores
                 } else {
                     &context.targets
                 };
-                entries.borrow_mut().retain(|entry| entry.id != id);
+                entries.borrow_mut().remove(&target);
             }
-        }))
+        })
     }
 
     pub fn dispose(&self) -> Result<(), JsValue> {
@@ -178,64 +169,54 @@ impl GestureContext {
         }
     }
 
-    fn event(&self, kind: &str, initial: Option<&EventTarget>) -> Result<Event, JsValue> {
+    fn event(&self, kind: &str, initial: Option<&JsValue>) -> Result<Event, JsValue> {
         let event = self.document.create_event("CustomEvent")?;
-        event.init_event_with_bubbles_and_cancelable(kind, false, true);
-        let value = initial.map_or(JsValue::UNDEFINED, |target| JsValue::from(target.clone()));
+        reads::function(event.as_ref(), "initEvent")?.call3(
+            event.as_ref(),
+            &kind.into(),
+            &JsValue::FALSE,
+            &JsValue::TRUE,
+        )?;
+        let value = initial.cloned().unwrap_or(JsValue::UNDEFINED);
         set(&event, "initialTarget", &value)?;
         number(&event, "tapCount", 0.0)?;
         Ok(event)
     }
 
-    fn event_for_touch(&self, kind: &str, initial: Option<&EventTarget>) -> Result<Event, JsValue> {
-        let event = self.event(kind, initial)?;
-        if initial.is_none() {
-            set(&event, "initialTarget", &JsValue::NULL)?;
+    fn dispatch(&self, event: &Event) -> Result<(), JsValue> {
+        if type_is(event, TAP)? {
+            let now = reads::tap_time()?;
+            let count = self.tap_count.borrow_mut().tap(now);
+            number(event, "tapCount", f64::from(count))?;
+        } else if type_is(event, CHANGE)? || type_is(event, CONTEXT_MENU)? {
+            self.tap_count.borrow_mut().reset();
         }
-        Ok(event)
-    }
-
-    fn dispatch(&self, event: &Event, initial: Option<&EventTarget>) -> Result<(), JsValue> {
-        match event.type_().as_str() {
-            TAP => {
-                let now = js_sys::Date::new_0().get_time();
-                let count = self.tap_count.borrow_mut().tap(now);
-                number(event, "tapCount", f64::from(count))?;
+        if !reads::field(event.as_ref(), "initialTarget")?.is_instance_of::<Node>() {
+            return Ok(());
+        }
+        let ignores = self.ignores.borrow().iter();
+        for target in ignores {
+            let initial = reads::field(event.as_ref(), "initialTarget")?;
+            if contains(&target.element, &initial)? {
+                return Ok(());
             }
-            CHANGE | CONTEXT_MENU => self.tap_count.borrow_mut().reset(),
-            _ => {}
         }
-        let Some(initial) = initial.and_then(|target| target.dyn_ref::<Node>()) else {
-            return Ok(());
-        };
-        if self
-            .ignores
-            .borrow()
-            .iter()
-            .any(|target| target.element.contains(Some(initial)))
-        {
-            return Ok(());
+        let candidates = self.targets.borrow().iter();
+        let mut targets = Vec::new();
+        for target in candidates {
+            let initial = reads::field(event.as_ref(), "initialTarget")?;
+            if !contains(&target.element, &initial)? {
+                continue;
+            }
+            let mut node = reads::field(event.as_ref(), "initialTarget")?;
+            let target_value = JsValue::from(target.element.clone());
+            let mut depth = 0;
+            while node.is_truthy() && node != target_value {
+                depth += 1;
+                node = reads::field(&node, "parentElement")?;
+            }
+            targets.push((depth, target.element.clone()));
         }
-        let mut targets: Vec<_> = self
-            .targets
-            .borrow()
-            .iter()
-            .filter_map(|target| {
-                if !target.element.contains(Some(initial)) {
-                    return None;
-                }
-                let mut node = Some(initial.clone());
-                let mut depth = 0;
-                while let Some(current) = node {
-                    if current.is_same_node(Some(target.element.as_ref())) {
-                        break;
-                    }
-                    depth += 1;
-                    node = current.parent_element().map(Into::into);
-                }
-                Some((depth, target.element.clone()))
-            })
-            .collect();
         targets.sort_by_key(|entry| entry.0);
         for (_, target) in targets {
             target.dispatch_event(event)?;
@@ -244,24 +225,29 @@ impl GestureContext {
         Ok(())
     }
 
-    fn inertia_targets(&self, target: Option<&EventTarget>) -> Vec<EventTarget> {
-        let Some(node) = target.and_then(|target| target.dyn_ref::<Node>()) else {
-            return Vec::new();
-        };
-        self.targets
+    fn inertia_targets(&self, initial: &JsValue) -> Result<Vec<EventTarget>, JsValue> {
+        let targets: Vec<_> = self
+            .targets
             .borrow()
             .iter()
-            .filter(|target| target.element.contains(Some(node)))
-            .map(|target| target.element.clone().into())
-            .collect()
+            .map(|target| target.element.clone())
+            .collect();
+        let mut matching = Vec::new();
+        for target in targets {
+            if initial.is_instance_of::<Node>() && contains(&target, initial)? {
+                matching.push(target.into());
+            }
+        }
+        Ok(matching)
     }
 
-    fn finish_batch(&self, event: &Event) {
+    fn finish_batch(&self, event: &Event) -> Result<(), JsValue> {
         if self.dispatched.get() {
-            event.prevent_default();
-            event.stop_propagation();
+            reads::call0(event.as_ref(), "preventDefault")?;
+            reads::call0(event.as_ref(), "stopPropagation")?;
             self.dispatched.set(false);
         }
+        Ok(())
     }
 
     fn inertia(
@@ -281,9 +267,21 @@ impl Drop for GestureContext {
     }
 }
 
+fn type_is(event: &Event, kind: &str) -> Result<bool, JsValue> {
+    Ok(reads::field(event.as_ref(), "type")? == JsValue::from_str(kind))
+}
+
+fn contains(target: &HtmlElement, node: &JsValue) -> Result<bool, JsValue> {
+    // Calling through the host function preserves thrown values and reentrant
+    // replacements without retaining a list borrow across an overridable method.
+    let callback: js_sys::Function =
+        js_sys::Reflect::get(target, &"contains".into())?.dyn_into()?;
+    Ok(callback.call1(target, node)?.is_truthy())
+}
+
 fn set(target: &Event, name: &str, value: &JsValue) -> Result<(), JsValue> {
     if !js_sys::Reflect::set(target.as_ref(), &name.into(), value)? {
-        return Err(error("Cannot set gesture event property"));
+        return Err(js_sys::TypeError::new("Cannot assign gesture event property").into());
     }
     Ok(())
 }
