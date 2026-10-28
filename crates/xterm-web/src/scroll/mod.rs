@@ -51,10 +51,42 @@ impl From<ScrollbarVisibility> for xterm_core::options::OptionValue {
         }
     }
 }
+#[cfg(target_arch = "wasm32")]
+pub mod abstract_scrollbar;
 pub mod animation;
+#[cfg(target_arch = "wasm32")]
+pub mod arrow;
+#[cfg(target_arch = "wasm32")]
+pub mod browser_scheduler;
+#[cfg(target_arch = "wasm32")]
+pub mod browser_visibility;
+#[cfg(target_arch = "wasm32")]
+pub mod element;
+#[cfg(target_arch = "wasm32")]
+pub mod environment;
+#[cfg(target_arch = "wasm32")]
+pub mod fast_dom_node;
+#[cfg(target_arch = "wasm32")]
+pub mod horizontal_scrollbar;
+#[cfg(target_arch = "wasm32")]
+pub mod iframe;
+#[cfg(target_arch = "wasm32")]
+pub(crate) mod interop;
 mod math;
+#[cfg(target_arch = "wasm32")]
+pub mod mouse_event;
+#[cfg(target_arch = "wasm32")]
+pub mod options;
+#[cfg(target_arch = "wasm32")]
+pub mod pointer_monitor;
 pub mod scrollable;
 pub mod scrollbar_state;
 pub mod state;
+#[cfg(target_arch = "wasm32")]
+pub mod vertical_scrollbar;
 pub mod visibility;
 pub mod wheel_classifier;
+#[cfg(target_arch = "wasm32")]
+pub mod wheel_event;
+#[cfg(target_arch = "wasm32")]
+pub mod widget;
