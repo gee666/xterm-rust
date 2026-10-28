@@ -1,0 +1,15 @@
+# Native ligature implementation contract
+
+Task119 uses a safe, bounds-checked SFNT cmap/GSUB reader and ports the supplied ligature table algorithms. It does not delegate shaping to JavaScript, consume an oracle-generated production tree or substitute general HarfBuzz behavior for the source's narrower and sometimes unusual GSUB semantics. The source opentype.js parser also accepts WOFF1, whose compressed tables require zlib decompression. Use the maintained pure-Rust miniz_oxide 0.8.9 with only with-alloc, licensed MIT OR Zlib OR Apache-2.0. Its bounded zlib decode uses the declared original table length rather than an arbitrary fallback or OS library. No general shaping dependency is added. The reader must validate every offset/count before allocating or indexing, preserve signed deltas, and return errors for invalid font input.
+
+The behavioral reference is the complete method matrix in `docs/ligature-shaping-acceptance.md`. A conventional OpenType implementation is not automatically equivalent, particularly for coverage range indices, fixed-start range segmentation, helper substitution selection and merge endpoints.
+
+Trees use arena indices for entries and child trees. This preserves shared entry identity and supports cycle-safe cloning/merging without Rc reference cycles or unsafe code. Integer glyph maps retain numeric glyph ordering. Source Map keys that are arrays have identity rather than value equality; ordered range-entry vectors preserve repeated equal intervals, while repeated individual glyph keys replace the prior value in its original position.
+
+Glyph sequences use signed integers because the source's JavaScript remainder can produce negative glyph IDs after a signed delta. Binary glyph IDs remain validated u16 values. Input iteration combines valid surrogate pairs and passes lone surrogate values to cmap lookup. Shaped ranges remain glyph positions as source does; only fallback ranges count raw UTF-16 positions.
+
+Public font results must preserve the source's mutable cached-result identity. Full result objects and their glyph/range arrays use explicit shared handles. No-group input/output arrays share identity, as the reference returns the same array. A cached range-only result cannot answer a later full-result request without recomputation. Callers of the browser joiner receive cloned range pairs instead, because that clone belongs to the addon wrapper, not the font cache.
+
+Cache capacity is an integer typed Rust input, measured in input UTF-16 code units. A future dynamic binding must preserve lru-cache constructor validation for noninteger/nonfinite values. Empty-key behavior and key sizes at/over the capacity must be compared against the actual installed upstream lru-cache rather than guessed.
+
+The first implementation will not be declared equivalent on the strength of four fonts alone. It needs synthetic table/graph branch fixtures, all original assertions, source hashes, directed malformed font cases and seeded differentials. Every unimplemented table, reader branch, ownership rule and integration remains unfinished work, not a successful fallback.
