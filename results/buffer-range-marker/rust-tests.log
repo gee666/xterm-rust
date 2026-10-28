@@ -1,21 +1,32 @@
+    Blocking waiting for file lock on build directory
    Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
-    Finished `test` profile [unoptimized] target(s) in 0.25s
+warning: unused import: `Disposable`
+ --> crates\xterm-core\src\headless\queued.rs:4:17
+  |
+4 |     lifecycle::{Disposable, DisposableHandle},
+  |                 ^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: `xterm-core` (lib) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 7.22s
      Running tests\buffer_range_marker.rs (target\debug\deps\buffer_range_marker-c0df4e0a547474b0.exe)
 
-running 13 tests
+running 14 tests
 test marker_clones_share_identity_line_and_state ... ok
 test marker_listener_failure_stops_cleanup_and_does_not_retry ... ok
-test marker_drop_releases_weak_resources_without_invoking_callbacks ... ok
-test marker_resource_traversal_is_live_and_has_no_callback_borrow ... ok
-test range_invalid_row_order ... ok
-test marker_listener_removal_uses_event_snapshot ... ok
-test marker_listener_and_resource_panics_preserve_invalidation_without_borrow_panics ... ok
-test range_multiple_lines ... ok
 test marker_trace_matches_javascript ... ok
+test marker_listener_removal_uses_event_snapshot ... ok
+test marker_propagates_original_callback_error_identity ... ok
+test marker_listener_and_resource_panics_preserve_invalidation_without_borrow_panics ... ok
+test marker_resource_traversal_is_live_and_has_no_callback_borrow ... ok
+test marker_drop_releases_weak_resources_without_invoking_callbacks ... ok
+test range_invalid_row_order ... ok
+test range_multiple_lines ... ok
 test range_next_line_out_of_width ... ok
 test range_signed_boundaries_and_exact_error ... ok
 test range_single_line ... ok
 test range_js_differential_fixture ... ok
 
-test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 

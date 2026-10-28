@@ -161,19 +161,42 @@ fn marker_resource_traversal_is_live_and_has_no_callback_borrow() {
 fn marker_listener_failure_stops_cleanup_and_does_not_retry() {
     let marker = Marker::new(2);
     let reached = Rc::new(Cell::new(false));
-    marker.on_dispose().try_subscribe(|_| Err(EmitError));
+    marker
+        .on_dispose()
+        .try_subscribe(|_| Err(EmitError::ListenerArrayCleared));
     let reached_event = Rc::clone(&reached);
     marker
         .on_dispose()
         .subscribe(move |_| reached_event.set(true));
     let reached_resource = Rc::clone(&reached);
     marker.register(to_disposable(move || reached_resource.set(true)));
-    assert_eq!(marker.dispose(), Err(EmitError));
+    assert_eq!(marker.dispose(), Err(EmitError::ListenerArrayCleared));
     assert!(marker.is_disposed());
     assert_eq!(marker.line(), -1);
     assert!(!reached.get());
     marker.dispose().unwrap();
     assert!(!reached.get());
+}
+
+#[test]
+fn marker_propagates_original_callback_error_identity() {
+    let marker = Marker::new(2);
+    let original = EmitError::callback(std::io::Error::other("callback sentinel"));
+    let callback_error = original.clone();
+    marker
+        .on_dispose()
+        .try_subscribe(move |_| Err(callback_error.clone()));
+    let returned = marker.dispose().unwrap_err();
+    assert_eq!(returned, original);
+    assert_eq!(
+        returned
+            .callback_ref::<std::io::Error>()
+            .unwrap()
+            .to_string(),
+        "callback sentinel"
+    );
+    assert!(marker.is_disposed());
+    assert_eq!(marker.line(), -1);
 }
 
 #[test]

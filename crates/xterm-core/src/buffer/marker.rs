@@ -8,13 +8,14 @@ use crate::event::{EmitError, Emitter, Event};
 use crate::lifecycle::{Disposable, DisposableHandle};
 use std::cell::{Cell, RefCell};
 use std::rc::{Rc, Weak};
-use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::Mutex;
 
 // Upstream's static counter is shared by every Marker, not by each Buffer.
-// Atomic allocation is the only process-global state and needs no object lock.
+// This fixed critical section avoids version-specific atomic update APIs and
+// contention retry loops. It contains no allocations or user callbacks.
 // JS increments cease to advance at 2^53. Preserve even that boundary behavior.
 const JS_ID_LIMIT: u64 = 1 << 53;
-static NEXT_ID: AtomicU64 = AtomicU64::new(1);
+static NEXT_ID: Mutex<u64> = Mutex::new(1);
 
 fn following_id(id: u64) -> u64 {
     (id + 1).min(JS_ID_LIMIT)
@@ -48,12 +49,17 @@ impl WeakMarker {
 
 impl Marker {
     pub fn new(line: i64) -> Self {
-        let id = NEXT_ID
-            .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |id| {
-                Some(following_id(id))
-            })
-            // The update closure always returns Some, so allocation cannot fail.
-            .expect("marker id update is never rejected");
+        let id = {
+            // No path while this guard is held can panic: the private counter
+            // stays <=2^53 and only a bounded integer update executes. Thus the
+            // lock cannot be poisoned; it is released before any allocation.
+            let mut next = NEXT_ID
+                .lock()
+                .expect("marker id critical section cannot panic");
+            let id = *next;
+            *next = following_id(id);
+            id
+        };
         Self {
             state: Rc::new(State {
                 id,
