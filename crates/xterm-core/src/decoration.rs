@@ -99,14 +99,16 @@ impl From<SortedListError> for DecorationError {
 }
 
 type Element = Rc<dyn Any>;
+/// Cached IColor object identity is retained across repeated getter calls.
+pub type DecorationColor = Rc<RefCell<Color>>;
 struct DecorationState {
     marker: Marker,
     options: Rc<RefCell<DecorationOptions>>,
     indexed_start: Cell<i64>,
     disposed: Cell<bool>,
     element: RefCell<Option<Element>>,
-    background: RefCell<Option<Option<Color>>>,
-    foreground: RefCell<Option<Option<Color>>>,
+    background: RefCell<Option<Option<DecorationColor>>>,
+    foreground: RefCell<Option<Option<DecorationColor>>>,
     on_render: Emitter<Element>,
     on_dispose: Emitter<()>,
     marker_listener: RefCell<Option<DisposableHandle>>,
@@ -184,21 +186,21 @@ impl Decoration {
     pub fn background_color(
         &self,
         canvas: impl FnOnce(&str) -> Option<[u8; 4]>,
-    ) -> Result<Option<Color>, color::css::UnsupportedCss> {
+    ) -> Result<Option<DecorationColor>, color::css::UnsupportedCss> {
         self.cached_color(&self.state.background, false, canvas)
     }
     pub fn foreground_color(
         &self,
         canvas: impl FnOnce(&str) -> Option<[u8; 4]>,
-    ) -> Result<Option<Color>, color::css::UnsupportedCss> {
+    ) -> Result<Option<DecorationColor>, color::css::UnsupportedCss> {
         self.cached_color(&self.state.foreground, true, canvas)
     }
     fn cached_color(
         &self,
-        cache: &RefCell<Option<Option<Color>>>,
+        cache: &RefCell<Option<Option<DecorationColor>>>,
         foreground: bool,
         canvas: impl FnOnce(&str) -> Option<[u8; 4]>,
-    ) -> Result<Option<Color>, color::css::UnsupportedCss> {
+    ) -> Result<Option<DecorationColor>, color::css::UnsupportedCss> {
         if let Some(value) = cache.borrow().as_ref() {
             return Ok(value.clone());
         }
@@ -211,7 +213,9 @@ impl Decoration {
             }
         };
         let parsed = match css.filter(|s| !s.is_empty()) {
-            Some(css) => Some(color::css::to_color_with_canvas(&css, canvas)?),
+            Some(css) => Some(Rc::new(RefCell::new(color::css::to_color_with_canvas(
+                &css, canvas,
+            )?))),
             None => None,
         };
         *cache.borrow_mut() = Some(parsed.clone());

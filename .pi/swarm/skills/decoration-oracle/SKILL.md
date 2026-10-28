@@ -14,6 +14,8 @@ cargo test -p xterm-core --release --test decoration_upstream --test decoration_
 cargo clippy -p xterm-core --test decoration_upstream --test decoration_differential --test decoration_edges -- -D warnings
 ```
 
+Default execution verifies deterministic fixture bytes without rewriting them. Use `node scripts/decoration-oracle.mjs --generate` explicitly to regenerate expected fixtures. A mismatch writes actual generated rows to tmp/decoration-oracle/actual.tsv and fails.
+
 The oracle bundles read-only original sources through the installed upstream esbuild and executes every original DecorationService.test.ts assertion unchanged under actual Mocha. It records ten original outcomes, source hashes, Node/platform metadata and fixture hashes in results/decoration/oracle.json. Temporary generated bundles are confined to tmp/decoration-oracle.
 
 Seed0xdec0a710 generates1024 ordered operations from the actual JavaScript service and buffer marker implementation. It compares every retained marker/decoration disposal state, sorted decoration sequence and240 ordered cell/layer lookups after every operation. Insert/delete actions wait for a real JavaScript microtask boundary. The Rust replay flushes the explicit portable microtask queue at the same boundary. Operations register zero/multi-height decorations, dispose, trim, insert, delete, reset and mutate layers. Never edit fixture expected states by hand to hide a mismatch.

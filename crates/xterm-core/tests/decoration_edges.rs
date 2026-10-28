@@ -120,17 +120,19 @@ fn lazy_colors_cache_absence_success_and_retry_failed_parse() {
     d.options().borrow_mut().foreground_color = Some("bad-color".into());
     assert!(d.foreground_color(|_| None).is_err());
     d.options().borrow_mut().foreground_color = Some("#123456".into());
-    assert_eq!(
-        d.foreground_color(|_| None).unwrap().unwrap().rgba,
-        0x123456ff
-    );
+    let first = d.foreground_color(|_| None).unwrap().unwrap();
+    assert_eq!(first.borrow().rgba, 0x123456ff);
     d.options().borrow_mut().foreground_color = Some("#ffffff".into());
+    let second = d
+        .foreground_color(|_| panic!("success cached"))
+        .unwrap()
+        .unwrap();
+    assert_eq!(second.borrow().rgba, 0x123456ff);
+    assert!(Rc::ptr_eq(&first, &second));
+    first.borrow_mut().rgba = 42;
     assert_eq!(
-        d.foreground_color(|_| panic!("success cached"))
-            .unwrap()
-            .unwrap()
-            .rgba,
-        0x123456ff
+        d.foreground_color(|_| None).unwrap().unwrap().borrow().rgba,
+        42
     );
 }
 #[test]
