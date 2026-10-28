@@ -128,6 +128,11 @@ impl<T: Clone> CircularList<T> {
         self.storage.borrow().get_number(index)
     }
 
+    /// JavaScript-number assignment, including fractional and NaN properties.
+    pub fn set_number(&self, index: f64, value: Option<T>) -> Result<(), CircularListError> {
+        self.storage.borrow_mut().set_number(index, value)
+    }
+
     /// Unordered snapshot of materialized slots, including stale/negative ones.
     /// Cost follows stored values, not capacity. Rc elements retain identity.
     pub fn stored_values(&self) -> Result<Vec<T>, CircularListError> {
@@ -182,12 +187,18 @@ impl<T: Clone> CircularList<T> {
         delete_count: usize,
         items: &[T],
     ) -> Result<(), CircularListError> {
-        if start > self.len() || delete_count > self.len() - start {
-            return Err(CircularListError::InvalidRange);
-        }
-        self.len()
+        let remaining = self
+            .len()
+            .checked_sub(delete_count)
+            .ok_or(CircularListError::InvalidRange)?;
+        remaining
             .checked_add(items.len())
             .ok_or(CircularListError::SizeOverflow)?;
+        if !items.is_empty() {
+            start
+                .checked_add(items.len() - 1)
+                .ok_or(CircularListError::SizeOverflow)?;
+        }
         if delete_count != 0 {
             for index in start..self.len() - delete_count {
                 self.set(index, self.get(index + delete_count))?;
@@ -198,6 +209,11 @@ impl<T: Clone> CircularList<T> {
                 amount: delete_count,
             })?;
         }
+        // Source permits insertion beyond length. Cached terminal rows can
+        // become out of range when a deletion observer resets the buffers.
+        self.len()
+            .checked_add(items.len())
+            .ok_or(CircularListError::SizeOverflow)?;
         for index in (start..self.len()).rev() {
             self.set(index + items.len(), self.get(index))?;
         }

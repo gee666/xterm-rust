@@ -16,6 +16,8 @@ Native cache roots are released when fire returns, errors or unwinds. A listener
 
 ## Binding use
 
+For optional disposable containers, use `register_with_context` and its `EventRegistration { handle, collect }` result. Late direct/mapped emitter subscriptions return a no-op with collect=false; any always returns a collected group, even for zero or disposed sources. Inspect or mutate a supplied container only when collect is true. The ordinary context-aware subscriber still returns only its handle for callers without containers.
+
 Create one `DispatchKey<JsValue>` beside the cached callable for an event getter. Each registration uses the context-aware subscriber. Convert with memoize_with or try_memoize_with, then pass the referenced JsValue to the actual callback. All listeners using that key see the same JavaScript object and earlier property mutations. Do not allocate a fresh key per listener. Returning an existing class/view object from the converter preserves its existing identity naturally.
 
 Cache cleanup follows the dispatch frame, not the lifetime of the event function. No last-payload field or deferred timer is needed. Arbitrary JS callback failures remain wrapped by the browser-owned JsCallbackError inside EmitError and are recovered through the standard Error::source chain.
@@ -24,4 +26,4 @@ Cache cleanup follows the dispatch frame, not the lifetime of the event function
 
 `tests/event_context.rs` covers shared mutable results, no retained cache roots after fire, nested isolation/restoration, separate converter keys, cleanup after error/panic, any/forward origin sharing, per-map output contexts, None filtering, failed-conversion recovery and recursive memoization without a borrow conflict. Existing Event/CircularList source baselines and differential traces must remain green.
 
-The WASM consumers must additionally assert `===`, mutation visibility across listeners, nested event ordering and no stale payload in progress/onResize tests. Those are integration obligations under tasks 31/164, not established by the native fake-object tests alone. Implementation and tests are source-only during the shared disk pause and require actual execution plus independent review before acceptance.
+The WASM consumers must additionally assert `===`, mutation visibility across listeners, nested event ordering and no stale payload in progress/onResize tests. Those are integration obligations under tasks 31/164, not established by the native fake-object tests alone. The current component run passed 96 Rust tests, including eight context and six late-container cases, plus 26 original tests, 25 directed source checks and 30,055 differential states/traces. Actual WASM consumers and independent review remain required.

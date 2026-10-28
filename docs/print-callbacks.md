@@ -17,6 +17,6 @@ Task 153 ports `source_repo/src/common/InputHandler.ts` print and REP behavior t
 
 ## Verification
 
-`tests/charset_terminal.rs::callback_observes_pre_write_cells_and_map_snapshot_matches_source` consumes the paired source callback fixture from task 82. The existing 402 charset engine snapshots and CSI/REP suite must continue passing. Add directed provider-reentry, callback-error, attribute-target/reset and mode-snapshot cases. Run rustfmt, scoped warning-free Clippy and real terminal regressions after the disk build pause lifts. Keep each command and its current source hashes in results/print-callbacks/.
+`tests/charset_terminal.rs::callbacks_observe_pre_write_cells_and_live_captured_map_identity` consumes the paired source callback fixture from task 82. The existing 402 charset engine snapshots and CSI/REP suite must continue passing. Add directed provider-reentry, callback-error, attribute-target/reset and mode-snapshot cases. Run rustfmt, scoped warning-free Clippy and real terminal regressions after the disk build pause lifts. Keep each command and its current source hashes in results/print-callbacks/.
 
-The print rewrite is source-only and unrun during the shared disk pause. It is not accepted proof until the paired fixtures, native checks and independent review execute. Task 168 checks the existing lossless accessibility/browser path; the earlier suspicion that the event used scalar-only String was corrected after inspecting the actual Vec<u16> type.
+The five private provider/attribute/error/REP tests passed. Timur independently checked the source and passed 18 integration tests, including 402 ordered-state profiles and six callback profiles. Task 153 is accepted. This is scoped native proof, not complete terminal or browser equivalence.

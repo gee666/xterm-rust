@@ -9,7 +9,7 @@ Reference files are `source_repo/src/common/{Event,CircularList}.ts` and their u
 - E1.03: Registering the same callback twice creates independent entries. Disposing one does not remove the other. Repeated handle disposal does not unregister a different entry.
 - E1.04: Capture the receiver instead of `thisArgs`; state changes target that same receiver. No deep copy of an event payload or receiver is introduced.
 - E1.05: Discarding a subscription handle does not remove the listener. Keeping a handle after emitter destruction does not leak a listener or panic on disposal.
-- E1.06: A handle added to a disposable vector or store is the exact returned object. Disposing either container unregisters it. Registering into an already disposed store unregisters immediately.
+- E1.06: A collected handle is the exact returned object. Container disposal unregisters it; an already disposed store unregisters immediately. A disposed emitter returns before touching supplied containers, including through map. Any still collects its aggregate for empty/disposed sources. See docs/reviews/event-late-collection.md.
 - E1.07: Emitter disposal is idempotent. It clears listeners, prevents future firing, and makes subsequent registration return a safe, repeatably disposable empty subscription.
 
 ## Event traversal and errors, E2
@@ -37,7 +37,7 @@ Reference files are `source_repo/src/common/{Event,CircularList}.ts` and their u
 - L1.02: Push below capacity extends length. Push at capacity overwrites the oldest slot, advances the start index, emits exactly one trim and leaves length capped.
 - L1.03: `get` and `set` wrap independently of logical length. Undefined slots stay absent. `pop` decrements length but does not clear the stale backing slot.
 - L1.04: `recycle` errors before any mutation when not full. When full, it advances first, emits trim, then reads the recycled last element. Shared mutable element identity survives copies/recycling with `Rc` storage.
-- L1.05: Cyclic-index arithmetic cannot overflow even for large representable indexes. The maximum source capacity, 4,294,967,295, must not cause eager capacity-sized allocation. Signed indexing preserves negative JavaScript array-property slots and unnormalized trim/shift/splice starts. `get_number` performs f64 start+index before remainder, including -0, NaN, infinities, subnormal inputs and rounding beyond 2^53.
+- L1.05: Cyclic-index arithmetic cannot overflow even for large representable indexes. The maximum source capacity, 4,294,967,295, must not cause eager capacity-sized allocation. Signed indexing preserves negative JavaScript array-property slots and unnormalized trim/shift/splice starts. `get_number` performs f64 start+index before remainder, including -0, NaN, infinities, subnormal inputs and rounding beyond 2^53. `set_number` preserves named fractional and NaN properties; both infinities access the NaN remainder property.
 
 ## Capacity and raw length, L2
 
@@ -72,7 +72,7 @@ Reference files are `source_repo/src/common/{Event,CircularList}.ts` and their u
 
 ## Typed boundaries and browser mapping, B1
 
-- B1.01: Document every Rust representation change. Positive capacity, usize length/index and validated splice ranges differ from degenerate JS states such as negative length after empty pop. Tests must assert the rejection without claiming those JS states are equivalent.
+- B1.01: Document every Rust representation change. Positive capacity, usize length/index and deletion counts that do not produce negative lengths differ from degenerate JS states such as negative length after empty pop. Tests must assert the rejection without claiming those JS states are equivalent.
 - B1.02: The browser binding must retain original callable signatures/errors wherever these internal contracts are observable through terminal behavior. Numeric conversion must reject nonfinite, fractional and out-of-range values before mutation where the original terminal does.
 - B1.03: Keep explicit unfinished status for any observable mismatch. A documented difference is not permission to claim full equivalence.
 
@@ -82,7 +82,7 @@ Run `node scripts/check-events-and-circular-list.mjs`, `cargo test -p xterm-core
 
 The baseline has seven Event tests and nineteen CircularList tests containing 95 original assertions. Preserve the assertion bodies and source hashes. Current trace seed is `0xc1ac01a7`; compare every raw/cyclic slot, length, capacity, fullness, result/error, ordered event payload and callback-time snapshot across 20,047 circular states and 10,008 event traces. Signed/f64 directed prefixes are included. Retain the failing operation prefix starting at the most recent reset as a replayable counterexample. Record exact commands, versions, source/harness hashes, counts and independent review under `results/events-circular-list/`.
 
-The expanded scoped suite requires 83 Rust tests and 12 paired directed source checks. The last observed pre-pause pass was 74 tests; dispatch-context and stored-slot additions remain unrun during the shared disk pause. This count is a requirement, not a claim that the added cases passed. Paired source checks run in addition to the 26 unchanged upstream tests. This covers sparse source-maximum capacity, deterministic failed-reserve atomicity, cached event identity, explicit-only subscription groups, concrete callback causes, signed/f64 indexing, shared list identity and reentrant mutation/error states. `--isolated` compiles the exact utility modules into small files under tmp/ when unrelated in-flight workspace code fails; its separate report never counts as a workspace pass. Native Windows utility checks do not prove Linux/macOS, browser/WASM or complete terminal equivalence. Integrated Buffer/marker and browser obligations remain in tasks 27, 31, 122 and 130.
+The current component run passed 96 Rust tests and 25 directed source checks. Source checks run in addition to the 26 unchanged upstream tests. This covers sparse source-maximum capacity, deterministic failed-reserve atomicity, cached event identity, explicit-only subscription groups, concrete callback causes, signed/f64 indexing, shared list identity and reentrant mutation/error states. `--isolated` compiles the exact utility modules into small files under tmp/ when unrelated in-flight workspace code fails; its separate report never counts as a workspace pass. Native Windows utility checks do not prove Linux/macOS, browser/WASM or complete terminal equivalence. Integrated Buffer/marker and browser obligations remain in tasks 27, 31, 122 and 130.
 
 ### Named regression mapping
 
@@ -95,7 +95,7 @@ The expanded scoped suite requires 83 Rust tests and 12 paired directed source c
 | E3.01-E3.06 | mapped/any/forward/initial-value tests in event/event_edges/event_errors; `tests/lifecycle_explicit.rs`; paired source utility checks |
 | L1.01-L1.04 | 19 faithful cases in `tests/circular_list.rs`, recycle shared-identity test |
 | L1.05/L2.01-L2.05 | `tests/circular_list_edges.rs` sparse limits, resize repetition/holes, signed/f64 arithmetic, failed allocation; all-slot oracle snapshots |
-| L3.01-L3.05/L4.01-L4.04 | faithful tests, per-trim snapshot and zero-count-invalid-argument cases; 20,047 operation states |
+| L3.01-L3.05/L4.01-L4.04 | faithful tests, sparse/tail-span cases in circular_list_splice.rs, per-trim snapshots; 20,047 operation states |
 | L5.01-L5.04 | callback-time oracle snapshots, directed reentrant source/Rust tests, partial-error states and shared-owner-borrow regression |
 | L5.05/B1.02 | actual Buffer/service and browser integration tasks, not satisfied by this utility suite |
 | B1.01/B1.03 | module rustdoc, report differences, explicit invalid-boundary tests; overall status remains NOT PROVEN |

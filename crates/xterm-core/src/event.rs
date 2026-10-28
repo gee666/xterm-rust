@@ -70,8 +70,18 @@ mod dispatch;
 pub use dispatch::{DispatchContext, DispatchKey};
 
 type Callback<T> = Rc<dyn Fn(&T, &DispatchContext) -> Result<(), EmitError>>;
-type Listeners<T> = Rc<RefCell<Vec<Callback<T>>>>;
-type Subscribe<T> = dyn Fn(Callback<T>) -> DisposableHandle;
+struct Listener<T> {
+    callback: Callback<T>,
+}
+type Listeners<T> = Rc<RefCell<Vec<Rc<Listener<T>>>>>;
+type Subscribe<T> = dyn Fn(Callback<T>) -> EventRegistration;
+
+/// Registration result for adapters that implement optional disposable lists.
+/// A disposed emitter returns an uncollected no-op; any still collects its group.
+pub struct EventRegistration {
+    pub handle: DisposableHandle,
+    pub collect: bool,
+}
 
 /// A callable event registration contract, including mapped or combined events.
 pub struct Event<T> {
@@ -93,10 +103,14 @@ impl<T: 'static> Event<T> {
     }
 
     pub fn subscribe(&self, listener: impl Fn(&T) + 'static) -> DisposableHandle {
-        self.try_subscribe(move |value| {
+        self.register_listener(listener).handle
+    }
+
+    fn register_listener(&self, listener: impl Fn(&T) + 'static) -> EventRegistration {
+        (self.subscribe)(Rc::new(move |value, _| {
             listener(value);
             Ok(())
-        })
+        }))
     }
 
     /// Fallible listeners propagate another emitter's synchronous dispatch error.
@@ -113,16 +127,30 @@ impl<T: 'static> Event<T> {
         &self,
         listener: impl Fn(&T, &DispatchContext) -> Result<(), EmitError> + 'static,
     ) -> DisposableHandle {
+        self.register_with_context(listener).handle
+    }
+
+    /// Preserve source collection side effects for browser-managed containers.
+    pub fn register_with_context(
+        &self,
+        listener: impl Fn(&T, &DispatchContext) -> Result<(), EmitError> + 'static,
+    ) -> EventRegistration {
         (self.subscribe)(Rc::new(listener))
     }
 
-    /// The returned handle and the store refer to the same subscription.
+    /// Collected registrations use the exact returned handle. A disposed
+    /// emitter leaves the store untouched, matching its early source return.
     pub fn subscribe_in(
         &self,
         store: &DisposableStore,
         listener: impl Fn(&T) + 'static,
     ) -> DisposableHandle {
-        store.add(self.subscribe(listener))
+        let entry = self.register_listener(listener);
+        if entry.collect {
+            store.add(entry.handle)
+        } else {
+            entry.handle
+        }
     }
 
     /// JavaScript's disposable array is represented by an owned handle vector.
@@ -131,9 +159,11 @@ impl<T: 'static> Event<T> {
         disposables: &mut Vec<DisposableHandle>,
         listener: impl Fn(&T) + 'static,
     ) -> DisposableHandle {
-        let handle = self.subscribe(listener);
-        disposables.push(Rc::clone(&handle));
-        handle
+        let entry = self.register_listener(listener);
+        if entry.collect {
+            disposables.push(Rc::clone(&entry.handle));
+        }
+        entry.handle
     }
 
     pub fn map<O: 'static>(&self, map: impl Fn(&T) -> O + 'static) -> Event<O> {
@@ -148,12 +178,12 @@ impl<T: 'static> Event<T> {
         Event {
             subscribe: Rc::new(move |listener| {
                 let map = Rc::clone(&map);
-                source.try_subscribe(move |value| {
+                (source.subscribe)(Rc::new(move |value, _| {
                     if let Some(mapped) = map(value) {
                         listener(&mapped, &DispatchContext::new())?;
                     }
                     Ok(())
-                })
+                }))
             }),
         }
     }
@@ -181,9 +211,12 @@ impl<T: 'static> Event<T> {
             subscribe: Rc::new(move |listener| {
                 let store = Rc::new(DisposableStore::new_explicit());
                 for event in &events {
-                    store.add((event.subscribe)(Rc::clone(&listener)));
+                    store.add((event.subscribe)(Rc::clone(&listener)).handle);
                 }
-                store
+                EventRegistration {
+                    handle: store,
+                    collect: true,
+                }
             }),
         }
     }
@@ -229,13 +262,17 @@ impl<T: 'static> Emitter<T> {
         Event {
             subscribe: Rc::new(move |listener| {
                 if state.disposed.get() {
-                    return Rc::new(crate::lifecycle::NoopDisposable);
+                    return EventRegistration {
+                        handle: Rc::new(crate::lifecycle::NoopDisposable),
+                        collect: false,
+                    };
                 }
+                let listener = Rc::new(Listener { callback: listener });
                 let mut listeners = state.listeners.borrow().borrow().clone();
                 listeners.push(Rc::clone(&listener));
                 *state.listeners.borrow_mut() = Rc::new(RefCell::new(listeners));
                 let weak = Rc::downgrade(&state);
-                to_disposable(move || {
+                let handle = to_disposable(move || {
                     if let Some(state) = weak.upgrade() {
                         let mut listeners = state.listeners.borrow().borrow().clone();
                         if let Some(index) = listeners
@@ -246,7 +283,11 @@ impl<T: 'static> Emitter<T> {
                             *state.listeners.borrow_mut() = Rc::new(RefCell::new(listeners));
                         }
                     }
-                })
+                });
+                EventRegistration {
+                    handle,
+                    collect: true,
+                }
             }),
         }
     }
@@ -268,7 +309,7 @@ impl<T: 'static> Emitter<T> {
                 .get(index)
                 .cloned()
                 .ok_or(EmitError::ListenerArrayCleared)?;
-            listener(value, context)?;
+            (listener.callback.as_ref())(value, context)?;
         }
         Ok(())
     }

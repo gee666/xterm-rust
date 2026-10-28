@@ -3,19 +3,32 @@
 import assert from 'node:assert';
 import { stripTypeScriptTypes } from 'node:module';
 import { createHash } from 'node:crypto';
-import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
+import { readFileSync, mkdirSync, writeFileSync, existsSync, copyFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import vm from 'node:vm';
 import { directedChecks } from './events-circular-directed.mjs';
+import { createEvidenceRun, persistEvidence } from './upstream-baseline-utils.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const directory = path.join(root, 'results/events-circular-list');
-mkdirSync(directory, { recursive: true });
+const baseDirectory = path.join(root, 'results/events-circular-list');
+const sourceOnly = process.argv.includes('--source-only');
+const evidenceRoot = sourceOnly ? path.join(baseDirectory, 'source-baseline') : baseDirectory;
+const scope = sourceOnly ? 'Source-only baseline; Rust and browser checks UNRUN' : 'Event/CircularList utilities; browser and full terminal equivalence NOT PROVEN';
+const attempt = createEvidenceRun(evidenceRoot, { scope });
+const directory = attempt.directory;
+const snapshot = path.join(baseDirectory, sourceOnly ? 'source-only.json' : 'verification.json');
+if (existsSync(snapshot) && !JSON.parse(readFileSync(snapshot, 'utf8')).runId) copyFileSync(snapshot, path.join(directory, 'predecessor-snapshot.json'));
+function writeSnapshot(report) {
+  const latest = JSON.parse(readFileSync(path.join(evidenceRoot, 'latest.json'), 'utf8'));
+  if (latest.runId === attempt.id) writeFileSync(snapshot, JSON.stringify({ ...report, runId: attempt.id, canonical: sourceOnly ? 'source-baseline/latest.json' : 'latest.json' }, null, 2) + '\n');
+}
+writeSnapshot({ status: 'incomplete', scope });
+try {
 const files = ['Lifecycle.ts', 'Event.ts', 'CircularList.ts', 'Event.test.ts', 'CircularList.test.ts'];
 const source = Object.fromEntries(files.map(file => [file, readFileSync(path.join(root, 'source_repo/src/common', file), 'utf8')]));
-const rustPaths = ['src/event.rs', 'src/event/dispatch.rs', 'src/lifecycle.rs', 'src/circular_list.rs', 'src/circular_list/storage.rs', 'tests/event.rs', 'tests/event_edges.rs', 'tests/event_errors.rs', 'tests/event_context.rs', 'tests/lifecycle_explicit.rs', 'tests/circular_list.rs', 'tests/circular_list_edges.rs', 'examples/event_trace.rs', 'examples/circular_list_trace.rs'].map(file => `crates/xterm-core/${file}`);
+const rustPaths = ['src/event.rs', 'src/event/dispatch.rs', 'src/lifecycle.rs', 'src/circular_list.rs', 'src/circular_list/storage.rs', 'tests/event.rs', 'tests/event_edges.rs', 'tests/event_errors.rs', 'tests/event_context.rs', 'tests/event_late_collection.rs', 'tests/lifecycle_explicit.rs', 'tests/circular_list.rs', 'tests/circular_list_edges.rs', 'tests/circular_list_splice.rs', 'tests/circular_list_numbers.rs', 'examples/event_trace.rs', 'examples/circular_list_trace.rs'].map(file => `crates/xterm-core/${file}`);
 const hash = file => createHash('sha256').update(readFileSync(path.join(root, file))).digest('hex');
 const rustSource = Object.fromEntries(rustPaths.map(file => [file, hash(file)]));
 function erase(text) {
@@ -51,10 +64,20 @@ for (const test of tests) {
   catch (error) { outcomes.push({ name: test.name, status: 'failed', error: String(error) }); }
 }
 writeFileSync(path.join(directory, 'upstream-tests.json'), JSON.stringify({ assertions, outcomes }, null, 2) + '\n');
+assert.equal(tests.length, 26, 'upstream test inventory changed; review every source assertion mapping');
 assert.ok(outcomes.every(test => test.status === 'passed'), 'original upstream assertion failure');
 const directed = directedChecks(context.oracle);
 writeFileSync(path.join(directory, 'directed-source-tests.json'), JSON.stringify(directed, null, 2) + '\n');
 assert.ok(directed.every(test => test.status === 'passed'), 'directed source assertion failure');
+if (sourceOnly) {
+  const report = { status: 'passed', scope, node: process.version,
+    source: Object.fromEntries(files.map(file => [file, createHash('sha256').update(source[file]).digest('hex')])),
+    upstream: { discovered: tests.length, executed: tests.length, passed: outcomes.length, assertions, outcomes }, directed,
+    rust: { status: 'unrun' }, overall: 'equivalence NOT PROVEN' };
+  persistEvidence(attempt, report); writeSnapshot(report);
+  console.log(JSON.stringify({ scope: report.scope, original: tests.length, assertions, directed: directed.length }));
+  process.exit(0);
+}
 
 const seed = 0xc1ac01a7;
 let randomState = seed;
@@ -77,7 +100,7 @@ function circleCommand(command) {
       circle.onTrim(amount => events.push(`T,${amount},${circle.length},${values()}`));
       break;
     case 'P': circle.push(numbers[0]); break;
-    case 'S': case 'Q': circle.set(numbers[0], fields[1] === '_' ? undefined : numbers[1]); break;
+    case 'S': case 'Q': case 'V': circle.set(numbers[0], fields[1] === '_' ? undefined : numbers[1]); break;
     case 'G': case 'Z': result = circle.get(numbers[0]) ?? '_'; break;
     case 'L': circle.length = numbers[0]; break;
     case 'M': circle.maxLength = numbers[0]; break;
@@ -98,7 +121,7 @@ for (const index of [NaN, Infinity, -Infinity, '-0', 0, 0.5, -0.5, Number.MIN_VA
 for (let index = 0; index < 20000; index++) {
   if (index % 257 === 0) { circleCommand(`N\t${random() % 12 + 1}`); continue; }
   const value = random() % 1000 - 500;
-  switch (random() % 15) {
+  switch (random() % 16) {
     case 0: case 1: circleCommand(`P\t${value}`); break;
     case 2: circleCommand(`S\t${random() % 40}\t${random() % 3 ? value : '_'}`); break;
     case 3: circleCommand(`L\t${random() % (circle.maxLength + 4)}`); break;
@@ -106,8 +129,8 @@ for (let index = 0; index < 20000; index++) {
     case 5: if (circle.length) circleCommand('O'); else circleCommand('R'); break;
     case 6: circleCommand('R'); break;
     case 7: {
-      const start = random() % (circle.length + 1);
-      const count = random() % (circle.length - start + 1);
+      const start = random() % (circle.length + 8);
+      const count = random() % (circle.length + 1);
       const items = Array.from({ length: random() % 5 }, () => random() % 1000 - 500);
       circleCommand(['D', start, count, ...items].join('\t')); break;
     }
@@ -118,6 +141,7 @@ for (let index = 0; index < 20000; index++) {
     case 12: circleCommand(`Q\t${random() % 41 - 20}\t${value}`); break;
     case 13: circleCommand(`G\t${random() % 41 - 20}`); break;
     case 14: circleCommand(`Z\t${(random() % 1000 - 500) / 8}`); break;
+    case 15: circleCommand(`V\t${[NaN,Infinity,-Infinity,0.5,-0.5,Number.MIN_VALUE][random()%6]}\t${value}`); break;
   }
 }
 
@@ -196,8 +220,9 @@ if (isolated) {
   run(cargo, ['build', '-p', 'xterm-core', '--example', 'event_trace', '--example', 'circular_list_trace']);
 }
 for (const [name, trace, expected] of [['event_trace', eventTrace, eventExpected], ['circular_list_trace', circleTrace, circleExpected]]) {
-  const binary = isolated ? path.join(temporary, name + suffix) : path.join(process.env.CARGO_TARGET_DIR || path.join(root, 'target'), 'debug/examples', name + suffix);
-  const actual = run(binary, [], { input: trace.join('\n') + '\n' }).trimEnd().split(/\r?\n/);
+  const input = { input: trace.join('\n') + '\n' };
+  const output = isolated ? run(path.join(temporary, name + suffix), [], input) : run(cargo, ['run', '--quiet', '-p', 'xterm-core', '--example', name], input);
+  const actual = output.trimEnd().split(/\r?\n/);
   const mismatch = expected.findIndex((line, index) => line !== actual[index]);
   if (mismatch !== -1 || actual.length !== expected.length) {
     const index = mismatch === -1 ? Math.min(actual.length, expected.length) : mismatch;
@@ -207,35 +232,44 @@ for (const [name, trace, expected] of [['event_trace', eventTrace, eventExpected
     assert.fail(`${name} mismatch at ${index}`);
   }
 }
-const testNames = ['event', 'event_edges', 'event_errors', 'event_context', 'circular_list', 'circular_list_edges', 'lifecycle_explicit'];
+const testNames = ['event', 'event_edges', 'event_errors', 'event_context', 'event_late_collection', 'circular_list', 'circular_list_edges', 'circular_list_splice', 'circular_list_numbers', 'lifecycle_explicit'];
 const rustTests = isolated ? testNames.map(name => {
   const binary = path.join(temporary, name + '_tests' + suffix);
   run(rustc, [...extern, '--test', `crates/xterm-core/tests/${name}.rs`, '-o', binary]);
   return run(binary, [], { includeStderr: true });
 }).join('\n') : run(cargo, ['test', '-p', 'xterm-core', ...testNames.flatMap(name => ['--test', name])], { includeStderr: true });
-const rustCount = [...rustTests.matchAll(/test result: ok\. (\d+) passed/g)].reduce((total, match) => total + Number(match[1]), 0);
-assert.ok(rustCount >= 83, 'missing scoped Rust tests');
 const rustLog = isolated ? 'rust-tests-isolated.log' : 'rust-tests.log';
 writeFileSync(path.join(directory, rustLog), rustTests);
+const rustSummaries = [...rustTests.matchAll(/test result: ok\. (\d+) passed; (\d+) failed; (\d+) ignored;/g)];
+const rustCount = rustSummaries.reduce((total, match) => total + Number(match[1]), 0);
+assert.equal(rustSummaries.length, testNames.length, 'missing scoped Rust suite');
+assert.ok(rustSummaries.every(match => Number(match[2]) === 0 && Number(match[3]) === 0), 'failed or ignored Rust cases');
+assert.ok(rustCount >= 96, 'missing scoped Rust tests');
 for (const file of rustPaths) assert.equal(hash(file), rustSource[file], `Rust input changed during verification: ${file}`);
 const report = {
   rustSource, directed,
-  status: 'passed scoped checks; terminal equivalence NOT PROVEN',
+  status: 'passed', scope, equivalence: 'NOT PROVEN', runId: attempt.id,
   harnessSource: Object.fromEntries(['scripts/check-events-and-circular-list.mjs', 'scripts/events-circular-directed.mjs'].map(file => [file, hash(file)])),
   command: 'node scripts/check-events-and-circular-list.mjs', platform: process.platform,
   node: process.version, rustc: run(rustc, ['--version']).trim(), cargo: run(cargo, ['--version']).trim(),
   buildMode: isolated ? 'isolated exact utility modules, not a workspace check' : 'workspace Cargo build',
   source: Object.fromEntries(files.map(file => [file, createHash('sha256').update(source[file]).digest('hex')])),
   upstream: { discovered: tests.length, executed: tests.length, passed: outcomes.filter(test => test.status === 'passed').length, failed: 0, skipped: 0, unrun: 0, assertions, outcomes },
-  rust: { tests: rustCount, upstreamMapped: 26, added: rustCount - 26, log: rustLog },
+  rust: { tests: rustCount, discovered: rustCount, executed: rustCount, passed: rustCount, failed: 0, skipped: 0, unrun: 0, upstreamMapped: 26, added: rustCount - 26, log: path.relative(root, path.join(directory, rustLog)).replaceAll('\\', '/') },
   differential: { seed, circleIterations: 20000, circleComparedStates: circleExpected.length, eventIterations: 10000, eventComparedTraces: eventExpected.length, failures: 0, comparison: 'all wrapped slots, length, capacity, fullness, operation result, event order/payload and event-time storage snapshots; listener traces, nested dispatch, additions/removals and disposal errors' },
   differences: [
     'CircularList requires a positive capacity. Zero capacity is rejected rather than constructing the degenerate upstream array.',
-    'Canonical lengths/indexes are usize; get_signed/set_signed preserve negative property slots and get_number preserves public f64 indexing. Empty pop and invalid splice ranges are rejected instead of negative lengths.',
+    'Canonical lengths/indexes are usize; get_signed/set_signed preserve negative property slots and get_number preserves public f64 indexing. Empty pop and splice delete counts exceeding length are rejected instead of creating negative lengths; sparse starts and deletion spans beyond the tail match source.',
     'Captured closures replace thisArgs. Rust events borrow payloads. EmitError distinguishes cleared listener arrays from retained concrete callback errors, including browser JsValue wrappers.',
     'Cloning Rust elements copies values. Rc elements preserve JavaScript mutable object identity.',
     'EventUtils.any combines a homogeneous Rust payload type; erase payloads explicitly for the heterogeneous JavaScript void overload.'
   ]
 };
 writeFileSync(path.join(directory, isolated ? 'verification-isolated.json' : 'verification.json'), JSON.stringify(report, null, 2) + '\n');
+persistEvidence(attempt, report); writeSnapshot(report);
 console.log(JSON.stringify(report, null, 2));
+} catch (error) {
+  const failure = { status: 'failed', scope, error: String(error.stack || error), rust: { status: 'not completed' }, equivalence: 'NOT PROVEN' };
+  persistEvidence(attempt, failure); writeSnapshot(failure);
+  throw error;
+}

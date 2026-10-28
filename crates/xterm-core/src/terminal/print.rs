@@ -15,6 +15,9 @@ use std::{
 
 #[path = "print_render.rs"]
 mod render;
+#[cfg(test)]
+#[path = "print_tests.rs"]
+mod tests;
 
 type RcLine = Rc<RefCell<BufferLine>>;
 type AttributeIdentity = Rc<RefCell<Option<AttributeData>>>;
@@ -46,11 +49,10 @@ pub(super) fn print(
             continue;
         }
         let code = if original < 127 {
-            run.charset
-                .as_ref()
-                .and_then(|map| map.get(&(original as u16)))
-                .filter(|value| !value.is_empty())
-                .map_or(original, |value| u32::from(value[0]))
+            match &run.charset {
+                Some(map) => map.get_first(original as u16)?.map_or(original, u32::from),
+                None => original,
+            }
         } else {
             original
         };
