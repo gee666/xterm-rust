@@ -18,4 +18,4 @@ pub mod local_fonts;
 #[cfg(target_arch = "wasm32")]
 pub use font_addons::{load_web_fonts, WebFontsAddon};
 #[cfg(target_arch = "wasm32")]
-pub use ligatures_addon::LigaturesAddon;
+pub use ligatures_addon::{enable_ligatures, LigaturesAddon};
