@@ -30,17 +30,19 @@ impl Mutation {
     }
 }
 impl ApcHandlerTrait for Mutation {
-    fn start(&mut self) {
+    fn start(&mut self) -> Result<(), DispatchError> {
         self.log.borrow_mut().push(format!("{}:s", self.name));
         if self.name == "b" && ["start", "shift"].contains(&self.stage.as_str()) {
             self.remove();
         }
+        Ok(())
     }
-    fn put(&mut self, _: &[u32]) {
+    fn put(&mut self, _: &[u32]) -> Result<(), DispatchError> {
         self.log.borrow_mut().push(format!("{}:p", self.name));
         if self.name == "b" && self.stage == "put" {
             self.remove();
         }
+        Ok(())
     }
     fn end(&mut self, success: bool) -> HandlerResult {
         self.log
@@ -195,7 +197,7 @@ struct RegisterDuringStart {
     log: Log,
 }
 impl ApcHandlerTrait for RegisterDuringStart {
-    fn start(&mut self) {
+    fn start(&mut self) -> Result<(), DispatchError> {
         let log = Rc::clone(&self.log);
         self.registrar
             .register_handler(
@@ -206,9 +208,11 @@ impl ApcHandlerTrait for RegisterDuringStart {
                 }))),
             )
             .unwrap();
+        Ok(())
     }
-    fn put(&mut self, _: &[u32]) {
+    fn put(&mut self, _: &[u32]) -> Result<(), DispatchError> {
         self.log.borrow_mut().push("old:put".to_owned());
+        Ok(())
     }
     fn end(&mut self, success: bool) -> HandlerResult {
         self.log.borrow_mut().push(format!("old:end:{success}"));
@@ -236,4 +240,23 @@ fn registrar_allows_callback_registration_without_retaining_parser() {
     assert_eq!(registrar.clear_handler(71), Some(()));
     drop(parser);
     assert_eq!(registrar.clear_handler(71), None);
+}
+
+#[test]
+fn borrow_free_disposal_clears_each_call_and_does_not_keep_parser_alive() {
+    let mut parser = ApcParser::new();
+    let disposal = parser.disposal_handle();
+    let log = Log::default();
+    register(&mut parser, 71, "old", &log);
+    parser.start(71).unwrap();
+    assert_eq!(disposal.dispose(), Some(()));
+    assert!(parser.end(true, true).unwrap().is_none());
+    assert!(log.borrow().is_empty());
+    register(&mut parser, 71, "new", &log);
+    assert_eq!(disposal.dispose(), Some(()));
+    parser.start(71).unwrap();
+    assert!(parser.end(true, true).unwrap().is_none());
+    assert!(log.borrow().is_empty());
+    drop(parser);
+    assert_eq!(disposal.dispose(), None);
 }

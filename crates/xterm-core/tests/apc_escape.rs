@@ -54,18 +54,20 @@ struct Reporter {
     log: Log,
 }
 impl ApcHandlerTrait for Reporter {
-    fn start(&mut self) {
+    fn start(&mut self) -> Result<(), DispatchError> {
         self.log
             .borrow_mut()
             .push(format!("H:{}:{}", self.id, self.name));
+        Ok(())
     }
-    fn put(&mut self, data: &[u32]) {
+    fn put(&mut self, data: &[u32]) -> Result<(), DispatchError> {
         self.log.borrow_mut().push(format!(
             "D:{}:{}:{}",
             self.id,
             self.name,
             hex(&utf32_to_string(data))
         ));
+        Ok(())
     }
     fn end(&mut self, success: bool) -> HandlerResult {
         let log = Rc::clone(&self.log);
@@ -204,13 +206,15 @@ struct ControlReporter {
     log: Log,
 }
 impl ApcHandlerTrait for ControlReporter {
-    fn start(&mut self) {
+    fn start(&mut self) -> Result<(), DispatchError> {
         self.log.borrow_mut().push(format!("{}:S", self.name));
+        Ok(())
     }
-    fn put(&mut self, data: &[u32]) {
+    fn put(&mut self, data: &[u32]) -> Result<(), DispatchError> {
         self.log
             .borrow_mut()
             .push(format!("{}:P:{}", self.name, hex(&utf32_to_string(data))));
+        Ok(())
     }
     fn end(&mut self, success: bool) -> HandlerResult {
         let log = Rc::clone(&self.log);

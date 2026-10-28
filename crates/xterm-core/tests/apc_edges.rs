@@ -13,8 +13,12 @@ struct Async {
     handled: bool,
 }
 impl ApcHandlerTrait for Async {
-    fn start(&mut self) {}
-    fn put(&mut self, _: &[u32]) {}
+    fn start(&mut self) -> Result<(), DispatchError> {
+        Ok(())
+    }
+    fn put(&mut self, _: &[u32]) -> Result<(), DispatchError> {
+        Ok(())
+    }
     fn end(&mut self, success: bool) -> HandlerResult {
         let log = Rc::clone(&self.log);
         let id = self.id;
@@ -162,14 +166,14 @@ fn dropped_callback_future_does_not_leak_payload_into_next_command() {
         output.borrow_mut().push(data);
         HandlerResult::Pending(Box::pin(async { true }))
     });
-    handler.start();
-    handler.put(&[65, 66]);
+    handler.start().unwrap();
+    handler.put(&[65, 66]).unwrap();
     drop(handler.end(true));
-    handler.start();
-    handler.put(&[67]);
+    handler.start().unwrap();
+    handler.put(&[67]).unwrap();
     assert!(resolve(handler.end(true)));
     assert_eq!(*calls.borrow(), [vec![65, 66], vec![67]]);
-    handler.start();
+    handler.start().unwrap();
     assert!(resolve(handler.end(true)));
     assert_eq!(calls.borrow().last(), Some(&vec![]));
     assert_eq!(xterm_core::parser::apc::PAYLOAD_LIMIT, 10_000_000);
@@ -230,4 +234,42 @@ fn rejected_callback_future_preserves_pause_until_explicit_reset() {
     parser.put(&[67]).unwrap();
     assert!(parser.end(true, true).unwrap().is_none());
     assert_eq!(*calls.borrow(), [vec![65, 66], vec![67]]);
+}
+
+#[test]
+fn checked_fallback_errors_propagate_without_losing_active_or_idle_identifiers() {
+    for phase in 0..5 {
+        let mut parser = ApcParser::new();
+        let failing_action = if phase < 3 { phase } else { phase - 2 };
+        parser.set_handler_fallback_checked(move |_, action| {
+            let action = match action {
+                ApcAction::Start => 0,
+                ApcAction::Put(_) => 1,
+                ApcAction::End(_) => 2,
+            };
+            if action == failing_action {
+                Err(DispatchError::CallbackFailed)
+            } else {
+                Ok(())
+            }
+        });
+        let result = match phase {
+            0 => parser.start(71),
+            1 => parser.start(71).and_then(|()| parser.put(&[65])),
+            2 => parser
+                .start(71)
+                .and_then(|()| parser.end(true, true).map(|_| ())),
+            3 => parser.put(&[65]),
+            _ => parser.end(true, true).map(|_| ()),
+        };
+        assert_eq!(result, Err(DispatchError::CallbackFailed), "phase {phase}");
+        let log = Rc::new(RefCell::new(Vec::new()));
+        let output = Rc::clone(&log);
+        parser.set_handler_fallback(move |id, action| output.borrow_mut().push((id, action)));
+        parser.put(&[66]).unwrap();
+        assert_eq!(
+            *log.borrow(),
+            [(if phase < 3 { 71 } else { 0 }, ApcAction::Put(vec![66]))]
+        );
+    }
 }

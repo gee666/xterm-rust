@@ -4,7 +4,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use xterm_core::parser::apc::{ApcAction, ApcHandler, ApcHandlerTrait, ApcParser, HandlerHandle};
-use xterm_core::parser::handler::HandlerResult;
+use xterm_core::parser::handler::{DispatchError, HandlerResult};
 use xterm_core::text_decoder::utf32_to_string;
 
 const ID: u32 = 0x2b70;
@@ -28,17 +28,19 @@ struct Reporter {
     asynchronous: bool,
 }
 impl ApcHandlerTrait for Reporter {
-    fn start(&mut self) {
+    fn start(&mut self) -> Result<(), DispatchError> {
         self.reports
             .borrow_mut()
             .push(format!("{} START", self.name));
+        Ok(())
     }
-    fn put(&mut self, data: &[u32]) {
+    fn put(&mut self, data: &[u32]) -> Result<(), DispatchError> {
         self.reports.borrow_mut().push(format!(
             "{} PUT {}",
             self.name,
             String::from_utf16_lossy(&utf32_to_string(data))
         ));
+        Ok(())
     }
     fn end(&mut self, success: bool) -> HandlerResult {
         let reports = Rc::clone(&self.reports);

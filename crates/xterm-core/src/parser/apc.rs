@@ -11,8 +11,8 @@ use super::osc::{OscParser, OscRegistrar};
 use crate::lifecycle::DisposableHandle;
 
 pub use super::osc::{
-    HandlerHandle, OscAction as ApcAction, OscHandler as ApcHandler,
-    OscHandlerTrait as ApcHandlerTrait, PAYLOAD_LIMIT,
+    HandlerHandle, OscAction as ApcAction, OscDisposalHandle as ApcDisposalHandle,
+    OscHandler as ApcHandler, OscHandlerTrait as ApcHandlerTrait, PAYLOAD_LIMIT,
 };
 
 /// Callback-safe registration access without retaining the parser or its lists.
@@ -60,15 +60,34 @@ impl ApcParser {
     }
 
     pub fn set_handler_fallback(&mut self, mut callback: impl FnMut(u32, ApcAction) + 'static) {
-        self.dispatch.set_handler_fallback(move |ident, action| {
-            // Only this adapter supplies IDs, and every u32 is exactly represented
-            // in f64. Shared idle dispatch always supplies zero.
-            callback(ident as u32, action);
+        self.set_handler_fallback_checked(move |ident, action| {
+            callback(ident, action);
+            Ok(())
         });
+    }
+
+    /// Propagate diagnostic/event callback failures without resetting partial
+    /// dispatch state or disguising the exception as an unhandled command.
+    pub fn set_handler_fallback_checked(
+        &mut self,
+        mut callback: impl FnMut(u32, ApcAction) -> Result<(), DispatchError> + 'static,
+    ) {
+        self.dispatch
+            .set_handler_fallback_checked(move |ident, action| {
+                // Only this adapter supplies IDs, and every u32 is exactly represented
+                // in f64. Shared idle dispatch always supplies zero.
+                callback(ident as u32, action)
+            });
     }
 
     pub fn dispose(&mut self) {
         self.dispatch.dispose();
+    }
+
+    /// Clear child registration/fallback/active slots while an outer parser call
+    /// is borrowed. Parent terminal disposal owns its separate once-only policy.
+    pub fn disposal_handle(&self) -> ApcDisposalHandle {
+        self.dispatch.disposal_handle()
     }
 
     /// Abort unfinished handlers in reverse order. A previously returned future
