@@ -21,19 +21,18 @@ term.loadAddon=function(addon){return this._loadAddon(this,addon);};
 const write=data=>new Promise(resolve=>term.write(data,resolve));
 function canonical(v) { if(Array.isArray(v))return v.map(canonical); if(v&&typeof v==='object'){const o={};for(const k of Object.keys(v).sort())o[k]=canonical(v[k]);return o;} return v; }
 function equal(actual,expected){if(JSON.stringify(canonical(actual))!==JSON.stringify(canonical(expected)))throw Error('actual '+JSON.stringify(actual)+' expected '+JSON.stringify(expected));}
-term.loadAddon(addon);
 return (async()=>{
+const parent=document.createElement('div');parent.style.cssText='width:800px;height:450px';document.body.appendChild(parent);
+try{term.open(parent);term.loadAddon(addon);
 "#;
-    let source = format!("{setup}{body}\n}})();");
+    let cleanup = "\n}finally{try{term.dispose();}finally{parent.remove();}}\n})();";
+    let source = format!("{setup}{body}{cleanup}");
     let promise = Function::new_with_args("term,addon", &source)
         .call2(&JsValue::UNDEFINED, &term, &addon)
         .unwrap()
         .dyn_into::<Promise>()
         .unwrap();
     JsFuture::from(promise).await.unwrap();
-    Function::new_with_args("term", "term.dispose()")
-        .call1(&JsValue::UNDEFINED, &term)
-        .unwrap();
 }
 #[wasm_bindgen_test]
 async fn keeps_reported_status_without_printing() {
@@ -67,6 +66,50 @@ await write('\x1b]7501;state=done:id=other\x07');if(addon.records[0]!==old)throw
 await write('\x1b]7501;state=working:id=plain\x07');if(addon.records[1]===old)throw Error('replacement reused raw identity');
 const thrown={statusCallback:true};addon.onChange(()=>{throw thrown;});let caught=false;
 try{addon.clear();}catch(error){if(error!==thrown)throw Error('callback error identity lost');caught=true;}if(!caught)throw Error('callback error swallowed');
+"#).await;
+}
+
+#[wasm_bindgen_test]
+async fn reentrant_status_listeners_keep_outer_payload_and_current_snapshot_identity() {
+    run(ProgramStatusAddon::new().into(),r#"
+let outer,inner,seen=0;
+addon.onChange(records=>{if(records.length){outer=records;addon.clear();}else{inner=records;}});
+addon.onChange(records=>{if(records.length){if(records!==outer)throw Error('outer status payload identity lost');seen++;}else if(records!==inner){throw Error('inner payload identity lost');}});
+await write('\x1b]7501;state=working\x07');
+if(seen!==1||addon.records!==inner||addon.records.length!==0)throw Error('reentrant snapshot cache changed current records');
+"#).await;
+}
+
+#[wasm_bindgen_test]
+async fn public_addon_activation_inside_a_parser_callback_is_reentrant() {
+    run(ProgramStatusAddon::new().into(),r#"
+const child=new addon.constructor();
+addon.onChange(()=>term.loadAddon(child));
+await write('\x1b]7501;state=working\x07\x1b]7501;state=done:id=second\x07');
+if(addon.records.length!==1||child.records.length!==1||child.records[0].id!=='second')throw Error('reentrant loadAddon failed');
+"#).await;
+}
+
+#[wasm_bindgen_test]
+async fn event_this_args_and_disposable_array_follow_source() {
+    run(ProgramStatusAddon::new().into(),r#"
+const receiver={marker:true},subscriptions=[];let count=0;
+const token=addon.onChange(function(records){if(this!==receiver)throw Error('event thisArgs lost');count++;},receiver,subscriptions);
+if(subscriptions[0]!==token||Object.getPrototypeOf(token)!==Object.prototype)throw Error('event disposable shape/array insertion changed');
+await write('\x1b]7501;state=working\x07');if(count!==1)throw Error('listener missing');
+const dispose=token.dispose;dispose();await write('\x1b]7501;state=done\x07');if(count!==1)throw Error('extracted disposer failed');
+"#).await;
+}
+#[wasm_bindgen_test]
+async fn event_store_failure_retains_listener_and_closed_registration_skips_store() {
+    run(ProgramStatusAddon::new().into(),r#"
+const thrown={registration:true};let saved,count=0;
+const store={add(token){if(this!==store)throw Error('store this lost');saved=token;throw thrown;}};
+try{addon.onChange(()=>count++,null,store);throw Error('missing store throw');}catch(error){if(error!==thrown)throw Error('store failure identity lost');}
+await write('\x1b]7501;state=working\x07');if(count!==1)throw Error('failed store insertion rolled listener back');saved.dispose();
+addon.dispose();const reject={get add(){throw Error('disposed event read store');}};
+const a=addon.onChange(()=>{},null,reject),b=addon.onChange(()=>{},null,reject);
+if(a===b||a.dispose===b.dispose||Object.isFrozen(a))throw Error('disposed registration used singleton/frozen token');a.dispose();b.dispose();
 "#).await;
 }
 
