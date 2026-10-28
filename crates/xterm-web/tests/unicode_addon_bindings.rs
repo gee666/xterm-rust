@@ -1,6 +1,14 @@
 #![cfg(target_arch = "wasm32")]
 use js_sys::{Function, Object, Reflect};
-use wasm_bindgen::{JsCast, JsValue};
+use wasm_bindgen::{prelude::wasm_bindgen, JsCast, JsValue};
+
+// The public browser facade supplies this exact one-line ABI adapter. The raw
+// wasm-bindgen class cannot receive its JavaScript wrapper as Rust's &self.
+#[wasm_bindgen(inline_js = "export function publicLoadAddon(terminal, addon) { return terminal._loadAddon(terminal, addon); }")]
+extern "C" {
+    #[wasm_bindgen(catch, js_name = publicLoadAddon)]
+    fn public_load_addon(terminal: &JsValue, addon: &JsValue) -> Result<(), JsValue>;
+}
 use wasm_bindgen_test::*;
 use xterm_web::{
     unicode_addons::{Unicode11Addon, UnicodeGraphemesAddon},
@@ -50,10 +58,10 @@ fn javascript_loadaddon_manages_real_provider_activation_and_disposal() {
     let value: JsValue = terminal.into();
     let eleven: JsValue = Unicode11Addon::new().into();
     let graphemes: JsValue = UnicodeGraphemesAddon::new().into();
-    call(&value, "loadAddon", Some(&eleven)).unwrap();
+    public_load_addon(&value, &eleven).unwrap();
     assert_eq!(unicode.versions(), ["6", "11"]);
     assert_eq!(unicode.active_version(), "6");
-    call(&value, "loadAddon", Some(&graphemes)).unwrap();
+    public_load_addon(&value, &graphemes).unwrap();
     assert_eq!(unicode.versions(), ["6", "11", "15", "15-graphemes"]);
     assert_eq!(unicode.active_version(), "15-graphemes");
     for line in include_str!("../../xterm-core/tests/fixtures/unicode-grapheme-strings.tsv").lines()
