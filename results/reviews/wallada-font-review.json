@@ -1,0 +1,58 @@
+{
+  "task": 112,
+  "reviewer": "Wallada",
+  "scope": "Ligatures UTF-16 parser and fallback matching only, not complete font addons or browser integration",
+  "reviewed": [
+    "source_repo/addons/addon-ligatures/src/parse.ts",
+    "source_repo/addons/addon-ligatures/src/parse.test.ts",
+    "source_repo/addons/addon-ligatures/src/index.ts",
+    "source_repo/addons/addon-ligatures/src/LigaturesAddon.ts",
+    "crates/xterm-addons/src/ligatures/mod.rs",
+    "crates/xterm-addons/src/ligatures/parse.rs",
+    "crates/xterm-addons/tests/font_addons.rs",
+    "scripts/font-oracle.mjs"
+  ],
+  "commands": [
+    {
+      "command": "node scripts/font-oracle.mjs",
+      "exit": 0,
+      "log": "results/reviews/wallada-font-oracle.log",
+      "originalTests": 16,
+      "originalAssertions": 16,
+      "parserCases": 8224,
+      "fallbackCases": 4156,
+      "extraWebFamilyCases": 4115
+    },
+    {
+      "command": "rustc --edition=2021 --test -Dwarnings tmp/reviews/font_helpers.rs -o tmp/reviews/font_helpers.exe; tmp/reviews/font_helpers.exe",
+      "exit": 0,
+      "tests": 8,
+      "logs": [
+        "results/reviews/wallada-font-isolated-build.log",
+        "results/reviews/wallada-font-isolated-tests.log"
+      ],
+      "scope": "Includes current production std-only ligatures/web_fonts modules and unchanged current font_addons.rs through path modules; not full workspace build."
+    },
+    {
+      "command": "cargo test -p xterm-addons --test font_addons",
+      "exit": 101,
+      "log": "results/reviews/wallada-font-tests.log",
+      "reason": "Unrelated native_status.rs references missing headless addon_registrars during live API migration."
+    }
+  ],
+  "findings": [
+    {
+      "issue": "Oracle rewrote checked-in fixtures on ordinary verification.",
+      "resolution": "Fergus added byte-exact verification by default; --generate now explicit."
+    },
+    {
+      "issue": "Original report counted tests without separate assertion accounting.",
+      "resolution": "Fergus instrumented unchanged assert calls,16 assertions executed and passed."
+    },
+    {
+      "issue": "Empty fallback string hangs upstream and non-string font input cannot enter typed Rust parser.",
+      "resolution": "Typed Result and binding/domain differences explicitly documented. No equivalence claim for unsupported JS boundary."
+    }
+  ],
+  "verdict": "accept scoped helper task; full-port and browser/font gates remain separate"
+}

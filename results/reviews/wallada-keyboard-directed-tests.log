@@ -1,0 +1,51 @@
+warning: associated function `clear_markers_shared` is never used
+  --> crates\xterm-core\src\buffer\screen_shared.rs:20:19
+   |
+11 | impl Buffer {
+   | ----------- associated function in this implementation
+...
+20 |     pub(crate) fn clear_markers_shared(
+   |                   ^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: function `clear_markers_on_line` is never used
+  --> crates\xterm-core\src\buffer\screen_shared.rs:44:15
+   |
+44 | pub(super) fn clear_markers_on_line(
+   |               ^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `with_queued_parse` is never used
+  --> crates\xterm-core\src\headless\events.rs:67:12
+   |
+33 | impl Events {
+   | ----------- method in this implementation
+...
+67 |     pub fn with_queued_parse<T>(&self, action: impl FnOnce() -> T) -> T {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: `xterm-core` (lib) generated 3 warnings
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 0.27s
+     Running tests\keyboard_edges.rs (target\debug\deps\keyboard_edges-06d620784c3c0082.exe)
+
+running 9 tests
+test cancellation_is_requested_only_for_the_upstream_branches ... ok
+test dead_keys_slice_one_code_unit_and_use_pinned_unicode_lowercase ... ok
+test control_shift_punctuation_keeps_alt_and_meta_branch_precedence ... ok
+test control_punctuation_and_ios_ctrl_c ... ok
+test insert_and_page_keys_ignore_only_the_documented_modifiers ... ok
+test numeric_boundaries_and_control_alphabet_are_exact ... ok
+test page_and_select_actions_preserve_priority ... ok
+test utf16_key_length_and_identity ... ok
+test meta_arrows_are_not_sent_but_home_and_function_keys_are ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\keyboard_upstream.rs (target\debug\deps\keyboard_upstream-80c4c6988cca996a.exe)
+
+running 1 test
+test every_upstream_keyboard_assertion ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
