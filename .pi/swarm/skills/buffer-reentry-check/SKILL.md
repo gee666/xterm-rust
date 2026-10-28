@@ -9,7 +9,7 @@ Reuse the source esbuild/Mocha approach from buffer-check and buffer-service-ora
 
 Run `node scripts/buffer-resize-reentry-oracle.mjs --generate` only when reviewing source fixture changes. Normal verification omits `--generate` and checks deterministic fixture equality. The driver saves source hashes and case names to results/buffer-reentry/oracle.json. Temporary reference bundles stay under tmp/buffer-resize-reentry.
 
-The ten source scenarios cover trim/larger/smaller observers reading and mutating the actual Buffer, nested resizing, scrollback numeric conversion and Windows getter reentry, thrown observer partial state, and replacement of the entire line list during widening. Every checkpoint includes full packed cells, UTF-16 strings, extended attributes, row identities, cursor/base/display/saved/region/dimension state and sparse undefined rows.
+The eleven source scenarios cover trim/larger/smaller observers reading and mutating the actual Buffer, nested resizing, scrollback numeric conversion and Windows getter reentry, thrown observer partial state, replacement of the entire line list during widening, and a later shrink which applies sparse layout/events before its undefined-row error. Every checkpoint includes full packed cells, UTF-16 strings, extended attributes, row identities, cursor/base/display/saved/region/dimension state and sparse undefined rows.
 
 Run `cargo test -p xterm-core --test buffer_resize_reentry` and the ordinary `buffer_resize_differential` suite. Both owned resize and shared resize must retain all source and seeded ordinary transition assertions. Also run scoped Clippy and rustfmt, and record debug/release execution separately. Use the shared target directory and honor the disk reserve/build pause.
 

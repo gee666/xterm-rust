@@ -1,0 +1,72 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0583]: file not found for module `sort_insert`
+ --> crates\xterm-core\src\sorted_list.rs:8:1
+  |
+8 | mod sort_insert;
+  | ^^^^^^^^^^^^^^^^
+  |
+  = help: to create the module `sort_insert`, create file "crates\xterm-core\src\sorted_list\sort_insert.rs" or "crates\xterm-core\src\sorted_list\sort_insert\mod.rs"
+  = note: if there is a `mod sort_insert` elsewhere in the crate already, import it with `use crate::...` instead
+
+error[E0432]: unresolved import `iteration::KeyItem`
+ --> crates\xterm-core\src\sorted_list.rs:9:50
+  |
+9 | pub use iteration::{IterationContext, KeyCursor, KeyItem};
+  |                                                  ^^^^^^^ no `KeyItem` in `sorted_list::iteration`
+
+error[E0308]: mismatched types
+  --> crates\xterm-core\src\sorted_list\iteration.rs:65:54
+   |
+65 |             self.iteration_context.0.set(self.search(cursor.key));
+   |                                               ------ ^^^^^^^^^^ expected `&SortedKey`, found `f64`
+   |                                               |
+   |                                               arguments to this method are incorrect
+   |
+note: method defined here
+  --> crates\xterm-core\src\sorted_list\lookup.rs:3:19
+   |
+3  |     pub(super) fn search(&self, key: &SortedKey) -> Result<usize, SortedListError> {
+   |                   ^^^^^^        ---------------
+
+error[E0308]: mismatched types
+  --> crates\xterm-core\src\sorted_list\iteration.rs:65:42
+   |
+65 |             self.iteration_context.0.set(self.search(cursor.key));
+   |                                      --- ^^^^^^^^^^^^^^^^^^^^^^^ expected `usize`, found `Result<usize, SortedListError>`
+   |                                      |
+   |                                      arguments to this method are incorrect
+   |
+   = note: expected type `usize`
+              found enum `Result<usize, SortedListError>`
+note: method defined here
+  --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\core\src\cell.rs:428:12
+help: use the `?` operator to extract the `Result<usize, SortedListError>` value, propagating a `Result::Err` value to the caller
+   |
+65 |             self.iteration_context.0.set(self.search(cursor.key)?);
+   |                                                                 +
+
+error[E0599]: no method named `flush_inserted` found for mutable reference `&mut sorted_list::SortedList<T, R>` in the current scope
+  --> crates\xterm-core\src\sorted_list.rs:80:14
+   |
+80 |         self.flush_inserted()?;
+   |              ^^^^^^^^^^^^^^
+   |
+help: there is a method `flush_deleted` with a similar name
+   |
+80 |         self.flush_deleted()?;
+   |              ~~~~~~~~~~~~~
+
+error[E0599]: no method named `flush_inserted` found for mutable reference `&mut sorted_list::SortedList<T, R>` in the current scope
+  --> crates\xterm-core\src\sorted_list.rs:99:67
+   |
+99 |     pub fn flush(&mut self) -> Result<(), SortedListError> { self.flush_inserted()?; self.flush_deleted() }
+   |                                                                   ^^^^^^^^^^^^^^
+   |
+help: there is a method `flush_deleted` with a similar name
+   |
+99 |     pub fn flush(&mut self) -> Result<(), SortedListError> { self.flush_deleted()?; self.flush_deleted() }
+   |                                                                   ~~~~~~~~~~~~~
+
+Some errors have detailed explanations: E0308, E0432, E0583, E0599.
+For more information about an error, try `rustc --explain E0308`.
+error: could not compile `xterm-core` (lib) due to 6 previous errors

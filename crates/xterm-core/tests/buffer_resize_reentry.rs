@@ -200,6 +200,61 @@ fn trim_callback_throws() {
 }
 
 #[test]
+fn sparse_replacement_then_smaller() {
+    let h = Harness::with_scrollback(5, 4, 6);
+    {
+        let mut b = h.buffer.borrow_mut();
+        for _ in 0..4 {
+            b.lines
+                .push(b.get_blank_line(&xterm_core::buffer::AttributeData::default(), false))
+                .unwrap();
+        }
+        b.x = 1;
+        b.y = 3;
+        b.ybase = 4;
+        b.ydisp = 4;
+    }
+    h.letters(0, "abcde");
+    h.letters(1, "fghij");
+    h.buffer.borrow().set_wrapped(1, true).unwrap();
+    for i in 2..8 {
+        h.letters(
+            i,
+            &char::from_u32(105 + u32::try_from(i).unwrap())
+                .unwrap()
+                .to_string(),
+        );
+    }
+    let weak = Rc::downgrade(&h);
+    let lines = h.buffer.borrow().lines.share();
+    h.retain(lines.on_delete_emitter.event().subscribe(move |event| {
+        let h = weak.upgrade().unwrap();
+        h.snapshot(&format!("delete,{},{}", event.index, event.amount));
+        {
+            let mut b = h.buffer.borrow_mut();
+            b.clear().unwrap();
+            b.fill_viewport_rows(None).unwrap();
+        }
+        let count = h.buffer.borrow().lines.len();
+        for i in 0..count {
+            let line = h.buffer.borrow().lines.get(i).unwrap();
+            let null = h.buffer.borrow().get_null_cell(None);
+            line.borrow_mut().resize(10, &null);
+            h.letters(i, "abcdefghij");
+        }
+        h.snapshot("refilled");
+    }));
+    h.resize(10, 4);
+    h.snapshot("after-widen");
+    assert!(matches!(
+        Buffer::resize_shared(&h.buffer, 4, 4),
+        Err(xterm_core::buffer::BufferError::MissingLine(9))
+    ));
+    h.snapshot("failed-state");
+    h.assert_fixture("sparse-replacement-then-smaller");
+}
+
+#[test]
 fn larger_callback_replaces_list() {
     let h = larger();
     let weak = Rc::downgrade(&h);

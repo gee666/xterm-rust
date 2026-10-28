@@ -109,6 +109,20 @@ run('larger-callback-replaces-list',()=>{
   buffer.lines.onDelete(()=>{snapshot('delete');buffer.clear();snapshot('cleared');});
   buffer.resize(4,5);snapshot('final');return out;
 });
+run('sparse-replacement-then-smaller',()=>{
+  const {buffer,snapshot,out}=setup(5,4,6);
+  for(let i=0;i<4;i++)buffer.lines.push(buffer.getBlankLine(new AttributeData()));
+  letters(buffer,0,'abcde');letters(buffer,1,'fghij');buffer.setWrapped(1,true);
+  for(let i=2;i<8;i++)letters(buffer,i,String.fromCharCode(105+i));
+  buffer.x=1;buffer.y=3;buffer.ybase=4;buffer.ydisp=4;
+  buffer.lines.onDelete(event=>{
+    snapshot(`delete,${event.index},${event.amount}`);buffer.clear();buffer.fillViewportRows();
+    for(let i=0;i<buffer.lines.length;i++){buffer.lines.get(i).resize(10,buffer.getNullCell(new AttributeData()));letters(buffer,i,'abcdefghij');}
+    snapshot('refilled');
+  });
+  buffer.resize(10,4);snapshot('after-widen');
+  assert.throws(()=>buffer.resize(4,4),/Cannot read properties of undefined/);snapshot('failed-state');return out;
+});
 const fixture=rows.join('\n')+'\n';
 const fixturePath=resolve(root,'crates/xterm-core/tests/fixtures/buffer-resize-reentry.tsv');
 if(process.argv.includes('--generate')) writeFileSync(fixturePath,fixture);

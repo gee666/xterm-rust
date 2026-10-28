@@ -11,28 +11,32 @@ use std::{
     fmt,
     rc::{Rc, Weak},
 };
+#[path = "cleanup_driver.rs"]
+mod backend;
+use backend::Driver;
 
 #[derive(Debug)]
 pub enum CleanupError<E> {
     Buffer(BufferError),
+    /// Failure from a scheduler or the caller-supplied queue's error domain.
     Schedule(E),
     ScheduledCallback(Rc<E>),
 }
 impl<E: fmt::Display> fmt::Display for CleanupError<E> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Buffer(error) => error.fmt(f),
-            Self::Schedule(error) => error.fmt(f),
-            Self::ScheduledCallback(error) => error.fmt(f),
+            Self::Buffer(e) => e.fmt(f),
+            Self::Schedule(e) => e.fmt(f),
+            Self::ScheduledCallback(e) => e.fmt(f),
         }
     }
 }
 impl<E: std::error::Error + 'static> std::error::Error for CleanupError<E> {
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
         match self {
-            Self::Buffer(error) => Some(error),
-            Self::Schedule(error) => Some(error),
-            Self::ScheduledCallback(error) => Some(error.as_ref()),
+            Self::Buffer(e) => Some(e),
+            Self::Schedule(e) => Some(e),
+            Self::ScheduledCallback(e) => Some(e.as_ref()),
         }
     }
 }
@@ -43,15 +47,11 @@ impl<E> From<BufferError> for CleanupError<E> {
 }
 type Failure<E> = Rc<RefCell<Option<CleanupError<E>>>>;
 
-/// One host scheduling owner for a shared buffer. The host dispatches the queue
-/// when its requested idle/priority callback fires. No clock or sleep is invented
-/// by the core. Dropping this adapter unregisters and cancels outstanding work.
-///
-/// A scheduling failure during resize propagates as BufferError::Dispatch; call
-/// take_error to recover the underlying typed host error. Work remains pending
-/// until the host retries or another resize replaces it, as in the source queue.
+/// One host scheduling owner per buffer. Tasks hold only a weak buffer reference.
+/// Dispatch failures leave the current queue task and index intact, just as an
+/// upstream throw does. Dropping this adapter cancels its outstanding work.
 pub struct BufferCleanup<S: Scheduler> {
-    queue: TaskQueue<S>,
+    driver: Rc<Driver<S>>,
     buffer: Weak<RefCell<Buffer>>,
     failure: Failure<S::Error>,
     subscription: DisposableHandle,
@@ -59,52 +59,86 @@ pub struct BufferCleanup<S: Scheduler> {
 }
 impl<S: Scheduler + 'static> BufferCleanup<S>
 where
-    S::Error: std::error::Error + 'static,
+    S::Error: 'static,
 {
     pub fn new(
         buffer: &Rc<RefCell<Buffer>>,
         scheduler: S,
-        supports_idle: bool,
-    ) -> Result<Self, CleanupError<S::Error>> {
-        Self::with_queue(buffer, TaskQueue::idle(scheduler, supports_idle))
+        idle: bool,
+    ) -> Result<Self, CleanupError<S::Error>>
+    where
+        S::Error: std::error::Error,
+    {
+        Self::attach(buffer, Driver::owned(scheduler, idle), |error| {
+            EmitError::Callback(error)
+        })
     }
-    /// Attach an empty dedicated queue already configured with the host's weak
-    /// callback dispatcher. The host may retain its queue handle for dispatch.
+    /// Inject a dedicated queue whose host error type can retain Buffer errors.
     pub fn with_queue(
         buffer: &Rc<RefCell<Buffer>>,
         queue: TaskQueue<S>,
+    ) -> Result<Self, CleanupError<S::Error>>
+    where
+        S::Error: std::error::Error + From<BufferError>,
+    {
+        Self::with_queue_map(buffer, queue, S::Error::from, |error| {
+            EmitError::Callback(error)
+        })
+    }
+    /// Configure an opaque host error domain, for example a browser JsValue.
+    /// Mappers must preserve the original thrown object rather than stringify it.
+    /// Callback errors return immediately through the supplied queue dispatcher;
+    /// callers need not poll take_error after an otherwise successful dispatch.
+    pub fn with_queue_map(
+        buffer: &Rc<RefCell<Buffer>>,
+        queue: TaskQueue<S>,
+        convert: impl Fn(BufferError) -> S::Error + 'static,
+        wrap_scheduler: impl Fn(Rc<S::Error>) -> EmitError + 'static,
     ) -> Result<Self, CleanupError<S::Error>> {
-        if queue.remaining_tasks() != 0 || queue.has_pending_callback() {
+        Self::attach(buffer, Driver::injected(queue, convert), wrap_scheduler)
+    }
+    fn attach(
+        buffer: &Rc<RefCell<Buffer>>,
+        driver: Driver<S>,
+        wrap_scheduler: impl Fn(Rc<S::Error>) -> EmitError + 'static,
+    ) -> Result<Self, CleanupError<S::Error>> {
+        if !driver.empty() {
             return Err(BufferError::CleanupQueueBusy.into());
         }
         let state = buffer.try_borrow().map_err(|_| BufferError::BorrowedLine)?;
         if state.cleanup_attached.replace(true) {
             return Err(BufferError::CleanupAlreadyAttached.into());
         }
+        let driver = Rc::new(driver);
         let failure = Rc::new(RefCell::new(None));
         let weak = Rc::downgrade(buffer);
-        let queue_ref = queue.clone();
-        let failure_ref = Rc::clone(&failure);
-        let weak_ref = weak.clone();
-        let subscription =
-            state.cleanup_events.event().try_subscribe(move |enabled| {
-                match schedule(
-                    &queue_ref,
-                    *enabled,
-                    weak_ref.clone(),
-                    Rc::clone(&failure_ref),
-                ) {
-                    Ok(()) => Ok(()),
-                    Err(error) => {
-                        let error = Rc::new(error);
-                        *failure_ref.borrow_mut() =
-                            Some(CleanupError::ScheduledCallback(Rc::clone(&error)));
-                        Err(EmitError::Callback(error))
-                    }
+        let callback_driver = Rc::clone(&driver);
+        let callback_buffer = weak.clone();
+        let callback_failure = Rc::clone(&failure);
+        let subscription = state.cleanup_events.event().try_subscribe(move |enabled| {
+            match schedule(&callback_driver, *enabled, callback_buffer.clone()) {
+                Ok(()) => Ok(()),
+                Err(CleanupError::Schedule(error)) => {
+                    let error = Rc::new(error);
+                    *callback_failure.borrow_mut() =
+                        Some(CleanupError::ScheduledCallback(Rc::clone(&error)));
+                    Err(wrap_scheduler(error))
                 }
-            });
+                Err(CleanupError::ScheduledCallback(error)) => {
+                    *callback_failure.borrow_mut() =
+                        Some(CleanupError::ScheduledCallback(Rc::clone(&error)));
+                    Err(wrap_scheduler(error))
+                }
+                Err(CleanupError::Buffer(error)) => {
+                    // Native diagnostic values may be copied; any nested actual
+                    // callback object remains shared through EmitError's Rc.
+                    *callback_failure.borrow_mut() = Some(CleanupError::Buffer(error.clone()));
+                    Err(EmitError::callback(error))
+                }
+            }
+        });
         let adapter = Self {
-            queue,
+            driver,
             buffer: weak,
             failure,
             subscription,
@@ -115,25 +149,17 @@ where
         Ok(adapter)
     }
     pub fn has_pending_callback(&self) -> bool {
-        self.queue.has_pending_callback()
+        self.driver.pending()
     }
-    /// Dispatch one real idle callback and report borrow, storage or host failure.
     pub fn process_idle(
         &self,
-        time_remaining: impl FnMut() -> f64,
+        remaining: impl FnMut() -> f64,
     ) -> Result<(), CleanupError<S::Error>> {
-        self.queue
-            .process(time_remaining)
-            .map_err(CleanupError::Schedule)?;
-        self.take_error().map_or(Ok(()), Err)
+        self.driver.process(remaining)
     }
     pub fn process_priority(&self) -> Result<(), CleanupError<S::Error>> {
-        self.queue
-            .process_priority()
-            .map_err(CleanupError::Schedule)?;
-        self.take_error().map_or(Ok(()), Err)
+        self.driver.priority()
     }
-    /// Explicit recovery after handling a temporary borrow or host scheduling error.
     pub fn retry_pending(&self) -> Result<(), CleanupError<S::Error>> {
         let pending = if let Some(buffer) = self.buffer.upgrade() {
             let state = buffer.try_borrow().map_err(|_| BufferError::BorrowedLine)?;
@@ -141,14 +167,10 @@ where
         } else {
             false
         };
-        schedule(
-            &self.queue,
-            pending,
-            self.buffer.clone(),
-            Rc::clone(&self.failure),
-        )
-        .map_err(CleanupError::Schedule)
+        schedule(&self.driver, pending, self.buffer.clone())
     }
+    /// Retrieve a resize-time scheduling failure for diagnostics. It was already
+    /// propagated through BufferError::Dispatch and is never rethrown on success.
     pub fn take_error(&self) -> Option<CleanupError<S::Error>> {
         self.failure.borrow_mut().take()
     }
@@ -156,34 +178,29 @@ where
 impl<S: Scheduler> Drop for BufferCleanup<S> {
     fn drop(&mut self) {
         self.subscription.dispose();
-        self.queue.clear();
+        self.driver.clear();
         self.attached.set(false);
     }
 }
 fn schedule<S: Scheduler + 'static>(
-    queue: &TaskQueue<S>,
+    driver: &Driver<S>,
     enabled: bool,
     buffer: Weak<RefCell<Buffer>>,
-    failure: Failure<S::Error>,
-) -> Result<(), S::Error> {
-    queue.clear();
+) -> Result<(), CleanupError<S::Error>>
+where
+    S::Error: 'static,
+{
+    driver.clear();
     if enabled {
-        queue.enqueue(move |_| {
+        driver.enqueue(Rc::new(move || {
             let Some(buffer) = buffer.upgrade() else {
-                return false;
+                return Ok(false);
             };
-            let result = buffer
+            let mut state = buffer
                 .try_borrow_mut()
-                .map_err(|_| BufferError::BorrowedLine)
-                .and_then(|mut state| state.poll_cleanup());
-            match result {
-                Ok(pending) => pending,
-                Err(error) => {
-                    *failure.borrow_mut() = Some(CleanupError::Buffer(error));
-                    false
-                }
-            }
-        })?;
+                .map_err(|_| BufferError::BorrowedLine)?;
+            state.poll_cleanup()
+        }))?;
     }
     Ok(())
 }

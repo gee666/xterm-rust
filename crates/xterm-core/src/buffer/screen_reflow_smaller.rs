@@ -192,9 +192,10 @@ impl SmallerPlan {
             return Ok(());
         }
         let lines = get_lines()?;
-        let original = (0..lines.len())
-            .map(|index| lines.get(index).ok_or(BufferError::MissingLine(index)))
-            .collect::<Result<Vec<_>, _>>()?;
+        // A prior observer may have installed a sparse list. The source keeps
+        // those undefined slots through layout and dispatches before later cell
+        // access fails, so rejecting a hole here would change partial state.
+        let original:Vec<_> = (0..lines.len()).map(|index|lines.get(index)).collect();
         let original_length = original.len();
         let expanded = original_length
             .checked_add(count)
@@ -230,7 +231,8 @@ impl SmallerPlan {
                 let line = usize::try_from(source)
                     .ok()
                     .and_then(|index| original.get(index))
-                    .cloned();
+                    .cloned()
+                    .flatten();
                 lines.set_signed(target, line)?;
                 source -= 1;
                 target -= 1;

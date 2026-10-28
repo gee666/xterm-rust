@@ -1,0 +1,23 @@
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error: field `cleanup_owner` is never read
+   --> crates\xterm-core\src\buffer\screen.rs:149:5
+    |
+119 | pub struct Buffer {
+    |            ------ field in this struct
+...
+149 |     cleanup_owner: CleanupOwnerSlot,
+    |     ^^^^^^^^^^^^^
+    |
+    = note: `-D dead-code` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(dead_code)]`
+
+error: associated function `cleanup_owner_slot_shared` is never used
+   --> crates\xterm-core\src\buffer\screen.rs:198:19
+    |
+151 | impl Buffer {
+    | ----------- associated function in this implementation
+...
+198 |     pub(crate) fn cleanup_owner_slot_shared(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: could not compile `xterm-core` (lib) due to 2 previous errors

@@ -46,7 +46,7 @@ impl BufferDimensions {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum BufferError {
     InvalidDimensions,
     InvalidOption(&'static str),
@@ -230,14 +230,7 @@ impl Buffer {
         )))
     }
     pub fn fill_viewport_rows(&mut self, attr: Option<&AttributeData>) -> Result<(), BufferError> {
-        if self.lines.is_empty() {
-            let default = AttributeData::default();
-            for _ in 0..self.rows {
-                self.lines
-                    .push(self.get_blank_line(attr.unwrap_or(&default), false))?;
-            }
-        }
-        Ok(())
+        shared::fill_viewport_rows_owned(self, attr)
     }
     pub fn clear(&mut self) -> Result<(), BufferError> {
         self.ydisp = 0;
@@ -287,8 +280,10 @@ impl Buffer {
         }
         let mut cleaned = 0;
         while self.cleanup_position < self.lines.len() {
-            let line = self.line(self.cleanup_position)?;
+            let index = self.cleanup_position;
+            // Source get(position++) advances even when the row is undefined.
             self.cleanup_position += 1;
+            let line = self.line(index)?;
             cleaned += usize::from(
                 line.try_borrow_mut()
                     .map_err(|_| BufferError::BorrowedLine)?

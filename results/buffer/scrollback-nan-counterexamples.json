@@ -1,0 +1,11 @@
+{
+  "scope":"Observed read-only JavaScript BufferService probes, not Rust passing evidence",
+  "method":"Existing source bundle tmp/buffer-service-oracle/api.cjs; OptionsService({cols:6,rows:2,scrollback:3}); options.options.scrollback=NaN; buffer.clear()",
+  "node":"v24.15.0",
+  "cases":[
+    {"case":"live-scrollback-NaN","threw":null,"capacity":5,"rows":2,"valueIsNaN":true},
+    {"case":"clear-with-scrollback-NaN","error":{"name":"RangeError","message":"Invalid array length"},"capacity":5,"x":0,"y":0}
+  ],
+  "rustGap":"positive_option rejects accepted NaN before source resize comparison gates; source comparisons with NaN are false, but construction/clear allocation throws",
+  "overallEquivalence":"NOT PROVEN"
+}

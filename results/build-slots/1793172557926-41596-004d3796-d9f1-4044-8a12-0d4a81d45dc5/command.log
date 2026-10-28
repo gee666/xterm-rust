@@ -1,0 +1,87 @@
+warning: field `cleanup_owner` is never read
+   --> crates\xterm-core\src\buffer\screen.rs:149:5
+    |
+119 | pub struct Buffer {
+    |            ------ field in this struct
+...
+149 |     cleanup_owner: CleanupOwnerSlot,
+    |     ^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` on by default
+
+warning: associated function `cleanup_owner_slot_shared` is never used
+   --> crates\xterm-core\src\buffer\screen.rs:198:19
+    |
+151 | impl Buffer {
+    | ----------- associated function in this implementation
+...
+198 |     pub(crate) fn cleanup_owner_slot_shared(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `xterm-core` (lib) generated 2 warnings
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 0.51s
+     Running tests\buffer_cleanup_injection.rs (target\debug\deps\buffer_cleanup_injection-62fff2031e6734bf.exe)
+
+running 6 tests
+test injected_busy_queue_is_rejected_without_cancelling_other_work ... ok
+test cleanup_position_advances_before_missing_row_error ... ok
+test injected_callback_failure_retains_task_and_stops_deadline_queries ... ok
+test root_buffer_disposal_is_idempotent_even_after_late_marker_registration ... ok
+test opaque_non_error_host_values_preserve_identity_without_late_rethrow ... ok
+test configured_host_queue_dispatches_the_actual_cleanup_task ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\buffer_contracts.rs (target\debug\deps\buffer_contracts-11423298b6a0f041.exe)
+
+running 11 tests
+test line_borrow_contention_reports_error_and_viewport_checks_do_not_overflow ... ok
+test clear_preserves_saved_state_but_resets_cursor_and_scrolling ... ok
+test tab_setup_preserves_incremental_stops_and_rebuilds_current_option ... ok
+test scratch_cells_preserve_width_code_and_clear_unspecified_attributes ... ok
+test real_marker_insert_delete_and_clear_one_line_preserve_identity_and_events ... ok
+test cleanup_priority_fallback_and_dispose_cancel_the_actual_token ... ok
+test cleanup_owner_is_unique_and_drop_cancels_then_permits_replacement ... ok
+test host_schedule_failure_propagates_with_typed_error_and_explicit_retry ... ok
+test cleanup_borrow_failure_is_not_hidden_or_retried_implicitly ... ok
+test cleanup_batches_preserve_source_101_cleaned_rows_and_final_rescan ... ok
+test host_idle_cleanup_is_requested_cancelled_and_drained_without_sleep ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\buffer_resize_differential.rs (target\debug\deps\buffer_resize_differential-fa76f5f51983df6b.exe)
+
+running 1 test
+test original_and_seeded_resizes_preserve_state_cells_identity_markers_and_events ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.63s
+
+     Running tests\buffer_resize_reentry.rs (target\debug\deps\buffer_resize_reentry-5e7d3c3e8815ac13.exe)
+
+running 11 tests
+test windows_getter_reentry ... ok
+test scrollback_coercion_reentry ... ok
+test trim_read_write ... ok
+test trim_callback_throws ... ok
+test trim_nested_resize ... ok
+test larger_callback_replaces_list ... ok
+test smaller_read_write ... ok
+test larger_read_write ... ok
+test smaller_nested_resize ... ok
+test larger_nested_resize ... ok
+test sparse_replacement_then_smaller ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\buffer_windows_options.rs (target\debug\deps\buffer_windows_options-de6443c4f5a15073.exe)
+
+running 5 tests
+test row_growth_checks_presence_and_short_circuits_build_lookup_each_row ... ok
+test getter_failures_propagate_without_text_or_default_substitution ... ok
+test alternate_reflow_does_not_read_backend_or_coerce_truthy_build ... ok
+test reflow_preserves_getter_order_and_repeats_the_build_getter ... ok
+test raw_build_truthiness_precedes_comparison_coercion ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -15,8 +15,13 @@ pub struct Harness {
 }
 impl Harness {
     pub fn new(cols: usize, rows: usize) -> Rc<Self> {
+        Self::with_scrollback(cols, rows, 3)
+    }
+    pub fn with_scrollback(cols: usize, rows: usize, scrollback: u32) -> Rc<Self> {
         let options = Rc::new(OptionsService::default());
-        options.set_raw("scrollback", V::Number(3.0)).unwrap();
+        options
+            .set_raw("scrollback", V::Number(f64::from(scrollback)))
+            .unwrap();
         let mut buffer = Buffer::new(true, cols, rows, options.clone()).unwrap();
         buffer.fill_viewport_rows(None).unwrap();
         let identities = (0..buffer.lines.len())
@@ -124,7 +129,7 @@ impl Harness {
     }
     pub fn assert_fixture(&self, name: &str) {
         let fixture = include_str!("../fixtures/buffer-resize-reentry.tsv");
-        assert_eq!(fixture.lines().count(), 10);
+        assert_eq!(fixture.lines().count(), 11);
         let expected = fixture
             .lines()
             .find_map(|line| {

@@ -1,0 +1,9 @@
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\screen_resize.rs:183:
+         let reveal = if configured {
+             false
+         } else {
+[31m-            target.read(|b| -> Result<bool,BufferError> {
+[0m[32m+            target.read(|b| -> Result<bool, BufferError> {
+[0m                 if b.ybase == 0 {
+                     return Ok(false);
+                 }
