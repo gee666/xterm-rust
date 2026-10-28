@@ -8,7 +8,9 @@ import { runCommand } from './quality-process.mjs';
 // the upstream JavaScript terminal engine. The runtime remains wasm-bindgen's.
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const testName = process.env.WASM_TEST ?? 'wasm_host';
+const packageName = process.env.WASM_PACKAGE ?? 'xterm-web';
 if (!/^[a-z0-9_]+$/.test(testName)) throw new Error('Invalid WASM_TEST name');
+if (!/^[a-z0-9-]+$/.test(packageName)) throw new Error('Invalid WASM_PACKAGE name');
 const work = resolve(root, 'tmp/browser-host', testName);
 const resultRoot = resolve(root, 'results/browser-host');
 const runId = new Date().toISOString().replace(/[:.]/g, '-');
@@ -34,7 +36,7 @@ async function command(executable, args, log) {
   await writeFile(resolve(results, 'commands.json'), JSON.stringify(commands, null, 2) + '\n');
   if (record.status !== 'passed') throw new Error(`Command failed; see ${results}/${log}`);
 }
-await command(cargo, ['test', '-p', 'xterm-web', '--target', 'wasm32-unknown-unknown',
+await command(cargo, ['test', '-p', packageName, '--target', 'wasm32-unknown-unknown',
   '--test', testName, '--no-run', '--message-format=json'], `${testName}-build.log`);
 const messages = (await readFile(resolve(results, `${testName}-build.log`), 'utf8')).split('\n')
   .filter(line => line.startsWith('{')).map(line => JSON.parse(line));
@@ -72,7 +74,7 @@ await new Promise((ready, reject) => {
   server.once('error', reject);
   server.listen(0, '127.0.0.1', ready);
 });
-const report = { testName, platform: process.platform, node: process.version,
+const report = { testName, packageName, platform: process.platform, node: process.version,
   date: new Date().toISOString(), componentOnly: true, commands, browsers: [] };
 try {
   const address = server.address();
