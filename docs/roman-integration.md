@@ -21,6 +21,9 @@ cargo test --locked --offline -p xterm-web --lib --test theme_css --test theme_c
 cargo clippy --locked --offline -p xterm-web --lib --test theme_css --test theme_css_raw -- -D warnings
 cargo clippy --locked --offline -p xterm-web --lib --test dom_font_browser --test wasm_raw_font_terminal --test row_factory_browser --target wasm32-unknown-unknown -- -D warnings
 cargo test --workspace --all-targets --all-features --locked --offline
+cargo test --locked --offline -p xterm-web --lib --test theme_css --test theme_css_raw --no-default-features
+cargo test --locked --offline -p xterm-web --lib --test theme_css --test theme_css_raw --release
+cargo test --workspace --doc --locked --offline
 cargo clippy --workspace --all-targets --all-features --locked --offline -- -D warnings
 cargo fmt --all -- --check
 node scripts/width-cache-oracle.mjs
@@ -42,7 +45,7 @@ Logs are retained under results/integration/roman. Browser summary copies there 
 
 - Scoped native checks passed59 tests. Source checks passed10 original WidthCache tests with819 assertions and6 reentrant cases, four DomRenderer font traces,73 canonical CSS cases and30 complete raw styles plus78 fast-color cases.
 - Scoped native/WASM Clippy and direct rustfmt checks for every changed Rust file passed.
-- The full native all-target/all-feature workspace run passed1956 tests in339 targets, zero failed or ignored.
+- The full native all-target/all-feature workspace run passed1956 tests in339 targets, zero failed or ignored. Scoped no-default and release runs passed59 tests each. Workspace doctests passed1 test, with three crates containing no doctests.
 - Full native Clippy first found the existing scrollbar_visibility.rs type-complexity lint. Rebase onto main5ae58c8 included its independently landed8c34869 repair. The same full Clippy command then passed.
 - Three real-browser integration suites passed6 tests per engine, covering four caller traces,565 retained row calls from38 source cases, and an opened exported Rust Terminal with raw font updates and disposal. Four standalone actual-canvas cache tests also passed in each engine.
 - The first full WASM library run failed in all engines at viewport_browser_tests.rs166 and285. A clean detached main e720ce8 baseline reproduced both failures in Chromium, excluding these font changes. Joyce confirmed missing production dependencies from the preceding viewport integration and reopened251. The original failures, error-formatting failure and timeout receipts are retained. No tests were skipped or weakened.
