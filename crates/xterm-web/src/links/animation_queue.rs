@@ -9,6 +9,7 @@ use web_sys::Window;
 use xterm_core::lifecycle::Disposable;
 
 type Runner = Rc<dyn Fn(&WindowAnimationQueue) -> Result<(), JsValue>>;
+type FrameCallback = Closure<dyn FnMut(f64)>;
 struct Item {
     canceled: Cell<bool>,
     priority: Cell<f64>,
@@ -37,7 +38,7 @@ struct State {
     next: RefCell<Vec<Rc<Item>>>,
     current: RefCell<Vec<Rc<Item>>>,
     requested: Cell<Option<i32>>,
-    callback: RefCell<Option<Closure<dyn FnMut(f64)>>>,
+    callback: RefCell<Option<FrameCallback>>,
 }
 impl State {
     fn run(self: &Rc<Self>) -> Result<(), JsValue> {
