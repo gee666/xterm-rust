@@ -1,0 +1,20 @@
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error: this expression creates a reference which is immediately dereferenced by the compiler
+  --> crates\xterm-core\tests\support\terminal_snapshot.rs:97:62
+   |
+97 |         TerminalEvent::Data(text) => Some(format!("D{}", hex(&text))),
+   |                                                              ^^^^^ help: change this to: `text`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_borrow
+   = note: `-D clippy::needless-borrow` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::needless_borrow)]`
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+  --> crates\xterm-core\tests\support\terminal_snapshot.rs:98:69
+   |
+98 |         TerminalEvent::TitleChange(text) => Some(format!("T{}", hex(&text))),
+   |                                                                     ^^^^^ help: change this to: `text`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_borrow
+
+error: could not compile `xterm-core` (test "terminal_csi_differential") due to 2 previous errors

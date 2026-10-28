@@ -1,0 +1,32 @@
+    Blocking waiting for file lock on build directory
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error: method `with_queued_parse` is never used
+  --> crates\xterm-core\src\headless\events.rs:67:12
+   |
+33 | impl Events {
+   | ----------- method in this implementation
+...
+67 |     pub fn with_queued_parse<T>(&self, action: impl FnOnce() -> T) -> T {
+   |            ^^^^^^^^^^^^^^^^^
+   |
+   = note: `-D dead-code` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(dead_code)]`
+
+error: `if` chain can be rewritten with `match`
+  --> crates\xterm-core\src\input\move_to_cell.rs:71:25
+   |
+71 |           let direction = if start_y == target_y {
+   |  _________________________^
+72 | |             if start_x > target_x {
+73 | |                 Direction::Left
+74 | |             } else {
+...  |
+80 | |             Direction::Right
+81 | |         };
+   | |_________^ help: consider rewriting the `if` chain with `match`: `match start_y.cmp(&target_y) {...}`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#comparison_chain
+   = note: `-D clippy::comparison-chain` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::comparison_chain)]`
+
+error: could not compile `xterm-core` (lib) due to 2 previous errors

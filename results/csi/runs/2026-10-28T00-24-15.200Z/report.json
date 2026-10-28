@@ -1,0 +1,1200 @@
+{
+  "command": "node scripts/check-csi.mjs --debug-only",
+  "attempt": "2026-10-28T00-24-15.200Z",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "checks": [
+    {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\nvm\\v24.15.0\\node.exe",
+        "scripts/csi-baseline.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 216.9391,
+      "status": "passed",
+      "log": "results/csi/runs/2026-10-28T00-24-15.200Z/command-0.log"
+    },
+    {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\nvm\\v24.15.0\\node.exe",
+        "scripts/csi-oracle.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 37468.973,
+      "status": "passed",
+      "log": "results/csi/runs/2026-10-28T00-24-15.200Z/command-1.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-core",
+        "--test",
+        "terminal_csi_cursor",
+        "--test",
+        "terminal_csi_editing",
+        "--test",
+        "terminal_csi_events",
+        "--test",
+        "terminal_csi_differential"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1051.0649000000049,
+      "status": "passed",
+      "log": "results/csi/runs/2026-10-28T00-24-15.200Z/command-2.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "xterm-core",
+        "--test",
+        "terminal_csi_cursor",
+        "--test",
+        "terminal_csi_editing",
+        "--test",
+        "terminal_csi_events",
+        "--test",
+        "terminal_csi_differential",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 2845.899000000005,
+      "status": "failed",
+      "log": "results/csi/runs/2026-10-28T00-24-15.200Z/command-3.log"
+    },
+    {
+      "command": [
+        "rustfmt",
+        "--check",
+        "--edition",
+        "2021",
+        "crates/xterm-core/src/terminal/csi.rs",
+        "crates/xterm-core/src/terminal/csi_edits.rs",
+        "crates/xterm-core/tests/terminal_csi_cursor.rs",
+        "crates/xterm-core/tests/terminal_csi_editing.rs",
+        "crates/xterm-core/tests/terminal_csi_events.rs",
+        "crates/xterm-core/tests/terminal_csi_differential.rs"
+      ],
+      "status": "failed",
+      "exitCode": null,
+      "resourceError": "Error: Insufficient disk headroom: 1065734144 bytes available, 1073741824 required. No cleanup was attempted.",
+      "log": "results/csi/runs/2026-10-28T00-24-15.200Z/command-4.log"
+    }
+  ],
+  "testCounts": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-core",
+        "--test",
+        "terminal_csi_cursor",
+        "--test",
+        "terminal_csi_editing",
+        "--test",
+        "terminal_csi_events",
+        "--test",
+        "terminal_csi_differential"
+      ],
+      "status": "passed",
+      "passed": 35,
+      "failed": 0,
+      "ignored": 0
+    }
+  ],
+  "status": "failed",
+  "before": {
+    "Cargo.toml": "9cf738a8b991fdf7d4a7782870c3c367c4249bdf7cb89a35462148f49e69308b",
+    "Cargo.lock": "648c4b550e584d5239c11f7b6c59ef5a89209b3b2faea9c7c3c9c7cce68fe999",
+    ".cargo/config.toml": "096a7c635c6976ce9add7f36059c0551935fd1655b208dee9691a352be3f0c5c",
+    "scripts/check-csi.mjs": "4320fe9f6a3033e6259681c3286557e7c01fa1ff4010336d3bdacefe6f59cc30",
+    "scripts/csi-baseline.mjs": "d56ba37dbad8dad31e62bca211ac3a9b0c3c969f7395c9568ca1c7e8e70f4832",
+    "scripts/csi-oracle.mjs": "ab36f7172d0c9ce427c8d12fafa51d5c889738a866d5c6b40fd3ad619f346281",
+    "scripts/terminal-snapshot.mjs": "f624743e5c59f6dbb0454cdafeb76c12cdcd61eb0dc337592c833f16042d9fea",
+    "scripts/quality-process.mjs": "4b5fd273f76113af15e88f579d0ce97d5468fcf3700be340713baf48727f8598",
+    "scripts/quality-resources.mjs": "a03eb398b898621e0414562253b37cdfa1b89456e1c8c10817e8223919242e3b",
+    "crates/xterm-core/tests/support/terminal_snapshot.rs": "ae30eadf508ef392be748927733a2a1de0523ea18df783c2e02383a71a0f7211",
+    "crates/xterm-core/tests/fixtures/csi-terminal.tsv": "e7eb7f1d750399babf7c780d54e0a85c14a825b918b3f583449508e2f4757bdc",
+    "crates/xterm-core/tests/terminal_csi_cursor.rs": "fae6a8a459a017e36335860693a736aa0bc3d6186e6768a24160bfd629088131",
+    "crates/xterm-core/tests/terminal_csi_editing.rs": "842a989a1c585f4e5014ff51fe8768b7b05f4f7b80f73a4c7b9b82fb7c6130cd",
+    "crates/xterm-core/tests/terminal_csi_events.rs": "4929745669eee0964dec2b5da8288e9b225b82157c976e7bd275f44b023f4ac1",
+    "crates/xterm-core/tests/terminal_csi_differential.rs": "660626c551cbf0434c1ace1838e3d9c4328e4f3c7733509fc6148953015e85f9",
+    "crates/xterm-core/src/buffer/attributes.rs": "8e91e059bd0e0e353d5b6179b869b17bb75be85b9c680768ddff917a7f74ac66",
+    "crates/xterm-core/src/buffer/buffer_set.rs": "3b02316a42e54c4a658b9d3034c33fb0a78ff2b3c639c2e1c93344d4c3b008e0",
+    "crates/xterm-core/src/buffer/cell.rs": "52bdef9deadcdb4010ac1afeb19a8711120184e15de48b862497fb6c8c226daa",
+    "crates/xterm-core/src/buffer/cleanup.rs": "65b806f05097c3b0d934c858ffca6f33f43e7711e87498c36930384c3607f816",
+    "crates/xterm-core/src/buffer/constants.rs": "70623dbf0d49f5532a56f3ea1c7fc2de6b7ce30c0e41b9ccdc33927491defbac",
+    "crates/xterm-core/src/buffer/extended.rs": "41d314890f8fb868aacb0f1387893ce6ca5d950baaddf59c786e6011af7583bb",
+    "crates/xterm-core/src/buffer/line.rs": "7b2345b2f64132de098167eb2a955994ea126475bdb69cf6ff8a1c7437ad2daa",
+    "crates/xterm-core/src/buffer/line_buffer_cleanup_tests.rs": "b3ce67d315167e7266aa7ff65685271a6e83c729ecabbc233f8dec00a894656b",
+    "crates/xterm-core/src/buffer/line_edit.rs": "28a7ceb0ce686157489425bf0dbc7660fc04d1d472e2b97b5651f3cfddf74df9",
+    "crates/xterm-core/src/buffer/line_numeric.rs": "2f4aafde7f3485d2ac63f4d2cf512b1357e857622cb93c133facdda9634840bf",
+    "crates/xterm-core/src/buffer/line_storage_tests.rs": "9060432041ebac64fd176d4ad13caf98a0cf8f8fadab7f4c296d414050996324",
+    "crates/xterm-core/src/buffer/line_text.rs": "36606e32d3d3ad35f70aa6dc3211c743961debe29e43089a42a64de7299a6e9a",
+    "crates/xterm-core/src/buffer/marker.rs": "bcdca03aa9b77969ffc5add24523e2085388c1b9d3ed386e0d9cc8b6426410f6",
+    "crates/xterm-core/src/buffer/mod.rs": "7c2147ea86043ec80f4394c589b1c5c68fece1b0343bc384639412e4be33a469",
+    "crates/xterm-core/src/buffer/range.rs": "eead3ef738e92a5f36e32cfbfc7c1103b33aae313d77bd2cc2e013507f72ad9b",
+    "crates/xterm-core/src/buffer/reflow.rs": "7c1e7908dc2f7d59cad15c023d25b96f8b99e7de0cc7effb6fe9d178e5ebe87f",
+    "crates/xterm-core/src/buffer/screen.rs": "2da2bb6eda4ebb8e7f2d31307daddc38eab08372767ce97489aff78e3bdeb23e",
+    "crates/xterm-core/src/buffer/screen_markers.rs": "338cc855adedeb7b5e76a2530a31b5e7641a142aafefee2735f2359c3014e654",
+    "crates/xterm-core/src/buffer/screen_navigation.rs": "5b7813e4cc019195382ed0e2489b9bd40034eeaf857f2f65bf7a851a7209020d",
+    "crates/xterm-core/src/buffer/screen_options.rs": "1278960f57676c407e99e94f3cb46ebfb5b7bdb457d1c58bf50b85a7303a2710",
+    "crates/xterm-core/src/buffer/screen_reflow.rs": "38243a66e5928280d5aadbe437fceecea0193880188565b37433265162aef522",
+    "crates/xterm-core/src/buffer/screen_reflow_smaller.rs": "b1a8b456cb7ad9e59580bff62744d15404daab743ee92c020b25afa99e55d486",
+    "crates/xterm-core/src/buffer/screen_resize.rs": "1769d567e48978086c3577a17a2530b70dc59463bfee3e48e24ad095c71b4a36",
+    "crates/xterm-core/src/buffer/screen_shared.rs": "2d782314a1089696c9368558100f949f19256fb4cb4d267cbce2bb8ff2f14399",
+    "crates/xterm-core/src/buffer/service.rs": "f66722ddb6d0e660ed487b6634f75596586400cf85676aad504537815e04f51f",
+    "crates/xterm-core/src/charset.rs": "2f886e18235426a28b0b852f5fd97ccfb3e0ac0fd5d933736e8c310d0ea7a27e",
+    "crates/xterm-core/src/charset_tables.rs": "e7c9ab868337c94306c7eec0ccdf0a97d9088b735eff946f105ee4b5b2f204e6",
+    "crates/xterm-core/src/circular_list/storage.rs": "3c756b92344f9adb2c03316ba6159f77f4f3c8371d3e8e488f07a24941f3b633",
+    "crates/xterm-core/src/circular_list.rs": "744027a9f3bba9e43012f04ebdf5f99fafca731baefc79e0c0bf670a9c88b625",
+    "crates/xterm-core/src/color/css.rs": "53fbc2fe54f951103cdb85e90c52c55af4139c0a2928a2501ad9e49d2ba71731",
+    "crates/xterm-core/src/color/mod.rs": "804e46b004befec326439dfa916d9fa9a8e9363080a756990bc54836a1e3d3b1",
+    "crates/xterm-core/src/color/palette.rs": "f1ceaa6a78a58040d033cf029cb1eeac3909a39eecaadcdece0c558133cee6cb",
+    "crates/xterm-core/src/core_service.rs": "ff01572c940dfecc68b1720678a1a9ea613c69b976f74c8fe7d4e2b7da6fabbd",
+    "crates/xterm-core/src/decoration.rs": "55c7a594fd993b86adebe20af730707d2ab67bf408012e19c544d740567fcd26",
+    "crates/xterm-core/src/decoration_cache.rs": "bf28e717f00b8a9da772f2db033018ae1f08309c17126c1bbe83a0d0ce0f0b04",
+    "crates/xterm-core/src/decoration_iterator.rs": "f593456754a5f8be0bb5830f5a9e2dfe9a1419644641ad95c075e36e9342eba8",
+    "crates/xterm-core/src/decoration_service.rs": "02dac4a4a560875e3674c5fe4207e3421810e0e9254b1f62a683ea7a938aeccd",
+    "crates/xterm-core/src/event.rs": "165314ec366d3416e0f83325265945cfb6ccb51a2bdd773e243a815ff579fd9a",
+    "crates/xterm-core/src/headless/error.rs": "3892f8808bd6bebabe7b81b9e348bc120b43979af8e07247b00426b30035ad6e",
+    "crates/xterm-core/src/headless/events.rs": "961ca537a91629de22916602756a9db61e9124124b0bfe166c59afa6775557fb",
+    "crates/xterm-core/src/headless/mod.rs": "b9e98253ee8a8663239994743cef7d2483c4b10409ba33b249c9bc16f18e84d0",
+    "crates/xterm-core/src/headless/modes.rs": "3cf1c079c9893ed3599bf4b2efd4ad87c6b3dbd2b704e2bff18bc132585daea6",
+    "crates/xterm-core/src/headless/native_queue.rs": "324ccc69ed8f6cd66371263fed4e32311d74a6ca5e48a93530ba5f5306c5a884",
+    "crates/xterm-core/src/headless/options_view.rs": "d188e1aa4f16749dbe0f3dd1e707e86f3145106f78298aae04a6406e3d3eca43",
+    "crates/xterm-core/src/headless/queued.rs": "3203c061edb0c697ec6f741d842f4942b1fe063c29f65a1a9b1947e352f93148",
+    "crates/xterm-core/src/headless/queue_bridge.rs": "cc22e3ca6e3a563d2236eb55b82cbdfbb25a663216bd9f2a0a53f4e011e3a2b2",
+    "crates/xterm-core/src/headless/terminal.rs": "06c2310ce2df0ade07514df098cd61e99d57b97c5be6583e27d71fbf24dd5081",
+    "crates/xterm-core/src/headless/views.rs": "019a54f5d24ad8b186ce39f0a4ce3ff966ce792fff052ade41e52b83900a17fc",
+    "crates/xterm-core/src/input/keyboard.rs": "03836dcea0755638e4ee19e795b14874d92a429963906185481860df71068241",
+    "crates/xterm-core/src/input/keyboard_event_source.rs": "b4abccd844ea75f247a7c45f5c7546b84225edf90df66d41fe68d04a215f4021",
+    "crates/xterm-core/src/input/keyboard_lowercase.rs": "d35b06cf6f278b18bc97c2bd36d414a15168fc70c9d160fe80229e19379509b5",
+    "crates/xterm-core/src/input/kitty_keyboard/inherited.rs": "7c86c05a1682a540fdc4ad3890ea526a5e80570692e6a3e6e9e546a3412b1d3b",
+    "crates/xterm-core/src/input/kitty_keyboard/keys.rs": "a128e22b4a61e03d74d8a926910cc537ea97c87054b5494e8c677ed665a8a8e2",
+    "crates/xterm-core/src/input/kitty_keyboard.rs": "1e4fe11fa6df9496bbdc660341ef7ffea4b0124b8a680507922abfe4544cde58",
+    "crates/xterm-core/src/input/move_to_cell.rs": "037d9600346792683d443752cb0cb4f34eb0e666e697ecf79e45e4b059d089c6",
+    "crates/xterm-core/src/input/text_decoder.rs": "282585d0b4070083ff4e79e9ade02bca4148f68c0ec3f1f6011beebe06f9d525",
+    "crates/xterm-core/src/input/win32_input_mode.rs": "63185e8be1965c94b03a446c0a1d3c68c509ebb58b41f559e4b3f81f329624ff",
+    "crates/xterm-core/src/input/win32_input_mode_tests.rs": "8c32537421b96feee2ad63cd16926ed0b90f8c81f2492e86b78a12f604290385",
+    "crates/xterm-core/src/input/win32_key_codes.rs": "7ac7f86e9979b8374401f3ab3ab1c9b71037f61f8c0a5826a715594c79c1956e",
+    "crates/xterm-core/src/input/write_buffer.rs": "73491996ca3e6dbe4987edd0b6c78e81b8746c0264fea766bb1d405290c68dca",
+    "crates/xterm-core/src/input/write_buffer_drain.rs": "3c831e4d8a27be980f3703bf5de7bbd4ddd35635e84df97f564bdf56adee82fe",
+    "crates/xterm-core/src/input/write_buffer_types.rs": "beaf1355195411240323baf2bbee8a2d819ded0d95fa536bc7f6b3effa5532e3",
+    "crates/xterm-core/src/input/xparse_color.rs": "4b20e6d95daebc7a706438a7fb004272e1ea8b21df7c69512b7de9aac8d5cf44",
+    "crates/xterm-core/src/instantiation.rs": "b81e959e740d2cfcaad83f8033a84e551714bc5cba70028ce1e0c937df813b99",
+    "crates/xterm-core/src/lib.rs": "cefe6164a92aff1cd0b4450e8d301cd5fa70ab27e594a83948f82067d3411c53",
+    "crates/xterm-core/src/lifecycle.rs": "bcd7fab9c761373bb75a0cff558795749ba63819c0de9592e2d9e0ff3b774931",
+    "crates/xterm-core/src/log_service.rs": "7436d20e57fe279c891e75cd4a76f5a1b7aa1af3491ddf844148e4a6dc1fd185",
+    "crates/xterm-core/src/mouse_protocol.rs": "37d13297e42b0cf87ecdee0e0f95c0b0a803638579070dd7ffe51ff4c8a0f832",
+    "crates/xterm-core/src/mouse_state.rs": "27628aa0ad48c18c58bc69ff4f43ab1ac1e5040b393203e086b9ce4cb57de9a7",
+    "crates/xterm-core/src/multi_key_map.rs": "fa4caf7d3fd79c547b4962b8664c730f2dcb4c62ec96bc1c089f0ae91ce258f1",
+    "crates/xterm-core/src/options/defaults.rs": "660292b88e90d5d2798855d9806706edbb039ada9b69910f7f83480c2d52e68d",
+    "crates/xterm-core/src/options/host_store.rs": "2156b455313a817e2f3a59e85f8cbdb09b5c5476d98e481f7019f960b72a49b0",
+    "crates/xterm-core/src/options/mod.rs": "2c408b75a4160a168e40da7a47ffaba4236a420bbf09d8d7dc0b43591d91dced",
+    "crates/xterm-core/src/options/object.rs": "533ed05861c78f58093f46d52a8cd562e377946e506ac9e6ad047aa9375b854a",
+    "crates/xterm-core/src/options/validation.rs": "af430e5059e4f2e376f066e04ca7ab2d01ca5ef379092f6a6276b466cdf128d4",
+    "crates/xterm-core/src/options/value.rs": "87a38bd293797a8b11f267845772d2fc0bced43f07a5357c60ccde8c4c2f89eb",
+    "crates/xterm-core/src/osc_link_service.rs": "f9490940e432d67991f6f955ca29610ab75b31430286887110042751c61d8497",
+    "crates/xterm-core/src/parser/apc.rs": "b9b2bee3b24a4a882f8f7c17eeefad2568767ad29f00a238e3259fe033b0b816",
+    "crates/xterm-core/src/parser/dcs.rs": "240e93f1031ceae3c8fb322702097dd04182225307ebc3efe275607a8370cb89",
+    "crates/xterm-core/src/parser/dcs_handler.rs": "02ca346643f828d4ea88532a89d482e4c18400909fbdc73bf037f92b33042217",
+    "crates/xterm-core/src/parser/escape.rs": "5772e095f659547660e07ffd2edfc88fd1b0a32c97adbb2f4da8ef1a497cf2eb",
+    "crates/xterm-core/src/parser/escape_handlers.rs": "c9103d6c75549e6395833870bd4cd94a7cd12ebf2189eade2173879826b47268",
+    "crates/xterm-core/src/parser/escape_parse.rs": "5e81fc8f7f52c36e64a2b42efb6fb0bef781bb9fd70f2689249788da28dbbc6a",
+    "crates/xterm-core/src/parser/escape_resume.rs": "6ede98b708e7cf9c5cf613e334d632ab0ef841c5b3857e5b6db3bf640b8e7de7",
+    "crates/xterm-core/src/parser/handler.rs": "6b0aa0367ad00cf72081214ec758dceb0b0a62e8ea35ec389db0a3153ea545f3",
+    "crates/xterm-core/src/parser/handler_registry.rs": "d3aae8eee9c898a44980f46368097e0e2d8f3858e58210d19fc05821fbf910f4",
+    "crates/xterm-core/src/parser/osc.rs": "3900c26643a30d6eaa1c4c699b26066ba803592407ccef08c3517f736b0e63b7",
+    "crates/xterm-core/src/parser/osc_handler.rs": "00522ed59f27ec586e28e709d2c01274f57511420acb8108793876621427326d",
+    "crates/xterm-core/src/parser/osc_registry.rs": "0686c13530785eaf27ce4d12a105147bc9d1dbbf301d78fd3a8ab2977bda1418",
+    "crates/xterm-core/src/parser/params.rs": "7791583aed1338cb52829d205cd64734889b496bd9c6adb72bb60e4780e34824",
+    "crates/xterm-core/src/parser/table.rs": "babf160c5ec24622c3a5ec349d7622ef2ec716fc59a7b50934ac973358909868",
+    "crates/xterm-core/src/parser/vt500_table.rs": "3155452ba6accf9c8e7bed7156c2150ae85729fc34de290e5293aa2bcf34f460",
+    "crates/xterm-core/src/platform.rs": "6f1fe6e9cb8a48e2e2983cce5c2bfcd99fdb36edcb764400dbf9ba116bca8ac3",
+    "crates/xterm-core/src/public_api/addon_manager.rs": "3e0328494ada7baa688d91738dd0289c48ffe38530a69df1d4cc432c2a391c4b",
+    "crates/xterm-core/src/public_api/buffer.rs": "345cac244a50cce0d451025d105c87237283c36447a04a8969af25e3f04d63fd",
+    "crates/xterm-core/src/public_api/line_numbers.rs": "d2c331833d764fbe7daa67058b0d60f42e9f3442de89ed5946ec0ecb0e4a386b",
+    "crates/xterm-core/src/public_api/line_translation.rs": "fe6359038f4784d42c66fd9e54a06b5c5932d0e3e7b974d9d9743fb043f3a2b7",
+    "crates/xterm-core/src/public_api/mod.rs": "767b5bfaaec96a9af9c22943573127078f02b6fca2a48879df8510692bf7aa48",
+    "crates/xterm-core/src/public_api/parser.rs": "d3ccbe1ea19810356bd0db76a6723aeb098e69577e83a95d52d9046c783976c6",
+    "crates/xterm-core/src/public_api/validation.rs": "7e02401691b0c677198c5f2238c2e58124eec88eef1c633447241956dc939a44",
+    "crates/xterm-core/src/search/cache.rs": "b2fb52e786a1201447fda180c169e5f644222610e9c16e25a89dba5ea8c66806",
+    "crates/xterm-core/src/search/engine.rs": "d65bdf3a9e06d1603a6997c60ca55dce9af9b57865411996c21f74039880ac65",
+    "crates/xterm-core/src/search/matching.rs": "f8437e559c569c17282ace838c608519b4123010590803e24dcf3e3dbad9f434",
+    "crates/xterm-core/src/search/mod.rs": "47c803b0c994145e873d04d8e9d3c89c5e56c97792ed17f394b27bc0bf1c50bb",
+    "crates/xterm-core/src/search/state.rs": "cfa8a0b6f6fd5863248bf4d79f05bd56a5235dc693d66b09d63d03cc9449b8c1",
+    "crates/xterm-core/src/serialize/addon.rs": "03299af3a36246ca611244267c769048256cd9d1bb2f0dfdd1da26318a6261db",
+    "crates/xterm-core/src/serialize/ansi.rs": "6fc4eabc157b23f5828c9ca22df679f75d53c8c4e02e681921b44b7ade9c296d",
+    "crates/xterm-core/src/serialize/buffer.rs": "781cd5f0538228d68bcc2c5c14a6707f0437dd17db69dce45a652760c0f58ace",
+    "crates/xterm-core/src/serialize/html.rs": "320ceea1323343c87f36f59da977d4c2cc626ef5a96f5e6a9479c5d6bfefea14",
+    "crates/xterm-core/src/serialize/mod.rs": "b5a7cd84ac130d7a8254bebe0d2821ac4c8083b10cd80fb5928b5faec72b35ee",
+    "crates/xterm-core/src/serialize/style.rs": "c930897894aef6f7c184d1430f408dc56666dad48ba2bbf728415fe5944ca550",
+    "crates/xterm-core/src/serialize/terminal.rs": "d80c9de9eaf322b4d4d07b778924de444fc305bcf1945a40e16e07852ef28867",
+    "crates/xterm-core/src/service_registry.rs": "5037627661ed00b68ebebde93291da621995f572c54d44b87618af814ec4decf",
+    "crates/xterm-core/src/sorted_list/iteration.rs": "d0475f0d4ba8eb9e1922279175c21b4852fe8fad45b7e020dcf59cc2b2b4821d",
+    "crates/xterm-core/src/sorted_list/sort_batch.rs": "0945209de4ed0e589d74777a636caaf84697552ca5682cdf6185dcecd620599d",
+    "crates/xterm-core/src/sorted_list.rs": "f978298aa5769e1b21abb5354cfc64b47b4bbbb27158b725a2b9567b1de89db3",
+    "crates/xterm-core/src/string_builder.rs": "3a50f3c396dbd53ee6a673097753620d792510d7a80f8e50610668649cfa7638",
+    "crates/xterm-core/src/task_queue.rs": "e4bb5d0dba55b6afdf15ce81afc85d7cbead6e75525271be2815b214de6933e3",
+    "crates/xterm-core/src/terminal/commands.rs": "c8a8d3addd27a13a7426dcef3c13d0df2242f10e55f04c0f83b9cca6f7f86fd6",
+    "crates/xterm-core/src/terminal/construction.rs": "fcfd1e45a30382278110618a0d5c533653a38992c51788164f464659a774fda7",
+    "crates/xterm-core/src/terminal/controls.rs": "f69162ce84a6979cfe81273092e767981decaf8da290778103764a747cd98bca",
+    "crates/xterm-core/src/terminal/csi.rs": "a2c884488f8d4ab8916951862f60feb572447923c99bde956e9f9469c20334a6",
+    "crates/xterm-core/src/terminal/csi_edits.rs": "7a38a06e47eccb1381feabd9f936d8fee72f495bad4e4e206a4f7d960d67f1df",
+    "crates/xterm-core/src/terminal/csi_erase.rs": "b652b9dd1b3ca48e8b49d3ed985f3867b0f3318a98c6c50ff519d755ec3cf87f",
+    "crates/xterm-core/src/terminal/dispatch.rs": "141bd7e3162abeeed8d7e414353af6e6f72e5df24b4d248b532e5d92a2ca4a14",
+    "crates/xterm-core/src/terminal/error.rs": "2c6f23227238a5a538bbde6d8d33fd6bc3b5ec5c7b0a901d320b950705c73fdf",
+    "crates/xterm-core/src/terminal/escape.rs": "88259fd0a6e13549927adacf59d80140390efe1bd55d7860a3aa215d3168c237",
+    "crates/xterm-core/src/terminal/events.rs": "8c9dfeeaaa2866db873583ccf43714a440c7ae4b05a160eb4e3c2402a9190cf6",
+    "crates/xterm-core/src/terminal/kitty_modes.rs": "badef6b6702ddb1b1a6cd1ffbae129aadd5555f5a455147e678614147cd0461a",
+    "crates/xterm-core/src/terminal/mod.rs": "7ae07bda3dc38b1ea8c802191993bcdd989b728c9866ca8953aa0ca051f72312",
+    "crates/xterm-core/src/terminal/modes.rs": "b8927668a0ec2c2b423001250dde0969c36a4e762034edb2f24983c39f6cf77f",
+    "crates/xterm-core/src/terminal/mode_callbacks.rs": "a4212647c25d0fe85bf621d0c898051c7083a731427b5bb0fc8b1875634b0f36",
+    "crates/xterm-core/src/terminal/mode_query.rs": "8125cb89c8a3d7f131d738f74a323e93dc93e2c4ac7ff5a253e6d6d44e056bf2",
+    "crates/xterm-core/src/terminal/operations.rs": "daeedfb3bbded03d5365b07bbf767623e6e3e25cdb6ceec70c761f5e1894b6b5",
+    "crates/xterm-core/src/terminal/osc.rs": "56fc573376b0ac47c4c80de86298d455ed5a28de9b02216f47a48901d2607cbe",
+    "crates/xterm-core/src/terminal/osc_colors.rs": "b3027fc88b415129a49ece4220b49d44dbf0a6f329db5c71e8aea8d0b74828c7",
+    "crates/xterm-core/src/terminal/print.rs": "8059a4c7b3603c014a60d4f63fc48f1dcda5fdcc8d845726b52e6a7a0fe4ea05",
+    "crates/xterm-core/src/terminal/register.rs": "67dab0a791c206a952395be9d50849b67668e25ff2ca0637720688f27e0e7fd6",
+    "crates/xterm-core/src/terminal/replies.rs": "616722ca2aae1ded9d2e24b56bd4c67c5923a8af56af084a4311a0a1eb21ad20",
+    "crates/xterm-core/src/terminal/reply_tests.rs": "4de576e929eeb98a445de7184cc258ce17ae232d62486f8d85de8d40855959d7",
+    "crates/xterm-core/src/terminal/sgr.rs": "4dae2ba7a519be006a12ea41f5a33de89f6fd032c5f2df9390a6b3702d2fd5b6",
+    "crates/xterm-core/src/terminal/sgr_dispatch.rs": "f14c878cdc30ee3c198022ed298146359e15b1fb936b3f212d64b6186fc79140",
+    "crates/xterm-core/src/terminal/state.rs": "682e1720cdcded2cfdce5b698461e455ce769a854b7a5067b7f9ef31e92205dd",
+    "crates/xterm-core/src/terminal/window.rs": "ae27ed56ac11cbb6757dead70108361bc6f3b9d6bb983215d39f4d232476048a",
+    "crates/xterm-core/src/terminal/windows_heuristics.rs": "ff6da948a4e5648d76c48f31cbd9b8a7f5a0b1164349b340656cffd5a610491d",
+    "crates/xterm-core/src/unicode.rs": "4dfd33b3de3331b3e0ecc41fa9109d6968db0f601960b7a8b9dede99865c147e",
+    "crates/xterm-core/src/unicode11.rs": "a5b2e480f39237b477f5b6b3a7ead3636552d3fd3befc89b41fa702ff7f29e88",
+    "crates/xterm-core/src/unicode11_tables.rs": "6ad9974d412e70d0462e6cd59f275fbd49650e053f392c5de595f2db6493a7ac",
+    "crates/xterm-core/src/unicode15_tables.rs": "fddf1eeb4ec31fbcadf9a0497b764203c57031ca21cb38ad05f255d305972f38",
+    "crates/xterm-core/src/unicode_addons.rs": "5b9df259db5cb04db64498e8daad50871ee79460e22a2a814a22b743ff819a85",
+    "crates/xterm-core/src/unicode_graphemes.rs": "231caeb48a9b18378c8f8830ef2a1546cdd55374c1b17e17df3cd076e1304080",
+    "crates/xterm-core/src/unicode_properties.rs": "e73148fa3dbad203e7979d9a6d5b38fd0330c2f2e978e20929542458a01fcb3d",
+    "crates/xterm-core/src/unicode_service.rs": "9e44249a79b9a19c9c3c52f603fe4ccd09e07c701135063416218676a7c6f9a5",
+    "crates/xterm-core/src/unicode_v6.rs": "e427968168c96cf948e78fa2c7d52ec169b5e4c203bd2bfb2b0e75ca52419393",
+    "crates/xterm-core/src/unicode_v6_tables.rs": "d8ee02632b0672df8b1148c371b6dec6ca03c9c0448ad226c13a80565626693a",
+    "crates/xterm-core/src/version.rs": "e02badb736157232cdb7333581af9e53c64545c477ce292f22761b9f5370cf80",
+    "crates/xterm-core/src/windows_mode.rs": "d144b1b52cfaf7c3dc9aea2723fdbee880b1940f3150eb5f33b8ac12429b748c"
+  },
+  "after": {
+    "Cargo.toml": "9cf738a8b991fdf7d4a7782870c3c367c4249bdf7cb89a35462148f49e69308b",
+    "Cargo.lock": "648c4b550e584d5239c11f7b6c59ef5a89209b3b2faea9c7c3c9c7cce68fe999",
+    ".cargo/config.toml": "096a7c635c6976ce9add7f36059c0551935fd1655b208dee9691a352be3f0c5c",
+    "scripts/check-csi.mjs": "4320fe9f6a3033e6259681c3286557e7c01fa1ff4010336d3bdacefe6f59cc30",
+    "scripts/csi-baseline.mjs": "d56ba37dbad8dad31e62bca211ac3a9b0c3c969f7395c9568ca1c7e8e70f4832",
+    "scripts/csi-oracle.mjs": "ab36f7172d0c9ce427c8d12fafa51d5c889738a866d5c6b40fd3ad619f346281",
+    "scripts/terminal-snapshot.mjs": "f624743e5c59f6dbb0454cdafeb76c12cdcd61eb0dc337592c833f16042d9fea",
+    "scripts/quality-process.mjs": "4b5fd273f76113af15e88f579d0ce97d5468fcf3700be340713baf48727f8598",
+    "scripts/quality-resources.mjs": "a03eb398b898621e0414562253b37cdfa1b89456e1c8c10817e8223919242e3b",
+    "crates/xterm-core/tests/support/terminal_snapshot.rs": "ae30eadf508ef392be748927733a2a1de0523ea18df783c2e02383a71a0f7211",
+    "crates/xterm-core/tests/fixtures/csi-terminal.tsv": "e7eb7f1d750399babf7c780d54e0a85c14a825b918b3f583449508e2f4757bdc",
+    "crates/xterm-core/tests/terminal_csi_cursor.rs": "fae6a8a459a017e36335860693a736aa0bc3d6186e6768a24160bfd629088131",
+    "crates/xterm-core/tests/terminal_csi_editing.rs": "842a989a1c585f4e5014ff51fe8768b7b05f4f7b80f73a4c7b9b82fb7c6130cd",
+    "crates/xterm-core/tests/terminal_csi_events.rs": "4929745669eee0964dec2b5da8288e9b225b82157c976e7bd275f44b023f4ac1",
+    "crates/xterm-core/tests/terminal_csi_differential.rs": "660626c551cbf0434c1ace1838e3d9c4328e4f3c7733509fc6148953015e85f9",
+    "crates/xterm-core/src/buffer/attributes.rs": "8e91e059bd0e0e353d5b6179b869b17bb75be85b9c680768ddff917a7f74ac66",
+    "crates/xterm-core/src/buffer/buffer_set.rs": "3b02316a42e54c4a658b9d3034c33fb0a78ff2b3c639c2e1c93344d4c3b008e0",
+    "crates/xterm-core/src/buffer/cell.rs": "52bdef9deadcdb4010ac1afeb19a8711120184e15de48b862497fb6c8c226daa",
+    "crates/xterm-core/src/buffer/cleanup.rs": "65b806f05097c3b0d934c858ffca6f33f43e7711e87498c36930384c3607f816",
+    "crates/xterm-core/src/buffer/constants.rs": "70623dbf0d49f5532a56f3ea1c7fc2de6b7ce30c0e41b9ccdc33927491defbac",
+    "crates/xterm-core/src/buffer/extended.rs": "41d314890f8fb868aacb0f1387893ce6ca5d950baaddf59c786e6011af7583bb",
+    "crates/xterm-core/src/buffer/line.rs": "7b2345b2f64132de098167eb2a955994ea126475bdb69cf6ff8a1c7437ad2daa",
+    "crates/xterm-core/src/buffer/line_buffer_cleanup_tests.rs": "b3ce67d315167e7266aa7ff65685271a6e83c729ecabbc233f8dec00a894656b",
+    "crates/xterm-core/src/buffer/line_edit.rs": "28a7ceb0ce686157489425bf0dbc7660fc04d1d472e2b97b5651f3cfddf74df9",
+    "crates/xterm-core/src/buffer/line_numeric.rs": "2f4aafde7f3485d2ac63f4d2cf512b1357e857622cb93c133facdda9634840bf",
+    "crates/xterm-core/src/buffer/line_storage_tests.rs": "9060432041ebac64fd176d4ad13caf98a0cf8f8fadab7f4c296d414050996324",
+    "crates/xterm-core/src/buffer/line_text.rs": "36606e32d3d3ad35f70aa6dc3211c743961debe29e43089a42a64de7299a6e9a",
+    "crates/xterm-core/src/buffer/marker.rs": "bcdca03aa9b77969ffc5add24523e2085388c1b9d3ed386e0d9cc8b6426410f6",
+    "crates/xterm-core/src/buffer/mod.rs": "7c2147ea86043ec80f4394c589b1c5c68fece1b0343bc384639412e4be33a469",
+    "crates/xterm-core/src/buffer/range.rs": "eead3ef738e92a5f36e32cfbfc7c1103b33aae313d77bd2cc2e013507f72ad9b",
+    "crates/xterm-core/src/buffer/reflow.rs": "7c1e7908dc2f7d59cad15c023d25b96f8b99e7de0cc7effb6fe9d178e5ebe87f",
+    "crates/xterm-core/src/buffer/screen.rs": "2da2bb6eda4ebb8e7f2d31307daddc38eab08372767ce97489aff78e3bdeb23e",
+    "crates/xterm-core/src/buffer/screen_markers.rs": "338cc855adedeb7b5e76a2530a31b5e7641a142aafefee2735f2359c3014e654",
+    "crates/xterm-core/src/buffer/screen_navigation.rs": "5b7813e4cc019195382ed0e2489b9bd40034eeaf857f2f65bf7a851a7209020d",
+    "crates/xterm-core/src/buffer/screen_options.rs": "1278960f57676c407e99e94f3cb46ebfb5b7bdb457d1c58bf50b85a7303a2710",
+    "crates/xterm-core/src/buffer/screen_reflow.rs": "38243a66e5928280d5aadbe437fceecea0193880188565b37433265162aef522",
+    "crates/xterm-core/src/buffer/screen_reflow_smaller.rs": "b1a8b456cb7ad9e59580bff62744d15404daab743ee92c020b25afa99e55d486",
+    "crates/xterm-core/src/buffer/screen_resize.rs": "1769d567e48978086c3577a17a2530b70dc59463bfee3e48e24ad095c71b4a36",
+    "crates/xterm-core/src/buffer/screen_shared.rs": "2d782314a1089696c9368558100f949f19256fb4cb4d267cbce2bb8ff2f14399",
+    "crates/xterm-core/src/buffer/service.rs": "f66722ddb6d0e660ed487b6634f75596586400cf85676aad504537815e04f51f",
+    "crates/xterm-core/src/charset.rs": "2f886e18235426a28b0b852f5fd97ccfb3e0ac0fd5d933736e8c310d0ea7a27e",
+    "crates/xterm-core/src/charset_tables.rs": "e7c9ab868337c94306c7eec0ccdf0a97d9088b735eff946f105ee4b5b2f204e6",
+    "crates/xterm-core/src/circular_list/storage.rs": "3c756b92344f9adb2c03316ba6159f77f4f3c8371d3e8e488f07a24941f3b633",
+    "crates/xterm-core/src/circular_list.rs": "744027a9f3bba9e43012f04ebdf5f99fafca731baefc79e0c0bf670a9c88b625",
+    "crates/xterm-core/src/color/css.rs": "53fbc2fe54f951103cdb85e90c52c55af4139c0a2928a2501ad9e49d2ba71731",
+    "crates/xterm-core/src/color/mod.rs": "804e46b004befec326439dfa916d9fa9a8e9363080a756990bc54836a1e3d3b1",
+    "crates/xterm-core/src/color/palette.rs": "f1ceaa6a78a58040d033cf029cb1eeac3909a39eecaadcdece0c558133cee6cb",
+    "crates/xterm-core/src/core_service.rs": "ff01572c940dfecc68b1720678a1a9ea613c69b976f74c8fe7d4e2b7da6fabbd",
+    "crates/xterm-core/src/decoration.rs": "55c7a594fd993b86adebe20af730707d2ab67bf408012e19c544d740567fcd26",
+    "crates/xterm-core/src/decoration_cache.rs": "bf28e717f00b8a9da772f2db033018ae1f08309c17126c1bbe83a0d0ce0f0b04",
+    "crates/xterm-core/src/decoration_iterator.rs": "f593456754a5f8be0bb5830f5a9e2dfe9a1419644641ad95c075e36e9342eba8",
+    "crates/xterm-core/src/decoration_service.rs": "02dac4a4a560875e3674c5fe4207e3421810e0e9254b1f62a683ea7a938aeccd",
+    "crates/xterm-core/src/event.rs": "165314ec366d3416e0f83325265945cfb6ccb51a2bdd773e243a815ff579fd9a",
+    "crates/xterm-core/src/headless/error.rs": "3892f8808bd6bebabe7b81b9e348bc120b43979af8e07247b00426b30035ad6e",
+    "crates/xterm-core/src/headless/events.rs": "961ca537a91629de22916602756a9db61e9124124b0bfe166c59afa6775557fb",
+    "crates/xterm-core/src/headless/mod.rs": "b9e98253ee8a8663239994743cef7d2483c4b10409ba33b249c9bc16f18e84d0",
+    "crates/xterm-core/src/headless/modes.rs": "3cf1c079c9893ed3599bf4b2efd4ad87c6b3dbd2b704e2bff18bc132585daea6",
+    "crates/xterm-core/src/headless/native_queue.rs": "324ccc69ed8f6cd66371263fed4e32311d74a6ca5e48a93530ba5f5306c5a884",
+    "crates/xterm-core/src/headless/options_view.rs": "d188e1aa4f16749dbe0f3dd1e707e86f3145106f78298aae04a6406e3d3eca43",
+    "crates/xterm-core/src/headless/queued.rs": "3203c061edb0c697ec6f741d842f4942b1fe063c29f65a1a9b1947e352f93148",
+    "crates/xterm-core/src/headless/queue_bridge.rs": "cc22e3ca6e3a563d2236eb55b82cbdfbb25a663216bd9f2a0a53f4e011e3a2b2",
+    "crates/xterm-core/src/headless/terminal.rs": "06c2310ce2df0ade07514df098cd61e99d57b97c5be6583e27d71fbf24dd5081",
+    "crates/xterm-core/src/headless/views.rs": "019a54f5d24ad8b186ce39f0a4ce3ff966ce792fff052ade41e52b83900a17fc",
+    "crates/xterm-core/src/input/keyboard.rs": "03836dcea0755638e4ee19e795b14874d92a429963906185481860df71068241",
+    "crates/xterm-core/src/input/keyboard_event_source.rs": "9056864d213ffa1d4e2290c930618c8ccda9ce4205babb1c619204cc0c050fbf",
+    "crates/xterm-core/src/input/keyboard_lowercase.rs": "d35b06cf6f278b18bc97c2bd36d414a15168fc70c9d160fe80229e19379509b5",
+    "crates/xterm-core/src/input/kitty_keyboard/inherited.rs": "7c86c05a1682a540fdc4ad3890ea526a5e80570692e6a3e6e9e546a3412b1d3b",
+    "crates/xterm-core/src/input/kitty_keyboard/keys.rs": "a128e22b4a61e03d74d8a926910cc537ea97c87054b5494e8c677ed665a8a8e2",
+    "crates/xterm-core/src/input/kitty_keyboard.rs": "1e4fe11fa6df9496bbdc660341ef7ffea4b0124b8a680507922abfe4544cde58",
+    "crates/xterm-core/src/input/move_to_cell.rs": "037d9600346792683d443752cb0cb4f34eb0e666e697ecf79e45e4b059d089c6",
+    "crates/xterm-core/src/input/text_decoder.rs": "282585d0b4070083ff4e79e9ade02bca4148f68c0ec3f1f6011beebe06f9d525",
+    "crates/xterm-core/src/input/win32_input_mode.rs": "f2af91c06867a31010f26755cef93587b3f5d64435cb48f60fdd4df0c68f615d",
+    "crates/xterm-core/src/input/win32_input_mode_tests.rs": "8c32537421b96feee2ad63cd16926ed0b90f8c81f2492e86b78a12f604290385",
+    "crates/xterm-core/src/input/win32_key_codes.rs": "7ac7f86e9979b8374401f3ab3ab1c9b71037f61f8c0a5826a715594c79c1956e",
+    "crates/xterm-core/src/input/write_buffer.rs": "73491996ca3e6dbe4987edd0b6c78e81b8746c0264fea766bb1d405290c68dca",
+    "crates/xterm-core/src/input/write_buffer_drain.rs": "3c831e4d8a27be980f3703bf5de7bbd4ddd35635e84df97f564bdf56adee82fe",
+    "crates/xterm-core/src/input/write_buffer_types.rs": "beaf1355195411240323baf2bbee8a2d819ded0d95fa536bc7f6b3effa5532e3",
+    "crates/xterm-core/src/input/xparse_color.rs": "4b20e6d95daebc7a706438a7fb004272e1ea8b21df7c69512b7de9aac8d5cf44",
+    "crates/xterm-core/src/instantiation.rs": "b81e959e740d2cfcaad83f8033a84e551714bc5cba70028ce1e0c937df813b99",
+    "crates/xterm-core/src/lib.rs": "cefe6164a92aff1cd0b4450e8d301cd5fa70ab27e594a83948f82067d3411c53",
+    "crates/xterm-core/src/lifecycle.rs": "bcd7fab9c761373bb75a0cff558795749ba63819c0de9592e2d9e0ff3b774931",
+    "crates/xterm-core/src/log_service.rs": "7436d20e57fe279c891e75cd4a76f5a1b7aa1af3491ddf844148e4a6dc1fd185",
+    "crates/xterm-core/src/mouse_protocol.rs": "37d13297e42b0cf87ecdee0e0f95c0b0a803638579070dd7ffe51ff4c8a0f832",
+    "crates/xterm-core/src/mouse_state.rs": "27628aa0ad48c18c58bc69ff4f43ab1ac1e5040b393203e086b9ce4cb57de9a7",
+    "crates/xterm-core/src/multi_key_map.rs": "fa4caf7d3fd79c547b4962b8664c730f2dcb4c62ec96bc1c089f0ae91ce258f1",
+    "crates/xterm-core/src/options/defaults.rs": "660292b88e90d5d2798855d9806706edbb039ada9b69910f7f83480c2d52e68d",
+    "crates/xterm-core/src/options/host_store.rs": "2156b455313a817e2f3a59e85f8cbdb09b5c5476d98e481f7019f960b72a49b0",
+    "crates/xterm-core/src/options/mod.rs": "2c408b75a4160a168e40da7a47ffaba4236a420bbf09d8d7dc0b43591d91dced",
+    "crates/xterm-core/src/options/object.rs": "533ed05861c78f58093f46d52a8cd562e377946e506ac9e6ad047aa9375b854a",
+    "crates/xterm-core/src/options/validation.rs": "af430e5059e4f2e376f066e04ca7ab2d01ca5ef379092f6a6276b466cdf128d4",
+    "crates/xterm-core/src/options/value.rs": "87a38bd293797a8b11f267845772d2fc0bced43f07a5357c60ccde8c4c2f89eb",
+    "crates/xterm-core/src/osc_link_service.rs": "4d7a4f773a7294180899e20edf6daba6457d5a559118d58c34a69e8cb094fa59",
+    "crates/xterm-core/src/parser/apc.rs": "b9b2bee3b24a4a882f8f7c17eeefad2568767ad29f00a238e3259fe033b0b816",
+    "crates/xterm-core/src/parser/dcs.rs": "240e93f1031ceae3c8fb322702097dd04182225307ebc3efe275607a8370cb89",
+    "crates/xterm-core/src/parser/dcs_handler.rs": "02ca346643f828d4ea88532a89d482e4c18400909fbdc73bf037f92b33042217",
+    "crates/xterm-core/src/parser/escape.rs": "5772e095f659547660e07ffd2edfc88fd1b0a32c97adbb2f4da8ef1a497cf2eb",
+    "crates/xterm-core/src/parser/escape_handlers.rs": "c9103d6c75549e6395833870bd4cd94a7cd12ebf2189eade2173879826b47268",
+    "crates/xterm-core/src/parser/escape_parse.rs": "5e81fc8f7f52c36e64a2b42efb6fb0bef781bb9fd70f2689249788da28dbbc6a",
+    "crates/xterm-core/src/parser/escape_resume.rs": "6ede98b708e7cf9c5cf613e334d632ab0ef841c5b3857e5b6db3bf640b8e7de7",
+    "crates/xterm-core/src/parser/handler.rs": "6b0aa0367ad00cf72081214ec758dceb0b0a62e8ea35ec389db0a3153ea545f3",
+    "crates/xterm-core/src/parser/handler_registry.rs": "d3aae8eee9c898a44980f46368097e0e2d8f3858e58210d19fc05821fbf910f4",
+    "crates/xterm-core/src/parser/osc.rs": "3900c26643a30d6eaa1c4c699b26066ba803592407ccef08c3517f736b0e63b7",
+    "crates/xterm-core/src/parser/osc_handler.rs": "00522ed59f27ec586e28e709d2c01274f57511420acb8108793876621427326d",
+    "crates/xterm-core/src/parser/osc_registry.rs": "0686c13530785eaf27ce4d12a105147bc9d1dbbf301d78fd3a8ab2977bda1418",
+    "crates/xterm-core/src/parser/params.rs": "7791583aed1338cb52829d205cd64734889b496bd9c6adb72bb60e4780e34824",
+    "crates/xterm-core/src/parser/table.rs": "babf160c5ec24622c3a5ec349d7622ef2ec716fc59a7b50934ac973358909868",
+    "crates/xterm-core/src/parser/vt500_table.rs": "3155452ba6accf9c8e7bed7156c2150ae85729fc34de290e5293aa2bcf34f460",
+    "crates/xterm-core/src/platform.rs": "6f1fe6e9cb8a48e2e2983cce5c2bfcd99fdb36edcb764400dbf9ba116bca8ac3",
+    "crates/xterm-core/src/public_api/addon_manager.rs": "3e0328494ada7baa688d91738dd0289c48ffe38530a69df1d4cc432c2a391c4b",
+    "crates/xterm-core/src/public_api/buffer.rs": "345cac244a50cce0d451025d105c87237283c36447a04a8969af25e3f04d63fd",
+    "crates/xterm-core/src/public_api/line_numbers.rs": "d2c331833d764fbe7daa67058b0d60f42e9f3442de89ed5946ec0ecb0e4a386b",
+    "crates/xterm-core/src/public_api/line_translation.rs": "fe6359038f4784d42c66fd9e54a06b5c5932d0e3e7b974d9d9743fb043f3a2b7",
+    "crates/xterm-core/src/public_api/mod.rs": "767b5bfaaec96a9af9c22943573127078f02b6fca2a48879df8510692bf7aa48",
+    "crates/xterm-core/src/public_api/parser.rs": "d3ccbe1ea19810356bd0db76a6723aeb098e69577e83a95d52d9046c783976c6",
+    "crates/xterm-core/src/public_api/validation.rs": "7e02401691b0c677198c5f2238c2e58124eec88eef1c633447241956dc939a44",
+    "crates/xterm-core/src/search/cache.rs": "b2fb52e786a1201447fda180c169e5f644222610e9c16e25a89dba5ea8c66806",
+    "crates/xterm-core/src/search/engine.rs": "d65bdf3a9e06d1603a6997c60ca55dce9af9b57865411996c21f74039880ac65",
+    "crates/xterm-core/src/search/matching.rs": "f8437e559c569c17282ace838c608519b4123010590803e24dcf3e3dbad9f434",
+    "crates/xterm-core/src/search/mod.rs": "47c803b0c994145e873d04d8e9d3c89c5e56c97792ed17f394b27bc0bf1c50bb",
+    "crates/xterm-core/src/search/state.rs": "cfa8a0b6f6fd5863248bf4d79f05bd56a5235dc693d66b09d63d03cc9449b8c1",
+    "crates/xterm-core/src/serialize/addon.rs": "d2fd344b08622f0611b23ad40e3bef86c200420eb7a4e252446f16bd5b50367d",
+    "crates/xterm-core/src/serialize/ansi.rs": "6fc4eabc157b23f5828c9ca22df679f75d53c8c4e02e681921b44b7ade9c296d",
+    "crates/xterm-core/src/serialize/buffer.rs": "781cd5f0538228d68bcc2c5c14a6707f0437dd17db69dce45a652760c0f58ace",
+    "crates/xterm-core/src/serialize/html.rs": "320ceea1323343c87f36f59da977d4c2cc626ef5a96f5e6a9479c5d6bfefea14",
+    "crates/xterm-core/src/serialize/mod.rs": "b5a7cd84ac130d7a8254bebe0d2821ac4c8083b10cd80fb5928b5faec72b35ee",
+    "crates/xterm-core/src/serialize/style.rs": "c930897894aef6f7c184d1430f408dc56666dad48ba2bbf728415fe5944ca550",
+    "crates/xterm-core/src/serialize/terminal.rs": "d80c9de9eaf322b4d4d07b778924de444fc305bcf1945a40e16e07852ef28867",
+    "crates/xterm-core/src/service_registry.rs": "5037627661ed00b68ebebde93291da621995f572c54d44b87618af814ec4decf",
+    "crates/xterm-core/src/sorted_list/iteration.rs": "d0475f0d4ba8eb9e1922279175c21b4852fe8fad45b7e020dcf59cc2b2b4821d",
+    "crates/xterm-core/src/sorted_list/sort_batch.rs": "0945209de4ed0e589d74777a636caaf84697552ca5682cdf6185dcecd620599d",
+    "crates/xterm-core/src/sorted_list.rs": "f978298aa5769e1b21abb5354cfc64b47b4bbbb27158b725a2b9567b1de89db3",
+    "crates/xterm-core/src/string_builder.rs": "3a50f3c396dbd53ee6a673097753620d792510d7a80f8e50610668649cfa7638",
+    "crates/xterm-core/src/task_queue.rs": "e4bb5d0dba55b6afdf15ce81afc85d7cbead6e75525271be2815b214de6933e3",
+    "crates/xterm-core/src/terminal/commands.rs": "c8a8d3addd27a13a7426dcef3c13d0df2242f10e55f04c0f83b9cca6f7f86fd6",
+    "crates/xterm-core/src/terminal/construction.rs": "855e4cf2f96318a8696e1b07c3c82825ff5d57216c06ac0d946534821feab676",
+    "crates/xterm-core/src/terminal/controls.rs": "f69162ce84a6979cfe81273092e767981decaf8da290778103764a747cd98bca",
+    "crates/xterm-core/src/terminal/csi.rs": "a2c884488f8d4ab8916951862f60feb572447923c99bde956e9f9469c20334a6",
+    "crates/xterm-core/src/terminal/csi_edits.rs": "7a38a06e47eccb1381feabd9f936d8fee72f495bad4e4e206a4f7d960d67f1df",
+    "crates/xterm-core/src/terminal/csi_erase.rs": "b652b9dd1b3ca48e8b49d3ed985f3867b0f3318a98c6c50ff519d755ec3cf87f",
+    "crates/xterm-core/src/terminal/dispatch.rs": "72ade877c09e83dd93b72aaa18cb9935b994c3f0265e775a273272865d4294d0",
+    "crates/xterm-core/src/terminal/error.rs": "2c6f23227238a5a538bbde6d8d33fd6bc3b5ec5c7b0a901d320b950705c73fdf",
+    "crates/xterm-core/src/terminal/escape.rs": "88259fd0a6e13549927adacf59d80140390efe1bd55d7860a3aa215d3168c237",
+    "crates/xterm-core/src/terminal/events.rs": "8c9dfeeaaa2866db873583ccf43714a440c7ae4b05a160eb4e3c2402a9190cf6",
+    "crates/xterm-core/src/terminal/kitty_modes.rs": "badef6b6702ddb1b1a6cd1ffbae129aadd5555f5a455147e678614147cd0461a",
+    "crates/xterm-core/src/terminal/mod.rs": "2850cc7e801d1359b81538482e8d5361e379cbe2bd5dd39c5bafddb7ade5827d",
+    "crates/xterm-core/src/terminal/modes.rs": "b8927668a0ec2c2b423001250dde0969c36a4e762034edb2f24983c39f6cf77f",
+    "crates/xterm-core/src/terminal/mode_callbacks.rs": "a4212647c25d0fe85bf621d0c898051c7083a731427b5bb0fc8b1875634b0f36",
+    "crates/xterm-core/src/terminal/mode_query.rs": "8125cb89c8a3d7f131d738f74a323e93dc93e2c4ac7ff5a253e6d6d44e056bf2",
+    "crates/xterm-core/src/terminal/operations.rs": "daeedfb3bbded03d5365b07bbf767623e6e3e25cdb6ceec70c761f5e1894b6b5",
+    "crates/xterm-core/src/terminal/osc.rs": "56fc573376b0ac47c4c80de86298d455ed5a28de9b02216f47a48901d2607cbe",
+    "crates/xterm-core/src/terminal/osc_colors.rs": "b3027fc88b415129a49ece4220b49d44dbf0a6f329db5c71e8aea8d0b74828c7",
+    "crates/xterm-core/src/terminal/print.rs": "8059a4c7b3603c014a60d4f63fc48f1dcda5fdcc8d845726b52e6a7a0fe4ea05",
+    "crates/xterm-core/src/terminal/register.rs": "67dab0a791c206a952395be9d50849b67668e25ff2ca0637720688f27e0e7fd6",
+    "crates/xterm-core/src/terminal/replies.rs": "616722ca2aae1ded9d2e24b56bd4c67c5923a8af56af084a4311a0a1eb21ad20",
+    "crates/xterm-core/src/terminal/reply_tests.rs": "4de576e929eeb98a445de7184cc258ce17ae232d62486f8d85de8d40855959d7",
+    "crates/xterm-core/src/terminal/sgr.rs": "4dae2ba7a519be006a12ea41f5a33de89f6fd032c5f2df9390a6b3702d2fd5b6",
+    "crates/xterm-core/src/terminal/sgr_dispatch.rs": "f14c878cdc30ee3c198022ed298146359e15b1fb936b3f212d64b6186fc79140",
+    "crates/xterm-core/src/terminal/state.rs": "9e50424a10e9f59d8415280caac186f40bfa2fa625157d3a22979b61d141e4ae",
+    "crates/xterm-core/src/terminal/window.rs": "ae27ed56ac11cbb6757dead70108361bc6f3b9d6bb983215d39f4d232476048a",
+    "crates/xterm-core/src/terminal/windows_heuristics.rs": "ff6da948a4e5648d76c48f31cbd9b8a7f5a0b1164349b340656cffd5a610491d",
+    "crates/xterm-core/src/unicode.rs": "4dfd33b3de3331b3e0ecc41fa9109d6968db0f601960b7a8b9dede99865c147e",
+    "crates/xterm-core/src/unicode11.rs": "a5b2e480f39237b477f5b6b3a7ead3636552d3fd3befc89b41fa702ff7f29e88",
+    "crates/xterm-core/src/unicode11_tables.rs": "6ad9974d412e70d0462e6cd59f275fbd49650e053f392c5de595f2db6493a7ac",
+    "crates/xterm-core/src/unicode15_tables.rs": "fddf1eeb4ec31fbcadf9a0497b764203c57031ca21cb38ad05f255d305972f38",
+    "crates/xterm-core/src/unicode_addons.rs": "5b9df259db5cb04db64498e8daad50871ee79460e22a2a814a22b743ff819a85",
+    "crates/xterm-core/src/unicode_graphemes.rs": "231caeb48a9b18378c8f8830ef2a1546cdd55374c1b17e17df3cd076e1304080",
+    "crates/xterm-core/src/unicode_properties.rs": "e73148fa3dbad203e7979d9a6d5b38fd0330c2f2e978e20929542458a01fcb3d",
+    "crates/xterm-core/src/unicode_service.rs": "9e44249a79b9a19c9c3c52f603fe4ccd09e07c701135063416218676a7c6f9a5",
+    "crates/xterm-core/src/unicode_v6.rs": "e427968168c96cf948e78fa2c7d52ec169b5e4c203bd2bfb2b0e75ca52419393",
+    "crates/xterm-core/src/unicode_v6_tables.rs": "d8ee02632b0672df8b1148c371b6dec6ca03c9c0448ad226c13a80565626693a",
+    "crates/xterm-core/src/version.rs": "e02badb736157232cdb7333581af9e53c64545c477ce292f22761b9f5370cf80",
+    "crates/xterm-core/src/windows_mode.rs": "d144b1b52cfaf7c3dc9aea2723fdbee880b1940f3150eb5f33b8ac12429b748c"
+  },
+  "changedDuringRun": [
+    "crates/xterm-core/src/input/keyboard_event_source.rs",
+    "crates/xterm-core/src/input/win32_input_mode.rs",
+    "crates/xterm-core/src/osc_link_service.rs",
+    "crates/xterm-core/src/serialize/addon.rs",
+    "crates/xterm-core/src/terminal/construction.rs",
+    "crates/xterm-core/src/terminal/dispatch.rs",
+    "crates/xterm-core/src/terminal/mod.rs",
+    "crates/xterm-core/src/terminal/state.rs"
+  ],
+  "baseline": {
+    "command": "node scripts/csi-baseline.mjs",
+    "node": "v24.15.0",
+    "platform": "win32",
+    "status": "passed",
+    "overallEquivalence": "NOT PROVEN",
+    "sourceHashes": {
+      "source_repo/src/common/Types.ts": "55f33764a24eae132a8c0bbabd6770355ef1fc3d6110eb6645e41cae15b80cb8",
+      "source_repo/src/common/data/EscapeSequences.ts": "d891e05aaf5982ee46f73649804c84eb407e603e360e84f8f89b9fcaa83f6276",
+      "source_repo/src/common/data/Charsets.ts": "64fe88d37beb2cc7c60a18d23fb4033e24f19b56b7f481fc656f8e912faac725",
+      "source_repo/src/common/parser/Types.ts": "ec838132ae42b3d8ce84e1dccfb572519d75982c1aab67759da170289d542a8c",
+      "source_repo/src/common/parser/Constants.ts": "b27193683d50f676cc2ad779fc8a5a5b4c0b38c2b0bb762168739c6d100942dd",
+      "source_repo/src/common/Lifecycle.ts": "e00016aae991e24137ab066778912414f4af959f2b26baecf47ec542ad313a83",
+      "source_repo/src/common/parser/Params.ts": "91bd52f527755b9cfc9e8ccd6e96aab49aa5554eb642d3a22a62120c3d12a25f",
+      "source_repo/src/common/input/TextDecoder.ts": "0368a7fddbb53502f86144b61d023f8d022f5ce973a1b01b59c552ec62631a1b",
+      "source_repo/src/common/StringBuilder.ts": "1c5fb0677d84788609304e7ea1efc3f760ad5e8c43dc691ceb83b283f1286114",
+      "source_repo/src/common/parser/OscParser.ts": "3a06692c278f8850922e54eafde315253c55df76a1c76a6b7327146e957e8f24",
+      "source_repo/src/common/parser/DcsParser.ts": "37bfefb7aeb66bb25b58d48676b4e0471ea005b778431b449c994572a825d5e9",
+      "source_repo/src/common/parser/ApcParser.ts": "f65e7a431013374e5794b360a8840359720630fec9330151a22ff17b09147fec",
+      "source_repo/src/common/parser/EscapeSequenceParser.ts": "bd85a7f4b4cd95bb6f6d8941902ba9c922022b9d9f88fdc585f7182c5daef624",
+      "source_repo/src/common/buffer/Constants.ts": "0342c709b580e7a7c62fffb61bab359f93511b82529f5a155374797ca4799f21",
+      "source_repo/src/common/buffer/AttributeData.ts": "09a9dc9693200cd7c34a98af3c1fc97b47b4354828cb02a76ab561a03515748a",
+      "source_repo/src/common/buffer/CellData.ts": "d0dfcbf310a949d8bdf4172f9896a6f143d3abf4e0dc68b896dec6612b82d992",
+      "source_repo/src/common/buffer/BufferLine.ts": "409958425629c5592bd4813272b00b480e6a723985ea28f24125a7a72ef95bdf",
+      "source_repo/src/common/services/ServiceRegistry.ts": "a467a496d3f1f26130c55809c587e1a7aeaa56d91e22be60af4182db6bb89171",
+      "source_repo/src/common/services/Services.ts": "617002157a8f7946b2245db9d795e2808d5d843171e84bb6917a80c0fe6e9a4b",
+      "source_repo/src/common/Event.ts": "aa374272c5ec5c0d6992d6072687211a94676b086a2505b0414ddd20cf57d641",
+      "source_repo/src/common/services/UnicodeService.ts": "dae3733c0a07bfe55f264ea749e3df61b3b4505830e4e685183771497c292811",
+      "source_repo/src/common/input/XParseColor.ts": "58483acb33f6cf892b5087d43e36629101728ac2c1c92bbe41e9795a10eea594",
+      "source_repo/src/common/Version.ts": "1add55c9a0f0b38f367e2641a154c6974ef5ca958fec91c67a1590d2ebb37e58",
+      "source_repo/src/common/InputHandler.ts": "1e4f0e4c3e0d706ea30bae3e32bf68a95f026c6a55275b8b3397b03a626e05a7",
+      "source_repo/src/common/Platform.ts": "be5ab9b1d1056e892b656732b375600178864e60281fc6a218480ac19c1f845a",
+      "source_repo/src/common/services/OptionsService.ts": "2cef872a29730441e2de5ef31a224872d9d1fb99be069d409febc8c9a7e41a09",
+      "source_repo/src/common/CircularList.ts": "558ae3c18862469de29c2f77e06c31c44c2cddaa25fd6e69059bf2176efc54f6",
+      "source_repo/src/common/TaskQueue.ts": "3a3c33a8d50aa767a7eaf355980ad6d53c1e9fc5acc287b14eabe0a72720142a",
+      "source_repo/src/common/buffer/BufferReflow.ts": "d2fa77716bd3190c5f2fbe2510fbae7218da8cf14fc55a48143c450802ccefe3",
+      "source_repo/src/common/buffer/Marker.ts": "3a6dc8fe7e791de49b825faba6c47093d73427bddf80fa6dd4069b8a90aac88d",
+      "source_repo/src/common/buffer/Buffer.ts": "b299d8dfdd75deee31807a94c9417093b0c0a0f1714e5553779052602b32e4af",
+      "source_repo/src/common/buffer/BufferSet.ts": "3a2cc96d786e65bbfd1c7dc0c60653ce0062eb9c6f58a0e89214b1660ba5722c",
+      "source_repo/src/common/input/UnicodeV6.ts": "526041b7d903ef88bf031825dde557a7f6d4b3e156be984fb524c66d02ac412e",
+      "source_repo/src/common/TestUtils.test.ts": "a1f20abc213a9a5f7611989c7eb74b1ad5f6810a733d5e491c29ff7f8b126034",
+      "source_repo/src/common/services/BufferService.ts": "8c418b27ef5893691a32d7770c2cf7d0a305803624ae1969f463d7484c893966",
+      "source_repo/src/common/services/CharsetService.ts": "72f7cd0cf438d0399ea46108fdabf4fda73ee4b8379f110aa4fb2f9776a348b1",
+      "source_repo/src/common/services/CoreService.ts": "fb7bb62faaedcb72dacdaa7e021584e90c0c92cd9c0c9cf4f22f24db58c3d512",
+      "source_repo/src/common/services/OscLinkService.ts": "f5ed0de0da3eb09feb80aef7603b1f082450cd8b7476c4a8ce0cad5968468b64",
+      "source_repo/src/common/InputHandler.test.ts": "39d741e6d922ef84bcd61b7702a127c48587a5bb7786f60a4c5a6628ad5a9e9c"
+    },
+    "original": {
+      "discovered": 52,
+      "executed": 52,
+      "passed": 52,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0
+    },
+    "rustMigration": {
+      "mapped": 37,
+      "partial": 15,
+      "unmapped": 0,
+      "negativeInternalCursorAssertionsUnrun": 15
+    },
+    "mapping": [
+      {
+        "source": "InputHandler SL/SR/DECIC/DECDC SL (scrollLeft)",
+        "rustTest": "scroll_left",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler SL/SR/DECIC/DECDC SR (scrollRight)",
+        "rustTest": "scroll_right",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler SL/SR/DECIC/DECDC insertColumns (DECIC)",
+        "rustTest": "insert_columns",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler SL/SR/DECIC/DECDC deleteColumns (DECDC)",
+        "rustTest": "delete_columns",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler regression tests insertChars",
+        "rustTest": "insert_and_delete_characters_regression",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler regression tests deleteChars",
+        "rustTest": "insert_and_delete_characters_regression",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler print should repeat preceding grapheme cluster via REP",
+        "rustTest": "repeat_preceding_grapheme",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler print should not repeat when REP has no preceding join state",
+        "rustTest": "repeat_without_predecessor",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler print should not repeat after an intervening escape sequence",
+        "rustTest": "intervening_sequence_resets_repeat",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler cursor positioning cursor forward (CUF)",
+        "rustTest": "cursor_forward_and_horizontal_relative",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler cursor positioning cursor backward (CUB)",
+        "rustTest": "cursor_backward",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler cursor positioning cursor down (CUD)",
+        "rustTest": "cursor_down_and_vertical_relative",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler cursor positioning cursor up (CUU)",
+        "rustTest": "cursor_up",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler cursor positioning cursor next line (CNL)",
+        "rustTest": "cursor_next_line",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler cursor positioning cursor previous line (CPL)",
+        "rustTest": "cursor_previous_line",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler cursor positioning cursor character absolute (CHA)",
+        "rustTest": "horizontal_absolute_aliases",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler cursor positioning cursor position (CUP)",
+        "rustTest": "cursor_position",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler cursor positioning cursor position (CUP) with DECOM and scroll margins",
+        "rustTest": "cursor_position_origin_and_scroll_margins",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler cursor positioning horizontal position absolute (HPA)",
+        "rustTest": "horizontal_absolute_aliases",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler cursor positioning horizontal position relative (HPR)",
+        "rustTest": "cursor_forward_and_horizontal_relative",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler cursor positioning vertical position absolute (VPA)",
+        "rustTest": "vertical_absolute",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler cursor positioning vertical position relative (VPR)",
+        "rustTest": "cursor_down_and_vertical_relative",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler cursor positioning should clamp cursor into addressable range CUF",
+        "rustTest": "clamp_positive_out_of_range_cursor",
+        "status": "partial",
+        "gap": "Positive out-of-range assertion is ported. Negative direct Buffer cursor mutation is unrepresentable in current Rust usize fields; negative precondition/assertion is explicitly unrun."
+      },
+      {
+        "source": "InputHandler cursor positioning should clamp cursor into addressable range CUB",
+        "rustTest": "clamp_positive_out_of_range_cursor",
+        "status": "partial",
+        "gap": "Positive out-of-range assertion is ported. Negative direct Buffer cursor mutation is unrepresentable in current Rust usize fields; negative precondition/assertion is explicitly unrun."
+      },
+      {
+        "source": "InputHandler cursor positioning should clamp cursor into addressable range CUD",
+        "rustTest": "clamp_positive_out_of_range_cursor",
+        "status": "partial",
+        "gap": "Positive out-of-range assertion is ported. Negative direct Buffer cursor mutation is unrepresentable in current Rust usize fields; negative precondition/assertion is explicitly unrun."
+      },
+      {
+        "source": "InputHandler cursor positioning should clamp cursor into addressable range CUU",
+        "rustTest": "clamp_positive_out_of_range_cursor",
+        "status": "partial",
+        "gap": "Positive out-of-range assertion is ported. Negative direct Buffer cursor mutation is unrepresentable in current Rust usize fields; negative precondition/assertion is explicitly unrun."
+      },
+      {
+        "source": "InputHandler cursor positioning should clamp cursor into addressable range CNL",
+        "rustTest": "clamp_positive_out_of_range_cursor",
+        "status": "partial",
+        "gap": "Positive out-of-range assertion is ported. Negative direct Buffer cursor mutation is unrepresentable in current Rust usize fields; negative precondition/assertion is explicitly unrun."
+      },
+      {
+        "source": "InputHandler cursor positioning should clamp cursor into addressable range CPL",
+        "rustTest": "clamp_positive_out_of_range_cursor",
+        "status": "partial",
+        "gap": "Positive out-of-range assertion is ported. Negative direct Buffer cursor mutation is unrepresentable in current Rust usize fields; negative precondition/assertion is explicitly unrun."
+      },
+      {
+        "source": "InputHandler cursor positioning should clamp cursor into addressable range CHA",
+        "rustTest": "clamp_positive_out_of_range_cursor",
+        "status": "partial",
+        "gap": "Positive out-of-range assertion is ported. Negative direct Buffer cursor mutation is unrepresentable in current Rust usize fields; negative precondition/assertion is explicitly unrun."
+      },
+      {
+        "source": "InputHandler cursor positioning should clamp cursor into addressable range CUP",
+        "rustTest": "clamp_positive_out_of_range_cursor",
+        "status": "partial",
+        "gap": "Positive out-of-range assertion is ported. Negative direct Buffer cursor mutation is unrepresentable in current Rust usize fields; negative precondition/assertion is explicitly unrun."
+      },
+      {
+        "source": "InputHandler cursor positioning should clamp cursor into addressable range HPA",
+        "rustTest": "clamp_positive_out_of_range_cursor",
+        "status": "partial",
+        "gap": "Positive out-of-range assertion is ported. Negative direct Buffer cursor mutation is unrepresentable in current Rust usize fields; negative precondition/assertion is explicitly unrun."
+      },
+      {
+        "source": "InputHandler cursor positioning should clamp cursor into addressable range HPR",
+        "rustTest": "clamp_positive_out_of_range_cursor",
+        "status": "partial",
+        "gap": "Positive out-of-range assertion is ported. Negative direct Buffer cursor mutation is unrepresentable in current Rust usize fields; negative precondition/assertion is explicitly unrun."
+      },
+      {
+        "source": "InputHandler cursor positioning should clamp cursor into addressable range VPA",
+        "rustTest": "clamp_positive_out_of_range_cursor",
+        "status": "partial",
+        "gap": "Positive out-of-range assertion is ported. Negative direct Buffer cursor mutation is unrepresentable in current Rust usize fields; negative precondition/assertion is explicitly unrun."
+      },
+      {
+        "source": "InputHandler cursor positioning should clamp cursor into addressable range VPR",
+        "rustTest": "clamp_positive_out_of_range_cursor",
+        "status": "partial",
+        "gap": "Positive out-of-range assertion is ported. Negative direct Buffer cursor mutation is unrepresentable in current Rust usize fields; negative precondition/assertion is explicitly unrun."
+      },
+      {
+        "source": "InputHandler cursor positioning should clamp cursor into addressable range DCH",
+        "rustTest": "clamp_positive_out_of_range_cursor",
+        "status": "partial",
+        "gap": "Positive out-of-range assertion is ported. Negative direct Buffer cursor mutation is unrepresentable in current Rust usize fields; negative precondition/assertion is explicitly unrun."
+      },
+      {
+        "source": "InputHandler cursor positioning should clamp cursor into addressable range DCH - should delete last cell",
+        "rustTest": "pending_wrap_edit_deletes_last_cell",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler cursor positioning should clamp cursor into addressable range ECH",
+        "rustTest": "clamp_positive_out_of_range_cursor",
+        "status": "partial",
+        "gap": "Positive out-of-range assertion is ported. Negative direct Buffer cursor mutation is unrepresentable in current Rust usize fields; negative precondition/assertion is explicitly unrun."
+      },
+      {
+        "source": "InputHandler cursor positioning should clamp cursor into addressable range ECH - should delete last cell",
+        "rustTest": "pending_wrap_edit_deletes_last_cell",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler cursor positioning should clamp cursor into addressable range ICH",
+        "rustTest": "clamp_positive_out_of_range_cursor",
+        "status": "partial",
+        "gap": "Positive out-of-range assertion is ported. Negative direct Buffer cursor mutation is unrepresentable in current Rust usize fields; negative precondition/assertion is explicitly unrun."
+      },
+      {
+        "source": "InputHandler cursor positioning should clamp cursor into addressable range ICH - should delete last cell",
+        "rustTest": "pending_wrap_edit_deletes_last_cell",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler DECSTBM - scroll margins should default to whole viewport",
+        "rustTest": "scroll_margin_defaults",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler DECSTBM - scroll margins should clamp bottom",
+        "rustTest": "scroll_margin_clamps_bottom",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler DECSTBM - scroll margins should only apply for top < bottom",
+        "rustTest": "scroll_margin_rejects_top_at_or_below_bottom",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler DECSTBM - scroll margins should home cursor",
+        "rustTest": "scroll_margin_homes_cursor",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler scroll margins scrollUp",
+        "rustTest": "scroll_up",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler scroll margins scrollDown",
+        "rustTest": "scroll_down",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler scroll margins insertLines - out of margins",
+        "rustTest": "insert_and_delete_lines_outside_margins",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler scroll margins insertLines - within margins",
+        "rustTest": "insert_lines_within_margins",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler scroll margins deleteLines - out of margins",
+        "rustTest": "insert_and_delete_lines_outside_margins",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler scroll margins deleteLines - within margins",
+        "rustTest": "delete_lines_within_margins",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler should correctly reset cells taken by wide chars ICH",
+        "rustTest": "insert_characters_repairs_wide_boundaries",
+        "status": "mapped",
+        "gap": null
+      },
+      {
+        "source": "InputHandler should correctly reset cells taken by wide chars DCH",
+        "rustTest": "delete_characters_repairs_wide_boundaries",
+        "status": "mapped",
+        "gap": null
+      }
+    ],
+    "outcomes": [
+      {
+        "name": "InputHandler SL/SR/DECIC/DECDC SL (scrollLeft)",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler SL/SR/DECIC/DECDC SR (scrollRight)",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler SL/SR/DECIC/DECDC insertColumns (DECIC)",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler SL/SR/DECIC/DECDC deleteColumns (DECDC)",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler regression tests insertChars",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler regression tests deleteChars",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler print should repeat preceding grapheme cluster via REP",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler print should not repeat when REP has no preceding join state",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler print should not repeat after an intervening escape sequence",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning cursor forward (CUF)",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning cursor backward (CUB)",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning cursor down (CUD)",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning cursor up (CUU)",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning cursor next line (CNL)",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning cursor previous line (CPL)",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning cursor character absolute (CHA)",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning cursor position (CUP)",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning cursor position (CUP) with DECOM and scroll margins",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning horizontal position absolute (HPA)",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning horizontal position relative (HPR)",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning vertical position absolute (VPA)",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning vertical position relative (VPR)",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning should clamp cursor into addressable range CUF",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning should clamp cursor into addressable range CUB",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning should clamp cursor into addressable range CUD",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning should clamp cursor into addressable range CUU",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning should clamp cursor into addressable range CNL",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning should clamp cursor into addressable range CPL",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning should clamp cursor into addressable range CHA",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning should clamp cursor into addressable range CUP",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning should clamp cursor into addressable range HPA",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning should clamp cursor into addressable range HPR",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning should clamp cursor into addressable range VPA",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning should clamp cursor into addressable range VPR",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning should clamp cursor into addressable range DCH",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning should clamp cursor into addressable range DCH - should delete last cell",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning should clamp cursor into addressable range ECH",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning should clamp cursor into addressable range ECH - should delete last cell",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning should clamp cursor into addressable range ICH",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler cursor positioning should clamp cursor into addressable range ICH - should delete last cell",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler DECSTBM - scroll margins should default to whole viewport",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler DECSTBM - scroll margins should clamp bottom",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler DECSTBM - scroll margins should only apply for top < bottom",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler DECSTBM - scroll margins should home cursor",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler scroll margins scrollUp",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler scroll margins scrollDown",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler scroll margins insertLines - out of margins",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler scroll margins insertLines - within margins",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler scroll margins deleteLines - out of margins",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler scroll margins deleteLines - within margins",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler should correctly reset cells taken by wide chars ICH",
+        "status": "passed"
+      },
+      {
+        "name": "InputHandler should correctly reset cells taken by wide chars DCH",
+        "status": "passed"
+      }
+    ],
+    "limits": [
+      "This is scoped original JavaScript execution and mapping, not a claim Rust passed.",
+      "All other InputHandler families belong to engine/SGR/modes/erase/OSC owners.",
+      "Typed Rust internal-cursor negative-state gap is retained rather than weakening source assertions."
+    ]
+  },
+  "oracle": {
+    "command": "node scripts/csi-oracle.mjs",
+    "status": "passed",
+    "node": "v24.15.0",
+    "platform": "win32",
+    "seed": "0xc5107",
+    "commandFamilies": [
+      "@",
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "P",
+      "S",
+      "T",
+      "X",
+      "Z",
+      "^",
+      "`",
+      "a",
+      "b",
+      "d",
+      "e",
+      "f",
+      "g",
+      "r",
+      "s",
+      "u",
+      " @",
+      " A",
+      "'}",
+      "'~",
+      "\"q",
+      "?J",
+      "?K"
+    ],
+    "directedTraces": 185,
+    "seededTraces": 64,
+    "traces": 249,
+    "snapshots": 2515,
+    "fixture": "crates/xterm-core/tests/fixtures/csi-terminal.tsv",
+    "fixtureSha256": "e7eb7f1d750399babf7c780d54e0a85c14a825b918b3f583449508e2f4757bdc",
+    "sourceHashes": {
+      "source_repo/src/common/input/TextDecoder.ts": "0368a7fddbb53502f86144b61d023f8d022f5ce973a1b01b59c552ec62631a1b",
+      "source_repo/src/common/buffer/Constants.ts": "0342c709b580e7a7c62fffb61bab359f93511b82529f5a155374797ca4799f21",
+      "source_repo/src/common/buffer/AttributeData.ts": "09a9dc9693200cd7c34a98af3c1fc97b47b4354828cb02a76ab561a03515748a",
+      "source_repo/src/common/buffer/CellData.ts": "d0dfcbf310a949d8bdf4172f9896a6f143d3abf4e0dc68b896dec6612b82d992",
+      "source_repo/src/common/public/BufferApiView.ts": "498e5add826d2c9a6d9482faff97cea666cd9c876986cdce459d6c8ca299bf87",
+      "source_repo/src/common/Lifecycle.ts": "e00016aae991e24137ab066778912414f4af959f2b26baecf47ec542ad313a83",
+      "source_repo/src/common/Event.ts": "aa374272c5ec5c0d6992d6072687211a94676b086a2505b0414ddd20cf57d641",
+      "source_repo/src/common/public/BufferNamespaceApi.ts": "69e317ab542b90b18535e797d6486f98d93e1df17f458cc6e7d31035dc63575a",
+      "source_repo/src/common/public/ParserApi.ts": "200ac118e408d1a12f47ee34c95f73a3022491fcca84d48e5b4ce333d67d7aff",
+      "source_repo/src/common/public/UnicodeApi.ts": "c00f2d01708057fa33b24dc5f3d5c086edd68627d5a11c5d3c28c779b8102ed2",
+      "source_repo/src/common/buffer/BufferLine.ts": "409958425629c5592bd4813272b00b480e6a723985ea28f24125a7a72ef95bdf",
+      "source_repo/src/common/services/ServiceRegistry.ts": "a467a496d3f1f26130c55809c587e1a7aeaa56d91e22be60af4182db6bb89171",
+      "source_repo/src/common/services/Services.ts": "617002157a8f7946b2245db9d795e2808d5d843171e84bb6917a80c0fe6e9a4b",
+      "source_repo/src/common/services/InstantiationService.ts": "43f48014c7e56738fb0dd2fafaaa7bfd477bea71d3f35f3ed8c6a01b6b5dacbe",
+      "source_repo/src/common/services/LogService.ts": "0035ee1b5739bec8576f48b990db94ffad6efe606cfb3119205df1c5492dd51b",
+      "source_repo/src/common/CircularList.ts": "558ae3c18862469de29c2f77e06c31c44c2cddaa25fd6e69059bf2176efc54f6",
+      "source_repo/src/common/TaskQueue.ts": "3a3c33a8d50aa767a7eaf355980ad6d53c1e9fc5acc287b14eabe0a72720142a",
+      "source_repo/src/common/buffer/BufferReflow.ts": "d2fa77716bd3190c5f2fbe2510fbae7218da8cf14fc55a48143c450802ccefe3",
+      "source_repo/src/common/buffer/Marker.ts": "3a6dc8fe7e791de49b825faba6c47093d73427bddf80fa6dd4069b8a90aac88d",
+      "source_repo/src/common/data/Charsets.ts": "64fe88d37beb2cc7c60a18d23fb4033e24f19b56b7f481fc656f8e912faac725",
+      "source_repo/src/common/buffer/Buffer.ts": "b299d8dfdd75deee31807a94c9417093b0c0a0f1714e5553779052602b32e4af",
+      "source_repo/src/common/buffer/BufferSet.ts": "3a2cc96d786e65bbfd1c7dc0c60653ce0062eb9c6f58a0e89214b1660ba5722c",
+      "source_repo/src/common/services/BufferService.ts": "8c418b27ef5893691a32d7770c2cf7d0a305803624ae1969f463d7484c893966",
+      "source_repo/src/common/Platform.ts": "be5ab9b1d1056e892b656732b375600178864e60281fc6a218480ac19c1f845a",
+      "source_repo/src/common/services/OptionsService.ts": "2cef872a29730441e2de5ef31a224872d9d1fb99be069d409febc8c9a7e41a09",
+      "source_repo/src/common/services/CoreService.ts": "fb7bb62faaedcb72dacdaa7e021584e90c0c92cd9c0c9cf4f22f24db58c3d512",
+      "source_repo/src/common/Types.ts": "55f33764a24eae132a8c0bbabd6770355ef1fc3d6110eb6645e41cae15b80cb8",
+      "source_repo/src/common/services/MouseStateService.ts": "1b562be54a3ea3d91c565ac8d94239f8e219cb82ff735388a3650170a993d5ee",
+      "source_repo/src/common/services/UnicodeService.ts": "dae3733c0a07bfe55f264ea749e3df61b3b4505830e4e685183771497c292811",
+      "source_repo/src/common/input/UnicodeV6.ts": "526041b7d903ef88bf031825dde557a7f6d4b3e156be984fb524c66d02ac412e",
+      "source_repo/src/common/services/CharsetService.ts": "72f7cd0cf438d0399ea46108fdabf4fda73ee4b8379f110aa4fb2f9776a348b1",
+      "source_repo/src/common/WindowsMode.ts": "a7a1a4322c42da5ca1e23e4d0a9d22643a28982fc0fb91a73349fde54580321d",
+      "source_repo/src/common/data/EscapeSequences.ts": "d891e05aaf5982ee46f73649804c84eb407e603e360e84f8f89b9fcaa83f6276",
+      "source_repo/src/common/parser/Types.ts": "ec838132ae42b3d8ce84e1dccfb572519d75982c1aab67759da170289d542a8c",
+      "source_repo/src/common/parser/Constants.ts": "b27193683d50f676cc2ad779fc8a5a5b4c0b38c2b0bb762168739c6d100942dd",
+      "source_repo/src/common/parser/Params.ts": "91bd52f527755b9cfc9e8ccd6e96aab49aa5554eb642d3a22a62120c3d12a25f",
+      "source_repo/src/common/StringBuilder.ts": "1c5fb0677d84788609304e7ea1efc3f760ad5e8c43dc691ceb83b283f1286114",
+      "source_repo/src/common/parser/OscParser.ts": "3a06692c278f8850922e54eafde315253c55df76a1c76a6b7327146e957e8f24",
+      "source_repo/src/common/parser/DcsParser.ts": "37bfefb7aeb66bb25b58d48676b4e0471ea005b778431b449c994572a825d5e9",
+      "source_repo/src/common/parser/ApcParser.ts": "f65e7a431013374e5794b360a8840359720630fec9330151a22ff17b09147fec",
+      "source_repo/src/common/parser/EscapeSequenceParser.ts": "bd85a7f4b4cd95bb6f6d8941902ba9c922022b9d9f88fdc585f7182c5daef624",
+      "source_repo/src/common/input/XParseColor.ts": "58483acb33f6cf892b5087d43e36629101728ac2c1c92bbe41e9795a10eea594",
+      "source_repo/src/common/Version.ts": "1add55c9a0f0b38f367e2641a154c6974ef5ca958fec91c67a1590d2ebb37e58",
+      "source_repo/src/common/InputHandler.ts": "1e4f0e4c3e0d706ea30bae3e32bf68a95f026c6a55275b8b3397b03a626e05a7",
+      "source_repo/src/common/Async.ts": "dc91cfe28cbbc295f85db93939d0199d8a43fdb82823fb59c1c7dec4e97d024f",
+      "source_repo/src/common/input/WriteBuffer.ts": "eb66b561becafcd0ad67ed311d621174cc52ec2b890ea4e2c8702caec7c4fbe3",
+      "source_repo/src/common/services/OscLinkService.ts": "f5ed0de0da3eb09feb80aef7603b1f082450cd8b7476c4a8ce0cad5968468b64",
+      "source_repo/src/common/CoreTerminal.ts": "fcb17486df9b3a8916fb6488056919d59454bd1938ce0c3bee4877aefad1840d",
+      "source_repo/src/headless/Terminal.ts": "b90b4d18daeceed5d9e5b556d4b5ccf55e65ee54ffb40a2c9570c9f7fe1861e2",
+      "source_repo/src/common/public/AddonManager.ts": "b815df3b09908a3d651c0cfe93e00efe29551eb5119946755efa7f375877992c",
+      "source_repo/src/headless/public/Terminal.ts": "e727263f9fc6d7c1f8aa1c27cf325aebee9404fff33872a07cba0e7abd1d2c21"
+    },
+    "compared": "Both buffers, every cell/codepoint/width/fg/bg/extended attrs/URL/UTF16 string/wrap, cursor/base/display/margins, modes/current attrs and ordered move/render/scroll/data/bell/linefeed/title events.",
+    "overallEquivalence": "NOT PROVEN",
+    "limits": [
+      "Finite handler corpus, not all terminal/addon/browser contracts.",
+      "Negative direct internal cursor mutation is not generated here; explicit remaining source assertions tracked in task152.",
+      "No native Linux/macOS execution or browser evidence from this Windows run."
+    ]
+  },
+  "overallEquivalence": "NOT PROVEN",
+  "limits": [
+    "Task152 retains 15 negative direct internal cursor assertions, not represented as completed Rust cases.",
+    "This scope checks CSI commands through actual Rust parser/buffers and source terminal, not full browser/addon coverage.",
+    "Clippy checks core and selected tests; formatting here is scoped. Full workspace gates are task47.",
+    "Native Linux/macOS and browser runtime evidence are not provided by this Windows run."
+  ]
+}
