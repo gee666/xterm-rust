@@ -2,7 +2,7 @@
   "testName": "local_fonts_browser",
   "platform": "win32",
   "node": "v24.15.0",
-  "date": "2026-10-28T00:15:01.306Z",
+  "date": "2026-10-28T16:16:59.204Z",
   "componentOnly": true,
   "commands": [
     {
@@ -10,7 +10,7 @@
         "cargo",
         "test",
         "-p",
-        "xterm-web",
+        "xterm-font-addons",
         "--target",
         "wasm32-unknown-unknown",
         "--test",
@@ -21,30 +21,34 @@
       "exitCode": 0,
       "signal": null,
       "error": null,
+      "aborted": false,
+      "abortError": null,
       "timedOut": false,
       "terminationError": null,
       "resourceError": null,
-      "elapsedMs": 6567.5729,
+      "elapsedMs": 250.0835,
       "status": "passed"
     },
     {
       "command": [
-        "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\wasm-tools\\wasm-bindgen-0.2.100-x86_64-pc-windows-msvc\\wasm-bindgen.exe",
-        "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\target\\wasm32-unknown-unknown\\debug\\deps\\local_fonts_browser-b94047d4831d6653.wasm",
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "C:\\Users\\user\\.xterm-rust-target\\7144d30a1fc3-worktrees\\Fergus\\target\\wasm32-unknown-unknown\\debug\\deps\\local_fonts_browser-71a6d748364fde61.wasm",
         "--target",
         "web",
         "--out-dir",
-        "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\browser-host\\local_fonts_browser",
+        "C:\\Users\\user\\.xterm-rust-target\\7144d30a1fc3-worktrees\\Fergus\\tmp\\browser-host\\local_fonts_browser",
         "--out-name",
         "suite"
       ],
       "exitCode": 0,
       "signal": null,
       "error": null,
+      "aborted": false,
+      "abortError": null,
       "timedOut": false,
       "terminationError": null,
       "resourceError": null,
-      "elapsedMs": 354.3703999999998,
+      "elapsedMs": 173.349,
       "status": "passed"
     }
   ],
@@ -53,11 +57,14 @@
       "name": "chromium",
       "status": "passed",
       "tests": [
+        "__wbgt__local_fonts_browser::concurrent_failed_query_reuses_the_other_calls_successful_catalog",
         "__wbgt__local_fonts_browser::denied_permission_rejects_and_remains_retryable",
         "__wbgt__local_fonts_browser::legacy_permission_typeerror_is_ignored_and_takes_priority",
         "__wbgt__local_fonts_browser::missing_apis_and_missing_families_resolve_without_a_font",
         "__wbgt__local_fonts_browser::missing_blob_stops_resolution_and_blob_errors_propagate",
         "__wbgt__local_fonts_browser::modern_queries_cache_metadata_and_read_first_blob",
+        "__wbgt__local_fonts_browser::nonstring_family_errors_only_after_query_and_reuses_catalog",
+        "__wbgt__local_fonts_browser::optional_permission_await_and_concurrent_query_failure_match_source",
         "__wbgt__local_fonts_browser::query_failure_caches_empty_catalog_and_does_not_retry",
         "__wbgt__local_fonts_browser::source_font_resolution_operation_traces_match_in_browser"
       ],
@@ -70,12 +77,28 @@
         {
           "type": "error",
           "text": "Error intentional query failure"
+        },
+        {
+          "type": "error",
+          "text": "Error controlled synchronous query failure"
+        },
+        {
+          "type": "error",
+          "text": "Error controlled synchronous query failure"
+        },
+        {
+          "type": "error",
+          "text": "Error controlled synchronous query failure"
+        },
+        {
+          "type": "error",
+          "text": "Error concurrent query failure"
         }
       ],
       "version": "148.0.7778.96",
-      "output": "running 7 tests\ntest source_font_resolution_operation_traces_match_in_browser ... ok\ntest query_failure_caches_empty_catalog_and_does_not_retry ... ok\ntest modern_queries_cache_metadata_and_read_first_blob ... ok\ntest missing_blob_stops_resolution_and_blob_errors_propagate ... ok\ntest missing_apis_and_missing_families_resolve_without_a_font ... ok\ntest legacy_permission_typeerror_is_ignored_and_takes_priority ... ok\ntest denied_permission_rejects_and_remains_retryable ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.02s\n\n",
+      "output": "running 10 tests\ntest source_font_resolution_operation_traces_match_in_browser ... ok\ntest query_failure_caches_empty_catalog_and_does_not_retry ... ok\ntest optional_permission_await_and_concurrent_query_failure_match_source ... ok\ntest nonstring_family_errors_only_after_query_and_reuses_catalog ... ok\ntest modern_queries_cache_metadata_and_read_first_blob ... ok\ntest missing_blob_stops_resolution_and_blob_errors_propagate ... ok\ntest missing_apis_and_missing_families_resolve_without_a_font ... ok\ntest legacy_permission_typeerror_is_ignored_and_takes_priority ... ok\ntest denied_permission_rejects_and_remains_retryable ... ok\ntest concurrent_failed_query_reuses_the_other_calls_successful_catalog ... ok\n\ntest result: ok. 10 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.02s\n\n",
       "counts": {
-        "passed": 7,
+        "passed": 10,
         "failed": 0,
         "ignored": 0,
         "filtered": 0
@@ -85,11 +108,14 @@
       "name": "firefox",
       "status": "passed",
       "tests": [
+        "__wbgt__local_fonts_browser::concurrent_failed_query_reuses_the_other_calls_successful_catalog",
         "__wbgt__local_fonts_browser::denied_permission_rejects_and_remains_retryable",
         "__wbgt__local_fonts_browser::legacy_permission_typeerror_is_ignored_and_takes_priority",
         "__wbgt__local_fonts_browser::missing_apis_and_missing_families_resolve_without_a_font",
         "__wbgt__local_fonts_browser::missing_blob_stops_resolution_and_blob_errors_propagate",
         "__wbgt__local_fonts_browser::modern_queries_cache_metadata_and_read_first_blob",
+        "__wbgt__local_fonts_browser::nonstring_family_errors_only_after_query_and_reuses_catalog",
+        "__wbgt__local_fonts_browser::optional_permission_await_and_concurrent_query_failure_match_source",
         "__wbgt__local_fonts_browser::query_failure_caches_empty_catalog_and_does_not_retry",
         "__wbgt__local_fonts_browser::source_font_resolution_operation_traces_match_in_browser"
       ],
@@ -102,12 +128,28 @@
         {
           "type": "error",
           "text": "Error intentional query failure"
+        },
+        {
+          "type": "error",
+          "text": "Error controlled synchronous query failure"
+        },
+        {
+          "type": "error",
+          "text": "Error controlled synchronous query failure"
+        },
+        {
+          "type": "error",
+          "text": "Error controlled synchronous query failure"
+        },
+        {
+          "type": "error",
+          "text": "Error concurrent query failure"
         }
       ],
       "version": "150.0.2",
-      "output": "running 7 tests\ntest source_font_resolution_operation_traces_match_in_browser ... ok\ntest query_failure_caches_empty_catalog_and_does_not_retry ... ok\ntest modern_queries_cache_metadata_and_read_first_blob ... ok\ntest missing_blob_stops_resolution_and_blob_errors_propagate ... ok\ntest missing_apis_and_missing_families_resolve_without_a_font ... ok\ntest legacy_permission_typeerror_is_ignored_and_takes_priority ... ok\ntest denied_permission_rejects_and_remains_retryable ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.02s\n\n",
+      "output": "running 10 tests\ntest source_font_resolution_operation_traces_match_in_browser ... ok\ntest query_failure_caches_empty_catalog_and_does_not_retry ... ok\ntest optional_permission_await_and_concurrent_query_failure_match_source ... ok\ntest nonstring_family_errors_only_after_query_and_reuses_catalog ... ok\ntest modern_queries_cache_metadata_and_read_first_blob ... ok\ntest missing_blob_stops_resolution_and_blob_errors_propagate ... ok\ntest missing_apis_and_missing_families_resolve_without_a_font ... ok\ntest legacy_permission_typeerror_is_ignored_and_takes_priority ... ok\ntest denied_permission_rejects_and_remains_retryable ... ok\ntest concurrent_failed_query_reuses_the_other_calls_successful_catalog ... ok\n\ntest result: ok. 10 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.03s\n\n",
       "counts": {
-        "passed": 7,
+        "passed": 10,
         "failed": 0,
         "ignored": 0,
         "filtered": 0
@@ -117,11 +159,14 @@
       "name": "webkit",
       "status": "passed",
       "tests": [
+        "__wbgt__local_fonts_browser::concurrent_failed_query_reuses_the_other_calls_successful_catalog",
         "__wbgt__local_fonts_browser::denied_permission_rejects_and_remains_retryable",
         "__wbgt__local_fonts_browser::legacy_permission_typeerror_is_ignored_and_takes_priority",
         "__wbgt__local_fonts_browser::missing_apis_and_missing_families_resolve_without_a_font",
         "__wbgt__local_fonts_browser::missing_blob_stops_resolution_and_blob_errors_propagate",
         "__wbgt__local_fonts_browser::modern_queries_cache_metadata_and_read_first_blob",
+        "__wbgt__local_fonts_browser::nonstring_family_errors_only_after_query_and_reuses_catalog",
+        "__wbgt__local_fonts_browser::optional_permission_await_and_concurrent_query_failure_match_source",
         "__wbgt__local_fonts_browser::query_failure_caches_empty_catalog_and_does_not_retry",
         "__wbgt__local_fonts_browser::source_font_resolution_operation_traces_match_in_browser"
       ],
@@ -134,12 +179,28 @@
         {
           "type": "error",
           "text": "Error intentional query failure"
+        },
+        {
+          "type": "error",
+          "text": "Error controlled synchronous query failure"
+        },
+        {
+          "type": "error",
+          "text": "Error controlled synchronous query failure"
+        },
+        {
+          "type": "error",
+          "text": "Error controlled synchronous query failure"
+        },
+        {
+          "type": "error",
+          "text": "Error concurrent query failure"
         }
       ],
       "version": "26.4",
-      "output": "running 7 tests\ntest source_font_resolution_operation_traces_match_in_browser ... ok\ntest query_failure_caches_empty_catalog_and_does_not_retry ... ok\ntest modern_queries_cache_metadata_and_read_first_blob ... ok\ntest missing_blob_stops_resolution_and_blob_errors_propagate ... ok\ntest missing_apis_and_missing_families_resolve_without_a_font ... ok\ntest legacy_permission_typeerror_is_ignored_and_takes_priority ... ok\ntest denied_permission_rejects_and_remains_retryable ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.13s\n\n",
+      "output": "running 10 tests\ntest source_font_resolution_operation_traces_match_in_browser ... ok\ntest query_failure_caches_empty_catalog_and_does_not_retry ... ok\ntest optional_permission_await_and_concurrent_query_failure_match_source ... ok\ntest nonstring_family_errors_only_after_query_and_reuses_catalog ... ok\ntest modern_queries_cache_metadata_and_read_first_blob ... ok\ntest missing_blob_stops_resolution_and_blob_errors_propagate ... ok\ntest missing_apis_and_missing_families_resolve_without_a_font ... ok\ntest legacy_permission_typeerror_is_ignored_and_takes_priority ... ok\ntest denied_permission_rejects_and_remains_retryable ... ok\ntest concurrent_failed_query_reuses_the_other_calls_successful_catalog ... ok\n\ntest result: ok. 10 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.16s\n\n",
       "counts": {
-        "passed": 7,
+        "passed": 10,
         "failed": 0,
         "ignored": 0,
         "filtered": 0

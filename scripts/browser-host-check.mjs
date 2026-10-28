@@ -9,7 +9,7 @@ import { withArtifactServer } from './browser-artifact-server.mjs';
 // Rust wasm-bindgen-test assertions, not the reference JavaScript terminal.
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const packageName = process.env.WASM_PACKAGE ?? 'xterm-web';
-if (!['xterm-web', 'xterm-wasm-support'].includes(packageName)) throw new Error('Invalid WASM_PACKAGE');
+if (!['xterm-web', 'xterm-wasm-support', 'xterm-font-addons'].includes(packageName)) throw new Error('Invalid WASM_PACKAGE');
 const testName = process.env.WASM_TEST ?? 'wasm_host';
 if (!/^[a-z0-9_]+$/.test(testName)) throw new Error('Invalid WASM_TEST');
 const features = process.env.CARGO_FEATURES ?? '';

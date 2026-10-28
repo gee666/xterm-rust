@@ -38,13 +38,11 @@ pub mod dom;
 #[cfg(target_arch = "wasm32")]
 pub mod dom_listener;
 #[cfg(target_arch = "wasm32")]
-pub mod font_addons;
-#[cfg(target_arch = "wasm32")]
-pub mod font_set;
+pub use xterm_font_addons::{font_addons, font_set, ligatures_addon};
 #[cfg(target_arch = "wasm32")]
 pub mod js_error;
 #[cfg(target_arch = "wasm32")]
-pub mod local_fonts;
+pub use xterm_font_addons::local_fonts;
 #[cfg(target_arch = "wasm32")]
 pub mod logger;
 #[cfg(target_arch = "wasm32")]
@@ -66,7 +64,7 @@ pub mod utf16;
 #[cfg(target_arch = "wasm32")]
 pub mod utility_addons;
 #[cfg(target_arch = "wasm32")]
-pub use font_addons::{load_web_fonts, WebFontsAddon};
+pub use xterm_font_addons::{load_web_fonts, LigaturesAddon, WebFontsAddon};
 #[cfg(target_arch = "wasm32")]
 mod host;
 

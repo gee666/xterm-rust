@@ -33,6 +33,8 @@ const cases = [
 ];
 const previous = ['navigator','window'].map(key => [key, Object.getOwnPropertyDescriptor(globalThis,key)]);
 const originalError = console.error;
+let concurrencyResult;
+const optionalPermission=[];
 try {
  for (let index=0; index<cases.length; index++) {
   const item=cases[index];
@@ -49,17 +51,42 @@ try {
   item.counters=Object.fromEntries(Object.entries(env).filter(([,value])=>typeof value==='number'));
   item.logs=logs;
  }
+ const concurrentLogs=[];
+ console.error=(...args)=>concurrentLogs.push(args.map(String).join(': '));
+ const env = new Function("let begin,fail;const started=new Promise(r=>begin=r);const pending=new Promise((_,reject)=>fail=()=>reject(new Error('concurrent query failure')));const env={navigator:{},queries:0,started,fail};env.window={queryLocalFonts:()=>{env.queries++;if(env.queries===1){begin();return pending}return Promise.resolve([{family:'Concurrent',blob:async()=>new Blob([new Uint8Array([4,5])])}])}};return env;")();
+ for(const key of ['navigator','window']) Object.defineProperty(globalThis,key,{configurable:true,value:env[key]});
+ const load=(await import(pathToFileURL(path.join(temporary,'font.ts')).href+'?case=concurrent')).default;
+ const first=load('Concurrent',100000);
+ await env.started;
+ const second=await load('Concurrent',100000);
+ env.fail();
+ const firstResult=await first;
+ concurrencyResult={queries:env.queries,firstBytes:firstResult?.bytes,secondBytes:second?.bytes,logs:concurrentLogs};
+ assert.deepEqual(concurrencyResult,{queries:2,firstBytes:[4,5],secondBytes:[4,5],logs:['Error: concurrent query failure']});
+ for(const calls of [1,2]) {
+  const trace=[]; const env={navigator:{permissions:{},fonts:{query(){trace.push('query');throw new Error('controlled synchronous query failure')}}},window:{}};
+  for(const key of ['navigator','window'])Object.defineProperty(globalThis,key,{configurable:true,value:env[key]});
+  const logs=[]; console.error=(...args)=>logs.push(args.map(String).join(': '));
+  const load=(await import(pathToFileURL(path.join(temporary,'font.ts')).href+'?optional='+calls)).default;
+  queueMicrotask(()=>trace.push('microtask'));
+  await Promise.all(Array.from({length:calls},()=>load('Missing',100000)));
+  assert.deepEqual(trace,['microtask',...Array(calls).fill('query')]);
+  optionalPermission.push({calls,trace,logs});
+ }
 } finally {
  console.error=originalError;
  for(const [key,descriptor]of previous) {if(descriptor)Object.defineProperty(globalThis,key,descriptor);else delete globalThis[key];}
 }
-const fixture=path.join(root,'crates/xterm-web/tests/fixtures/local-font-cases.json');
+const fixture=path.join(root,'crates/xterm-font-addons/tests/fixtures/local-font-cases.json');
 const content=JSON.stringify(cases,null,2)+'\n';
 if(generate) await fs.writeFile(fixture,content);
 else {
  const expected=await fs.readFile(fixture,'utf8');
  if(expected!==content) {await fs.writeFile(path.join(temporary,'local-font-cases.actual.json'),content);assert.fail('Local font fixture drift. Inspect tmp/local-font-oracle/local-font-cases.actual.json before --generate.');}
 }
-const report={node:process.version,scope:'Font metadata resolution, not GSUB',source:sourcePath,sha256:createHash('sha256').update(source).digest('hex'),cases:cases.length,calls:cases.reduce((sum,item)=>sum+item.calls.length,0),fixtureSha256:createHash('sha256').update(content).digest('hex'),mode:generate?'generate':'verify'};
+const permissionFixture=path.join(root,'crates/xterm-font-addons/tests/fixtures/local-font-permission-trace.json');
+const permissionText=JSON.stringify(optionalPermission)+'\n';
+if(generate)await fs.writeFile(permissionFixture,permissionText);else assert.equal(await fs.readFile(permissionFixture,'utf8'),permissionText,'optional permission trace drift');
+const report={node:process.version,scope:'Font metadata resolution, not GSUB',source:sourcePath,sha256:createHash('sha256').update(source).digest('hex'),cases:cases.length,calls:cases.reduce((sum,item)=>sum+item.calls.length,0),fixtureSha256:createHash('sha256').update(content).digest('hex'),mode:generate?'generate':'verify',concurrentQuery:concurrencyResult,optionalPermission};
 await fs.writeFile(path.join(resultDir,'local-font-oracle.json'),JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify(report));

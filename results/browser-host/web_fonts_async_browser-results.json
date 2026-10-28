@@ -1,0 +1,137 @@
+{
+  "testName": "web_fonts_async_browser",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-10-28T16:21:07.393Z",
+  "componentOnly": true,
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-font-addons",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "web_fonts_async_browser",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 393.0185,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "C:\\Users\\user\\.xterm-rust-target\\7144d30a1fc3-worktrees\\Fergus\\target\\wasm32-unknown-unknown\\debug\\deps\\web_fonts_async_browser-d03fa06e8a7dd43d.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "C:\\Users\\user\\.xterm-rust-target\\7144d30a1fc3-worktrees\\Fergus\\tmp\\browser-host\\web_fonts_async_browser",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 162.63899999999995,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "passed",
+      "tests": [
+        "__wbgt__web_fonts_async_browser::disposal_during_load_cancels_both_option_assignments",
+        "__wbgt__web_fonts_async_browser::disposing_from_first_option_setter_preserves_second_write_typeerror",
+        "__wbgt__web_fonts_async_browser::duplicate_descriptors_reuse_first_even_if_source_and_display_differ",
+        "__wbgt__web_fonts_async_browser::duplicate_family_requests_call_load_repeatedly_in_request_order",
+        "__wbgt__web_fonts_async_browser::family_lookup_is_case_sensitive_and_unquotes_registered_names",
+        "__wbgt__web_fonts_async_browser::reactivation_during_load_uses_current_terminal_and_old_family_snapshot"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "warning",
+          "text": "OTS parsing error: invalid sfntVersion: 66051"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 6 tests\ntest reactivation_during_load_uses_current_terminal_and_old_family_snapshot ... ok\ntest family_lookup_is_case_sensitive_and_unquotes_registered_names ... ok\ntest duplicate_family_requests_call_load_repeatedly_in_request_order ... ok\ntest duplicate_descriptors_reuse_first_even_if_source_and_display_differ ... ok\ntest disposing_from_first_option_setter_preserves_second_write_typeerror ... ok\ntest disposal_during_load_cancels_both_option_assignments ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.02s\n\n",
+      "counts": {
+        "passed": 6,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "firefox",
+      "status": "passed",
+      "tests": [
+        "__wbgt__web_fonts_async_browser::disposal_during_load_cancels_both_option_assignments",
+        "__wbgt__web_fonts_async_browser::disposing_from_first_option_setter_preserves_second_write_typeerror",
+        "__wbgt__web_fonts_async_browser::duplicate_descriptors_reuse_first_even_if_source_and_display_differ",
+        "__wbgt__web_fonts_async_browser::duplicate_family_requests_call_load_repeatedly_in_request_order",
+        "__wbgt__web_fonts_async_browser::family_lookup_is_case_sensitive_and_unquotes_registered_names",
+        "__wbgt__web_fonts_async_browser::reactivation_during_load_uses_current_terminal_and_old_family_snapshot"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "[JavaScript Error: \"downloadable font: rejected by sanitizer (font-family: \"HashWeb\" style:normal weight:400 stretch:100 src index:0) source: (invalid URI)\"]"
+        },
+        {
+          "type": "error",
+          "text": "[JavaScript Error: \"downloadable font: font load failed (font-family: \"HashWeb\" style:normal weight:400 stretch:100 src index:0) source: (invalid URI)\"]"
+        }
+      ],
+      "version": "150.0.2",
+      "output": "running 6 tests\ntest reactivation_during_load_uses_current_terminal_and_old_family_snapshot ... ok\ntest family_lookup_is_case_sensitive_and_unquotes_registered_names ... ok\ntest duplicate_family_requests_call_load_repeatedly_in_request_order ... ok\ntest duplicate_descriptors_reuse_first_even_if_source_and_display_differ ... ok\ntest disposing_from_first_option_setter_preserves_second_write_typeerror ... ok\ntest disposal_during_load_cancels_both_option_assignments ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.01s\n\n",
+      "counts": {
+        "passed": 6,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "webkit",
+      "status": "passed",
+      "tests": [
+        "__wbgt__web_fonts_async_browser::disposal_during_load_cancels_both_option_assignments",
+        "__wbgt__web_fonts_async_browser::disposing_from_first_option_setter_preserves_second_write_typeerror",
+        "__wbgt__web_fonts_async_browser::duplicate_descriptors_reuse_first_even_if_source_and_display_differ",
+        "__wbgt__web_fonts_async_browser::duplicate_family_requests_call_load_repeatedly_in_request_order",
+        "__wbgt__web_fonts_async_browser::family_lookup_is_case_sensitive_and_unquotes_registered_names",
+        "__wbgt__web_fonts_async_browser::reactivation_during_load_uses_current_terminal_and_old_family_snapshot"
+      ],
+      "errors": [],
+      "console": [],
+      "version": "26.4",
+      "output": "running 6 tests\ntest reactivation_during_load_uses_current_terminal_and_old_family_snapshot ... ok\ntest family_lookup_is_case_sensitive_and_unquotes_registered_names ... ok\ntest duplicate_family_requests_call_load_repeatedly_in_request_order ... ok\ntest duplicate_descriptors_reuse_first_even_if_source_and_display_differ ... ok\ntest disposing_from_first_option_setter_preserves_second_write_typeerror ... ok\ntest disposal_during_load_cancels_both_option_assignments ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.03s\n\n",
+      "counts": {
+        "passed": 6,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ]
+}
