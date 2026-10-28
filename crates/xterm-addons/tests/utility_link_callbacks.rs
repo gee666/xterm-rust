@@ -9,7 +9,17 @@ use xterm_core::{
     lifecycle::{to_disposable, Disposable, DisposableHandle},
     terminal::CoreTerminal,
 };
+#[path = "support/utility_sparse.rs"]
+mod sparse;
 type Calls = Rc<RefCell<Vec<&'static str>>>;
+#[test]
+fn sparse_rows_and_virtual_end_coordinates_are_portable() {
+    let matcher = Matcher {
+        enabled: Rc::new(Cell::new(true)),
+        calls: Calls::default(),
+    };
+    sparse::assert_source_cases(&matcher);
+}
 struct Matcher {
     enabled: Rc<Cell<bool>>,
     calls: Calls,

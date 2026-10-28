@@ -1,5 +1,8 @@
 //! WebLinksAddon exports use the terminal's pre-open provider registry.
-use super::{matcher::BrowserLinkMatcher, provider::BrowserWebLinkTerminal};
+use super::{
+    matcher::{BrowserLinkMatcher, ObjectLinkMatcher},
+    provider::BrowserWebLinkTerminal,
+};
 use crate::{terminal::Terminal, utf16::to_js_string};
 use js_sys::{Array, Function, Object, Reflect};
 use std::{cell::RefCell, rc::Rc};
@@ -8,7 +11,7 @@ use web_sys::MouseEvent;
 use xterm_addons::{
     link_snapshot::LinkSnapshot,
     web_link_provider::{Activate, LinkOptions, WebLinksAddon as Inner},
-    web_links::{LinkError, LinkRange, RegexSpec},
+    web_links::{LinkError, LinkMatcher, LinkRange},
 };
 use xterm_core::lifecycle::Disposable;
 
@@ -52,26 +55,10 @@ fn callback(value: JsValue) -> Option<Activate<MouseEvent>> {
         Some(Rc::new(move |event, uri| call(&value, &args(event, uri))))
     }
 }
-fn regex(options: &JsValue) -> Result<Option<RegexSpec>, LinkError> {
-    let value = Reflect::get(options, &"urlRegex".into()).map_err(error)?;
-    if nullish(&value) {
-        return Ok(None);
-    }
-    let source = Reflect::get(&value, &"source".into())
-        .map_err(error)?
-        .as_string()
-        .ok_or_else(|| LinkError::Message("URL RegExp source must be a string".into()))?;
-    let flags = Reflect::get(&value, &"flags".into())
-        .map_err(error)?
-        .as_string()
-        .ok_or_else(|| LinkError::Message("URL RegExp flags must be a string".into()))?;
-    Ok(Some(RegexSpec { source, flags }))
-}
 
 #[wasm_bindgen(js_name=WebLinksAddon)]
 pub struct WebLinksAddon {
     addon: Inner<MouseEvent>,
-    options: JsValue,
     terminals: RefCell<Vec<Rc<BrowserWebLinkTerminal>>>,
 }
 #[wasm_bindgen]
@@ -85,18 +72,27 @@ impl WebLinksAddon {
         };
         let hover = options.clone();
         let leave = options.clone();
+        let pattern = options.clone();
         let native_options = LinkOptions {
+            matcher_factory: Some(Rc::new(move || {
+                let regex = super::js_property::get(&pattern, "urlRegex").map_err(error)?;
+                Ok(if nullish(&regex) {
+                    Rc::new(BrowserLinkMatcher) as Rc<dyn LinkMatcher>
+                } else {
+                    Rc::new(ObjectLinkMatcher::new(regex)) as Rc<dyn LinkMatcher>
+                })
+            })),
             hover_factory: Some(Rc::new(move |location| {
                 let location = range(location)?;
                 let hover = hover.clone();
                 Ok(Rc::new(move |event: &MouseEvent, uri: &[u16]| {
-                    if Reflect::get(&hover, &"hover".into())
+                    if super::js_property::get(&hover, "hover")
                         .map_err(error)?
                         .is_truthy()
                     {
                         // Source reads the option twice, so accessor side effects
                         // between the truthiness check and invocation are visible.
-                        let callback = Reflect::get(&hover, &"hover".into()).map_err(error)?;
+                        let callback = super::js_property::get(&hover, "hover").map_err(error)?;
                         let args = args(event, uri);
                         args.push(&location);
                         call(&callback, &args)?;
@@ -105,7 +101,7 @@ impl WebLinksAddon {
                 }) as Activate<MouseEvent>)
             })),
             leave_factory: Some(Rc::new(move || {
-                let value = Reflect::get(&leave, &"leave".into()).map_err(error)?;
+                let value = super::js_property::get(&leave, "leave").map_err(error)?;
                 Ok(if value.is_truthy() {
                     callback(value)
                 } else {
@@ -120,13 +116,10 @@ impl WebLinksAddon {
                 callback(handler),
                 native_options,
             ),
-            options,
             terminals: RefCell::default(),
         }
     }
     pub fn activate(&self, terminal: &Terminal) -> Result<(), JsValue> {
-        let regex = regex(&self.options).map_err(|e| crate::js_error::to_js_error(&e))?;
-        self.addon.options.borrow_mut().regex = regex;
         let native = Rc::downgrade(&terminal.shared_native());
         let host = Rc::new(BrowserWebLinkTerminal {
             providers: terminal.shared.link_providers.clone(),

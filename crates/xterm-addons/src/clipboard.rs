@@ -8,8 +8,11 @@ use std::cell::RefCell;
 use std::fmt;
 use std::future::Future;
 use std::pin::Pin;
-use std::rc::Rc;
+use std::rc::{Rc, Weak};
 use xterm_core::lifecycle::{Disposable, DisposableHandle};
+
+pub const OSC_CLIPBOARD: u16 = 52;
+const REPLY_PREFIX: &str = "\u{1b}]52;";
 
 #[derive(Clone, Debug)]
 pub enum ClipboardError {
@@ -95,7 +98,29 @@ pub trait ClipboardTerminal {
     fn input(&self, data: &[u16], was_user_input: bool) -> Result<(), ClipboardError>;
 }
 
+pub trait ClipboardReply {
+    fn send_reply(&self, data: &[u16]) -> Result<(), ClipboardError>;
+}
+impl<T: ClipboardTerminal + ?Sized> ClipboardReply for T {
+    fn send_reply(&self, data: &[u16]) -> Result<(), ClipboardError> {
+        self.input(data, false)
+    }
+}
+struct CurrentReply(Rc<RefCell<Option<Weak<dyn ClipboardTerminal>>>>);
+impl ClipboardReply for CurrentReply {
+    fn send_reply(&self, data: &[u16]) -> Result<(), ClipboardError> {
+        let terminal = self
+            .0
+            .borrow()
+            .clone()
+            .and_then(|target| target.upgrade())
+            .ok_or_else(|| ClipboardError::Message("clipboard terminal was dropped".into()))?;
+        terminal.input(data, false)
+    }
+}
+
 pub struct ClipboardAddon {
+    target: Rc<RefCell<Option<Weak<dyn ClipboardTerminal>>>>,
     codec: Rc<dyn Base64Codec>,
     provider: Rc<dyn ClipboardProvider>,
     disposable: RefCell<Option<DisposableHandle>>,
@@ -104,6 +129,7 @@ pub struct ClipboardAddon {
 impl ClipboardAddon {
     pub fn new(provider: Rc<dyn ClipboardProvider>, codec: Option<Rc<dyn Base64Codec>>) -> Self {
         Self {
+            target: Rc::default(),
             codec: codec.unwrap_or_else(|| Rc::new(Base64)),
             provider,
             disposable: RefCell::default(),
@@ -113,17 +139,20 @@ impl ClipboardAddon {
     pub fn activate(&self, terminal: Rc<dyn ClipboardTerminal>) {
         let codec = Rc::clone(&self.codec);
         let provider = Rc::clone(&self.provider);
-        // A terminal owns its callback. A weak reference avoids retaining it.
-        let target = Rc::downgrade(&terminal);
+        // Pending queries use the most recently activated terminal, as source
+        // _readText reads this._terminal only when the provider settles.
+        *self.target.borrow_mut() = Some(Rc::downgrade(&terminal));
+        let target = Rc::new(CurrentReply(Rc::clone(&self.target)));
         let callback = Rc::new(move |data: &[u16]| {
-            let Some(target) = target.upgrade() else {
-                return Completion::Ready(Err(ClipboardError::Message(
-                    "clipboard terminal was dropped".into(),
-                )));
-            };
-            handle_osc(data, Rc::clone(&codec), Rc::clone(&provider), target)
+            handle_osc(
+                data,
+                Rc::clone(&codec),
+                Rc::clone(&provider),
+                Rc::clone(&target),
+            )
         });
-        *self.disposable.borrow_mut() = Some(terminal.register_osc_handler(52, callback));
+        *self.disposable.borrow_mut() =
+            Some(terminal.register_osc_handler(OSC_CLIPBOARD, callback));
     }
 }
 
@@ -141,32 +170,54 @@ impl Drop for ClipboardAddon {
     }
 }
 
-pub fn handle_osc(
-    data: &[u16],
-    codec: Rc<dyn Base64Codec>,
-    provider: Rc<dyn ClipboardProvider>,
-    terminal: Rc<dyn ClipboardTerminal>,
-) -> Completion<bool> {
+pub enum ClipboardRequest<'a> {
+    Ignored,
+    Read(&'a [u16]),
+    Write {
+        selection: &'a [u16],
+        payload: &'a [u16],
+    },
+}
+pub fn parse_request(data: &[u16]) -> ClipboardRequest<'_> {
     let mut args = data.split(|unit| *unit == u16::from(b';'));
     let selection = args.next().unwrap_or_default();
     let Some(payload) = args.next() else {
-        return Completion::Ready(Ok(true));
+        return ClipboardRequest::Ignored;
     };
     if payload == [u16::from(b'?')] {
-        let selection = selection.to_vec();
-        provider.read_text(&selection).map(move |data| {
-            let encoded = codec.encode_text(&data)?;
-            let mut reply: Vec<u16> = "\u{1b}]52;".encode_utf16().collect();
-            reply.extend(selection);
-            reply.push(u16::from(b';'));
-            reply.extend(encoded);
-            reply.push(7);
-            terminal.input(&reply, false)?;
-            Ok(true)
-        })
+        ClipboardRequest::Read(selection)
     } else {
-        // Clearing on decode failure is the upstream OSC 52 contract.
-        let text = codec.decode_text(payload).unwrap_or_default();
-        provider.write_text(selection, &text).map(|()| Ok(true))
+        ClipboardRequest::Write { selection, payload }
+    }
+}
+pub fn query_reply(selection: &[u16], encoded: &[u16]) -> Vec<u16> {
+    let mut reply: Vec<u16> = REPLY_PREFIX.encode_utf16().collect();
+    reply.extend_from_slice(selection);
+    reply.push(u16::from(b';'));
+    reply.extend_from_slice(encoded);
+    reply.push(7);
+    reply
+}
+pub fn handle_osc<T: ClipboardReply + ?Sized + 'static>(
+    data: &[u16],
+    codec: Rc<dyn Base64Codec>,
+    provider: Rc<dyn ClipboardProvider>,
+    terminal: Rc<T>,
+) -> Completion<bool> {
+    match parse_request(data) {
+        ClipboardRequest::Ignored => Completion::Ready(Ok(true)),
+        ClipboardRequest::Read(selection) => {
+            let selection = selection.to_vec();
+            provider.read_text(&selection).map(move |data| {
+                let encoded = codec.encode_text(&data)?;
+                terminal.send_reply(&query_reply(&selection, &encoded))?;
+                Ok(true)
+            })
+        }
+        ClipboardRequest::Write { selection, payload } => {
+            // Clearing on decode failure is the upstream OSC52 contract.
+            let text = codec.decode_text(payload).unwrap_or_default();
+            provider.write_text(selection, &text).map(|()| Ok(true))
+        }
     }
 }

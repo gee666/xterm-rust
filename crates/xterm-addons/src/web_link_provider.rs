@@ -1,6 +1,8 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved.
 // Licensed under MIT. Port of WebLinksAddon registration/callback lifecycle.
-use crate::web_links::{compute_links, LinkBuffer, LinkError, LinkMatcher, LinkRange, RegexSpec};
+use crate::web_links::{
+    compute_prepared_links, LinkBuffer, LinkError, LinkMatcher, LinkRange, RegexSpec,
+};
 use std::{cell::RefCell, rc::Rc};
 use xterm_core::lifecycle::{Disposable, DisposableHandle};
 
@@ -8,6 +10,7 @@ pub type Activate<E> = Rc<dyn Fn(&E, &[u16]) -> Result<(), LinkError>>;
 pub type Hover<E> = Rc<dyn Fn(&E, &[u16], LinkRange) -> Result<(), LinkError>>;
 pub type HoverFactory<E> = Rc<dyn Fn(LinkRange) -> Result<Activate<E>, LinkError>>;
 pub type LeaveFactory<E> = Rc<dyn Fn() -> Result<Option<Activate<E>>, LinkError>>;
+pub type MatcherFactory = Rc<dyn Fn() -> Result<Rc<dyn LinkMatcher>, LinkError>>;
 pub struct LinkOptions<E> {
     pub regex: Option<RegexSpec>,
     pub hover: Option<Hover<E>>,
@@ -16,6 +19,7 @@ pub struct LinkOptions<E> {
     /// and the exact time at which user-defined option getters execute.
     pub hover_factory: Option<HoverFactory<E>>,
     pub leave_factory: Option<LeaveFactory<E>>,
+    pub matcher_factory: Option<MatcherFactory>,
 }
 impl<E> Default for LinkOptions<E> {
     fn default() -> Self {
@@ -25,6 +29,7 @@ impl<E> Default for LinkOptions<E> {
             leave: None,
             hover_factory: None,
             leave_factory: None,
+            matcher_factory: None,
         }
     }
 }
@@ -72,15 +77,24 @@ impl<E: 'static> WebLinksAddon<E> {
                     .open_link(event, uri)
             })
         });
-        let matcher = Rc::clone(&self.matcher);
+        let factory = self.options.borrow().matcher_factory.clone();
+        let matcher = if let Some(factory) = factory {
+            factory()?
+        } else {
+            Rc::clone(&self.matcher)
+        };
         let options = Rc::clone(&self.options);
         let regex = options.borrow().regex.clone().unwrap_or_default();
         let provider = Rc::new(move |y| {
+            let prepared = matcher.prepare(&regex)?;
             let buffer = target
                 .upgrade()
                 .ok_or_else(|| LinkError::Message("link terminal was dropped".into()))?
                 .buffer()?;
-            let links = compute_links(y, &regex, &*buffer, &*matcher)?;
+            let links = compute_prepared_links(y, &*buffer, &*prepared)?;
+            // No host query guard or buffer borrow crosses option callbacks.
+            drop(buffer);
+            drop(prepared);
             links
                 .into_iter()
                 .map(|link| {

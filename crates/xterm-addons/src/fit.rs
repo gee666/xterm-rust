@@ -111,14 +111,18 @@ pub fn propose_dimensions(m: &FitMeasurements) -> Option<Dimensions> {
     let height = parse_css_integer(&m.parent_height).max(0.0);
     let width = parse_css_integer(&m.parent_width).max(0.0);
     let padding = m.padding.each_ref().map(|value| parse_css_integer(value));
+    // Keep source grouping: subtracting sides separately rounds differently
+    // near binary64 integer boundaries even when the final sum is representable.
+    let padding_horizontal = padding[2] + padding[3];
+    let padding_vertical = padding[0] + padding[1];
     Some(Dimensions {
         cols: js_max(
             MINIMUM_COLS,
-            ((width - padding[2] - padding[3] - scrollbar) / m.cell_width).floor(),
+            ((width - padding_horizontal - scrollbar) / m.cell_width).floor(),
         ),
         rows: js_max(
             MINIMUM_ROWS,
-            ((height - padding[0] - padding[1]) / m.cell_height).floor(),
+            ((height - padding_vertical) / m.cell_height).floor(),
         ),
     })
 }
