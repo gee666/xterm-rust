@@ -67,8 +67,8 @@ function record(columns, rows, scrollback, start, end, length, all, trim, clear 
   ].join('\t'));
 }
 for (const columns of [1, 2, 3, 80, 132, 65535, 4294967295]) {
-  const points = [undefined, [0, 0], [1, 0], [columns - 1, 2], [columns, 3], [0, 5], [columns, -1]];
-  const lengths = [...new Set([0, 1, columns - 1, columns, Math.min(4294967295, columns * 2), 4294967295])];
+  const points = [undefined, [-2, 0], [-1, 3], [0, 0], [1, 0], [columns - 1, 2], [columns, 3], [0, 5], [columns, -1]];
+  const lengths = [...new Set([-3, -1, 0, 1, columns - 1, columns, Math.min(4294967295, columns * 2), 4294967295])];
   for (const start of points) for (const end of points) for (const length of lengths) {
     for (const all of [false, true]) for (const trim of [undefined, 0, 1, 3, 4294967295]) {
       record(columns, 24, 1000, start, end, length, all, trim);
@@ -87,7 +87,7 @@ for (let index = 0; index < 20000; index++) {
   const scrollback = random() % 65536;
   const start = random() % 8 ? [random() % (columns + 1), random() % (scrollback + rows)] : undefined;
   const end = random() % 8 ? [random() % (columns + 1), random() % (scrollback + rows)] : undefined;
-  record(columns, rows, scrollback, start, end, random() % (columns * 8), random() % 16 === 0,
+  record(columns, rows, scrollback, start, end, random() % (columns * 8) - columns, random() % 16 === 0,
     random() % 4 ? random() % (scrollback + rows) : undefined, random() % 32 === 0);
 }
 
@@ -124,7 +124,7 @@ const report = {
 await writeFile('results/selection-model/oracle.json', JSON.stringify(report, null, 2) + '\n');
 if (!passed) {
   await writeFile('results/selection-model/counterexample.json', JSON.stringify({
-    seed, index: mismatch, input: cases[mismatch], expected: expected[mismatch], actual: actual[mismatch],
+    seed, failureKind: result.status === 0 ? 'mismatch' : 'native-execution', index: mismatch, input: cases[mismatch], expected: expected[mismatch], actual: actual[mismatch],
     nativeExitCode: result.status, error: result.error?.message
   }, null, 2) + '\n');
 }

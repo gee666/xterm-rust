@@ -3,15 +3,15 @@
 
 use std::{error::Error, fmt, num::NonZeroU32};
 
-/// A buffer cell boundary. Rows are signed because trimming can move them above zero.
+/// A buffer cell boundary. Search inside combined cells can produce signed columns.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct Position {
-    pub column: u32,
+    pub column: i64,
     pub row: i64,
 }
 
 impl Position {
-    pub const fn new(column: u32, row: i64) -> Self {
+    pub const fn new(column: i64, row: i64) -> Self {
         Self { column, row }
     }
 }
@@ -24,13 +24,13 @@ pub struct Dimensions {
     pub scrollback: u32,
 }
 
-/// An endpoint row cannot be represented by the Rust coordinate type.
+/// Coordinate arithmetic cannot be represented by the Rust integer type.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct CoordinateOverflow;
 
 impl fmt::Display for CoordinateOverflow {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str("selection row exceeds the signed 64-bit coordinate range")
+        f.write_str("selection exceeds the signed 64-bit coordinate range")
     }
 }
 
@@ -38,13 +38,13 @@ impl Error for CoordinateOverflow {}
 
 /// Selection coordinates only, independent of cell contents and browser events.
 ///
-/// Columns and initial selection length use unsigned 32-bit cell counts. The
-/// upstream buffer capacity is also bounded by u32::MAX. Row arithmetic is
-/// checked because callers may construct endpoints outside a live buffer.
+/// Columns and lengths remain signed because addon searches inside combined
+/// cells can produce negative values. Arithmetic is checked; browser bindings
+/// validate JavaScript integer ranges before constructing native coordinates.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct SelectionModel {
     pub is_select_all_active: bool,
-    pub selection_start_length: u32,
+    pub selection_start_length: i64,
     pub selection_start: Option<Position>,
     pub selection_end: Option<Position>,
 }
@@ -78,42 +78,47 @@ impl SelectionModel {
     ) -> Result<Option<Position>, CoordinateOverflow> {
         if self.is_select_all_active {
             return Ok(Some(Position::new(
-                dimensions.columns.get(),
+                i64::from(dimensions.columns.get()),
                 i64::from(dimensions.scrollback) + i64::from(dimensions.rows.get()) - 1,
             )));
         }
         let Some(start) = self.selection_start else {
             return Ok(None);
         };
-        let columns = u64::from(dimensions.columns.get());
-        let start_plus_length = u64::from(start.column) + u64::from(self.selection_start_length);
+        let columns = i64::from(dimensions.columns.get());
+        let start_plus_length = || {
+            start
+                .column
+                .checked_add(self.selection_start_length)
+                .ok_or(CoordinateOverflow)
+        };
         let end = match self.selection_end {
             Some(end) if !self.are_selection_values_reversed() => end,
-            _ => return Self::minimum_end(start, columns, start_plus_length, true).map(Some),
+            _ => return Self::minimum_end(start, columns, start_plus_length()?, true).map(Some),
         };
         if self.selection_start_length != 0 && end.row == start.row {
+            let start_plus_length = start_plus_length()?;
             if start_plus_length > columns {
                 // Unlike the absent/reversed-end branch, upstream retains the
                 // next row's column zero for an exact wrapped word here.
                 return Self::minimum_end(start, columns, start_plus_length, false).map(Some);
             }
-            let minimum = u32::try_from(start_plus_length).map_err(|_| CoordinateOverflow)?;
-            return Ok(Some(Position::new(minimum.max(end.column), end.row)));
+            return Ok(Some(Position::new(
+                start_plus_length.max(end.column),
+                end.row,
+            )));
         }
         Ok(Some(end))
     }
 
     fn minimum_end(
         start: Position,
-        columns: u64,
-        start_plus_length: u64,
+        columns: i64,
+        start_plus_length: i64,
         exclude_trailing_eol: bool,
     ) -> Result<Position, CoordinateOverflow> {
         if start_plus_length <= columns {
-            return Ok(Position::new(
-                u32::try_from(start_plus_length).map_err(|_| CoordinateOverflow)?,
-                start.row,
-            ));
+            return Ok(Position::new(start_plus_length, start.row));
         }
         let remainder = start_plus_length % columns;
         let mut row_offset = start_plus_length / columns;
@@ -123,16 +128,12 @@ impl SelectionModel {
         } else {
             remainder
         };
-        // The sum of two u32 values and its quotient fit in i64.
-        let row_offset = i64::try_from(row_offset).map_err(|_| CoordinateOverflow)?;
+        // This branch only divides a positive value by a positive column count.
         let row = start
             .row
             .checked_add(row_offset)
             .ok_or(CoordinateOverflow)?;
-        Ok(Position::new(
-            u32::try_from(column).map_err(|_| CoordinateOverflow)?,
-            row,
-        ))
+        Ok(Position::new(column, row))
     }
 
     /// Returns whether clearing or clamping requires a selection refresh.

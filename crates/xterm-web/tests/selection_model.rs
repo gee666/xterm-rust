@@ -3,7 +3,7 @@
 use std::num::NonZeroU32;
 use xterm_web::selection::model::{CoordinateOverflow, Dimensions, Position, SelectionModel};
 
-fn point(column: u32, row: i64) -> Option<Position> {
+fn point(column: i64, row: i64) -> Option<Position> {
     Some(Position::new(column, row))
 }
 fn dimensions() -> Dimensions {
@@ -13,7 +13,7 @@ fn dimensions() -> Dimensions {
         scrollback: 0,
     }
 }
-fn model(start: Option<Position>, end: Option<Position>, length: u32) -> SelectionModel {
+fn model(start: Option<Position>, end: Option<Position>, length: i64) -> SelectionModel {
     SelectionModel {
         selection_start: start,
         selection_end: end,
@@ -142,6 +142,18 @@ fn no_trailing_eol_at_end_of_line() {
 }
 
 // Additional boundaries absent from the upstream unit suite.
+#[test]
+fn signed_search_positions_and_lengths_are_not_clamped() {
+    assert_eq!(end(&model(point(-2, 0), None, -3)), point(-5, 0));
+    assert_eq!(end(&model(point(-2, 0), point(-1, 0), -3)), point(-1, 0));
+    assert_eq!(end(&model(point(i64::MAX, 0), point(0, 1), 1)), point(0, 1));
+    let model = model(point(i64::MAX, 0), None, 1);
+    assert_eq!(
+        model.final_selection_end(dimensions()),
+        Err(CoordinateOverflow)
+    );
+}
+
 #[test]
 fn exact_wrap_with_explicit_same_row_end_preserves_source_branch() {
     assert_eq!(end(&model(point(78, 2), point(79, 2), 82)), point(0, 4));
