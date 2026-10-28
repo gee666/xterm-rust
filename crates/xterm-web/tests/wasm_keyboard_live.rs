@@ -15,6 +15,17 @@ use web_sys::Event;
 wasm_bindgen_test_configure!(run_in_browser);
 
 #[wasm_bindgen_test]
+fn adopted_textarea_accepts_keyboard_events_from_its_foreign_document() {
+    let setup = Setup::new();
+    let errors = Errors::new();
+    let (_document, event) = ForeignDocument::keyboard(&setup.dom.element);
+    setup.dom.textarea.dispatch_event(&event).unwrap();
+    assert_eq!(*setup.host.data.borrow(), vec![(vec![13], true)]);
+    assert!(event.default_prevented());
+    errors.empty();
+}
+
+#[wasm_bindgen_test]
 fn custom_veto_does_not_read_any_event_field() {
     let setup = Setup::new();
     let errors = Errors::new();

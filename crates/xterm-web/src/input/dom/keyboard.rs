@@ -22,7 +22,9 @@ pub(super) fn bind(bindings: &mut InputBindings) -> Result<(), JsValue> {
         ("keypress", KeyEventKind::Press),
     ] {
         listen(bindings, area.as_ref(), name, true, move |state, event| {
-            let event: KeyboardEvent = event.dyn_into()?;
+            // Listener registration supplies an Event; keyboard fields remain lazy.
+            // A global instanceof check rejects valid events from an adopted document.
+            let event: KeyboardEvent = event.unchecked_into();
             let source = LiveKeyEvent(&event);
             let adapter = Adapter {
                 state,
@@ -43,7 +45,8 @@ pub(super) fn bind(bindings: &mut InputBindings) -> Result<(), JsValue> {
         })?;
     }
     listen(bindings, area.as_ref(), "input", true, |state, event| {
-        let event: InputEvent = event.dyn_into()?;
+        // Input events can also originate in a different same-origin realm.
+        let event: InputEvent = event.unchecked_into();
         let data = js_sys::Reflect::get(event.as_ref(), &JsValue::from_str("data"))?;
         let data = if data.is_null() || data.is_undefined() {
             None
