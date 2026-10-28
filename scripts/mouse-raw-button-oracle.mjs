@@ -1,26 +1,14 @@
 // Copyright (c) 2019, 2026 The xterm.js authors. All rights reserved. MIT license.
 // Builds the original source in memory; no reference source or assertion edits.
-import { createRequire } from 'node:module';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import vm from 'node:vm';
+import { loadMouseReference } from './mouse-reference-module.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const require = createRequire(new URL('../source_repo/package.json', import.meta.url));
-const esbuild = require('esbuild');
-const source = 'source_repo/src/common/services/MouseStateService.ts';
-let built;
-try {
-  built = esbuild.buildSync({ absWorkingDir: root, entryPoints: [source],
-    bundle: true, platform: 'node', format: 'cjs', write: false, metafile: true, logLevel: 'silent' });
-} finally {
-  esbuild.stop();
-}
-const module = { exports: {} };
-vm.runInNewContext(built.outputFiles[0].text, { module, exports: module.exports });
-const { MouseStateService } = module.exports;
+const reference = loadMouseReference();
+const { MouseStateService } = reference;
 const service = new MouseStateService();
 const buttons = [-1, -2, -32768, 32767, -2147483648, 2147483647, 4];
 const rows = [];
@@ -47,13 +35,11 @@ const text = rows.join('\n') + '\n';
 if (process.argv.includes('--generate')) writeFileSync(path.join(root, fixture), text);
 else if (readFileSync(path.join(root, fixture), 'utf8').replaceAll('\r\n', '\n') !== text) throw new Error('raw mouse fixture drift');
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
-const hashes = Object.fromEntries(Object.keys(built.metafile.inputs).map(file =>
-  [file, sha256(readFileSync(path.join(root, file)))]));
 const directory = path.join(root, 'results/mouse-state');
 mkdirSync(directory, { recursive: true });
 writeFileSync(path.join(directory, 'raw-buttons-oracle.json'), JSON.stringify({
-  node: process.version, platform: process.platform, esbuild: esbuild.version,
-  sourceHashes: hashes, buttons, rows: rows.length, fixture,
+  node: process.version, platform: process.platform, esbuild: reference.esbuild,
+  sourceHashes: reference.sourceHashes, buttons, rows: rows.length, fixture,
   fixtureSha256: sha256(readFileSync(path.join(root, fixture))), canonicalSha256: sha256(text),
   scope: 'Raw signed/bitwise mouse button compatibility only; not browser routing or terminal equivalence.'
 }, null, 2) + '\n');

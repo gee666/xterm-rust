@@ -1,0 +1,2634 @@
+{
+  "node": "v24.15.0",
+  "platform": "win32",
+  "arch": "x64",
+  "originalSuitesExecuted": 0,
+  "rustCasesExecuted": 0,
+  "scope": "Additional unchanged-source observations only. Task171 must implement and compare actual Rust/WASM behavior.",
+  "checks": [
+    {
+      "name": "wheel receives original event and stable real service receiver",
+      "status": "passed"
+    },
+    {
+      "name": "only literal boolean false vetoes wheel",
+      "status": "passed"
+    },
+    {
+      "name": "direct callback call ignores poisoned Function.call property",
+      "status": "passed"
+    },
+    {
+      "name": "Event callback deliberately observes Function.call unlike wheel callbacks",
+      "status": "passed"
+    },
+    {
+      "name": "every thrown value retains identity instead of false or empty fallback",
+      "status": "passed"
+    },
+    {
+      "name": "restriction and encoding have distinct actual method receivers",
+      "status": "passed"
+    },
+    {
+      "name": "inherited registry names are not ordinary unknown-name failures",
+      "status": "passed"
+    },
+    {
+      "name": "numeric registry keys use Object.keys order",
+      "status": "passed"
+    },
+    {
+      "name": "__proto__ registration changes prototype rather than adding own key",
+      "status": "passed"
+    }
+  ],
+  "observations": {
+    "serviceOwnKeys": [
+      "_store",
+      "_protocols",
+      "_encodings",
+      "_activeProtocol",
+      "_activeEncoding",
+      "_onProtocolChange",
+      "onProtocolChange"
+    ],
+    "servicePrototype": [
+      {
+        "name": "constructor",
+        "method": true,
+        "getter": false,
+        "setter": false,
+        "enumerable": false,
+        "configurable": true
+      },
+      {
+        "name": "addProtocol",
+        "method": true,
+        "getter": false,
+        "setter": false,
+        "enumerable": false,
+        "configurable": true
+      },
+      {
+        "name": "addEncoding",
+        "method": true,
+        "getter": false,
+        "setter": false,
+        "enumerable": false,
+        "configurable": true
+      },
+      {
+        "name": "activeProtocol",
+        "method": false,
+        "getter": true,
+        "setter": true,
+        "enumerable": false,
+        "configurable": true
+      },
+      {
+        "name": "areMouseEventsActive",
+        "method": false,
+        "getter": true,
+        "setter": false,
+        "enumerable": false,
+        "configurable": true
+      },
+      {
+        "name": "activeEncoding",
+        "method": false,
+        "getter": true,
+        "setter": true,
+        "enumerable": false,
+        "configurable": true
+      },
+      {
+        "name": "reset",
+        "method": true,
+        "getter": false,
+        "setter": false,
+        "enumerable": false,
+        "configurable": true
+      },
+      {
+        "name": "setCustomWheelEventHandler",
+        "method": true,
+        "getter": false,
+        "setter": false,
+        "enumerable": false,
+        "configurable": true
+      },
+      {
+        "name": "allowCustomWheelEvent",
+        "method": true,
+        "getter": false,
+        "setter": false,
+        "enumerable": false,
+        "configurable": true
+      },
+      {
+        "name": "restrictMouseEvent",
+        "method": true,
+        "getter": false,
+        "setter": false,
+        "enumerable": false,
+        "configurable": true
+      },
+      {
+        "name": "encodeMouseEvent",
+        "method": true,
+        "getter": false,
+        "setter": false,
+        "enumerable": false,
+        "configurable": true
+      },
+      {
+        "name": "isDefaultEncoding",
+        "method": false,
+        "getter": true,
+        "setter": false,
+        "enumerable": false,
+        "configurable": true
+      },
+      {
+        "name": "isPixelEncoding",
+        "method": false,
+        "getter": true,
+        "setter": false,
+        "enumerable": false,
+        "configurable": true
+      }
+    ],
+    "wheelReceiver": {
+      "sameService": true,
+      "sameEvent": true,
+      "extraIdentity": true,
+      "states": [
+        [
+          "NONE",
+          "DEFAULT"
+        ],
+        [
+          "ANY",
+          "SGR"
+        ]
+      ],
+      "ownKeys": [
+        "_store",
+        "_protocols",
+        "_encodings",
+        "_activeProtocol",
+        "_activeEncoding",
+        "_onProtocolChange",
+        "onProtocolChange",
+        "_customWheelEventHandler"
+      ],
+      "constructorName": "MouseStateService"
+    },
+    "wheelResults": [
+      {
+        "name": "undefined",
+        "result": {
+          "type": "undefined"
+        },
+        "allowed": true
+      },
+      {
+        "name": "null",
+        "result": {
+          "type": "null",
+          "value": null
+        },
+        "allowed": true
+      },
+      {
+        "name": "false",
+        "result": {
+          "type": "boolean",
+          "value": false
+        },
+        "allowed": false
+      },
+      {
+        "name": "true",
+        "result": {
+          "type": "boolean",
+          "value": true
+        },
+        "allowed": true
+      },
+      {
+        "name": "zero",
+        "result": {
+          "type": "number",
+          "text": "0"
+        },
+        "allowed": true
+      },
+      {
+        "name": "negativeZero",
+        "result": {
+          "type": "number",
+          "text": "-0"
+        },
+        "allowed": true
+      },
+      {
+        "name": "one",
+        "result": {
+          "type": "number",
+          "text": "1"
+        },
+        "allowed": true
+      },
+      {
+        "name": "NaN",
+        "result": {
+          "type": "number",
+          "text": "NaN"
+        },
+        "allowed": true
+      },
+      {
+        "name": "empty",
+        "result": {
+          "type": "string",
+          "utf16": []
+        },
+        "allowed": true
+      },
+      {
+        "name": "text",
+        "result": {
+          "type": "string",
+          "utf16": [
+            120
+          ]
+        },
+        "allowed": true
+      },
+      {
+        "name": "object",
+        "result": {
+          "type": "object"
+        },
+        "allowed": true
+      },
+      {
+        "name": "array",
+        "result": {
+          "type": "object"
+        },
+        "allowed": true
+      },
+      {
+        "name": "symbol",
+        "result": {
+          "type": "symbol"
+        },
+        "allowed": true
+      },
+      {
+        "name": "bigintZero",
+        "result": {
+          "type": "bigint",
+          "text": "0"
+        },
+        "allowed": true
+      },
+      {
+        "name": "boxedFalse",
+        "result": {
+          "type": "object"
+        },
+        "allowed": true
+      }
+    ],
+    "poisonedCallReads": 0,
+    "eventCallProperty": {
+      "reads": 1,
+      "bodies": 0,
+      "committedProtocol": "NONE"
+    },
+    "callbackThrows": [
+      {
+        "thrown": {
+          "type": "object"
+        },
+        "identityRetained": true
+      },
+      {
+        "thrown": {
+          "type": "object"
+        },
+        "identityRetained": true
+      },
+      {
+        "thrown": {
+          "type": "number",
+          "text": "7"
+        },
+        "identityRetained": true
+      },
+      {
+        "thrown": {
+          "type": "string",
+          "utf16": [
+            55296
+          ]
+        },
+        "identityRetained": true
+      },
+      {
+        "thrown": {
+          "type": "undefined"
+        },
+        "identityRetained": true
+      },
+      {
+        "thrown": {
+          "type": "null",
+          "value": null
+        },
+        "identityRetained": true
+      },
+      {
+        "thrown": {
+          "type": "boolean",
+          "value": false
+        },
+        "identityRetained": true
+      },
+      {
+        "thrown": {
+          "type": "symbol"
+        },
+        "identityRetained": true
+      }
+    ],
+    "methodReceivers": {
+      "protocolIdentity": true,
+      "registryIdentity": true,
+      "eventIdentity": true,
+      "loneSurrogate": [
+        55296
+      ]
+    },
+    "inherited": [
+      {
+        "nameUtf16": [
+          99,
+          111,
+          110,
+          115,
+          116,
+          114,
+          117,
+          99,
+          116,
+          111,
+          114
+        ],
+        "protocol": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              99,
+              111,
+              110,
+              115,
+              116,
+              114,
+              117,
+              99,
+              116,
+              111,
+              114
+            ]
+          }
+        },
+        "active": {
+          "status": "returned",
+          "value": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        "masks": [
+          {
+            "type": "undefined"
+          }
+        ],
+        "restrict": {
+          "status": "threw",
+          "value": {
+            "type": "object"
+          },
+          "name": "TypeError",
+          "messageUtf16": [
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            112,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            115,
+            91,
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            97,
+            99,
+            116,
+            105,
+            118,
+            101,
+            80,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            93,
+            46,
+            114,
+            101,
+            115,
+            116,
+            114,
+            105,
+            99,
+            116,
+            32,
+            105,
+            115,
+            32,
+            110,
+            111,
+            116,
+            32,
+            97,
+            32,
+            102,
+            117,
+            110,
+            99,
+            116,
+            105,
+            111,
+            110
+          ]
+        },
+        "encoding": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              99,
+              111,
+              110,
+              115,
+              116,
+              114,
+              117,
+              99,
+              116,
+              111,
+              114
+            ]
+          }
+        },
+        "encoded": {
+          "status": "returned",
+          "value": {
+            "type": "object",
+            "reference": "event"
+          }
+        }
+      },
+      {
+        "nameUtf16": [
+          95,
+          95,
+          100,
+          101,
+          102,
+          105,
+          110,
+          101,
+          71,
+          101,
+          116,
+          116,
+          101,
+          114,
+          95,
+          95
+        ],
+        "protocol": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              95,
+              95,
+              100,
+              101,
+              102,
+              105,
+              110,
+              101,
+              71,
+              101,
+              116,
+              116,
+              101,
+              114,
+              95,
+              95
+            ]
+          }
+        },
+        "active": {
+          "status": "returned",
+          "value": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        "masks": [
+          {
+            "type": "undefined"
+          }
+        ],
+        "restrict": {
+          "status": "threw",
+          "value": {
+            "type": "object"
+          },
+          "name": "TypeError",
+          "messageUtf16": [
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            112,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            115,
+            91,
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            97,
+            99,
+            116,
+            105,
+            118,
+            101,
+            80,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            93,
+            46,
+            114,
+            101,
+            115,
+            116,
+            114,
+            105,
+            99,
+            116,
+            32,
+            105,
+            115,
+            32,
+            110,
+            111,
+            116,
+            32,
+            97,
+            32,
+            102,
+            117,
+            110,
+            99,
+            116,
+            105,
+            111,
+            110
+          ]
+        },
+        "encoding": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              95,
+              95,
+              100,
+              101,
+              102,
+              105,
+              110,
+              101,
+              71,
+              101,
+              116,
+              116,
+              101,
+              114,
+              95,
+              95
+            ]
+          }
+        },
+        "encoded": {
+          "status": "threw",
+          "value": {
+            "type": "object"
+          },
+          "name": "TypeError",
+          "messageUtf16": [
+            79,
+            98,
+            106,
+            101,
+            99,
+            116,
+            46,
+            112,
+            114,
+            111,
+            116,
+            111,
+            116,
+            121,
+            112,
+            101,
+            46,
+            95,
+            95,
+            100,
+            101,
+            102,
+            105,
+            110,
+            101,
+            71,
+            101,
+            116,
+            116,
+            101,
+            114,
+            95,
+            95,
+            58,
+            32,
+            69,
+            120,
+            112,
+            101,
+            99,
+            116,
+            105,
+            110,
+            103,
+            32,
+            102,
+            117,
+            110,
+            99,
+            116,
+            105,
+            111,
+            110
+          ]
+        }
+      },
+      {
+        "nameUtf16": [
+          95,
+          95,
+          100,
+          101,
+          102,
+          105,
+          110,
+          101,
+          83,
+          101,
+          116,
+          116,
+          101,
+          114,
+          95,
+          95
+        ],
+        "protocol": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              95,
+              95,
+              100,
+              101,
+              102,
+              105,
+              110,
+              101,
+              83,
+              101,
+              116,
+              116,
+              101,
+              114,
+              95,
+              95
+            ]
+          }
+        },
+        "active": {
+          "status": "returned",
+          "value": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        "masks": [
+          {
+            "type": "undefined"
+          }
+        ],
+        "restrict": {
+          "status": "threw",
+          "value": {
+            "type": "object"
+          },
+          "name": "TypeError",
+          "messageUtf16": [
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            112,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            115,
+            91,
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            97,
+            99,
+            116,
+            105,
+            118,
+            101,
+            80,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            93,
+            46,
+            114,
+            101,
+            115,
+            116,
+            114,
+            105,
+            99,
+            116,
+            32,
+            105,
+            115,
+            32,
+            110,
+            111,
+            116,
+            32,
+            97,
+            32,
+            102,
+            117,
+            110,
+            99,
+            116,
+            105,
+            111,
+            110
+          ]
+        },
+        "encoding": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              95,
+              95,
+              100,
+              101,
+              102,
+              105,
+              110,
+              101,
+              83,
+              101,
+              116,
+              116,
+              101,
+              114,
+              95,
+              95
+            ]
+          }
+        },
+        "encoded": {
+          "status": "threw",
+          "value": {
+            "type": "object"
+          },
+          "name": "TypeError",
+          "messageUtf16": [
+            79,
+            98,
+            106,
+            101,
+            99,
+            116,
+            46,
+            112,
+            114,
+            111,
+            116,
+            111,
+            116,
+            121,
+            112,
+            101,
+            46,
+            95,
+            95,
+            100,
+            101,
+            102,
+            105,
+            110,
+            101,
+            83,
+            101,
+            116,
+            116,
+            101,
+            114,
+            95,
+            95,
+            58,
+            32,
+            69,
+            120,
+            112,
+            101,
+            99,
+            116,
+            105,
+            110,
+            103,
+            32,
+            102,
+            117,
+            110,
+            99,
+            116,
+            105,
+            111,
+            110
+          ]
+        }
+      },
+      {
+        "nameUtf16": [
+          104,
+          97,
+          115,
+          79,
+          119,
+          110,
+          80,
+          114,
+          111,
+          112,
+          101,
+          114,
+          116,
+          121
+        ],
+        "protocol": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              104,
+              97,
+              115,
+              79,
+              119,
+              110,
+              80,
+              114,
+              111,
+              112,
+              101,
+              114,
+              116,
+              121
+            ]
+          }
+        },
+        "active": {
+          "status": "returned",
+          "value": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        "masks": [
+          {
+            "type": "undefined"
+          }
+        ],
+        "restrict": {
+          "status": "threw",
+          "value": {
+            "type": "object"
+          },
+          "name": "TypeError",
+          "messageUtf16": [
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            112,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            115,
+            91,
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            97,
+            99,
+            116,
+            105,
+            118,
+            101,
+            80,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            93,
+            46,
+            114,
+            101,
+            115,
+            116,
+            114,
+            105,
+            99,
+            116,
+            32,
+            105,
+            115,
+            32,
+            110,
+            111,
+            116,
+            32,
+            97,
+            32,
+            102,
+            117,
+            110,
+            99,
+            116,
+            105,
+            111,
+            110
+          ]
+        },
+        "encoding": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              104,
+              97,
+              115,
+              79,
+              119,
+              110,
+              80,
+              114,
+              111,
+              112,
+              101,
+              114,
+              116,
+              121
+            ]
+          }
+        },
+        "encoded": {
+          "status": "returned",
+          "value": {
+            "type": "boolean",
+            "value": false
+          }
+        }
+      },
+      {
+        "nameUtf16": [
+          95,
+          95,
+          108,
+          111,
+          111,
+          107,
+          117,
+          112,
+          71,
+          101,
+          116,
+          116,
+          101,
+          114,
+          95,
+          95
+        ],
+        "protocol": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              95,
+              95,
+              108,
+              111,
+              111,
+              107,
+              117,
+              112,
+              71,
+              101,
+              116,
+              116,
+              101,
+              114,
+              95,
+              95
+            ]
+          }
+        },
+        "active": {
+          "status": "returned",
+          "value": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        "masks": [
+          {
+            "type": "undefined"
+          }
+        ],
+        "restrict": {
+          "status": "threw",
+          "value": {
+            "type": "object"
+          },
+          "name": "TypeError",
+          "messageUtf16": [
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            112,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            115,
+            91,
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            97,
+            99,
+            116,
+            105,
+            118,
+            101,
+            80,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            93,
+            46,
+            114,
+            101,
+            115,
+            116,
+            114,
+            105,
+            99,
+            116,
+            32,
+            105,
+            115,
+            32,
+            110,
+            111,
+            116,
+            32,
+            97,
+            32,
+            102,
+            117,
+            110,
+            99,
+            116,
+            105,
+            111,
+            110
+          ]
+        },
+        "encoding": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              95,
+              95,
+              108,
+              111,
+              111,
+              107,
+              117,
+              112,
+              71,
+              101,
+              116,
+              116,
+              101,
+              114,
+              95,
+              95
+            ]
+          }
+        },
+        "encoded": {
+          "status": "returned",
+          "value": {
+            "type": "undefined"
+          }
+        }
+      },
+      {
+        "nameUtf16": [
+          95,
+          95,
+          108,
+          111,
+          111,
+          107,
+          117,
+          112,
+          83,
+          101,
+          116,
+          116,
+          101,
+          114,
+          95,
+          95
+        ],
+        "protocol": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              95,
+              95,
+              108,
+              111,
+              111,
+              107,
+              117,
+              112,
+              83,
+              101,
+              116,
+              116,
+              101,
+              114,
+              95,
+              95
+            ]
+          }
+        },
+        "active": {
+          "status": "returned",
+          "value": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        "masks": [
+          {
+            "type": "undefined"
+          }
+        ],
+        "restrict": {
+          "status": "threw",
+          "value": {
+            "type": "object"
+          },
+          "name": "TypeError",
+          "messageUtf16": [
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            112,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            115,
+            91,
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            97,
+            99,
+            116,
+            105,
+            118,
+            101,
+            80,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            93,
+            46,
+            114,
+            101,
+            115,
+            116,
+            114,
+            105,
+            99,
+            116,
+            32,
+            105,
+            115,
+            32,
+            110,
+            111,
+            116,
+            32,
+            97,
+            32,
+            102,
+            117,
+            110,
+            99,
+            116,
+            105,
+            111,
+            110
+          ]
+        },
+        "encoding": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              95,
+              95,
+              108,
+              111,
+              111,
+              107,
+              117,
+              112,
+              83,
+              101,
+              116,
+              116,
+              101,
+              114,
+              95,
+              95
+            ]
+          }
+        },
+        "encoded": {
+          "status": "returned",
+          "value": {
+            "type": "undefined"
+          }
+        }
+      },
+      {
+        "nameUtf16": [
+          105,
+          115,
+          80,
+          114,
+          111,
+          116,
+          111,
+          116,
+          121,
+          112,
+          101,
+          79,
+          102
+        ],
+        "protocol": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              105,
+              115,
+              80,
+              114,
+              111,
+              116,
+              111,
+              116,
+              121,
+              112,
+              101,
+              79,
+              102
+            ]
+          }
+        },
+        "active": {
+          "status": "returned",
+          "value": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        "masks": [
+          {
+            "type": "undefined"
+          }
+        ],
+        "restrict": {
+          "status": "threw",
+          "value": {
+            "type": "object"
+          },
+          "name": "TypeError",
+          "messageUtf16": [
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            112,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            115,
+            91,
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            97,
+            99,
+            116,
+            105,
+            118,
+            101,
+            80,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            93,
+            46,
+            114,
+            101,
+            115,
+            116,
+            114,
+            105,
+            99,
+            116,
+            32,
+            105,
+            115,
+            32,
+            110,
+            111,
+            116,
+            32,
+            97,
+            32,
+            102,
+            117,
+            110,
+            99,
+            116,
+            105,
+            111,
+            110
+          ]
+        },
+        "encoding": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              105,
+              115,
+              80,
+              114,
+              111,
+              116,
+              111,
+              116,
+              121,
+              112,
+              101,
+              79,
+              102
+            ]
+          }
+        },
+        "encoded": {
+          "status": "returned",
+          "value": {
+            "type": "boolean",
+            "value": false
+          }
+        }
+      },
+      {
+        "nameUtf16": [
+          112,
+          114,
+          111,
+          112,
+          101,
+          114,
+          116,
+          121,
+          73,
+          115,
+          69,
+          110,
+          117,
+          109,
+          101,
+          114,
+          97,
+          98,
+          108,
+          101
+        ],
+        "protocol": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              112,
+              114,
+              111,
+              112,
+              101,
+              114,
+              116,
+              121,
+              73,
+              115,
+              69,
+              110,
+              117,
+              109,
+              101,
+              114,
+              97,
+              98,
+              108,
+              101
+            ]
+          }
+        },
+        "active": {
+          "status": "returned",
+          "value": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        "masks": [
+          {
+            "type": "undefined"
+          }
+        ],
+        "restrict": {
+          "status": "threw",
+          "value": {
+            "type": "object"
+          },
+          "name": "TypeError",
+          "messageUtf16": [
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            112,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            115,
+            91,
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            97,
+            99,
+            116,
+            105,
+            118,
+            101,
+            80,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            93,
+            46,
+            114,
+            101,
+            115,
+            116,
+            114,
+            105,
+            99,
+            116,
+            32,
+            105,
+            115,
+            32,
+            110,
+            111,
+            116,
+            32,
+            97,
+            32,
+            102,
+            117,
+            110,
+            99,
+            116,
+            105,
+            111,
+            110
+          ]
+        },
+        "encoding": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              112,
+              114,
+              111,
+              112,
+              101,
+              114,
+              116,
+              121,
+              73,
+              115,
+              69,
+              110,
+              117,
+              109,
+              101,
+              114,
+              97,
+              98,
+              108,
+              101
+            ]
+          }
+        },
+        "encoded": {
+          "status": "returned",
+          "value": {
+            "type": "boolean",
+            "value": false
+          }
+        }
+      },
+      {
+        "nameUtf16": [
+          116,
+          111,
+          83,
+          116,
+          114,
+          105,
+          110,
+          103
+        ],
+        "protocol": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              116,
+              111,
+              83,
+              116,
+              114,
+              105,
+              110,
+              103
+            ]
+          }
+        },
+        "active": {
+          "status": "returned",
+          "value": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        "masks": [
+          {
+            "type": "undefined"
+          }
+        ],
+        "restrict": {
+          "status": "threw",
+          "value": {
+            "type": "object"
+          },
+          "name": "TypeError",
+          "messageUtf16": [
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            112,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            115,
+            91,
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            97,
+            99,
+            116,
+            105,
+            118,
+            101,
+            80,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            93,
+            46,
+            114,
+            101,
+            115,
+            116,
+            114,
+            105,
+            99,
+            116,
+            32,
+            105,
+            115,
+            32,
+            110,
+            111,
+            116,
+            32,
+            97,
+            32,
+            102,
+            117,
+            110,
+            99,
+            116,
+            105,
+            111,
+            110
+          ]
+        },
+        "encoding": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              116,
+              111,
+              83,
+              116,
+              114,
+              105,
+              110,
+              103
+            ]
+          }
+        },
+        "encoded": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              91,
+              111,
+              98,
+              106,
+              101,
+              99,
+              116,
+              32,
+              79,
+              98,
+              106,
+              101,
+              99,
+              116,
+              93
+            ]
+          }
+        }
+      },
+      {
+        "nameUtf16": [
+          118,
+          97,
+          108,
+          117,
+          101,
+          79,
+          102
+        ],
+        "protocol": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              118,
+              97,
+              108,
+              117,
+              101,
+              79,
+              102
+            ]
+          }
+        },
+        "active": {
+          "status": "returned",
+          "value": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        "masks": [
+          {
+            "type": "undefined"
+          }
+        ],
+        "restrict": {
+          "status": "threw",
+          "value": {
+            "type": "object"
+          },
+          "name": "TypeError",
+          "messageUtf16": [
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            112,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            115,
+            91,
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            97,
+            99,
+            116,
+            105,
+            118,
+            101,
+            80,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            93,
+            46,
+            114,
+            101,
+            115,
+            116,
+            114,
+            105,
+            99,
+            116,
+            32,
+            105,
+            115,
+            32,
+            110,
+            111,
+            116,
+            32,
+            97,
+            32,
+            102,
+            117,
+            110,
+            99,
+            116,
+            105,
+            111,
+            110
+          ]
+        },
+        "encoding": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              118,
+              97,
+              108,
+              117,
+              101,
+              79,
+              102
+            ]
+          }
+        },
+        "encoded": {
+          "status": "returned",
+          "value": {
+            "type": "object",
+            "reference": "registry"
+          }
+        }
+      },
+      {
+        "nameUtf16": [
+          95,
+          95,
+          112,
+          114,
+          111,
+          116,
+          111,
+          95,
+          95
+        ],
+        "protocol": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              95,
+              95,
+              112,
+              114,
+              111,
+              116,
+              111,
+              95,
+              95
+            ]
+          }
+        },
+        "active": {
+          "status": "returned",
+          "value": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        "masks": [
+          {
+            "type": "undefined"
+          }
+        ],
+        "restrict": {
+          "status": "threw",
+          "value": {
+            "type": "object"
+          },
+          "name": "TypeError",
+          "messageUtf16": [
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            112,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            115,
+            91,
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            97,
+            99,
+            116,
+            105,
+            118,
+            101,
+            80,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            93,
+            46,
+            114,
+            101,
+            115,
+            116,
+            114,
+            105,
+            99,
+            116,
+            32,
+            105,
+            115,
+            32,
+            110,
+            111,
+            116,
+            32,
+            97,
+            32,
+            102,
+            117,
+            110,
+            99,
+            116,
+            105,
+            111,
+            110
+          ]
+        },
+        "encoding": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              95,
+              95,
+              112,
+              114,
+              111,
+              116,
+              111,
+              95,
+              95
+            ]
+          }
+        },
+        "encoded": {
+          "status": "threw",
+          "value": {
+            "type": "object"
+          },
+          "name": "TypeError",
+          "messageUtf16": [
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            101,
+            110,
+            99,
+            111,
+            100,
+            105,
+            110,
+            103,
+            115,
+            91,
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            97,
+            99,
+            116,
+            105,
+            118,
+            101,
+            69,
+            110,
+            99,
+            111,
+            100,
+            105,
+            110,
+            103,
+            93,
+            32,
+            105,
+            115,
+            32,
+            110,
+            111,
+            116,
+            32,
+            97,
+            32,
+            102,
+            117,
+            110,
+            99,
+            116,
+            105,
+            111,
+            110
+          ]
+        }
+      },
+      {
+        "nameUtf16": [
+          116,
+          111,
+          76,
+          111,
+          99,
+          97,
+          108,
+          101,
+          83,
+          116,
+          114,
+          105,
+          110,
+          103
+        ],
+        "protocol": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              116,
+              111,
+              76,
+              111,
+              99,
+              97,
+              108,
+              101,
+              83,
+              116,
+              114,
+              105,
+              110,
+              103
+            ]
+          }
+        },
+        "active": {
+          "status": "returned",
+          "value": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        "masks": [
+          {
+            "type": "undefined"
+          }
+        ],
+        "restrict": {
+          "status": "threw",
+          "value": {
+            "type": "object"
+          },
+          "name": "TypeError",
+          "messageUtf16": [
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            112,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            115,
+            91,
+            116,
+            104,
+            105,
+            115,
+            46,
+            95,
+            97,
+            99,
+            116,
+            105,
+            118,
+            101,
+            80,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            93,
+            46,
+            114,
+            101,
+            115,
+            116,
+            114,
+            105,
+            99,
+            116,
+            32,
+            105,
+            115,
+            32,
+            110,
+            111,
+            116,
+            32,
+            97,
+            32,
+            102,
+            117,
+            110,
+            99,
+            116,
+            105,
+            111,
+            110
+          ]
+        },
+        "encoding": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              116,
+              111,
+              76,
+              111,
+              99,
+              97,
+              108,
+              101,
+              83,
+              116,
+              114,
+              105,
+              110,
+              103
+            ]
+          }
+        },
+        "encoded": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              91,
+              111,
+              98,
+              106,
+              101,
+              99,
+              116,
+              32,
+              79,
+              98,
+              106,
+              101,
+              99,
+              116,
+              93
+            ]
+          }
+        }
+      },
+      {
+        "nameUtf16": [
+          109,
+          105,
+          115,
+          115,
+          105,
+          110,
+          103
+        ],
+        "protocol": {
+          "status": "threw",
+          "value": {
+            "type": "object"
+          },
+          "name": "Error",
+          "messageUtf16": [
+            117,
+            110,
+            107,
+            110,
+            111,
+            119,
+            110,
+            32,
+            112,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            32,
+            34,
+            109,
+            105,
+            115,
+            115,
+            105,
+            110,
+            103,
+            34
+          ]
+        },
+        "active": {
+          "status": "returned",
+          "value": {
+            "type": "boolean",
+            "value": false
+          }
+        },
+        "masks": [],
+        "restrict": {
+          "status": "returned",
+          "value": {
+            "type": "boolean",
+            "value": false
+          }
+        },
+        "encoding": {
+          "status": "threw",
+          "value": {
+            "type": "object"
+          },
+          "name": "Error",
+          "messageUtf16": [
+            117,
+            110,
+            107,
+            110,
+            111,
+            119,
+            110,
+            32,
+            101,
+            110,
+            99,
+            111,
+            100,
+            105,
+            110,
+            103,
+            32,
+            34,
+            109,
+            105,
+            115,
+            115,
+            105,
+            110,
+            103,
+            34
+          ]
+        },
+        "encoded": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              27,
+              91,
+              77,
+              32,
+              33,
+              34
+            ]
+          }
+        }
+      },
+      {
+        "nameUtf16": [
+          55296
+        ],
+        "protocol": {
+          "status": "threw",
+          "value": {
+            "type": "object"
+          },
+          "name": "Error",
+          "messageUtf16": [
+            117,
+            110,
+            107,
+            110,
+            111,
+            119,
+            110,
+            32,
+            112,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            32,
+            34,
+            55296,
+            34
+          ]
+        },
+        "active": {
+          "status": "returned",
+          "value": {
+            "type": "boolean",
+            "value": false
+          }
+        },
+        "masks": [],
+        "restrict": {
+          "status": "returned",
+          "value": {
+            "type": "boolean",
+            "value": false
+          }
+        },
+        "encoding": {
+          "status": "threw",
+          "value": {
+            "type": "object"
+          },
+          "name": "Error",
+          "messageUtf16": [
+            117,
+            110,
+            107,
+            110,
+            111,
+            119,
+            110,
+            32,
+            101,
+            110,
+            99,
+            111,
+            100,
+            105,
+            110,
+            103,
+            32,
+            34,
+            55296,
+            34
+          ]
+        },
+        "encoded": {
+          "status": "returned",
+          "value": {
+            "type": "string",
+            "utf16": [
+              27,
+              91,
+              77,
+              32,
+              33,
+              34
+            ]
+          }
+        }
+      }
+    ],
+    "numericKeys": [
+      "0",
+      "2",
+      "10",
+      "4294967294",
+      "NONE",
+      "X10",
+      "VT200",
+      "DRAG",
+      "ANY",
+      "4294967295",
+      "01"
+    ],
+    "protoRegistration": {
+      "ownProtocol": false,
+      "ownEncoding": false,
+      "liveProtocol": true,
+      "liveEncoding": true
+    }
+  },
+  "status": "passed-source-only",
+  "reference": {
+    "sourceHashes": {
+      "source_repo/src/common/Types.ts": "55f33764a24eae132a8c0bbabd6770355ef1fc3d6110eb6645e41cae15b80cb8",
+      "source_repo/src/common/Lifecycle.ts": "e00016aae991e24137ab066778912414f4af959f2b26baecf47ec542ad313a83",
+      "source_repo/src/common/Event.ts": "aa374272c5ec5c0d6992d6072687211a94676b086a2505b0414ddd20cf57d641",
+      "source_repo/src/common/services/MouseStateService.ts": "1b562be54a3ea3d91c565ac8d94239f8e219cb82ff735388a3650170a993d5ee"
+    },
+    "moduleSha256": "9e754a45c7531993da2f5dcf0749ff5286b3f066b5d4e2277393c9bfc0e0a111",
+    "esbuild": "0.28.1"
+  },
+  "runId": "2026-10-28T07-31-17-061Z-7f9632e1-92b1-4387-ba39-fe1938be8631"
+}
