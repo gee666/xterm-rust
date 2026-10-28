@@ -16,7 +16,6 @@ impl TerminalState {
                 self.core.dec_private_modes.borrow_mut().application_keypad = final_byte == "=";
                 self.events.borrow_mut().push(TerminalEvent::SyncScrollBar);
             }
-            "c" => self.reset_state()?,
             "n" | "}" => self.charset.set_g_level(2),
             "o" | "|" => self.charset.set_g_level(3),
             "~" => self.charset.set_g_level(1),
@@ -34,11 +33,12 @@ impl TerminalState {
             let height = b.scroll_bottom - b.scroll_top;
             b.lines
                 .shift_elements(top as isize, height, 1)
-                .map_err(|e| TerminalError::Buffer(e.to_string()))?;
+                .map_err(crate::buffer::BufferError::from)?;
             b.lines
                 .set(top, Some(b.get_blank_line(&self.erase_attributes(), false)))
-                .map_err(|e| TerminalError::Buffer(e.to_string()))?;
-            self.dirty_all();
+                .map_err(crate::buffer::BufferError::from)?;
+            self.dirty_row(b.scroll_top);
+            self.dirty_row(b.scroll_bottom);
         } else {
             b.y = b.y.saturating_sub(1);
             self.dirty_row(b.y);
@@ -49,7 +49,12 @@ impl TerminalState {
         self.set_cursor(0, 0)?;
         let cell = crate::buffer::CellData {
             content: (1 << crate::buffer::constants::content::WIDTH_SHIFT) | u32::from(b'E'),
-            attributes: self.attributes.clone(),
+            // DECALN copies packed fg/bg, but not the current extended object.
+            attributes: crate::buffer::AttributeData {
+                fg: self.attributes.fg,
+                bg: self.attributes.bg,
+                ..Default::default()
+            },
             ..Default::default()
         };
         let active = self.active_buffer();

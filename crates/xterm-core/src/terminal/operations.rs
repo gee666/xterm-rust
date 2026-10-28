@@ -3,6 +3,16 @@ use super::{CoreTerminal, TerminalError, TerminalEvent, TerminalState};
 use crate::buffer::AttributeData;
 
 impl CoreTerminal {
+    /// Run the actual InputHandler LF operation without writing another parser chunk.
+    pub fn line_feed(&mut self) -> Result<(), TerminalError> {
+        self.ensure_live()?;
+        super::line_feed_state(&self.state)
+    }
+    /// Mark a viewport row for the next parsed/render batch, as addon handlers do.
+    pub fn mark_dirty(&mut self, row: usize) -> Result<(), TerminalError> {
+        self.ensure_live()?;
+        mark_dirty_state(&self.state, row)
+    }
     pub fn resize(&mut self, cols: usize, rows: usize) -> Result<(), TerminalError> {
         self.ensure_live()?;
         if self.awaiting {
@@ -11,22 +21,38 @@ impl CoreTerminal {
         if cols > i32::MAX as usize || rows > i32::MAX as usize {
             return Err(TerminalError::InvalidDimensions);
         }
-        let mut state = self.state.borrow_mut();
-        state
-            .buffer_service
-            .resize(cols.max(2), rows.max(1))
-            .map_err(|e| TerminalError::Buffer(e.to_string()))?;
-        state.dirty_all();
-        Ok(())
+        let service = std::rc::Rc::clone(
+            &self
+                .state
+                .try_borrow()
+                .map_err(|_| TerminalError::Borrowed)?
+                .buffer_service,
+        );
+        service.resize(cols.max(2), rows.max(1))?;
+        super::dispatch_events(&self.state)
     }
     pub fn scroll_lines(&mut self, lines: i64) -> Result<(), TerminalError> {
         self.ensure_live()?;
-        let mut state = self.state.borrow_mut();
-        state
-            .buffer_service
-            .scroll_lines(lines, false)
-            .map_err(|e| TerminalError::Buffer(e.to_string()))?;
-        state.dirty_all();
+        let service = std::rc::Rc::clone(
+            &self
+                .state
+                .try_borrow()
+                .map_err(|_| TerminalError::Borrowed)?
+                .buffer_service,
+        );
+        let old = service.buffer().borrow().ydisp;
+        service.scroll_lines(lines, false)?;
+        super::dispatch_events(&self.state)?;
+        if service.buffer().borrow().ydisp != old {
+            let mut state = self
+                .state
+                .try_borrow_mut()
+                .map_err(|_| TerminalError::Borrowed)?;
+            let active = state.active_buffer();
+            let b = active.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+            state.dirty_row(b.scroll_top);
+            state.dirty_row(b.scroll_bottom);
+        }
         Ok(())
     }
     pub fn scroll_pages(&mut self, pages: i64) -> Result<(), TerminalError> {
@@ -48,35 +74,128 @@ impl CoreTerminal {
     pub fn reset(&mut self) -> Result<(), TerminalError> {
         self.ensure_live()?;
         // Public reset is out-of-band and deliberately retains parser/decoder state.
-        self.state.borrow_mut().reset_state()
+        reset_state_handle(&self.state)
     }
     pub fn clear(&mut self) -> Result<(), TerminalError> {
         self.ensure_live()?;
-        let mut state = self.state.borrow_mut();
-        let active = state.active_buffer();
-        let mut b = active.borrow_mut();
-        b.clear_all_markers()
-            .map_err(|e| TerminalError::Buffer(e.to_string()))?;
-        let row = b
-            .lines
-            .get(b.ybase + b.y)
-            .ok_or(TerminalError::MissingLine)?;
-        b.lines
-            .set(0, Some(row))
-            .map_err(|e| TerminalError::Buffer(e.to_string()))?;
-        b.lines.set_length(1);
-        b.ydisp = 0;
-        b.ybase = 0;
-        b.y = 0;
-        for _ in 1..state.rows() {
-            b.lines
-                .push(b.get_blank_line(&AttributeData::default(), false))
-                .map_err(|e| TerminalError::Buffer(e.to_string()))?;
-        }
-        state.events.borrow_mut().push(TerminalEvent::Scroll(0));
-        state.dirty_all();
-        Ok(())
+        clear_state_handle(&self.state)
     }
+}
+/// The native wrapper may clear again from a marker callback while the outer
+/// engine is already borrowed. Both entry points share these callback phases.
+/// Host entry points must enforce their disposed-terminal contract first.
+pub fn clear_state_handle(
+    shared: &std::rc::Rc<std::cell::RefCell<TerminalState>>,
+) -> Result<(), TerminalError> {
+    let active = shared
+        .try_borrow()
+        .map_err(|_| TerminalError::Borrowed)?
+        .active_buffer();
+    crate::buffer::Buffer::clear_all_markers_shared(&active)?;
+    // A marker callback can reset or switch buffers before row selection.
+    let (active, rows) = {
+        let state = shared.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+        (state.active_buffer(), state.rows())
+    };
+    let mut buffer = active
+        .try_borrow_mut()
+        .map_err(|_| TerminalError::Borrowed)?;
+    let row = buffer
+        .lines
+        .get(buffer.ybase + buffer.y)
+        .ok_or(TerminalError::MissingLine)?;
+    buffer
+        .lines
+        .set(0, Some(row))
+        .map_err(crate::buffer::BufferError::from)?;
+    buffer.lines.set_length(1);
+    buffer.ydisp = 0;
+    buffer.ybase = 0;
+    buffer.y = 0;
+    for _ in 1..rows {
+        buffer
+            .lines
+            .push(buffer.get_blank_line(&AttributeData::default(), false))
+            .map_err(crate::buffer::BufferError::from)?;
+    }
+    drop(buffer);
+    shared
+        .try_borrow()
+        .map_err(|_| TerminalError::Borrowed)?
+        .events
+        .borrow_mut()
+        .push(TerminalEvent::Scroll(0));
+    super::dispatch_events(shared)
+}
+/// State-handle form for addon callbacks invoked while the outer parser is borrowed.
+pub fn mark_dirty_state(
+    shared: &std::rc::Rc<std::cell::RefCell<TerminalState>>,
+    row: usize,
+) -> Result<(), TerminalError> {
+    shared
+        .try_borrow_mut()
+        .map_err(|_| TerminalError::Borrowed)?
+        .dirty_row(row);
+    Ok(())
+}
+/// Common reset with callback phases separated from terminal-state borrows.
+pub fn reset_state_handle(
+    shared: &std::rc::Rc<std::cell::RefCell<TerminalState>>,
+) -> Result<(), TerminalError> {
+    let (service, options, wrapping) = {
+        let state = shared.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+        (
+            std::rc::Rc::clone(&state.buffer_service),
+            std::rc::Rc::clone(&state.options),
+            std::rc::Rc::clone(&state.windows_wrapping),
+        )
+    };
+    // The public terminal bootstrap carries live dimensions into constructor-only
+    // raw options before resetting the common services.
+    options.set(
+        "rows",
+        crate::options::OptionValue::Number(service.rows() as f64),
+    )?;
+    options.set(
+        "cols",
+        crate::options::OptionValue::Number(service.cols() as f64),
+    )?;
+    wrapping.set(super::controls::windows_heuristics_enabled(
+        &options.get("windowsPty")?,
+    )?);
+    shared
+        .try_borrow_mut()
+        .map_err(|_| TerminalError::Borrowed)?
+        .replace_attributes(AttributeData::default());
+    service.reset()?;
+    let (core, mouse) = {
+        let mut state = shared
+            .try_borrow_mut()
+            .map_err(|_| TerminalError::Borrowed)?;
+        state.charset.reset();
+        state.dirty_all();
+        (
+            std::rc::Rc::clone(&state.core),
+            std::rc::Rc::clone(&state.mouse),
+        )
+    };
+    core.reset();
+    mouse.reset()?;
+    super::dispatch_events(shared)
+}
+/// In-band RIS/DECCOLM reset. Host observers receive the notification after the
+/// terminal's built-in reset, matching the first registered source listener.
+pub fn request_reset_state(
+    shared: &std::rc::Rc<std::cell::RefCell<TerminalState>>,
+) -> Result<(), TerminalError> {
+    reset_state_handle(shared)?;
+    shared
+        .try_borrow()
+        .map_err(|_| TerminalError::Borrowed)?
+        .events
+        .borrow_mut()
+        .push(TerminalEvent::RequestReset);
+    super::dispatch_events(shared)
 }
 impl TerminalState {
     pub(crate) fn set_cursor(&mut self, x: i64, y: i64) -> Result<(), TerminalError> {
@@ -130,8 +249,7 @@ impl TerminalState {
         self.attributes.bg = b.saved_cur_attr_data.bg;
         for (level, charset) in b.saved_charsets.iter().enumerate() {
             self.charset
-                .set_g_charset(level, charset.clone())
-                .map_err(|e| TerminalError::Buffer(e.to_string()))?;
+                .set_g_charset(level, charset.clone())?;
         }
         self.charset.set_g_level(b.saved_glevel);
         {
@@ -148,17 +266,6 @@ impl TerminalState {
             y.min((self.rows() - 1) as i64) as usize
         };
         self.dirty_row(b.y);
-        Ok(())
-    }
-    pub fn reset_state(&mut self) -> Result<(), TerminalError> {
-        self.buffer_service
-            .reset()
-            .map_err(|e| TerminalError::Buffer(e.to_string()))?;
-        self.core.reset();
-        self.mouse.reset()?;
-        self.charset.reset();
-        self.attributes = AttributeData::default();
-        self.dirty_all();
         Ok(())
     }
 }

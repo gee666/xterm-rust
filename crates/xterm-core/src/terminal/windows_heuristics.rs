@@ -5,10 +5,12 @@ pub(super) fn enabled(pty: &OptionValue) -> Result<bool, OptionError> {
     if !pty.is_truthy() {
         return Ok(false);
     }
-    let backend = pty.get_property("backend")?;
-    let build = pty.get_property("buildNumber")?;
-    if matches!(backend, OptionValue::Undefined) || matches!(build, OptionValue::Undefined) {
+    if matches!(pty.get_property("backend")?, OptionValue::Undefined)
+        || matches!(pty.get_property("buildNumber")?, OptionValue::Undefined)
+    {
         return Ok(false);
     }
-    Ok(backend == OptionValue::from("conpty") && build.number()? < 21376.0)
+    // Keep the source's second reads: host getters can change values in between.
+    Ok(pty.get_property("backend")? == OptionValue::from("conpty")
+        && pty.get_property("buildNumber")?.number()? < 21376.0)
 }

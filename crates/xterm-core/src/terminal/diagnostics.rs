@@ -4,12 +4,12 @@ use super::TerminalError;
 use crate::{
     event::EmitError,
     input::parse_source::{ParseInputSource, ParseSourceError},
-    log_service::{LogError, LogLevel, LogParameter, LogService, LogValue},
+    log_service::{LogError, LogLevel, LogParameter, LogProperty, LogService, LogValue},
     options::OptionValue,
     parser::{
         apc::ApcAction,
         dcs::DcsAction,
-        escape::{EscapeSequenceParser, ParseError},
+        escape::{EscapeSequenceParser, ParseError, ParsingState},
         handler::DispatchError,
         osc::OscAction,
         params::{ParamValue, Params},
@@ -42,6 +42,37 @@ pub fn log_source(logger: &LogService, source: &dyn ParseInputSource) -> Result<
         )?;
     }
     Ok(())
+}
+
+/// The producer must supply the live Params view, never a clone/toArray
+/// substitute. This is wired only when the shared-storage binding is available.
+pub fn install_error_handler(
+    parser: &mut EscapeSequenceParser,
+    logger: Rc<LogService>,
+    params_view: impl Fn(&Params) -> Result<LogValue, LogError> + 'static,
+) {
+    parser.set_error_handler_checked(move |state| {
+        let params = params_view(state.params).map_err(parse_error)?;
+        log_error_state(&logger, &state, params).map_err(parse_error)
+    });
+}
+
+pub fn log_error_state(logger: &LogService, state: &ParsingState<'_>, params: LogValue) -> Result<bool, LogError> {
+    let position = u32::try_from(state.position).map_err(|_| LogError::Sink("parser diagnostic position exceeds uint32".into()))?;
+    let abort = Rc::new(LogProperty::new(false.into()));
+    let fields = vec![
+        ("position".into(), number(f64::from(position))),
+        ("code".into(), number(f64::from(state.code))),
+        ("currentState".into(), number(f64::from(state.current_state as u8))),
+        ("collect".into(), number(f64::from(i32::from_ne_bytes(state.collect.to_ne_bytes())))),
+        ("params".into(), params),
+        ("abort".into(), LogValue::Property(Rc::clone(&abort))),
+    ];
+    logger.log(LogLevel::Error, &"Parsing error: ".encode_utf16().collect::<Vec<_>>(),
+        vec![LogParameter::Value(LogValue::Object(fields))])?;
+    // A JS logger may install an accessor here. Read it after the logging call,
+    // matching the parser's return-state.abort access and preserving its throw.
+    abort.get().map(|value| value.is_truthy())
 }
 
 fn dispatch_error(error: LogError) -> DispatchError {

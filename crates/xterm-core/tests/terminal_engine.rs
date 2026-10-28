@@ -106,7 +106,7 @@ fn event_callback_observes_action_time_and_can_reset_before_next_print() {
                     .translate_to_string(true, None, None, None),
             ));
             drop(b);
-            state.borrow_mut().reset_state().unwrap();
+            xterm_core::terminal::reset_state_handle(&state).unwrap();
         }
         Ok(())
     })));

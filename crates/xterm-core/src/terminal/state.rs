@@ -10,11 +10,6 @@ use crate::{
 };
 use std::{cell::RefCell, rc::Rc};
 
-pub(crate) enum CoreAction {
-    Reply(Vec<u16>),
-    Debug(Vec<u16>),
-}
-
 /// Shared state read by native and browser adapters. Buffer rows retain identity.
 pub struct TerminalState {
     pub buffer_service: Rc<BufferService>,
@@ -26,6 +21,7 @@ pub struct TerminalState {
     pub unicode: Rc<UnicodeService>,
     pub charset: CharsetService,
     pub attributes: AttributeData,
+    pub(crate) attributes_identity: Rc<RefCell<Option<AttributeData>>>,
     pub title: Vec<u16>,
     pub icon_name: Vec<u16>,
     pub(crate) title_stack: Vec<Vec<u16>>,
@@ -36,7 +32,7 @@ pub struct TerminalState {
     pub(crate) dirty: Option<(usize, usize)>,
     pub(crate) preceding_join_state: Rc<std::cell::Cell<u32>>,
     pub(crate) windows_wrapping: Rc<std::cell::Cell<bool>>,
-    pub(crate) core_actions: std::collections::VecDeque<CoreAction>,
+    pub(crate) pending_replies: std::collections::VecDeque<Vec<u16>>,
 }
 impl std::ops::Deref for TerminalState {
     type Target = BufferService;
@@ -45,6 +41,11 @@ impl std::ops::Deref for TerminalState {
     }
 }
 impl TerminalState {
+    pub(crate) fn replace_attributes(&mut self, attributes: AttributeData) {
+        let previous = std::mem::replace(&mut self.attributes, attributes);
+        *self.attributes_identity.borrow_mut() = Some(previous);
+        self.attributes_identity = Rc::new(RefCell::new(None));
+    }
     pub fn take_error(&mut self) -> Option<TerminalError> {
         self.error.take()
     }
@@ -84,13 +85,8 @@ impl TerminalState {
         Ok(self.options.get(key)?.is_truthy())
     }
     pub(crate) fn reply(&mut self, text: &str) -> Result<(), TerminalError> {
-        self.core_actions
-            .push_back(CoreAction::Reply(text.encode_utf16().collect()));
-        Ok(())
-    }
-    pub(crate) fn mode_debug(&mut self, text: &str) -> Result<(), TerminalError> {
-        self.core_actions
-            .push_back(CoreAction::Debug(text.encode_utf16().collect()));
+        self.pending_replies
+            .push_back(text.encode_utf16().collect());
         Ok(())
     }
 }

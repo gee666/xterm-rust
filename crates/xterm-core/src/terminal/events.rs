@@ -21,8 +21,14 @@ pub enum TerminalEvent {
     /// InputHandler-only scroll notification. Browser selection/viewport refresh
     /// consumes this; it is not a public headless onScroll event.
     InputScroll(usize),
-    Resize { cols: usize, rows: usize },
-    Render { start: usize, end: usize },
+    Resize {
+        cols: usize,
+        rows: usize,
+    },
+    Render {
+        start: usize,
+        end: usize,
+    },
     WriteParsed,
     Data(Vec<u16>),
     Binary(Vec<u16>),

@@ -13,17 +13,12 @@ pub(super) fn dispatch_events(shared: &Rc<RefCell<TerminalState>>) -> Result<(),
             let mut s = shared
                 .try_borrow_mut()
                 .map_err(|_| TerminalError::Borrowed)?;
-            s.core_actions
+            s.pending_replies
                 .pop_front()
-                .map(|a| (a, Rc::clone(&s.core), Rc::clone(&s.logger)))
+                .map(|data| (data, Rc::clone(&s.core)))
         };
-        if let Some((action, core, logger)) = action {
-            match action {
-                super::state::CoreAction::Reply(data) => core.trigger_data_event(&data, false)?,
-                super::state::CoreAction::Debug(text) => {
-                    logger.log(crate::log_service::LogLevel::Debug, &text, Vec::new())?
-                }
-            }
+        if let Some((data, core)) = action {
+            core.trigger_data_event(&data, false)?;
             continue;
         }
         let callback = handler.borrow().clone();
