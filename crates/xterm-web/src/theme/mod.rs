@@ -2,7 +2,9 @@
 // Licensed under the MIT license. Ported from browser/services/ThemeService.ts.
 mod color_set;
 pub use xterm_core::color::palette;
+mod option;
 mod resolve;
+pub use option::ThemeOptionError;
 
 use color_set::RestoreColors;
 pub use color_set::{ColorRef, ColorSet, ColorSlot, SharedColors};
@@ -56,6 +58,9 @@ impl ThemeService {
             parser,
             changes: Emitter::new(),
         }
+    }
+    pub fn parse_color(&self, input: &str) -> Result<Color, css::UnsupportedCss> {
+        (self.parser)(input)
     }
     pub fn colors(&self) -> SharedColors {
         Rc::clone(&self.colors)
