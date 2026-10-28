@@ -49,6 +49,7 @@ impl BufferDimensions {
 #[derive(Clone, Debug)]
 pub enum BufferError {
     InvalidDimensions,
+    InvalidArrayLength,
     InvalidOption(&'static str),
     MissingLine(usize),
     BorrowedLine,
@@ -64,6 +65,7 @@ impl fmt::Display for BufferError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::InvalidDimensions => f.write_str("buffer dimensions must be positive"),
+            Self::InvalidArrayLength => f.write_str("Invalid array length"),
             Self::InvalidOption(key) => write!(f, "invalid buffer option {key}"),
             Self::MissingLine(index) => write!(f, "missing buffer line {index}"),
             Self::BorrowedLine => f.write_str("buffer line already borrowed"),

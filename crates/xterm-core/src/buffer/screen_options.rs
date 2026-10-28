@@ -21,7 +21,9 @@ fn positive_option(
     key: &'static str,
     allow_zero: bool,
 ) -> Result<usize, BufferError> {
-    let value = options.get(key)?.number()?;
+    integer_option(options.get(key)?.number()?, key, allow_zero)
+}
+fn integer_option(value: f64, key: &'static str, allow_zero: bool) -> Result<usize, BufferError> {
     if !value.is_finite()
         || value < 0.0
         || (!allow_zero && value == 0.0)
@@ -37,12 +39,25 @@ pub(super) fn correct_buffer_length(
     rows: usize,
     options: &OptionsService,
 ) -> Result<usize, BufferError> {
+    resize_buffer_length(scrollback, rows, options)?.ok_or(BufferError::InvalidArrayLength)
+}
+/// NaN is unordered for resize comparisons, but invalid when allocating a list.
+pub(super) fn resize_buffer_length(
+    scrollback: bool,
+    rows: usize,
+    options: &OptionsService,
+) -> Result<Option<usize>, BufferError> {
     if !scrollback {
-        return Ok(rows);
+        return Ok(Some(rows));
     }
-    Ok(rows
-        .saturating_add(positive_option(options, "scrollback", true)?)
-        .min(MAX_BUFFER_SIZE))
+    let value = options.get("scrollback")?.number()?;
+    if value.is_nan() {
+        return Ok(None);
+    }
+    Ok(Some(
+        rows.saturating_add(integer_option(value, "scrollback", true)?)
+            .min(MAX_BUFFER_SIZE),
+    ))
 }
 pub(super) fn is_reflow_enabled(
     scrollback: bool,

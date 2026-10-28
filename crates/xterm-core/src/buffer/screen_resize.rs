@@ -73,9 +73,11 @@ fn resize_target(target: &ResizeTarget<'_>, cols: usize, rows: usize) -> Result<
             b.get_null_cell(Some(&AttributeData::default())),
         )
     })?;
-    let maximum = super::options::correct_buffer_length(scrollback, rows, &options)?;
-    if maximum > target.lines()?.max_length() {
-        target.lines()?.set_max_length(maximum)?;
+    let maximum = super::options::resize_buffer_length(scrollback, rows, &options)?;
+    if let Some(maximum) = maximum {
+        if maximum > target.lines()?.max_length() {
+            target.lines()?.set_max_length(maximum)?;
+        }
     }
     let mut dirty = 0;
     let filled = !target.lines()?.is_empty();
@@ -90,21 +92,25 @@ fn resize_target(target: &ResizeTarget<'_>, cols: usize, rows: usize) -> Result<
             shrink_rows(target, old_rows, rows)?;
             0
         };
-        if maximum < target.lines()?.max_length() {
-            let trim = target.lines()?.len().saturating_sub(maximum);
-            if trim > 0 {
-                target.lines()?.trim_start(trim)?;
-                target.update(|b| {
-                    b.ybase = b.ybase.saturating_sub(trim);
-                    b.ydisp = b.ydisp.saturating_sub(trim);
-                    b.saved_y = b
-                        .saved_y
-                        .saturating_sub(i64::try_from(trim).map_err(|_| BufferError::SizeOverflow)?)
-                        .max(0);
-                    Ok(())
-                })?;
+        if let Some(maximum) = maximum {
+            if maximum < target.lines()?.max_length() {
+                let trim = target.lines()?.len().saturating_sub(maximum);
+                if trim > 0 {
+                    target.lines()?.trim_start(trim)?;
+                    target.update(|b| {
+                        b.ybase = b.ybase.saturating_sub(trim);
+                        b.ydisp = b.ydisp.saturating_sub(trim);
+                        b.saved_y = b
+                            .saved_y
+                            .saturating_sub(
+                                i64::try_from(trim).map_err(|_| BufferError::SizeOverflow)?,
+                            )
+                            .max(0);
+                        Ok(())
+                    })?;
+                }
+                target.lines()?.set_max_length(maximum)?;
             }
-            target.lines()?.set_max_length(maximum)?;
         }
         target.update(|b| {
             b.x = b.x.min(cols - 1);
@@ -183,7 +189,7 @@ fn grow_rows(
         let reveal = if configured {
             false
         } else {
-            target.read(|b| -> Result<bool,BufferError> {
+            target.read(|b| -> Result<bool, BufferError> {
                 if b.ybase == 0 {
                     return Ok(false);
                 }
