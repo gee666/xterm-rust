@@ -48,6 +48,39 @@ export function registerThrowing(api, afterFirst) {
   throw new Error('expected a throwing version getter');
 }
 
+// The same width operations run against unchanged source and the live WASM
+// internal view. Public selection and the width service must share one registry.
+export function unicodeWidthTrace(api, service) {
+  const v6Emoji = service.getStringCellWidth('🤣🤣');
+  const host = registerMutable(api);
+  const widths = [service.getStringCellWidth('\ud800A\udc00'),
+    service.getStringCellWidth('\ud800')];
+  host.setWide(true);
+  widths.push(service.getStringCellWidth('\ud800'));
+  host.replace();
+  widths.push(service.getStringCellWidth('A'));
+  host.setFail(true);
+  const errors = [];
+  for (const text of ['\ud800', 'A']) {
+    try { service.getStringCellWidth(text); errors.push(false); }
+    catch (error) { errors.push(error === host.failure); }
+  }
+  host.setFail(false);
+  widths.push(service.getStringCellWidth('AB'));
+  const reentry = [];
+  api.register({
+    version: 'reentry', wcwidth: () => 2,
+    charProperties(code, preceding) {
+      reentry.push([code, preceding]);
+      api.activeVersion = '6';
+      return 4;
+    }
+  });
+  api.activeVersion = 'reentry';
+  const reentryWidth = service.getStringCellWidth('AB');
+  return {v6Emoji, widths, errors, callbacks: host.trace, reentry, reentryWidth, active: api.activeVersion};
+}
+
 export function registerMutable(api) {
   const trace = [];
   const failure = {};

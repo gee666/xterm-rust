@@ -18,6 +18,7 @@ mod event_functions;
 pub(crate) mod events;
 pub mod input_host;
 mod input_services;
+mod internal_api;
 pub mod link_services;
 mod modes_api;
 mod operations;
@@ -51,6 +52,7 @@ pub(crate) struct Shared {
     pub events: EventFunctions,
     pub buffer: JsValue,
     pub parser: JsValue,
+    pub internal: JsValue,
     pub selection: Rc<crate::selection::service::SelectionService>,
     pub decorations: Rc<xterm_core::decoration::DecorationService>,
     pub platform: xterm_core::platform::Platform,
@@ -152,6 +154,11 @@ impl Terminal {
         });
         let buffer = buffer_api::WebBufferNamespace::new(Rc::clone(&native))?.into();
         let parser = parser_api::WebParserApi::new(Rc::clone(&native)).into();
+        // Internal services are not proposed-API gated, unlike public views.
+        let unicode = native
+            .with_state(|state| Rc::clone(&state.unicode))
+            .map_err(|error| to_js_error(&error))?;
+        let internal = internal_api::CoreServices::new(unicode).into();
         let link_providers = link_services::create_registry(Rc::clone(&native), &window)?;
         let selection = Rc::new(crate::selection::service::SelectionService::new(
             crate::selection::service::SelectionPlatform {
@@ -176,6 +183,7 @@ impl Terminal {
                 events,
                 buffer,
                 parser,
+                internal,
                 platform,
                 selection,
                 decorations,

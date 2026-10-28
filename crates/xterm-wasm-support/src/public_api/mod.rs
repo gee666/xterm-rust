@@ -5,3 +5,4 @@ pub mod buffer_api;
 pub mod buffer_cell;
 pub mod parser_api;
 pub mod unicode_api;
+pub mod unicode_service;

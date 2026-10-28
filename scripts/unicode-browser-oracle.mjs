@@ -13,14 +13,19 @@ const sources = await Promise.all(paths.map(path => readFile(resolve(root, 'sour
 const runtime = sources.map(source => stripTypeScriptTypes(
   source.replace(/^import .*;\r?\n/gm, '').replace(/^export /gm, ''), {mode: 'transform'})).join('\n');
 const traceSource = await readFile(resolve(root, 'crates/xterm-web/tests/support/unicode_api.js'), 'utf8');
-const {UnicodeService, UnicodeV6, unicodeTrace} = runInNewContext(
-  runtime + '\n' + traceSource.replace(/^export /gm, '') + '\n({UnicodeService, UnicodeV6, unicodeTrace});');
+const {UnicodeService, UnicodeV6, unicodeTrace, unicodeWidthTrace} = runInNewContext(
+  runtime + '\n' + traceSource.replace(/^export /gm, '') + '\n({UnicodeService, UnicodeV6, unicodeTrace, unicodeWidthTrace});');
 const service = new UnicodeService();
 service.register(new UnicodeV6());
 const expected = JSON.stringify(unicodeTrace(service), null, 2) + '\n';
 const fixture = resolve(root, 'crates/xterm-web/tests/fixtures/unicode-api.json');
 await mkdir(dirname(fixture), {recursive: true});
 await verifyOrGenerate(fixture, expected, process.argv.includes('--generate'));
+const widthService = new UnicodeService();
+widthService.register(new UnicodeV6());
+const widthExpected = JSON.stringify(unicodeWidthTrace(widthService, widthService), null, 2) + '\n';
+await verifyOrGenerate(resolve(root, 'crates/xterm-web/tests/fixtures/unicode-width-api.json'),
+  widthExpected, process.argv.includes('--generate'));
 const results = resolve(root, 'results/unicode-browser');
 await mkdir(results, {recursive: true});
 await writeFile(resolve(results, 'oracle.json'), JSON.stringify({
@@ -29,5 +34,7 @@ await writeFile(resolve(results, 'oracle.json'), JSON.stringify({
     path: 'source_repo/src/common/' + path,
     sha256: createHash('sha256').update(sources[index]).digest('hex')
   })), snapshots: JSON.parse(expected).snapshots.length,
+  widthTraceSha256: createHash('sha256').update(traceSource).digest('hex'),
+  widthFixtureSha256: createHash('sha256').update(widthExpected).digest('hex'),
   note: 'Source-only expected values, not Rust/browser runtime evidence.'
 }, null, 2) + '\n');
