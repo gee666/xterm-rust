@@ -1,6 +1,7 @@
 //! Browser bindings for Rust status addon logic. No JavaScript terminal engine
 //! parses the OSC reports or maintains addon state.
 
+mod coercion;
 mod program;
 mod progress;
 pub use program::ProgramStatusAddon;
