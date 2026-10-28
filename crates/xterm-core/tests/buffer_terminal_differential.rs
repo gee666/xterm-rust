@@ -17,7 +17,7 @@ fn compare(failures: &mut Vec<String>, label: &str, actual: &str, expected: &str
 }
 #[test]
 fn pa06_and_buffer_parser_addons_match_live_source_operations() {
-    let directory = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../results/buffer-terminal");
+    let directory = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../tmp/buffer-terminal");
     fs::create_dir_all(&directory).unwrap();
     fs::write(
         directory.join("rust-summary.json"),
@@ -232,14 +232,14 @@ fn pa06_and_buffer_parser_addons_match_live_source_operations() {
     }
     assert!(
         failures.is_empty(),
-        "{} mismatches retained in results/buffer-terminal/rust-failures.txt",
+        "{} mismatches retained in tmp/buffer-terminal/rust-failures.txt",
         failures.len()
     );
 }
 
 #[test]
 fn pa06_marker_disposal_callbacks_read_and_reenter_public_terminal() {
-    let directory = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../results/buffer-terminal");
+    let directory = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../tmp/buffer-terminal");
     fs::create_dir_all(&directory).unwrap();
     fs::write(
         directory.join("clear-rust-summary.json"),
@@ -275,6 +275,6 @@ fn pa06_marker_disposal_callbacks_read_and_reenter_public_terminal() {
     }
     assert!(
         failures.is_empty(),
-        "clear callback mismatches retained in results/buffer-terminal/clear-rust-failures.txt"
+        "clear callback mismatches retained in tmp/buffer-terminal/clear-rust-failures.txt"
     );
 }
