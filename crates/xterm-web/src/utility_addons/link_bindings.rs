@@ -59,6 +59,7 @@ fn callback(value: JsValue) -> Option<Activate<MouseEvent>> {
 #[wasm_bindgen(js_name=WebLinksAddon)]
 pub struct WebLinksAddon {
     addon: Inner<MouseEvent>,
+    options: JsValue,
     terminals: RefCell<Vec<Rc<BrowserWebLinkTerminal>>>,
 }
 #[wasm_bindgen]
@@ -116,8 +117,14 @@ impl WebLinksAddon {
                 callback(handler),
                 native_options,
             ),
+            options,
             terminals: RefCell::default(),
         }
+    }
+    /// The unchanged upstream suite updates this live constructor options bag.
+    #[wasm_bindgen(getter,js_name=_options)]
+    pub fn options_compat(&self) -> JsValue {
+        self.options.clone()
     }
     pub fn activate(&self, terminal: &Terminal) -> Result<(), JsValue> {
         let native = Rc::downgrade(&terminal.shared_native());
