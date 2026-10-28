@@ -49,19 +49,6 @@ pub(crate) fn begin_style(node: &HtmlElement) -> Result<JsValue, JsValue> {
 pub(crate) fn assign_style(style: &JsValue, key: &str, value: &JsValue) -> Result<(), JsValue> {
     fastAssignStyle(style, key, value)
 }
-pub(crate) fn set_style(node: &HtmlElement, key: &str, value: &JsValue) -> Result<(), JsValue> {
-    assign_style(&begin_style(node)?, key, value)
-}
-pub(crate) fn set_style_with(
-    node: &HtmlElement,
-    key: &str,
-    create: impl FnOnce() -> Result<JsValue, JsValue>,
-) -> Result<(), JsValue> {
-    let style = begin_style(node)?;
-    let value = create()?;
-    assign_style(&style, key, &value)
-}
-
 /// Both portable option values and live browser values are consumed without
 /// premature string/number coercion. This keeps geometry and DOM callers shared.
 pub trait DomValue {

@@ -28,6 +28,7 @@ pub struct TerminalState {
     pub(crate) icon_stack: Vec<Vec<u16>>,
     pub(crate) events: Rc<RefCell<Vec<TerminalEvent>>>,
     pub(crate) event_handler: Rc<RefCell<Option<super::EventHandler>>>,
+    pub(crate) reset_request_handler: Rc<RefCell<Option<super::ResetRequestHandler>>>,
     pub(crate) error: Option<TerminalError>,
     pub(crate) dirty: Option<(usize, usize)>,
     pub(crate) preceding_join_state: Rc<std::cell::Cell<u32>>,

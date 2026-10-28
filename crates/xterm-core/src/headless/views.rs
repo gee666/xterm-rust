@@ -29,6 +29,17 @@ pub(super) fn registrations(
 }
 
 impl Terminal {
+    /// Browser hosts override the virtual reset action before the default reset.
+    /// Capture a Weak owner and call ordinary reset inside the callback.
+    pub fn set_reset_request_handler(
+        &self,
+        handler: Option<crate::terminal::ResetRequestHandler>,
+    ) -> Result<(), HeadlessError> {
+        let slot = self.with_state(|state| Rc::clone(&state.reset_request_handler))?;
+        let previous = slot.replace(handler);
+        drop(previous);
+        Ok(())
+    }
     /// Addons retain Weak handles when their lifetime may outlast the terminal.
     pub fn state_handle_for_addon(&self) -> Rc<std::cell::RefCell<crate::terminal::TerminalState>> {
         Rc::clone(&self.state)

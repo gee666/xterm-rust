@@ -144,6 +144,7 @@ impl CoreTerminal {
             icon_stack: Vec::new(),
             events,
             event_handler,
+            reset_request_handler: Rc::default(),
             error: None,
             dirty: None,
             preceding_join_state: Rc::default(),
