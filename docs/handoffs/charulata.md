@@ -8,6 +8,8 @@ Observed: source identifier oracle 195 cases; all 16 component tests pass in Chr
 
 Remaining task 66 waits for actual Root task 31: unchanged Parser.test.ts and Terminal.test.ts loadAddon assertions through the facade, real GC ownership checks, then swarm_review. `scripts/public-parser-browser.mjs` is the prepared original-assertion runner. Do not call component results full Root parity.
 
+Latest restart update: Salahuddin reports actual Root numeric seven tests now pass in all three browsers on `swarm/Salahuddin` commit `09e9ab3`, after merging Xavier and the canonical adapters. This is a useful tested candidate for task 66's remaining Root suite, not a full Root acceptance. See post 184.
+
 The branch is not merged. Last changed-crate run found main failures: missing web exports for character_joiner/scroll/webgl, web test URL u32 versus u64, and core_services_integration.rs188 logger cursor expectation. Chloe, Xavier and Willie were notified. Do not weaken assertions or copy foreign WIP to hide these. There are untracked generated results in the private worktree; stage only intended files.
 
 GitHub Actions was triggered by pushes. Observed run URLs include https://github.com/gee666/xterm-rust/actions/runs/40659680361 and the earlier failed 40659197212. Refresh actual conclusions before citing a platform pass.
