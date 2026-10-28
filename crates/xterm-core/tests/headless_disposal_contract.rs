@@ -69,6 +69,51 @@ fn marker_disposal_observes_source_service_phases() {
     assert!(term.is_disposed().unwrap());
     assert_eq!(text(&term), "AB");
 }
+#[test]
+fn reentrant_disposal_clears_commands_immediately_but_preserves_print_and_later_registrations() {
+    for register in [false, true] {
+        let term = Rc::new(Terminal::new(8, 3, 10).unwrap());
+        let host = QueuedTerminal::new(Rc::clone(&term)).unwrap();
+        let calls = Rc::new(Cell::new(0));
+        let output = Rc::clone(&calls);
+        let target = Rc::downgrade(&term);
+        term.on_bell().subscribe(move |_| {
+            let term = target.upgrade().unwrap();
+            term.dispose().unwrap();
+            if register {
+                let output = Rc::clone(&output);
+                term.with_parser(|api| {
+                    api.register_csi_handler(
+                        xterm_core::parser::escape::FunctionIdentifier::new("z"),
+                        move |_| {
+                            output.set(output.get() + 1);
+                            HandlerResult::Ready(true)
+                        },
+                    )
+                })
+                .unwrap()
+                .unwrap();
+            }
+        });
+        let input = if register {
+            "A\x07\x1b[zC"
+        } else {
+            "A\x07B\n\x1bcC"
+        };
+        host.write(
+            xterm_core::input::write_buffer::WriteData::text(input),
+            None,
+        )
+        .unwrap();
+        host.queue().flush_sync().unwrap();
+        assert_eq!(text(&term), if register { "AC" } else { "ABC" });
+        assert_eq!(
+            term.buffer().unwrap().active().unwrap().cursor_y().unwrap(),
+            0
+        );
+        assert_eq!(calls.get(), usize::from(register));
+    }
+}
 fn text(term: &Terminal) -> String {
     let row = term
         .buffer()

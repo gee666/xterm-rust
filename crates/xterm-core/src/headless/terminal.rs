@@ -27,6 +27,7 @@ pub struct Terminal {
     pub(super) state: Rc<RefCell<TerminalState>>,
     addons: AddonManager<Terminal, HeadlessError>,
     pub(super) parser_registrations: crate::public_api::ParserRegistrations,
+    parser_disposal: crate::parser::escape::ParserDisposalHandle,
     pub(super) buffer_cache: Rc<OnceCell<Rc<crate::public_api::buffer::BufferNamespaceApi>>>,
 }
 impl Terminal {
@@ -42,6 +43,7 @@ impl Terminal {
         engine.drain_events();
         let state = engine.state_handle();
         let parser_registrations = super::views::registrations(&mut engine, &state);
+        let parser_disposal = engine.parser_mut().disposal_handle();
         let events = Rc::new(Events::default());
         let output = Rc::clone(&events);
         engine.set_event_handler(Some(Rc::new(move |event| output.dispatch(event))));
@@ -55,6 +57,7 @@ impl Terminal {
             state,
             addons: AddonManager::new(),
             parser_registrations,
+            parser_disposal,
             buffer_cache: Rc::new(OnceCell::new()),
         })
     }
@@ -251,6 +254,7 @@ impl Terminal {
             core.dispose();
             mouse.dispose();
             unicode.dispose();
+            self.parser_disposal.dispose();
             self.deferred_parser_disposal.set(true);
         }
         self.dispose_request.fire(&())?;
