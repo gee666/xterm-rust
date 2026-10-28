@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { createHash, randomUUID } from 'node:crypto';
-import { mkdirSync, readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync, readdirSync, statSync, realpathSync } from 'node:fs';
 import { resolve, dirname, relative, sep } from 'node:path';
 const root=resolve(import.meta.dirname,'..');
 process.chdir(root);
@@ -26,7 +26,7 @@ try {
   let output=resolve(root,'source_repo/out-esbuild/headless/public/Terminal.js');
   function compiledHashes() {
     const entries=[];
-    for(const file of Object.keys(require.cache).filter(file=>file.startsWith(resolve(root,'source_repo/out-esbuild')+sep))) {
+    for(const file of Object.keys(require.cache).filter(file=>file.startsWith(realpathSync(resolve(root,'source_repo/out-esbuild'))+sep))) {
       const mapFile=file+'.map';
       const map=JSON.parse(readFileSync(mapFile,'utf8'));
       assert.equal(map.sources.length,map.sourcesContent.length,'missing embedded source provenance');
@@ -47,7 +47,10 @@ try {
   }
   report.referenceMode=reuse?'Existing original ESBuild modules; every loaded source map content matched unchanged TS; no compiler/bundler invoked.':'Fresh unchanged-source ESBuild bundle.';
   const {Terminal}=require(output);
-  if(reuse)report.compiledBefore=compiledHashes();
+  if(reuse) {
+    report.compiledBefore=compiledHashes();
+    assert.ok(Object.keys(report.compiledBefore).length>0,'no compiled source modules were verified');
+  }
   for(const spec of identifierSpecs()) {
     const terminal=new Terminal({cols:20,rows:3,scrollback:10,allowProposedApi:true});
     const log=[],calls=[];
