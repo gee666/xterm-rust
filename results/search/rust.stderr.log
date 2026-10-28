@@ -1,36 +1,7 @@
-    Blocking waiting for file lock on package cache
-    Blocking waiting for file lock on package cache
     Blocking waiting for file lock on build directory
    Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
-error[E0432]: unresolved import `super::handler::registry`
- --> crates\xterm-core\src\parser\dcs.rs:8:21
-  |
-8 | use super::handler::registry::{HandlerRegistry, Registrar};
-  |                     ^^^^^^^^ could not find `registry` in `handler`
-
-error[E0004]: non-exhaustive patterns: `&TerminalEvent::ColorSchemeQuery` and `&TerminalEvent::WindowReport(_)` not covered
-  --> crates\xterm-core\src\headless\events.rs:67:15
-   |
-67 |         match &event {
-   |               ^^^^^^ patterns `&TerminalEvent::ColorSchemeQuery` and `&TerminalEvent::WindowReport(_)` not covered
-   |
-note: `TerminalEvent` defined here
-  --> crates\xterm-core\src\terminal\events.rs:7:10
-   |
-7  | pub enum TerminalEvent {
-   |          ^^^^^^^^^^^^^
-...
-12 |     ColorSchemeQuery,
-   |     ---------------- not covered
-13 |     WindowReport(WindowReport),
-   |     ------------ not covered
-   = note: the matched value is of type `&TerminalEvent`
-help: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern, a match arm with multiple or-patterns as shown, or multiple match arms
-   |
-88 ~             | TerminalEvent::SendFocus => {},
-89 +             &TerminalEvent::ColorSchemeQuery | &TerminalEvent::WindowReport(_) => todo!()
-   |
-
-Some errors have detailed explanations: E0004, E0432.
-For more information about an error, try `rustc --explain E0004`.
-error: could not compile `xterm-core` (lib) due to 2 previous errors
+    Finished `test` profile [unoptimized] target(s) in 2.42s
+     Running tests\search_cache.rs (target\debug\deps\search_cache-fe2796b0eff856ab.exe)
+     Running tests\search_differential.rs (target\debug\deps\search_differential-4be1d2ed7c64a388.exe)
+     Running tests\search_integration.rs (target\debug\deps\search_integration-f52fbef70ae1ad6a.exe)
+     Running tests\search_ring.rs (target\debug\deps\search_ring-31d3605bfd333367.exe)

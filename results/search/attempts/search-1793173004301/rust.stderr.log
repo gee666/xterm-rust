@@ -1,0 +1,61 @@
+warning: fields `token` and `resource` are never read
+ --> crates\xterm-core\src\buffer\cleanup_owner.rs:6:5
+  |
+5 | struct Owner {
+  |        ----- fields in this struct
+6 |     token: Rc<()>,
+  |     ^^^^^
+7 |     resource: Box<dyn Any>,
+  |     ^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: field `owner` is never read
+  --> crates\xterm-core\src\buffer\cleanup_owner.rs:12:5
+   |
+11 | pub(crate) struct CleanupOwnerSlot {
+   |                   ---------------- field in this struct
+12 |     owner: RefCell<Option<Owner>>,
+   |     ^^^^^
+   |
+   = note: `CleanupOwnerSlot` has a derived impl for the trait `Default`, but this is intentionally ignored during dead code analysis
+
+warning: methods `is_owned_by`, `install`, and `take_if_owned` are never used
+  --> crates\xterm-core\src\buffer\cleanup_owner.rs:15:19
+   |
+14 | impl CleanupOwnerSlot {
+   | --------------------- methods in this implementation
+15 |     pub(crate) fn is_owned_by(&self, token: &Rc<()>) -> bool {
+   |                   ^^^^^^^^^^^
+...
+20 |     pub(crate) fn install(&self, token: &Rc<()>, resource: Box<dyn Any>) {
+   |                   ^^^^^^^
+...
+26 |     pub(crate) fn take_if_owned(&self, token: &Rc<()>) -> Option<Box<dyn Any>> {
+   |                   ^^^^^^^^^^^^^
+
+warning: field `cleanup_owner` is never read
+   --> crates\xterm-core\src\buffer\screen.rs:146:5
+    |
+116 | pub struct Buffer {
+    |            ------ field in this struct
+...
+146 |     cleanup_owner: Rc<CleanupOwnerSlot>,
+    |     ^^^^^^^^^^^^^
+
+warning: method `cleanup_owner_slot` is never used
+   --> crates\xterm-core\src\buffer\screen.rs:195:19
+    |
+148 | impl Buffer {
+    | ----------- method in this implementation
+...
+195 |     pub(crate) fn cleanup_owner_slot(&self) -> Rc<CleanupOwnerSlot> {
+    |                   ^^^^^^^^^^^^^^^^^^
+
+warning: `xterm-core` (lib) generated 5 warnings
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 0.39s
+     Running tests\search_cache.rs (target\debug\deps\search_cache-fe2796b0eff856ab.exe)
+     Running tests\search_differential.rs (target\debug\deps\search_differential-4be1d2ed7c64a388.exe)
+     Running tests\search_integration.rs (target\debug\deps\search_integration-f52fbef70ae1ad6a.exe)
+     Running tests\search_ring.rs (target\debug\deps\search_ring-31d3605bfd333367.exe)

@@ -1,0 +1,15 @@
+    Blocking waiting for file lock on build directory
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error: this `let...else` may be rewritten with the `?` operator
+  --> crates\xterm-core\src\input\text_decoder_utf8.rs:31:13
+   |
+31 | /             let Some(&byte) = input.get(start as usize) else {
+32 | |                 return None;
+33 | |             };
+   | |______________^ help: replace it with: `let &byte = input.get(start as usize)?;`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#question_mark
+   = note: `-D clippy::question-mark` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::question_mark)]`
+
+error: could not compile `xterm-core` (lib) due to 1 previous error

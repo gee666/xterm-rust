@@ -1,0 +1,147 @@
+
+
+  SearchEngine
+    find
+      ✔ should return undefined for empty search term
+      ✔ should find basic text in terminal content
+      ✔ should find text starting from specified position
+      ✔ should search across multiple rows
+      ✔ should return undefined when text is not found
+      ✔ should throw error for invalid column position
+      ✔ should handle search starting from last column
+      ✔ should handle search from middle of match
+    search options
+      caseSensitive
+        ✔ should find text with case-insensitive search (default)
+        ✔ should find text with case-sensitive search when enabled
+        ✔ should not find text with case-sensitive search when case differs
+      wholeWord
+        ✔ should find whole word when enabled
+        ✔ should not find partial word when wholeWord is enabled
+        ✔ should find word at beginning of line with wholeWord
+        ✔ should find word at end of line with wholeWord
+        ✔ should handle word boundaries with punctuation
+        ✔ should not match when not whole word
+      regex
+        ✔ should find text using simple regex pattern
+        ✔ should find text using regex with case-insensitive flag
+        ✔ should find text using regex with case-sensitive flag
+        ✔ should handle complex regex patterns
+        ✔ should return undefined for invalid regex pattern
+        ✔ should handle empty regex matches
+      combined options
+        ✔ should handle regex + caseSensitive combination
+        ✔ should handle wholeWord + caseSensitive combination
+    findNextWithSelection
+      ✔ should return undefined for empty search term
+      ✔ should find first occurrence when no selection exists
+      ✔ should find next occurrence after current selection
+      ✔ should wrap around to beginning when reaching end
+      ✔ should wrap across multiple rows
+      ✔ should return same selection if only one match exists
+      ✔ should clear selection and return undefined when term not found
+    findPreviousWithSelection
+      ✔ should return undefined for empty search term
+      ✔ should find last occurrence when no selection exists
+      ✔ should find previous occurrence before current selection
+      ✔ should wrap around to end when reaching beginning
+      ✔ should work across multiple rows in reverse
+      ✔ should handle selection expansion correctly
+      ✔ should clear selection and return undefined when term not found
+    edge cases and error handling
+      unicode and special characters
+        ✔ should handle unicode characters correctly
+        ✔ should handle wide characters
+      wrapped lines
+        ✔ should handle search across wrapped lines
+        ✔ should handle wrapped lines with unicode
+        ✔ should skip wrapped lines correctly in findInLine
+      buffer boundaries
+        ✔ should handle empty buffer gracefully
+        ✔ should handle search beyond buffer size
+      invalid inputs
+        ✔ should handle undefined search options gracefully
+        ✔ should handle negative start positions
+        ✔ should handle search options with undefined properties
+    private method behaviors (tested indirectly)
+      _isWholeWord behavior
+        ✔ should recognize word boundaries with various punctuation
+        ✔ should handle word boundaries at line start and end
+      buffer offset calculations
+        ✔ should handle wide character offset calculations
+      string to buffer size conversions
+        ✔ should correctly calculate size for simple text
+        ✔ should correctly calculate size for unicode text
+        ✔ should handle size calculation across wrapped lines
+    integration with SearchLineCache
+      ✔ should use cache for line translation
+      ✔ should handle cache misses gracefully
+      ✔ should work correctly with cache invalidation
+
+
+  58 passing (832ms)
+
+
+
+  SearchLineCache
+    constructor
+      ✔ should create a SearchLineCache instance
+      ✔ should start with no cache initialized
+    initLinesCache
+      ✔ should initialize the lines cache array
+      ✔ should not reinitialize if cache already exists
+      ✔ should set up TTL timeout
+    getLineFromCache
+      ✔ should return undefined when cache is not initialized
+      ✔ should return undefined for unset entries when cache is initialized
+      ✔ should return cached entries
+    setLineInCache
+      ✔ should not set entries when cache is not initialized
+      ✔ should set entries when cache is initialized
+      ✔ should overwrite existing entries
+    translateBufferLineToStringWithWrap
+      ✔ should translate a single line without wrapping
+      ✔ should handle trimRight parameter
+      ✔ should handle wrapped lines
+      ✔ should handle wide characters
+      ✔ should handle empty lines
+      ✔ should handle lines beyond buffer
+      ✔ should handle complex wrapped content (45ms)
+    cache invalidation
+      ✔ should invalidate cache on line feed
+      ✔ should invalidate cache on cursor move
+      ✔ should invalidate cache on resize
+    disposal
+      ✔ should clean up resources on dispose
+      ✔ should be safe to dispose multiple times
+    LineCacheEntry type
+      ✔ should handle complex line offsets
+      ✔ should handle unicode characters in cache entries
+    integration with real terminal content
+      ✔ should correctly translate real buffer content
+      ✔ should handle real wrapped content correctly
+      ✔ should work with real escape sequences
+
+
+  28 passing (224ms)
+
+[
+  {
+    "tests": "source_repo/addons/addon-search/src/SearchEngine.test.ts",
+    "discovered": 58,
+    "executed": 58,
+    "passed": 58,
+    "failed": 0,
+    "pending": 0,
+    "unrun": 0
+  },
+  {
+    "tests": "source_repo/addons/addon-search/src/SearchLineCache.test.ts",
+    "discovered": 28,
+    "executed": 28,
+    "passed": 28,
+    "failed": 0,
+    "pending": 0,
+    "unrun": 0
+  }
+]
