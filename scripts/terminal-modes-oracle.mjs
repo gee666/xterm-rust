@@ -103,7 +103,7 @@ terminal.dispose();
 const corpus = `${rows.join('\n')}\n`;
 const fixture = 'crates/xterm-core/tests/fixtures/terminal-modes.tsv';
 if (process.argv.includes('--generate')) await writeFile(fixture, corpus);
-else assert.equal(await readFile(fixture, 'utf8'), corpus, 'mode fixture differs from unchanged source');
+else assert.equal((await readFile(fixture, 'utf8')).replace(/\r\n/g, '\n'), corpus, 'mode fixture differs from unchanged source');
 const hashes = {};
 for (const file of [...new Set([...Object.keys(bundled.metafile.inputs), ...Object.keys(production.metafile.inputs)])].sort()) {
   hashes[file] = createHash('sha256').update(await readFile(file)).digest('hex');

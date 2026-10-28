@@ -22,12 +22,17 @@ impl TerminalState {
         &mut self,
         params: &Params,
         ansi: bool,
+        gate: Option<bool>,
+        captured_cols: usize,
+        captured_modes: Option<crate::core_service::DecPrivateModes>,
     ) -> Result<(), TerminalError> {
         let mode = params.values().first().copied().unwrap_or(0);
         let value = if ansi {
             self.ansi_mode_status(mode)?
         } else {
-            self.private_mode_status(mode)?
+            let modes =
+                captured_modes.unwrap_or_else(|| self.core.dec_private_modes.borrow().clone());
+            self.private_mode_status(mode, gate, captured_cols, &modes)?
         };
         self.reply(&format!(
             "\x1b[{}{mode};{value}$y",
@@ -45,12 +50,16 @@ impl TerminalState {
         })
     }
 
-    fn private_mode_status(&self, mode: i32) -> Result<u8, TerminalError> {
-        // Option property getters may reenter the shared mode service.
-        let modes = self.core.dec_private_modes.borrow().clone();
+    fn private_mode_status(
+        &self,
+        mode: i32,
+        gate: Option<bool>,
+        captured_cols: usize,
+        modes: &crate::core_service::DecPrivateModes,
+    ) -> Result<u8, TerminalError> {
         Ok(match mode {
             1 => status(modes.application_cursor_keys),
-            3 if self.mode_option("windowOptions", "setWinLines", false)? => match self.cols() {
+            3 if gate == Some(true) => match captured_cols {
                 80 => RESET,
                 132 => SET,
                 _ => NOT_RECOGNIZED,
@@ -76,9 +85,7 @@ impl TerminalState {
             47 | 1047 | 1049 => status(Rc::ptr_eq(&self.buffers.active(), &self.buffers.alt())),
             2004 => status(modes.bracketed_paste_mode),
             2026 => status(modes.synchronized_output),
-            9001 if self.mode_option("vtExtensions", "win32InputMode", false)? => {
-                status(modes.win32_input_mode)
-            }
+            9001 if gate == Some(true) => status(modes.win32_input_mode),
             _ => NOT_RECOGNIZED,
         })
     }

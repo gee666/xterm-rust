@@ -12,9 +12,6 @@ impl TerminalState {
         operation: &str,
         params: &Params,
     ) -> Result<(), TerminalError> {
-        if !self.mode_option("vtExtensions", "kittyKeyboard", false)? {
-            return Ok(());
-        }
         let first = params.values().first().copied().unwrap_or(0);
         match operation {
             "=" => {
