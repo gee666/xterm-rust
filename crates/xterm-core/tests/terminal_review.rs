@@ -87,6 +87,25 @@ fn resize_preserves_callback_error_identity() {
 }
 
 #[test]
+fn dispose_releases_event_callback_that_captures_state() {
+    let mut terminal = CoreTerminal::new(10, 3, 10).unwrap();
+    let shared = terminal.state_handle();
+    let weak = Rc::downgrade(&shared);
+    let retained = Rc::clone(&shared);
+    terminal.set_event_handler(Some(Rc::new(move |_| {
+        let _ = retained.borrow().cols();
+        Ok(())
+    })));
+    drop(shared);
+    terminal.dispose().unwrap();
+    drop(terminal);
+    assert!(
+        weak.upgrade().is_none(),
+        "disposed event callback retained a terminal-state ownership cycle"
+    );
+}
+
+#[test]
 fn clear_marker_observer_can_read_live_terminal_state_and_buffer() {
     let mut terminal = CoreTerminal::new(10, 3, 10).unwrap();
     let shared = terminal.state_handle();
