@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+  "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+  "implementation": [
+    {
+      "path": "crates/xterm-core/src/service_registry.rs",
+      "sha256": "5037627661ed00b68ebebde93291da621995f572c54d44b87618af814ec4decf"
+    },
+    {
+      "path": "crates/xterm-core/src/instantiation.rs",
+      "sha256": "b81e959e740d2cfcaad83f8033a84e551714bc5cba70028ce1e0c937df813b99"
+    },
+    {
+      "path": "crates/xterm-core/examples/service_injection_trace.rs",
+      "sha256": "18fd53201c8379d05c47067578685dfd099c3086c4b690d9a14988807445dc07"
+    },
+    {
+      "path": "crates/xterm-core/tests/service_injection.rs",
+      "sha256": "713b6fb71b2c79b986b187958b9fc2e4205f31556a7dde0e166dc5b54e4a2a49"
+    },
+    {
+      "path": "scripts/service-injection-oracle.mjs",
+      "sha256": "66958b3e24bd28ea1540a945e4ade1825fde840502712305e00bb126dca315bb"
+    }
+  ],
+  "status": "passed",
+  "seed": 99066318,
+  "iterations": 2500,
+  "comparisons": 2563,
+  "originalUpstreamTests": 0,
+  "sourceFiles": {
+    "ServiceRegistry.ts": "a467a496d3f1f26130c55809c587e1a7aeaa56d91e22be60af4182db6bb89171",
+    "InstantiationService.ts": "43f48014c7e56738fb0dd2fafaaa7bfd477bea71d3f35f3ed8c6a01b6b5dacbe"
+  },
+  "node": "v24.15.0",
+  "typescript": "5.9.3",
+  "platform": "win32",
+  "arch": "x64",
+  "command": "node scripts/service-injection-oracle.mjs",
+  "failures": [],
+  "gaps": [
+    "No original test files exist for these two modules.",
+    "Rc identity/drop, typed mismatch and constructor failure are separate Rust tests, not this line protocol.",
+    "Terminal direct construction and browser integration are not verified by these utility traces.",
+    "Native Linux/macOS and WASM not run by this command."
+  ]
+}
