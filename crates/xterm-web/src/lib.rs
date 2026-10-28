@@ -19,6 +19,8 @@ pub mod character_joiner;
 pub mod char_size_browser;
 
 #[cfg(target_arch = "wasm32")]
+pub mod js_error;
+#[cfg(target_arch = "wasm32")]
 pub mod dom;
 #[cfg(target_arch = "wasm32")]
 pub mod canvas_css;
