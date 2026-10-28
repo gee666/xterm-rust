@@ -65,9 +65,11 @@ fn misaligned_extended_flag_does_not_invent_an_extended_object() {
 
 #[test]
 fn scalar_metadata_does_not_copy_combined_text_or_extended_attributes() {
-    let mut source = CellData::default();
-    source.content = content::IS_COMBINED_MASK | (1 << content::WIDTH_SHIFT);
-    source.combined_data = vec![0x301; 131_072];
+    let source = CellData {
+        content: content::IS_COMBINED_MASK | (1 << content::WIDTH_SHIFT),
+        combined_data: vec![0x301; 131_072],
+        ..CellData::default()
+    };
     let cell: xterm_core::public_api::line_numbers::NumericCell = source.into();
     let metadata = cell.metadata();
     assert!(metadata.combined_data.is_empty());
