@@ -208,10 +208,10 @@ pub fn load() -> Vec<Case> {
                     html: html(c[11]),
                     selection: selection(c[12]),
                     config: HtmlConfig {
-                        font_family: text(c[13]),
+                        font_family: units(c[13]),
                         font_size: num(c[14]),
-                        foreground: (c[15] != "-").then(|| text(c[15])),
-                        background: (c[16] != "-").then(|| text(c[16])),
+                        foreground: (c[15] != "-").then(|| units(c[15])),
+                        background: (c[16] != "-").then(|| units(c[16])),
                         ansi_colors: opt::<usize>(c[17])
                             .map(|id| palettes.get(&id).unwrap().clone()),
                     },
