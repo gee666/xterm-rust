@@ -1,6 +1,6 @@
 // Copyright (c) 2022 The xterm.js authors. All rights reserved. MIT license.
 // Shared by the fixture assertion and executable differential adapter.
-use std::{cell::RefCell, collections::BTreeSet, error::Error, rc::Rc};
+use std::{cell::RefCell, collections::BTreeSet, error::Error, fmt::Write as _, rc::Rc};
 use xterm_core::{
     buffer::{marker::Marker, AttributeData, BufferService},
     options::{OptionValue, OptionsService},
@@ -146,5 +146,9 @@ fn encode(units: &[u16]) -> String {
     if units.is_empty() {
         return "_".into();
     }
-    units.iter().map(|unit| format!("{unit:04x}")).collect()
+    let mut encoded = String::new();
+    for unit in units {
+        write!(&mut encoded, "{unit:04x}").expect("writing to a String cannot fail");
+    }
+    encoded
 }

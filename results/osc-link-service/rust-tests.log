@@ -1,26 +1,49 @@
     Blocking waiting for file lock on build directory
+warning: associated function `clear_markers_shared` is never used
+  --> crates\xterm-core\src\buffer\screen_shared.rs:20:19
+   |
+11 | impl Buffer {
+   | ----------- associated function in this implementation
+...
+20 |     pub(crate) fn clear_markers_shared(
+   |                   ^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: function `clear_markers_on_line` is never used
+  --> crates\xterm-core\src\buffer\screen_shared.rs:44:15
+   |
+44 | pub(super) fn clear_markers_on_line(
+   |               ^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `with_queued_parse` is never used
+  --> crates\xterm-core\src\headless\events.rs:67:12
+   |
+33 | impl Events {
+   | ----------- method in this implementation
+...
+67 |     pub fn with_queued_parse<T>(&self, action: impl FnOnce() -> T) -> T {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: `xterm-core` (lib) generated 3 warnings
    Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
-error[E0624]: method `primitive` is private
-   --> crates\xterm-core\src\options\value.rs:127:42
-    |
-127 |             Self::Object(value) => value.primitive(CoercionHint::Number)?.number()?,
-    |                                          ^^^^^^^^^ private method
-    |
-   ::: crates\xterm-core\src\options\object.rs:86:5
-    |
-86  |     fn primitive(&self, hint: CoercionHint) -> Result<OptionValue, OptionError> {
-    |     --------------------------------------------------------------------------- private method defined here
+    Finished `test` profile [unoptimized] target(s) in 4.94s
+     Running tests\osc_link_service.rs (target\debug\deps\osc_link_service-7f4271f588742b27.exe)
 
-error[E0624]: method `primitive` is private
-   --> crates\xterm-core\src\options\value.rs:138:49
-    |
-138 |             Self::Object(value) => return value.primitive(CoercionHint::String)?.text_utf16(),
-    |                                                 ^^^^^^^^^ private method
-    |
-   ::: crates\xterm-core\src\options\object.rs:86:5
-    |
-86  |     fn primitive(&self, hint: CoercionHint) -> Result<OptionValue, OptionError> {
-    |     --------------------------------------------------------------------------- private method defined here
+running 13 tests
+test typed_borrow_errors_do_not_allocate_a_marker_or_id ... ok
+test data_identity_and_utf16_surrogates_are_lossless ... ok
+test active_buffers_and_absolute_cursor_lines_are_live ... ok
+test unnamed_to_named_mutation_cleans_only_its_numeric_entry ... ok
+test marker_cleanup_borrow_failure_retains_original_error_and_partial_state ... ok
+test named_id_mutation_preserves_stale_key_source_behavior ... ok
+test upstream_link_ids_are_created_and_fetched_consistently ... ok
+test upstream_fetches_exact_link_data ... ok
+test markers_deduplicate_current_lines_and_last_disposal_expires_entry ... ok
+test upstream_last_trimmed_marker_expires_link_id ... ok
+test service_drop_releases_data_without_disposing_buffer_markers ... ok
+test unnamed_links_are_unique_empty_named_ids_reuse_and_delimiters_collide ... ok
+test deterministic_source_service_trace_matches_rust ... ok
 
-For more information about this error, try `rustc --explain E0624`.
-error: could not compile `xterm-core` (lib) due to 2 previous errors
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+

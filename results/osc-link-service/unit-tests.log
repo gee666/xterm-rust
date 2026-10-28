@@ -1,0 +1,22 @@
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+warning: method `with_queued_parse` is never used
+  --> crates\xterm-core\src\headless\events.rs:67:12
+   |
+33 | impl Events {
+   | ----------- method in this implementation
+...
+67 |     pub fn with_queued_parse<T>(&self, action: impl FnOnce() -> T) -> T {
+   |            ^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `xterm-core` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 1.77s
+     Running unittests src\lib.rs (target\debug\deps\xterm_core-71fa172dc17bbd8d.exe)
+
+running 2 tests
+test osc_link_service::tests::ids_follow_javascript_safe_integer_boundary ... ok
+test osc_link_service::tests::overwritten_limit_entry_still_removes_the_current_numeric_id ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 16 filtered out; finished in 0.00s
+
