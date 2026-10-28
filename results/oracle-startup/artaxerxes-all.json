@@ -1,0 +1,114 @@
+{
+  "command": "node scripts/check-oracle-startup.mjs",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "arch": "x64",
+  "method": "Actual source body with only root/import paths redirected into tmp. Nonzero exit and invalidated prior pass both required; timeout/crash is not success.",
+  "executed": 6,
+  "passed": 6,
+  "failed": 0,
+  "records": [
+    {
+      "oracle": "reflow",
+      "source": "scripts/buffer-reflow-oracle.mjs",
+      "sourceSha256": "bd59d8bb366919b1a43d4bbc42ba29928335f7b6c96d605de2ecbca9b2f999b2",
+      "scenario": "missing-reference-or-dependency",
+      "status": 1,
+      "signal": null,
+      "stderr": "node:internal/modules/esm/resolve:271\r\n    throw new ERR_MODULE_NOT_FOUND(\r\n          ^\r\n\r\nError [ERR_MODULE_NOT_FOUND]: Cannot find module 'P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\oracle-startup\\reflow\\missing-reference-or-dependency\\source_repo\\node_modules\\esbuild\\lib\\main.js' imported from P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\oracle-startup\\reflow\\missing-reference-or-dependency\\probe.mjs\r\n    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\r\n    at moduleResolve (node:internal/modules/esm/resolve:861:10)\r\n    at defaultResolve (node:internal/modules/esm/resolve:988:11)\r\n    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)\r\n    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)\r\n    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:746:52)\r\n    at #resolve (node:internal/modules/esm/loader:679:17)\r\n    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:599:35)\r\n    at node:internal/modules/esm/loader:628:32\r\n    at TracingChannel.tracePromise (node:diagnostics_channel:362:14) {\r\n  code: 'ERR_MODULE_NOT_FOUND',\r\n  url: 'file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/oracle-startup/reflow/missing-reference-or-dependency/source_repo/node_modules/esbuild/lib/main.js'\r\n}\r\n\r\nNode.js v24.15.0\r\n",
+      "receipt": {
+        "status": "incomplete",
+        "command": "node scripts/buffer-reflow-oracle.mjs",
+        "started": "2026-10-28T00:32:08.581Z",
+        "overallEquivalence": "NOT PROVEN"
+      },
+      "expectedReceiptStatus": "incomplete",
+      "passed": true
+    },
+    {
+      "oracle": "reflow",
+      "source": "scripts/buffer-reflow-oracle.mjs",
+      "sourceSha256": "bd59d8bb366919b1a43d4bbc42ba29928335f7b6c96d605de2ecbca9b2f999b2",
+      "scenario": "blocked-temp-directory",
+      "status": 1,
+      "signal": null,
+      "stderr": "node:fs:1350\r\n  const result = binding.mkdir(\r\n                         ^\r\n\r\nError: EEXIST: file already exists, mkdir 'P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\oracle-startup\\reflow\\blocked-temp-directory\\tmp\\buffer-reflow-oracle'\r\n    at mkdirSync (node:fs:1350:26)\r\n    at file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/oracle-startup/reflow/blocked-temp-directory/probe.mjs:18:1\r\n    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)\r\n    at async node:internal/modules/esm/loader:639:26\r\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\r\n  errno: -4075,\r\n  code: 'EEXIST',\r\n  syscall: 'mkdir',\r\n  path: 'P:\\\\workshop\\\\Windows_Worshop\\\\oira666\\\\xterm-rust\\\\tmp\\\\oracle-startup\\\\reflow\\\\blocked-temp-directory\\\\tmp\\\\buffer-reflow-oracle'\r\n}\r\n\r\nNode.js v24.15.0\r\n",
+      "receipt": {
+        "status": "incomplete",
+        "command": "node scripts/buffer-reflow-oracle.mjs",
+        "started": "2026-10-28T00:32:08.634Z",
+        "overallEquivalence": "NOT PROVEN"
+      },
+      "expectedReceiptStatus": "incomplete",
+      "passed": true
+    },
+    {
+      "oracle": "serialize",
+      "source": "scripts/serialize-oracle.mjs",
+      "sourceSha256": "ae79fddc5394f8b4ff7dee009cb253684d9c7b1774ca90ccd3806c12b6dd7779",
+      "scenario": "missing-reference-or-dependency",
+      "status": 1,
+      "signal": null,
+      "stderr": "node:internal/modules/cjs/loader:531\r\n      const err = new Error(\r\n                  ^\r\n\r\nError: Cannot find module 'P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\oracle-startup\\serialize\\missing-reference-or-dependency\\source_repo\\node_modules\\esbuild\\missing-entry.js'. Please verify that the package.json has a valid \"main\" entry\r\n    at tryPackage (node:internal/modules/cjs/loader:531:19)\r\n    at Module._findPath (node:internal/modules/cjs/loader:799:18)\r\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1461:27)\r\n    at wrapResolveFilename (node:internal/modules/cjs/loader:1049:27)\r\n    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1073:10)\r\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1094:12)\r\n    at Module._load (node:internal/modules/cjs/loader:1262:25)\r\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\r\n    at Module.require (node:internal/modules/cjs/loader:1576:12)\r\n    at require (node:internal/modules/helpers:153:16) {\r\n  code: 'MODULE_NOT_FOUND',\r\n  path: '\\\\\\\\?\\\\P:\\\\workshop\\\\Windows_Worshop\\\\oira666\\\\xterm-rust\\\\tmp\\\\oracle-startup\\\\serialize\\\\missing-reference-or-dependency\\\\source_repo\\\\node_modules\\\\esbuild\\\\package.json',\r\n  requestPath: 'esbuild'\r\n}\r\n\r\nNode.js v24.15.0\r\n",
+      "receipt": {
+        "command": "node scripts/serialize-oracle.mjs",
+        "startedAt": "2026-10-28T00:32:08.680Z",
+        "node": "v24.15.0",
+        "status": "failed",
+        "error": "Error: Cannot find module 'P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\oracle-startup\\serialize\\missing-reference-or-dependency\\source_repo\\node_modules\\esbuild\\missing-entry.js'. Please verify that the package.json has a valid \"main\" entry\n    at tryPackage (node:internal/modules/cjs/loader:531:19)\n    at Module._findPath (node:internal/modules/cjs/loader:799:18)\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1461:27)\n    at wrapResolveFilename (node:internal/modules/cjs/loader:1049:27)\n    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1073:10)\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1094:12)\n    at Module._load (node:internal/modules/cjs/loader:1262:25)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.require (node:internal/modules/cjs/loader:1576:12)\n    at require (node:internal/modules/helpers:153:16)"
+      },
+      "expectedReceiptStatus": "failed",
+      "passed": true
+    },
+    {
+      "oracle": "serialize",
+      "source": "scripts/serialize-oracle.mjs",
+      "sourceSha256": "ae79fddc5394f8b4ff7dee009cb253684d9c7b1774ca90ccd3806c12b6dd7779",
+      "scenario": "blocked-temp-directory",
+      "status": 1,
+      "signal": null,
+      "stderr": "node:internal/fs/promises:859\r\n  return await PromisePrototypeThen(\r\n         ^\r\n\r\nError: EEXIST: file already exists, mkdir 'P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\oracle-startup\\serialize\\blocked-temp-directory\\tmp\\serialize-oracle'\r\n    at async mkdir (node:internal/fs/promises:859:10)\r\n    at async file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/oracle-startup/serialize/blocked-temp-directory/probe.mjs:24:1 {\r\n  errno: -4075,\r\n  code: 'EEXIST',\r\n  syscall: 'mkdir',\r\n  path: 'P:\\\\workshop\\\\Windows_Worshop\\\\oira666\\\\xterm-rust\\\\tmp\\\\oracle-startup\\\\serialize\\\\blocked-temp-directory\\\\tmp\\\\serialize-oracle'\r\n}\r\n\r\nNode.js v24.15.0\r\n",
+      "receipt": {
+        "command": "node scripts/serialize-oracle.mjs",
+        "startedAt": "2026-10-28T00:32:08.729Z",
+        "node": "v24.15.0",
+        "status": "failed",
+        "error": "Error: EEXIST: file already exists, mkdir 'P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\oracle-startup\\serialize\\blocked-temp-directory\\tmp\\serialize-oracle'\n    at async mkdir (node:internal/fs/promises:859:10)\n    at async file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/oracle-startup/serialize/blocked-temp-directory/probe.mjs:24:1"
+      },
+      "expectedReceiptStatus": "failed",
+      "passed": true
+    },
+    {
+      "oracle": "charset",
+      "source": "scripts/charset-terminal-oracle.mjs",
+      "sourceSha256": "cd320dd4bc9eb0a2a2075b68fc05597c7e27b1453f135335f45af6352a3e62e8",
+      "scenario": "missing-reference-or-dependency",
+      "status": 1,
+      "signal": null,
+      "stderr": "node:internal/modules/cjs/loader:531\r\n      const err = new Error(\r\n                  ^\r\n\r\nError: Cannot find module 'P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\oracle-startup\\charset\\missing-reference-or-dependency\\source_repo\\node_modules\\esbuild\\missing-entry.js'. Please verify that the package.json has a valid \"main\" entry\r\n    at tryPackage (node:internal/modules/cjs/loader:531:19)\r\n    at Module._findPath (node:internal/modules/cjs/loader:799:18)\r\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1461:27)\r\n    at wrapResolveFilename (node:internal/modules/cjs/loader:1049:27)\r\n    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1073:10)\r\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1094:12)\r\n    at Module._load (node:internal/modules/cjs/loader:1262:25)\r\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\r\n    at Module.require (node:internal/modules/cjs/loader:1576:12)\r\n    at require (node:internal/modules/helpers:153:16) {\r\n  code: 'MODULE_NOT_FOUND',\r\n  path: '\\\\\\\\?\\\\P:\\\\workshop\\\\Windows_Worshop\\\\oira666\\\\xterm-rust\\\\tmp\\\\oracle-startup\\\\charset\\\\missing-reference-or-dependency\\\\source_repo\\\\node_modules\\\\esbuild\\\\package.json',\r\n  requestPath: 'esbuild'\r\n}\r\n\r\nNode.js v24.15.0\r\n",
+      "receipt": {
+        "status": "failed",
+        "command": "node scripts/charset-terminal-oracle.mjs",
+        "error": "Error: Cannot find module 'P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\oracle-startup\\charset\\missing-reference-or-dependency\\source_repo\\node_modules\\esbuild\\missing-entry.js'. Please verify that the package.json has a valid \"main\" entry\n    at tryPackage (node:internal/modules/cjs/loader:531:19)\n    at Module._findPath (node:internal/modules/cjs/loader:799:18)\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1461:27)\n    at wrapResolveFilename (node:internal/modules/cjs/loader:1049:27)\n    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1073:10)\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1094:12)\n    at Module._load (node:internal/modules/cjs/loader:1262:25)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.require (node:internal/modules/cjs/loader:1576:12)\n    at require (node:internal/modules/helpers:153:16)"
+      },
+      "expectedReceiptStatus": "failed",
+      "passed": true
+    },
+    {
+      "oracle": "charset",
+      "source": "scripts/charset-terminal-oracle.mjs",
+      "sourceSha256": "cd320dd4bc9eb0a2a2075b68fc05597c7e27b1453f135335f45af6352a3e62e8",
+      "scenario": "blocked-temp-directory",
+      "status": 1,
+      "signal": null,
+      "stderr": "node:internal/fs/promises:859\r\n  return await PromisePrototypeThen(\r\n         ^\r\n\r\nError: EEXIST: file already exists, mkdir 'P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\oracle-startup\\charset\\blocked-temp-directory\\tmp\\charset-terminal'\r\n    at async mkdir (node:internal/fs/promises:859:10)\r\n    at async file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/oracle-startup/charset/blocked-temp-directory/probe.mjs:20:1 {\r\n  errno: -4075,\r\n  code: 'EEXIST',\r\n  syscall: 'mkdir',\r\n  path: 'P:\\\\workshop\\\\Windows_Worshop\\\\oira666\\\\xterm-rust\\\\tmp\\\\oracle-startup\\\\charset\\\\blocked-temp-directory\\\\tmp\\\\charset-terminal'\r\n}\r\n\r\nNode.js v24.15.0\r\n",
+      "receipt": {
+        "status": "failed",
+        "command": "node scripts/charset-terminal-oracle.mjs",
+        "error": "Error: EEXIST: file already exists, mkdir 'P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\tmp\\oracle-startup\\charset\\blocked-temp-directory\\tmp\\charset-terminal'\n    at async mkdir (node:internal/fs/promises:859:10)\n    at async file:///P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/oracle-startup/charset/blocked-temp-directory/probe.mjs:20:1"
+      },
+      "expectedReceiptStatus": "failed",
+      "passed": true
+    }
+  ]
+}
