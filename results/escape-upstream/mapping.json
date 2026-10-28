@@ -1,0 +1,3108 @@
+{
+  "sourcePath": "source_repo/src/common/parser/EscapeSequenceParser.test.ts",
+  "sourceSha256": "dd1ea180ec271a2807435f73108b1398d5252e85def8f1f0ade57c6ac1a3434a",
+  "typescript": "5.9.3",
+  "staticAssertionSites": 268,
+  "staticHelperExpectations": 60,
+  "originalDiscovered": 161,
+  "synchronousMapped": 147,
+  "asyncOwnedSeparately": 14,
+  "fixtureAdaptations": [
+    "Rust typed states cannot contain the private invalid number124. Reset is exercised after parsed nondefault state/parameters/collect instead. Live OSC payload # is reset, old end emits no event, and a fresh OSC completes without stale payload.",
+    "OSC raw put/ignore assertions use a real OSC payload initialized with0; rather than replacing the concrete subparser with a mock.",
+    "Representation-only constant placeholder fields in raw DCS/APC test callback arrays become typed event variants. Payload/parameters/order/success expectations are preserved.",
+    "The original ERROR callback returns a state object with abortfalse. Rust returns false and preserves every diagnostic field."
+  ],
+  "mapping": [
+    {
+      "sourceLine": 237,
+      "name": "constructor",
+      "assertionSites": [
+        {
+          "line": 239,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 241,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 244,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::construction_initial_and_reset_states",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 246,
+      "name": "initial states",
+      "assertionSites": [
+        {
+          "line": 247,
+          "name": "assert.equal"
+        },
+        {
+          "line": 248,
+          "name": "assert.equal"
+        },
+        {
+          "line": 249,
+          "name": "assert.equal"
+        },
+        {
+          "line": 250,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 251,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::construction_initial_and_reset_states",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 253,
+      "name": "reset states",
+      "assertionSites": [
+        {
+          "line": 260,
+          "name": "assert.equal"
+        },
+        {
+          "line": 261,
+          "name": "assert.equal"
+        },
+        {
+          "line": 262,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 263,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::construction_initial_and_reset_states",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 267,
+      "name": "state GROUND execute action",
+      "assertionSites": [
+        {
+          "line": 276,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 277,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_executable_state_rules_and_ground_printables",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 282,
+      "name": "state GROUND print action",
+      "assertionSites": [
+        {
+          "line": 289,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 290,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_executable_state_rules_and_ground_printables",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 295,
+      "name": "trans ANYWHERE --> GROUND with actions",
+      "assertionSites": [
+        {
+          "line": 313,
+          "name": "assert.equal"
+        },
+        {
+          "line": 319,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 314,
+          "name": "testTerminal.compare"
+        },
+        {
+          "line": 320,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_anywhere_cancel_st_and_escape_clear_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 325,
+      "name": "trans ANYWHERE --> ESCAPE with clear",
+      "assertionSites": [
+        {
+          "line": 332,
+          "name": "assert.equal"
+        },
+        {
+          "line": 333,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 334,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_anywhere_cancel_st_and_escape_clear_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 338,
+      "name": "state ESCAPE execute rules",
+      "assertionSites": [
+        {
+          "line": 347,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 348,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_executable_state_rules_and_ground_printables",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 353,
+      "name": "state ESCAPE ignore",
+      "assertionSites": [
+        {
+          "line": 358,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 359,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_ignore_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 363,
+      "name": "trans ESCAPE --> GROUND with ecs_dispatch action",
+      "assertionSites": [
+        {
+          "line": 373,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 374,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_esc_dispatch_ranges",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 379,
+      "name": "trans ESCAPE --> ESCAPE_INTERMEDIATE with collect action",
+      "assertionSites": [
+        {
+          "line": 385,
+          "name": "assert.equal"
+        },
+        {
+          "line": 386,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_collect_ranges",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 390,
+      "name": "state ESCAPE_INTERMEDIATE execute rules",
+      "assertionSites": [
+        {
+          "line": 399,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 400,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_executable_state_rules_and_ground_printables",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 405,
+      "name": "state ESCAPE_INTERMEDIATE ignore",
+      "assertionSites": [
+        {
+          "line": 410,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 411,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_ignore_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 415,
+      "name": "state ESCAPE_INTERMEDIATE collect action",
+      "assertionSites": [
+        {
+          "line": 421,
+          "name": "assert.equal"
+        },
+        {
+          "line": 422,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_collect_ranges",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 426,
+      "name": "trans ESCAPE_INTERMEDIATE --> GROUND with esc_dispatch action",
+      "assertionSites": [
+        {
+          "line": 433,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 435,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_esc_dispatch_ranges",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 440,
+      "name": "trans ANYWHERE/ESCAPE --> CSI_ENTRY with clear",
+      "assertionSites": [
+        {
+          "line": 447,
+          "name": "assert.equal"
+        },
+        {
+          "line": 448,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 449,
+          "name": "assert.equal"
+        },
+        {
+          "line": 457,
+          "name": "assert.equal"
+        },
+        {
+          "line": 458,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 459,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_entry_clear_and_sos_pm_transitions",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 463,
+      "name": "state CSI_ENTRY execute rules",
+      "assertionSites": [
+        {
+          "line": 472,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 473,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_executable_state_rules_and_ground_printables",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 478,
+      "name": "state CSI_ENTRY ignore",
+      "assertionSites": [
+        {
+          "line": 483,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 484,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_ignore_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 488,
+      "name": "trans CSI_ENTRY --> GROUND with csi_dispatch action",
+      "assertionSites": [
+        {
+          "line": 494,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 495,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_csi_dispatch_and_ignore_exit_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 500,
+      "name": "trans CSI_ENTRY --> CSI_PARAM with param/collect actions",
+      "assertionSites": [
+        {
+          "line": 507,
+          "name": "assert.equal"
+        },
+        {
+          "line": 508,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 513,
+          "name": "assert.equal"
+        },
+        {
+          "line": 514,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 519,
+          "name": "assert.equal"
+        },
+        {
+          "line": 520,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_parameter_and_prefix_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 524,
+      "name": "state CSI_PARAM execute rules",
+      "assertionSites": [
+        {
+          "line": 533,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 534,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_executable_state_rules_and_ground_printables",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 539,
+      "name": "state CSI_PARAM param action",
+      "assertionSites": [
+        {
+          "line": 545,
+          "name": "assert.equal"
+        },
+        {
+          "line": 546,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 551,
+          "name": "assert.equal"
+        },
+        {
+          "line": 552,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_parameter_and_prefix_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 555,
+      "name": "state CSI_PARAM ignore",
+      "assertionSites": [
+        {
+          "line": 560,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 561,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_ignore_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 565,
+      "name": "trans CSI_PARAM --> GROUND with csi_dispatch action",
+      "assertionSites": [
+        {
+          "line": 572,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 573,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_csi_dispatch_and_ignore_exit_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 578,
+      "name": "trans CSI_ENTRY --> CSI_INTERMEDIATE with collect action",
+      "assertionSites": [
+        {
+          "line": 584,
+          "name": "assert.equal"
+        },
+        {
+          "line": 585,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_collect_ranges",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 589,
+      "name": "trans CSI_PARAM --> CSI_INTERMEDIATE with collect action",
+      "assertionSites": [
+        {
+          "line": 595,
+          "name": "assert.equal"
+        },
+        {
+          "line": 596,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_collect_ranges",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 600,
+      "name": "state CSI_INTERMEDIATE execute rules",
+      "assertionSites": [
+        {
+          "line": 609,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 610,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_executable_state_rules_and_ground_printables",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 615,
+      "name": "state CSI_INTERMEDIATE collect",
+      "assertionSites": [
+        {
+          "line": 621,
+          "name": "assert.equal"
+        },
+        {
+          "line": 622,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_collect_ranges",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 626,
+      "name": "state CSI_INTERMEDIATE ignore",
+      "assertionSites": [
+        {
+          "line": 631,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 632,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_ignore_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 636,
+      "name": "trans CSI_INTERMEDIATE --> GROUND with csi_dispatch action",
+      "assertionSites": [
+        {
+          "line": 643,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 644,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_csi_dispatch_and_ignore_exit_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 649,
+      "name": "trans CSI_ENTRY --> CSI_PARAM for \":\" (0x3a)",
+      "assertionSites": [
+        {
+          "line": 653,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_parameter_and_prefix_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 656,
+      "name": "trans CSI_PARAM --> CSI_IGNORE",
+      "assertionSites": [
+        {
+          "line": 662,
+          "name": "assert.equal"
+        },
+        {
+          "line": 663,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_ignore_entry_from_parameter_and_intermediate",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 667,
+      "name": "trans CSI_PARAM --> CSI_IGNORE",
+      "assertionSites": [
+        {
+          "line": 671,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 674,
+          "name": "assert.equal"
+        },
+        {
+          "line": 675,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_ignore_entry_from_parameter_and_intermediate",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 679,
+      "name": "trans CSI_INTERMEDIATE --> CSI_IGNORE",
+      "assertionSites": [
+        {
+          "line": 685,
+          "name": "assert.equal"
+        },
+        {
+          "line": 686,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_ignore_entry_from_parameter_and_intermediate",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 690,
+      "name": "state CSI_IGNORE execute rules",
+      "assertionSites": [
+        {
+          "line": 699,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 700,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_executable_state_rules_and_ground_printables",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 705,
+      "name": "state CSI_IGNORE ignore",
+      "assertionSites": [
+        {
+          "line": 713,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 714,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_ignore_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 719,
+      "name": "trans CSI_IGNORE --> GROUND",
+      "assertionSites": [
+        {
+          "line": 726,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 727,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_csi_dispatch_and_ignore_exit_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 732,
+      "name": "trans ANYWHERE/ESCAPE --> SOS_PM_STRING",
+      "assertionSites": [
+        {
+          "line": 738,
+          "name": "assert.equal"
+        },
+        {
+          "line": 747,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_entry_clear_and_sos_pm_transitions",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 752,
+      "name": "state SOS_PM_STRING ignore rules",
+      "assertionSites": [
+        {
+          "line": 761,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_ignore_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 765,
+      "name": "trans ANYWHERE/ESCAPE --> OSC_STRING",
+      "assertionSites": [
+        {
+          "line": 769,
+          "name": "assert.equal"
+        },
+        {
+          "line": 775,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_entry_clear_and_sos_pm_transitions",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 779,
+      "name": "state OSC_STRING ignore rules",
+      "assertionSites": [
+        {
+          "line": 788,
+          "name": "assert.equal"
+        },
+        {
+          "line": 789,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/strings.rs",
+      "rustTest": "strings::original_osc_raw_put_and_ignore_expectations_with_real_dispatch",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 793,
+      "name": "state OSC_STRING put action",
+      "assertionSites": [
+        {
+          "line": 799,
+          "name": "assert.equal"
+        },
+        {
+          "line": 800,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/strings.rs",
+      "rustTest": "strings::original_osc_raw_put_and_ignore_expectations_with_real_dispatch",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 804,
+      "name": "state DCS_ENTRY",
+      "assertionSites": [
+        {
+          "line": 808,
+          "name": "assert.equal"
+        },
+        {
+          "line": 814,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_entry_clear_and_sos_pm_transitions",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 818,
+      "name": "state DCS_ENTRY ignore rules",
+      "assertionSites": [
+        {
+          "line": 827,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_ignore_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 831,
+      "name": "state DCS_ENTRY --> DCS_PARAM with param/collect actions",
+      "assertionSites": [
+        {
+          "line": 838,
+          "name": "assert.equal"
+        },
+        {
+          "line": 839,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 844,
+          "name": "assert.equal"
+        },
+        {
+          "line": 845,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 850,
+          "name": "assert.equal"
+        },
+        {
+          "line": 851,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_parameter_and_prefix_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 855,
+      "name": "state DCS_PARAM ignore rules",
+      "assertionSites": [
+        {
+          "line": 864,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_ignore_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 868,
+      "name": "state DCS_PARAM param action",
+      "assertionSites": [
+        {
+          "line": 874,
+          "name": "assert.equal"
+        },
+        {
+          "line": 875,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 880,
+          "name": "assert.equal"
+        },
+        {
+          "line": 881,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_parameter_and_prefix_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 884,
+      "name": "trans DCS_ENTRY --> DCS_PARAM for \":\" (0x3a)",
+      "assertionSites": [
+        {
+          "line": 888,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_parameter_and_prefix_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 891,
+      "name": "trans DCS_PARAM --> DCS_IGNORE",
+      "assertionSites": [
+        {
+          "line": 897,
+          "name": "assert.equal"
+        },
+        {
+          "line": 898,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_ignore_entry_from_parameter_and_intermediate",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 902,
+      "name": "trans DCS_INTERMEDIATE --> DCS_IGNORE",
+      "assertionSites": [
+        {
+          "line": 908,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_ignore_entry_from_parameter_and_intermediate",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 912,
+      "name": "state DCS_IGNORE ignore rules",
+      "assertionSites": [
+        {
+          "line": 922,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_ignore_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 926,
+      "name": "trans DCS_ENTRY --> DCS_INTERMEDIATE with collect action",
+      "assertionSites": [
+        {
+          "line": 932,
+          "name": "assert.equal"
+        },
+        {
+          "line": 933,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_collect_ranges",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 937,
+      "name": "trans DCS_PARAM --> DCS_INTERMEDIATE with collect action",
+      "assertionSites": [
+        {
+          "line": 943,
+          "name": "assert.equal"
+        },
+        {
+          "line": 944,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_collect_ranges",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 948,
+      "name": "state DCS_INTERMEDIATE ignore rules",
+      "assertionSites": [
+        {
+          "line": 957,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_ignore_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 961,
+      "name": "state DCS_INTERMEDIATE collect action",
+      "assertionSites": [
+        {
+          "line": 967,
+          "name": "assert.equal"
+        },
+        {
+          "line": 968,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_collect_ranges",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 972,
+      "name": "trans DCS_INTERMEDIATE --> DCS_IGNORE",
+      "assertionSites": [
+        {
+          "line": 978,
+          "name": "assert.equal"
+        },
+        {
+          "line": 979,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_ignore_entry_from_parameter_and_intermediate",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 983,
+      "name": "trans DCS_ENTRY --> DCS_PASSTHROUGH with hook",
+      "assertionSites": [
+        {
+          "line": 990,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 991,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/strings.rs",
+      "rustTest": "strings::original_dcs_apc_start_put_and_end_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 996,
+      "name": "trans DCS_PARAM --> DCS_PASSTHROUGH with hook",
+      "assertionSites": [
+        {
+          "line": 1003,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 1004,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/strings.rs",
+      "rustTest": "strings::original_dcs_apc_start_put_and_end_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1009,
+      "name": "trans DCS_INTERMEDIATE --> DCS_PASSTHROUGH with hook",
+      "assertionSites": [
+        {
+          "line": 1016,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 1017,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/strings.rs",
+      "rustTest": "strings::original_dcs_apc_start_put_and_end_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1022,
+      "name": "state DCS_PASSTHROUGH put action",
+      "assertionSites": [
+        {
+          "line": 1032,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 1033,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/strings.rs",
+      "rustTest": "strings::original_dcs_apc_start_put_and_end_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1038,
+      "name": "state DCS_PASSTHROUGH ignore",
+      "assertionSites": [
+        {
+          "line": 1043,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 1044,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_ignore_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1048,
+      "name": "state APC_ENTRY",
+      "assertionSites": [
+        {
+          "line": 1052,
+          "name": "assert.equal"
+        },
+        {
+          "line": 1058,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_entry_clear_and_sos_pm_transitions",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1062,
+      "name": "state APC_ENTRY ignore rules",
+      "assertionSites": [
+        {
+          "line": 1071,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_ignore_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1075,
+      "name": "trans APC_ENTRY --> APC_INTERMEDIATE with collect action",
+      "assertionSites": [
+        {
+          "line": 1081,
+          "name": "assert.equal"
+        },
+        {
+          "line": 1082,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/parameters.rs",
+      "rustTest": "parameters::original_collect_ranges",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1086,
+      "name": "trans APC_ENTRY --> APC_PASSTHROUGH with start",
+      "assertionSites": [
+        {
+          "line": 1093,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 1094,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/strings.rs",
+      "rustTest": "strings::original_dcs_apc_start_put_and_end_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1099,
+      "name": "trans APC_INTERMEDIATE --> APC_PASSTHROUGH with start",
+      "assertionSites": [
+        {
+          "line": 1106,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 1107,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/strings.rs",
+      "rustTest": "strings::original_dcs_apc_start_put_and_end_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1112,
+      "name": "state APC_INTERMEDIATE ignore rules",
+      "assertionSites": [
+        {
+          "line": 1121,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_ignore_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1125,
+      "name": "state APC_PASSTHROUGH put action",
+      "assertionSites": [
+        {
+          "line": 1133,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 1134,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/strings.rs",
+      "rustTest": "strings::original_dcs_apc_start_put_and_end_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1139,
+      "name": "state APC_PASSTHROUGH ignore rules",
+      "assertionSites": [
+        {
+          "line": 1150,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 1151,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/states.rs",
+      "rustTest": "states::original_ignore_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1156,
+      "name": "trans APC_PASSTHROUGH --> GROUND|ESCAPE with end action",
+      "assertionSites": [
+        {
+          "line": 1163,
+          "name": "assert.equal"
+        },
+        {
+          "line": 1171,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 1164,
+          "name": "testTerminal.compare"
+        },
+        {
+          "line": 1172,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/strings.rs",
+      "rustTest": "strings::original_dcs_apc_start_put_and_end_rules",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1188,
+      "name": "CSI with print and execute",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1189,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_00",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1197,
+      "name": "OSC",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1198,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_01",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1202,
+      "name": "single DCS",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1203,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_02",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1209,
+      "name": "multi DCS",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1210,
+          "name": "test"
+        },
+        {
+          "line": 1215,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_03",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1220,
+      "name": "print + DCS(C1)",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1221,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_04",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1228,
+      "name": "print + PM(C1) + print",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1229,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_05",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1234,
+      "name": "print + OSC(C1) + print",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1235,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_06",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1241,
+      "name": "single APC",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1242,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_07",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1248,
+      "name": "multi APC",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1249,
+          "name": "test"
+        },
+        {
+          "line": 1254,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_08",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1259,
+      "name": "print + DCS(C1) + print",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1260,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_09",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1268,
+      "name": "print + DCS(C0) + print",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1269,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_10",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1277,
+      "name": "error recovery",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1278,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_11",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1283,
+      "name": "7bit ST should be swallowed",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1284,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_12",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1290,
+      "name": "colon notation in CSI params",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1291,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_13",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1299,
+      "name": "colon notation in DCS params",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1300,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_14",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1307,
+      "name": "CAN should abort DCS",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1308,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_15",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1315,
+      "name": "SUB should abort DCS",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1316,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_16",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1323,
+      "name": "CAN should abort APC",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1324,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_17",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1331,
+      "name": "SUB should abort APC",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1332,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_18",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1339,
+      "name": "CAN should abort OSC",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1340,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_19",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1344,
+      "name": "SUB should abort OSC",
+      "assertionSites": [],
+      "helperExpectations": [
+        {
+          "line": 1345,
+          "name": "test"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/examples.rs",
+      "rustTest": "examples::example_20",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1352,
+      "name": "CSI_IGNORE error",
+      "assertionSites": [
+        {
+          "line": 1357,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 1358,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/strings.rs",
+      "rustTest": "strings::original_unicode_coverage_cases",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1362,
+      "name": "DCS_IGNORE error",
+      "assertionSites": [
+        {
+          "line": 1367,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 1368,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/strings.rs",
+      "rustTest": "strings::original_unicode_coverage_cases",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1372,
+      "name": "DCS_PASSTHROUGH error",
+      "assertionSites": [
+        {
+          "line": 1377,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 1378,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/strings.rs",
+      "rustTest": "strings::original_unicode_coverage_cases",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1382,
+      "name": "error else of if (code > 159)",
+      "assertionSites": [
+        {
+          "line": 1387,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [
+        {
+          "line": 1388,
+          "name": "testTerminal.compare"
+        }
+      ],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/strings.rs",
+      "rustTest": "strings::original_unicode_coverage_cases",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1417,
+      "name": "print handler",
+      "assertionSites": [
+        {
+          "line": 1424,
+          "name": "assert.equal"
+        },
+        {
+          "line": 1429,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/basic_handlers.rs",
+      "rustTest": "basic_handlers::original_print_execute_and_esc_set_clear_handlers",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1431,
+      "name": "ESC handler",
+      "assertionSites": [
+        {
+          "line": 1441,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1446,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1450,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/basic_handlers.rs",
+      "rustTest": "basic_handlers::original_print_execute_and_esc_set_clear_handlers",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1453,
+      "name": "prevent fallback",
+      "assertionSites": [
+        {
+          "line": 1457,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1459,
+      "name": "allow fallback",
+      "assertionSites": [
+        {
+          "line": 1463,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1465,
+      "name": "Multiple custom handlers fallback once",
+      "assertionSites": [
+        {
+          "line": 1470,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1472,
+      "name": "Multiple custom handlers no fallback",
+      "assertionSites": [
+        {
+          "line": 1477,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1479,
+      "name": "Execution order should go from latest handler down to the original",
+      "assertionSites": [
+        {
+          "line": 1485,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_exact_latest_to_original_order",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1487,
+      "name": "Dispose should work",
+      "assertionSites": [
+        {
+          "line": 1492,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1494,
+      "name": "Should not corrupt the parser when dispose is called twice",
+      "assertionSites": [
+        {
+          "line": 1500,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1503,
+      "name": "CSI handler",
+      "assertionSites": [
+        {
+          "line": 1509,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1514,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_csi_osc_set_clear_handlers",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1517,
+      "name": "Prevent fallback",
+      "assertionSites": [
+        {
+          "line": 1522,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1523,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1525,
+      "name": "Allow fallback",
+      "assertionSites": [
+        {
+          "line": 1530,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1531,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1533,
+      "name": "Multiple custom handlers fallback once",
+      "assertionSites": [
+        {
+          "line": 1540,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1541,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1542,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1544,
+      "name": "Multiple custom handlers no fallback",
+      "assertionSites": [
+        {
+          "line": 1551,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1552,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1553,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1555,
+      "name": "Execution order should go from latest handler down to the original",
+      "assertionSites": [
+        {
+          "line": 1561,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_exact_latest_to_original_order",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1563,
+      "name": "Dispose should work",
+      "assertionSites": [
+        {
+          "line": 1569,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1570,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1572,
+      "name": "Should not corrupt the parser when dispose is called twice",
+      "assertionSites": [
+        {
+          "line": 1579,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1580,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1583,
+      "name": "EXECUTE handler",
+      "assertionSites": [
+        {
+          "line": 1593,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1598,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/basic_handlers.rs",
+      "rustTest": "basic_handlers::original_print_execute_and_esc_set_clear_handlers",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1600,
+      "name": "OSC handler",
+      "assertionSites": [
+        {
+          "line": 1606,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1611,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_csi_osc_set_clear_handlers",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1614,
+      "name": "Prevent fallback",
+      "assertionSites": [
+        {
+          "line": 1619,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1620,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1622,
+      "name": "Allow fallback",
+      "assertionSites": [
+        {
+          "line": 1627,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1628,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1630,
+      "name": "Multiple custom handlers fallback once",
+      "assertionSites": [
+        {
+          "line": 1637,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1638,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1639,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1641,
+      "name": "Multiple custom handlers no fallback",
+      "assertionSites": [
+        {
+          "line": 1648,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1649,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1650,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1652,
+      "name": "Execution order should go from latest handler down to the original",
+      "assertionSites": [
+        {
+          "line": 1658,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_exact_latest_to_original_order",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1660,
+      "name": "Dispose should work",
+      "assertionSites": [
+        {
+          "line": 1666,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1667,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1669,
+      "name": "Should not corrupt the parser when dispose is called twice",
+      "assertionSites": [
+        {
+          "line": 1676,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1677,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1680,
+      "name": "DCS handler",
+      "assertionSites": [
+        {
+          "line": 1699,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1709,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/basic_handlers.rs",
+      "rustTest": "basic_handlers::original_dcs_apc_raw_streaming_set_clear_handlers",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1713,
+      "name": "Prevent fallback",
+      "assertionSites": [
+        {
+          "line": 1718,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1720,
+      "name": "Allow fallback",
+      "assertionSites": [
+        {
+          "line": 1725,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1727,
+      "name": "Multiple custom handlers fallback once",
+      "assertionSites": [
+        {
+          "line": 1733,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1735,
+      "name": "Multiple custom handlers no fallback",
+      "assertionSites": [
+        {
+          "line": 1741,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1743,
+      "name": "Execution order should go from latest handler down to the original",
+      "assertionSites": [
+        {
+          "line": 1749,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_exact_latest_to_original_order",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1751,
+      "name": "Dispose should work",
+      "assertionSites": [
+        {
+          "line": 1757,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1759,
+      "name": "Should not corrupt the parser when dispose is called twice",
+      "assertionSites": [
+        {
+          "line": 1766,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1769,
+      "name": "APC handler",
+      "assertionSites": [
+        {
+          "line": 1788,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1798,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/basic_handlers.rs",
+      "rustTest": "basic_handlers::original_dcs_apc_raw_streaming_set_clear_handlers",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1802,
+      "name": "Prevent fallback",
+      "assertionSites": [
+        {
+          "line": 1807,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1809,
+      "name": "Allow fallback",
+      "assertionSites": [
+        {
+          "line": 1814,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1816,
+      "name": "Multiple custom handlers fallback once",
+      "assertionSites": [
+        {
+          "line": 1822,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1824,
+      "name": "Multiple custom handlers no fallback",
+      "assertionSites": [
+        {
+          "line": 1830,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1832,
+      "name": "Execution order should go from latest handler down to the original",
+      "assertionSites": [
+        {
+          "line": 1838,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_exact_latest_to_original_order",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1840,
+      "name": "Dispose should work",
+      "assertionSites": [
+        {
+          "line": 1846,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1848,
+      "name": "Should not corrupt the parser when dispose is called twice",
+      "assertionSites": [
+        {
+          "line": 1855,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/registrations.rs",
+      "rustTest": "registrations::original_custom_handler_bubbling_order_and_disposal_all_five_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1858,
+      "name": "ERROR handler",
+      "assertionSites": [
+        {
+          "line": 1865,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 1877,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/basic_handlers.rs",
+      "rustTest": "basic_handlers::original_error_handler_diagnostic_and_clear",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1882,
+      "name": "prefix range 0x3c .. 0x3f, one byte",
+      "assertionSites": [
+        {
+          "line": 1885,
+          "name": "assert.equal"
+        },
+        {
+          "line": 1887,
+          "name": "assert.throws"
+        },
+        {
+          "line": 1888,
+          "name": "assert.throws"
+        },
+        {
+          "line": 1889,
+          "name": "assert.throws"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/identifiers.rs",
+      "rustTest": "identifiers::original_prefix_intermediate_and_final_limits",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1891,
+      "name": "intermediates range 0x20 .. 0x2f, up to two bytes",
+      "assertionSites": [
+        {
+          "line": 1894,
+          "name": "assert.equal"
+        },
+        {
+          "line": 1896,
+          "name": "assert.throws"
+        },
+        {
+          "line": 1897,
+          "name": "assert.throws"
+        },
+        {
+          "line": 1898,
+          "name": "assert.throws"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/identifiers.rs",
+      "rustTest": "identifiers::original_prefix_intermediate_and_final_limits",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1900,
+      "name": "final CSI/DCS range 0x40 .. 0x7e (default), one byte",
+      "assertionSites": [
+        {
+          "line": 1903,
+          "name": "assert.equal"
+        },
+        {
+          "line": 1905,
+          "name": "assert.throws"
+        },
+        {
+          "line": 1906,
+          "name": "assert.throws"
+        },
+        {
+          "line": 1907,
+          "name": "assert.throws"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/identifiers.rs",
+      "rustTest": "identifiers::original_prefix_intermediate_and_final_limits",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1909,
+      "name": "final ESC + APC range 0x30 .. 0x7e, one byte",
+      "assertionSites": [
+        {
+          "line": 1913,
+          "name": "assert.doesNotThrow"
+        },
+        {
+          "line": 1915,
+          "name": "assert.doesNotThrow"
+        },
+        {
+          "line": 1921,
+          "name": "assert.throws"
+        },
+        {
+          "line": 1922,
+          "name": "assert.throws"
+        },
+        {
+          "line": 1923,
+          "name": "assert.throws"
+        },
+        {
+          "line": 1924,
+          "name": "assert.throws"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/identifiers.rs",
+      "rustTest": "identifiers::original_prefix_intermediate_and_final_limits",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1926,
+      "name": "id calculation - should stacking prefix -> intermediate -> final",
+      "assertionSites": [
+        {
+          "line": 1927,
+          "name": "assert.equal"
+        },
+        {
+          "line": 1928,
+          "name": "assert.equal"
+        },
+        {
+          "line": 1929,
+          "name": "assert.equal"
+        },
+        {
+          "line": 1930,
+          "name": "assert.equal"
+        },
+        {
+          "line": 1931,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/identifiers.rs",
+      "rustTest": "identifiers::original_identifier_packing_order",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1935,
+      "name": "ESC",
+      "assertionSites": [
+        {
+          "line": 1945,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/identifiers.rs",
+      "rustTest": "identifiers::original_identifier_invocations_all_four_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1947,
+      "name": "CSI",
+      "assertionSites": [
+        {
+          "line": 1963,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/identifiers.rs",
+      "rustTest": "identifiers::original_identifier_invocations_all_four_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1968,
+      "name": "DCS",
+      "assertionSites": [
+        {
+          "line": 1984,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/identifiers.rs",
+      "rustTest": "identifiers::original_identifier_invocations_all_four_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 1996,
+      "name": "APC",
+      "assertionSites": [
+        {
+          "line": 2006,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "rustFile": "crates/xterm-core/tests/escape_upstream_support/identifiers.rs",
+      "rustTest": "identifiers::original_identifier_invocations_all_four_families",
+      "ownerTask": 90,
+      "status": "mapped"
+    },
+    {
+      "sourceLine": 2119,
+      "name": "sync handlers keep being parsed in sync mode",
+      "assertionSites": [
+        {
+          "line": 2121,
+          "name": "assert.equal"
+        },
+        {
+          "line": 2122,
+          "name": "assert.equal"
+        },
+        {
+          "line": 2123,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "ownerTask": 26,
+      "status": "async-owned-separately"
+    },
+    {
+      "sourceLine": 2125,
+      "name": "correct result on sync parse call",
+      "assertionSites": [
+        {
+          "line": 2127,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 2128,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "ownerTask": 26,
+      "status": "async-owned-separately"
+    },
+    {
+      "sourceLine": 2130,
+      "name": "correct result on async parse call",
+      "assertionSites": [
+        {
+          "line": 2132,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 2133,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "ownerTask": 26,
+      "status": "async-owned-separately"
+    },
+    {
+      "sourceLine": 2155,
+      "name": "sync parse call does not work anymore",
+      "assertionSites": [
+        {
+          "line": 2156,
+          "name": "assert.notEqual"
+        },
+        {
+          "line": 2157,
+          "name": "assert.notDeepEqual"
+        },
+        {
+          "line": 2160,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "ownerTask": 26,
+      "status": "async-owned-separately"
+    },
+    {
+      "sourceLine": 2162,
+      "name": "improper continuation should throw",
+      "assertionSites": [
+        {
+          "line": 2170,
+          "name": "assert.notEqual"
+        },
+        {
+          "line": 2171,
+          "name": "assert.notDeepEqual"
+        },
+        {
+          "line": 2172,
+          "name": "assert.throws"
+        },
+        {
+          "line": 2174,
+          "name": "assert.throws"
+        }
+      ],
+      "helperExpectations": [],
+      "ownerTask": 26,
+      "status": "async-owned-separately"
+    },
+    {
+      "sourceLine": 2180,
+      "name": "reset during async pause continues at next codepoint in chunk",
+      "assertionSites": [
+        {
+          "line": 2199,
+          "name": "assert.ok"
+        },
+        {
+          "line": 2201,
+          "name": "assert.equal"
+        },
+        {
+          "line": 2209,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 2210,
+          "name": "assert.equal"
+        }
+      ],
+      "helperExpectations": [],
+      "ownerTask": 26,
+      "status": "async-owned-separately"
+    },
+    {
+      "sourceLine": 2212,
+      "name": "correct result on awaited parse call",
+      "assertionSites": [
+        {
+          "line": 2214,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "ownerTask": 26,
+      "status": "async-owned-separately"
+    },
+    {
+      "sourceLine": 2225,
+      "name": "correct result on chunked awaited parse calls",
+      "assertionSites": [
+        {
+          "line": 2261,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "ownerTask": 26,
+      "status": "async-owned-separately"
+    },
+    {
+      "sourceLine": 2272,
+      "name": "multiple async SGR handlers",
+      "assertionSites": [
+        {
+          "line": 2279,
+          "name": "assert.equal"
+        },
+        {
+          "line": 2296,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 2314,
+          "name": "assert.notEqual"
+        },
+        {
+          "line": 2329,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "ownerTask": 26,
+      "status": "async-owned-separately"
+    },
+    {
+      "sourceLine": 2340,
+      "name": "multiple async ESC handlers",
+      "assertionSites": [
+        {
+          "line": 2346,
+          "name": "assert.equal"
+        },
+        {
+          "line": 2362,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 2379,
+          "name": "assert.notEqual"
+        },
+        {
+          "line": 2394,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "ownerTask": 26,
+      "status": "async-owned-separately"
+    },
+    {
+      "sourceLine": 2405,
+      "name": "sync/async SGR mixed",
+      "assertionSites": [
+        {
+          "line": 2415,
+          "name": "assert.equal"
+        },
+        {
+          "line": 2416,
+          "name": "assert.equal"
+        },
+        {
+          "line": 2438,
+          "name": "assert.equal"
+        },
+        {
+          "line": 2456,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "ownerTask": 26,
+      "status": "async-owned-separately"
+    },
+    {
+      "sourceLine": 2467,
+      "name": "multiple async OSC handlers",
+      "assertionSites": [
+        {
+          "line": 2473,
+          "name": "assert.equal"
+        },
+        {
+          "line": 2489,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 2506,
+          "name": "assert.notEqual"
+        },
+        {
+          "line": 2521,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "ownerTask": 26,
+      "status": "async-owned-separately"
+    },
+    {
+      "sourceLine": 2533,
+      "name": "multiple async DCS handlers",
+      "assertionSites": [
+        {
+          "line": 2539,
+          "name": "assert.equal"
+        },
+        {
+          "line": 2555,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 2572,
+          "name": "assert.notEqual"
+        },
+        {
+          "line": 2587,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "ownerTask": 26,
+      "status": "async-owned-separately"
+    },
+    {
+      "sourceLine": 2599,
+      "name": "multiple async APC handlers",
+      "assertionSites": [
+        {
+          "line": 2605,
+          "name": "assert.equal"
+        },
+        {
+          "line": 2621,
+          "name": "assert.deepEqual"
+        },
+        {
+          "line": 2638,
+          "name": "assert.notEqual"
+        },
+        {
+          "line": 2653,
+          "name": "assert.deepEqual"
+        }
+      ],
+      "helperExpectations": [],
+      "ownerTask": 26,
+      "status": "async-owned-separately"
+    }
+  ]
+}

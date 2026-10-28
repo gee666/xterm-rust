@@ -1,0 +1,23 @@
+{
+  "task": 7,
+  "reviewer": "Ashley",
+  "scope": "Re-review u32 conversion boundaries, slice assertions and verify-only oracle mode after detailed criteria additions",
+  "platform": "native Windows x86_64",
+  "rustc": "1.85.1",
+  "node": "v24.15.0",
+  "files": {
+    "crates/xterm-core/src/input/text_decoder.rs": "282585d0b4070083ff4e79e9ade02bca4148f68c0ec3f1f6011beebe06f9d525",
+    "crates/xterm-core/tests/text_decoder.rs": "2b67298080beb440986e52c71166ef26697d852a83eb2c8a66d33d118ed889a5",
+    "scripts/text-decoder-oracle.mjs": "9343c17327bb3cc3b6ba82344f57140ba5dd324fd24531563b07318d8df7321f"
+  },
+  "oracle": { "originalCasesPassed": 288, "malformedTracesChecked": 2107, "u32BoundaryCasesChecked": 14, "failed": 0 },
+  "rust": {
+    "command": "rustc --edition 2021 --test -D warnings -C debuginfo=0 tmp/decoder-review.rs -o tmp/decoder-review.exe; tmp/decoder-review.exe",
+    "harness": "Alias self as xterm_core; import the exact production text_decoder.rs and exact repository tests/text_decoder.rs via path modules, without copying or rewriting either",
+    "passed": 7, "failed": 0, "ignored": 0,
+    "log": "results/reviews/decoder-ashley-rust.txt"
+  },
+  "integratedCargoRerun": "Attempted twice. First blocked by concurrent DCS registry, public-buffer EmitError and headless event edits. Second blocked by concurrent EventError enum migration and OSC registry edits. No current whole-crate pass is claimed.",
+  "findings": [],
+  "verdict": "accept focused decoder task; workspace integration gates remain separate and incomplete"
+}
