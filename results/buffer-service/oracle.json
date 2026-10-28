@@ -29,6 +29,12 @@
     "source_repo/src/common/services/BufferService.ts": "8c418b27ef5893691a32d7770c2cf7d0a305803624ae1969f463d7484c893966",
     "source_repo/src/common/services/BufferService.test.ts": "594464798e1c6326a5bd4ba9a278986a616ad8c7626c5d21cf8fad8a18e3226e"
   },
+  "referenceBuild": "reused-existing-source-hash-checked",
+  "referenceBundleHashes": {
+    "BufferSet.test.cjs": "a52a16c47dd6d19b1d8accd142db42239afd76611edc7e8db4a30c7066f9cacc",
+    "BufferService.test.cjs": "226096cf4e9e1c122392a4334928a412d03ab28e0176694daac104dadcd96fac",
+    "api.cjs": "59090f434e3f6ce0ebf8991828ea75b375a4a37c5b672cf2e4852a16859982db"
+  },
   "suites": [
     {
       "tests": "source_repo/src/common/buffer/BufferSet.test.ts",
@@ -135,6 +141,13 @@
     "trim-activation",
     "trim-resize"
   ],
-  "reentrantSha256": "5f3cc7ad29a4c23fec617a3822d7e473a8510b87fe91952d64c0efb4870dc604",
+  "reentrantSha256": "b3ab35d104ee5f851db4b8406002bf13bc508bce7d8afcc4b9c3e7fa470dc56c",
+  "ownerCases": [
+    "reset-during-normal-activation",
+    "nested-reset-owner-slot",
+    "reset-during-alt-fill",
+    "failed-reset-owner-slot"
+  ],
+  "ownerSha256": "d72105d100d13ad1bc5ce8cce9ff6562e6c784bcb7866a14bc3a8d8e5b18e155",
   "scope": "Original JS BufferSet/BufferService tests and deterministic fixtures. Rust replay is a separate check."
 }

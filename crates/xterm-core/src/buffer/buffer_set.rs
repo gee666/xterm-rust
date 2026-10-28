@@ -12,6 +12,9 @@ use std::{
 };
 
 pub type BufferRef = Rc<RefCell<Buffer>>;
+#[path = "buffer_owner.rs"]
+mod owner;
+use owner::BufferOwner;
 
 #[derive(Clone)]
 pub struct BufferActivation {
@@ -23,6 +26,8 @@ struct State {
     normal: RefCell<BufferRef>,
     alt: RefCell<BufferRef>,
     active: RefCell<BufferRef>,
+    normal_owner: BufferOwner,
+    alt_owner: BufferOwner,
     dimensions: Rc<BufferDimensions>,
     options: Rc<OptionsService>,
     activate: Emitter<BufferActivation>,
@@ -44,6 +49,8 @@ impl BufferSet {
         let alt = make_buffer(false, &dimensions, &options)?;
         let state = Rc::new(State {
             active: RefCell::new(Rc::clone(&normal)),
+            normal_owner: BufferOwner::new(Rc::clone(&normal)),
+            alt_owner: BufferOwner::new(Rc::clone(&alt)),
             normal: RefCell::new(normal),
             alt: RefCell::new(alt),
             dimensions,
@@ -99,18 +106,15 @@ impl BufferSet {
 
     pub fn reset(&self) -> Result<(), BufferError> {
         let normal = make_buffer(true, &self.state.dimensions, &self.state.options)?;
-        let old = self.state.normal.replace(Rc::clone(&normal));
-        if !self.state.disposed.get() {
-            Buffer::dispose_shared(&old)?;
-        }
-        normal.borrow_mut().fill_viewport_rows(None)?;
+        *self.state.normal.borrow_mut() = Rc::clone(&normal);
+        self.state.normal_owner.replace(normal)?;
+        Buffer::fill_viewport_rows_shared(&self.normal(), None)?;
         let alt = make_buffer(false, &self.state.dimensions, &self.state.options)?;
-        let old = self.state.alt.replace(Rc::clone(&alt));
-        if !self.state.disposed.get() {
-            Buffer::dispose_shared(&old)?;
-        }
+        *self.state.alt.borrow_mut() = Rc::clone(&alt);
+        self.state.alt_owner.replace(alt)?;
+        let normal = self.normal();
         *self.state.active.borrow_mut() = Rc::clone(&normal);
-        self.fire_activation(normal, alt)?;
+        self.fire_activation(normal, self.alt())?;
         self.setup_tab_stops(None)
     }
     pub fn activate_normal_buffer(&self) -> Result<(), BufferError> {
@@ -128,11 +132,15 @@ impl BufferSet {
             normal.y = alt.y;
         }
         Buffer::clear_all_markers_shared(&alt)?;
-        alt.try_borrow_mut()
+        // Marker callbacks may reset the Set, replacing both raw fields. Source
+        // rereads those fields after each callback instead of using old handles.
+        self.alt()
+            .try_borrow_mut()
             .map_err(|_| BufferError::BorrowedLine)?
             .clear()?;
+        let normal = self.normal();
         *self.state.active.borrow_mut() = Rc::clone(&normal);
-        self.fire_activation(normal, alt)
+        self.fire_activation(normal, self.alt())
     }
     pub fn activate_alt_buffer(
         &self,
@@ -142,18 +150,19 @@ impl BufferSet {
         if Rc::ptr_eq(&alt, &self.active()) {
             return Ok(());
         }
+        Buffer::fill_viewport_rows_shared(&alt, fill_attr)?;
         let normal = self.normal();
+        let alt = self.alt();
         {
+            let normal = normal.try_borrow().map_err(|_| BufferError::BorrowedLine)?;
             let mut alt = alt
                 .try_borrow_mut()
                 .map_err(|_| BufferError::BorrowedLine)?;
-            alt.fill_viewport_rows(fill_attr)?;
-            let normal = normal.try_borrow().map_err(|_| BufferError::BorrowedLine)?;
             alt.x = normal.x;
             alt.y = normal.y;
         }
         *self.state.active.borrow_mut() = Rc::clone(&alt);
-        self.fire_activation(alt, normal)
+        self.fire_activation(alt, self.normal())
     }
     pub fn resize(&self, cols: usize, rows: usize) -> Result<(), BufferError> {
         resize_state(&self.state, cols, rows)
@@ -178,8 +187,8 @@ impl BufferSet {
         if self.state.disposed.replace(true) {
             return Ok(());
         }
-        Buffer::dispose_shared(&self.normal())?;
-        Buffer::dispose_shared(&self.alt())?;
+        self.state.normal_owner.dispose()?;
+        self.state.alt_owner.dispose()?;
         self.state.activate.dispose();
         for listener in &self.option_listeners {
             listener.dispose();
@@ -210,14 +219,9 @@ fn make_buffer(
 }
 fn resize_state(state: &State, cols: usize, rows: usize) -> Result<(), BufferError> {
     let normal = Rc::clone(&state.normal.borrow());
-    normal
-        .try_borrow_mut()
-        .map_err(|_| BufferError::BorrowedLine)?
-        .resize(cols, rows)?;
+    Buffer::resize_shared(&normal, cols, rows)?;
     let alt = Rc::clone(&state.alt.borrow());
-    alt.try_borrow_mut()
-        .map_err(|_| BufferError::BorrowedLine)?
-        .resize(cols, rows)?;
+    Buffer::resize_shared(&alt, cols, rows)?;
     setup_tabs(state, Some(cols))
 }
 fn setup_tabs(state: &State, start: Option<usize>) -> Result<(), BufferError> {

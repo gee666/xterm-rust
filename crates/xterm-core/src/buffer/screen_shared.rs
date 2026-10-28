@@ -1,7 +1,7 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
 //! Callback checkpoints for shared Buffer handles. Ordinary owned Buffer methods
 //! use the same marker loop; shared callers release RefCell borrows first.
-use super::{Buffer, BufferError};
+use super::{resize::ResizeTarget, AttributeData, Buffer, BufferError};
 use crate::buffer::marker::Marker;
 use std::{
     cell::{Cell, RefCell},
@@ -9,6 +9,12 @@ use std::{
 };
 
 impl Buffer {
+    pub(crate) fn fill_viewport_rows_shared(
+        buffer: &Rc<RefCell<Self>>,
+        attr: Option<&AttributeData>,
+    ) -> Result<(), BufferError> {
+        fill_rows(&ResizeTarget::Shared(buffer), attr)
+    }
     pub(crate) fn clear_all_markers_shared(buffer: &Rc<RefCell<Self>>) -> Result<(), BufferError> {
         let (markers, clearing) = {
             let state = buffer.try_borrow().map_err(|_| BufferError::BorrowedLine)?;
@@ -29,16 +35,50 @@ impl Buffer {
     }
 
     pub(crate) fn dispose_shared(buffer: &Rc<RefCell<Self>>) -> Result<(), BufferError> {
-        {
+        let cleanup = {
             let mut state = buffer
                 .try_borrow_mut()
                 .map_err(|_| BufferError::BorrowedLine)?;
+            if state.disposed {
+                return Ok(());
+            }
+            state.disposed = true;
             state.cleanup_pending = false;
-            // These private host scheduler callbacks never access Buffer state.
-            state.cleanup_events.fire(&false)?;
-        }
+            Rc::clone(&state.cleanup_events)
+        };
+        // Host cancellation can synchronously inspect terminal state too.
+        cleanup.fire(&false)?;
         Self::clear_all_markers_shared(buffer)
     }
+}
+
+pub(super) fn fill_viewport_rows_owned(
+    buffer: &mut Buffer,
+    attr: Option<&AttributeData>,
+) -> Result<(), BufferError> {
+    fill_rows(&ResizeTarget::Owned(RefCell::new(buffer)), attr)
+}
+fn fill_rows(target: &ResizeTarget<'_>, attr: Option<&AttributeData>) -> Result<(), BufferError> {
+    let rows = target.read(|buffer| {
+        if buffer.lines.is_empty() {
+            buffer.rows
+        } else {
+            0
+        }
+    })?;
+    let default = AttributeData::default();
+    // Source captures its row count, but reloads the receiver's line collection
+    // and live host dimensions for every push after synchronous callbacks.
+    for _ in 0..rows {
+        let (lines, line) = target.read(|buffer| {
+            (
+                buffer.lines.share(),
+                buffer.get_blank_line(attr.unwrap_or(&default), false),
+            )
+        })?;
+        lines.push(line)?;
+    }
+    Ok(())
 }
 
 pub(super) fn clear_markers_on_line(

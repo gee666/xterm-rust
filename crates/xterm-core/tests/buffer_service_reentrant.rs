@@ -1,29 +1,14 @@
 // Copyright (c) 2026 xterm-rust contributors. Licensed under MIT.
-#[path = "buffer_service_support/mod.rs"]
+#[path = "buffer_service_support/reentrant.rs"]
 mod support;
 use std::{
     cell::{Cell, RefCell},
     collections::HashMap,
     rc::Rc,
 };
-use xterm_core::{
-    buffer::{AttributeData, BufferService},
-    options::{OptionValue, OptionsService},
-};
+use xterm_core::buffer::{AttributeData, BufferService};
 
-fn service() -> Rc<BufferService> {
-    Rc::new(
-        BufferService::new(Rc::new(OptionsService::new(
-            false,
-            [
-                ("cols", OptionValue::Number(4.0)),
-                ("rows", OptionValue::Number(3.0)),
-                ("scrollback", OptionValue::Number(1.0)),
-            ],
-        )))
-        .unwrap(),
-    )
-}
+use support::new_service as service;
 fn full_service() -> Rc<BufferService> {
     let service = service();
     while !service.buffer().borrow().lines.is_full() {
@@ -47,38 +32,7 @@ fn full_service() -> Rc<BufferService> {
     drop(active);
     service
 }
-fn checkpoint(service: &BufferService, tag: &str) -> String {
-    let set = &service.buffers;
-    let active = service.buffer();
-    let kind = if Rc::ptr_eq(&active, &set.normal()) {
-        "n"
-    } else if Rc::ptr_eq(&active, &set.alt()) {
-        "a"
-    } else {
-        "old"
-    };
-    format!(
-        "{tag}#{}#{}#{}#{kind}#{}#{}#{}",
-        service.cols(),
-        service.rows(),
-        u8::from(service.is_user_scrolling.get()),
-        support::buffer_snapshot(&set.normal().borrow()),
-        support::buffer_snapshot(&set.alt().borrow()),
-        support::buffer_snapshot(&active.borrow())
-    )
-}
-type Save = Rc<dyn Fn(&str)>;
-fn recorder(service: &Rc<BufferService>, out: &Rc<RefCell<Vec<String>>>) -> Save {
-    let service = Rc::downgrade(service);
-    let out = Rc::clone(out);
-    Rc::new(move |tag| {
-        out.borrow_mut()
-            .push(checkpoint(&service.upgrade().unwrap(), tag))
-    })
-}
-fn on_scroll(service: &BufferService, save: Save) {
-    service.on_scroll().subscribe(move |_| save("scroll"));
-}
+use support::{on_scroll, recorder};
 #[test]
 fn source_exact_partial_state_and_nested_callback_traces() {
     let mut actual = HashMap::new();

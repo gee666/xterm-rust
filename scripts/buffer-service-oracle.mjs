@@ -8,12 +8,25 @@ import { pathToFileURL } from 'node:url';
 import { createRequire } from 'node:module';
 const root = resolve(import.meta.dirname, '..');
 const dependencies = resolve(root, 'source_repo/node_modules');
-const { build } = await import(pathToFileURL(resolve(dependencies, 'esbuild/lib/main.js')));
+const reuseReference = process.argv.includes('--reuse-reference-build');
+const build = reuseReference ? null : (await import(pathToFileURL(resolve(dependencies, 'esbuild/lib/main.js')))).build;
 const { default: Mocha } = await import(pathToFileURL(resolve(dependencies, 'mocha/index.js')));
 const temporary = resolve(root, 'tmp/buffer-service-oracle');
 const output = resolve(root, 'results/buffer-service');
 mkdirSync(temporary, { recursive: true }); mkdirSync(output, { recursive: true });
 const sourceHashes = {};
+if (reuseReference) {
+  const previous=JSON.parse(readFileSync(resolve(output,'oracle.json'),'utf8'));
+  assert(Object.keys(previous.sourceHashes).length>0,'no reference build provenance');
+  for(const [file,expected] of Object.entries(previous.sourceHashes)) {
+    const actual=createHash('sha256').update(readFileSync(resolve(root,file))).digest('hex');
+    assert.equal(actual,expected,`cached reference source drift: ${file}`);
+    sourceHashes[file]=actual;
+  }
+  for(const [file,expected] of Object.entries(previous.referenceBundleHashes ?? {})) {
+    assert.equal(createHash('sha256').update(readFileSync(resolve(temporary,file))).digest('hex'),expected,`cached reference bundle drift: ${file}`);
+  }
+}
 const buildOptions = { absWorkingDir: root, bundle: true, platform: 'node', format: 'cjs',
   metafile: true, tsconfig: 'source_repo/src/common/tsconfig.json' };
 function hashes(built) {
@@ -25,7 +38,7 @@ const suites = [];
 for (const path of ['buffer/BufferSet', 'services/BufferService']) {
   const tests = `source_repo/src/common/${path}.test.ts`;
   const bundle = resolve(temporary, `${path.split('/')[1]}.test.cjs`);
-  hashes(await build({ ...buildOptions, entryPoints: [tests], outfile: bundle }));
+  if (!reuseReference) hashes(await build({ ...buildOptions, entryPoints: [tests], outfile: bundle }));
   const mocha = new Mocha({ reporter: 'dot' }); mocha.addFile(bundle); await mocha.loadFilesAsync();
   const outcomes = []; let runner;
   const failed = await new Promise(done => {
@@ -39,7 +52,7 @@ for (const path of ['buffer/BufferSet', 'services/BufferService']) {
 }
 assert(suites.every(s => s.failed === 0 && s.skipped === 0 && s.unrun === 0));
 const apiFile = resolve(temporary, 'api.cjs');
-hashes(await build({ ...buildOptions, stdin: { contents: `
+if (!reuseReference) hashes(await build({ ...buildOptions, stdin: { contents: `
 export { BufferService } from './source_repo/src/common/services/BufferService';
 export { OptionsService } from './source_repo/src/common/services/OptionsService';
 export { AttributeData } from './source_repo/src/common/buffer/AttributeData';
@@ -82,8 +95,10 @@ const reentrantRows = [];
 function checkpoint(service, tag) {
   const set = service.buffers;
   const kind = service.buffer === set.normal ? 'n' : service.buffer === set.alt ? 'a' : 'old';
+  const markers=buffer=>buffer.markers.map(marker=>`${marker.line},${+marker.isDisposed}`).join(';')||'-';
   return [tag, service.cols, service.rows, +service.isUserScrolling, kind,
-    bufferSnapshot(set.normal), bufferSnapshot(set.alt), bufferSnapshot(service.buffer)].join('#');
+    bufferSnapshot(set.normal), bufferSnapshot(set.alt), bufferSnapshot(service.buffer),
+    markers(set.normal),markers(set.alt),markers(service.buffer)].join('#');
 }
 function fullService() {
   const service = new BufferService(new OptionsService({cols:4,rows:3,scrollback:1}),new MockLogService());
@@ -134,6 +149,49 @@ function fullService() {
   service.onResize(()=>save('resize')); service.onScroll(()=>save('scroll')); service.scroll(new AttributeData()); save('final');
   reentrantRows.push(['trim-resize',out.join('^')].join('\t'));
 }
+const ownerRows=[];
+{
+  const service=new BufferService(new OptionsService({cols:4,rows:3,scrollback:1}),new MockLogService());
+  const set=service.buffers;set.activateAltBuffer();set.alt.x=2;set.alt.y=1;
+  const out=[];const save=tag=>out.push(checkpoint(service,tag));
+  set.alt.addMarker(1).onDispose(()=>{save('marker');set.reset();save('reset-return');});
+  service.onScroll(()=>save('scroll'));set.activateNormalBuffer();save('final');
+  assert.equal(service.buffer,set.normal);
+  ownerRows.push(['reset-during-normal-activation',out.join('^')].join('\t'));
+}
+{
+  const service=new BufferService(new OptionsService({cols:4,rows:3,scrollback:1}),new MockLogService());
+  const set=service.buffers;const out=[];const save=tag=>out.push(checkpoint(service,tag));let transient;
+  set.normal.addMarker(0).onDispose(()=>{save('old-marker');transient=set.normal.addMarker(1);
+    transient.onDispose(()=>save('transient-disposed'));set.reset();save('inner-return');});
+  service.onScroll(()=>save('scroll'));set.reset();save('outer-return');
+  const current=set.normal.addMarker(0);current.onDispose(()=>save('current-disposed'));
+  set.dispose();save('disposed');
+  out.push(`markers:${transient.line},${+transient.isDisposed},${current.line},${+current.isDisposed}`);
+  assert.equal(transient.isDisposed,true);assert.equal(current.isDisposed,false);
+  ownerRows.push(['nested-reset-owner-slot',out.join('^')].join('\t'));
+}
+{
+  const service=new BufferService(new OptionsService({cols:4,rows:3,scrollback:1}),new MockLogService());
+  const set=service.buffers;set.alt.lines.maxLength=1;const out=[];const save=tag=>out.push(checkpoint(service,tag));
+  set.alt.addMarker(0).onDispose(()=>{save('marker');set.reset();save('reset-return');});
+  service.onScroll(()=>save('scroll'));set.activateAltBuffer();save('final');
+  assert.equal(service.buffer,set.alt);assert.equal(set.alt.lines.length,0);
+  ownerRows.push(['reset-during-alt-fill',out.join('^')].join('\t'));
+}
+{
+  const service=new BufferService(new OptionsService({cols:4,rows:3,scrollback:1}),new MockLogService());
+  const set=service.buffers;const out=[];const save=tag=>out.push(checkpoint(service,tag));const failure=new Error('exact marker failure');
+  set.normal.addMarker(0).onDispose(()=>{save('old-marker');throw failure;});
+  service.onScroll(()=>save('scroll'));assert.throws(()=>set.reset(),error=>error===failure);save('failed');
+  const detached=set.normal;const late=detached.addMarker(1);late.onDispose(()=>save('late-disposed'));
+  set.reset();save('retry');out.push(`late:${late.line},${+late.isDisposed}`);assert.equal(late.isDisposed,false);
+  ownerRows.push(['failed-reset-owner-slot',out.join('^')].join('\t'));
+}
+const ownerFixture=ownerRows.join('\n')+'\n';
+const ownerPath=resolve(root,'crates/xterm-core/tests/fixtures/buffer-set-owners.tsv');
+if(process.argv.includes('--generate'))writeFileSync(ownerPath,ownerFixture);
+else assert.equal(readFileSync(ownerPath,'utf8'),ownerFixture,'Set owner fixture drift');
 const reentrantFixture=reentrantRows.join('\n')+'\n';
 const reentrantPath=resolve(root,'crates/xterm-core/tests/fixtures/buffer-service-reentrant.tsv');
 if(process.argv.includes('--generate')) writeFileSync(reentrantPath,reentrantFixture);
@@ -180,14 +238,20 @@ for (let trace = 0; trace < 64; trace++) {
   service.dispose();
 }
 const fixture = traces.join('\n') + '\n';
+assert(Buffer.byteLength(fixture)+Buffer.byteLength(reentrantFixture)+Buffer.byteLength(ownerFixture)<=20*1024*1024,'source-only fixture budget exceeded');
 const fixturePath = resolve(root, 'crates/xterm-core/tests/fixtures/buffer-service.tsv');
 if (process.argv.includes('--generate')) writeFileSync(fixturePath, fixture);
 else assert.equal(readFileSync(fixturePath, 'utf8'), fixture, 'fixture drift; review before --generate');
 const report = { command: 'node scripts/buffer-service-oracle.mjs', node: process.version, platform: process.platform,
-  overallEquivalence: 'NOT PROVEN', sourceHashes, suites, directedChecks, seed, traces: 64, steps: 64, operations: counts,
+  overallEquivalence: 'NOT PROVEN', sourceHashes,
+  referenceBuild:reuseReference?'reused-existing-source-hash-checked':'fresh-esbuild',
+  referenceBundleHashes:Object.fromEntries(['BufferSet.test.cjs','BufferService.test.cjs','api.cjs'].map(file=>[file,createHash('sha256').update(readFileSync(resolve(temporary,file))).digest('hex')])),
+  suites, directedChecks, seed, traces: 64, steps: 64, operations: counts,
   fixtureSha256: createHash('sha256').update(fixture).digest('hex'),
   reentrantCases: reentrantRows.map(row=>row.split('\t')[0]),
   reentrantSha256: createHash('sha256').update(reentrantFixture).digest('hex'),
+  ownerCases: ownerRows.map(row=>row.split('\t')[0]),
+  ownerSha256:createHash('sha256').update(ownerFixture).digest('hex'),
   scope: 'Original JS BufferSet/BufferService tests and deterministic fixtures. Rust replay is a separate check.' };
 writeFileSync(resolve(output, 'oracle.json'), JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify({ tests: suites.reduce((n,s) => n+s.passed, 0), traceSteps: traces.length, seed }));
