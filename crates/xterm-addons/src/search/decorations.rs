@@ -1,10 +1,11 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
-use super::{SearchAddonError, SearchDecorationOptions, SearchHost};
+use super::{SearchAddonError, SearchColor, SearchDecorationOptionsHandle, SearchHost};
 use std::{cell::RefCell, collections::BTreeSet, rc::Rc};
 use xterm_core::{
     buffer::marker::Marker,
     decoration::{
-        Decoration, DecorationLayer, DecorationOptions, OverviewPosition, OverviewRulerOptions,
+        Decoration, DecorationError, DecorationLayer, DecorationOptions, OverviewPosition,
+        OverviewRulerOptions,
     },
     event::EmitError,
     lifecycle::DisposableHandle,
@@ -92,7 +93,7 @@ impl DecorationManager {
     pub fn create_highlights(
         &self,
         results: &[SearchResult],
-        options: &SearchDecorationOptions,
+        options: &SearchDecorationOptionsHandle,
     ) -> Result<(), SearchAddonError> {
         self.clear_highlights()?;
         for result in results {
@@ -108,7 +109,7 @@ impl DecorationManager {
     pub fn create_active(
         &self,
         result: SearchResult,
-        options: &SearchDecorationOptions,
+        options: &SearchDecorationOptionsHandle,
     ) -> Result<Option<Rc<MultiHighlight>>, SearchAddonError> {
         let decorations = self.create(&result, options, true)?;
         Ok((!decorations.is_empty()).then(|| {
@@ -121,12 +122,15 @@ impl DecorationManager {
     fn create(
         &self,
         result: &SearchResult,
-        options: &SearchDecorationOptions,
+        options: &SearchDecorationOptionsHandle,
         active: bool,
     ) -> Result<Vec<ManagedDecoration>, SearchAddonError> {
         let terminal = self.host.terminal();
         let cols =
             isize::try_from(terminal.cols()?).map_err(|_| SearchAddonError::InvalidCoordinates)?;
+        if cols == 0 {
+            return Err(SearchAddonError::InvalidCoordinates);
+        }
         let mut col = result.col;
         let mut remaining = result.size;
         let buffer = terminal.with_state(|state| state.active_buffer())?;
@@ -134,18 +138,34 @@ impl DecorationManager {
             let buffer = buffer
                 .try_borrow()
                 .map_err(|_| SearchAddonError::Borrowed)?;
-            result.row as i64 - buffer.ybase as i64 - buffer.y as i64
+            let row =
+                i64::try_from(result.row).map_err(|_| SearchAddonError::InvalidCoordinates)?;
+            let base =
+                i64::try_from(buffer.ybase).map_err(|_| SearchAddonError::InvalidCoordinates)?;
+            let cursor =
+                i64::try_from(buffer.y).map_err(|_| SearchAddonError::InvalidCoordinates)?;
+            row.checked_sub(base)
+                .and_then(|row| row.checked_sub(cursor))
+                .ok_or(SearchAddonError::InvalidCoordinates)?
         };
         let mut ranges = Vec::new();
         while remaining > 0 {
-            let width = (cols - col).min(remaining);
-            if width <= 0 {
-                return Err(SearchAddonError::InvalidCoordinates);
-            }
+            let width = cols
+                .checked_sub(col)
+                .ok_or(SearchAddonError::InvalidCoordinates)?
+                .min(remaining);
+            // At col==cols the source first emits a zero-width range, then
+            // resets to col zero. Do not turn that valid source quirk into Err.
             ranges.push((marker_offset, col, width));
             col = 0;
-            remaining -= width;
-            marker_offset += 1;
+            remaining = remaining
+                .checked_sub(width)
+                .ok_or(SearchAddonError::InvalidCoordinates)?;
+            if remaining > 0 {
+                marker_offset = marker_offset
+                    .checked_add(1)
+                    .ok_or(SearchAddonError::InvalidCoordinates)?;
+            }
         }
         let mut decorations = Vec::new();
         for (offset, col, width) in ranges {
@@ -158,26 +178,40 @@ impl DecorationManager {
             } else {
                 DecorationLayer::Bottom
             });
-            decoration_options.background_color = if active {
-                options.active_match_background.clone()
+            decoration_options.background_color = options.color(if active {
+                SearchColor::ActiveBackground
             } else {
-                options.match_background.clone()
-            };
-            if !self.highlighted_lines.borrow().contains(&marker.line()) {
+                SearchColor::MatchBackground
+            })?;
+            let needs_overview = !self.highlighted_lines.borrow().contains(&marker.line());
+            if needs_overview {
                 decoration_options.overview_ruler_options = Some(OverviewRulerOptions {
-                    color: if active {
-                        options.active_match_overview_ruler.clone()
-                    } else {
-                        options.match_overview_ruler.clone()
-                    },
+                    color: options
+                        .color(if active {
+                            SearchColor::ActiveOverview
+                        } else {
+                            SearchColor::MatchOverview
+                        })?
+                        .unwrap_or_default(),
                     position: Some(OverviewPosition::Center),
                 });
             }
+            // Source calls the public Terminal.registerDecoration wrapper after
+            // evaluating option getters, so preserve its validation and order.
+            xterm_core::public_api::validation::verify_positive_integers(&[
+                col as f64,
+                width as f64,
+                1.0,
+            ])
+            .map_err(|error| SearchAddonError::Host(Rc::new(error)))?;
             let decoration = self
                 .host
                 .decorations()
                 .register_decoration(Rc::new(RefCell::new(decoration_options)))
-                .map_err(|error| SearchAddonError::Host(Rc::new(error)))?;
+                .map_err(|error| match error {
+                    DecorationError::Dispatch(error) => SearchAddonError::Dispatch(error),
+                    other => SearchAddonError::Host(Rc::new(other)),
+                })?;
             if let Some(decoration) = decoration {
                 let resources = Rc::new(Resources {
                     marker,
@@ -185,16 +219,17 @@ impl DecorationManager {
                     disposed: RefCell::new(None),
                 });
                 let weak_host = Rc::downgrade(&self.host);
-                let border = if active {
-                    options.active_match_border.clone()
-                } else {
-                    options.match_border.clone()
-                };
+                let colors = Rc::clone(options);
                 *resources.rendered.borrow_mut() =
                     Some(decoration.on_render().try_subscribe(move |element| {
                         // Upstream passes false to _applyStyles even for an active
                         // result. Preserve that behavior, not its unused active class.
                         if let Some(host) = weak_host.upgrade() {
+                            let border = colors.color(if active {
+                                SearchColor::ActiveBorder
+                            } else {
+                                SearchColor::MatchBorder
+                            })?;
                             host.style_decoration(element, border.as_deref())?;
                         }
                         Ok(())

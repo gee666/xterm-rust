@@ -1,8 +1,11 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
-use super::{DecorationManager, SearchAddonError, SearchHost, SearchOptions, SearchResultTracker};
+use super::{
+    DecorationManager, NumericHighlightLimit, SearchAddonError, SearchHighlightLimit, SearchHost,
+    SearchOptions, SearchResultTracker,
+};
 use std::{
     cell::{Cell, RefCell},
-    rc::Rc,
+    rc::{Rc, Weak},
 };
 use xterm_core::{
     event::{EmitError, Emitter, Event},
@@ -13,7 +16,17 @@ use xterm_core::{
 #[path = "find.rs"]
 mod find;
 
-pub type SearchOptionsHandle = Rc<RefCell<SearchOptions>>;
+pub trait SearchOptionsSource {
+    fn read(&self) -> Result<SearchOptions, SearchAddonError>;
+}
+impl SearchOptionsSource for RefCell<SearchOptions> {
+    fn read(&self) -> Result<SearchOptions, SearchAddonError> {
+        self.try_borrow()
+            .map(|options| options.clone())
+            .map_err(|_| SearchAddonError::Borrowed)
+    }
+}
+pub type SearchOptionsHandle = Rc<dyn SearchOptionsSource>;
 const DEFAULT_HIGHLIGHT_LIMIT: f64 = 1000.0;
 const REFRESH_DELAY_MS: u64 = 200;
 
@@ -24,7 +37,7 @@ pub(super) struct Inner {
     last_options: RefCell<Option<SearchOptionsHandle>>,
     cache: RefCell<SearchLineCache>,
     tracker: SearchResultTracker,
-    highlight_limit: f64,
+    highlight_limit: Rc<dyn SearchHighlightLimit>,
     highlight_timeout: RefCell<Option<DisposableHandle>>,
     cache_timeout: RefCell<Option<DisposableHandle>>,
     cache_listener: RefCell<Option<DisposableHandle>>,
@@ -39,13 +52,32 @@ pub(super) struct Inner {
 pub struct SearchAddon {
     inner: Rc<Inner>,
 }
+#[derive(Clone)]
+pub struct WeakSearchAddon {
+    inner: Weak<Inner>,
+}
+impl WeakSearchAddon {
+    pub fn upgrade(&self) -> Option<SearchAddon> {
+        self.inner.upgrade().map(|inner| SearchAddon { inner })
+    }
+}
 impl Default for SearchAddon {
     fn default() -> Self {
         Self::new(None)
     }
 }
 impl SearchAddon {
+    pub fn downgrade(&self) -> WeakSearchAddon {
+        WeakSearchAddon {
+            inner: Rc::downgrade(&self.inner),
+        }
+    }
     pub fn new(highlight_limit: Option<f64>) -> Self {
+        Self::with_limit(Rc::new(NumericHighlightLimit(
+            highlight_limit.unwrap_or(DEFAULT_HIGHLIGHT_LIMIT),
+        )))
+    }
+    pub fn with_limit(highlight_limit: Rc<dyn SearchHighlightLimit>) -> Self {
         Self {
             inner: Rc::new(Inner {
                 host: RefCell::new(None),
@@ -54,7 +86,7 @@ impl SearchAddon {
                 last_options: RefCell::new(None),
                 cache: RefCell::new(SearchLineCache::default()),
                 tracker: SearchResultTracker::default(),
-                highlight_limit: highlight_limit.unwrap_or(DEFAULT_HIGHLIGHT_LIMIT),
+                highlight_limit,
                 highlight_timeout: RefCell::new(None),
                 cache_timeout: RefCell::new(None),
                 cache_listener: RefCell::new(None),
@@ -206,10 +238,11 @@ impl SearchAddon {
         Self::cancel(&self.inner.highlight_timeout);
         let term = self.inner.state.borrow().cached_search_term.clone();
         let options = self.inner.last_options.borrow().clone();
+        let request = options.map(|options| options.read()).transpose()?;
         if term.as_ref().is_some_and(|term| !term.is_empty())
-            && options
+            && request
                 .as_ref()
-                .is_some_and(|options| options.borrow().decorations.is_some())
+                .is_some_and(|options| options.decorations.is_some())
         {
             let weak = Rc::downgrade(&self.inner);
             let timer = self.host()?.timeout(
@@ -225,11 +258,15 @@ impl SearchAddon {
                             .clone()
                             .unwrap_or_default();
                         let previous = addon.inner.last_options.borrow().clone();
-                        let options = previous.map(|previous| {
-                            let mut options = previous.borrow().clone();
-                            options.matching.incremental = Some(true);
-                            Rc::new(RefCell::new(options))
-                        });
+                        let options = previous
+                            .map(|previous| {
+                                let mut options = previous.read()?;
+                                options.matching.incremental = Some(true);
+                                Ok::<SearchOptionsHandle, SearchAddonError>(Rc::new(RefCell::new(
+                                    options,
+                                )))
+                            })
+                            .transpose()?;
                         addon.inner.state.borrow_mut().clear_cached_term();
                         addon.find_previous_internal(&term, options, true)?;
                     }

@@ -1,8 +1,7 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
 use super::*;
 use xterm_core::search::{
-    SearchBuffer, SearchEngine, SearchError, SearchOptions as MatchOptions, SearchResult,
-    SearchSelection,
+    with_buffer, SearchEngine, SearchOptions as MatchOptions, SearchResult, SearchSelection,
 };
 
 enum Operation {
@@ -46,7 +45,10 @@ impl SearchAddon {
         *self.inner.last_options.borrow_mut() = options.clone();
         // The source stores the new options before asking whether they changed.
         // Preserve that order, including its unchanged-term highlight behavior.
-        let flags = options.as_ref().map(|o| matching(&o.borrow()));
+        let flags = options
+            .as_ref()
+            .map(|o| o.read().map(|options| matching(&options)))
+            .transpose()?;
         self.inner.state.borrow_mut().last_search_options = flags.clone();
         let update = self
             .inner
@@ -55,13 +57,14 @@ impl SearchAddon {
             .should_update_highlighting(term, flags.as_ref());
         if update {
             if let Some(options) = &options {
-                let request = options.borrow().clone();
+                let request = options.read()?;
                 self.highlight_all(term, &request)?;
             }
         }
         let request = options
             .as_ref()
-            .map(|o| o.borrow().clone())
+            .map(|o| o.read())
+            .transpose()?
             .unwrap_or_default();
         let result = if term.is_empty() {
             host.clear_selection()?;
@@ -108,7 +111,7 @@ impl SearchAddon {
             if previous
                 .as_ref()
                 .is_some_and(|previous| previous.row == found.row && previous.col == found.col)
-                || results.len() as f64 >= self.inner.highlight_limit
+                || self.inner.highlight_limit.reached(results.len())?
             {
                 break;
             }
@@ -130,9 +133,10 @@ impl SearchAddon {
             result =
                 self.run_engine(term, &flags, Operation::At(next_row, next_col), None, None)?;
         }
+        let end = self.inner.highlight_limit.end_index(results.len())?;
         self.inner
             .tracker
-            .update_results(results.clone(), self.inner.highlight_limit);
+            .update_results(results.clone(), end as f64);
         let manager = self
             .inner
             .manager
@@ -147,7 +151,7 @@ impl SearchAddon {
     fn select_result(
         &self,
         result: Option<SearchResult>,
-        decorations: Option<&super::super::SearchDecorationOptions>,
+        decorations: Option<&super::super::SearchDecorationOptionsHandle>,
         no_scroll: bool,
     ) -> Result<bool, SearchAddonError> {
         self.inner.tracker.clear_selected()?;
@@ -198,32 +202,19 @@ impl SearchAddon {
         let buffer = active
             .try_borrow()
             .map_err(|_| SearchAddonError::Borrowed)?;
-        let lines: Vec<_> = (0..buffer.lines.len())
-            .map(|i| {
-                buffer
-                    .lines
-                    .get(i)
-                    .ok_or(SearchAddonError::InvalidCoordinates)
-            })
-            .collect::<Result<_, _>>()?;
-        let guards = lines
-            .iter()
-            .map(|line| line.try_borrow().map_err(|_| SearchAddonError::Borrowed))
-            .collect::<Result<Vec<_>, _>>()?;
-        let rows: Vec<_> = guards.iter().map(|line| &**line).collect();
-        let view = SearchBuffer::from_rows(&rows, terminal.cols()?)?;
         let mut cache = self
             .inner
             .cache
             .try_borrow_mut()
             .map_err(|_| SearchAddonError::Borrowed)?;
-        let mut engine = SearchEngine::new(view, &mut cache, host.now_ms());
-        let result: Result<_, SearchError> = match operation {
-            Operation::At(row, col) => engine.find(term, row, col, options),
-            Operation::Next => engine.find_next(term, options, cached, selection),
-            Operation::Previous => engine.find_previous(term, options, cached, selection),
-        };
-        Ok(result?)
+        Ok(with_buffer(&buffer, terminal.cols()?, |view| {
+            let mut engine = SearchEngine::new(view, &mut cache, host.now_ms());
+            match operation {
+                Operation::At(row, col) => engine.find(term, row, col, options),
+                Operation::Next => engine.find_next(term, options, cached, selection),
+                Operation::Previous => engine.find_previous(term, options, cached, selection),
+            }
+        })?)
     }
 }
 fn matching(options: &SearchOptions) -> MatchOptions {

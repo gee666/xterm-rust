@@ -44,15 +44,7 @@ impl SearchResultTracker {
         *self.selected.borrow_mut() = selected;
     }
     pub fn update_results(&self, mut results: Vec<SearchResult>, maximum: f64) {
-        let length = results.len() as f64;
-        let end = if maximum.is_nan() {
-            0.0
-        } else if maximum < 0.0 {
-            (length + maximum.trunc()).max(0.0)
-        } else {
-            maximum.trunc().min(length)
-        };
-        results.truncate(end as usize);
+        results.truncate(super::slice_end(results.len(), maximum));
         *self.results.borrow_mut() = results;
     }
     pub fn clear_results(&self) {
