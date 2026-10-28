@@ -1,0 +1,134 @@
+    Blocking waiting for file lock on build directory
+    Checking xterm-web v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web)
+error: operator precedence can trip the unwary
+   --> crates\xterm-web\tests\support\keyboard_dispatch.rs:173:22
+    |
+173 |       let state_bits = u8::from(state.key_down_handled)
+    |  ______________________^
+174 | |         | u8::from(state.key_down_seen) << 1
+175 | |         | u8::from(state.key_press_handled) << 2
+176 | |         | u8::from(state.unprocessed_dead_key) << 3;
+    | |___________________________________________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#precedence
+    = note: `-D clippy::precedence` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::precedence)]`
+help: consider parenthesizing your expression
+    |
+173 ~     let state_bits = u8::from(state.key_down_handled)
+174 +         | u8::from(state.key_down_seen) << 1
+175 ~         | u8::from(state.key_press_handled) << 2 | (u8::from(state.unprocessed_dead_key) << 3);
+    |
+
+error: operator precedence can trip the unwary
+   --> crates\xterm-web\tests\support\keyboard_dispatch.rs:173:22
+    |
+173 |       let state_bits = u8::from(state.key_down_handled)
+    |  ______________________^
+174 | |         | u8::from(state.key_down_seen) << 1
+175 | |         | u8::from(state.key_press_handled) << 2
+    | |________________________________________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#precedence
+help: consider parenthesizing your expression
+    |
+173 ~     let state_bits = u8::from(state.key_down_handled)
+174 +         | u8::from(state.key_down_seen) << 1 | (u8::from(state.key_press_handled) << 2)
+    |
+
+error: operator precedence can trip the unwary
+   --> crates\xterm-web\tests\support\keyboard_dispatch.rs:173:22
+    |
+173 |       let state_bits = u8::from(state.key_down_handled)
+    |  ______________________^
+174 | |         | u8::from(state.key_down_seen) << 1
+    | |____________________________________________^ help: consider parenthesizing your expression: `u8::from(state.key_down_handled) | (u8::from(state.key_down_seen) << 1)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#precedence
+
+error: this will panic at run-time if the environment variable doesn't exist at compile-time
+   --> crates\xterm-web\tests\wasm_utility_addons.rs:138:15
+    |
+138 |       let url = option_env!("UTILITY_SOCKET_URL")
+    |  _______________^
+139 | |         .expect("run with scripts/utility-addon-browser-check.mjs");
+    | |___________________________________________________________________^
+    |
+    = help: consider using the `env!` macro instead
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#option_env_unwrap
+    = note: `-D clippy::option-env-unwrap` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::option_env_unwrap)]`
+
+error: use of `format!` to build up a string from an iterator
+  --> crates\xterm-web\tests\osc_links_differential.rs:64:44
+   |
+64 |                           let text: String = link
+   |  ____________________________________________^
+65 | |                             .text
+66 | |                             .iter()
+67 | |                             .map(|unit| *unit as u8)
+...  |
+70 | |                             .map(|b| format!("{b:02x}"))
+71 | |                             .collect();
+   | |______________________________________^
+   |
+help: call `fold` instead
+  --> crates\xterm-web\tests\osc_links_differential.rs:70:30
+   |
+70 | ...                   .map(|b| format!("{b:02x}"))
+   |                        ^^^
+help: ... and use the `write!` macro here
+  --> crates\xterm-web\tests\osc_links_differential.rs:70:38
+   |
+70 | ...                   .map(|b| format!("{b:02x}"))
+   |                                ^^^^^^^^^^^^^^^^^^
+   = note: this can be written more efficiently by appending to a `String` directly
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#format_collect
+   = note: `-D clippy::format-collect` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::format_collect)]`
+
+error: could not compile `xterm-web` (test "osc_links_differential") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: useless use of `vec!`
+   --> crates\xterm-web\tests\wasm_host.rs:236:17
+    |
+236 |     let units = vec![0xD800, 0, 0xDC00, 0xFEFF, 0xD83E, 0xDD80].repeat(40_000);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: you can use an array directly: `[0xD800, 0, 0xDC00, 0xFEFF, 0xD83E, 0xDD80]`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#useless_vec
+    = note: `-D clippy::useless-vec` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::useless_vec)]`
+
+error: could not compile `xterm-web` (test "wasm_utility_addons") due to 1 previous error
+error: could not compile `xterm-web` (test "wasm_host") due to 1 previous error
+error: the following explicit lifetimes could be elided: 'a
+  --> crates\xterm-web\tests\keyboard_dispatch.rs:11:10
+   |
+11 | fn event<'a>(key: &'a [u16], key_code: u32, kind: KeyEventKind) -> DispatchKeyEvent<'a> {
+   |          ^^        ^^                                                               ^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_lifetimes
+   = note: `-D clippy::needless-lifetimes` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::needless_lifetimes)]`
+help: elide the lifetimes
+   |
+11 - fn event<'a>(key: &'a [u16], key_code: u32, kind: KeyEventKind) -> DispatchKeyEvent<'a> {
+11 + fn event(key: &[u16], key_code: u32, kind: KeyEventKind) -> DispatchKeyEvent<'_> {
+   |
+
+error: could not compile `xterm-web` (test "keyboard_dispatch") due to 4 previous errors
+error: float has excessive precision
+   --> crates\xterm-web\src\renderer\width_cache_tests.rs:131:19
+    |
+131 |         f64::from(1.23456789_f32)
+    |                   ^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#excessive_precision
+    = note: `-D clippy::excessive-precision` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::excessive_precision)]`
+help: consider changing the type or truncating it to
+    |
+131 |         f64::from(1.234_567_9_f32)
+    |                   ~~~~~~~~~~~~~~~
+
+error: could not compile `xterm-web` (lib test) due to 1 previous error

@@ -6,6 +6,7 @@ use std::{
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_test::*;
 use web_sys::{HtmlElement, MouseEvent};
+use xterm_web::links::native_osc::{NativeOscLinkProvider, OscLinkHandler};
 use xterm_web::links::{
     browser_linkifier::{BrowserLink, BrowserLinkProvider, BrowserLinkifier, LinkReply},
     Link, Position, Range,
@@ -164,5 +165,74 @@ fn rendered_rows_clear_requery_and_dispose_old_cached_links() {
     controller.on_render(0, 0).unwrap();
     assert_eq!(provider.requests.get(), 2);
     assert_eq!(*log.borrow(), vec!["hover", "leave", "dispose"]);
+    root.remove();
+}
+
+#[wasm_bindgen_test]
+fn real_rust_osc8_cells_resolve_wrap_activate_and_expire_on_trim() {
+    let native = Rc::new(xterm_core::headless::Terminal::new(5, 3, 0).unwrap());
+    native
+        .write("\u{1b}]8;id=shared;https://example.com/path\u{1b}\\abcdeFG\u{1b}]8;;\u{1b}\\x")
+        .unwrap();
+    let id = native
+        .with_state(|state| {
+            let buffer = state.active_buffer();
+            let line = buffer.borrow().lines.get(0).unwrap();
+            let id = line.borrow().get_extended(0).unwrap().url_id();
+            assert!(state.links.get_link_data(id).is_some());
+            id
+        })
+        .unwrap();
+    assert_ne!(id, 0);
+    let root = element();
+    let activated = Rc::new(Cell::new(0));
+    let count = activated.clone();
+    let handler = OscLinkHandler {
+        allow_non_http_protocols: false,
+        activate: Rc::new(move |_, link| {
+            assert_eq!(
+                link.text,
+                "https://example.com/path"
+                    .encode_utf16()
+                    .collect::<Vec<_>>()
+            );
+            assert_eq!(
+                link.range,
+                Range {
+                    start: Position { x: 1, y: 1 },
+                    end: Position { x: 2, y: 2 }
+                }
+            );
+            count.set(count.get() + 1);
+            Ok(())
+        }),
+        hover: None,
+        leave: None,
+    };
+    let provider = Rc::new(NativeOscLinkProvider::new(
+        Rc::downgrade(&native),
+        web_sys::window().unwrap(),
+        move || Ok(Some(handler.clone())),
+    ));
+    let controller = BrowserLinkifier::new(
+        root.clone(),
+        5,
+        0,
+        Rc::new(|_| Some(Position { x: 3, y: 1 })),
+        Rc::new(|_, _| Ok(())),
+    )
+    .unwrap();
+    let _registration = controller.register_provider(provider);
+    event(&root, "mousemove");
+    assert!(controller.current_link().is_some());
+    event(&root, "mousedown");
+    event(&root, "mouseup");
+    assert_eq!(activated.get(), 1);
+    native.write("\r\n1\r\n2\r\n3\r\n4\r\n5\r\n6").unwrap();
+    native
+        .with_state(|state| assert!(state.links.get_link_data(id).is_none()))
+        .unwrap();
+    controller.on_render(0, 2).unwrap();
+    assert!(controller.current_link().is_none());
     root.remove();
 }

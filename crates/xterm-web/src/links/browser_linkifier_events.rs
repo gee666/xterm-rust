@@ -42,18 +42,25 @@ impl State {
             return Ok(());
         }
         let effects = self.hover.borrow_mut().leave();
-        self.apply(effects, None)
+        self.apply(effects, None)?;
+        self.hover.borrow_mut().clear_current();
+        Ok(())
     }
     pub(super) fn ask(self: &Rc<Self>, position: Position, use_cache: bool) -> Result<(), JsValue> {
         if !use_cache || self.active_line.get().is_none() {
-            let old = self.replies.borrow_mut().clear();
-            for data in old {
-                let handler = self.handlers.borrow().get(&Rc::as_ptr(&data)).cloned();
-                if let Some(dispose) = handler.and_then(|handler| handler.dispose.clone()) {
+            let old = self.replies.borrow().cached_links();
+            let handlers: Vec<_> = old
+                .iter()
+                .filter_map(|data| self.handlers.borrow().get(&Rc::as_ptr(data)).cloned())
+                .collect();
+            for handler in handlers {
+                if let Some(dispose) = &handler.dispose {
                     dispose()?;
                 }
             }
-            self.handlers.borrow_mut().clear();
+            self.replies.borrow_mut().clear();
+            let handlers = std::mem::take(&mut *self.handlers.borrow_mut());
+            drop(handlers);
             self.active_line.set(Some(position.y));
         }
         let request = ProviderRequest::new(position);

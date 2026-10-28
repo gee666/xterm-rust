@@ -2,34 +2,9 @@
 // Transpile read-only source modules in memory. Runtime source and tests stay intact.
 import fs from 'node:fs';
 import path from 'node:path';
-import { createRequire } from 'node:module';
-import { createHash } from 'node:crypto';
+import { sourceLoader } from './source-ts-loader.mjs';
 
-const root = process.cwd();
-const source = path.join(root, 'source_repo');
-const require = createRequire(path.join(source, 'package.json'));
-const ts = require('typescript');
-const cache = new Map();
-const hashes = new Map();
-function load(filename) {
-  if (cache.has(filename)) return cache.get(filename).exports;
-  const text = fs.readFileSync(filename, 'utf8');
-  hashes.set(path.relative(root, filename).replaceAll('\\', '/'), createHash('sha256').update(text).digest('hex'));
-  const module = { exports: {} };
-  cache.set(filename, module);
-  const code = ts.transpileModule(text, { compilerOptions: {
-    target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS,
-    experimentalDecorators: true, esModuleInterop: false
-  }}).outputText;
-  const localRequire = id => {
-    const candidate = id.startsWith('.') ? path.resolve(path.dirname(filename), id)
-      : /^(common|browser|headless)\//.test(id) ? path.join(source, 'src', id) : undefined;
-    if (candidate && fs.existsSync(candidate + '.ts')) return load(candidate + '.ts');
-    return require(id);
-  };
-  new Function('require', 'module', 'exports', code)(localRequire, module, module.exports);
-  return module.exports;
-}
+const { source, load, hashes, typescript } = sourceLoader();
 const suites = [];
 const tests = [];
 globalThis.describe = (name, callback) => { suites.push({ name, before: [] }); callback(); suites.pop(); };
@@ -90,7 +65,7 @@ for (let i = 0; i < 4096; i++) {
 fs.mkdirSync('crates/xterm-web/tests/fixtures', { recursive: true });
 fs.mkdirSync('results/links', { recursive: true });
 fs.writeFileSync('crates/xterm-web/tests/fixtures/osc-links.tsv', cases.join('\n') + '\n');
-const result = { command: 'node scripts/link-oracle.mjs', node: process.version, seed: initialSeed,
+const result = { command: 'node scripts/link-oracle.mjs', node: process.version, typescript, seed: initialSeed,
   baseline: { discovered: outcomes.length, passed: outcomes.filter(t => t.status === 'passed').length,
     failed: outcomes.filter(t => t.status === 'failed').length, skipped: 0, outcomes },
   differential: { cases: cases.length, fixture: 'crates/xterm-web/tests/fixtures/osc-links.tsv' },

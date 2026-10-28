@@ -16,7 +16,8 @@ pub trait TimerScheduler {
     fn cleanup_error(&mut self, error: Self::Error);
 }
 
-type Render<S> = Rc<dyn Fn(&TimeBasedDebouncer<S>, RenderRange)>;
+type Render<S> =
+    Rc<dyn Fn(&TimeBasedDebouncer<S>, RenderRange) -> Result<(), <S as TimerScheduler>::Error>>;
 struct State<S: TimerScheduler> {
     scheduler: RefCell<S>,
     rows: RefCell<Rows>,
@@ -55,6 +56,16 @@ impl<S: TimerScheduler> TimeBasedDebouncer<S> {
         threshold_ms: f64,
         render: impl Fn(&Self, RenderRange) + 'static,
     ) -> Self {
+        Self::try_new(scheduler, threshold_ms, move |debouncer, range| {
+            render(debouncer, range);
+            Ok(())
+        })
+    }
+    pub fn try_new(
+        scheduler: S,
+        threshold_ms: f64,
+        render: impl Fn(&Self, RenderRange) -> Result<(), S::Error> + 'static,
+    ) -> Self {
         Self {
             state: Rc::new(State {
                 scheduler: RefCell::new(scheduler),
@@ -84,7 +95,7 @@ impl<S: TimerScheduler> TimeBasedDebouncer<S> {
                 self.state.additional.set(false);
             }
             self.state.last_refresh.set(now);
-            self.render();
+            self.render()?;
         } else if !self.state.additional.get() {
             self.state.additional.set(true);
             let handle = self
@@ -98,24 +109,26 @@ impl<S: TimerScheduler> TimeBasedDebouncer<S> {
     }
     /// Consume one fired host timeout. Clearing trailing flags AFTER rendering is
     /// intentional: callback reentrancy sees the source's still-pending state.
-    pub fn weak_dispatcher(&self) -> impl Fn() + 'static
+    pub fn weak_dispatcher(&self) -> impl Fn() -> Result<(), S::Error> + 'static
     where
         S: 'static,
     {
         let state = Rc::downgrade(&self.state);
         move || {
             if let Some(state) = state.upgrade() {
-                Self { state }.on_timeout();
+                Self { state }.on_timeout()?;
             }
+            Ok(())
         }
     }
-    pub fn on_timeout(&self) {
+    pub fn on_timeout(&self) -> Result<(), S::Error> {
         self.state
             .last_refresh
             .set(self.state.scheduler.borrow().now());
-        self.render();
+        self.render()?;
         self.state.additional.set(false);
         self.state.pending.borrow_mut().take();
+        Ok(())
     }
     pub fn dispose(&self) -> Result<(), S::Error> {
         let pending = self.state.pending.borrow().clone();
@@ -129,10 +142,11 @@ impl<S: TimerScheduler> TimeBasedDebouncer<S> {
     pub fn has_pending_timeout(&self) -> bool {
         self.state.pending.borrow().is_some()
     }
-    fn render(&self) {
+    fn render(&self) -> Result<(), S::Error> {
         let range = self.state.rows.borrow_mut().take();
         if let Some(range) = range {
-            (self.state.render)(self, range);
+            (self.state.render)(self, range)?;
         }
+        Ok(())
     }
 }

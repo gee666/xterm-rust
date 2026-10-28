@@ -33,10 +33,11 @@ pub struct BrowserLink {
 pub trait BrowserLinkProvider {
     fn provide_links(&self, y: usize, callback: LinkReply) -> Result<(), JsValue>;
 }
+pub type BrowserProviders = Rc<LinkProviderService<dyn BrowserLinkProvider>>;
 
 pub(super) struct State {
     element: HtmlElement,
-    providers: LinkProviderService<dyn BrowserLinkProvider>,
+    providers: BrowserProviders,
     replies: RefCell<ProviderReplies>,
     handlers: RefCell<HashMap<*const Link, Rc<BrowserLink>>>,
     hover: RefCell<HoverState>,
@@ -67,9 +68,28 @@ impl BrowserLinkifier {
         coordinates: MouseCoordinates,
         underline: UnderlineCallback,
     ) -> Result<Self, JsValue> {
+        Self::with_providers(
+            element,
+            cols,
+            scroll_offset,
+            coordinates,
+            underline,
+            Rc::new(LinkProviderService::default()),
+        )
+    }
+    /// Providers can be registered before open. The terminal owns this service;
+    /// disposing the DOM controller does not dispose externally owned providers.
+    pub fn with_providers(
+        element: HtmlElement,
+        cols: usize,
+        scroll_offset: usize,
+        coordinates: MouseCoordinates,
+        underline: UnderlineCallback,
+        providers: BrowserProviders,
+    ) -> Result<Self, JsValue> {
         let state = Rc::new(State {
             element: element.clone(),
-            providers: LinkProviderService::default(),
+            providers,
             replies: RefCell::new(ProviderReplies::default()),
             handlers: RefCell::new(HashMap::new()),
             hover: RefCell::new(HoverState::new(cols, scroll_offset)),
@@ -86,15 +106,16 @@ impl BrowserLinkifier {
         let mut listeners = Vec::new();
         for event_type in ["mousemove", "mouseleave", "mousedown", "mouseup"] {
             let weak = Rc::downgrade(&state);
-            listeners.push(DomListener::new(
+            listeners.push(DomListener::new_reentrant_fallible(
                 element.as_ref(),
                 event_type,
                 false,
+                None,
                 move |event| {
                     let Some(state) = weak.upgrade().filter(|state| !state.disposed.get()) else {
-                        return;
+                        return Ok(());
                     };
-                    let result = match event_type {
+                    match event_type {
                         "mousemove" => event
                             .dyn_into::<MouseEvent>()
                             .map_err(|_| JsValue::from_str("mousemove was not a MouseEvent"))
@@ -115,11 +136,6 @@ impl BrowserLinkifier {
                                 state.apply(effect.into_iter().collect(), Some(&e))
                             }),
                         _ => unreachable!("fixed event type list"),
-                    };
-                    // DOM EventListener exceptions are reported, not swallowed. Native
-                    // caller methods below instead propagate recoverable exceptions.
-                    if let Err(error) = result {
-                        web_sys::console::error_1(&error);
                     }
                 },
             )?);
@@ -178,7 +194,6 @@ impl BrowserLinkifier {
         self.state.last_event.borrow_mut().take();
         self.state.replies.borrow_mut().clear();
         self.state.handlers.borrow_mut().clear();
-        self.state.providers.dispose();
         Ok(())
     }
 }
@@ -189,4 +204,3 @@ impl Drop for BrowserLinkifier {
         }
     }
 }
-use xterm_core::lifecycle::Disposable;

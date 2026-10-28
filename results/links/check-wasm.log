@@ -1,0 +1,104 @@
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Checking xterm-addons v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons)
+    Checking xterm-web v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web)
+error[E0603]: module `localization` is private
+ --> crates\xterm-web\src\terminal\runtime.rs:4:28
+  |
+4 | use crate::{accessibility::localization::LocalizableStrings, input::touch::GestureContext,
+  |                            ^^^^^^^^^^^^ private module
+  |
+note: the module `localization` is defined here
+ --> crates\xterm-web\src\accessibility\mod.rs:5:1
+  |
+5 | mod localization;
+  | ^^^^^^^^^^^^^^^^^
+
+error[E0603]: module `localization` is private
+  --> crates\xterm-web\src\terminal\browser_services.rs:47:40
+   |
+47 |     pub strings: crate::accessibility::localization::LocalizableStrings,
+   |                                        ^^^^^^^^^^^^ private module
+   |
+note: the module `localization` is defined here
+  --> crates\xterm-web\src\accessibility\mod.rs:5:1
+   |
+5  | mod localization;
+   | ^^^^^^^^^^^^^^^^^
+help: consider importing this struct through its public re-export instead
+   |
+47 |     pub strings: crate::accessibility::LocalizableStrings,
+   |                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0603]: module `browser` is private
+  --> crates\xterm-web\src\terminal\browser_services.rs:48:61
+   |
+48 |     pub accessibility: RefCell<Option<crate::accessibility::browser::AccessibilityManager>>,
+   |                                                             ^^^^^^^ private module
+   |
+note: the module `browser` is defined here
+  --> crates\xterm-web\src\accessibility\mod.rs:12:1
+   |
+12 | mod browser;
+   | ^^^^^^^^^^^^
+help: consider importing this struct through its public re-export instead
+   |
+48 |     pub accessibility: RefCell<Option<crate::accessibility::AccessibilityManager>>,
+   |                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0283]: type annotations needed
+   --> crates\xterm-web\src\accessibility\browser_rows.rs:189:16
+    |
+188 |             .map(|target| target.as_ref())
+    |                                  ------ type must be known at this point
+189 |             != Some(adjacent.element.as_ref())
+    |                ^^^^ cannot infer type of the type parameter `T` declared on the enum `Option`
+    |
+    = note: multiple `impl`s satisfying `EventTarget: AsRef<_>` found in the `web_sys` crate:
+            - impl AsRef<EventTarget> for EventTarget;
+            - impl AsRef<js_sys::Object> for EventTarget;
+            - impl AsRef<wasm_bindgen::JsValue> for EventTarget;
+help: consider specifying the generic argument
+    |
+189 |             != Some::<&A>(adjacent.element.as_ref())
+    |                    ++++++
+
+error[E0283]: type annotations needed
+   --> crates\xterm-web\src\accessibility\browser_rows.rs:189:16
+    |
+189 |             != Some(adjacent.element.as_ref())
+    |                ^^^^                  ------ type must be known at this point
+    |                |
+    |                cannot infer type of the type parameter `T` declared on the enum `Option`
+    |
+    = note: multiple `impl`s satisfying `web_sys::HtmlElement: AsRef<_>` found in the `web_sys` crate:
+            - impl AsRef<Element> for web_sys::HtmlElement;
+            - impl AsRef<EventTarget> for web_sys::HtmlElement;
+            - impl AsRef<Node> for web_sys::HtmlElement;
+            - impl AsRef<js_sys::Object> for web_sys::HtmlElement;
+            - impl AsRef<wasm_bindgen::JsValue> for web_sys::HtmlElement;
+            - impl AsRef<web_sys::HtmlElement> for web_sys::HtmlElement;
+help: consider specifying the generic argument
+    |
+189 |             != Some::<&A>(adjacent.element.as_ref())
+    |                    ++++++
+
+error[E0061]: this function takes 2 arguments but 3 arguments were supplied
+  --> crates\xterm-web\src\terminal\mod.rs:77:22
+   |
+77 |         let events = EventFunctions::new(&native, &writer, &browser_events);
+   |                      ^^^^^^^^^^^^^^^^^^^                   --------------- unexpected argument #3 of type `&std::rc::Rc<BrowserEvents>`
+   |
+note: associated function defined here
+  --> crates\xterm-web\src\terminal\event_functions.rs:19:12
+   |
+19 |     pub fn new(native: &headless::Terminal, writer: &WriteBuffer<BrowserWriteScheduler>) -> Self {
+   |            ^^^ ---------------------------  -------------------------------------------
+help: remove the extra argument
+   |
+77 -         let events = EventFunctions::new(&native, &writer, &browser_events);
+77 +         let events = EventFunctions::new(&native, &writer);
+   |
+
+Some errors have detailed explanations: E0061, E0283, E0603.
+For more information about an error, try `rustc --explain E0061`.
+error: could not compile `xterm-web` (lib) due to 6 previous errors

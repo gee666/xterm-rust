@@ -61,7 +61,7 @@ fn frame_coalesces_clamps_and_uses_latest_count() {
     d.refresh(Some(-3.0), Some(50.0), 80.0).unwrap();
     d.refresh(Some(2.0), Some(6.0), 10.0).unwrap();
     assert_eq!(clock.next.get(), 1);
-    d.on_frame();
+    d.on_frame().unwrap();
     assert_eq!(
         *log.borrow(),
         vec![RenderRange {
@@ -84,7 +84,7 @@ fn callback_only_frame_is_ordered_and_receives_zero() {
             .unwrap();
     }
     assert_eq!(clock.next.get(), 1);
-    d.on_frame();
+    d.on_frame().unwrap();
     assert_eq!(*log.borrow(), vec![(0, 0.0), (1, 0.0), (2, 0.0)]);
 }
 #[test]
@@ -107,10 +107,10 @@ fn reentrant_render_preserves_next_frame_rows() {
         }
     });
     d.refresh(None, None, 10.0).unwrap();
-    d.on_frame();
+    d.on_frame().unwrap();
     assert!(d.has_pending_frame());
     assert_eq!(clock.next.get(), 2);
-    d.on_frame();
+    d.on_frame().unwrap();
     assert_eq!(count.get(), 2);
 }
 #[test]
@@ -125,11 +125,11 @@ fn callbacks_added_during_callback_are_visited_in_same_frame() {
             .unwrap();
     })
     .unwrap();
-    d.on_frame();
+    d.on_frame().unwrap();
     assert_eq!(*log.borrow(), vec![1, 2]);
     // The reentrant registration requested a new frame before being visited.
     assert!(d.has_pending_frame());
-    d.on_frame();
+    d.on_frame().unwrap();
     assert_eq!(log.borrow().len(), 2);
 }
 #[test]
@@ -142,7 +142,7 @@ fn disposal_retains_callbacks_and_rows_for_reuse() {
     d.dispose().unwrap();
     d.dispose().unwrap();
     d.refresh(Some(5.0), Some(6.0), 10.0).unwrap();
-    d.on_frame();
+    d.on_frame().unwrap();
     assert_eq!(
         *log.borrow(),
         vec![RenderRange {
@@ -180,7 +180,7 @@ fn time_threshold_first_wait_trailing_coalescence_and_equality() {
     d.refresh(Some(1.0), Some(8.0), 6.0).unwrap();
     assert_eq!(*clock.operations.borrow(), vec!["timeout:900:1"]);
     clock.now.set(1000.0);
-    d.on_timeout();
+    d.on_timeout().unwrap();
     assert_eq!(
         *log.borrow(),
         vec![RenderRange {
@@ -225,13 +225,13 @@ fn trailing_callback_reentrancy_does_not_schedule_until_next_request() {
     });
     d.refresh(None, None, 10.0).unwrap();
     clock.now.set(100.0);
-    d.on_timeout();
+    d.on_timeout().unwrap();
     assert_eq!(clock.next.get(), 1);
     assert!(!d.has_pending_timeout());
     clock.now.set(101.0);
     d.refresh(Some(6.0), Some(7.0), 10.0).unwrap();
     assert_eq!(clock.next.get(), 2);
     clock.now.set(200.0);
-    d.on_timeout();
+    d.on_timeout().unwrap();
     assert_eq!(count.get(), 2);
 }

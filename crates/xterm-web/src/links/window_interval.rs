@@ -8,7 +8,7 @@ use std::{
 use wasm_bindgen::{closure::Closure, JsCast, JsValue};
 use web_sys::{Node, Window};
 
-type Runner = Rc<dyn Fn() -> Result<(), JsValue>>;
+type Runner = Rc<dyn Fn(&WindowIntervalTimer) -> Result<(), JsValue>>;
 struct State {
     fallback: Window,
     default_target: Option<Window>,
@@ -64,7 +64,9 @@ impl WindowIntervalTimer {
             let Some(state) = weak.upgrade() else { return };
             let runner = state.runner.borrow().clone();
             if let Some(runner) = runner {
-                if let Err(error) = runner() {
+                if let Err(error) = runner(&WindowIntervalTimer {
+                    state: Rc::clone(&state),
+                }) {
                     web_sys::console::error_1(&error);
                 }
             }
@@ -74,7 +76,7 @@ impl WindowIntervalTimer {
     }
     pub fn cancel_and_set(
         &self,
-        runner: impl Fn() -> Result<(), JsValue> + 'static,
+        runner: impl Fn(&Self) -> Result<(), JsValue> + 'static,
         interval_ms: f64,
         target: Option<&Window>,
     ) -> Result<(), JsValue> {

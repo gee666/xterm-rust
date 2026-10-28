@@ -75,7 +75,7 @@ impl HoverState {
         effects
     }
     pub fn leave(&mut self) -> Vec<HoverEffect> {
-        let Some(link) = self.current.take() else {
+        let Some(link) = self.current.clone() else {
             return Vec::new();
         };
         self.hovered = false;
@@ -91,6 +91,11 @@ impl HoverState {
         }
         effects.push(HoverEffect::Leave(link));
         effects
+    }
+    /// Call after leave effects succeed. A throwing leave callback keeps the
+    /// current link visible to subsequent calls, as upstream does.
+    pub fn clear_current(&mut self) {
+        self.current = None;
     }
     pub fn mouse_down(&mut self) {
         self.mouse_down.clone_from(&self.current);

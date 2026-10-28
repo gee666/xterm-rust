@@ -1,0 +1,75 @@
+   Compiling xterm-addons v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons)
+warning: associated function `for_activation` is never used
+  --> crates\xterm-addons\src\native_status.rs:72:19
+   |
+68 | impl StatusTerminalAdapter<CoreService> {
+   | --------------------------------------- associated function in this implementation
+...
+72 |     pub(crate) fn for_activation(terminal: &xterm_core::headless::Terminal) -> Result<Self, xterm_core::headless::HeadlessError> {
+   |                   ^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `xterm-addons` (lib) generated 1 warning
+   Compiling xterm-web v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 1.52s
+     Running tests\debounce.rs (target\debug\deps\debounce-0d5c95050e4958c2.exe)
+
+running 9 tests
+test callback_only_frame_is_ordered_and_receives_zero ... ok
+test frame_coalesces_clamps_and_uses_latest_count ... ok
+test disposal_retains_callbacks_and_rows_for_reuse ... ok
+test last_handle_drop_cancels_but_clone_drop_does_not ... ok
+test callbacks_added_during_callback_are_visited_in_same_frame ... ok
+test reentrant_render_preserves_next_frame_rows ... ok
+test immediate_refresh_cancels_pending_timeout ... ok
+test time_threshold_first_wait_trailing_coalescence_and_equality ... ok
+test trailing_callback_reentrancy_does_not_schedule_until_next_request ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\debounce_errors.rs (target\debug\deps\debounce_errors-f118865aafb4db41.exe)
+
+running 3 tests
+test failed_refresh_callback_retains_original_array_and_stops_later_callbacks ... ok
+test failed_frame_render_leaves_callbacks_but_consumes_rows_and_frame ... ok
+test failed_trailing_render_preserves_pending_flags_until_immediate_refresh ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\link_state.rs (target\debug\deps\link_state-5459ccd7d11fb97c.exe)
+
+running 6 tests
+test dynamic_decorations_and_viewport_invalidation ... ok
+test undefined_higher_reply_allows_early_lower_selection ... ok
+test all_replies_choose_provider_order_not_completion_order ... ok
+test rejected_overlap_retains_partially_occupied_cells ... ok
+test pending_and_empty_reply_delay_lower_priority ... ok
+test hover_effect_order_and_mouseup_text_range_equality ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\links.rs (target\debug\deps\links-6addc1c0664a3580.exe)
+
+running 11 tests
+test provider_identity_duplicates_and_repeated_disposal ... ok
+test matches_source_single_cell_eol_early_continue ... ok
+test scroll_offset_can_place_underline_above_viewport ... ok
+test missing_empty_and_protocol_policy ... ok
+test upstream_show_underline ... ok
+test upstream_expands_backward ... ok
+test upstream_hide_underline ... ok
+test upstream_hide_wrapped_underline ... ok
+test upstream_show_wrapped_underline ... ok
+test upstream_expands_forward ... ok
+test upstream_different_ids_do_not_merge ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\osc_links_differential.rs (target\debug\deps\osc_links_differential-db65196fb463b749.exe)
+
+running 1 test
+test source_seeded_cell_id_and_wrap_cases ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+

@@ -1,0 +1,10 @@
+{
+  "seed": "0x6deb0ace",
+  "fixture": "debounce.tsv",
+  "step": 53,
+  "input": "frame dispatch at 42260",
+  "expected": "render:0:30",
+  "actual": "render:-0:30",
+  "cause": "Rust f64::max ties preserve negative zero; JS Math.max(-0,0) must produce positive zero.",
+  "status": "fixed by explicit zero sign handling in shared js_min/js_max"
+}

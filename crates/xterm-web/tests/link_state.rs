@@ -15,6 +15,21 @@ fn request() -> ProviderRequest {
     ProviderRequest::new(Position { x: 5, y: 1 })
 }
 #[test]
+fn cache_disposal_is_reply_insertion_order_not_provider_priority() {
+    let mut replies = ProviderReplies::default();
+    let request = request();
+    replies.receive(2, Some(vec![link("third", 20, 22)]), &request, 3, 80);
+    replies.receive(0, Some(vec![link("first", 3, 5)]), &request, 3, 80);
+    replies.receive(1, None, &request, 3, 80);
+    replies.receive(2, Some(vec![link("replacement", 20, 22)]), &request, 3, 80);
+    let order: Vec<_> = replies
+        .clear()
+        .iter()
+        .map(|link| String::from_utf16(&link.text).unwrap())
+        .collect();
+    assert_eq!(order, vec!["replacement", "first"]);
+}
+#[test]
 fn pending_and_empty_reply_delay_lower_priority() {
     let mut replies = ProviderReplies::default();
     let r = request();
@@ -126,6 +141,8 @@ fn dynamic_decorations_and_viewport_invalidation() {
     ));
     assert_eq!(effects[1], HoverEffect::Pointer(false));
     assert!(matches!(effects[2], HoverEffect::Leave(_)));
+    assert!(state.current().is_some());
+    state.clear_current();
     assert!(state.current().is_none());
     assert!(state.leave().is_empty());
 }

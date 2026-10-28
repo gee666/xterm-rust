@@ -41,6 +41,12 @@ impl Rows {
 pub(super) fn js_min(a: f64, b: f64) -> f64 {
     if a.is_nan() || b.is_nan() {
         f64::NAN
+    } else if a == 0.0 && b == 0.0 {
+        if a.is_sign_negative() || b.is_sign_negative() {
+            -0.0
+        } else {
+            0.0
+        }
     } else {
         a.min(b)
     }
@@ -48,13 +54,20 @@ pub(super) fn js_min(a: f64, b: f64) -> f64 {
 pub(super) fn js_max(a: f64, b: f64) -> f64 {
     if a.is_nan() || b.is_nan() {
         f64::NAN
+    } else if a == 0.0 && b == 0.0 {
+        if a.is_sign_negative() && b.is_sign_negative() {
+            -0.0
+        } else {
+            0.0
+        }
     } else {
         a.max(b)
     }
 }
 
-type Render<S> = Rc<dyn Fn(&RenderDebouncer<S>, RenderRange)>;
-type Refresh<S> = Rc<dyn Fn(&RenderDebouncer<S>, f64)>;
+type Render<S> =
+    Rc<dyn Fn(&RenderDebouncer<S>, RenderRange) -> Result<(), <S as FrameScheduler>::Error>>;
+type Refresh<S> = Rc<dyn Fn(&RenderDebouncer<S>, f64) -> Result<(), <S as FrameScheduler>::Error>>;
 struct FrameState<S: FrameScheduler> {
     scheduler: RefCell<S>,
     rows: RefCell<Rows>,
@@ -87,6 +100,15 @@ impl<S: FrameScheduler> Clone for RenderDebouncer<S> {
 }
 impl<S: FrameScheduler> RenderDebouncer<S> {
     pub fn new(scheduler: S, render: impl Fn(&Self, RenderRange) + 'static) -> Self {
+        Self::try_new(scheduler, move |debouncer, range| {
+            render(debouncer, range);
+            Ok(())
+        })
+    }
+    pub fn try_new(
+        scheduler: S,
+        render: impl Fn(&Self, RenderRange) -> Result<(), S::Error> + 'static,
+    ) -> Self {
         Self {
             state: Rc::new(FrameState {
                 scheduler: RefCell::new(scheduler),
@@ -110,6 +132,15 @@ impl<S: FrameScheduler> RenderDebouncer<S> {
         &self,
         callback: impl Fn(&Self, f64) + 'static,
     ) -> Result<S::Handle, S::Error> {
+        self.add_try_refresh_callback(move |debouncer, time| {
+            callback(debouncer, time);
+            Ok(())
+        })
+    }
+    pub fn add_try_refresh_callback(
+        &self,
+        callback: impl Fn(&Self, f64) -> Result<(), S::Error> + 'static,
+    ) -> Result<S::Handle, S::Error> {
         self.state.callbacks.borrow_mut().push(Rc::new(callback));
         self.schedule()
     }
@@ -126,34 +157,36 @@ impl<S: FrameScheduler> RenderDebouncer<S> {
         self.state.pending.borrow().is_some()
     }
     /// An event-loop callback that does not keep this debouncer alive.
-    pub fn weak_dispatcher(&self) -> impl Fn() + 'static
+    pub fn weak_dispatcher(&self) -> impl Fn() -> Result<(), S::Error> + 'static
     where
         S: 'static,
     {
         let state = Rc::downgrade(&self.state);
         move || {
             if let Some(state) = state.upgrade() {
-                Self { state }.on_frame();
+                Self { state }.on_frame()?;
             }
+            Ok(())
         }
     }
     /// Called once by the host when its requested animation frame fires.
-    pub fn on_frame(&self) {
+    pub fn on_frame(&self) -> Result<(), S::Error> {
         self.state.pending.borrow_mut().take();
         let range = self.state.rows.borrow_mut().take();
         if let Some(range) = range {
-            (self.state.render)(self, range);
+            (self.state.render)(self, range)?;
         }
         // JS array iteration sees callbacks appended while iteration is active.
         let mut index = 0;
         loop {
             let callback = self.state.callbacks.borrow().get(index).cloned();
             let Some(callback) = callback else { break };
-            callback(self, 0.0);
+            callback(self, 0.0)?;
             index += 1;
         }
         let callbacks = std::mem::take(&mut *self.state.callbacks.borrow_mut());
         drop(callbacks);
+        Ok(())
     }
     fn schedule(&self) -> Result<S::Handle, S::Error> {
         if let Some(handle) = self.state.pending.borrow().as_ref() {

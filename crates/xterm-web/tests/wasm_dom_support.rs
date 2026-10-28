@@ -25,19 +25,18 @@ async fn priority_stability_cancellation_and_reentrant_next_frame() {
     });
     let out = log.clone();
     queue
-        .schedule(0.0, move || {
+        .schedule(0.0, move |_| {
             out.borrow_mut().push("zero");
             Ok(())
         })
         .unwrap();
     let out = log.clone();
-    let next_queue = queue.clone();
     queue
-        .schedule(10.0, move || {
+        .schedule(10.0, move |next_queue| {
             out.borrow_mut().push("first ten");
             let log = out.clone();
             let finish = resolve_later.clone();
-            next_queue.schedule(100.0, move || {
+            next_queue.schedule(100.0, move |_| {
                 log.borrow_mut().push("next frame");
                 let resolve: Function = finish.borrow_mut().take().unwrap();
                 resolve.call0(&JsValue::NULL).unwrap();
@@ -48,34 +47,34 @@ async fn priority_stability_cancellation_and_reentrant_next_frame() {
         .unwrap();
     let out = log.clone();
     same_window
-        .schedule(10.0, move || {
+        .schedule(10.0, move |_| {
             out.borrow_mut().push("second ten");
             Ok(())
         })
         .unwrap();
     let out = log.clone();
     let mutable = queue
-        .schedule(-1.0, move || {
+        .schedule(-1.0, move |_| {
             out.borrow_mut().push("raised");
             Ok(())
         })
         .unwrap();
     mutable.set_priority(20.0);
     let canceled = queue
-        .schedule(1000.0, || panic!("canceled item must not run"))
+        .schedule(1000.0, |_| panic!("canceled item must not run"))
         .unwrap();
     canceled.dispose();
     canceled.dispose();
     let out = log.clone();
     queue
-        .schedule(15.0, move || {
+        .schedule(15.0, move |_| {
             out.borrow_mut().push("error");
             Err(JsValue::from_str("expected queue callback error"))
         })
         .unwrap();
     let first_frame = Promise::new(&mut |resolve, _| {
         queue
-            .schedule(f64::NEG_INFINITY, move || {
+            .schedule(f64::NEG_INFINITY, move |_| {
                 resolve.call0(&JsValue::NULL).unwrap();
                 Ok(())
             })
@@ -142,4 +141,40 @@ fn owner_document_event_view_and_page_coordinates() {
         (100.0, 2000.0, 120.0, 50.0)
     );
     iframe.remove();
+}
+
+#[wasm_bindgen_test(async)]
+async fn interval_cancels_reentrantly_and_rejects_reuse_after_dispose() {
+    use std::cell::Cell;
+    use xterm_web::links::window_interval::WindowIntervalTimer;
+    let window = web_sys::window().unwrap();
+    let timer = WindowIntervalTimer::new(None, window.clone());
+    let count = Rc::new(Cell::new(0));
+    let output = count.clone();
+    let completed = Promise::new(&mut |resolve, _| {
+        let output = output.clone();
+        timer
+            .cancel_and_set(
+                move |timer| {
+                    output.set(output.get() + 1);
+                    timer.cancel()?;
+                    resolve.call0(&JsValue::NULL)?;
+                    Ok(())
+                },
+                0.0,
+                None,
+            )
+            .unwrap();
+    });
+    JsFuture::from(completed).await.unwrap();
+    assert_eq!(count.get(), 1);
+    timer.dispose().unwrap();
+    timer.dispose().unwrap();
+    let error = timer
+        .cancel_and_set(|_| Ok(()), 0.0, Some(&window))
+        .unwrap_err();
+    assert_eq!(
+        error.as_string().unwrap(),
+        "Calling cancelAndSet on a disposed IntervalTimer"
+    );
 }

@@ -8,7 +8,7 @@ use wasm_bindgen::{closure::Closure, JsCast, JsValue};
 use web_sys::Window;
 use xterm_core::lifecycle::Disposable;
 
-type Runner = Rc<dyn Fn() -> Result<(), JsValue>>;
+type Runner = Rc<dyn Fn(&WindowAnimationQueue) -> Result<(), JsValue>>;
 struct Item {
     canceled: Cell<bool>,
     priority: Cell<f64>,
@@ -40,7 +40,7 @@ struct State {
     callback: RefCell<Option<Closure<dyn FnMut(f64)>>>,
 }
 impl State {
-    fn run(&self) -> Result<(), JsValue> {
+    fn run(self: &Rc<Self>) -> Result<(), JsValue> {
         self.requested.set(None);
         *self.current.borrow_mut() = std::mem::take(&mut *self.next.borrow_mut());
         loop {
@@ -87,7 +87,9 @@ impl State {
                 current.remove(0)
             };
             if !item.canceled.get() {
-                if let Err(error) = (item.runner)() {
+                if let Err(error) = (item.runner)(&WindowAnimationQueue {
+                    state: Rc::clone(self),
+                }) {
                     web_sys::console::error_1(&error);
                 }
             }
@@ -133,7 +135,7 @@ impl WindowAnimationQueue {
     pub fn schedule(
         &self,
         priority: f64,
-        runner: impl Fn() -> Result<(), JsValue> + 'static,
+        runner: impl Fn(&Self) -> Result<(), JsValue> + 'static,
     ) -> Result<AnimationItem, JsValue> {
         let item = Rc::new(Item {
             canceled: Cell::new(false),

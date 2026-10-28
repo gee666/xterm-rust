@@ -11,6 +11,7 @@ use std::{
 #[derive(Default)]
 pub struct ProviderReplies {
     replies: BTreeMap<usize, Option<Vec<Rc<Link>>>>,
+    insertion_order: Vec<usize>,
 }
 
 /// Each provider lookup captures its original position and a shared selection flag.
@@ -31,13 +32,20 @@ impl ProviderRequest {
 }
 
 impl ProviderReplies {
-    /// Extract every retained link for host disposal before starting a new cache.
-    pub fn clear(&mut self) -> Vec<Rc<Link>> {
-        std::mem::take(&mut self.replies)
-            .into_values()
-            .flatten()
-            .flatten()
+    /// Disposal follows Map insertion order, not provider priority. Snapshot before
+    /// callbacks, and clear only after they succeed, to preserve failure state.
+    pub fn cached_links(&self) -> Vec<Rc<Link>> {
+        self.insertion_order
+            .iter()
+            .filter_map(|index| self.links(*index))
+            .flat_map(|links| links.iter().cloned())
             .collect()
+    }
+    pub fn clear(&mut self) -> Vec<Rc<Link>> {
+        let links = self.cached_links();
+        self.replies.clear();
+        self.insertion_order.clear();
+        links
     }
 
     pub fn receive(
@@ -62,6 +70,9 @@ impl ProviderReplies {
         provider_count: usize,
         cols: usize,
     ) -> Option<Rc<Link>> {
+        if !self.replies.contains_key(&index) {
+            self.insertion_order.push(index);
+        }
         self.replies.insert(index, links);
         self.check(index, request, provider_count, cols)
     }

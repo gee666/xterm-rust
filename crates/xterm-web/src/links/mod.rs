@@ -12,6 +12,8 @@ pub mod debounce;
 #[cfg(target_arch = "wasm32")]
 pub mod dom_helpers;
 mod hover;
+#[cfg(target_arch = "wasm32")]
+pub mod native_osc;
 mod osc;
 mod provider;
 mod replies;
@@ -20,7 +22,7 @@ pub mod time_debounce;
 pub mod window_interval;
 
 pub use hover::{Decorations, HoverEffect, HoverState};
-pub use osc::osc_links;
+pub use osc::{osc_links, try_osc_links, OscBuffer};
 pub use provider::{LinkProviderService, ProviderRegistration};
 pub use replies::{ProviderReplies, ProviderRequest};
 

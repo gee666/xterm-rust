@@ -9,6 +9,8 @@ use wasm_bindgen::{closure::Closure, JsCast, JsValue};
 use web_sys::{Performance, Window};
 
 type CallbackSlot = Rc<RefCell<Option<Function>>>;
+type FrameCallback = Closure<dyn FnMut(f64) -> Result<(), JsValue>>;
+type TimerCallback = Closure<dyn FnMut() -> Result<(), JsValue>>;
 
 struct BrowserFrameScheduler {
     window: Window,
@@ -36,12 +38,21 @@ impl FrameScheduler for BrowserFrameScheduler {
 /// releasing it. The closure captures weak core state, never a strong owner.
 pub struct BrowserRenderDebouncer {
     inner: RenderDebouncer<BrowserFrameScheduler>,
-    callback: Option<Closure<dyn FnMut(f64)>>,
+    callback: Option<FrameCallback>,
 }
 impl BrowserRenderDebouncer {
     pub fn new(window: Window, render: impl Fn(RenderRange) + 'static) -> Self {
+        Self::try_new(window, move |range| {
+            render(range);
+            Ok(())
+        })
+    }
+    pub fn try_new(
+        window: Window,
+        render: impl Fn(RenderRange) -> Result<(), JsValue> + 'static,
+    ) -> Self {
         let slot: CallbackSlot = Rc::new(RefCell::new(None));
-        let inner = RenderDebouncer::new(
+        let inner = RenderDebouncer::try_new(
             BrowserFrameScheduler {
                 window,
                 callback: slot.clone(),
@@ -49,7 +60,9 @@ impl BrowserRenderDebouncer {
             move |_, rows| render(rows),
         );
         let dispatch = inner.weak_dispatcher();
-        let callback = Closure::wrap(Box::new(move |_: f64| dispatch()) as Box<dyn FnMut(f64)>);
+        let callback = Closure::wrap(
+            Box::new(move |_: f64| dispatch()) as Box<dyn FnMut(f64) -> Result<(), JsValue>>
+        );
         *slot.borrow_mut() = Some(callback.as_ref().unchecked_ref::<Function>().clone());
         Self {
             inner,
@@ -120,7 +133,7 @@ impl TimerScheduler for BrowserTimerScheduler {
 
 pub struct BrowserTimeDebouncer {
     inner: TimeBasedDebouncer<BrowserTimerScheduler>,
-    callback: Option<Closure<dyn FnMut()>>,
+    callback: Option<TimerCallback>,
 }
 impl BrowserTimeDebouncer {
     pub fn new(
@@ -128,11 +141,21 @@ impl BrowserTimeDebouncer {
         threshold_ms: f64,
         render: impl Fn(RenderRange) + 'static,
     ) -> Result<Self, JsValue> {
+        Self::try_new(window, threshold_ms, move |range| {
+            render(range);
+            Ok(())
+        })
+    }
+    pub fn try_new(
+        window: Window,
+        threshold_ms: f64,
+        render: impl Fn(RenderRange) -> Result<(), JsValue> + 'static,
+    ) -> Result<Self, JsValue> {
         let performance = window
             .performance()
             .ok_or_else(|| JsValue::from_str("window.performance unavailable"))?;
         let slot: CallbackSlot = Rc::new(RefCell::new(None));
-        let inner = TimeBasedDebouncer::new(
+        let inner = TimeBasedDebouncer::try_new(
             BrowserTimerScheduler {
                 window,
                 performance,
@@ -142,7 +165,7 @@ impl BrowserTimeDebouncer {
             move |_, rows| render(rows),
         );
         let dispatch = inner.weak_dispatcher();
-        let callback = Closure::wrap(Box::new(dispatch) as Box<dyn FnMut()>);
+        let callback = Closure::wrap(Box::new(dispatch) as Box<dyn FnMut() -> Result<(), JsValue>>);
         *slot.borrow_mut() = Some(callback.as_ref().unchecked_ref::<Function>().clone());
         Ok(Self {
             inner,
