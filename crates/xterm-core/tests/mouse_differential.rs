@@ -42,9 +42,20 @@ fn compare_corpus(corpus: &str, expected_count: usize, require_surrogates: bool)
             shift: flag(fields[10]),
         };
         let before = [event.col, event.row, event.x, event.y].map(f64::to_bits);
+        let button_before = event.button.numeric_value().to_bits();
+        let action_before = event.action;
         service.set_active_protocol(fields[0]).unwrap();
         service.set_active_encoding(fields[1]).unwrap();
         let accepted = service.restrict_mouse_event(&mut event);
+        assert_eq!(
+            event.button.numeric_value().to_bits(),
+            button_before,
+            "restriction button row {index}: {row}"
+        );
+        assert_eq!(
+            event.action, action_before,
+            "restriction action row {index}: {row}"
+        );
         assert_eq!(
             accepted,
             fields[11] == "1",
@@ -60,6 +71,15 @@ fn compare_corpus(corpus: &str, expected_count: usize, require_surrogates: bool)
         );
         // Encoding is independently callable upstream, even for rejected events.
         let actual = service.encode_mouse_event(&mut event);
+        assert_eq!(
+            event.button.numeric_value().to_bits(),
+            button_before,
+            "button mutation row {index}: {row}"
+        );
+        assert_eq!(
+            event.action, action_before,
+            "action mutation row {index}: {row}"
+        );
         let expected = units(fields[15]);
         assert_eq!(actual, expected, "encoding row {index}: {row}");
         surrogate_outputs +=
