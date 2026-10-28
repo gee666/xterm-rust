@@ -42,4 +42,10 @@ Native `cargo test --workspace --all-targets --all-features` passes1942 tests ac
 
 The required workspace rustfmt command fails Windows error206 because its command line is too long. Individual changed-file rustfmt checks pass. Native workspace Clippy fails the existing excessive_precision literal in renderer/width_cache_tests.rs131. Scoped WASM Clippy fails existing Closure type_complexity in links/animation_queue.rs40 and selection/dom.rs70. Logs remain under `results/image-lifecycle/`. No lint suppression or fixture change was used to hide these failures. Full release/feature/platform gates remain open.
 
+## Main integration
+
+The canonical worktree helper rebased accepted272 and127 onto current main and fast-forwarded main to7ad4129. It ran298 xterm-web tests across92 summaries, native dependent checks and the browser WASM library checks, all passing. The complete receipt is results/image-lifecycle/gated-merge.log. After integration both browser suites were rerun on that committed tree:13 lifecycle and14 canvas tests passed in each engine. Reports link the new immutable runs, and results/image-lifecycle/integrated-lifecycle.log and integrated-canvas.log retain their summaries.
+
+The helper removed the private target after merging. A follow-up browser run initially failed preflight because statfs could not inspect the absent target. Creating the same designated target directory before rerunning resolved it. No second cache or headroom bypass was used. The failed run receipts remain in the immutable browser results.
+
 Task277 still owns accepted QOI branch integration. The lifecycle branch includes accepted272 canvas commits rebased onto the compiling main checkpoint. Task38 must still activate all image protocols, prove original full-addon suites and bind this lifecycle through the actual addon manager. This task does not claim that work has passed.
