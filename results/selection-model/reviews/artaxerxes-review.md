@@ -1,0 +1,11 @@
+# Independent bounded SelectionModel review
+
+Task 69 owns the coordinate-only model, not DOM selection or the complete JavaScript Number boundary. I read the full source SelectionModel, native model, all 23 tests, oracle driver/harness and criterion28 checklist. I also checked that selection service/DOM dimensions supply the actual buffer ybase to the field named scrollback.
+
+The implementation preserves endpoint absence/reversal, select-all live dimensions, minimum word length, exact wrapped-EOL distinction, forward endpoints on another row and trim clear/reset refresh semantics. The previously reported eager checked-add bug is fixed by evaluating start-plus-length only in source branches that actually use it. Native checked integer overflow remains an explicit binding boundary, not a claimed JavaScript numeric equivalent.
+
+I independently ran the retained integrated selection_model test executable: 23 passed, zero ignored. I then ran `SELECTION_MODEL_DRIVER=tmp/selection-model-isolated/selection-model-driver.exe node scripts/selection-model-oracle.mjs`, explicitly using the existing production-model driver without compiling. All 18 unchanged original assertion bodies passed through the documented coordinate-only mock and Node strict-assert mapping. All 61,310 deterministic/seeded cases matched eight result fields, including 20,000 seeded cases at seed 0x051ec710. The source harness identifies itself as not the complete upstream runner baseline, and the standalone driver is not counted as a Cargo integration pass. Native and oracle outputs are retained in this directory.
+
+The model performs no browser operations and no unsafe code. The integer coordinate domain and NonZero dimensions are documented. Native signed64 limits do not prove browser -0, larger integer Number values or other numeric conversion behavior. Task189/criterion420 explicitly retain those contracts, while actual SelectionService and three-browser wiring remain other tasks. The known source-backed scope must not be expanded to claim those missing behaviors.
+
+Accept task69's bounded coordinate model and faithful source assertion/oracle evidence. No current whole-workspace, other-OS or browser-equivalence claim follows from this review.
