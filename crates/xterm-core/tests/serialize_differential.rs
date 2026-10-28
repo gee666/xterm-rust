@@ -75,11 +75,11 @@ fn run(kind: &str, expected_count: usize) {
             failed.push(case.id);
         }
     }
-    let results = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../results/serialize");
+    let results = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../tmp/serialize");
     std::fs::create_dir_all(&results).unwrap();
     std::fs::write(results.join(format!("{kind}-differential.tsv")), report).unwrap();
     assert_eq!(count, expected_count);
-    assert!(failed.is_empty(), "{kind}: {} of {count} cases differ. First IDs {:?}; inspect results/serialize/{kind}-differential.tsv and fixture inputs", failed.len(), &failed[..failed.len().min(20)]);
+    assert!(failed.is_empty(), "{kind}: {} of {count} cases differ. First IDs {:?}; inspect tmp/serialize/{kind}-differential.tsv and fixture inputs", failed.len(), &failed[..failed.len().min(20)]);
 }
 
 #[test]
