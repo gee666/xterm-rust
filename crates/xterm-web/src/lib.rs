@@ -4,6 +4,8 @@
 //! unsupported terminal APIs are not exported as successful placeholders.
 
 pub mod api;
+#[cfg(target_arch = "wasm32")]
+pub mod addons;
 pub mod input;
 pub mod links;
 pub mod selection;
