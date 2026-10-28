@@ -43,12 +43,14 @@ Set `SOURCE_REPO` to another exact reference tree, `REFERENCE_NODE_MODULES` to i
 
 Windows run with rustc/cargo1.85.1 and Node24.15.0:
 
-- 13 Rust/WASM tests passed in Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4. No ignored tests.
+- 14 Rust/WASM tests passed in Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4. No ignored tests.
 - Seed0x272389 performs128 draw/extract pairs per browser. Each draw compares every pixel in the80x60 output canvas with the unchanged source class, then compares extracted tile dimensions and all nonempty tile pixels. Cases vary fractional cell size, rescaling, edge clipping, counts and positions. This is384 pairs across three browsers, not an exhaustive input proof.
 - Other checks exercise real native engine/storage tiles, original resource identity, ImageData bytes/local document creation, top/bottom ordering, region clearing, no-op versus resetting canvas size, real bitmap conversion/close, missing APIs, missing2D contexts, unchanged spec state after failed rescaling, thrown-value identity, storage deletion partial state, and late placeholder bitmap close ordering.
 - Scoped WASM Clippy passes with `-D warnings`. Direct rustfmt checks pass.
 
 Raw browser commands, counts and logs are in `results/browser-host/image_canvas_browser/` and its latest JSON report. `results/image-canvas/verification.json` links exact Rust/source hashes and marks the isolated scope. The source bundle is generated in `tmp/` without editing source code or assertions. The original renderer is only the comparator; the Rust side draws through Rust and the browser canvas API.
+
+Independent review found that bitmap retrieval must still return a new canvas when its2D context is absent. This was fixed without weakening existing tests. A new real-bitmap regression goes through shared storage retrieval and checks successful canvas dimensions, transparency and global document ownership. Exceptions from context creation/drawing still propagate.
 
 Required workspace commands were attempted and failed. Logs are retained under `results/image-canvas/`:
 
