@@ -76,6 +76,13 @@ impl BrowserRenderDebouncer {
         self.inner
             .add_refresh_callback(move |_, time| callback(time))
     }
+    pub fn add_try_refresh_callback(
+        &self,
+        callback: impl Fn(f64) -> Result<(), JsValue> + 'static,
+    ) -> Result<i32, JsValue> {
+        self.inner
+            .add_try_refresh_callback(move |_, time| callback(time))
+    }
     pub fn dispose(&self) -> Result<(), JsValue> {
         self.inner.dispose()
     }
@@ -89,10 +96,24 @@ impl Drop for BrowserRenderDebouncer {
     }
 }
 
-struct BrowserTimerScheduler {
+/// Reusable browser timeout/clock adapter. The caller owns any Rust Closure
+/// behind callback and must cancel outstanding jobs before releasing that owner.
+pub struct BrowserTimerScheduler {
     window: Window,
     performance: Performance,
     callback: CallbackSlot,
+}
+impl BrowserTimerScheduler {
+    pub fn new(window: Window, callback: Function) -> Result<Self, JsValue> {
+        let performance = window
+            .performance()
+            .ok_or_else(|| JsValue::from_str("window.performance unavailable"))?;
+        Ok(Self {
+            window,
+            performance,
+            callback: Rc::new(RefCell::new(Some(callback))),
+        })
+    }
 }
 impl TimerScheduler for BrowserTimerScheduler {
     type Handle = i32;
@@ -123,7 +144,10 @@ impl TimerScheduler for BrowserTimerScheduler {
         Ok(handle as i32)
     }
     fn cancel_timeout(&mut self, handle: i32) -> Result<(), JsValue> {
-        self.window.clear_timeout_with_handle(handle);
+        let clear_timeout: Function =
+            js_sys::Reflect::get(self.window.as_ref(), &JsValue::from_str("clearTimeout"))?
+                .dyn_into()?;
+        clear_timeout.call1(self.window.as_ref(), &JsValue::from_f64(f64::from(handle)))?;
         Ok(())
     }
     fn cleanup_error(&mut self, error: JsValue) {

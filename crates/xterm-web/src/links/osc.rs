@@ -12,6 +12,15 @@ pub trait OscBuffer {
         index: usize,
         read: impl FnOnce(&BufferLine) -> R,
     ) -> Result<Option<R>, Self::Error>;
+    /// The main scan retains its original row identity across host getters;
+    /// wrapped-range probes still read the buffer's current row at each index.
+    fn with_scan_line<R>(
+        &self,
+        index: usize,
+        read: impl FnOnce(&BufferLine) -> R,
+    ) -> Result<Option<R>, Self::Error> {
+        self.with_line(index, read)
+    }
 }
 impl<T: AsRef<[BufferLine]> + ?Sized> OscBuffer for T {
     type Error = Infallible;
@@ -48,14 +57,25 @@ pub fn osc_links(
 pub fn try_osc_links<B: OscBuffer + ?Sized>(
     lines: &B,
     y: usize,
-    mut uri: impl FnMut(u64) -> Result<Option<Vec<u16>>, B::Error>,
+    uri: impl FnMut(u64) -> Result<Option<Vec<u16>>, B::Error>,
     allow_non_http_protocols: bool,
     mut is_http_url: impl FnMut(&[u16]) -> bool,
+) -> Result<Option<Vec<Link>>, B::Error> {
+    try_osc_links_with_policy(lines, y, uri, |text| {
+        Ok(allow_non_http_protocols || is_http_url(text))
+    })
+}
+
+pub fn try_osc_links_with_policy<B: OscBuffer + ?Sized>(
+    lines: &B,
+    y: usize,
+    mut uri: impl FnMut(u64) -> Result<Option<Vec<u16>>, B::Error>,
+    mut accept: impl FnMut(&[u16]) -> Result<bool, B::Error>,
 ) -> Result<Option<Vec<Link>>, B::Error> {
     let Some(row) = y.checked_sub(1) else {
         return Ok(None);
     };
-    let Some(length) = lines.with_line(row, BufferLine::get_trimmed_length)? else {
+    let Some(length) = lines.with_scan_line(row, BufferLine::get_trimmed_length)? else {
         return Ok(None);
     };
     let mut result = Vec::new();
@@ -63,13 +83,15 @@ pub fn try_osc_links<B: OscBuffer + ?Sized>(
     for x in 0..length {
         if current.is_none()
             && lines
-                .with_line(row, |line| line.has_content(x).unwrap_or(0))?
+                .with_scan_line(row, |line| line.has_content(x).unwrap_or(0))?
                 .unwrap_or(0)
                 == 0
         {
             continue;
         }
-        let mut id = url_id(lines, row, x)?;
+        let mut id = lines
+            .with_scan_line(row, |line| cell_url_id(line, x))?
+            .unwrap_or(0);
         if current.is_none() && id != 0 {
             // Source continues even when this new run begins at trimmed EOL.
             current = Some((x, id));
@@ -81,7 +103,7 @@ pub fn try_osc_links<B: OscBuffer + ?Sized>(
                 if let Some(text) = uri(current_id)?.filter(|text| !text.is_empty()) {
                     let end = x + usize::from(!finish && x == length - 1);
                     let range = wrapped_range(lines, y, start, end, current_id, &mut id)?;
-                    if allow_non_http_protocols || is_http_url(&text) {
+                    if accept(&text)? {
                         result.push(Link { text, range });
                     }
                 }
@@ -91,11 +113,12 @@ pub fn try_osc_links<B: OscBuffer + ?Sized>(
     }
     Ok(Some(result))
 }
+fn cell_url_id(line: &BufferLine, x: usize) -> u64 {
+    line.get_extended(x).map(|ext| ext.url_id()).unwrap_or(0)
+}
 fn url_id<B: OscBuffer + ?Sized>(lines: &B, y: usize, x: usize) -> Result<u64, B::Error> {
     Ok(lines
-        .with_line(y, |line| {
-            line.get_extended(x).map(|ext| ext.url_id()).unwrap_or(0)
-        })?
+        .with_line(y, |line| cell_url_id(line, x))?
         .unwrap_or(0))
 }
 fn has_id<B: OscBuffer + ?Sized>(

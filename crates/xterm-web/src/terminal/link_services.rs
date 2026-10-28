@@ -10,7 +10,7 @@ use crate::{
     },
     utf16::to_js_string,
 };
-use js_sys::{Function, Object, Reflect};
+use js_sys::{Array, Function, Object};
 use std::{cell::RefCell, collections::HashMap, rc::Rc};
 use wasm_bindgen::{JsCast, JsValue};
 use web_sys::{MouseEvent, Window};
@@ -36,10 +36,13 @@ pub fn create_registry(
         if !value.is_truthy() {
             return Ok(None);
         }
-        let allow = value
-            .get_property("allowNonHttpProtocols")
-            .map_err(|error| to_js_error(&error))?
-            .is_truthy();
+        let protocol_handler = value.clone();
+        let allow = Rc::new(move || {
+            protocol_handler
+                .get_property("allowNonHttpProtocols")
+                .map(|value| value.is_truthy())
+                .map_err(|error| to_js_error(&error))
+        });
         let cache: RangeCache = Rc::new(RefCell::new(HashMap::new()));
         Ok(Some(OscLinkHandler {
             allow_non_http_protocols: allow,
@@ -96,14 +99,16 @@ fn handler_callback(
     })
 }
 fn range_object(range: Range) -> Result<JsValue, JsValue> {
-    let result = Object::new();
-    for (key, position) in [("start", range.start), ("end", range.end)] {
-        let value = Object::new();
-        Reflect::set(&value, &"x".into(), &JsValue::from_f64(position.x as f64))?;
-        Reflect::set(&value, &"y".into(), &JsValue::from_f64(position.y as f64))?;
-        Reflect::set(&result, &key.into(), &value)?;
-    }
-    Ok(result.into())
+    let start = Array::of2(&"start".into(), point_object(range.start)?.as_ref());
+    let end = Array::of2(&"end".into(), point_object(range.end)?.as_ref());
+    // fromEntries defines own data properties, as object literals do. Assignment
+    // through Reflect.set would incorrectly invoke Object.prototype setters.
+    Ok(Object::from_entries(Array::of2(start.as_ref(), end.as_ref()).as_ref())?.into())
+}
+fn point_object(position: Position) -> Result<Object, JsValue> {
+    let x = Array::of2(&"x".into(), &JsValue::from_f64(position.x as f64));
+    let y = Array::of2(&"y".into(), &JsValue::from_f64(position.y as f64));
+    Object::from_entries(Array::of2(x.as_ref(), y.as_ref()).as_ref())
 }
 
 pub fn install(

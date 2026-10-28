@@ -2,7 +2,7 @@
 use super::{
     browser::{default_activate, is_http_url},
     browser_linkifier::{BrowserLink, BrowserLinkProvider, LinkCallback, LinkReply},
-    osc::{try_osc_links, OscBuffer},
+    osc::{try_osc_links_with_policy, OscBuffer},
 };
 use crate::js_error::to_js_error;
 use std::{
@@ -16,15 +16,20 @@ use xterm_core::{
     headless,
 };
 
+pub type OscProtocolPolicy = Rc<dyn Fn() -> Result<bool, JsValue>>;
 #[derive(Clone)]
 pub struct OscLinkHandler {
-    pub allow_non_http_protocols: bool,
+    pub allow_non_http_protocols: OscProtocolPolicy,
     pub activate: LinkCallback,
     pub hover: Option<LinkCallback>,
     pub leave: Option<LinkCallback>,
 }
 
-struct LiveBuffer(Rc<RefCell<Buffer>>);
+struct LiveBuffer {
+    buffer: Rc<RefCell<Buffer>>,
+    scan_index: usize,
+    scan_line: Rc<RefCell<BufferLine>>,
+}
 impl OscBuffer for LiveBuffer {
     type Error = JsValue;
     fn with_line<R>(
@@ -33,7 +38,7 @@ impl OscBuffer for LiveBuffer {
         read: impl FnOnce(&BufferLine) -> R,
     ) -> Result<Option<R>, JsValue> {
         let line = self
-            .0
+            .buffer
             .try_borrow()
             .map_err(|error| to_js_error(&error))?
             .lines
@@ -42,11 +47,26 @@ impl OscBuffer for LiveBuffer {
         let line = line.try_borrow().map_err(|error| to_js_error(&error))?;
         Ok(Some(read(&line)))
     }
+    fn with_scan_line<R>(
+        &self,
+        index: usize,
+        read: impl FnOnce(&BufferLine) -> R,
+    ) -> Result<Option<R>, JsValue> {
+        if index != self.scan_index {
+            return self.with_line(index, read);
+        }
+        let line = self
+            .scan_line
+            .try_borrow()
+            .map_err(|error| to_js_error(&error))?;
+        Ok(Some(read(&line)))
+    }
 }
 
 /// Reads URL ids and URI data from the SAME Rust terminal state used by OSC8
 /// parsing and printing. No terminal engine or link discovery runs in JavaScript.
-/// Handler settings are sampled once per provideLinks call, as upstream does.
+/// Handler identity is sampled once for an existing row. The protocol getter is
+/// read for each finished run, after URI lookup and wrapped-range expansion.
 pub struct NativeOscLinkProvider {
     terminal: Weak<headless::Terminal>,
     window: Window,
@@ -73,12 +93,25 @@ impl BrowserLinkProvider for NativeOscLinkProvider {
         let (buffer, links) = terminal
             .with_state(|state| (state.active_buffer(), state.links.clone()))
             .map_err(|error| to_js_error(&error))?;
+        let Some(row) = y.checked_sub(1) else {
+            return callback(None);
+        };
+        let scan_line = buffer
+            .try_borrow()
+            .map_err(|error| to_js_error(&error))?
+            .lines
+            .get(row);
+        let Some(scan_line) = scan_line else {
+            return callback(None);
+        };
+        let source = LiveBuffer {
+            buffer,
+            scan_index: row,
+            scan_line,
+        };
         let handler = (self.handler)()?;
-        let allow = handler
-            .as_ref()
-            .is_some_and(|handler| handler.allow_non_http_protocols);
-        let found = try_osc_links(
-            &LiveBuffer(buffer),
+        let found = try_osc_links_with_policy(
+            &source,
             y,
             |id| {
                 links
@@ -90,8 +123,14 @@ impl BrowserLinkProvider for NativeOscLinkProvider {
                     })
                     .transpose()
             },
-            allow,
-            is_http_url,
+            |text| {
+                let allow = handler
+                    .as_ref()
+                    .map(|handler| (handler.allow_non_http_protocols)())
+                    .transpose()?
+                    .unwrap_or(false);
+                Ok(allow || is_http_url(text))
+            },
         )?;
         let found = found.map(|links| {
             links

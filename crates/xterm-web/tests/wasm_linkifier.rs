@@ -188,7 +188,7 @@ fn real_rust_osc8_cells_resolve_wrap_activate_and_expire_on_trim() {
     let activated = Rc::new(Cell::new(0));
     let count = activated.clone();
     let handler = OscLinkHandler {
-        allow_non_http_protocols: false,
+        allow_non_http_protocols: Rc::new(|| Ok(false)),
         activate: Rc::new(move |_, link| {
             assert_eq!(
                 link.text,

@@ -24,7 +24,7 @@ No RefCell state borrow is held across activation/hover/leave/dispose callbacks.
 
 ## Native OSC provider
 
-Register `NativeOscLinkProvider::new(Rc::downgrade(native_terminal), window, handler_settings)` before external providers, as upstream does. The settings callback returns Result<Option<OscLinkHandler>, JsValue> and is sampled once per provideLinks call. None uses confirmation/default navigation and only valid http/https URIs. A custom handler specifies the protocol bypass and activation/hover/leave callbacks.
+Register `NativeOscLinkProvider::new(Rc::downgrade(native_terminal), window, handler_settings)` before external providers, as upstream does. The settings callback returns Result<Option<OscLinkHandler>, JsValue> and is sampled once for each existing requested row. Missing rows do not read options. The allow_non_http_protocols member is a fallible getter, evaluated after URI lookup and wrapped-range expansion for each completed nonempty link run. None uses confirmation/default navigation and only valid http/https URIs. A custom handler specifies the protocol bypass and activation/hover/leave callbacks.
 
 Discovery reads the active Rust buffer and `TerminalState.links` directly. The OscBuffer.with_line contract releases each row borrow before URI lookup or host callback. It does not snapshot or clone scrollback. URL IDs use u64 to retain source safe-integer identities, including 2^53, and URI strings retain unpaired UTF-16 surrogates. WHATWG URL's USVString conversion replaces surrogates only at the URL-constructor boundary, never in stored callback text.
 
@@ -32,7 +32,7 @@ A full JavaScript custom-handler binding still needs deliberate shared range-obj
 
 ## Scheduling helpers
 
-`BrowserRenderDebouncer::try_new(window, render)` and `BrowserTimeDebouncer::try_new(window, threshold_ms, render)` take fallible callbacks. Existing new constructors wrap infallible callbacks. Host closures return Result to the JavaScript event loop; callback failure stops subsequent callbacks/cleanup exactly where source execution stops. Native debouncers expose on_frame/on_timeout as Result, and tests must check it.
+`BrowserRenderDebouncer::try_new(window, render)` and `BrowserTimeDebouncer::try_new(window, threshold_ms, render)` take fallible callbacks. Existing new constructors wrap infallible callbacks. Host closures return Result to the JavaScript event loop; callback failure stops subsequent callbacks/cleanup exactly where source execution stops. Native debouncers expose on_frame/on_timeout as Result, and tests must check it. BrowserRenderDebouncer.add_try_refresh_callback propagates callback failures without clearing the pending callback array. BrowserTimerScheduler::new(window, Function) is shared by other timeout-driven browser components; callers own the Rust Closure until outstanding jobs are canceled. Reflect-based clearTimeout preserves host exceptions.
 
 Use one `WindowAnimationQueues` registry per browser platform and share it across all services/terminals. for_window coalesces calls targeting the same Window. Scheduled runners receive a queue handle, so reentrant scheduling need not capture a strong queue and form a reference cycle. WindowIntervalTimer runners likewise receive their timer handle for safe reentrant cancellation.
 
