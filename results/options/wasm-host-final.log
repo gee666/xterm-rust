@@ -1,0 +1,203 @@
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+warning: variant `Debug` is never constructed
+  --> crates\xterm-core\src\terminal\state.rs:15:5
+   |
+13 | pub(crate) enum CoreAction {
+   |                 ---------- variant in this enum
+14 |     Reply(Vec<u16>),
+15 |     Debug(Vec<u16>),
+   |     ^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: method `mode_debug` is never used
+  --> crates\xterm-core\src\terminal\state.rs:97:19
+   |
+48 | impl TerminalState {
+   | ------------------ method in this implementation
+...
+97 |     pub(crate) fn mode_debug(&mut self, text: &str) -> Result<(), TerminalError> {
+   |                   ^^^^^^^^^^
+
+warning: `xterm-core` (lib) generated 2 warnings
+    Checking xterm-addons v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons)
+    Checking xterm-web v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web)
+error[E0433]: failed to resolve: could not find `theme_css` in `super`
+   --> crates\xterm-web\src\renderer\dom\mod.rs:235:44
+    |
+235 |             .set_text_content(Some(&super::theme_css::theme_css(
+    |                                            ^^^^^^^^^ could not find `theme_css` in `super`
+
+error[E0603]: module `localization` is private
+ --> crates\xterm-web\src\terminal\runtime.rs:4:28
+  |
+4 | use crate::{accessibility::localization::LocalizableStrings, input::touch::GestureContext,
+  |                            ^^^^^^^^^^^^ private module
+  |
+note: the module `localization` is defined here
+ --> crates\xterm-web\src\accessibility\mod.rs:5:1
+  |
+5 | mod localization;
+  | ^^^^^^^^^^^^^^^^^
+
+error[E0603]: module `localization` is private
+  --> crates\xterm-web\src\terminal\browser_services.rs:47:40
+   |
+47 |     pub strings: crate::accessibility::localization::LocalizableStrings,
+   |                                        ^^^^^^^^^^^^ private module
+   |
+note: the module `localization` is defined here
+  --> crates\xterm-web\src\accessibility\mod.rs:5:1
+   |
+5  | mod localization;
+   | ^^^^^^^^^^^^^^^^^
+help: consider importing this struct through its public re-export instead
+   |
+47 |     pub strings: crate::accessibility::LocalizableStrings,
+   |                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0603]: module `browser` is private
+  --> crates\xterm-web\src\terminal\browser_services.rs:48:61
+   |
+48 |     pub accessibility: RefCell<Option<crate::accessibility::browser::AccessibilityManager>>,
+   |                                                             ^^^^^^^ private module
+   |
+note: the module `browser` is defined here
+  --> crates\xterm-web\src\accessibility\mod.rs:12:1
+   |
+12 | mod browser;
+   | ^^^^^^^^^^^^
+help: consider importing this struct through its public re-export instead
+   |
+48 |     pub accessibility: RefCell<Option<crate::accessibility::AccessibilityManager>>,
+   |                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0308]: `?` operator has incompatible types
+   --> crates\xterm-web\src\renderer\dom\layout.rs:139:40
+    |
+139 |                   fragment.append_child(&self.selection_element(
+    |  ________________________________________^
+140 | |                     new.capped_start,
+141 | |                     start[0].min(end[0]),
+142 | |                     start[0].max(end[0]),
+143 | |                     new.capped_end - new.capped_start + 1,
+144 | |                 )?)?;
+    | |__________________^ expected `Node`, found `HtmlElement`
+    |
+    = note: `?` operator cannot convert from `web_sys::HtmlElement` to `Node`
+help: call `Into::into` on this expression to convert `web_sys::HtmlElement` into `Node`
+    |
+144 |                 )?.into())?;
+    |                   +++++++
+
+error[E0308]: `?` operator has incompatible types
+   --> crates\xterm-web\src\renderer\dom\layout.rs:156:40
+    |
+156 |                   fragment.append_child(&self.selection_element(
+    |  ________________________________________^
+157 | |                     new.capped_start,
+158 | |                     first_start,
+159 | |                     first_end,
+160 | |                     1,
+161 | |                 )?)?;
+    | |__________________^ expected `Node`, found `HtmlElement`
+    |
+    = note: `?` operator cannot convert from `web_sys::HtmlElement` to `Node`
+help: call `Into::into` on this expression to convert `web_sys::HtmlElement` into `Node`
+    |
+161 |                 )?.into())?;
+    |                   +++++++
+
+error[E0308]: `?` operator has incompatible types
+   --> crates\xterm-web\src\renderer\dom\layout.rs:162:40
+    |
+162 |                   fragment.append_child(&self.selection_element(
+    |  ________________________________________^
+163 | |                     new.capped_start + 1,
+164 | |                     0,
+165 | |                     cols,
+166 | |                     new.capped_end - new.capped_start - 1,
+167 | |                 )?)?;
+    | |__________________^ expected `Node`, found `HtmlElement`
+    |
+    = note: `?` operator cannot convert from `web_sys::HtmlElement` to `Node`
+help: call `Into::into` on this expression to convert `web_sys::HtmlElement` into `Node`
+    |
+167 |                 )?.into())?;
+    |                   +++++++
+
+error[E0308]: `?` operator has incompatible types
+   --> crates\xterm-web\src\renderer\dom\layout.rs:174:44
+    |
+174 |                       fragment.append_child(&self.selection_element(
+    |  ____________________________________________^
+175 | |                         new.capped_end,
+176 | |                         0,
+177 | |                         last_end,
+178 | |                         1,
+179 | |                     )?)?;
+    | |______________________^ expected `Node`, found `HtmlElement`
+    |
+    = note: `?` operator cannot convert from `web_sys::HtmlElement` to `Node`
+help: call `Into::into` on this expression to convert `web_sys::HtmlElement` into `Node`
+    |
+179 |                     )?.into())?;
+    |                       +++++++
+
+error[E0283]: type annotations needed
+   --> crates\xterm-web\src\accessibility\browser_rows.rs:110:77
+    |
+110 |         if event.related_target().as_ref().map(|target| target.as_ref()) != Some(adjacent.element.as_ref()) { return Ok(()); }
+    |                                                                ------       ^^^^ cannot infer type of the type parameter `T` declared on the enum `Option`
+    |                                                                |
+    |                                                                type must be known at this point
+    |
+    = note: multiple `impl`s satisfying `EventTarget: AsRef<_>` found in the `web_sys` crate:
+            - impl AsRef<EventTarget> for EventTarget;
+            - impl AsRef<js_sys::Object> for EventTarget;
+            - impl AsRef<wasm_bindgen::JsValue> for EventTarget;
+help: consider specifying the generic argument
+    |
+110 |         if event.related_target().as_ref().map(|target| target.as_ref()) != Some::<&A>(adjacent.element.as_ref()) { return Ok(()); }
+    |                                                                                 ++++++
+
+error[E0283]: type annotations needed
+   --> crates\xterm-web\src\accessibility\browser_rows.rs:110:77
+    |
+110 |         if event.related_target().as_ref().map(|target| target.as_ref()) != Some(adjacent.element.as_ref()) { return Ok(()); }
+    |                                                                             ^^^^                  ------ type must be known at this point
+    |                                                                             |
+    |                                                                             cannot infer type of the type parameter `T` declared on the enum `Option`
+    |
+    = note: multiple `impl`s satisfying `web_sys::HtmlElement: AsRef<_>` found in the `web_sys` crate:
+            - impl AsRef<Element> for web_sys::HtmlElement;
+            - impl AsRef<EventTarget> for web_sys::HtmlElement;
+            - impl AsRef<Node> for web_sys::HtmlElement;
+            - impl AsRef<js_sys::Object> for web_sys::HtmlElement;
+            - impl AsRef<wasm_bindgen::JsValue> for web_sys::HtmlElement;
+            - impl AsRef<web_sys::HtmlElement> for web_sys::HtmlElement;
+help: consider specifying the generic argument
+    |
+110 |         if event.related_target().as_ref().map(|target| target.as_ref()) != Some::<&A>(adjacent.element.as_ref()) { return Ok(()); }
+    |                                                                                 ++++++
+
+error[E0061]: this function takes 2 arguments but 3 arguments were supplied
+  --> crates\xterm-web\src\terminal\mod.rs:77:22
+   |
+77 |         let events = EventFunctions::new(&native, &writer, &browser_events);
+   |                      ^^^^^^^^^^^^^^^^^^^                   --------------- unexpected argument #3 of type `&std::rc::Rc<BrowserEvents>`
+   |
+note: associated function defined here
+  --> crates\xterm-web\src\terminal\event_functions.rs:19:12
+   |
+19 |     pub fn new(native: &headless::Terminal, writer: &WriteBuffer<BrowserWriteScheduler>) -> Self {
+   |            ^^^ ---------------------------  -------------------------------------------
+help: remove the extra argument
+   |
+77 -         let events = EventFunctions::new(&native, &writer, &browser_events);
+77 +         let events = EventFunctions::new(&native, &writer);
+   |
+
+Some errors have detailed explanations: E0061, E0283, E0308, E0433, E0603.
+For more information about an error, try `rustc --explain E0061`.
+error: could not compile `xterm-web` (lib) due to 11 previous errors

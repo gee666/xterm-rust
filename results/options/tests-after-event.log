@@ -1,0 +1,60 @@
+    Blocking waiting for file lock on build directory
+warning: unused `Result` that must be used
+   --> crates\xterm-core\src\headless\terminal.rs:218:9
+    |
+218 | /         self.engine
+219 | |             .try_borrow_mut()
+220 | |             .map_err(|_| HeadlessError::Borrowed)?
+221 | |             .dispose();
+    | |______________________^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+    = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+    |
+218 |         let _ = self.engine
+    |         +++++++
+
+warning: `xterm-core` (lib) generated 1 warning
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 3.34s
+     Running tests\options_boundary.rs (target\debug\deps\options_boundary-5fe90a75e4ba6e70.exe)
+
+running 9 tests
+test fallible_listener_commits_before_throw_and_stops_traversal ... ok
+test structured_defaults_and_typed_pty_have_properties ... ok
+test object_conversion_failure_is_not_nan_or_success ... ok
+test host_exception_text_is_lossless ... ok
+test property_getters_forward_host_errors_and_mutations ... ok
+test nested_listener_errors_keep_original_error_and_clear_frames ... ok
+test subscription_mutation_uses_original_event_snapshot ... ok
+test rust_unwind_removes_dispatch_frame_without_swallowing_panic ... ok
+test numeric_then_string_hint_and_failure_atomicity ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\options_service.rs (target\debug\deps\options_service-b98e1536c1a68c34.exe)
+
+running 19 tests
+test constructor_undefined_dimensions_use_defaults ... ok
+test disposal_clears_external_references_without_events ... ok
+test constructor_valid_dimensions ... ok
+test construction_unknown_keys_and_diagnostic_order ... ok
+test constructor_invalid_value_uses_default ... ok
+test long_radix_coercion_rounds_once ... ok
+test object_keys_are_nonempty ... ok
+test specific_option_change_duplicate_upstream_case ... ok
+test listener_reentrancy_reads_current_value_and_mutates ... ok
+test multiple_option_change ... ok
+test valid_font_weights ... ok
+test invalid_font_weights_normalize ... ok
+test on_option_change ... ok
+test specific_option_change_first_upstream_case ... ok
+test defaults_share_objects_but_not_platform_policy ... ok
+test strict_equality_and_raw_write ... ok
+test validation_boundaries_and_coercion ... ok
+test invalid_utf16_error_is_lossless ... ok
+test utf16_and_object_coercion ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -168,8 +168,12 @@ const actual = run.stdout.trimEnd().split(/\r?\n/);
 assert.equal(actual.length, expected.length);
 for (let i = 0; i < actual.length; i++) {
   if (actual[i] !== expected[i]) {
-    writeFileSync('results/options/counterexample.json', JSON.stringify({seed, index: i, operation: i < keys.length ? '@defaults' : operations[i - keys.length + 1], expected: expected[i], actual: actual[i]}, null, 2));
-    assert.fail(`Mismatch at ${i}; see results/options/counterexample.json`);
+    const detail = {seed, index: i, operation: i < keys.length ? '@defaults' : operations[i - keys.length + 1], expected: expected[i], actual: actual[i]};
+    const json = JSON.stringify(detail, null, 2) + '\n';
+    mkdirSync('results/options/counterexamples', {recursive:true});
+    const artifact = `results/options/counterexamples/${createHash('sha256').update(json).digest('hex')}.json`;
+    writeFileSync(artifact, json);
+    assert.fail(`Mismatch at ${i}; see ${artifact}`);
   }
 }
 const rustc = spawnSync(process.env.RUSTC ?? 'rustc', ['--version'], {encoding:'utf8', timeout:10000});

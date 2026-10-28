@@ -1,43 +1,83 @@
-    Blocking waiting for file lock on build directory
    Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
-    Finished `test` profile [unoptimized] target(s) in 4.51s
-     Running tests\options_boundary.rs (target\debug\deps\options_boundary-5fe90a75e4ba6e70.exe)
+error[E0423]: expected value, found enum `EmitError`
+  --> crates\xterm-core\src\buffer\buffer_set.rs:80:25
+   |
+80 |                         EmitError
+   |                         ^^^^^^^^^
+   |
+note: the enum is defined here
+  --> crates\xterm-core\src\event.rs:18:1
+   |
+18 | / pub enum EmitError {
+19 | |     ListenerArrayCleared,
+20 | |     /// Retain an actual callback failure, including a browser-owned wrapper
+21 | |     /// around a thrown JsValue. The portable core does not depend on that type.
+22 | |     Callback(Rc<dyn std::error::Error>),
+23 | | }
+   | |_^
+help: you might have meant to use the following enum variant
+   |
+80 |                         input::write_buffer::EmitError::ListenerArrayCleared
+   |
+help: alternatively, the following enum variant is available
+   |
+80 |                         (input::write_buffer::EmitError::Callback(/* fields */))
+   |
 
-running 9 tests
-test fallible_listener_commits_before_throw_and_stops_traversal ... ok
-test nested_listener_errors_keep_original_error_and_clear_frames ... ok
-test numeric_then_string_hint_and_failure_atomicity ... ok
-test structured_defaults_and_typed_pty_have_properties ... ok
-test object_conversion_failure_is_not_nan_or_success ... ok
-test property_getters_forward_host_errors_and_mutations ... ok
-test host_exception_text_is_lossless ... ok
-test subscription_mutation_uses_original_event_snapshot ... ok
-test rust_unwind_removes_dispatch_frame_without_swallowing_panic ... ok
+error[E0423]: expected value, found enum `EmitError`
+  --> crates\xterm-core\src\buffer\service.rs:45:30
+   |
+45 |                 .map_err(|_| EmitError)?
+   |                              ^^^^^^^^^
+   |
+note: the enum is defined here
+  --> crates\xterm-core\src\event.rs:18:1
+   |
+18 | / pub enum EmitError {
+19 | |     ListenerArrayCleared,
+20 | |     /// Retain an actual callback failure, including a browser-owned wrapper
+21 | |     /// around a thrown JsValue. The portable core does not depend on that type.
+22 | |     Callback(Rc<dyn std::error::Error>),
+23 | | }
+   | |_^
+help: you might have meant to use the following enum variant
+   |
+45 |                 .map_err(|_| input::write_buffer::EmitError::ListenerArrayCleared)?
+   |                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: alternatively, the following enum variant is available
+   |
+45 |                 .map_err(|_| (input::write_buffer::EmitError::Callback(/* fields */)))?
+   |                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+error[E0624]: method `alignment_pattern` is private
+   --> crates\xterm-core\src\terminal\register.rs:114:26
+    |
+114 |         command(|s, _| s.alignment_pattern(), Rc::clone(state)),
+    |                          ^^^^^^^^^^^^^^^^^ private method
+    |
+   ::: crates\xterm-core\src\terminal\escape.rs:48:5
+    |
+48  |     fn alignment_pattern(&mut self) -> Result<(), TerminalError> {
+    |     ------------------------------------------------------------ private method defined here
 
-     Running tests\options_service.rs (target\debug\deps\options_service-b98e1536c1a68c34.exe)
+error[E0509]: cannot move out of type `DisposableStore`, which implements the `Drop` trait
+   --> crates\xterm-core\src\lifecycle.rs:117:9
+    |
+117 |         Self { explicit_disposal: true, ..Self::default() }
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |         |
+    |         cannot move out of here
+    |         move occurs because value has type `std::cell::RefCell<StoreResources>`, which does not implement the `Copy` trait
 
-running 19 tests
-test construction_unknown_keys_and_diagnostic_order ... ok
-test constructor_valid_dimensions ... ok
-test constructor_invalid_value_uses_default ... ok
-test constructor_undefined_dimensions_use_defaults ... ok
-test specific_option_change_first_upstream_case ... ok
-test defaults_share_objects_but_not_platform_policy ... ok
-test on_option_change ... ok
-test utf16_and_object_coercion ... ok
-test multiple_option_change ... ok
-test object_keys_are_nonempty ... ok
-test specific_option_change_duplicate_upstream_case ... ok
-test validation_boundaries_and_coercion ... ok
-test invalid_font_weights_normalize ... ok
-test strict_equality_and_raw_write ... ok
-test invalid_utf16_error_is_lossless ... ok
-test valid_font_weights ... ok
-test listener_reentrancy_reads_current_value_and_mutates ... ok
-test long_radix_coercion_rounds_once ... ok
-test disposal_clears_external_references_without_events ... ok
+error[E0509]: cannot move out of type `DisposableStore`, which implements the `Drop` trait
+   --> crates\xterm-core\src\lifecycle.rs:117:9
+    |
+117 |         Self { explicit_disposal: true, ..Self::default() }
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |         |
+    |         cannot move out of here
+    |         move occurs because value has type `std::cell::Cell<bool>`, which does not implement the `Copy` trait
 
-test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
-
+Some errors have detailed explanations: E0423, E0509, E0624.
+For more information about an error, try `rustc --explain E0423`.
+error: could not compile `xterm-core` (lib) due to 5 previous errors
