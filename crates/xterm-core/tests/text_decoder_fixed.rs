@@ -25,7 +25,9 @@ fn bounded_targets_match_all_original_chunked_traces() {
         let states: Vec<_> = fields[3].split(';').collect();
         assert_eq!(fields.len(), 4);
         assert_eq!(input.len(), outputs.len());
-        if fields[0] == "8" { assert_eq!(states.len(), input.len()); }
+        if fields[0] == "8" {
+            assert_eq!(states.len(), input.len());
+        }
         for capacity in [0, 1, 2, 5, 13] {
             let mut utf8 = Utf8ToUtf32::new();
             let mut utf16 = StringToUtf32::new();
@@ -80,6 +82,28 @@ fn pending_surrogate_overflow_is_counted_without_out_of_bounds_writes() {
     decoder.clear();
     assert_eq!(decoder.decode_to_slice(&[0xdc00], &mut target), 1);
     assert_eq!(target[0], 0xdc00);
+}
+
+#[test]
+fn public_interim_mutations_preserve_full_fold_sparse_tail_and_retry() {
+    let mut decoder = Utf8ToUtf32::new();
+    decoder.interim = [0xc2, 0x80, 0x80];
+    let mut vector = Vec::new();
+    assert_eq!(decoder.decode(b"A", &mut vector), 2);
+    assert_eq!(vector, [0x2000, 0x41]);
+    decoder.interim = [0xe1, 0, 0x80];
+    assert_eq!(decoder.decode_to_slice(&[0x80], &mut []), 0);
+    assert_eq!(decoder.interim, [0xe1, 0x80, 0x80]);
+    let mut target = [SENTINEL; 3];
+    assert_eq!(decoder.decode_to_slice(b"A", &mut target), 2);
+    assert_eq!(target, [0x1000, 0x41, SENTINEL]);
+    decoder.interim = [0xc0, 0x80, 0];
+    let mut target = [SENTINEL; 2];
+    assert_eq!(decoder.decode_to_slice(b"abcd", &mut target), 5);
+    assert_eq!(target, [0, u32::from(b'a')]);
+    decoder.interim = [0xc2, 0x80, 0x80];
+    assert_eq!(decoder.decode_to_slice(&[], &mut []), 0);
+    assert_eq!(decoder.interim, [0xc2, 0x80, 0x80]);
 }
 
 #[test]

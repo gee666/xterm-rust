@@ -91,7 +91,7 @@ impl UnicodeGraphemesAddon {
     }
 
     pub fn activate(&self, unicode: Rc<UnicodeService>) -> Result<(), UnicodeServiceError> {
-        let (plain, graphemes) = {
+        let (plain, graphemes, previous) = {
             let mut state = self.state.borrow_mut();
             let plain = Rc::clone(
                 state
@@ -103,9 +103,12 @@ impl UnicodeGraphemesAddon {
                     .graphemes
                     .get_or_insert_with(|| Rc::new(UnicodeGraphemeProvider::new(true))),
             );
-            state.unicode = Some(Rc::clone(&unicode));
-            (plain, graphemes)
+            let previous = state.unicode.replace(Rc::clone(&unicode));
+            (plain, graphemes, previous)
         };
+        // The final old service owner can drop listeners whose captures reenter
+        // this addon. Commit the new service first and release the state borrow.
+        drop(previous);
         unicode.register(plain)?;
         unicode.register(graphemes)?;
         self.state.borrow_mut().old_version = unicode.active_version();

@@ -7,6 +7,9 @@
 //! surrogates are observable. Vector APIs append and report new values. Fixed
 //! slice APIs preserve JS typed-array overflow drops and logical write counts.
 
+#[path = "text_decoder_utf8.rs"]
+mod utf8_pending;
+
 /// Convert a code point to JavaScript UTF-16 units, including lone surrogates.
 /// Out-of-range values retain the upstream `String.fromCharCode` truncation.
 pub fn string_from_code_point(code_point: u32) -> Vec<u16> {
@@ -188,13 +191,21 @@ impl Utf8ToUtf32 {
         let original_len = target.position();
         let mut index = 0;
         if self.interim[0] != 0 {
-            let count = self.interim.iter().take_while(|&&byte| byte != 0).count();
-            let mut sequence = [0; 4];
-            sequence[..count].copy_from_slice(&self.interim[..count]);
-            self.clear();
-            self.decode_sequence(sequence, count, input, &mut index, target);
-            if self.interim[0] != 0 {
-                return target.position() - original_len;
+            let Some(start) = self.decode_pending(input, target) else {
+                return 0;
+            };
+            if start < 0 {
+                // With a manually completed overlong public prefix, the JS
+                // ASCII shortcut reads input[-1] and stores it as typed-array0.
+                if input.len() >= 4 && input[..3].iter().all(u8::is_ascii) {
+                    target.push(0);
+                    for &byte in &input[..3] {
+                        target.push(u32::from(byte));
+                    }
+                    index = 3;
+                }
+            } else {
+                index = start as usize;
             }
         }
         while index < input.len() {
@@ -202,8 +213,8 @@ impl Utf8ToUtf32 {
             index += 1;
             if first < 0x80 {
                 target.push(u32::from(first));
-            } else if sequence_length(first).is_some() {
-                self.decode_sequence([first, 0, 0, 0], 1, input, &mut index, target);
+            } else if let Some(length) = sequence_length(first) {
+                self.decode_sequence([first, 0, 0, 0], 1, length, input, &mut index, target);
                 if self.interim[0] != 0 {
                     break;
                 }
@@ -216,12 +227,11 @@ impl Utf8ToUtf32 {
         &mut self,
         mut sequence: [u8; 4],
         mut count: usize,
+        length: usize,
         input: &[u8],
         index: &mut usize,
         target: &mut T,
     ) {
-        // An externally changed interim prefix uses upstream's fallback type 4.
-        let length = sequence_length(sequence[0]).unwrap_or(4);
         while count < length {
             let Some(&byte) = input.get(*index) else {
                 self.interim[..count].copy_from_slice(&sequence[..count]);
