@@ -12,4 +12,4 @@ Pointer monitor has cloneable `GlobalPointerMoveMonitor`, `new`, `is_monitoring`
 
 Disposal order is visibility timer, pointer monitor, root pointer listener, vertical arrows in creation order, then slider pointer and click listeners. Pointer disposal does not invoke drag-end or remove the active class, matching source. DOM nodes are not removed by scrollbar disposal. Source delegate hit-testing uses client-rect top for both axes and omits the arrow offset. Preserve those source choices instead of silently fixing them.
 
-Source-only development and controlled build slots remain in effect. No new browser/runtime pass is claimed by this interface document.
+Verification now passes in Chromium 148, Firefox 150 and WebKit 26.4: eight pointer-monitor cases, six layout/drag cases and three deterministic arrow cases. `scripts/scrollbar-drag-check.mjs` also passes trusted horizontal/vertical capture, outside-node movement, release and listener cleanup in each engine. Run commands are in the scrollbar-dom-check skill. Task215 retains the explicit malformed raw-position arithmetic gap; this is not whole-terminal equivalence.

@@ -27,6 +27,8 @@ use xterm_web::{
     },
 };
 wasm_bindgen_test_configure!(run_in_browser);
+#[path = "support/trusted_scrollbar.rs"]
+mod trusted;
 
 struct Fixture<B: Deref<Target = Scrollbar>> {
     bar: Rc<B>,
