@@ -150,6 +150,10 @@ criteria. Component acceptance does not establish whole-terminal equivalence.
 - Existing differential/edge cases: `tests/string_builder_differential.rs`, four
   tests and the 264-trace corpus.
 - Existing evidence: `results/string-builder/{oracle,verification}.json` and logs.
-- Still required: exhaustive single-unit checks, full chunk-boundary/overflow
-  recovery matrix, arbitrary JS-number limit behavior, and explicit consumer
-  integration review. These are implementation or verification work, not blockers.
+- Followup task 75 implements all single-unit checks, every partition of the
+  directed surrogate sequences, boundary/overflow recovery matrices and exact
+  JavaScript numeric limits. Current corpus is 278 traces and 16,648 operations.
+- OSC and DCS import the shared builder; APC aliases the OSC adapter. The scoped
+  parser integration run exercises 48 tests covering exact-limit/overflow,
+  lone-surrogate and sync/async payload handling. It does not replace full
+  terminal/browser integration requirements.

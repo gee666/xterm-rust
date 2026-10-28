@@ -26,11 +26,15 @@ fn matches_seeded_javascript_traces() {
         let is_plain = columns[1] == "-";
         if columns[0] != previous {
             plain.reset();
-            limited = LimitedStringBuilder::new(if is_plain {
-                0
+            limited = if let Some(number) = columns[1].strip_prefix("j:") {
+                LimitedStringBuilder::with_js_limit(number.parse().unwrap())
             } else {
-                columns[1].parse().unwrap()
-            });
+                LimitedStringBuilder::new(if is_plain {
+                    0
+                } else {
+                    columns[1].parse().unwrap()
+                })
+            };
             previous = columns[0];
         }
         let input = units(columns[3]);
@@ -60,7 +64,7 @@ fn matches_seeded_javascript_traces() {
         assert_eq!(actual, units(columns[6]), "content on row {line}");
         count += 1;
     }
-    assert_eq!(count, 16_480);
+    assert_eq!(count, 16_648);
 }
 
 #[test]

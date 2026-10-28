@@ -1,0 +1,205 @@
+{
+  "scope": "String builders and specified parser-adapter tests only. Full terminal equivalence NOT PROVEN.",
+  "command": "node scripts/check-string-builders.mjs",
+  "platform": "win32",
+  "arch": "x64",
+  "node": "v24.15.0",
+  "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+  "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+  "freeBytesBefore": 1738002432,
+  "freeBytesAfter": 1736765440,
+  "sourceHashes": {
+    "crates/xterm-core/src/string_builder.rs": "3a50f3c396dbd53ee6a673097753620d792510d7a80f8e50610668649cfa7638",
+    "crates/xterm-core/tests/string_builder_upstream.rs": "a3e8a0e2384bed1355f7506ac2f80b2a13f34114d3b5fa111298d917956dd98b",
+    "crates/xterm-core/tests/string_builder_differential.rs": "2a73029b66415fb3aa3b464d37876ab1871afe109b468fbab206f8e84f2ef00f",
+    "crates/xterm-core/tests/string_builder_edges.rs": "e46dda65333f53ca3a5b1c2c5768daae182704d7b778785360eb742c6e30a7bf"
+  },
+  "oracle": {
+    "sourceSha256": "1c5fb0677d84788609304e7ea1efc3f760ad5e8c43dc691ceb83b283f1286114",
+    "testsSha256": "c7c82fac1221c9696a7d8dcdb0c2df0fb51509f3ff78cfeee831a256b5cba2d7",
+    "fixtureSha256": "2d05157960204a021b69aec433d77d78332f4e275a547a053500192022cd898c",
+    "baseline": {
+      "discovered": 17,
+      "executed": 17,
+      "passed": 17,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0,
+      "outcomes": [
+        {
+          "name": "StringBuilder / should start empty",
+          "status": "passed"
+        },
+        {
+          "name": "StringBuilder / should append a single chunk",
+          "status": "passed"
+        },
+        {
+          "name": "StringBuilder / should join multiple chunks in order",
+          "status": "passed"
+        },
+        {
+          "name": "StringBuilder / should handle empty chunks",
+          "status": "passed"
+        },
+        {
+          "name": "StringBuilder / should reset accumulated data",
+          "status": "passed"
+        },
+        {
+          "name": "StringBuilder / should allow appending after reset",
+          "status": "passed"
+        },
+        {
+          "name": "StringBuilder / should accumulate many small chunks without quadratic concatenation",
+          "status": "passed"
+        },
+        {
+          "name": "LimitedStringBuilder / should expose the configured limit",
+          "status": "passed"
+        },
+        {
+          "name": "LimitedStringBuilder / should start empty",
+          "status": "passed"
+        },
+        {
+          "name": "LimitedStringBuilder / should accept data up to the limit",
+          "status": "passed"
+        },
+        {
+          "name": "LimitedStringBuilder / should accept a single chunk exactly at the limit",
+          "status": "passed"
+        },
+        {
+          "name": "LimitedStringBuilder / should reject data exceeding the limit and clear the buffer",
+          "status": "passed"
+        },
+        {
+          "name": "LimitedStringBuilder / should reject a single chunk larger than the limit",
+          "status": "passed"
+        },
+        {
+          "name": "LimitedStringBuilder / should allow appending again after reset following a limit breach",
+          "status": "passed"
+        },
+        {
+          "name": "LimitedStringBuilder / should accumulate many chunks before hitting the limit",
+          "status": "passed"
+        },
+        {
+          "name": "LimitedStringBuilder / should reject when limit is zero and any data is appended",
+          "status": "passed"
+        },
+        {
+          "name": "LimitedStringBuilder / should allow zero-length appends at the limit",
+          "status": "passed"
+        }
+      ]
+    },
+    "seed": 5353501,
+    "traces": 278,
+    "operations": 16648,
+    "exhaustiveSingleUnits": 65536
+  },
+  "checks": [
+    {
+      "name": "expanded-oracle",
+      "command": "C:\\nvm4w\\nodejs\\node.exe",
+      "args": [
+        "--experimental-transform-types",
+        "scripts/string-builder-oracle.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "results/string-builder/runs/2026-10-28T00-00-06-398Z-916902a1-41f4-45e7-b02e-0af1e8f6242e/expanded-oracle.log",
+      "status": "passed"
+    },
+    {
+      "name": "expanded-tests",
+      "command": "cargo",
+      "args": [
+        "test",
+        "-p",
+        "xterm-core",
+        "--test",
+        "string_builder_upstream",
+        "--test",
+        "string_builder_differential",
+        "--test",
+        "string_builder_edges"
+      ],
+      "expectedTests": 27,
+      "exitCode": 0,
+      "signal": null,
+      "log": "results/string-builder/runs/2026-10-28T00-00-06-398Z-916902a1-41f4-45e7-b02e-0af1e8f6242e/expanded-tests.log",
+      "status": "passed",
+      "passed": 27,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "name": "expanded-rustfmt",
+      "command": "rustfmt",
+      "args": [
+        "--edition",
+        "2021",
+        "--check",
+        "crates/xterm-core/src/string_builder.rs",
+        "crates/xterm-core/tests/string_builder_upstream.rs",
+        "crates/xterm-core/tests/string_builder_differential.rs",
+        "crates/xterm-core/tests/string_builder_edges.rs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "results/string-builder/runs/2026-10-28T00-00-06-398Z-916902a1-41f4-45e7-b02e-0af1e8f6242e/expanded-rustfmt.log",
+      "status": "passed"
+    },
+    {
+      "name": "expanded-clippy",
+      "command": "cargo",
+      "args": [
+        "clippy",
+        "-p",
+        "xterm-core",
+        "--lib",
+        "--test",
+        "string_builder_upstream",
+        "--test",
+        "string_builder_differential",
+        "--test",
+        "string_builder_edges",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "log": "results/string-builder/runs/2026-10-28T00-00-06-398Z-916902a1-41f4-45e7-b02e-0af1e8f6242e/expanded-clippy.log",
+      "status": "failed"
+    },
+    {
+      "name": "parser-integration",
+      "command": "cargo",
+      "args": [
+        "test",
+        "-p",
+        "xterm-core",
+        "--test",
+        "dcs",
+        "--test",
+        "osc",
+        "--test",
+        "apc"
+      ],
+      "minimumTests": 48,
+      "status": "unrun"
+    }
+  ],
+  "status": "failed",
+  "nativePlatformsUnrun": [
+    "linux",
+    "darwin"
+  ],
+  "runId": "2026-10-28T00-00-06-398Z-916902a1-41f4-45e7-b02e-0af1e8f6242e"
+}

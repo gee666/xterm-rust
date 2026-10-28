@@ -1,7 +1,7 @@
 // Copyright (c) 2026 The xterm.js authors. All rights reserved.
 // Licensed under the MIT license.
 // Faithful assertions from source_repo/src/common/StringBuilder.test.ts.
-use xterm_core::string_builder::{LimitedStringBuilder, StringBuilder};
+use xterm_core::string_builder::{LimitedStringBuilder, PayloadLimit, StringBuilder};
 
 #[test]
 fn starts_empty() {
@@ -68,7 +68,10 @@ fn accumulates_many_small_chunks() {
 
 #[test]
 fn exposes_limit() {
-    assert_eq!(LimitedStringBuilder::new(42).limit(), 42);
+    assert_eq!(
+        LimitedStringBuilder::new(42).limit(),
+        PayloadLimit::Units(42)
+    );
 }
 
 #[test]

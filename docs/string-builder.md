@@ -9,17 +9,19 @@ retained. No dependency or platform adapter is needed.
 | Upstream | Rust |
 | --- | --- |
 | `new StringBuilder()` | `StringBuilder::new()` or `default()` |
-| `new LimitedStringBuilder(limit)` | `LimitedStringBuilder::new(limit: usize)` |
+| `new LimitedStringBuilder(limit)` | `new(limit: usize)` for native bounds; `with_js_limit(limit: f64)` for all JS Number values |
 | `length` | `len()` counts UTF-16 code units |
-| `limit` | `limit()` |
+| `limit` | `limit()` returns `PayloadLimit::Units(usize)` or `PayloadLimit::JavaScript(f64)` without losing metadata |
 | `append(string)` | `append(&str)` for valid Unicode, `append_utf16(&[u16])` for arbitrary JS strings |
 | `reset()` | `reset()` |
 | `toString()` | `as_utf16()` borrows exact JS code units; `to_utf8()` returns `Result<String, FromUtf16Error>` |
 
-Rust `usize` represents nonnegative, integral, addressable payload limits.
-Negative, fractional, NaN and infinite JavaScript limits are not accepted by
-this typed Rust API. This boundary is intentional, not a claim that arbitrary
-JavaScript numeric constructor arguments have equivalent Rust values.
+`PayloadLimit` distinguishes exact native unit bounds from JavaScript Number
+bounds. `new(usize)` retains integer overflow-safe comparison even at usize::MAX.
+`with_js_limit(f64)` preserves fractions, negative values, NaN, infinities and
+negative zero. It applies the source `length > limit` comparison. Thus a negative
+limit rejects even an empty append, NaN never rejects, and equality succeeds.
+The enum returned by `limit()` makes that representation explicit to callers.
 
 Lone surrogates survive append, observation and reset. A surrogate pair may be
 split across chunks. UTF-8 conversion returns an error for an unpaired surrogate
@@ -39,7 +41,7 @@ Run from the repository root with Node 24 and Rust 1.85 or newer:
 
 ```sh
 node --experimental-transform-types scripts/string-builder-oracle.mjs
-cargo test -p xterm-core --test string_builder_upstream --test string_builder_differential
+cargo test -p xterm-core --test string_builder_upstream --test string_builder_differential --test string_builder_edges
 rustfmt --edition 2021 --check crates/xterm-core/src/string_builder.rs crates/xterm-core/tests/string_builder_upstream.rs crates/xterm-core/tests/string_builder_differential.rs
 cargo clippy -p xterm-core --lib --test string_builder_upstream --test string_builder_differential --all-features -- -D warnings
 ```
@@ -59,15 +61,20 @@ single-chunk overflow, reuse after breach and reset, 100 chunks to the limit,
 zero-limit overflow and zero-limit empty appends. Assertions retain the original
 values and expected results.
 
-`tests/string_builder_differential.rs` adds four tests. One checks 264 traces
-containing 16,480 operations, generated with xorshift32 seed `0x51b01d`. Every
+`tests/string_builder_differential.rs` adds four tests. One checks 278 traces
+containing 16,648 operations, generated with xorshift32 seed `0x51b01d`. Every
 operation compares overflow status, exact UTF-16 length and all output units.
 Eight directed traces cover zero/equality limits, NUL, split pairs, isolated
 surrogates, empty appends and resets. Another 256 seeded traces mix reset and
 arbitrary UTF-16 appends with unlimited and 0..64-unit limits. Three focused tests
 cover UTF-8 helper counts, error handling and maximal representable Rust limits.
-The checked-in TSV records inputs and full expected states, so any mismatch
-identifies a retained counterexample by row number.
+Fourteen additional directed traces cover all JavaScript numeric limit classes,
+with exact configured metadata tested separately. The checked-in TSV records
+inputs and full expected states, so any mismatch identifies a retained
+counterexample by row number. The Node oracle also checks all 65,536 single code
+units. `tests/string_builder_edges.rs` adds six tests for those units, every
+partition of six surrogate/combining sequences, native boundary matrices,
+repeated overflow/recovery, numeric metadata and independent owned snapshots.
 
 `results/string-builder/oracle.json` records exact reference/fixture SHA-256
 hashes, seed, platform, Node version, all upstream names and baseline counts.

@@ -56,19 +56,35 @@ impl StringBuilder {
     }
 }
 
+/// An exact native unit bound or the original JavaScript numeric bound.
+/// JavaScript numbers preserve fractional, nonfinite and signed-zero values.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum PayloadLimit {
+    Units(usize),
+    JavaScript(f64),
+}
+
 /// Clears its accumulated payload whenever an append exceeds the fixed limit.
 /// A breach does not permanently reject future chunks.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct LimitedStringBuilder {
     builder: StringBuilder,
-    limit: usize,
+    limit: PayloadLimit,
 }
 
 impl LimitedStringBuilder {
     pub fn new(limit: usize) -> Self {
         Self {
             builder: StringBuilder::new(),
-            limit,
+            limit: PayloadLimit::Units(limit),
+        }
+    }
+
+    /// Preserve the full Number constructor contract of the source class.
+    pub fn with_js_limit(limit: f64) -> Self {
+        Self {
+            builder: StringBuilder::new(),
+            limit: PayloadLimit::JavaScript(limit),
         }
     }
 
@@ -80,7 +96,7 @@ impl LimitedStringBuilder {
         self.builder.is_empty()
     }
 
-    pub fn limit(&self) -> usize {
+    pub fn limit(&self) -> PayloadLimit {
         self.limit
     }
 
@@ -115,9 +131,15 @@ impl LimitedStringBuilder {
     }
 
     fn reject_length(&mut self, additional: usize) -> bool {
-        // len <= limit after every append. Subtraction also avoids overflowing
-        // usize for a caller-supplied limit near usize::MAX.
-        if additional > self.limit - self.len() {
+        let exceeded = match self.limit {
+            // The native constructor maintains len <= limit. Subtraction avoids
+            // wrapping even for usize::MAX. No units have been appended yet.
+            PayloadLimit::Units(limit) => additional > limit - self.len(),
+            // JS updates length as a Number before comparing. Converting the
+            // lengths separately matches that addition without usize overflow.
+            PayloadLimit::JavaScript(limit) => (self.len() as f64 + additional as f64) > limit,
+        };
+        if exceeded {
             self.reset();
             true
         } else {

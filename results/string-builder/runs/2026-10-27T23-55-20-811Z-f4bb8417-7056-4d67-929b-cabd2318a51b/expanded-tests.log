@@ -1,0 +1,491 @@
+    Blocking waiting for file lock on build directory
+   Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error[E0423]: expected value, found enum `EmitError`
+  --> crates\xterm-core\src\buffer\screen_markers.rs:52:73
+   |
+52 |                         let amount = i64::try_from(*amount).map_err(|_| EmitError)?;
+   |                                                                         ^^^^^^^^^
+   |
+note: the enum is defined here
+  --> crates\xterm-core\src\event.rs:18:1
+   |
+18 | / pub enum EmitError {
+19 | |     ListenerArrayCleared,
+20 | |     /// Retain an actual callback failure, including a browser-owned wrapper
+21 | |     /// around a thrown JsValue. The portable core does not depend on that type.
+22 | |     Callback(Rc<dyn std::error::Error>),
+23 | | }
+   | |_^
+help: you might have meant to use the following enum variant
+   |
+52 |                         let amount = i64::try_from(*amount).map_err(|_| input::write_buffer::EmitError::ListenerArrayCleared)?;
+   |                                                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: alternatively, the following enum variant is available
+   |
+52 |                         let amount = i64::try_from(*amount).map_err(|_| (input::write_buffer::EmitError::Callback(/* fields */)))?;
+   |                                                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0423]: expected value, found enum `EmitError`
+  --> crates\xterm-core\src\buffer\screen_markers.rs:53:81
+   |
+53 |                         marker.set_line(marker.line().checked_sub(amount).ok_or(EmitError)?);
+   |                                                                                 ^^^^^^^^^
+   |
+note: the enum is defined here
+  --> crates\xterm-core\src\event.rs:18:1
+   |
+18 | / pub enum EmitError {
+19 | |     ListenerArrayCleared,
+20 | |     /// Retain an actual callback failure, including a browser-owned wrapper
+21 | |     /// around a thrown JsValue. The portable core does not depend on that type.
+22 | |     Callback(Rc<dyn std::error::Error>),
+23 | | }
+   | |_^
+help: you might have meant to use the following enum variant
+   |
+53 |                         marker.set_line(marker.line().checked_sub(amount).ok_or(input::write_buffer::EmitError::ListenerArrayCleared)?);
+   |                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: alternatively, the following enum variant is available
+   |
+53 |                         marker.set_line(marker.line().checked_sub(amount).ok_or((input::write_buffer::EmitError::Callback(/* fields */)))?);
+   |                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0423]: expected value, found enum `EmitError`
+  --> crates\xterm-core\src\buffer\screen_markers.rs:68:76
+   |
+68 |                         let index = i64::try_from(event.index).map_err(|_| EmitError)?;
+   |                                                                            ^^^^^^^^^
+   |
+note: the enum is defined here
+  --> crates\xterm-core\src\event.rs:18:1
+   |
+18 | / pub enum EmitError {
+19 | |     ListenerArrayCleared,
+20 | |     /// Retain an actual callback failure, including a browser-owned wrapper
+21 | |     /// around a thrown JsValue. The portable core does not depend on that type.
+22 | |     Callback(Rc<dyn std::error::Error>),
+23 | | }
+   | |_^
+help: you might have meant to use the following enum variant
+   |
+68 |                         let index = i64::try_from(event.index).map_err(|_| input::write_buffer::EmitError::ListenerArrayCleared)?;
+   |                                                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: alternatively, the following enum variant is available
+   |
+68 |                         let index = i64::try_from(event.index).map_err(|_| (input::write_buffer::EmitError::Callback(/* fields */)))?;
+   |                                                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0423]: expected value, found enum `EmitError`
+  --> crates\xterm-core\src\buffer\screen_markers.rs:70:82
+   |
+70 | ...                   let amount = i64::try_from(event.amount).map_err(|_| EmitError)?;
+   |                                                                            ^^^^^^^^^
+   |
+note: the enum is defined here
+  --> crates\xterm-core\src\event.rs:18:1
+   |
+18 | / pub enum EmitError {
+19 | |     ListenerArrayCleared,
+20 | |     /// Retain an actual callback failure, including a browser-owned wrapper
+21 | |     /// around a thrown JsValue. The portable core does not depend on that type.
+22 | |     Callback(Rc<dyn std::error::Error>),
+23 | | }
+   | |_^
+help: you might have meant to use the following enum variant
+   |
+70 |                             let amount = i64::try_from(event.amount).map_err(|_| input::write_buffer::EmitError::ListenerArrayCleared)?;
+   |                                                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: alternatively, the following enum variant is available
+   |
+70 |                             let amount = i64::try_from(event.amount).map_err(|_| (input::write_buffer::EmitError::Callback(/* fields */)))?;
+   |                                                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0423]: expected value, found enum `EmitError`
+  --> crates\xterm-core\src\buffer\screen_markers.rs:71:85
+   |
+71 | ...                   marker.set_line(marker.line().checked_add(amount).ok_or(EmitError)?);
+   |                                                                               ^^^^^^^^^
+   |
+note: the enum is defined here
+  --> crates\xterm-core\src\event.rs:18:1
+   |
+18 | / pub enum EmitError {
+19 | |     ListenerArrayCleared,
+20 | |     /// Retain an actual callback failure, including a browser-owned wrapper
+21 | |     /// around a thrown JsValue. The portable core does not depend on that type.
+22 | |     Callback(Rc<dyn std::error::Error>),
+23 | | }
+   | |_^
+help: you might have meant to use the following enum variant
+   |
+71 |                             marker.set_line(marker.line().checked_add(amount).ok_or(input::write_buffer::EmitError::ListenerArrayCleared)?);
+   |                                                                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: alternatively, the following enum variant is available
+   |
+71 |                             marker.set_line(marker.line().checked_add(amount).ok_or((input::write_buffer::EmitError::Callback(/* fields */)))?);
+   |                                                                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0423]: expected value, found enum `EmitError`
+  --> crates\xterm-core\src\buffer\screen_markers.rs:84:76
+   |
+84 |                         let index = i64::try_from(event.index).map_err(|_| EmitError)?;
+   |                                                                            ^^^^^^^^^
+   |
+note: the enum is defined here
+  --> crates\xterm-core\src\event.rs:18:1
+   |
+18 | / pub enum EmitError {
+19 | |     ListenerArrayCleared,
+20 | |     /// Retain an actual callback failure, including a browser-owned wrapper
+21 | |     /// around a thrown JsValue. The portable core does not depend on that type.
+22 | |     Callback(Rc<dyn std::error::Error>),
+23 | | }
+   | |_^
+help: you might have meant to use the following enum variant
+   |
+84 |                         let index = i64::try_from(event.index).map_err(|_| input::write_buffer::EmitError::ListenerArrayCleared)?;
+   |                                                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: alternatively, the following enum variant is available
+   |
+84 |                         let index = i64::try_from(event.index).map_err(|_| (input::write_buffer::EmitError::Callback(/* fields */)))?;
+   |                                                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0423]: expected value, found enum `EmitError`
+  --> crates\xterm-core\src\buffer\screen_markers.rs:85:78
+   |
+85 |                         let amount = i64::try_from(event.amount).map_err(|_| EmitError)?;
+   |                                                                              ^^^^^^^^^
+   |
+note: the enum is defined here
+  --> crates\xterm-core\src\event.rs:18:1
+   |
+18 | / pub enum EmitError {
+19 | |     ListenerArrayCleared,
+20 | |     /// Retain an actual callback failure, including a browser-owned wrapper
+21 | |     /// around a thrown JsValue. The portable core does not depend on that type.
+22 | |     Callback(Rc<dyn std::error::Error>),
+23 | | }
+   | |_^
+help: you might have meant to use the following enum variant
+   |
+85 |                         let amount = i64::try_from(event.amount).map_err(|_| input::write_buffer::EmitError::ListenerArrayCleared)?;
+   |                                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: alternatively, the following enum variant is available
+   |
+85 |                         let amount = i64::try_from(event.amount).map_err(|_| (input::write_buffer::EmitError::Callback(/* fields */)))?;
+   |                                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0423]: expected value, found enum `EmitError`
+  --> crates\xterm-core\src\buffer\screen_markers.rs:86:67
+   |
+86 |                         let end = index.checked_add(amount).ok_or(EmitError)?;
+   |                                                                   ^^^^^^^^^
+   |
+note: the enum is defined here
+  --> crates\xterm-core\src\event.rs:18:1
+   |
+18 | / pub enum EmitError {
+19 | |     ListenerArrayCleared,
+20 | |     /// Retain an actual callback failure, including a browser-owned wrapper
+21 | |     /// around a thrown JsValue. The portable core does not depend on that type.
+22 | |     Callback(Rc<dyn std::error::Error>),
+23 | | }
+   | |_^
+help: you might have meant to use the following enum variant
+   |
+86 |                         let end = index.checked_add(amount).ok_or(input::write_buffer::EmitError::ListenerArrayCleared)?;
+   |                                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: alternatively, the following enum variant is available
+   |
+86 |                         let end = index.checked_add(amount).ok_or((input::write_buffer::EmitError::Callback(/* fields */)))?;
+   |                                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0423]: expected value, found enum `EmitError`
+  --> crates\xterm-core\src\buffer\screen_markers.rs:91:85
+   |
+91 | ...                   marker.set_line(marker.line().checked_sub(amount).ok_or(EmitError)?);
+   |                                                                               ^^^^^^^^^
+   |
+note: the enum is defined here
+  --> crates\xterm-core\src\event.rs:18:1
+   |
+18 | / pub enum EmitError {
+19 | |     ListenerArrayCleared,
+20 | |     /// Retain an actual callback failure, including a browser-owned wrapper
+21 | |     /// around a thrown JsValue. The portable core does not depend on that type.
+22 | |     Callback(Rc<dyn std::error::Error>),
+23 | | }
+   | |_^
+help: you might have meant to use the following enum variant
+   |
+91 |                             marker.set_line(marker.line().checked_sub(amount).ok_or(input::write_buffer::EmitError::ListenerArrayCleared)?);
+   |                                                                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: alternatively, the following enum variant is available
+   |
+91 |                             marker.set_line(marker.line().checked_sub(amount).ok_or((input::write_buffer::EmitError::Callback(/* fields */)))?);
+   |                                                                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0423]: expected value, found enum `EmitError`
+  --> crates\xterm-core\src\buffer\cleanup.rs:77:29
+   |
+77 |                         Err(EmitError)
+   |                             ^^^^^^^^^
+   |
+note: the enum is defined here
+  --> crates\xterm-core\src\event.rs:18:1
+   |
+18 | / pub enum EmitError {
+19 | |     ListenerArrayCleared,
+20 | |     /// Retain an actual callback failure, including a browser-owned wrapper
+21 | |     /// around a thrown JsValue. The portable core does not depend on that type.
+22 | |     Callback(Rc<dyn std::error::Error>),
+23 | | }
+   | |_^
+help: you might have meant to use the following enum variant
+   |
+77 |                         Err(input::write_buffer::EmitError::ListenerArrayCleared)
+   |                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: alternatively, the following enum variant is available
+   |
+77 |                         Err((input::write_buffer::EmitError::Callback(/* fields */)))
+   |                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0423]: expected value, found enum `EmitError`
+  --> crates\xterm-core\src\buffer\buffer_set.rs:80:25
+   |
+80 |                         EmitError
+   |                         ^^^^^^^^^
+   |
+note: the enum is defined here
+  --> crates\xterm-core\src\event.rs:18:1
+   |
+18 | / pub enum EmitError {
+19 | |     ListenerArrayCleared,
+20 | |     /// Retain an actual callback failure, including a browser-owned wrapper
+21 | |     /// around a thrown JsValue. The portable core does not depend on that type.
+22 | |     Callback(Rc<dyn std::error::Error>),
+23 | | }
+   | |_^
+help: you might have meant to use the following enum variant
+   |
+80 |                         input::write_buffer::EmitError::ListenerArrayCleared
+   |
+help: alternatively, the following enum variant is available
+   |
+80 |                         (input::write_buffer::EmitError::Callback(/* fields */))
+   |
+
+error[E0423]: expected value, found enum `EmitError`
+  --> crates\xterm-core\src\buffer\service.rs:45:30
+   |
+45 |                 .map_err(|_| EmitError)?
+   |                              ^^^^^^^^^
+   |
+note: the enum is defined here
+  --> crates\xterm-core\src\event.rs:18:1
+   |
+18 | / pub enum EmitError {
+19 | |     ListenerArrayCleared,
+20 | |     /// Retain an actual callback failure, including a browser-owned wrapper
+21 | |     /// around a thrown JsValue. The portable core does not depend on that type.
+22 | |     Callback(Rc<dyn std::error::Error>),
+23 | | }
+   | |_^
+help: you might have meant to use the following enum variant
+   |
+45 |                 .map_err(|_| input::write_buffer::EmitError::ListenerArrayCleared)?
+   |                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: alternatively, the following enum variant is available
+   |
+45 |                 .map_err(|_| (input::write_buffer::EmitError::Callback(/* fields */)))?
+   |                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0423]: expected value, found enum `EmitError`
+  --> crates\xterm-core\src\decoration_service.rs:82:38
+   |
+82 |                         .map_err(|_| EmitError)?;
+   |                                      ^^^^^^^^^
+   |
+note: the enum is defined here
+  --> crates\xterm-core\src\event.rs:18:1
+   |
+18 | / pub enum EmitError {
+19 | |     ListenerArrayCleared,
+20 | |     /// Retain an actual callback failure, including a browser-owned wrapper
+21 | |     /// around a thrown JsValue. The portable core does not depend on that type.
+22 | |     Callback(Rc<dyn std::error::Error>),
+23 | | }
+   | |_^
+help: you might have meant to use the following enum variant
+   |
+82 |                         .map_err(|_| input::write_buffer::EmitError::ListenerArrayCleared)?;
+   |                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: alternatively, the following enum variant is available
+   |
+82 |                         .map_err(|_| (input::write_buffer::EmitError::Callback(/* fields */)))?;
+   |                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0423]: expected value, found enum `EmitError`
+   --> crates\xterm-core\src\options\mod.rs:232:28
+    |
+232 |                 return Err(EmitError);
+    |                            ^^^^^^^^^
+    |
+note: the enum is defined here
+   --> crates\xterm-core\src\event.rs:18:1
+    |
+18  | / pub enum EmitError {
+19  | |     ListenerArrayCleared,
+20  | |     /// Retain an actual callback failure, including a browser-owned wrapper
+21  | |     /// around a thrown JsValue. The portable core does not depend on that type.
+22  | |     Callback(Rc<dyn std::error::Error>),
+23  | | }
+    | |_^
+help: you might have meant to use the following enum variant
+    |
+232 |                 return Err(input::write_buffer::EmitError::ListenerArrayCleared);
+    |                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: alternatively, the following enum variant is available
+    |
+232 |                 return Err((input::write_buffer::EmitError::Callback(/* fields */)));
+    |                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0423]: expected value, found enum `crate::event::EmitError`
+  --> crates\xterm-core\src\terminal\mod.rs:83:65
+   |
+83 |             service.scroll_lines(difference, false).map_err(|_| crate::event::EmitError)
+   |                                                                 ^^^^^^^^^^^^^^^^^^^^^^^
+   |
+note: the enum is defined here
+  --> crates\xterm-core\src\event.rs:18:1
+   |
+18 | / pub enum EmitError {
+19 | |     ListenerArrayCleared,
+20 | |     /// Retain an actual callback failure, including a browser-owned wrapper
+21 | |     /// around a thrown JsValue. The portable core does not depend on that type.
+22 | |     Callback(Rc<dyn std::error::Error>),
+23 | | }
+   | |_^
+help: you might have meant to use the following enum variant
+   |
+83 |             service.scroll_lines(difference, false).map_err(|_| input::write_buffer::EmitError::ListenerArrayCleared)
+   |                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+help: alternatively, the following enum variant is available
+   |
+83 |             service.scroll_lines(difference, false).map_err(|_| (input::write_buffer::EmitError::Callback(/* fields */)))
+   |                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+error[E0425]: cannot find function `register` in module `registry`
+  --> crates\xterm-core\src\parser\osc.rs:97:19
+   |
+97 |         registry::register(&self.handlers, id, handler)
+   |                   ^^^^^^^^ not found in `registry`
+   |
+note: these functions exist but are inaccessible
+  --> crates\xterm-core\src\terminal\register.rs:6:1
+   |
+6  |   pub(super) fn register(parser: &mut EscapeSequenceParser, state: &Rc<RefCell<TerminalState>>) -> Result<(), TerminalError> {
+   |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `crate::terminal::register::register`: not accessible
+   |
+  ::: crates\xterm-core\src\parser\handler_registry.rs:69:1
+   |
+69 | / fn register<K: Eq + Hash, H: ?Sized + 'static>(
+70 | |     entries: &Rc<Entries<K, H>>, key: K, handler: HandlerHandle<H>,
+71 | | ) -> DisposableHandle {
+72 | |     let list = Rc::clone(entries.borrow_mut().entry(key).or_default());
+...  |
+84 | |     })
+85 | | }
+   | |_^ `crate::parser::handler::registry::register`: not accessible
+
+error[E0308]: mismatched types
+  --> crates\xterm-core\src\parser\osc.rs:70:23
+   |
+70 |             handlers: Rc::default(),
+   |                       ^^^^^^^^^^^^^ expected `HandlerRegistry<u64, ...>`, found `Rc<_, _>`
+   |
+   = note: expected struct `HandlerRegistry<u64, (dyn OscHandlerTrait + 'static)>`
+              found struct `std::rc::Rc<_, _>`
+help: try wrapping the expression in `parser::handler::registry::HandlerRegistry` (its field is private, but it's local to this crate and its privacy can be changed)
+   |
+70 |             handlers: parser::handler::registry::HandlerRegistry { entries: Rc::default() },
+   |                       +++++++++++++++++++++++++++++++++++++++++++++++++++++               +
+
+error[E0599]: no method named `borrow_mut` found for struct `HandlerRegistry` in the current scope
+    |
+   ::: crates\xterm-core\src\parser\handler_registry.rs:16:1
+    |
+16  | pub struct HandlerRegistry<K, H: ?Sized> {
+    | ---------------------------------------- method `borrow_mut` not found for this struct
+   --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\core\src\borrow.rs:205:8
+    |
+    = note: the method is available for `HandlerRegistry<u64, (dyn OscHandlerTrait + 'static)>` here
+   --> crates\xterm-core\src\parser\osc.rs:101:23
+    |
+101 |         self.handlers.borrow_mut().remove(&key(id));
+    |                       ^^^^^^^^^^
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `BorrowMut` which provides `borrow_mut` is implemented but not in scope; perhaps you want to import it
+    |
+9   + use std::borrow::BorrowMut;
+    |
+help: there is a method `borrow` with a similar name
+    |
+101 |         self.handlers.borrow().remove(&key(id));
+    |                       ~~~~~~
+
+error[E0599]: no method named `borrow_mut` found for struct `HandlerRegistry` in the current scope
+    |
+   ::: crates\xterm-core\src\parser\handler_registry.rs:16:1
+    |
+16  | pub struct HandlerRegistry<K, H: ?Sized> {
+    | ---------------------------------------- method `borrow_mut` not found for this struct
+   --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\core\src\borrow.rs:205:8
+    |
+    = note: the method is available for `HandlerRegistry<u64, (dyn OscHandlerTrait + 'static)>` here
+   --> crates\xterm-core\src\parser\osc.rs:113:23
+    |
+113 |         self.handlers.borrow_mut().clear();
+    |                       ^^^^^^^^^^
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `BorrowMut` which provides `borrow_mut` is implemented but not in scope; perhaps you want to import it
+    |
+9   + use std::borrow::BorrowMut;
+    |
+help: there is a method `borrow` with a similar name
+    |
+113 |         self.handlers.borrow().clear();
+    |                       ~~~~~~
+
+error[E0599]: no method named `borrow` found for struct `HandlerRegistry` in the current scope
+    |
+   ::: crates\xterm-core\src\parser\handler_registry.rs:16:1
+    |
+16  |   pub struct HandlerRegistry<K, H: ?Sized> {
+    |   ---------------------------------------- method `borrow` not found for this struct
+   --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181\library\core\src\borrow.rs:178:8
+    |
+    = note: the method is available for `HandlerRegistry<u64, (dyn OscHandlerTrait + 'static)>` here
+   --> crates\xterm-core\src\parser\osc.rs:174:14
+    |
+172 |           self.active = self
+    |  _______________________-
+173 | |             .handlers
+174 | |             .borrow()
+    | |_____________-^^^^^^
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `Borrow` which provides `borrow` is implemented but not in scope; perhaps you want to import it
+    |
+9   + use std::borrow::Borrow;
+    |
+help: there is a method `borrow_mut` with a similar name
+    |
+174 |             .borrow_mut()
+    |              ~~~~~~~~~~
+
+Some errors have detailed explanations: E0308, E0423, E0425, E0599.
+For more information about an error, try `rustc --explain E0308`.
+error: could not compile `xterm-core` (lib) due to 20 previous errors

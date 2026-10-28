@@ -53,14 +53,15 @@ const hex = units => Array.from(units, unit => unit.toString(16)).join(',');
 const unitsOf = str => Array.from({ length: str.length }, (_, i) => str.charCodeAt(i));
 const rows = [];
 let traceCount = 0;
-function trace(limit, operations) {
+function trace(limit, operations, javascriptLimit = false) {
   const id = traceCount++;
   const builder = limit === '-' ? new StringBuilder() : new LimitedStringBuilder(limit);
   for (const units of operations) {
     let overflow = false;
     if (units === null) builder.reset();
     else overflow = builder.append(String.fromCharCode(...units)) === true;
-    rows.push([id, limit, units === null ? 'reset' : 'append', hex(units ?? []),
+    const limitLabel = javascriptLimit ? `j:${Object.is(limit, -0) ? '-0' : String(limit)}` : limit;
+    rows.push([id, limitLabel, units === null ? 'reset' : 'append', hex(units ?? []),
       Number(overflow), builder.length, hex(unitsOf(builder.toString()))].join('\t'));
   }
 }
@@ -79,6 +80,20 @@ for (let i = 0; i < 256; i++) {
   }
   trace(limit, operations);
 }
+const numericLimits = [-0, 0, 0.5, 1, 1.5, -0.5, -1, NaN, Infinity, -Infinity,
+  Number.MAX_SAFE_INTEGER, 2 ** 53, Number.MAX_VALUE, Number.MIN_VALUE];
+for (const limit of numericLimits) {
+  trace(limit, [[], [0x41], [0x42], [], null, [], [0xd800], [0xdc00],
+    null, [0x41, 0xd83d, 0xde00], [0x301], []], true);
+}
+// Every single JS code unit is legal, including lone surrogates.
+for (let unit = 0; unit <= 0xffff; unit++) {
+  const builder = new StringBuilder();
+  builder.append(String.fromCharCode(unit));
+  if (builder.length !== 1 || builder.toString().charCodeAt(0) !== unit) {
+    throw new Error(`single-unit mismatch ${unit}`);
+  }
+}
 await writeFile(fixture, rows.join('\n') + '\n');
 const report = {
   source: path.relative(root, source), sourceSha256: await hash(source),
@@ -86,6 +101,7 @@ const report = {
   node: process.version, platform: process.platform, arch: process.arch,
   harness: 'Node TypeScript transform; synchronous describe/it; Node strict assertions replace chai',
   seed, traces: traceCount, operations: rows.length,
+  numericLimitTraces: numericLimits.length, exhaustiveSingleUnits: 65536,
   fixture: path.relative(root, fixture), fixtureSha256: await hash(fixture),
   baseline: { discovered: outcomes.length, executed: outcomes.length,
     passed: outcomes.filter(o => o.status === 'passed').length,
