@@ -6,6 +6,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { stripTypeScriptTypes } from 'node:module';
 import { resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { captureRustInputs, changedInputs } from './public-api-evidence.mjs';
 
 process.chdir(resolve(import.meta.dirname, '..'));
 const output = 'results/public-api';
@@ -128,14 +129,13 @@ else assert.equal(readFileSync(modeFixture, 'utf8'), modeText, 'modes fixture dr
 const fixtureText = `${rows.join('\n')}\n`;
 if (process.argv.includes('--generate')) writeFileSync(fixture, fixtureText);
 else assert.equal(readFileSync(fixture, 'utf8'), fixtureText, 'source/fixture drift; review before --generate');
+const rustExtras = ['crates/xterm-core/tests/public_api_differential.rs', fixture, modeFixture];
 const summary = {
   status: 'running', attempt, seed, randomValues: 4096, numericValues: values.length,
   fixtureRows: rows.length, modeSnapshotRows: modeRows.length, wrapperDispatchCases: dispatchCases, readonlyCases,
   sources: hashes, fixtureSha256: createHash('sha256').update(readFileSync(fixture)).digest('hex'),
   modeFixtureSha256: createHash('sha256').update(readFileSync(modeFixture)).digest('hex'),
-  rustInputs: Object.fromEntries(['crates/xterm-core/src/public_api/validation.rs',
-    'crates/xterm-core/src/headless/modes.rs', 'crates/xterm-core/tests/public_api_differential.rs']
-    .map(path => [path, createHash('sha256').update(readFileSync(path)).digest('hex')])),
+  rustInputs: captureRustInputs(rustExtras),
   node: process.version, platform: `${process.platform}-${process.arch}`,
   command: 'cargo test -p xterm-core --test public_api_differential',
   scope: 'PA01 validators/fake-core dispatch; PA02 readonly/proposed errors; PA05 service-backed snapshots, not escape dispatch',
@@ -153,8 +153,7 @@ for (const name of ['numeric-cargo', attempt]) {
 summary.status = run.status === 0 ? 'passed' : 'failed';
 summary.exitCode = run.status;
 summary.error = run.error?.message ?? null;
-summary.changedDuringRun = Object.entries(summary.rustInputs).filter(([path, hash]) =>
-  createHash('sha256').update(readFileSync(path)).digest('hex') !== hash).map(([path]) => path);
+summary.changedDuringRun = changedInputs(summary.rustInputs, captureRustInputs(rustExtras));
 if (summary.changedDuringRun.length) summary.status = 'changed-during-run';
 for (const path of sources) assert.equal(createHash('sha256').update(readFileSync(path)).digest('hex'), hashes[path]);
 writeFileSync(summaryPath, JSON.stringify(summary, null, 2) + '\n');

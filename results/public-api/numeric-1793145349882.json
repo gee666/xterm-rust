@@ -1,0 +1,37 @@
+{
+  "status": "failed",
+  "attempt": "numeric-1793145349882",
+  "seed": 1346449457,
+  "randomValues": 4096,
+  "numericValues": 4115,
+  "fixtureRows": 8238,
+  "modeSnapshotRows": 12288,
+  "wrapperDispatchCases": 90530,
+  "readonlyCases": 6,
+  "sources": {
+    "source_repo/src/headless/public/Terminal.ts": "e727263f9fc6d7c1f8aa1c27cf325aebee9404fff33872a07cba0e7abd1d2c21",
+    "source_repo/src/browser/public/Terminal.ts": "f5c1c0d79c1c3484d305b8ec3ab201066958f056adb9878d27f5a1a0dd264011"
+  },
+  "fixtureSha256": "5f8d1dbf9421cadfb8b059b9ea5b18c69df225357a065e0569609a1c3c292090",
+  "modeFixtureSha256": "30a0c84ecc039a27906295fe907c532a4fac6feacadf0c801e2bdf15cfce7f66",
+  "rustInputs": {
+    "crates/xterm-core/src/public_api/validation.rs": "7e02401691b0c677198c5f2238c2e58124eec88eef1c633447241956dc939a44",
+    "crates/xterm-core/src/headless/modes.rs": "3cf1c079c9893ed3599bf4b2efd4ad87c6b3dbd2b704e2bff18bc132585daea6",
+    "crates/xterm-core/tests/public_api_differential.rs": "b595914b6f6ea2b365cbf1a671a03083036efa7cec0a52d9234ceca30266c2d7"
+  },
+  "node": "v24.15.0",
+  "platform": "win32-x64",
+  "command": "cargo test -p xterm-core --test public_api_differential",
+  "scope": "PA01 validators/fake-core dispatch; PA02 readonly/proposed errors; PA05 service-backed snapshots, not escape dispatch",
+  "unrun": [
+    "real engine clamp/state/events",
+    "WASM ABI coercion",
+    "browser DOM",
+    "PA02 live options through terminal",
+    "PA03/PA04/PA06",
+    "PA05 escape dispatch/negotiation"
+  ],
+  "exitCode": 101,
+  "error": null,
+  "changedDuringRun": []
+}
