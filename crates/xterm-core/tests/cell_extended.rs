@@ -1,4 +1,7 @@
-use std::rc::Rc;
+use std::{
+    cell::{Cell, RefCell},
+    rc::{Rc, Weak},
+};
 use xterm_core::buffer::{
     constants::{attributes as color, bg_flags, ext_flags, underline_style as style},
     AttributeData, ExtendedAttrs,
@@ -82,6 +85,44 @@ fn clone_keeps_hidden_style_when_url_is_present_and_cell_clone_drops_payload() {
     b.extended.set_url_id(0);
     assert_eq!(b.extended.underline_style(), style::CURLY);
     assert_eq!(a.extended.url_id(), 17);
+}
+
+#[test]
+fn native_payload_drop_observes_replacement_and_reenters_without_borrowing_conflict() {
+    struct Payload {
+        view: Weak<RefCell<ExtendedAttrs>>,
+        observed: Rc<Cell<u32>>,
+    }
+    impl Drop for Payload {
+        fn drop(&mut self) {
+            let view = self.view.upgrade().unwrap();
+            let mut attrs = view.borrow_mut();
+            let replacement = attrs.payload().unwrap();
+            self.observed
+                .set(*replacement.downcast_ref::<u32>().unwrap());
+            attrs.set_url_id(1_u64 << 32);
+            attrs.set_payload(Some(Rc::new(3_u32)));
+        }
+    }
+    let mut attrs = ExtendedAttrs::default();
+    let view = Rc::new(RefCell::new(attrs.share()));
+    let observed = Rc::new(Cell::new(0));
+    attrs.set_payload(Some(Rc::new(Payload {
+        view: Rc::downgrade(&view),
+        observed: Rc::clone(&observed),
+    })));
+    attrs.set_payload(Some(Rc::new(2_u32)));
+    assert_eq!(
+        observed.get(),
+        2,
+        "new payload must be published before old Drop"
+    );
+    assert_eq!(attrs.url_id(), 1_u64 << 32);
+    assert_eq!(
+        *attrs.payload().unwrap().downcast_ref::<u32>().unwrap(),
+        3,
+        "outer setter must not overwrite the reentrant replacement"
+    );
 }
 
 #[test]

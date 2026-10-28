@@ -53,7 +53,10 @@ impl ExtendedAttrs {
         self.data.borrow().payload.clone()
     }
     pub fn set_payload(&mut self, value: Option<Rc<dyn Any>>) {
-        self.data.borrow_mut().payload = value;
+        // Native payload destruction can run user code. Publish the replacement
+        // and release the borrow before dropping the previous owner.
+        let previous = std::mem::replace(&mut self.data.borrow_mut().payload, value);
+        drop(previous);
     }
 
     pub fn ext(&self) -> u32 {
