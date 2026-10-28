@@ -1,22 +1,62 @@
-use super::Theme;
+use super::{CssText, Theme};
 use std::fmt;
-use xterm_core::options::{OptionError, OptionValue};
+use xterm_core::{
+    event::EmitError,
+    options::{OptionError, OptionValue},
+};
+pub(super) const ANSI_NAMES: [&str; 16] = [
+    "black",
+    "red",
+    "green",
+    "yellow",
+    "blue",
+    "magenta",
+    "cyan",
+    "white",
+    "brightBlack",
+    "brightRed",
+    "brightGreen",
+    "brightYellow",
+    "brightBlue",
+    "brightMagenta",
+    "brightCyan",
+    "brightWhite",
+];
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct ThemeOptionError(pub OptionError);
+pub enum ThemeOptionError {
+    Property(OptionError),
+    Dispatch(EmitError),
+    InvalidAnsiState,
+}
 impl fmt::Display for ThemeOptionError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        self.0.fmt(f)
+        match self {
+            Self::Property(error) => error.fmt(f),
+            Self::Dispatch(error) => error.fmt(f),
+            Self::InvalidAnsiState => {
+                f.write_str("theme ANSI palette was shortened during property access")
+            }
+        }
     }
 }
 impl std::error::Error for ThemeOptionError {
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
-        Some(&self.0)
+        match self {
+            Self::Property(error) => Some(error),
+            Self::Dispatch(error) => Some(error),
+            Self::InvalidAnsiState => None,
+        }
     }
 }
 impl From<OptionError> for ThemeOptionError {
     fn from(error: OptionError) -> Self {
-        Self(error)
+        Self::Property(error)
+    }
+}
+impl From<EmitError> for ThemeOptionError {
+    fn from(error: EmitError) -> Self {
+        Self::Dispatch(error)
     }
 }
 impl Theme {
@@ -45,25 +85,7 @@ impl Theme {
             overview_ruler_border: css(value, "overviewRulerBorder")?,
             ..Self::default()
         };
-        const NAMES: [&str; 16] = [
-            "black",
-            "red",
-            "green",
-            "yellow",
-            "blue",
-            "magenta",
-            "cyan",
-            "white",
-            "brightBlack",
-            "brightRed",
-            "brightGreen",
-            "brightYellow",
-            "brightBlue",
-            "brightMagenta",
-            "brightCyan",
-            "brightWhite",
-        ];
-        for (index, name) in NAMES.iter().enumerate() {
+        for (index, name) in ANSI_NAMES.iter().enumerate() {
             theme.ansi[index] = css(value, name)?;
         }
         let extended = value.get_property("extendedAnsi")?;
@@ -85,9 +107,9 @@ impl Theme {
         Ok(theme)
     }
 }
-fn css(value: &OptionValue, key: &str) -> Result<Option<String>, OptionError> {
+fn css(value: &OptionValue, key: &str) -> Result<Option<CssText>, OptionError> {
     Ok(match value.get_property(key)? {
-        OptionValue::String(units) => Some(String::from_utf16_lossy(&units)),
+        OptionValue::String(units) => Some(units.into()),
         _ => None,
     })
 }

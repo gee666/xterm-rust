@@ -8,19 +8,63 @@ use std::{
 use xterm_core::color::Color;
 
 /// Shared color-object identity, including mutations retained by restore slots.
+#[derive(Debug)]
+struct SharedColor {
+    value: Color,
+    raw_css: Option<(String, Vec<u16>)>,
+}
 #[derive(Clone, Debug)]
-pub struct ColorRef(Rc<RefCell<Color>>);
+pub struct ColorRef(Rc<RefCell<SharedColor>>);
 impl From<Color> for ColorRef {
     fn from(color: Color) -> Self {
-        Self(Rc::new(RefCell::new(color)))
+        Self(Rc::new(RefCell::new(SharedColor {
+            value: color,
+            raw_css: None,
+        })))
+    }
+}
+impl From<xterm_core::color::css::Utf16Color> for ColorRef {
+    fn from(color: xterm_core::color::css::Utf16Color) -> Self {
+        let result = Self::from(Color {
+            css: String::new(),
+            rgba: color.rgba,
+        });
+        result.set_css_units(color.css);
+        result
     }
 }
 impl ColorRef {
     pub fn borrow(&self) -> Ref<'_, Color> {
-        self.0.borrow()
+        Ref::map(self.0.borrow(), |color| &color.value)
     }
     pub fn borrow_mut(&self) -> RefMut<'_, Color> {
-        self.0.borrow_mut()
+        RefMut::map(self.0.borrow_mut(), |color| &mut color.value)
+    }
+    /// Actual CSS code units. For an ill-formed JS string, borrow().css is only
+    /// an escaped native inspection view; browser setters must use this method.
+    pub fn css_units(&self) -> Vec<u16> {
+        let color = self.0.borrow();
+        if let Some((projection, units)) = &color.raw_css {
+            if *projection == color.value.css {
+                return units.clone();
+            }
+        }
+        color.value.css.encode_utf16().collect()
+    }
+    pub fn set_css_units(&self, units: Vec<u16>) {
+        let mut color = self.0.borrow_mut();
+        match String::from_utf16(&units) {
+            Ok(text) => {
+                color.value.css = text;
+                color.raw_css = None;
+            }
+            Err(_) => {
+                let projection: String =
+                    units.iter().map(|unit| format!("\\u{unit:04x}")).collect();
+                color.value.css = projection.clone();
+                color.raw_css = Some((projection, units));
+            }
+        }
     }
     pub fn same_object(&self, other: &Self) -> bool {
         Rc::ptr_eq(&self.0, &other.0)
@@ -28,7 +72,7 @@ impl ColorRef {
 }
 impl PartialEq for ColorRef {
     fn eq(&self, other: &Self) -> bool {
-        *self.borrow() == *other.borrow()
+        self.borrow().rgba == other.borrow().rgba && self.css_units() == other.css_units()
     }
 }
 impl Eq for ColorRef {}

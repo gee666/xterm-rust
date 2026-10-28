@@ -1,13 +1,12 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved.
 // Licensed under MIT. Browser fallback from common/Color.ts.
-use crate::theme::ColorParser;
+use crate::theme::{ColorParser, ColorRef, Utf16ColorParser};
 use std::rc::Rc;
 use wasm_bindgen::{JsCast, JsValue};
 use web_sys::{CanvasGradient, CanvasRenderingContext2d, Document, HtmlCanvasElement};
 use xterm_core::color::{css, Color};
 
-/// One private pixel canvas per parser. Drawing uses copy compositing so the
-/// previous parsed color cannot contaminate a later sample.
+/// One private pixel canvas per parser; copy compositing prevents stale samples.
 pub struct CanvasColorParser {
     context: CanvasRenderingContext2d,
     litmus: CanvasGradient,
@@ -31,15 +30,27 @@ impl CanvasColorParser {
         let litmus = context.create_linear_gradient(0.0, 0.0, 1.0, 1.0);
         Ok(Self { context, litmus })
     }
-
     pub fn to_color(&self, input: &str) -> Result<Color, JsValue> {
-        if let Ok(color) = css::to_color(input) {
-            return Ok(color);
+        let parsed = self.to_color_utf16(&input.encode_utf16().collect::<Vec<_>>())?;
+        let color = parsed.borrow().clone();
+        Ok(color)
+    }
+    /// JS-facing parsing never converts lone surrogates through a Rust String.
+    pub fn to_color_utf16(&self, input: &[u16]) -> Result<ColorRef, JsValue> {
+        if let Ok(color) = css::to_color_utf16(input) {
+            return Ok(color.into());
         }
         self.context.set_fill_style_canvas_gradient(&self.litmus);
-        self.context.set_fill_style_str(input);
-        // Invalid assignments leave the gradient unchanged. Comparing only with
-        // another string color would incorrectly reject valid identical values.
+        let text = crate::utf16::to_js_string(input);
+        if !js_sys::Reflect::set(
+            self.context.as_ref(),
+            &JsValue::from_str("fillStyle"),
+            text.as_ref(),
+        )? {
+            return Err(js_sys::TypeError::new("canvas fillStyle is not writable").into());
+        }
+        // Invalid assignments leave the gradient unchanged; string sentinels
+        // would incorrectly reject valid equal colors.
         if !self.context.fill_style().is_string() {
             return Err(unsupported());
         }
@@ -51,18 +62,25 @@ impl CanvasColorParser {
         if pixel[3] != 255 {
             return Err(unsupported());
         }
-        Ok(Color {
-            css: input.into(),
+        Ok(css::Utf16Color {
+            css: input.to_vec(),
             rgba: u32::from_be_bytes(pixel),
-        })
+        }
+        .into())
     }
-
-    /// ThemeService intentionally converts every parse failure to its specified
-    /// fallback, matching the source's parseColor try/catch. Direct callers of
-    /// to_color retain actual canvas DOM errors instead of swallowing them.
+    /// Theme parsing deliberately converts failures to its specified fallback,
+    /// as upstream parseColor does. Direct to_color retains original DOM errors.
     pub fn theme_parser(self: &Rc<Self>) -> ColorParser {
         let parser = Rc::clone(self);
         Rc::new(move |input| parser.to_color(input).map_err(|_| css::UnsupportedCss))
+    }
+    pub fn utf16_theme_parser(self: &Rc<Self>) -> Utf16ColorParser {
+        let parser = Rc::clone(self);
+        Rc::new(move |input| {
+            parser
+                .to_color_utf16(input)
+                .map_err(|_| css::UnsupportedCss)
+        })
     }
 }
 fn unsupported() -> JsValue {

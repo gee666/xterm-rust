@@ -5,18 +5,18 @@ use crate::contrast_cache::ColorContrastCache;
 use std::{cell::RefCell, rc::Rc};
 use xterm_core::color::{channels, css::UnsupportedCss, value, Color};
 
-type Parser = dyn Fn(&str) -> Result<Color, UnsupportedCss>;
+pub(super) type Parser = dyn Fn(&[u16]) -> Result<ColorRef, UnsupportedCss>;
 type Caches = (
     Rc<RefCell<ColorContrastCache>>,
     Rc<RefCell<ColorContrastCache>>,
 );
 
 pub(super) struct Defaults {
-    foreground: ColorRef,
-    background: ColorRef,
-    cursor: ColorRef,
-    selection: ColorRef,
-    ansi: Vec<ColorRef>,
+    pub(super) foreground: ColorRef,
+    pub(super) background: ColorRef,
+    pub(super) cursor: ColorRef,
+    pub(super) selection: ColorRef,
+    pub(super) ansi: Vec<ColorRef>,
 }
 impl Defaults {
     pub fn new() -> Self {
@@ -33,19 +33,22 @@ impl Defaults {
         }
     }
 }
-fn parse(input: Option<&str>, fallback: &ColorRef, parser: &Parser) -> ColorRef {
+pub(super) fn parse(input: Option<&[u16]>, fallback: &ColorRef, parser: &Parser) -> ColorRef {
     input
         .and_then(|input| parser(input).ok())
-        .map(ColorRef::from)
         .unwrap_or_else(|| fallback.clone())
 }
-fn opacity(color: &ColorRef, factor: f64) -> ColorRef {
+pub(super) fn opacity(color: &ColorRef, factor: f64) -> ColorRef {
     value::opacity(&color.borrow(), factor).into()
 }
-fn blend(bg: &ColorRef, fg: &ColorRef) -> ColorRef {
-    value::blend(&bg.borrow(), &fg.borrow()).into()
+pub(super) fn blend(bg: &ColorRef, fg: &ColorRef) -> ColorRef {
+    let result: ColorRef = value::blend(&bg.borrow(), &fg.borrow()).into();
+    if value::is_opaque(&fg.borrow()) {
+        result.set_css_units(fg.css_units());
+    }
+    result
 }
-fn selection_transparent(color: ColorRef) -> ColorRef {
+pub(super) fn selection_transparent(color: ColorRef) -> ColorRef {
     if value::is_opaque(&color.borrow()) {
         opacity(&color, 0.3)
     } else {
@@ -87,8 +90,7 @@ pub(super) fn colors(
         .selection_foreground
         .as_deref()
         .filter(|s| !s.is_empty())
-        .and_then(|input| parser(input).ok())
-        .map(ColorRef::from);
+        .and_then(|input| parser(input).ok());
     let scrollbar_slider_background = parse(
         theme.scrollbar_slider_background.as_deref(),
         &opacity(&foreground, 0.2),

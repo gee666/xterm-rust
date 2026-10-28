@@ -80,7 +80,11 @@ fn all_extended_ansi_colors_can_be_set_in_reverse_order() {
     let defaults = default_ansi_colors();
     service
         .set_theme(&Theme {
-            extended_ansi: defaults.iter().rev().map(|c| Some(c.css.clone())).collect(),
+            extended_ansi: defaults
+                .iter()
+                .rev()
+                .map(|c| Some(c.css.clone().into()))
+                .collect(),
             ..Theme::default()
         })
         .unwrap();

@@ -17,6 +17,33 @@ impl fmt::Display for UnsupportedCss {
 }
 impl Error for UnsupportedCss {}
 
+/// Lossless CSS at JavaScript boundaries, including lone surrogate code units.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Utf16Color {
+    pub css: Vec<u16>,
+    pub rgba: u32,
+}
+
+pub fn to_color_utf16(css: &[u16]) -> Result<Utf16Color, UnsupportedCss> {
+    // The fast grammar recognizes only ASCII punctuation/digits and ECMAScript
+    // whitespace. An unpaired surrogate is none of those and occupies one UTF-16
+    // unit. This private parsing view substitutes a nonmatching one-unit scalar;
+    // it is never sent to the host or returned as the color's CSS string.
+    let view: String = char::decode_utf16(css.iter().copied())
+        .map(|unit| unit.unwrap_or('\u{e000}'))
+        .collect();
+    let color = to_color(&view)?;
+    let output = if color.css == view {
+        css.to_vec()
+    } else {
+        color.css.encode_utf16().collect()
+    };
+    Ok(Utf16Color {
+        css: output,
+        rgba: color.rgba,
+    })
+}
+
 pub fn to_color(css: &str) -> Result<Color, UnsupportedCss> {
     to_color_with_canvas(css, |_| None)
 }

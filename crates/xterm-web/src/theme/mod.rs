@@ -1,6 +1,9 @@
 // Copyright (c) 2022 The xterm.js authors. All rights reserved.
 // Licensed under the MIT license. Ported from browser/services/ThemeService.ts.
 mod color_set;
+mod css_text;
+mod live;
+pub use css_text::CssText;
 pub use xterm_core::color::palette;
 mod option;
 mod resolve;
@@ -19,22 +22,23 @@ use xterm_core::{
 /// black/red/green/yellow/blue/magenta/cyan/white then bright order.
 #[derive(Clone, Debug, Default)]
 pub struct Theme {
-    pub foreground: Option<String>,
-    pub background: Option<String>,
-    pub cursor: Option<String>,
-    pub cursor_accent: Option<String>,
-    pub selection_foreground: Option<String>,
-    pub selection_background: Option<String>,
-    pub selection_inactive_background: Option<String>,
-    pub scrollbar_slider_background: Option<String>,
-    pub scrollbar_slider_hover_background: Option<String>,
-    pub scrollbar_slider_active_background: Option<String>,
-    pub overview_ruler_border: Option<String>,
-    pub ansi: [Option<String>; 16],
-    pub extended_ansi: Vec<Option<String>>,
+    pub foreground: Option<CssText>,
+    pub background: Option<CssText>,
+    pub cursor: Option<CssText>,
+    pub cursor_accent: Option<CssText>,
+    pub selection_foreground: Option<CssText>,
+    pub selection_background: Option<CssText>,
+    pub selection_inactive_background: Option<CssText>,
+    pub scrollbar_slider_background: Option<CssText>,
+    pub scrollbar_slider_hover_background: Option<CssText>,
+    pub scrollbar_slider_active_background: Option<CssText>,
+    pub overview_ruler_border: Option<CssText>,
+    pub ansi: [Option<CssText>; 16],
+    pub extended_ansi: Vec<Option<CssText>>,
 }
 
 pub type ColorParser = Rc<dyn Fn(&str) -> Result<Color, css::UnsupportedCss>>;
+pub type Utf16ColorParser = Rc<dyn Fn(&[u16]) -> Result<ColorRef, css::UnsupportedCss>>;
 
 /// Color state independent of DOM lifetime. The host must forward typed theme
 /// option changes and minimum-contrast changes through the corresponding methods.
@@ -43,11 +47,20 @@ pub struct ThemeService {
     colors: SharedColors,
     restore: RefCell<RestoreColors>,
     defaults: resolve::Defaults,
-    parser: ColorParser,
+    parser: Utf16ColorParser,
     changes: Emitter<SharedColors>,
 }
 impl ThemeService {
     pub fn new(theme: &Theme, parser: ColorParser) -> Self {
+        Self::new_utf16(
+            theme,
+            Rc::new(move |units| match String::from_utf16(units) {
+                Ok(text) => parser(&text).map(ColorRef::from),
+                Err(_) => css::to_color_utf16(units).map(ColorRef::from),
+            }),
+        )
+    }
+    pub fn new_utf16(theme: &Theme, parser: Utf16ColorParser) -> Self {
         let defaults = resolve::Defaults::new();
         let colors = resolve::colors(theme, &defaults, parser.as_ref(), None);
         let restore = RestoreColors::capture(&colors);
@@ -60,6 +73,11 @@ impl ThemeService {
         }
     }
     pub fn parse_color(&self, input: &str) -> Result<Color, css::UnsupportedCss> {
+        let parsed = (self.parser)(&input.encode_utf16().collect::<Vec<_>>())?;
+        let color = parsed.borrow().clone();
+        Ok(color)
+    }
+    pub fn parse_css_units(&self, input: &[u16]) -> Result<ColorRef, css::UnsupportedCss> {
         (self.parser)(input)
     }
     pub fn colors(&self) -> SharedColors {

@@ -97,6 +97,14 @@ Sources include `browser/decorations/ColorZoneStore.ts`, `BufferDecorationRender
 - Render decoration anchors, x/width/height/layer and top/bottom positioning against live viewport/scrollback; update on marker movement, resize, registration/removal and disposal. Deliver onRender and onDispose in source order with actual HTMLElement ownership.
 - Overview canvas dimensions, border, lanes, DPR scaling, minimum zone height, clear/redraw scheduling and colors match the source. Exercise multiple overlapping zones, scrolling, buffer activation, marker disposal and option/theme changes with pixel assertions in the Rust-backed browser.
 
+## R9. Raw UTF-16 CSS boundary
+
+Task 170 must retain original JavaScript UTF-16 units for font family/weight, theme CSS and generated stylesheet text. Lone high/low surrogates and split surrogate sequences must not pass through `from_utf16_lossy` or wasm-bindgen String conversion. Native well-formed String helpers are only one path, not a waiver for the browser path. Compare complete CSS code-unit arrays with the source, including malformed but fast-path accepted colors, numeric CSS formatting, object getter failures and callback reentrancy. Test actual canvas/style setters and retained stylesheet textContent in all three browsers. Live theme getter failures must retain the source's already-committed partial color state, not convert the operation into a transaction.
+
+## R10. Shipped terminal stylesheet
+
+Preserve every rule in `source_repo/css/xterm.css` and its complete MIT attribution. The Rust-backed distribution must load that stylesheet or prove equivalent rules. Check root focus/outline/user-select, hidden textarea placement and dimensions, IME active layering, opaque-versus-transparent viewport background, relative screen/canvas layout, mouse/link/column-selection cursors, accessibility overlays/tree/live-region clipping, dim opacity, every underline/overline combination, strikethrough, decoration layer order and overview ruler placement. Verify scrollable arrow masks, visibility/fade timing, pointer-event suppression and each scrollbar shadow. Retain an asset hash comparison and real-browser computed-style/pixel assertions, including focus, transparency, composition, scrolling and disposal. A demo-only CSS file that is omitted from the supported web distribution is not sufficient.
+
 ## Evidence gate
 
 For each section record discovered/mapped/executed/pass/fail/skip/unrun assertions, exact commands and environment, source hashes, random seeds/iterations, retained failures and independent findings. Existing Color evidence is in `results/color`; all remaining rendering evidence is required, not implied. Full rendering equivalence remains NOT PROVEN until every path above and the complete applicable upstream suites execute through Rust.
