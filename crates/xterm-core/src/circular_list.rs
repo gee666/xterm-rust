@@ -128,6 +128,12 @@ impl<T: Clone> CircularList<T> {
         self.storage.borrow().get_number(index)
     }
 
+    /// Unordered snapshot of materialized slots, including stale/negative ones.
+    /// Cost follows stored values, not capacity. Rc elements retain identity.
+    pub fn stored_values(&self) -> Result<Vec<T>, CircularListError> {
+        self.storage.borrow().stored_values()
+    }
+
     pub fn set_signed(&self, index: i64, value: Option<T>) -> Result<(), CircularListError> {
         self.storage.borrow_mut().set_signed(index, value)
     }

@@ -319,3 +319,18 @@ fn callback_error_chain_retains_concrete_cause_for_bindings() {
     );
     assert!(CircularListError::InvalidRange.source().is_none());
 }
+
+#[test]
+fn stored_snapshot_includes_stale_and_negative_slots_without_capacity_scan() {
+    let list = CircularList::new(usize::try_from(u32::MAX).unwrap()).unwrap();
+    list.set(0, Some(1)).unwrap();
+    list.set(usize::try_from(u32::MAX - 1).unwrap(), Some(2))
+        .unwrap();
+    list.set_signed(-1, Some(3)).unwrap();
+    list.push(4).unwrap();
+    list.pop().unwrap();
+    let mut values = list.stored_values().unwrap();
+    values.sort_unstable();
+    assert_eq!(values, [2, 3, 4]);
+    assert!(list.is_empty());
+}

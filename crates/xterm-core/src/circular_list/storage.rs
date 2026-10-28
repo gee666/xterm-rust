@@ -78,6 +78,15 @@ impl<T: Clone> Storage<T> {
         self.set_physical(self.signed_index(index), value)
     }
 
+    pub fn stored_values(&self) -> Result<Vec<T>, CircularListError> {
+        let mut values = Vec::new();
+        values
+            .try_reserve_exact(self.slots.len())
+            .map_err(|_| CircularListError::AllocationFailed)?;
+        values.extend(self.slots.values().cloned());
+        Ok(values)
+    }
+
     fn set_physical(&mut self, index: i128, value: Option<T>) -> Result<(), CircularListError> {
         match value {
             Some(value) => {
