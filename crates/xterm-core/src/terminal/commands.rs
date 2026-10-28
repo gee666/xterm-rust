@@ -18,8 +18,8 @@ pub(super) fn register(
     state: &Rc<RefCell<TerminalState>>,
 ) -> Result<(), TerminalError> {
     for final_byte in [
-        "@", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "P", "S", "T", "X",
-        "Z", "^", "`", "a", "d", "e", "f", "g", "r", "s", "u",
+        "@", "A", "B", "C", "D", "E", "F", "G", "H", "I", "K", "P", "X", "Z", "`", "a", "d", "e",
+        "f", "g", "r", "s", "u",
     ] {
         parser.register_csi_handler(
             FunctionIdentifier::new(final_byte),
@@ -34,6 +34,22 @@ pub(super) fn register(
             ),
         )?;
     }
+    for final_byte in ["L", "M", "S", "T", "^"] {
+        parser.register_csi_handler(
+            FunctionIdentifier::new(final_byte),
+            shared_command(
+                move |s, p| super::csi_edits::rows(s, p, final_byte),
+                Rc::clone(state),
+            ),
+        )?;
+    }
+    parser.register_csi_handler(
+        FunctionIdentifier::new("J"),
+        shared_command(
+            |s, p| super::csi_erase::erase_display(s, p, false),
+            Rc::clone(state),
+        ),
+    )?;
     parser.register_csi_handler(
         FunctionIdentifier::new("b"),
         repeat_command(Rc::clone(state)),
@@ -64,10 +80,17 @@ pub(super) fn register(
                 intermediates: None,
                 final_byte,
             },
-            command(
-                move |s, p| s.dispatch_csi(final_byte, p, true).map(|_| ()),
-                Rc::clone(state),
-            ),
+            if final_byte == "J" {
+                shared_command(
+                    |s, p| super::csi_erase::erase_display(s, p, true),
+                    Rc::clone(state),
+                )
+            } else {
+                command(
+                    move |s, p| s.dispatch_csi(final_byte, p, true).map(|_| ()),
+                    Rc::clone(state),
+                )
+            },
         )?;
     }
     parser.register_csi_handler(

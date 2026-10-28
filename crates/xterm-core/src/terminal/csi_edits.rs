@@ -1,21 +1,23 @@
 // Copyright (c) 2014-2026 The xterm.js authors. All rights reserved. MIT license.
-//! Cell, row and column edits preserve the source's per-operation list events.
+//! Cell/column changes are local. Row changes release state before observers.
 use super::{csi::count, TerminalError, TerminalState};
-use crate::{buffer::AttributeData, parser::params::Params};
+use crate::{
+    buffer::{AttributeData, LineRef},
+    parser::params::Params,
+};
+use std::{cell::RefCell, rc::Rc};
 
 impl TerminalState {
     pub(super) fn dispatch_edits(
         &mut self,
-        final_byte: &str,
+        command: &str,
         params: &Params,
         selective: bool,
     ) -> Result<bool, TerminalError> {
-        match final_byte {
-            "@" | "P" => self.edit_characters(params, final_byte == "@")?,
-            "L" | "M" => self.edit_lines(params, final_byte == "L")?,
-            "S" | "T" | "^" => self.scroll_csi_rows(params, final_byte != "S")?,
-            " @" | " A" | "'}" | "'~" => self.edit_columns(params, final_byte)?,
-            _ => return self.dispatch_erase(final_byte, params, selective),
+        match command {
+            "@" | "P" => self.edit_characters(params, command == "@")?,
+            " @" | " A" | "'}" | "'~" => self.edit_columns(params, command)?,
+            _ => return self.dispatch_erase(command, params, selective),
         }
         Ok(true)
     }
@@ -33,81 +35,6 @@ impl TerminalState {
             }
             self.dirty_row(b.y);
         }
-        Ok(())
-    }
-    fn edit_lines(&mut self, params: &Params, insert: bool) -> Result<(), TerminalError> {
-        self.restrict_csi_cursor(self.cols() - 1)?;
-        let active = self.active_buffer();
-        let b = active.try_borrow().map_err(|_| TerminalError::Borrowed)?;
-        if b.y < b.scroll_top || b.y > b.scroll_bottom {
-            return Ok(());
-        }
-        let start = b.ybase + b.y;
-        let end = b.ybase + b.scroll_bottom;
-        drop(b);
-        for _ in 0..count(params)? {
-            let (remove, add) = if insert { (end, start) } else { (start, end) };
-            self.splice_csi_rows(remove, 1, &[])?;
-            let active = self.active_buffer();
-            let blank = active
-                .try_borrow()
-                .map_err(|_| TerminalError::Borrowed)?
-                .get_blank_line(&self.erase_attributes(), false);
-            self.splice_csi_rows(add, 0, &[blank])?;
-        }
-        let current = self.active_buffer();
-        let b = current.try_borrow().map_err(|_| TerminalError::Borrowed)?;
-        self.dirty_row(b.y);
-        self.dirty_row(b.scroll_bottom);
-        drop(b);
-        current
-            .try_borrow_mut()
-            .map_err(|_| TerminalError::Borrowed)?
-            .x = 0;
-        Ok(())
-    }
-    fn scroll_csi_rows(&mut self, params: &Params, down: bool) -> Result<(), TerminalError> {
-        for _ in 0..count(params)? {
-            let active = self.active_buffer();
-            let b = active.try_borrow().map_err(|_| TerminalError::Borrowed)?;
-            let remove = b.ybase + if down { b.scroll_bottom } else { b.scroll_top };
-            drop(b);
-            self.splice_csi_rows(remove, 1, &[])?;
-            let active = self.active_buffer();
-            let b = active.try_borrow().map_err(|_| TerminalError::Borrowed)?;
-            let add = b.ybase + if down { b.scroll_top } else { b.scroll_bottom };
-            // SD intentionally uses default attributes while SU uses BCE attributes.
-            let attrs = if down {
-                AttributeData::default()
-            } else {
-                self.erase_attributes()
-            };
-            let blank = b.get_blank_line(&attrs, false);
-            drop(b);
-            self.splice_csi_rows(add, 0, &[blank])?;
-        }
-        let active = self.active_buffer();
-        let b = active.try_borrow().map_err(|_| TerminalError::Borrowed)?;
-        self.dirty_row(b.scroll_top);
-        self.dirty_row(b.scroll_bottom);
-        Ok(())
-    }
-    fn splice_csi_rows(
-        &self,
-        index: usize,
-        count: usize,
-        rows: &[crate::buffer::LineRef],
-    ) -> Result<(), TerminalError> {
-        let active = self.active_buffer();
-        let lines = active
-            .try_borrow()
-            .map_err(|_| TerminalError::Borrowed)?
-            .lines
-            .share();
-        // Buffer observers can mutate the buffer during list callbacks.
-        lines
-            .splice(index, count, rows)
-            .map_err(crate::buffer::BufferError::from)?;
         Ok(())
     }
     fn edit_columns(&mut self, params: &Params, command: &str) -> Result<(), TerminalError> {
@@ -134,4 +61,125 @@ impl TerminalState {
         self.dirty_row(b.scroll_bottom);
         Ok(())
     }
+}
+
+pub(super) fn rows(
+    shared: &Rc<RefCell<TerminalState>>,
+    params: &Params,
+    command: &str,
+) -> Result<(), TerminalError> {
+    match command {
+        "L" | "M" => edit_lines(shared, params, command == "L"),
+        "S" | "T" | "^" => scroll_rows(shared, params, command != "S"),
+        _ => Err(TerminalError::InvalidParameter(
+            "unknown row editing command",
+        )),
+    }
+}
+fn active(
+    shared: &Rc<RefCell<TerminalState>>,
+) -> Result<Rc<RefCell<crate::buffer::Buffer>>, TerminalError> {
+    Ok(shared
+        .try_borrow()
+        .map_err(|_| TerminalError::Borrowed)?
+        .active_buffer())
+}
+fn splice(
+    shared: &Rc<RefCell<TerminalState>>,
+    index: usize,
+    count: usize,
+    rows: &[LineRef],
+) -> Result<(), TerminalError> {
+    let buffer = active(shared)?;
+    let lines = buffer
+        .try_borrow()
+        .map_err(|_| TerminalError::Borrowed)?
+        .lines
+        .share();
+    lines
+        .splice(index, count, rows)
+        .map_err(crate::buffer::BufferError::from)?;
+    Ok(())
+}
+fn blank(shared: &Rc<RefCell<TerminalState>>, default: bool) -> Result<LineRef, TerminalError> {
+    let state = shared.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+    let buffer = state.active_buffer();
+    let attrs = if default {
+        AttributeData::default()
+    } else {
+        state.erase_attributes()
+    };
+    let result = buffer
+        .try_borrow()
+        .map_err(|_| TerminalError::Borrowed)?
+        .get_blank_line(&attrs, false);
+    Ok(result)
+}
+fn edit_lines(
+    shared: &Rc<RefCell<TerminalState>>,
+    params: &Params,
+    insert: bool,
+) -> Result<(), TerminalError> {
+    {
+        let mut state = shared
+            .try_borrow_mut()
+            .map_err(|_| TerminalError::Borrowed)?;
+        let max = state.cols() - 1;
+        state.restrict_csi_cursor(max)?;
+    }
+    let buffer = active(shared)?;
+    let b = buffer.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+    if b.y < b.scroll_top || b.y > b.scroll_bottom {
+        return Ok(());
+    }
+    let start = b.ybase + b.y;
+    let end = b.ybase + b.scroll_bottom;
+    drop(b);
+    // The source captures absolute indices, but reloads the receiver's buffer
+    // after each callback. A reset can therefore create sparse insertion slots.
+    for _ in 0..count(params)? {
+        let (remove, add) = if insert { (end, start) } else { (start, end) };
+        splice(shared, remove, 1, &[])?;
+        let line = blank(shared, false)?;
+        splice(shared, add, 0, &[line])?;
+    }
+    let buffer = active(shared)?;
+    let mut b = buffer
+        .try_borrow_mut()
+        .map_err(|_| TerminalError::Borrowed)?;
+    let mut state = shared
+        .try_borrow_mut()
+        .map_err(|_| TerminalError::Borrowed)?;
+    state.dirty_row(b.y);
+    state.dirty_row(b.scroll_bottom);
+    b.x = 0;
+    Ok(())
+}
+fn scroll_rows(
+    shared: &Rc<RefCell<TerminalState>>,
+    params: &Params,
+    down: bool,
+) -> Result<(), TerminalError> {
+    for _ in 0..count(params)? {
+        let buffer = active(shared)?;
+        let b = buffer.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+        let remove = b.ybase + if down { b.scroll_bottom } else { b.scroll_top };
+        drop(b);
+        splice(shared, remove, 1, &[])?;
+        let buffer = active(shared)?;
+        let b = buffer.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+        let add = b.ybase + if down { b.scroll_top } else { b.scroll_bottom };
+        drop(b);
+        // SD deliberately uses defaults; SU retains the current BCE color.
+        let line = blank(shared, down)?;
+        splice(shared, add, 0, &[line])?;
+    }
+    let buffer = active(shared)?;
+    let b = buffer.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+    let mut state = shared
+        .try_borrow_mut()
+        .map_err(|_| TerminalError::Borrowed)?;
+    state.dirty_row(b.scroll_top);
+    state.dirty_row(b.scroll_bottom);
+    Ok(())
 }
