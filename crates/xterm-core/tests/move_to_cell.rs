@@ -1,5 +1,5 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
-use std::{cell::Cell, rc::Rc};
+use std::{cell::Cell, fmt::Write, rc::Rc};
 use xterm_core::{
     buffer::{AttributeData, BufferService},
     input::move_to_cell::move_to_cell_sequence,
@@ -186,11 +186,10 @@ fn corpus(case_id: &str) {
             f[7] == "1",
         )
         .unwrap();
-        let hex = actual
-            .as_bytes()
-            .iter()
-            .map(|byte| format!("{byte:02x}"))
-            .collect::<String>();
+        let mut hex = String::with_capacity(actual.len() * 2);
+        for byte in actual.as_bytes() {
+            write!(hex, "{byte:02x}").unwrap();
+        }
         let after = snapshot(&s);
         captures.push_str(&format!("{hex}\t{after}\t[]\n"));
         assert_eq!(hex, f[10], "case {cases}: {record}");

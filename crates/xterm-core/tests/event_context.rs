@@ -9,7 +9,8 @@ fn listeners_share_mutable_value_and_no_root_survives_fire() {
     let emitter = Emitter::<i32>::new();
     let key = DispatchKey::<RefCell<Vec<i32>>>::new();
     let first_key = key.clone();
-    let weak: Rc<RefCell<Option<Weak<RefCell<Vec<i32>>>>>> = Rc::default();
+    type Payload = RefCell<Vec<i32>>;
+    let weak: Rc<RefCell<Option<Weak<Payload>>>> = Rc::default();
     let output = Rc::clone(&weak);
     let creates = Rc::new(Cell::new(0));
     let calls = Rc::clone(&creates);
