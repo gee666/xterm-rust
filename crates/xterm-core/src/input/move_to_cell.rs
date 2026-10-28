@@ -205,17 +205,25 @@ impl Navigation<'_> {
             && row >= 0
             && (row as u128) < self.buffer.lines.len() as u128
         {
-            col += if forward { 1 } else { -1 };
+            col = col
+                .checked_add(if forward { 1 } else { -1 })
+                .ok_or(MoveToCellError::CoordinateRange)?;
             if forward && col > self.cols - 1 {
                 length += self.translated_length(row, start_col, col)?;
                 col = 0;
                 start_col = 0;
-                row += 1;
+                row = row.checked_add(1).ok_or(MoveToCellError::CoordinateRange)?;
             } else if !forward && col < 0 {
-                length += self.translated_length(row, 0, start_col + 1)?;
+                length += self.translated_length(
+                    row,
+                    0,
+                    start_col
+                        .checked_add(1)
+                        .ok_or(MoveToCellError::CoordinateRange)?,
+                )?;
                 col = self.cols - 1;
                 start_col = col;
-                row -= 1;
+                row = row.checked_sub(1).ok_or(MoveToCellError::CoordinateRange)?;
             }
         }
         Ok(length + self.translated_length(row, start_col, col)?)
