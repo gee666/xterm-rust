@@ -5,7 +5,7 @@ use crate::{
     color::{self, Color},
     event::{EmitError, Emitter, Event},
     lifecycle::{Disposable, DisposableHandle},
-    sorted_list::{SortedList, SortedListError},
+    sorted_list::{KeyReader, SortedKey, SortedList, SortedListError},
 };
 use std::{
     any::Any,
@@ -260,7 +260,12 @@ impl Decoration {
     }
 }
 
-fn line_key(d: &Decoration) -> f64 {
-    d.marker().line() as f64
+struct DecorationLineKey;
+impl KeyReader<Decoration> for DecorationLineKey {
+    fn read_key(&self, decoration: Option<&Decoration>) -> Result<SortedKey, SortedListError> {
+        Ok(decoration.map_or(SortedKey::Undefined, |decoration| {
+            SortedKey::number(decoration.marker().line() as f64)
+        }))
+    }
 }
-type DecorationList = SortedList<Decoration, fn(&Decoration) -> f64>;
+type DecorationList = SortedList<Decoration, DecorationLineKey>;

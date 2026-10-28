@@ -31,7 +31,7 @@ impl DecorationService {
     pub fn new() -> Self {
         Self {
             state: Rc::new(ServiceState {
-                decorations: RefCell::new(SortedList::new(line_key as fn(&Decoration) -> f64)),
+                decorations: RefCell::new(SortedList::from_reader(DecorationLineKey)),
                 cache: DecorationLineCache::new(),
                 registered: Emitter::new(),
                 removed: Emitter::new(),

@@ -1,7 +1,7 @@
 use std::cell::Cell;
 use std::collections::HashMap;
 use std::rc::Rc;
-use xterm_core::sorted_list::{IterationContext, KeyCursor, SortedList, SortedListError};
+use xterm_core::sorted_list::{IterationContext, KeyCursor, KeyItem, SortedList, SortedListError};
 
 struct Entry {
     key: Cell<Option<f64>>,
@@ -22,7 +22,8 @@ fn error_name(error: &SortedListError) -> &'static str {
     match error {
         SortedListError::InvalidArrayLength => "RangeError",
         SortedListError::KeyAccess(message) if message.starts_with("callback ") => "Error",
-        SortedListError::KeyAccess(_) => "TypeError",
+        SortedListError::KeyAccess(_) | SortedListError::UndefinedYield => "TypeError",
+        SortedListError::Callback(_) => "Error",
     }
 }
 fn new_list(context: IterationContext) -> List {
@@ -92,9 +93,10 @@ fn identity_dynamic_keys_and_reentrant_traces_match_source() {
                 }
                 "N" => {
                     let (which, cursor) = cursors.get_mut(id).unwrap();
-                    Ok(lists[*which]
-                        .next_by_key(cursor)?
-                        .map_or_else(|| "undefined".into(), |v| v.id.clone()))
+                    Ok(match lists[*which].next_key_item(cursor)? {
+                        Some(KeyItem::Value(value)) => value.id.clone(),
+                        Some(KeyItem::Undefined) | None => "undefined".into(),
+                    })
                 }
                 "F" => {
                     let query = number(id).unwrap();
