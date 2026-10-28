@@ -3,17 +3,17 @@ name: native-demo-check
 description: Use when validating or demonstrating the live native Rust terminal example, its command parser or script-mode assertions.
 ---
 
+# Native demo checks
+
 Run from the repository root with Rust1.85+, Cargo/rustfmt/Clippy and Node24+ available:
 
 ```sh
 cargo run --locked -p xterm-core --example native -- --plain
 cargo test --locked -p xterm-core --example native
 node scripts/check-native-demo.mjs
-# During the shared local build protocol, acquire the bounded native lane:
-node scripts/build-slot.mjs --owner NAME --lane native --timeout-ms 240000 -- node scripts/check-native-demo.mjs
 ```
 
-Honor the shared disk/build policy. Do not start local builds during a coordinated disk pause. The checker requires1GiB free on the root and existing target filesystem, validates the resolved Cargo OS/shared directory, uses Cargo's actual JSON executable artifact, and never changes profiles or removes files. It reuses the existing quality process runner and immutable evidence-attempt helper, with no npm dependency.
+Use the user's parallel worktree workflow for agent builds, with an independent Cargo target per worktree. The former global build-slot command is historical, not a requirement for new work. Check free space before building. The checker requires1GiB free on the root and existing target filesystem, validates the resolved Cargo OS/shared directory, uses Cargo's actual JSON executable artifact, and never changes profiles or removes files. It reuses the existing quality process runner and immutable evidence-attempt helper, with no npm dependency.
 
 The fixture crates/xterm-core/tests/fixtures/native-demo.txt drives the same executor as interactive commands. Its assertions inspect actual Rust cells/colors/widths/cursor/dimensions, resize reflow and outbound UTF16, not echoed text. Plain and ANSI runs, a stdin-driven interactive error/recovery session, EOF disposal and six strict expected-failure cases are retained separately under results/demos/native/runs. Read latest.json for the current attempt; older successes do not establish a later run passed.
 
