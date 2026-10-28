@@ -1,0 +1,125 @@
+    Blocking waiting for file lock on build directory
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+    Checking xterm-addons v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons)
+    Checking xterm-web v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web)
+warning: unused import: `cell::RefCell`
+ --> crates\xterm-web\src\terminal\options.rs:7:11
+  |
+7 | use std::{cell::RefCell, rc::Rc};
+  |           ^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+error[E0053]: method `deadline_exceeded` has an incompatible type for trait
+  --> crates\xterm-web\src\task_queue.rs:97:51
+   |
+97 |     fn deadline_exceeded(&self, milliseconds: f64) {
+   |                                                   ^ expected `Result<(), wasm_bindgen::JsValue>`, found `()`
+   |
+   = note: expected signature `fn(&BrowserScheduler, _) -> Result<(), wasm_bindgen::JsValue>`
+              found signature `fn(&BrowserScheduler, _) -> ()`
+help: change the output type to match the trait
+   |
+97 |     fn deadline_exceeded(&self, milliseconds: f64) -> Result<(), wasm_bindgen::JsValue> {
+   |                                                    ++++++++++++++++++++++++++++++++++++
+
+error[E0308]: mismatched types
+  --> crates\xterm-web\src\input\touch_events.rs:27:62
+   |
+27 |             .insert(touch.identifier(), Rc::new(RefCell::new(data)));
+   |                                                 ------------ ^^^^ expected `TouchData<EventTarget>`, found `TouchData<Option<EventTarget>>`
+   |                                                 |
+   |                                                 arguments to this function are incorrect
+   |
+   = note: expected struct `TouchData<EventTarget>`
+              found struct `TouchData<std::option::Option<EventTarget>>`
+note: associated function defined here
+  --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181/library/core/src/cell.rs:850:18
+
+error[E0308]: mismatched types
+  --> crates\xterm-web\src\input\touch_events.rs:28:49
+   |
+28 |         let gesture = context.event(START, Some(&target))?;
+   |                                            ---- ^^^^^^^ expected `&EventTarget`, found `&Option<EventTarget>`
+   |                                            |
+   |                                            arguments to this enum variant are incorrect
+   |
+   = note: expected reference `&EventTarget`
+              found reference `&std::option::Option<EventTarget>`
+help: the type constructed contains `&std::option::Option<EventTarget>` due to the type of the argument passed
+  --> crates\xterm-web\src\input\touch_events.rs:28:44
+   |
+28 |         let gesture = context.event(START, Some(&target))?;
+   |                                            ^^^^^-------^
+   |                                                 |
+   |                                                 this argument influences the type of `Some`
+note: tuple variant defined here
+  --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181/library/core/src/option.rs:580:5
+
+error[E0308]: mismatched types
+   --> crates\xterm-web\src\input\touch_events.rs:30:36
+    |
+30  |         context.dispatch(&gesture, &target)?;
+    |                 --------           ^^^^^^^ expected `&EventTarget`, found `&Option<EventTarget>`
+    |                 |
+    |                 arguments to this method are incorrect
+    |
+    = note: expected reference `&EventTarget`
+               found reference `&std::option::Option<EventTarget>`
+note: method defined here
+   --> crates\xterm-web\src\input\touch_dom.rs:175:8
+    |
+175 |     fn dispatch(&self, event: &Event, initial: &EventTarget) -> Result<(), JsValue> {
+    |        ^^^^^^^^                       ---------------------
+
+error[E0599]: the function or associated item `new` exists for struct `Rc<dyn Disposable>`, but its trait bounds were not satisfied
+   --> crates\xterm-web\src\input\touch_dom.rs:117:41
+    |
+117 |             return Ok(DisposableHandle::new(|| {}));
+    |                                         ^^^ function or associated item cannot be called on `Rc<dyn Disposable>` due to unsatisfied trait bounds
+    |
+   ::: P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\lifecycle.rs:15:1
+    |
+15  | pub trait Disposable {
+    | -------------------- doesn't satisfy `(dyn Disposable + 'static): Sized`
+    |
+note: if you're trying to build a new `std::rc::Rc<(dyn Disposable + 'static)>` consider using one of the following associated functions:
+      std::rc::Rc::<T>::from_raw
+      std::rc::Rc::<T, A>::from_raw_in
+   --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181/library/alloc/src/rc.rs:1325:5
+    = note: the following trait bounds were not satisfied:
+            `(dyn Disposable + 'static): Sized`
+
+error[E0599]: the function or associated item `new` exists for struct `Rc<dyn Disposable>`, but its trait bounds were not satisfied
+   --> crates\xterm-web\src\input\touch_dom.rs:135:30
+    |
+135 |         Ok(DisposableHandle::new(move || {
+    |                              ^^^ function or associated item cannot be called on `Rc<dyn Disposable>` due to unsatisfied trait bounds
+    |
+   ::: P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\lifecycle.rs:15:1
+    |
+15  | pub trait Disposable {
+    | -------------------- doesn't satisfy `(dyn Disposable + 'static): Sized`
+    |
+note: if you're trying to build a new `std::rc::Rc<(dyn Disposable + 'static)>` consider using one of the following associated functions:
+      std::rc::Rc::<T>::from_raw
+      std::rc::Rc::<T, A>::from_raw_in
+   --> /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181/library/alloc/src/rc.rs:1325:5
+    = note: the following trait bounds were not satisfied:
+            `(dyn Disposable + 'static): Sized`
+
+error[E0282]: type annotations needed
+   --> crates\xterm-web\src\input\touch_dom.rs:169:72
+    |
+169 |         let value = initial.map_or(JsValue::UNDEFINED, |target| target.as_ref().clone());
+    |                                                                        ^^^^^^   ----- type must be known at this point
+    |
+help: try using a fully qualified path to specify the expected types
+    |
+169 |         let value = initial.map_or(JsValue::UNDEFINED, |target| <EventTarget as AsRef<T>>::as_ref(target).clone());
+    |                                                                 ++++++++++++++++++++++++++++++++++      ~
+
+Some errors have detailed explanations: E0053, E0282, E0308, E0599.
+For more information about an error, try `rustc --explain E0053`.
+warning: `xterm-web` (lib) generated 1 warning
+error: could not compile `xterm-web` (lib) due to 7 previous errors; 1 warning emitted

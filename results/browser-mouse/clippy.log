@@ -1,0 +1,46 @@
+    Blocking waiting for file lock on build directory
+    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
+error: unused import: `Disposable`
+ --> crates\xterm-core\src\headless\queued.rs:3:17
+  |
+3 |     lifecycle::{Disposable,DisposableHandle}};
+  |                 ^^^^^^^^^^
+  |
+  = note: `-D unused-imports` implied by `-D warnings`
+  = help: to override `-D warnings` add `#[allow(unused_imports)]`
+
+error: unneeded `return` statement
+  --> crates\xterm-core\src\headless\queue_bridge.rs:13:41
+   |
+13 |                   WriteData::External(_)=>return Err(HeadlessError::Engine(TerminalError::Buffer(
+   |  _________________________________________^
+14 | |                     "host payload must be converted by its adapter before native parsing".into()))),
+   | |___________________________________________________________________________________________________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_return
+   = note: `-D clippy::needless-return` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::needless_return)]`
+help: remove `return`
+   |
+13 ~                 WriteData::External(_)=>Err(HeadlessError::Engine(TerminalError::Buffer(
+14 ~                     "host payload must be converted by its adapter before native parsing".into()))),
+   |
+
+error: `if` chain can be rewritten with `match`
+  --> crates\xterm-core\src\input\move_to_cell.rs:71:25
+   |
+71 |           let direction = if start_y == target_y {
+   |  _________________________^
+72 | |             if start_x > target_x {
+73 | |                 Direction::Left
+74 | |             } else {
+...  |
+80 | |             Direction::Right
+81 | |         };
+   | |_________^ help: consider rewriting the `if` chain with `match`: `match start_y.cmp(&target_y) {...}`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#comparison_chain
+   = note: `-D clippy::comparison-chain` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::comparison_chain)]`
+
+error: could not compile `xterm-core` (lib) due to 3 previous errors

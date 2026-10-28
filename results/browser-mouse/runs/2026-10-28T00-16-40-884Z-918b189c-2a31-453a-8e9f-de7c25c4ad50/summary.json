@@ -1,0 +1,174 @@
+{
+  "scope": "Pure browser mouse policy, original source assertions, native tests and WASM compile. Actual DOM/browser tests are separate and NOT PROVEN here.",
+  "command": "node scripts/check-browser-mouse.mjs",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "arch": "x64",
+  "sourceHashes": {
+    "crates/xterm-web/src/input/mouse_coords.rs": "0a6917af24e7d9093b7fa80881ec0961ead48a710d056def2e991b8685a4bc9f",
+    "crates/xterm-web/src/input/mouse_policy.rs": "b68726be9f24a955dcb8c08132b4111bee977ed504d2f85b7be9905ede5bfc6f",
+    "crates/xterm-web/src/input/mouse_wheel.rs": "344d448648b255004cd3a3e03e0c370904639b8a5cfbab1d9e06f0abaeea766b",
+    "crates/xterm-web/tests/mouse_policy.rs": "f1e1360e14c2146e6016bb44c01b85e40b6cbf582df085520b54ae81eba993f7",
+    "crates/xterm-web/tests/mouse_routing.rs": "bb7be3902d8f064a7ecc69ea9df7ca1bda0a98595d36478a3047feb8c09b656d"
+  },
+  "freeBytesBefore": 1184251904,
+  "freeBytesAfter": 1200705536,
+  "oracle": {
+    "node": "v24.15.0",
+    "platform": "win32",
+    "seed": 723550,
+    "fixtures": {
+      "browser-mouse-trigger.tsv": {
+        "rows": 1562,
+        "sha256": "323f4aff58746fd2571d87df935d7687825151cc77c58ee8f4c90edcfe0e7f67"
+      },
+      "browser-mouse-coords.tsv": {
+        "rows": 1024,
+        "sha256": "633336daf496650b851724f5461ad9eec45398b47984a9d35e9fb10d9480b777"
+      },
+      "browser-mouse-wheel.tsv": {
+        "rows": 2522,
+        "sha256": "5ac237181c74921be5140139a70b20fca02dfc037a48f11e275f087d5a394e0b"
+      },
+      "browser-mouse-touch.tsv": {
+        "rows": 516,
+        "sha256": "92e6b2d1bab06405354dc8e6e1ce97c98529427ad61b103578ffdb5757ff1bb3"
+      }
+    },
+    "sourceHashes": {
+      "browser/input/Mouse.ts": "977343fb0427d041b8cc64947332669a3d09f3ef8f4663d9456293d46d8ae919",
+      "browser/input/Mouse.test.ts": "911518475c17a36772fec50a67a334e9c12326067c644e2dabddc5fdd011707e",
+      "browser/services/MouseCoordsService.ts": "235d7febfd33a65074036c0fd74a00a8bf0b3fa6488fcc16c72bb3ce99073699",
+      "browser/services/MouseService.ts": "cb1c4b1d292a7c049e0d73564227a949c8915bd7637ad2784124905467e1129c",
+      "browser/services/MouseService.test.ts": "c7deb1cf7fdf554aa9b88a585c6db914e5aadc459dcfba75fcca32867ee550ee",
+      "common/services/MouseStateService.ts": "1b562be54a3ea3d91c565ac8d94239f8e219cb82ff735388a3650170a993d5ee"
+    },
+    "upstream": {
+      "discovered": 15,
+      "executed": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0
+    },
+    "names": [
+      "Mouse getCoords should return the cell that was clicked",
+      "Mouse getCoords should ensure the coordinates are returned within the terminal bounds",
+      "MouseService _triggerMouseEvent NONE",
+      "MouseService _triggerMouseEvent X10",
+      "MouseService _triggerMouseEvent VT200",
+      "MouseService _triggerMouseEvent DRAG",
+      "MouseService _triggerMouseEvent ANY",
+      "MouseService _triggerMouseEvent eventCodes with modifiers (DEFAULT encoding)",
+      "MouseService _triggerMouseEvent coords DEFAULT encoding",
+      "MouseService _triggerMouseEvent coords SGR encoding",
+      "MouseService _triggerMouseEvent coords SGR_PIXELS encoding",
+      "MouseService mouseEventsRequireAlt should update selection state and cursor class when toggled while mouse events are active",
+      "MouseService mouseEventsRequireAlt should strip alt modifier from forwarded mouse reports",
+      "MouseService mouseEventsRequireAlt should toggle enable-mouse-events class when alt modifier changes",
+      "MouseService multi-window should manage protocol mouseup/mousemove listeners on the element's current document, not the document the terminal was opened with"
+    ],
+    "scope": "Original 15 tests and pure policy corpus; Rust DOM/three-browser proof remains separate."
+  },
+  "checks": [
+    {
+      "name": "oracle",
+      "command": "C:\\nvm4w\\nodejs\\node.exe",
+      "args": [
+        "scripts/browser-mouse-oracle.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "results/browser-mouse/runs/2026-10-28T00-16-40-884Z-918b189c-2a31-453a-8e9f-de7c25c4ad50/oracle.log",
+      "status": "passed"
+    },
+    {
+      "name": "native-tests",
+      "command": "cargo",
+      "args": [
+        "test",
+        "-p",
+        "xterm-web",
+        "--test",
+        "mouse_policy",
+        "--test",
+        "mouse_routing"
+      ],
+      "expectedTests": 11,
+      "exitCode": 0,
+      "signal": null,
+      "log": "results/browser-mouse/runs/2026-10-28T00-16-40-884Z-918b189c-2a31-453a-8e9f-de7c25c4ad50/native-tests.log",
+      "status": "passed",
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "name": "fmt",
+      "command": "rustfmt",
+      "args": [
+        "--edition",
+        "2021",
+        "--check",
+        "crates/xterm-web/src/input/mouse_coords.rs",
+        "crates/xterm-web/src/input/mouse_policy.rs",
+        "crates/xterm-web/src/input/mouse_wheel.rs",
+        "crates/xterm-web/tests/mouse_policy.rs",
+        "crates/xterm-web/tests/mouse_routing.rs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "results/browser-mouse/runs/2026-10-28T00-16-40-884Z-918b189c-2a31-453a-8e9f-de7c25c4ad50/fmt.log",
+      "status": "passed"
+    },
+    {
+      "name": "clippy",
+      "command": "cargo",
+      "args": [
+        "clippy",
+        "-p",
+        "xterm-web",
+        "--lib",
+        "--test",
+        "mouse_policy",
+        "--test",
+        "mouse_routing",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "results/browser-mouse/runs/2026-10-28T00-16-40-884Z-918b189c-2a31-453a-8e9f-de7c25c4ad50/clippy.log",
+      "status": "passed"
+    },
+    {
+      "name": "wasm-check",
+      "command": "cargo",
+      "args": [
+        "check",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "log": "results/browser-mouse/runs/2026-10-28T00-16-40-884Z-918b189c-2a31-453a-8e9f-de7c25c4ad50/wasm-check.log",
+      "status": "failed",
+      "error": "WASM build emitted warnings; inspect retained log"
+    }
+  ],
+  "status": "failed",
+  "browsersUnrun": [
+    "chromium",
+    "firefox",
+    "webkit"
+  ],
+  "nativePlatformsUnrun": [
+    "linux",
+    "darwin"
+  ],
+  "runId": "2026-10-28T00-16-40-884Z-918b189c-2a31-453a-8e9f-de7c25c4ad50"
+}

@@ -1,0 +1,25 @@
+    Blocking waiting for file lock on build directory
+    Checking xterm-addons v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-addons)
+    Checking xterm-web v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web)
+error: this `if` has identical blocks
+   --> crates\xterm-web\src\renderer\row.rs:157:59
+    |
+157 |               span.text = if cell.attrs.is_invisible() != 0 {
+    |  ___________________________________________________________^
+158 | |                 vec![32]
+159 | |             } else if cell.chars.is_empty() {
+    | |_____________^
+    |
+note: same as this
+   --> crates\xterm-web\src\renderer\row.rs:159:45
+    |
+159 |               } else if cell.chars.is_empty() {
+    |  _____________________________________________^
+160 | |                 vec![32]
+161 | |             } else {
+    | |_____________^
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#if_same_then_else
+    = note: `-D clippy::if-same-then-else` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::if_same_then_else)]`
+
+error: could not compile `xterm-web` (lib) due to 1 previous error
