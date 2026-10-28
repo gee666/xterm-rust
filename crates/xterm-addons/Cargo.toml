@@ -8,6 +8,11 @@ description = "Portable xterm.js addon behavior and adapter contracts"
 
 [dependencies]
 xterm-core = { path = "../xterm-core" }
+# Image protocol reports need ECMAScript Number formatting. Already licensed
+# in licenses/ryu-js-BSL-1.0.txt; the crate supports Rust 1.71, below our MSRV.
+ryu-js = "1.0"
+# WOFF GSUB tables require bounded zlib decompression without a native backend.
+miniz_oxide = { version = "=0.8.9", default-features = false, features = ["with-alloc"] }
 
 # JSON is used only to replay source-generated differential fixtures.
 [dev-dependencies]
