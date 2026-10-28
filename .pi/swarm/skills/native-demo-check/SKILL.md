@@ -9,6 +9,8 @@ Run from the repository root with Rust1.85+, Cargo/rustfmt/Clippy and Node24+ av
 cargo run --locked -p xterm-core --example native -- --plain
 cargo test --locked -p xterm-core --example native
 node scripts/check-native-demo.mjs
+# During the shared local build protocol, acquire the bounded native lane:
+node scripts/build-slot.mjs --owner NAME --lane native --timeout-ms 240000 -- node scripts/check-native-demo.mjs
 ```
 
 Honor the shared disk/build policy. Do not start local builds during a coordinated disk pause. The checker requires1GiB free on the root and existing target filesystem, validates the resolved Cargo OS/shared directory, uses Cargo's actual JSON executable artifact, and never changes profiles or removes files. It reuses the existing quality process runner and immutable evidence-attempt helper, with no npm dependency.

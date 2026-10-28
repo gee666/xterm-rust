@@ -133,8 +133,12 @@ impl Demo {
 }
 
 pub(super) fn numbers(text: &str, count: usize) -> DemoResult<Vec<usize>> {
+    // One extra token is enough to reject wrong arity without collecting an
+    // arbitrarily long malformed command into a temporary vector.
+    let limit = count.checked_add(1).ok_or("argument count overflow")?;
     let values = text
         .split_whitespace()
+        .take(limit)
         .map(str::parse)
         .collect::<Result<Vec<_>, _>>()?;
     if values.len() != count {

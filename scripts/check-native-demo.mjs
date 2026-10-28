@@ -1,9 +1,11 @@
 // Use the same real command path for native interaction and deterministic checks.
 import assert from 'node:assert/strict';
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, realpath, lstat } from 'node:fs/promises';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { performance } from 'node:perf_hooks';
+import { createReadStream } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { createEvidenceRun, persistEvidence } from './upstream-baseline-utils.mjs';
 
@@ -23,6 +25,12 @@ async function checkDisk() {
   runtime.requireHeadroom(await runtime.diskHeadroom(root, reserveMiB));
   try { runtime.requireHeadroom(await runtime.diskHeadroom(path.join(root, 'target'), reserveMiB)); }
   catch (error) { if (error.code !== 'ENOENT') throw error; }
+}
+async function fingerprint(file) {
+  const hash = createHash('sha256');
+  let bytes = 0;
+  for await (const chunk of createReadStream(file)) { bytes += chunk.length; hash.update(chunk); }
+  return { bytes, sha256: hash.digest('hex') };
 }
 async function run(name, command, args, expected = 'success') {
   await checkDisk();
@@ -105,7 +113,14 @@ try {
       message.target.kind.includes('example') && !message.profile.test && message.executable);
   assert.equal(artifacts.length, 1, 'Use this build artifact, never a stale hardcoded executable');
   const executable = artifacts[0].executable;
-  report.executable = relative(executable);
+  const physicalTarget = await realpath(path.join(root, 'target'));
+  const physicalExecutable = await realpath(executable);
+  const artifactPath = path.relative(physicalTarget, physicalExecutable);
+  assert(artifactPath && !artifactPath.startsWith('..') && !path.isAbsolute(artifactPath), 'Build artifact escaped the approved shared target');
+  assert((await lstat(physicalExecutable)).isFile(), 'Native artifact must resolve to a regular file');
+  report.executable = `target/${artifactPath.split(path.sep).join('/')}`;
+  report.environment.physicalExecutable = physicalExecutable;
+  report.artifactBefore = await fingerprint(executable);
   const script = 'crates/xterm-core/tests/fixtures/native-demo.txt';
   const expectedAssertions = (await readFile(path.join(root, script), 'utf8')).split(/\r?\n/).filter(line => line.startsWith('assert-')).length;
   assert(expectedAssertions >= 20, 'Demo script must assert actual state, not startup alone');
@@ -141,6 +156,8 @@ try {
     assert(accepted, `Negative case ${name} did not fail with its expected diagnostic`);
   }
   report.assertionsPerScript = expectedAssertions;
+  report.artifactAfter = await fingerprint(executable);
+  assert.deepEqual(report.artifactAfter, report.artifactBefore, 'The executable changed between runtime checks');
   report.sourceAfter = await runtime.snapshot(root);
   report.sourceStable = report.sourceBefore.sha256 === report.sourceAfter.sha256;
   if (!report.sourceStable) report.gaps.push('Shared source changed during execution; repeat on a stable snapshot before final acceptance.');
