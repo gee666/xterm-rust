@@ -1,40 +1,72 @@
+Commands: cargo test -p xterm-core --test osc --test osc_edges --test osc_failures --test osc_registry --test osc_differential --test escape_osc
 rustc 1.85.1 (4eb161250 2025-03-15)
 cargo 1.85.1 (d73d2caf9 2024-12-31)
 v24.15.0
+    Blocking waiting for file lock on build directory
    Compiling xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.34s
-     Running tests\osc.rs (target\debug\deps\osc-708ca06b0d85f3c8.exe)
+    Finished `test` profile [unoptimized] target(s) in 1.29s
+     Running tests\escape_osc.rs (target\debug\deps\escape_osc-cb6f5d0a16c264ab.exe)
+
+running 4 tests
+test failed_callback_stops_before_trailing_print_and_does_not_invoke_older_handler ... ok
+test every_osc_mutation_exception_propagates_through_outer_parser ... ok
+test rejected_callback_future_keeps_parser_paused_until_explicit_reset ... ok
+test every_osc_intro_terminator_and_chunk_boundary_matches_original_parser ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests\osc.rs (target\debug\deps\osc-5776e1d61b21962c.exe)
 
 running 7 tests
-test identifier_parsing ... ok
-test registration_clear_and_disposal ... ok
-test reset_payload_and_resume_after_reset ... ok
 test reset_retains_async_cleanup_futures ... ok
-test factory_exact_limit_and_limit_plus_one ... ok
+test reset_payload_and_resume_after_reset ... ok
+test identifier_parsing ... ok
 test factory_success_abort_dispose_and_bubble ... ok
+test registration_clear_and_disposal ... ok
+test factory_exact_limit_and_limit_plus_one ... ok
 test bubbling_and_mixed_sync_async_cleanup ... ok
 
 test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
-     Running tests\osc_differential.rs (target\debug\deps\osc_differential-08c139bb433533eb.exe)
+     Running tests\osc_differential.rs (target\debug\deps\osc_differential-3b590c1ed1244995.exe)
 
 running 1 test
 test randomized_registration_lifecycle_and_streaming_matches_javascript ... ok
 
-test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
 
-     Running tests\osc_edges.rs (target\debug\deps\osc_edges-c9a58f7d419337ec.exe)
+     Running tests\osc_edges.rs (target\debug\deps\osc_edges-ba86f489f2c2bd1c.exe)
 
-running 7 tests
-test clearing_registry_does_not_replace_active_handler_list ... ok
-test utf16_lone_surrogates_and_astral_units_count_toward_limit ... ok
-test live_removal_during_every_callback_stage_returns_recoverable_error ... ok
+running 8 tests
 test numeric_identifier_preserves_javascript_float_rounding_and_overflow ... ok
-test reset_while_paused_cleans_only_lower_handlers_and_preserves_owned_future ... ok
+test live_removal_during_every_callback_stage_returns_recoverable_error ... ok
+test clearing_registry_does_not_replace_active_handler_list ... ok
 test empty_and_illegal_identifier_boundaries ... ok
+test repeated_disposal_removes_next_equal_identity_registration ... ok
+test reset_while_paused_cleans_only_lower_handlers_and_preserves_owned_future ... ok
+test utf16_lone_surrogates_and_astral_units_count_toward_limit ... ok
 test zero_limit_overflow_ignores_later_chunks_and_recovers_after_start ... ok
 
-test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
-    Checking xterm-core v0.1.0 (P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core)
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.63s
+     Running tests\osc_failures.rs (target\debug\deps\osc_failures-316ef9cda815d683.exe)
+
+running 6 tests
+test buffered_callback_failure_preserves_data_until_later_end_or_start ... ok
+test rejected_future_retains_payload_and_successful_future_clears_it ... ok
+test cleanup_failure_stops_before_older_handlers ... ok
+test failed_end_does_not_bubble_or_cleanup_lower_handlers ... ok
+test rejected_future_does_not_resume_bubbling_and_reset_cleans_older_handlers ... ok
+test event_callback_cause_is_not_replaced_by_a_generic_error ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\osc_registry.rs (target\debug\deps\osc_registry-9a87ac9b8e82db81.exe)
+
+running 3 tests
+test callback_can_register_and_clear_without_reborrowing_parser ... ok
+test registrar_is_weak_but_explicit_dispose_does_not_permanently_close_live_parser ... ok
+test token_captured_by_its_handler_does_not_create_reference_cycle ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -103,6 +103,71 @@
       }
     ]
   },
+  "mutationChecks": [
+    {
+      "phase": "start",
+      "error": "TypeError",
+      "rustError": "DispatchError::ActiveHandlerRemoved",
+      "status": "passed"
+    },
+    {
+      "phase": "put",
+      "error": "TypeError",
+      "rustError": "DispatchError::ActiveHandlerRemoved",
+      "status": "passed"
+    },
+    {
+      "phase": "end",
+      "error": "TypeError",
+      "rustError": "DispatchError::ActiveHandlerRemoved",
+      "status": "passed"
+    },
+    {
+      "phase": "reset",
+      "error": "TypeError",
+      "rustError": "DispatchError::ActiveHandlerRemoved",
+      "status": "passed"
+    },
+    {
+      "phase": "repeated disposal with duplicate identity",
+      "status": "passed"
+    },
+    {
+      "phase": "register from callback",
+      "status": "passed"
+    },
+    {
+      "phase": "clear then register from callback",
+      "status": "passed"
+    }
+  ],
+  "callbackFailureChecks": [
+    {
+      "asynchronous": false,
+      "path": "buffer retained on error; cleared on success",
+      "status": "passed"
+    },
+    {
+      "asynchronous": true,
+      "path": "buffer retained on error; cleared on success",
+      "status": "passed"
+    },
+    {
+      "stage": "end",
+      "path": "failure stops older dispatch with partial state",
+      "status": "passed"
+    },
+    {
+      "stage": "reset",
+      "path": "failure stops older dispatch with partial state",
+      "status": "passed"
+    },
+    {
+      "stage": "cleanup",
+      "path": "failure stops older dispatch with partial state",
+      "status": "passed"
+    }
+  ],
   "sources": [
     {
       "path": "source_repo/src/common/parser/Constants.ts",

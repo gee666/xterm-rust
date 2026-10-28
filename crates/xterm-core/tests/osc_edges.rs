@@ -5,7 +5,9 @@ use std::future::Future;
 use std::pin::Pin;
 use std::rc::Rc;
 use std::task::{Context, Poll, Wake, Waker};
-use xterm_core::lifecycle::DisposableHandle;
+#[path = "parser_support/removal.rs"]
+mod removal;
+use removal::RemoveAll;
 use xterm_core::parser::handler::HandlerResult;
 use xterm_core::parser::osc::{OscAction, OscError, OscHandler, OscHandlerTrait, OscParser};
 
@@ -103,6 +105,29 @@ fn clearing_registry_does_not_replace_active_handler_list() {
     assert_eq!(*calls.borrow(), [("old", vec![65, 66]), ("new", vec![67])]);
 }
 #[test]
+fn repeated_disposal_removes_next_equal_identity_registration() {
+    let calls = Rc::new(std::cell::Cell::new(0));
+    let log = Rc::clone(&calls);
+    let mut parser = OscParser::new();
+    let handler = Rc::new(RefCell::new(OscHandler::new(move |_| {
+        log.set(log.get() + 1);
+        HandlerResult::Ready(false)
+    })));
+    let token = parser.register_handler(1.0, handler.clone());
+    let other = parser.register_handler(1.0, handler);
+    token.dispose();
+    parser.start().unwrap();
+    parser.put(&[49, 59, 65]).unwrap();
+    assert!(parser.end(true, true).unwrap().is_none());
+    assert_eq!(calls.get(), 1);
+    token.dispose();
+    parser.start().unwrap();
+    parser.put(&[49, 59, 66]).unwrap();
+    assert!(parser.end(true, true).unwrap().is_none());
+    assert_eq!(calls.get(), 1);
+    other.dispose();
+}
+#[test]
 fn empty_and_illegal_identifier_boundaries() {
     let output = Rc::new(RefCell::new(Vec::new()));
     let log = Rc::clone(&output);
@@ -144,31 +169,6 @@ fn numeric_identifier_preserves_javascript_float_rounding_and_overflow() {
     // converted digit; rounding at this boundary gives 9007199254740992.
     assert_eq!(output.borrow()[0], 9_007_199_254_740_992.0);
     assert_eq!(output.borrow()[2], f64::INFINITY);
-}
-struct RemoveAll {
-    phase: &'static str,
-    tokens: std::rc::Weak<RefCell<Vec<DisposableHandle>>>,
-}
-impl RemoveAll {
-    fn remove(&self, phase: &str) {
-        if self.phase == phase {
-            for token in self.tokens.upgrade().unwrap().borrow().iter() {
-                token.dispose();
-            }
-        }
-    }
-}
-impl OscHandlerTrait for RemoveAll {
-    fn start(&mut self) {
-        self.remove("start");
-    }
-    fn put(&mut self, _: &[u32]) {
-        self.remove("put");
-    }
-    fn end(&mut self, _: bool) -> HandlerResult {
-        self.remove("end");
-        HandlerResult::Ready(false)
-    }
 }
 #[test]
 fn live_removal_during_every_callback_stage_returns_recoverable_error() {

@@ -6,15 +6,17 @@
 //! Pending end results must be awaited, then passed back to `end`. Reset may
 //! cancel the remaining dispatch without awaiting a previously returned future.
 
-use crate::lifecycle::{to_disposable, DisposableHandle};
+use crate::lifecycle::DisposableHandle;
 use crate::text_decoder::utf32_to_string;
 use std::cell::RefCell;
-use std::collections::HashMap;
 use std::rc::Rc;
 
 #[path = "osc_handler.rs"]
 mod handler;
 pub use handler::OscHandler;
+#[path = "osc_registry.rs"]
+mod registry;
+pub use registry::OscRegistrar;
 
 pub const PAYLOAD_LIMIT: usize = 10_000_000;
 
@@ -53,7 +55,7 @@ struct Pause {
 pub struct OscParser {
     state: State,
     id: f64,
-    handlers: HashMap<u64, HandlerList>,
+    handlers: registry::Registry,
     active: HandlerList,
     fallback: Option<Box<dyn FnMut(f64, OscAction)>>,
     pause: Option<Pause>,
@@ -65,7 +67,7 @@ impl Default for OscParser {
         Self {
             state: State::Start,
             id: -1.0,
-            handlers: HashMap::new(),
+            handlers: registry::Registry::new(),
             active: Rc::default(),
             fallback: None,
             pause: None,
@@ -92,19 +94,15 @@ impl OscParser {
     /// Explicit disposal removes the first registration with the same identity.
     /// Dropping the returned handle does not unregister, matching JavaScript.
     pub fn register_handler(&mut self, id: f64, handler: HandlerHandle) -> DisposableHandle {
-        let list = self.handlers.entry(key(id)).or_default();
-        list.borrow_mut().push(Rc::clone(&handler));
-        let list = Rc::clone(list);
-        to_disposable(move || {
-            let mut list = list.borrow_mut();
-            if let Some(index) = list.iter().position(|entry| Rc::ptr_eq(entry, &handler)) {
-                list.remove(index);
-            }
-        })
+        self.handlers.register(key(id), handler)
     }
 
     pub fn clear_handler(&mut self, id: f64) {
-        self.handlers.remove(&key(id));
+        self.handlers.clear(&key(id));
+    }
+
+    pub fn registrar(&self) -> OscRegistrar {
+        OscRegistrar::new(&self.handlers)
     }
 
     pub fn set_handler_fallback(&mut self, callback: impl FnMut(f64, OscAction) + 'static) {
@@ -112,7 +110,7 @@ impl OscParser {
     }
 
     pub fn dispose(&mut self) {
-        self.handlers.clear();
+        self.handlers.clear_all();
         self.fallback = None;
         self.active = Rc::default();
     }
@@ -143,8 +141,12 @@ impl OscParser {
                 // Rust futures are lazy. Retain asynchronous cleanup for the
                 // adapter's executor instead of silently cancelling it.
                 let result = handler.borrow_mut().end(false);
-                if matches!(result, HandlerResult::Pending(_)) {
-                    self.cleanup.push(result);
+                match result {
+                    HandlerResult::Pending(_) | HandlerResult::PendingFallible(_) => {
+                        self.cleanup.push(result)
+                    }
+                    HandlerResult::Failed(error) => return Err(error),
+                    HandlerResult::Ready(_) => {}
                 }
             }
         }
@@ -167,11 +169,7 @@ impl OscParser {
     }
 
     fn begin_payload(&mut self) -> Result<(), OscError> {
-        self.active = self
-            .handlers
-            .get(&key(self.id))
-            .cloned()
-            .unwrap_or_default();
+        self.active = self.handlers.get(&key(self.id));
         let count = self.active.borrow().len();
         if count == 0 {
             self.report(OscAction::Start);
@@ -294,9 +292,10 @@ impl OscParser {
             let result = handler.borrow_mut().end(success && !cleanup);
             match result {
                 HandlerResult::Ready(handled) => cleanup |= handled,
-                HandlerResult::Pending(future) => {
+                HandlerResult::Failed(error) => return Err(error),
+                pending @ (HandlerResult::Pending(_) | HandlerResult::PendingFallible(_)) => {
                     self.pause = Some(Pause { next, cleanup });
-                    return Ok(Some(HandlerResult::Pending(future)));
+                    return Ok(Some(pending));
                 }
             }
         }

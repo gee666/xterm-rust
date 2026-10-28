@@ -14,6 +14,7 @@ pub fn units(data: &[u16]) -> String {
         .collect::<Vec<_>>()
         .join(",")
 }
+#[derive(Clone)]
 pub struct Reporter {
     pub name: String,
     pub handled: bool,

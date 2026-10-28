@@ -1,9 +1,10 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved.
 // Licensed under MIT. Ported assertions from common/parser/OscParser.test.ts.
 use std::cell::RefCell;
-use std::future::Future;
 use std::rc::Rc;
-use std::task::{Context, Poll, Wake, Waker};
+#[path = "parser_support/future.rs"]
+mod future;
+use future::resolve;
 use xterm_core::parser::handler::HandlerResult;
 use xterm_core::parser::osc::{HandlerHandle, OscAction, OscHandler, OscHandlerTrait, OscParser};
 
@@ -27,24 +28,10 @@ fn parser() -> (OscParser, Log) {
     });
     (parser, log)
 }
-struct NoWake;
-impl Wake for NoWake {
-    fn wake(self: std::sync::Arc<Self>) {}
-}
-fn ready(mut future: std::pin::Pin<Box<dyn Future<Output = bool>>>) -> bool {
-    let waker = Waker::from(std::sync::Arc::new(NoWake));
-    match future.as_mut().poll(&mut Context::from_waker(&waker)) {
-        Poll::Ready(value) => value,
-        Poll::Pending => panic!("test future must complete when polled"),
-    }
-}
 fn end(parser: &mut OscParser, success: bool) {
     let mut previous = true;
     while let Some(result) = parser.end(success, previous).unwrap() {
-        previous = match result {
-            HandlerResult::Ready(value) => value,
-            HandlerResult::Pending(future) => ready(future),
-        };
+        previous = resolve(result);
     }
 }
 struct Handler {
@@ -305,9 +292,7 @@ fn reset_retains_async_cleanup_futures() {
     let cleanup = parser.take_cleanup();
     assert_eq!(cleanup.len(), 1);
     for result in cleanup {
-        if let HandlerResult::Pending(future) = result {
-            assert!(ready(future));
-        }
+        assert!(resolve(result));
     }
     assert_eq!(
         *log.borrow(),

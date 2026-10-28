@@ -69,9 +69,20 @@ impl<F: FnMut(Vec<u16>) -> HandlerResult> OscHandlerTrait for OscHandler<F> {
         };
         let result = data.map_or(HandlerResult::Ready(false), &mut self.callback);
         match result {
+            // A source callback throwing bypasses the following cleanup. Keep
+            // accumulation intact until the next start, rather than swallowing it.
+            HandlerResult::Failed(error) => HandlerResult::Failed(error),
             HandlerResult::Ready(value) => {
                 clear(&self.payload);
                 HandlerResult::Ready(value)
+            }
+            HandlerResult::PendingFallible(future) => {
+                let payload = Rc::clone(&self.payload);
+                HandlerResult::PendingFallible(Box::pin(async move {
+                    let result = future.await?;
+                    clear(&payload);
+                    Ok(result)
+                }))
             }
             HandlerResult::Pending(future) => {
                 let payload = Rc::clone(&self.payload);

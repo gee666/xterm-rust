@@ -6,6 +6,11 @@ import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import vm from 'node:vm';
 
+export function eraseModuleBoundaries(text) {
+  return stripTypeScriptTypes(text.replace(/^import .*;\r?$/gm, '')
+    .replace(/^export type .*;\r?$/gm, '').replace(/^export /gm, ''), { mode: 'transform' });
+}
+
 export async function parserOracle(name) {
   const paths = [
     'source_repo/src/common/parser/Constants.ts',
@@ -18,8 +23,7 @@ export async function parserOracle(name) {
   const texts = await Promise.all(paths.map(path => readFile(path, 'utf8')));
   // Remove only module boundaries and type syntax. Runtime implementation and
   // every upstream assertion execute unchanged inside a single realm.
-  const erase = text => stripTypeScriptTypes(
-    text.replace(/^import .*;\r?$/gm, '').replace(/^export /gm, ''), { mode: 'transform' });
+  const erase = eraseModuleBoundaries;
   const suites = [];
   const tests = [];
   const context = vm.createContext({ assert,
@@ -33,7 +37,7 @@ export async function parserOracle(name) {
         before: suites.flatMap(s => s.before), after: suites.toReversed().flatMap(s => s.after) });
     },
   });
-  vm.runInContext(texts.slice(0, -1).map(erase).join('\n') + `\nglobalThis.Parser = ${name}Parser;` +
+  vm.runInContext(texts.slice(0, -1).map(erase).join('\n') + `\nglobalThis.Parser = ${name}Parser; globalThis.Handler = ${name}Handler;` +
     (name === 'Dcs' ? '\nglobalThis.Params = Params;' : ''), context);
   vm.runInContext(erase(texts.at(-1)), context);
   const outcomes = [];

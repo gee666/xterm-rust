@@ -1,0 +1,10 @@
+{
+  "case": "restart-mode2",
+  "operations": "p:1b,5d,32,3b,41,9d,32,3b,42,7",
+  "status": "executor scheduling mismatch identified",
+  "actual": "h:2|h:1|h:0|p:2:41|p:1:41|p:0:41|e:2:0|e:0:0|h:2|h:1|h:0|p:2:42|p:1:42|p:0:42|e:2:1|w|e:1:0|e:0:0|s:0:0:0:0",
+  "expected": "h:2|h:1|h:0|p:2:41|p:1:41|p:0:41|e:2:0|e:0:0|h:2|h:1|h:0|p:2:42|p:1:42|p:0:42|e:2:1|w|e:1:0|e:1:0|e:0:0|s:0:0:0:0",
+  "cause": "Rust futures are lazy. Driver awaited current end callback but never drove earlier reset cleanup futures. Core retained them correctly in take_cleanup.",
+  "required": "Drive queued cleanup futures before current pending handler at executor microtask boundary; drain at each explicit trace chunk completion. JS oracle flushes same boundary to include all scheduled reset callbacks.",
+  "integration": "Terminal engine owner notified. Core/terminal browser scheduling must use the same explicit ownership contract."
+}

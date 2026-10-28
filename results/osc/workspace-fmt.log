@@ -1,0 +1,1418 @@
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\line.rs:6:
+ };
+ use std::{cell::RefCell, collections::BTreeMap};
+ 
+[32m+#[cfg(test)]
+[0m[32m+#[path = "line_buffer_cleanup_tests.rs"]
+[0m[32m+mod buffer_cleanup_tests;
+[0m #[path = "line_edit.rs"]
+ mod edit;
+ #[cfg(test)]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\line.rs:12:
+ #[path = "line_storage_tests.rs"]
+ mod storage_tests;
+[31m-#[cfg(test)]
+[0m[31m-#[path = "line_buffer_cleanup_tests.rs"]
+[0m[31m-mod buffer_cleanup_tests;
+[0m #[path = "line_text.rs"]
+ mod text;
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\mod.rs:1:
+ //! Packed cells and attributes shared by buffers, renderers and terminal APIs.
+ mod attributes;
+ mod cell;
+[32m+pub mod cleanup;
+[0m pub mod constants;
+ mod extended;
+ mod line;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\mod.rs:7:
+[31m-pub mod reflow;
+[0m pub mod marker;
+ pub mod range;
+[32m+pub mod reflow;
+[0m pub mod screen;
+[31m-pub mod cleanup;
+[0m pub use cleanup::BufferCleanup;
+ pub mod buffer_set;
+ pub mod service;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\buffer\mod.rs:15:
+[31m-pub use screen::{Buffer, BufferDimensions, BufferError, LineRef};
+[0m pub use buffer_set::BufferSet;
+[32m+pub use screen::{Buffer, BufferDimensions, BufferError, LineRef};
+[0m pub use service::BufferService;
+ 
+ pub use attributes::AttributeData;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\headless\views.rs:8:
+ 
+ impl Terminal {
+     /// Registration-only handles do not borrow the parser during callbacks.
+[31m-    pub fn addon_registrars(&self) -> Result<(crate::parser::osc::OscRegistrar,crate::parser::escape::CommandRegistrar),HeadlessError> {
+[0m[31m-        let mut engine = self.engine.try_borrow_mut().map_err(|_|HeadlessError::Borrowed)?;
+[0m[32m+    pub fn addon_registrars(
+[0m[32m+        &self,
+[0m[32m+    ) -> Result<
+[0m[32m+        (
+[0m[32m+            crate::parser::osc::OscRegistrar,
+[0m[32m+            crate::parser::escape::CommandRegistrar,
+[0m[32m+        ),
+[0m[32m+        HeadlessError,
+[0m[32m+    > {
+[0m[32m+        let mut engine = self
+[0m[32m+            .engine
+[0m[32m+            .try_borrow_mut()
+[0m[32m+            .map_err(|_| HeadlessError::Borrowed)?;
+[0m         let parser = engine.parser_mut();
+[31m-        Ok((parser.osc.registrar(),parser.esc_registrar()))
+[0m[32m+        Ok((parser.osc.registrar(), parser.esc_registrar()))
+[0m     }
+     pub fn buffer(&self) -> Result<Rc<BufferNamespaceApi>, HeadlessError> {
+         if let Some(buffer) = self.buffer_cache.get() {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\input\write_buffer_drain.rs:153:
+                     Ok(value) => queue.resume_handler(start, value),
+                     Err(error) => {
+                         queue.state.scheduler.borrow_mut().report_error(error);
+[31m-                        if queue.is_disposed() { return; }
+[0m[32m+                        if queue.is_disposed() {
+[0m[32m+                            return;
+[0m[32m+                        }
+[0m                         // Source catch queues the uncaught error before its
+                         // resolved-false promise schedules parser continuation.
+                         let weak = queue.downgrade();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\input\write_buffer_drain.rs:160:
+[31m-                        queue.state.scheduler.borrow_mut().spawn(Box::pin(async move {
+[0m[31m-                            if let Some(queue) = weak.upgrade() { queue.resume_handler(start, false); }
+[0m[31m-                        }));
+[0m[32m+                        queue
+[0m[32m+                            .state
+[0m[32m+                            .scheduler
+[0m[32m+                            .borrow_mut()
+[0m[32m+                            .spawn(Box::pin(async move {
+[0m[32m+                                if let Some(queue) = weak.upgrade() {
+[0m[32m+                                    queue.resume_handler(start, false);
+[0m[32m+                                }
+[0m[32m+                            }));
+[0m                     }
+                 }
+             }));
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\input\write_buffer_drain.rs:166:
+     }
+     fn resume_handler(&self, start: f64, result: bool) {
+[31m-        if self.is_disposed() { return; }
+[0m[32m+        if self.is_disposed() {
+[0m[32m+            return;
+[0m[32m+        }
+[0m         let resumed = if self.now() - start >= WRITE_TIMEOUT_MS {
+             self.schedule(0.0, result)
+         } else {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\input\write_buffer_drain.rs:172:
+             self.inner_write(start, result)
+         };
+[31m-        if let Err(error) = resumed { self.state.scheduler.borrow_mut().report_error(error); }
+[0m[32m+        if let Err(error) = resumed {
+[0m[32m+            self.state.scheduler.borrow_mut().report_error(error);
+[0m[32m+        }
+[0m     }
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\value.rs:43:
+         payload: T,
+         to_primitive: impl Fn(CoercionHint) -> Result<OptionValue, CoercionError> + 'static,
+     ) -> Rc<Self> {
+[31m-        Self::with_fallible_properties(payload,
+[0m[32m+        Self::with_fallible_properties(
+[0m[32m+            payload,
+[0m             move |hint| to_primitive(hint).map_err(Into::into),
+[31m-            |_, _| Ok(OptionValue::Undefined))
+[0m[32m+            |_, _| Ok(OptionValue::Undefined),
+[0m[32m+        )
+[0m     }
+ 
+     /// Supply property access for structured payloads or JS getters. The getter
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\value.rs:55:
+         to_primitive: impl Fn(CoercionHint) -> Result<OptionValue, CoercionError> + 'static,
+         get: impl Fn(&T, &str) -> Result<OptionValue, CoercionError> + 'static,
+     ) -> Rc<Self> {
+[31m-        Self::with_fallible_properties(payload,
+[0m[32m+        Self::with_fallible_properties(
+[0m[32m+            payload,
+[0m             move |hint| to_primitive(hint).map_err(Into::into),
+[31m-            move |payload, key| get(payload, key).map_err(Into::into))
+[0m[32m+            move |payload, key| get(payload, key).map_err(Into::into),
+[0m[32m+        )
+[0m     }
+ 
+     /// Full host callback errors can retain the original exception via
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\value.rs:68:
+         get: impl Fn(&T, &str) -> Result<OptionValue, super::OptionError> + 'static,
+     ) -> Rc<Self> {
+         Rc::new(Self {
+[31m-            payload: Box::new(payload), to_primitive: Box::new(to_primitive),
+[0m[32m+            payload: Box::new(payload),
+[0m[32m+            to_primitive: Box::new(to_primitive),
+[0m             property_getter: Box::new(move |payload, key| {
+                 // This object owns exactly the T boxed by this constructor.
+[31m-                get(payload.downcast_ref::<T>().expect("property getter payload type"), key)
+[0m[32m+                get(
+[0m[32m+                    payload
+[0m[32m+                        .downcast_ref::<T>()
+[0m[32m+                        .expect("property getter payload type"),
+[0m[32m+                    key,
+[0m[32m+                )
+[0m             }),
+         })
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\options\value.rs:87:
+     fn primitive(&self, hint: CoercionHint) -> Result<OptionValue, super::OptionError> {
+         let primitive = (self.to_primitive)(hint)?;
+         if matches!(primitive, OptionValue::Object(_)) {
+[31m-            Err(CoercionError::new(
+[0m[31m-                "Cannot convert object to primitive value",
+[0m[31m-            ).into())
+[0m[32m+            Err(CoercionError::new("Cannot convert object to primitive value").into())
+[0m         } else {
+             Ok(primitive)
+         }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\public_api\buffer.rs:4:
+ //! terminal; retained line handles have the same stale-reference caveat as JS.
+ 
+ use crate::{
+[31m-    buffer::{buffer_set::BufferRef, Buffer, BufferError, BufferLine, BufferSet, CellData, LineRef},
+[0m[32m+    buffer::{
+[0m[32m+        buffer_set::BufferRef, Buffer, BufferError, BufferLine, BufferSet, CellData, LineRef,
+[0m[32m+    },
+[0m     event::{EmitError, Emitter, Event},
+     lifecycle::{Disposable, DisposableHandle},
+ };
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\public_api\buffer.rs:13:
+ /// A signed public cell lookup, used by native and JavaScript adapters.
+ /// Unlike circular buffer line lookup, BufferLine.getCell checks its bounds.
+ pub fn get_cell_signed(line: &BufferLine, index: i64) -> Option<CellData> {
+[31m-    usize::try_from(index).ok().and_then(|index| line.get_cell(index))
+[0m[32m+    usize::try_from(index)
+[0m[32m+        .ok()
+[0m[32m+        .and_then(|index| line.get_cell(index))
+[0m }
+ 
+ #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\mod.rs:232:
+         let b = state.active_buffer();
+         let b = b.borrow();
+         self.cursor_start = (b.x, b.y);
+[31m-        drop(b); drop(state);
+[0m[31m-        self.state.borrow_mut().dirty=Some((self.cursor_start.1,self.cursor_start.1));
+[0m[32m+        drop(b);
+[0m[32m+        drop(state);
+[0m[32m+        self.state.borrow_mut().dirty = Some((self.cursor_start.1, self.cursor_start.1));
+[0m         Ok(())
+     }
+     /// Take and await the handler future, then call `resume` with its result.
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\src\terminal\state.rs:43:
+     }
+ }
+ impl TerminalState {
+[31m-    pub fn take_error(&mut self) -> Option<TerminalError> {self.error.take()}
+[0m[32m+    pub fn take_error(&mut self) -> Option<TerminalError> {
+[0m[32m+        self.error.take()
+[0m[32m+    }
+[0m     pub fn active_buffer(&self) -> Rc<RefCell<Buffer>> {
+         self.buffers.active()
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\escape_async.rs:127:
+             "PRINT:N"
+         ]
+     );
+[31m-    let expected: Vec<_> = BASE_PAUSES.into_iter().map(|(_,kind,handler)|(0,kind,handler)).collect();
+[0m[31m-    assert_pauses(&pauses,&expected);
+[0m[32m+    let expected: Vec<_> = BASE_PAUSES
+[0m[32m+        .into_iter()
+[0m[32m+        .map(|(_, kind, handler)| (0, kind, handler))
+[0m[32m+        .collect();
+[0m[32m+    assert_pauses(&pauses, &expected);
+[0m }
+ 
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\escape_async.rs:175:
+         token.dispose();
+         token.dispose();
+         log.borrow_mut().clear();
+[31m-        assert_pauses(&drive(&mut parser,&data(INPUT)), &BASE_PAUSES);
+[0m[32m+        assert_pauses(&drive(&mut parser, &data(INPUT)), &BASE_PAUSES);
+[0m         assert_eq!(*log.borrow(), EXPECTED);
+         let token = extra(&mut parser, kind, &log, "handled", true, true);
+         log.borrow_mut().clear();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\escape_async.rs:200:
+         assert!(!log.borrow().iter().any(|entry| entry.starts_with(original)));
+         token.dispose();
+         log.borrow_mut().clear();
+[31m-        assert_pauses(&drive(&mut parser,&data(INPUT)), &BASE_PAUSES);
+[0m[32m+        assert_pauses(&drive(&mut parser, &data(INPUT)), &BASE_PAUSES);
+[0m         assert_eq!(*log.borrow(), EXPECTED);
+     }
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\escape_async.rs:217:
+             assert!(log.borrow()[index + 2].starts_with("SGR:"));
+         }
+     }
+[31m-    let expected = |extra_index| BASE_PAUSES.into_iter().flat_map(|entry| {
+[0m[31m-        if entry.1 == HandlerKind::Csi { vec![(entry.0,entry.1,extra_index),entry] } else { vec![entry] }
+[0m[31m-    }).collect::<Vec<_>>();
+[0m[31m-    assert_pauses(&pauses,&expected(2));
+[0m[32m+    let expected = |extra_index| {
+[0m[32m+        BASE_PAUSES
+[0m[32m+            .into_iter()
+[0m[32m+            .flat_map(|entry| {
+[0m[32m+                if entry.1 == HandlerKind::Csi {
+[0m[32m+                    vec![(entry.0, entry.1, extra_index), entry]
+[0m[32m+                } else {
+[0m[32m+                    vec![entry]
+[0m[32m+                }
+[0m[32m+            })
+[0m[32m+            .collect::<Vec<_>>()
+[0m[32m+    };
+[0m[32m+    assert_pauses(&pauses, &expected(2));
+[0m     sync.dispose();
+     log.borrow_mut().clear();
+     let pauses = drive(&mut parser, &data(INPUT));
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\escape_async.rs:227:
+[31m-    assert_pauses(&pauses,&expected(1));
+[0m[32m+    assert_pauses(&pauses, &expected(1));
+[0m     asynchronous.dispose();
+     log.borrow_mut().clear();
+[31m-    assert_pauses(&drive(&mut parser,&data(INPUT)), &BASE_PAUSES);
+[0m[32m+    assert_pauses(&drive(&mut parser, &data(INPUT)), &BASE_PAUSES);
+[0m     assert_eq!(*log.borrow(), EXPECTED);
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\escape_async_support\mod.rs:22:
+ 
+ pub type Log = Rc<RefCell<Vec<String>>>;
+ pub const BASE_PAUSES: [(usize, HandlerKind, usize); 7] = [
+[31m-    (6,HandlerKind::Csi,0),(15,HandlerKind::Esc,0),(20,HandlerKind::Esc,0),(27,HandlerKind::Csi,0),
+[0m[31m-    (41,HandlerKind::Dcs,0),(54,HandlerKind::Osc,0),(62,HandlerKind::Apc,0),
+[0m[32m+    (6, HandlerKind::Csi, 0),
+[0m[32m+    (15, HandlerKind::Esc, 0),
+[0m[32m+    (20, HandlerKind::Esc, 0),
+[0m[32m+    (27, HandlerKind::Csi, 0),
+[0m[32m+    (41, HandlerKind::Dcs, 0),
+[0m[32m+    (54, HandlerKind::Osc, 0),
+[0m[32m+    (62, HandlerKind::Apc, 0),
+[0m ];
+ pub fn assert_pauses(actual: &[PauseInfo], expected: &[(usize, HandlerKind, usize)]) {
+[31m-    assert_eq!(actual.iter().map(|p|(p.chunk_position,p.kind,p.handler_position)).collect::<Vec<_>>(), expected);
+[0m[32m+    assert_eq!(
+[0m[32m+        actual
+[0m[32m+            .iter()
+[0m[32m+            .map(|p| (p.chunk_position, p.kind, p.handler_position))
+[0m[32m+            .collect::<Vec<_>>(),
+[0m[32m+        expected
+[0m[32m+    );
+[0m }
+ pub const INPUT: &str = "\x1b[1;31mhello \x1b%Gwor\x1bEld!\x1b[0m\r\n$>\x1bP1;2axyz\x1b\\\x1b]1;foo=bar\x1b\\\x1b_Xabc\x1b\\FIN";
+ pub const EXPECTED: [&str; 14] = [
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\escape_upstream_support\states.rs:19:
+ fn construction_initial_and_reset_states() {
+     let mut fixture = Fixture::new();
+     assert_eq!(fixture.parser.transitions(), &TransitionTable::vt500());
+[31m-    assert_eq!(EscapeSequenceParser::with_transitions(TransitionTable::vt500()).transitions(), &TransitionTable::vt500());
+[0m     assert_eq!(
+[32m+        EscapeSequenceParser::with_transitions(TransitionTable::vt500()).transitions(),
+[0m[32m+        &TransitionTable::vt500()
+[0m[32m+    );
+[0m[32m+    assert_eq!(
+[0m         EscapeSequenceParser::with_transitions(TransitionTable::new(10))
+             .transitions()
+             .packed()
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-core\tests\escape_upstream_support\states.rs:47:
+     fixture.parser.reset().unwrap();
+     assert_eq!(fixture.parser.current_state, S::Ground);
+     assert!(fixture.parser.osc.end(true, true).unwrap().is_none());
+[31m-    assert!(fixture.events().is_empty(), "reset must discard the active OSC payload");
+[0m[32m+    assert!(
+[0m[32m+        fixture.events().is_empty(),
+[0m[32m+        "reset must discard the active OSC payload"
+[0m[32m+    );
+[0m     fixture.parse("\x1b]1;after\x07");
+[31m-    assert_eq!(fixture.events(), vec![Event::Osc("1;after, success: true".into())]);
+[0m[32m+    assert_eq!(
+[0m[32m+        fixture.events(),
+[0m[32m+        vec![Event::Osc("1;after, success: true".into())]
+[0m[32m+    );
+[0m }
+ 
+ #[test]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\js_error.rs:27:
+         if let Some(value) = cause.downcast_ref::<JsCallbackError>() {
+             return value.0.clone();
+         }
+[31m-        if matches!(cause.downcast_ref::<EmitError>(), Some(EmitError::ListenerArrayCleared)) {
+[0m[32m+        if matches!(
+[0m[32m+            cause.downcast_ref::<EmitError>(),
+[0m[32m+            Some(EmitError::ListenerArrayCleared)
+[0m[32m+        ) {
+[0m             return js_sys::TypeError::new(&cause.to_string()).into();
+         }
+         current = cause.source();
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\lib.rs:26:
+ #[cfg(target_arch = "wasm32")]
+ pub mod font_set;
+ #[cfg(target_arch = "wasm32")]
+[31m-pub mod task_queue;
+[0m[31m-#[cfg(target_arch = "wasm32")]
+[0m pub mod js_error;
+ #[cfg(target_arch = "wasm32")]
+[31m-pub mod write_scheduler;
+[0m[32m+pub mod task_queue;
+[0m #[cfg(target_arch = "wasm32")]
+ pub mod utf16;
+ #[cfg(target_arch = "wasm32")]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\lib.rs:37:
+ pub mod utility_addons;
+[32m+#[cfg(target_arch = "wasm32")]
+[0m[32m+pub mod write_scheduler;
+[0m #[cfg(target_arch = "wasm32")]
+ pub use font_addons::{load_web_fonts, WebFontsAddon};
+ #[cfg(target_arch = "wasm32")]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\mod.rs:2:
+ //! from their browser adapters so exact source algorithms can be tested natively.
+ #[cfg(target_arch = "wasm32")]
+ pub mod canvas_width;
+[31m-pub mod width_cache;
+[0m pub mod row;
+[31m-pub mod row_types;
+[0m mod row_colors;
+ #[cfg(target_arch = "wasm32")]
+ pub mod row_dom;
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\mod.rs:11:
+[32m+pub mod row_types;
+[0m[32m+pub mod width_cache;
+[0m 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row.rs:1:
+ // Copyright (c) 2018, 2023 The xterm.js authors. All rights reserved. MIT license.
+[31m-use super::{row_colors, row_types::*, width_cache::{WidthCache, WidthMeasurer}};
+[0m[32m+use super::{
+[0m[32m+    row_colors,
+[0m[32m+    row_types::*,
+[0m[32m+    width_cache::{WidthCache, WidthMeasurer},
+[0m[32m+};
+[0m use crate::theme::ColorSet;
+ use xterm_core::buffer::{AttributeData, BufferLine};
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row.rs:6:
+ pub struct RowContext<'a> {
+     pub options: &'a RowOptions,
+     pub colors: &'a ColorSet,
+[31m-    pub joined_ranges: &'a [[usize;2]],
+[0m[31m-    pub decorations: &'a dyn Fn(usize,usize)->Vec<RowDecoration>,
+[0m[32m+    pub joined_ranges: &'a [[usize; 2]],
+[0m[32m+    pub decorations: &'a dyn Fn(usize, usize) -> Vec<RowDecoration>,
+[0m }
+ #[derive(Default, Debug)]
+[31m-pub struct RenderedRow { pub spans:Vec<RowSpan>,pub has_blinking_cells:bool }
+[0m[32m+pub struct RenderedRow {
+[0m[32m+    pub spans: Vec<RowSpan>,
+[0m[32m+    pub has_blinking_cells: bool,
+[0m[32m+}
+[0m #[derive(Default)]
+[31m-pub struct RowFactory { pub selection:Selection }
+[0m[31m-struct MergeState { selected:bool,bg:u32,fg:u32,extended:u32,link:bool,spacing:f64 }
+[0m[32m+pub struct RowFactory {
+[0m[32m+    pub selection: Selection,
+[0m[32m+}
+[0m[32m+struct MergeState {
+[0m[32m+    selected: bool,
+[0m[32m+    bg: u32,
+[0m[32m+    fg: u32,
+[0m[32m+    extended: u32,
+[0m[32m+    link: bool,
+[0m[32m+    spacing: f64,
+[0m[32m+}
+[0m impl RowFactory {
+[31m-    pub fn create_row<M:WidthMeasurer>(&self,line:&BufferLine,context:RowContext<'_>,widths:&mut WidthCache<M>)->Result<RenderedRow,RowError<M::Error>> {
+[0m[31m-        let options=context.options;let colors=context.colors;
+[0m[31m-        let mut result=RenderedRow::default();
+[0m[31m-        let mut length=line.get_no_bg_trimmed_length();
+[0m[31m-        if options.cursor_row {length=length.max(options.cursor_x.saturating_add(1));}
+[0m[31m-        let mut x=0;let mut join_index=0;let mut skip_until=0;
+[0m[31m-        let mut old=None::<MergeState>;let mut mergeable=false;
+[0m[31m-        let mut classes=Vec::<String>::new();
+[0m[31m-        while x<length {
+[0m[31m-            let mut cell=RenderCell::from(line.get_cell(x).unwrap_or_default());
+[0m[31m-            if cell.width==0 {x+=1;continue;}
+[0m[31m-            let mut joined=false;let mut valid_join=x>=skip_until;let mut last_x=x;
+[0m[31m-            if context.joined_ranges.get(join_index).is_some_and(|range|range[0]==x) && valid_join {
+[0m[31m-                let range=context.joined_ranges[join_index];join_index+=1;
+[0m[31m-                if range[1]<=range[0] || range[1]>line.len() {return Err(RowError::JoinRange(range));}
+[0m[31m-                let selected=self.selection.contains(range[0],options.row);
+[0m[31m-                valid_join=(range[0]+1..range[1]).all(|col|self.selection.contains(col,options.row)==selected);
+[0m[31m-                valid_join &= !options.cursor_row || options.cursor_x<range[0] || options.cursor_x>=range[1];
+[0m[31m-                if !valid_join {skip_until=range[1];}
+[0m[31m-                else {
+[0m[31m-                    joined=true;last_x=range[1]-1;
+[0m[31m-                    cell.chars=line.translate_to_string(true,Some(range[0]),Some(range[1]),None);
+[0m[31m-                    cell.width=(range[1]-range[0]) as i32;cell.code=Some(0x1fffff);
+[0m[31m-                    cell.attrs=AttributeData{fg:cell.attrs.fg,bg:cell.attrs.bg,..AttributeData::default()};
+[0m[32m+    pub fn create_row<M: WidthMeasurer>(
+[0m[32m+        &self,
+[0m[32m+        line: &BufferLine,
+[0m[32m+        context: RowContext<'_>,
+[0m[32m+        widths: &mut WidthCache<M>,
+[0m[32m+    ) -> Result<RenderedRow, RowError<M::Error>> {
+[0m[32m+        let options = context.options;
+[0m[32m+        let colors = context.colors;
+[0m[32m+        let mut result = RenderedRow::default();
+[0m[32m+        let mut length = line.get_no_bg_trimmed_length();
+[0m[32m+        if options.cursor_row {
+[0m[32m+            length = length.max(options.cursor_x.saturating_add(1));
+[0m[32m+        }
+[0m[32m+        let mut x = 0;
+[0m[32m+        let mut join_index = 0;
+[0m[32m+        let mut skip_until = 0;
+[0m[32m+        let mut old = None::<MergeState>;
+[0m[32m+        let mut mergeable = false;
+[0m[32m+        let mut classes = Vec::<String>::new();
+[0m[32m+        while x < length {
+[0m[32m+            let mut cell = RenderCell::from(line.get_cell(x).unwrap_or_default());
+[0m[32m+            if cell.width == 0 {
+[0m[32m+                x += 1;
+[0m[32m+                continue;
+[0m[32m+            }
+[0m[32m+            let mut joined = false;
+[0m[32m+            let mut valid_join = x >= skip_until;
+[0m[32m+            let mut last_x = x;
+[0m[32m+            if context
+[0m[32m+                .joined_ranges
+[0m[32m+                .get(join_index)
+[0m[32m+                .is_some_and(|range| range[0] == x)
+[0m[32m+                && valid_join
+[0m[32m+            {
+[0m[32m+                let range = context.joined_ranges[join_index];
+[0m[32m+                join_index += 1;
+[0m[32m+                if range[1] <= range[0] || range[1] > line.len() {
+[0m[32m+                    return Err(RowError::JoinRange(range));
+[0m                 }
+[32m+                let selected = self.selection.contains(range[0], options.row);
+[0m[32m+                valid_join = (range[0] + 1..range[1])
+[0m[32m+                    .all(|col| self.selection.contains(col, options.row) == selected);
+[0m[32m+                valid_join &= !options.cursor_row
+[0m[32m+                    || options.cursor_x < range[0]
+[0m[32m+                    || options.cursor_x >= range[1];
+[0m[32m+                if !valid_join {
+[0m[32m+                    skip_until = range[1];
+[0m[32m+                } else {
+[0m[32m+                    joined = true;
+[0m[32m+                    last_x = range[1] - 1;
+[0m[32m+                    cell.chars =
+[0m[32m+                        line.translate_to_string(true, Some(range[0]), Some(range[1]), None);
+[0m[32m+                    cell.width = (range[1] - range[0]) as i32;
+[0m[32m+                    cell.code = Some(0x1fffff);
+[0m[32m+                    cell.attrs = AttributeData {
+[0m[32m+                        fg: cell.attrs.fg,
+[0m[32m+                        bg: cell.attrs.bg,
+[0m[32m+                        ..AttributeData::default()
+[0m[32m+                    };
+[0m[32m+                }
+[0m             }
+[31m-            let selected=self.selection.contains(x,options.row);
+[0m[31m-            let cursor=options.cursor_row && x==options.cursor_x;
+[0m[31m-            let link=options.link_range.is_some_and(|range|x as i128>=i128::from(range[0]) && x as i128<=i128::from(range[1]));
+[0m[31m-            if cell.attrs.is_blink()!=0 {result.has_blinking_cells=true;if !options.blink_on {classes.push("xterm-blink-hidden".into());}}
+[0m[31m-            let decorations=(context.decorations)(x,options.row);
+[0m[31m-            let mut chars=if cell.chars.is_empty(){vec![32]}else{cell.chars.clone()};
+[0m[31m-            if chars==[32] && (cell.attrs.is_underline()!=0 || cell.attrs.is_overline()!=0) {chars[0]=160;}
+[0m[31m-            let spacing=f64::from(cell.width)*options.cell_width-widths.get(&chars,cell.attrs.is_bold()!=0,cell.attrs.is_italic()!=0)?;
+[0m[31m-            let can_merge=old.as_ref().is_some_and(|old|mergeable &&
+[0m[31m-                ((selected&&old.selected)||(!selected&&!old.selected&&cell.attrs.bg==old.bg)) &&
+[0m[31m-                ((selected&&old.selected&&colors.selection_foreground.is_some())||cell.attrs.fg==old.fg) &&
+[0m[31m-                cell.attrs.extended.ext()==old.extended && link==old.link && spacing==old.spacing && !cursor && !joined && decorations.is_empty() && valid_join);
+[0m[32m+            let selected = self.selection.contains(x, options.row);
+[0m[32m+            let cursor = options.cursor_row && x == options.cursor_x;
+[0m[32m+            let link = options.link_range.is_some_and(|range| {
+[0m[32m+                x as i128 >= i128::from(range[0]) && x as i128 <= i128::from(range[1])
+[0m[32m+            });
+[0m[32m+            if cell.attrs.is_blink() != 0 {
+[0m[32m+                result.has_blinking_cells = true;
+[0m[32m+                if !options.blink_on {
+[0m[32m+                    classes.push("xterm-blink-hidden".into());
+[0m[32m+                }
+[0m[32m+            }
+[0m[32m+            let decorations = (context.decorations)(x, options.row);
+[0m[32m+            let mut chars = if cell.chars.is_empty() {
+[0m[32m+                vec![32]
+[0m[32m+            } else {
+[0m[32m+                cell.chars.clone()
+[0m[32m+            };
+[0m[32m+            if chars == [32] && (cell.attrs.is_underline() != 0 || cell.attrs.is_overline() != 0) {
+[0m[32m+                chars[0] = 160;
+[0m[32m+            }
+[0m[32m+            let spacing = f64::from(cell.width) * options.cell_width
+[0m[32m+                - widths.get(
+[0m[32m+                    &chars,
+[0m[32m+                    cell.attrs.is_bold() != 0,
+[0m[32m+                    cell.attrs.is_italic() != 0,
+[0m[32m+                )?;
+[0m[32m+            let can_merge = old.as_ref().is_some_and(|old| {
+[0m[32m+                mergeable
+[0m[32m+                    && ((selected && old.selected)
+[0m[32m+                        || (!selected && !old.selected && cell.attrs.bg == old.bg))
+[0m[32m+                    && ((selected && old.selected && colors.selection_foreground.is_some())
+[0m[32m+                        || cell.attrs.fg == old.fg)
+[0m[32m+                    && cell.attrs.extended.ext() == old.extended
+[0m[32m+                    && link == old.link
+[0m[32m+                    && spacing == old.spacing
+[0m[32m+                    && !cursor
+[0m[32m+                    && !joined
+[0m[32m+                    && decorations.is_empty()
+[0m[32m+                    && valid_join
+[0m[32m+            });
+[0m             if can_merge {
+                 // A previous span exists whenever old/mergeable exist.
+[31m-                if let Some(span)=result.spans.last_mut() {if cell.attrs.is_invisible()!=0 {span.text.push(32);}else{span.text.extend(chars);}}
+[0m[31m-                x+=1;continue;
+[0m[32m+                if let Some(span) = result.spans.last_mut() {
+[0m[32m+                    if cell.attrs.is_invisible() != 0 {
+[0m[32m+                        span.text.push(32);
+[0m[32m+                    } else {
+[0m[32m+                        span.text.extend(chars);
+[0m[32m+                    }
+[0m[32m+                }
+[0m[32m+                x += 1;
+[0m[32m+                continue;
+[0m             }
+[31m-            old=Some(MergeState{selected,bg:cell.attrs.bg,fg:cell.attrs.fg,extended:cell.attrs.extended.ext(),link,spacing});
+[0m[31m-            let mut span=RowSpan::default();
+[0m[31m-            glyph_classes(&mut classes,&cell,options,cursor);
+[0m[31m-            span.text=if cell.attrs.is_invisible()!=0 {vec![32]}else if cell.chars.is_empty(){vec![32]}else{cell.chars.clone()};
+[0m[31m-            if cell.attrs.is_underline()!=0 {
+[0m[31m-                classes.push(format!("xterm-underline-{}",cell.attrs.extended.underline_style()));
+[0m[31m-                if span.text==[32] {span.text[0]=160;}
+[0m[32m+            old = Some(MergeState {
+[0m[32m+                selected,
+[0m[32m+                bg: cell.attrs.bg,
+[0m[32m+                fg: cell.attrs.fg,
+[0m[32m+                extended: cell.attrs.extended.ext(),
+[0m[32m+                link,
+[0m[32m+                spacing,
+[0m[32m+            });
+[0m[32m+            let mut span = RowSpan::default();
+[0m[32m+            glyph_classes(&mut classes, &cell, options, cursor);
+[0m[32m+            span.text = if cell.attrs.is_invisible() != 0 {
+[0m[32m+                vec![32]
+[0m[32m+            } else if cell.chars.is_empty() {
+[0m[32m+                vec![32]
+[0m[32m+            } else {
+[0m[32m+                cell.chars.clone()
+[0m[32m+            };
+[0m[32m+            if cell.attrs.is_underline() != 0 {
+[0m[32m+                classes.push(format!(
+[0m[32m+                    "xterm-underline-{}",
+[0m[32m+                    cell.attrs.extended.underline_style()
+[0m[32m+                ));
+[0m[32m+                if span.text == [32] {
+[0m[32m+                    span.text[0] = 160;
+[0m[32m+                }
+[0m                 if !cell.attrs.is_underline_color_default() {
+                     if cell.attrs.is_underline_color_rgb() {
+[31m-                        let [r,g,b]=AttributeData::to_color_rgb(cell.attrs.get_underline_color()as u32);
+[0m[31m-                        span.style("text-decoration-color",format!("rgb({r},{g},{b})"));
+[0m[32m+                        let [r, g, b] =
+[0m[32m+                            AttributeData::to_color_rgb(cell.attrs.get_underline_color() as u32);
+[0m[32m+                        span.style("text-decoration-color", format!("rgb({r},{g},{b})"));
+[0m                     } else {
+[31m-                        let mut index=cell.attrs.get_underline_color();
+[0m[31m-                        if options.bold_bright && cell.attrs.is_bold()!=0 && index<8 {index+=8;}
+[0m[31m-                        span.style("text-decoration-color",row_colors::palette::<M::Error>(colors,index)?.css);
+[0m[32m+                        let mut index = cell.attrs.get_underline_color();
+[0m[32m+                        if options.bold_bright && cell.attrs.is_bold() != 0 && index < 8 {
+[0m[32m+                            index += 8;
+[0m[32m+                        }
+[0m[32m+                        span.style(
+[0m[32m+                            "text-decoration-color",
+[0m[32m+                            row_colors::palette::<M::Error>(colors, index)?.css,
+[0m[32m+                        );
+[0m                     }
+                 }
+             }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row.rs:79:
+[31m-            if cell.attrs.is_overline()!=0 {classes.push("xterm-overline".into());if span.text==[32]{span.text[0]=160;}}
+[0m[31m-            if cell.attrs.is_strikethrough()!=0 {classes.push("xterm-strikethrough".into());}
+[0m[31m-            if link {span.style("text-decoration","underline".into());}
+[0m[32m+            if cell.attrs.is_overline() != 0 {
+[0m[32m+                classes.push("xterm-overline".into());
+[0m[32m+                if span.text == [32] {
+[0m[32m+                    span.text[0] = 160;
+[0m[32m+                }
+[0m[32m+            }
+[0m[32m+            if cell.attrs.is_strikethrough() != 0 {
+[0m[32m+                classes.push("xterm-strikethrough".into());
+[0m[32m+            }
+[0m[32m+            if link {
+[0m[32m+                span.style("text-decoration", "underline".into());
+[0m[32m+            }
+[0m             // Keep class order, including the source's pending blink classes from
+             // merged cells, before decoration and foreground/background classes.
+[31m-            span.classes=std::mem::take(&mut classes);
+[0m[31m-            row_colors::apply(&mut span,&cell,options,colors,&decorations,selected)?;
+[0m[31m-            mergeable=!cursor&&!joined&&decorations.is_empty()&&valid_join;
+[0m[31m-            if spacing!=options.default_spacing {span.style("letter-spacing",format!("{spacing}px"));}
+[0m[31m-            result.spans.push(span);x=last_x+1;
+[0m[32m+            span.classes = std::mem::take(&mut classes);
+[0m[32m+            row_colors::apply(&mut span, &cell, options, colors, &decorations, selected)?;
+[0m[32m+            mergeable = !cursor && !joined && decorations.is_empty() && valid_join;
+[0m[32m+            if spacing != options.default_spacing {
+[0m[32m+                span.style("letter-spacing", format!("{spacing}px"));
+[0m[32m+            }
+[0m[32m+            result.spans.push(span);
+[0m[32m+            x = last_x + 1;
+[0m         }
+         Ok(result)
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row.rs:92:
+ }
+[31m-fn glyph_classes(classes:&mut Vec<String>,cell:&RenderCell,options:&RowOptions,cursor:bool) {
+[0m[32m+fn glyph_classes(classes: &mut Vec<String>, cell: &RenderCell, options: &RowOptions, cursor: bool) {
+[0m     if !options.cursor_hidden && cursor && options.cursor_initialized {
+         classes.push("xterm-cursor".into());
+         if options.focused {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row.rs:97:
+[31m-            if options.cursor_blink {classes.push("xterm-cursor-blink".into());}
+[0m[31m-            let style=match options.cursor_style.as_str(){"bar"=>"bar","underline"=>"underline",_=>"block"};
+[0m[32m+            if options.cursor_blink {
+[0m[32m+                classes.push("xterm-cursor-blink".into());
+[0m[32m+            }
+[0m[32m+            let style = match options.cursor_style.as_str() {
+[0m[32m+                "bar" => "bar",
+[0m[32m+                "underline" => "underline",
+[0m[32m+                _ => "block",
+[0m[32m+            };
+[0m             classes.push(format!("xterm-cursor-{style}"));
+[31m-        } else if ["outline","block","bar","underline"].contains(&options.cursor_inactive_style.as_str()) {classes.push(format!("xterm-cursor-{}",options.cursor_inactive_style));}
+[0m[32m+        } else if ["outline", "block", "bar", "underline"]
+[0m[32m+            .contains(&options.cursor_inactive_style.as_str())
+[0m[32m+        {
+[0m[32m+            classes.push(format!("xterm-cursor-{}", options.cursor_inactive_style));
+[0m[32m+        }
+[0m     }
+[31m-    for (flag,class) in [(cell.attrs.is_bold(),"xterm-bold"),(cell.attrs.is_italic(),"xterm-italic"),(cell.attrs.is_dim(),"xterm-dim")] {if flag!=0{classes.push(class.into());}}
+[0m[32m+    for (flag, class) in [
+[0m[32m+        (cell.attrs.is_bold(), "xterm-bold"),
+[0m[32m+        (cell.attrs.is_italic(), "xterm-italic"),
+[0m[32m+        (cell.attrs.is_dim(), "xterm-dim"),
+[0m[32m+    ] {
+[0m[32m+        if flag != 0 {
+[0m[32m+            classes.push(class.into());
+[0m[32m+        }
+[0m[32m+    }
+[0m }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row_colors.rs:1:
+ // Copyright (c) 2018, 2023 The xterm.js authors. All rights reserved. MIT license.
+ use super::row_types::{RenderCell, RowDecoration, RowError, RowOptions, RowSpan};
+ use crate::theme::{ColorRef, ColorSet};
+[31m-use xterm_core::{buffer::constants::attributes as mode, color::{channels, value, Color}};
+[0m[32m+use xterm_core::{
+[0m[32m+    buffer::constants::attributes as mode,
+[0m[32m+    color::{channels, value, Color},
+[0m[32m+};
+[0m 
+ pub(super) fn palette<E>(colors: &ColorSet, index: i32) -> Result<Color, RowError<E>> {
+[31m-    usize::try_from(index).ok().and_then(|i|colors.ansi.get(i)).map(|color|color.borrow().clone()).ok_or(RowError::Palette(index))
+[0m[32m+    usize::try_from(index)
+[0m[32m+        .ok()
+[0m[32m+        .and_then(|i| colors.ansi.get(i))
+[0m[32m+        .map(|color| color.borrow().clone())
+[0m[32m+        .ok_or(RowError::Palette(index))
+[0m }
+[31m-pub(super) fn apply<E>(span:&mut RowSpan, cell:&RenderCell, options:&RowOptions, colors:&ColorSet, decorations:&[RowDecoration], selected:bool)->Result<(),RowError<E>> {
+[0m[31m-    let attrs=&cell.attrs;
+[0m[31m-    let (mut fg,mut fg_mode,mut bg,mut bg_mode)=(attrs.get_fg_color(),attrs.get_fg_color_mode(),attrs.get_bg_color(),attrs.get_bg_color_mode());
+[0m[31m-    let inverse=attrs.is_inverse()!=0;
+[0m[31m-    if inverse {std::mem::swap(&mut fg,&mut bg);std::mem::swap(&mut fg_mode,&mut bg_mode);}
+[0m[31m-    let (mut bg_override,mut fg_override)=(None,None);
+[0m[31m-    let mut top=false;
+[0m[32m+pub(super) fn apply<E>(
+[0m[32m+    span: &mut RowSpan,
+[0m[32m+    cell: &RenderCell,
+[0m[32m+    options: &RowOptions,
+[0m[32m+    colors: &ColorSet,
+[0m[32m+    decorations: &[RowDecoration],
+[0m[32m+    selected: bool,
+[0m[32m+) -> Result<(), RowError<E>> {
+[0m[32m+    let attrs = &cell.attrs;
+[0m[32m+    let (mut fg, mut fg_mode, mut bg, mut bg_mode) = (
+[0m[32m+        attrs.get_fg_color(),
+[0m[32m+        attrs.get_fg_color_mode(),
+[0m[32m+        attrs.get_bg_color(),
+[0m[32m+        attrs.get_bg_color_mode(),
+[0m[32m+    );
+[0m[32m+    let inverse = attrs.is_inverse() != 0;
+[0m[32m+    if inverse {
+[0m[32m+        std::mem::swap(&mut fg, &mut bg);
+[0m[32m+        std::mem::swap(&mut fg_mode, &mut bg_mode);
+[0m[32m+    }
+[0m[32m+    let (mut bg_override, mut fg_override) = (None, None);
+[0m[32m+    let mut top = false;
+[0m     for decoration in decorations {
+[31m-        if !decoration.top && top {continue;}
+[0m[31m-        if let Some(color)=&decoration.background {bg_mode=mode::CM_RGB;bg=(color.rgba>>8)as i32;bg_override=Some(color.clone());}
+[0m[31m-        if let Some(color)=&decoration.foreground {fg_mode=mode::CM_RGB;fg=(color.rgba>>8)as i32;fg_override=Some(color.clone());}
+[0m[31m-        top=decoration.top;
+[0m[32m+        if !decoration.top && top {
+[0m[32m+            continue;
+[0m[32m+        }
+[0m[32m+        if let Some(color) = &decoration.background {
+[0m[32m+            bg_mode = mode::CM_RGB;
+[0m[32m+            bg = (color.rgba >> 8) as i32;
+[0m[32m+            bg_override = Some(color.clone());
+[0m[32m+        }
+[0m[32m+        if let Some(color) = &decoration.foreground {
+[0m[32m+            fg_mode = mode::CM_RGB;
+[0m[32m+            fg = (color.rgba >> 8) as i32;
+[0m[32m+            fg_override = Some(color.clone());
+[0m[32m+        }
+[0m[32m+        top = decoration.top;
+[0m     }
+     if !top && selected {
+[31m-        let background=if options.focused {&colors.selection_background_opaque}else{&colors.selection_inactive_background_opaque};
+[0m[31m-        let color=background.borrow().clone();bg=(color.rgba>>8)as i32;bg_mode=mode::CM_RGB;bg_override=Some(color);top=true;
+[0m[31m-        if let Some(color)=&colors.selection_foreground {let color=color.borrow().clone();fg_mode=mode::CM_RGB;fg=(color.rgba>>8)as i32;fg_override=Some(color);}
+[0m[32m+        let background = if options.focused {
+[0m[32m+            &colors.selection_background_opaque
+[0m[32m+        } else {
+[0m[32m+            &colors.selection_inactive_background_opaque
+[0m[32m+        };
+[0m[32m+        let color = background.borrow().clone();
+[0m[32m+        bg = (color.rgba >> 8) as i32;
+[0m[32m+        bg_mode = mode::CM_RGB;
+[0m[32m+        bg_override = Some(color);
+[0m[32m+        top = true;
+[0m[32m+        if let Some(color) = &colors.selection_foreground {
+[0m[32m+            let color = color.borrow().clone();
+[0m[32m+            fg_mode = mode::CM_RGB;
+[0m[32m+            fg = (color.rgba >> 8) as i32;
+[0m[32m+            fg_override = Some(color);
+[0m[32m+        }
+[0m     }
+[31m-    if top {span.classes.push("xterm-decoration-top".into());}
+[0m[31m-    let resolved_bg=match bg_mode {
+[0m[31m-        mode::CM_P16|mode::CM_P256=>{span.classes.push(format!("xterm-bg-{bg}"));usize::try_from(bg).ok().and_then(|i|colors.ansi.get(i)).map(|c|c.borrow().clone())}
+[0m[31m-        mode::CM_RGB=>{span.style("background-color",format!("#{bg:06x}"));Some(rgb_color(bg))}
+[0m[31m-        _=>Some(if inverse {span.classes.push("xterm-bg-257".into());colors.foreground.borrow().clone()}else{colors.background.borrow().clone()}),
+[0m[32m+    if top {
+[0m[32m+        span.classes.push("xterm-decoration-top".into());
+[0m[32m+    }
+[0m[32m+    let resolved_bg = match bg_mode {
+[0m[32m+        mode::CM_P16 | mode::CM_P256 => {
+[0m[32m+            span.classes.push(format!("xterm-bg-{bg}"));
+[0m[32m+            usize::try_from(bg)
+[0m[32m+                .ok()
+[0m[32m+                .and_then(|i| colors.ansi.get(i))
+[0m[32m+                .map(|c| c.borrow().clone())
+[0m[32m+        }
+[0m[32m+        mode::CM_RGB => {
+[0m[32m+            span.style("background-color", format!("#{bg:06x}"));
+[0m[32m+            Some(rgb_color(bg))
+[0m[32m+        }
+[0m[32m+        _ => Some(if inverse {
+[0m[32m+            span.classes.push("xterm-bg-257".into());
+[0m[32m+            colors.foreground.borrow().clone()
+[0m[32m+        } else {
+[0m[32m+            colors.background.borrow().clone()
+[0m[32m+        }),
+[0m     };
+[31m-    if bg_override.is_none() && attrs.is_dim()!=0 {bg_override=Some(value::multiply_opacity(resolved_bg.as_ref().ok_or(RowError::Palette(bg))?,0.5));}
+[0m[32m+    if bg_override.is_none() && attrs.is_dim() != 0 {
+[0m[32m+        bg_override = Some(value::multiply_opacity(
+[0m[32m+            resolved_bg.as_ref().ok_or(RowError::Palette(bg))?,
+[0m[32m+            0.5,
+[0m[32m+        ));
+[0m[32m+    }
+[0m     // Source tests use a short palette and ratio1. Accessing missing colors is
+     // harmless until a dim/contrast operation actually reads their channels.
+[31m-    let needs_contrast=options.minimum_contrast_ratio!=1.0 && !background_glyph(cell.code);
+[0m[32m+    let needs_contrast = options.minimum_contrast_ratio != 1.0 && !background_glyph(cell.code);
+[0m     match fg_mode {
+[31m-        mode::CM_P16|mode::CM_P256=>{
+[0m[31m-            if attrs.is_bold()!=0 && fg<8 && options.bold_bright {fg+=8;}
+[0m[31m-            if !needs_contrast || !apply_contrast(span,cell,options,colors,ContrastInput{bg:resolved_bg.as_ref().ok_or(RowError::Palette(bg))?,fg:&palette::<E>(colors,fg)?,bg_override:bg_override.as_ref(),fg_override:None}) {span.classes.push(format!("xterm-fg-{fg}"));}
+[0m[32m+        mode::CM_P16 | mode::CM_P256 => {
+[0m[32m+            if attrs.is_bold() != 0 && fg < 8 && options.bold_bright {
+[0m[32m+                fg += 8;
+[0m[32m+            }
+[0m[32m+            if !needs_contrast
+[0m[32m+                || !apply_contrast(
+[0m[32m+                    span,
+[0m[32m+                    cell,
+[0m[32m+                    options,
+[0m[32m+                    colors,
+[0m[32m+                    ContrastInput {
+[0m[32m+                        bg: resolved_bg.as_ref().ok_or(RowError::Palette(bg))?,
+[0m[32m+                        fg: &palette::<E>(colors, fg)?,
+[0m[32m+                        bg_override: bg_override.as_ref(),
+[0m[32m+                        fg_override: None,
+[0m[32m+                    },
+[0m[32m+                )
+[0m[32m+            {
+[0m[32m+                span.classes.push(format!("xterm-fg-{fg}"));
+[0m[32m+            }
+[0m         }
+[31m-        mode::CM_RGB=>{
+[0m[31m-            if !needs_contrast || !apply_contrast(span,cell,options,colors,ContrastInput{bg:resolved_bg.as_ref().ok_or(RowError::Palette(bg))?,fg:&rgb_color(fg),bg_override:bg_override.as_ref(),fg_override:fg_override.as_ref()}) {span.style("color",format!("#{fg:06x}"));}
+[0m[32m+        mode::CM_RGB => {
+[0m[32m+            if !needs_contrast
+[0m[32m+                || !apply_contrast(
+[0m[32m+                    span,
+[0m[32m+                    cell,
+[0m[32m+                    options,
+[0m[32m+                    colors,
+[0m[32m+                    ContrastInput {
+[0m[32m+                        bg: resolved_bg.as_ref().ok_or(RowError::Palette(bg))?,
+[0m[32m+                        fg: &rgb_color(fg),
+[0m[32m+                        bg_override: bg_override.as_ref(),
+[0m[32m+                        fg_override: fg_override.as_ref(),
+[0m[32m+                    },
+[0m[32m+                )
+[0m[32m+            {
+[0m[32m+                span.style("color", format!("#{fg:06x}"));
+[0m[32m+            }
+[0m         }
+[31m-        _=>{
+[0m[31m-            if (!needs_contrast || !apply_contrast(span,cell,options,colors,ContrastInput{bg:resolved_bg.as_ref().ok_or(RowError::Palette(bg))?,fg:&colors.foreground.borrow(),bg_override:bg_override.as_ref(),fg_override:fg_override.as_ref()})) && inverse {span.classes.push("xterm-fg-257".into());}
+[0m[32m+        _ => {
+[0m[32m+            if (!needs_contrast
+[0m[32m+                || !apply_contrast(
+[0m[32m+                    span,
+[0m[32m+                    cell,
+[0m[32m+                    options,
+[0m[32m+                    colors,
+[0m[32m+                    ContrastInput {
+[0m[32m+                        bg: resolved_bg.as_ref().ok_or(RowError::Palette(bg))?,
+[0m[32m+                        fg: &colors.foreground.borrow(),
+[0m[32m+                        bg_override: bg_override.as_ref(),
+[0m[32m+                        fg_override: fg_override.as_ref(),
+[0m[32m+                    },
+[0m[32m+                ))
+[0m[32m+                && inverse
+[0m[32m+            {
+[0m[32m+                span.classes.push("xterm-fg-257".into());
+[0m[32m+            }
+[0m         }
+     }
+     Ok(())
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row_colors.rs:50:
+ }
+[31m-fn rgb_color(color:i32)->Color {channels::to_color(i64::from((color>>16)&255),i64::from((color>>8)&255),i64::from(color&255),None)}
+[0m[31m-fn background_glyph(code:Option<u32>)->bool {code.is_some_and(|code|(0xe0a4..=0xe0d6).contains(&code)||(0x2500..=0x259f).contains(&code))}
+[0m[31m-struct ContrastInput<'a> { bg:&'a Color, fg:&'a Color, bg_override:Option<&'a Color>, fg_override:Option<&'a Color> }
+[0m[31m-fn apply_contrast(span:&mut RowSpan,cell:&RenderCell,options:&RowOptions,colors:&ColorSet,input:ContrastInput<'_>)->bool {
+[0m[31m-    if options.minimum_contrast_ratio==1.0 || background_glyph(cell.code) {return false;}
+[0m[31m-    let cache=if cell.attrs.is_dim()!=0 {&colors.half_contrast_cache}else{&colors.contrast_cache};
+[0m[31m-    let mut adjusted=None;
+[0m[31m-    if input.bg_override.is_none() && input.fg_override.is_none() {adjusted=cache.borrow().get_color(input.bg.rgba,input.fg.rgba).cloned();}
+[0m[31m-    let result=match adjusted {
+[0m[31m-        Some(color)=>color,
+[0m[31m-        None=>{
+[0m[31m-            let ratio=options.minimum_contrast_ratio/if cell.attrs.is_dim()!=0 {2.0}else{1.0};
+[0m[31m-            let bg=input.bg_override.unwrap_or(input.bg);let fg=input.fg_override.unwrap_or(input.fg);
+[0m[31m-            let result=value::ensure_contrast_ratio(bg,fg,ratio).map(ColorRef::from);
+[0m[31m-            cache.borrow_mut().set_color(bg.rgba,fg.rgba,result.clone());result
+[0m[32m+fn rgb_color(color: i32) -> Color {
+[0m[32m+    channels::to_color(
+[0m[32m+        i64::from((color >> 16) & 255),
+[0m[32m+        i64::from((color >> 8) & 255),
+[0m[32m+        i64::from(color & 255),
+[0m[32m+        None,
+[0m[32m+    )
+[0m[32m+}
+[0m[32m+fn background_glyph(code: Option<u32>) -> bool {
+[0m[32m+    code.is_some_and(|code| (0xe0a4..=0xe0d6).contains(&code) || (0x2500..=0x259f).contains(&code))
+[0m[32m+}
+[0m[32m+struct ContrastInput<'a> {
+[0m[32m+    bg: &'a Color,
+[0m[32m+    fg: &'a Color,
+[0m[32m+    bg_override: Option<&'a Color>,
+[0m[32m+    fg_override: Option<&'a Color>,
+[0m[32m+}
+[0m[32m+fn apply_contrast(
+[0m[32m+    span: &mut RowSpan,
+[0m[32m+    cell: &RenderCell,
+[0m[32m+    options: &RowOptions,
+[0m[32m+    colors: &ColorSet,
+[0m[32m+    input: ContrastInput<'_>,
+[0m[32m+) -> bool {
+[0m[32m+    if options.minimum_contrast_ratio == 1.0 || background_glyph(cell.code) {
+[0m[32m+        return false;
+[0m[32m+    }
+[0m[32m+    let cache = if cell.attrs.is_dim() != 0 {
+[0m[32m+        &colors.half_contrast_cache
+[0m[32m+    } else {
+[0m[32m+        &colors.contrast_cache
+[0m[32m+    };
+[0m[32m+    let mut adjusted = None;
+[0m[32m+    if input.bg_override.is_none() && input.fg_override.is_none() {
+[0m[32m+        adjusted = cache
+[0m[32m+            .borrow()
+[0m[32m+            .get_color(input.bg.rgba, input.fg.rgba)
+[0m[32m+            .cloned();
+[0m[32m+    }
+[0m[32m+    let result = match adjusted {
+[0m[32m+        Some(color) => color,
+[0m[32m+        None => {
+[0m[32m+            let ratio =
+[0m[32m+                options.minimum_contrast_ratio / if cell.attrs.is_dim() != 0 { 2.0 } else { 1.0 };
+[0m[32m+            let bg = input.bg_override.unwrap_or(input.bg);
+[0m[32m+            let fg = input.fg_override.unwrap_or(input.fg);
+[0m[32m+            let result = value::ensure_contrast_ratio(bg, fg, ratio).map(ColorRef::from);
+[0m[32m+            cache
+[0m[32m+                .borrow_mut()
+[0m[32m+                .set_color(bg.rgba, fg.rgba, result.clone());
+[0m[32m+            result
+[0m         }
+     };
+[31m-    if let Some(color)=result {span.style("color",color.borrow().css.clone());true}else{false}
+[0m[32m+    if let Some(color) = result {
+[0m[32m+        span.style("color", color.borrow().css.clone());
+[0m[32m+        true
+[0m[32m+    } else {
+[0m[32m+        false
+[0m[32m+    }
+[0m }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row_dom.rs:5:
+ 
+ /// Preserve source CSS assignment and DOM attribute order, not merely computed
+ /// color equality: upstream row assertions compare serialized span HTML.
+[31m-pub fn create_spans(document:&Document,spans:&[RowSpan])->Result<Vec<HtmlElement>,JsValue> {
+[0m[31m-    spans.iter().map(|span| {
+[0m[31m-        let element:HtmlElement=document.create_element("span")?.dyn_into()?;
+[0m[31m-        js_sys::Reflect::set(element.as_ref(),&JsValue::from_str("textContent"),&crate::utf16::to_js_string(&span.text))?;
+[0m[31m-        for (property,value) in &span.styles {
+[0m[31m-            if property=="letter-spacing" {continue;}
+[0m[31m-            if property=="background-color" || property=="color" {
+[0m[31m-                let existing=element.get_attribute("style").unwrap_or_default();
+[0m[31m-                element.set_attribute("style",&format!("{existing}{property}:{value};"))?;
+[0m[31m-            } else {element.style().set_property(property,value)?;}
+[0m[31m-        }
+[0m[31m-        if !span.classes.is_empty() {element.set_class_name(&span.classes.join(" "));}
+[0m[31m-        if let Some((_,spacing))=span.styles.iter().find(|(property,_)|property=="letter-spacing") {element.style().set_property("letter-spacing",spacing)?;}
+[0m[31m-        Ok(element)
+[0m[31m-    }).collect()
+[0m[32m+pub fn create_spans(document: &Document, spans: &[RowSpan]) -> Result<Vec<HtmlElement>, JsValue> {
+[0m[32m+    spans
+[0m[32m+        .iter()
+[0m[32m+        .map(|span| {
+[0m[32m+            let element: HtmlElement = document.create_element("span")?.dyn_into()?;
+[0m[32m+            js_sys::Reflect::set(
+[0m[32m+                element.as_ref(),
+[0m[32m+                &JsValue::from_str("textContent"),
+[0m[32m+                &crate::utf16::to_js_string(&span.text),
+[0m[32m+            )?;
+[0m[32m+            for (property, value) in &span.styles {
+[0m[32m+                if property == "letter-spacing" {
+[0m[32m+                    continue;
+[0m[32m+                }
+[0m[32m+                if property == "background-color" || property == "color" {
+[0m[32m+                    let existing = element.get_attribute("style").unwrap_or_default();
+[0m[32m+                    element.set_attribute("style", &format!("{existing}{property}:{value};"))?;
+[0m[32m+                } else {
+[0m[32m+                    element.style().set_property(property, value)?;
+[0m[32m+                }
+[0m[32m+            }
+[0m[32m+            if !span.classes.is_empty() {
+[0m[32m+                element.set_class_name(&span.classes.join(" "));
+[0m[32m+            }
+[0m[32m+            if let Some((_, spacing)) = span
+[0m[32m+                .styles
+[0m[32m+                .iter()
+[0m[32m+                .find(|(property, _)| property == "letter-spacing")
+[0m[32m+            {
+[0m[32m+                element.style().set_property("letter-spacing", spacing)?;
+[0m[32m+            }
+[0m[32m+            Ok(element)
+[0m[32m+        })
+[0m[32m+        .collect()
+[0m }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row_types.rs:1:
+ // Copyright (c) 2018, 2023 The xterm.js authors. All rights reserved. MIT license.
+ use super::width_cache::WidthError;
+[31m-use xterm_core::{buffer::{AttributeData, CellData}, color::Color};
+[0m[32m+use xterm_core::{
+[0m[32m+    buffer::{AttributeData, CellData},
+[0m[32m+    color::Color,
+[0m[32m+};
+[0m 
+ #[derive(Clone, Debug, Default, PartialEq)]
+ pub struct RowSpan {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row_types.rs:10:
+ }
+ impl RowSpan {
+     pub fn style(&mut self, property: &str, value: String) {
+[31m-        if let Some((_, old)) = self.styles.iter_mut().find(|(key, _)| key == property) { *old = value; }
+[0m[31m-        else { self.styles.push((property.into(), value)); }
+[0m[32m+        if let Some((_, old)) = self.styles.iter_mut().find(|(key, _)| key == property) {
+[0m[32m+            *old = value;
+[0m[32m+        } else {
+[0m[32m+            self.styles.push((property.into(), value));
+[0m[32m+        }
+[0m     }
+ }
+ #[derive(Clone, Debug, Default)]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row_types.rs:40:
+ }
+ impl Default for RowOptions {
+     fn default() -> Self {
+[31m-        Self { row:0, cursor_row:false, cursor_x:0, cursor_style:"block".into(), cursor_inactive_style:"outline".into(), cursor_blink:false, cursor_hidden:false, cursor_initialized:true, focused:true, blink_on:true, cell_width:10.0, default_spacing:0.0, link_range:None, bold_bright:true, minimum_contrast_ratio:1.0 }
+[0m[32m+        Self {
+[0m[32m+            row: 0,
+[0m[32m+            cursor_row: false,
+[0m[32m+            cursor_x: 0,
+[0m[32m+            cursor_style: "block".into(),
+[0m[32m+            cursor_inactive_style: "outline".into(),
+[0m[32m+            cursor_blink: false,
+[0m[32m+            cursor_hidden: false,
+[0m[32m+            cursor_initialized: true,
+[0m[32m+            focused: true,
+[0m[32m+            blink_on: true,
+[0m[32m+            cell_width: 10.0,
+[0m[32m+            default_spacing: 0.0,
+[0m[32m+            link_range: None,
+[0m[32m+            bold_bright: true,
+[0m[32m+            minimum_contrast_ratio: 1.0,
+[0m[32m+        }
+[0m     }
+ }
+ #[derive(Clone, Copy, Debug, Default)]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row_types.rs:51:
+ }
+ impl Selection {
+     pub fn contains(&self, x: usize, y: usize) -> bool {
+[31m-        let (Some(start),Some(end))=(self.start,self.end) else {return false;};
+[0m[32m+        let (Some(start), Some(end)) = (self.start, self.end) else {
+[0m[32m+            return false;
+[0m[32m+        };
+[0m         if self.column {
+[31m-            let (left,right) = if start[0]<=end[0] {(start[0],end[0])} else {(end[0],start[0])};
+[0m[31m-            return x>=left && x<right && y>=start[1] && y<=end[1];
+[0m[32m+            let (left, right) = if start[0] <= end[0] {
+[0m[32m+                (start[0], end[0])
+[0m[32m+            } else {
+[0m[32m+                (end[0], start[0])
+[0m[32m+            };
+[0m[32m+            return x >= left && x < right && y >= start[1] && y <= end[1];
+[0m         }
+[31m-        (y>start[1] && y<end[1]) || (start[1]==end[1] && y==start[1] && x>=start[0] && x<end[0]) ||
+[0m[31m-        (start[1]<end[1] && y==end[1] && x<end[0]) || (start[1]<end[1] && y==start[1] && x>=start[0])
+[0m[32m+        (y > start[1] && y < end[1])
+[0m[32m+            || (start[1] == end[1] && y == start[1] && x >= start[0] && x < end[0])
+[0m[32m+            || (start[1] < end[1] && y == end[1] && x < end[0])
+[0m[32m+            || (start[1] < end[1] && y == start[1] && x >= start[0])
+[0m     }
+ }
+ #[derive(Debug)]
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row_types.rs:64:
+[31m-pub enum RowError<E> { Width(WidthError<E>), Palette(i32), JoinRange([usize; 2]) }
+[0m[31m-impl<E> From<WidthError<E>> for RowError<E> { fn from(error:WidthError<E>)->Self{Self::Width(error)} }
+[0m[32m+pub enum RowError<E> {
+[0m[32m+    Width(WidthError<E>),
+[0m[32m+    Palette(i32),
+[0m[32m+    JoinRange([usize; 2]),
+[0m[32m+}
+[0m[32m+impl<E> From<WidthError<E>> for RowError<E> {
+[0m[32m+    fn from(error: WidthError<E>) -> Self {
+[0m[32m+        Self::Width(error)
+[0m[32m+    }
+[0m[32m+}
+[0m pub(super) struct RenderCell {
+     pub attrs: AttributeData,
+     pub chars: Vec<u16>,
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\renderer\row_types.rs:70:
+     pub code: Option<u32>,
+ }
+ impl From<CellData> for RenderCell {
+[31m-    fn from(cell:CellData)->Self { Self {chars:cell.get_chars(),width:cell.get_width(),code:cell.get_code(),attrs:cell.attributes} }
+[0m[32m+    fn from(cell: CellData) -> Self {
+[0m[32m+        Self {
+[0m[32m+            chars: cell.get_chars(),
+[0m[32m+            width: cell.get_width(),
+[0m[32m+            code: cell.get_code(),
+[0m[32m+            attrs: cell.attributes,
+[0m[32m+        }
+[0m[32m+    }
+[0m }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\write_scheduler.rs:14:
+     _callback: Closure<dyn FnMut() -> Result<(), JsValue>>,
+ }
+ impl Drop for WriteTimer {
+[31m-    fn drop(&mut self) { self.window.clear_timeout_with_handle(self.id); }
+[0m[32m+    fn drop(&mut self) {
+[0m[32m+        self.window.clear_timeout_with_handle(self.id);
+[0m[32m+    }
+[0m }
+ 
+ pub struct BrowserWriteScheduler {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\write_scheduler.rs:25:
+ 
+ impl BrowserWriteScheduler {
+     pub fn new(window: &Window) -> Result<Self, JsValue> {
+[31m-        let performance = window.performance().ok_or_else(|| js_sys::Error::new("Writes require performance.now"))?;
+[0m[31m-        let report_error = js_sys::Reflect::get(window, &"reportError".into())?.dyn_into::<Function>()?;
+[0m[31m-        Ok(Self { window: window.clone(), performance, report_error })
+[0m[32m+        let performance = window
+[0m[32m+            .performance()
+[0m[32m+            .ok_or_else(|| js_sys::Error::new("Writes require performance.now"))?;
+[0m[32m+        let report_error =
+[0m[32m+            js_sys::Reflect::get(window, &"reportError".into())?.dyn_into::<Function>()?;
+[0m[32m+        Ok(Self {
+[0m[32m+            window: window.clone(),
+[0m[32m+            performance,
+[0m[32m+            report_error,
+[0m[32m+        })
+[0m     }
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\write_scheduler.rs:35:
+     type Handle = WriteTimer;
+ 
+     fn request(
+[31m-        &mut self, queue: WeakWriteBuffer<Self>, last_time: f64, promise_result: bool,
+[0m[32m+        &mut self,
+[0m[32m+        queue: WeakWriteBuffer<Self>,
+[0m[32m+        last_time: f64,
+[0m[32m+        promise_result: bool,
+[0m     ) -> Result<Self::Handle, WriteError> {
+         let callback = Closure::wrap(Box::new(move || {
+             if let Some(queue) = queue.upgrade() {
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\src\write_scheduler.rs:42:
+[31m-                queue.process(last_time, promise_result).map_err(|error| to_js_error(&error))
+[0m[31m-            } else { Ok(()) }
+[0m[32m+                queue
+[0m[32m+                    .process(last_time, promise_result)
+[0m[32m+                    .map_err(|error| to_js_error(&error))
+[0m[32m+            } else {
+[0m[32m+                Ok(())
+[0m[32m+            }
+[0m         }) as Box<dyn FnMut() -> Result<(), JsValue>>);
+[31m-        let id = self.window.set_timeout_with_callback(callback.as_ref().unchecked_ref())
+[0m[32m+        let id = self
+[0m[32m+            .window
+[0m[32m+            .set_timeout_with_callback(callback.as_ref().unchecked_ref())
+[0m             .map_err(|error| WriteError::Event(callback_error(error)))?;
+[31m-        Ok(WriteTimer { window: self.window.clone(), id, _callback: callback })
+[0m[32m+        Ok(WriteTimer {
+[0m[32m+            window: self.window.clone(),
+[0m[32m+            id,
+[0m[32m+            _callback: callback,
+[0m[32m+        })
+[0m     }
+ 
+[31m-    fn cancel(&mut self, handle: Self::Handle) { drop(handle); }
+[0m[31m-    fn now(&self) -> f64 { self.performance.now() }
+[0m[32m+    fn cancel(&mut self, handle: Self::Handle) {
+[0m[32m+        drop(handle);
+[0m[32m+    }
+[0m[32m+    fn now(&self) -> f64 {
+[0m[32m+        self.performance.now()
+[0m[32m+    }
+[0m     fn spawn(&mut self, future: Pin<Box<dyn Future<Output = ()>>>) {
+         wasm_bindgen_futures::spawn_local(future);
+     }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\row_factory_browser.rs:4:
+ use serde_json::Value;
+ use std::convert::Infallible;
+ use wasm_bindgen_test::*;
+[31m-use xterm_core::{buffer::{AttributeData, BufferLine, CellData, ExtendedAttrs}, color::Color};
+[0m[31m-use xterm_web::{renderer::{row::{RowContext, RowFactory}, row_dom::create_spans, row_types::{RowOptions, Selection}, width_cache::{Font, FontVariant, WidthCache, WidthMeasurer}}, theme::{ColorRef, ThemeService}};
+[0m[32m+use xterm_core::{
+[0m[32m+    buffer::{AttributeData, BufferLine, CellData, ExtendedAttrs},
+[0m[32m+    color::Color,
+[0m[32m+};
+[0m[32m+use xterm_web::{
+[0m[32m+    renderer::{
+[0m[32m+        row::{RowContext, RowFactory},
+[0m[32m+        row_dom::create_spans,
+[0m[32m+        row_types::{RowOptions, Selection},
+[0m[32m+        width_cache::{Font, FontVariant, WidthCache, WidthMeasurer},
+[0m[32m+    },
+[0m[32m+    theme::{ColorRef, ThemeService},
+[0m[32m+};
+[0m wasm_bindgen_test_configure!(run_in_browser);
+ 
+ struct FixtureMeasurer(Value);
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\row_factory_browser.rs:12:
+ impl WidthMeasurer for FixtureMeasurer {
+[31m-    type Error=Infallible;
+[0m[31m-    fn configure(&mut self,_:&Font)->Result<(),Infallible>{Ok(())}
+[0m[31m-    fn measure(&mut self,text:&[u16],variant:FontVariant)->Result<f64,Infallible>{
+[0m[31m-        let text=String::from_utf16(text).unwrap();
+[0m[32m+    type Error = Infallible;
+[0m[32m+    fn configure(&mut self, _: &Font) -> Result<(), Infallible> {
+[0m[32m+        Ok(())
+[0m[32m+    }
+[0m[32m+    fn measure(&mut self, text: &[u16], variant: FontVariant) -> Result<f64, Infallible> {
+[0m[32m+        let text = String::from_utf16(text).unwrap();
+[0m         Ok(self.0[variant as usize][text].as_f64().unwrap_or(5.0))
+     }
+ }
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\row_factory_browser.rs:20:
+[31m-fn number(value:&Value)->usize {value.as_u64().unwrap()as usize}
+[0m[31m-fn flag(value:&Value)->bool {value.as_bool().unwrap_or(false)}
+[0m[31m-fn color(value:&Value)->ColorRef {Color{css:value["css"].as_str().unwrap().into(),rgba:value["rgba"].as_u64().unwrap()as u32}.into()}
+[0m[31m-fn position(value:&Value)->Option<[usize;2]>{value.as_array().map(|a|[number(&a[0]),number(&a[1])])}
+[0m[32m+fn number(value: &Value) -> usize {
+[0m[32m+    value.as_u64().unwrap() as usize
+[0m[32m+}
+[0m[32m+fn flag(value: &Value) -> bool {
+[0m[32m+    value.as_bool().unwrap_or(false)
+[0m[32m+}
+[0m[32m+fn color(value: &Value) -> ColorRef {
+[0m[32m+    Color {
+[0m[32m+        css: value["css"].as_str().unwrap().into(),
+[0m[32m+        rgba: value["rgba"].as_u64().unwrap() as u32,
+[0m[32m+    }
+[0m[32m+    .into()
+[0m[32m+}
+[0m[32m+fn position(value: &Value) -> Option<[usize; 2]> {
+[0m[32m+    value.as_array().map(|a| [number(&a[0]), number(&a[1])])
+[0m[32m+}
+[0m 
+ #[wasm_bindgen_test]
+[31m-fn replay_every_original_row_assertion_in_real_browser_dom(){
+[0m[31m-    let fixture:Value=serde_json::from_str(include_str!("fixtures/row-factory.json")).unwrap();
+[0m[31m-    let document=web_sys::window().unwrap().document().unwrap();
+[0m[31m-    let cases=fixture["calls"].as_array().unwrap();
+[0m[32m+fn replay_every_original_row_assertion_in_real_browser_dom() {
+[0m[32m+    let fixture: Value = serde_json::from_str(include_str!("fixtures/row-factory.json")).unwrap();
+[0m[32m+    let document = web_sys::window().unwrap().document().unwrap();
+[0m[32m+    let cases = fixture["calls"].as_array().unwrap();
+[0m     assert!(!cases.is_empty());
+[31m-    for (index,case) in cases.iter().enumerate(){
+[0m[31m-        let cells=case["cells"].as_array().unwrap();
+[0m[31m-        let mut line=BufferLine::new(cells.len(),None,false);
+[0m[31m-        for (column,raw) in cells.iter().enumerate(){
+[0m[31m-            line.set_cell(column,&CellData{content:number(&raw["content"])as u32,attributes:AttributeData{fg:number(&raw["fg"])as u32,bg:number(&raw["bg"])as u32,extended:ExtendedAttrs::new(number(&raw["ext"])as u32,number(&raw["url"])as u32)},combined_data:raw["chars"].as_array().unwrap().iter().map(|v|number(v)as u16).collect()});
+[0m[32m+    for (index, case) in cases.iter().enumerate() {
+[0m[32m+        let cells = case["cells"].as_array().unwrap();
+[0m[32m+        let mut line = BufferLine::new(cells.len(), None, false);
+[0m[32m+        for (column, raw) in cells.iter().enumerate() {
+[0m[32m+            line.set_cell(
+[0m[32m+                column,
+[0m[32m+                &CellData {
+[0m[32m+                    content: number(&raw["content"]) as u32,
+[0m[32m+                    attributes: AttributeData {
+[0m[32m+                        fg: number(&raw["fg"]) as u32,
+[0m[32m+                        bg: number(&raw["bg"]) as u32,
+[0m[32m+                        extended: ExtendedAttrs::new(
+[0m[32m+                            number(&raw["ext"]) as u32,
+[0m[32m+                            number(&raw["url"]) as u32,
+[0m[32m+                        ),
+[0m[32m+                    },
+[0m[32m+                    combined_data: raw["chars"]
+[0m[32m+                        .as_array()
+[0m[32m+                        .unwrap()
+[0m[32m+                        .iter()
+[0m[32m+                        .map(|v| number(v) as u16)
+[0m[32m+                        .collect(),
+[0m[32m+                },
+[0m[32m+            );
+[0m         }
+[31m-        let theme=ThemeService::default();let colors=theme.colors();
+[0m[32m+        let theme = ThemeService::default();
+[0m[32m+        let colors = theme.colors();
+[0m         {
+[31m-            let mut colors=colors.borrow_mut();let raw=&case["colors"];
+[0m[31m-            colors.foreground=color(&raw["foreground"]);colors.background=color(&raw["background"]);
+[0m[31m-            colors.selection_background_opaque=color(&raw["selectionBackgroundOpaque"]);
+[0m[31m-            colors.selection_inactive_background_opaque=color(&raw["selectionInactiveBackgroundOpaque"]);
+[0m[31m-            colors.selection_foreground=raw.get("selectionForeground").map(color);
+[0m[31m-            colors.ansi=raw["ansi"].as_array().unwrap().iter().map(color).collect();
+[0m[32m+            let mut colors = colors.borrow_mut();
+[0m[32m+            let raw = &case["colors"];
+[0m[32m+            colors.foreground = color(&raw["foreground"]);
+[0m[32m+            colors.background = color(&raw["background"]);
+[0m[32m+            colors.selection_background_opaque = color(&raw["selectionBackgroundOpaque"]);
+[0m[32m+            colors.selection_inactive_background_opaque =
+[0m[32m+                color(&raw["selectionInactiveBackgroundOpaque"]);
+[0m[32m+            colors.selection_foreground = raw.get("selectionForeground").map(color);
+[0m[32m+            colors.ansi = raw["ansi"].as_array().unwrap().iter().map(color).collect();
+[0m         }
+[31m-        let start=case["linkStart"].as_i64().unwrap();let end=case["linkEnd"].as_i64().unwrap();
+[0m[31m-        let options=RowOptions{row:number(&case["row"]),cursor_row:flag(&case["cursorRow"]),cursor_x:number(&case["cursorX"]),cursor_style:case["cursorStyle"].as_str().unwrap().into(),cursor_inactive_style:case["inactiveStyle"].as_str().unwrap().into(),cursor_blink:flag(&case["cursorBlink"]),cursor_hidden:flag(&case["cursorHidden"]),cursor_initialized:flag(&case["cursorInitialized"]),focused:flag(&case["focused"]),blink_on:flag(&case["blinkOn"]),cell_width:case["cellWidth"].as_f64().unwrap(),default_spacing:case["defaultSpacing"].as_f64().unwrap(),link_range:if start == -1 || end == -1 {None}else{Some([start,end])},bold_bright:flag(&case["boldBright"]),minimum_contrast_ratio:case["contrast"].as_f64().unwrap_or(1.0)};
+[0m[31m-        let factory=RowFactory{selection:Selection{start:position(&case["selectionStart"]),end:position(&case["selectionEnd"]),column:flag(&case["column"])}};
+[0m[31m-        let mut widths=WidthCache::new(FixtureMeasurer(case["widths"].clone()));
+[0m[31m-        let colors=colors.borrow();
+[0m[31m-        let row=factory.create_row(&line,RowContext{options:&options,colors:&colors,joined_ranges:&[],decorations:&|_,_|Vec::new()},&mut widths).unwrap();
+[0m[31m-        let container=document.create_element("div").unwrap();
+[0m[31m-        for span in create_spans(&document,&row.spans).unwrap(){container.append_child(&span).unwrap();}
+[0m[31m-        assert_eq!(container.inner_html(),case["html"].as_str().unwrap(),"upstream captured call {index}");
+[0m[32m+        let start = case["linkStart"].as_i64().unwrap();
+[0m[32m+        let end = case["linkEnd"].as_i64().unwrap();
+[0m[32m+        let options = RowOptions {
+[0m[32m+            row: number(&case["row"]),
+[0m[32m+            cursor_row: flag(&case["cursorRow"]),
+[0m[32m+            cursor_x: number(&case["cursorX"]),
+[0m[32m+            cursor_style: case["cursorStyle"].as_str().unwrap().into(),
+[0m[32m+            cursor_inactive_style: case["inactiveStyle"].as_str().unwrap().into(),
+[0m[32m+            cursor_blink: flag(&case["cursorBlink"]),
+[0m[32m+            cursor_hidden: flag(&case["cursorHidden"]),
+[0m[32m+            cursor_initialized: flag(&case["cursorInitialized"]),
+[0m[32m+            focused: flag(&case["focused"]),
+[0m[32m+            blink_on: flag(&case["blinkOn"]),
+[0m[32m+            cell_width: case["cellWidth"].as_f64().unwrap(),
+[0m[32m+            default_spacing: case["defaultSpacing"].as_f64().unwrap(),
+[0m[32m+            link_range: if start == -1 || end == -1 {
+[0m[32m+                None
+[0m[32m+            } else {
+[0m[32m+                Some([start, end])
+[0m[32m+            },
+[0m[32m+            bold_bright: flag(&case["boldBright"]),
+[0m[32m+            minimum_contrast_ratio: case["contrast"].as_f64().unwrap_or(1.0),
+[0m[32m+        };
+[0m[32m+        let factory = RowFactory {
+[0m[32m+            selection: Selection {
+[0m[32m+                start: position(&case["selectionStart"]),
+[0m[32m+                end: position(&case["selectionEnd"]),
+[0m[32m+                column: flag(&case["column"]),
+[0m[32m+            },
+[0m[32m+        };
+[0m[32m+        let mut widths = WidthCache::new(FixtureMeasurer(case["widths"].clone()));
+[0m[32m+        let colors = colors.borrow();
+[0m[32m+        let row = factory
+[0m[32m+            .create_row(
+[0m[32m+                &line,
+[0m[32m+                RowContext {
+[0m[32m+                    options: &options,
+[0m[32m+                    colors: &colors,
+[0m[32m+                    joined_ranges: &[],
+[0m[32m+                    decorations: &|_, _| Vec::new(),
+[0m[32m+                },
+[0m[32m+                &mut widths,
+[0m[32m+            )
+[0m[32m+            .unwrap();
+[0m[32m+        let container = document.create_element("div").unwrap();
+[0m[32m+        for span in create_spans(&document, &row.spans).unwrap() {
+[0m[32m+            container.append_child(&span).unwrap();
+[0m[32m+        }
+[0m[32m+        assert_eq!(
+[0m[32m+            container.inner_html(),
+[0m[32m+            case["html"].as_str().unwrap(),
+[0m[32m+            "upstream captured call {index}"
+[0m[32m+        );
+[0m     }
+ }
+ 
+Diff in \\?\P:\workshop\Windows_Worshop\oira666\xterm-rust\crates\xterm-web\tests\wasm_input.rs:40:
+     );
+     setup.dom.element.dispatch_event(&copy).unwrap();
+     assert!(copy.default_prevented());
+[31m-    let copied = copy.dyn_ref::<web_sys::ClipboardEvent>().unwrap().clipboard_data().unwrap();
+[0m[32m+    let copied = copy
+[0m[32m+        .dyn_ref::<web_sys::ClipboardEvent>()
+[0m[32m+        .unwrap()
+[0m[32m+        .clipboard_data()
+[0m[32m+        .unwrap();
+[0m     assert_eq!(copied.get_data("text/plain").unwrap(), "selected 😀");
+     clipboard.set_data("text/plain", "one\ntwo").unwrap();
+     let paste = event(
+
+exit_status=1

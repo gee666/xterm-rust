@@ -12,6 +12,79 @@ function random() {
   state ^= state << 13; state ^= state >>> 17; state ^= state << 5;
   return state >>> 0;
 }
+const mutationChecks = [];
+for (const phase of ['start', 'put', 'end', 'reset']) {
+  const parser = new oracle.context.Parser();
+  const tokens = [];
+  const remove = method => { if (method === phase || phase === 'reset' && method === 'end') tokens.forEach(t => t.dispose()); };
+  const handler = { start() { remove('start'); }, put() { remove('put'); },
+    end() { remove('end'); return false; } };
+  tokens.push(parser.registerHandler(1, handler), parser.registerHandler(1, handler));
+  parser.start();
+  const put = () => parser.put(Uint32Array.from([49, 59, 65]), 0, 3);
+  const operation = phase === 'start' || phase === 'put' ? put : () => {
+    put(); if (phase === 'end') parser.end(true); else parser.reset();
+  };
+  assert.throws(operation, { name: 'TypeError' });
+  mutationChecks.push({ phase, error: 'TypeError', rustError: 'DispatchError::ActiveHandlerRemoved', status: 'passed' });
+}
+{
+  const parser = new oracle.context.Parser();
+  let calls = 0;
+  const handler = { start() {}, put() {}, end() { calls++; return false; } };
+  const token = parser.registerHandler(1, handler);
+  parser.registerHandler(1, handler);
+  token.dispose(); token.dispose();
+  parser.start(); parser.put(Uint32Array.from([49, 59, 65]), 0, 3); parser.end(true);
+  assert.equal(calls, 0);
+  mutationChecks.push({ phase: 'repeated disposal with duplicate identity', status: 'passed' });
+}
+for (const clear of [false, true]) {
+  const parser = new oracle.context.Parser();
+  const log = [];
+  parser.registerHandler(2, new oracle.context.Handler(data => {
+    log.push(`old:${utf16Hex(data)}`);
+    if (clear) parser.clearHandler(2);
+    parser.registerHandler(2, new oracle.context.Handler(data => { log.push(`new:${utf16Hex(data)}`); return true; }));
+    return true;
+  }));
+  for (const code of [65, 66]) {
+    parser.start(); parser.put(Uint32Array.from([50, 59, code]), 0, 3); parser.end(true);
+  }
+  assert.deepEqual(log, ['old:41', 'new:42']);
+  mutationChecks.push({ phase: clear ? 'clear then register from callback' : 'register from callback', status: 'passed' });
+}
+const callbackFailureChecks = [];
+for (const asynchronous of [false, true]) {
+  const payloads = [];
+  const callback = data => {
+    payloads.push(utf16Hex(data));
+    const run = () => { if (payloads.length === 1) throw new Error('listener failed'); return true; };
+    return asynchronous ? oracle.resolvedPromise(run) : run();
+  };
+  const handler = new oracle.context.Handler(callback);
+  handler.start(); handler.put(Uint32Array.from([65]), 0, 1);
+  if (asynchronous) await assert.rejects(handler.end(true), /listener failed/);
+  else assert.throws(() => handler.end(true), /listener failed/);
+  assert.equal(await handler.end(true), true);
+  assert.equal(await handler.end(true), true);
+  assert.deepEqual(payloads, ['41', '41', '']);
+  callbackFailureChecks.push({ asynchronous, path: 'buffer retained on error; cleared on success', status: 'passed' });
+}
+for (const stage of ['end', 'reset', 'cleanup']) {
+  const parser = new oracle.context.Parser();
+  const log = [];
+  for (const name of [1, 2]) parser.registerHandler(2, {
+    start() {}, put() {}, end(success) {
+      log.push([name, success]); if (name === 2) throw new Error('listener failed'); return false;
+    },
+  });
+  if (stage === 'cleanup') parser.registerHandler(2, { start() {}, put() {}, end() { return true; } });
+  parser.start(); parser.put(Uint32Array.from([50, 59, 65]), 0, 3);
+  assert.throws(() => stage === 'reset' ? parser.reset() : parser.end(true), /listener failed/);
+  assert.deepEqual(log, [[2, stage === 'end']]);
+  callbackFailureChecks.push({ stage, path: 'failure stops older dispatch with partial state', status: 'passed' });
+}
 const lines = [];
 const cases = 512;
 const steps = 96;
@@ -69,7 +142,7 @@ if (process.argv.includes('--generate')) await writeFile(fixture, corpus);
 else assert.equal(await readFile(fixture, 'utf8'), corpus, 'OSC oracle drift');
 const report = {
   node: process.version, seed, randomizedCases: cases, stepsPerCase: steps,
-  baseline: oracle.baseline, sources: oracle.sources,
+  baseline: oracle.baseline, mutationChecks, callbackFailureChecks, sources: oracle.sources,
   fixtureSha256: createHash('sha256').update(corpus).digest('hex'),
   status: process.argv.includes('--generate') ? 'generated' : 'matched',
 };
