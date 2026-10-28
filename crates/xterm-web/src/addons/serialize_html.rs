@@ -41,7 +41,8 @@ pub(super) fn serialize(addon: &SerializeBackend, options: JsValue) -> Result<Js
             end_column,
         )
     } else if ops::serialTruthy(&only) {
-        let Some((first, last, column, end_column)) = selection(&addon.current()?)? else {
+        let selection_host = addon.current()?;
+        let Some((first, last, column, end_column)) = selection(&selection_host)? else {
             return Ok(to_js_string(&[]));
         };
         (first, last, column, end_column)
