@@ -55,6 +55,8 @@ use std::{
 pub use window::window_option_allowed;
 
 pub type EventHandler = Rc<dyn Fn(TerminalEvent) -> Result<(), crate::event::EmitError>>;
+/// Host virtual reset action. It calls ordinary reset, not request_reset_state.
+pub type ResetRequestHandler = Rc<dyn Fn() -> Result<(), crate::event::EmitError>>;
 
 pub struct CoreTerminal {
     state: Rc<RefCell<TerminalState>>,
@@ -153,6 +155,7 @@ impl CoreTerminal {
         core.dispose();
         mouse.dispose();
         unicode.dispose();
+        operations::clear_reset_request_handler(&self.state)?;
         self.finish_parser_dispose();
         Ok(())
     }
@@ -172,6 +175,7 @@ impl CoreTerminal {
         for listener in self.listeners.drain(..) {
             listener.dispose();
         }
+        operations::clear_reset_request_handler(&self.state)?;
         self.finish_parser_dispose();
         Ok(())
     }

@@ -4,6 +4,7 @@
 //! Shared marker identity and synchronous invalidation. Disposal is explicit and
 //! fallible; dropping a marker handle never invokes user callbacks.
 
+use super::marker_line::{MarkerLine, MarkerLineError};
 use crate::event::{EmitError, Emitter, Event};
 use crate::lifecycle::{Disposable, DisposableHandle};
 use std::cell::{Cell, RefCell};
@@ -23,7 +24,7 @@ fn following_id(id: u64) -> u64 {
 
 struct State {
     id: u64,
-    line: Cell<i64>,
+    line: RefCell<MarkerLine>,
     disposed: Cell<bool>,
     on_dispose: Emitter<()>,
     resources: RefCell<Vec<DisposableHandle>>,
@@ -48,7 +49,9 @@ impl WeakMarker {
 }
 
 impl Marker {
-    pub fn new(line: i64) -> Self {
+    pub fn new(line: impl Into<MarkerLine>) -> Self {
+        // Native adapters may supply a conversion; finish it before the id lock.
+        let line = line.into();
         let id = {
             // No path while this guard is held can panic: the private counter
             // stays <=2^53 and only a bounded integer update executes. Thus the
@@ -63,7 +66,7 @@ impl Marker {
         Self {
             state: Rc::new(State {
                 id,
-                line: Cell::new(line),
+                line: RefCell::new(line),
                 disposed: Cell::new(false),
                 on_dispose: Emitter::new(),
                 resources: RefCell::new(Vec::new()),
@@ -80,13 +83,33 @@ impl Marker {
         Rc::ptr_eq(&self.state, &other.state)
     }
 
-    pub fn line(&self) -> i64 {
-        self.state.line.get()
+    /// The authoritative primitive, retaining Number versus UTF-16 String.
+    pub fn line_value(&self) -> MarkerLine {
+        self.state.line.borrow().clone()
+    }
+
+    /// Numeric projection for comparisons against numeric buffer indices.
+    /// Strict equality and public getters must use `line_value` instead.
+    pub fn line_number(&self) -> f64 {
+        self.state.line.borrow().to_number()
     }
 
     /// Like the upstream public field, this remains writable after disposal.
-    pub fn set_line(&self, line: i64) {
-        self.state.line.set(line);
+    pub fn set_line(&self, line: impl Into<MarkerLine>) {
+        let line = line.into();
+        let previous = self.state.line.replace(line);
+        drop(previous);
+    }
+
+    pub fn add_to_line(&self, amount: f64) -> Result<(), MarkerLineError> {
+        let next = self.line_value().add_number(amount)?;
+        self.set_line(next);
+        Ok(())
+    }
+
+    pub fn subtract_from_line(&self, amount: f64) {
+        let next = self.line_value().subtract_number(amount);
+        self.set_line(next);
     }
 
     pub fn is_disposed(&self) -> bool {
@@ -120,7 +143,7 @@ impl Marker {
         if self.state.disposed.replace(true) {
             return Ok(());
         }
-        self.state.line.set(-1);
+        self.set_line(MarkerLine::number(-1.0));
         self.state.on_dispose.fire(&())?;
         // The source registers its emitter before user resources.
         self.state.on_dispose.dispose();

@@ -1,8 +1,8 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
 use super::{SearchAddonError, SearchColor, SearchDecorationOptionsHandle, SearchHost};
-use std::{cell::RefCell, collections::BTreeSet, rc::Rc};
+use std::{cell::RefCell, collections::HashSet, rc::Rc};
 use xterm_core::{
-    buffer::marker::Marker,
+    buffer::{marker::Marker, marker_line::MarkerLineKey},
     decoration::{
         Decoration, DecorationError, DecorationLayer, DecorationOptions, OverviewPosition,
         OverviewRulerOptions,
@@ -71,14 +71,14 @@ impl MultiHighlight {
 pub struct DecorationManager {
     host: Rc<dyn SearchHost>,
     highlights: RefCell<Vec<ManagedDecoration>>,
-    highlighted_lines: RefCell<BTreeSet<i64>>,
+    highlighted_lines: RefCell<HashSet<MarkerLineKey>>,
 }
 impl DecorationManager {
     pub fn new(host: Rc<dyn SearchHost>) -> Self {
         Self {
             host,
             highlights: RefCell::new(Vec::new()),
-            highlighted_lines: RefCell::new(BTreeSet::new()),
+            highlighted_lines: RefCell::new(HashSet::new()),
         }
     }
     pub fn clear_highlights(&self) -> Result<(), EmitError> {
@@ -100,7 +100,7 @@ impl DecorationManager {
             for item in self.create(result, options, false)? {
                 self.highlighted_lines
                     .borrow_mut()
-                    .insert(item.decoration.marker().line());
+                    .insert(item.decoration.marker().line_value().map_key());
                 self.highlights.borrow_mut().push(item);
             }
         }
@@ -183,7 +183,10 @@ impl DecorationManager {
             } else {
                 SearchColor::MatchBackground
             })?;
-            let needs_overview = !self.highlighted_lines.borrow().contains(&marker.line());
+            let needs_overview = !self
+                .highlighted_lines
+                .borrow()
+                .contains(&marker.line_value().map_key());
             if needs_overview {
                 decoration_options.overview_ruler_options = Some(OverviewRulerOptions {
                     color: options

@@ -56,7 +56,7 @@ fn source_exact_partial_state_and_nested_callback_traces() {
         on_scroll(&service, Rc::clone(&save));
         service.scroll(&AttributeData::default(), false).unwrap();
         save("final");
-        assert_eq!(marker.line(), -1);
+        assert_eq!(marker.line_number(), -1.0);
         assert!(marker.is_disposed());
         actual.insert("trim-read-write", out.borrow().join("^"));
     }

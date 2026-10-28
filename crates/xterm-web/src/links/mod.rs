@@ -24,7 +24,7 @@ pub mod window_interval;
 pub use hover::{Decorations, HoverEffect, HoverState};
 pub use osc::{osc_links, try_osc_links, try_osc_links_with_policy, OscBuffer};
 pub use provider::{LinkProviderService, ProviderRegistration};
-pub use replies::{ProviderReplies, ProviderRequest};
+pub use replies::{ProviderReplies, ProviderRequest, ReplyGroup};
 
 /// Buffer cell coordinates are one-based, including inclusive link end positions.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -33,17 +33,32 @@ pub struct Position {
     pub y: usize,
 }
 
+/// Generated endpoints can be one cell beyond a 32-bit indexed row/window.
+/// Keep them independent of pointer-sized indices, especially on WASM32.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct RangePosition {
+    pub x: u64,
+    pub y: u64,
+}
+impl From<Position> for RangePosition {
+    fn from(position: Position) -> Self {
+        Self {
+            x: position.x as u64,
+            y: position.y as u64,
+        }
+    }
+}
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Range {
-    pub start: Position,
-    pub end: Position,
+    pub start: RangePosition,
+    pub end: RangePosition,
 }
 
 impl Range {
     /// Matches the source's row-major comparison, even for positions outside a row.
     pub fn contains(self, position: Position, cols: usize) -> bool {
-        let linear = |p: Position| p.y as u128 * cols as u128 + p.x as u128;
-        linear(self.start) <= linear(position) && linear(position) <= linear(self.end)
+        let linear = |p: RangePosition| p.y as u128 * cols as u128 + p.x as u128;
+        linear(self.start) <= linear(position.into()) && linear(position.into()) <= linear(self.end)
     }
 }
 
@@ -58,7 +73,7 @@ pub struct Link {
 pub struct UnderlineEvent {
     pub x1: i64,
     pub y1: i64,
-    pub x2: usize,
+    pub x2: u64,
     pub y2: i64,
     pub cols: usize,
 }

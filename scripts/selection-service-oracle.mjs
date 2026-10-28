@@ -75,6 +75,7 @@ try {
 } finally { delete globalThis.describe; delete globalThis.beforeEach; delete globalThis.it; }
 assert.equal(outcomes.length, 26, 'source selection service test count changed');
 const upstreamTraceCount = traces.length;
+const legacyCacheCase = process.argv.includes('--legacy-cache-case');
 const commonMocks = load('source_repo/src/common/TestUtils.test.ts');
 const browserMocks = load('source_repo/src/browser/TestUtils.test.ts');
 const { BufferLine } = load('source_repo/src/common/buffer/BufferLine.ts');
@@ -113,7 +114,7 @@ for (let iteration = 0; iteration < 4096; iteration++) {
   service._model.selectionStart = [next() % (columns + 3) - 2, next() % totalRows];
   service._model.selectionEnd = next() % 4 ? [next() % (columns + 1), next() % totalRows] : undefined;
   service._model.selectionStartLength = next() % (columns * 3) - columns;
-  switch (next() % 6) {
+  switch (next() % (legacyCacheCase ? 5 : 6)) {
     case 0: service._selectWordAt([next() % columns, next() % totalRows], !!(next() & 1)); break;
     case 1: service._selectLineAt(next() % totalRows); break;
     case 2: service.selectAll(); break;
@@ -123,6 +124,22 @@ for (let iteration = 0; iteration < 4096; iteration++) {
   }
 }
 await mkdir('results/selection-service', { recursive: true });
+if (legacyCacheCase) {
+  assert(outcomes.every(test => test.status === 'passed'));
+  const value = traces[269];
+  assert.equal(value.split('\t').length, 15);
+  assert(value.startsWith('word\t11\t2\t3\t0\t2,1,0\t'), 'historical cache counterexample input changed');
+  assert.equal(value.split('\t')[9], '0,6,9,0,1,4');
+  await writeFile('results/selection-service/counterexamples/signed-cache-269.tsv', value + '\n');
+  await writeFile('crates/xterm-web/tests/fixtures/selection-cache-regression.tsv', value + '\n');
+  await writeFile('results/selection-service/counterexamples/signed-cache-269.json', JSON.stringify({
+    seed, originalOperationKinds: 5, originalTraceIndex: 269, sourceHashes: Object.fromEntries([...hashes].sort()),
+    sha256: createHash('sha256').update(value + '\n').digest('hex'),
+    note: 'Recreated directly from the original seeded five-operation source corpus. The first attempted fixture copy accidentally retained the word undefined because a truncated read was indexed without validation. This regeneration validates schema and known input/model before writing.'
+  }, null, 2) + '\n');
+  console.log('Historical source cache counterexample regenerated and schema checked');
+  process.exit(0);
+}
 const fixture = 'crates/xterm-web/tests/fixtures/selection-service.tsv';
 const corpus = traces.join('\n') + '\n';
 if (process.argv.includes('--generate')) await writeFile(fixture, corpus);

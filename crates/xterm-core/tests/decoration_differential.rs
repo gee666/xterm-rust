@@ -23,7 +23,7 @@ fn snapshot(service: &DecorationService, all: &[Decoration]) -> String {
         .map(|d| {
             format!(
                 "{},{},{}",
-                d.marker().line(),
+                d.marker().line_number(),
                 u8::from(d.marker().is_disposed()),
                 u8::from(d.is_disposed())
             )

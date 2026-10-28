@@ -93,7 +93,7 @@ pub(super) fn clear_markers_on_line(
         let Some(marker) = marker else {
             break;
         };
-        if marker.line() == row {
+        if marker.line_value().strict_eq_number(row as f64) {
             marker.dispose()?;
             if index < markers.borrow().len() {
                 markers.borrow_mut().remove(index);

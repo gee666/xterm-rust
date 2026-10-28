@@ -14,7 +14,13 @@ fn capture(terminal: &Terminal, events: &Observations, tag: &str) -> Result<(), 
     } else {
         markers
             .iter()
-            .map(|marker| format!("{},{}", marker.line(), u8::from(marker.is_disposed())))
+            .map(|marker| {
+                format!(
+                    "{},{}",
+                    marker.line_number(),
+                    u8::from(marker.is_disposed())
+                )
+            })
             .collect::<Vec<_>>()
             .join("|")
     };

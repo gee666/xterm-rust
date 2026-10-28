@@ -1,7 +1,7 @@
 // Copyright (c) 2022 The xterm.js authors. All rights reserved. MIT license.
 //! Host-independent decorations. Element handles are opaque to the terminal core.
 use crate::{
-    buffer::marker::Marker,
+    buffer::{marker::Marker, marker_line::MarkerLine},
     color::{self, Color},
     event::{EmitError, Emitter, Event},
     lifecycle::{Disposable, DisposableHandle},
@@ -122,7 +122,7 @@ pub type DecorationColor = Rc<RefCell<Color>>;
 struct DecorationState {
     marker: Marker,
     options: Rc<RefCell<DecorationOptions>>,
-    indexed_start: Cell<f64>,
+    indexed_start: RefCell<MarkerLine>,
     disposed: Cell<bool>,
     element: RefCell<Option<Element>>,
     background: RefCell<Option<Option<DecorationColor>>>,
@@ -159,7 +159,7 @@ impl Decoration {
         }
         Self {
             state: Rc::new(DecorationState {
-                indexed_start: Cell::new(marker.line() as f64),
+                indexed_start: RefCell::new(marker.line_value()),
                 marker,
                 options,
                 disposed: Cell::new(false),
@@ -248,6 +248,12 @@ impl Decoration {
         }
         Ok(())
     }
+    fn indexed_start(&self) -> MarkerLine {
+        self.state.indexed_start.borrow().clone()
+    }
+    fn set_indexed_start(&self, start: MarkerLine) {
+        *self.state.indexed_start.borrow_mut() = start;
+    }
     fn height(&self) -> i64 {
         i64::from(self.state.options.borrow().height.unwrap_or(1))
     }
@@ -264,7 +270,7 @@ struct DecorationLineKey;
 impl KeyReader<Decoration> for DecorationLineKey {
     fn read_key(&self, decoration: Option<&Decoration>) -> Result<SortedKey, SortedListError> {
         Ok(decoration.map_or(SortedKey::Undefined, |decoration| {
-            SortedKey::number(decoration.marker().line() as f64)
+            SortedKey::from(decoration.marker().line_value())
         }))
     }
 }

@@ -84,7 +84,7 @@ impl Runner {
             "move" => {
                 let index: usize = field(1)?.parse()?;
                 if let Some(marker) = self.markers.get(index) {
-                    marker.set_line(field(2)?.parse()?);
+                    marker.set_line(field(2)?.parse::<f64>()?);
                 }
             }
             _ => return Err("unknown trace operation".into()),
@@ -115,7 +115,7 @@ impl Runner {
         for marker in &self.markers {
             result.push_str(&format!(
                 "{}:{},",
-                marker.line(),
+                marker.line_number(),
                 u8::from(marker.is_disposed())
             ));
         }

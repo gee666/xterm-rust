@@ -1,20 +1,31 @@
 # Common public adapters
 
-Task 66 implements the four upstream common public adapters in `crates/xterm-core/src/public_api`. UnicodeApi belongs to task 23. Acceptance sections A1-A2, B1-B3 and P1-P3 are in `docs/acceptance/public-adapters.md`, criteria 213-220. Full equivalence is NOT PROVEN.
+Task 66 ports AddonManager, BufferApiView, BufferNamespaceApi and ParserApi. Task 214 covers dynamic JavaScript identifiers. Task 136 covers Number-based cell lookup and translation; task 191 retains additional host coercion and reentry cases. UnicodeApi belongs to task 23.
 
-## Native contracts
+The detailed source contracts are in `docs/acceptance/public-adapters.md`, criteria 213-220. Full equivalence is NOT PROVEN.
 
-- `AddonManager<T,E>` activates `TerminalAddon<T>` against the actual public terminal, records ownership before activation, returns a managed `AddonHandle`, propagates failures and disposes in source reverse order. Dispose through the handle, not the raw callback. Failed cleanup remains marked disposed and recorded exactly as the source. Reentrant mutations retain captured splice indices and report an invalidated reverse traversal as an error. `downgrade` supports callbacks without an ownership cycle. Explicit disposal reports errors; Drop does not invoke fallible user callbacks.
-- `BufferNamespaceApi::new(Rc<BufferSet>)` owns stable normal/alternate public views, refreshes their backing buffers after reset and emits the now-active public identity synchronously. The core subscription uses a weak namespace reference. `BufferApiView` reads real core state and returns shared line identities. Borrow conflicts return BufferError rather than panic. The source getLine delegates directly to CircularList, so capacity-wrapped indices and popped stale slots remain visible despite the typings' bounds comment. Unsigned and signed native methods expose that behavior. Null cells are new width-zero CellData objects, not width-one buffer blanks.
-- `ParserApi` borrows the real escape parser; registrations and pending work remain parser-owned. Five registration methods and four deprecated aliases preserve callback order, UTF-16 payloads and owned Params arrays. Terminal wrappers use `with_window_option_guard` to consume disallowed bare CSI t commands before custom hooks and preserve option getter failures. `new` is a raw-parser adapter without terminal policy.
-- The headless Terminal integrates these adapters through load_addon, cached buffer and with_parser. The native future is explicitly taken and resolved before resume. Native synchronous APIs do not pretend to be JavaScript's event loop.
+## Implementation
 
-## Evidence
+- `crates/xterm-core/src/public_api/addon_manager.rs` records ownership before activation, returns managed disposal handles, preserves reverse order and partial failure state, and retains callback error causes. Native handles replace JavaScript method mutation.
+- `buffer.rs` exposes live buffer/line identities and refreshes namespace views after reset. Wrapped and stale CircularList slots remain visible, as in the source. Replacing a backing buffer releases its payloads only after ending the view borrow.
+- `parser.rs` shares weak registrars for all five handler families. Registration works inside callbacks without borrowing the running engine. Parameters and UTF-16 payloads are owned snapshots. Low-level packed routes preserve the source's separately evaluated CSI window-policy decision.
+- Browser bindings live under `crates/xterm-web/src/terminal/`. The identifier reader repeats actual JavaScript property reads and preserves UTF-16 charCodeAt, setter behavior and validation order. Small JS helpers perform boundary operations only, not terminal parsing.
+- Browser disposal tokens use the shared plain-object factory. The compatible facade owns addon records through a JS WeakMap; Rust releases its strong array reference. This fixes the identified standard addon-to-Terminal ownership cycle, but GC integration tests remain required.
 
-Run `node scripts/check-public-adapters.mjs`. Existing esbuild and Mocha dependencies under source_repo/node_modules compile and execute the unchanged AddonManager source and its original two-case suite. Generated code stays in root tmp/. Source hashes and exact original titles are retained. Directed source checks cover reverse/direct/reentrant disposal, failure partial state, live buffer getters, wrapped/stale line slots and independent null cells.
+## Checks
 
-Six focused Rust suites contain 22 tests, including the original AddonManager assertions, core buffer identity/reset/disposal, five parser families with true/false/async dispatch, payload chunk splits and lone surrogates, CSI t guards, and actual public terminal addon/buffer/parser integration through UTF-8 and UTF-16 writes. Individual observed runs passed 17 adapter tests and later five terminal/guard tests. The authoritative current rerun status and all counts are in `results/public-adapters/verification.json`; a shared compilation failure is recorded as unrun, never passing. That report hashes the exact adapter/test/script inputs. `clippy.log` records focused lint results and may predate later changes, so compare its command and the current input hashes before relying on it.
+```sh
+node scripts/public-addon-oracle.mjs
+node scripts/public-buffer-oracle.mjs
+node scripts/check-public-adapters.mjs
+node --test scripts/check-public-adapters.test.mjs
+node scripts/public-parser-identifiers-oracle.mjs --reuse-built
+WASM_TEST=public_adapters_wasm node scripts/browser-host-check.mjs
+node scripts/public-parser-browser.mjs
+```
 
-## Remaining checks
+Observed on Windows: 27 native adapter tests pass, including callback-time registration/disposal and payload-Drop reentry. Scoped Clippy passes with warnings denied. The original AddonManager suite passes both cases, and directed addon/buffer checks pass. The identifier oracle passes 195 cases using existing original ESBuild modules whose source-map contents match the reference TS. A fresh-bundle oracle mode is available by omitting `--reuse-built`; `--generate` alone regenerates expected data.
 
-The native API does not replace methods on Rust objects. Browser addon method replacement, duplicate-instance nested wrappers and cross-manager aliasing still need JavaScript binding evidence. Public JavaScript number indexing requires actual production boundary tests, especially fractional/NaN/infinite/very large indices; checked Rust index conversion is not proof of those cases. Cell and line methods reuse existing Rust buffer behavior, but full public binding mapping and the original browser Parser/Terminal groups still require execution against Rust-backed Chromium, Firefox and WebKit. WASM buffer/parser bindings are work in progress under task 66. Reentrant reads during core buffer callbacks currently expose held RefCell borrows and have a separate core followup; this is not source-equivalent yet. Native Linux/macOS execution and full workspace/feature/quality gates are separate unmet project requirements. No browser, platform or full-equivalence pass is claimed by these focused results.
+The browser entry groups component assertions in `public_adapter_cases/` to avoid linking duplicate test binaries. It includes actual Terminal DOM cleanup checks. The original-browser runner retains every Parser.test.ts assertion and the Terminal.test.ts loadAddon group; only its fixture transport changes. The ASCII parser fixture explicitly omits unrelated Unicode-graphemes addon setup.
+
+Remaining: execute current WASM and original-browser assertions after Root/Viewport integration compiles, verify GC ownership against the actual facade, finish the additional coercion cases, and obtain independent review. Native component passes do not close those gaps. Generated expected tables and older detailed logs are retained; they are data, not additional implementation modules.

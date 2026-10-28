@@ -139,7 +139,7 @@ impl OscLinkService {
             .lines
             .borrow()
             .iter()
-            .any(|marker| marker.line() == line)
+            .any(|marker| marker.line_value().strict_eq_number(line as f64))
         {
             return Ok(());
         }

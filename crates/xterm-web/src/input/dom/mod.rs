@@ -12,7 +12,7 @@ use std::rc::Rc;
 use wasm_bindgen::{JsCast, JsValue};
 use web_sys::{HtmlElement, HtmlTextAreaElement};
 
-use super::composition::{Composition, Textarea};
+use super::composition::Composition;
 use super::composition_geometry::CursorGeometry;
 use super::keyboard_dispatch::{KeyboardAction, KeyboardDispatch, KeyboardReadHost};
 use crate::dom::BrowserDom;
@@ -24,7 +24,6 @@ use timers::TimerQueue;
 pub struct InputOptions {
     pub bracketed_paste: bool,
     pub ignore_bracketed_paste: bool,
-    pub screen_reader: bool,
     pub right_click_selects_word: bool,
     pub is_firefox: bool,
     pub is_linux: bool,
@@ -42,7 +41,16 @@ pub struct OverlayLayout {
 /// RefCell borrow is held across these calls. The core's data path enforces
 /// disableStdin, user-input ordering and scroll-on-input as upstream does.
 pub trait InputHost: mouse::MouseHost + KeyboardReadHost<Error = JsValue> {
-    fn options(&self) -> Result<InputOptions, JsValue>;
+    /// Statically owned hosts need no extra lease. Weak engine adapters retain
+    /// the source method receiver through callbacks that may dispose terminal.
+    fn retain_host(&self) -> Result<Option<Rc<dyn std::any::Any>>, JsValue> {
+        Ok(None)
+    }
+    fn bracketed_paste(&self) -> Result<bool, JsValue>;
+    fn ignore_bracketed_paste(&self) -> Result<bool, JsValue>;
+    fn right_click_selects_word(&self) -> Result<bool, JsValue>;
+    fn is_firefox(&self) -> Result<bool, JsValue>;
+    fn is_linux(&self) -> Result<bool, JsValue>;
     fn custom_key_handler(&self, event: &web_sys::KeyboardEvent) -> Result<bool, JsValue>;
     /// Handles selection/scroll/cursor/onKey effects, not local DOM cancellation
     /// or engine data. InputBindings handles those before calling this method.
@@ -57,7 +65,6 @@ pub trait InputHost: mouse::MouseHost + KeyboardReadHost<Error = JsValue> {
     fn selection_text(&self) -> Result<Vec<u16>, JsValue>;
     fn sync_textarea(&self) -> Result<(), JsValue>;
     fn right_click_select(&self, event: &web_sys::MouseEvent) -> Result<(), JsValue>;
-    fn report_error(&self, error: JsValue);
 }
 
 struct State {
@@ -76,12 +83,23 @@ struct State {
 /// the listeners already installed, through RAII.
 pub struct InputBindings {
     state: Rc<State>,
-    listeners: Vec<DomListener>,
-    mouse: mouse::MouseBindings,
+    listeners: RefCell<Vec<DomListener>>,
+    mouse: RefCell<Option<mouse::MouseBindings>>,
 }
 
 impl InputBindings {
     pub fn new(dom: &BrowserDom, host: Rc<dyn InputHost>) -> Result<Self, JsValue> {
+        let bindings = Self::new_without_mouse(dom, host)?;
+        bindings.bind_mouse(dom)?;
+        Ok(bindings)
+    }
+
+    /// The terminal stores this owner before binding mouse. Protocol logging
+    /// can invoke user callbacks during bind_mouse, including terminal.dispose.
+    pub(crate) fn new_without_mouse(
+        dom: &BrowserDom,
+        host: Rc<dyn InputHost>,
+    ) -> Result<Self, JsValue> {
         let window = dom
             .document
             .default_view()
@@ -96,27 +114,43 @@ impl InputBindings {
             timers: TimerQueue::new(window),
             disposed: Cell::new(false),
         });
-        let mouse = mouse::MouseBindings::new(dom, state.host.clone())?;
         let mut bindings = Self {
             state,
-            listeners: Vec::new(),
-            mouse,
+            listeners: RefCell::new(Vec::new()),
+            mouse: RefCell::new(None),
         };
-        clipboard::bind(&mut bindings, dom)?;
         composition::bind(&mut bindings)?;
         keyboard::bind(&mut bindings)?;
+        clipboard::bind(&mut bindings, dom)?;
         Ok(bindings)
+    }
+
+    pub(crate) fn bind_mouse(&self, dom: &BrowserDom) -> Result<(), JsValue> {
+        self.check_live()?;
+        if self.mouse.borrow().is_some() {
+            return Err(js_sys::Error::new("Mouse input is already bound").into());
+        }
+        let mouse = mouse::MouseBindings::new(dom, self.state.host.clone())?;
+        if self.state.disposed.get() {
+            // Match registration in an already-disposed source DisposableStore.
+            mouse.dispose()?;
+        } else {
+            *self.mouse.borrow_mut() = Some(mouse);
+        }
+        Ok(())
     }
 
     /// Programmatic paste follows the same engine path as a browser paste.
     pub fn paste(&self, text: &[u16]) -> Result<(), JsValue> {
         self.check_live()?;
+        let _host = self.state.host.retain_host()?;
         clipboard::paste(&self.state, text)
     }
 
     /// Called after a render/layout change while composition is active.
     pub fn update_composition_elements(&self) -> Result<(), JsValue> {
         self.check_live()?;
+        let _host = self.state.host.retain_host()?;
         composition::update_elements(&self.state, true)
     }
 
@@ -124,22 +158,23 @@ impl InputBindings {
         self.state.composition.borrow().is_composing
     }
 
-    pub fn sync_mouse_options(&self) -> Result<(), JsValue> {
-        self.mouse.sync_options()
-    }
-
     pub fn reset_mouse(&self) {
-        self.mouse.reset();
+        if let Some(mouse) = self.mouse.borrow().as_ref() {
+            mouse.reset();
+        }
     }
 
-    pub fn dispose(&mut self) -> Result<(), JsValue> {
+    pub fn dispose(&self) -> Result<(), JsValue> {
         self.state.disposed.set(true);
-        self.mouse.dispose()?;
+        let mouse = self.mouse.borrow_mut().take();
+        if let Some(mouse) = mouse {
+            mouse.dispose()?;
+        }
         self.state.timers.clear();
-        for listener in &mut self.listeners {
+        let listeners = std::mem::take(&mut *self.listeners.borrow_mut());
+        for mut listener in listeners {
             listener.dispose()?;
         }
-        self.listeners.clear();
         Ok(())
     }
 
@@ -160,14 +195,6 @@ impl Drop for InputBindings {
     }
 }
 
-fn snapshot(area: &HtmlTextAreaElement) -> Result<Textarea, JsValue> {
-    Ok(Textarea {
-        value: read_value(area)?,
-        selection_start: area.selection_start()?.map(|value| value as usize),
-        selection_end: area.selection_end()?.map(|value| value as usize),
-    })
-}
-
 fn read_value(area: &HtmlTextAreaElement) -> Result<Vec<u16>, JsValue> {
     let value = js_sys::Reflect::get(area.as_ref(), &JsValue::from_str("value"))?;
     Ok(from_js_string(&value.dyn_into::<js_sys::JsString>()?))
@@ -180,7 +207,7 @@ fn set_value(area: &HtmlTextAreaElement, value: &[u16]) -> Result<(), JsValue> {
         &to_js_string(value),
     )?;
     if !success {
-        return Err(js_sys::Error::new("Cannot set input textarea value").into());
+        return Err(js_sys::TypeError::new("Cannot set input textarea value").into());
     }
     Ok(())
 }
@@ -193,19 +220,23 @@ fn listen(
     callback: impl Fn(&Rc<State>, web_sys::Event) -> Result<(), JsValue> + 'static,
 ) -> Result<(), JsValue> {
     let state = Rc::downgrade(&bindings.state);
-    bindings.listeners.push(DomListener::new_reentrant_fallible(
-        target,
-        name,
-        capture,
-        None,
-        move |event| {
-            if let Some(state) = state.upgrade() {
-                if !state.disposed.get() {
-                    return callback(&state, event);
+    bindings
+        .listeners
+        .borrow_mut()
+        .push(DomListener::new_reentrant_fallible(
+            target,
+            name,
+            capture,
+            None,
+            move |event| {
+                if let Some(state) = state.upgrade() {
+                    if !state.disposed.get() {
+                        let _host = state.host.retain_host()?;
+                        return callback(&state, event);
+                    }
                 }
-            }
-            Ok(())
-        },
-    )?);
+                Ok(())
+            },
+        )?);
     Ok(())
 }

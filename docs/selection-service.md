@@ -28,6 +28,8 @@ node scripts/selection-service-oracle.mjs --generate
 
 The normal command checks rather than silently overwrites the committed fixture. The 4,297-line TSV exceeds the normal source line limit because it is generated source-derived test data. Keep retained counterexamples even after a passing rerun.
 
+Task273 found that the separate historical cache fixture on main contained only `undefined`, so case4297 failed its 15-field schema assertion before testing Rust behavior. Batu's validated `--legacy-cache-case` regeneration restores the original five-operation seeded case269. It checks the schema, known input and raw model before writing. The regenerated fixture matches Batu24c30bb byte-for-byte. Both debug and release replays now pass all4,298 cases, with23 model and7 service test functions also passing. No expected observation or native logic was weakened. Source26 assertions and the current4,297-case corpus match unchanged. Reproduction commands and limits are in `results/selection-service/fixture-repair.json`. This scoped native repair does not establish browser selection equivalence.
+
 ## DOM and terminal integration
 
 `selection/dom.rs` owns DOM listeners and subscriptions. Its companion modules own mousedown/move/up/right-click behavior, requestAnimationFrame redraw coalescing and drag intervals. Callbacks capture weak state; disposal removes document-level listeners, cancels jobs and releases subscriptions. Resize, buffer activation, trims and actual user-input events update the same native SelectionService. Trims avoid borrowing the buffer while its mutation is dispatching.

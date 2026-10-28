@@ -59,7 +59,7 @@ enum LookupSource {
 /// Once exhausted it remains done, like a JavaScript generator.
 pub struct DecorationCellIterator {
     source: LookupSource,
-    line: i64,
+    line: MarkerLine,
     initialized: bool,
     finished: bool,
     bucket: Option<Bucket>,
@@ -71,7 +71,7 @@ impl DecorationCellIterator {
     pub(super) fn new(
         cache: DecorationLineCache,
         x: f64,
-        line: i64,
+        line: MarkerLine,
         layer: Option<DecorationLayer>,
     ) -> Self {
         Self {
@@ -98,8 +98,8 @@ impl Iterator for DecorationCellIterator {
         }
         if !self.initialized {
             self.bucket = match &self.source {
-                LookupSource::Cache(cache) => cache.bucket(self.line as f64),
-                LookupSource::Service(service) => service.line_cache().bucket(self.line as f64),
+                LookupSource::Cache(cache) => cache.bucket(&self.line),
+                LookupSource::Service(service) => service.line_cache().bucket(&self.line),
             };
             self.initialized = true;
         }

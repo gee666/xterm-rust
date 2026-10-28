@@ -72,9 +72,9 @@ fn live_raw_fields_and_mutable_owner_slots_match_source_after_reentry() {
         let transient = transient.as_ref().unwrap();
         out.borrow_mut().push(format!(
             "markers:{},{},{},{}",
-            transient.line(),
+            transient.line_number(),
             u8::from(transient.is_disposed()),
-            current.line(),
+            current.line_number(),
             u8::from(current.is_disposed())
         ));
         assert!(transient.is_disposed());
@@ -135,7 +135,7 @@ fn live_raw_fields_and_mutable_owner_slots_match_source_after_reentry() {
         save("retry");
         out.borrow_mut().push(format!(
             "late:{},{}",
-            late.line(),
+            late.line_number(),
             u8::from(late.is_disposed())
         ));
         assert!(!late.is_disposed());

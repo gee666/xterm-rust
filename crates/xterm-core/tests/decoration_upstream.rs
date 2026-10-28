@@ -105,7 +105,9 @@ fn should_keep_lookups_correct_after_buffer_trim() {
     let line = buffer.lines.len() as i64 - 1;
     let decoration = register(&mut buffer, &service, line, None, Some(10.0), None);
     buffer.lines.on_trim_emitter.fire(&1).unwrap();
-    assert_eq!(hits(&service, 0.0, decoration.marker().line()).len(), 1);
+    let line = decoration.marker().line_number();
+    assert_eq!(line.fract(), 0.0);
+    assert_eq!(hits(&service, 0.0, line as i64).len(), 1);
 }
 #[test]
 fn should_remove_decoration_when_marker_trimmed_off_buffer() {
@@ -126,9 +128,11 @@ fn should_keep_multiline_index_after_actual_line_insert() {
     buffer.lines.splice(5, 0, &[blank]).unwrap();
     service.line_cache().flush_pending().unwrap();
     let mut found = Vec::new();
-    for line in decoration.marker().line()..decoration.marker().line() + 3 {
+    let start = decoration.marker().line_number();
+    assert_eq!(start.fract(), 0.0);
+    for line in start as i64..start as i64 + 3 {
         found.extend(hits(&service, 0.0, line));
     }
     assert!(found.iter().any(|d| d.ptr_eq(&decoration)));
-    assert!(hits(&service, 0.0, decoration.marker().line() + 3).is_empty());
+    assert!(hits(&service, 0.0, start as i64 + 3).is_empty());
 }

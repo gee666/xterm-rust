@@ -103,7 +103,7 @@ impl Harness {
         }
         self.markers
             .iter()
-            .map(|m| format!("{},{}", m.line(), u8::from(m.is_disposed())))
+            .map(|m| format!("{},{}", m.line_number(), u8::from(m.is_disposed())))
             .collect::<Vec<_>>()
             .join("|")
     }

@@ -132,15 +132,15 @@ fn marker_clones_share_identity_line_and_state() {
     assert!(first.ptr_eq(&clone));
     assert!(!first.ptr_eq(&second));
     clone.set_line(i64::from(u32::MAX));
-    assert_eq!(first.line(), i64::from(u32::MAX));
+    assert_eq!(first.line_number(), f64::from(u32::MAX));
     clone.set_line(13);
-    assert_eq!(first.line(), 13);
+    assert_eq!(first.line_number(), 13.0);
     first.dispose().unwrap();
     assert!(clone.is_disposed());
-    assert_eq!(clone.line(), -1);
+    assert_eq!(clone.line_number(), -1.0);
     clone.set_line(19);
     clone.dispose().unwrap();
-    assert_eq!(first.line(), 19);
+    assert_eq!(first.line_number(), 19.0);
 }
 
 #[test]
@@ -151,9 +151,11 @@ fn marker_trace_matches_javascript() {
     let log_event = Rc::clone(&log);
     marker.on_dispose().subscribe(move |_| {
         let marker = weak.upgrade().unwrap();
-        log_event
-            .borrow_mut()
-            .push(format!("event:{}:{}", marker.is_disposed(), marker.line()));
+        log_event.borrow_mut().push(format!(
+            "event:{}:{}",
+            marker.is_disposed(),
+            marker.line_number()
+        ));
         marker.dispose().unwrap();
         let log_late = Rc::clone(&log_event);
         marker.register(to_disposable(move || {
@@ -221,7 +223,7 @@ fn marker_listener_failure_stops_cleanup_and_does_not_retry() {
     marker.register(to_disposable(move || reached_resource.set(true)));
     assert_eq!(marker.dispose(), Err(EmitError::ListenerArrayCleared));
     assert!(marker.is_disposed());
-    assert_eq!(marker.line(), -1);
+    assert_eq!(marker.line_number(), -1.0);
     assert!(!reached.get());
     marker.dispose().unwrap();
     assert!(!reached.get());
@@ -245,7 +247,7 @@ fn marker_propagates_original_callback_error_identity() {
         "callback sentinel"
     );
     assert!(marker.is_disposed());
-    assert_eq!(marker.line(), -1);
+    assert_eq!(marker.line_number(), -1.0);
 }
 
 #[test]
@@ -268,7 +270,7 @@ fn marker_listener_and_resource_panics_preserve_invalidation_without_borrow_pani
         marker.register(to_disposable(move || cleanup_reached.set(true)));
         assert!(catch_unwind(AssertUnwindSafe(|| marker.dispose())).is_err());
         assert!(marker.is_disposed());
-        assert_eq!(marker.line(), -1);
+        assert_eq!(marker.line_number(), -1.0);
         assert!(!reached.get());
         marker.dispose().unwrap();
         assert!(!reached.get());

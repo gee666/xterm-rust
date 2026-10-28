@@ -83,7 +83,7 @@ fn disposal_event_order_and_marker_invalidation() {
     let weak_service = service.clone();
     service.on_decoration_removed().subscribe(move |d| {
         assert!(!d.is_disposed());
-        assert_eq!(d.marker().line(), -1);
+        assert_eq!(d.marker().line_number(), -1.0);
         assert_eq!(
             weak_service.get_decorations_at_cell(0.0, 3, None).count(),
             0

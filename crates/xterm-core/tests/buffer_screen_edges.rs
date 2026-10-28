@@ -194,9 +194,15 @@ fn deletion_disposes_half_open_range_and_shifts_only_later_markers() {
     assert_eq!(
         markers
             .iter()
-            .map(|m| (m.line(), m.is_disposed()))
+            .map(|m| (m.line_number(), m.is_disposed()))
             .collect::<Vec<_>>(),
-        [(0, false), (-1, true), (-1, true), (1, false), (2, false)]
+        [
+            (0.0, false),
+            (-1.0, true),
+            (-1.0, true),
+            (1.0, false),
+            (2.0, false)
+        ]
     );
     assert_eq!(buffer.markers.borrow().len(), 3);
 }

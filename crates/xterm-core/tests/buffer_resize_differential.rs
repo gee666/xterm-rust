@@ -75,9 +75,15 @@ fn original_and_seeded_resizes_preserve_state_cells_identity_markers_and_events(
         snapshot::assert_snapshot(&buffer, &identities, &case.after, &label);
         let actual_markers: Vec<_> = markers
             .iter()
-            .map(|m| (m.line(), m.is_disposed()))
+            .map(|m| (m.line_number(), m.is_disposed()))
             .collect();
-        assert_eq!(actual_markers, case.after.markers, "{label}: markers");
+        let expected_markers: Vec<_> = case
+            .after
+            .markers
+            .iter()
+            .map(|&(line, disposed)| (line as f64, disposed))
+            .collect();
+        assert_eq!(actual_markers, expected_markers, "{label}: markers");
         assert_eq!(
             buffer.markers.borrow().len(),
             case.after

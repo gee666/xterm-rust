@@ -237,7 +237,14 @@ fn real_marker_insert_delete_and_clear_one_line_preserve_identity_and_events() {
             amount: 2,
         })
         .unwrap();
-    assert_eq!((first.line(), middle.line(), last.line()), (0, 4, 5));
+    assert_eq!(
+        (
+            first.line_number(),
+            middle.line_number(),
+            last.line_number()
+        ),
+        (0.0, 4.0, 5.0)
+    );
     buffer
         .lines
         .on_delete_emitter
@@ -247,8 +254,8 @@ fn real_marker_insert_delete_and_clear_one_line_preserve_identity_and_events() {
         })
         .unwrap();
     assert!(middle.is_disposed());
-    assert_eq!(middle.line(), -1);
-    assert_eq!(last.line(), 4);
+    assert_eq!(middle.line_number(), -1.0);
+    assert_eq!(last.line_number(), 4.0);
     buffer.clear_markers(0).unwrap();
     assert!(first.is_disposed());
     assert_eq!(buffer.markers.borrow().len(), 1);

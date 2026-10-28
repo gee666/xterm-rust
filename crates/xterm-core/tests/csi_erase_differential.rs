@@ -64,9 +64,10 @@ fn erase_protection_markers_and_both_buffers_match_full_source_traces() {
                 let target = Rc::clone(&log);
                 let weak = marker.downgrade();
                 marker.on_dispose().subscribe(move |_| {
-                    target
-                        .borrow_mut()
-                        .push(format!("M{label}:{}", weak.upgrade().unwrap().line()));
+                    target.borrow_mut().push(format!(
+                        "M{label}:{}",
+                        weak.upgrade().unwrap().line_number()
+                    ));
                 });
                 markers.push(marker);
             }
@@ -92,7 +93,7 @@ fn erase_protection_markers_and_both_buffers_match_full_source_traces() {
         let actual = markers
             .iter()
             .enumerate()
-            .map(|(i, m)| format!("{i}:{}:{}", m.line(), u8::from(m.is_disposed())))
+            .map(|(i, m)| format!("{i}:{}:{}", m.line_number(), u8::from(m.is_disposed())))
             .collect::<Vec<_>>()
             .join(";");
         assert_eq!(actual, columns[5], "markers row{row} trace{trace}");

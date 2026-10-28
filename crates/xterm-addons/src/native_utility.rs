@@ -99,22 +99,17 @@ impl ClipboardTerminal for NativeUtilityTerminal {
 }
 impl AttachTerminal for NativeUtilityTerminal {
     fn write(&self, data: SocketMessage) -> Result<(), AttachError> {
+        let source = data.into_parse_source()?;
         match &self.engine {
             EngineOwner::Core(engine) => {
                 let mut engine = engine.try_borrow_mut().map_err(|_| {
                     AttachError::Adapter("terminal is already parsing a write".into())
                 })?;
-                match data {
-                    SocketMessage::Text(data) => engine.write_utf16(&data),
-                    SocketMessage::Binary(data) => engine.write_bytes(&data),
-                }
-                .map_err(|error| AttachError::Adapter(error.to_string()))
+                engine.write_source(source).map_err(AttachError::host)
             }
-            EngineOwner::Public(terminal) => match data {
-                SocketMessage::Text(data) => terminal.write_utf16(&data),
-                SocketMessage::Binary(data) => terminal.write_bytes(&data),
+            EngineOwner::Public(terminal) => {
+                terminal.write_source(source).map_err(AttachError::host)
             }
-            .map_err(|error| AttachError::Adapter(error.to_string())),
         }
     }
     fn on_data(&self, callback: DataCallback) -> DisposableHandle {

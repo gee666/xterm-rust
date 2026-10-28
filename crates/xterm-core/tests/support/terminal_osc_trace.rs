@@ -96,7 +96,7 @@ impl Runner {
                     &mut out,
                     "{}:{}:{},",
                     marker.id(),
-                    marker.line(),
+                    marker.line_number(),
                     u8::from(marker.is_disposed())
                 )?;
             }

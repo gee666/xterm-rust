@@ -1,12 +1,15 @@
 // Copyright (c) 2022 The xterm.js authors. All rights reserved. MIT license.
 use super::*;
-use crate::circular_list::{CircularList, ListChange};
+use crate::{
+    buffer::marker_line::MarkerLineKey,
+    circular_list::{CircularList, ListChange},
+};
 #[path = "decoration_iterator.rs"]
 mod iterator;
 pub use iterator::{DecorationBucket, DecorationBucketIterator, DecorationCellIterator};
 type Bucket = Rc<RefCell<Vec<Decoration>>>;
-// JS Map keys and line arithmetic retain Number precision, not i64 arithmetic.
-type Buckets = Vec<(f64, Bucket)>;
+// Ordered Map entries preserve String/Number identity and SameValueZero keys.
+type Buckets = Vec<(MarkerLineKey, Bucket)>;
 #[derive(Clone, Copy)]
 enum Change {
     Insert(ListChange),
@@ -77,9 +80,9 @@ impl DecorationLineCache {
         self.state.sync_requested.dispose();
     }
     pub fn add(&self, decoration: Decoration) -> Result<(), NonAdvancingDecorationSpan> {
-        let start = decoration.marker().line() as f64;
-        if start >= 0.0 {
-            span::validate(start, decoration.height())?;
+        let start = decoration.marker().line_value();
+        if !start.rel_lt(&MarkerLine::number(0.0)) {
+            span::validate(&start, decoration.height())?;
         }
         if !self
             .state
@@ -93,39 +96,40 @@ impl DecorationLineCache {
         self.add_to_buckets(&decoration)
     }
     pub fn remove(&self, decoration: &Decoration) -> Result<(), NonAdvancingDecorationSpan> {
-        span::validate(decoration.state.indexed_start.get(), decoration.height())?;
+        span::validate(&decoration.indexed_start(), decoration.height())?;
         self.state
             .decorations
             .borrow_mut()
             .retain(|d| !d.ptr_eq(decoration));
         self.remove_from_buckets(decoration)
     }
-    pub fn decorations_on_line(&self, line: i64) -> Option<DecorationBucket> {
-        self.bucket(line as f64).map(DecorationBucket::new)
+    pub fn decorations_on_line(&self, line: impl Into<MarkerLine>) -> Option<DecorationBucket> {
+        self.bucket(&line.into()).map(DecorationBucket::new)
     }
-    fn bucket(&self, line: f64) -> Option<Bucket> {
+    fn bucket(&self, line: &MarkerLine) -> Option<Bucket> {
+        let key = line.map_key();
         self.state
             .buckets
             .borrow()
             .iter()
-            .find(|(key, _)| same_number(*key, line))
+            .find(|(existing, _)| *existing == key)
             .map(|(_, bucket)| Rc::clone(bucket))
     }
     fn add_to_buckets(&self, decoration: &Decoration) -> Result<(), NonAdvancingDecorationSpan> {
-        let start = decoration.marker().line() as f64;
-        if start < 0.0 {
+        let start = decoration.marker().line_value();
+        if start.rel_lt(&MarkerLine::number(0.0)) {
             return Ok(());
         }
-        decoration.state.indexed_start.set(start);
-        span::for_each_line(start, decoration.height(), |line| {
-            let bucket = match self.bucket(line) {
+        decoration.set_indexed_start(start.clone());
+        span::for_each_line(&start, decoration.height(), |line| {
+            let bucket = match self.bucket(&line) {
                 Some(bucket) => bucket,
                 None => {
                     let bucket = Rc::new(RefCell::new(Vec::new()));
                     self.state
                         .buckets
                         .borrow_mut()
-                        .push((line, Rc::clone(&bucket)));
+                        .push((line.map_key(), Rc::clone(&bucket)));
                     bucket
                 }
             };
@@ -136,24 +140,21 @@ impl DecorationLineCache {
         &self,
         decoration: &Decoration,
     ) -> Result<(), NonAdvancingDecorationSpan> {
-        span::for_each_line(
-            decoration.state.indexed_start.get(),
-            decoration.height(),
-            |line| {
-                if let Some(bucket) = self.bucket(line) {
-                    let position = bucket.borrow().iter().position(|d| d.ptr_eq(decoration));
-                    if let Some(position) = position {
-                        bucket.borrow_mut().remove(position);
-                    }
-                    if bucket.borrow().is_empty() {
-                        self.state
-                            .buckets
-                            .borrow_mut()
-                            .retain(|(key, _)| !same_number(*key, line));
-                    }
+        span::for_each_line(&decoration.indexed_start(), decoration.height(), |line| {
+            if let Some(bucket) = self.bucket(&line) {
+                let position = bucket.borrow().iter().position(|d| d.ptr_eq(decoration));
+                if let Some(position) = position {
+                    bucket.borrow_mut().remove(position);
                 }
-            },
-        )
+                if bucket.borrow().is_empty() {
+                    let key = line.map_key();
+                    self.state
+                        .buckets
+                        .borrow_mut()
+                        .retain(|(existing, _)| *existing != key);
+                }
+            }
+        })
     }
     pub fn attach_to_buffer_lines<T: Clone + 'static>(&self, lines: &CircularList<T>) {
         // MutableDisposable disposes replacement listener stores after disposal.
@@ -210,16 +211,17 @@ impl DecorationLineCache {
         }
         Ok(())
     }
-    fn remap(&self, map: impl Fn(f64) -> Option<f64>) {
+    fn remap(&self, map: impl Fn(MarkerLine) -> Option<MarkerLine>) {
         let mut next: Buckets = Vec::new();
-        for (line, bucket) in self.state.buckets.borrow().iter() {
-            if let Some(line) = map(*line) {
-                if let Some((_, existing)) = next.iter().find(|(key, _)| same_number(*key, line)) {
+        for (key, bucket) in self.state.buckets.borrow().iter() {
+            if let Some(line) = map(key.to_line()) {
+                let key = line.map_key();
+                if let Some((_, existing)) = next.iter().find(|(existing, _)| *existing == key) {
                     existing
                         .borrow_mut()
                         .extend(bucket.borrow().iter().cloned());
                 } else {
-                    next.push((line, Rc::new(RefCell::new(bucket.borrow().clone()))));
+                    next.push((key, Rc::new(RefCell::new(bucket.borrow().clone()))));
                 }
             }
         }
@@ -231,37 +233,44 @@ impl DecorationLineCache {
         }
         let amount = amount as f64;
         self.remap(|line| {
-            let next = line - amount;
-            (next >= 0.0).then_some(next)
+            let next = line.subtract_number(amount);
+            // Source only excludes negative values. NaN survives as a Map key.
+            (!next.rel_lt(&MarkerLine::number(0.0))).then_some(next)
         });
         for d in self.state.decorations.borrow().iter() {
             if !d.marker().is_disposed() {
-                d.state
-                    .indexed_start
-                    .set(d.state.indexed_start.get() - amount);
+                d.set_indexed_start(d.indexed_start().subtract_number(amount));
             }
         }
     }
     fn insert(&self, event: ListChange) -> Result<(), EmitError> {
-        let index = event.index as f64;
-        let amount = event.amount as f64;
+        let index = MarkerLine::from(event.index);
         let decorations = self.state.decorations.borrow().clone();
         let crossers: Vec<_> = decorations
             .iter()
             .filter(|d| {
+                let start = d.indexed_start();
                 !d.marker().is_disposed()
-                    && d.state.indexed_start.get() < index
-                    && d.state.indexed_start.get() + d.height() as f64 > index
+                    && start.rel_lt(&index)
+                    && span::end(&start, d.height()).rel_gt(&index)
             })
             .cloned()
             .collect();
         for d in &crossers {
             self.remove_from_buckets(d).map_err(EmitError::callback)?;
         }
-        self.remap(|line| Some(if line >= index { line + amount } else { line }));
+        self.remap(|line| {
+            Some(if line.rel_ge(&index) {
+                // Map-key addition preserves String concatenation, unlike trim.
+                line.add_number(event.amount as f64)
+                    .expect("primitive key addition cannot fail")
+            } else {
+                line
+            })
+        });
         for d in decorations {
-            if !d.marker().is_disposed() && d.state.indexed_start.get() >= index {
-                d.state.indexed_start.set(d.marker().line() as f64);
+            if !d.marker().is_disposed() && d.indexed_start().rel_ge(&index) {
+                d.set_indexed_start(d.marker().line_value());
             }
         }
         for d in crossers {
@@ -270,29 +279,38 @@ impl DecorationLineCache {
         Ok(())
     }
     fn delete(&self, event: ListChange) -> Result<(), EmitError> {
-        let index = event.index as f64;
+        let index = MarkerLine::from(event.index);
         let amount = event.amount as f64;
-        let end = index + amount;
+        let end = MarkerLine::number(event.index as f64 + amount);
         self.remap(|line| {
-            if line >= index && line < end {
+            if line.rel_ge(&index) && line.rel_lt(&end) {
                 None
             } else {
-                Some(if line >= end { line - amount } else { line })
+                Some(if line.rel_ge(&end) {
+                    line.subtract_number(amount)
+                } else {
+                    line
+                })
             }
         });
         let decorations = self.state.decorations.borrow().clone();
+        let mut reindex = Vec::new();
         for d in decorations {
             if d.marker().is_disposed() {
                 continue;
             }
-            let start = d.state.indexed_start.get();
-            if start >= end {
-                d.state.indexed_start.set(d.marker().line() as f64);
-            } else if start < index && start + d.height() as f64 > end {
-                self.remove_from_buckets(&d).map_err(EmitError::callback)?;
-                if d.marker().line() >= 0 {
-                    self.add_to_buckets(&d).map_err(EmitError::callback)?;
-                }
+            let start = d.indexed_start();
+            if start.rel_ge(&end) {
+                d.set_indexed_start(d.marker().line_value());
+            } else if start.rel_lt(&index) && span::end(&start, d.height()).rel_gt(&end) {
+                reindex.push(d);
+            }
+        }
+        // Collect first, matching source traversal before any re-indexing.
+        for d in reindex {
+            self.remove_from_buckets(&d).map_err(EmitError::callback)?;
+            if d.marker().line_number() >= 0.0 {
+                self.add_to_buckets(&d).map_err(EmitError::callback)?;
             }
         }
         Ok(())
@@ -300,12 +318,9 @@ impl DecorationLineCache {
     pub fn at_cell(
         &self,
         x: f64,
-        line: i64,
+        line: impl Into<MarkerLine>,
         layer: Option<DecorationLayer>,
     ) -> DecorationCellIterator {
-        DecorationCellIterator::new(self.clone(), x, line, layer)
+        DecorationCellIterator::new(self.clone(), x, line.into(), layer)
     }
-}
-fn same_number(a: f64, b: f64) -> bool {
-    a == b || (a.is_nan() && b.is_nan())
 }

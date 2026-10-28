@@ -94,9 +94,9 @@ fn marker_line_adjusts_when_trimmed() {
     let mut buffer = buffer(0);
     buffer.fill_viewport_rows(None).unwrap();
     let marker = buffer.add_marker((buffer.lines.len() - 1) as i64);
-    assert_eq!(marker.line(), (buffer.lines.len() - 1) as i64);
+    assert_eq!(marker.line_number(), (buffer.lines.len() - 1) as f64);
     buffer.lines.on_trim_emitter.fire(&1).unwrap();
-    assert_eq!(marker.line(), (buffer.lines.len() - 2) as i64);
+    assert_eq!(marker.line_number(), (buffer.lines.len() - 2) as f64);
 }
 #[test]
 fn marker_disposes_when_trimmed_out() {

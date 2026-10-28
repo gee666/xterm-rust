@@ -116,12 +116,18 @@ fn active_buffers_and_absolute_cursor_lines_are_live() {
     buffers.buffer().borrow_mut().ybase = 3;
     buffers.buffer().borrow_mut().y = 2;
     let id = links.register_link(data(Some("foo"), "bar")).unwrap();
-    assert_eq!(buffers.buffer().borrow().markers.borrow()[0].line(), 5);
+    assert_eq!(
+        buffers.buffer().borrow().markers.borrow()[0].line_number(),
+        5.0
+    );
     buffers.buffers.activate_alt_buffer(None).unwrap();
     links.add_line_to_link(id, 5).unwrap();
     assert!(buffers.buffer().borrow().markers.borrow().is_empty());
     links.add_line_to_link(id, -1).unwrap();
-    assert_eq!(buffers.buffer().borrow().markers.borrow()[0].line(), -1);
+    assert_eq!(
+        buffers.buffer().borrow().markers.borrow()[0].line_number(),
+        -1.0
+    );
 }
 
 #[test]
@@ -184,7 +190,7 @@ fn marker_cleanup_borrow_failure_retains_original_error_and_partial_state() {
         Some(&OscLinkError::BorrowedData)
     );
     assert!(marker.is_disposed());
-    assert_eq!(marker.line(), -1);
+    assert_eq!(marker.line_number(), -1.0);
     assert!(links.get_link_data(id).is_some());
     drop(borrowed);
     marker.dispose().unwrap();

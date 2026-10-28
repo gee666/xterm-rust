@@ -127,7 +127,7 @@ impl ColorZoneStore {
                 color: overview.color.encode_utf16().collect(),
                 position: overview.position,
             });
-        self.add(decoration.marker().line() as f64, overview.as_ref())
+        self.add(decoration.marker().line_number(), overview.as_ref())
     }
     /// `None` is a decoration without overviewRulerOptions, not a default-color zone.
     pub fn add(

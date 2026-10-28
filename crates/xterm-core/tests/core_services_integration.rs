@@ -3,7 +3,7 @@ use std::cell::{Cell, RefCell};
 use std::error::Error as _;
 use std::rc::Rc;
 use xterm_core::core_service::{CoreError, KittyKeyboardState};
-use xterm_core::log_service::{CustomLogger, LogError, LogLevel, LogRecord, LogSink};
+use xterm_core::log_service::{CustomLogger, LogError, LogLevel, LogRecord, LogSink, LogValue};
 use xterm_core::options::{OptionValue, OptionsService};
 use xterm_core::terminal::{CoreTerminal, TerminalError, TerminalEvent};
 
@@ -184,8 +184,24 @@ fn parser_replies_and_logger_callbacks_can_observe_engine_without_borrow_panics(
         .unwrap();
     terminal.write("ab\x1b[6n").unwrap();
     assert_eq!(observed.borrow()[0], (text("\x1b[1;3R"), 2));
-    assert!(!records.borrow().is_empty());
-    assert!(records.borrow().iter().all(|(_, x)| *x == 2));
+    {
+        let records = records.borrow();
+        assert_eq!(records.len(), 4);
+        assert_eq!(
+            records.iter().map(|(_, x)| *x).collect::<Vec<_>>(),
+            [0, 0, 2, 2]
+        );
+        assert_eq!(records[0].0.message, text("parsing data  \"ab\x1b[6n\""));
+        assert_eq!(
+            records[1].0.parameters,
+            [LogValue::CodeUnits(text("ab\x1b[6n"))]
+        );
+        assert_eq!(records[2].0.message, text("sending data \"\x1b[1;3R\""));
+        assert_eq!(
+            records[3].0.parameters,
+            [LogValue::CodeUnits(text("\x1b[1;3R"))]
+        );
+    }
     assert!(terminal.drain_logs().is_empty());
     options.set("logLevel", "off".into()).unwrap();
     let count = records.borrow().len();

@@ -138,7 +138,7 @@ fn root_buffer_disposal_is_idempotent_even_after_late_marker_registration() {
     let marker = buffer.borrow_mut().add_marker(0);
     buffer.borrow_mut().dispose().unwrap();
     assert!(!marker.is_disposed());
-    assert_eq!(marker.line(), 0);
+    assert_eq!(marker.line_number(), 0.0);
     assert_eq!(buffer.borrow().markers.borrow().len(), 1);
 }
 

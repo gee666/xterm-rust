@@ -1,14 +1,17 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
 use super::{Buffer, BufferError};
-use crate::{buffer::marker::Marker, event::EmitError};
+use crate::{
+    buffer::{marker::Marker, marker_line::MarkerLine},
+    event::EmitError,
+};
 use std::rc::Rc;
-
-fn marker_overflow() -> EmitError {
-    EmitError::callback(BufferError::SizeOverflow)
-}
 
 impl Buffer {
     pub fn clear_markers(&mut self, y: i64) -> Result<(), BufferError> {
+        self.clear_markers_value(&MarkerLine::from(y))
+    }
+
+    pub fn clear_markers_value(&mut self, row: &MarkerLine) -> Result<(), BufferError> {
         self.is_clearing.set(true);
         let mut index = 0;
         loop {
@@ -16,7 +19,7 @@ impl Buffer {
             let Some(marker) = marker else {
                 break;
             };
-            if marker.line() == y {
+            if marker.line_value().strict_eq(row) {
                 marker.dispose()?;
                 if index < self.markers.borrow().len() {
                     self.markers.borrow_mut().remove(index);
@@ -32,7 +35,12 @@ impl Buffer {
         super::shared::clear_markers(&self.markers, &self.is_clearing)
     }
     pub fn add_marker(&mut self, y: i64) -> Marker {
-        let marker = Marker::new(y);
+        self.add_marker_value(MarkerLine::from(y))
+    }
+
+    /// The caller evaluates host coercion before borrowing the captured buffer.
+    pub fn add_marker_value(&mut self, line: MarkerLine) -> Marker {
+        let marker = Marker::new(line);
         self.markers.borrow_mut().push(marker.clone());
         let weak = marker.downgrade();
         marker.register(
@@ -41,14 +49,8 @@ impl Buffer {
                 .event()
                 .try_subscribe(move |amount| {
                     if let Some(marker) = weak.upgrade() {
-                        let amount = i64::try_from(*amount).map_err(|_| marker_overflow())?;
-                        marker.set_line(
-                            marker
-                                .line()
-                                .checked_sub(amount)
-                                .ok_or_else(marker_overflow)?,
-                        );
-                        if marker.line() < 0 {
+                        marker.subtract_from_line(*amount as f64);
+                        if marker.line_number() < 0.0 {
                             marker.dispose()?;
                         }
                     }
@@ -62,16 +64,10 @@ impl Buffer {
                 .event()
                 .try_subscribe(move |event| {
                     if let Some(marker) = weak.upgrade() {
-                        let index = i64::try_from(event.index).map_err(|_| marker_overflow())?;
-                        if marker.line() >= index {
-                            let amount =
-                                i64::try_from(event.amount).map_err(|_| marker_overflow())?;
-                            marker.set_line(
-                                marker
-                                    .line()
-                                    .checked_add(amount)
-                                    .ok_or_else(marker_overflow)?,
-                            );
+                        if marker.line_number() >= event.index as f64 {
+                            marker
+                                .add_to_line(event.amount as f64)
+                                .map_err(EmitError::callback)?;
                         }
                     }
                     Ok(())
@@ -84,19 +80,13 @@ impl Buffer {
                 .event()
                 .try_subscribe(move |event| {
                     if let Some(marker) = weak.upgrade() {
-                        let index = i64::try_from(event.index).map_err(|_| marker_overflow())?;
-                        let amount = i64::try_from(event.amount).map_err(|_| marker_overflow())?;
-                        let end = index.checked_add(amount).ok_or_else(marker_overflow)?;
-                        if marker.line() >= index && marker.line() < end {
+                        let index = event.index as f64;
+                        let amount = event.amount as f64;
+                        if marker.line_number() >= index && marker.line_number() < index + amount {
                             marker.dispose()?;
                         }
-                        if marker.line() > index {
-                            marker.set_line(
-                                marker
-                                    .line()
-                                    .checked_sub(amount)
-                                    .ok_or_else(marker_overflow)?,
-                            );
+                        if marker.line_number() > index {
+                            marker.subtract_from_line(amount);
                         }
                     }
                     Ok(())

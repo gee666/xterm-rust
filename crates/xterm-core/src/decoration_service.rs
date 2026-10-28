@@ -83,9 +83,9 @@ impl DecorationService {
             return Ok(None);
         }
         let decoration = Decoration::new(options);
-        let start = decoration.marker().line() as f64;
-        if start >= 0.0 {
-            span::validate(start, decoration.height())?;
+        let start = decoration.marker().line_value();
+        if !start.rel_lt(&MarkerLine::number(0.0)) {
+            span::validate(&start, decoration.height())?;
         }
         let weak = Rc::downgrade(&decoration.state);
         *decoration.state.marker_listener.borrow_mut() =
@@ -162,7 +162,7 @@ impl DecorationService {
     pub fn get_decorations_at_cell(
         &self,
         x: f64,
-        line: i64,
+        line: impl Into<MarkerLine>,
         layer: Option<DecorationLayer>,
     ) -> DecorationCellIterator {
         self.state
@@ -173,7 +173,7 @@ impl DecorationService {
     pub fn for_each_decoration_at_cell(
         &self,
         x: f64,
-        line: i64,
+        line: impl Into<MarkerLine>,
         layer: Option<DecorationLayer>,
         mut callback: impl FnMut(Decoration),
     ) {

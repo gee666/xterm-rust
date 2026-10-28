@@ -89,15 +89,27 @@ impl<'a> ParserApi<'a> {
     pub fn register_csi_handler(
         &mut self,
         id: FunctionIdentifier<'_>,
+        callback: impl FnMut(Vec<ParamValue>) -> HandlerResult + 'static,
+    ) -> Result<DisposableHandle, RegistrarError> {
+        let guarded = id.final_byte == "t"
+            && id.prefix.is_none_or(str::is_empty)
+            && id.intermediates.is_none_or(str::is_empty);
+        self.register_csi_packed(id.packed(false)?, guarded, callback)
+    }
+    /// JS accessors can change between the window-policy classification and
+    /// identifier packing. The binding supplies the original classification;
+    /// reconstructing it from the final packed byte would change source policy.
+    pub fn register_csi_packed(
+        &mut self,
+        ident: u32,
+        source_guarded: bool,
         mut callback: impl FnMut(Vec<ParamValue>) -> HandlerResult + 'static,
     ) -> Result<DisposableHandle, RegistrarError> {
-        let guard = (id.final_byte == "t"
-            && id.prefix.is_none_or(str::is_empty)
-            && id.intermediates.is_none_or(str::is_empty))
-        .then(|| self.registrations.window_option_guard.clone())
-        .flatten();
-        self.registrations.csi.register(
-            id,
+        let guard = source_guarded
+            .then(|| self.registrations.window_option_guard.clone())
+            .flatten();
+        self.registrations.csi.register_packed(
+            ident,
             Rc::new(RefCell::new(move |params: &Params| {
                 if let Some(guard) = &guard {
                     match guard(params) {
@@ -120,10 +132,18 @@ impl<'a> ParserApi<'a> {
     pub fn register_dcs_handler(
         &mut self,
         id: FunctionIdentifier<'_>,
+        callback: impl FnMut(Vec<u16>, Vec<ParamValue>) -> HandlerResult + 'static,
+    ) -> Result<DisposableHandle, RegistrarError> {
+        self.register_dcs_packed(id.packed(false)?, callback)
+    }
+    /// Register a source-packed identifier without rereading JS accessors.
+    pub fn register_dcs_packed(
+        &mut self,
+        ident: u32,
         mut callback: impl FnMut(Vec<u16>, Vec<ParamValue>) -> HandlerResult + 'static,
     ) -> Result<DisposableHandle, RegistrarError> {
         // JavaScript packs DCS identifiers into signed int32 bits.
-        let ident = i32::from_ne_bytes(id.packed(false)?.to_ne_bytes());
+        let ident = i32::from_ne_bytes(ident.to_ne_bytes());
         self.registrations
             .dcs
             .register_handler(
@@ -144,11 +164,19 @@ impl<'a> ParserApi<'a> {
     pub fn register_esc_handler(
         &mut self,
         id: FunctionIdentifier<'_>,
+        callback: impl FnMut() -> HandlerResult + 'static,
+    ) -> Result<DisposableHandle, RegistrarError> {
+        self.register_esc_packed(id.packed(true)?, callback)
+    }
+    /// Register a source-packed identifier without rereading JS accessors.
+    pub fn register_esc_packed(
+        &mut self,
+        ident: u32,
         mut callback: impl FnMut() -> HandlerResult + 'static,
     ) -> Result<DisposableHandle, RegistrarError> {
         self.registrations
             .esc
-            .register(id, Rc::new(RefCell::new(move |_: &Params| callback())))
+            .register_packed(ident, Rc::new(RefCell::new(move |_: &Params| callback())))
     }
     pub fn add_esc_handler(
         &mut self,
@@ -180,12 +208,18 @@ impl<'a> ParserApi<'a> {
         callback: impl FnMut(Vec<u16>) -> HandlerResult + 'static,
     ) -> Result<DisposableHandle, RegistrarError> {
         id.prefix = None;
+        self.register_apc_packed(id.packed(true)?, callback)
+    }
+    /// The JS binding performs the source APC prefix assignment before packing;
+    /// a custom setter can leave a prefix present, so do not clear it again here.
+    pub fn register_apc_packed(
+        &mut self,
+        ident: u32,
+        callback: impl FnMut(Vec<u16>) -> HandlerResult + 'static,
+    ) -> Result<DisposableHandle, RegistrarError> {
         self.registrations
             .apc
-            .register_handler(
-                id.packed(true)?,
-                Rc::new(RefCell::new(ApcHandler::new(callback))),
-            )
+            .register_handler(ident, Rc::new(RefCell::new(ApcHandler::new(callback))))
             .ok_or(RegistrarError::ParserDropped)
     }
 }

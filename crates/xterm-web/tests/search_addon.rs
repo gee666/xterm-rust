@@ -20,6 +20,8 @@ mod clocks;
 mod decorations;
 #[path = "search_cases/ranges.rs"]
 mod ranges;
+#[path = "search_cases/raw_marker.rs"]
+mod raw_marker;
 #[path = "search_cases/tracker.rs"]
 mod tracker;
 

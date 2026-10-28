@@ -21,7 +21,7 @@ impl BufferDecorationRenderer {
             layer == Some(DecorationLayer::Top),
         )?;
         let (ydisp, _, cols) = self.viewport()?;
-        let line = decoration.marker().line() as f64 - ydisp;
+        let line = decoration.marker().line_number() - ydisp;
         self.update_size(decoration, &element, line)?;
         let x = decoration.options().borrow().x.unwrap_or(0.0);
         if truthy(x) && x > cols as f64 {
@@ -32,7 +32,7 @@ impl BufferDecorationRenderer {
     }
     pub(super) fn refresh_style(self: &Rc<Self>, decoration: &Decoration) -> Result<(), JsValue> {
         let (ydisp, rows, _) = self.viewport()?;
-        let line = decoration.marker().line() as f64 - ydisp;
+        let line = decoration.marker().line_number() - ydisp;
         if line < 0.0 || line >= rows as f64 {
             if let Some(handle) = decoration.element() {
                 html(&handle)?.style().set_property("display", "none")?;

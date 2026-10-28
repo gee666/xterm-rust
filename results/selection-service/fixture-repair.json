@@ -1,0 +1,47 @@
+{
+  "task": 273,
+  "platform": "Windows native",
+  "base": "561b705",
+  "toolchain": {
+    "rustc": "1.85.1",
+    "cargo": "1.85.1",
+    "node": "24.15.0"
+  },
+  "cause": "Historical cache fixture contained literal undefined from an unchecked truncated read. Case4297 failed schema before Rust behavior.",
+  "producer": "Batu24c30bb, reused only script historical regeneration hunks; regenerated artifacts match producer fixture byte-for-byte.",
+  "commands": [
+    {
+      "command": "cargo test -p xterm-web --test selection_service_differential",
+      "phase": "before",
+      "result": "FAIL case4297 schema left1 right15"
+    },
+    {
+      "command": "NODE_PATH=P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/node_modules node scripts/selection-service-oracle.mjs --legacy-cache-case",
+      "result": "PASS source26 assertions; schema15, known input/model validated; fixture regenerated",
+      "seed": "0x5e1ec710",
+      "operationKinds": 5,
+      "sourceTraceIndex": 269
+    },
+    {
+      "command": "NODE_PATH=P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/node_modules node scripts/selection-service-oracle.mjs",
+      "result": "PASS original26 assertions and existing4297-case fixture,201 upstream traces plus4096 seeded operations"
+    },
+    {
+      "command": "cargo test -p xterm-web --test selection_model --test selection_service --test selection_service_differential",
+      "result": "PASS31 functions, including4298 replay cases"
+    },
+    {
+      "command": "cargo test --release -p xterm-web --test selection_model --test selection_service --test selection_service_differential",
+      "result": "PASS31 functions, including4298 replay cases"
+    },
+    {
+      "command": "cargo clippy -p xterm-web --test selection_model --test selection_service --test selection_service_differential --example selection_oracle -- -D warnings",
+      "result": "FAIL unrelated existing theme/color_set.rs63 format_collect, no lint suppression added"
+    }
+  ],
+  "limits": [
+    "No native implementation or source assertion changed.",
+    "No browser/WASM or full workspace gate pass claimed.",
+    "Full xterm.js equivalence remains NOT PROVEN."
+  ]
+}
