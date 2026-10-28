@@ -58,7 +58,8 @@ impl BrowserDom {
         let helpers = div(&document, "xterm-helpers")?;
         let textarea: HtmlTextAreaElement = document.create_element("textarea")?.unchecked_into();
         textarea.set_class_name("xterm-helper-textarea");
-        let set_attribute: js_sys::Function = js_sys::Reflect::get(&textarea, &"setAttribute".into())?.dyn_into()?;
+        let set_attribute: js_sys::Function =
+            js_sys::Reflect::get(&textarea, &"setAttribute".into())?.dyn_into()?;
         set_attribute.call2(&textarea, &"aria-label".into(), &options.prompt_label)?;
         if !options.is_chrome_os {
             textarea.set_attribute("aria-multiline", "false")?;

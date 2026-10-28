@@ -1,8 +1,14 @@
 use super::browser_services::BrowserServices;
-use crate::{js_error::to_js_error, theme::{ColorRef, ColorSet, ColorSlot}};
+use crate::{
+    js_error::to_js_error,
+    theme::{ColorRef, ColorSet, ColorSlot},
+};
 use wasm_bindgen::JsValue;
-use xterm_core::{color::{channels, value, rgb}, input::xparse_color::to_rgb_string,
-    terminal::{ColorIndex, ColorRequest, WindowReport}};
+use xterm_core::{
+    color::{channels, rgb, value},
+    input::xparse_color::to_rgb_string,
+    terminal::{ColorIndex, ColorRequest, WindowReport},
+};
 
 fn slot(index: ColorIndex) -> ColorSlot {
     match index {
@@ -22,7 +28,9 @@ fn current(colors: &ColorSet, index: ColorIndex) -> &ColorRef {
 }
 impl BrowserServices {
     fn reply(&self, text: &str) -> Result<(), JsValue> {
-        self.native.input(&text.encode_utf16().collect::<Vec<_>>(), false).map_err(|error| to_js_error(&error))
+        self.native
+            .input(&text.encode_utf16().collect::<Vec<_>>(), false)
+            .map_err(|error| to_js_error(&error))
     }
     pub fn color_requests(&self, requests: &[ColorRequest]) -> Result<(), JsValue> {
         for request in requests {
@@ -36,22 +44,34 @@ impl BrowserServices {
                         ColorIndex::Background => "11".into(),
                         ColorIndex::Cursor => "12".into(),
                     };
-                    self.reply(&format!("\x1b]{identifier};{}\x1b\\", to_rgb_string(rgb, None)))?;
+                    self.reply(&format!(
+                        "\x1b]{identifier};{}\x1b\\",
+                        to_rgb_string(rgb, None)
+                    ))?;
                 }
                 ColorRequest::Set { index, color } => {
                     let [r, g, b] = color;
-                    self.theme.modify_colors(|colors| {
-                        let mut colors = colors.borrow_mut();
-                        let value = channels::to_color(i64::from(r), i64::from(g), i64::from(b), None).into();
-                        match index {
-                            ColorIndex::Indexed(index) => colors.ansi[usize::from(index)] = value,
-                            ColorIndex::Foreground => colors.foreground = value,
-                            ColorIndex::Background => colors.background = value,
-                            ColorIndex::Cursor => colors.cursor = value,
-                        }
-                    }).map_err(|error| to_js_error(&error))?;
+                    self.theme
+                        .modify_colors(|colors| {
+                            let mut colors = colors.borrow_mut();
+                            let value =
+                                channels::to_color(i64::from(r), i64::from(g), i64::from(b), None)
+                                    .into();
+                            match index {
+                                ColorIndex::Indexed(index) => {
+                                    colors.ansi[usize::from(index)] = value
+                                }
+                                ColorIndex::Foreground => colors.foreground = value,
+                                ColorIndex::Background => colors.background = value,
+                                ColorIndex::Cursor => colors.cursor = value,
+                            }
+                        })
+                        .map_err(|error| to_js_error(&error))?;
                 }
-                ColorRequest::Restore { index } => self.theme.restore_color(index.map(slot)).map_err(|error| to_js_error(&error))?,
+                ColorRequest::Restore { index } => self
+                    .theme
+                    .restore_color(index.map(slot))
+                    .map_err(|error| to_js_error(&error))?,
             }
         }
         Ok(())
@@ -62,7 +82,11 @@ impl BrowserServices {
             let colors = colors.borrow();
             let background = rgb::relative_luminance(colors.background.borrow().rgba >> 8);
             let foreground = rgb::relative_luminance(colors.foreground.borrow().rgba >> 8);
-            if background < foreground { 1 } else { 2 }
+            if background < foreground {
+                1
+            } else {
+                2
+            }
         };
         self.reply(&format!("\x1b[?997;{mode}n"))
     }
@@ -77,9 +101,16 @@ impl BrowserServices {
         self.reply(&format!("\x1b[{kind};{height};{width}t"))
     }
     pub fn report_focus(&self) -> Result<(), JsValue> {
-        let enabled = self.native.with_state(|state| state.core.dec_private_modes.borrow().send_focus).map_err(|error| to_js_error(&error))?;
+        let enabled = self
+            .native
+            .with_state(|state| state.core.dec_private_modes.borrow().send_focus)
+            .map_err(|error| to_js_error(&error))?;
         if enabled {
-            self.reply(if self.dom.element.class_list().contains("focus") { "\x1b[I" } else { "\x1b[O" })?;
+            self.reply(if self.dom.element.class_list().contains("focus") {
+                "\x1b[I"
+            } else {
+                "\x1b[O"
+            })?;
         }
         Ok(())
     }

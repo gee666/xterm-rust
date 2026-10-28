@@ -16,14 +16,24 @@ fn attributes(value: &AttributeData) -> Value {
     json!({"fg": value.fg, "bg": value.bg, "ext": value.extended.ext(), "urlId": value.extended.url_id(), "hasPayload": value.extended.payload().is_some()})
 }
 fn charset(value: &Option<Charset>) -> Result<Value, JsValue> {
-    let Some(value) = value else { return Ok(Value::Null); };
-    let builtin = "04567=ACEHKQRYZ".chars().find(|&id| {
-        builtin_charset(id).is_some_and(|other| Charset::ptr_eq(value, &other))
-    });
-    let entries: Vec<_> = value.snapshot().map_err(|error| to_js_error(&error))?.into_iter().map(|(key, value)| {
-        let value = match value { CharsetValue::Text(text) => json!(text), CharsetValue::Undefined => Value::Null };
-        json!([key, value])
-    }).collect();
+    let Some(value) = value else {
+        return Ok(Value::Null);
+    };
+    let builtin = "04567=ACEHKQRYZ"
+        .chars()
+        .find(|&id| builtin_charset(id).is_some_and(|other| Charset::ptr_eq(value, &other)));
+    let entries: Vec<_> = value
+        .snapshot()
+        .map_err(|error| to_js_error(&error))?
+        .into_iter()
+        .map(|(key, value)| {
+            let value = match value {
+                CharsetValue::Text(text) => json!(text),
+                CharsetValue::Undefined => Value::Null,
+            };
+            json!([key, value])
+        })
+        .collect();
     Ok(json!({"builtin": builtin.map(|id| id.to_string()), "entries": entries}))
 }
 fn line(value: &BufferLine) -> Value {
@@ -64,14 +74,36 @@ fn buffer(value: &Rc<RefCell<Buffer>>) -> Result<Value, JsValue> {
 #[wasm_bindgen]
 impl Terminal {
     #[wasm_bindgen(js_name = _acceptanceOnInternalEvent)]
-    pub fn acceptance_on_internal_event(&self, listener: js_sys::Function) -> Result<JsValue, JsValue> {
+    pub fn acceptance_on_internal_event(
+        &self,
+        listener: js_sys::Function,
+    ) -> Result<JsValue, JsValue> {
         use xterm_core::terminal::TerminalEvent as E;
-        let event = self.shared.native.on_event().filter_map(|event| match event {
-            E::Render { .. } | E::SyncScrollBar | E::SendFocus | E::RequestReset | E::InputScroll(_) => Some(event.clone()),
-            E::Bell | E::ColorSchemeQuery | E::Color(_) | E::WindowReport(_) | E::LineFeed | E::CursorMove
-            | E::Scroll(_) | E::Resize { .. } | E::WriteParsed | E::Data(_) | E::Binary(_) | E::TitleChange(_)
-            | E::AccessibilityChar(_) | E::AccessibilityTab(_) => None,
-        });
+        let event = self
+            .shared
+            .native
+            .on_event()
+            .filter_map(|event| match event {
+                E::Render { .. }
+                | E::SyncScrollBar
+                | E::SendFocus
+                | E::RequestReset
+                | E::InputScroll(_) => Some(event.clone()),
+                E::Bell
+                | E::ColorSchemeQuery
+                | E::Color(_)
+                | E::WindowReport(_)
+                | E::LineFeed
+                | E::CursorMove
+                | E::Scroll(_)
+                | E::Resize { .. }
+                | E::WriteParsed
+                | E::Data(_)
+                | E::Binary(_)
+                | E::TitleChange(_)
+                | E::AccessibilityChar(_)
+                | E::AccessibilityTab(_) => None,
+            });
         let register = super::events::callable(event, |event| {
             let value = match event {
                 E::Render { start, end } => json!({"name": "refresh", "start": start, "end": end}),
@@ -89,7 +121,11 @@ impl Terminal {
 
     #[wasm_bindgen(js_name = _acceptanceSnapshot)]
     pub fn acceptance_snapshot(&self) -> Result<JsValue, JsValue> {
-        let disposed = self.shared.native.is_disposed().map_err(|error| to_js_error(&error))?;
+        let disposed = self
+            .shared
+            .native
+            .is_disposed()
+            .map_err(|error| to_js_error(&error))?;
         let snapshot = self.shared.native.with_state(|state| {
             let normal = state.buffers.normal();
             let alternate = state.buffers.alt();
