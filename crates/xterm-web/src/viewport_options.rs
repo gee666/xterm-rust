@@ -2,6 +2,7 @@
 use super::SmoothScrollableElement;
 use crate::{
     js_error::to_js_error,
+    scroll::ScrollbarVisibility,
     terminal::options::{into_js, set_data},
 };
 use js_sys::Object;
@@ -56,7 +57,14 @@ pub(super) fn changes(options: &OptionsService) -> Result<JsValue, JsValue> {
     set_data(
         &object,
         "vertical",
-        &JsValue::from_f64(if show.is_truthy() { 1.0 } else { 2.0 }),
+        &into_js(
+            &if show.is_truthy() {
+                ScrollbarVisibility::Auto
+            } else {
+                ScrollbarVisibility::Hidden
+            }
+            .value(),
+        )?,
     )?;
     set_data(&object, "verticalScrollbarSize", &into_js(&width)?)?;
     set_data(&object, "verticalHasArrows", &into_js(&arrows)?)?;
@@ -66,8 +74,8 @@ pub(super) fn changes(options: &OptionsService) -> Result<JsValue, JsValue> {
 pub(super) fn initial(options: &OptionsService) -> Result<JsValue, JsValue> {
     let object = Object::new();
     for (key, value) in [
-        ("vertical", JsValue::from_f64(1.0)),
-        ("horizontal", JsValue::from_f64(2.0)),
+        ("vertical", into_js(&ScrollbarVisibility::Auto.value())?),
+        ("horizontal", into_js(&ScrollbarVisibility::Hidden.value())?),
         ("useShadows", JsValue::FALSE),
         ("mouseWheelSmoothScroll", JsValue::TRUE),
     ] {
