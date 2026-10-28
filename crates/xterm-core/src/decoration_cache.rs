@@ -5,7 +5,8 @@ use crate::circular_list::{CircularList, ListChange};
 mod iterator;
 pub use iterator::{DecorationBucket, DecorationBucketIterator, DecorationCellIterator};
 type Bucket = Rc<RefCell<Vec<Decoration>>>;
-type Buckets = Vec<(i64, Bucket)>;
+// JS Map keys and line arithmetic retain Number precision, not i64 arithmetic.
+type Buckets = Vec<(f64, Bucket)>;
 #[derive(Clone, Copy)]
 enum Change {
     Insert(ListChange),
@@ -27,7 +28,6 @@ impl Drop for CacheState {
         }
     }
 }
-
 /// Logical-line index. Insert/delete work runs only at the host microtask boundary.
 #[derive(Clone)]
 pub struct DecorationLineCache {
@@ -76,7 +76,11 @@ impl DecorationLineCache {
         self.state.scheduled.set(false);
         self.state.sync_requested.dispose();
     }
-    pub fn add(&self, decoration: Decoration) {
+    pub fn add(&self, decoration: Decoration) -> Result<(), NonAdvancingDecorationSpan> {
+        let start = decoration.marker().line() as f64;
+        if start >= 0.0 {
+            span::validate(start, decoration.height())?;
+        }
         if !self
             .state
             .decorations
@@ -86,36 +90,34 @@ impl DecorationLineCache {
         {
             self.state.decorations.borrow_mut().push(decoration.clone());
         }
-        self.add_to_buckets(&decoration);
+        self.add_to_buckets(&decoration)
     }
-    pub fn remove(&self, decoration: &Decoration) {
+    pub fn remove(&self, decoration: &Decoration) -> Result<(), NonAdvancingDecorationSpan> {
+        span::validate(decoration.state.indexed_start.get(), decoration.height())?;
         self.state
             .decorations
             .borrow_mut()
             .retain(|d| !d.ptr_eq(decoration));
-        self.remove_from_buckets(decoration);
+        self.remove_from_buckets(decoration)
     }
     pub fn decorations_on_line(&self, line: i64) -> Option<DecorationBucket> {
-        self.bucket(line).map(DecorationBucket::new)
+        self.bucket(line as f64).map(DecorationBucket::new)
     }
-    fn bucket(&self, line: i64) -> Option<Bucket> {
+    fn bucket(&self, line: f64) -> Option<Bucket> {
         self.state
             .buckets
             .borrow()
             .iter()
-            .find(|(key, _)| *key == line)
+            .find(|(key, _)| same_number(*key, line))
             .map(|(_, bucket)| Rc::clone(bucket))
     }
-    fn add_to_buckets(&self, decoration: &Decoration) {
-        let start = decoration.marker().line();
-        if start < 0 {
-            return;
+    fn add_to_buckets(&self, decoration: &Decoration) -> Result<(), NonAdvancingDecorationSpan> {
+        let start = decoration.marker().line() as f64;
+        if start < 0.0 {
+            return Ok(());
         }
         decoration.state.indexed_start.set(start);
-        for offset in 0..decoration.height() {
-            let Some(line) = start.checked_add(offset) else {
-                break;
-            };
+        span::for_each_line(start, decoration.height(), |line| {
             let bucket = match self.bucket(line) {
                 Some(bucket) => bucket,
                 None => {
@@ -128,27 +130,30 @@ impl DecorationLineCache {
                 }
             };
             bucket.borrow_mut().push(decoration.clone());
-        }
+        })
     }
-    fn remove_from_buckets(&self, decoration: &Decoration) {
-        let start = decoration.state.indexed_start.get();
-        for offset in 0..decoration.height() {
-            let Some(line) = start.checked_add(offset) else {
-                break;
-            };
-            if let Some(bucket) = self.bucket(line) {
-                let position = bucket.borrow().iter().position(|d| d.ptr_eq(decoration));
-                if let Some(position) = position {
-                    bucket.borrow_mut().remove(position);
+    fn remove_from_buckets(
+        &self,
+        decoration: &Decoration,
+    ) -> Result<(), NonAdvancingDecorationSpan> {
+        span::for_each_line(
+            decoration.state.indexed_start.get(),
+            decoration.height(),
+            |line| {
+                if let Some(bucket) = self.bucket(line) {
+                    let position = bucket.borrow().iter().position(|d| d.ptr_eq(decoration));
+                    if let Some(position) = position {
+                        bucket.borrow_mut().remove(position);
+                    }
+                    if bucket.borrow().is_empty() {
+                        self.state
+                            .buckets
+                            .borrow_mut()
+                            .retain(|(key, _)| !same_number(*key, line));
+                    }
                 }
-                if bucket.borrow().is_empty() {
-                    self.state
-                        .buckets
-                        .borrow_mut()
-                        .retain(|(key, _)| *key != line);
-                }
-            }
-        }
+            },
+        )
     }
     pub fn attach_to_buffer_lines<T: Clone + 'static>(&self, lines: &CircularList<T>) {
         // MutableDisposable disposes replacement listener stores after disposal.
@@ -160,11 +165,10 @@ impl DecorationLineCache {
             listener.dispose();
         }
         let weak = Rc::downgrade(&self.state);
-        let trim = lines.on_trim_emitter.event().try_subscribe(move |amount| {
+        let trim = lines.on_trim_emitter.event().subscribe(move |amount| {
             if let Some(state) = weak.upgrade() {
-                DecorationLineCache { state }.trim(*amount)?;
+                DecorationLineCache { state }.trim(*amount);
             }
-            Ok(())
         });
         let weak = Rc::downgrade(&self.state);
         let insert = lines.on_insert_emitter.event().try_subscribe(move |event| {
@@ -194,8 +198,7 @@ impl DecorationLineCache {
         }
         Ok(())
     }
-    /// Call from queueMicrotask, after all synchronous marker listeners finish.
-    /// A stale scheduled callback after clear/dispose finds no pending work.
+    /// Run after synchronous marker listeners. A stale callback after clear is empty.
     pub fn flush_pending(&self) -> Result<(), EmitError> {
         self.state.scheduled.set(false);
         let pending = self.state.pending.take();
@@ -207,11 +210,11 @@ impl DecorationLineCache {
         }
         Ok(())
     }
-    fn remap(&self, map: impl Fn(i64) -> Option<i64>) {
+    fn remap(&self, map: impl Fn(f64) -> Option<f64>) {
         let mut next: Buckets = Vec::new();
         for (line, bucket) in self.state.buckets.borrow().iter() {
             if let Some(line) = map(*line) {
-                if let Some((_, existing)) = next.iter().find(|(key, _)| *key == line) {
+                if let Some((_, existing)) = next.iter().find(|(key, _)| same_number(*key, line)) {
                     existing
                         .borrow_mut()
                         .extend(bucket.borrow().iter().cloned());
@@ -222,65 +225,59 @@ impl DecorationLineCache {
         }
         *self.state.buckets.borrow_mut() = next;
     }
-    fn trim(&self, amount: usize) -> Result<(), EmitError> {
+    fn trim(&self, amount: usize) {
         if amount == 0 || self.state.buckets.borrow().is_empty() {
-            return Ok(());
+            return;
         }
-        let amount = i64::try_from(amount).map_err(EmitError::callback)?;
-        self.remap(|line| line.checked_sub(amount).filter(|line| *line >= 0));
+        let amount = amount as f64;
+        self.remap(|line| {
+            let next = line - amount;
+            (next >= 0.0).then_some(next)
+        });
         for d in self.state.decorations.borrow().iter() {
             if !d.marker().is_disposed() {
                 d.state
                     .indexed_start
-                    .set(d.state.indexed_start.get().saturating_sub(amount));
+                    .set(d.state.indexed_start.get() - amount);
             }
         }
-        Ok(())
     }
     fn insert(&self, event: ListChange) -> Result<(), EmitError> {
-        let index = i64::try_from(event.index).map_err(EmitError::callback)?;
-        let amount = i64::try_from(event.amount).map_err(EmitError::callback)?;
+        let index = event.index as f64;
+        let amount = event.amount as f64;
         let decorations = self.state.decorations.borrow().clone();
         let crossers: Vec<_> = decorations
             .iter()
             .filter(|d| {
                 !d.marker().is_disposed()
                     && d.state.indexed_start.get() < index
-                    && d.state.indexed_start.get().saturating_add(d.height()) > index
+                    && d.state.indexed_start.get() + d.height() as f64 > index
             })
             .cloned()
             .collect();
         for d in &crossers {
-            self.remove_from_buckets(d);
+            self.remove_from_buckets(d).map_err(EmitError::callback)?;
         }
-        self.remap(|line| {
-            if line >= index {
-                line.checked_add(amount)
-            } else {
-                Some(line)
-            }
-        });
+        self.remap(|line| Some(if line >= index { line + amount } else { line }));
         for d in decorations {
             if !d.marker().is_disposed() && d.state.indexed_start.get() >= index {
-                d.state.indexed_start.set(d.marker().line());
+                d.state.indexed_start.set(d.marker().line() as f64);
             }
         }
         for d in crossers {
-            self.add_to_buckets(&d);
+            self.add_to_buckets(&d).map_err(EmitError::callback)?;
         }
         Ok(())
     }
     fn delete(&self, event: ListChange) -> Result<(), EmitError> {
-        let index = i64::try_from(event.index).map_err(EmitError::callback)?;
-        let amount = i64::try_from(event.amount).map_err(EmitError::callback)?;
-        let end = index.saturating_add(amount);
+        let index = event.index as f64;
+        let amount = event.amount as f64;
+        let end = index + amount;
         self.remap(|line| {
             if line >= index && line < end {
                 None
-            } else if line >= end {
-                line.checked_sub(amount)
             } else {
-                Some(line)
+                Some(if line >= end { line - amount } else { line })
             }
         });
         let decorations = self.state.decorations.borrow().clone();
@@ -290,11 +287,11 @@ impl DecorationLineCache {
             }
             let start = d.state.indexed_start.get();
             if start >= end {
-                d.state.indexed_start.set(d.marker().line());
-            } else if start < index && start.saturating_add(d.height()) > end {
-                self.remove_from_buckets(&d);
+                d.state.indexed_start.set(d.marker().line() as f64);
+            } else if start < index && start + d.height() as f64 > end {
+                self.remove_from_buckets(&d).map_err(EmitError::callback)?;
                 if d.marker().line() >= 0 {
-                    self.add_to_buckets(&d);
+                    self.add_to_buckets(&d).map_err(EmitError::callback)?;
                 }
             }
         }
@@ -308,4 +305,7 @@ impl DecorationLineCache {
     ) -> DecorationCellIterator {
         DecorationCellIterator::new(self.clone(), x, line, layer)
     }
+}
+fn same_number(a: f64, b: f64) -> bool {
+    a == b || (a.is_nan() && b.is_nan())
 }

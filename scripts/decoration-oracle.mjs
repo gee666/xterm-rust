@@ -1,4 +1,5 @@
 // MIT license. Execute unchanged upstream assertions and actual-JS cache traces.
+import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -74,6 +75,21 @@ for (let i = 0; i < 1024; i++) {
   await new Promise(resolve => queueMicrotask(resolve));
   rows.push([op, a, b, snapshot()].join('\t'));
 }
+const precision = [];
+for (const [line, height, expected] of [
+  [2 ** 53, 1, [0, 0, 0, 0]],
+  [2 ** 53 - 1, 2, [0, 1, 0, 0]],
+  [2 ** 53 + 2, 3, [0, 1, 0, 0]],
+  [2 ** 53 + 4, 1, [0, 0, 0, 0]],
+]) {
+  const buffer = new Buffer(true, new OptionsService(), { cols: 80, rows: 24 });
+  const service = new DecorationService(log, { buffer, buffers: { onBufferActivate: () => ({ dispose() {} }) } });
+  const decoration = service.registerDecoration({ marker: buffer.addMarker(line), height });
+  const lookups = [-1, 0, 1, 2].map(offset => [...service.getDecorationsAtCell(0, line + offset)].length);
+  precision.push({ line, height, lookups });
+  assert.deepEqual(lookups, expected);
+  decoration.dispose(); service.dispose();
+}
 const fixture = resolve(root, 'crates/xterm-core/tests/fixtures/decoration.tsv');
 const fixtureText = rows.join('\n') + '\n';
 let fixtureDrift = false;
@@ -86,7 +102,7 @@ const report = { command: 'node scripts/decoration-oracle.mjs', node: process.ve
   scope: 'DecorationService only, original baseline and cache/marker traces. Browser rendering unrun.', overallEquivalence: 'NOT PROVEN',
   hashes, upstream: { discovered: runner.total, executed: runner.stats.tests - runner.stats.pending, passed: runner.stats.passes,
     failed: runner.stats.failures, skipped: runner.stats.pending, unrun: runner.total - runner.stats.tests, outcomes },
-  seed: '0xdec0a710', operations: rows.length, fixtureSha256: digest(readFileSync(fixture)), generatedSha256: digest(fixtureText), fixtureDrift, mode: generate ? 'generate' : 'verify' };
+  seed: '0xdec0a710', operations: rows.length, precision, fixtureSha256: digest(readFileSync(fixture)), generatedSha256: digest(fixtureText), fixtureDrift, mode: generate ? 'generate' : 'verify' };
 writeFileSync(resolve(results, 'oracle.json'), JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify({ upstream: report.upstream, operations: report.operations }, null, 2));
 if (report.upstream.failed || report.upstream.skipped || report.upstream.unrun || fixtureDrift) process.exitCode = 1;

@@ -83,6 +83,10 @@ impl DecorationService {
             return Ok(None);
         }
         let decoration = Decoration::new(options);
+        let start = decoration.marker().line() as f64;
+        if start >= 0.0 {
+            span::validate(start, decoration.height())?;
+        }
         let weak = Rc::downgrade(&decoration.state);
         *decoration.state.marker_listener.borrow_mut() =
             Some(decoration.marker().on_dispose().try_subscribe(move |_| {
@@ -110,7 +114,10 @@ impl DecorationService {
                         .delete_by(&decoration, Decoration::ptr_eq)
                         .map_err(EmitError::callback)?;
                     if removed {
-                        service.cache.remove(&decoration);
+                        service
+                            .cache
+                            .remove(&decoration)
+                            .map_err(EmitError::callback)?;
                         service.removed.fire(&decoration)?;
                     }
                 }
@@ -124,7 +131,7 @@ impl DecorationService {
             .decorations
             .borrow_mut()
             .insert(decoration.clone())?;
-        self.state.cache.add(decoration.clone());
+        self.state.cache.add(decoration.clone())?;
         self.state.registered.fire(&decoration)?;
         Ok(Some(decoration))
     }

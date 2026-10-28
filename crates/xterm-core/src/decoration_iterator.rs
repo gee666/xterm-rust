@@ -98,8 +98,8 @@ impl Iterator for DecorationCellIterator {
         }
         if !self.initialized {
             self.bucket = match &self.source {
-                LookupSource::Cache(cache) => cache.bucket(self.line),
-                LookupSource::Service(service) => service.line_cache().bucket(self.line),
+                LookupSource::Cache(cache) => cache.bucket(self.line as f64),
+                LookupSource::Service(service) => service.line_cache().bucket(self.line as f64),
             };
             self.initialized = true;
         }

@@ -14,9 +14,12 @@ use std::{
 };
 #[path = "decoration_cache.rs"]
 mod cache;
+#[path = "decoration_span.rs"]
+mod span;
 pub use cache::{
     DecorationBucket, DecorationBucketIterator, DecorationCellIterator, DecorationLineCache,
 };
+pub use span::NonAdvancingDecorationSpan;
 #[path = "decoration_service.rs"]
 mod service;
 pub use service::DecorationService;
@@ -77,16 +80,31 @@ impl DecorationOptions {
 pub enum DecorationError {
     Dispatch(EmitError),
     Storage(SortedListError),
+    NonAdvancingSpan(NonAdvancingDecorationSpan),
 }
 impl std::fmt::Display for DecorationError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::Dispatch(e) => e.fmt(f),
             Self::Storage(e) => e.fmt(f),
+            Self::NonAdvancingSpan(e) => e.fmt(f),
         }
     }
 }
-impl std::error::Error for DecorationError {}
+impl std::error::Error for DecorationError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Dispatch(error) => Some(error),
+            Self::Storage(error) => Some(error),
+            Self::NonAdvancingSpan(error) => Some(error),
+        }
+    }
+}
+impl From<NonAdvancingDecorationSpan> for DecorationError {
+    fn from(error: NonAdvancingDecorationSpan) -> Self {
+        Self::NonAdvancingSpan(error)
+    }
+}
 impl From<EmitError> for DecorationError {
     fn from(e: EmitError) -> Self {
         Self::Dispatch(e)
@@ -104,7 +122,7 @@ pub type DecorationColor = Rc<RefCell<Color>>;
 struct DecorationState {
     marker: Marker,
     options: Rc<RefCell<DecorationOptions>>,
-    indexed_start: Cell<i64>,
+    indexed_start: Cell<f64>,
     disposed: Cell<bool>,
     element: RefCell<Option<Element>>,
     background: RefCell<Option<Option<DecorationColor>>>,
@@ -141,7 +159,7 @@ impl Decoration {
         }
         Self {
             state: Rc::new(DecorationState {
-                indexed_start: Cell::new(marker.line()),
+                indexed_start: Cell::new(marker.line() as f64),
                 marker,
                 options,
                 disposed: Cell::new(false),
