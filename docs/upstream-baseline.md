@@ -22,7 +22,7 @@ There are 73 original source `.test.ts` modules under core/addon `src`. Seventy-
 
 ## Evidence and counters
 
-Every attempt gets a new `results/upstream-baseline/runs/<id>/` directory. `results/upstream-baseline/latest.json` points to its summary and is marked `incomplete` before dependency checks or builds. Failed and interrupted attempts cannot reuse an older passed summary. Finished attempt files are not overwritten by future runs. Early flat files from the first observed run are retained as historical evidence, not as the current result.
+Every attempt gets a new `results/upstream-baseline/runs/<id>/` directory. `results/upstream-baseline/latest.json` points to its summary and is marked `incomplete` before dependency checks or builds. Failed and interrupted attempts cannot reuse an older passed summary. Finished attempt files are not overwritten by future runs. Start and completion pointer updates use a short exclusive lock under repository-root `tmp/evidence-pointer-locks/` and atomic pointer replacement. An older completion cannot replace a newer failed or incomplete attempt. Contention fails explicitly without retries or automatic deletion of another owner's lock. Early flat files from the first observed run are retained as historical evidence, not as the current result.
 
 Read the pointer, require its status to be `passed`, then read its referenced summary. Artifact paths inside that summary resolve from the repository root. The following table describes the files within that attempt directory.
 
@@ -40,7 +40,7 @@ Read the pointer, require its status to be `passed`, then read its referenced su
 
 Mocha's usual `file` field labels tests from an imported test module with the importer's filename. The ten WidthCache cases are imported by DomRendererRowFactory. `upstream-registration.cjs` observes the actual test registration stack without changing original test bodies, order or reporter fields. The per-source summary uses that callsite provenance, while the raw reporter output remains intact. This prevents incorrectly classifying WidthCache as a module with no tests.
 
-The small runner unit suite mutates only temporary files under repository-root `tmp/`. It checks same-length corruption, growth, missing files, path escape rejection, count inconsistency and isolation of successful, failed and interrupted attempts. It never mutates the actual reference to test its integrity guard.
+The small runner unit suite mutates only temporary files under repository-root `tmp/`. The follow-up six-control run is retained in `results/upstream-baseline/pointer-order-tests-20261028.log`; older complete baseline attempts retain their original four-control logs unchanged. It checks same-length corruption, growth, missing files, path escape rejection, count inconsistency and isolation of successful, failed and interrupted attempts. It never mutates the actual reference to test its integrity guard.
 
 ## Remaining verification
 

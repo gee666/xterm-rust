@@ -65,6 +65,51 @@ test('new, interrupted and failed attempts never reuse or erase older success', 
   }
 });
 
+test('older completion cannot replace newer failed or incomplete attempt pointers', () => {
+  const directory = fs.mkdtempSync(path.join(tempRoot, 'upstream-order-test-'));
+  const readLatest = () => JSON.parse(fs.readFileSync(path.join(directory, 'latest.json'), 'utf8'));
+  try {
+    for (const newerStatus of ['failed', 'incomplete', 'passed']) {
+      const older = createEvidenceRun(directory);
+      const newer = createEvidenceRun(directory);
+      if (newerStatus !== 'incomplete') persistEvidence(newer, { status: newerStatus });
+      const before = fs.readFileSync(path.join(directory, 'latest.json'), 'utf8');
+      persistEvidence(older, { status: 'passed' });
+      assert.equal(readLatest().runId, newer.id);
+      assert.equal(readLatest().status, newerStatus);
+      assert.equal(fs.readFileSync(path.join(directory, 'latest.json'), 'utf8'), before);
+      assert.equal(JSON.parse(fs.readFileSync(path.join(older.directory, 'summary.json'), 'utf8')).status, 'passed');
+    }
+  } finally { fs.rmSync(directory, { recursive: true }); }
+});
+
+test('pointer lock contention fails explicitly and callback errors release ownership', () => {
+  const directory = fs.mkdtempSync(path.join(tempRoot, 'upstream-lock-test-'));
+  let ownedLock;
+  try {
+    const attempt = createEvidenceRun(directory);
+    const canonical = fs.realpathSync(directory);
+    const key = sha256(process.platform === 'win32' ? canonical.toLowerCase() : canonical);
+    ownedLock = path.join(tempRoot, 'evidence-pointer-locks', `${key}.lock`);
+    fs.writeFileSync(ownedLock, 'test-owned lock', { flag: 'wx' });
+    const before = fs.readFileSync(path.join(directory, 'latest.json'), 'utf8');
+    assert.throws(() => createEvidenceRun(directory), /Evidence pointer is locked/);
+    assert.throws(() => persistEvidence(attempt, { status: 'passed' }), /Evidence pointer is locked/);
+    assert.equal(fs.readFileSync(path.join(directory, 'latest.json'), 'utf8'), before);
+    fs.unlinkSync(ownedLock);
+    ownedLock = undefined;
+    const circular = { status: 'failed' };
+    circular.circular = circular;
+    assert.throws(() => persistEvidence(attempt, circular), /circular/i);
+    const recovered = createEvidenceRun(directory);
+    persistEvidence(recovered, { status: 'passed' });
+    assert.equal(JSON.parse(fs.readFileSync(path.join(directory, 'latest.json'), 'utf8')).runId, recovered.id);
+  } finally {
+    if (ownedLock) fs.unlinkSync(ownedLock);
+    fs.rmSync(directory, { recursive: true });
+  }
+});
+
 test('pending cases are not executed or passed and mismatched totals fail', () => {
   assert.deepEqual(unitCounts(5, 2, 1, 2), {
     discovered: 5, executed: 3, passed: 2, failed: 1, pending: 2, skipped: 0, unrun: 0

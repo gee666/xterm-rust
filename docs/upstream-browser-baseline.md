@@ -62,9 +62,9 @@ The actual installed binaries were launched after the baseline to record version
 
 ## Failed assertions and remaining investigation
 
-- Fit has ten failures in Chromium/Firefox involving the original column-width upper bounds. WebKit passed all nine Fit cases. Do not widen or remove these assertions. Font metrics and original platform assumptions need investigation.
+- Fit has ten failures in Chromium/Firefox involving the original column-width upper bounds. WebKit passed all nine Fit cases. Independent font diagnostics in `results/utility-addons/font-diagnostics.json` observed default monospace widths of 8.25px in Chromium/Firefox and 9px in WebKit, producing 95/120 versus87/110 columns. Do not widen or remove the original assertions; controlled-font diagnostics remain distinct from the unchanged default baseline.
 - Image has two failures each in Chromium/Firefox involving 165 versus 160 pixel image width, and four WebKit failures involving SIXEL cursor, image lifecycle/storage and resizing. All original error records remain retained.
-- WebKit WebGL has 54 failures involving timeouts or pixel reads such as constant `[13,13,13,255]` instead of expected colors. The platform/renderer cause has not been established. Do not hide these failures under a passing startup or skip them to obtain green results.
+- WebKit WebGL has 54 failures involving timeouts or screenshot pixels such as constant `[13,13,13,255]` instead of expected colors. Static inspection found an API/setup mismatch: `WebglRenderer.test.ts` constructs `new WebglAddon(true)`, but the current constructor and typings accept an options object and read `options?.preserveDrawingBuffer`, which is undefined for a boolean. The shared tests sample a cached screenshot, not direct gl.readPixels. Whether this mismatch or screenshot timing causes the failures has not been demonstrated. Do not invent an unsupported-GPU classification, transform the reference inputs to get green results, or erase the unchanged failed attempt.
 
 The individual failing titles, source files, project names, expected statuses and assertion messages are in the derived report's `failures` array and original raw Playwright reports. Subsystem owners were notified. These are observed original-reference failures, not proof that the Rust implementation fails or passes the corresponding contracts.
 
