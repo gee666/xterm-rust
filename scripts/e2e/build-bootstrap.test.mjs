@@ -48,5 +48,16 @@ export class FitAddon {}
     const notified = new URL(requests[0].url, 'http://fixture');
     assert.equal(notified.searchParams.get('token'), 'token');
     assert.ok(notified.searchParams.get('missing').split(',').includes('ImageAddon'));
+    const failedRequests = [], failureWindow = {}, errors = [];
+    const failedContext = { ...context, window: failureWindow,
+      compileReady: Promise.reject(new Error('broken WASM module')),
+      console: { error: error => errors.push(String(error)) },
+      fetch: async url => { failedRequests.push(url); return { ok: true }; } };
+    new Script(await readFile(outputFile, 'utf8')).runInNewContext(failedContext);
+    await failureWindow.__rustE2EReady;
+    assert.equal(failureWindow.Terminal, undefined);
+    assert.match(failureWindow.__rustE2EInitializationError, /broken WASM module/);
+    assert.deepEqual(failedRequests, ['/rust-ready?token=token&failed=1']);
+    assert.equal(errors.length, 1);
   } finally { await rm(directory, { recursive: true, force: true }); }
 });

@@ -18,9 +18,15 @@ test('retains original browser projects, assertions directory and settings', () 
 });
 test('distinguishes discovered, executed, passed, failed, skipped and unrun', () => {
   const tests = [ {}, { results: [{ status: 'passed' }] }, { results: [{ status: 'failed' }] },
-    { results: [{ status: 'skipped' }] }, { results: [{ status: 'timedOut' }] } ];
+    { expectedStatus: 'skipped', results: [{ status: 'skipped' }] }, { results: [{ status: 'timedOut' }] } ];
   assert.deepEqual(testCounts({ suites: [{ suites: [{ specs: [{ tests }] }] }] }),
     { discovered: 5, executed: 3, passed: 1, failed: 2, skipped: 1, unrun: 1 });
+});
+test('beforeAll fallout is unrun, not an original skip', () => {
+  const tests = [{ expectedStatus: 'passed', results: [{ status: 'skipped' }] },
+    { annotations: [{ type: 'fixme' }], results: [{ status: 'skipped' }] }];
+  assert.deepEqual(testCounts({ suites: [{ specs: [{ tests }] }] }),
+    { discovered: 2, executed: 0, passed: 0, failed: 0, skipped: 1, unrun: 1 });
 });
 test('empty output cannot acquire a positive test count', () => {
   assert.deepEqual(testCounts({}), { discovered: 0, executed: 0, passed: 0, failed: 0, skipped: 0, unrun: 0 });

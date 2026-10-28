@@ -16,7 +16,10 @@ export function testCounts(raw) {
         counts.discovered++;
         const result = test.results?.at(-1);
         if (!result) counts.unrun++;
-        else if (result.status === 'skipped') counts.skipped++;
+        else if (result.status === 'skipped') {
+          const declaredSkip = test.expectedStatus === 'skipped' || test.annotations?.some(annotation => ['skip', 'fixme'].includes(annotation.type));
+          if (declaredSkip) counts.skipped++; else counts.unrun++;
+        }
         else {
           counts.executed++;
           if (result.status === 'passed') counts.passed++; else counts.failed++;
