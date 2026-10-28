@@ -248,8 +248,7 @@ impl TerminalState {
         self.attributes.fg = b.saved_cur_attr_data.fg;
         self.attributes.bg = b.saved_cur_attr_data.bg;
         for (level, charset) in b.saved_charsets.iter().enumerate() {
-            self.charset
-                .set_g_charset(level, charset.clone())?;
+            self.charset.set_g_charset(level, charset.clone())?;
         }
         self.charset.set_g_level(b.saved_glevel);
         {
