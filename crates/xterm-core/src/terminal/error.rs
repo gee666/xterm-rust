@@ -27,6 +27,7 @@ pub enum TerminalError {
     Mouse(crate::mouse_state::MouseStateError),
     Log(crate::log_service::LogError),
     Link(crate::osc_link_service::OscLinkError),
+    Charset(crate::charset::CharsetError),
 }
 impl fmt::Display for TerminalError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -49,6 +50,7 @@ impl fmt::Display for TerminalError {
             Self::Mouse(error) => error.fmt(f),
             Self::Log(error) => error.fmt(f),
             Self::Link(error) => error.fmt(f),
+            Self::Charset(error) => error.fmt(f),
         }
     }
 }
@@ -65,8 +67,14 @@ impl std::error::Error for TerminalError {
             Self::Mouse(error) => Some(error),
             Self::Log(error) => Some(error),
             Self::Link(error) => Some(error),
+            Self::Charset(error) => Some(error),
             _ => None,
         }
+    }
+}
+impl From<crate::charset::CharsetError> for TerminalError {
+    fn from(error: crate::charset::CharsetError) -> Self {
+        Self::Charset(error)
     }
 }
 impl From<crate::osc_link_service::OscLinkError> for TerminalError {
