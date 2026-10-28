@@ -94,13 +94,23 @@ impl CommandRegistrar {
         id: FunctionIdentifier<'_>,
         handler: CommandHandler,
     ) -> Result<DisposableHandle, RegistrarError> {
-        let id = id.packed(self.esc)?;
+        self.register_packed(id.packed(self.esc)?, handler)
+    }
+    /// Use a key already computed by a binding's identifier reader. Re-reading
+    /// the original object here would change JavaScript getter/Proxy effects.
+    pub fn register_packed(
+        &self,
+        id: u32,
+        handler: CommandHandler,
+    ) -> Result<DisposableHandle, RegistrarError> {
         self.registry
             .register(id, handler)
             .ok_or(RegistrarError::ParserDropped)
     }
     pub fn clear(&self, id: FunctionIdentifier<'_>) -> Result<(), RegistrarError> {
-        let id = id.packed(self.esc)?;
+        self.clear_packed(id.packed(self.esc)?)
+    }
+    pub fn clear_packed(&self, id: u32) -> Result<(), RegistrarError> {
         self.registry
             .clear(&id)
             .ok_or(RegistrarError::ParserDropped)
@@ -171,24 +181,64 @@ impl EscapeSequenceParser {
         code: u32,
         handler: impl FnMut(Option<u32>) -> Result<bool, super::ParseError> + 'static,
     ) {
-        self.execute.insert(code, Box::new(handler));
+        let handler: super::ExecuteHandler = Box::new(handler);
+        let handler: super::ExecuteHandle = std::rc::Rc::new(std::cell::RefCell::new(handler));
+        let removed = self.execute.borrow_mut().insert(code, handler);
+        drop(removed);
     }
     pub fn clear_execute_handler(&mut self, code: u32) {
-        self.execute.remove(&code);
+        let removed = self.execute.borrow_mut().remove(&code);
+        drop(removed);
     }
-    pub fn set_execute_handler_fallback(&mut self, handler: impl FnMut(u32) + 'static) {
+    pub fn set_execute_handler_fallback(&mut self, mut handler: impl FnMut(u32) + 'static) {
+        self.set_execute_handler_fallback_checked(move |code| {
+            handler(code);
+            Ok(())
+        });
+    }
+    pub fn set_execute_handler_fallback_checked(
+        &mut self,
+        handler: impl FnMut(u32) -> Result<(), super::ParseError> + 'static,
+    ) {
         self.execute_fallback = Some(Box::new(handler));
     }
-    pub fn set_csi_handler_fallback(&mut self, handler: impl FnMut(u32, &super::Params) + 'static) {
+    pub fn set_csi_handler_fallback(
+        &mut self,
+        mut handler: impl FnMut(u32, &super::Params) + 'static,
+    ) {
+        self.set_csi_handler_fallback_checked(move |id, params| {
+            handler(id, params);
+            Ok(())
+        });
+    }
+    pub fn set_csi_handler_fallback_checked(
+        &mut self,
+        handler: impl FnMut(u32, &super::Params) -> Result<(), super::ParseError> + 'static,
+    ) {
         self.csi_fallback = Some(Box::new(handler));
     }
-    pub fn set_esc_handler_fallback(&mut self, handler: impl FnMut(u32) + 'static) {
+    pub fn set_esc_handler_fallback(&mut self, mut handler: impl FnMut(u32) + 'static) {
+        self.set_esc_handler_fallback_checked(move |id| {
+            handler(id);
+            Ok(())
+        });
+    }
+    pub fn set_esc_handler_fallback_checked(
+        &mut self,
+        handler: impl FnMut(u32) -> Result<(), super::ParseError> + 'static,
+    ) {
         self.esc_fallback = Some(Box::new(handler));
     }
     /// Return true to abort this chunk. Other state changes are unsupported upstream.
     pub fn set_error_handler(
         &mut self,
-        handler: impl FnMut(super::ParsingState<'_>) -> bool + 'static,
+        mut handler: impl FnMut(super::ParsingState<'_>) -> bool + 'static,
+    ) {
+        self.set_error_handler_checked(move |state| Ok(handler(state)));
+    }
+    pub fn set_error_handler_checked(
+        &mut self,
+        handler: impl FnMut(super::ParsingState<'_>) -> Result<bool, super::ParseError> + 'static,
     ) {
         self.error = Some(Box::new(handler));
     }

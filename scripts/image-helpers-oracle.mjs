@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { spawnSync } from 'node:child_process';
+import { pinArtifact } from './acceptance-artifacts.mjs';
 const require=createRequire(import.meta.url);
 const ts=require('../source_repo/node_modules/typescript');
 const chai=require('../source_repo/node_modules/chai');
@@ -126,7 +127,10 @@ for(let i=0;i<1000;i++){
 }
 fs.writeFileSync(path.join(results,'operations.ndjson'),operations.map(op=>JSON.stringify(op)).join('\n')+'\n');
 const build=spawnSync('cargo',['build','-p','xterm-addons','--example','image_helpers_trace'],{cwd:root,encoding:'utf8',timeout:120000});fs.writeFileSync(path.join(results,'build.log'),(build.stdout??'')+(build.stderr??''));assert.equal(build.status,0,build.stderr||build.error?.message);
-const executable=path.join(root,'target/debug/examples/image_helpers_trace'+(process.platform==='win32'?'.exe':''));
+const compilerExecutable=path.join(root,'target/debug/examples/image_helpers_trace'+(process.platform==='win32'?'.exe':''));
+const artifactPin=await pinArtifact(root,compilerExecutable);
+fs.writeFileSync(path.join(results,'artifact.json'),JSON.stringify(artifactPin,null,2)+'\n');
+const executable=path.resolve(root,artifactPin.path);
 const run=spawnSync(executable,[],{cwd:root,input:operations.map(op=>JSON.stringify(op)).join('\n')+'\n',encoding:'utf8',timeout:120000,maxBuffer:128*1024*1024});assert.equal(run.status,0,run.stderr||run.error?.message);
 const actual=run.stdout.replace(/\r?\n$/,'').split(/\r?\n/).map(line=>JSON.parse(line));
 const negativeOperations=[],negativeExpected=[],controlEnds=[];

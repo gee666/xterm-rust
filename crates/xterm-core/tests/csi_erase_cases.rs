@@ -170,13 +170,13 @@ fn original_alt_ed3_preserves_normal_user_viewport_after_resizing() {
 }
 #[test]
 fn original_decsca_default_and_selective_line_display_erasure() {
-    let mut t = CoreTerminal::new(80, 25, 1000).unwrap();
+    let mut t = CoreTerminal::new(80, 30, 1000).unwrap();
     t.write("some text\x1b[?2K").unwrap();
     assert_eq!(lines(&t, 2), ["", ""]);
     t.write("some text\x1b[?2J").unwrap();
     assert_eq!(lines(&t, 2), ["", ""]);
     for (protected, command) in [("lineerase", "K"), ("displayerase", "J")] {
-        let mut t = CoreTerminal::new(80, 25, 1000).unwrap();
+        let mut t = CoreTerminal::new(80, 30, 1000).unwrap();
         t.write(&format!(
             "###\x1b[1\"q{protected}\x1b[0\"q***\x1b[?2{command}"
         ))
@@ -188,7 +188,7 @@ fn original_decsca_default_and_selective_line_display_erasure() {
 }
 #[test]
 fn original_decrqss_reports_protection_default_set_and_reset() {
-    let mut t = CoreTerminal::new(80, 25, 1000).unwrap();
+    let mut t = CoreTerminal::new(80, 30, 1000).unwrap();
     for (prefix, expected) in [
         ("", "\x1bP1$r0\"q\x1b\\"),
         ("###\x1b[1\"q", "\x1bP1$r1\"q\x1b\\"),

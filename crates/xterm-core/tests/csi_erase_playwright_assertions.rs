@@ -29,7 +29,7 @@ fn original_browser_ed_and_decsed_content_assertions() {
 fn original_browser_el_and_decsel_content_assertions() {
     for prefix in ["", "?"] {
         for (mode, expected) in [("", "ab"), ("0", "ab"), ("1", "   de"), ("2", "")] {
-            let mut t = CoreTerminal::new(80, 25, 1000).unwrap();
+            let mut t = CoreTerminal::new(80, 24, 1000).unwrap();
             t.write(&format!("abcde\x1b[1;3H\x1b[{prefix}{mode}K"))
                 .unwrap();
             assert_eq!(
@@ -43,14 +43,14 @@ fn original_browser_el_and_decsel_content_assertions() {
 #[test]
 fn original_browser_ech_content_assertions() {
     for (count, expected) in [("", " bcdef"), ("3", "   def")] {
-        let mut t = CoreTerminal::new(80, 25, 1000).unwrap();
+        let mut t = CoreTerminal::new(80, 24, 1000).unwrap();
         t.write(&format!("abcdef\x1b[1;1H\x1b[{count}X")).unwrap();
         assert_eq!(lines(&t, 1), [expected]);
     }
 }
 #[test]
 fn original_browser_decsca_content_assertions() {
-    let mut t = CoreTerminal::new(80, 25, 1000).unwrap();
+    let mut t = CoreTerminal::new(80, 24, 1000).unwrap();
     t.write("\x1b[1\"qPROT\x1b[2\"qopen").unwrap();
     assert_eq!(lines(&t, 1), ["PROTopen"]);
     t.write("\x1b[1;1H\x1b[?2K").unwrap();

@@ -66,12 +66,12 @@ impl EscapeSequenceParser {
             match kind {
                 PendingKind::Csi => {
                     if let Some(fallback) = &mut self.csi_fallback {
-                        fallback(id, &self.params);
+                        fallback(id, &self.params)?;
                     }
                 }
                 _ => {
                     if let Some(fallback) = &mut self.esc_fallback {
-                        fallback(id);
+                        fallback(id)?;
                     }
                 }
             }

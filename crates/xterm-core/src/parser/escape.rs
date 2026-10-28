@@ -15,12 +15,15 @@ use super::{
 };
 use std::{
     cell::{Cell, RefCell},
-    collections::HashMap,
     error::Error,
     fmt,
     rc::Rc,
 };
 
+#[path = "escape_dispose.rs"]
+mod disposal;
+pub use disposal::ParserDisposalHandle;
+use disposal::{ExecuteHandle, SharedExecute};
 #[path = "escape_handlers.rs"]
 mod handlers;
 #[path = "escape_parse.rs"]
@@ -34,8 +37,9 @@ use handlers::{HandlerList, Registry};
 pub type CommandHandler = Rc<RefCell<dyn FnMut(&Params) -> HandlerResult>>;
 type PrintHandler = Box<dyn FnMut(&[u32]) -> Result<(), ParseError>>;
 type ExecuteHandler = Box<dyn FnMut(Option<u32>) -> Result<bool, ParseError>>;
-type CsiFallback = Box<dyn FnMut(u32, &Params)>;
-type ErrorHandler = Box<dyn FnMut(ParsingState<'_>) -> bool>;
+type ControlFallback = Box<dyn FnMut(u32) -> Result<(), ParseError>>;
+type CsiFallback = Box<dyn FnMut(u32, &Params) -> Result<(), ParseError>>;
+type ErrorHandler = Box<dyn FnMut(ParsingState<'_>) -> Result<bool, ParseError>>;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum IdentifierError {
@@ -168,15 +172,16 @@ pub struct EscapeSequenceParser {
     params: Params,
     collect: u32,
     print: Option<PrintHandler>,
-    execute: HashMap<u32, ExecuteHandler>,
-    execute_fallback: Option<Box<dyn FnMut(u32)>>,
+    execute: SharedExecute,
+    execute_fallback: Option<ControlFallback>,
     csi: Registry,
     esc: Registry,
     csi_fallback: Option<CsiFallback>,
-    esc_fallback: Option<Box<dyn FnMut(u32)>>,
+    esc_fallback: Option<ControlFallback>,
     error: Option<ErrorHandler>,
     action_boundary: Option<Box<dyn FnMut() -> Result<(), ParseError>>>,
     stack: Stack,
+    disposal: ParserDisposalHandle,
 }
 impl Default for EscapeSequenceParser {
     fn default() -> Self {
@@ -192,26 +197,41 @@ impl EscapeSequenceParser {
         params
             .reset_zdm()
             .expect("default Params has nonzero capacity");
+        let osc = OscParser::new();
+        let dcs = DcsParser::new();
+        let apc = ApcParser::new();
+        let csi = Registry::default();
+        let esc = Registry::default();
+        let execute = SharedExecute::default();
+        let disposal = ParserDisposalHandle::new(
+            &execute,
+            &csi,
+            &esc,
+            osc.disposal_handle(),
+            dcs.disposal_handle(),
+            apc.disposal_handle(),
+        );
         let parser = Self {
             initial_state: ParserState::Ground,
             current_state: ParserState::Ground,
             preceding_join_state: Rc::default(),
-            osc: OscParser::new(),
-            dcs: DcsParser::new(),
-            apc: ApcParser::new(),
+            osc,
+            dcs,
+            apc,
             transitions,
             params,
             collect: 0,
             print: None,
-            execute: HashMap::new(),
+            execute,
             execute_fallback: None,
-            csi: Registry::default(),
-            esc: Registry::default(),
+            csi,
+            esc,
             csi_fallback: None,
             esc_fallback: None,
             error: None,
             action_boundary: None,
             stack: Stack::None,
+            disposal,
         };
         // The default ST handler is a real registration and can be cleared.
         parser.esc.register(
@@ -287,12 +307,10 @@ impl EscapeSequenceParser {
     /// Explicit upstream-style disposal does not invoke active end callbacks.
     /// Dropping the Rust object releases all parser-owned resources via RAII.
     pub fn dispose(&mut self) {
-        self.osc.dispose();
-        self.dcs.dispose();
-        self.apc.dispose();
-        self.csi.clear_all();
-        self.esc.clear_all();
-        self.execute.clear();
+        self.disposal.dispose();
+    }
+    pub fn disposal_handle(&self) -> ParserDisposalHandle {
+        self.disposal.clone()
     }
     fn clear_sequence(&mut self) -> Result<(), ParseError> {
         self.params.reset_zdm()?;
@@ -300,10 +318,11 @@ impl EscapeSequenceParser {
         Ok(())
     }
     fn execute_code(&mut self, code: u32, fast: bool) -> Result<(), ParseError> {
-        if let Some(handler) = self.execute.get_mut(&code) {
-            handler(fast.then_some(code))?;
+        let handler = self.execute.borrow().get(&code).cloned();
+        if let Some(handler) = handler {
+            handler.borrow_mut()(fast.then_some(code))?;
         } else if let Some(fallback) = &mut self.execute_fallback {
-            fallback(code);
+            fallback(code)?;
         }
         self.preceding_join_state.set(0);
         Ok(())

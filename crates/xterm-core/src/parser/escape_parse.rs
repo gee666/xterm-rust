@@ -70,7 +70,7 @@ impl EscapeSequenceParser {
                             current_state: self.current_state,
                             collect: self.collect,
                             params: &self.params,
-                        }) {
+                        })? {
                             return Ok(None);
                         }
                     }
