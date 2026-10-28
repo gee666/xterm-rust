@@ -3,7 +3,7 @@
 use std::cell::RefCell;
 use std::fmt::Display;
 use std::rc::Rc;
-use xterm_core::parser::handler::HandlerResult;
+use xterm_core::parser::handler::{DispatchError, HandlerResult};
 use xterm_core::parser::osc::{OscAction, OscHandlerTrait};
 use xterm_core::text_decoder::utf32_to_string;
 
@@ -21,13 +21,15 @@ pub struct Reporter {
     pub log: Log,
 }
 impl OscHandlerTrait for Reporter {
-    fn start(&mut self) {
+    fn start(&mut self) -> Result<(), DispatchError> {
         self.log.borrow_mut().push(format!("h:{}", self.name));
+        Ok(())
     }
-    fn put(&mut self, data: &[u32]) {
+    fn put(&mut self, data: &[u32]) -> Result<(), DispatchError> {
         self.log
             .borrow_mut()
             .push(format!("p:{}:{}", self.name, units(&utf32_to_string(data))));
+        Ok(())
     }
     fn end(&mut self, success: bool) -> HandlerResult {
         self.log

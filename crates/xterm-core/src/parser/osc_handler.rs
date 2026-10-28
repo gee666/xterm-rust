@@ -1,7 +1,7 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved.
 // Licensed under the MIT license. Port of common/parser/OscParser.ts.
 
-use super::{HandlerResult, OscHandlerTrait, PAYLOAD_LIMIT};
+use super::{HandlerResult, OscError, OscHandlerTrait, PAYLOAD_LIMIT};
 use crate::string_builder::LimitedStringBuilder;
 use crate::text_decoder::utf32_to_string;
 use std::cell::RefCell;
@@ -47,15 +47,17 @@ fn clear(payload: &RefCell<Payload>) {
 }
 
 impl<F: FnMut(Vec<u16>) -> HandlerResult> OscHandlerTrait for OscHandler<F> {
-    fn start(&mut self) {
+    fn start(&mut self) -> Result<(), OscError> {
         clear(&self.payload);
+        Ok(())
     }
 
-    fn put(&mut self, data: &[u32]) {
+    fn put(&mut self, data: &[u32]) -> Result<(), OscError> {
         let mut payload = self.payload.borrow_mut();
         if !payload.hit_limit && payload.data.append_utf16(&utf32_to_string(data)) {
             payload.hit_limit = true;
         }
+        Ok(())
     }
 
     fn end(&mut self, success: bool) -> HandlerResult {

@@ -3,7 +3,7 @@
 use std::cell::RefCell;
 use std::rc::Weak;
 use xterm_core::lifecycle::DisposableHandle;
-use xterm_core::parser::handler::HandlerResult;
+use xterm_core::parser::handler::{DispatchError, HandlerResult};
 use xterm_core::parser::osc::OscHandlerTrait;
 
 pub struct RemoveAll {
@@ -26,11 +26,13 @@ impl RemoveAll {
     }
 }
 impl OscHandlerTrait for RemoveAll {
-    fn start(&mut self) {
+    fn start(&mut self) -> Result<(), DispatchError> {
         self.remove("start");
+        Ok(())
     }
-    fn put(&mut self, _: &[u32]) {
+    fn put(&mut self, _: &[u32]) -> Result<(), DispatchError> {
         self.remove("put");
+        Ok(())
     }
     fn end(&mut self, _: bool) -> HandlerResult {
         self.remove("end");

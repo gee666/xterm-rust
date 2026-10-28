@@ -8,7 +8,7 @@ use std::task::{Context, Poll, Wake, Waker};
 #[path = "parser_support/removal.rs"]
 mod removal;
 use removal::RemoveAll;
-use xterm_core::parser::handler::HandlerResult;
+use xterm_core::parser::handler::{DispatchError, HandlerResult};
 use xterm_core::parser::osc::{OscAction, OscError, OscHandler, OscHandlerTrait, OscParser};
 
 struct NoWake;
@@ -34,8 +34,8 @@ fn utf16_lone_surrogates_and_astral_units_count_toward_limit() {
             },
             limit,
         );
-        handler.start();
-        handler.put(&[0x1f600, 0xd800]);
+        handler.start().unwrap();
+        handler.put(&[0x1f600, 0xd800]).unwrap();
         let HandlerResult::Ready(result) = handler.end(true) else {
             panic!("sync")
         };
@@ -48,8 +48,8 @@ fn utf16_lone_surrogates_and_astral_units_count_toward_limit() {
                 vec![]
             }
         );
-        handler.start();
-        handler.put(&[65]);
+        handler.start().unwrap();
+        handler.put(&[65]).unwrap();
         assert!(matches!(handler.end(true), HandlerResult::Ready(true)));
         assert_eq!(output.borrow().last(), Some(&vec![65]));
     }
@@ -65,14 +65,14 @@ fn zero_limit_overflow_ignores_later_chunks_and_recovers_after_start() {
         },
         0,
     );
-    handler.start();
-    handler.put(&[]);
+    handler.start().unwrap();
+    handler.put(&[]).unwrap();
     assert!(matches!(handler.end(true), HandlerResult::Ready(true)));
-    handler.start();
-    handler.put(&[65]);
-    handler.put(&[]);
+    handler.start().unwrap();
+    handler.put(&[65]).unwrap();
+    handler.put(&[]).unwrap();
     assert!(matches!(handler.end(true), HandlerResult::Ready(false)));
-    handler.start();
+    handler.start().unwrap();
     assert!(matches!(handler.end(true), HandlerResult::Ready(true)));
     assert_eq!(*calls.borrow(), [Vec::<u16>::new(), Vec::new()]);
 }
@@ -207,8 +207,12 @@ struct AsyncHandler {
     log: Rc<RefCell<Vec<(u8, bool)>>>,
 }
 impl OscHandlerTrait for AsyncHandler {
-    fn start(&mut self) {}
-    fn put(&mut self, _: &[u32]) {}
+    fn start(&mut self) -> Result<(), DispatchError> {
+        Ok(())
+    }
+    fn put(&mut self, _: &[u32]) -> Result<(), DispatchError> {
+        Ok(())
+    }
     fn end(&mut self, success: bool) -> HandlerResult {
         let name = self.name;
         let log = Rc::clone(&self.log);

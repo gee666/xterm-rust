@@ -5,7 +5,7 @@ use std::rc::Rc;
 #[path = "parser_support/future.rs"]
 mod future;
 use future::resolve;
-use xterm_core::parser::handler::HandlerResult;
+use xterm_core::parser::handler::{DispatchError, HandlerResult};
 use xterm_core::parser::osc::{HandlerHandle, OscAction, OscHandler, OscHandlerTrait, OscParser};
 
 type Log = Rc<RefCell<Vec<String>>>;
@@ -41,15 +41,17 @@ struct Handler {
     asynchronous: bool,
 }
 impl OscHandlerTrait for Handler {
-    fn start(&mut self) {
+    fn start(&mut self) -> Result<(), DispatchError> {
         self.log.borrow_mut().push(format!("{}:s", self.name));
+        Ok(())
     }
-    fn put(&mut self, data: &[u32]) {
+    fn put(&mut self, data: &[u32]) -> Result<(), DispatchError> {
         self.log.borrow_mut().push(format!(
             "{}:p:{}",
             self.name,
             string(&xterm_core::text_decoder::utf32_to_string(data))
         ));
+        Ok(())
     }
     fn end(&mut self, success: bool) -> HandlerResult {
         let name = self.name;

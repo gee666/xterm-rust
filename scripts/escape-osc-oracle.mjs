@@ -5,6 +5,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { escapeReference } from './escape-reference.mjs';
 import { utf16Hex } from './parser-oracle-common.mjs';
+import { canonicalTsvRecords } from './tsv-records.mjs';
 
 const reference = await escapeReference();
 const modes = [[], [[true, false]], [[false, false], [false, true], [true, false]],
@@ -114,10 +115,12 @@ const corpus = `${lines.join('\n')}\n`;
 const fixture = 'crates/xterm-core/tests/fixtures/escape-osc-oracle.tsv';
 await mkdir('crates/xterm-core/tests/fixtures', { recursive: true });
 if (process.argv.includes('--generate')) await writeFile(fixture, corpus);
-else assert.equal(await readFile(fixture, 'utf8'), corpus, 'outer OSC oracle drift');
+const fixtureBytes = await readFile(fixture);
+assert.equal(canonicalTsvRecords(fixtureBytes.toString('utf8')), corpus, 'outer OSC oracle drift');
 const report = { node: process.version, seed, deterministicTraces: lines.length - 128, randomTraces: 128,
   randomOperationsPerTrace: 32, pendingCount, resetCount, mutationChecks, sources: reference.sources,
-  fixtureSha256: createHash('sha256').update(corpus).digest('hex'), status: 'matched' };
+  fixtureSha256: createHash('sha256').update(fixtureBytes).digest('hex'),
+  fixtureCanonicalSha256: createHash('sha256').update(corpus).digest('hex'), status: 'matched' };
 await mkdir('results/osc', { recursive: true });
 await writeFile('results/osc/escape-oracle.json', `${JSON.stringify(report, null, 2)}\n`);
 console.log(JSON.stringify(report, null, 2));

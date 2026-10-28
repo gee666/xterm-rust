@@ -16,20 +16,19 @@ mod handler;
 pub use handler::OscHandler;
 #[path = "osc_registry.rs"]
 mod registry;
-pub use registry::OscRegistrar;
+pub use registry::{OscDisposalHandle, OscRegistrar};
 
 pub const PAYLOAD_LIMIT: usize = 10_000_000;
 
 pub use super::handler::{DispatchError as OscError, HandlerResult};
 
 pub trait OscHandlerTrait {
-    fn start(&mut self);
-    fn put(&mut self, data: &[u32]);
+    fn start(&mut self) -> Result<(), OscError>;
+    fn put(&mut self, data: &[u32]) -> Result<(), OscError>;
     fn end(&mut self, success: bool) -> HandlerResult;
 }
 
 pub type HandlerHandle = Rc<RefCell<dyn OscHandlerTrait>>;
-type HandlerList = Rc<RefCell<Vec<HandlerHandle>>>;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum OscAction {
@@ -55,9 +54,7 @@ struct Pause {
 pub struct OscParser {
     state: State,
     id: f64,
-    handlers: registry::Registry,
-    active: HandlerList,
-    fallback: Option<Box<dyn FnMut(f64, OscAction)>>,
+    control: Rc<registry::Control>,
     pause: Option<Pause>,
     cleanup: Vec<HandlerResult>,
 }
@@ -67,9 +64,7 @@ impl Default for OscParser {
         Self {
             state: State::Start,
             id: -1.0,
-            handlers: registry::Registry::new(),
-            active: Rc::default(),
-            fallback: None,
+            control: Rc::default(),
             pause: None,
             cleanup: Vec::new(),
         }
@@ -94,40 +89,53 @@ impl OscParser {
     /// Explicit disposal removes the first registration with the same identity.
     /// Dropping the returned handle does not unregister, matching JavaScript.
     pub fn register_handler(&mut self, id: f64, handler: HandlerHandle) -> DisposableHandle {
-        self.handlers.register(key(id), handler)
+        self.control.registry.register(key(id), handler)
     }
 
     pub fn clear_handler(&mut self, id: f64) {
-        self.handlers.clear(&key(id));
+        self.control.registry.clear(&key(id));
     }
 
     pub fn registrar(&self) -> OscRegistrar {
-        OscRegistrar::new(&self.handlers)
+        OscRegistrar::new(&self.control.registry)
     }
 
-    pub fn set_handler_fallback(&mut self, callback: impl FnMut(f64, OscAction) + 'static) {
-        self.fallback = Some(Box::new(callback));
+    pub fn set_handler_fallback(&mut self, mut callback: impl FnMut(f64, OscAction) + 'static) {
+        self.set_handler_fallback_checked(move |id, action| {
+            callback(id, action);
+            Ok(())
+        });
+    }
+
+    /// Callback failures correspond to source exceptions. Dispatch stops without
+    /// clearing the identifier, payload state or queued cleanup.
+    pub fn set_handler_fallback_checked(
+        &mut self,
+        callback: impl FnMut(f64, OscAction) -> Result<(), OscError> + 'static,
+    ) {
+        self.control.fallback.set(Box::new(callback));
+    }
+
+    pub fn disposal_handle(&self) -> OscDisposalHandle {
+        OscDisposalHandle::new(&self.control)
     }
 
     pub fn dispose(&mut self) {
-        self.handlers.clear_all();
-        self.fallback = None;
-        self.active = Rc::default();
+        self.control.dispose();
     }
 
-    fn report(&mut self, action: OscAction) {
-        if let Some(fallback) = &mut self.fallback {
-            fallback(self.id, action);
+    fn report(&mut self, action: OscAction) -> Result<(), OscError> {
+        // The slot borrow ends before user code. Disposal may clear this slot
+        // during the call; the current callback is never restored afterward.
+        if let Some(fallback) = self.control.fallback.get() {
+            fallback.borrow_mut()(self.id, action)?;
         }
+        Ok(())
     }
 
     // Clone one identity at a time, never borrowing the collection in callbacks.
     fn at(&self, index: usize) -> Result<HandlerHandle, OscError> {
-        self.active
-            .borrow()
-            .get(index)
-            .cloned()
-            .ok_or(OscError::ActiveHandlerRemoved)
+        self.control.active.at(index)
     }
 
     pub fn reset(&mut self) -> Result<(), OscError> {
@@ -135,7 +143,7 @@ impl OscParser {
             let end = self
                 .pause
                 .as_ref()
-                .map_or_else(|| self.active.borrow().len(), |pause| pause.next);
+                .map_or_else(|| self.control.active.len(), |pause| pause.next);
             for index in (0..end).rev() {
                 let handler = self.at(index)?;
                 // Rust futures are lazy. Retain asynchronous cleanup for the
@@ -163,19 +171,21 @@ impl OscParser {
 
     fn finish(&mut self) {
         self.pause = None;
-        self.active = Rc::default();
+        self.control.active.clear();
         self.id = -1.0;
         self.state = State::Start;
     }
 
     fn begin_payload(&mut self) -> Result<(), OscError> {
-        self.active = self.handlers.get(&key(self.id));
-        let count = self.active.borrow().len();
+        self.control
+            .active
+            .set(self.control.registry.get(&key(self.id)));
+        let count = self.control.active.len();
         if count == 0 {
-            self.report(OscAction::Start);
+            self.report(OscAction::Start)?;
         } else {
             for index in (0..count).rev() {
-                self.at(index)?.borrow_mut().start();
+                self.at(index)?.borrow_mut().start()?;
             }
         }
         Ok(())
@@ -247,12 +257,12 @@ impl OscParser {
     }
 
     fn dispatch_payload(&mut self, data: &[u32]) -> Result<(), OscError> {
-        let count = self.active.borrow().len();
+        let count = self.control.active.len();
         if count == 0 {
-            self.report(OscAction::Put(utf32_to_string(data)));
+            self.report(OscAction::Put(utf32_to_string(data)))?;
         } else {
             for index in (0..count).rev() {
-                self.at(index)?.borrow_mut().put(data);
+                self.at(index)?.borrow_mut().put(data)?;
             }
         }
         Ok(())
@@ -275,9 +285,9 @@ impl OscParser {
         if self.state == State::Id {
             self.begin_payload()?;
         }
-        let count = self.active.borrow().len();
+        let count = self.control.active.len();
         if count == 0 {
-            self.report(OscAction::End(success));
+            self.report(OscAction::End(success))?;
             self.finish();
             return Ok(None);
         }

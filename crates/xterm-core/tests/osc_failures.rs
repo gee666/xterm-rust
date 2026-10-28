@@ -35,8 +35,8 @@ fn buffered_callback_failure_preserves_data_until_later_end_or_start() {
             HandlerResult::Ready(true)
         }
     });
-    handler.start();
-    handler.put(&[65, 0x1f600, 0xd800]);
+    handler.start().unwrap();
+    handler.put(&[65, 0x1f600, 0xd800]).unwrap();
     assert!(matches!(
         handler.end(true),
         HandlerResult::Failed(DispatchError::CallbackFailed)
@@ -49,8 +49,8 @@ fn buffered_callback_failure_preserves_data_until_later_end_or_start() {
             vec![65, 0xd83d, 0xde00, 0xd800]
         ]
     );
-    handler.start();
-    handler.put(&[66]);
+    handler.start().unwrap();
+    handler.put(&[66]).unwrap();
     assert!(matches!(handler.end(true), HandlerResult::Ready(true)));
     assert_eq!(calls.borrow().last(), Some(&vec![66]));
 }
@@ -70,8 +70,8 @@ fn rejected_future_retains_payload_and_successful_future_clears_it() {
             }
         }))
     });
-    handler.start();
-    handler.put(&[65]);
+    handler.start().unwrap();
+    handler.put(&[65]).unwrap();
     assert_eq!(
         future::resolve_checked(handler.end(true)),
         Err(DispatchError::CallbackFailed)
@@ -110,14 +110,80 @@ fn rejected_future_does_not_resume_bubbling_and_reset_cleans_older_handlers() {
     assert_eq!(*log.borrow(), [(1, false)]);
 }
 
+struct ResumedFailure {
+    name: u8,
+    log: Rc<RefCell<Vec<(u8, bool)>>>,
+}
+impl OscHandlerTrait for ResumedFailure {
+    fn start(&mut self) -> Result<(), DispatchError> {
+        Ok(())
+    }
+    fn put(&mut self, _: &[u32]) -> Result<(), DispatchError> {
+        Ok(())
+    }
+    fn end(&mut self, success: bool) -> HandlerResult {
+        let name = self.name;
+        let log = Rc::clone(&self.log);
+        if name == 2 {
+            HandlerResult::Pending(Box::pin(async move {
+                log.borrow_mut().push((name, success));
+                false
+            }))
+        } else {
+            log.borrow_mut().push((name, success));
+            if name == 1 && success {
+                HandlerResult::Failed(DispatchError::CallbackFailed)
+            } else {
+                HandlerResult::Ready(false)
+            }
+        }
+    }
+}
+#[test]
+fn resumed_lower_callback_error_clears_inner_pause_so_reset_aborts_all_handlers_again() {
+    let mut parser = OscParser::new();
+    let log = Rc::new(RefCell::new(Vec::new()));
+    for name in 0..3 {
+        parser.register_handler(
+            2.0,
+            Rc::new(RefCell::new(ResumedFailure {
+                name,
+                log: Rc::clone(&log),
+            })),
+        );
+    }
+    parser.start().unwrap();
+    parser.put(&[50, 59, 65]).unwrap();
+    let pending = parser.end(true, true).unwrap().unwrap();
+    assert!(!future::resolve(pending));
+    assert!(matches!(
+        parser.end(true, false),
+        Err(DispatchError::CallbackFailed)
+    ));
+    parser.reset().unwrap();
+    let cleanup = parser.take_cleanup();
+    assert_eq!(cleanup.len(), 1);
+    for pending in cleanup {
+        assert!(!future::resolve(pending));
+    }
+    assert_eq!(
+        *log.borrow(),
+        [(2, true), (1, true), (1, false), (0, false), (2, false)]
+    );
+}
+
 struct Failing {
     name: u8,
     fail: bool,
     log: Rc<RefCell<Vec<(u8, bool)>>>,
 }
 impl OscHandlerTrait for Failing {
-    fn start(&mut self) {}
-    fn put(&mut self, _: &[u32]) {}
+    fn start(&mut self) -> Result<(), DispatchError> {
+        Ok(())
+    }
+    fn put(&mut self, _: &[u32]) -> Result<(), DispatchError> {
+        Ok(())
+    }
     fn end(&mut self, success: bool) -> HandlerResult {
         self.log.borrow_mut().push((self.name, success));
         if self.fail {

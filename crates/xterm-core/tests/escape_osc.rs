@@ -35,11 +35,13 @@ struct Handler {
     asynchronous: bool,
 }
 impl OscHandlerTrait for Handler {
-    fn start(&mut self) {
-        self.inner.start();
+    fn start(&mut self) -> Result<(), DispatchError> {
+        self.inner.start()?;
+        Ok(())
     }
-    fn put(&mut self, data: &[u32]) {
-        self.inner.put(data);
+    fn put(&mut self, data: &[u32]) -> Result<(), DispatchError> {
+        self.inner.put(data)?;
+        Ok(())
     }
     fn end(&mut self, success: bool) -> HandlerResult {
         if self.asynchronous {
