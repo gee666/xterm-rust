@@ -67,3 +67,24 @@ fn absent_native_lines_remain_distinct_from_borrow_errors() {
     assert_eq!(b.base_y(), 0);
     assert_eq!(b.cursor_y(), 0);
 }
+
+#[test]
+fn ansi_range_past_buffer_preserves_missing_next_line_failure() {
+    let b = buffer();
+    let output = serialize_buffer(
+        &b,
+        10,
+        2,
+        &AttributeData::default(),
+        CellRange {
+            start: Position { x: 0, y: 0 },
+            end: Position { x: 10, y: 2 },
+        },
+        true,
+    );
+    assert_eq!(output, Err(SerializeError::MissingWrappedLine));
+    assert_eq!(
+        SerializeError::MissingWrappedLine.to_string(),
+        "Cannot read properties of undefined (reading 'isWrapped')"
+    );
+}

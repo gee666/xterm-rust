@@ -83,6 +83,7 @@ pub struct HtmlConfig {
 pub enum SerializeError {
     InvalidRange,
     BorrowedLine,
+    MissingWrappedLine,
 }
 
 impl std::fmt::Display for SerializeError {
@@ -90,6 +91,7 @@ impl std::fmt::Display for SerializeError {
         f.write_str(match self {
             Self::InvalidRange => "Invalid array length",
             Self::BorrowedLine => "buffer line already borrowed",
+            Self::MissingWrappedLine => "Cannot read properties of undefined (reading 'isWrapped')",
         })
     }
 }

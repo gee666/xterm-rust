@@ -118,6 +118,11 @@ impl Handler<'_> {
                     self.background = cell;
                 }
             }
+            // Source reads nextLine.isWrapped even when a caller's range runs
+            // past the buffer. Preserve that failure instead of omitting rows.
+            if self.buffer.line_len(row + 1)?.is_none() {
+                return Err(SerializeError::MissingWrappedLine);
+            }
             if !self.buffer.is_wrapped(row + 1)? {
                 separator.push_str("\r\n");
                 self.cursor = (row + 1, 0);

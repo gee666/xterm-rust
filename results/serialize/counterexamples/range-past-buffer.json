@@ -1,0 +1,24 @@
+{
+  "fixtureId": 1254,
+  "origin": "directed JS source oracle",
+  "fixtureSha256": "8c5b6c73f1fa72b012d855504e0a46514e4fbce3f8e47b4ff59c3dede7615d2e",
+  "fixturePath": "crates/xterm-core/tests/fixtures/serialize-oracle.tsv",
+  "operation": "ANSI serialize inclusive row range 0..2 with two buffer lines, 4 columns and 2 rows",
+  "normalBufferRows": ["a", "b"],
+  "sourceExpected": {
+    "kind": "TypeError",
+    "message": "Cannot read properties of undefined (reading 'isWrapped')"
+  },
+  "beforeFix": {
+    "kind": "success",
+    "utf16": [97, 13, 10, 98],
+    "reason": "Missing next row was treated as not wrapped, yielding successful partial output instead of the source exception"
+  },
+  "fix": "ANSI row_end checks for a missing next line and propagates SerializeError::MissingWrappedLine with source error text. Browser binding must preserve TypeError in task 88.",
+  "afterFix": {
+    "kind": "SerializeError::MissingWrappedLine",
+    "message": "Cannot read properties of undefined (reading 'isWrapped')"
+  },
+  "regression": "serialize_native::ansi_range_past_buffer_preserves_missing_next_line_failure",
+  "verification": "All 1663 ANSI and 1671 HTML source fixtures pass after the fix. Expected fixture output was not edited. See results/serialize/vikramaditya-independent-tests.log and vikramaditya-independent-release.log."
+}
