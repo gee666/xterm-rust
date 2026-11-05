@@ -1,0 +1,45 @@
+
+running 6 tests
+test caught_inner_error_keeps_original_array_active_for_outer_iteration ... ok
+test outer_error_preserves_new_list_after_nested_completion ... ok
+test propagated_inner_error_retains_callbacks_for_next_frame ... ok
+test nested_completion_keeps_outer_array_and_live_appends ... FAILED
+test dispose_after_nested_completion_does_not_clear_outer_iterator ... FAILED
+test outer_success_discards_new_list_appended_after_nested_completion ... FAILED
+
+failures:
+
+---- nested_completion_keeps_outer_array_and_live_appends stdout ----
+
+thread 'nested_completion_keeps_outer_array_and_live_appends' panicked at crates\xterm-web\tests\render_callback_iteration.rs:56:5:
+assertion `left == right` failed
+  left: ["A", "A", "B", "C"]
+ right: ["A", "A", "B", "C", "B", "C"]
+
+---- dispose_after_nested_completion_does_not_clear_outer_iterator stdout ----
+
+thread 'dispose_after_nested_completion_does_not_clear_outer_iterator' panicked at crates\xterm-web\tests\render_callback_iteration.rs:185:5:
+assertion `left == right` failed
+  left: ["A", "A", "B", "C"]
+ right: ["A", "A", "B", "C", "B", "C"]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- outer_success_discards_new_list_appended_after_nested_completion stdout ----
+
+thread 'outer_success_discards_new_list_appended_after_nested_completion' panicked at crates\xterm-web\tests\render_callback_iteration.rs:80:5:
+assertion `left == right` failed
+  left: ["A", "A", "B", "C"]
+ right: ["A", "A", "B", "C", "B", "C"]
+
+
+failures:
+    dispose_after_nested_completion_does_not_clear_outer_iterator
+    nested_completion_keeps_outer_array_and_live_appends
+    outer_success_discards_new_list_appended_after_nested_completion
+
+test result: FAILED. 3 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\WillowRender\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 2.57s
+     Running tests\render_callback_iteration.rs (target\debug\deps\render_callback_iteration-90db53e05f51aebc.exe)
+error: test failed, to rerun pass `-p xterm-web --test render_callback_iteration`

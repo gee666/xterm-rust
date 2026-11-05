@@ -1,0 +1,127 @@
+{
+  "package": "xterm-web",
+  "testName": "render_scheduler_browser",
+  "testTimeoutMs": 60000,
+  "features": [
+    "acceptance-hooks"
+  ],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T22:07:57.488Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "render_scheduler_browser",
+        "--features",
+        "acceptance-hooks",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 16988.819199999998,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 53.15020000000004,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\WillowRender\\results\\acceptance-artifacts\\fc60d3eb280b2ea03af414ff234577aac5cbab065b6e657e794ff3bc6e45b67e\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\WillowRender\\results\\browser-host\\render_scheduler_browser\\2026-11-05T22-07-57-485Z-30c31de9-14b9-4f25-90f2-fc01a7b40a04\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 2116.4843,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__render_scheduler_browser::current_window_preserves_every_javascript_thrown_value",
+        "__wbgt__render_scheduler_browser::nested_refresh_callbacks_preserve_array_identity_and_errors",
+        "__wbgt__render_scheduler_browser::real_animation_frame_delivers_retained_rows_then_zero_time_callbacks",
+        "__wbgt__render_scheduler_browser::real_render_scheduler_matches_source_reentry_and_error_identity"
+      ],
+      "errors": [],
+      "console": [],
+      "version": "148.0.7778.96",
+      "output": "running 4 tests\ntest real_render_scheduler_matches_source_reentry_and_error_identity ... ok\ntest real_animation_frame_delivers_retained_rows_then_zero_time_callbacks ... ok\ntest nested_refresh_callbacks_preserve_array_identity_and_errors ... FAIL\ntest current_window_preserves_every_javascript_thrown_value ... ok\n\nfailures:\n\n---- nested_refresh_callbacks_preserve_array_identity_and_errors output ----\n    JS exception that was thrown:\n        Error: JsValue(Error: render callback/plain/object expected [[\"source\"],[\"get-request\",0],[\"request\",0,true],[\"result\",\"callback\",true,1],[\"result\",\"callback\",true,1],[\"frame\",1],[\"callback\",\"A\",0],[\"source\"],[\"get-request\",0],[\"request\",0,true],[\"result\",\"callback\",true,2],[\"frame\",2],[\"callback\",\"A\",0],[\"callback\",\"B\",0],[\"callback\",\"C\",0],[\"callback\",\"B\",0],[\"callback\",\"C\",0],[\"delivered\"],[\"pending\",[]],[\"source\"],[\"get-request\",0],[\"request\",0,true],[\"result\",\"callback\",true,3],[\"result\",\"refresh\",true,null],[\"frame\",3],[\"render\",0,2],[\"callback\",\"tail\",0],[\"delivered\"],[\"delivered\"],[\"delivered\"],[\"pending\",[]],[\"result\",\"dispose\",true,null]] actual [[\"source\"],[\"get-request\",0],[\"request\",0,true],[\"result\",\"callback\",true,1],[\"result\",\"callback\",true,1],[\"frame\",1],[\"callback\",\"A\",0],[\"source\"],[\"get-request\",0],[\"request\",0,true],[\"result\",\"callback\",true,2],[\"frame\",2],[\"callback\",\"A\",0],[\"callback\",\"B\",0],[\"callback\",\"C\",0],[\"delivered\"],[\"pending\",[]],[\"source\"],[\"get-request\",0],[\"request\",0,true],[\"result\",\"callback\",true,3],[\"result\",\"refresh\",true,null],[\"frame\",3],[\"render\",0,2],[\"callback\",\"tail\",0],[\"delivered\"],[\"delivered\"],[\"delivered\"],[\"pending\",[]],[\"result\",\"dispose\",true,null]]\n        Error: render callback/plain/object expected [[\"source\"],[\"get-request\",0],[\"request\",0,true],[\"result\",\"callback\",true,1],[\"result\",\"callback\",true,1],[\"frame\",1],[\"callback\",\"A\",0],[\"source\"],[\"get-request\",0],[\"request\",0,true],[\"result\",\"callback\",true,2],[\"frame\",2],[\"callback\",\"A\",0],[\"callback\",\"B\",0],[\"callback\",\"C\",0],[\"callback\",\"B\",0],[\"callback\",\"C\",0],[\"delivered\"],[\"pending\",[]],[\"source\"],[\"get-request\",0],[\"request\",0,true],[\"result\",\"callback\",true,3],[\"result\",\"refresh\",true,null],[\"frame\",3],[\"render\",0,2],[\"callback\",\"tail\",0],[\"delivered\"],[\"delivered\"],[\"delivered\"],[\"pending\",[]],[\"result\",\"dispose\",true,null]] actual [[\"source\"],[\"get-request\",0],[\"request\",0,true],[\"result\",\"callback\",true,1],[\"result\",\"callback\",true,1],[\"frame\",1],[\"callback\",\"A\",0],[\"source\"],[\"get-request\",0],[\"request\",0,true],[\"result\",\"callback\",true,2],[\"frame\",2],[\"callback\",\"A\",0],[\"callback\",\"B\",0],[\"callback\",\"C\",0],[\"delivered\"],[\"pending\",[]],[\"source\"],[\"get-request\",0],[\"request\",0,true],[\"result\",\"callback\",true,3],[\"result\",\"refresh\",true,null],[\"frame\",3],[\"render\",0,2],[\"callback\",\"tail\",0],[\"delivered\"],[\"delivered\"],[\"delivered\"],[\"pending\",[]],[\"result\",\"dispose\",true,null]]\n            at runRenderCallbackCases (http://127.0.0.1:52954/snippets/xterm-web-f147851b6cb0c0ef/tests/render_scheduler_oracle.js:227:15)\n            at http://127.0.0.1:52954/suite.js:6324:21\n            at handleError (http://127.0.0.1:52954/suite.js:176:18)\n            at imports.wbg.__wbg_runRenderCallbackCases_e0b1be1672e64dac (http://127.0.0.1:52954/suite.js:6323:85)\n            at render_scheduler_browser-5377cb87252f4565.wasm.__wbg_runRenderCallbackCases_e0b1be1672e64dac externref shim (http://127.0.0.1:52954/suite_bg.wasm:wasm-function[46560]:0xb15b82)\n            at render_scheduler_browser-5377cb87252f4565.wasm.render_scheduler_browser::callback_cases::h75d7efdc8ec3072b (http://127.0.0.1:52954/suite_bg.wasm:wasm-function[9082]:0x7e6f98)\n            at render_scheduler_browser-5377cb87252f4565.wasm.render_scheduler_browser::nested_refresh_callbacks_preserve_array_identity_and_errors::h1665f130bca40982 (http://127.0.0.1:52954/suite_bg.wasm:wasm-function[4390]:0x64883a)\n            at render_scheduler_browser-5377cb87252f4565.wasm.core::ops::function::FnOnce::call_once::hb1cac404293c2a0e (http://127.0.0.1:52954/suite_bg.wasm:wasm-function[27023]:0xa837f9)\n            at render_scheduler_browser-5377cb87252f4565.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h27275303b2c5bab4 (http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11540]:0x87e9aa)\n            at render_scheduler_browser-5377cb87252f4565.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h2d849607cf9152f9 (http://127.0.0.1:52954/suite_bg.wasm:wasm-function[16698]:0x96607a))\n            at imports.wbg.__wbindgen_error_new (http://127.0.0.1:52954/suite.js:7000:21)\n            at render_scheduler_browser-5377cb87252f4565.wasm.__wbindgen_error_new externref shim (http://127.0.0.1:52954/suite_bg.wasm:wasm-function[37410]:0xaf6e9c)\n            at render_scheduler_browser-5377cb87252f4565.wasm.wasm_bindgen::JsError::new::he956fd85533682a7 (http://127.0.0.1:52954/suite_bg.wasm:wasm-function[33749]:0xade63d)\n            at render_scheduler_browser-5377cb87252f4565.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::{{closure}}::h269da69370041f04 (http://127.0.0.1:52954/suite_bg.wasm:wasm-function[6295]:0x70f214)\n            at render_scheduler_browser-5377cb87252f4565.wasm.core::result::Result<T,E>::map_err::h83a98eb55a10df3e (http://127.0.0.1:52954/suite_bg.wasm:wasm-function[18006]:0x995b83)\n            at render_scheduler_browser-5377cb87252f4565.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::he9d5ab92d1660713 (http://127.0.0.1:52954/suite_bg.wasm:wasm-function[24448]:0xa4e933)\n            at render_scheduler_browser-5377cb87252f4565.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h27275303b2c5bab4 (http://127.0.0.1:52954/suite_bg.wasm:wasm-function[11540]:0x87e9c2)\n            at render_scheduler_browser-5377cb87252f4565.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h2d849607cf9152f9 (http://127.0.0.1:52954/suite_bg.wasm:wasm-function[16698]:0x96607a)\n            at render_scheduler_browser-5377cb87252f4565.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8 (http://127.0.0.1:52954/suite_bg.wasm:wasm-function[26802]:0xa7f762)\n            at __wbg_adapter_1331 (http://127.0.0.1:52954/suite.js:633:10)\n\nfailures:\n\n    nested_refresh_callbacks_preserve_array_identity_and_errors\n\ntest result: FAILED. 3 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.06s\n\n",
+      "counts": {
+        "passed": 3,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/fc60d3eb280b2ea03af414ff234577aac5cbab065b6e657e794ff3bc6e45b67e/artifact.wasm",
+      "sha256": "fc60d3eb280b2ea03af414ff234577aac5cbab065b6e657e794ff3bc6e45b67e",
+      "bytes": 19951975,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\WillowRender\\target\\wasm32-unknown-unknown\\debug\\deps\\render_scheduler_browser-5377cb87252f4565.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\WillowRender\\results\\browser-host\\render_scheduler_browser\\2026-11-05T22-07-57-485Z-30c31de9-14b9-4f25-90f2-fc01a7b40a04\\artifacts\\suite_bg.wasm",
+      "bytes": 16759673,
+      "sha256": "490beffe493d4f9e5e86ae7463280992b3e126ecdd997024ace25e5180a3a6d9"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\WillowRender\\results\\browser-host\\render_scheduler_browser\\2026-11-05T22-07-57-485Z-30c31de9-14b9-4f25-90f2-fc01a7b40a04\\artifacts\\suite.js",
+      "bytes": 249888,
+      "sha256": "95af8c73076ce61dd808f1900a76b5d274cd1eff9eaf532fbe79ce1eca2bb0ae"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "f1748ea2b6c37266231f2409533f63773d700d4ea2c03b26897b516d3dfef378"
+  },
+  "finishedAt": "2026-11-05T22:08:18.338Z"
+}
