@@ -1,7 +1,7 @@
 // Copyright (c) 2018 The xterm.js authors. All rights reserved.
 // Licensed under MIT. Port of addon-webgl/src/RectangleRenderer.ts.
 use super::{
-    gpu_resources::{error, Buffer, Program, VertexArray},
+    gpu_resources::{error, Buffer, Program, UnitQuad, VertexArray},
     math::PROJECTION_MATRIX,
     model::RenderModel,
     rectangles::{RectangleGeometry, RectangleVertices},
@@ -37,9 +37,7 @@ struct Gpu {
     projection: WebGlUniformLocation,
     vao: VertexArray,
     attributes: Buffer,
-    // VAO references do not own deletion; retain the two static buffers too.
-    _quad: Buffer,
-    _indices: Buffer,
+    _quad: UnitQuad,
 }
 impl Gpu {
     fn new(gl: Gl) -> Result<Self, JsValue> {
@@ -48,19 +46,9 @@ impl Gpu {
             .get_uniform_location(&program.value, "u_projection")
             .ok_or_else(|| error("WebGL projection uniform was not found"))?;
         let vao = VertexArray::new(&gl)?;
-        let quad = Buffer::new(&gl)?;
-        let indices = Buffer::new(&gl)?;
-        let attributes = Buffer::new(&gl)?;
         gl.bind_vertex_array(Some(&vao.value));
-        gl.bind_buffer(Gl::ARRAY_BUFFER, Some(&quad.value));
-        let values =
-            js_sys::Float32Array::from([0.0_f32, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0].as_slice());
-        gl.buffer_data_with_array_buffer_view(Gl::ARRAY_BUFFER, &values, Gl::STATIC_DRAW);
-        gl.enable_vertex_attrib_array(3);
-        gl.vertex_attrib_pointer_with_i32(3, 2, Gl::FLOAT, false, 0, 0);
-        gl.bind_buffer(Gl::ELEMENT_ARRAY_BUFFER, Some(&indices.value));
-        let values = js_sys::Uint8Array::from([0_u8, 1, 2, 3].as_slice());
-        gl.buffer_data_with_array_buffer_view(Gl::ELEMENT_ARRAY_BUFFER, &values, Gl::STATIC_DRAW);
+        let quad = UnitQuad::new(&gl, 3)?;
+        let attributes = Buffer::new(&gl)?;
         gl.bind_buffer(Gl::ARRAY_BUFFER, Some(&attributes.value));
         for (location, size, offset) in [(0, 2, 0), (1, 2, 8), (2, 4, 16)] {
             gl.enable_vertex_attrib_array(location);
@@ -74,7 +62,6 @@ impl Gpu {
             vao,
             attributes,
             _quad: quad,
-            _indices: indices,
         })
     }
     fn render(&self, vertices: &RectangleVertices) -> Result<(), JsValue> {

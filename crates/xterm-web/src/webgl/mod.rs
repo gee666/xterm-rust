@@ -7,11 +7,18 @@
 
 pub mod cache;
 pub mod config;
+pub mod glyphs;
 pub mod math;
 pub mod model;
 pub mod rectangles;
 pub mod typed_array;
 
+#[cfg(target_arch = "wasm32")]
+pub mod glyph_atlas;
+#[cfg(target_arch = "wasm32")]
+pub mod glyph_gpu;
+#[cfg(target_arch = "wasm32")]
+mod glyph_shaders;
 #[cfg(target_arch = "wasm32")]
 mod gpu_resources;
 #[cfg(target_arch = "wasm32")]

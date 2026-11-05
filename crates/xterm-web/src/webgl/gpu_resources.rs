@@ -101,6 +101,32 @@ impl Drop for Buffer {
     }
 }
 
+/// Static triangle-strip quad shared by the two instanced renderers.
+/// The buffers remain owned even though the VAO retains their bindings.
+pub(super) struct UnitQuad {
+    _vertices: Buffer,
+    _indices: Buffer,
+}
+impl UnitQuad {
+    pub fn new(gl: &Gl, location: u32) -> Result<Self, JsValue> {
+        let vertices = Buffer::new(gl)?;
+        let indices = Buffer::new(gl)?;
+        gl.bind_buffer(Gl::ARRAY_BUFFER, Some(&vertices.value));
+        let values =
+            js_sys::Float32Array::from([0.0_f32, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0].as_slice());
+        gl.buffer_data_with_array_buffer_view(Gl::ARRAY_BUFFER, &values, Gl::STATIC_DRAW);
+        gl.enable_vertex_attrib_array(location);
+        gl.vertex_attrib_pointer_with_i32(location, 2, Gl::FLOAT, false, 0, 0);
+        gl.bind_buffer(Gl::ELEMENT_ARRAY_BUFFER, Some(&indices.value));
+        let values = js_sys::Uint8Array::from([0_u8, 1, 2, 3].as_slice());
+        gl.buffer_data_with_array_buffer_view(Gl::ELEMENT_ARRAY_BUFFER, &values, Gl::STATIC_DRAW);
+        Ok(Self {
+            _vertices: vertices,
+            _indices: indices,
+        })
+    }
+}
+
 pub(super) struct VertexArray {
     gl: Gl,
     pub value: WebGlVertexArrayObject,
