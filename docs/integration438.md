@@ -20,7 +20,9 @@ The retained audit derives each complete combined file from accepted434 plus the
 
 The unchanged source oracles pass1329 GDEF constructor cases and nine addon scenarios, plus477 avar constructors and ten addon result fields. The Windows workflow verifier passes its unchanged tests. All five complete package formatting checks pass. The exact `cargo fmt --all -- --check` still fails with Windows OS206 and is retained as a failure. The433 hosted short-checkout change has not yet been claimed as a hosted runtime pass.
 
-Canonical native build/test, affected-dependent/workspace and applicable WASM checks are pending. This document will receive the actual gate result afterward. Prior scoped browser/native evidence remains bound to producer inputs, not relabeled as a fresh full integrated matrix. Native Linux/macOS, complete original/browser/demo matrices, final quality and comparison proof remain separate open work.
+The unmodified canonical helper fast-forwarded main to frozen `3aa04692a409bc147670d7c61a9e2ac37b5ea9f8`. Its changed-crate default-feature all-target test run passes2094 test functions across438 summaries, with zero failed, ignored or filtered tests. It builds/tests xterm-core, xterm-addons, xterm-web and xterm-font-addons, checks their affected native dependents and the workspace, and checks applicable WASM libraries. The helper removed the private target after success. Raw output and exact accounting are in `canonical-merge.log` and `canonical-summary.json`.
+
+This is not a fresh complete all-feature, release, native OS or browser matrix. Prior scoped browser/native evidence remains bound to producer inputs, not relabeled as a fresh full integrated matrix. Native Linux/macOS, complete original/browser/demo matrices, final quality and comparison proof remain separate open work. Main-ref and compiler ownership were explicitly released after the gate; any later receipt commit changes documentation/evidence only.
 
 ## Ownership
 
