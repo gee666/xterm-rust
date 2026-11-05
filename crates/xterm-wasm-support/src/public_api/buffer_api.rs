@@ -1,6 +1,8 @@
 // Copyright (c) 2018-2026 The xterm.js authors. All rights reserved. MIT license.
 //! Live JavaScript buffer views over the Rust buffer namespace.
 use super::buffer_cell::WebBufferCell;
+#[path = "buffer_line_snapshot.rs"]
+mod line_snapshot;
 use crate::{js_error::to_js_error, utf16::to_js_string};
 use js_sys::{Function, JsString, Reflect};
 use std::{
@@ -8,7 +10,14 @@ use std::{
     collections::HashMap,
     rc::{Rc, Weak},
 };
-use wasm_bindgen::prelude::*;
+use wasm_bindgen::{prelude::*, JsCast};
+
+#[wasm_bindgen]
+extern "C" {
+    /// The already-shaped JavaScript wrapper retains its BufferCell type.
+    #[wasm_bindgen(typescript_type = "BufferCell")]
+    pub type CellSnapshot;
+}
 use xterm_core::{
     buffer::{BufferLine, LineRef},
     headless::Terminal,
@@ -29,6 +38,11 @@ use xterm_core::{
 extern "C" {
     #[wasm_bindgen(catch, js_name = bufferAssignField)]
     fn assign_cell_field(target: &JsValue, field: &str, value: &JsValue) -> Result<(), JsValue>;
+}
+#[wasm_bindgen(module = "/src/public_api/buffer_shape.js")]
+extern "C" {
+    #[wasm_bindgen(catch, js_name = shapeBufferLine)]
+    fn shape_line(value: JsValue) -> Result<JsValue, JsValue>;
 }
 
 struct CachedLine {
@@ -139,8 +153,10 @@ impl WebBufferView {
         self.native.len().map_err(|error| to_js_error(&error))
     }
     #[wasm_bindgen(js_name = getNullCell)]
-    pub fn get_null_cell(&self) -> WebBufferCell {
-        WebBufferCell::new(self.native.get_null_cell())
+    pub fn get_null_cell(&self) -> Result<CellSnapshot, JsValue> {
+        WebBufferCell::new(self.native.get_null_cell())?
+            .into_js()
+            .map(JsCast::unchecked_into)
     }
     #[wasm_bindgen(js_name = getLine)]
     pub fn get_line(&self, index: f64) -> Result<JsValue, JsValue> {
@@ -164,9 +180,10 @@ impl WebBufferView {
         if cache.len() > live.saturating_mul(2) {
             cache.retain(|_, entry| entry.native.strong_count() > 1);
         }
+        drop(cache);
         let weak = Rc::downgrade(&line);
-        let object: JsValue = WebBufferLine { native: line }.into();
-        cache.insert(
+        let object = shape_line(WebBufferLine { native: line }.into())?;
+        self.lines.borrow_mut().insert(
             key,
             CachedLine {
                 native: weak,
@@ -183,6 +200,11 @@ pub struct WebBufferLine {
 }
 #[wasm_bindgen(js_class = BufferLine)]
 impl WebBufferLine {
+    /// Read-only capture of packed row data, strings and extended attributes.
+    #[wasm_bindgen(getter, js_name = _line)]
+    pub fn snapshot(&self) -> Result<JsValue, JsValue> {
+        line_snapshot::snapshot(&self.native)
+    }
     #[wasm_bindgen(getter, js_name = isWrapped)]
     pub fn is_wrapped(&self) -> Result<bool, JsValue> {
         Ok(self
@@ -212,7 +234,7 @@ impl WebBufferLine {
             Ok::<_, JsValue>(read_cell_number(&line, index))
         };
         if !target.is_truthy() {
-            return Ok(WebBufferCell::numeric(read()?).into());
+            return WebBufferCell::numeric(read()?)?.into_js();
         }
         let assign = |field: &str, property: &JsValue| assign_cell_field(&target, field, property);
         // Each setter can mutate or resize the row. Later source fields are
@@ -252,7 +274,7 @@ impl WebBufferLine {
                 .map_err(|error| to_js_error(&error))?;
             extended_at_number(&line, index)
         };
-        assign("extended", &WebBufferCell::extended_value(extended))?;
+        assign("extended", &WebBufferCell::extended_value(extended)?)?;
         Ok(target)
     }
     #[wasm_bindgen(js_name = translateToString)]

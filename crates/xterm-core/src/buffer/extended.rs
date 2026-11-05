@@ -59,6 +59,11 @@ impl ExtendedAttrs {
         drop(previous);
     }
 
+    /// Stored packed word, before the source `ext` getter's hyperlink override.
+    pub fn raw_ext(&self) -> u32 {
+        self.data.borrow().raw
+    }
+
     pub fn ext(&self) -> u32 {
         let data = self.data.borrow();
         if data.url_id != 0 {

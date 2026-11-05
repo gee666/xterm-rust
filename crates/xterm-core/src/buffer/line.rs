@@ -57,6 +57,18 @@ impl BufferLine {
     pub fn is_empty(&self) -> bool {
         self.length == 0
     }
+    /// Logical packed cells, excluding spare storage retained after shrinking.
+    pub fn packed_cells(&self) -> &[[u32; 3]] {
+        &self.data[..self.length]
+    }
+    /// Sparse storage includes stale entries until the source cleanup operations.
+    pub fn combined_strings(&self) -> &BTreeMap<usize, Vec<u16>> {
+        &self.combined
+    }
+    /// Read the actual extended objects, including their shared opaque payloads.
+    pub fn extended_attributes(&self) -> &BTreeMap<usize, ExtendedAttrs> {
+        &self.extended
+    }
     fn invalidate(&mut self) {
         *self.cache.get_mut() = None;
     }

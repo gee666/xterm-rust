@@ -12,6 +12,12 @@ use xterm_core::{
     public_api::line_numbers::{NumericCell, NumericCellError},
 };
 
+#[wasm_bindgen(module = "/src/public_api/buffer_shape.js")]
+extern "C" {
+    #[wasm_bindgen(catch, js_name = shapeBufferCell)]
+    fn shape(value: JsValue) -> Result<JsValue, JsValue>;
+}
+
 fn numeric_error(error: NumericCellError) -> JsValue {
     js_sys::TypeError::new(&error.to_string()).into()
 }
@@ -25,23 +31,26 @@ impl WebBufferCell {
     pub(crate) fn coerce_word(value: &JsValue) -> Result<u32, JsValue> {
         extended_getters::cell_uint32(value)
     }
-    pub(crate) fn new(data: CellData) -> Self {
+    pub(crate) fn into_js(self) -> Result<JsValue, JsValue> {
+        shape(self.into())
+    }
+    pub(crate) fn new(data: CellData) -> Result<Self, JsValue> {
         Self::numeric(data.into())
     }
-    pub(crate) fn extended_value(value: Option<ExtendedAttrs>) -> JsValue {
-        value
-            .map(|value| extended_values::WebExtendedAttrs::new(value).into())
-            .unwrap_or(JsValue::UNDEFINED)
+    pub(crate) fn extended_value(value: Option<ExtendedAttrs>) -> Result<JsValue, JsValue> {
+        value.map_or(Ok(JsValue::UNDEFINED), |value| {
+            extended_values::WebExtendedAttrs::new(value).into_js()
+        })
     }
-    pub(crate) fn numeric(mut data: NumericCell) -> Self {
-        let extended = Self::extended_value(data.extended.take());
+    pub(crate) fn numeric(mut data: NumericCell) -> Result<Self, JsValue> {
+        let extended = Self::extended_value(data.extended.take())?;
         // Browser extended getters use the JS object. Keep only an empty scalar
         // metadata cache here, so target reuse cannot retain an old line payload.
         data.extended = Some(ExtendedAttrs::default());
-        Self {
+        Ok(Self {
             data: RefCell::new(data),
             extended_js: RefCell::new(extended),
-        }
+        })
     }
 }
 #[wasm_bindgen(js_class = BufferCell)]

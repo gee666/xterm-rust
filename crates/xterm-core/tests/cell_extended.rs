@@ -78,6 +78,9 @@ fn clone_keeps_hidden_style_when_url_is_present_and_cell_clone_drops_payload() {
     let mut b = a.clone();
     assert_eq!(b.extended.url_id(), 17);
     assert_eq!(b.extended.underline_style(), style::DASHED);
+    assert_eq!(a.extended.raw_ext(), style::CURLY << 26);
+    assert_eq!(b.extended.raw_ext(), a.extended.raw_ext());
+    assert_ne!(b.extended.raw_ext(), b.extended.ext());
     assert!(!a.extended.same_identity(&b.extended));
     assert!(b.extended.payload().is_none());
     assert_eq!(a.fg, b.fg);

@@ -6,11 +6,20 @@ use xterm_core::buffer::ExtendedAttrs;
 
 const MAX_SAFE_INTEGER: f64 = 9_007_199_254_740_991.0;
 
+#[wasm_bindgen(module = "/src/public_api/buffer_shape.js")]
+extern "C" {
+    #[wasm_bindgen(catch, js_name = shapeExtendedCell)]
+    fn shape(value: JsValue) -> Result<JsValue, JsValue>;
+}
+
 #[wasm_bindgen(js_name = ExtendedCellAttributes)]
 pub struct WebExtendedAttrs {
     value: RefCell<ExtendedAttrs>,
 }
 impl WebExtendedAttrs {
+    pub(super) fn into_js(self) -> Result<JsValue, JsValue> {
+        shape(self.into())
+    }
     pub(super) fn new(value: ExtendedAttrs) -> Self {
         Self {
             value: RefCell::new(value),
@@ -19,6 +28,22 @@ impl WebExtendedAttrs {
 }
 #[wasm_bindgen(js_class = ExtendedCellAttributes)]
 impl WebExtendedAttrs {
+    #[wasm_bindgen(getter, js_name = _ext)]
+    pub fn raw_ext(&self) -> u32 {
+        self.value.borrow().raw_ext()
+    }
+    #[wasm_bindgen(setter, js_name = _ext)]
+    pub fn set_raw_ext(&self, value: u32) {
+        self.value.borrow_mut().set_ext(value);
+    }
+    #[wasm_bindgen(getter, js_name = _urlId)]
+    pub fn raw_url_id(&self) -> f64 {
+        self.url_id()
+    }
+    #[wasm_bindgen(setter, js_name = _urlId)]
+    pub fn set_raw_url_id(&self, value: f64) -> Result<(), JsValue> {
+        self.set_url_id(value)
+    }
     #[wasm_bindgen(getter)]
     pub fn ext(&self) -> u32 {
         self.value.borrow().ext()
@@ -92,7 +117,8 @@ impl WebExtendedAttrs {
         self.value.borrow().is_empty()
     }
     #[wasm_bindgen(js_name = clone)]
-    pub fn clone_value(&self) -> Self {
-        Self::new(self.value.borrow().clone())
+    pub fn clone_value(&self) -> Result<JsValue, JsValue> {
+        let value = self.value.borrow().clone();
+        Self::new(value).into_js()
     }
 }
