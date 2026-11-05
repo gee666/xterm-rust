@@ -154,6 +154,8 @@ impl CoreTerminal {
             line_feed,
             windows_wrapping: Rc::clone(&windows_wrapping),
             pending_replies: Default::default(),
+            shared_parse_depth: Rc::default(),
+            defer_bell: Rc::default(),
         }));
         state.borrow_mut().preceding_join_state = Rc::clone(&parser.preceding_join_state);
         register::register(&mut parser, &state)?;
@@ -166,7 +168,7 @@ impl CoreTerminal {
             parser,
             utf16: StringToUtf32::new(),
             utf8: Utf8ToUtf32::new(),
-            decoded: vec![0; super::INITIAL_PARSE_BUFFER_LENGTH],
+            decoded: Rc::new(RefCell::new(vec![0; super::INITIAL_PARSE_BUFFER_LENGTH])),
             decoded_length: 0,
             source: None,
             source_position: 0,

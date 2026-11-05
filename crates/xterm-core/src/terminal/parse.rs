@@ -102,8 +102,15 @@ impl CoreTerminal {
         }
         let logger = Rc::clone(&self.state.borrow().logger);
         super::diagnostics::log_source(&logger, source.as_ref())?;
-        if self.decoded.len() < source.len()? && self.decoded.len() < MAX_PARSE_BUFFER_LENGTH {
-            self.decoded = vec![0; source.len()?.min(MAX_PARSE_BUFFER_LENGTH)];
+        if self.decoded.borrow().len() < source.len()?
+            && self.decoded.borrow().len() < MAX_PARSE_BUFFER_LENGTH
+        {
+            self.decoded = Rc::new(std::cell::RefCell::new(vec![
+                0;
+                source.len()?.min(
+                    MAX_PARSE_BUFFER_LENGTH
+                )
+            ]));
         }
         if !was_paused {
             let state = self.state.borrow();
@@ -133,7 +140,7 @@ impl CoreTerminal {
         }
         self.finish_input()
     }
-    fn decode_range(
+    pub(super) fn decode_range(
         &mut self,
         source: &dyn ParseInputSource,
         range: std::ops::Range<usize>,
@@ -141,23 +148,29 @@ impl CoreTerminal {
         self.decode_chunk(source.read_range(range)?);
         Ok(())
     }
-    fn decode_all(&mut self, source: &dyn ParseInputSource) -> Result<(), TerminalError> {
+    pub(super) fn decode_all(
+        &mut self,
+        source: &dyn ParseInputSource,
+    ) -> Result<(), TerminalError> {
         self.decode_chunk(source.read_all()?);
         Ok(())
     }
     fn decode_chunk(&mut self, chunk: ParseChunk<'_>) {
         // The chunk and any host borrow end here, before parse_current is called.
+        let mut decoded = self.decoded.borrow_mut();
         self.decoded_length = match chunk {
-            ParseChunk::Text(data) => self.utf16.decode_to_slice(&data, &mut self.decoded),
-            ParseChunk::Bytes(data) => self.utf8.decode_to_slice(&data, &mut self.decoded),
+            ParseChunk::Text(data) => self.utf16.decode_to_slice(&data, &mut decoded),
+            ParseChunk::Bytes(data) => self.utf8.decode_to_slice(&data, &mut decoded),
         };
     }
     fn parse_current(&mut self, previous: Option<bool>) -> Result<(), TerminalError> {
+        let storage = Rc::clone(&self.decoded);
+        let decoded = storage.borrow();
         if let Some(observer) = self.parse_observer.clone() {
-            observer(&self.decoded, self.decoded_length)?;
+            observer(&decoded, self.decoded_length)?;
         }
-        let stored = self.decoded_length.min(self.decoded.len());
-        let parsed = self.parser.parse(&self.decoded[..stored], previous);
+        let stored = self.decoded_length.min(decoded.len());
+        let parsed = self.parser.parse(&decoded[..stored], previous);
         if let Some(error) = self.state.borrow_mut().error.take() {
             return Err(error);
         }
@@ -167,24 +180,32 @@ impl CoreTerminal {
             dispatch_events(&self.state)?;
             return Err(TerminalError::Pending);
         }
-        if self.decoded_length > self.decoded.len() {
+        if self.decoded_length > decoded.len() {
             return Err(TerminalError::Event(EmitError::callback(
                 DecodeBufferOverflow {
                     decoded_length: self.decoded_length,
-                    buffer_length: self.decoded.len(),
+                    buffer_length: decoded.len(),
                 },
             )));
         }
         Ok(())
     }
     fn finish_input(&mut self) -> Result<(), TerminalError> {
-        let mut state = self.state.borrow_mut();
+        self.enqueue_input_end(self.cursor_start)?;
+        self.source = None;
+        dispatch_events(&self.state)
+    }
+    pub(super) fn enqueue_input_end(
+        &self,
+        cursor_start: (usize, usize),
+    ) -> Result<(), TerminalError> {
+        let state = self.state.borrow_mut();
         let active = state.active_buffer();
         let active = active.borrow();
-        if self.cursor_start != (active.x, active.y) {
+        if cursor_start != (active.x, active.y) {
             state.events.borrow_mut().push(TerminalEvent::CursorMove);
         }
-        if let Some((start, end)) = state.dirty.take() {
+        if let Some((start, end)) = state.dirty {
             let offset = active.ybase.saturating_sub(active.ydisp);
             if start.saturating_add(offset) < state.rows() {
                 state.events.borrow_mut().push(TerminalEvent::Render {
@@ -196,11 +217,10 @@ impl CoreTerminal {
         state.events.borrow_mut().push(TerminalEvent::WriteParsed);
         drop(active);
         drop(state);
-        self.source = None;
-        dispatch_events(&self.state)
+        Ok(())
     }
 }
-fn next_range(position: usize) -> Result<usize, TerminalError> {
+pub(super) fn next_range(position: usize) -> Result<usize, TerminalError> {
     position
         .checked_add(MAX_PARSE_BUFFER_LENGTH)
         .ok_or(TerminalError::InvalidParameter(

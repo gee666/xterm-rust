@@ -56,7 +56,13 @@ pub(super) fn register(
                 state.error = Some(e);
                 return Err(ParseError::HandlerAborted);
             }
+            // A native shared driver delivers Bell after releasing its engine
+            // borrow, before EXECUTE resets join state or reads the next cell.
+            let deferred = code == 0x07 && state.defer_bell.get();
             drop(state);
+            if deferred {
+                return Ok(true);
+            }
             super::dispatch_events(&shared).map(|()| true).map_err(|e| {
                 shared.borrow_mut().error = Some(e);
                 ParseError::HandlerAborted

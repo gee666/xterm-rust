@@ -35,6 +35,8 @@ pub struct TerminalState {
     pub(crate) line_feed: Rc<crate::event::Emitter<()>>,
     pub(super) windows_wrapping: Rc<super::windows_heuristics::WindowsWrapping>,
     pub(crate) pending_replies: std::collections::VecDeque<Vec<u16>>,
+    pub(crate) shared_parse_depth: Rc<std::cell::Cell<usize>>,
+    pub(super) defer_bell: Rc<std::cell::Cell<bool>>,
 }
 impl std::ops::Deref for TerminalState {
     type Target = BufferService;

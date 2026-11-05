@@ -1,0 +1,16 @@
+async-text	text	async	resize	0	6	3	4	0	0	0	0	0	0	0	41,41,42,42,20,20;20,20,20,20,20,20;20,20,20,20,20,20	bell|bell|resize:6,3|callback|resize:6,3	-
+async-bytes	bytes	async	resize	0	6	3	4	0	0	0	0	0	0	0	41,41,42,42,20,20;20,20,20,20,20,20;20,20,20,20,20,20	bell|bell|resize:6,3|callback|resize:6,3	-
+sync-resize	text	sync	resize	0	6	3	2	0	0	0	0	0	2147483647	0	41,42,20,20,20,20;20,20,20,20,20,20;20,20,20,20,20,20	bell|resize:6,3|callback	-
+idle-resize	text	resize	observe	0	6	3	2	0	0	0	0	0	2147483647	0	41,42,20,20,20,20;20,20,20,20,20,20;20,20,20,20,20,20	bell|callback|resize:6,3	-
+same-size	text	same	observe	0	8	3	2	0	0	0	0	0	0	0	41,42,20,20,20,20,20,20;20,20,20,20,20,20,20,20;20,20,20,20,20,20,20,20	before:3|bell|callback	-
+async-tail	text	async	resize	1	6	3	5	0	0	0	0	0	0	0	41,41,42,43,42,20;20,20,20,20,20,20;20,20,20,20,20,20	bell|bell|resize:6,3|callback|tail-callback|resize:6,3	-
+async-grow	text	async	resize	5000	6	3	6	2	10	10	0	0	0	0	43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,42	bell|bell|resize:6,3|callback|tail-callback|resize:6,3	-
+async-grow-limit	text	async	resize	140000	6	3	6	2	10	10	0	0	0	0	43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,43;43,43,43,43,43,42	bell|bell|resize:6,3|callback|tail-callback|resize:6,3	-
+async-input	text	async	input	0	8	3	2	0	0	0	0	0	0	0	41,42,20,20,20,20,20,20;20,20,20,20,20,20,20,20;20,20,20,20,20,20,20,20	bell|data:69,6e|callback	-
+async-reset	text	async	reset	0	8	3	1	0	0	0	0	0	0	0	42,20,20,20,20,20,20,20;20,20,20,20,20,20,20,20;20,20,20,20,20,20,20,20	bell|callback	-
+async-dispose	text	async	dispose	0	8	3	2	0	0	0	1	0	0	0	41,42,20,20,20,20,20,20;20,20,20,20,20,20,20,20;20,20,20,20,20,20,20,20	bell	-
+nested-reset	text	async	nested-reset	0	6	3	2	0	0	0	0	0	0	0	42,42,20,20,20,20;20,20,20,20,20,20;20,20,20,20,20,20	bell|bell|callback|resize:6,3	-
+nested-dispose	text	async	nested-dispose	0	6	3	4	0	0	0	1	0	0	0	41,41,42,42,20,20;20,20,20,20,20,20;20,20,20,20,20,20	bell|bell	-
+append-before-resize	text	async	append	0	6	3	5	0	0	0	0	0	0	0	41,41,42,43,42,20;20,20,20,20,20,20;20,20,20,20,20,20	bell|bell|callback|inner-callback|resize:6,3	-
+nested-error	text	async	error	0	8	3	2	0	0	0	0	3	0	0	41,41,20,20,20,20,20,20;20,20,20,20,20,20,20,20;20,20,20,20,20,20,20,20	bell|bell	nested listener failure
+async-unicode	unicode	async	resize	0	6	3	1	1	0	0	0	0	0	0	754c,754c,301,301;5a,20,20,20,20,20;20,20,20,20,20,20	bell|bell|resize:6,3|callback|resize:6,3	-

@@ -16,6 +16,8 @@ pub enum HeadlessError {
     Unicode(UnicodeServiceError),
     Addon(Box<AddonError<HeadlessError>>),
     Borrowed,
+    QueueAlreadyAttached,
+    Queue(crate::input::write_buffer::WriteError),
 }
 impl fmt::Display for HeadlessError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -27,6 +29,8 @@ impl fmt::Display for HeadlessError {
             Self::Unicode(error) => error.fmt(f),
             Self::Addon(error) => error.fmt(f),
             Self::Borrowed => f.write_str("terminal is already borrowed"),
+            Self::QueueAlreadyAttached => f.write_str("terminal already has a native write queue"),
+            Self::Queue(error) => error.fmt(f),
         }
     }
 }
@@ -39,7 +43,8 @@ impl std::error::Error for HeadlessError {
             Self::Dispatch(error) => Some(error),
             Self::Unicode(error) => Some(error),
             Self::Addon(error) => Some(error.as_ref()),
-            Self::Borrowed => None,
+            Self::Borrowed | Self::QueueAlreadyAttached => None,
+            Self::Queue(error) => Some(error),
         }
     }
 }

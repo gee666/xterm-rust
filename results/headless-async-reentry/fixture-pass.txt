@@ -1,0 +1,49 @@
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\Ishtar16\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 0.49s
+     Running tests\headless_async_resize.rs (target\debug\deps\headless_async_resize-c41f89087bdde09f.exe)
+
+running 1 test
+test async_bell_resize_preserves_source_flush_reentry ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\headless_disposal_contract.rs (target\debug\deps\headless_disposal_contract-adee46eac7be1baa.exe)
+
+running 3 tests
+test marker_disposal_observes_source_service_phases ... ok
+test reentrant_disposal_clears_commands_immediately_but_preserves_print_and_later_registrations ... ok
+test nine_public_post_disposal_outcomes_follow_source_instead_of_blanket_rejection ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\headless_queue.rs (target\debug\deps\headless_queue-3722f15556953f21.exe)
+
+running 10 tests
+test dropping_pump_rejects_new_timers_without_leaking_queue_state ... ok
+test pending_local_future_is_not_busy_polled_and_wakes_on_demand ... ok
+test callback_error_is_returned_without_a_false_success_or_later_callback ... ok
+test writeln_bytes_and_crlf_callback_observe_completed_state ... ok
+test dispose_cancels_queued_work_and_releases_host_timer ... ok
+test rejected_handler_retains_typed_error_and_resumes_false_into_older_handler ... ok
+test fifo_callbacks_precede_one_batched_parsed_notification ... ok
+test reentrant_callback_appends_to_the_same_fifo_without_losing_input ... ok
+test pending_parser_resumes_once_before_callback_and_later_chunks ... ok
+test user_input_drives_the_source_low_latency_path_but_disabled_stdin_does_not ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\headless_recursive_fixture.rs (target\debug\deps\headless_recursive_fixture-0c15693a9dfcefe9.exe)
+
+running 2 tests
+test one_native_queue_per_terminal_and_drop_unhooks_resize ... ok
+test source_recursive_entry_matches_native_cells_events_queue_and_errors ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+     Running tests\native_queue_differential.rs (target\debug\deps\native_queue_differential-6ba32305dde0326d.exe)
+
+running 1 test
+test real_native_queued_terminal_matches_original_headless_operation_traces ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -9,6 +9,30 @@ use crate::{
 use std::rc::Rc;
 
 impl Terminal {
+    pub fn resize(&self, cols: usize, rows: usize) -> Result<(), HeadlessError> {
+        if cols == self.cols()? && rows == self.rows()? {
+            return Ok(());
+        }
+        let queue = self
+            .resize_queue
+            .borrow()
+            .as_ref()
+            .and_then(|queue| queue.upgrade());
+        if let Some(queue) = queue {
+            queue.flush_sync().map_err(HeadlessError::Queue)?;
+        }
+        if self.is_disposed()? || self.engine.try_borrow_mut().is_err() {
+            if cols > i32::MAX as usize || rows > i32::MAX as usize {
+                return Err(TerminalError::InvalidDimensions.into());
+            }
+            let service = self.with_state(|state| Rc::clone(&state.buffer_service))?;
+            service
+                .resize(cols.max(2), rows.max(1))
+                .map_err(TerminalError::from)?;
+            return self.flush_notifications();
+        }
+        self.operate(|engine| engine.resize(cols, rows))
+    }
     /// Retains a live source across a parser pause. The caller still owns future
     /// driving through take_pending/resume; this does not consume that future.
     pub fn write_source(&self, source: Rc<dyn ParseInputSource>) -> Result<(), HeadlessError> {
@@ -57,6 +81,37 @@ impl Terminal {
     fn resume_queued(&self, result: bool) -> Result<WriteAction, WriteError> {
         let result = self.events.with_queued_parse(|| self.resume(result));
         self.queue_result(result)
+    }
+    pub(super) fn parse_native_write_data(
+        &self,
+        data: Rc<WriteData>,
+        previous: Option<bool>,
+    ) -> Result<WriteAction, WriteError> {
+        let source = if previous.is_some() {
+            self.engine
+                .try_borrow()
+                .map_err(WriteError::external)?
+                .queued_source()
+                .map_err(WriteError::external)?
+        } else {
+            data.into_parse_source()?
+        };
+        let result = self
+            .events
+            .with_queued_parse(|| self.parse_shared(source, previous));
+        self.queue_result(result)
+    }
+    fn parse_shared(
+        &self,
+        source: Rc<dyn ParseInputSource>,
+        previous: Option<bool>,
+    ) -> Result<(), HeadlessError> {
+        let result =
+            crate::terminal::CoreTerminal::write_source_shared(&self.engine, source, previous);
+        // Disposal inside a listener closes shared services immediately, while
+        // the executing chunk retains its parser and decoded storage upstream.
+        self.operate(|_| Ok(()))?;
+        result.map_err(Into::into)
     }
     fn queue_result(&self, result: Result<(), HeadlessError>) -> Result<WriteAction, WriteError> {
         match result {

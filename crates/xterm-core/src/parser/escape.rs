@@ -28,6 +28,7 @@ use disposal::{ExecuteHandle, SharedExecute};
 mod handlers;
 #[path = "escape_parse.rs"]
 mod parse;
+pub(crate) use parse::ParseStep;
 #[path = "escape_resume.rs"]
 mod resume;
 pub use handlers::{CommandRegistrar, FunctionIdentifier, RegistrarError};
@@ -324,7 +325,6 @@ impl EscapeSequenceParser {
         } else if let Some(fallback) = &mut self.execute_fallback {
             fallback(code)?;
         }
-        self.preceding_join_state.set(0);
         Ok(())
     }
     fn parameter(&mut self, code: u32) -> Result<(), ParseError> {

@@ -19,6 +19,8 @@ use std::{
 
 pub struct Terminal {
     pub(super) engine: RefCell<CoreTerminal>,
+    pub(super) resize_queue:
+        RefCell<Option<crate::input::write_buffer::WeakWriteBuffer<super::NativeWriteScheduler>>>,
     options: PublicOptions,
     disposed: std::cell::Cell<bool>,
     deferred_parser_disposal: std::cell::Cell<bool>,
@@ -49,6 +51,7 @@ impl Terminal {
         engine.set_event_handler(Some(Rc::new(move |event| output.dispatch(event))));
         Ok(Self {
             engine: RefCell::new(engine),
+            resize_queue: RefCell::new(None),
             options,
             disposed: std::cell::Cell::new(false),
             deferred_parser_disposal: std::cell::Cell::new(false),
@@ -178,22 +181,6 @@ impl Terminal {
         }
         Ok(())
     }
-    pub fn resize(&self, cols: usize, rows: usize) -> Result<(), HeadlessError> {
-        if cols == self.cols()? && rows == self.rows()? {
-            return Ok(());
-        }
-        if self.disposed.get() || self.engine.try_borrow_mut().is_err() {
-            if cols > i32::MAX as usize || rows > i32::MAX as usize {
-                return Err(TerminalError::InvalidDimensions.into());
-            }
-            let service = self.with_state(|state| Rc::clone(&state.buffer_service))?;
-            service
-                .resize(cols.max(2), rows.max(1))
-                .map_err(TerminalError::from)?;
-            return self.flush_notifications();
-        }
-        self.operate(|engine| engine.resize(cols, rows))
-    }
     pub fn clear(&self) -> Result<(), HeadlessError> {
         if !self.disposed.get() && self.engine.try_borrow_mut().is_ok() {
             return self.operate(CoreTerminal::clear);
@@ -236,8 +223,9 @@ impl Terminal {
         // callback traversal, including when the parser owns the engine.
         crate::terminal::dispose_windows_wrapping(&self.state)?;
         self.events.dispose_core();
-        if let Ok(mut engine) = self.engine.try_borrow_mut() {
-            engine.dispose()?;
+        let parsing = self.state.borrow().shared_parse_depth.get() != 0;
+        if !parsing && self.engine.try_borrow_mut().is_ok() {
+            self.engine.borrow_mut().dispose()?;
         } else {
             // The active parser finishes its current chunk upstream. Dispose
             // shared services now; parser ownership is released after that call.
@@ -287,7 +275,9 @@ impl Terminal {
                 .try_borrow_mut()
                 .map_err(|_| HeadlessError::Borrowed)?;
             let result = action(&mut engine);
-            if self.deferred_parser_disposal.replace(false) {
+            if self.state.borrow().shared_parse_depth.get() == 0
+                && self.deferred_parser_disposal.replace(false)
+            {
                 engine.finish_dispose_after_shared_services()?;
             }
             (result, engine.drain_events())

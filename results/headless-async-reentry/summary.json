@@ -1,0 +1,47 @@
+{
+  "status": "passed",
+  "platform": "win32",
+  "arch": "x64",
+  "node": "v24.15.0",
+  "rust": "1.85.1 (4eb161250 2025-03-15)",
+  "host": "x86_64-pc-windows-msvc",
+  "baselineMain": "c0dd42be7420b828e9c2b0572c19374f6dcf7c5a",
+  "baselineCoreTree": "9f32e0aaea04bcdbf3d8905f7423d6f1c5b960c7",
+  "baseline": {
+    "passed": 0,
+    "failed": 1,
+    "expected": "AABB",
+    "actual": "AB",
+    "exitCode": 101
+  },
+  "sourceCases": 16,
+  "rustFixtureCases": 16,
+  "retainedAssertionPassed": true,
+  "core": {
+    "command": "cargo test -p xterm-core --all-targets --all-features -j2",
+    "passed": 1504,
+    "failed": 0,
+    "ignored": 0,
+    "measured": 0,
+    "filtered": 0,
+    "summaries": 227
+  },
+  "doctests": {
+    "command": "cargo test -p xterm-core --doc -j2",
+    "passed": 1,
+    "failed": 0
+  },
+  "clippy": {
+    "command": "cargo clippy -p xterm-core --all-targets --all-features -j2 -- -D warnings",
+    "exitCode": 0
+  },
+  "formatting": {
+    "scope": "changed core files and their modules via rustfmt --edition 2021 --check",
+    "exitCode": 0
+  },
+  "fixtureSha256": "f7729e3b4ebb8302c85b3a81304e6af7d9abd31654c834ec6f0932c9b0d3e407",
+  "overallEquivalence": "NOT PROVEN",
+  "browser": "unrun for this task; public browser parse bridge unchanged",
+  "linux": "unrun",
+  "macos": "unrun"
+}

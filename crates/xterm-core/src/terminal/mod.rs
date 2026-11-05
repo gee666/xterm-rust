@@ -9,6 +9,7 @@ mod csi_erase;
 pub mod diagnostics;
 mod dispatch;
 mod parse;
+mod shared_parse;
 use dispatch::dispatch_events;
 mod error;
 mod escape;
@@ -64,7 +65,7 @@ pub struct CoreTerminal {
     parser: EscapeSequenceParser,
     utf16: StringToUtf32,
     utf8: Utf8ToUtf32,
-    decoded: Vec<u32>,
+    decoded: Rc<RefCell<Vec<u32>>>,
     decoded_length: usize,
     source: Option<Rc<dyn crate::input::parse_source::ParseInputSource>>,
     source_position: usize,
@@ -203,7 +204,7 @@ impl CoreTerminal {
         self.pending = None;
         self.source = None;
         self.parse_observer = None;
-        self.decoded.clear();
+        self.decoded.borrow_mut().clear();
         self.decoded_length = 0;
         self.source_position = 0;
         self.awaiting = false;

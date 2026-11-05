@@ -1,0 +1,35 @@
+Baseline main:
+c0dd42be7420b828e9c2b0572c19374f6dcf7c5a
+9f32e0aaea04bcdbf3d8905f7423d6f1c5b960c7
+    Updating crates.io index
+     Locking 8 packages to latest compatible versions
+      Adding regress v0.10.4 (available: v0.10.5)
+   Compiling xterm-core v0.1.0 (C:\Users\user\.xterm-rust-target\7144d30a1fc3-worktrees\Integration\crates\xterm-core)
+   Compiling recursive-entry-before-fix v0.0.0 (O:\xterm-rust-swarm-16\tmp\worktrees\Ishtar16\tmp\recursive-baseline)
+    Finished `test` profile [unoptimized] target(s) in 5.84s
+     Running ..\..\crates\xterm-core\tests\headless_async_resize.rs (target\debug\deps\retained_aabb-f738c94a0bb001cb.exe)
+
+running 1 test
+test async_bell_resize_preserves_source_flush_reentry ... FAILED
+
+failures:
+
+---- async_bell_resize_preserves_source_flush_reentry stdout ----
+
+thread 'async_bell_resize_preserves_source_flush_reentry' panicked at ..\..\crates\xterm-core\tests\headless_async_resize.rs:42:5:
+assertion `left == right` failed
+  left: "AB"
+ right: "AABB"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    async_bell_resize_preserves_source_flush_reentry
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--test retained_aabb`
+Exit: 101
+Baseline main after:
+c0dd42be7420b828e9c2b0572c19374f6dcf7c5a
+9f32e0aaea04bcdbf3d8905f7423d6f1c5b960c7

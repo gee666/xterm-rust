@@ -25,6 +25,15 @@ impl QueuedTerminal {
         Self::with_pump(terminal, NativeWritePump::new())
     }
     pub fn with_pump(terminal: Rc<Terminal>, pump: NativeWritePump) -> Result<Self, HeadlessError> {
+        if terminal
+            .resize_queue
+            .borrow()
+            .as_ref()
+            .and_then(|queue| queue.upgrade())
+            .is_some()
+        {
+            return Err(HeadlessError::QueueAlreadyAttached);
+        }
         let service = terminal.with_state(|state| Rc::clone(&state.buffer_service))?;
         let logger = terminal.with_state(|state| Rc::downgrade(&state.logger))?;
         let cleanup_host = pump.scheduler();
@@ -53,12 +62,7 @@ impl QueuedTerminal {
             } else {
                 None
             };
-            let action = if let Some(result) = resume {
-                terminal.parse_write_data(&data, Some(result))
-            } else {
-                data.into_parse_source()
-                    .and_then(|source| terminal.parse_write_source(source, None))
-            };
+            let action = terminal.parse_native_write_data(data, resume);
             for cleanup in terminal.take_cleanup().map_err(WriteError::external)? {
                 let scheduler = cleanup_scheduler.clone();
                 let errors = cleanup_scheduler.clone();
@@ -95,6 +99,7 @@ impl QueuedTerminal {
             }
             Ok(())
         });
+        *terminal.resize_queue.borrow_mut() = Some(queue.downgrade());
         Ok(Self {
             terminal,
             queue,
@@ -135,7 +140,6 @@ impl QueuedTerminal {
         {
             return Ok(());
         }
-        self.queue.flush_sync()?;
         self.terminal
             .resize(cols, rows)
             .map_err(WriteError::external)
@@ -148,6 +152,7 @@ impl QueuedTerminal {
 }
 impl Drop for QueuedTerminal {
     fn drop(&mut self) {
+        self.terminal.resize_queue.borrow_mut().take();
         self.cleanup.dispose();
         self.queue.dispose();
         self.parsed.dispose();
