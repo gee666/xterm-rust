@@ -19,6 +19,15 @@ extern "C" {
     #[wasm_bindgen(catch, js_name = serializeMissingCell)]
     fn warn(row: f64, col: usize) -> Result<(), JsValue>;
 }
+#[wasm_bindgen(
+    inline_js = "export function serializeMissingWrappedLineError() { try { const nextLine = undefined; return nextLine.isWrapped; } catch (error) { return error; } }"
+)]
+extern "C" {
+    // Host engines include the source expression in their TypeError diagnostics.
+    // Keep the original nextLine.isWrapped access, not a V8-only message string.
+    #[wasm_bindgen(js_name = serializeMissingWrappedLineError)]
+    fn missing_wrapped_line_error() -> JsValue;
+}
 pub(super) fn error(error: &(dyn Error + 'static)) -> JsValue {
     let mut current = Some(error);
     while let Some(cause) = current {
@@ -27,9 +36,7 @@ pub(super) fn error(error: &(dyn Error + 'static)) -> JsValue {
                 SerializeError::InvalidRange => {
                     return js_sys::RangeError::new(&cause.to_string()).into()
                 }
-                SerializeError::MissingWrappedLine => {
-                    return js_sys::TypeError::new(&cause.to_string()).into()
-                }
+                SerializeError::MissingWrappedLine => return missing_wrapped_line_error(),
                 _ => {}
             }
         }

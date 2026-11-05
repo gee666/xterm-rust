@@ -15,10 +15,11 @@ assert(['baseline', 'fixed', 'both'].includes(selectedPhase));
 const prefix = 'ansi-scrollback-coercion-', total = 90, inheritedTotal = 85;
 const unresolved = 'ansi-scrollback-captured-missing-line';
 const failingCases = ['values', 'default-hint', 'reentry'].map(name => prefix + name);
-const expectedFailures = (phase, engine) => [
-  ...(phase === 'baseline' ? failingCases : []), ...(engine === 'chromium' ? [] : [unresolved])
-];
-const sources = ['crates/xterm-web/src/serialize_addon/mod.rs', 'crates/xterm-web/src/serialize_addon/options.rs'];
+const expectedFailures = (phase, engine) => phase === 'baseline' ? [
+  ...failingCases, ...(engine === 'chromium' ? [] : [unresolved])
+] : [];
+const sources = ['crates/xterm-web/src/serialize_addon/mod.rs', 'crates/xterm-web/src/serialize_addon/options.rs',
+  'crates/xterm-web/src/serialize_addon/view.rs'];
 const pointer = join(root, 'results/demos/build/latest.json'), pkg = join(root, 'browser/pkg');
 const json = async file => JSON.parse(await readFile(file, 'utf8'));
 const save = (file, data) => writeFile(file, JSON.stringify(data, null, 2) + '\n');
@@ -52,7 +53,7 @@ function validate(report, phase) {
     assert.equal(suite.result.status, 'passed'); assert.equal(suite.counts.passed, 120);
     for (const field of ['failed', 'skipped', 'unrun']) assert.equal(suite.counts[field], 0);
   }
-  assert.equal(report.status, 'failed', 'Unresolved missing-line diagnostics must remain visible');
+  assert.equal(report.status, phase === 'baseline' ? 'failed' : 'passed');
 }
 await mkdir(scratch, { recursive: true });
 const fixed = await Promise.all(sources.map(file => readFile(join(root, file))));
@@ -99,7 +100,7 @@ if (mode === 'build' || mode === 'proof') {
         }
         const report = await json(join(directory, 'browser/verification.json'));
         validate(report, phase);
-        assert.equal(result.exitCode, 1, 'The complete runner retains unresolved missing-line diagnostics');
+        assert.equal(result.exitCode, phase === 'baseline' ? 1 : 0);
         await save(join(directory, 'proof.json'), { status: 'passed', result, engines: report.browsers, suites: report.suites });
       }
     }
@@ -157,9 +158,8 @@ if (mode === 'audit') {
     assert.deepEqual(mismatches, expectedFailures('fixed', browser));
     const inherited = entries => entries.filter(entry => !entry.name.startsWith(prefix) && entry.name !== unresolved);
     assert.equal(inherited(beforeRust).length, inheritedTotal); assert.deepEqual(inherited(beforeRust), inherited(afterRust));
-    assert.deepEqual(beforeRust.find(entry => entry.name === unresolved), afterRust.find(entry => entry.name === unresolved));
     traceAudit.push({ browser, sourceStable: true, fixedExact: total - mismatches.length, fixedTotal: total,
-      retainedFailures: mismatches, newCasesExact: 4, inheritedUnchanged: inheritedTotal, unresolvedRustUnchanged: true,
+      retainedFailures: mismatches, allocationCasesExact: 4, missingLineCaseExact: true, inheritedUnchanged: inheritedTotal,
       repaired: beforeRust.filter((entry, index) => JSON.stringify(entry) !== JSON.stringify(afterRust[index])).map(entry => entry.name) });
   }
   const before = await json(join(output, 'baseline/build-identity.json')), after = await json(join(output, 'fixed/build-identity.json'));
@@ -169,7 +169,7 @@ if (mode === 'audit') {
   assert.notEqual(before.build.artifacts[1].sha256, after.build.artifacts[1].sha256);
   await save(join(output, 'summary.json'), { status: 'scoped-pass', reports, traceAudit, baselineInput: before.input, fixedInput: after.input,
     baselineWasm: before.build.artifacts[1], fixedWasm: after.build.artifacts[1],
-    scope: 'Nonnumeric ANSI scrollback allocation phases. Complete runner retains unrelated missing-line diagnostic mismatch in Firefox/WebKit. Full346/322 and overall equivalence NOT PROVEN.' });
+    scope: 'Nonnumeric ANSI scrollback allocation phases521 and browser-native missing-line diagnostics526. Full346/322 and overall equivalence NOT PROVEN.' });
   const files = [];
   async function walk(relative) {
     for (const entry of await readdir(join(root, relative), { withFileTypes: true })) {

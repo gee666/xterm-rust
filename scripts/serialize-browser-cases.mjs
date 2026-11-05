@@ -164,8 +164,8 @@ export async function serializationCases() {
     }
     return values;
   });
-  // Keep the unrelated missing-line diagnostic counterexample in the complete
-  // runner. It must remain an honest failure until browser-native errors match.
+  // Retain captured and explicit missing-line diagnostics alongside allocation
+  // cases, including the engine-specific property expression in the TypeError.
   await run('ansi-scrollback-captured-missing-line', async (term, addon) => {
     await write(term, '\x1b[32mnormal\r\nsecond\r\nthird\r\nfourth\r\nfifth\x1b[?1049hALT');
     const log = []; let nested;
@@ -177,7 +177,11 @@ export async function serializationCases() {
       get scrollback() { log.push('scrollback'); return raw; },
       get excludeAltBuffer() { log.push('alt'); return false; },
       get excludeModes() { log.push('modes'); return false; } };
-    return { ansi: capture(() => addon.serialize(options)), nested, log, state: snapshot(term) };
+    const reentry = { ansi: capture(() => addon.serialize(options)), nested, log, state: snapshot(term) };
+    const length = term.buffer.normal.length;
+    const explicit = [[0, length], [length, length + 1]].map(([start, end]) => ({ start, end,
+      ansi: capture(() => addon.serialize({ range: { start, end } })), state: snapshot(term) }));
+    return { reentry, explicit };
   });
   await run('ansi-scrollback-coercion-throws', async (term, addon) => {
     await write(term, 'normal\r\nsecond\r\nthird\r\nfourth\r\nfifth');
