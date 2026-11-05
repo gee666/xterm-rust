@@ -1,0 +1,477 @@
+{
+  "task": 436,
+  "status": "scoped tests passed; review pending; full equivalence NOT PROVEN",
+  "sourceCommits": [
+    "0cc7446b",
+    "a698c945"
+  ],
+  "base": "dcde3e9ca10e21ebdfd5babddb5dbeccbb259dcb",
+  "environment": {
+    "platform": "win32",
+    "node": "v24.15.0",
+    "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+    "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)"
+  },
+  "scope": "Live stored search flag comparison only; source state/matching and broader port closure remain347/322.",
+  "counts": {
+    "native": {
+      "discovered": 46,
+      "executed": 46,
+      "passed": 46,
+      "failed": 0,
+      "ignored": 0,
+      "filtered": 0
+    },
+    "directedSource": [
+      {
+        "engine": "chromium",
+        "cases": 464,
+        "status": "passed"
+      },
+      {
+        "engine": "firefox",
+        "cases": 464,
+        "status": "passed"
+      },
+      {
+        "engine": "webkit",
+        "cases": 464,
+        "status": "passed"
+      }
+    ],
+    "fixedWasm": [
+      {
+        "engine": "chromium",
+        "version": "148.0.7778.96",
+        "discovered": 14,
+        "passed": 14,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      },
+      {
+        "engine": "firefox",
+        "version": "150.0.2",
+        "discovered": 14,
+        "passed": 14,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      },
+      {
+        "engine": "webkit",
+        "version": "26.4",
+        "discovered": 14,
+        "passed": 14,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    ],
+    "finalWasm": [
+      {
+        "engine": "chromium",
+        "version": "148.0.7778.96",
+        "discovered": 14,
+        "passed": 14,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      },
+      {
+        "engine": "firefox",
+        "version": "150.0.2",
+        "discovered": 14,
+        "passed": 14,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      },
+      {
+        "engine": "webkit",
+        "version": "26.4",
+        "discovered": 14,
+        "passed": 14,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    ],
+    "original": {
+      "discovered": 81,
+      "executed": 81,
+      "passed": 81,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0
+    },
+    "negativeNative": {
+      "executed": 2,
+      "passed": 0,
+      "failed": 2,
+      "filtered": 44
+    },
+    "negativeChromium": {
+      "passed": 13,
+      "failed": 1,
+      "ignored": 0,
+      "filtered": 0
+    }
+  },
+  "integrity": {
+    "sourceBefore": {
+      "files": 776,
+      "mismatches": []
+    },
+    "sourceAfter": {
+      "files": 776,
+      "mismatches": []
+    },
+    "original": {
+      "before": {
+        "files": 776,
+        "mismatches": []
+      },
+      "after": {
+        "files": 776,
+        "mismatches": []
+      },
+      "junctionRemoved": true
+    }
+  },
+  "limitations": [
+    "No full workspace/native Linux/macOS/demo proof",
+    "Aggregate fmt Windows OS206, scoped fmt passed",
+    "No new randomized corpus",
+    "464 directed cases per engine are inside one of14 WASM functions, not additional functions",
+    "Compiler/binding/distribution paths are temporary provenance, not retained distribution artifacts",
+    "Negative algorithm bodies retain new resolver signature; not exact historical revision"
+  ],
+  "pins": [
+    {
+      "path": "crates/xterm-addons/src/search/addon.rs",
+      "bytes": 12294,
+      "sha256": "6a756c1a7988cab5b25cc829145da0216458b4d86bb8b8aeb79cadec17d94196"
+    },
+    {
+      "path": "crates/xterm-addons/src/search/find.rs",
+      "bytes": 9894,
+      "sha256": "ba4547e83b0d7a90eea2fdca23ddead279338128e5225066a3305f06b9d0a9a9"
+    },
+    {
+      "path": "crates/xterm-addons/src/search/mod.rs",
+      "bytes": 6608,
+      "sha256": "422d6d40893e65e26e3fb056b58a0eb2c66d3d5fbcdbdf69a93f1c03b324f7f4"
+    },
+    {
+      "path": "crates/xterm-web/src/search_addon/options.rs",
+      "bytes": 6678,
+      "sha256": "b789854dfcc887854567c8de6b49adfd56c81ab548ed3523897ce630c1dc7250"
+    },
+    {
+      "path": "crates/xterm-web/tests/fixtures/search-live-stored-flags.js",
+      "bytes": 6662,
+      "sha256": "30647cf8ab23cb2f7bfa41e7de6cdb451547cc448844480d321d24f954ce8fb3"
+    },
+    {
+      "path": "crates/xterm-web/tests/search_addon.rs",
+      "bytes": 10523,
+      "sha256": "8f6bd35c6409c39ef6653c0fb40cc10c0082760c16aa0dcc26da07e8f755f075"
+    },
+    {
+      "path": "crates/xterm-web/tests/search_cases/empty.rs",
+      "bytes": 2615,
+      "sha256": "e4661fdf52853f81e9ef7f6b78e1cf8aa50d399778c92e546d8e516eb4058fae"
+    },
+    {
+      "path": "crates/xterm-web/tests/search_cases/falsy_stored_options.rs",
+      "bytes": 4646,
+      "sha256": "abfbd56a3f141f08d84a2f1194a8c8754d1ca18817abdda2a3fdcc230a6a37d0"
+    },
+    {
+      "path": "crates/xterm-web/tests/search_cases/invalid.rs",
+      "bytes": 3694,
+      "sha256": "6d8a1017e106c88209fae7aee5ce3155f6adcfc54d785ac69bf3ad5ef81eef1d"
+    },
+    {
+      "path": "crates/xterm-web/tests/search_cases/live_stored_flags.rs",
+      "bytes": 7149,
+      "sha256": "f38a952de9a43665ec381c8296e40c68a330b280dec1641e8ba7cf4b165db553"
+    },
+    {
+      "path": "crates/xterm-web/tests/search_cases/matching_errors.rs",
+      "bytes": 3476,
+      "sha256": "d4c9a132464d9221bb393140774c1f0156d6b4c05813687e28688681524e4995"
+    },
+    {
+      "path": "crates/xterm-web/tests/search_cases/refresh.rs",
+      "bytes": 3800,
+      "sha256": "2f1b6c1ec1bd271204f2667b456ba0fadea2945239357ca2e4498e4fe224bbf0"
+    },
+    {
+      "path": "crates/xterm-web/tests/search_cases/refresh_undefined.rs",
+      "bytes": 3945,
+      "sha256": "1a97fa41597e4eab3ac4cfb86ef7e3dbe88b2bb530ef2bd4db7cd661233e5a88"
+    },
+    {
+      "path": "crates/xterm-web/tests/wasm_search_addon.rs",
+      "bytes": 10477,
+      "sha256": "907aca8c24a9fe8be3b58ca8ed160adfa2647d6c4ffcc239ef33c1e39c7818d7"
+    },
+    {
+      "path": "results/search-live-stored-flags/final-browser-command.json",
+      "bytes": 320,
+      "sha256": "827d83f21d09efd3b80152d2237fba1eecc60a240f7714da805b314d71df2bbd"
+    },
+    {
+      "path": "results/search-live-stored-flags/final-browser-commands.json",
+      "bytes": 1707,
+      "sha256": "b7077e131708875f3289050f5fa0e7a0089f708a0fe5b813b237db65abd5dd48"
+    },
+    {
+      "path": "results/search-live-stored-flags/final-browser-wasm_search_addon-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/search-live-stored-flags/final-browser-wasm_search_addon-bindgen.log",
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": "results/search-live-stored-flags/final-browser-wasm_search_addon-build.log",
+      "bytes": 44713,
+      "sha256": "f5a89ac24bb7472d2b630b64b754c3bb48e37e64313d4f3772d0e40fe288f241"
+    },
+    {
+      "path": "results/search-live-stored-flags/final-browser-wasm_search_addon-chromium.log",
+      "bytes": 1193,
+      "sha256": "f930d68e5b0154d37ccf633fe64eabfda19f5f2ee011b7ba831cff398d9f1728"
+    },
+    {
+      "path": "results/search-live-stored-flags/final-browser-wasm_search_addon-firefox.log",
+      "bytes": 1193,
+      "sha256": "f50ad1f899ec65069b2bad34f68264d7c1f3cd95869be9e6eb5bd15345e79e4b"
+    },
+    {
+      "path": "results/search-live-stored-flags/final-browser-wasm_search_addon-webkit.log",
+      "bytes": 1193,
+      "sha256": "57e4babd905634d2168199dab98fccf50691c02ba71b784f80bfa85ded63aaa1"
+    },
+    {
+      "path": "results/search-live-stored-flags/final-browser.json",
+      "bytes": 12434,
+      "sha256": "f40a7e3ebe8d7f0042c466d6bf1374ef3b51001f223496e0baad615d3d1a7c01"
+    },
+    {
+      "path": "results/search-live-stored-flags/final-browser.log",
+      "bytes": 135,
+      "sha256": "6fad7d06a71406c6987af473f2dd046ddcec05e8e736b6faffa5894662caa16f"
+    },
+    {
+      "path": "results/search-live-stored-flags/fixed-browser-command.json",
+      "bytes": 312,
+      "sha256": "793aa41668f6a5d98751796f58334a0f8da723c91ef7c0c472403d11cafd0a45"
+    },
+    {
+      "path": "results/search-live-stored-flags/fixed-browser-commands.json",
+      "bytes": 1697,
+      "sha256": "ddc877a4d18c6a845a5780a2cc57d171bbeb7b2135cbb753aec5628efa95eb1b"
+    },
+    {
+      "path": "results/search-live-stored-flags/fixed-browser-wasm_search_addon-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/search-live-stored-flags/fixed-browser-wasm_search_addon-bindgen.log",
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": "results/search-live-stored-flags/fixed-browser-wasm_search_addon-build.log",
+      "bytes": 44713,
+      "sha256": "4d34adf29416d88ce85ac67d6ef58377170a32b1f36fc4b3fcf48befb6d95518"
+    },
+    {
+      "path": "results/search-live-stored-flags/fixed-browser-wasm_search_addon-chromium.log",
+      "bytes": 1193,
+      "sha256": "c878f7ea83b9f6176312734d2e943201a9863f1d9d09b6518e79276c986d344f"
+    },
+    {
+      "path": "results/search-live-stored-flags/fixed-browser-wasm_search_addon-firefox.log",
+      "bytes": 1193,
+      "sha256": "34b089ff149c5811c811d30f889f2ecfde7a0089a6dcbb73f53a0d1fc021b1b2"
+    },
+    {
+      "path": "results/search-live-stored-flags/fixed-browser-wasm_search_addon-webkit.log",
+      "bytes": 1193,
+      "sha256": "be1f0b2d0bb0c13cc0fd769ba186ddaa4d55618adabf9cd83a0747cc8966d338"
+    },
+    {
+      "path": "results/search-live-stored-flags/fixed-browser.json",
+      "bytes": 12424,
+      "sha256": "e6b4a9a66be9a77acabe155d083161b9004135cfb3ed56aa15de8c271bd510ea"
+    },
+    {
+      "path": "results/search-live-stored-flags/fixed-browser.log",
+      "bytes": 135,
+      "sha256": "6fad7d06a71406c6987af473f2dd046ddcec05e8e736b6faffa5894662caa16f"
+    },
+    {
+      "path": "results/search-live-stored-flags/fixed-focused-final-command.json",
+      "bytes": 305,
+      "sha256": "e86af580a2250f48eddcb9bfc9287fb1fc432772982bd2da15e07ce58c3ee9b8"
+    },
+    {
+      "path": "results/search-live-stored-flags/fixed-focused-final.log",
+      "bytes": 88,
+      "sha256": "13a8899f18d6c0dd1676b8df13f35e8e9f1d90094b6a3e6fe7f291aa7b4e2b5f"
+    },
+    {
+      "path": "results/search-live-stored-flags/focused-commands.json",
+      "bytes": 2001,
+      "sha256": "747893163b229bf249af3c6681c9012f26e205756c42f55e752d8bda668142e1"
+    },
+    {
+      "path": "results/search-live-stored-flags/full-fmt.log",
+      "bytes": 816,
+      "sha256": "a3aa819acd4a800a025151dd14103033e5af56ff3a5ed6a7dfb163d8c484bcc2"
+    },
+    {
+      "path": "results/search-live-stored-flags/native-clippy.log",
+      "bytes": 228,
+      "sha256": "85181894e0a3f3d624d34431205090ef72c8bea3bc8fe1a53f54bd029dc4576f"
+    },
+    {
+      "path": "results/search-live-stored-flags/native.log",
+      "bytes": 4458,
+      "sha256": "862bc9aab7d4cae1a1cdd8f495c5c05f22431dffe028f282ccbd2da3ed07aaa3"
+    },
+    {
+      "path": "results/search-live-stored-flags/negative-browser-run-command.json",
+      "bytes": 313,
+      "sha256": "95e9f4b52aa6bc9d6a645ffd1218a70852bfd4dbb4e4b75105a07fef7d746c3e"
+    },
+    {
+      "path": "results/search-live-stored-flags/negative-browser-run.log",
+      "bytes": 29,
+      "sha256": "68292e577ee86b06f25dda5a5f4a3799af80273c4c1d5bac141c8fb0d45e6d37"
+    },
+    {
+      "path": "results/search-live-stored-flags/negative-browser.json",
+      "bytes": 12569,
+      "sha256": "a66ffb55bd23cd1169ce73c5bce9ff654ac449b3f7c70da83b112dbac7304d4e"
+    },
+    {
+      "path": "results/search-live-stored-flags/negative-browser.log",
+      "bytes": 51,
+      "sha256": "4e01203cc923b26f1dcb6b7b16fc4c27bb1a407e71f86d9cfb28a4863f71e71f"
+    },
+    {
+      "path": "results/search-live-stored-flags/negative-native-run-command.json",
+      "bytes": 319,
+      "sha256": "c981b168ad8e89bc2b4a7a4f6c46ffb11d6b87d000f45502aa470975d8042189"
+    },
+    {
+      "path": "results/search-live-stored-flags/negative-native-run.log",
+      "bytes": 28,
+      "sha256": "2d4b427f7a4b64213367663a82a7250171c53eff88e8b9d6dad2000b107f4dd2"
+    },
+    {
+      "path": "results/search-live-stored-flags/negative-native.json",
+      "bytes": 934,
+      "sha256": "ee125555088335c258049dfcbe63a28867cef5c5e9f53293944cbb1af8b45f36"
+    },
+    {
+      "path": "results/search-live-stored-flags/negative-native.log",
+      "bytes": 1744,
+      "sha256": "9b194544a265c231a52a13c1ab35a2710292ceccd2fe3451fe71e275ea049b82"
+    },
+    {
+      "path": "results/search-live-stored-flags/negative-wasm_search_addon-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/search-live-stored-flags/negative-wasm_search_addon-bindgen.log",
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": "results/search-live-stored-flags/negative-wasm_search_addon-build.log",
+      "bytes": 44983,
+      "sha256": "7908c3ce230025d111efc6a501cf2a22a08c2c79dba5a5a2913be5410fd50c32"
+    },
+    {
+      "path": "results/search-live-stored-flags/negative-wasm_search_addon-chromium.log",
+      "bytes": 3195,
+      "sha256": "4e8fb53a976b5c821a3b08d1cdc80dda6459b01f5253fffeb98273500d73a322"
+    },
+    {
+      "path": "results/search-live-stored-flags/original-build-report.json",
+      "bytes": 4931,
+      "sha256": "4143bbd2a2a54b051f051882d842a101bc3f8698b3930a4f235477332eda2345"
+    },
+    {
+      "path": "results/search-live-stored-flags/original-build.log",
+      "bytes": 4931,
+      "sha256": "4143bbd2a2a54b051f051882d842a101bc3f8698b3930a4f235477332eda2345"
+    },
+    {
+      "path": "results/search-live-stored-flags/original-command.json",
+      "bytes": 375,
+      "sha256": "ba86872f8536f321097df9f206156c959f197b8617acaf66f57f0716f6165e4c"
+    },
+    {
+      "path": "results/search-live-stored-flags/original-integrity.json",
+      "bytes": 145,
+      "sha256": "b7e20fc9f2cbeb418f2225c3696e7fa04bbf502dc0b751682e00a7f68e87761c"
+    },
+    {
+      "path": "results/search-live-stored-flags/original-playwright.log",
+      "bytes": 218,
+      "sha256": "6512410751d8770c1eba76d95ecaa1bba2ea1b710bef51d7e9551036af9f3520"
+    },
+    {
+      "path": "results/search-live-stored-flags/original-search-playwright.json",
+      "bytes": 113929,
+      "sha256": "f5c65911cb76613187dd435f4c939d9a8ac445e8caf4d614534e9fd390d6ecf8"
+    },
+    {
+      "path": "results/search-live-stored-flags/original-search-report.json",
+      "bytes": 6874,
+      "sha256": "81670c809a1c0916186faf851ab54006774fa15487fa449e4f587ce81a2ef362"
+    },
+    {
+      "path": "results/search-live-stored-flags/original-search.log",
+      "bytes": 223,
+      "sha256": "83898614e6185d37eb6a5209c95c8cec603a3e5906d9d9bf2b51c8e7f49b42d2"
+    },
+    {
+      "path": "results/search-live-stored-flags/scoped-fmt.log",
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": "results/search-live-stored-flags/source.json",
+      "bytes": 2418,
+      "sha256": "e0434c80d6ee3bec2e03e88246f9175a9f83b7a3a8c72aa6a6fe0c24dc11a9e2"
+    },
+    {
+      "path": "results/search-live-stored-flags/wasm-build.log",
+      "bytes": 266,
+      "sha256": "9511e6ce770d34ebc7248c1a92264d3abc6a1f54f8825c54054a40b082a45b9f"
+    },
+    {
+      "path": "results/search-live-stored-flags/wasm-clippy.log",
+      "bytes": 326,
+      "sha256": "294d833b708daf363a0306ec038b1ba59de4faf825b449eca5693f980c996de8"
+    },
+    {
+      "path": "scripts/search-call-args-source.mjs",
+      "bytes": 6458,
+      "sha256": "54431353aee4567f28922e7c19b0c476c939171a56feb0ddd594cb9a0f59f058"
+    }
+  ]
+}

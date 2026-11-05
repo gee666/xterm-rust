@@ -1,0 +1,31 @@
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\I436\crates\xterm-addons)
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\I436\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 4.91s
+     Running tests\search_addon.rs (target\debug\deps\search_addon-4de7d175adac3b45.exe)
+
+running 2 tests
+test live_stored_flags::stored_flags_are_read_before_incoming_and_stop_on_first_difference ... FAILED
+test live_stored_flags::either_operand_can_replace_live_stored_request_before_next_property ... FAILED
+
+failures:
+
+---- live_stored_flags::stored_flags_are_read_before_incoming_and_stop_on_first_difference stdout ----
+
+thread 'live_stored_flags::stored_flags_are_read_before_incoming_and_stop_on_first_difference' panicked at crates\xterm-web\tests\search_cases\live_stored_flags.rs:107:13:
+assertion failed: matches!(find(&h, reverse, request),
+    Err(SearchAddonError::InvalidCoordinates))
+
+---- live_stored_flags::either_operand_can_replace_live_stored_request_before_next_property stdout ----
+
+thread 'live_stored_flags::either_operand_can_replace_live_stored_request_before_next_property' panicked at crates\xterm-web\tests\search_cases\live_stored_flags.rs:176:17:
+assertion failed: matches!(find(&h, reverse, request), Err(SearchAddonError::MissingOptions))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    live_stored_flags::either_operand_can_replace_live_stored_request_before_next_property
+    live_stored_flags::stored_flags_are_read_before_incoming_and_stop_on_first_difference
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 44 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-web --test search_addon`
