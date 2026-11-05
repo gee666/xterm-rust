@@ -16,7 +16,7 @@ The actual combined image WASM test builds. Its initial36 functions returned35 p
 
 All five complete member formatting checks pass. Exact `cargo fmt --all -- --check` remains Windows OS206 here, recorded as failure rather than replaced by member checks. All776 original reference hashes match. Task452 changes one cloned-page test slice to from_ref, preserving identity and assertions. Actual repaired Rust1.99 CI remains unrun; the original3aa checkpoint's WASM lint failure and observed native results stay separate under444/304.
 
-Canonical gates have not run at this document revision. The next operation is the unchanged scripts/worktree-merge.mjs helper on one frozen head, one first-four Cargo jobs2 lane, no browsers or late picks. Its real outcome will be appended afterward. This is not a full all-feature/release/native-OS/browser/demo/comparison proof.
+The unchanged canonical helper exited0 and fast-forwarded main to frozen32bf954467fe3389e9cfe42fdd8c34d425975b62. The three changed crates, xterm-addons, xterm-font-addons and xterm-web, passed default-feature all-target tests with547 passes across199 summaries, zero failed or ignored. Affected native all-target, workspace and applicable WASM library checks passed. The helper removed the private target. Raw output and exact summary are retained in results/integration448/canonical-merge.log and canonical-summary.json. Core was not a changed crate, so this is not a fresh core test run or full all-feature/release/native-OS/browser/demo/comparison proof. Mainref and compiler ownership were released after success.
 
 ## Ownership and cleanup
 
