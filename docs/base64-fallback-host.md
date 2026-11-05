@@ -38,6 +38,8 @@ The isolated task400 reviewer accepted b3a93e33 with no findings and no tracked 
 
 After rebasing onto actual main d8ac6a04, all42 browser executions, ten native tests and focused WASM Clippy passed again. The `union-*` reports retain these fresh results. The exact full-workspace fmt command then hit Windows OS206 as the upstream union gained more test targets. A temporary short subst alias did not avoid Cargo's physical-path canonicalization and was removed. `union-fmt.log` and `union-fmt-short.log` preserve the failures. Formatting every workspace package separately passed, as `union-fmt-packages.log` records, but is not represented as a new exact full-command pass. The earlier exact command and independent-review passes apply to the pre-rebase checkpoint.
 
+The canonical worktree helper integrated repair7cbc9d6b, review receipt66f3a9da and refreshed-union evidence0a1580f9 into actual main. `merge.log` records changed xterm-web build/all-target tests, affected-dependent checks, workspace check and applicable WASM library check. The helper removed the owned private target. This is not the full all-feature/native-OS workspace matrix.
+
 ## Reproduce
 
 Use existing source-only Node dependencies, Playwright engines and wasm-bindgen0.2.100 through SOURCE_ROOT, PLAYWRIGHT_MODULE and WASM_BINDGEN. Keep new builds and scratch on O: under current team resource limits.
