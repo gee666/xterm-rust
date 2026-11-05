@@ -1,0 +1,77 @@
+40x8 cursor=(11,2) base=0 viewport=0
+|red green|
+|A😀界é|
+|cursor: XYZ|
+||
+||
+||
+||
+||
+outbound UTF-16: 
+ok assert-size
+ok assert-line
+ok assert-fg
+ok assert-fg
+ok assert-cell
+ok assert-width
+ok assert-cell
+ok assert-width
+ok assert-cell
+ok assert-line
+ok assert-cursor
+40x8 cursor=(11,2) base=0 viewport=0
+|red green|
+|A😀界é|
+|cursor: XYZ|
+||
+||
+||
+||
+||
+outbound UTF-16: hi\r\uD800
+ok assert-output
+40x8 cursor=(0,0) base=0 viewport=0
+||
+||
+||
+||
+||
+||
+||
+||
+outbound UTF-16: hi\r\uD800
+ok assert-line
+ok assert-cursor
+8x4 cursor=(0,0) base=0 viewport=0
+||
+||
+||
+||
+outbound UTF-16: hi\r\uD800
+8x4 cursor=(0,2) base=0 viewport=0
+|abcdefgh|
+|ijkl|
+||
+||
+outbound UTF-16: hi\r\uD800
+ok assert-line
+ok assert-line
+ok assert-cursor
+12x4 cursor=(0,1) base=0 viewport=0
+|abcdefghijkl|
+||
+||
+||
+outbound UTF-16: hi\r\uD800
+ok assert-size
+ok assert-line
+ok assert-line
+ok assert-cursor
+serialized UTF-16: abcdefghijkl\e[1B\e[12D
+12x4 cursor=(0,1) base=0 viewport=0
+|abcdefghijkl|
+||
+||
+||
+outbound UTF-16: hi\r\uD800
+Assertions: 21; disposed: true

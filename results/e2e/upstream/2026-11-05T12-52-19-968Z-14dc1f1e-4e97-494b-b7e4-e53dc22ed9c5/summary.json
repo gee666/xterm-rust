@@ -1,0 +1,300 @@
+{
+  "status": "failed",
+  "engine": "Rust WASM",
+  "suite": "core",
+  "project": "FirefoxStable",
+  "mode": "runtime",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "counts": {
+    "discovered": 63,
+    "executed": 33,
+    "passed": 31,
+    "failed": 2,
+    "skipped": 30,
+    "unrun": 0
+  },
+  "errors": [
+    "Error: Original Playwright assertions failed against Rust\n    at file:///O:/xterm-rust-swarm-16/tmp/B/scripts/e2e-upstream.mjs:93:65"
+  ],
+  "commands": [
+    {
+      "stage": "playwright",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\B\\source_repo\\node_modules\\@playwright\\test\\cli.js",
+        "test",
+        "--config=O:\\xterm-rust-swarm-16\\tmp\\B\\tmp\\e2e\\2026-11-05T12-52-19-968Z-14dc1f1e-4e97-494b-b7e4-e53dc22ed9c5\\playwright.cjs",
+        "--reporter=json",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=479500",
+        "--output=O:\\xterm-rust-swarm-16\\tmp\\B\\results\\e2e\\upstream\\2026-11-05T12-52-19-968Z-14dc1f1e-4e97-494b-b7e4-e53dc22ed9c5\\artifacts",
+        "--project=FirefoxStable",
+        "--grep=(?:combining chars|surrogate chars|surrogate combining chars|fullwidth chars|fullwidth chars offset 1|CSI Ps SP q - Set cursor style \\(DECSCUSR\\), VT520\\.|CSI Ps \" q - Select character protection attribute \\(DECSCA\\), VT220\\.|CSI # q - Pop video attributes from stack \\(XTPOPSGR\\), xterm\\.|CSI Ps ; Ps r - Set Scrolling Region \\[top;bottom\\] \\(default = full size of window\\) \\(DECSTBM\\), VT100\\.|CSI \\? Pm r - Restore DEC Private Mode Values \\(XTRESTORE\\), xterm\\.|CSI Pt ; Pl ; Pb ; Pr ; Pm \\$ r - Change Attributes in Rectangular Area \\(DECCARA\\), VT400 and up\\.|CSI s - Save cursor, available only when DECLRMM is disabled \\(SCOSC, also ANSI\\.SYS\\)\\.|CSI Pl ; Pr s - Set left and right margins \\(DECSLRM\\), VT420 and up\\.|CSI > Ps s - Set/reset shift-escape options \\(XTSHIFTESCAPE\\), xterm\\.|CSI \\? Pm s - Save DEC Private Mode Values \\(XTSAVE\\), xterm\\.  Ps values are the same as for DECSET\\.|CSI > Pm t - This xterm control sets one or more features of the title modes \\(XTSMTITLE\\), xterm\\.|CSI Ps SP t - Set warning-bell volume \\(DECSWBV\\), VT520\\.|CSI Pt ; Pl ; Pb ; Pr ; Pm \\$ t - Reverse Attributes in Rectangular Area \\(DECRARA\\), VT400 and up\\.|CSI u - Restore cursor \\(SCORC, also ANSI\\.SYS\\)\\.|CSI Ps SP u - Set margin-bell volume \\(DECSMBV\\), VT520\\.|CSI Pt ; Pl ; Pb ; Pr ; Pp ; Pt ; Pl ; Pp \\$ v - Copy Rectangular Area \\(DECCRA\\), VT400 and up\\.|CSI Ps \\$ w - Request presentation state report \\(DECRQPSR\\), VT320 and up\\.|CSI Pt ; Pl ; Pb ; Pr ' w - Enable Filter Rectangle \\(DECEFR\\), VT420 and up\\.|CSI Ps x - Request Terminal Parameters \\(DECREQTPARM\\)\\.|CSI Ps \\* x - Select Attribute Change Extent \\(DECSACE\\), VT420 and up\\.|CSI Pc ; Pt ; Pl ; Pb ; Pr \\$ x - Fill Rectangular Area \\(DECFRA\\), VT420 and up\\.|CSI Ps # y - Select checksum extension \\(XTCHECKSUM\\), xterm\\.|CSI Pi ; Pg ; Pt ; Pl ; Pb ; Pr \\* y - Request Checksum of Rectangular Area \\(DECRQCRA\\), VT420 and up\\.|CSI Ps ; Pu ' z - Enable Locator Reporting \\(DECELR\\)\\.|CSI Pt ; Pl ; Pb ; Pr \\$ z - Erase Rectangular Area \\(DECERA\\), VT400 and up\\.|CSI Pm ' \\{ - Select Locator Events \\(DECSLE\\)\\.|CSI \\[Pm\\] # \\{ Push video attributes onto stack \\(XTPUSHSGR\\), xterm\\.|CSI Pt ; Pl ; Pb ; Pr \\$ \\{ - Selective Erase Rectangular Area \\(DECSERA\\), VT400 and up\\.|CSI Pt ; Pl ; Pb ; Pr # \\| - Report selected graphic rendition \\(XTREPORTSGR\\), xterm\\.|CSI Ps \\$ \\| - Select columns per page \\(DECSCPP\\), VT340\\.|CSI Ps ' \\| - Request Locator Position \\(DECRQLP\\)\\.|CSI Ps \\* \\| - Select number of lines per screen \\(DECSNLS\\), VT420 and up\\.|CSI # \\} - Pop video attributes from stack \\(XTPOPSGR\\), xterm\\.|CSI Ps ' \\} - Insert Ps Column\\(s\\) \\(default = 1\\) \\(DECIC\\), VT420 and up\\.|CSI Ps \\$ \\} - Select active status display \\(DECSASD\\), VT320 and up\\.|CSI Ps ' ~ - Delete Ps Column\\(s\\) \\(default = 1\\) \\(DECDC\\), VT420 and up\\.|CSI Ps \\$ ~ - Select status line type \\(DECSSDT\\), VT320 and up\\.|should be disabled by default|14 - GetWinSizePixels|16 - GetCellSizePixels|query single color|query multiple colors|set & query single color|query & set colors mixed|change & restore single color|restore multiple at once|restore full table|query FG color|query BG color|query FG & BG color in one call|set & query FG|set & query BG|set & query cursor color|set & query FG & BG color in one call|OSC 110: restore FG color|OSC 111: restore BG color|OSC 112: restore cursor color|should save the absolute cursor position so resizing restores to the correct position)$"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 26118.588499999998,
+      "status": "failed",
+      "log": "playwright.log"
+    }
+  ],
+  "scope": "This run does not establish complete terminal or cross-platform equivalence.",
+  "source": {
+    "revision": "e1651049cf208ae47965b9c9f7e206fecf36cdd6",
+    "sha256": "3661cb6cf07784549c345c0ede25c9e22f81e26a1f5ba367abbb8934bf641653",
+    "files": 1424
+  },
+  "reference": [
+    {
+      "path": "demo/test.html",
+      "bytes": 545,
+      "sha256": "35f81ad165aee291f49ac3ffea10068bf164207aad8d5fe4e5a558ada0e5ceed"
+    },
+    {
+      "path": "test/playwright/playwright.config.ts",
+      "bytes": 622,
+      "sha256": "0cdbe7c97fb5a60a6d02ae7e097368a1b9ca8bb5ba1451da24c6cd7190af7d02"
+    }
+  ],
+  "fixture": [
+    {
+      "path": "scripts/e2e-upstream.mjs",
+      "bytes": 7780,
+      "sha256": "12d881e3127c7865f00d7a55251bad4de8b611c24403fe3e14867798e6e16977"
+    },
+    {
+      "path": "scripts/e2e/fixture-server.mjs",
+      "bytes": 7410,
+      "sha256": "4790325527ed20905ecbaf0ceba34272325ccdecdd36060c9cf6bf5ec7a0b2ef"
+    },
+    {
+      "path": "scripts/e2e/test-page.mjs",
+      "bytes": 1867,
+      "sha256": "58a7f3ff1c587dff8b78d8c5775b9b7a3ac72b144f800d893d80bd8e98d20b28"
+    },
+    {
+      "path": "scripts/e2e/build-bootstrap.mjs",
+      "bytes": 905,
+      "sha256": "487154862b39623222d248d465c66aa06ee08467631b6dacdbe5c43f3a51f801"
+    },
+    {
+      "path": "scripts/e2e/upstream-config.mjs",
+      "bytes": 1388,
+      "sha256": "0ff88d3d995ad09fa7308bd6ac5675a82d10992f22f5b9b8304a9fee9590aa2f"
+    },
+    {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    }
+  ],
+  "build": {
+    "report": "results/demos/build/2026-11-05T11-47-21-450Z/report.json",
+    "source": {
+      "revision": "e1651049cf208ae47965b9c9f7e206fecf36cdd6",
+      "sha256": "3661cb6cf07784549c345c0ede25c9e22f81e26a1f5ba367abbb8934bf641653",
+      "files": 1424
+    },
+    "artifacts": [
+      {
+        "path": "browser/pkg/xterm_web.js",
+        "bytes": 181383,
+        "sha256": "8a6da09d9fe3bec94715ddf60880490d94976661270d39c6a555c20fe0b58e4f"
+      },
+      {
+        "path": "browser/pkg/xterm_web_bg.wasm",
+        "bytes": 13587515,
+        "sha256": "ee1f63bec2e3dac92567d8aa1936773c3008b2f3058bb4bef4ae2cb2f77b3ff6"
+      }
+    ]
+  },
+  "bindings": [
+    {
+      "path": "browser/xterm.mjs",
+      "bytes": 1119,
+      "sha256": "3c6937bc590937d8678cf8d507b5b44448071d81bd0a4e4ecac8a2e0f0319c30"
+    }
+  ],
+  "command": [
+    "C:\\nvm4w\\nodejs\\node.exe",
+    "O:\\xterm-rust-swarm-16\\tmp\\B\\source_repo\\node_modules\\@playwright\\test\\cli.js",
+    "test",
+    "--config=O:\\xterm-rust-swarm-16\\tmp\\B\\tmp\\e2e\\2026-11-05T12-52-19-968Z-14dc1f1e-4e97-494b-b7e4-e53dc22ed9c5\\playwright.cjs",
+    "--reporter=json",
+    "--workers=2",
+    "--retries=0",
+    "--global-timeout=479500",
+    "--output=O:\\xterm-rust-swarm-16\\tmp\\B\\results\\e2e\\upstream\\2026-11-05T12-52-19-968Z-14dc1f1e-4e97-494b-b7e4-e53dc22ed9c5\\artifacts",
+    "--project=FirefoxStable",
+    "--grep=(?:combining chars|surrogate chars|surrogate combining chars|fullwidth chars|fullwidth chars offset 1|CSI Ps SP q - Set cursor style \\(DECSCUSR\\), VT520\\.|CSI Ps \" q - Select character protection attribute \\(DECSCA\\), VT220\\.|CSI # q - Pop video attributes from stack \\(XTPOPSGR\\), xterm\\.|CSI Ps ; Ps r - Set Scrolling Region \\[top;bottom\\] \\(default = full size of window\\) \\(DECSTBM\\), VT100\\.|CSI \\? Pm r - Restore DEC Private Mode Values \\(XTRESTORE\\), xterm\\.|CSI Pt ; Pl ; Pb ; Pr ; Pm \\$ r - Change Attributes in Rectangular Area \\(DECCARA\\), VT400 and up\\.|CSI s - Save cursor, available only when DECLRMM is disabled \\(SCOSC, also ANSI\\.SYS\\)\\.|CSI Pl ; Pr s - Set left and right margins \\(DECSLRM\\), VT420 and up\\.|CSI > Ps s - Set/reset shift-escape options \\(XTSHIFTESCAPE\\), xterm\\.|CSI \\? Pm s - Save DEC Private Mode Values \\(XTSAVE\\), xterm\\.  Ps values are the same as for DECSET\\.|CSI > Pm t - This xterm control sets one or more features of the title modes \\(XTSMTITLE\\), xterm\\.|CSI Ps SP t - Set warning-bell volume \\(DECSWBV\\), VT520\\.|CSI Pt ; Pl ; Pb ; Pr ; Pm \\$ t - Reverse Attributes in Rectangular Area \\(DECRARA\\), VT400 and up\\.|CSI u - Restore cursor \\(SCORC, also ANSI\\.SYS\\)\\.|CSI Ps SP u - Set margin-bell volume \\(DECSMBV\\), VT520\\.|CSI Pt ; Pl ; Pb ; Pr ; Pp ; Pt ; Pl ; Pp \\$ v - Copy Rectangular Area \\(DECCRA\\), VT400 and up\\.|CSI Ps \\$ w - Request presentation state report \\(DECRQPSR\\), VT320 and up\\.|CSI Pt ; Pl ; Pb ; Pr ' w - Enable Filter Rectangle \\(DECEFR\\), VT420 and up\\.|CSI Ps x - Request Terminal Parameters \\(DECREQTPARM\\)\\.|CSI Ps \\* x - Select Attribute Change Extent \\(DECSACE\\), VT420 and up\\.|CSI Pc ; Pt ; Pl ; Pb ; Pr \\$ x - Fill Rectangular Area \\(DECFRA\\), VT420 and up\\.|CSI Ps # y - Select checksum extension \\(XTCHECKSUM\\), xterm\\.|CSI Pi ; Pg ; Pt ; Pl ; Pb ; Pr \\* y - Request Checksum of Rectangular Area \\(DECRQCRA\\), VT420 and up\\.|CSI Ps ; Pu ' z - Enable Locator Reporting \\(DECELR\\)\\.|CSI Pt ; Pl ; Pb ; Pr \\$ z - Erase Rectangular Area \\(DECERA\\), VT400 and up\\.|CSI Pm ' \\{ - Select Locator Events \\(DECSLE\\)\\.|CSI \\[Pm\\] # \\{ Push video attributes onto stack \\(XTPUSHSGR\\), xterm\\.|CSI Pt ; Pl ; Pb ; Pr \\$ \\{ - Selective Erase Rectangular Area \\(DECSERA\\), VT400 and up\\.|CSI Pt ; Pl ; Pb ; Pr # \\| - Report selected graphic rendition \\(XTREPORTSGR\\), xterm\\.|CSI Ps \\$ \\| - Select columns per page \\(DECSCPP\\), VT340\\.|CSI Ps ' \\| - Request Locator Position \\(DECRQLP\\)\\.|CSI Ps \\* \\| - Select number of lines per screen \\(DECSNLS\\), VT420 and up\\.|CSI # \\} - Pop video attributes from stack \\(XTPOPSGR\\), xterm\\.|CSI Ps ' \\} - Insert Ps Column\\(s\\) \\(default = 1\\) \\(DECIC\\), VT420 and up\\.|CSI Ps \\$ \\} - Select active status display \\(DECSASD\\), VT320 and up\\.|CSI Ps ' ~ - Delete Ps Column\\(s\\) \\(default = 1\\) \\(DECDC\\), VT420 and up\\.|CSI Ps \\$ ~ - Select status line type \\(DECSSDT\\), VT320 and up\\.|should be disabled by default|14 - GetWinSizePixels|16 - GetCellSizePixels|query single color|query multiple colors|set & query single color|query & set colors mixed|change & restore single color|restore multiple at once|restore full table|query FG color|query BG color|query FG & BG color in one call|set & query FG|set & query BG|set & query cursor color|set & query FG & BG color in one call|OSC 110: restore FG color|OSC 111: restore BG color|OSC 112: restore cursor color|should save the absolute cursor position so resizing restores to the correct position)$"
+  ],
+  "playwrightStats": {
+    "startTime": "2026-11-05T12:52:21.292Z",
+    "duration": 25667.17,
+    "expected": 31,
+    "skipped": 30,
+    "unexpected": 2,
+    "flaky": 0
+  },
+  "requests": [
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=110d8852-9aeb-426c-9dbe-3cb91b551f46",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=110d8852-9aeb-426c-9dbe-3cb91b551f46&missing=ImageAddon%2CWebglAddon",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": "/favicon.ico",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=6f860279-ab29-43ac-a475-d3e630e67e0d",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=6f860279-ab29-43ac-a475-d3e630e67e0d&missing=ImageAddon%2CWebglAddon",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": "/favicon.ico",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=8ac5661f-06ec-4a69-b0e6-31f16ce8217d",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=8ac5661f-06ec-4a69-b0e6-31f16ce8217d&missing=ImageAddon%2CWebglAddon",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": "/favicon.ico",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=4a951c9d-0d90-4ccb-b3a7-1a8c37c75aff",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=4a951c9d-0d90-4ccb-b3a7-1a8c37c75aff&missing=ImageAddon%2CWebglAddon",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": "/favicon.ico",
+      "status": 404
+    }
+  ],
+  "serverErrors": [],
+  "runtimes": [
+    {
+      "state": "ready",
+      "missingBindings": [
+        "ImageAddon",
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "ImageAddon",
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "ImageAddon",
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "ImageAddon",
+        "WebglAddon"
+      ]
+    }
+  ]
+}

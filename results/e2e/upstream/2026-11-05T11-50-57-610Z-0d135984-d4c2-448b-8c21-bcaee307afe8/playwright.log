@@ -1,0 +1,641 @@
+Listing tests:
+  [Chromium] › ImageAddon.test.ts:101:7 › ImageAddon › test for private accessors
+  [Chromium] › ImageAddon.test.ts:128:9 › ImageAddon › ctor options › empty settings should load defaults
+  [Chromium] › ImageAddon.test.ts:145:9 › ImageAddon › ctor options › custom settings should overload defaults
+  [Chromium] › ImageAddon.test.ts:169:9 › ImageAddon › scrolling & cursor modes › testdata default (scrolling with VT240 cursor pos)
+  [Chromium] › ImageAddon.test.ts:177:9 › ImageAddon › scrolling & cursor modes › write testdata noScrolling
+  [Chromium] › ImageAddon.test.ts:184:9 › ImageAddon › scrolling & cursor modes › testdata cursor always at VT240 pos
+  [Chromium] › ImageAddon.test.ts:199:9 › ImageAddon › image lifecycle & eviction › onImageAdded fires for each image
+  [Chromium] › ImageAddon.test.ts:211:9 › ImageAddon › image lifecycle & eviction › delete image once scrolled off
+  [Chromium] › ImageAddon.test.ts:226:9 › ImageAddon › image lifecycle & eviction › get storageUsage
+  [Chromium] › ImageAddon.test.ts:231:9 › ImageAddon › image lifecycle & eviction › get/set storageLimit
+  [Chromium] › ImageAddon.test.ts:236:9 › ImageAddon › image lifecycle & eviction › remove images by storage limit pressure
+  [Chromium] › ImageAddon.test.ts:253:9 › ImageAddon › image lifecycle & eviction › set storageLimit removes images synchronously
+  [Chromium] › ImageAddon.test.ts:260:9 › ImageAddon › image lifecycle & eviction › clear alternate images on buffer change
+  [Chromium] › ImageAddon.test.ts:267:9 › ImageAddon › image lifecycle & eviction › evict tiles by in-place overwrites (only full overwrite tested)
+  [Chromium] › ImageAddon.test.ts:280:9 › ImageAddon › image lifecycle & eviction › manual eviction on alternate buffer must not miss images
+  [Chromium] › ImageAddon.test.ts:294:9 › ImageAddon › IIP support › size params is optional/informative
+  [Chromium] › ImageAddon.test.ts:302:10 › ImageAddon › IIP support › FilePart support - bytewise
+  [Chromium] › ImageAddon.test.ts:313:9 › ImageAddon › IIP support › FilePart support - chunks
+  [Chromium] › ImageAddon.test.ts:324:9 › ImageAddon › IIP support › FilePart support - edgecases
+  [Chromium] › ImageAddon.test.ts:340:9 › ImageAddon › IIP support › FilePart support - other IIP sequence cancels chunked image
+  [Chromium] › ImageAddon.test.ts:355:9 › ImageAddon › IIP support - testimages › palette.png
+  [Chromium] › ImageAddon.test.ts:359:9 › ImageAddon › IIP support - testimages › spinfox.png
+  [Chromium] › ImageAddon.test.ts:363:9 › ImageAddon › IIP support - testimages › w3c gif
+  [Chromium] › ImageAddon.test.ts:367:9 › ImageAddon › IIP support - testimages › w3c jpeg
+  [Chromium] › ImageAddon.test.ts:371:9 › ImageAddon › IIP support - testimages › w3c png
+  [Chromium] › ImageAddon.test.ts:378:9 › ImageAddon › IIP - QOI support › palette should yield same bytes from PNG and QOI
+  [Chromium] › ImageAddon.test.ts:404:11 › ImageAddon › IIP - resizing › palette.png: N --> width=20 height=5 preserveAspectRatio=0
+  [Chromium] › ImageAddon.test.ts:411:11 › ImageAddon › IIP - resizing › palette.png: Npx --> width=320px height=160px preserveAspectRatio=0
+  [Chromium] › ImageAddon.test.ts:417:11 › ImageAddon › IIP - resizing › palette.png: N% --> width=50% height=30% preserveAspectRatio=0
+  [Chromium] › ImageAddon.test.ts:424:11 › ImageAddon › IIP - resizing › palette.png: ommitted dimension assumes preserveAspectRatio=1
+  [Chromium] › ImageAddon.test.ts:404:11 › ImageAddon › IIP - resizing › palette.qoi: N --> width=20 height=5 preserveAspectRatio=0
+  [Chromium] › ImageAddon.test.ts:411:11 › ImageAddon › IIP - resizing › palette.qoi: Npx --> width=320px height=160px preserveAspectRatio=0
+  [Chromium] › ImageAddon.test.ts:417:11 › ImageAddon › IIP - resizing › palette.qoi: N% --> width=50% height=30% preserveAspectRatio=0
+  [Chromium] › ImageAddon.test.ts:424:11 › ImageAddon › IIP - resizing › palette.qoi: ommitted dimension assumes preserveAspectRatio=1
+  [Chromium] › ImageAddon.test.ts:440:9 › ImageAddon › text overwrite removes tiles › sixel
+  [Chromium] › ImageAddon.test.ts:443:9 › ImageAddon › text overwrite removes tiles › iip
+  [Chromium] › KittyGraphics.test.ts:121:9 › Kitty Graphics Protocol › Basic transmission and storage › stores 1x1 black PNG with a=T (transmit and display)
+  [Chromium] › KittyGraphics.test.ts:129:9 › Kitty Graphics Protocol › Basic transmission and storage › stores 3x1 RGB PNG with a=T
+  [Chromium] › KittyGraphics.test.ts:137:9 › Kitty Graphics Protocol › Basic transmission and storage › transmit only (a=t) does not display but stores in handler
+  [Chromium] › KittyGraphics.test.ts:144:9 › Kitty Graphics Protocol › Basic transmission and storage › uses specified image ID
+  [Chromium] › KittyGraphics.test.ts:152:9 › Kitty Graphics Protocol › Basic transmission and storage › assigns auto-incrementing IDs when not specified
+  [Chromium] › KittyGraphics.test.ts:161:9 › Kitty Graphics Protocol › Basic transmission and storage › defaults to transmit action when action is omitted
+  [Chromium] › KittyGraphics.test.ts:168:9 › Kitty Graphics Protocol › Basic transmission and storage › ignores command when action is empty string
+  [Chromium] › KittyGraphics.test.ts:177:9 › Kitty Graphics Protocol › Chunked transmission › handles chunked transmission (m=1)
+  [Chromium] › KittyGraphics.test.ts:194:9 › Kitty Graphics Protocol › Chunked transmission › verifies chunked data is assembled correctly
+  [Chromium] › KittyGraphics.test.ts:211:9 › Kitty Graphics Protocol › Chunked transmission › enforces size limit across chunked transmissions
+  [Chromium] › KittyGraphics.test.ts:244:9 › Kitty Graphics Protocol › Chunked transmission › chunked a=T works when subsequent chunks omit i= (spec pattern)
+  [Chromium] › KittyGraphics.test.ts:258:9 › Kitty Graphics Protocol › Chunked transmission › chunked a=t works when subsequent chunks omit i= (spec pattern)
+  [Chromium] › KittyGraphics.test.ts:270:9 › Kitty Graphics Protocol › Chunked transmission › chunked data without i= on subsequent chunks is assembled correctly
+  [Chromium] › KittyGraphics.test.ts:287:9 › Kitty Graphics Protocol › Chunked transmission › three-chunk transfer with only m= on middle and last chunks
+  [Chromium] › KittyGraphics.test.ts:308:9 › Kitty Graphics Protocol › Chunked transmission › chunked a=T without i= on any chunk works (no response)
+  [Chromium] › KittyGraphics.test.ts:322:9 › Kitty Graphics Protocol › Chunked transmission › chunked transfer responds OK on final chunk when i= on first only
+  [Chromium] › KittyGraphics.test.ts:347:9 › Kitty Graphics Protocol › Delete commands › delete command (a=d,d=i) removes specific image by id
+  [Chromium] › KittyGraphics.test.ts:357:9 › Kitty Graphics Protocol › Delete commands › delete command (a=d) removes all images when no id specified
+  [Chromium] › KittyGraphics.test.ts:368:9 › Kitty Graphics Protocol › Delete commands › delete by id aborts in-flight chunked upload
+  [Chromium] › KittyGraphics.test.ts:381:9 › Kitty Graphics Protocol › Delete commands › delete by id only aborts targeted upload, not others
+  [Chromium] › KittyGraphics.test.ts:396:9 › Kitty Graphics Protocol › Delete commands › delete all aborts in-flight chunked upload
+  [Chromium] › KittyGraphics.test.ts:410:9 › Kitty Graphics Protocol › Delete commands › d=i selector deletes specific image by id
+  [Chromium] › KittyGraphics.test.ts:422:9 › Kitty Graphics Protocol › Delete commands › d=I selector deletes specific image by id (uppercase)
+  [Chromium] › KittyGraphics.test.ts:434:9 › Kitty Graphics Protocol › Delete commands › d=a selector deletes all images
+  [Chromium] › KittyGraphics.test.ts:445:9 › Kitty Graphics Protocol › Delete commands › d=A selector deletes all images (uppercase)
+  [Chromium] › KittyGraphics.test.ts:456:9 › Kitty Graphics Protocol › Delete commands › d=a selector also removes displayed images from storage
+  [Chromium] › KittyGraphics.test.ts:466:9 › Kitty Graphics Protocol › Delete commands › d=i selector also removes displayed image from storage
+  [Chromium] › KittyGraphics.test.ts:476:9 › Kitty Graphics Protocol › Delete commands › d=i without id does nothing
+  [Chromium] › KittyGraphics.test.ts:486:9 › Kitty Graphics Protocol › Delete commands › d=i selector clears pixels from canvas
+  [Chromium] › KittyGraphics.test.ts:496:9 › Kitty Graphics Protocol › Delete commands › d=a selector clears all pixels from canvas
+  [Chromium] › KittyGraphics.test.ts:506:9 › Kitty Graphics Protocol › Delete commands › unsupported delete selector is ignored
+  [Chromium] › KittyGraphics.test.ts:516:9 › Kitty Graphics Protocol › Delete commands › chunks sent after delete are not assembled with previous data
+  [Chromium] › KittyGraphics.test.ts:541:9 › Kitty Graphics Protocol › Query support (a=q) › responds with OK for capability query without payload
+  [Chromium] › KittyGraphics.test.ts:554:9 › Kitty Graphics Protocol › Query support (a=q) › responds with OK for valid PNG query
+  [Chromium] › KittyGraphics.test.ts:567:9 › Kitty Graphics Protocol › Query support (a=q) › query does NOT store the image (unlike transmit)
+  [Chromium] › KittyGraphics.test.ts:578:9 › Kitty Graphics Protocol › Query support (a=q) › responds with error for invalid base64
+  [Chromium] › KittyGraphics.test.ts:591:9 › Kitty Graphics Protocol › Query support (a=q) › responds with error for RGB data without dimensions
+  [Chromium] › KittyGraphics.test.ts:604:9 › Kitty Graphics Protocol › Query support (a=q) › suppresses OK response when q=1
+  [Chromium] › KittyGraphics.test.ts:616:9 › Kitty Graphics Protocol › Query support (a=q) › suppresses OK response when q=2
+  [Chromium] › KittyGraphics.test.ts:628:9 › Kitty Graphics Protocol › Query support (a=q) › suppresses error response when q=2
+  [Chromium] › KittyGraphics.test.ts:640:9 › Kitty Graphics Protocol › Query support (a=q) › responds with EINVAL when both i and I keys are specified
+  [Chromium] › KittyGraphics.test.ts:654:9 › Kitty Graphics Protocol › Query support (a=q) › responds with EINVAL for i+I conflict even without payload
+  [Chromium] › KittyGraphics.test.ts:670:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=t sends EINVAL on decode error when id is specified
+  [Chromium] › KittyGraphics.test.ts:683:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=t sends no response on decode error without id
+  [Chromium] › KittyGraphics.test.ts:695:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T sends EINVAL on decode error when id is specified
+  [Chromium] › KittyGraphics.test.ts:708:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T sends no response on decode error without id
+  [Chromium] › KittyGraphics.test.ts:720:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T sends EINVAL when raw pixel render fails (missing dimensions)
+  [Chromium] › KittyGraphics.test.ts:733:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T sends OK on successful render with id
+  [Chromium] › KittyGraphics.test.ts:746:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=t sends OK on successful transmit with id
+  [Chromium] › KittyGraphics.test.ts:759:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=t EINVAL suppressed by q=2
+  [Chromium] › KittyGraphics.test.ts:771:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T EINVAL suppressed by q=2
+  [Chromium] › KittyGraphics.test.ts:783:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=t OK suppressed by q=1
+  [Chromium] › KittyGraphics.test.ts:795:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T OK suppressed by q=1
+  [Chromium] › KittyGraphics.test.ts:807:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=t OK suppressed by q=2
+  [Chromium] › KittyGraphics.test.ts:819:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T OK suppressed by q=2
+  [Chromium] › KittyGraphics.test.ts:833:9 › Kitty Graphics Protocol › Transmission medium rejection › query rejects t=f (file transmission)
+  [Chromium] › KittyGraphics.test.ts:846:9 › Kitty Graphics Protocol › Transmission medium rejection › query rejects t=s (shared memory)
+  [Chromium] › KittyGraphics.test.ts:859:9 › Kitty Graphics Protocol › Transmission medium rejection › query rejects t=t (temp file)
+  [Chromium] › KittyGraphics.test.ts:872:9 › Kitty Graphics Protocol › Transmission medium rejection › query accepts t=d (direct transmission)
+  [Chromium] › KittyGraphics.test.ts:885:9 › Kitty Graphics Protocol › Transmission medium rejection › query without t key defaults to direct (OK)
+  [Chromium] › KittyGraphics.test.ts:898:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit rejects t=f with id (EINVAL response)
+  [Chromium] › KittyGraphics.test.ts:911:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit rejects t=s with id (EINVAL response)
+  [Chromium] › KittyGraphics.test.ts:924:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit rejects t=t with id (EINVAL response)
+  [Chromium] › KittyGraphics.test.ts:937:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit rejects t=f without id (no response)
+  [Chromium] › KittyGraphics.test.ts:950:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit+display rejects t=f with id (EINVAL response)
+  [Chromium] › KittyGraphics.test.ts:963:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit+display rejects t=s with id (EINVAL response)
+  [Chromium] › KittyGraphics.test.ts:976:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit+display rejects t=t with id (EINVAL response)
+  [Chromium] › KittyGraphics.test.ts:989:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit+display rejects t=f without id (no response)
+  [Chromium] › KittyGraphics.test.ts:1004:9 › Kitty Graphics Protocol › Placement action (a=p) › displays a previously transmitted image at cursor
+  [Chromium] › KittyGraphics.test.ts:1017:9 › Kitty Graphics Protocol › Placement action (a=p) › responds OK on successful placement
+  [Chromium] › KittyGraphics.test.ts:1033:9 › Kitty Graphics Protocol › Placement action (a=p) › responds ENOENT for non-existent image id
+  [Chromium] › KittyGraphics.test.ts:1046:9 › Kitty Graphics Protocol › Placement action (a=p) › without id sends no response
+  [Chromium] › KittyGraphics.test.ts:1058:9 › Kitty Graphics Protocol › Placement action (a=p) › places at specified column/row size (c/r)
+  [Chromium] › KittyGraphics.test.ts:1069:9 › Kitty Graphics Protocol › Placement action (a=p) › cursor advances past placed image (default C=0)
+  [Chromium] › KittyGraphics.test.ts:1079:9 › Kitty Graphics Protocol › Placement action (a=p) › cursor does not move when C=1
+  [Chromium] › KittyGraphics.test.ts:1089:9 › Kitty Graphics Protocol › Placement action (a=p) › supports z-index (negative = bottom layer)
+  [Chromium] › KittyGraphics.test.ts:1101:9 › Kitty Graphics Protocol › Placement action (a=p) › supports source crop via x/y
+  [Chromium] › KittyGraphics.test.ts:1114:9 › Kitty Graphics Protocol › Placement action (a=p) › supports sub-cell offset via X/Y
+  [Chromium] › KittyGraphics.test.ts:1126:9 › Kitty Graphics Protocol › Placement action (a=p) › multiple placements of same image create separate displays
+  [Chromium] › KittyGraphics.test.ts:1145:9 › Kitty Graphics Protocol › Placement action (a=p) › image data remains available after placement for future placements
+  [Chromium] › KittyGraphics.test.ts:1163:9 › Kitty Graphics Protocol › Placement action (a=p) › OK response suppressed by q=1
+  [Chromium] › KittyGraphics.test.ts:1179:9 › Kitty Graphics Protocol › Placement action (a=p) › OK response suppressed by q=2
+  [Chromium] › KittyGraphics.test.ts:1195:9 › Kitty Graphics Protocol › Placement action (a=p) › ENOENT error suppressed by q=2
+  [Chromium] › KittyGraphics.test.ts:1207:9 › Kitty Graphics Protocol › Placement action (a=p) › ENOENT still reported when q=1 (only suppresses OK)
+  [Chromium] › KittyGraphics.test.ts:1220:9 › Kitty Graphics Protocol › Placement action (a=p) › renders pixels correctly when placing a PNG image
+  [Chromium] › KittyGraphics.test.ts:1233:9 › Kitty Graphics Protocol › Placement action (a=p) › renders pixels correctly when placing raw RGB image
+  [Chromium] › KittyGraphics.test.ts:1246:9 › Kitty Graphics Protocol › Placement action (a=p) › renders pixels correctly when placing raw RGBA image
+  [Chromium] › KittyGraphics.test.ts:1259:9 › Kitty Graphics Protocol › Placement action (a=p) › response includes placement id when p is specified
+  [Chromium] › KittyGraphics.test.ts:1275:9 › Kitty Graphics Protocol › Placement action (a=p) › only c specified computes r from aspect ratio
+  [Chromium] › KittyGraphics.test.ts:1293:9 › Kitty Graphics Protocol › Placement action (a=p) › only r specified computes c from aspect ratio
+  [Chromium] › KittyGraphics.test.ts:1317:9 › Kitty Graphics Protocol › Cursor positioning › cursor advances past 1x1 image
+  [Chromium] › KittyGraphics.test.ts:1328:9 › Kitty Graphics Protocol › Cursor positioning › cursor advances with text before image
+  [Chromium] › KittyGraphics.test.ts:1339:9 › Kitty Graphics Protocol › Cursor positioning › cursor advances with text after image
+  [Chromium] › KittyGraphics.test.ts:1349:9 › Kitty Graphics Protocol › Cursor positioning › cursor position with multiple images on same line
+  [Chromium] › KittyGraphics.test.ts:1363:9 › Kitty Graphics Protocol › Cursor positioning › cursor advances on newline after image
+  [Chromium] › KittyGraphics.test.ts:1372:9 › Kitty Graphics Protocol › Cursor positioning › cursor should move right by cols when c specified
+  [Chromium] › KittyGraphics.test.ts:1383:9 › Kitty Graphics Protocol › Cursor positioning › cursor should move down by rows when r specified
+  [Chromium] › KittyGraphics.test.ts:1393:9 › Kitty Graphics Protocol › Cursor positioning › cursor should move by cols AND rows when both specified
+  [Chromium] › KittyGraphics.test.ts:1401:9 › Kitty Graphics Protocol › Cursor positioning › cursor should NOT move when C=1 is specified
+  [Chromium] › KittyGraphics.test.ts:1409:9 › Kitty Graphics Protocol › Cursor positioning › cursor should calculate cols/rows from image size when not specified
+  [Chromium] › KittyGraphics.test.ts:1426:9 › Kitty Graphics Protocol › Z-index layer placement › default placement (no z key) stores image on top layer
+  [Chromium] › KittyGraphics.test.ts:1434:9 › Kitty Graphics Protocol › Z-index layer placement › z=0 stores image on top layer
+  [Chromium] › KittyGraphics.test.ts:1442:9 › Kitty Graphics Protocol › Z-index layer placement › z=1 (positive) stores image on top layer
+  [Chromium] › KittyGraphics.test.ts:1450:9 › Kitty Graphics Protocol › Z-index layer placement › z=-1 uses bottom layer even when allowTransparency is disabled
+  [Chromium] › KittyGraphics.test.ts:1459:9 › Kitty Graphics Protocol › Z-index layer placement › z=-1 (negative) stores image on bottom layer when allowTransparency is enabled
+  [Chromium] › KittyGraphics.test.ts:1468:9 › Kitty Graphics Protocol › Z-index layer placement › z=-100 (large negative) stores image on bottom layer when allowTransparency is enabled
+  [Chromium] › KittyGraphics.test.ts:1477:9 › Kitty Graphics Protocol › Z-index layer placement › top layer canvas has correct CSS class
+  [Chromium] › KittyGraphics.test.ts:1487:9 › Kitty Graphics Protocol › Z-index layer placement › bottom layer canvas has correct CSS class
+  [Chromium] › KittyGraphics.test.ts:1498:9 › Kitty Graphics Protocol › Z-index layer placement › bottom layer canvas is before text canvas in DOM order
+  [Chromium] › KittyGraphics.test.ts:1511:9 › Kitty Graphics Protocol › Pixel verification › renders 1x1 black PNG at cursor position
+  [Chromium] › KittyGraphics.test.ts:1519:9 › Kitty Graphics Protocol › Pixel verification › renders 3x1 RGB PNG (red, green, blue pixels)
+  [Chromium] › KittyGraphics.test.ts:1534:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Basic transmission and storage › stores 200x100 PNG with a=T
+  [Chromium] › KittyGraphics.test.ts:1541:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Basic transmission and storage › transmit only (a=t) stores 200x100 image without display
+  [Chromium] › KittyGraphics.test.ts:1547:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Basic transmission and storage › stores with specified image ID
+  [Chromium] › KittyGraphics.test.ts:1555:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Chunked transmission › handles 2-chunk transmission
+  [Chromium] › KittyGraphics.test.ts:1570:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Chunked transmission › handles 3-chunk transmission
+  [Chromium] › KittyGraphics.test.ts:1586:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Chunked transmission › verifies chunked data assembles correctly
+  [Chromium] › KittyGraphics.test.ts:1605:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Cursor positioning › cursor advances past multi-cell image
+  [Chromium] › KittyGraphics.test.ts:1617:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Cursor positioning › cursor does not move with C=1
+  [Chromium] › KittyGraphics.test.ts:1623:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Cursor positioning › cursor uses explicit c and r over image dimensions
+  [Chromium] › KittyGraphics.test.ts:1636:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › renders red rectangle at top-left origin (0,0)
+  [Chromium] › KittyGraphics.test.ts:1643:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › renders top row colors at rectangle centers
+  [Chromium] › KittyGraphics.test.ts:1661:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › renders bottom row colors at rectangle centers
+  [Chromium] › KittyGraphics.test.ts:1678:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › renders correct colors at rectangle boundaries
+  [Chromium] › KittyGraphics.test.ts:1692:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › renders correct color at bottom-right corner
+  [Chromium] › KittyGraphics.test.ts:1700:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › renders a strip of top-row pixels via getPixels
+  [Chromium] › KittyGraphics.test.ts:1712:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › applies source crop via x/y/w/h before display
+  [Chromium] › KittyGraphics.test.ts:1721:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › scales cropped source region to c/r placement rectangle
+  [Chromium] › KittyGraphics.test.ts:1737:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › applies sub-cell offset via X/Y within first cell
+  [Chromium] › KittyGraphics.test.ts:1746:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › w=0 is treated as unset (displays full width)
+  [Chromium] › KittyGraphics.test.ts:1755:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › h=0 is treated as unset (displays full height)
+  [Chromium] › KittyGraphics.test.ts:1764:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › x exceeding image width produces no display
+  [Chromium] › KittyGraphics.test.ts:1771:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › negative x/y values are clamped to 0
+  [Chromium] › KittyGraphics.test.ts:1779:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › combined crop and sub-cell offset
+  [Chromium] › KittyGraphics.test.ts:1788:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › sub-cell offset with explicit c/r advances cursor correctly
+  [Chromium] › KittyGraphics.test.ts:1797:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Query support › responds with OK for valid 200x100 PNG query
+  [Chromium] › KittyGraphics.test.ts:1810:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Query support › query does not store the 200x100 image
+  [Chromium] › KittyGraphics.test.ts:1822:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Delete commands › delete removes 200x100 image by id
+  [Chromium] › KittyGraphics.test.ts:1836:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Pixel verification › renders 1x1 black pixel with alpha set to 255
+  [Chromium] › KittyGraphics.test.ts:1842:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Pixel verification › renders 1x1 red pixel with alpha set to 255
+  [Chromium] › KittyGraphics.test.ts:1848:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Pixel verification › renders 3x1 strip (red, green, blue)
+  [Chromium] › KittyGraphics.test.ts:1858:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Pixel verification › renders 2x2 grid with correct pixel layout
+  [Chromium] › KittyGraphics.test.ts:1867:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Pixel verification › renders 5x1 row with block+remainder pixel layout
+  [Chromium] › KittyGraphics.test.ts:1877:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Pixel verification › renders 4x2 grid with multi-block pixel layout
+  [Chromium] › KittyGraphics.test.ts:1892:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Storage and dimensions › stores image with correct original dimensions (3x1)
+  [Chromium] › KittyGraphics.test.ts:1899:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Storage and dimensions › stores image with correct original dimensions (2x2)
+  [Chromium] › KittyGraphics.test.ts:1906:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Storage and dimensions › stores image with correct original dimensions (5x1)
+  [Chromium] › KittyGraphics.test.ts:1913:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Storage and dimensions › stores image with correct original dimensions (4x2)
+  [Chromium] › KittyGraphics.test.ts:1922:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › does not render without width (s=)
+  [Chromium] › KittyGraphics.test.ts:1928:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › does not render without height (v=)
+  [Chromium] › KittyGraphics.test.ts:1934:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › does not render without either dimension
+  [Chromium] › KittyGraphics.test.ts:1940:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › does not render with insufficient byte count
+  [Chromium] › KittyGraphics.test.ts:1946:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › query returns EINVAL without dimensions
+  [Chromium] › KittyGraphics.test.ts:1957:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › query returns EINVAL for insufficient pixel data
+  [Chromium] › KittyGraphics.test.ts:1968:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › query returns OK for valid RGB data with correct dimensions
+  [Chromium] › KittyGraphics.test.ts:1983:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Pixel verification › renders 1x1 opaque white pixel
+  [Chromium] › KittyGraphics.test.ts:1989:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Pixel verification › renders 1x1 opaque red pixel
+  [Chromium] › KittyGraphics.test.ts:1995:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Pixel verification › preserves full transparency (alpha=0)
+  [Chromium] › KittyGraphics.test.ts:2002:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Pixel verification › renders 3x1 strip (red, green, blue opaque)
+  [Chromium] › KittyGraphics.test.ts:2012:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Pixel verification › renders 2x2 grid with correct pixel layout
+  [Chromium] › KittyGraphics.test.ts:2021:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Pixel verification › renders 5x1 row with zero-copy pixel layout
+  [Chromium] › KittyGraphics.test.ts:2033:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Storage and dimensions › stores image with correct original dimensions (3x1)
+  [Chromium] › KittyGraphics.test.ts:2040:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Storage and dimensions › stores image with correct original dimensions (2x2)
+  [Chromium] › KittyGraphics.test.ts:2047:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Storage and dimensions › stores image with correct original dimensions (5x1)
+  [Chromium] › KittyGraphics.test.ts:2056:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › does not render without width (s=)
+  [Chromium] › KittyGraphics.test.ts:2062:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › does not render without height (v=)
+  [Chromium] › KittyGraphics.test.ts:2068:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › does not render without either dimension
+  [Chromium] › KittyGraphics.test.ts:2074:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › does not render with insufficient byte count
+  [Chromium] › KittyGraphics.test.ts:2080:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › query returns EINVAL without dimensions
+  [Chromium] › KittyGraphics.test.ts:2091:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › query returns EINVAL for insufficient pixel data
+  [Chromium] › KittyGraphics.test.ts:2102:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › query returns OK for valid RGBA data with correct dimensions
+  [Chromium] › KittyGraphics.test.ts:2116:9 › Kitty Graphics Protocol › Eviction and memory leak prevention › re-transmit with same i= cleans up old storage entry
+  [Chromium] › KittyGraphics.test.ts:2133:9 › Kitty Graphics Protocol › Eviction and memory leak prevention › memory limit eviction cleans Kitty handler maps
+  [Chromium] › KittyGraphics.test.ts:2167:9 › Kitty Graphics Protocol › Eviction and memory leak prevention › scrollback eviction cleans Kitty handler maps
+  [Chromium] › KittyGraphics.test.ts:2191:9 › Kitty Graphics Protocol › Eviction and memory leak prevention › re-transmit with a=t then a=T cleans old storage before display
+  [Chromium] › KittyGraphics.test.ts:2205:9 › Kitty Graphics Protocol › onImageAdded callback › onImageAdded fires for each kitty image
+  [Chromium] › KittyGraphics.test.ts:2218:9 › Kitty Graphics Protocol › text overwrite removes tiles › a=T placement
+  [FirefoxStable] › ImageAddon.test.ts:101:7 › ImageAddon › test for private accessors
+  [FirefoxStable] › ImageAddon.test.ts:128:9 › ImageAddon › ctor options › empty settings should load defaults
+  [FirefoxStable] › ImageAddon.test.ts:145:9 › ImageAddon › ctor options › custom settings should overload defaults
+  [FirefoxStable] › ImageAddon.test.ts:169:9 › ImageAddon › scrolling & cursor modes › testdata default (scrolling with VT240 cursor pos)
+  [FirefoxStable] › ImageAddon.test.ts:177:9 › ImageAddon › scrolling & cursor modes › write testdata noScrolling
+  [FirefoxStable] › ImageAddon.test.ts:184:9 › ImageAddon › scrolling & cursor modes › testdata cursor always at VT240 pos
+  [FirefoxStable] › ImageAddon.test.ts:199:9 › ImageAddon › image lifecycle & eviction › onImageAdded fires for each image
+  [FirefoxStable] › ImageAddon.test.ts:211:9 › ImageAddon › image lifecycle & eviction › delete image once scrolled off
+  [FirefoxStable] › ImageAddon.test.ts:226:9 › ImageAddon › image lifecycle & eviction › get storageUsage
+  [FirefoxStable] › ImageAddon.test.ts:231:9 › ImageAddon › image lifecycle & eviction › get/set storageLimit
+  [FirefoxStable] › ImageAddon.test.ts:236:9 › ImageAddon › image lifecycle & eviction › remove images by storage limit pressure
+  [FirefoxStable] › ImageAddon.test.ts:253:9 › ImageAddon › image lifecycle & eviction › set storageLimit removes images synchronously
+  [FirefoxStable] › ImageAddon.test.ts:260:9 › ImageAddon › image lifecycle & eviction › clear alternate images on buffer change
+  [FirefoxStable] › ImageAddon.test.ts:267:9 › ImageAddon › image lifecycle & eviction › evict tiles by in-place overwrites (only full overwrite tested)
+  [FirefoxStable] › ImageAddon.test.ts:280:9 › ImageAddon › image lifecycle & eviction › manual eviction on alternate buffer must not miss images
+  [FirefoxStable] › ImageAddon.test.ts:294:9 › ImageAddon › IIP support › size params is optional/informative
+  [FirefoxStable] › ImageAddon.test.ts:302:10 › ImageAddon › IIP support › FilePart support - bytewise
+  [FirefoxStable] › ImageAddon.test.ts:313:9 › ImageAddon › IIP support › FilePart support - chunks
+  [FirefoxStable] › ImageAddon.test.ts:324:9 › ImageAddon › IIP support › FilePart support - edgecases
+  [FirefoxStable] › ImageAddon.test.ts:340:9 › ImageAddon › IIP support › FilePart support - other IIP sequence cancels chunked image
+  [FirefoxStable] › ImageAddon.test.ts:355:9 › ImageAddon › IIP support - testimages › palette.png
+  [FirefoxStable] › ImageAddon.test.ts:359:9 › ImageAddon › IIP support - testimages › spinfox.png
+  [FirefoxStable] › ImageAddon.test.ts:363:9 › ImageAddon › IIP support - testimages › w3c gif
+  [FirefoxStable] › ImageAddon.test.ts:367:9 › ImageAddon › IIP support - testimages › w3c jpeg
+  [FirefoxStable] › ImageAddon.test.ts:371:9 › ImageAddon › IIP support - testimages › w3c png
+  [FirefoxStable] › ImageAddon.test.ts:378:9 › ImageAddon › IIP - QOI support › palette should yield same bytes from PNG and QOI
+  [FirefoxStable] › ImageAddon.test.ts:404:11 › ImageAddon › IIP - resizing › palette.png: N --> width=20 height=5 preserveAspectRatio=0
+  [FirefoxStable] › ImageAddon.test.ts:411:11 › ImageAddon › IIP - resizing › palette.png: Npx --> width=320px height=160px preserveAspectRatio=0
+  [FirefoxStable] › ImageAddon.test.ts:417:11 › ImageAddon › IIP - resizing › palette.png: N% --> width=50% height=30% preserveAspectRatio=0
+  [FirefoxStable] › ImageAddon.test.ts:424:11 › ImageAddon › IIP - resizing › palette.png: ommitted dimension assumes preserveAspectRatio=1
+  [FirefoxStable] › ImageAddon.test.ts:404:11 › ImageAddon › IIP - resizing › palette.qoi: N --> width=20 height=5 preserveAspectRatio=0
+  [FirefoxStable] › ImageAddon.test.ts:411:11 › ImageAddon › IIP - resizing › palette.qoi: Npx --> width=320px height=160px preserveAspectRatio=0
+  [FirefoxStable] › ImageAddon.test.ts:417:11 › ImageAddon › IIP - resizing › palette.qoi: N% --> width=50% height=30% preserveAspectRatio=0
+  [FirefoxStable] › ImageAddon.test.ts:424:11 › ImageAddon › IIP - resizing › palette.qoi: ommitted dimension assumes preserveAspectRatio=1
+  [FirefoxStable] › ImageAddon.test.ts:440:9 › ImageAddon › text overwrite removes tiles › sixel
+  [FirefoxStable] › ImageAddon.test.ts:443:9 › ImageAddon › text overwrite removes tiles › iip
+  [FirefoxStable] › KittyGraphics.test.ts:121:9 › Kitty Graphics Protocol › Basic transmission and storage › stores 1x1 black PNG with a=T (transmit and display)
+  [FirefoxStable] › KittyGraphics.test.ts:129:9 › Kitty Graphics Protocol › Basic transmission and storage › stores 3x1 RGB PNG with a=T
+  [FirefoxStable] › KittyGraphics.test.ts:137:9 › Kitty Graphics Protocol › Basic transmission and storage › transmit only (a=t) does not display but stores in handler
+  [FirefoxStable] › KittyGraphics.test.ts:144:9 › Kitty Graphics Protocol › Basic transmission and storage › uses specified image ID
+  [FirefoxStable] › KittyGraphics.test.ts:152:9 › Kitty Graphics Protocol › Basic transmission and storage › assigns auto-incrementing IDs when not specified
+  [FirefoxStable] › KittyGraphics.test.ts:161:9 › Kitty Graphics Protocol › Basic transmission and storage › defaults to transmit action when action is omitted
+  [FirefoxStable] › KittyGraphics.test.ts:168:9 › Kitty Graphics Protocol › Basic transmission and storage › ignores command when action is empty string
+  [FirefoxStable] › KittyGraphics.test.ts:177:9 › Kitty Graphics Protocol › Chunked transmission › handles chunked transmission (m=1)
+  [FirefoxStable] › KittyGraphics.test.ts:194:9 › Kitty Graphics Protocol › Chunked transmission › verifies chunked data is assembled correctly
+  [FirefoxStable] › KittyGraphics.test.ts:211:9 › Kitty Graphics Protocol › Chunked transmission › enforces size limit across chunked transmissions
+  [FirefoxStable] › KittyGraphics.test.ts:244:9 › Kitty Graphics Protocol › Chunked transmission › chunked a=T works when subsequent chunks omit i= (spec pattern)
+  [FirefoxStable] › KittyGraphics.test.ts:258:9 › Kitty Graphics Protocol › Chunked transmission › chunked a=t works when subsequent chunks omit i= (spec pattern)
+  [FirefoxStable] › KittyGraphics.test.ts:270:9 › Kitty Graphics Protocol › Chunked transmission › chunked data without i= on subsequent chunks is assembled correctly
+  [FirefoxStable] › KittyGraphics.test.ts:287:9 › Kitty Graphics Protocol › Chunked transmission › three-chunk transfer with only m= on middle and last chunks
+  [FirefoxStable] › KittyGraphics.test.ts:308:9 › Kitty Graphics Protocol › Chunked transmission › chunked a=T without i= on any chunk works (no response)
+  [FirefoxStable] › KittyGraphics.test.ts:322:9 › Kitty Graphics Protocol › Chunked transmission › chunked transfer responds OK on final chunk when i= on first only
+  [FirefoxStable] › KittyGraphics.test.ts:347:9 › Kitty Graphics Protocol › Delete commands › delete command (a=d,d=i) removes specific image by id
+  [FirefoxStable] › KittyGraphics.test.ts:357:9 › Kitty Graphics Protocol › Delete commands › delete command (a=d) removes all images when no id specified
+  [FirefoxStable] › KittyGraphics.test.ts:368:9 › Kitty Graphics Protocol › Delete commands › delete by id aborts in-flight chunked upload
+  [FirefoxStable] › KittyGraphics.test.ts:381:9 › Kitty Graphics Protocol › Delete commands › delete by id only aborts targeted upload, not others
+  [FirefoxStable] › KittyGraphics.test.ts:396:9 › Kitty Graphics Protocol › Delete commands › delete all aborts in-flight chunked upload
+  [FirefoxStable] › KittyGraphics.test.ts:410:9 › Kitty Graphics Protocol › Delete commands › d=i selector deletes specific image by id
+  [FirefoxStable] › KittyGraphics.test.ts:422:9 › Kitty Graphics Protocol › Delete commands › d=I selector deletes specific image by id (uppercase)
+  [FirefoxStable] › KittyGraphics.test.ts:434:9 › Kitty Graphics Protocol › Delete commands › d=a selector deletes all images
+  [FirefoxStable] › KittyGraphics.test.ts:445:9 › Kitty Graphics Protocol › Delete commands › d=A selector deletes all images (uppercase)
+  [FirefoxStable] › KittyGraphics.test.ts:456:9 › Kitty Graphics Protocol › Delete commands › d=a selector also removes displayed images from storage
+  [FirefoxStable] › KittyGraphics.test.ts:466:9 › Kitty Graphics Protocol › Delete commands › d=i selector also removes displayed image from storage
+  [FirefoxStable] › KittyGraphics.test.ts:476:9 › Kitty Graphics Protocol › Delete commands › d=i without id does nothing
+  [FirefoxStable] › KittyGraphics.test.ts:486:9 › Kitty Graphics Protocol › Delete commands › d=i selector clears pixels from canvas
+  [FirefoxStable] › KittyGraphics.test.ts:496:9 › Kitty Graphics Protocol › Delete commands › d=a selector clears all pixels from canvas
+  [FirefoxStable] › KittyGraphics.test.ts:506:9 › Kitty Graphics Protocol › Delete commands › unsupported delete selector is ignored
+  [FirefoxStable] › KittyGraphics.test.ts:516:9 › Kitty Graphics Protocol › Delete commands › chunks sent after delete are not assembled with previous data
+  [FirefoxStable] › KittyGraphics.test.ts:541:9 › Kitty Graphics Protocol › Query support (a=q) › responds with OK for capability query without payload
+  [FirefoxStable] › KittyGraphics.test.ts:554:9 › Kitty Graphics Protocol › Query support (a=q) › responds with OK for valid PNG query
+  [FirefoxStable] › KittyGraphics.test.ts:567:9 › Kitty Graphics Protocol › Query support (a=q) › query does NOT store the image (unlike transmit)
+  [FirefoxStable] › KittyGraphics.test.ts:578:9 › Kitty Graphics Protocol › Query support (a=q) › responds with error for invalid base64
+  [FirefoxStable] › KittyGraphics.test.ts:591:9 › Kitty Graphics Protocol › Query support (a=q) › responds with error for RGB data without dimensions
+  [FirefoxStable] › KittyGraphics.test.ts:604:9 › Kitty Graphics Protocol › Query support (a=q) › suppresses OK response when q=1
+  [FirefoxStable] › KittyGraphics.test.ts:616:9 › Kitty Graphics Protocol › Query support (a=q) › suppresses OK response when q=2
+  [FirefoxStable] › KittyGraphics.test.ts:628:9 › Kitty Graphics Protocol › Query support (a=q) › suppresses error response when q=2
+  [FirefoxStable] › KittyGraphics.test.ts:640:9 › Kitty Graphics Protocol › Query support (a=q) › responds with EINVAL when both i and I keys are specified
+  [FirefoxStable] › KittyGraphics.test.ts:654:9 › Kitty Graphics Protocol › Query support (a=q) › responds with EINVAL for i+I conflict even without payload
+  [FirefoxStable] › KittyGraphics.test.ts:670:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=t sends EINVAL on decode error when id is specified
+  [FirefoxStable] › KittyGraphics.test.ts:683:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=t sends no response on decode error without id
+  [FirefoxStable] › KittyGraphics.test.ts:695:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T sends EINVAL on decode error when id is specified
+  [FirefoxStable] › KittyGraphics.test.ts:708:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T sends no response on decode error without id
+  [FirefoxStable] › KittyGraphics.test.ts:720:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T sends EINVAL when raw pixel render fails (missing dimensions)
+  [FirefoxStable] › KittyGraphics.test.ts:733:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T sends OK on successful render with id
+  [FirefoxStable] › KittyGraphics.test.ts:746:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=t sends OK on successful transmit with id
+  [FirefoxStable] › KittyGraphics.test.ts:759:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=t EINVAL suppressed by q=2
+  [FirefoxStable] › KittyGraphics.test.ts:771:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T EINVAL suppressed by q=2
+  [FirefoxStable] › KittyGraphics.test.ts:783:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=t OK suppressed by q=1
+  [FirefoxStable] › KittyGraphics.test.ts:795:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T OK suppressed by q=1
+  [FirefoxStable] › KittyGraphics.test.ts:807:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=t OK suppressed by q=2
+  [FirefoxStable] › KittyGraphics.test.ts:819:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T OK suppressed by q=2
+  [FirefoxStable] › KittyGraphics.test.ts:833:9 › Kitty Graphics Protocol › Transmission medium rejection › query rejects t=f (file transmission)
+  [FirefoxStable] › KittyGraphics.test.ts:846:9 › Kitty Graphics Protocol › Transmission medium rejection › query rejects t=s (shared memory)
+  [FirefoxStable] › KittyGraphics.test.ts:859:9 › Kitty Graphics Protocol › Transmission medium rejection › query rejects t=t (temp file)
+  [FirefoxStable] › KittyGraphics.test.ts:872:9 › Kitty Graphics Protocol › Transmission medium rejection › query accepts t=d (direct transmission)
+  [FirefoxStable] › KittyGraphics.test.ts:885:9 › Kitty Graphics Protocol › Transmission medium rejection › query without t key defaults to direct (OK)
+  [FirefoxStable] › KittyGraphics.test.ts:898:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit rejects t=f with id (EINVAL response)
+  [FirefoxStable] › KittyGraphics.test.ts:911:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit rejects t=s with id (EINVAL response)
+  [FirefoxStable] › KittyGraphics.test.ts:924:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit rejects t=t with id (EINVAL response)
+  [FirefoxStable] › KittyGraphics.test.ts:937:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit rejects t=f without id (no response)
+  [FirefoxStable] › KittyGraphics.test.ts:950:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit+display rejects t=f with id (EINVAL response)
+  [FirefoxStable] › KittyGraphics.test.ts:963:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit+display rejects t=s with id (EINVAL response)
+  [FirefoxStable] › KittyGraphics.test.ts:976:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit+display rejects t=t with id (EINVAL response)
+  [FirefoxStable] › KittyGraphics.test.ts:989:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit+display rejects t=f without id (no response)
+  [FirefoxStable] › KittyGraphics.test.ts:1004:9 › Kitty Graphics Protocol › Placement action (a=p) › displays a previously transmitted image at cursor
+  [FirefoxStable] › KittyGraphics.test.ts:1017:9 › Kitty Graphics Protocol › Placement action (a=p) › responds OK on successful placement
+  [FirefoxStable] › KittyGraphics.test.ts:1033:9 › Kitty Graphics Protocol › Placement action (a=p) › responds ENOENT for non-existent image id
+  [FirefoxStable] › KittyGraphics.test.ts:1046:9 › Kitty Graphics Protocol › Placement action (a=p) › without id sends no response
+  [FirefoxStable] › KittyGraphics.test.ts:1058:9 › Kitty Graphics Protocol › Placement action (a=p) › places at specified column/row size (c/r)
+  [FirefoxStable] › KittyGraphics.test.ts:1069:9 › Kitty Graphics Protocol › Placement action (a=p) › cursor advances past placed image (default C=0)
+  [FirefoxStable] › KittyGraphics.test.ts:1079:9 › Kitty Graphics Protocol › Placement action (a=p) › cursor does not move when C=1
+  [FirefoxStable] › KittyGraphics.test.ts:1089:9 › Kitty Graphics Protocol › Placement action (a=p) › supports z-index (negative = bottom layer)
+  [FirefoxStable] › KittyGraphics.test.ts:1101:9 › Kitty Graphics Protocol › Placement action (a=p) › supports source crop via x/y
+  [FirefoxStable] › KittyGraphics.test.ts:1114:9 › Kitty Graphics Protocol › Placement action (a=p) › supports sub-cell offset via X/Y
+  [FirefoxStable] › KittyGraphics.test.ts:1126:9 › Kitty Graphics Protocol › Placement action (a=p) › multiple placements of same image create separate displays
+  [FirefoxStable] › KittyGraphics.test.ts:1145:9 › Kitty Graphics Protocol › Placement action (a=p) › image data remains available after placement for future placements
+  [FirefoxStable] › KittyGraphics.test.ts:1163:9 › Kitty Graphics Protocol › Placement action (a=p) › OK response suppressed by q=1
+  [FirefoxStable] › KittyGraphics.test.ts:1179:9 › Kitty Graphics Protocol › Placement action (a=p) › OK response suppressed by q=2
+  [FirefoxStable] › KittyGraphics.test.ts:1195:9 › Kitty Graphics Protocol › Placement action (a=p) › ENOENT error suppressed by q=2
+  [FirefoxStable] › KittyGraphics.test.ts:1207:9 › Kitty Graphics Protocol › Placement action (a=p) › ENOENT still reported when q=1 (only suppresses OK)
+  [FirefoxStable] › KittyGraphics.test.ts:1220:9 › Kitty Graphics Protocol › Placement action (a=p) › renders pixels correctly when placing a PNG image
+  [FirefoxStable] › KittyGraphics.test.ts:1233:9 › Kitty Graphics Protocol › Placement action (a=p) › renders pixels correctly when placing raw RGB image
+  [FirefoxStable] › KittyGraphics.test.ts:1246:9 › Kitty Graphics Protocol › Placement action (a=p) › renders pixels correctly when placing raw RGBA image
+  [FirefoxStable] › KittyGraphics.test.ts:1259:9 › Kitty Graphics Protocol › Placement action (a=p) › response includes placement id when p is specified
+  [FirefoxStable] › KittyGraphics.test.ts:1275:9 › Kitty Graphics Protocol › Placement action (a=p) › only c specified computes r from aspect ratio
+  [FirefoxStable] › KittyGraphics.test.ts:1293:9 › Kitty Graphics Protocol › Placement action (a=p) › only r specified computes c from aspect ratio
+  [FirefoxStable] › KittyGraphics.test.ts:1317:9 › Kitty Graphics Protocol › Cursor positioning › cursor advances past 1x1 image
+  [FirefoxStable] › KittyGraphics.test.ts:1328:9 › Kitty Graphics Protocol › Cursor positioning › cursor advances with text before image
+  [FirefoxStable] › KittyGraphics.test.ts:1339:9 › Kitty Graphics Protocol › Cursor positioning › cursor advances with text after image
+  [FirefoxStable] › KittyGraphics.test.ts:1349:9 › Kitty Graphics Protocol › Cursor positioning › cursor position with multiple images on same line
+  [FirefoxStable] › KittyGraphics.test.ts:1363:9 › Kitty Graphics Protocol › Cursor positioning › cursor advances on newline after image
+  [FirefoxStable] › KittyGraphics.test.ts:1372:9 › Kitty Graphics Protocol › Cursor positioning › cursor should move right by cols when c specified
+  [FirefoxStable] › KittyGraphics.test.ts:1383:9 › Kitty Graphics Protocol › Cursor positioning › cursor should move down by rows when r specified
+  [FirefoxStable] › KittyGraphics.test.ts:1393:9 › Kitty Graphics Protocol › Cursor positioning › cursor should move by cols AND rows when both specified
+  [FirefoxStable] › KittyGraphics.test.ts:1401:9 › Kitty Graphics Protocol › Cursor positioning › cursor should NOT move when C=1 is specified
+  [FirefoxStable] › KittyGraphics.test.ts:1409:9 › Kitty Graphics Protocol › Cursor positioning › cursor should calculate cols/rows from image size when not specified
+  [FirefoxStable] › KittyGraphics.test.ts:1426:9 › Kitty Graphics Protocol › Z-index layer placement › default placement (no z key) stores image on top layer
+  [FirefoxStable] › KittyGraphics.test.ts:1434:9 › Kitty Graphics Protocol › Z-index layer placement › z=0 stores image on top layer
+  [FirefoxStable] › KittyGraphics.test.ts:1442:9 › Kitty Graphics Protocol › Z-index layer placement › z=1 (positive) stores image on top layer
+  [FirefoxStable] › KittyGraphics.test.ts:1450:9 › Kitty Graphics Protocol › Z-index layer placement › z=-1 uses bottom layer even when allowTransparency is disabled
+  [FirefoxStable] › KittyGraphics.test.ts:1459:9 › Kitty Graphics Protocol › Z-index layer placement › z=-1 (negative) stores image on bottom layer when allowTransparency is enabled
+  [FirefoxStable] › KittyGraphics.test.ts:1468:9 › Kitty Graphics Protocol › Z-index layer placement › z=-100 (large negative) stores image on bottom layer when allowTransparency is enabled
+  [FirefoxStable] › KittyGraphics.test.ts:1477:9 › Kitty Graphics Protocol › Z-index layer placement › top layer canvas has correct CSS class
+  [FirefoxStable] › KittyGraphics.test.ts:1487:9 › Kitty Graphics Protocol › Z-index layer placement › bottom layer canvas has correct CSS class
+  [FirefoxStable] › KittyGraphics.test.ts:1498:9 › Kitty Graphics Protocol › Z-index layer placement › bottom layer canvas is before text canvas in DOM order
+  [FirefoxStable] › KittyGraphics.test.ts:1511:9 › Kitty Graphics Protocol › Pixel verification › renders 1x1 black PNG at cursor position
+  [FirefoxStable] › KittyGraphics.test.ts:1519:9 › Kitty Graphics Protocol › Pixel verification › renders 3x1 RGB PNG (red, green, blue pixels)
+  [FirefoxStable] › KittyGraphics.test.ts:1534:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Basic transmission and storage › stores 200x100 PNG with a=T
+  [FirefoxStable] › KittyGraphics.test.ts:1541:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Basic transmission and storage › transmit only (a=t) stores 200x100 image without display
+  [FirefoxStable] › KittyGraphics.test.ts:1547:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Basic transmission and storage › stores with specified image ID
+  [FirefoxStable] › KittyGraphics.test.ts:1555:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Chunked transmission › handles 2-chunk transmission
+  [FirefoxStable] › KittyGraphics.test.ts:1570:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Chunked transmission › handles 3-chunk transmission
+  [FirefoxStable] › KittyGraphics.test.ts:1586:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Chunked transmission › verifies chunked data assembles correctly
+  [FirefoxStable] › KittyGraphics.test.ts:1605:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Cursor positioning › cursor advances past multi-cell image
+  [FirefoxStable] › KittyGraphics.test.ts:1617:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Cursor positioning › cursor does not move with C=1
+  [FirefoxStable] › KittyGraphics.test.ts:1623:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Cursor positioning › cursor uses explicit c and r over image dimensions
+  [FirefoxStable] › KittyGraphics.test.ts:1636:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › renders red rectangle at top-left origin (0,0)
+  [FirefoxStable] › KittyGraphics.test.ts:1643:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › renders top row colors at rectangle centers
+  [FirefoxStable] › KittyGraphics.test.ts:1661:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › renders bottom row colors at rectangle centers
+  [FirefoxStable] › KittyGraphics.test.ts:1678:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › renders correct colors at rectangle boundaries
+  [FirefoxStable] › KittyGraphics.test.ts:1692:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › renders correct color at bottom-right corner
+  [FirefoxStable] › KittyGraphics.test.ts:1700:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › renders a strip of top-row pixels via getPixels
+  [FirefoxStable] › KittyGraphics.test.ts:1712:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › applies source crop via x/y/w/h before display
+  [FirefoxStable] › KittyGraphics.test.ts:1721:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › scales cropped source region to c/r placement rectangle
+  [FirefoxStable] › KittyGraphics.test.ts:1737:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › applies sub-cell offset via X/Y within first cell
+  [FirefoxStable] › KittyGraphics.test.ts:1746:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › w=0 is treated as unset (displays full width)
+  [FirefoxStable] › KittyGraphics.test.ts:1755:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › h=0 is treated as unset (displays full height)
+  [FirefoxStable] › KittyGraphics.test.ts:1764:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › x exceeding image width produces no display
+  [FirefoxStable] › KittyGraphics.test.ts:1771:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › negative x/y values are clamped to 0
+  [FirefoxStable] › KittyGraphics.test.ts:1779:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › combined crop and sub-cell offset
+  [FirefoxStable] › KittyGraphics.test.ts:1788:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › sub-cell offset with explicit c/r advances cursor correctly
+  [FirefoxStable] › KittyGraphics.test.ts:1797:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Query support › responds with OK for valid 200x100 PNG query
+  [FirefoxStable] › KittyGraphics.test.ts:1810:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Query support › query does not store the 200x100 image
+  [FirefoxStable] › KittyGraphics.test.ts:1822:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Delete commands › delete removes 200x100 image by id
+  [FirefoxStable] › KittyGraphics.test.ts:1836:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Pixel verification › renders 1x1 black pixel with alpha set to 255
+  [FirefoxStable] › KittyGraphics.test.ts:1842:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Pixel verification › renders 1x1 red pixel with alpha set to 255
+  [FirefoxStable] › KittyGraphics.test.ts:1848:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Pixel verification › renders 3x1 strip (red, green, blue)
+  [FirefoxStable] › KittyGraphics.test.ts:1858:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Pixel verification › renders 2x2 grid with correct pixel layout
+  [FirefoxStable] › KittyGraphics.test.ts:1867:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Pixel verification › renders 5x1 row with block+remainder pixel layout
+  [FirefoxStable] › KittyGraphics.test.ts:1877:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Pixel verification › renders 4x2 grid with multi-block pixel layout
+  [FirefoxStable] › KittyGraphics.test.ts:1892:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Storage and dimensions › stores image with correct original dimensions (3x1)
+  [FirefoxStable] › KittyGraphics.test.ts:1899:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Storage and dimensions › stores image with correct original dimensions (2x2)
+  [FirefoxStable] › KittyGraphics.test.ts:1906:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Storage and dimensions › stores image with correct original dimensions (5x1)
+  [FirefoxStable] › KittyGraphics.test.ts:1913:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Storage and dimensions › stores image with correct original dimensions (4x2)
+  [FirefoxStable] › KittyGraphics.test.ts:1922:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › does not render without width (s=)
+  [FirefoxStable] › KittyGraphics.test.ts:1928:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › does not render without height (v=)
+  [FirefoxStable] › KittyGraphics.test.ts:1934:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › does not render without either dimension
+  [FirefoxStable] › KittyGraphics.test.ts:1940:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › does not render with insufficient byte count
+  [FirefoxStable] › KittyGraphics.test.ts:1946:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › query returns EINVAL without dimensions
+  [FirefoxStable] › KittyGraphics.test.ts:1957:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › query returns EINVAL for insufficient pixel data
+  [FirefoxStable] › KittyGraphics.test.ts:1968:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › query returns OK for valid RGB data with correct dimensions
+  [FirefoxStable] › KittyGraphics.test.ts:1983:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Pixel verification › renders 1x1 opaque white pixel
+  [FirefoxStable] › KittyGraphics.test.ts:1989:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Pixel verification › renders 1x1 opaque red pixel
+  [FirefoxStable] › KittyGraphics.test.ts:1995:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Pixel verification › preserves full transparency (alpha=0)
+  [FirefoxStable] › KittyGraphics.test.ts:2002:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Pixel verification › renders 3x1 strip (red, green, blue opaque)
+  [FirefoxStable] › KittyGraphics.test.ts:2012:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Pixel verification › renders 2x2 grid with correct pixel layout
+  [FirefoxStable] › KittyGraphics.test.ts:2021:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Pixel verification › renders 5x1 row with zero-copy pixel layout
+  [FirefoxStable] › KittyGraphics.test.ts:2033:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Storage and dimensions › stores image with correct original dimensions (3x1)
+  [FirefoxStable] › KittyGraphics.test.ts:2040:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Storage and dimensions › stores image with correct original dimensions (2x2)
+  [FirefoxStable] › KittyGraphics.test.ts:2047:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Storage and dimensions › stores image with correct original dimensions (5x1)
+  [FirefoxStable] › KittyGraphics.test.ts:2056:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › does not render without width (s=)
+  [FirefoxStable] › KittyGraphics.test.ts:2062:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › does not render without height (v=)
+  [FirefoxStable] › KittyGraphics.test.ts:2068:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › does not render without either dimension
+  [FirefoxStable] › KittyGraphics.test.ts:2074:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › does not render with insufficient byte count
+  [FirefoxStable] › KittyGraphics.test.ts:2080:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › query returns EINVAL without dimensions
+  [FirefoxStable] › KittyGraphics.test.ts:2091:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › query returns EINVAL for insufficient pixel data
+  [FirefoxStable] › KittyGraphics.test.ts:2102:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › query returns OK for valid RGBA data with correct dimensions
+  [FirefoxStable] › KittyGraphics.test.ts:2116:9 › Kitty Graphics Protocol › Eviction and memory leak prevention › re-transmit with same i= cleans up old storage entry
+  [FirefoxStable] › KittyGraphics.test.ts:2133:9 › Kitty Graphics Protocol › Eviction and memory leak prevention › memory limit eviction cleans Kitty handler maps
+  [FirefoxStable] › KittyGraphics.test.ts:2167:9 › Kitty Graphics Protocol › Eviction and memory leak prevention › scrollback eviction cleans Kitty handler maps
+  [FirefoxStable] › KittyGraphics.test.ts:2191:9 › Kitty Graphics Protocol › Eviction and memory leak prevention › re-transmit with a=t then a=T cleans old storage before display
+  [FirefoxStable] › KittyGraphics.test.ts:2205:9 › Kitty Graphics Protocol › onImageAdded callback › onImageAdded fires for each kitty image
+  [FirefoxStable] › KittyGraphics.test.ts:2218:9 › Kitty Graphics Protocol › text overwrite removes tiles › a=T placement
+  [WebKit] › ImageAddon.test.ts:101:7 › ImageAddon › test for private accessors
+  [WebKit] › ImageAddon.test.ts:128:9 › ImageAddon › ctor options › empty settings should load defaults
+  [WebKit] › ImageAddon.test.ts:145:9 › ImageAddon › ctor options › custom settings should overload defaults
+  [WebKit] › ImageAddon.test.ts:169:9 › ImageAddon › scrolling & cursor modes › testdata default (scrolling with VT240 cursor pos)
+  [WebKit] › ImageAddon.test.ts:177:9 › ImageAddon › scrolling & cursor modes › write testdata noScrolling
+  [WebKit] › ImageAddon.test.ts:184:9 › ImageAddon › scrolling & cursor modes › testdata cursor always at VT240 pos
+  [WebKit] › ImageAddon.test.ts:199:9 › ImageAddon › image lifecycle & eviction › onImageAdded fires for each image
+  [WebKit] › ImageAddon.test.ts:211:9 › ImageAddon › image lifecycle & eviction › delete image once scrolled off
+  [WebKit] › ImageAddon.test.ts:226:9 › ImageAddon › image lifecycle & eviction › get storageUsage
+  [WebKit] › ImageAddon.test.ts:231:9 › ImageAddon › image lifecycle & eviction › get/set storageLimit
+  [WebKit] › ImageAddon.test.ts:236:9 › ImageAddon › image lifecycle & eviction › remove images by storage limit pressure
+  [WebKit] › ImageAddon.test.ts:253:9 › ImageAddon › image lifecycle & eviction › set storageLimit removes images synchronously
+  [WebKit] › ImageAddon.test.ts:260:9 › ImageAddon › image lifecycle & eviction › clear alternate images on buffer change
+  [WebKit] › ImageAddon.test.ts:267:9 › ImageAddon › image lifecycle & eviction › evict tiles by in-place overwrites (only full overwrite tested)
+  [WebKit] › ImageAddon.test.ts:280:9 › ImageAddon › image lifecycle & eviction › manual eviction on alternate buffer must not miss images
+  [WebKit] › ImageAddon.test.ts:294:9 › ImageAddon › IIP support › size params is optional/informative
+  [WebKit] › ImageAddon.test.ts:302:10 › ImageAddon › IIP support › FilePart support - bytewise
+  [WebKit] › ImageAddon.test.ts:313:9 › ImageAddon › IIP support › FilePart support - chunks
+  [WebKit] › ImageAddon.test.ts:324:9 › ImageAddon › IIP support › FilePart support - edgecases
+  [WebKit] › ImageAddon.test.ts:340:9 › ImageAddon › IIP support › FilePart support - other IIP sequence cancels chunked image
+  [WebKit] › ImageAddon.test.ts:355:9 › ImageAddon › IIP support - testimages › palette.png
+  [WebKit] › ImageAddon.test.ts:359:9 › ImageAddon › IIP support - testimages › spinfox.png
+  [WebKit] › ImageAddon.test.ts:363:9 › ImageAddon › IIP support - testimages › w3c gif
+  [WebKit] › ImageAddon.test.ts:367:9 › ImageAddon › IIP support - testimages › w3c jpeg
+  [WebKit] › ImageAddon.test.ts:371:9 › ImageAddon › IIP support - testimages › w3c png
+  [WebKit] › ImageAddon.test.ts:378:9 › ImageAddon › IIP - QOI support › palette should yield same bytes from PNG and QOI
+  [WebKit] › ImageAddon.test.ts:404:11 › ImageAddon › IIP - resizing › palette.png: N --> width=20 height=5 preserveAspectRatio=0
+  [WebKit] › ImageAddon.test.ts:411:11 › ImageAddon › IIP - resizing › palette.png: Npx --> width=320px height=160px preserveAspectRatio=0
+  [WebKit] › ImageAddon.test.ts:417:11 › ImageAddon › IIP - resizing › palette.png: N% --> width=50% height=30% preserveAspectRatio=0
+  [WebKit] › ImageAddon.test.ts:424:11 › ImageAddon › IIP - resizing › palette.png: ommitted dimension assumes preserveAspectRatio=1
+  [WebKit] › ImageAddon.test.ts:404:11 › ImageAddon › IIP - resizing › palette.qoi: N --> width=20 height=5 preserveAspectRatio=0
+  [WebKit] › ImageAddon.test.ts:411:11 › ImageAddon › IIP - resizing › palette.qoi: Npx --> width=320px height=160px preserveAspectRatio=0
+  [WebKit] › ImageAddon.test.ts:417:11 › ImageAddon › IIP - resizing › palette.qoi: N% --> width=50% height=30% preserveAspectRatio=0
+  [WebKit] › ImageAddon.test.ts:424:11 › ImageAddon › IIP - resizing › palette.qoi: ommitted dimension assumes preserveAspectRatio=1
+  [WebKit] › ImageAddon.test.ts:440:9 › ImageAddon › text overwrite removes tiles › sixel
+  [WebKit] › ImageAddon.test.ts:443:9 › ImageAddon › text overwrite removes tiles › iip
+  [WebKit] › KittyGraphics.test.ts:121:9 › Kitty Graphics Protocol › Basic transmission and storage › stores 1x1 black PNG with a=T (transmit and display)
+  [WebKit] › KittyGraphics.test.ts:129:9 › Kitty Graphics Protocol › Basic transmission and storage › stores 3x1 RGB PNG with a=T
+  [WebKit] › KittyGraphics.test.ts:137:9 › Kitty Graphics Protocol › Basic transmission and storage › transmit only (a=t) does not display but stores in handler
+  [WebKit] › KittyGraphics.test.ts:144:9 › Kitty Graphics Protocol › Basic transmission and storage › uses specified image ID
+  [WebKit] › KittyGraphics.test.ts:152:9 › Kitty Graphics Protocol › Basic transmission and storage › assigns auto-incrementing IDs when not specified
+  [WebKit] › KittyGraphics.test.ts:161:9 › Kitty Graphics Protocol › Basic transmission and storage › defaults to transmit action when action is omitted
+  [WebKit] › KittyGraphics.test.ts:168:9 › Kitty Graphics Protocol › Basic transmission and storage › ignores command when action is empty string
+  [WebKit] › KittyGraphics.test.ts:177:9 › Kitty Graphics Protocol › Chunked transmission › handles chunked transmission (m=1)
+  [WebKit] › KittyGraphics.test.ts:194:9 › Kitty Graphics Protocol › Chunked transmission › verifies chunked data is assembled correctly
+  [WebKit] › KittyGraphics.test.ts:211:9 › Kitty Graphics Protocol › Chunked transmission › enforces size limit across chunked transmissions
+  [WebKit] › KittyGraphics.test.ts:244:9 › Kitty Graphics Protocol › Chunked transmission › chunked a=T works when subsequent chunks omit i= (spec pattern)
+  [WebKit] › KittyGraphics.test.ts:258:9 › Kitty Graphics Protocol › Chunked transmission › chunked a=t works when subsequent chunks omit i= (spec pattern)
+  [WebKit] › KittyGraphics.test.ts:270:9 › Kitty Graphics Protocol › Chunked transmission › chunked data without i= on subsequent chunks is assembled correctly
+  [WebKit] › KittyGraphics.test.ts:287:9 › Kitty Graphics Protocol › Chunked transmission › three-chunk transfer with only m= on middle and last chunks
+  [WebKit] › KittyGraphics.test.ts:308:9 › Kitty Graphics Protocol › Chunked transmission › chunked a=T without i= on any chunk works (no response)
+  [WebKit] › KittyGraphics.test.ts:322:9 › Kitty Graphics Protocol › Chunked transmission › chunked transfer responds OK on final chunk when i= on first only
+  [WebKit] › KittyGraphics.test.ts:347:9 › Kitty Graphics Protocol › Delete commands › delete command (a=d,d=i) removes specific image by id
+  [WebKit] › KittyGraphics.test.ts:357:9 › Kitty Graphics Protocol › Delete commands › delete command (a=d) removes all images when no id specified
+  [WebKit] › KittyGraphics.test.ts:368:9 › Kitty Graphics Protocol › Delete commands › delete by id aborts in-flight chunked upload
+  [WebKit] › KittyGraphics.test.ts:381:9 › Kitty Graphics Protocol › Delete commands › delete by id only aborts targeted upload, not others
+  [WebKit] › KittyGraphics.test.ts:396:9 › Kitty Graphics Protocol › Delete commands › delete all aborts in-flight chunked upload
+  [WebKit] › KittyGraphics.test.ts:410:9 › Kitty Graphics Protocol › Delete commands › d=i selector deletes specific image by id
+  [WebKit] › KittyGraphics.test.ts:422:9 › Kitty Graphics Protocol › Delete commands › d=I selector deletes specific image by id (uppercase)
+  [WebKit] › KittyGraphics.test.ts:434:9 › Kitty Graphics Protocol › Delete commands › d=a selector deletes all images
+  [WebKit] › KittyGraphics.test.ts:445:9 › Kitty Graphics Protocol › Delete commands › d=A selector deletes all images (uppercase)
+  [WebKit] › KittyGraphics.test.ts:456:9 › Kitty Graphics Protocol › Delete commands › d=a selector also removes displayed images from storage
+  [WebKit] › KittyGraphics.test.ts:466:9 › Kitty Graphics Protocol › Delete commands › d=i selector also removes displayed image from storage
+  [WebKit] › KittyGraphics.test.ts:476:9 › Kitty Graphics Protocol › Delete commands › d=i without id does nothing
+  [WebKit] › KittyGraphics.test.ts:486:9 › Kitty Graphics Protocol › Delete commands › d=i selector clears pixels from canvas
+  [WebKit] › KittyGraphics.test.ts:496:9 › Kitty Graphics Protocol › Delete commands › d=a selector clears all pixels from canvas
+  [WebKit] › KittyGraphics.test.ts:506:9 › Kitty Graphics Protocol › Delete commands › unsupported delete selector is ignored
+  [WebKit] › KittyGraphics.test.ts:516:9 › Kitty Graphics Protocol › Delete commands › chunks sent after delete are not assembled with previous data
+  [WebKit] › KittyGraphics.test.ts:541:9 › Kitty Graphics Protocol › Query support (a=q) › responds with OK for capability query without payload
+  [WebKit] › KittyGraphics.test.ts:554:9 › Kitty Graphics Protocol › Query support (a=q) › responds with OK for valid PNG query
+  [WebKit] › KittyGraphics.test.ts:567:9 › Kitty Graphics Protocol › Query support (a=q) › query does NOT store the image (unlike transmit)
+  [WebKit] › KittyGraphics.test.ts:578:9 › Kitty Graphics Protocol › Query support (a=q) › responds with error for invalid base64
+  [WebKit] › KittyGraphics.test.ts:591:9 › Kitty Graphics Protocol › Query support (a=q) › responds with error for RGB data without dimensions
+  [WebKit] › KittyGraphics.test.ts:604:9 › Kitty Graphics Protocol › Query support (a=q) › suppresses OK response when q=1
+  [WebKit] › KittyGraphics.test.ts:616:9 › Kitty Graphics Protocol › Query support (a=q) › suppresses OK response when q=2
+  [WebKit] › KittyGraphics.test.ts:628:9 › Kitty Graphics Protocol › Query support (a=q) › suppresses error response when q=2
+  [WebKit] › KittyGraphics.test.ts:640:9 › Kitty Graphics Protocol › Query support (a=q) › responds with EINVAL when both i and I keys are specified
+  [WebKit] › KittyGraphics.test.ts:654:9 › Kitty Graphics Protocol › Query support (a=q) › responds with EINVAL for i+I conflict even without payload
+  [WebKit] › KittyGraphics.test.ts:670:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=t sends EINVAL on decode error when id is specified
+  [WebKit] › KittyGraphics.test.ts:683:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=t sends no response on decode error without id
+  [WebKit] › KittyGraphics.test.ts:695:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T sends EINVAL on decode error when id is specified
+  [WebKit] › KittyGraphics.test.ts:708:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T sends no response on decode error without id
+  [WebKit] › KittyGraphics.test.ts:720:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T sends EINVAL when raw pixel render fails (missing dimensions)
+  [WebKit] › KittyGraphics.test.ts:733:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T sends OK on successful render with id
+  [WebKit] › KittyGraphics.test.ts:746:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=t sends OK on successful transmit with id
+  [WebKit] › KittyGraphics.test.ts:759:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=t EINVAL suppressed by q=2
+  [WebKit] › KittyGraphics.test.ts:771:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T EINVAL suppressed by q=2
+  [WebKit] › KittyGraphics.test.ts:783:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=t OK suppressed by q=1
+  [WebKit] › KittyGraphics.test.ts:795:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T OK suppressed by q=1
+  [WebKit] › KittyGraphics.test.ts:807:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=t OK suppressed by q=2
+  [WebKit] › KittyGraphics.test.ts:819:9 › Kitty Graphics Protocol › Error responses for transmit and display › a=T OK suppressed by q=2
+  [WebKit] › KittyGraphics.test.ts:833:9 › Kitty Graphics Protocol › Transmission medium rejection › query rejects t=f (file transmission)
+  [WebKit] › KittyGraphics.test.ts:846:9 › Kitty Graphics Protocol › Transmission medium rejection › query rejects t=s (shared memory)
+  [WebKit] › KittyGraphics.test.ts:859:9 › Kitty Graphics Protocol › Transmission medium rejection › query rejects t=t (temp file)
+  [WebKit] › KittyGraphics.test.ts:872:9 › Kitty Graphics Protocol › Transmission medium rejection › query accepts t=d (direct transmission)
+  [WebKit] › KittyGraphics.test.ts:885:9 › Kitty Graphics Protocol › Transmission medium rejection › query without t key defaults to direct (OK)
+  [WebKit] › KittyGraphics.test.ts:898:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit rejects t=f with id (EINVAL response)
+  [WebKit] › KittyGraphics.test.ts:911:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit rejects t=s with id (EINVAL response)
+  [WebKit] › KittyGraphics.test.ts:924:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit rejects t=t with id (EINVAL response)
+  [WebKit] › KittyGraphics.test.ts:937:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit rejects t=f without id (no response)
+  [WebKit] › KittyGraphics.test.ts:950:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit+display rejects t=f with id (EINVAL response)
+  [WebKit] › KittyGraphics.test.ts:963:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit+display rejects t=s with id (EINVAL response)
+  [WebKit] › KittyGraphics.test.ts:976:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit+display rejects t=t with id (EINVAL response)
+  [WebKit] › KittyGraphics.test.ts:989:9 › Kitty Graphics Protocol › Transmission medium rejection › transmit+display rejects t=f without id (no response)
+  [WebKit] › KittyGraphics.test.ts:1004:9 › Kitty Graphics Protocol › Placement action (a=p) › displays a previously transmitted image at cursor
+  [WebKit] › KittyGraphics.test.ts:1017:9 › Kitty Graphics Protocol › Placement action (a=p) › responds OK on successful placement
+  [WebKit] › KittyGraphics.test.ts:1033:9 › Kitty Graphics Protocol › Placement action (a=p) › responds ENOENT for non-existent image id
+  [WebKit] › KittyGraphics.test.ts:1046:9 › Kitty Graphics Protocol › Placement action (a=p) › without id sends no response
+  [WebKit] › KittyGraphics.test.ts:1058:9 › Kitty Graphics Protocol › Placement action (a=p) › places at specified column/row size (c/r)
+  [WebKit] › KittyGraphics.test.ts:1069:9 › Kitty Graphics Protocol › Placement action (a=p) › cursor advances past placed image (default C=0)
+  [WebKit] › KittyGraphics.test.ts:1079:9 › Kitty Graphics Protocol › Placement action (a=p) › cursor does not move when C=1
+  [WebKit] › KittyGraphics.test.ts:1089:9 › Kitty Graphics Protocol › Placement action (a=p) › supports z-index (negative = bottom layer)
+  [WebKit] › KittyGraphics.test.ts:1101:9 › Kitty Graphics Protocol › Placement action (a=p) › supports source crop via x/y
+  [WebKit] › KittyGraphics.test.ts:1114:9 › Kitty Graphics Protocol › Placement action (a=p) › supports sub-cell offset via X/Y
+  [WebKit] › KittyGraphics.test.ts:1126:9 › Kitty Graphics Protocol › Placement action (a=p) › multiple placements of same image create separate displays
+  [WebKit] › KittyGraphics.test.ts:1145:9 › Kitty Graphics Protocol › Placement action (a=p) › image data remains available after placement for future placements
+  [WebKit] › KittyGraphics.test.ts:1163:9 › Kitty Graphics Protocol › Placement action (a=p) › OK response suppressed by q=1
+  [WebKit] › KittyGraphics.test.ts:1179:9 › Kitty Graphics Protocol › Placement action (a=p) › OK response suppressed by q=2
+  [WebKit] › KittyGraphics.test.ts:1195:9 › Kitty Graphics Protocol › Placement action (a=p) › ENOENT error suppressed by q=2
+  [WebKit] › KittyGraphics.test.ts:1207:9 › Kitty Graphics Protocol › Placement action (a=p) › ENOENT still reported when q=1 (only suppresses OK)
+  [WebKit] › KittyGraphics.test.ts:1220:9 › Kitty Graphics Protocol › Placement action (a=p) › renders pixels correctly when placing a PNG image
+  [WebKit] › KittyGraphics.test.ts:1233:9 › Kitty Graphics Protocol › Placement action (a=p) › renders pixels correctly when placing raw RGB image
+  [WebKit] › KittyGraphics.test.ts:1246:9 › Kitty Graphics Protocol › Placement action (a=p) › renders pixels correctly when placing raw RGBA image
+  [WebKit] › KittyGraphics.test.ts:1259:9 › Kitty Graphics Protocol › Placement action (a=p) › response includes placement id when p is specified
+  [WebKit] › KittyGraphics.test.ts:1275:9 › Kitty Graphics Protocol › Placement action (a=p) › only c specified computes r from aspect ratio
+  [WebKit] › KittyGraphics.test.ts:1293:9 › Kitty Graphics Protocol › Placement action (a=p) › only r specified computes c from aspect ratio
+  [WebKit] › KittyGraphics.test.ts:1317:9 › Kitty Graphics Protocol › Cursor positioning › cursor advances past 1x1 image
+  [WebKit] › KittyGraphics.test.ts:1328:9 › Kitty Graphics Protocol › Cursor positioning › cursor advances with text before image
+  [WebKit] › KittyGraphics.test.ts:1339:9 › Kitty Graphics Protocol › Cursor positioning › cursor advances with text after image
+  [WebKit] › KittyGraphics.test.ts:1349:9 › Kitty Graphics Protocol › Cursor positioning › cursor position with multiple images on same line
+  [WebKit] › KittyGraphics.test.ts:1363:9 › Kitty Graphics Protocol › Cursor positioning › cursor advances on newline after image
+  [WebKit] › KittyGraphics.test.ts:1372:9 › Kitty Graphics Protocol › Cursor positioning › cursor should move right by cols when c specified
+  [WebKit] › KittyGraphics.test.ts:1383:9 › Kitty Graphics Protocol › Cursor positioning › cursor should move down by rows when r specified
+  [WebKit] › KittyGraphics.test.ts:1393:9 › Kitty Graphics Protocol › Cursor positioning › cursor should move by cols AND rows when both specified
+  [WebKit] › KittyGraphics.test.ts:1401:9 › Kitty Graphics Protocol › Cursor positioning › cursor should NOT move when C=1 is specified
+  [WebKit] › KittyGraphics.test.ts:1409:9 › Kitty Graphics Protocol › Cursor positioning › cursor should calculate cols/rows from image size when not specified
+  [WebKit] › KittyGraphics.test.ts:1426:9 › Kitty Graphics Protocol › Z-index layer placement › default placement (no z key) stores image on top layer
+  [WebKit] › KittyGraphics.test.ts:1434:9 › Kitty Graphics Protocol › Z-index layer placement › z=0 stores image on top layer
+  [WebKit] › KittyGraphics.test.ts:1442:9 › Kitty Graphics Protocol › Z-index layer placement › z=1 (positive) stores image on top layer
+  [WebKit] › KittyGraphics.test.ts:1450:9 › Kitty Graphics Protocol › Z-index layer placement › z=-1 uses bottom layer even when allowTransparency is disabled
+  [WebKit] › KittyGraphics.test.ts:1459:9 › Kitty Graphics Protocol › Z-index layer placement › z=-1 (negative) stores image on bottom layer when allowTransparency is enabled
+  [WebKit] › KittyGraphics.test.ts:1468:9 › Kitty Graphics Protocol › Z-index layer placement › z=-100 (large negative) stores image on bottom layer when allowTransparency is enabled
+  [WebKit] › KittyGraphics.test.ts:1477:9 › Kitty Graphics Protocol › Z-index layer placement › top layer canvas has correct CSS class
+  [WebKit] › KittyGraphics.test.ts:1487:9 › Kitty Graphics Protocol › Z-index layer placement › bottom layer canvas has correct CSS class
+  [WebKit] › KittyGraphics.test.ts:1498:9 › Kitty Graphics Protocol › Z-index layer placement › bottom layer canvas is before text canvas in DOM order
+  [WebKit] › KittyGraphics.test.ts:1511:9 › Kitty Graphics Protocol › Pixel verification › renders 1x1 black PNG at cursor position
+  [WebKit] › KittyGraphics.test.ts:1519:9 › Kitty Graphics Protocol › Pixel verification › renders 3x1 RGB PNG (red, green, blue pixels)
+  [WebKit] › KittyGraphics.test.ts:1534:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Basic transmission and storage › stores 200x100 PNG with a=T
+  [WebKit] › KittyGraphics.test.ts:1541:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Basic transmission and storage › transmit only (a=t) stores 200x100 image without display
+  [WebKit] › KittyGraphics.test.ts:1547:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Basic transmission and storage › stores with specified image ID
+  [WebKit] › KittyGraphics.test.ts:1555:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Chunked transmission › handles 2-chunk transmission
+  [WebKit] › KittyGraphics.test.ts:1570:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Chunked transmission › handles 3-chunk transmission
+  [WebKit] › KittyGraphics.test.ts:1586:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Chunked transmission › verifies chunked data assembles correctly
+  [WebKit] › KittyGraphics.test.ts:1605:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Cursor positioning › cursor advances past multi-cell image
+  [WebKit] › KittyGraphics.test.ts:1617:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Cursor positioning › cursor does not move with C=1
+  [WebKit] › KittyGraphics.test.ts:1623:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Cursor positioning › cursor uses explicit c and r over image dimensions
+  [WebKit] › KittyGraphics.test.ts:1636:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › renders red rectangle at top-left origin (0,0)
+  [WebKit] › KittyGraphics.test.ts:1643:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › renders top row colors at rectangle centers
+  [WebKit] › KittyGraphics.test.ts:1661:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › renders bottom row colors at rectangle centers
+  [WebKit] › KittyGraphics.test.ts:1678:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › renders correct colors at rectangle boundaries
+  [WebKit] › KittyGraphics.test.ts:1692:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › renders correct color at bottom-right corner
+  [WebKit] › KittyGraphics.test.ts:1700:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › renders a strip of top-row pixels via getPixels
+  [WebKit] › KittyGraphics.test.ts:1712:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › applies source crop via x/y/w/h before display
+  [WebKit] › KittyGraphics.test.ts:1721:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › scales cropped source region to c/r placement rectangle
+  [WebKit] › KittyGraphics.test.ts:1737:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › applies sub-cell offset via X/Y within first cell
+  [WebKit] › KittyGraphics.test.ts:1746:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › w=0 is treated as unset (displays full width)
+  [WebKit] › KittyGraphics.test.ts:1755:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › h=0 is treated as unset (displays full height)
+  [WebKit] › KittyGraphics.test.ts:1764:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › x exceeding image width produces no display
+  [WebKit] › KittyGraphics.test.ts:1771:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › negative x/y values are clamped to 0
+  [WebKit] › KittyGraphics.test.ts:1779:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › combined crop and sub-cell offset
+  [WebKit] › KittyGraphics.test.ts:1788:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Pixel verification › sub-cell offset with explicit c/r advances cursor correctly
+  [WebKit] › KittyGraphics.test.ts:1797:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Query support › responds with OK for valid 200x100 PNG query
+  [WebKit] › KittyGraphics.test.ts:1810:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Query support › query does not store the 200x100 image
+  [WebKit] › KittyGraphics.test.ts:1822:11 › Kitty Graphics Protocol › Larger image (200x100 multicolor PNG) › Delete commands › delete removes 200x100 image by id
+  [WebKit] › KittyGraphics.test.ts:1836:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Pixel verification › renders 1x1 black pixel with alpha set to 255
+  [WebKit] › KittyGraphics.test.ts:1842:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Pixel verification › renders 1x1 red pixel with alpha set to 255
+  [WebKit] › KittyGraphics.test.ts:1848:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Pixel verification › renders 3x1 strip (red, green, blue)
+  [WebKit] › KittyGraphics.test.ts:1858:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Pixel verification › renders 2x2 grid with correct pixel layout
+  [WebKit] › KittyGraphics.test.ts:1867:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Pixel verification › renders 5x1 row with block+remainder pixel layout
+  [WebKit] › KittyGraphics.test.ts:1877:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Pixel verification › renders 4x2 grid with multi-block pixel layout
+  [WebKit] › KittyGraphics.test.ts:1892:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Storage and dimensions › stores image with correct original dimensions (3x1)
+  [WebKit] › KittyGraphics.test.ts:1899:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Storage and dimensions › stores image with correct original dimensions (2x2)
+  [WebKit] › KittyGraphics.test.ts:1906:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Storage and dimensions › stores image with correct original dimensions (5x1)
+  [WebKit] › KittyGraphics.test.ts:1913:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Storage and dimensions › stores image with correct original dimensions (4x2)
+  [WebKit] › KittyGraphics.test.ts:1922:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › does not render without width (s=)
+  [WebKit] › KittyGraphics.test.ts:1928:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › does not render without height (v=)
+  [WebKit] › KittyGraphics.test.ts:1934:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › does not render without either dimension
+  [WebKit] › KittyGraphics.test.ts:1940:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › does not render with insufficient byte count
+  [WebKit] › KittyGraphics.test.ts:1946:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › query returns EINVAL without dimensions
+  [WebKit] › KittyGraphics.test.ts:1957:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › query returns EINVAL for insufficient pixel data
+  [WebKit] › KittyGraphics.test.ts:1968:11 › Kitty Graphics Protocol › Raw RGB pixel format (f=24) › Validation › query returns OK for valid RGB data with correct dimensions
+  [WebKit] › KittyGraphics.test.ts:1983:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Pixel verification › renders 1x1 opaque white pixel
+  [WebKit] › KittyGraphics.test.ts:1989:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Pixel verification › renders 1x1 opaque red pixel
+  [WebKit] › KittyGraphics.test.ts:1995:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Pixel verification › preserves full transparency (alpha=0)
+  [WebKit] › KittyGraphics.test.ts:2002:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Pixel verification › renders 3x1 strip (red, green, blue opaque)
+  [WebKit] › KittyGraphics.test.ts:2012:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Pixel verification › renders 2x2 grid with correct pixel layout
+  [WebKit] › KittyGraphics.test.ts:2021:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Pixel verification › renders 5x1 row with zero-copy pixel layout
+  [WebKit] › KittyGraphics.test.ts:2033:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Storage and dimensions › stores image with correct original dimensions (3x1)
+  [WebKit] › KittyGraphics.test.ts:2040:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Storage and dimensions › stores image with correct original dimensions (2x2)
+  [WebKit] › KittyGraphics.test.ts:2047:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Storage and dimensions › stores image with correct original dimensions (5x1)
+  [WebKit] › KittyGraphics.test.ts:2056:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › does not render without width (s=)
+  [WebKit] › KittyGraphics.test.ts:2062:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › does not render without height (v=)
+  [WebKit] › KittyGraphics.test.ts:2068:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › does not render without either dimension
+  [WebKit] › KittyGraphics.test.ts:2074:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › does not render with insufficient byte count
+  [WebKit] › KittyGraphics.test.ts:2080:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › query returns EINVAL without dimensions
+  [WebKit] › KittyGraphics.test.ts:2091:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › query returns EINVAL for insufficient pixel data
+  [WebKit] › KittyGraphics.test.ts:2102:11 › Kitty Graphics Protocol › Raw RGBA pixel format (f=32) › Validation › query returns OK for valid RGBA data with correct dimensions
+  [WebKit] › KittyGraphics.test.ts:2116:9 › Kitty Graphics Protocol › Eviction and memory leak prevention › re-transmit with same i= cleans up old storage entry
+  [WebKit] › KittyGraphics.test.ts:2133:9 › Kitty Graphics Protocol › Eviction and memory leak prevention › memory limit eviction cleans Kitty handler maps
+  [WebKit] › KittyGraphics.test.ts:2167:9 › Kitty Graphics Protocol › Eviction and memory leak prevention › scrollback eviction cleans Kitty handler maps
+  [WebKit] › KittyGraphics.test.ts:2191:9 › Kitty Graphics Protocol › Eviction and memory leak prevention › re-transmit with a=t then a=T cleans old storage before display
+  [WebKit] › KittyGraphics.test.ts:2205:9 › Kitty Graphics Protocol › onImageAdded callback › onImageAdded fires for each kitty image
+  [WebKit] › KittyGraphics.test.ts:2218:9 › Kitty Graphics Protocol › text overwrite removes tiles › a=T placement
+Total: 639 tests in 2 files

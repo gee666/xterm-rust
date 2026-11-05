@@ -1,0 +1,514 @@
+{
+  "scope": "Native demo only; full terminal equivalence NOT PROVEN",
+  "environment": {
+    "node": "v24.15.0",
+    "platform": "win32",
+    "architecture": "x64",
+    "rustflags": null,
+    "cargoEncodedRustflags": null,
+    "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+    "targetDirectory": "O:\\xterm-rust-swarm-16\\tmp\\B\\target",
+    "resolvedTargetOs": "windows",
+    "physicalExecutable": "O:\\xterm-rust-swarm-16\\tmp\\B\\target\\debug\\examples\\native.exe"
+  },
+  "commands": [
+    {
+      "command": [
+        "rustc",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 32.591699999999946,
+      "status": "passed",
+      "id": "rustc",
+      "expected": "success",
+      "log": "results/demos/native/runs/2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605/rustc.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "metadata",
+        "--locked",
+        "--no-deps",
+        "--format-version",
+        "1"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 39.34400000000005,
+      "status": "passed",
+      "id": "metadata",
+      "expected": "success",
+      "log": "results/demos/native/runs/2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605/metadata.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "rustc",
+        "--locked",
+        "-p",
+        "xterm-core",
+        "--lib",
+        "--",
+        "--print",
+        "cfg"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 2941.235,
+      "status": "passed",
+      "id": "target-cfg",
+      "expected": "success",
+      "log": "results/demos/native/runs/2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605/target-cfg.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "xterm-core",
+        "--example",
+        "native"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 4991.026599999999,
+      "status": "passed",
+      "id": "unit",
+      "expected": "success",
+      "log": "results/demos/native/runs/2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605/unit.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "-p",
+        "xterm-core",
+        "--example",
+        "native",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 4370.716200000001,
+      "status": "passed",
+      "id": "clippy",
+      "expected": "success",
+      "log": "results/demos/native/runs/2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605/clippy.log"
+    },
+    {
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2021",
+        "--check",
+        "crates/xterm-core/examples/native.rs",
+        "crates/xterm-core/examples/native/commands.rs",
+        "crates/xterm-core/examples/native/checks.rs",
+        "crates/xterm-core/examples/native/view.rs",
+        "crates/xterm-core/examples/native/escape.rs",
+        "crates/xterm-core/examples/native/arguments.rs",
+        "crates/xterm-core/examples/native/diagnostics.rs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 54.08560000000034,
+      "status": "passed",
+      "id": "format",
+      "expected": "success",
+      "log": "results/demos/native/runs/2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605/format.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "-p",
+        "xterm-core",
+        "--example",
+        "native",
+        "--message-format=json-render-diagnostics"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 534.848899999999,
+      "status": "passed",
+      "id": "build",
+      "expected": "success",
+      "log": "results/demos/native/runs/2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605/build.log"
+    },
+    {
+      "command": [
+        "O:\\xterm-rust-swarm-16\\tmp\\B\\target\\debug\\examples\\native.exe",
+        "--plain",
+        "--script",
+        "crates/xterm-core/tests/fixtures/native-demo.txt"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 101.26449999999932,
+      "status": "passed",
+      "id": "script-plain",
+      "expected": "success",
+      "log": "results/demos/native/runs/2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605/script-plain.log"
+    },
+    {
+      "command": [
+        "O:\\xterm-rust-swarm-16\\tmp\\B\\target\\debug\\examples\\native.exe",
+        "--script",
+        "crates/xterm-core/tests/fixtures/native-demo.txt"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 9.99200000000019,
+      "status": "passed",
+      "id": "script-ansi",
+      "expected": "success",
+      "log": "results/demos/native/runs/2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605/script-ansi.log"
+    },
+    {
+      "id": "interactive",
+      "command": [
+        "O:\\xterm-rust-swarm-16\\tmp\\B\\target\\debug\\examples\\native.exe",
+        "--plain"
+      ],
+      "expected": "success with one rejected interactive command",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "elapsedMs": 10.044400000000678,
+      "status": "passed",
+      "log": "results/demos/native/runs/2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605/interactive-stdout.log"
+    },
+    {
+      "command": [
+        "O:\\xterm-rust-swarm-16\\tmp\\B\\target\\debug\\examples\\native.exe",
+        "--plain"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 8.139900000000125,
+      "status": "passed",
+      "id": "stdin-eof",
+      "expected": "success",
+      "log": "results/demos/native/runs/2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605/stdin-eof.log"
+    },
+    {
+      "command": [
+        "O:\\xterm-rust-swarm-16\\tmp\\B\\target\\debug\\examples\\native.exe",
+        "--help"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 6.879300000000512,
+      "status": "passed",
+      "id": "help",
+      "expected": "success",
+      "log": "results/demos/native/runs/2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605/help.log"
+    },
+    {
+      "command": [
+        "O:\\xterm-rust-swarm-16\\tmp\\B\\target\\debug\\examples\\native.exe",
+        "--plain",
+        "--script",
+        "O:\\xterm-rust-swarm-16\\tmp\\B\\tmp\\native-demo\\2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605\\unknown.txt"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 9.615799999999581,
+      "status": "failed",
+      "id": "negative-unknown",
+      "expected": "failure",
+      "log": "results/demos/native/runs/2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605/negative-unknown.log"
+    },
+    {
+      "command": [
+        "O:\\xterm-rust-swarm-16\\tmp\\B\\target\\debug\\examples\\native.exe",
+        "--plain",
+        "--script",
+        "O:\\xterm-rust-swarm-16\\tmp\\B\\tmp\\native-demo\\2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605\\escape.txt"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 8.633899999998903,
+      "status": "failed",
+      "id": "negative-escape",
+      "expected": "failure",
+      "log": "results/demos/native/runs/2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605/negative-escape.log"
+    },
+    {
+      "command": [
+        "O:\\xterm-rust-swarm-16\\tmp\\B\\target\\debug\\examples\\native.exe",
+        "--plain",
+        "--script",
+        "O:\\xterm-rust-swarm-16\\tmp\\B\\tmp\\native-demo\\2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605\\zero-cols.txt"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 8.750600000001214,
+      "status": "failed",
+      "id": "negative-zero-cols",
+      "expected": "failure",
+      "log": "results/demos/native/runs/2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605/negative-zero-cols.log"
+    },
+    {
+      "command": [
+        "O:\\xterm-rust-swarm-16\\tmp\\B\\target\\debug\\examples\\native.exe",
+        "--plain",
+        "--script",
+        "O:\\xterm-rust-swarm-16\\tmp\\B\\tmp\\native-demo\\2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605\\zero-rows.txt"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 8.555099999999584,
+      "status": "failed",
+      "id": "negative-zero-rows",
+      "expected": "failure",
+      "log": "results/demos/native/runs/2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605/negative-zero-rows.log"
+    },
+    {
+      "command": [
+        "O:\\xterm-rust-swarm-16\\tmp\\B\\target\\debug\\examples\\native.exe",
+        "--plain",
+        "--script",
+        "O:\\xterm-rust-swarm-16\\tmp\\B\\tmp\\native-demo\\2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605\\budget.txt"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 8.957300000000032,
+      "status": "failed",
+      "id": "negative-budget",
+      "expected": "failure",
+      "log": "results/demos/native/runs/2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605/negative-budget.log"
+    },
+    {
+      "command": [
+        "O:\\xterm-rust-swarm-16\\tmp\\B\\target\\debug\\examples\\native.exe",
+        "--plain",
+        "--script",
+        "O:\\xterm-rust-swarm-16\\tmp\\B\\tmp\\native-demo\\2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605\\assertion.txt"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 11.643599999999424,
+      "status": "failed",
+      "id": "negative-assertion",
+      "expected": "failure",
+      "log": "results/demos/native/runs/2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605/negative-assertion.log"
+    }
+  ],
+  "negativeChecks": [
+    {
+      "name": "unknown",
+      "accepted": true,
+      "expectedMessage": "unknown command"
+    },
+    {
+      "name": "escape",
+      "accepted": true,
+      "expectedMessage": "expected hexadecimal digit"
+    },
+    {
+      "name": "zero-cols",
+      "accepted": true,
+      "expectedMessage": "at least 2 columns"
+    },
+    {
+      "name": "zero-rows",
+      "accepted": true,
+      "expectedMessage": "at least 2 columns"
+    },
+    {
+      "name": "budget",
+      "accepted": true,
+      "expectedMessage": "exceeds --max-cells"
+    },
+    {
+      "name": "assertion",
+      "accepted": true,
+      "expectedMessage": "expected"
+    }
+  ],
+  "failedChecks": [],
+  "status": "passed",
+  "gaps": [],
+  "sourceBefore": {
+    "sha256": "a82a2eb2b35da2889b1140212a314869a3ae9e17302518b94857c352677c8715",
+    "files": 1814,
+    "unsafeCandidates": [
+      {
+        "path": "crates/xterm-core/src/instantiation.rs",
+        "line": 3,
+        "text": "//! Shared service values and constructor argument resolution without unsafe code."
+      },
+      {
+        "path": "crates/xterm-web/src/image/iip_decode.rs",
+        "line": 86,
+        "text": "// Snapshot before browser calls, without unsafe WASM memory views or"
+      },
+      {
+        "path": "crates/xterm-web/src/status_addons/coercion.rs",
+        "line": 4,
+        "text": "//! Static wasm-bindgen snippets avoid requiring eval or unsafe-eval CSP rules."
+      },
+      {
+        "path": "crates/xterm-web/src/webgl/rectangle_gpu.rs",
+        "line": 79,
+        "text": "// Copy, rather than unsafe views into WASM memory. WebGL owns its upload."
+      }
+    ]
+  },
+  "executable": "target/debug/examples/native.exe",
+  "artifactBefore": {
+    "bytes": 2883072,
+    "sha256": "e756b5d74771ad835312ff731d40272a86c5efbf587bf3a78123b6c04424694c"
+  },
+  "interactiveDiagnosticLines": 0,
+  "interactiveChecks": {
+    "recoveredCommandErrors": 1,
+    "successfulStateAssertions": 3,
+    "disposed": true
+  },
+  "assertionsPerScript": 21,
+  "artifactAfter": {
+    "bytes": 2883072,
+    "sha256": "e756b5d74771ad835312ff731d40272a86c5efbf587bf3a78123b6c04424694c"
+  },
+  "sourceAfter": {
+    "sha256": "a82a2eb2b35da2889b1140212a314869a3ae9e17302518b94857c352677c8715",
+    "files": 1814,
+    "unsafeCandidates": [
+      {
+        "path": "crates/xterm-core/src/instantiation.rs",
+        "line": 3,
+        "text": "//! Shared service values and constructor argument resolution without unsafe code."
+      },
+      {
+        "path": "crates/xterm-web/src/image/iip_decode.rs",
+        "line": 86,
+        "text": "// Snapshot before browser calls, without unsafe WASM memory views or"
+      },
+      {
+        "path": "crates/xterm-web/src/status_addons/coercion.rs",
+        "line": 4,
+        "text": "//! Static wasm-bindgen snippets avoid requiring eval or unsafe-eval CSP rules."
+      },
+      {
+        "path": "crates/xterm-web/src/webgl/rectangle_gpu.rs",
+        "line": 79,
+        "text": "// Copy, rather than unsafe views into WASM memory. WebGL owns its upload."
+      }
+    ]
+  },
+  "sourceStable": true,
+  "unrunChecks": [],
+  "runId": "2026-11-05T11-49-57-957Z-f2dc6643-0d88-4bcd-b233-a7ff1b602605"
+}

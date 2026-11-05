@@ -98,7 +98,14 @@ test('HTML serialization reaches the real clipboard or reports host denial', asy
   await page.locator('#serialize-html').click();
   await expect(page.locator('#html-output')).toContainText('HTML');
   const html = await page.locator('#html-output').textContent();
-  expect(html).toContain('<'); expect(html).toContain('255');
+  expect(html).toContain('<');
+  // Source SerializeAddon emits hex CSS, so assert the actual text color.
+  const foreground = await page.evaluate(html => {
+    const document = new DOMParser().parseFromString(html, 'text/html');
+    const span = [...document.querySelectorAll('span')].find(span => span.textContent.includes('HTML 界😀'));
+    return span?.style.color;
+  }, html);
+  expect(foreground).toBe('rgb(255, 0, 0)');
   await expect.poll(() => page.evaluate(() => demo.events.some(event => event.name === 'serialize:html-copied') || demo.errors.length > 0)).toBe(true);
   const copied = await page.evaluate(() => demo.events.some(event => event.name === 'serialize:html-copied'));
   if (browserName === 'chromium') expect(copied, 'Granted Chromium clipboard permission must copy actual HTML').toBe(true);

@@ -1,0 +1,201 @@
+
+Running 21 tests using 2 workers
+·····F···F···F····FFF
+
+  1) [Chromium] › scripts\demo-e2e\demo-05.spec.cjs:95:1 › HTML serialization reaches the real clipboard or reports host denial 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoContain[2m([22m[32mexpected[39m[2m) // indexOf[22m
+
+    Expected substring: [32m"255"[39m
+    Received string:    [31m"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span></span><span style='color: #ff0000;'>HTML 界😀</span><span>                                </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div></div></pre><!--EndFragment--></body></html>"[39m
+
+       99 |   await expect(page.locator('#html-output')).toContainText('HTML');
+      100 |   const html = await page.locator('#html-output').textContent();
+    > 101 |   expect(html).toContain('<'); expect(html).toContain('255');
+          |                                             ^
+      102 |   await expect.poll(() => page.evaluate(() => demo.events.some(event => event.name === 'serialize:html-copied') || demo.errors.length > 0)).toBe(true);
+      103 |   const copied = await page.evaluate(() => demo.events.some(event => event.name === 'serialize:html-copied'));
+      104 |   if (browserName === 'chromium') expect(copied, 'Granted Chromium clipboard permission must copy actual HTML').toBe(true);
+        at O:\xterm-rust-swarm-16\tmp\B\scripts\demo-e2e\demo-05.spec.cjs:101:45
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-Chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-Chromium\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-Chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-Chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [Chromium] › scripts\demo-e2e\demo-05.spec.cjs:119:1 › DOM and WebGL controls replace actual renderer ownership and retain selection 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      123 |   const canvases = await page.locator('.xterm canvas').count();
+      124 |   await change(page, 'renderer', 'webgl');
+    > 125 |   await expect.poll(() => page.locator('.xterm canvas').count()).toBeGreaterThan(canvases);
+          |                                                                  ^
+      126 |   expect(await snapshot(page)).toEqual(before);
+      127 |   expect(await page.evaluate(() => demo.terminal.getSelection())).toBe('renderer');
+      128 |   await change(page, 'renderer', 'dom');
+        at O:\xterm-rust-swarm-16\tmp\B\scripts\demo-e2e\demo-05.spec.cjs:125:66
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-Chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-Chromium\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-Chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-Chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [FirefoxStable] › scripts\demo-e2e\demo-05.spec.cjs:95:1 › HTML serialization reaches the real clipboard or reports host denial 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoContain[2m([22m[32mexpected[39m[2m) // indexOf[22m
+
+    Expected substring: [32m"255"[39m
+    Received string:    [31m"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span></span><span style='color: #ff0000;'>HTML 界😀</span><span>                                </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div></div></pre><!--EndFragment--></body></html>"[39m
+
+       99 |   await expect(page.locator('#html-output')).toContainText('HTML');
+      100 |   const html = await page.locator('#html-output').textContent();
+    > 101 |   expect(html).toContain('<'); expect(html).toContain('255');
+          |                                             ^
+      102 |   await expect.poll(() => page.evaluate(() => demo.events.some(event => event.name === 'serialize:html-copied') || demo.errors.length > 0)).toBe(true);
+      103 |   const copied = await page.evaluate(() => demo.events.some(event => event.name === 'serialize:html-copied'));
+      104 |   if (browserName === 'chromium') expect(copied, 'Granted Chromium clipboard permission must copy actual HTML').toBe(true);
+        at O:\xterm-rust-swarm-16\tmp\B\scripts\demo-e2e\demo-05.spec.cjs:101:45
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-FirefoxStable\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-FirefoxStable\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-FirefoxStable\trace.zip
+    Usage:
+
+        npx playwright show-trace results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-FirefoxStable\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [FirefoxStable] › scripts\demo-e2e\demo-05.spec.cjs:119:1 › DOM and WebGL controls replace actual renderer ownership and retain selection 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      123 |   const canvases = await page.locator('.xterm canvas').count();
+      124 |   await change(page, 'renderer', 'webgl');
+    > 125 |   await expect.poll(() => page.locator('.xterm canvas').count()).toBeGreaterThan(canvases);
+          |                                                                  ^
+      126 |   expect(await snapshot(page)).toEqual(before);
+      127 |   expect(await page.evaluate(() => demo.terminal.getSelection())).toBe('renderer');
+      128 |   await change(page, 'renderer', 'dom');
+        at O:\xterm-rust-swarm-16\tmp\B\scripts\demo-e2e\demo-05.spec.cjs:125:66
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-FirefoxStable\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-FirefoxStable\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-FirefoxStable\trace.zip
+    Usage:
+
+        npx playwright show-trace results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-FirefoxStable\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [WebKit] › scripts\demo-e2e\demo-05.spec.cjs:95:1 › HTML serialization reaches the real clipboard or reports host denial 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoContain[2m([22m[32mexpected[39m[2m) // indexOf[22m
+
+    Expected substring: [32m"255"[39m
+    Received string:    [31m"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span></span><span style='color: #ff0000;'>HTML 界😀</span><span>                                </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div><div><span>                                        </span></div></div></pre><!--EndFragment--></body></html>"[39m
+
+       99 |   await expect(page.locator('#html-output')).toContainText('HTML');
+      100 |   const html = await page.locator('#html-output').textContent();
+    > 101 |   expect(html).toContain('<'); expect(html).toContain('255');
+          |                                             ^
+      102 |   await expect.poll(() => page.evaluate(() => demo.events.some(event => event.name === 'serialize:html-copied') || demo.errors.length > 0)).toBe(true);
+      103 |   const copied = await page.evaluate(() => demo.events.some(event => event.name === 'serialize:html-copied'));
+      104 |   if (browserName === 'chromium') expect(copied, 'Granted Chromium clipboard permission must copy actual HTML').toBe(true);
+        at O:\xterm-rust-swarm-16\tmp\B\scripts\demo-e2e\demo-05.spec.cjs:101:45
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-WebKit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-WebKit\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-WebKit\trace.zip
+    Usage:
+
+        npx playwright show-trace results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-WebKit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [WebKit] › scripts\demo-e2e\demo-05.spec.cjs:119:1 › DOM and WebGL controls replace actual renderer ownership and retain selection 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      123 |   const canvases = await page.locator('.xterm canvas').count();
+      124 |   await change(page, 'renderer', 'webgl');
+    > 125 |   await expect.poll(() => page.locator('.xterm canvas').count()).toBeGreaterThan(canvases);
+          |                                                                  ^
+      126 |   expect(await snapshot(page)).toEqual(before);
+      127 |   expect(await page.evaluate(() => demo.terminal.getSelection())).toBe('renderer');
+      128 |   await change(page, 'renderer', 'dom');
+        at O:\xterm-rust-swarm-16\tmp\B\scripts\demo-e2e\demo-05.spec.cjs:125:66
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-WebKit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-WebKit\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-WebKit\trace.zip
+    Usage:
+
+        npx playwright show-trace results\demos\browser\2026-11-05T11-54-36-824Z-7a40da51-565b-4880-a409-d789ed6d625f\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-WebKit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6 failed
+    [Chromium] › scripts\demo-e2e\demo-05.spec.cjs:95:1 › HTML serialization reaches the real clipboard or reports host denial 
+    [Chromium] › scripts\demo-e2e\demo-05.spec.cjs:119:1 › DOM and WebGL controls replace actual renderer ownership and retain selection 
+    [FirefoxStable] › scripts\demo-e2e\demo-05.spec.cjs:95:1 › HTML serialization reaches the real clipboard or reports host denial 
+    [FirefoxStable] › scripts\demo-e2e\demo-05.spec.cjs:119:1 › DOM and WebGL controls replace actual renderer ownership and retain selection 
+    [WebKit] › scripts\demo-e2e\demo-05.spec.cjs:95:1 › HTML serialization reaches the real clipboard or reports host denial 
+    [WebKit] › scripts\demo-e2e\demo-05.spec.cjs:119:1 › DOM and WebGL controls replace actual renderer ownership and retain selection 
+  15 passed (39.7s)
