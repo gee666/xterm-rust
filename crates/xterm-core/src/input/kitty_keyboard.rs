@@ -6,10 +6,10 @@
 
 use super::keyboard::{KeyboardEvent, KeyboardResult};
 
-mod inherited;
 mod keys;
 mod live;
 mod live_fields;
+pub mod lookup;
 
 /// Enhancement flag bits accepted by [`evaluate`]. Unknown bits are preserved
 /// by callers and ignored by this encoder, as in the JavaScript implementation.
@@ -62,31 +62,4 @@ pub fn try_evaluate<E: crate::input::keyboard_event_source::KeyboardEventSource 
     mac_option_as_alt: bool,
 ) -> Result<KeyboardResult, E::Error> {
     live::evaluate(event, flags, event_type, mac_option_as_alt)
-}
-
-fn legacy_sequence(
-    number: &str,
-    suffix: &str,
-    ss3: bool,
-    modifiers: u8,
-    event_type: EventType,
-    report_events: bool,
-) -> String {
-    let needs_event = report_events && event_type != EventType::Press;
-    if ss3 && modifiers == 0 && !needs_event {
-        return format!("\x1bO{suffix}");
-    }
-    let mut sequence = if number == "1" && modifiers == 0 && !needs_event {
-        "\x1b[".into()
-    } else {
-        format!("\x1b[{number}")
-    };
-    if modifiers > 0 || needs_event {
-        sequence.push_str(&format!(";{}", modifiers.max(1)));
-        if needs_event {
-            sequence.push_str(&format!(":{}", event_type as u8));
-        }
-    }
-    sequence.push_str(suffix);
-    sequence
 }

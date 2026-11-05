@@ -15,3 +15,7 @@ mod touch_dom;
 
 #[cfg(target_arch = "wasm32")]
 pub mod dom;
+#[cfg(target_arch = "wasm32")]
+pub mod keyboard_lookup;
+#[cfg(target_arch = "wasm32")]
+pub mod win32_lookup;

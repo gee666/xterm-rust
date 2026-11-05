@@ -2,14 +2,17 @@
 // Licensed under the MIT license. Ported from common/input/Win32InputMode.ts.
 
 //! Win32 protocol encoding with source-ordered, fallible event field access.
-//! The fixed scan-code table intentionally uses upstream's approximate US layout.
-//! Inherited object-map coercions remain tracked by tasks 184/185 and
-//! docs/keyboard-map-lookup.md; this module does not establish full equivalence.
+//! Object-map results retain their raw identity until final string interpolation.
+//! Browser event sources provide realm-specific ordinary objects and coercion.
 
 use super::keyboard_event_source::{code_point_at_zero, number_is_truthy, KeyboardEventSource};
 
 #[path = "win32_key_codes.rs"]
 mod key_codes;
+#[path = "win32_lookup.rs"]
+pub mod lookup;
+
+use lookup::{Hint, Table, Value};
 
 /// Windows console control-state flags used by the Win32 input protocol.
 pub mod control_key_state {
@@ -28,7 +31,8 @@ pub use super::keyboard::{
     KeyboardEvent as Win32KeyboardEvent, KeyboardResult as Win32KeyboardResult, KeyboardResultType,
 };
 
-/// Stateless encoder for `CSI Vk ; Sc ; Uc ; Kd ; Cs ; Rc _` records.
+/// Stateless encoding policy. Stateful ordinary-object lookups belong to the
+/// event source's runtime, not to the platform-independent policy.
 #[derive(Clone, Copy, Debug, Default)]
 pub struct Win32InputMode;
 
@@ -52,29 +56,34 @@ impl Win32InputMode {
         event: &E,
         is_key_down: bool,
     ) -> Result<Win32KeyboardResult, E::Error> {
-        let vk = if let Some(vk) = key_codes::virtual_key(&event.code()?) {
-            f64::from(vk)
-        } else {
+        let vk = event.win32_lookup(Table::VirtualKey, &event.code()?)?;
+        let vk = if vk.is_undefined() {
             let code = event.key_code()?;
-            if number_is_truthy(code) {
-                code
-            } else {
-                0.0
-            }
+            Value::Number(if number_is_truthy(code) { code } else { 0.0 })
+        } else {
+            vk
         };
-        let sc = key_codes::scan_code(&event.code()?);
+        let sc = event.win32_lookup(Table::ScanCode, &event.code()?)?;
+        let sc = if sc.is_truthy() {
+            sc
+        } else {
+            Value::Number(0.0)
+        };
         let uc = unicode_char(event)?;
         let kd = u8::from(is_key_down);
         let cs = control_state(event)?;
-        let vk = ryu_js::Buffer::new().format(vk).to_owned();
+        // User coercion observes later field reads and throws in Vk/Sc/Uc order.
+        let mut key = vec![0x1b, u16::from(b'[')];
+        vk.append(&mut key, Hint::String)?;
+        key.push(u16::from(b';'));
+        sc.append(&mut key, Hint::String)?;
+        key.push(u16::from(b';'));
+        uc.append(&mut key, Hint::String)?;
+        key.extend(format!(";{kd};{cs};1_").encode_utf16());
         Ok(Win32KeyboardResult {
             result_type: KeyboardResultType::SendKey,
             cancel: true,
-            key: Some(
-                format!("\x1b[{vk};{sc};{uc};{kd};{cs};1_")
-                    .encode_utf16()
-                    .collect(),
-            ),
+            key: Some(key),
         })
     }
 }
@@ -83,43 +92,32 @@ fn equals(key: &[u16], value: &str) -> bool {
     key.iter().copied().eq(value.encode_utf16())
 }
 
-fn unicode_char<E: KeyboardEventSource + ?Sized>(event: &E) -> Result<u32, E::Error> {
+fn unicode_char<E: KeyboardEventSource + ?Sized>(event: &E) -> Result<Value<E::Error>, E::Error> {
     if event.ctrl_key()? && !event.alt_key()? && !event.meta_key()? {
         if equals(&event.key()?, "Enter") {
-            return Ok(10);
+            return Ok(Value::Number(10.0));
         }
         if equals(&event.key()?, "Backspace") {
-            return Ok(127);
+            return Ok(Value::Number(127.0));
         }
     }
-    let control = event.key()?;
-    let code = if equals(&control, "Enter") {
-        Some(13)
-    } else if equals(&control, "Backspace") {
-        Some(8)
-    } else if equals(&control, "Tab") {
-        Some(9)
-    } else if equals(&control, "Escape") {
-        Some(27)
-    } else {
-        None
-    };
-    if let Some(code) = code {
-        return Ok(code);
+    let control = event.win32_lookup(Table::ControlChar, &event.key()?)?;
+    if !control.is_undefined() {
+        return Ok(control);
     }
     if event.key()?.len() == 1 {
         let code = code_point_at_zero(&event.key()?).unwrap_or(0);
         if event.ctrl_key()? && !event.alt_key()? && !event.meta_key()? {
             if (0x41..=0x5a).contains(&code) {
-                return Ok(code - 0x40);
+                return Ok(Value::Number(f64::from(code - 0x40)));
             }
             if (0x61..=0x7a).contains(&code) {
-                return Ok(code - 0x60);
+                return Ok(Value::Number(f64::from(code - 0x60)));
             }
         }
-        return Ok(code);
+        return Ok(Value::Number(f64::from(code)));
     }
-    Ok(0)
+    Ok(Value::Number(0.0))
 }
 
 fn control_state<E: KeyboardEventSource + ?Sized>(event: &E) -> Result<u16, E::Error> {

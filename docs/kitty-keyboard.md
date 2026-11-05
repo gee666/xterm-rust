@@ -13,7 +13,7 @@
 | `IKeyboardEvent` | shared `keyboard::KeyboardEvent<'a>` |
 | result key, cancel and type | shared `keyboard::KeyboardResult` |
 
-The Rust module exposes functions rather than an instance because upstream has no mutable state. Key maps are immutable data. `EventType` has Press, Repeat and Release with the original numeric values 1, 2 and 3. The adapter supplies the appropriate event type and Mac Option setting. DOM keyCode and event type strings are not read by this policy, but keyCode remains in the shared event type.
+The Rust module exposes stateless encoding functions. Ordinary upstream map objects can be mutated by prototype getters. `KeyboardEventSource::kitty_lookup` owns that runtime state; browser InputBindings retains one `KeyboardTables` owner across events and mode changes. Borrowed native events use immutable default maps. `EventType` has Press, Repeat and Release with the original numeric values 1, 2 and 3. The adapter supplies the appropriate event type and Mac Option setting. DOM keyCode and event type strings are not read by this policy, but keyCode remains in the shared event type.
 
 Flags are a `u32` bitfield, including unknown bits. A browser binding must perform JavaScript bitwise conversion before calling `evaluate`. `should_use_protocol` accepts that typed bitfield, not arbitrary JS numbers such as NaN, fractions or negative numbers. Bindings must evaluate the upstream positive-number check before converting an arbitrary JS API argument; conversion must not turn a negative flag into protocol activation.
 
@@ -27,7 +27,7 @@ Physical Key recovery uses the shared Unicode 17.0 lowercase table from the lega
 
 The Numpad branch retains the source's lexical suffix comparison and radix-10 parseInt behavior, including synthetic codes such as Numpad123 and Numpad8suffix. Key numbers use JavaScript-compatible floating-point formatting from the workspace's existing `ryu-js` dependency. This is needed for very long synthetic decimal suffixes; it does not add a dependency.
 
-Source lookup tables are ordinary JavaScript objects. Their inherited Object.prototype names can therefore produce unexpected sequences for synthetic key names such as toString. `kitty_keyboard/inherited.rs` preserves the observed Node 24/V8 native-function strings, and __proto__ produces [object Object]. This text is engine-dependent under JavaScript's native-function string contract. Firefox/WebKit and prototype-mutated JavaScript realms remain separate browser verification obligations, not proven by this Node oracle.
+Source lookup tables are ordinary JavaScript objects. Their inherited Object.prototype names can therefore produce unexpected sequences for synthetic key names such as toString. Native `keyboard_map_inherited.rs` preserves the documented Node24/V8 intrinsic text. Browser `input::keyboard_lookup` bypasses that text data, retaining raw values from its own realm's ordinary tables until Rust requests string addition with the default hint. Getters receive the actual table, exceptions retain identity and output retains lone surrogates. See [keyboard-map-lookup.md](keyboard-map-lookup.md) and [keyboard-recovery343.md](keyboard-recovery343.md).
 
 ## Verification
 
@@ -35,7 +35,7 @@ With Rust tools on PATH and Node.js supporting `stripTypeScriptTypes`:
 
 ```sh
 node scripts/verify-kitty-keyboard.mjs
-cargo test -p xterm-core --test kitty_upstream --test kitty_edges
+cargo test -p xterm-core --test kitty_upstream --test kitty_edges --test kitty_lookup
 cargo fmt --all -- --check
 cargo clippy --workspace --all-targets --all-features -- -D warnings
 cargo test --workspace --all-targets --all-features
@@ -48,4 +48,4 @@ Observed Windows x86-64 evidence currently includes 165 original tests and 173 o
 
 `results/kitty/` retains this task's command logs, including failed workspace checks caused by other active modules. A successful targeted run does not mean a workspace gate passed. Temporary build products remain under `target/` or `tmp/`.
 
-Terminal flag negotiation, actual DOM keydown/keyup dispatch, legacy/Win32 mode selection, cancellation, duplicate-event prevention and browser listener disposal belong to integration tasks #28 and #33. Native Linux/macOS and Chromium/Firefox/WebKit runtime evidence are not established by this policy test. Full terminal equivalence remains NOT PROVEN.
+Terminal flag negotiation, actual DOM keydown/keyup dispatch, legacy/Win32 mode selection, cancellation, duplicate-event prevention and browser listener disposal belong to integration tasks #28 and #33. Native Linux/macOS and Chromium/Firefox/WebKit runtime evidence are not established by this portable policy test. The separate raw-realm and listener checks are recorded in `docs/keyboard-recovery343.md`. Full terminal equivalence remains NOT PROVEN.

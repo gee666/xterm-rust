@@ -4,6 +4,13 @@ use std::borrow::Cow;
 use std::convert::Infallible;
 
 use super::keyboard::KeyboardEvent;
+use super::win32_input_mode::lookup::{native_lookup, Table, Value};
+
+#[path = "keyboard_map_inherited.rs"]
+pub(crate) mod inherited;
+
+#[path = "keyboard_lookup.rs"]
+pub mod lookup;
 
 /// Read every field at its source expression. Implementations may observe a
 /// mutable browser event or throw; encoders must not eagerly snapshot or cache
@@ -13,6 +20,21 @@ use super::keyboard::KeyboardEvent;
 /// negative, infinite and NaN values instead of an early WebIDL conversion.
 pub trait KeyboardEventSource {
     type Error;
+
+    /// Ordinary Win32 object lookup, retaining raw values until interpolation.
+    /// A browser implementation must keep each table alive across events.
+    fn win32_lookup(&self, table: Table, key: &[u16]) -> Result<Value<Self::Error>, Self::Error> {
+        Ok(native_lookup(table, key))
+    }
+
+    /// Ordinary Kitty lookup. Only the runtime knows its prototype and receiver.
+    fn kitty_lookup(
+        &self,
+        table: super::kitty_keyboard::lookup::Table,
+        key: &[u16],
+    ) -> Result<Value<Self::Error>, Self::Error> {
+        Ok(super::kitty_keyboard::lookup::native_lookup(table, key))
+    }
 
     fn key_code(&self) -> Result<f64, Self::Error>;
     fn key(&self) -> Result<Cow<'_, [u16]>, Self::Error>;
@@ -75,4 +97,24 @@ pub(crate) fn code_point_at_zero(units: &[u16]) -> Option<u32> {
         }
     }
     Some(u32::from(first))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{code_point_at_zero, number_is_truthy};
+
+    #[test]
+    fn shared_keyboard_helpers_retain_js_values() {
+        // Retained from the source-path oracle runner when it began linking
+        // the real core crate. Keep private-helper checks inside their crate.
+        assert!(!number_is_truthy(0.0));
+        assert_eq!(code_point_at_zero(&[0x41]), Some(0x41));
+        assert!(!number_is_truthy(-0.0));
+        assert!(!number_is_truthy(f64::NAN));
+        assert!(number_is_truthy(f64::INFINITY));
+        assert_eq!(code_point_at_zero(&[]), None);
+        assert_eq!(code_point_at_zero(&[0xd800]), Some(0xd800));
+        assert_eq!(code_point_at_zero(&[0xdc00]), Some(0xdc00));
+        assert_eq!(code_point_at_zero(&[0xd83d, 0xde00]), Some(0x1f600));
+    }
 }

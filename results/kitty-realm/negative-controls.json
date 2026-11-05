@@ -1,0 +1,1167 @@
+{
+  "scope": "Source-only deliberate faults; not Rust coverage",
+  "node": "v24.15.0",
+  "sourceSha256": "b2e17f3ce40ff0660c8dd8a167a3ce8a775dfd0b66da72410ce92fa43bcebe82",
+  "baselineCases": 10224,
+  "results": [
+    {
+      "name": "no-prototype",
+      "cases": 10224,
+      "detected": 4440,
+      "firstFailure": {
+        "spec": {
+          "operation": "undefined",
+          "table": 0,
+          "mask": 0,
+          "flags": 0,
+          "type": 1,
+          "inherited": true
+        },
+        "expected": {
+          "result": {
+            "type": 0,
+            "cancel": false,
+            "key": null
+          },
+          "trace": [
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "altKey"
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "metaKey"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              2,
+              true
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              3,
+              true
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              1,
+              true
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              0,
+              true
+            ],
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "key"
+            ]
+          ]
+        },
+        "actual": {
+          "result": {
+            "type": 0,
+            "cancel": false,
+            "key": null
+          },
+          "trace": [
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "altKey"
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "metaKey"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "key"
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "string-hint",
+      "cases": 10224,
+      "detected": 1080,
+      "firstFailure": {
+        "spec": {
+          "operation": "symbol",
+          "table": 2,
+          "mask": 0,
+          "flags": 0,
+          "type": 1,
+          "inherited": false
+        },
+        "expected": {
+          "threw": {
+            "name": "TypeError",
+            "message": [
+              67,
+              97,
+              110,
+              110,
+              111,
+              116,
+              32,
+              99,
+              111,
+              110,
+              118,
+              101,
+              114,
+              116,
+              32,
+              97,
+              32,
+              83,
+              121,
+              109,
+              98,
+              111,
+              108,
+              32,
+              118,
+              97,
+              108,
+              117,
+              101,
+              32,
+              116,
+              111,
+              32,
+              97,
+              32,
+              115,
+              116,
+              114,
+              105,
+              110,
+              103
+            ]
+          },
+          "trace": [
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "altKey"
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "metaKey"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              2,
+              true
+            ]
+          ]
+        },
+        "actual": {
+          "result": {
+            "type": 0,
+            "cancel": true,
+            "key": [
+              27,
+              91,
+              83,
+              121,
+              109,
+              98,
+              111,
+              108,
+              40,
+              107,
+              105,
+              116,
+              116,
+              121,
+              41
+            ]
+          },
+          "trace": [
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "altKey"
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "metaKey"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              2,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "numeric-coercion",
+      "cases": 10224,
+      "detected": 2166,
+      "firstFailure": {
+        "spec": {
+          "operation": "undefined",
+          "table": 0,
+          "mask": 0,
+          "flags": 0,
+          "type": 1,
+          "inherited": false
+        },
+        "expected": {
+          "result": {
+            "type": 0,
+            "cancel": false,
+            "key": null
+          },
+          "trace": [
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "altKey"
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "metaKey"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              2,
+              true
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              3,
+              true
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              1,
+              true
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              0,
+              true
+            ],
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "key"
+            ]
+          ]
+        },
+        "actual": {
+          "result": {
+            "type": 0,
+            "cancel": false,
+            "key": null
+          },
+          "trace": [
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "altKey"
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "metaKey"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              2,
+              true
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              3,
+              true
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              1,
+              true
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              0,
+              true
+            ],
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              0,
+              true
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "field",
+              "key"
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "lossy-utf16",
+      "cases": 10224,
+      "detected": 2048,
+      "firstFailure": {
+        "spec": {
+          "operation": "high-surrogate",
+          "table": 0,
+          "mask": 0,
+          "flags": 2,
+          "type": 1,
+          "inherited": false
+        },
+        "expected": {
+          "result": {
+            "type": 0,
+            "cancel": true,
+            "key": [
+              27,
+              91,
+              55296,
+              117
+            ]
+          },
+          "trace": [
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "altKey"
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "metaKey"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              2,
+              true
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              3,
+              true
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              1,
+              true
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              0,
+              true
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              0,
+              true
+            ]
+          ]
+        },
+        "actual": {
+          "result": {
+            "type": 0,
+            "cancel": true,
+            "key": [
+              27,
+              91,
+              65533,
+              117
+            ]
+          },
+          "trace": [
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "altKey"
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "metaKey"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              2,
+              true
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              3,
+              true
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              1,
+              true
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              0,
+              true
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              0,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "replaced-exceptions",
+      "cases": 10224,
+      "detected": 924,
+      "firstFailure": {
+        "spec": {
+          "operation": "symbol",
+          "table": 0,
+          "mask": 0,
+          "flags": 2,
+          "type": 1,
+          "inherited": false
+        },
+        "expected": {
+          "threw": {
+            "name": "TypeError",
+            "message": [
+              67,
+              97,
+              110,
+              110,
+              111,
+              116,
+              32,
+              99,
+              111,
+              110,
+              118,
+              101,
+              114,
+              116,
+              32,
+              97,
+              32,
+              83,
+              121,
+              109,
+              98,
+              111,
+              108,
+              32,
+              118,
+              97,
+              108,
+              117,
+              101,
+              32,
+              116,
+              111,
+              32,
+              97,
+              32,
+              115,
+              116,
+              114,
+              105,
+              110,
+              103
+            ]
+          },
+          "trace": [
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "altKey"
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "metaKey"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              2,
+              true
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              3,
+              true
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              1,
+              true
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              0,
+              true
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              0,
+              true
+            ]
+          ]
+        },
+        "actual": {
+          "threw": {
+            "name": "Error",
+            "message": [
+              114,
+              101,
+              112,
+              108,
+              97,
+              99,
+              101,
+              109,
+              101,
+              110,
+              116
+            ]
+          },
+          "trace": [
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "altKey"
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "metaKey"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              2,
+              true
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              3,
+              true
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              1,
+              true
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              0,
+              true
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              0,
+              true
+            ]
+          ]
+        }
+      }
+    }
+  ]
+}

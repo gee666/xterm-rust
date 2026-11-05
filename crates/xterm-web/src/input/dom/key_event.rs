@@ -8,7 +8,17 @@ use wasm_bindgen::{JsCast, JsValue};
 use web_sys::KeyboardEvent;
 use xterm_core::input::keyboard_event_source::KeyboardEventSource;
 
-pub(super) struct LiveKeyEvent<'a>(pub(super) &'a KeyboardEvent);
+#[cfg(test)]
+#[path = "kitty_lookup_tests.rs"]
+mod kitty_tests;
+#[cfg(test)]
+#[path = "win32_lookup_tests.rs"]
+mod win32_tests;
+
+pub(super) struct LiveKeyEvent<'a>(
+    pub(super) &'a KeyboardEvent,
+    pub(super) &'a crate::input::keyboard_lookup::KeyboardTables,
+);
 impl LiveKeyEvent<'_> {
     fn get(&self, name: &str) -> Result<JsValue, JsValue> {
         js_sys::Reflect::get(self.0.as_ref(), &JsValue::from_str(name))
@@ -35,6 +45,20 @@ impl LiveKeyEvent<'_> {
 }
 impl KeyboardEventSource for LiveKeyEvent<'_> {
     type Error = JsValue;
+    fn win32_lookup(
+        &self,
+        table: xterm_core::input::win32_input_mode::lookup::Table,
+        key: &[u16],
+    ) -> Result<xterm_core::input::win32_input_mode::lookup::Value<JsValue>, JsValue> {
+        self.1.lookup(table, key)
+    }
+    fn kitty_lookup(
+        &self,
+        table: xterm_core::input::kitty_keyboard::lookup::Table,
+        key: &[u16],
+    ) -> Result<xterm_core::input::keyboard_event_source::lookup::Value<JsValue>, JsValue> {
+        self.1.kitty_lookup(table, key)
+    }
     fn key_code(&self) -> Result<f64, JsValue> {
         // Missing/null synthetic key codes cannot match a numeric switch case.
         // Preserve f64 values before the source's own arithmetic/conversions.

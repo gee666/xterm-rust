@@ -1,4 +1,6 @@
 #![cfg(target_arch = "wasm32")]
+#[path = "support/kitty_realm_dom.rs"]
+mod kitty_realm_dom;
 #[path = "support/live_key_dom.rs"]
 mod live_support;
 #[path = "support/input_dom.rs"]

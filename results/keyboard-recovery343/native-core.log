@@ -1,0 +1,119 @@
+   Compiling equivalent v1.0.3
+   Compiling allocator-api2 v0.2.21
+   Compiling foldhash v0.1.5
+   Compiling memchr v2.8.3
+   Compiling hashbrown v0.15.5
+   Compiling regress v0.10.4
+   Compiling ryu-js v1.0.3
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\Herodotus16\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 9.69s
+     Running unittests src\lib.rs (target\debug\deps\xterm_core-71fa172dc17bbd8d.exe)
+
+running 67 tests
+test buffer::marker::tests::allocator_preserves_javascript_precision_limit ... ok
+test buffer::cleanup_owner::tests::foreign_registration_cannot_release_an_owner ... ok
+test buffer::line::storage_tests::empty_line_edits_and_missing_cells_do_not_panic ... ok
+test buffer::line::storage_tests::cleanup_threshold_is_strict ... ok
+test input::keyboard_event_source::tests::shared_keyboard_helpers_retain_js_values ... ok
+test input::parse_source::tests::text_ranges_use_utf16_substring_clamping_and_swap ... ok
+test buffer::cleanup_owner::tests::released_destructor_can_reenter_without_overwriting_its_replacement ... ok
+test buffer::line::storage_tests::blank_optimization_only_applies_to_blank_lines ... ok
+test input::parse_source::tests::host_errors_keep_the_original_typed_cause ... ok
+test buffer::line::text::tests::cached_trim_uses_javascript_whitespace ... ok
+test buffer::line::text::tests::upstream_canonical_cache_contract ... ok
+test input::parse_source::tests::bytes_keep_all_values_and_subarray_does_not_swap_bounds ... ok
+test buffer::line::storage_tests::empty_combined_string_stays_empty ... ok
+test buffer::line::storage_tests::upstream_shrink_regrow_sparse_map_cardinality ... ok
+test buffer::line::storage_tests::shrink_regrow_prunes_extended_identity ... ok
+test charset::tests::borrows_are_reported_and_never_escape_lookup_or_set ... ok
+test input::win32_input_mode::tests::alt_and_meta_prevent_ctrl_character_conversion ... ok
+test input::win32_input_mode::tests::javascript_utf16_length_is_not_rust_character_count ... ok
+test buffer::line::text::tests::upstream_all_mutations_invalidate_cache ... ok
+test input::win32_input_mode::tests::unknown_code_uses_key_code_without_inventing_a_scan_code ... ok
+test core_service::mode_capture::tests::in_place_changes_stay_visible_until_first_reset ... ok
+test core_service::mode_capture::tests::nested_captures_keep_their_own_replacement_boundaries ... ok
+test core_service::mode_capture::tests::dropped_captures_do_not_accumulate_or_hold_a_mode_borrow ... ok
+test log_service::property::tests::old_native_payload_drop_can_reenter_after_commit ... ok
+test osc_link_service::tests::ids_follow_javascript_safe_integer_boundary ... ok
+test search::cache::tests::lowercase_is_lazy_and_reuses_full_utf16_context ... ok
+test search::cache::tests::lowercase_is_replaced_and_expires_with_source_entry ... ok
+test log_service::property::tests::native_and_host_updates_remain_live ... ok
+test input::win32_input_mode::tests::every_upstream_assertion_case_matches_the_complete_result ... ok
+test buffer::line::buffer_cleanup_tests::original_buffer_idle_cleanup_preserves_then_realigns_exact_backing_bytes ... ok
+test osc_link_service::tests::overwritten_limit_entry_still_removes_the_current_numeric_id ... ok
+test terminal::print::tests::replacement_does_not_retarget_the_original_attribute_object ... ok
+test terminal::print::tests::rep_delivers_each_callback_before_its_repeated_cell ... ok
+test terminal::print::tests::a11y_and_wrap_modes_are_snapshots_until_the_next_print_run ... ok
+test terminal::reply_tests::regressions::directed_window_title_pop_observes_previous_icon ... ok
+test terminal::reply_tests::regressions::directed_soft_reset_callback_sees_prefix_and_error_stops_suffix ... ok
+test terminal::reply_tests::source_cursor_style_parameters ... ok
+test terminal::print::tests::unicode_provider_reentry_updates_the_live_captured_attribute_object ... ok
+test headless::native_cleanup::tests::closed_real_host_returns_the_same_typed_scheduling_error ... ok
+test terminal::reply_tests::regressions::directed_status_string_unknown_raw_style_reports_nan ... ok
+test terminal::reply_tests::source_decstr_insert ... ok
+test terminal::reply_tests::source_decstr_cursor_visibility ... ok
+test terminal::reply_tests::source_decstr_margins ... ok
+test terminal::reply_tests::source_window_pixel_size_has_no_headless_report ... ok
+test terminal::reply_tests::source_window_defaults_deny_reports ... ok
+test terminal::reply_tests::source_window_cell_size_has_no_headless_report ... ok
+test terminal::reply_tests::source_save_restore_origin ... ok
+test terminal::reply_tests::source_deccolm_permission ... ok
+test terminal::reply_tests::source_window_character_size_reports_live_dimensions ... ok
+test terminal::reply_tests::source_decstr_saved_cursor ... ok
+test terminal::reply_tests::source_save_restore_wrap ... ok
+test terminal::reply_tests::source_decstr_attributes ... ok
+test terminal::print::tests::callback_error_stops_before_cell_write_and_keeps_preceding_state ... ok
+test terminal::reply_tests::source_decstr_origin ... ok
+test terminal::reply_tests::source_window_push_pop_both ... ok
+test unicode_service::tests::signed_accumulation_reports_overflow_without_wrapping ... ok
+test headless::native_cleanup::tests::actual_host_surfaces_logger_failure_without_scheduling_successful_retry ... ok
+test terminal::reply_tests::source_window_push_pop_icon ... ok
+test terminal::reply_tests::source_xtversion_nonzero ... ok
+test terminal::reply_tests::source_window_push_pop_title ... ok
+test terminal::reply_tests::source_xtversion_omitted ... ok
+test terminal::sgr_dispatch::tests::logger_reentrant_attribute_mutation_precedes_outer_tail ... ok
+test terminal::sgr_dispatch::tests::parse_debug_reset_happens_before_sgr_captures_its_target ... ok
+test terminal::sgr_dispatch::tests::replacing_target_moves_extended_identity_instead_of_cloning_payload ... ok
+test terminal::reply_tests::source_xtversion_zero ... ok
+test terminal::sgr_dispatch::tests::nested_mutation_then_reset_preserves_the_original_detached_target ... ok
+test terminal::sgr_dispatch::tests::logger_error_observes_prefix_and_stops_later_mutations ... ok
+
+test result: ok. 67 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\keyboard_live.rs (target\debug\deps\keyboard_live-37b34d13f02c81b1.exe)
+
+running 1 test
+test exact_live_getters_mutations_numbers_and_throw_identity_match_source ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests\kitty_edges.rs (target\debug\deps\kitty_edges-b3137068d4f7f5ee.exe)
+
+running 5 tests
+test inherited_object_names_follow_plain_object_lookup ... ok
+test shifted_physical_key_uses_first_lowercase_utf16_unit ... ok
+test associated_text_repeat_omits_event_suffix_but_release_does_not ... ok
+test numpad_retains_upstream_lexical_parse_int_behavior ... ok
+test utf16_length_is_not_unicode_scalar_count ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\kitty_upstream.rs (target\debug\deps\kitty_upstream-fab219a2db3f8de8.exe)
+
+running 2 tests
+test upstream_protocol_enablement_assertions ... ok
+test upstream_evaluation_assertions ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\win32_lookup.rs (target\debug\deps\win32_lookup-4bcaf700ed445e88.exe)
+
+running 5 tests
+test inherited_text_does_not_replace_lone_surrogates ... ok
+test raw_values_coerce_only_after_all_field_reads_and_in_template_order ... ok
+test lookup_and_coercion_failures_stop_at_the_source_stage ... ok
+test false_scan_values_but_only_undefined_virtual_and_control_values_fall_back ... ok
+test native_intrinsic_names_use_the_documented_v8_representation ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -1,6 +1,7 @@
 // Licensed under MIT. Fallible Kitty policy retaining original getter order.
-use super::live_fields::{self, CodeValue};
-use super::{flags, inherited::inherited_name, keys, legacy_sequence, EventType};
+use super::live_fields;
+use super::lookup::{Hint, Table, Value};
+use super::{flags, EventType};
 use crate::input::keyboard::{KeyboardResult, KeyboardResultType};
 use crate::input::keyboard_event_source::{code_point_at_zero, KeyboardEventSource};
 
@@ -32,69 +33,55 @@ pub(super) fn evaluate<E: KeyboardEventSource + ?Sized>(
         return Ok(result);
     }
 
-    if let Some(suffix) = keys::letter(&event.key()?) {
-        result.key = Some(
-            legacy_sequence("1", suffix, false, modifiers, event_type, report_events)
-                .encode_utf16()
-                .collect(),
-        );
-        result.cancel = true;
-        return Ok(result);
-    }
-    if let Some(suffix) = keys::ss3(&event.key()?) {
-        result.key = Some(
-            legacy_sequence("1", suffix, true, modifiers, event_type, report_events)
-                .encode_utf16()
-                .collect(),
-        );
-        result.cancel = true;
-        return Ok(result);
-    }
-    let tilde_key = event.key()?;
-    let tilde = keys::tilde(&tilde_key)
-        .map(|number| CodeValue::Number(f64::from(number)))
-        .or_else(|| inherited_name(&tilde_key).map(CodeValue::Native));
-    if let Some(number) = tilde {
-        result.key = Some(
-            legacy_sequence(
-                &number.text(),
-                "~",
-                false,
+    for table in [Table::Letter, Table::Ss3, Table::Tilde] {
+        let value = event.kitty_lookup(table, &event.key()?)?;
+        let use_value = if table == Table::Tilde {
+            !value.is_undefined()
+        } else {
+            value.is_truthy()
+        };
+        if use_value {
+            result.key = Some(legacy_sequence(
+                &value,
+                table,
                 modifiers,
                 event_type,
                 report_events,
-            )
-            .encode_utf16()
-            .collect(),
-        );
-        result.cancel = true;
+            )?);
+            result.cancel = true;
+            return Ok(result);
+        }
+    }
+    let code = live_fields::key_code(event, mac_option_as_alt)?;
+    if code.is_undefined() {
         return Ok(result);
     }
-    let Some(code) = live_fields::key_code(event, mac_option_as_alt)? else {
-        return Ok(result);
-    };
-    let special = code.is_special();
+    let special = code.is_number(13.0) || code.is_number(9.0) || code.is_number(127.0);
     if special && event_type == EventType::Release && !report_all {
         return Ok(result);
     }
-    let is_func =
-        live_fields::functional(&event.key()?).is_some() || live_fields::numpad(event)?.is_some();
+    let is_func = !event
+        .kitty_lookup(Table::Functional, &event.key()?)?
+        .is_undefined()
+        || live_fields::numpad(event)?.is_some();
     let use_csi_u = report_all
         || (report_events && event_type == EventType::Release)
         || ((flags & flags::DISAMBIGUATE_ESCAPE_CODES != 0 || report_events)
             && ((is_func && !special)
                 || ((modifiers > 0 && event.key()?.len() != 1) || modifiers > 2)));
     if use_csi_u {
-        result.key = Some(
-            csi_u(event, &code, modifiers, event_type, flags, is_func, is_mod)?
-                .encode_utf16()
-                .collect(),
-        );
+        result.key = Some(csi_u(
+            event, &code, modifiers, event_type, flags, is_func, is_mod,
+        )?);
         result.cancel = true;
     } else if special {
-        if let CodeValue::Number(code) = code {
-            result.key = Some(vec![code as u16]);
-        }
+        result.key = Some(vec![if code.is_number(13.0) {
+            13
+        } else if code.is_number(9.0) {
+            9
+        } else {
+            127
+        }]);
     } else if event.key()?.len() == 1
         && !event.ctrl_key()?
         && !event.alt_key()?
@@ -105,16 +92,53 @@ pub(super) fn evaluate<E: KeyboardEventSource + ?Sized>(
     Ok(result)
 }
 
+// The raw operand must reach string addition with the default hint, not an
+// eager String conversion. Keep UTF-16 output even when it contains surrogates.
+fn legacy_sequence<E>(
+    value: &Value<E>,
+    table: Table,
+    modifiers: u8,
+    event_type: EventType,
+    report_events: bool,
+) -> Result<Vec<u16>, E> {
+    let needs_event = report_events && event_type != EventType::Press;
+    let has_parameters = modifiers > 0 || needs_event;
+    let prefix = if table == Table::Ss3 && !has_parameters {
+        "\x1bO"
+    } else {
+        "\x1b["
+    };
+    let mut sequence: Vec<u16> = prefix.encode_utf16().collect();
+    if table == Table::Tilde {
+        value.append(&mut sequence, Hint::Default)?;
+    } else if has_parameters {
+        sequence.push(u16::from(b'1'));
+    }
+    if has_parameters {
+        sequence.extend(format!(";{}", modifiers.max(1)).encode_utf16());
+        if needs_event {
+            sequence.extend(format!(":{}", event_type as u8).encode_utf16());
+        }
+    }
+    if table == Table::Tilde {
+        sequence.push(u16::from(b'~'));
+    } else {
+        value.append(&mut sequence, Hint::Default)?;
+    }
+    Ok(sequence)
+}
+
 fn csi_u<E: KeyboardEventSource + ?Sized>(
     event: &E,
-    code: &CodeValue,
+    code: &Value<E::Error>,
     modifiers: u8,
     event_type: EventType,
     flags: u32,
     is_func: bool,
     is_mod: bool,
-) -> Result<String, E::Error> {
-    let mut sequence = format!("\x1b[{}", code.text());
+) -> Result<Vec<u16>, E::Error> {
+    let mut sequence = vec![0x1b, u16::from(b'[')];
+    code.append(&mut sequence, Hint::Default)?;
     if flags & flags::REPORT_ALTERNATE_KEYS != 0
         && event.shift_key()?
         && event.key()?.len() == 1
@@ -122,11 +146,11 @@ fn csi_u<E: KeyboardEventSource + ?Sized>(
         && !is_mod
     {
         let shifted = code_point_at_zero(&event.key()?);
-        sequence.push(':');
+        sequence.push(u16::from(b':'));
         if let Some(code) = shifted {
-            sequence.push_str(&code.to_string());
+            sequence.extend(code.to_string().encode_utf16());
         } else {
-            sequence.push_str("undefined");
+            sequence.extend("undefined".encode_utf16());
         }
     }
     let associated = flags & flags::REPORT_ASSOCIATED_TEXT != 0
@@ -144,19 +168,19 @@ fn csi_u<E: KeyboardEventSource + ?Sized>(
         && event_type != EventType::Press
         && (event_type == EventType::Release || text.is_none());
     if modifiers > 0 || needs_event || text.is_some() {
-        sequence.push(';');
+        sequence.push(u16::from(b';'));
         if modifiers > 0 {
-            sequence.push_str(&modifiers.to_string());
+            sequence.extend(modifiers.to_string().encode_utf16());
         } else if needs_event {
-            sequence.push('1');
+            sequence.push(u16::from(b'1'));
         }
         if needs_event {
-            sequence.push_str(&format!(":{}", event_type as u8));
+            sequence.extend(format!(":{}", event_type as u8).encode_utf16());
         }
     }
     if let Some(text) = text {
-        sequence.push_str(&format!(";{text}"));
+        sequence.extend(format!(";{text}").encode_utf16());
     }
-    sequence.push('u');
+    sequence.push(u16::from(b'u'));
     Ok(sequence)
 }

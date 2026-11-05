@@ -178,17 +178,13 @@ for (let i = 0; i < 20000; i++) {
   const key = i % 3 ? keys[random() % keys.length] : String.fromCharCode(random() & 0xffff, random() & 0xffff);
   add(keyCode, key, codes[random() % codes.length], modifiers, flags, 'seeded malformed keys');
 }
-const runner = `#[path = ${JSON.stringify(path.join(root, 'crates/xterm-core/src/input/keyboard_event_source.rs').replaceAll('\\', '/'))}]
-mod keyboard_event_source;
-#[path = ${JSON.stringify(path.join(root, 'crates/xterm-core/src/input/keyboard.rs').replaceAll('\\', '/'))}]
-mod keyboard;
+// Link the actual crate instead of rebuilding shared event/lookup modules.
+const runner = `use xterm_core::input::keyboard;
 use std::io::{self, BufRead};
 fn units(s: &str) -> Vec<u16> {
     s.split(',').filter(|s| !s.is_empty()).map(|s| u16::from_str_radix(s, 16).expect("generated UTF-16")).collect()
 }
 fn main() {
-    assert!(!keyboard_event_source::number_is_truthy(0.0));
-    assert_eq!(keyboard_event_source::code_point_at_zero(&[0x41]), Some(0x41));
     for line in io::stdin().lock().lines() {
         let line = line.expect("stdin read");
         let p: Vec<_> = line.split('\\t').collect();
@@ -211,7 +207,11 @@ function run(command, args, options = {}) {
   return result;
 }
 const rustc = process.env.RUSTC || 'rustc';
-run(rustc, ['--edition=2021', '-Dwarnings', runnerPath, '-o', binary]);
+run(process.env.CARGO || 'cargo', ['test', '-p', 'xterm-core', '--lib', 'shared_keyboard_helpers_retain_js_values']);
+run(process.env.CARGO || 'cargo', ['build', '-p', 'xterm-core']);
+const target = process.env.CARGO_TARGET_DIR || path.join(root, 'target');
+run(rustc, ['--edition=2021', '-Dwarnings', '-L', `dependency=${path.join(target, 'debug/deps')}`,
+  '--extern', `xterm_core=${path.join(target, 'debug/libxterm_core.rlib')}`, runnerPath, '-o', binary]);
 const actual = run(binary, [], { input: cases.map(eventRow).join('\n') + '\n' }).stdout.trimEnd().split(/\r?\n/);
 assert.equal(actual.length, cases.length);
 for (let i = 0; i < cases.length; i++) {

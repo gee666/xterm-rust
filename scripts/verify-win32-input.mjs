@@ -3,7 +3,7 @@
 // Licensed under MIT. Runs the unmodified upstream assertions after TS erasure.
 import assert from 'node:assert/strict';
 import { stripTypeScriptTypes } from 'node:module';
-import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import vm from 'node:vm';
@@ -66,7 +66,8 @@ if (process.argv.includes('--generate')) {
   const sorted = rows => [...rows].sort((a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0);
   output += 'fn lookup(code: &[u16], table: &[(&str, u16)]) -> Option<u16> {\n    table.binary_search_by(|(name, _)| name.encode_utf16().cmp(code.iter().copied())).ok().map(|index| table[index].1)\n}\n\n';
   output += 'pub(super) fn virtual_key(code: &[u16]) -> Option<u32> {\n    lookup(code, VIRTUAL_KEYS).map(u32::from)\n}\n\n';
-  output += 'pub(super) fn scan_code(code: &[u16]) -> u16 {\n    lookup(code, SCAN_CODES).unwrap_or(0)\n}\n\n';
+  output += 'pub(super) fn scan_code(code: &[u16]) -> Option<u16> {\n    lookup(code, SCAN_CODES)\n}\n\n';
+  output += 'pub(super) fn control_char(key: &[u16]) -> Option<u32> {\n    lookup(key, &[("Backspace", 8), ("Enter", 13), ("Escape", 27), ("Tab", 9)]).map(u32::from)\n}\n\n';
   output += 'pub(super) fn is_enhanced(code: &[u16]) -> bool {\n    ENHANCED_KEYS.binary_search_by(|name| name.encode_utf16().cmp(code.iter().copied())).is_ok()\n}\n\n';
   output += 'const VIRTUAL_KEYS: &[(&str, u16)] = &[\n';
   output += sorted(vk).map(([code, n]) => `    ("${code}", ${n}),`).join('\n') + '\n];\n\n';
@@ -111,14 +112,9 @@ for (let i = 0; i < 10000; i++) {
   cases.push({ event, down, result: context.encoder.evaluateKeyboardEvent(event, down), name: `random ${i}` });
 }
 
-const runner = `#[path = ${JSON.stringify(path.join(root, 'crates/xterm-core/src/input/keyboard.rs').replaceAll('\\', '/'))}]
-pub mod keyboard;
-#[path = ${JSON.stringify(path.join(root, 'crates/xterm-core/src/input/keyboard_event_source.rs').replaceAll('\\', '/'))}]
-pub mod keyboard_event_source;
-#[path = ${JSON.stringify(path.join(root, 'crates/xterm-core/src/input/win32_input_mode.rs').replaceAll('\\', '/'))}]
-pub mod win32_input_mode;
-use std::io::{self, BufRead};
-use win32_input_mode::{Win32InputMode, Win32KeyboardEvent};
+// Link the actual core crate so shared event/lookup modules are not reconstructed.
+const runner = `use std::io::{self, BufRead};
+use xterm_core::input::win32_input_mode::{self, Win32InputMode, Win32KeyboardEvent};
 fn main() {
   for line in io::stdin().lock().lines() {
     let line = line.expect("stdin read");
@@ -144,13 +140,10 @@ function run(command, args, options = {}) {
   return result;
 }
 const rustc = process.env.RUSTC || 'rustc';
-// Live numeric fields use the workspace's existing JS-compatible formatter.
-run(process.env.CARGO || 'cargo', ['build', '-p', 'ryu-js']);
+run(process.env.CARGO || 'cargo', ['build', '-p', 'xterm-core']);
 const dependencies = path.join(process.env.CARGO_TARGET_DIR || path.join(root, 'target'), 'debug/deps');
-const candidates = readdirSync(dependencies).filter(name => /^libryu_js-.*\.rlib$/.test(name));
-assert.ok(process.env.RYU_JS_RLIB || candidates.length === 1, 'set RYU_JS_RLIB when several cached ryu-js libraries exist');
-const ryu = process.env.RYU_JS_RLIB || path.join(dependencies, candidates[0]);
-run(rustc, ['--edition=2021', '-L', `dependency=${dependencies}`, '--extern', `ryu_js=${ryu}`, runnerPath, '-o', binary]);
+const core = path.join(process.env.CARGO_TARGET_DIR || path.join(root, 'target'), 'debug/libxterm_core.rlib');
+run(rustc, ['--edition=2021', '-L', `dependency=${dependencies}`, '--extern', `xterm_core=${core}`, runnerPath, '-o', binary]);
 const rows = cases.map(c => eventRow(c.event, c.down, c.result, c.name));
 const actual = run(binary, [], { input: rows.join('\n') + '\n' }).stdout.trimEnd().split(/\r?\n/);
 assert.equal(actual.length, cases.length);

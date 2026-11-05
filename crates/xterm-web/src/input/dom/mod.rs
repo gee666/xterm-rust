@@ -74,6 +74,7 @@ struct State {
     host: Rc<dyn InputHost>,
     composition: RefCell<Composition>,
     keyboard: KeyboardDispatch,
+    keyboard_tables: super::keyboard_lookup::KeyboardTables,
     timers: TimerQueue,
     disposed: Cell<bool>,
 }
@@ -111,6 +112,7 @@ impl InputBindings {
             host,
             composition: RefCell::new(Composition::default()),
             keyboard: KeyboardDispatch::default(),
+            keyboard_tables: super::keyboard_lookup::KeyboardTables::default(),
             timers: TimerQueue::new(window),
             disposed: Cell::new(false),
         });

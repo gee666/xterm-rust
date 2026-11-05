@@ -25,7 +25,7 @@ pub(super) fn bind(bindings: &mut InputBindings) -> Result<(), JsValue> {
             // Listener registration supplies an Event; keyboard fields remain lazy.
             // A global instanceof check rejects valid events from an adopted document.
             let event: KeyboardEvent = event.unchecked_into();
-            let source = LiveKeyEvent(&event);
+            let source = LiveKeyEvent(&event, &state.keyboard_tables);
             let adapter = Adapter {
                 state,
                 event: Some(&event),

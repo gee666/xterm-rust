@@ -38,8 +38,10 @@ export function focusedBuild(root, resultDir) {
     // only those submodule paths in a temporary copy, never production logic.
     const kittyPath = path.join(dir, 'kitty.rs');
     let kittySource = readFileSync(path.join(root, 'crates/xterm-core/src/input/kitty_keyboard.rs'), 'utf8');
-    for (const name of ['keys', 'inherited', 'live', 'live_fields']) kittySource = kittySource.replace(`mod ${name};`,
-      `#[path=${quotePath(`crates/xterm-core/src/input/kitty_keyboard/${name}.rs`)}] mod ${name};`);
+    for (const name of ['keys', 'live', 'live_fields', 'lookup']) {
+      kittySource = kittySource.replace(new RegExp('(pub )?mod ' + name + ';'), (_, visibility = '') =>
+        `#[path=${quotePath(`crates/xterm-core/src/input/kitty_keyboard/${name}.rs`)}] ${visibility}mod ${name};`);
+    }
     writeFileSync(kittyPath, kittySource);
     writeFileSync(corePath, 'pub mod input {\n' + [
       module('keyboard', 'crates/xterm-core/src/input/keyboard.rs'),

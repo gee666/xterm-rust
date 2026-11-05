@@ -1,0 +1,784 @@
+{
+  "scope": "Source-only harness negative controls. Not Rust execution.",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "cases": 348,
+  "controls": [
+    {
+      "mutation": "ConstantOutput",
+      "detected": 348,
+      "firstCounterexample": {
+        "id": "undefined-0-0-0",
+        "expected": {
+          "returned": {
+            "type": 0,
+            "cancel": true,
+            "key": [
+              27,
+              91,
+              50,
+              49,
+              49,
+              59,
+              49,
+              50,
+              59,
+              49,
+              51,
+              59,
+              48,
+              59,
+              48,
+              59,
+              49,
+              95
+            ]
+          },
+          "trace": [
+            [
+              "field",
+              "code"
+            ],
+            [
+              "lookup",
+              0,
+              true
+            ],
+            [
+              "field",
+              "keyCode"
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "lookup",
+              1,
+              true
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              2,
+              true
+            ],
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "altKey"
+            ],
+            [
+              "field",
+              "code"
+            ]
+          ]
+        },
+        "actual": {
+          "returned": {
+            "type": 0,
+            "cancel": true,
+            "key": [
+              27,
+              91,
+              48,
+              59,
+              48,
+              59,
+              48,
+              59,
+              49,
+              59,
+              48,
+              59,
+              49,
+              95
+            ]
+          },
+          "trace": []
+        }
+      }
+    },
+    {
+      "mutation": "EarlyLookups",
+      "detected": 348,
+      "firstCounterexample": {
+        "id": "undefined-0-0-0",
+        "expected": {
+          "returned": {
+            "type": 0,
+            "cancel": true,
+            "key": [
+              27,
+              91,
+              50,
+              49,
+              49,
+              59,
+              49,
+              50,
+              59,
+              49,
+              51,
+              59,
+              48,
+              59,
+              48,
+              59,
+              49,
+              95
+            ]
+          },
+          "trace": [
+            [
+              "field",
+              "code"
+            ],
+            [
+              "lookup",
+              0,
+              true
+            ],
+            [
+              "field",
+              "keyCode"
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "lookup",
+              1,
+              true
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              2,
+              true
+            ],
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "altKey"
+            ],
+            [
+              "field",
+              "code"
+            ]
+          ]
+        },
+        "actual": {
+          "returned": {
+            "type": 0,
+            "cancel": true,
+            "key": [
+              27,
+              91,
+              50,
+              49,
+              49,
+              59,
+              48,
+              59,
+              48,
+              59,
+              48,
+              59,
+              48,
+              59,
+              49,
+              95
+            ]
+          },
+          "trace": [
+            [
+              "field",
+              "code"
+            ],
+            [
+              "field",
+              "keyCode"
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "altKey"
+            ],
+            [
+              "field",
+              "code"
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "mutation": "NumericCoercion",
+      "detected": 168,
+      "firstCounterexample": {
+        "id": "null-0-0-0",
+        "expected": {
+          "returned": {
+            "type": 0,
+            "cancel": true,
+            "key": [
+              27,
+              91,
+              110,
+              117,
+              108,
+              108,
+              59,
+              49,
+              50,
+              59,
+              49,
+              51,
+              59,
+              48,
+              59,
+              48,
+              59,
+              49,
+              95
+            ]
+          },
+          "trace": [
+            [
+              "field",
+              "code"
+            ],
+            [
+              "lookup",
+              0,
+              true
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "lookup",
+              1,
+              true
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              2,
+              true
+            ],
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "altKey"
+            ],
+            [
+              "field",
+              "code"
+            ]
+          ]
+        },
+        "actual": {
+          "returned": {
+            "type": 0,
+            "cancel": true,
+            "key": [
+              27,
+              91,
+              78,
+              97,
+              78,
+              59,
+              49,
+              50,
+              59,
+              49,
+              51,
+              59,
+              48,
+              59,
+              48,
+              59,
+              49,
+              95
+            ]
+          },
+          "trace": [
+            [
+              "field",
+              "code"
+            ],
+            [
+              "lookup",
+              0,
+              true
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "lookup",
+              1,
+              true
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              2,
+              true
+            ],
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "altKey"
+            ],
+            [
+              "field",
+              "code"
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "mutation": "LossyUtf16",
+      "detected": 36,
+      "firstCounterexample": {
+        "id": "high-surrogate-0-0-0",
+        "expected": {
+          "returned": {
+            "type": 0,
+            "cancel": true,
+            "key": [
+              27,
+              91,
+              55296,
+              59,
+              49,
+              50,
+              59,
+              49,
+              51,
+              59,
+              48,
+              59,
+              48,
+              59,
+              49,
+              95
+            ]
+          },
+          "trace": [
+            [
+              "field",
+              "code"
+            ],
+            [
+              "lookup",
+              0,
+              true
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "lookup",
+              1,
+              true
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              2,
+              true
+            ],
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "altKey"
+            ],
+            [
+              "field",
+              "code"
+            ]
+          ]
+        },
+        "actual": {
+          "returned": {
+            "type": 0,
+            "cancel": true,
+            "key": [
+              27,
+              91,
+              65533,
+              59,
+              49,
+              50,
+              59,
+              49,
+              51,
+              59,
+              48,
+              59,
+              48,
+              59,
+              49,
+              95
+            ]
+          },
+          "trace": [
+            [
+              "field",
+              "code"
+            ],
+            [
+              "lookup",
+              0,
+              true
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "lookup",
+              1,
+              true
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              2,
+              true
+            ],
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "altKey"
+            ],
+            [
+              "field",
+              "code"
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "mutation": "ReplacedException",
+      "detected": 48,
+      "firstCounterexample": {
+        "id": "symbol-0-0-0",
+        "expected": {
+          "threw": {
+            "name": "TypeError",
+            "message": [
+              67,
+              97,
+              110,
+              110,
+              111,
+              116,
+              32,
+              99,
+              111,
+              110,
+              118,
+              101,
+              114,
+              116,
+              32,
+              97,
+              32,
+              83,
+              121,
+              109,
+              98,
+              111,
+              108,
+              32,
+              118,
+              97,
+              108,
+              117,
+              101,
+              32,
+              116,
+              111,
+              32,
+              97,
+              32,
+              115,
+              116,
+              114,
+              105,
+              110,
+              103
+            ]
+          },
+          "trace": [
+            [
+              "field",
+              "code"
+            ],
+            [
+              "lookup",
+              0,
+              true
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "lookup",
+              1,
+              true
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              2,
+              true
+            ],
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "altKey"
+            ],
+            [
+              "field",
+              "code"
+            ]
+          ]
+        },
+        "actual": {
+          "threw": {
+            "name": "Error",
+            "message": [
+              82,
+              101,
+              112,
+              108,
+              97,
+              99,
+              101,
+              100,
+              32,
+              111,
+              114,
+              105,
+              103,
+              105,
+              110,
+              97,
+              108,
+              32,
+              116,
+              104,
+              114,
+              111,
+              119,
+              110,
+              32,
+              118,
+              97,
+              108,
+              117,
+              101
+            ]
+          },
+          "trace": [
+            [
+              "field",
+              "code"
+            ],
+            [
+              "lookup",
+              0,
+              true
+            ],
+            [
+              "field",
+              "code"
+            ],
+            [
+              "lookup",
+              1,
+              true
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "key"
+            ],
+            [
+              "lookup",
+              2,
+              true
+            ],
+            [
+              "field",
+              "shiftKey"
+            ],
+            [
+              "field",
+              "ctrlKey"
+            ],
+            [
+              "field",
+              "altKey"
+            ],
+            [
+              "field",
+              "code"
+            ]
+          ]
+        }
+      }
+    }
+  ],
+  "source": [
+    {
+      "path": "src/common/Types.ts",
+      "sha256": "55f33764a24eae132a8c0bbabd6770355ef1fc3d6110eb6645e41cae15b80cb8"
+    },
+    {
+      "path": "src/common/data/EscapeSequences.ts",
+      "sha256": "d891e05aaf5982ee46f73649804c84eb407e603e360e84f8f89b9fcaa83f6276"
+    },
+    {
+      "path": "src/common/input/Win32InputMode.ts",
+      "sha256": "e5cc4d3507391f9e249e731a078f35494c5e65ba2d46c81eea3378493da857c7"
+    }
+  ]
+}

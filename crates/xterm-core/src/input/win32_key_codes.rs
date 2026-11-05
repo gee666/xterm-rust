@@ -13,8 +13,16 @@ pub(super) fn virtual_key(code: &[u16]) -> Option<u32> {
     lookup(code, VIRTUAL_KEYS).map(u32::from)
 }
 
-pub(super) fn scan_code(code: &[u16]) -> u16 {
-    lookup(code, SCAN_CODES).unwrap_or(0)
+pub(super) fn scan_code(code: &[u16]) -> Option<u16> {
+    lookup(code, SCAN_CODES)
+}
+
+pub(super) fn control_char(key: &[u16]) -> Option<u32> {
+    lookup(
+        key,
+        &[("Backspace", 8), ("Enter", 13), ("Escape", 27), ("Tab", 9)],
+    )
+    .map(u32::from)
 }
 
 pub(super) fn is_enhanced(code: &[u16]) -> bool {

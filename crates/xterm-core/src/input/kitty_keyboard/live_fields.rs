@@ -1,28 +1,9 @@
 // Licensed under MIT. Source-ordered Kitty field and key-number resolution.
-use super::{inherited::inherited_name, keys};
+use super::{
+    keys,
+    lookup::{Table, Value},
+};
 use crate::input::keyboard_event_source::{code_point_at_zero, KeyboardEventSource};
-
-pub(super) enum CodeValue {
-    Number(f64),
-    Native(&'static str),
-}
-impl CodeValue {
-    pub(super) fn text(&self) -> String {
-        match self {
-            Self::Number(value) => ryu_js::Buffer::new().format(*value).to_owned(),
-            Self::Native(value) => (*value).into(),
-        }
-    }
-    pub(super) fn is_special(&self) -> bool {
-        matches!(self, Self::Number(number) if *number == 13.0 || *number == 9.0 || *number == 127.0)
-    }
-}
-
-pub(super) fn functional(key: &[u16]) -> Option<CodeValue> {
-    keys::functional(key)
-        .map(|number| CodeValue::Number(f64::from(number)))
-        .or_else(|| inherited_name(key).map(CodeValue::Native))
-}
 
 pub(super) fn numpad<E: KeyboardEventSource + ?Sized>(event: &E) -> Result<Option<f64>, E::Error> {
     if keys::starts_with(&event.code()?, "Numpad") {
@@ -35,15 +16,16 @@ pub(super) fn numpad<E: KeyboardEventSource + ?Sized>(event: &E) -> Result<Optio
 pub(super) fn key_code<E: KeyboardEventSource + ?Sized>(
     event: &E,
     mac_option_as_alt: bool,
-) -> Result<Option<CodeValue>, E::Error> {
+) -> Result<Value<E::Error>, E::Error> {
     if let Some(code) = numpad(event)? {
-        return Ok(Some(CodeValue::Number(code)));
+        return Ok(Value::Number(code));
     }
     if let Some(code) = keys::modifier(&event.code()?) {
-        return Ok(Some(CodeValue::Number(f64::from(code))));
+        return Ok(Value::Number(f64::from(code)));
     }
-    if let Some(code) = functional(&event.key()?) {
-        return Ok(Some(code));
+    let code = event.kitty_lookup(Table::Functional, &event.key()?)?;
+    if !code.is_undefined() {
+        return Ok(code);
     }
     if (event.shift_key()? || (mac_option_as_alt && event.alt_key()?)) && !event.code()?.is_empty()
     {
@@ -53,7 +35,7 @@ pub(super) fn key_code<E: KeyboardEventSource + ?Sized>(
                 .get(5)
                 .filter(|unit| (48..=57).contains(*unit))
             {
-                return Ok(Some(CodeValue::Number(f64::from(*digit))));
+                return Ok(Value::Number(f64::from(*digit)));
             }
         }
         if keys::starts_with(&event.code()?, "Key") && event.code()?.len() == 4 {
@@ -62,22 +44,20 @@ pub(super) fn key_code<E: KeyboardEventSource + ?Sized>(
                 .get(3)
                 .map(|unit| f64::from(crate::input::keyboard::lowercase::lowercase_first(*unit)))
                 .unwrap_or(f64::NAN);
-            return Ok(Some(CodeValue::Number(number)));
+            return Ok(Value::Number(number));
         }
     }
     if event.key()?.len() == 1 {
         let Some(code) = code_point_at_zero(&event.key()?) else {
-            return Ok(None);
+            return Ok(Value::Undefined);
         };
-        return Ok(Some(CodeValue::Number(f64::from(
-            if (65..=90).contains(&code) {
-                code + 32
-            } else {
-                code
-            },
-        ))));
+        return Ok(Value::Number(f64::from(if (65..=90).contains(&code) {
+            code + 32
+        } else {
+            code
+        })));
     }
-    Ok(None)
+    Ok(Value::Undefined)
 }
 
 pub(super) fn modifier<E: KeyboardEventSource + ?Sized>(event: &E) -> Result<bool, E::Error> {

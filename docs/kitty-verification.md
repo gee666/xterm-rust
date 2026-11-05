@@ -1,5 +1,7 @@
 # Independent Kitty keyboard verification
 
+This is historical portable-policy evidence. Task343 recovers the later raw-realm policies and adapters, including moving the native intrinsic table to `input/keyboard_map_inherited.rs`. Current scoped commands and results are in `docs/keyboard-recovery343.md`; the historical review below is not a fresh browser or workspace pass.
+
 Victor owns task 54, `scripts/verify-kitty-keyboard.mjs`, generated fixtures, this review and `results/kitty-keyboard/`. Wallada owns task 51's encoder, runner and Rust tests. The exact branch checklist is [kitty-acceptance.md](kitty-acceptance.md), criteria 85 through 89. These checks cover the portable encoding policy, not terminal mode negotiation or browser dispatch.
 
 ## Scope and method

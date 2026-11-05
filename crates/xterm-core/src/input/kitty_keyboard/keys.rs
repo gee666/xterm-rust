@@ -1,8 +1,6 @@
 // Copyright (c) 2025 The xterm.js authors. All rights reserved.
 // Licensed under MIT. Key mappings from common/input/KittyKeyboard.ts.
 
-use super::inherited::inherited_name;
-
 pub(super) fn equals(units: &[u16], text: &str) -> bool {
     units.iter().copied().eq(text.encode_utf16())
 }
@@ -96,9 +94,6 @@ fn lookup(units: &[u16], entries: &[(&str, u32)]) -> Option<u32> {
 }
 
 pub(super) fn letter(key: &[u16]) -> Option<&'static str> {
-    if let Some(suffix) = inherited_name(key) {
-        return Some(suffix);
-    }
     for (text, letter) in [
         ("ArrowUp", "A"),
         ("ArrowDown", "B"),
@@ -115,9 +110,6 @@ pub(super) fn letter(key: &[u16]) -> Option<&'static str> {
 }
 
 pub(super) fn ss3(key: &[u16]) -> Option<&'static str> {
-    if let Some(suffix) = inherited_name(key) {
-        return Some(suffix);
-    }
     for (text, letter) in [("F1", "P"), ("F2", "Q"), ("F3", "R"), ("F4", "S")] {
         if equals(key, text) {
             return Some(letter);

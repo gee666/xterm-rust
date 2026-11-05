@@ -188,7 +188,8 @@ const productionPaths = [
   'crates/xterm-core/src/input/keyboard_policy.rs', 'crates/xterm-core/src/input/keyboard_default.rs',
   'crates/xterm-core/src/input/keyboard_uppercase.rs', 'crates/xterm-core/src/input/keyboard_event_source.rs',
   'crates/xterm-core/src/input/kitty_keyboard.rs', 'crates/xterm-core/src/input/kitty_keyboard/keys.rs',
-  'crates/xterm-core/src/input/kitty_keyboard/inherited.rs', 'crates/xterm-core/src/input/win32_input_mode.rs',
+  'crates/xterm-core/src/input/keyboard_map_inherited.rs', 'crates/xterm-core/src/input/keyboard_lookup.rs',
+  'crates/xterm-core/src/input/kitty_keyboard/lookup.rs', 'crates/xterm-core/src/input/win32_lookup.rs', 'crates/xterm-core/src/input/win32_input_mode.rs',
   'crates/xterm-core/src/input/kitty_keyboard/live.rs', 'crates/xterm-core/src/input/kitty_keyboard/live_fields.rs',
   'crates/xterm-web/src/input/keyboard.rs', 'crates/xterm-web/src/input/keyboard_dispatch.rs',
   'crates/xterm-web/src/input/keyboard_dispatch_types.rs', 'crates/xterm-web/src/input/keyboard_event.rs'
