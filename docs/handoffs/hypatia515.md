@@ -13,3 +13,7 @@ Audit747 repeated phaseinputchecks/7artifactpins/3fresh=false compiles/both776re
 Private/prototype/writable backing/payload state, pixel/palette coercion,GC,full image311/324 and originalsuite/nativeOS/globalquality proof remain OPEN. Scoped coordinate passing results do not prove full equivalence. Preserve485/503 constructor flags/guards and runner pins when integrating this later source.
 
 Own O:HypatiaImageRows cleanup requires fresh process/reparse/reference checks and normal no-force worktree removal. Original reference/source/dependencies and other owners are never cleanup targets. Runtime artifact paths become historical absent identities. Final cleanup receipt will confirm absence/unregistration and776 original hashes after whole removal. Do not replay deletion.
+
+## Final cleanup confirmation
+
+Owned O: root is ABSENT/unregistered after normal no-force worktree removal. Preflight22054files/3904dirs/0links/redirects/ownedjobs. Removed318 pinned untracked generated browser files in two exact paths, then the normal whole worktree. Original776 hashes PASS AFTER whole removal. Final receipt is results/image-row-coordinates/cleanup-removed.json. Own four earlier commits37192f45→7fd58e34→39a2f2be→b467991e precede this final receipt; no private prerequisites. No owned temporary path, job, resource grant or pending personal reply remains. Never replay deletion.
