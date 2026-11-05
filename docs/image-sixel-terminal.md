@@ -47,6 +47,10 @@ WASM_TEST=image_canvas_browser CARGO_BUILD_JOBS=2 node scripts/image-canvas-chec
 WASM_TEST=image_lifecycle_browser CARGO_BUILD_JOBS=2 node scripts/image-canvas-check.mjs
 ```
 
+## Integrated-base refresh
+
+After acceptance, the producer rebased onto main `2f1be3b980494d9618a9049fd1a7440534ff6444`. All owned source/test/runner bytes match the reviewed commit. The union15-test matrix again passed in all three engines. Workspace all-target/all-feature tests passed2040 tests across398 summaries with zero failures or ignored tests, and workspace Clippy/full formatting passed. Exact union reports are retained as `results/image-sixel-terminal/union-*`. The batch also includes the confirmed documentation-only task367 integration receipt `4a8ef32`, without replaying its already integrated source.
+
 ## Independent review
 
 Task370 was accepted at `4520a1f`. The isolated reviewer inspected the implementation, the diagnostic-only WASM helper, original-source comparator and fixture extraction. It independently reran15 SIXEL and12 IIP tests per browser, two native streaming tests, all2036 workspace tests across396 summaries, native workspace/scoped WASM warning-denied Clippy, full formatting and JS syntax checks. No findings remained. Its browser reports and focused native log are retained as `results/image-sixel-terminal/reviewer-*`.
