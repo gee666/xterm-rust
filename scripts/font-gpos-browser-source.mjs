@@ -32,7 +32,7 @@ try{
   return{constructors,addon:await gposAddonCases(o=>new LigaturesAddon(o),input,fixture.cases)};
  }`,resolveDir:root,sourcefile:'gpos-source-entry.mjs'},bundle:true,format:'esm',platform:'browser',outfile:path.join(work,'source.js'),logLevel:'silent'});
  report.bundleSha256=hash(await fs.readFile(path.join(work,'source.js')));
- const playwright=await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE??require.resolve('playwright/index.mjs')));
+ const playwright=await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE??path.join(path.dirname(require.resolve('playwright')),'index.mjs')));
  await withArtifactServer({directory:work,css:'',html:'<!doctype html><meta charset="utf-8"><title>Source GPOS baseline</title>'},async url=>{
   for(const name of ['chromium','firefox','webkit']){
    let browser;const record={name,status:'unrun'};report.browsers.push(record);

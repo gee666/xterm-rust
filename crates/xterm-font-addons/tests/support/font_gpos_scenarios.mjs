@@ -4,7 +4,7 @@ export async function gposAddonCases(create, input, cases) {
     .map(([object,key])=>[object,key,Object.getOwnPropertyDescriptor(object,key)]);
   let active,reads=0;
   const families=cases.map((_,i)=>({family:'GPOS'+i,async blob(){reads++;return{async arrayBuffer(){active=input(i).slice();return active.buffer;}};}}));
-  Object.defineProperty(globalThis,'window',{configurable:true,value:owner});
+  if(!globalThis.window)Object.defineProperty(globalThis,'window',{configurable:true,value:owner});
   Object.defineProperty(globalThis,'navigator',{configurable:true,value:{}});
   Object.defineProperty(owner,'queryLocalFonts',{configurable:true,value:async()=>families});
   const results=[];
