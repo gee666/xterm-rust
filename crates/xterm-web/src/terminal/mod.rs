@@ -77,7 +77,7 @@ pub(crate) struct Shared {
     pub custom_key: Rc<RefCell<Option<Function>>>,
     pub custom_wheel: Rc<RefCell<Option<Function>>>,
     pub public_disposed: Cell<bool>,
-    pub core_disposed: Cell<bool>,
+    pub core_disposed: Rc<Cell<bool>>,
 }
 
 /// Browser API over the Rust engine. No upstream JavaScript terminal is loaded.
@@ -166,7 +166,8 @@ impl Terminal {
         let buffer = buffer_api::WebBufferNamespace::new(Rc::clone(&native))?.into();
         let parser = parser_api::WebParserApi::new(Rc::clone(&native)).into();
         // Internal services are not proposed-API gated, unlike public views.
-        let internal = internal_api::CoreServices::new(&native)?.into();
+        let core_disposed = Rc::new(Cell::new(false));
+        let internal = internal_api::CoreServices::new(&native, Rc::clone(&core_disposed))?.into();
         let link_providers = link_services::create_registry(Rc::clone(&native), &window)?;
         let selection = Rc::new(crate::selection::service::SelectionService::new(
             crate::selection::service::SelectionPlatform {
@@ -211,7 +212,7 @@ impl Terminal {
                 custom_key: Rc::new(RefCell::new(None)),
                 custom_wheel: Rc::new(RefCell::new(None)),
                 public_disposed: Cell::new(false),
-                core_disposed: Cell::new(false),
+                core_disposed,
                 link_providers,
                 browser_events,
                 will_open: xterm_core::event::Emitter::new(),
