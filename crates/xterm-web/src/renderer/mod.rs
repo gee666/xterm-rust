@@ -19,6 +19,11 @@ pub mod row;
 mod row_colors;
 #[cfg(target_arch = "wasm32")]
 pub mod row_dom;
+#[cfg(target_arch = "wasm32")]
+mod row_operators;
+#[cfg(target_arch = "wasm32")]
+mod row_raw;
+mod row_source;
 pub mod row_types;
 pub mod selection_model;
 #[cfg(target_arch = "wasm32")]

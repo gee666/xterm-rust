@@ -120,6 +120,7 @@ impl DomRenderer {
             spacing: Cell::new(0.0),
             focused: Cell::new(false),
             selection: RefCell::new(Selection::default()),
+            row_work_cell: RefCell::new(xterm_core::buffer::CellData::default()),
             last_selection: Cell::new(Selection::default()),
             selection_model: Cell::new(
                 crate::renderer::selection_model::SelectionRenderModel::default(),

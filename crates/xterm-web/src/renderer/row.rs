@@ -1,4 +1,5 @@
 // Copyright (c) 2018, 2023 The xterm.js authors. All rights reserved. MIT license.
+use super::row_source::{RowSource, TypedRow};
 use super::{
     row_colors,
     row_types::*,
@@ -11,7 +12,7 @@ pub struct RowContext<'a> {
     pub options: &'a RowOptions,
     pub colors: &'a ColorSet,
     pub joined_ranges: &'a [[usize; 2]],
-    pub decorations: &'a dyn Fn(usize, usize) -> Result<Vec<RowDecoration>, String>,
+    pub decorations: &'a dyn Fn(f64, usize) -> Result<Vec<RowDecoration>, String>,
 }
 #[derive(Default, Debug)]
 pub struct RenderedRow {
@@ -37,66 +38,44 @@ impl RowFactory {
         context: RowContext<'_>,
         widths: &WidthCache<M>,
     ) -> Result<RenderedRow, RowError<M::Error>> {
+        let source = TypedRow::new(line, &context, self.selection);
+        self.plan_row(source, context, widths)
+    }
+    pub(super) fn plan_row<M: WidthMeasurer>(
+        &self,
+        mut source: impl RowSource,
+        context: RowContext<'_>,
+        widths: &WidthCache<M>,
+    ) -> Result<RenderedRow, RowError<M::Error>> {
         let options = context.options;
         let colors = context.colors;
         let mut result = RenderedRow::default();
-        let mut length = line.get_no_bg_trimmed_length();
+        let mut length = source.length();
         if options.cursor_row {
             length = length.max(options.cursor_x.saturating_add(1));
         }
-        let mut x = 0;
-        let mut join_index = 0;
-        let mut skip_until = 0;
+        let mut x = 0.0;
         let mut old = None::<MergeState>;
         let mut mergeable = false;
         let mut classes = Vec::<String>::new();
-        while x < length {
-            let mut cell = RenderCell::from(line.get_cell(x).unwrap_or_default());
-            if cell.width == 0 {
-                x += 1;
+        while x < length as f64 {
+            if !x.is_finite() || x + 1.0 == x {
+                return Err(RowError::NonProgressingColumn(x));
+            }
+            let mut cell = source.cell(x);
+            if cell.width == 0.0 {
+                x += 1.0;
                 continue;
             }
-            let mut joined = false;
-            let mut valid_join = x >= skip_until;
-            let mut last_x = x;
-            if context
-                .joined_ranges
-                .get(join_index)
-                .is_some_and(|range| range[0] == x)
-                && valid_join
-            {
-                let range = context.joined_ranges[join_index];
-                join_index += 1;
-                if range[1] <= range[0] || range[1] > line.len() {
-                    return Err(RowError::JoinRange(range));
-                }
-                let selected = self.selection.contains(range[0], options.row);
-                valid_join = (range[0] + 1..range[1])
-                    .all(|col| self.selection.contains(col, options.row) == selected);
-                valid_join &= !options.cursor_row
-                    || options.cursor_x < range[0]
-                    || options.cursor_x >= range[1];
-                if !valid_join {
-                    skip_until = range[1];
-                } else {
-                    joined = true;
-                    last_x = range[1] - 1;
-                    cell.chars =
-                        line.translate_to_string(true, Some(range[0]), Some(range[1]), None);
-                    cell.width = (range[1] - range[0]) as i32;
-                    cell.code = Some(0x1fffff);
-                    cell.attrs = AttributeData {
-                        fg: cell.attrs.fg,
-                        bg: cell.attrs.bg,
-                        ..AttributeData::default()
-                    };
-                }
-            }
-            let selected = self.selection.contains(x, options.row);
-            let cursor = options.cursor_row && x == options.cursor_x;
-            let link = options.link_range.is_some_and(|range| {
-                x as i128 >= i128::from(range[0]) && x as i128 <= i128::from(range[1])
-            });
+            let mut valid_join = source.valid(x)?;
+            let joined_end = source.join(x, &mut cell, &mut valid_join, options)?;
+            let joined = joined_end.is_some();
+            let last_x = joined_end.unwrap_or(x);
+            let selected = source.selected(x, options.row);
+            let cursor = options.cursor_row && x == options.cursor_x as f64;
+            let link = options
+                .link_range
+                .is_some_and(|range| x >= range[0] as f64 && x <= range[1] as f64);
             if cell.attrs.is_blink() != 0 {
                 result.has_blinking_cells = true;
                 if !options.blink_on {
@@ -113,7 +92,7 @@ impl RowFactory {
             if chars == [32] && (cell.attrs.is_underline() != 0 || cell.attrs.is_overline() != 0) {
                 chars[0] = 160;
             }
-            let spacing = f64::from(cell.width) * options.cell_width
+            let spacing = cell.pixel_width(options.cell_width)?
                 - widths.get(
                     &chars,
                     cell.attrs.is_bold() != 0,
@@ -142,7 +121,7 @@ impl RowFactory {
                         span.text.extend(chars);
                     }
                 }
-                x += 1;
+                x += 1.0;
                 continue;
             }
             old = Some(MergeState {
@@ -206,7 +185,7 @@ impl RowFactory {
                 span.style("letter-spacing", format!("{spacing}px"));
             }
             result.spans.push(span);
-            x = last_x + 1;
+            x = last_x + 1.0;
         }
         Ok(result)
     }

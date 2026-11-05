@@ -56,32 +56,6 @@ impl BrowserJoinerService {
         id
     }
 }
-impl RawRanges {
-    /// The existing typed row factory consumes cell offsets. Conversion has
-    /// already mutated raw ranges; never coerce offsets a second time here.
-    pub fn render_ranges(&self) -> Result<Vec<[usize; 2]>, JsValue> {
-        let mut result = Vec::new();
-        let mut index = 0.0;
-        while less(&index.into(), &length(&self.0)?)? {
-            let range = at(&self.0, index)?;
-            let start = at(&range, 0.0)?;
-            let Some(start) = start.as_f64().filter(|v| {
-                v.is_finite() && *v >= 0.0 && v.fract() == 0.0 && *v <= u32::MAX as f64
-            }) else {
-                // Strict equality in the source row factory cannot match this
-                // head range, so later ranges are not reached either.
-                break;
-            };
-            let end = at(&range, 1.0)?
-                .as_f64()
-                .filter(|v| v.is_finite() && *v >= 0.0 && v.fract() == 0.0 && *v <= u32::MAX as f64)
-                .ok_or_else(|| js_sys::RangeError::new("non-integral joined cell endpoint"))?;
-            result.push([start as usize, end as usize]);
-            index += 1.0;
-        }
-        Ok(result)
-    }
-}
 impl RangeStorage for RawRanges {
     type HandlerError = JsValue;
     type ConversionError = JsValue;

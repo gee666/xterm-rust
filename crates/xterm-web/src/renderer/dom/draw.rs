@@ -117,8 +117,7 @@ impl DomRenderer {
             // User joiners run before borrowing theme, width caches or row data.
             let joins = self
                 .joiners
-                .try_get_joined_characters(Some(Rc::clone(&line)))?
-                .render_ranges()?;
+                .try_get_joined_characters(Some(Rc::clone(&line)))?;
             let row_options = RowOptions {
                 row: absolute,
                 cursor_row: absolute == cursor_y && link.as_ref().is_none_or(|link| link.cols > 0),
@@ -164,15 +163,15 @@ impl DomRenderer {
                 minimum_contrast_ratio: options.minimum_contrast_ratio,
             };
             let colors = self.theme.colors();
-            let colors = colors.borrow();
+            let colors = colors.borrow().clone();
             let factory = RowFactory {
                 selection: *self.selection.borrow(),
             };
-            let decorations = |x: usize, row: usize| -> Result<Vec<RowDecoration>, String> {
+            let decorations = |x: f64, row: usize| -> Result<Vec<RowDecoration>, String> {
                 let row = i64::try_from(row)
                     .map_err(|_| "decoration row exceeds signed bounds".to_owned())?;
                 self.decoration
-                    .get_decorations_at_cell(x as f64, row, None)
+                    .get_decorations_at_cell(x, row, None)
                     .map(|decoration| {
                         let fallback = |input: &str| {
                             self.theme
@@ -198,12 +197,15 @@ impl DomRenderer {
                     .collect()
             };
             let rendered = factory
-                .create_row(
-                    &line.borrow(),
+                .create_row_raw(
+                    &line,
+                    &self.row_work_cell,
+                    joins,
+                    &|| *self.selection.borrow(),
                     RowContext {
                         options: &row_options,
                         colors: &colors,
-                        joined_ranges: &joins,
+                        joined_ranges: &[],
                         decorations: &decorations,
                     },
                     self.widths()?,
@@ -229,12 +231,15 @@ fn replace_children(element: &HtmlElement, children: &[HtmlElement]) -> Result<(
 }
 fn row_error(error: RowError<JsValue>) -> JsValue {
     match error {
-        RowError::Width(WidthError::Measure(error)) => error,
+        RowError::Browser(error) | RowError::Width(WidthError::Measure(error)) => error,
         RowError::Width(WidthError::Disposed) => {
             js_sys::TypeError::new("width measurement canvas has been disposed").into()
         }
         RowError::Palette(index) => {
             js_sys::TypeError::new(&format!("palette index {index} is missing")).into()
+        }
+        RowError::NonProgressingColumn(_) => {
+            js_sys::RangeError::new("DOM row column cannot advance").into()
         }
         RowError::JoinRange(range) => {
             js_sys::RangeError::new(&format!("invalid join range {range:?}")).into()

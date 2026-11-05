@@ -56,6 +56,7 @@ pub struct DomRenderer {
     spacing: Cell<f64>,
     focused: Cell<bool>,
     selection: RefCell<Selection>,
+    row_work_cell: RefCell<xterm_core::buffer::CellData>,
     last_selection: Cell<Selection>,
     selection_model: Cell<super::selection_model::SelectionRenderModel>,
     theme: Rc<ThemeService>,

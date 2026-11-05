@@ -76,29 +76,55 @@ impl Selection {
         let (Some(start), Some(end)) = (self.start, self.end) else {
             return false;
         };
-        let start = start.map(i128::from);
-        let end = end.map(i128::from);
-        let (x, y) = (x as i128, y as i128);
-        if self.column {
-            let (left, right) = if start[0] <= end[0] {
-                (start[0], end[0])
-            } else {
-                (end[0], start[0])
-            };
-            return x >= left && x < right && y >= start[1] && y <= end[1];
-        }
-        (y > start[1] && y < end[1])
-            || (start[1] == end[1] && y == start[1] && x >= start[0] && x < end[0])
-            || (start[1] < end[1] && y == end[1] && x < end[0])
-            || (start[1] < end[1] && y == start[1] && x >= start[0])
+        contains_in_range(
+            x as i128,
+            y as i128,
+            [i128::from(start[0]), i128::from(end[0])],
+            [i128::from(start[1]), i128::from(end[1])],
+            self.column,
+        )
     }
+    /// Fractional browser columns must not be rounded into a native cell index.
+    pub fn contains_number(&self, x: f64, y: usize) -> bool {
+        let (Some(start), Some(end)) = (self.start, self.end) else {
+            return false;
+        };
+        contains_in_range(
+            x,
+            y as i128,
+            [start[0] as f64, end[0] as f64],
+            [i128::from(start[1]), i128::from(end[1])],
+            self.column,
+        )
+    }
+}
+fn contains_in_range<T: Copy + PartialOrd>(
+    x: T,
+    y: i128,
+    horizontal: [T; 2],
+    vertical: [i128; 2],
+    column: bool,
+) -> bool {
+    let [sx, ex] = horizontal;
+    let [sy, ey] = vertical;
+    if column {
+        let (left, right) = if sx <= ex { (sx, ex) } else { (ex, sx) };
+        return x >= left && x < right && y >= sy && y <= ey;
+    }
+    (y > sy && y < ey)
+        || (sy == ey && y == sy && x >= sx && x < ex)
+        || (sy < ey && y == ey && x < ex)
+        || (sy < ey && y == sy && x >= sx)
 }
 #[derive(Debug)]
 pub enum RowError<E> {
     Width(WidthError<E>),
     Palette(i32),
     JoinRange([usize; 2]),
+    NonProgressingColumn(f64),
     Decoration(String),
+    #[cfg(target_arch = "wasm32")]
+    Browser(wasm_bindgen::JsValue),
 }
 impl<E> From<WidthError<E>> for RowError<E> {
     fn from(error: WidthError<E>) -> Self {
@@ -108,14 +134,37 @@ impl<E> From<WidthError<E>> for RowError<E> {
 pub(super) struct RenderCell {
     pub attrs: AttributeData,
     pub chars: Vec<u16>,
-    pub width: i32,
+    pub width: f64,
+    #[cfg(target_arch = "wasm32")]
+    pub raw_width: Option<wasm_bindgen::JsValue>,
     pub code: Option<u32>,
+}
+impl RenderCell {
+    pub fn pixel_width<E>(&self, cell_width: f64) -> Result<f64, RowError<E>> {
+        #[cfg(target_arch = "wasm32")]
+        if let Some(width) = &self.raw_width {
+            return super::row_operators::multiply(width, cell_width).map_err(RowError::Browser);
+        }
+        Ok(self.width * cell_width)
+    }
+    pub fn join(&mut self, chars: Vec<u16>, width: f64) {
+        self.chars = chars;
+        self.width = width;
+        self.code = Some(0x1fffff);
+        self.attrs = AttributeData {
+            fg: self.attrs.fg,
+            bg: self.attrs.bg,
+            ..AttributeData::default()
+        };
+    }
 }
 impl From<CellData> for RenderCell {
     fn from(cell: CellData) -> Self {
         Self {
             chars: cell.get_chars(),
-            width: cell.get_width(),
+            width: f64::from(cell.get_width()),
+            #[cfg(target_arch = "wasm32")]
+            raw_width: None,
             code: cell.get_code(),
             attrs: cell.attributes,
         }
