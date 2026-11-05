@@ -7,7 +7,7 @@ use std::{
     rc::{Rc, Weak},
 };
 use wasm_bindgen::prelude::*;
-use xterm_addons::fit::{FitAddon as Inner, FitError};
+use xterm_addons::fit::{FitAddon as Inner, FitError, FitTerminal};
 use xterm_core::options::OptionValue;
 
 #[wasm_bindgen(js_name=FitAddon)]
@@ -125,11 +125,24 @@ impl FitAddon {
         Ok(value.into())
     }
     pub fn fit(&self) -> Result<(), JsValue> {
-        // Resize callbacks may activate a different terminal on this addon.
         let addon = self.addon.borrow().clone();
-        addon
-            .fit()
-            .map_err(|error| crate::js_error::to_js_error(&error))
+        let Some(dimensions) = addon
+            .propose_dimensions()
+            .map_err(|error| crate::js_error::to_js_error(&error))?
+        else {
+            return Ok(());
+        };
+        // Style callbacks may activate another terminal. Source measures first,
+        // then resizes the current terminal, not the one used for measurement.
+        let terminal = self.terminal.borrow().clone();
+        if let Some(terminal) = terminal {
+            if !dimensions.cols.is_nan() && !dimensions.rows.is_nan() {
+                terminal
+                    .resize(dimensions)
+                    .map_err(|error| crate::js_error::to_js_error(&error))?;
+            }
+        }
+        Ok(())
     }
     pub fn dispose(&self) {
         self.addon.borrow().dispose();
