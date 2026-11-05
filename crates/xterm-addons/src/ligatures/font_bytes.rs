@@ -1,5 +1,6 @@
 // Copyright (c) 2018 The xterm.js authors. All rights reserved. MIT license.
 // Container/cmap behavior also follows opentype.js, see licenses/opentype-js-MIT.txt.
+use super::{font_cmap::Cmap, font_warning::FontLoadError, FontWarning};
 use std::{borrow::Cow, fmt};
 #[path = "font_hint_bytes.rs"]
 mod hints;
@@ -102,17 +103,12 @@ impl<'a> Reader<'a> {
 }
 
 pub struct DeferredTable<'a> {
-    reader: Reader<'a>,
     record: Reader<'a>,
     woff: bool,
 }
 impl<'a> DeferredTable<'a> {
     pub fn offset(&self) -> Result<usize, FontError> {
         self.record.offset32(if self.woff { 4 } else { 8 })
-    }
-
-    pub fn load(&self) -> Result<Cow<'a, [u8]>, FontError> {
-        self.load_from(self.reader.bytes)
     }
 
     pub fn load_from<'b>(&self, bytes: &'b [u8]) -> Result<Cow<'b, [u8]>, FontError> {
@@ -123,7 +119,7 @@ impl<'a> DeferredTable<'a> {
 }
 
 pub struct FontTables<'a> {
-    pub cmap: Cow<'a, [u8]>,
+    pub cmap: Cmap,
     pub gsub: Option<DeferredTable<'a>>,
     pub gdef: Option<DeferredTable<'a>>,
     pub kern: Option<DeferredTable<'a>>,
@@ -133,8 +129,12 @@ pub struct FontTables<'a> {
     pub glyph_count: Option<u16>,
 }
 impl<'a> FontTables<'a> {
-    pub fn parse(bytes: &'a [u8]) -> Result<Self, FontError> {
+    pub fn parse_with_refresh<E>(
+        bytes: &'a [u8],
+        warning: &mut impl FnMut(FontWarning) -> Result<Option<Vec<u8>>, E>,
+    ) -> Result<(Self, Option<Vec<u8>>), FontLoadError<E>> {
         let reader = Reader::new(bytes);
+        let mut refreshed = None;
         let signature_bytes = reader.bytes(0, 4)?;
         let signature = [
             signature_bytes[0],
@@ -151,7 +151,7 @@ impl<'a> FontTables<'a> {
         if !matches!(flavor, [0, 1, 0, 0] | [b'O', b'T', b'T', b'O'])
             && (woff || !matches!(flavor, [b't', b'r', b'u', b'e'] | [b't', b'y', b'p', b'1']))
         {
-            return Err(FontError::Signature(signature));
+            return Err(FontError::Signature(signature).into());
         }
         let count = usize::from(reader.u16(if woff { 12 } else { 4 })?);
         let (start, width) = if woff { (44, 20) } else { (12, 16) };
@@ -202,15 +202,45 @@ impl<'a> FontTables<'a> {
             }
             let metadata = matches!(
                 tag,
-                b"head" | b"hhea" | b"maxp" | b"OS/2" | b"post" | b"ltag" | b"SVG "
+                b"head"
+                    | b"hhea"
+                    | b"maxp"
+                    | b"OS/2"
+                    | b"post"
+                    | b"ltag"
+                    | b"SVG "
+                    | b"CPAL"
+                    | b"COLR"
             );
             if tag != b"cmap" && !metadata {
                 continue;
             }
             let offset = record.offset32(if woff { 4 } else { 8 })?;
-            let table = table_data(reader, record, woff, metadata)?;
+            let payload = Reader::new(refreshed.as_deref().unwrap_or(bytes));
+            let table = table_data(payload, record, woff, metadata)?;
             match tag {
-                b"cmap" => cmap = Some(table),
+                b"cmap" => cmap = Some(Cmap::parse(&table)?),
+                b"CPAL" | b"COLR" => {
+                    let diagnostic = super::font_color::warning(tag, &table)?;
+                    let borrowed = matches!(table, Cow::Borrowed(_));
+                    if let Some(diagnostic) = diagnostic {
+                        let next = warning(diagnostic).map_err(FontLoadError::Warning)?;
+                        if let Some(next) = next {
+                            if borrowed {
+                                // Header version is already parsed; only later reads see writes.
+                                super::font_color::finish(
+                                    tag,
+                                    &table_data(Reader::new(&next), record, woff, true)?,
+                                )?;
+                            } else {
+                                super::font_color::finish(tag, &table)?;
+                            }
+                            refreshed = Some(next);
+                            continue;
+                        }
+                    }
+                    super::font_color::finish(tag, &table)?;
+                }
                 b"SVG " => super::font_svg::validate(&table)?,
                 b"hhea" => {
                     super::font_metadata::immediate(tag, &table)?;
@@ -224,13 +254,14 @@ impl<'a> FontTables<'a> {
                 b"post" if matches!(&table, Cow::Borrowed(_)) => {
                     // Signed Pascal lengths can read backwards into preceding
                     // tables, since the source retains the full font DataView.
-                    super::font_metadata::post(reader, offset)?;
+                    super::font_metadata::post(payload, offset)?;
                 }
                 _ => super::font_metadata::immediate(tag, &table)?,
             }
         }
+        let payload = Reader::new(refreshed.as_deref().unwrap_or(bytes));
         let name = table_data(
-            reader,
+            payload,
             name.ok_or(FontError::MissingTable("name"))?,
             woff,
             true,
@@ -239,50 +270,30 @@ impl<'a> FontTables<'a> {
         if !(glyf && loca || cff) {
             return Err(FontError::Invalid(
                 "Font doesn\'t contain TrueType, CFF or CFF2 outlines.",
-            ));
+            )
+            .into());
         }
         let hmtx = hmtx.ok_or(FontError::MissingTable("hmtx"))?;
         if glyf && loca {
-            validate_hmtx(reader, hmtx, woff, glyph_count.unwrap_or(0), metric_count)?;
+            validate_hmtx(payload, hmtx, woff, glyph_count.unwrap_or(0), metric_count)?;
         }
-        Ok(Self {
-            cmap: cmap.ok_or(FontError::MissingTable("cmap"))?,
-            gdef: gdef.map(|record| DeferredTable {
-                reader,
-                record,
-                woff,
-            }),
-            gsub: gsub.map(|record| DeferredTable {
-                reader,
-                record,
-                woff,
-            }),
-            kern: kern.map(|record| DeferredTable {
-                reader,
-                record,
-                woff,
-            }),
-            meta: meta.map(|record| DeferredTable {
-                reader,
-                record,
-                woff,
-            }),
-            fvar: fvar.map(|record| DeferredTable {
-                reader,
-                record,
-                woff,
-            }),
-            avar: avar.map(|record| DeferredTable {
-                reader,
-                record,
-                woff,
-            }),
-            glyph_count: if glyf && loca {
-                Some(glyph_count.unwrap_or(0))
-            } else {
-                None
+        Ok((
+            Self {
+                cmap: cmap.ok_or(FontError::MissingTable("cmap"))?,
+                gdef: gdef.map(|record| DeferredTable { record, woff }),
+                gsub: gsub.map(|record| DeferredTable { record, woff }),
+                kern: kern.map(|record| DeferredTable { record, woff }),
+                meta: meta.map(|record| DeferredTable { record, woff }),
+                fvar: fvar.map(|record| DeferredTable { record, woff }),
+                avar: avar.map(|record| DeferredTable { record, woff }),
+                glyph_count: if glyf && loca {
+                    Some(glyph_count.unwrap_or(0))
+                } else {
+                    None
+                },
             },
-        })
+            refreshed,
+        ))
     }
 }
 

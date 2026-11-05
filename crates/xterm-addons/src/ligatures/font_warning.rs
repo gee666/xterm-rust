@@ -13,6 +13,8 @@ pub enum FontWarning {
     AvarMissingFvar,
     /// Unsupported major versions still parse after the diagnostic.
     AvarVersion { major: u16, minor: u16 },
+    UnsupportedCpalVersion,
+    UnsupportedColrVersion,
 }
 impl FontWarning {
     pub fn message(self) -> Cow<'static, str> {
@@ -23,6 +25,8 @@ impl FontWarning {
             ).into(),
             Self::AvarMissingFvar => "This font provides an avar table, but no fvar table, which is required for variable fonts.".into(),
             Self::AvarVersion { major, minor } => format!("Unsupported avar table version {major}.{minor}").into(),
+            Self::UnsupportedCpalVersion => "Only CPALv0 is currently fully supported.".into(),
+            Self::UnsupportedColrVersion => "Only COLRv0 is currently fully supported. A subset of color glyphs might be available in this font if provided in the v0 format.".into(),
         }
     }
 }

@@ -13,6 +13,8 @@ mod font_bytes;
 mod font_cache;
 #[path = "font_cmap.rs"]
 mod font_cmap;
+#[path = "font_color.rs"]
+mod font_color;
 #[path = "font_fvar.rs"]
 mod font_fvar;
 #[path = "font_gdef.rs"]
@@ -53,7 +55,6 @@ pub use font_bytes::FontError;
 use font_bytes::FontTables;
 use font_cache::{Cache, Cached};
 pub use font_cache::{GlyphArray, LigatureData, LigatureResult, RangeArray};
-use font_cmap::Cmap;
 pub use font_tables::{Glyph, GlyphValue};
 use font_tables::{Gsub, Lookup};
 use font_tree::{Arena, TreeId};
@@ -69,7 +70,7 @@ struct Group {
     forward: bool,
 }
 pub struct Font {
-    cmap: Cmap,
+    cmap: font_cmap::Cmap,
     arena: Arena,
     groups: Vec<Group>,
     glyph_lookups: HashMap<Glyph, Vec<usize>>,
@@ -114,8 +115,8 @@ impl Font {
         options: FontOptions,
         mut warning: impl FnMut(FontWarning) -> Result<Option<Vec<u8>>, E>,
     ) -> Result<Self, FontLoadError<E>> {
-        let tables = FontTables::parse(bytes)?;
-        let cmap = Cmap::parse(&tables.cmap)?;
+        let (tables, mut refreshed) = FontTables::parse_with_refresh(bytes, &mut warning)?;
+        let cmap = tables.cmap;
         if tables
             .glyph_count
             .is_some_and(|count| !cmap.valid_glyph_indices(count))
@@ -127,15 +128,21 @@ impl Font {
         }
         // opentype assigns cmap glyph names before it reads deferred kern/GSUB
         // data, so those later errors must not replace an invalid-glyph error.
-        let mut refreshed = None;
         if let Some(table) = tables.kern {
-            let loaded = table.load()?;
+            let loaded = table.load_from(refreshed.as_deref().unwrap_or(bytes))?;
             let header = font_kern::Header::read(&loaded)?;
             if let Some(diagnostic) = header.warning() {
-                refreshed = warning(diagnostic).map_err(FontLoadError::Warning)?;
-            }
-            if let (std::borrow::Cow::Borrowed(_), Some(bytes)) = (&loaded, &refreshed) {
-                header.finish(&table.load_from(bytes)?)?;
+                if let Some(next) = warning(diagnostic).map_err(FontLoadError::Warning)? {
+                    if matches!(loaded, std::borrow::Cow::Borrowed(_)) {
+                        header.finish(&table.load_from(&next)?)?;
+                    } else {
+                        header.finish(&loaded)?;
+                    }
+                    refreshed = Some(next);
+                    // Deferred GSUB and metadata must see the same refreshed buffer.
+                } else {
+                    header.finish(&loaded)?;
+                }
             } else {
                 header.finish(&loaded)?;
             }
@@ -189,7 +196,11 @@ impl Font {
         Self::from_gsub(gsub, cmap, options).map_err(FontLoadError::Font)
     }
 
-    fn from_gsub(gsub: Option<Gsub>, cmap: Cmap, options: FontOptions) -> Result<Self, FontError> {
+    fn from_gsub(
+        gsub: Option<Gsub>,
+        cmap: font_cmap::Cmap,
+        options: FontOptions,
+    ) -> Result<Self, FontError> {
         let mut arena = Arena::default();
         let mut groups = Vec::new();
         if let Some(gsub) = gsub {
