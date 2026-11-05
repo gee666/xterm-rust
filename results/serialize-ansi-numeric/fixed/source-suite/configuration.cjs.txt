@@ -1,0 +1,5 @@
+const loaded = require("P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-serialize\\test\\playwright.config.ts");
+const original = loaded.default ?? loaded;
+const path = require("node:path");
+module.exports = { ...original, testDir: path.resolve("P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-serialize\\test", original.testDir ?? '.'),
+use: { ...original.use, baseURL: "http://127.0.0.1:53721" }, webServer: undefined };

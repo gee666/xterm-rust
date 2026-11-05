@@ -1,0 +1,56 @@
+import assert from 'node:assert/strict';
+import { readFile, writeFile, mkdir, copyFile, cp, rm } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
+import { sourceIdentity, verifyBuiltPackage } from '../scripts/e2e/build-identity.mjs';
+import { runCommand } from '../scripts/quality-process.mjs';
+const root = process.cwd();
+const sourceFiles = ['crates/xterm-core/tests/serialize_ansi_numeric_row.rs', 'crates/xterm-core/src/serialize/ansi.rs', 'crates/xterm-core/src/serialize/mod.rs', 'crates/xterm-web/src/serialize_addon/mod.rs', 'results/demos/build/latest.json'];
+async function copyFileTo(file, destination) {
+  await mkdir(dirname(destination), { recursive: true }); await copyFile(file, destination);
+}
+async function snapshot(name) {
+  for (const file of sourceFiles) await copyFileTo(file, join('tmp', name, file));
+  await cp('browser/pkg', join('tmp', name, 'browser/pkg'), { recursive: true });
+}
+async function restore(name) {
+  for (const file of sourceFiles) await copyFileTo(join('tmp', name, file), file);
+  await rm('browser/pkg', { recursive: true });
+  await cp(join('tmp', name, 'browser/pkg'), 'browser/pkg', { recursive: true });
+}
+async function capture(name, suite) {
+  const dest = join('results/serialize-ansi-numeric', name);
+  await mkdir(dest, { recursive: true });
+  const identity = await sourceIdentity(root);
+  await verifyBuiltPackage(root, identity);
+  const result = await runCommand(process.execPath, ['scripts/serialize-browser-check.mjs', ...(suite ? ['--suite'] : [])], {
+    cwd: root, log: join(dest, 'runner.log'), timeoutMs: 360000, env: process.env,
+  });
+  await writeFile(join(dest, 'runner-result.json'), JSON.stringify(result, null, 2) + '\n');
+  const files = ['verification.json', ...['chromium', 'firefox', 'webkit'].flatMap(browser => [`${browser}-source.json`, `${browser}-rust.json`, `${browser}-terminal.png`])];
+  if (suite) for (const engine of ['source', 'rust']) for (const file of ['playwright.json', 'playwright.log', 'configuration.cjs.txt']) files.push(`${engine}-suite/${file}`);
+  for (const file of files) await copyFileTo(join('results/serialize-browser', file), join(dest, file));
+  const report = JSON.parse(await readFile(join(dest, 'verification.json')));
+  console.log(name, JSON.stringify({ result, identity, browsers: report.browsers.map(b => ({ name:b.name, passed:b.passed, executed:b.executed, mismatches:b.mismatches.map(m => m.name), error:b.error })), suites:report.suites.map(s => ({engine:s.engine,counts:s.counts})) }));
+  return report;
+}
+const fixedIdentity = await sourceIdentity(root);
+await verifyBuiltPackage(root, fixedIdentity);
+await snapshot('fixed');
+try {
+  await restore('baseline');
+  const baseline = await capture('baseline', false);
+  assert.equal(baseline.status, 'failed');
+  assert.equal(baseline.browsers.length, 3);
+  for (const browser of baseline.browsers) {
+    assert.equal(browser.executed, 66);
+    assert.deepEqual(browser.mismatches.map(m => m.name).sort(), ['ansi-equal-numeric-row-ring-aliases', 'ansi-equal-numeric-warning-reentry', 'raw-numeric-boundaries']);
+  }
+} finally {
+  await restore('fixed');
+  assert.equal((await sourceIdentity(root)).sha256, fixedIdentity.sha256);
+  await verifyBuiltPackage(root, fixedIdentity);
+}
+const fixed = await capture('fixed', true);
+assert.equal(fixed.status, 'passed');
+assert.equal((await sourceIdentity(root)).sha256, fixedIdentity.sha256);
+await verifyBuiltPackage(root, fixedIdentity);

@@ -1,0 +1,23 @@
+import { createRequire } from 'node:module';
+import { pathToFileURL } from 'node:url';
+import { readFile, mkdir, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { join } from 'node:path';
+const root = process.env.SOURCE_ROOT;
+const terminalPath = join(root, 'out-esbuild/headless/public/Terminal.js');
+const addonPath = join(root, 'addons/addon-serialize/lib/addon-serialize.mjs');
+const require = createRequire(pathToFileURL(terminalPath));
+const { Terminal } = require(terminalPath);
+const { SerializeAddon } = await import(pathToFileURL(addonPath));
+const term = new Terminal({ cols:12, rows:2, scrollback:0 });
+const addon = new SerializeAddon(); term.loadAddon(addon);
+try {
+  await new Promise(resolve => term.write('\x1b[31mABC\r\n\x1b[32mDEF\r\n\x1b[34mGHI', resolve));
+  const rows = [-2, -1, -0, -0.5, 0.5, Number.MIN_VALUE, 2**32, 2**32+1, Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER, 0.4, 3.429227000030392, 1.300047319391903];
+  const results = rows.map(row => ({ row:String(row), trim:row+1-row, ansi:addon.serialize({range:{start:row,end:row},excludeAltBuffer:true,excludeModes:true}) }));
+  const files = await Promise.all([terminalPath,addonPath].map(async path => ({path,sha256:createHash('sha256').update(await readFile(path)).digest('hex')})));
+  const result = {platform:process.platform,node:process.version,scope:'Actual original headless Terminal and compiled original SerializeAddon; supplemental source-only evidence, not Rust browser proof.',files,results};
+  await mkdir('results/serialize-ansi-numeric',{recursive:true});
+  await writeFile('results/serialize-ansi-numeric/node-source.json',JSON.stringify(result,null,2)+'\n');
+  console.log(JSON.stringify(result,null,2));
+} finally {term.dispose();}
