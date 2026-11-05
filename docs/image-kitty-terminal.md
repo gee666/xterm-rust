@@ -40,6 +40,10 @@ The first12-test Chromium run passed every Rust assertion but reported five seco
 
 The green suite uses supported logLevel=off on both terminals for handler-rejection tests. Its raw-DEFLATE case exercises the explicit retry through a synchronous DecompressionStream constructor failure, then performs actual browser raw decompression. It does not claim that malformed/default-zlib writer rejections are free of secondary errors. No page-error filtering or source/assertion changes were added. The initial diagnostic is retained separately as `initial-source-error-diagnostic.json`; broad unhandled-rejection timing remains unproven.
 
+## Independent review
+
+Task373 was accepted at6ed73ad. The isolated reviewer inspected source/native/browser phase ordering, retention and cleanup, then independently reran19 Kitty,12 IIP and15 SIXEL tests in each browser, both native APC tests, all2043 workspace tests across401 summaries, full formatting and native/scoped-WASM warning-denied Clippy. No findings remained. Its browser reports and focused native receipt are retained as `reviewer-*` under this task's results directory.
+
 ## Reproduce
 
 Use the reference/tool environment described in docs/image-canvas.md. No original source modifications are needed.
