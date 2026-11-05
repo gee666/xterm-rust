@@ -1,0 +1,69 @@
+{
+  "task": 366,
+  "base": "a2a1252",
+  "platform": "win32",
+  "arch": "x64",
+  "node": "v24.15.0",
+  "rustc": "1.85.1",
+  "cargo": "1.85.1",
+  "baseline": {
+    "exit": 101,
+    "reason": "compile_fail doctest compiled successfully before the invariant marker fix"
+  },
+  "focusedTests": 14,
+  "coreDoctests": 2,
+  "oracle": {
+    "status": "passed",
+    "comparisons": 2601,
+    "seed": 99066318,
+    "originalUpstreamTests": 0
+  },
+  "quality": {
+    "fullWorkspaceFmt": "passed",
+    "nativeCoreWebAllTargetsAllFeaturesClippy": "passed",
+    "wasmWebLibClippy": "passed"
+  },
+  "implementation": [
+    {
+      "path": "crates/xterm-core/src/service_registry.rs",
+      "sha256": "ba5263df8fbed5a768b2d7e09f1eee2e640a3a57b88f92b5be9d642a58a17dff"
+    },
+    {
+      "path": "crates/xterm-core/src/instantiation.rs",
+      "sha256": "b81e959e740d2cfcaad83f8033a84e551714bc5cba70028ce1e0c937df813b99"
+    },
+    {
+      "path": "crates/xterm-core/tests/service_identity.rs",
+      "sha256": "acfa1dca652061889ad0eaebade4eb41b9ea55aaf025dccec410263f3913cde1"
+    },
+    {
+      "path": "crates/xterm-core/tests/service_injection.rs",
+      "sha256": "713b6fb71b2c79b986b187958b9fc2e4205f31556a7dde0e166dc5b54e4a2a49"
+    },
+    {
+      "path": "crates/xterm-core/tests/service_dependency_views.rs",
+      "sha256": "787ff94af471960d6c89af1be5c2f8cc7ed6ff6e9c53baaae027c719904cbebc"
+    },
+    {
+      "path": "scripts/service-injection-oracle.mjs",
+      "sha256": "88c7b472be4923d64f9faee026b21106a35254d335d43454ee43a7df375bbd2a"
+    }
+  ],
+  "source": [
+    {
+      "path": "src/common/services/ServiceRegistry.ts",
+      "sha256": "a467a496d3f1f26130c55809c587e1a7aeaa56d91e22be60af4182db6bb89171"
+    },
+    {
+      "path": "src/common/services/InstantiationService.ts",
+      "sha256": "43f48014c7e56738fb0dd2fafaaa7bfd477bea71d3f35f3ed8c6a01b6b5dacbe"
+    }
+  ],
+  "notProven": [
+    "browser runtime",
+    "native Linux/macOS",
+    "full workspace runtime/feature/release matrix",
+    "complete common-family parity",
+    "full xterm.js equivalence"
+  ]
+}

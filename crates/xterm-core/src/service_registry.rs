@@ -35,10 +35,20 @@ impl PartialEq for ServiceKey {
 impl Eq for ServiceKey {}
 
 /// A service's identity and expected Rust value type.
+///
+/// The value type is invariant: subtyping must not change the type associated
+/// with the retained registry key, even for function-pointer lifetimes.
+///
+/// ```compile_fail
+/// use xterm_core::service_registry::ServiceId;
+/// type General = fn(&());
+/// type Static = fn(&'static ());
+/// fn reinterpret(id: ServiceId<General>) -> ServiceId<Static> { id }
+/// ```
 #[derive(Debug)]
 pub struct ServiceId<T: 'static> {
     key: ServiceKey,
-    marker: PhantomData<fn() -> T>,
+    marker: PhantomData<fn(T) -> T>,
 }
 impl<T> Clone for ServiceId<T> {
     fn clone(&self) -> Self {

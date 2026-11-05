@@ -4,7 +4,7 @@
 
 ## Rust representations
 
-A caller owns `ServiceRegistry` and shares its typed IDs with the constructors it wires. `create_decorator::<T>` interns a name within that registry. Different registries intentionally have distinct identities. Unlike a JavaScript generic cast, a repeated name with a different Rust type is rejected. A `ServiceKey` erases only the generic parameter, not identity. Dynamic values are checked against the key's type before mutation.
+A caller owns `ServiceRegistry` and shares its typed IDs with the constructors it wires. `create_decorator::<T>` interns a name within that registry. Different registries intentionally have distinct identities. Unlike a JavaScript generic cast, a repeated name with a different Rust type is rejected. `ServiceId<T>` is invariant in `T`, including function-pointer lifetimes, so Rust subtyping cannot retain a key while changing its expected `TypeId`. A `ServiceKey` erases only the generic parameter, not identity. Dynamic values are checked against the key's type before mutation.
 
 `ConstructorMetadata` represents compiler-emitted parameter metadata and explicit parent inheritance. `dependencies_view()` is the typed equivalent of `getServiceDependencies`. Its `DependencyList` is an `Rc<RefCell<Vec<Dependency>>>`. Annotated constructors and descendants share the same mutable list until a child's first successful decorator creates its own list. Without inherited or own annotations, each call returns a fresh, unattached empty list. Clearing an annotated list does not detach it. Views retained before a child gains its own decorators still refer to the parent's list.
 
@@ -33,12 +33,15 @@ There are no original `ServiceRegistry.test.ts` or `InstantiationService.test.ts
 With Cargo and Node on PATH and upstream TypeScript dependencies installed:
 
 ```text
-cargo test -p xterm-core --test service_injection --test service_dependency_views
+cargo test -p xterm-core --test service_injection --test service_dependency_views --test service_identity
+cargo test -p xterm-core --doc service_registry::ServiceId
 node scripts/service-injection-oracle.mjs
 cargo clippy -p xterm-core --test service_injection --test service_dependency_views --example service_injection_trace -- -D warnings
 rustfmt --edition 2021 --check crates/xterm-core/src/service_registry.rs crates/xterm-core/src/instantiation.rs crates/xterm-core/tests/service_injection.rs crates/xterm-core/tests/service_dependency_views.rs crates/xterm-core/examples/service_injection_trace.rs
 ```
 
 Local environment is native Windows x64, Node 24.15.0, TypeScript 5.9.3, rustc 1.85.1 and cargo 1.85.1. Fresh 12-test and 2,601-comparison runs pass after the shared terminal/parser migrations. Three live-view tests cover detached empties, multi-level inheritance and replacement, clearing/redecorating, error-time sorting and constructor callback mutation. Worktrees may set `XT_SOURCE_ROOT` to the preserved reference directory with TypeScript installed; source modules still execute unchanged. Scoped warning-denied Clippy and formatting pass. `results/service-injection/` retains replay input, expected/actual output, source and implementation hashes, oracle summary and the earlier failed compilation attempt. A retained `failed-build.json` records a historical integration failure, not the current passing build. Check `build.log`, `tests.log`, `clippy.log` and the implementation hashes against current files before reusing this evidence.
+
+Task366 adds the invariant typed-identity boundary. `service_identity.rs` checks distinct function-pointer `TypeId`s, repeated-name rejection, unchanged collection contents after an invalid dynamic assignment, and constructor injection with original `Rc` identity. The `ServiceId` compile-fail doctest rejects function-pointer lifetime reinterpretation. This is a Rust representation invariant, not a newly claimed original JavaScript assertion. See `docs/service-identity.md` for its negative control and exact checks.
 
 Task 101 separately verifies the terminal's direct typed construction against the upstream dependency graph and browser APIs. Coleman chose direct typed service construction for the terminal engine, not a runtime service locator. Native Linux/macOS, browser/WASM integration and complete xterm.js equivalence are NOT PROVEN by this utility evidence.
