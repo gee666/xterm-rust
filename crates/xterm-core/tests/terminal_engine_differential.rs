@@ -39,7 +39,13 @@ fn both_buffers_cells_modes_and_ordered_events_match_real_source_traces() {
             ),
             "R" => {
                 let dims: Vec<usize> = fields[5].split(',').map(|s| s.parse().unwrap()).collect();
-                t.resize(dims[0], dims[1])
+                // The oracle calls public Terminal.resize, whose unchanged-size
+                // check precedes CoreTerminal.resize and its margin reset.
+                if dims == [t.cols(), t.rows()] {
+                    Ok(())
+                } else {
+                    t.resize(dims[0], dims[1])
+                }
             }
             "S" => t.scroll_lines(fields[5].parse().unwrap()),
             "C" => t.clear(),

@@ -23,6 +23,18 @@ const inputs=['abc','\rZ','\n','界','e\u0301','🙂','\x08!','\tX','\x07','\x1b
  '\x1b]2;title\x07','\x1b[c','\x1b[6n','\x1bP$qm\x1b\\','\x1b)0\x0eq\x0f','\x1b#8',
  '\x1b[2;3r','\x1b[?6h','\x1b[?6l','\x1b[4h','\x1b[4l','\x1b[2b','\x1b[38:2::1:2:3mX',
  '\x1b[?45h\x08','\x1b[3g\t','\x1bH','\x1b[!p','\x1bc'];
+const extendedInputs=[...inputs,
+ '\x1b[?1047hALT','\x1b[?1047l','\x1b[?1048h','\x1b[?1048l',
+ '\x1b[?47hALT','\x1b[?47l','\x1b[5;6s','\x1b[?69h','\x1b[?69l',
+ '\x1b[3;1H\x1b[2K','\x1b[9;9H\x1b[1J','\x1b[1K','\x1b[1J',
+ '\x1b[?1h','\x1b[?1l','\x1b=','\x1b>','\x1b[20h','\x1b[20l',
+ '\x1b[?2004h','\x1b[?2004l','\x1b[6 q','\x1b[2 q','\x1b[5n',
+ '\x1b[?6n','\x1b[?25l','\x1b[?25h','\x1b[0m','\x1b[4:3m',
+ '\x1b[58:2::3:4:5m','\x1b[59m','\x1b[53m','\x1b[55m',
+ '\x1b[1000P','\x1b[1000@','\x1b[1000X','\x1b[1000b',
+ '\x00\x18\x1a\x7f','\x1b[1;2\x18tail','\x1b]2;\uD800\x07',
+ '\x1bPbad\x18tail','\x1b[999999999999999999999m',
+ '\uD800x\uDC00','\x1b[2I','\x1b[2Z','\x1b[3E','\x1b[3F'];
 const seed=0x4354524d;let random=seed;
 function next(){random^=random<<13;random^=random>>>17;random^=random<<5;return random>>>0;}
 const traces=inputs.map((text,i)=>({id:`directed-${i}`,cols:5,rows:3,scrollback:6,ops:[['W','initial\r\ntext'],['W',text]]}));
@@ -39,6 +51,20 @@ for(let i=0;i<128;i++) {
     else ops.push(['W',inputs[next()%inputs.length]]);
   }
   traces.push({id:`seed-${i}`,cols:2+next()%8,rows:1+next()%4,scrollback:6,ops});
+}
+for(let i=0;i<512;i++) {
+  const ops=[];
+  for(let j=0;j<16;j++) {
+    const choice=next()%24;
+    if(choice===0)ops.push(['R',[2+next()%8,1+next()%4]]);
+    else if(choice===1)ops.push(['S',(next()%7)-3]);
+    else if(choice===2)ops.push(['C','']);
+    else if(choice===3)ops.push(['Q','']);
+    else if(choice===4)ops.push(['B',Array.from({length:1+next()%8},()=>next()%256)]);
+    else if(choice===5)ops.push(['W',String.fromCharCode(...Array.from({length:1+next()%8},()=>next()%65536))]);
+    else ops.push(['W',extendedInputs[next()%extendedInputs.length]]);
+  }
+  traces.push({id:`extended-${i}`,cols:2+next()%8,rows:1+next()%4,scrollback:6,ops});
 }
 const output=[];
 for(const trace of traces) {
