@@ -28,6 +28,7 @@ export function fvarCases() {
     for(const position of ['first','last'])add(`invalid ${position} descriptor ${woff?'WOFF':'SFNT'}`,{}, {woff,duplicateTable:{tag:'fvar',position}});
     add(`GSUB error precedes fvar version ${woff?'WOFF':'SFNT'}`,{version:0},{woff,duplicateTable:{tag:'GSUB',position:'last'}});
     add(`cmap error precedes fvar version ${woff?'WOFF':'SFNT'}`,{version:0},{woff,glyphCount:0});
+    for(const position of ['first','last'])for(const version of [0,65536])add(`fvar version ${version} before ${position} invalid META ${woff?'WOFF':'SFNT'}`,{version},{woff,duplicateTable:{tag:'meta',position}});
     for(const tag of ['name','hmtx'])add(`missing ${tag} precedes fvar version ${woff?'WOFF':'SFNT'}`,{version:0},{woff,remove:[tag]});
   }
   add('ignored earlier invalid compressed descriptor',{}, {woff:true,duplicateTable:{tag:'fvar',position:'first',invalidCompression:true}});
