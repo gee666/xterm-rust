@@ -1,0 +1,24 @@
+{
+  "task": 367,
+  "status": "confirmed mismatch, unrepaired",
+  "base": "d88c4b9 plus service identity change only",
+  "sourceTrace": [
+    "new"
+  ],
+  "nativeTrace": [
+    "old"
+  ],
+  "implementation": {
+    "path": "crates/xterm-core/src/task_queue.rs",
+    "sha256": "68fe8f3c013b6ca5502afb86451d33a04980ee97cc09d09c07c98c14be71e2b9"
+  },
+  "rustc": "1.85.1",
+  "platform": "native Windows x64",
+  "command": "rustc --edition 2021 results/task-queue-clock/native-repro.rs --extern xterm_core=<normal Cargo-built rlib> -L dependency=target/debug/deps -o tmp/clock-reentry.exe && tmp/clock-reentry.exe",
+  "limitations": [
+    "Source controlled host, not browser runtime",
+    "Native probe uses normal Cargo-built core rlib",
+    "No missing-task error case run",
+    "No repair or new passing parity claim"
+  ]
+}
