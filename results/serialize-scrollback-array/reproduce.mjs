@@ -75,7 +75,13 @@ async function variant(name, bytes, retainPackage) {
     report.webFresh = web.map(message => message.fresh);
     const browser = await command('browser', process.execPath, ['scripts/serialize-browser-check.mjs', '--suite'], directory);
     report.commands.push(browser);
-    await cp(join(root, 'results/serialize-browser'), join(directory, 'browser'), { recursive: true });
+    const browserFiles = ['verification.json', ...['chromium', 'firefox', 'webkit'].flatMap(name =>
+      [`${name}-source.json`, `${name}-rust.json`, `${name}-terminal.png`]),
+    ...['source-suite', 'rust-suite'].flatMap(name => ['configuration.cjs.txt', 'playwright.json', 'playwright.log'].map(file => `${name}/${file}`))];
+    for (const file of browserFiles) {
+      await mkdir(join(directory, 'browser', file, '..'), { recursive: true });
+      await cp(join(root, 'results/serialize-browser', file), join(directory, 'browser', file));
+    }
     const observed = await json(join(directory, 'browser/verification.json'));
     assert.equal(observed.error, undefined); assert.deepEqual(observed.cleanupErrors, []);
     assert.equal(observed.referenceBefore.mismatches.length, 0); assert.equal(observed.referenceAfter.mismatches.length, 0);
