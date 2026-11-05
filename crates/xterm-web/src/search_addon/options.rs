@@ -63,6 +63,9 @@ impl SearchDecorationSource for JsDecorations {
 }
 pub struct JsOptions(pub JsValue);
 impl SearchOptionsSource for JsOptions {
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
     fn is_truthy(&self) -> bool {
         self.0.is_truthy()
     }
@@ -77,10 +80,30 @@ impl SearchOptionsSource for JsOptions {
             .is_truthy()
             .then(|| Rc::new(JsDecorations(value)) as SearchDecorationOptionsHandle))
     }
-    fn flags_changed(&self) -> Result<bool, SearchAddonError> {
-        for key in ["caseSensitive", "regex", "wholeWord"] {
-            let left = property(&self.0, key).map_err(host_error)?;
-            let right = property(&self.0, key).map_err(host_error)?;
+    fn flags_changed(
+        &self,
+        stored: &dyn Fn() -> Option<SearchOptionsHandle>,
+    ) -> Result<bool, SearchAddonError> {
+        for (index, key) in ["caseSensitive", "regex", "wholeWord"]
+            .into_iter()
+            .enumerate()
+        {
+            // Capture this request before invoking its getter, but resolve the
+            // next property from live addon state after both getters return.
+            let current = stored();
+            let left = match current.as_ref() {
+                Some(options) => match options.as_any().downcast_ref::<Self>() {
+                    Some(options) => flag(&options.0, key).map_err(host_error)?,
+                    None => {
+                        let flags = options.read()?.matching;
+                        [flags.case_sensitive, flags.regex, flags.whole_word][index]
+                            .map(JsValue::from_bool)
+                            .unwrap_or(JsValue::UNDEFINED)
+                    }
+                },
+                None => flag(&JsValue::UNDEFINED, key).map_err(host_error)?,
+            };
+            let right = flag(&self.0, key).map_err(host_error)?;
             if left != right {
                 return Ok(true);
             }

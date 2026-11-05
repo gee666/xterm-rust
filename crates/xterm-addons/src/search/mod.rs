@@ -77,6 +77,7 @@ pub struct SearchOptions {
 pub enum SearchAddonError {
     NotLoaded,
     Borrowed,
+    MissingOptions,
     InvalidCoordinates,
     Search(SearchError),
     Terminal(HeadlessError),
@@ -88,6 +89,7 @@ impl fmt::Display for SearchAddonError {
         match self {
             Self::NotLoaded => f.write_str("Cannot use addon until it has been loaded"),
             Self::Borrowed => f.write_str("search terminal state is already borrowed"),
+            Self::MissingOptions => f.write_str("cannot read flags of absent search options"),
             Self::InvalidCoordinates => {
                 f.write_str("search match coordinates are not representable by the host")
             }

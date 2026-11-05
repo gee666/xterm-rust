@@ -7,6 +7,9 @@ struct Poisoned {
     decorated: bool,
 }
 impl SearchOptionsSource for Poisoned {
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
     fn read(&self) -> Result<SearchOptions, SearchAddonError> {
         panic!("empty search must not snapshot matching flags")
     }
@@ -49,6 +52,9 @@ struct Reentrant {
     entered: Cell<bool>,
 }
 impl SearchOptionsSource for Reentrant {
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
     fn read(&self) -> Result<SearchOptions, SearchAddonError> {
         panic!("empty search must not snapshot matching flags")
     }

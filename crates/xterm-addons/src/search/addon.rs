@@ -19,6 +19,8 @@ mod completion;
 mod find;
 
 pub trait SearchOptionsSource {
+    /// Host adapters use their retained raw values for strict flag equality.
+    fn as_any(&self) -> &dyn std::any::Any;
     fn read(&self) -> Result<SearchOptions, SearchAddonError>;
     /// Raw request truthiness, without invoking getters or coercion callbacks.
     /// Typed Rust option records are always truthy.
@@ -36,17 +38,32 @@ pub trait SearchOptionsSource {
     fn decorations(&self) -> Result<Option<SearchDecorationOptionsHandle>, SearchAddonError> {
         Ok(self.read()?.decorations)
     }
-    /// The source stores the incoming options before comparing them. Host
-    /// accessors can therefore change between two reads of this same request.
-    fn flags_changed(&self) -> Result<bool, SearchAddonError> {
-        let left = self.read()?.matching;
-        let right = self.read()?.matching;
-        Ok(left.case_sensitive != right.case_sensitive
-            || left.regex != right.regex
-            || left.whole_word != right.whole_word)
+    /// Compare stored then incoming flags, resolving the live stored request
+    /// again before each property. Either getter may replace it by reentry.
+    /// Native records have no per-property accessors; host adapters preserve them.
+    fn flags_changed(
+        &self,
+        stored: &dyn Fn() -> Option<SearchOptionsHandle>,
+    ) -> Result<bool, SearchAddonError> {
+        for index in 0..3 {
+            let left = stored()
+                .ok_or(SearchAddonError::MissingOptions)?
+                .read()?
+                .matching;
+            let left = [left.case_sensitive, left.regex, left.whole_word][index];
+            let right = self.read()?.matching;
+            let right = [right.case_sensitive, right.regex, right.whole_word][index];
+            if left != right {
+                return Ok(true);
+            }
+        }
+        Ok(false)
     }
 }
 impl SearchOptionsSource for RefCell<SearchOptions> {
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
     fn read(&self) -> Result<SearchOptions, SearchAddonError> {
         self.try_borrow()
             .map(|options| options.clone())

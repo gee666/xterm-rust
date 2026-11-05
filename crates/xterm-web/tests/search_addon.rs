@@ -24,6 +24,8 @@ mod empty;
 mod falsy_stored_options;
 #[path = "search_cases/invalid.rs"]
 mod invalid;
+#[path = "search_cases/live_stored_flags.rs"]
+mod live_stored_flags;
 #[path = "search_cases/matching_errors.rs"]
 mod matching_errors;
 #[path = "search_cases/ranges.rs"]

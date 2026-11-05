@@ -44,6 +44,9 @@ struct Flags {
     decorations: Cell<usize>,
 }
 impl SearchOptionsSource for Flags {
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
     fn read(&self) -> Result<SearchOptions, SearchAddonError> {
         panic!("invalid term must not snapshot matching flags")
     }
@@ -51,7 +54,10 @@ impl SearchOptionsSource for Flags {
         self.decorations.set(self.decorations.get() + 1);
         Ok(options().read()?.decorations)
     }
-    fn flags_changed(&self) -> Result<bool, SearchAddonError> {
+    fn flags_changed(
+        &self,
+        _stored: &dyn Fn() -> Option<SearchOptionsHandle>,
+    ) -> Result<bool, SearchAddonError> {
         self.comparisons.set(self.comparisons.get() + 1);
         Ok(false)
     }

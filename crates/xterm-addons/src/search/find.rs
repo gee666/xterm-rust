@@ -85,7 +85,9 @@ impl SearchAddon {
                 || options
                     .as_ref()
                     .filter(|options| options.is_truthy())
-                    .map(|options| options.flags_changed())
+                    .map(|options| {
+                        options.flags_changed(&|| self.inner.last_options.borrow().clone())
+                    })
                     .transpose()?
                     .unwrap_or(false);
             if update {

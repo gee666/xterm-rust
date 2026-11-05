@@ -10,6 +10,9 @@ struct Request {
     comparisons: Cell<usize>,
 }
 impl SearchOptionsSource for Request {
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
     fn is_truthy(&self) -> bool {
         self.truthy
     }
@@ -31,7 +34,10 @@ impl SearchOptionsSource for Request {
         }
         Ok(self.read()?.decorations)
     }
-    fn flags_changed(&self) -> Result<bool, SearchAddonError> {
+    fn flags_changed(
+        &self,
+        _stored: &dyn Fn() -> Option<SearchOptionsHandle>,
+    ) -> Result<bool, SearchAddonError> {
         self.comparisons.set(self.comparisons.get() + 1);
         Err(SearchAddonError::InvalidCoordinates)
     }

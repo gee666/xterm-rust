@@ -85,6 +85,15 @@ async fn delayed_refresh_retains_undefined_after_cache_clear_and_copy_reentry() 
 }
 
 #[wasm_bindgen_test]
+async fn live_stored_flags_preserve_operand_order_reentry_and_strict_equality() {
+    let body = format!(
+        "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),464);",
+        include_str!("fixtures/search-live-stored-flags.js")
+    );
+    run(&body, true, DEFAULTS).await;
+}
+
+#[wasm_bindgen_test]
 async fn falsy_stored_options_skip_cached_term_flag_comparison() {
     let body = format!(
         "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),84);",

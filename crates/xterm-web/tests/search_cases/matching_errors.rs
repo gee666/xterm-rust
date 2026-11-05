@@ -5,6 +5,9 @@ use xterm_addons::search::{SearchDecorationOptionsHandle, SearchOptionsSource};
 type Read = dyn Fn() -> Result<SearchOptions, SearchAddonError>;
 struct MatchingFailure(Rc<Read>);
 impl SearchOptionsSource for MatchingFailure {
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
     fn read(&self) -> Result<SearchOptions, SearchAddonError> {
         (self.0)()
     }

@@ -8,6 +8,9 @@ pub(super) struct Request {
     pub(super) refresh: Rc<Refresh>,
 }
 impl SearchOptionsSource for Request {
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
     fn read(&self) -> Result<SearchOptions, SearchAddonError> {
         Ok(self.options.clone())
     }

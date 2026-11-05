@@ -7,13 +7,19 @@ struct Probe {
     fail: bool,
 }
 impl SearchOptionsSource for Probe {
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
     fn read(&self) -> Result<SearchOptions, SearchAddonError> {
         panic!("invalid terms must not enter matching")
     }
     fn decorations(&self) -> Result<Option<SearchDecorationOptionsHandle>, SearchAddonError> {
         Ok(options().read()?.decorations)
     }
-    fn flags_changed(&self) -> Result<bool, SearchAddonError> {
+    fn flags_changed(
+        &self,
+        _stored: &dyn Fn() -> Option<SearchOptionsHandle>,
+    ) -> Result<bool, SearchAddonError> {
         self.comparisons.set(self.comparisons.get() + 1);
         if self.fail {
             Err(SearchAddonError::InvalidCoordinates)
