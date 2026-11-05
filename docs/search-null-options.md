@@ -17,9 +17,10 @@ WASM_TEST=wasm_search_addon node scripts/browser-host-check.mjs
 cargo clippy --locked -j2 -p xterm-addons -p xterm-web --lib --test search_addon -- -D warnings
 cargo clippy --locked -j2 -p xterm-web --target wasm32-unknown-unknown --lib --test wasm_search_addon -- -D warnings
 cargo fmt -p xterm-addons -p xterm-web -- --check
+node scripts/e2e-upstream.mjs --suite addon-search --timeout-ms 180000
 ```
 
-Set TEMP, TMP, and TMPDIR to owned O: scratch and CARGO_BUILD_JOBS=2. SOURCE_DEPENDENCIES points to the unchanged original checkout, PLAYWRIGHT_MODULE to its Playwright module, and WASM_BINDGEN to the installed matching CLI. The runners bound commands and close their servers and browsers. The shared directed fixture uses no sleeps or new random seed. All776 reference-manifest entries match before and after its source run.
+Set TEMP, TMP, and TMPDIR to owned O: scratch and CARGO_BUILD_JOBS=2. SOURCE_DEPENDENCIES points to the unchanged original checkout, PLAYWRIGHT_MODULE to its Playwright module, and WASM_BINDGEN to the installed matching CLI. The runners bound commands and close their servers and browsers. The original E2E runner used one explicitly owned node_modules junction under the physical reference copy, removed in a finally block immediately after execution. The shared directed fixture uses no sleeps or new random seed. All776 reference-manifest entries match before and after its source run.
 
 | Check | Executed | Passed | Failed | Ignored |
 | --- | ---: | ---: | ---: | ---: |
@@ -27,6 +28,7 @@ Set TEMP, TMP, and TMPDIR to owned O: scratch and CARGO_BUILD_JOBS=2. SOURCE_DEP
 | Native addon test functions | 37 | 37 | 0 | 0 |
 | Fixed WASM test functions, three browsers | 33 | 33 | 0 | 0 |
 | Shared null-option cases inside three WASM functions | 138 | 138 | 0 | 0 |
+| Unchanged original Search E2E, all original projects | 81 | 81 | 0 | 0 |
 | Old native producer negative control | 2 | 1 | 1 | 0 |
 
 The138-case WASM subtotal is inside33 test functions, not138 additional functions. Existing callable argument, empty/invalid-term and delayed refresh assertions also execute. The46 new cases per engine cover both directions, present/absent matches, existing/no selection, null requests with eight invalid terms, seven other primitive request values, activation and before-event precedence, regex/caseSensitive getter exceptions, exact thrown identity, and nested real selection.
@@ -36,6 +38,12 @@ The old native producer fails the cleared-selection assertion. The old WASM prod
 An intermediate fixed run passed11 functions each in Chromium and Firefox but failed one of11 in WebKit. The computed-key property helper produced a TypeError without the `regex` label. The named property read corrects that engine-visible detail. The fixture assertions are unchanged between that failure and the final three-browser pass. Raw failed and final reports remain under `results/search-null-options/`. Browser/compiler artifacts identified by those reports are temporary verification output, not distribution artifacts.
 
 Scoped warning-denied Clippy and formatting pass. Exact `cargo fmt --all -- --check` still fails on Windows OS206 in this physical short worktree. This is retained, not relabeled as a full formatting pass or waived. Final integrated workspace quality remains304. This task supplies no Linux/macOS native runtime or current full-workspace proof.
+
+## Independent review and original suite
+
+Task412 was accepted at343a7044 after isolated review found no concrete problems. The reviewer independently ran both JavaScript syntax checks and verified all26 then-pinned file hashes. It inspected source/borrow/cache ordering and retained native/source/WASM/negative-control receipts. It did not launch Cargo or browsers during the resource pause. No production source changed after review.
+
+After the explicit browser grant, the unchanged original Search suite passed81/81 in its three original projects, with zero failed, skipped, or unrun cases and no retries. This uses the real Rust debug browser distribution on the rebased main85e0fd43 union. The runner verifies source and build identity, then closes its server. Its raw original Playwright result, summary, and build identity are retained alongside the earlier source-pinned scoped receipts. This is not a new full native/WASM matrix on the union.
 
 ## Remaining work
 
