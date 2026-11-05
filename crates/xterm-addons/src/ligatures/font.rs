@@ -11,6 +11,8 @@ mod font_build_helpers;
 mod font_bytes;
 #[path = "font_cache.rs"]
 mod font_cache;
+#[path = "font_cff_header.rs"]
+mod font_cff_header;
 #[path = "font_cmap.rs"]
 mod font_cmap;
 #[path = "font_color.rs"]

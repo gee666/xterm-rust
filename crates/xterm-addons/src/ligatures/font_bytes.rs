@@ -16,6 +16,7 @@ pub enum FontError {
     GposVersion { major: u16, minor: u16 },
     GposLookupType(u16),
     GposFormat { offset: usize, kind: u16 },
+    CffVersion { major: u8, minor: u8 },
     CoverageFormat { offset: usize },
     Invalid(&'static str),
     Type(&'static str),
@@ -47,6 +48,9 @@ impl fmt::Display for FontError {
                 f,
                 "0x{offset:x}: GPOS lookup type {kind} format must be 1 or 2."
             ),
+            Self::CffVersion { major, minor } => {
+                write!(f, "Unsupported CFF table version {major}.{minor}")
+            }
             Self::CoverageFormat { offset } => {
                 write!(f, "0x{offset:x}: Coverage format must be 1 or 2.")
             }
@@ -149,13 +153,8 @@ impl<'a> FontTables<'a> {
     ) -> Result<(Self, Option<Vec<u8>>), FontLoadError<E>> {
         let reader = Reader::new(bytes);
         let mut refreshed = None;
-        let signature_bytes = reader.bytes(0, 4)?;
-        let signature = [
-            signature_bytes[0],
-            signature_bytes[1],
-            signature_bytes[2],
-            signature_bytes[3],
-        ];
+        let signature = reader.u32(0)?.to_be_bytes();
+        let signature_bytes = signature.as_slice();
         let woff = signature == *b"wOFF";
         let flavor = if woff {
             reader.bytes(4, 4)?
@@ -181,8 +180,9 @@ impl<'a> FontTables<'a> {
         let mut name = None;
         let mut tags = None;
         let mut glyph_count = None;
-        let (mut glyf, mut loca, mut cff) = (None, None, false);
+        let (mut glyf, mut loca) = (None, None);
         let mut short_loca = false;
+        let (mut cff, mut cff2) = (None, None);
         let mut hmtx = None;
         // Missing hhea leaves the source metric count undefined. Its numeric
         // comparison then reads no metrics, the same boundary as zero here.
@@ -197,7 +197,8 @@ impl<'a> FontTables<'a> {
                 }
                 b"glyf" => glyf = Some(record),
                 b"loca" => loca = Some(record),
-                b"CFF " | b"CFF2" => cff = true,
+                b"CFF " => cff = Some(record),
+                b"CFF2" => cff2 = Some(record),
                 b"name" | b"GSUB" | b"GDEF" | b"GPOS" | b"hmtx" | b"kern" | b"meta" | b"fvar"
                 | b"avar" => {
                     // These tables are deferred by the source constructor. Select
@@ -290,11 +291,11 @@ impl<'a> FontTables<'a> {
         )?;
         super::font_metadata::name(&name, tags)?;
         let truetype = glyf.zip(loca);
-        if truetype.is_none() && !cff {
-            return Err(FontError::Invalid(
-                "Font doesn\'t contain TrueType, CFF or CFF2 outlines.",
-            )
-            .into());
+        if truetype.is_none() {
+            let record = cff.or(cff2).ok_or(FontError::Invalid(
+                "Font doesn't contain TrueType, CFF or CFF2 outlines.",
+            ))?;
+            super::font_cff_header::validate(&table_data(payload, record, woff, true)?)?;
         }
         if let Some((glyf, loca)) = truetype {
             super::font_outline::validate(payload, glyf, loca, woff, glyph_count, short_loca)?;
