@@ -269,7 +269,15 @@ async fn raw_kitty_limit_numeric_forms_enforce_real_stream_limit_and_pixels() {
         let pair = Pair::new(true, &options);
         pair.write(kitty()).await;
         pair.compare();
-        if get(&pair.events, "count") == 1 {
+        let inserted = matches!(
+            expression,
+            "'6'" | "'1000'" | "[1000]" | "new Number(1000)" | "({valueOf(){return 1000}})"
+        );
+        assert_eq!(
+            get(&pair.events, "count"),
+            JsValue::from(u32::from(inserted))
+        );
+        if inserted {
             pair.compare_image(0.0, 0.0);
         }
     }
