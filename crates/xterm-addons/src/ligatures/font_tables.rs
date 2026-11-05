@@ -249,10 +249,12 @@ pub struct ReverseTable {
 
 #[derive(Clone, Debug)]
 pub enum Lookup {
-    Single(Vec<SingleSubstitution>),
-    Chain(Vec<ChainTable>),
-    Reverse(Vec<ReverseTable>),
-    Other(Vec<GenericTable>),
+    // A zero subtable pointer is undefined in the source. Keep its position
+    // until FontImpl actually reads the selected or referenced subtable.
+    Single(Vec<Option<SingleSubstitution>>),
+    Chain(Vec<Option<ChainTable>>),
+    Reverse(Vec<Option<ReverseTable>>),
+    Other(Vec<Option<GenericTable>>),
     /// Type9 has no source parser; only absent subtable pointers survive.
     NullSubtables(usize),
 }

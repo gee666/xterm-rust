@@ -76,27 +76,36 @@ fn view(lookup: &Lookup, index: usize) -> SubView<'_> {
     // The caller obtains this index from the same lookup's subtable count.
     match lookup {
         Lookup::NullSubtables(_) => SubView::Missing,
-        Lookup::Single(tables) => SubView::Single(&tables[index]),
-        Lookup::Chain(tables) => match &tables[index] {
-            ChainTable::Glyphs { coverage, .. } => SubView::Other {
+        Lookup::Single(tables) => tables[index]
+            .as_ref()
+            .map_or(SubView::Missing, SubView::Single),
+        Lookup::Chain(tables) => match tables[index].as_ref() {
+            None => SubView::Missing,
+            Some(ChainTable::Glyphs { coverage, .. }) => SubView::Other {
                 coverage: Some(coverage),
                 replacement: Replacement::NaN,
             },
-            ChainTable::Classes { coverage, .. } => SubView::Other {
+            Some(ChainTable::Classes { coverage, .. }) => SubView::Other {
                 coverage: Some(coverage),
                 replacement: Replacement::MissingValues,
             },
-            ChainTable::Coverage { .. } => SubView::Other {
+            Some(ChainTable::Coverage { .. }) => SubView::Other {
                 coverage: None,
                 replacement: Replacement::Undefined,
             },
         },
-        Lookup::Reverse(tables) => SubView::Other {
-            coverage: Some(&tables[index].coverage),
-            replacement: Replacement::NaN,
-        },
+        Lookup::Reverse(tables) => {
+            tables[index]
+                .as_ref()
+                .map_or(SubView::Missing, |table| SubView::Other {
+                    coverage: Some(&table.coverage),
+                    replacement: Replacement::NaN,
+                })
+        }
         Lookup::Other(tables) => {
-            let table = &tables[index];
+            let Some(table) = tables[index].as_ref() else {
+                return SubView::Missing;
+            };
             SubView::Other {
                 coverage: table.coverage.as_ref(),
                 replacement: match table.format {

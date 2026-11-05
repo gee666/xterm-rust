@@ -1,0 +1,130 @@
+{
+  "cwd": "O:/xterm-rust-swarm-16/tmp/worktrees/MarwanGsubSubtables",
+  "environment": {
+    "CARGO_BUILD_JOBS": "2",
+    "CARGO_TARGET_DIR": "O:/xterm-rust-swarm-16/tmp/worktrees/MarwanGsubSubtables/target",
+    "TEMP": "O:/xterm-rust-swarm-16/tmp/worktrees/MarwanGsubSubtables/tmp",
+    "TMP": "O:/xterm-rust-swarm-16/tmp/worktrees/MarwanGsubSubtables/tmp",
+    "SOURCE_PACKAGE_JSON": "P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/package.json",
+    "PLAYWRIGHT_MODULE": "P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/node_modules/playwright/index.mjs",
+    "WASM_BINDGEN": "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe"
+  },
+  "commands": [
+    {
+      "command": "GSUB_CORPUS=subtables node scripts/font-gsub-lookup-oracle.mjs --generate",
+      "timeoutSeconds": 120,
+      "exit": 0,
+      "log": "source-generate.log"
+    },
+    {
+      "command": "GSUB_CORPUS=subtables node scripts/font-gsub-lookup-oracle.mjs",
+      "timeoutSeconds": 120,
+      "exit": 0,
+      "log": "source-replay.log"
+    },
+    {
+      "command": "cargo test --locked -j2 -p xterm-addons --test font_gsub_subtables",
+      "timeoutSeconds": 180,
+      "exit": 101,
+      "log": "native-before.log",
+      "note": "Four production files temporarily from417b9a2b, finally restored;944mismatches."
+    },
+    {
+      "command": "cargo test --locked -j2 -p xterm-addons --all-targets --all-features",
+      "timeoutSeconds": 180,
+      "exit": 0,
+      "log": "native-addons.log"
+    },
+    {
+      "command": "cargo clippy --locked -j2 -p xterm-addons --all-targets --all-features -- -D warnings",
+      "exit": 0,
+      "log": "native-clippy.log"
+    },
+    {
+      "command": "cargo clippy --locked -j2 -p xterm-font-addons --target wasm32-unknown-unknown --test font_gsub_subtables_browser --test font_gsub_refs_browser -- -D warnings",
+      "exit": 0,
+      "log": "wasm-clippy.log"
+    },
+    {
+      "command": "cargo check --locked -j2 --target wasm32-unknown-unknown --lib -p xterm-web -p xterm-wasm-support -p xterm-font-addons",
+      "exit": 0,
+      "log": "wasm-dependents.log"
+    },
+    {
+      "command": "cargo fmt --all -- --check",
+      "exit": 1,
+      "log": "fmt-all.log",
+      "note": "WindowsOS206, not passed."
+    },
+    {
+      "command": "cargo fmt -p PACKAGE -- --check",
+      "packages": [
+        "xterm-core",
+        "xterm-addons",
+        "xterm-web",
+        "xterm-font-addons",
+        "xterm-wasm-support"
+      ],
+      "exit": 0,
+      "logs": "fmt-PACKAGE.log"
+    },
+    {
+      "command": "GSUB_CORPUS=subtables node scripts/font-gsub-header-browser-source.mjs",
+      "timeoutSeconds": 240,
+      "exit": 0,
+      "log": "source-browser.log"
+    },
+    {
+      "command": "cargo test --locked -j2 -p xterm-addons --all-targets --all-features",
+      "exit": 0,
+      "log": "native-addons-final.log",
+      "note": "Final exact production source including module documentation."
+    },
+    {
+      "command": "WASM_PACKAGE=xterm-font-addons WASM_TEST=font_gsub_subtables_browser WASM_TEST_TIMEOUT_MS=180000 node scripts/browser-host-check.mjs",
+      "outerTimeoutSeconds": 300,
+      "outcome": "outer deadline afterChromium2PASS",
+      "log": "initial-rust-browser.log",
+      "artifactCommands": "browser-commands.json"
+    },
+    {
+      "command": "node results/font-gsub-subtables/browser-replay.mjs firefox",
+      "outerTimeoutSeconds": 180,
+      "outcome": "deadline during assertion execution",
+      "logs": [
+        "short-deadline-firefox.log",
+        "short-deadline-firefox.json"
+      ]
+    },
+    {
+      "command": "node results/font-gsub-subtables/browser-replay.mjs firefox",
+      "outerTimeoutSeconds": 480,
+      "assertionTimeoutSeconds": 420,
+      "outcome": "Both testsPASS249.86s, saved before server shutdown stalled; outer deadline terminated owned run; zero owned processes observed afterwards.",
+      "logs": [
+        "replay-firefox.log",
+        "replay-firefox.json"
+      ]
+    },
+    {
+      "command": "node results/font-gsub-subtables/browser-replay.mjs chromium",
+      "exit": 0,
+      "log": "replay-chromium.log"
+    },
+    {
+      "command": "node results/font-gsub-subtables/browser-replay.mjs webkit",
+      "exit": 0,
+      "log": "replay-webkit.log"
+    },
+    {
+      "command": "node results/font-gsub-subtables/verify.mjs",
+      "exit": 0,
+      "log": "reference-copy-final.log"
+    },
+    {
+      "command": "SOURCE_PACKAGE_JSON=P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/package.json node results/font-gsub-subtables/verify.mjs",
+      "exit": 0,
+      "log": "reference-original-final.log"
+    }
+  ]
+}

@@ -33,6 +33,9 @@ fn expected_error(case: &Value) -> Option<FontError> {
             "Cannot convert undefined or null to object" => {
                 "Cannot convert undefined or null to object"
             }
+            "Cannot read properties of undefined (reading 'substFormat')" => {
+                "Cannot read properties of undefined (reading 'substFormat')"
+            }
             "Cannot read properties of undefined (reading 'coverage')" => {
                 "Cannot read properties of undefined (reading 'coverage')"
             }
@@ -81,10 +84,15 @@ fn expected_error(case: &Value) -> Option<FontError> {
     };
     // These witnesses point at the already-read flags word, not arbitrary data.
     let data = case["data"].as_array().unwrap();
-    let format = u16::from_be_bytes([
-        u8::try_from(data[16].as_u64().unwrap()).unwrap(),
-        u8::try_from(data[17].as_u64().unwrap()).unwrap(),
-    ]);
+    let format = case["format"].as_u64().map_or_else(
+        || {
+            u16::from_be_bytes([
+                u8::try_from(data[16].as_u64().unwrap()).unwrap(),
+                u8::try_from(data[17].as_u64().unwrap()).unwrap(),
+            ])
+        },
+        |format| u16::try_from(format).unwrap(),
+    );
     Some(FontError::UnsupportedFormat(error, format))
 }
 pub fn assert_corpus() {

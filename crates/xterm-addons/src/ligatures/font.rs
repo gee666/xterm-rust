@@ -1,6 +1,8 @@
 // Copyright (c) 2018 The xterm.js authors. All rights reserved. MIT license.
 //! Contextual ligature lookup over raw font bytes. Full equivalence remains
 //! unproven until the source differential and browser integration gates pass.
+//! This cohesive loader/public Font module slightly exceeds 350 lines to keep
+//! the ordered constructor phases and their shared private state in one place.
 #[path = "font_avar.rs"]
 mod font_avar;
 #[path = "font_build.rs"]
@@ -229,12 +231,18 @@ impl Font {
                     Lookup::Chain(tables) => {
                         trees.try_reserve_exact(tables.len())?;
                         for (index, table) in tables.iter().enumerate() {
+                            let table = table.as_ref().ok_or(FontError::Type(
+                                "Cannot read properties of undefined (reading 'substFormat')",
+                            ))?;
                             trees.push(font_build::chain(&mut arena, table, &gsub.lookups, index)?);
                         }
                     }
                     Lookup::Reverse(tables) => {
                         trees.try_reserve_exact(tables.len())?;
                         for (index, table) in tables.iter().enumerate() {
+                            let table = table.as_ref().ok_or(FontError::Type(
+                                "Cannot read properties of undefined (reading 'coverage')",
+                            ))?;
                             trees.push(font_build::reverse(&mut arena, table, index)?);
                         }
                     }

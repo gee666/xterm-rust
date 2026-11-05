@@ -57,42 +57,16 @@ pub fn parse(bytes: &[u8]) -> Result<Gsub, FontError> {
             }
             lookups.push(Some(Lookup::NullSubtables(count)));
         } else {
-            let offsets = table.words(6, count)?;
-            match kind {
-                1 => {
-                    let mut subtables = Vec::new();
-                    subtables.try_reserve_exact(count)?;
-                    for offset in offsets {
-                        subtables.push(other::single(table.at(usize::from(offset))?)?);
-                    }
-                    lookups.push(Some(Lookup::Single(subtables)));
-                }
-                6 => {
-                    let mut subtables = Vec::new();
-                    subtables.try_reserve_exact(count)?;
-                    for offset in offsets {
-                        subtables.push(chain::parse(table.at(usize::from(offset))?)?);
-                    }
-                    lookups.push(Some(Lookup::Chain(subtables)));
-                }
-                8 => {
-                    let mut subtables = Vec::new();
-                    subtables.try_reserve_exact(count)?;
-                    for offset in offsets {
-                        subtables.push(other::reverse(table.at(usize::from(offset))?)?);
-                    }
-                    lookups.push(Some(Lookup::Reverse(subtables)));
-                }
-                2..=5 | 7 => {
-                    let mut subtables = Vec::new();
-                    subtables.try_reserve_exact(count)?;
-                    for offset in offsets {
-                        subtables.push(other::generic(kind, table.at(usize::from(offset))?)?);
-                    }
-                    lookups.push(Some(Lookup::Other(subtables)));
-                }
+            let lookup = match kind {
+                1 => Lookup::Single(subtables(table, count, other::single)?),
+                6 => Lookup::Chain(subtables(table, count, chain::parse)?),
+                8 => Lookup::Reverse(subtables(table, count, other::reverse)?),
+                2..=5 | 7 => Lookup::Other(subtables(table, count, |table| {
+                    other::generic(kind, table)
+                })?),
                 _ => return Err(FontError::UnsupportedFormat("GSUB lookup type", kind)),
-            }
+            };
+            lookups.push(Some(lookup));
         }
         // Subtable errors precede the optional trailing mark-filter word.
         if flags & 0x0010 != 0 {
@@ -106,6 +80,21 @@ pub fn parse(bytes: &[u8]) -> Result<Gsub, FontError> {
         }
     }
     Ok(Gsub { selected, lookups })
+}
+
+fn subtables<T>(
+    table: Reader<'_>,
+    count: usize,
+    parse: impl Fn(Reader<'_>) -> Result<T, FontError>,
+) -> Result<Vec<Option<T>>, FontError> {
+    let mut output = Vec::new();
+    output.try_reserve_exact(count)?;
+    for index in 0..count {
+        // Each pointer is followed before reading the next offset. A null
+        // pointer consumes no subtable bytes, including the format word.
+        output.push(pointer(table, 6 + index * 2)?.map(&parse).transpose()?);
+    }
+    Ok(output)
 }
 
 pub(super) fn glyphs(

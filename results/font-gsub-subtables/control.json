@@ -1,0 +1,21 @@
+{
+  "base": "417b9a2b",
+  "files": [
+    "crates/xterm-addons/src/ligatures/font.rs",
+    "crates/xterm-addons/src/ligatures/font_tables.rs",
+    "crates/xterm-addons/src/ligatures/font_gsub.rs",
+    "crates/xterm-addons/src/ligatures/font_build_helpers.rs"
+  ],
+  "command": [
+    "cargo",
+    "test",
+    "--locked",
+    "-j2",
+    "-p",
+    "xterm-addons",
+    "--test",
+    "font_gsub_subtables"
+  ],
+  "exit": 101,
+  "expected": "test failure on source null-subtable differential"
+}
