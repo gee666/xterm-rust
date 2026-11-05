@@ -11,6 +11,14 @@ if(args.some(arg=>arg!=='--generate'&&!arg.startsWith('--source=')))throw new Er
 const require=createRequire(path.resolve(source,'package.json')),{parse}=require('opentype.js');
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const base=await fs.readFile('crates/xterm-addons/tests/fixtures/ligature-fonts/UbuntuMono-Regular.ttf');
+// Keep source recipes independent of the Rust decoder. Reuse source-compressed
+// payloads only as input data, not expected outcomes or validation decisions.
+const woffTemplate={};
+for(let i=0;i<base.readUInt16BE(4);i++){
+  const at=12+i*16,start=base.readUInt32BE(at+8);
+  woffTemplate[base.toString('latin1',at,at+4)]=[...deflateSync(base.subarray(start,start+base.readUInt32BE(at+12)))];
+}
+const inputHash=bytes=>{let value=0x811c9dc5;for(const byte of bytes)value=Math.imul(value^byte,0x01000193);return value>>>0;};
 function construct(change) {
   const records=[];
   for(let i=0;i<base.readUInt16BE(4);i++) {
@@ -54,11 +62,12 @@ try {
     Object.defineProperty(console,'warn',{configurable:true,value(message){warnings.push(message);mutate(bytes,change.mutation);if(change.throws)throw sentinel;}});
     try{parse(buffer);outcome={status:'ok'};}
     catch(error){outcome=error===sentinel?{status:'warning'}:{status:'error',name:error.name,message:error.message};}
-    cases.push({...change,inputSha256:initialHash,warnings,outcome});
+    const woffPayloads=change.woff?Object.fromEntries([...change.extraTables??[],{tag:change.tag,data:change.data}].map(({tag,data})=>[tag,[...deflateSync(Buffer.from(data))]])):undefined;
+    cases.push({...change,...(woffPayloads?{woffPayloads}:{}),inputHash:inputHash(input),inputSha256:initialHash,warnings,outcome});
   }
 } finally {if(descriptor)Object.defineProperty(console,'warn',descriptor);else delete console.warn;}
 const dependency=require.resolve('opentype.js');
-const fixture={sourceSha256:hash(await fs.readFile(dependency)),fontSha256:hash(base),cases};
+const fixture={woffTemplate,sourceSha256:hash(await fs.readFile(dependency)),fontSha256:hash(base),cases};
 const content=JSON.stringify(fixture)+'\n',file='crates/xterm-addons/tests/fixtures/font-avar.json';
 if(generate)await fs.writeFile(file,content);else if(await fs.readFile(file,'utf8')!==content)throw new Error('avar fixture drift');
 const report={node:process.version,scope:'avar constructor rejection and warning order only',sourceSha256:fixture.sourceSha256,fontSha256:fixture.fontSha256,fixtureSha256:hash(content),cases:cases.length,accepted:cases.filter(c=>c.outcome.status==='ok').length,rejected:cases.filter(c=>c.outcome.status==='error').length,warningAborts:cases.filter(c=>c.outcome.status==='warning').length};

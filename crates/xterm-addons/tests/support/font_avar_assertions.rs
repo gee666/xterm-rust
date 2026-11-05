@@ -57,7 +57,20 @@ pub fn assert_corpus() {
         serde_json::from_str(include_str!("../fixtures/font-avar.json")).unwrap();
     let mut failures = Vec::new();
     for case in fixture["cases"].as_array().unwrap() {
-        let bytes = corpus::construct(case);
+        let bytes = if case["woff"] == true {
+            corpus::construct_with_woff_payloads(case, Some(&fixture["woffTemplate"]))
+        } else {
+            corpus::construct(case)
+        };
+        let hash = bytes.iter().fold(0x811c9dc5_u32, |hash, byte| {
+            (hash ^ u32::from(*byte)).wrapping_mul(0x01000193)
+        });
+        assert_eq!(
+            u64::from(hash),
+            case["inputHash"].as_u64().unwrap(),
+            "{}",
+            case["name"]
+        );
         let mut live = bytes.clone();
         let mut warnings = Vec::new();
         let actual = Font::load_buffer_with_refresh(&bytes, FontOptions::default(), |warning| {
