@@ -1,0 +1,12 @@
+{
+  "initialTestsPerEngine": {
+    "passed": 2,
+    "failed": 1
+  },
+  "cases": [
+    "seeded-19"
+  ],
+  "rootCause": "ImageData constructor with Clamped<&[u8]> retained a view into a dropped Rust Vec; return bytes were overwritten",
+  "fix": "Use JS-owned Uint8ClampedArray and ImageData JS-array overload",
+  "regression": "Compare all527 original cases; assert data buffer differs from WASM memory and pixels survive actual memory.grow"
+}

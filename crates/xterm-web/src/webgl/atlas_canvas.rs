@@ -6,7 +6,7 @@ use super::{
     },
     gpu_resources::error,
 };
-use wasm_bindgen::{Clamped, JsValue};
+use wasm_bindgen::JsValue;
 use web_sys::{CanvasRenderingContext2d, ImageData};
 
 #[derive(Clone, Copy, Debug)]
@@ -53,11 +53,11 @@ pub fn prepare_image(
         scan,
     )
     .map_err(|e| error(&e.to_string()))?;
-    let image = ImageData::new_with_u8_clamped_array_and_sh(
-        Clamped(&pixels),
-        image.width(),
-        image.height(),
-    )?;
+    // ImageData retains its input array. A borrowed WASM slice would outlive the
+    // Vec and can be overwritten or detached on memory growth.
+    let data = js_sys::Uint8ClampedArray::from(pixels.as_slice());
+    let image =
+        ImageData::new_with_js_u8_clamped_array_and_sh(&data, image.width(), image.height())?;
     Ok(Some(GlyphBitmap { image, bounds }))
 }
 

@@ -1,0 +1,178 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_webgl_atlas_pixels",
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T13:24:42.731Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_webgl_atlas_pixels",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 28009.3842,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 10.46559999999954,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\R\\results\\acceptance-artifacts\\8cfa13d3f622da5cb6376c5eb08fe4bc5a6d75d47a8fdf61ad76898b2562eff0\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\R\\results\\browser-host\\wasm_webgl_atlas_pixels\\2026-11-05T13-24-42-729Z-060681f2-d890-4324-932c-61d33a6b62d9\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 876.5360000000001,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_webgl_atlas_pixels::actual_image_data_matches_original_pixel_and_bounds_cases",
+        "__wbgt__wasm_webgl_atlas_pixels::preserves_canvas_read_errors_and_validates_nonempty_scan",
+        "__wbgt__wasm_webgl_atlas_pixels::reads_real_canvas_and_returns_filtered_crop_without_mutating_canvas"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "warning",
+          "text": "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_webgl_atlas_pixels.rs:66:17:\nassertion `left == right` failed\n  left: [168, 141, 45, 0, 168, 141, 45, 0, 112, 170, 204, 140, 248, 66, 114, 0, 83, 156, 134, 0, 242, 66, 121, 0, 156, 157, 141, 44, 188, 205, 37, 127, 148, 235, 138, 88, 248, 66, 114, 0, 248, 66, 114, 0, 47, 48, 32, 188]\n right: [243, 108, 243, 181, 92, 150, 80, 28, 112, 170, 204, 140, 248, 66, 114, 0, 83, 156, 134, 0, 242, 66, 121, 0, 156, 157, 141, 44, 188, 205, 37, 127, 148, 235, 138, 88, 248, 66, 114, 0, 248, 66, 114, 0, 47, 48, 32, 188]\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:52654/suite.js:4299:21)\n    at wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:52654/suite_bg.wasm:wasm-function[33518]:0x95283e)\n    at wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:52654/suite_bg.wasm:wasm-function[21620]:0x8c3679)\n    at wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:52654/suite_bg.wasm:wasm-function[7238]:0x67ac68)\n    at wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:52654/suite_bg.wasm:wasm-function[21621]:0x8c36fd)\n    at wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:52654/suite_bg.wasm:wasm-function[11378]:0x76fe4c)\n    at wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:52654/suite_bg.wasm:wasm-function[14406]:0x7eee65)\n    at wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:52654/suite_bg.wasm:wasm-function[40558]:0x9681d0)\n    at wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.rust_begin_unwind (http://127.0.0.1:52654/suite_bg.wasm:wasm-function[27692]:0x9280bb)\n    at wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:52654/suite_bg.wasm:wasm-function[27693]:0x9280e8)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 3 tests\ntest reads_real_canvas_and_returns_filtered_crop_without_mutating_canvas ... ok\ntest preserves_canvas_read_errors_and_validates_nonempty_scan ... ok\ntest actual_image_data_matches_original_pixel_and_bounds_cases ... FAIL\n\nfailures:\n\n---- actual_image_data_matches_original_pixel_and_bounds_cases output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.__rust_start_panic (http://127.0.0.1:52654/suite_bg.wasm:wasm-function[41034]:0x968dd7)\n            at wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.rust_panic (http://127.0.0.1:52654/suite_bg.wasm:wasm-function[36677]:0x95e929)\n            at wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:52654/suite_bg.wasm:wasm-function[11378]:0x76fe7a)\n            at wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:52654/suite_bg.wasm:wasm-function[14406]:0x7eee65)\n            at wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:52654/suite_bg.wasm:wasm-function[40558]:0x9681d0)\n            at wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.rust_begin_unwind (http://127.0.0.1:52654/suite_bg.wasm:wasm-function[27692]:0x9280bb)\n            at wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:52654/suite_bg.wasm:wasm-function[27693]:0x9280e8)\n            at wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:52654/suite_bg.wasm:wasm-function[5085]:0x5ca4bd)\n            at wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.core::panicking::assert_failed::h6d59da6e996d2955 (http://127.0.0.1:52654/suite_bg.wasm:wasm-function[20696]:0x8aed5a)\n            at wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_webgl_atlas_pixels::actual_image_data_matches_original_pixel_and_bounds_cases::hff581bb48ecde8b5 (http://127.0.0.1:52654/suite_bg.wasm:wasm-function[597]:0x126f66)\n\nfailures:\n\n    actual_image_data_matches_original_pixel_and_bounds_cases\n\ntest result: FAILED. 2 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.07s\n\n",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "firefox",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_webgl_atlas_pixels::actual_image_data_matches_original_pixel_and_bounds_cases",
+        "__wbgt__wasm_webgl_atlas_pixels::preserves_canvas_read_errors_and_validates_nonempty_scan",
+        "__wbgt__wasm_webgl_atlas_pixels::reads_real_canvas_and_returns_filtered_crop_without_mutating_canvas"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_webgl_atlas_pixels.rs:66:17:\nassertion `left == right` failed\n  left: [168, 141, 45, 0, 168, 141, 45, 0, 112, 170, 204, 140, 248, 66, 114, 0, 83, 156, 134, 0, 242, 66, 121, 0, 156, 157, 141, 44, 188, 205, 37, 127, 148, 235, 138, 88, 248, 66, 114, 0, 248, 66, 114, 0, 47, 48, 32, 188]\n right: [243, 108, 243, 181, 92, 150, 80, 28, 112, 170, 204, 140, 248, 66, 114, 0, 83, 156, 134, 0, 242, 66, 121, 0, 156, 157, 141, 44, 188, 205, 37, 127, 148, 235, 138, 88, 248, 66, 114, 0, 248, 66, 114, 0, 47, 48, 32, 188]\n\nStack:\n\n__wbg_get_imports/imports.wbg.__wbg_new_78093c5bd701d017@http://127.0.0.1:52654/suite.js:4299:21\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.__wbg_new_78093c5bd701d017 externref shim@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[33518]:0x95283e\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[21620]:0x8c3679\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[7238]:0x67ac68\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[21621]:0x8c36fd\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[11378]:0x76fe4c\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[14406]:0x7eee65\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[40558]:0x9681d0\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.rust_begin_unwind@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[27692]:0x9280bb\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[27693]:0x9280e8\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[5085]:0x5ca4bd\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.core::panicking::assert_failed::h6d59da6e996d2955@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[20696]:0x8aed5a\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_webgl_atlas_pixels::actual_image_data_matches_original_pixel_and_bounds_cases::hff581bb48ecde8b5@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[597]:0x126f66\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.core::ops::function::FnOnce::call_once::h3959ea813a38064c@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[27193]:0x922795\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::he4d9ec4e5a2505b8@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[10975]:0x75c437\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h7022d1c43f57299a@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[14407]:0x7eeedc\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[23082]:0x8e1aed\n__wbg_adapter_150@http://127.0.0.1:52654/suite.js:615:10\ncb0@http://127.0.0.1:52654/suite.js:5006:28\nglobalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52\n__wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:52654/suite.js:5011:30\nhandleError@http://127.0.0.1:52654/suite.js:160:18\n__wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:52654/suite.js:4999:76\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[6879]:0x660a4e\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::h2e22b7830a1799df@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[13229]:0x7c1012\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::hdfab7b1a23bd79bf@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[16347]:0x833dd5\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::h4ca1e482884919d0@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[1847]:0x3f46d0\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[845]:0x24007e\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[3729]:0x539b9d\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[1766]:0x3df632\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[3698]:0x535ff5\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[3319]:0x504fbe\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[20837]:0x8b2183\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[17040]:0x84b443\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.closure1987 externref shim@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[32963]:0x94fd78\n__wbg_adapter_126@http://127.0.0.1:52654/suite.js:611:10\nreal@http://127.0.0.1:52654/suite.js:240:20\nVoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:52654/suite.js:4502:23\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[40603]:0x968383\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[32015]:0x94a639\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[5698]:0x6029d1\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::{{closure}}::h95b28db559806c13@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[36953]:0x95f692\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::queue::Queue::with::h9bd5fdd801f7dec4@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[32016]:0x94a64c\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::h42fed9c117de84b9@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[2882]:0x4c4527\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::spawn_local::h3dc491f304d42e44@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[12052]:0x78e7be\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::h15c44db32e5b7614@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[9411]:0x708bb4\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen::convert::closures::invoke2_mut::hba2fa4cbb261e43e@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[19293]:0x88c3b4\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.closure2620 externref shim@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[29518]:0x9398dd\n__wbg_adapter_1231@http://127.0.0.1:52654/suite.js:623:10\ncb0@http://127.0.0.1:52654/suite.js:4275:28\n__wbg_get_imports/imports.wbg.__wbg_new_23a2665fac83c611@http://127.0.0.1:52654/suite.js:4280:25\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.__wbg_new_23a2665fac83c611 externref shim@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[32583]:0x94db3b\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.js_sys::Promise::new::hf39a358a769dc6ed@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[13744]:0x7d53a5\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::future_to_promise::h65257425de8480bc@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[10767]:0x751d50\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_test::__rt::Context::run::he8da95eeed777e80@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[1466]:0x386343\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasmbindgentestcontext_run@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[9967]:0x727fbb\nwasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasmbindgentestcontext_run externref shim@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[32942]:0x94fb74\nrun@http://127.0.0.1:52654/suite.js:3137:26\nglobalThis.testRun<@debugger eval code line 302 > eval:11:42\nasync*@debugger eval code line 302 > eval:14:11\nevaluate@debugger eval code:304:16\n@debugger eval code:1:44\n@debugger eval code:1:62\n\n\n"
+        }
+      ],
+      "version": "150.0.2",
+      "output": "running 3 tests\ntest reads_real_canvas_and_returns_filtered_crop_without_mutating_canvas ... ok\ntest preserves_canvas_read_errors_and_validates_nonempty_scan ... ok\ntest actual_image_data_matches_original_pixel_and_bounds_cases ... FAIL\n\nfailures:\n\n---- actual_image_data_matches_original_pixel_and_bounds_cases output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable executed\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.__rust_start_panic@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[41034]:0x968dd7\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.rust_panic@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[36677]:0x95e929\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[11378]:0x76fe7a\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[14406]:0x7eee65\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[40558]:0x9681d0\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.rust_begin_unwind@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[27692]:0x9280bb\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[27693]:0x9280e8\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[5085]:0x5ca4bd\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.core::panicking::assert_failed::h6d59da6e996d2955@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[20696]:0x8aed5a\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_webgl_atlas_pixels::actual_image_data_matches_original_pixel_and_bounds_cases::hff581bb48ecde8b5@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[597]:0x126f66\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.core::ops::function::FnOnce::call_once::h3959ea813a38064c@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[27193]:0x922795\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::he4d9ec4e5a2505b8@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[10975]:0x75c437\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h7022d1c43f57299a@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[14407]:0x7eeedc\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[23082]:0x8e1aed\n        __wbg_adapter_150@http://127.0.0.1:52654/suite.js:615:10\n        cb0@http://127.0.0.1:52654/suite.js:5006:28\n        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52\n        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:52654/suite.js:5011:30\n        handleError@http://127.0.0.1:52654/suite.js:160:18\n        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:52654/suite.js:4999:76\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[6879]:0x660a4e\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::h2e22b7830a1799df@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[13229]:0x7c1012\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::hdfab7b1a23bd79bf@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[16347]:0x833dd5\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::h4ca1e482884919d0@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[1847]:0x3f46d0\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[845]:0x24007e\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[3729]:0x539b9d\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[1766]:0x3df632\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[3698]:0x535ff5\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[3319]:0x504fbe\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[20837]:0x8b2183\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[17040]:0x84b443\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.closure1987 externref shim@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[32963]:0x94fd78\n        __wbg_adapter_126@http://127.0.0.1:52654/suite.js:611:10\n        real@http://127.0.0.1:52654/suite.js:240:20\n        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:52654/suite.js:4502:23\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[40603]:0x968383\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[32015]:0x94a639\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[5698]:0x6029d1\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::{{closure}}::h95b28db559806c13@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[36953]:0x95f692\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::queue::Queue::with::h9bd5fdd801f7dec4@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[32016]:0x94a64c\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::h42fed9c117de84b9@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[2882]:0x4c4527\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::spawn_local::h3dc491f304d42e44@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[12052]:0x78e7be\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::h15c44db32e5b7614@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[9411]:0x708bb4\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen::convert::closures::invoke2_mut::hba2fa4cbb261e43e@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[19293]:0x88c3b4\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.closure2620 externref shim@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[29518]:0x9398dd\n        __wbg_adapter_1231@http://127.0.0.1:52654/suite.js:623:10\n        cb0@http://127.0.0.1:52654/suite.js:4275:28\n        __wbg_get_imports/imports.wbg.__wbg_new_23a2665fac83c611@http://127.0.0.1:52654/suite.js:4280:25\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.__wbg_new_23a2665fac83c611 externref shim@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[32583]:0x94db3b\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.js_sys::Promise::new::hf39a358a769dc6ed@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[13744]:0x7d53a5\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_futures::future_to_promise::h65257425de8480bc@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[10767]:0x751d50\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasm_bindgen_test::__rt::Context::run::he8da95eeed777e80@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[1466]:0x386343\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasmbindgentestcontext_run@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[9967]:0x727fbb\n        wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm.wasmbindgentestcontext_run externref shim@http://127.0.0.1:52654/suite_bg.wasm:wasm-function[32942]:0x94fb74\n        run@http://127.0.0.1:52654/suite.js:3137:26\n        globalThis.testRun<@debugger eval code line 302 > eval:11:42\n        async*@debugger eval code line 302 > eval:14:11\n        evaluate@debugger eval code:304:16\n        @debugger eval code:1:44\n        @debugger eval code:1:62\n\nfailures:\n\n    actual_image_data_matches_original_pixel_and_bounds_cases\n\ntest result: FAILED. 2 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.40s\n\n",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "webkit",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_webgl_atlas_pixels::actual_image_data_matches_original_pixel_and_bounds_cases",
+        "__wbgt__wasm_webgl_atlas_pixels::preserves_canvas_read_errors_and_validates_nonempty_scan",
+        "__wbgt__wasm_webgl_atlas_pixels::reads_real_canvas_and_returns_filtered_crop_without_mutating_canvas"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_webgl_atlas_pixels.rs:66:17:\nassertion `left == right` failed\n  left: [168, 141, 45, 0, 168, 141, 45, 0, 112, 170, 204, 140, 248, 66, 114, 0, 83, 156, 134, 0, 242, 66, 121, 0, 156, 157, 141, 44, 188, 205, 37, 127, 148, 235, 138, 88, 248, 66, 114, 0, 248, 66, 114, 0, 47, 48, 32, 188]\n right: [243, 108, 243, 181, 92, 150, 80, 28, 112, 170, 204, 140, 248, 66, 114, 0, 83, 156, 134, 0, 242, 66, 121, 0, 156, 157, 141, 44, 188, 205, 37, 127, 148, 235, 138, 88, 248, 66, 114, 0, 248, 66, 114, 0, 47, 48, 32, 188]\n\nStack:\n\n@http://127.0.0.1:52654/suite.js:4299:30\n33518@wasm-function[33518]\n21620@wasm-function[21620]\n7238@wasm-function[7238]\n21621@wasm-function[21621]\n11378@wasm-function[11378]\n14406@wasm-function[14406]\n40558@wasm-function[40558]\n27692@wasm-function[27692]\n27693@wasm-function[27693]\n5085@wasm-function[5085]\n20696@wasm-function[20696]\n597@wasm-function[597]\n27193@wasm-function[27193]\n10975@wasm-function[10975]\n14407@wasm-function[14407]\n23082@wasm-function[23082]\n__wbg_adapter_150@http://127.0.0.1:52654/suite.js:615:73\ncb0@http://127.0.0.1:52654/suite.js:5006:45\n@\n@http://127.0.0.1:52654/suite.js:5011:30\nhandleError@http://127.0.0.1:52654/suite.js:160:23\n6879@wasm-function[6879]\n13229@wasm-function[13229]\n16347@wasm-function[16347]\n1847@wasm-function[1847]\n845@wasm-function[845]\n3729@wasm-function[3729]\n1766@wasm-function[1766]\n3698@wasm-function[3698]\n3319@wasm-function[3319]\n20837@wasm-function[20837]\n17040@wasm-function[17040]\n32963@wasm-function[32963]\n__wbg_adapter_126@http://127.0.0.1:52654/suite.js:611:36\nreal@http://127.0.0.1:52654/suite.js:240:21\n\n"
+        }
+      ],
+      "version": "26.4",
+      "output": "running 3 tests\ntest reads_real_canvas_and_returns_filtered_crop_without_mutating_canvas ... ok\ntest preserves_canvas_read_errors_and_validates_nonempty_scan ... ok\ntest actual_image_data_matches_original_pixel_and_bounds_cases ... FAIL\n\nfailures:\n\n---- actual_image_data_matches_original_pixel_and_bounds_cases output ----\n    JS exception that was thrown:\n        RuntimeError: Unreachable code should not be executed (evaluating 'wasm.wasm_bindgen__convert__closures__invoke0_mut__h6ccbabcefd85a5b8(arg0, arg1)')\n        41034@wasm-function[41034]\n        36677@wasm-function[36677]\n        11378@wasm-function[11378]\n        14406@wasm-function[14406]\n        40558@wasm-function[40558]\n        27692@wasm-function[27692]\n        27693@wasm-function[27693]\n        5085@wasm-function[5085]\n        20696@wasm-function[20696]\n        597@wasm-function[597]\n        27193@wasm-function[27193]\n        10975@wasm-function[10975]\n        14407@wasm-function[14407]\n        23082@wasm-function[23082]\n        __wbg_adapter_150@http://127.0.0.1:52654/suite.js:615:73\n        cb0@http://127.0.0.1:52654/suite.js:5006:45\n        @\n        @http://127.0.0.1:52654/suite.js:5011:30\n        handleError@http://127.0.0.1:52654/suite.js:160:23\n        6879@wasm-function[6879]\n        13229@wasm-function[13229]\n        16347@wasm-function[16347]\n        1847@wasm-function[1847]\n        845@wasm-function[845]\n        3729@wasm-function[3729]\n        1766@wasm-function[1766]\n        3698@wasm-function[3698]\n        3319@wasm-function[3319]\n        20837@wasm-function[20837]\n        17040@wasm-function[17040]\n        32963@wasm-function[32963]\n        __wbg_adapter_126@http://127.0.0.1:52654/suite.js:611:36\n        real@http://127.0.0.1:52654/suite.js:240:21\n\nfailures:\n\n    actual_image_data_matches_original_pixel_and_bounds_cases\n\ntest result: FAILED. 2 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.27s\n\n",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/8cfa13d3f622da5cb6376c5eb08fe4bc5a6d75d47a8fdf61ad76898b2562eff0/artifact.wasm",
+      "sha256": "8cfa13d3f622da5cb6376c5eb08fe4bc5a6d75d47a8fdf61ad76898b2562eff0",
+      "bytes": 18268900,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\R\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_webgl_atlas_pixels-9a63af2045a4dc62.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\R\\results\\browser-host\\wasm_webgl_atlas_pixels\\2026-11-05T13-24-42-729Z-060681f2-d890-4324-932c-61d33a6b62d9\\artifacts\\suite_bg.wasm",
+      "bytes": 15379868,
+      "sha256": "a9111ef118e41e0a2a6b1de7c1f1dad37fc2464b2cc6c2dd733163d8d62ad3c3"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\R\\results\\browser-host\\wasm_webgl_atlas_pixels\\2026-11-05T13-24-42-729Z-060681f2-d890-4324-932c-61d33a6b62d9\\artifacts\\suite.js",
+      "bytes": 193216,
+      "sha256": "91829530905bc1455861895787aa03be1e0bf68008e1e853ec1190c3e1d85ab2"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "1719b5002033d01cf9e7103ce67dc6bf8d08933ac2b7a78db215a57b4c13f248"
+  },
+  "finishedAt": "2026-11-05T13:25:20.040Z"
+}

@@ -3,7 +3,7 @@
 #[path = "support/atlas_pixel_fixture.rs"]
 mod fixture;
 use serde_json::Value;
-use wasm_bindgen::{prelude::wasm_bindgen, Clamped, JsCast, JsValue};
+use wasm_bindgen::{prelude::wasm_bindgen, JsCast, JsValue};
 use wasm_bindgen_test::*;
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement, ImageData};
 use xterm_web::{
@@ -33,11 +33,21 @@ fn actual_image_data_matches_original_pixel_and_bounds_cases() {
             c["height"].as_u64().unwrap() as u32,
         );
         if w == 0 || h == 0 {
-            assert!(ImageData::new_with_u8_clamped_array_and_sh(Clamped(&[]), w, h).is_err());
+            assert!(ImageData::new_with_js_u8_clamped_array_and_sh(
+                &js_sys::Uint8ClampedArray::new_with_length(0),
+                w,
+                h
+            )
+            .is_err());
             continue; // Pure pixel scans allow empty data; the browser constructor rejects it.
         }
         let data = fixture::pixels(&c["pixels"]);
-        let image = ImageData::new_with_u8_clamped_array_and_sh(Clamped(&data), w, h).unwrap();
+        let image = ImageData::new_with_js_u8_clamped_array_and_sh(
+            &js_sys::Uint8ClampedArray::from(data.as_slice()),
+            w,
+            h,
+        )
+        .unwrap();
         for allow_transparency in [false, true] {
             let options = PixelOptions {
                 background_rgba: c["bg"].as_u64().unwrap() as u32,
@@ -74,6 +84,7 @@ fn actual_image_data_matches_original_pixel_and_bounds_cases() {
                     c["name"].as_str().unwrap(),
                 );
                 assert_eq!((bitmap.image.width(), bitmap.image.height()), (w, h));
+                assert_eq!(image.data().0, data);
             }
         }
     }
@@ -141,6 +152,17 @@ fn reads_real_canvas_and_returns_filtered_crop_without_mutating_canvas() {
     );
     assert_eq!(bitmap.bounds.size, [3.0, 2.0]);
     assert_eq!(bitmap.bounds.offset, [0.0, 1.0]);
+    let view = js_sys::Reflect::get(&bitmap.image, &"data".into())
+        .unwrap()
+        .dyn_into::<js_sys::Uint8ClampedArray>()
+        .unwrap();
+    let memory = wasm_bindgen::memory()
+        .dyn_into::<js_sys::WebAssembly::Memory>()
+        .unwrap();
+    assert_ne!(JsValue::from(view.buffer()), memory.buffer());
+    let before_growth = bitmap.image.data().0;
+    memory.grow(1);
+    assert_eq!(bitmap.image.data().0, before_growth);
     assert_eq!(&bitmap.image.data().0[..4], &[0, 0, 0, 0]);
     assert_eq!(
         &ctx.get_image_data(0.0, 0.0, 1.0, 1.0).unwrap().data().0,
