@@ -37,6 +37,12 @@ The08:50:19 keyboard run failed one Rust expectation in all engines. Changing ke
 
 Task292 was accepted at002669c after independent inspection of the complete diff from main4b02ba1. The reviewer reran both source-fixture integrity checks, all20 focused native regressions, `git diff --check`, and the real DOM InputEvent suite in all three engines. Each engine passed4 functions, including288 source-body guard combinations. The09:02:24 report and full outputs are retained here and indexed in matrix.json with `independentReview: true`. Existing input/callback/keyboard reports were inspected. The reviewer found no concrete defect and confirmed the remaining raw payload gap is explicit. Reviewer artifacts were removed after those reports were saved.
 
+## Canonical integration
+
+The reviewed producer and owner-confirmed accepted search290, wheel334 and CI-recovery336 source/receipts were integrated together by the canonical helper at mainc0dd42be7420b828e9c2b0572c19374f6dcf7c5a. It passed1821 native tests across327 summaries with zero failures/ignored cases. Changed core/web builds and all-target tests, affected all-target checks, the default workspace check and applicable WASM library checks passed. The regular private target was removed automatically. See canonical-merge.json and canonical-merge.log. The active CI Node verifier was also rerun independently,45/45 passing, in batched-quality-node.log.
+
+These are the canonical helper's specific gates, not the full workspace all-feature/Clippy/fmt/final-platform matrix. No full equivalence conclusion follows.
+
 ## Remaining scope
 
 See docs/input-event-dispatch.md. Admitted second-read non-string payloads still need raw browser CoreService event plumbing. Complete keyboard/IME/focus/accessibility, full original suites and final integrated platform/quality gates remain separate work. This scoped pass is not full port equivalence.
