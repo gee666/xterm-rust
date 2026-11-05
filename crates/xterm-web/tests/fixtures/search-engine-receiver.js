@@ -41,10 +41,10 @@ async function checkSearchCallArgs(term, addon, write, equal) {
       check(term.hasSelection(), false);
       if (throwing) {
         check(Object.is(caught, sentinel), true);
-        check(other.getSelectionPosition(), position(4));
+        check(other.getSelectionPosition(), position(warm && nested ? 6 : 4));
         check(events, nested ? ['before', 'before', 'after'] : ['before']);
         check(child.findNext('a'), true);
-        check(other.getSelectionPosition(), position(warm || nested ? 6 : 4));
+        check(other.getSelectionPosition(), position(warm && nested ? 4 : warm || nested ? 6 : 4));
       } else {
         check(result, query === 'a');
         check(events, nested ? ['before', 'before', 'after', 'after'] : ['before', 'after']);
@@ -85,6 +85,34 @@ async function checkSearchCallArgs(term, addon, write, equal) {
       }
     }
   }
-  equal(cases, 112);
+  for (const reverse of [false, true]) {
+    for (const field of ['regex', 'caseSensitive', 'wholeWord']) {
+      const parent = document.createElement('div'); document.body.appendChild(parent);
+      const other = new term.constructor({cols: 20, rows: 3, allowProposedApi: true});
+      const child = new addon.constructor(); term.loadAddon(child);
+      try {
+        other.open(parent);
+        await new Promise(resolve => other.write('    a a', resolve));
+        term.select(0, 0, 1); other.select(4, 0, 1);
+        let armed = true, changed;
+        child.onDidChangeResults(value => changed = value);
+        const request = {decorations: {}, get [field]() {
+          if (armed) { armed = false; child.activate(other); }
+          return false;
+        }};
+        equal(child[reverse ? 'findPrevious' : 'findNext']('a', request), true);
+        equal(armed, false);
+        equal(term.getSelectionPosition(), position(0));
+        equal(other.getSelectionPosition(), position(4));
+        // The first highlight uses A. Later engine calls and final selection
+        // use B, so the result list is [A:0, B:4, B:6], not just B's two hits.
+        equal(changed, {resultIndex: 1, resultCount: 3});
+        equal(child.findNext('a'), true);
+        equal(other.getSelectionPosition(), position(6));
+        cases++;
+      } finally { child.dispose(); other.dispose(); parent.remove(); }
+    }
+  }
+  equal(cases, 118);
   return cases;
 }

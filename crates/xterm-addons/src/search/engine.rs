@@ -30,7 +30,8 @@ impl EngineContext {
         SearchAddon::cancel(&self.listener);
     }
     pub fn init(self: &Rc<Self>) -> Result<(), SearchAddonError> {
-        self.cache.borrow_mut().init(self.host.now_ms());
+        let now = self.host.now_ms();
+        self.cache.borrow_mut().init(now);
         // Disposed source caches can still be used by a captured engine, but
         // their MutableDisposables immediately cancel any new listener/timer.
         if self.disposed.get() {
@@ -77,7 +78,11 @@ impl EngineContext {
                     Ok(())
                 }),
             )?;
-            *self.timeout.borrow_mut() = Some(timer);
+            if self.disposed.get() {
+                timer.dispose();
+            } else {
+                *self.timeout.borrow_mut() = Some(timer);
+            }
         }
         Ok(())
     }

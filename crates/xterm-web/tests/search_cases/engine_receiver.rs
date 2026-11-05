@@ -202,11 +202,17 @@ fn throwing_engine_reactivation_keeps_live_host_without_reinstalling_old_cache_j
                     Err(SearchAddonError::InvalidCoordinates)
                 ));
                 assert_eq!(old.selection().is_some(), phase == 0);
-                assert_eq!(current.selection().unwrap().start.col, 4);
+                assert_eq!(
+                    current.selection().unwrap().start.col,
+                    if nested { 6 } else { 4 }
+                );
                 assert_eq!(old.host.clock.pending(), 0);
                 assert_eq!(current.host.clock.pending(), usize::from(nested));
                 assert!(old.addon.find_next(&term("a"), None).unwrap());
-                assert_eq!(current.selection().unwrap().start.col, 6);
+                assert_eq!(
+                    current.selection().unwrap().start.col,
+                    if nested { 4 } else { 6 }
+                );
             }
         }
     }

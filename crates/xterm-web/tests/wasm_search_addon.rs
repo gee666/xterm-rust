@@ -51,7 +51,7 @@ async fn highlight_engine_guard_preserves_raw_length_cutoffs_and_exact_errors() 
 #[wasm_bindgen_test]
 async fn engine_receiver_retains_terminal_and_cache_across_reactivation() {
     let body = format!(
-        "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),112);",
+        "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),118);",
         include_str!("fixtures/search-engine-receiver.js")
     );
     run(

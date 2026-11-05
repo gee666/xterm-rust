@@ -14,7 +14,7 @@ Addon-level selection, decoration manager, result tracker and delayed match refr
 
 Three native functions expand 42 scenarios. They cover successful raw guard, matching flag and matching-text activation; both directions; warm/cold caches; nested searches on B; thrown errors; independently captured highlight calls; old/new host event invalidation; cache TTL and disposal. These use real terminal, selection, decoration and virtual timer services. Successful raw guard/text callbacks are native-only until the remaining raw matching methods in 347 are implemented.
 
-The shared JavaScript fixture has 112 cases. It runs without assertion changes against original source classes and actual Rust/WASM bindings. It covers regex, caseSensitive and wholeWord getter activation, both directions, warm/cold cache, nested B searches, hits/misses, exact frozen-object/null/symbol throw identity, event ordering and follow-up B cache isolation. It deliberately does not assert per-line getter counts or successful boxed/overridden term methods. Those remain 347.
+The shared JavaScript fixture has 118 cases, including six highlight receiver controls with mixed A/B result lists. It runs without assertion changes against original source classes and actual Rust/WASM bindings. It covers regex, caseSensitive and wholeWord getter activation, both directions, warm/cold cache, nested B searches, hits/misses, exact frozen-object/null/symbol throw identity, event ordering and follow-up B cache isolation. It deliberately does not assert per-line getter counts, successful boxed/overridden term methods or cell mutation/resizing inside matching getters. Those access-phase behaviors remain 347.
 
 Verification is pending. No test pass or equivalence claim is made in this initial change.
 
