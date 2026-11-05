@@ -165,7 +165,19 @@ fn scrollback_buffer(
 ) -> Result<Vec<u16>, JsValue> {
     let max = view.len().map_err(|error| to_js_error(&error))?;
     let rows = host.native.rows().map_err(|error| to_js_error(&error))?;
-    let start = options::scrollback_start(max, rows, scrollback)?;
+    let start = if let Some(scrollback) = scrollback.as_f64() {
+        let retained = (scrollback + rows as f64).clamp(0.0, max as f64);
+        // Source allocates Array(end - start) before traversal, including zero
+        // retained rows and NaN. Reuse range validation for browser error text;
+        // subtract the actual endpoints to preserve floating-point rounding.
+        options::line_range(
+            JsValue::from_f64(max as f64 - retained),
+            JsValue::from_f64(max as f64 - 1.0),
+        )?
+        .start
+    } else {
+        options::scrollback_start(max, rows, scrollback)?
+    };
     let cols = columns(host)?;
     buffer(
         host,
