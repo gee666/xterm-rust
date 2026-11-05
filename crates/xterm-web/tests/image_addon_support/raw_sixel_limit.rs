@@ -8,6 +8,16 @@ use xterm_web::{image::ImageAddon, js_error::to_js_error};
 fn values() -> js_sys::Array {
     eval("[undefined,null,false,true,0,-0,NaN,Infinity,-Infinity,1,-1,'','1000','no',0n,1000n,Symbol('size'),{},[],new Number(1000)]").unchecked_into()
 }
+fn pair(open: bool, options: &str) -> Pair {
+    // Check the constructor before allocating a terminal. Expected old-code
+    // failures must not leave an opened terminal or pending renderer callbacks.
+    let input = eval(options);
+    let addon = ImageAddon::new(input.clone()).unwrap();
+    let actual = get(&addon.option_inspection(), "sixelSizeLimit");
+    addon.dispose().unwrap();
+    assert!(js_sys::Object::is(&actual, &get(&input, "sixelSizeLimit")));
+    Pair::new(open, options)
+}
 fn json(value: &JsValue) -> String {
     js_sys::JSON::stringify(value).unwrap().as_string().unwrap()
 }
@@ -83,10 +93,10 @@ fn raw_sixel_limit_constructor_keeps_first_copy_without_coercion() {
 
 #[wasm_bindgen_test(async)]
 async fn raw_sixel_limit_skips_disabled_pending_and_aborted_packets() {
-    let disabled = Pair::new(false, "({sixelSupport:false,showPlaceholder:false,sixelSizeLimit:{[Symbol.toPrimitive](){throw Error('disabled')}}})");
+    let disabled = pair(false, "({sixelSupport:false,showPlaceholder:false,sixelSizeLimit:{[Symbol.toPrimitive](){throw Error('disabled')}}})");
     disabled.write(sixel()).await;
     disabled.compare();
-    let pair = Pair::new(false, "({showPlaceholder:false,sixelSizeLimit:{log:[],[Symbol.toPrimitive](hint){this.log.push(hint);return -1}}})");
+    let pair = pair(false, "({showPlaceholder:false,sixelSizeLimit:{log:[],[Symbol.toPrimitive](hint){this.log.push(hint);return -1}}})");
     // Both initialization promises are still pending. This must not coerce.
     let (actual, expected) = parse(&pair, "\x1bP0;1q~\x1b\\");
     actual.unwrap();
@@ -142,7 +152,7 @@ async fn raw_sixel_limit_relational_primitives_match_real_image_pixels() {
         "[]",
         "new Number(1000)",
     ] {
-        let pair = Pair::new(
+        let pair = pair(
             true,
             &format!("({{showPlaceholder:false,sixelSizeLimit:{expression}}})"),
         );
@@ -165,7 +175,7 @@ async fn raw_sixel_limit_relational_primitives_match_real_image_pixels() {
             assert_eq!(get(&actual, "message"), get(&expected, "message"));
         }
         pair.compare();
-        if get(&pair.events, "count") == JsValue::from(1) {
+        if get(&pair.events, "count") == 1 {
             pair.compare_image(0.0, 0.0);
         }
     }
@@ -173,7 +183,7 @@ async fn raw_sixel_limit_relational_primitives_match_real_image_pixels() {
 
 #[wasm_bindgen_test(async)]
 async fn raw_sixel_limit_throw_keeps_committed_size_and_exact_value() {
-    let pair = Pair::new(true, "({showPlaceholder:false,sixelSizeLimit:{log:[],token:{},[Symbol.toPrimitive](hint){this.log.push(hint);throw this.token}}})");
+    let pair = pair(true, "({showPlaceholder:false,sixelSizeLimit:{log:[],token:{},[Symbol.toPrimitive](hint){this.log.push(hint);throw this.token}}})");
     pair.ready().await;
     let (actual, expected) = parse(&pair, "\x1bP0;1q~");
     assert_eq!(actual.unwrap_err(), get(&limit(&pair, true), "token"));
@@ -189,12 +199,33 @@ async fn raw_sixel_limit_throw_keeps_committed_size_and_exact_value() {
     );
     assert_eq!(get(&source_handler, "_size"), JsValue::from(1));
     pair.compare();
+    for rust in [false, true] {
+        js_sys::Reflect::set(
+            &limit(&pair, rust),
+            &js_sys::Symbol::to_primitive(),
+            &js_sys::Function::new_no_args("return 1"),
+        )
+        .unwrap();
+    }
+    // The second byte exceeds 1 only if the first increment survived the throw.
+    let patch = eval("(()=>{const old=console.warn,log=[];console.warn=(...args)=>log.push(args);return {log,restore(){console.warn=old}}})()");
+    let actual = pair.terminal.shared_native().write("~\x1b\\");
+    let actual_log = json(&get(&patch, "log"));
+    call(&get(&patch, "log"), "splice", &[0.into()]);
+    let expected = source_parse(&pair, "~\x1b\\");
+    let expected_log = json(&get(&patch, "log"));
+    call(&patch, "restore", &[]);
+    actual.unwrap();
+    expected.unwrap();
+    assert_eq!(actual_log, "[[\"SIXEL: too much data, aborting\"]]");
+    assert_eq!(actual_log, expected_log);
+    pair.compare();
 }
 
 #[wasm_bindgen_test(async)]
 async fn raw_sixel_limit_coercion_reset_and_warning_failures_use_live_state() {
     for reset in [false, true] {
-        let pair = Rc::new(Pair::new(true, "({showPlaceholder:false,sixelSizeLimit:{log:[],callback:null,[Symbol.toPrimitive](hint){this.log.push(hint);this.callback?.();return 1000}}})"));
+        let pair = Rc::new(pair(true, "({showPlaceholder:false,sixelSizeLimit:{log:[],callback:null,[Symbol.toPrimitive](hint){this.log.push(hint);this.callback?.();return 1000}}})"));
         pair.ready().await;
         let weak = Rc::downgrade(&pair);
         let callback = Closure::<dyn Fn()>::new(move || {
@@ -228,7 +259,7 @@ async fn raw_sixel_limit_coercion_reset_and_warning_failures_use_live_state() {
         );
         js_sys::Reflect::set(&limit(&pair, true), &"callback".into(), &JsValue::NULL).unwrap();
     }
-    let pair = Pair::new(
+    let pair = pair(
         true,
         "({showPlaceholder:false,sixelSizeLimit:{[Symbol.toPrimitive](){return -1}}})",
     );
