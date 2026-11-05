@@ -57,14 +57,20 @@ pub(super) fn serialize(addon: &SerializeAddon, raw: JsValue) -> Result<Vec<u16>
         let max = active.len().map_err(|error| to_js_error(&error))?;
         let scrollback = options::property(&raw, "scrollback")?;
         let rows = host.native.rows().map_err(|error| to_js_error(&error))?;
-        let start = options::scrollback_start(max, rows, scrollback)?;
-        Range::Integral(CellRange {
-            start: Position { x: 0, y: start },
-            end: Position {
-                x: columns(&host)?,
-                y: max.saturating_sub(1),
-            },
-        })
+        if scrollback.as_f64().is_some_and(f64::is_nan) {
+            // NaN survives the source clamp and makes row <= end false. Do not
+            // reuse ANSI's invalid-array-length error or skip header callbacks.
+            empty_rows(columns(&host)?)
+        } else {
+            let start = options::scrollback_start(max, rows, scrollback)?;
+            Range::Integral(CellRange {
+                start: Position { x: 0, y: start },
+                end: Position {
+                    x: columns(&host)?,
+                    y: max.saturating_sub(1),
+                },
+            })
+        }
     };
     let include_background = options::property(&raw, "includeGlobalBackground")?.is_truthy();
     let mut config = header(&host, include_background)?;
@@ -112,10 +118,7 @@ fn explicit_range(host: &Shared, range: &JsValue) -> Result<Range, JsValue> {
         // A false numeric row comparison skips the cell loop entirely, even for
         // reversed infinite bounds. Preserve the header/footer and do not coerce
         // an unused column. Objects still need late source coercion under task346.
-        return Ok(Range::Integral(CellRange {
-            start: Position { x: 0, y: 1 },
-            end: Position { x: end_col, y: 0 },
-        }));
+        return Ok(empty_rows(end_col));
     }
     let start_col = if col.is_undefined()
         || col
@@ -149,6 +152,12 @@ fn explicit_range(host: &Shared, range: &JsValue) -> Result<Range, JsValue> {
             y: options::index(end)?,
         },
     }))
+}
+fn empty_rows(end_col: usize) -> Range {
+    Range::Integral(CellRange {
+        start: Position { x: 0, y: 1 },
+        end: Position { x: end_col, y: 0 },
+    })
 }
 fn header(host: &Shared, include_background: bool) -> Result<HtmlConfig, JsValue> {
     let (foreground, background) = if include_background {
