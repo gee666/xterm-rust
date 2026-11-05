@@ -89,21 +89,35 @@ impl SearchAddon {
             .map_err(|cause| error(&cause))
     }
     #[wasm_bindgen(js_name = findNext)]
-    pub fn find_next(&self, term: JsValue, options: JsValue) -> Result<bool, JsValue> {
+    pub fn find_next(
+        &self,
+        term: JsValue,
+        options: JsValue,
+        internal_options: JsValue,
+    ) -> Result<bool, JsValue> {
         self.addon
-            .find_next(&options::term(term)?, request(options))
+            .find_next_with_scroll(&options::term(term)?, request(options), || {
+                options::no_scroll(&internal_options)
+            })
             .map_err(|cause| error(&cause))
     }
     #[wasm_bindgen(js_name = findPrevious)]
-    pub fn find_previous(&self, term: JsValue, options: JsValue) -> Result<bool, JsValue> {
+    pub fn find_previous(
+        &self,
+        term: JsValue,
+        options: JsValue,
+        internal_options: JsValue,
+    ) -> Result<bool, JsValue> {
         self.addon
-            .find_previous(&options::term(term)?, request(options))
+            .find_previous_with_scroll(&options::term(term)?, request(options), || {
+                options::no_scroll(&internal_options)
+            })
             .map_err(|cause| error(&cause))
     }
     #[wasm_bindgen(js_name = clearDecorations)]
-    pub fn clear_decorations(&self) -> Result<(), JsValue> {
+    pub fn clear_decorations(&self, retain_cached_term: JsValue) -> Result<(), JsValue> {
         self.addon
-            .clear_decorations(false)
+            .clear_decorations(retain_cached_term.is_truthy())
             .map_err(|cause| error(&cause))
     }
     #[wasm_bindgen(js_name = clearActiveDecoration)]

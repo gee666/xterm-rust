@@ -16,14 +16,33 @@ impl SearchAddon {
         term: &[u16],
         options: Option<SearchOptionsHandle>,
     ) -> Result<bool, SearchAddonError> {
-        self.find_and_select(term, options, false, false)
+        self.find_next_with_scroll(term, options, || Ok(false))
+    }
+    /// Read the host's internal `noScroll` option after matching and before
+    /// changing the selected result. An empty term never reads this option.
+    pub fn find_next_with_scroll(
+        &self,
+        term: &[u16],
+        options: Option<SearchOptionsHandle>,
+        no_scroll: impl FnOnce() -> Result<bool, SearchAddonError>,
+    ) -> Result<bool, SearchAddonError> {
+        self.find_and_select(term, options, false, no_scroll)
     }
     pub fn find_previous(
         &self,
         term: &[u16],
         options: Option<SearchOptionsHandle>,
     ) -> Result<bool, SearchAddonError> {
-        self.find_previous_internal(term, options, false)
+        self.find_previous_with_scroll(term, options, || Ok(false))
+    }
+    /// Reverse-search counterpart of [`Self::find_next_with_scroll`].
+    pub fn find_previous_with_scroll(
+        &self,
+        term: &[u16],
+        options: Option<SearchOptionsHandle>,
+        no_scroll: impl FnOnce() -> Result<bool, SearchAddonError>,
+    ) -> Result<bool, SearchAddonError> {
+        self.find_and_select(term, options, true, no_scroll)
     }
     pub(super) fn find_previous_internal(
         &self,
@@ -31,14 +50,14 @@ impl SearchAddon {
         options: Option<SearchOptionsHandle>,
         no_scroll: bool,
     ) -> Result<bool, SearchAddonError> {
-        self.find_and_select(term, options, true, no_scroll)
+        self.find_previous_with_scroll(term, options, || Ok(no_scroll))
     }
     fn find_and_select(
         &self,
         term: &[u16],
         options: Option<SearchOptionsHandle>,
         reverse: bool,
-        no_scroll: bool,
+        no_scroll: impl FnOnce() -> Result<bool, SearchAddonError>,
     ) -> Result<bool, SearchAddonError> {
         let host = self.host()?;
         self.inner.before.fire(&())?;
@@ -89,7 +108,7 @@ impl SearchAddon {
         let found = if term.is_empty() {
             false
         } else {
-            self.select_result(result, request.decorations.as_ref(), no_scroll)?
+            self.select_result(result, request.decorations.as_ref(), no_scroll()?)?
         };
         self.inner
             .tracker

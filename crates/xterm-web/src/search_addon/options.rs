@@ -24,6 +24,11 @@ extern "C" {
 fn host_error(value: JsValue) -> SearchAddonError {
     SearchAddonError::Host(Rc::new(crate::js_error::JsCallbackError(value)))
 }
+pub fn no_scroll(value: &JsValue) -> Result<bool, SearchAddonError> {
+    property(value, "noScroll")
+        .map(|value| value.is_truthy())
+        .map_err(host_error)
+}
 pub struct JsLimit(pub JsValue);
 impl SearchHighlightLimit for JsLimit {
     fn reached(&self, count: usize) -> Result<bool, SearchAddonError> {

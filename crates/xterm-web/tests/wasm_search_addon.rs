@@ -40,6 +40,15 @@ return (async()=>{try{if(opened)term.open(parent);
 const DEFAULTS: &str = r#"{"cols":20,"rows":5,"scrollback":1000}"#;
 
 #[wasm_bindgen_test]
+async fn retained_terms_and_late_internal_scroll_options_match_source() {
+    let body = format!(
+        "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),81);",
+        include_str!("fixtures/search-call-args.js")
+    );
+    run(&body, true, r#"{"cols":20,"rows":3,"scrollback":1000}"#).await;
+}
+
+#[wasm_bindgen_test]
 async fn actual_shared_selection_and_search_events_through_public_binding() {
     run(r#"
 let events=[];addon.onBeforeSearch(()=>events.push('before'));addon.onAfterSearch(()=>events.push('after'));

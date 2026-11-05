@@ -24,6 +24,8 @@ mod ranges;
 mod raw_marker;
 #[path = "search_cases/tracker.rs"]
 mod tracker;
+#[path = "search_cases/scroll_options.rs"]
+mod scroll_options;
 
 #[test]
 fn use_before_activation_errors_without_search_events() {
