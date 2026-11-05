@@ -19,6 +19,12 @@ fn duplicate(change: &Value) -> Option<(&str, &str, bool)> {
     ))
 }
 pub fn construct(change: &Value) -> Vec<u8> {
+    construct_with_woff_payloads(change, None)
+}
+
+// Shared encoded payloads keep source/Rust diagnostic offsets byte-identical.
+// Existing corpora still use their original independently compressed inputs.
+pub fn construct_with_woff_payloads(change: &Value, payloads: Option<&Value>) -> Vec<u8> {
     let base = include_bytes!("../fixtures/ligature-fonts/UbuntuMono-Regular.ttf");
     let mut records: Vec<([u8; 4], Vec<u8>)> = Vec::new();
     for index in 0..word(base, 4) {
@@ -50,6 +56,24 @@ pub fn construct(change: &Value) -> Vec<u8> {
         data[..2].copy_from_slice(&1_u16.to_be_bytes());
         data[4..8].copy_from_slice(&2_u32.to_be_bytes());
         records.push((*b"kern", data));
+    }
+    if let Some(tables) = change["extraTables"].as_array() {
+        for table in tables {
+            records.push((
+                table["tag"]
+                    .as_str()
+                    .unwrap()
+                    .as_bytes()
+                    .try_into()
+                    .unwrap(),
+                table["data"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|v| u8::try_from(v.as_u64().unwrap()).unwrap())
+                    .collect(),
+            ));
+        }
     }
     if let Some(data) = change["data"].as_array() {
         records.push((
@@ -98,7 +122,7 @@ pub fn construct(change: &Value) -> Vec<u8> {
     }
     let compressed = change["woff"] == true;
     if compressed {
-        output = woff(&output);
+        output = woff(&output, change, payloads);
     }
     if let Some((_, position, invalid_compression)) = duplicate(change) {
         let index = if position == "first" {
@@ -144,7 +168,7 @@ pub fn construct(change: &Value) -> Vec<u8> {
     output
 }
 
-fn woff(bytes: &[u8]) -> Vec<u8> {
+fn woff(bytes: &[u8], change: &Value, payloads: Option<&Value>) -> Vec<u8> {
     let count = word(bytes, 4);
     let mut output = vec![0; 44 + count * 20];
     output[..4].copy_from_slice(b"wOFF");
@@ -154,7 +178,21 @@ fn woff(bytes: &[u8]) -> Vec<u8> {
         let at = 12 + index * 16;
         let start = offset(bytes, at + 8);
         let data = &bytes[start..start + offset(bytes, at + 12)];
-        let compressed = miniz_oxide::deflate::compress_to_vec_zlib(data, 6);
+        let tag = std::str::from_utf8(&bytes[at..at + 4]).unwrap();
+        let encoded = change["woffPayloads"]
+            .get(tag)
+            .or_else(|| payloads.and_then(|v| v.get(tag)));
+        let compressed = encoded.map_or_else(
+            || miniz_oxide::deflate::compress_to_vec_zlib(data, 6),
+            |value| {
+                value
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|v| u8::try_from(v.as_u64().unwrap()).unwrap())
+                    .collect()
+            },
+        );
         let payload = if compressed.len() < data.len() {
             compressed.as_slice()
         } else {

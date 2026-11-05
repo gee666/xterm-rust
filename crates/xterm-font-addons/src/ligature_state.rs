@@ -116,7 +116,7 @@ fn load(
                         cache_size: SOURCE_FONT_CACHE_SIZE,
                     },
                     |warning| {
-                        host::warning(warning.message())?;
+                        host::warning(&warning.message())?;
                         host::font_bytes(&font.buffer).map(|bytes| Some(bytes.to_vec()))
                     },
                 )

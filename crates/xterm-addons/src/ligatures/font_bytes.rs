@@ -9,6 +9,7 @@ pub enum FontError {
     Signature([u8; 4]),
     UnsupportedFormat(&'static str, u16),
     KernVersion(u16),
+    CoverageFormat { offset: usize },
     Invalid(&'static str),
     Type(&'static str),
     Capacity,
@@ -27,6 +28,9 @@ impl fmt::Display for FontError {
             }
             Self::KernVersion(version) => {
                 write!(f, "Unsupported kern table version ({version}).")
+            }
+            Self::CoverageFormat { offset } => {
+                write!(f, "0x{offset:x}: Coverage format must be 1 or 2.")
             }
             Self::Invalid(reason) | Self::Type(reason) => f.write_str(reason),
             Self::Capacity => f.write_str("Cannot allocate font table storage"),
@@ -99,6 +103,10 @@ pub struct DeferredTable<'a> {
     woff: bool,
 }
 impl<'a> DeferredTable<'a> {
+    pub fn offset(&self) -> Result<usize, FontError> {
+        self.record.offset32(if self.woff { 4 } else { 8 })
+    }
+
     pub fn load(&self) -> Result<Cow<'a, [u8]>, FontError> {
         self.load_from(self.reader.bytes)
     }
@@ -113,6 +121,7 @@ impl<'a> DeferredTable<'a> {
 pub struct FontTables<'a> {
     pub cmap: Cow<'a, [u8]>,
     pub gsub: Option<DeferredTable<'a>>,
+    pub gdef: Option<DeferredTable<'a>>,
     pub kern: Option<DeferredTable<'a>>,
     pub meta: Option<DeferredTable<'a>>,
     pub fvar: Option<DeferredTable<'a>>,
@@ -144,6 +153,7 @@ impl<'a> FontTables<'a> {
         reader.bytes(start, count.checked_mul(width).ok_or(FontError::Bounds)?)?;
         let mut cmap = None;
         let mut gsub = None;
+        let mut gdef = None;
         let mut kern = None;
         let mut meta = None;
         let mut fvar = None;
@@ -162,13 +172,14 @@ impl<'a> FontTables<'a> {
                 b"glyf" => glyf = true,
                 b"loca" => loca = true,
                 b"CFF " | b"CFF2" => cff = true,
-                b"name" | b"GSUB" | b"hmtx" | b"kern" | b"meta" | b"fvar" => {
+                b"name" | b"GSUB" | b"GDEF" | b"hmtx" | b"kern" | b"meta" | b"fvar" => {
                     // These tables are deferred by the source constructor. Select
                     // the final descriptor without touching earlier data, even
                     // when its offset or compressed payload is invalid.
                     match tag {
                         b"name" => name = Some(record),
                         b"GSUB" => gsub = Some(record),
+                        b"GDEF" => gdef = Some(record),
                         b"kern" => kern = Some(record),
                         b"meta" => meta = Some(record),
                         b"fvar" => fvar = Some(record),
@@ -225,6 +236,11 @@ impl<'a> FontTables<'a> {
         }
         Ok(Self {
             cmap: cmap.ok_or(FontError::MissingTable("cmap"))?,
+            gdef: gdef.map(|record| DeferredTable {
+                reader,
+                record,
+                woff,
+            }),
             gsub: gsub.map(|record| DeferredTable {
                 reader,
                 record,

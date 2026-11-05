@@ -13,6 +13,8 @@ mod font_cache;
 mod font_cmap;
 #[path = "font_fvar.rs"]
 mod font_fvar;
+#[path = "font_gdef.rs"]
+mod font_gdef;
 #[path = "font_gsub.rs"]
 mod font_gsub;
 #[path = "font_kern.rs"]
@@ -135,6 +137,9 @@ impl Font {
             } else {
                 header.finish(&loaded)?;
             }
+        }
+        if let Some(table) = tables.gdef {
+            font_gdef::validate(&table, bytes, &mut refreshed, &mut warning)?;
         }
         let current = refreshed.as_deref().unwrap_or(bytes);
         let gsub = tables
