@@ -1,0 +1,153 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_webgl_texture_atlas",
+  "testTimeoutMs": 60000,
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T21:16:55.776Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_webgl_texture_atlas",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 14610.2961,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 13.078700000000026,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ZhuContrast\\results\\acceptance-artifacts\\cf117945ab360f7fe7edf8f720199da9069af974e72572122088396bff8be005\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ZhuContrast\\results\\browser-host\\wasm_webgl_texture_atlas\\2026-11-05T21-16-55-774Z-83547218-8824-4c9e-9e8c-7c18ebbf284b\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1252.3089,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_webgl_texture_atlas::capacity_eviction_and_page_events",
+        "__wbgt__wasm_webgl_texture_atlas::clear_retains_metadata_and_invalidates_layout",
+        "__wbgt__wasm_webgl_texture_atlas::contrast_and_dim",
+        "__wbgt__wasm_webgl_texture_atlas::disabled_custom_glyphs",
+        "__wbgt__wasm_webgl_texture_atlas::gpu_case::actual_gpu_forwards_original_numbers_to_texture_atlas",
+        "__wbgt__wasm_webgl_texture_atlas::gpu_case::contrast::actual_gpu_preserves_signed_contrast_keys_and_source_atlas_pixels",
+        "__wbgt__wasm_webgl_texture_atlas::gpu_case::existing_gpu_consumer_draws_and_refreshes_actual_texture_atlas",
+        "__wbgt__wasm_webgl_texture_atlas::high_dpi_and_line_height",
+        "__wbgt__wasm_webgl_texture_atlas::host_cases::host_errors_keep_identity_order_and_partial_canvas_state",
+        "__wbgt__wasm_webgl_texture_atlas::merge_updates_cached_aliases",
+        "__wbgt__wasm_webgl_texture_atlas::nested_page_listener_overwrites_shared_upload_crop",
+        "__wbgt__wasm_webgl_texture_atlas::oversized_ligatures_use_overflow_page",
+        "__wbgt__wasm_webgl_texture_atlas::page_added_listener_can_clear_live_atlas",
+        "__wbgt__wasm_webgl_texture_atlas::seeded_mixed_styles_pack_like_source",
+        "__wbgt__wasm_webgl_texture_atlas::signed_color_numbers_keep_distinct_cache_aliases",
+        "__wbgt__wasm_webgl_texture_atlas::signed_combined_color_numbers_keep_distinct_cache_aliases",
+        "__wbgt__wasm_webgl_texture_atlas::signed_full_contrast_cache_colors_and_null_reach_real_atlas_pixels",
+        "__wbgt__wasm_webgl_texture_atlas::signed_half_contrast_cache_colors_and_null_reach_real_atlas_pixels",
+        "__wbgt__wasm_webgl_texture_atlas::text_styles_and_custom_glyphs",
+        "__wbgt__wasm_webgl_texture_atlas::transparent_styles",
+        "__wbgt__wasm_webgl_texture_atlas::warmup_is_idle_cached_and_only_scheduled_once"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_webgl_texture_atlas.rs:105:49:\nassertion `left == right` failed: signedHalfContrast/final/0/size/0\n  left: Some(8.0)\n right: Some(9.0)\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:58006/suite.js:6148:21)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[40827]:0xb9d77c)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[26864]:0xafc203)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[9023]:0x8356c6)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[26865]:0xafc287)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[13906]:0x954ccd)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[17559]:0x9ede7b)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[49161]:0xbb71cf)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.rust_begin_unwind (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[33608]:0xb68fec)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[33609]:0xb69019)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_webgl_texture_atlas.rs:105:49:\nassertion `left == right` failed: signedContrast/final/1/size/0\n  left: Some(9.0)\n right: Some(8.0)\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:58006/suite.js:6148:21)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[40827]:0xb9d77c)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[26864]:0xafc203)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[9023]:0x8356c6)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[26865]:0xafc287)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[13906]:0x954ccd)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[17559]:0x9ede7b)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[49161]:0xbb71cf)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.rust_begin_unwind (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[33608]:0xb68fec)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[33609]:0xb69019)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_webgl_texture_atlas.rs:105:49:\nassertion `left == right` failed: GPU contrast glyph/size/0\n  left: Some(9.0)\n right: Some(8.0)\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:58006/suite.js:6148:21)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[40827]:0xb9d77c)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[26864]:0xafc203)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[9023]:0x8356c6)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[26865]:0xafc287)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[13906]:0x954ccd)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[17559]:0x9ede7b)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[49161]:0xbb71cf)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.rust_begin_unwind (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[33608]:0xb68fec)\n    at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[33609]:0xb69019)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 21 tests\ntest warmup_is_idle_cached_and_only_scheduled_once ... ok\ntest transparent_styles ... ok\ntest text_styles_and_custom_glyphs ... ok\ntest signed_half_contrast_cache_colors_and_null_reach_real_atlas_pixels ... FAIL\ntest signed_full_contrast_cache_colors_and_null_reach_real_atlas_pixels ... FAIL\ntest signed_combined_color_numbers_keep_distinct_cache_aliases ... ok\ntest signed_color_numbers_keep_distinct_cache_aliases ... ok\ntest seeded_mixed_styles_pack_like_source ... ok\ntest page_added_listener_can_clear_live_atlas ... ok\ntest oversized_ligatures_use_overflow_page ... ok\ntest nested_page_listener_overwrites_shared_upload_crop ... ok\ntest merge_updates_cached_aliases ... ok\ntest host_cases::host_errors_keep_identity_order_and_partial_canvas_state ... ok\ntest high_dpi_and_line_height ... ok\ntest gpu_case::existing_gpu_consumer_draws_and_refreshes_actual_texture_atlas ... ok\ntest gpu_case::contrast::actual_gpu_preserves_signed_contrast_keys_and_source_atlas_pixels ... FAIL\ntest gpu_case::actual_gpu_forwards_original_numbers_to_texture_atlas ... ok\ntest disabled_custom_glyphs ... ok\ntest contrast_and_dim ... ok\ntest clear_retains_metadata_and_invalidates_layout ... ok\ntest capacity_eviction_and_page_events ... ok\n\nfailures:\n\n---- signed_half_contrast_cache_colors_and_null_reach_real_atlas_pixels output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.__rust_start_panic (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[49752]:0xbb80b8)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.rust_panic (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[44582]:0xbabd09)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[13906]:0x954cfb)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[17559]:0x9ede7b)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[49161]:0xbb71cf)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.rust_begin_unwind (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[33608]:0xb68fec)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[33609]:0xb69019)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[6343]:0x75b24a)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.core::panicking::assert_failed::he571ef6582bcb55b (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[25240]:0xad87fa)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.wasm_webgl_texture_atlas::assert_same::h899dd306c3d96438 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[914]:0x231f3d)\n\n---- signed_full_contrast_cache_colors_and_null_reach_real_atlas_pixels output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.__rust_start_panic (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[49752]:0xbb80b8)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.rust_panic (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[44582]:0xbabd09)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[13906]:0x954cfb)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[17559]:0x9ede7b)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[49161]:0xbb71cf)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.rust_begin_unwind (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[33608]:0xb68fec)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[33609]:0xb69019)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[6343]:0x75b24a)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.core::panicking::assert_failed::he571ef6582bcb55b (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[25240]:0xad87fa)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.wasm_webgl_texture_atlas::assert_same::h899dd306c3d96438 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[914]:0x231f3d)\n\n---- gpu_case::contrast::actual_gpu_preserves_signed_contrast_keys_and_source_atlas_pixels output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.__rust_start_panic (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[49752]:0xbb80b8)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.rust_panic (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[44582]:0xbabd09)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[13906]:0x954cfb)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[17559]:0x9ede7b)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[49161]:0xbb71cf)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.rust_begin_unwind (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[33608]:0xb68fec)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[33609]:0xb69019)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[6343]:0x75b24a)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.core::panicking::assert_failed::he571ef6582bcb55b (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[25240]:0xad87fa)\n            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.wasm_webgl_texture_atlas::assert_same::h899dd306c3d96438 (http://127.0.0.1:58006/suite_bg.wasm:wasm-function[914]:0x231f3d)\n\nfailures:\n\n    signed_half_contrast_cache_colors_and_null_reach_real_atlas_pixels\n    signed_full_contrast_cache_colors_and_null_reach_real_atlas_pixels\n    gpu_case::contrast::actual_gpu_preserves_signed_contrast_keys_and_source_atlas_pixels\n\ntest result: FAILED. 18 passed; 3 failed; 0 ignored; 0 filtered out; finished in 1.79s\n\n",
+      "counts": {
+        "passed": 18,
+        "failed": 3,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/cf117945ab360f7fe7edf8f720199da9069af974e72572122088396bff8be005/artifact.wasm",
+      "sha256": "cf117945ab360f7fe7edf8f720199da9069af974e72572122088396bff8be005",
+      "bytes": 21187977,
+      "originalPath": "O:/xterm-rust-swarm-16/tmp/worktrees/ZhuContrast/target\\wasm32-unknown-unknown\\debug\\deps\\wasm_webgl_texture_atlas-57e9454baab9ec86.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ZhuContrast\\results\\browser-host\\wasm_webgl_texture_atlas\\2026-11-05T21-16-55-774Z-83547218-8824-4c9e-9e8c-7c18ebbf284b\\artifacts\\suite_bg.wasm",
+      "bytes": 17917400,
+      "sha256": "38cf961bcbf9b3a9bc7ea9d90e99f4d6c1324e2902d49a77d772732415962133"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ZhuContrast\\results\\browser-host\\wasm_webgl_texture_atlas\\2026-11-05T21-16-55-774Z-83547218-8824-4c9e-9e8c-7c18ebbf284b\\artifacts\\suite.js",
+      "bytes": 262271,
+      "sha256": "6ccb8e685ab8428b05ce23a426c65b3b008ffd222f05d542cf1c013e48e8bec4"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "77f4079ac246dee2d41f014f56974f64a376de90b2103776b812ad5263892890"
+  },
+  "finishedAt": "2026-11-05T21:17:14.161Z"
+}

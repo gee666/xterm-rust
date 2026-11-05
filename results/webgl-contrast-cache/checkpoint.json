@@ -1,0 +1,357 @@
+{
+  "task": 482,
+  "date": "2026-11-05T21:21:43.291Z",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "initialMain": "3a4f5e8f",
+  "privatePrerequisiteHead": "904d4041",
+  "prerequisitesIntegratedByMain": "26c7c42d",
+  "ownedSourceCommits": [
+    "10d64d84",
+    "ae00675c"
+  ],
+  "pickOnlyOwnedCommits": true,
+  "counts": {
+    "referenceFiles": 776,
+    "originalColorCases": 452,
+    "newColorCases": 24,
+    "finalColorCases": 476,
+    "nativeTests": 8,
+    "atlasPerEngine": 21,
+    "glyphGpuPerEngine": 8
+  },
+  "finalTemporaryEnvironment": {
+    "TEMP": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ZhuContrast\\tmp",
+    "TMP": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ZhuContrast\\tmp",
+    "CARGO_TARGET_DIR": "O:/xterm-rust-swarm-16/tmp/worktrees/ZhuContrast/target"
+  },
+  "commands": [
+    "cargo test --locked -j2 -p xterm-web --test webgl_atlas_colors --test webgl_glyph_backgrounds --test webgl_renderer --test webgl_glyphs",
+    "cargo clippy --locked -j2 -p xterm-web --lib --test webgl_atlas_colors --test webgl_glyph_backgrounds --test webgl_renderer --test webgl_glyphs --all-features -- -D warnings",
+    "cargo clippy --locked -j2 -p xterm-web --target wasm32-unknown-unknown --lib --test wasm_webgl_texture_atlas --test wasm_webgl_glyphs --all-features -- -D warnings",
+    "node results/webgl-contrast-cache/negative-control.mjs --native-only",
+    "node results/webgl-contrast-cache/negative-control.mjs",
+    "cargo fmt -p xterm-web -- --check",
+    "cargo fmt --all -- --check"
+  ],
+  "formatting": {
+    "xtermWeb": "passed",
+    "exactWorkspace": "failed Windows OS206; not replaced by member pass"
+  },
+  "parserDiagnostic": "First expected18PASS3FAIL browser result aborted only in driver failure-name parsing after exact restore; corrected to harness output and all controls/finals rerun. Raw first receipt and restoration retained.",
+  "fullParity": false,
+  "remaining": "Task306 actualbrowser host/construction/layers/sharedruntime/rawobjects/cachefacade/Addon/Root/full suites; broader nativeOS/workspace/release/platform evidence not claimed.",
+  "pins": [
+    {
+      "path": "crates/xterm-web/src/webgl/atlas_colors.rs",
+      "bytes": 9216,
+      "sha256": "e649fdca972391f2cea7c550be005cbfd9738e92cf8a98b97011ed633a35fa26"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/atlas_rasterizer.rs",
+      "bytes": 12518,
+      "sha256": "f2fc243fae059e83d37979476fbe4fb9750b707b03d4c62b01fec9488f5db165"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/texture_atlas.rs",
+      "bytes": 9038,
+      "sha256": "2d741db39c274836b4ccdb425e50e71347b123e44ca7140367628b30ba7a635f"
+    },
+    {
+      "path": "crates/xterm-web/tests/fixtures/webgl-atlas-colors.json",
+      "bytes": 171699,
+      "sha256": "cc905758ced29e152abd582840a33e9f748adaca60a983773a4ebdeaad372c54"
+    },
+    {
+      "path": "crates/xterm-web/tests/reference/webgl-texture-atlas.mjs",
+      "bytes": 11647,
+      "sha256": "0995f72eb238585eaffe6e145f50a6423f867754f05d36809845de56df534868"
+    },
+    {
+      "path": "crates/xterm-web/tests/support/texture_atlas_contrast_gpu.rs",
+      "bytes": 2797,
+      "sha256": "6b87b22369b1eea02e1ed7795c0e69721b420b14533505be1b62fde601b5006a"
+    },
+    {
+      "path": "crates/xterm-web/tests/support/texture_atlas_gpu.rs",
+      "bytes": 5269,
+      "sha256": "6cdc35f85568bffe82aff2a55cac8bde8f5a806fa11ef200e1f8c0f9fa7b3572"
+    },
+    {
+      "path": "crates/xterm-web/tests/wasm_webgl_texture_atlas.rs",
+      "bytes": 12511,
+      "sha256": "77f4079ac246dee2d41f014f56974f64a376de90b2103776b812ad5263892890"
+    },
+    {
+      "path": "crates/xterm-web/tests/webgl_atlas_colors.rs",
+      "bytes": 6297,
+      "sha256": "d26aa07ea12917a24276f16a971756a634973a6bf2b0d852495e3b50b143c9ff"
+    },
+    {
+      "path": "scripts/webgl-atlas-color-oracle.mjs",
+      "bytes": 5736,
+      "sha256": "5942ca228a3320f154a02217fdcbc3802fd17ebc0da8106653100d02c97b7480"
+    },
+    {
+      "path": "Cargo.lock",
+      "bytes": 11108,
+      "sha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9"
+    },
+    {
+      "path": "docs/baseline/reference-manifest.json",
+      "bytes": 128515,
+      "sha256": "fad438d8ae8c48870f454646a1fbbc0bba8e6c87526bd3ae0b56be28b02a71f2"
+    },
+    {
+      "path": "crates/xterm-web/src/contrast_cache.rs",
+      "bytes": 2232,
+      "sha256": "9ed380acfe1d027cf3c4012bcd313d09e0184d3cb41fe8979e2f678273a7f117"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/glyph_atlas.rs",
+      "bytes": 1547,
+      "sha256": "f7d1d5574133c8083c4e462d8190472d5ede3aea0ca860e97d3750b255c1bb32"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/glyph_gpu.rs",
+      "bytes": 12218,
+      "sha256": "45a0bd74439336a033fb45d33fa2d60a7702949049d78673044fe31c54013d9c"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/glyphs.rs",
+      "bytes": 8518,
+      "sha256": "69028fbb315bcfde04c35bca140ccc1e8244fee41df3fc210f0b28ab16bdfe08"
+    },
+    {
+      "path": "scripts/browser-host-check.mjs",
+      "bytes": 9815,
+      "sha256": "63dc6978c20d94958c046cfd721f50f785fef16cd7db69332918fc712ba96536"
+    },
+    {
+      "path": "scripts/webgl-texture-atlas-oracle.mjs",
+      "bytes": 1881,
+      "sha256": "c9cc4ce95d5146d139691e2746a1a4e7e4644c7c579e68b8bde937647011e692"
+    },
+    {
+      "path": "results/webgl-contrast-cache/audit.mjs",
+      "bytes": 3413,
+      "sha256": "2fbb4ce0b0136818780643ee6c04c6f6ac1e095fa77bed47b4cd32a1cc0c1657"
+    },
+    {
+      "path": "results/webgl-contrast-cache/clippy-native-final.log",
+      "bytes": 158,
+      "sha256": "73f048df59fff5eda7e42d2edbe9a4f253c6bd49c48a30ce028c44cad338b3e0"
+    },
+    {
+      "path": "results/webgl-contrast-cache/clippy-native.log",
+      "bytes": 865,
+      "sha256": "c1b8d5481db3b670cc0775a6a0f51451aa5d3d2e81333eaa657086b15d419196"
+    },
+    {
+      "path": "results/webgl-contrast-cache/clippy-wasm-final.log",
+      "bytes": 159,
+      "sha256": "2c39e07fa9300cc70b9bd7fd57026407303c2ad7b1e682ca54b91c579019c618"
+    },
+    {
+      "path": "results/webgl-contrast-cache/clippy-wasm.log",
+      "bytes": 1640,
+      "sha256": "bb3af30353546d6ffc68e4d0cdda580e277ee781cd4e6a5f65ffcb2dcfe5b653"
+    },
+    {
+      "path": "results/webgl-contrast-cache/final-atlas.json",
+      "bytes": 14367,
+      "sha256": "4ccd57e6891411901563c4e667d7e7dc575b288b23e426ff49b1a1c92f1b06cc"
+    },
+    {
+      "path": "results/webgl-contrast-cache/final-atlas.log",
+      "bytes": 135,
+      "sha256": "94e0df1f5af280e114904cf9833e720d48be86ca20038474dc8db3b69d6a51e4"
+    },
+    {
+      "path": "results/webgl-contrast-cache/final-gpu.json",
+      "bytes": 17774,
+      "sha256": "7ab9f33d262ff571a07832cbb2fd37d9cbd89161cc060fe545c85a3466887dcf"
+    },
+    {
+      "path": "results/webgl-contrast-cache/final-gpu.log",
+      "bytes": 132,
+      "sha256": "0679bc1311eeed0b568a3b0f0f71789aaf91aa1ede6ae8712483d2d78b5c5933"
+    },
+    {
+      "path": "results/webgl-contrast-cache/fmt-all.log",
+      "bytes": 817,
+      "sha256": "a3c64adc493a218a5a8332dfc60b9e9fd0cf455d8215931a5888f9bc84a29c70"
+    },
+    {
+      "path": "results/webgl-contrast-cache/fmt-web.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/webgl-contrast-cache/native-final.log",
+      "bytes": 1495,
+      "sha256": "14c08d5eed9129f7f8623c77b5627df243d3b1356cbabc3bbe45b31eef561993"
+    },
+    {
+      "path": "results/webgl-contrast-cache/native-mutant.log",
+      "bytes": 1400,
+      "sha256": "cf2b5930a1bf2a448b52e1bd819f4e7dce6acd11775ba8ef7f99da8c0b784807"
+    },
+    {
+      "path": "results/webgl-contrast-cache/native-negative.json",
+      "bytes": 1235,
+      "sha256": "3247532de066a987d92fdaa3e78701e3f75fc083134c0d0553296c1e6a3e10b6"
+    },
+    {
+      "path": "results/webgl-contrast-cache/native-restored.log",
+      "bytes": 484,
+      "sha256": "36cbd1aae8e39fd138f3f6e903a8970f908e3d50fed4a9c2e3a9bc21c64d4bc4"
+    },
+    {
+      "path": "results/webgl-contrast-cache/native.log",
+      "bytes": 2203,
+      "sha256": "fcc19336b2704e51f37ce1e58156e9bd39a6cf8f70327c3f045eabaab111ade8"
+    },
+    {
+      "path": "results/webgl-contrast-cache/negative-control.json",
+      "bytes": 3697,
+      "sha256": "f337f1d985221633c1c4332c13e54fbb5b924d4a3d406ed0e7e7a1012636ee2e"
+    },
+    {
+      "path": "results/webgl-contrast-cache/negative-control.mjs",
+      "bytes": 4891,
+      "sha256": "c7e44b28a576380e295fd76b60e978ce5156d6236437e8debb9091a0513ce9d5"
+    },
+    {
+      "path": "results/webgl-contrast-cache/old-rasterizer-forwarding.json",
+      "bytes": 19367,
+      "sha256": "205d3677d87c27176631971521af3318a3110b750b80196ba3d0d7725b22a67d"
+    },
+    {
+      "path": "results/webgl-contrast-cache/old-rasterizer-forwarding.log",
+      "bytes": 51,
+      "sha256": "fbe274acd5c4fead04c559183140695ee9244b1bcaec6952516c60a26c7a254b"
+    },
+    {
+      "path": "results/webgl-contrast-cache/old-rasterizer-forwarding.rs.txt",
+      "bytes": 12482,
+      "sha256": "02735121946e8aa7d4396ced3ca51c85be3d4ae9f5c674cd3fab3410eb46af10"
+    },
+    {
+      "path": "results/webgl-contrast-cache/packed-contrast-keys-first.json",
+      "bytes": 19328,
+      "sha256": "7f1844673bd73a8a181590b03264decc2cecd069e5518f2bb42f7ac0f49471b3"
+    },
+    {
+      "path": "results/webgl-contrast-cache/packed-contrast-keys.json",
+      "bytes": 19366,
+      "sha256": "1d910fb5950243679ac97398081629d65927f4c845ac33241c8b44747ec181a5"
+    },
+    {
+      "path": "results/webgl-contrast-cache/packed-contrast-keys.log",
+      "bytes": 51,
+      "sha256": "fbe274acd5c4fead04c559183140695ee9244b1bcaec6952516c60a26c7a254b"
+    },
+    {
+      "path": "results/webgl-contrast-cache/packed-contrast-keys.rs.txt",
+      "bytes": 9236,
+      "sha256": "18956d88fb52fa77d57ea8910da0d9a7c71a72d21e06d89eedc267ed56bc496f"
+    },
+    {
+      "path": "results/webgl-contrast-cache/parser-diagnostic.json",
+      "bytes": 1190,
+      "sha256": "67dad359a70bca5319be7187699ff42acfcbb3cf132e1456d0d1db55ed58c30e"
+    },
+    {
+      "path": "results/webgl-contrast-cache/source-probe.json",
+      "bytes": 2794,
+      "sha256": "8bb23987a04d3c3452cd89ae3c76ad5bf6f008079b2eae48b1e54164d538c8a6"
+    },
+    {
+      "path": "results/webgl-contrast-cache/toolchain.log",
+      "bytes": 240,
+      "sha256": "4b5ade1e149ea13baeb521cc1d2a6045d554358117c4fa753647b03b52149ccf"
+    },
+    {
+      "path": "results/webgl-contrast-cache/wasm-build.log",
+      "bytes": 1472,
+      "sha256": "48074901301d62b6f67ed1a666d5256ae8d2aa868e6e6c6dece20b7a6aa440eb"
+    }
+  ],
+  "browserArtifacts": [
+    {
+      "suite": "final-atlas",
+      "kind": "compiler",
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ZhuContrast\\results\\acceptance-artifacts\\65bcf3a862e0184946e3b988806f923fca1bfd9684cf049f497366792af478df\\artifact.wasm",
+      "sha256": "65bcf3a862e0184946e3b988806f923fca1bfd9684cf049f497366792af478df",
+      "ephemeral": true
+    },
+    {
+      "suite": "final-atlas",
+      "kind": "wasm",
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ZhuContrast\\results\\browser-host\\wasm_webgl_texture_atlas\\2026-11-05T21-18-29-676Z-6e26fe67-0dab-467d-82c1-82cf4f2db307\\artifacts\\suite_bg.wasm",
+      "sha256": "f347d2466ebb7038f447d84da0cd65e4ed6dcbad5af4dc50041a13921b37274d",
+      "ephemeral": true
+    },
+    {
+      "suite": "final-atlas",
+      "kind": "bindings",
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ZhuContrast\\results\\browser-host\\wasm_webgl_texture_atlas\\2026-11-05T21-18-29-676Z-6e26fe67-0dab-467d-82c1-82cf4f2db307\\artifacts\\suite.js",
+      "sha256": "3baa322eb24548dd794eda29e09e8c18114f10f768cbca7923c73eb58bb2ff96",
+      "ephemeral": true
+    },
+    {
+      "suite": "final-gpu",
+      "kind": "compiler",
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ZhuContrast\\results\\acceptance-artifacts\\5f26e07a5b7f6f9ad59bd392e83ee60ab9edba64c24b12965491b8b4a70465a3\\artifact.wasm",
+      "sha256": "5f26e07a5b7f6f9ad59bd392e83ee60ab9edba64c24b12965491b8b4a70465a3",
+      "ephemeral": true
+    },
+    {
+      "suite": "final-gpu",
+      "kind": "wasm",
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ZhuContrast\\results\\browser-host\\wasm_webgl_glyphs\\2026-11-05T21-19-12-610Z-38490ac8-95fe-4a4f-afbe-6f4ce60202f7\\artifacts\\suite_bg.wasm",
+      "sha256": "5f31274399a62a13256d7af95ee6d8001c284b5988b8c3734abf1dfbff185d2b",
+      "ephemeral": true
+    },
+    {
+      "suite": "final-gpu",
+      "kind": "bindings",
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ZhuContrast\\results\\browser-host\\wasm_webgl_glyphs\\2026-11-05T21-19-12-610Z-38490ac8-95fe-4a4f-afbe-6f4ce60202f7\\artifacts\\suite.js",
+      "sha256": "0012c8aac57ad784a3541b858afa9eac4a076459969be2a748a4888529f04929",
+      "ephemeral": true
+    },
+    {
+      "kind": "source-prelude",
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ZhuContrast\\tmp\\webgl-texture-atlas\\source.js",
+      "sha256": "027946f0a1c9937b28fd2012cc4e173f69b826915a67f11f6cc30f353310c9f3",
+      "ephemeral": true
+    }
+  ],
+  "nativeArtifacts": [
+    {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ZhuContrast\\target\\debug\\deps\\webgl_atlas_colors-6bb8515f0244cee3.exe",
+      "bytes": 1535488,
+      "sha256": "342704cf0e616199e4ae5666f4a1c67f4ef5c4f4456fc4124c04a2660df55eee",
+      "ephemeral": true
+    },
+    {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ZhuContrast\\target\\debug\\deps\\webgl_glyphs-e9a71eefd7de876a.exe",
+      "bytes": 3657216,
+      "sha256": "326fcfa34a497bb53b9f5b2eea3a2b12ba84ddf98cde18f0099ccc5dc89ed086",
+      "ephemeral": true
+    },
+    {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ZhuContrast\\target\\debug\\deps\\webgl_glyph_backgrounds-fe4e351ecc6e8d5d.exe",
+      "bytes": 1197056,
+      "sha256": "a0f1c73dd0686f033c0245665dc752ac098426f21fcdc68d22ae813af0ca9694",
+      "ephemeral": true
+    },
+    {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ZhuContrast\\target\\debug\\deps\\webgl_renderer-b0b69f3a102fadbe.exe",
+      "bytes": 3342336,
+      "sha256": "620fa076c7584b20cca237de14d035074f4d2615704f4736bbd616dba27c9215",
+      "ephemeral": true
+    }
+  ]
+}

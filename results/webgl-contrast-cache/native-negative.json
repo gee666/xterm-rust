@@ -1,0 +1,46 @@
+{
+  "date": "2026-11-05T21:16:25.420Z",
+  "nativeOnly": true,
+  "mutations": [
+    {
+      "name": "packed-contrast-keys",
+      "path": "crates/xterm-web/src/webgl/atlas_colors.rs",
+      "from": "cache_bg: colors[0],\n            cache_fg: colors[1],",
+      "to": "cache_bg: i64::from(attrs.bg),\n            cache_fg: i64::from(attrs.fg),",
+      "before": "e649fdca972391f2cea7c550be005cbfd9738e92cf8a98b97011ed633a35fa26",
+      "mutant": "18956d88fb52fa77d57ea8910da0d9a7c71a72d21e06d89eedc267ed56bc496f",
+      "counts": {
+        "passed": 1,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "restored": "e649fdca972391f2cea7c550be005cbfd9738e92cf8a98b97011ed633a35fa26"
+    }
+  ],
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-j2",
+        "-p",
+        "xterm-web",
+        "--test",
+        "webgl_atlas_colors"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 4066.5838,
+      "status": "failed"
+    }
+  ],
+  "finishedAt": "2026-11-05T21:16:29.505Z"
+}

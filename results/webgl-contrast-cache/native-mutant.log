@@ -1,0 +1,32 @@
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\ZhuContrast\crates\xterm-web)
+warning: unused variable: `colors`
+  --> crates\xterm-web\src\webgl\atlas_colors.rs:89:53
+   |
+89 |     pub fn paint_with_colors(attrs: &AttributeData, colors: [i64; 2]) -> GlyphPaint {
+   |                                                     ^^^^^^ help: if this is intentional, prefix it with an underscore: `_colors`
+   |
+   = note: `#[warn(unused_variables)]` on by default
+
+warning: `xterm-web` (lib) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 3.80s
+     Running tests\webgl_atlas_colors.rs (target\debug\deps\webgl_atlas_colors-6bb8515f0244cee3.exe)
+
+running 2 tests
+test source_palette_errors_are_explicit ... ok
+test unchanged_source_colors_identity_and_contrast_cache ... FAILED
+
+failures:
+
+---- unchanged_source_colors_identity_and_contrast_cache stdout ----
+
+thread 'unchanged_source_colors_identity_and_contrast_cache' panicked at crates\xterm-web\tests\webgl_atlas_colors.rs:100:13:
+seeded color identity: signed-false-color-false-true
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    unchanged_source_colors_identity_and_contrast_cache
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+
+error: test failed, to rerun pass `-p xterm-web --test webgl_atlas_colors`

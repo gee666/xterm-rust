@@ -1,0 +1,117 @@
+{
+  "date": "2026-11-05T21:17:54.178Z",
+  "nativeOnly": false,
+  "mutations": [
+    {
+      "name": "packed-contrast-keys",
+      "path": "crates/xterm-web/src/webgl/atlas_colors.rs",
+      "from": "cache_bg: colors[0],\n            cache_fg: colors[1],",
+      "to": "cache_bg: i64::from(attrs.bg),\n            cache_fg: i64::from(attrs.fg),",
+      "before": "e649fdca972391f2cea7c550be005cbfd9738e92cf8a98b97011ed633a35fa26",
+      "mutant": "18956d88fb52fa77d57ea8910da0d9a7c71a72d21e06d89eedc267ed56bc496f",
+      "counts": {
+        "passed": 18,
+        "failed": 3,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "failures": [
+        "test signed_half_contrast_cache_colors_and_null_reach_real_atlas_pixels ... FAIL",
+        "test signed_full_contrast_cache_colors_and_null_reach_real_atlas_pixels ... FAIL",
+        "test gpu_case::contrast::actual_gpu_preserves_signed_contrast_keys_and_source_atlas_pixels ... FAIL"
+      ],
+      "restored": "e649fdca972391f2cea7c550be005cbfd9738e92cf8a98b97011ed633a35fa26"
+    },
+    {
+      "name": "old-rasterizer-forwarding",
+      "path": "crates/xterm-web/src/webgl/atlas_rasterizer.rs",
+      "from": "AtlasColors::paint_with_colors(&attrs, [colors[0], colors[1]])",
+      "to": "AtlasColors::paint(&attrs)",
+      "before": "f2fc243fae059e83d37979476fbe4fb9750b707b03d4c62b01fec9488f5db165",
+      "mutant": "02735121946e8aa7d4396ced3ca51c85be3d4ae9f5c674cd3fab3410eb46af10",
+      "counts": {
+        "passed": 18,
+        "failed": 3,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "failures": [
+        "test signed_half_contrast_cache_colors_and_null_reach_real_atlas_pixels ... FAIL",
+        "test signed_full_contrast_cache_colors_and_null_reach_real_atlas_pixels ... FAIL",
+        "test gpu_case::contrast::actual_gpu_preserves_signed_contrast_keys_and_source_atlas_pixels ... FAIL"
+      ],
+      "restored": "f2fc243fae059e83d37979476fbe4fb9750b707b03d4c62b01fec9488f5db165"
+    }
+  ],
+  "commands": [
+    {
+      "name": "packed-contrast-keys",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/browser-host-check.mjs"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 18963.0779,
+      "status": "failed"
+    },
+    {
+      "name": "old-rasterizer-forwarding",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/browser-host-check.mjs"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 16429.2542,
+      "status": "failed"
+    },
+    {
+      "name": "final-atlas",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/browser-host-check.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 42920.039600000004,
+      "status": "passed"
+    },
+    {
+      "name": "final-gpu",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/browser-host-check.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 19418.0582,
+      "status": "passed"
+    }
+  ],
+  "finishedAt": "2026-11-05T21:19:31.975Z"
+}
