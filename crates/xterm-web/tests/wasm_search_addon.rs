@@ -58,6 +58,15 @@ async fn raw_invalid_terms_preserve_validation_identity_and_callback_phases() {
 }
 
 #[wasm_bindgen_test]
+async fn delayed_refresh_preserves_own_enumerable_option_spread_and_reentry() {
+    let body = format!(
+        "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),14);",
+        include_str!("fixtures/search-refresh-options.js")
+    );
+    run(&body, true, DEFAULTS).await;
+}
+
+#[wasm_bindgen_test]
 async fn empty_search_skips_matching_getters_and_retains_source_phases() {
     let body = format!(
         "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),54);",

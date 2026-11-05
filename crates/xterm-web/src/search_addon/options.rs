@@ -3,18 +3,20 @@ use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 use xterm_addons::search::{
     SearchAddonError, SearchColor, SearchDecorationOptionsHandle, SearchDecorationSource,
-    SearchHighlightLimit, SearchOptions, SearchOptionsSource,
+    SearchHighlightLimit, SearchOptions, SearchOptionsHandle, SearchOptionsSource,
 };
 
 // These access/coercion operations need JS boxing, getter exceptions, BigInt and
 // Symbol semantics. All matching, traversal, result state and decoration layout
 // remain Rust. Static module imports also work under a no-eval CSP.
 #[wasm_bindgen(
-    inline_js = "export function searchAddonGet(v,k){return v?.[k];}\nexport function searchAddonLimitReached(v,n){return n>=v;}\nexport function searchAddonLimitEnd(v,n){let x=+v;if(Number.isNaN(x))x=0;x=Math.trunc(x);return x<0?Math.max(n+x,0):Math.min(x,n);}"
+    inline_js = "export function searchAddonGet(v,k){return v?.[k];}\nexport function searchAddonRefresh(v){return {...v,incremental:true};}\nexport function searchAddonLimitReached(v,n){return n>=v;}\nexport function searchAddonLimitEnd(v,n){let x=+v;if(Number.isNaN(x))x=0;x=Math.trunc(x);return x<0?Math.max(n+x,0):Math.min(x,n);}"
 )]
 extern "C" {
     #[wasm_bindgen(catch, js_name = searchAddonGet)]
     pub fn property(value: &JsValue, key: &str) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch, js_name = searchAddonRefresh)]
+    fn refresh(value: &JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch, js_name = searchAddonLimitReached)]
     fn reached(value: &JsValue, count: f64) -> Result<bool, JsValue>;
     #[wasm_bindgen(catch, js_name = searchAddonLimitEnd)]
@@ -57,6 +59,11 @@ impl SearchDecorationSource for JsDecorations {
 }
 pub struct JsOptions(pub JsValue);
 impl SearchOptionsSource for JsOptions {
+    fn for_refresh(&self) -> Result<SearchOptionsHandle, SearchAddonError> {
+        refresh(&self.0)
+            .map(|value| Rc::new(Self(value)) as SearchOptionsHandle)
+            .map_err(host_error)
+    }
     fn decorations(&self) -> Result<Option<SearchDecorationOptionsHandle>, SearchAddonError> {
         let value = property(&self.0, "decorations").map_err(host_error)?;
         Ok(value

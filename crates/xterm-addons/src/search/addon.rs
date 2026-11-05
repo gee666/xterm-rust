@@ -20,6 +20,13 @@ mod find;
 
 pub trait SearchOptionsSource {
     fn read(&self) -> Result<SearchOptions, SearchAddonError>;
+    /// Copy the live request for delayed refresh and force incremental matching.
+    /// Browser adapters preserve own enumerable properties and accessor order.
+    fn for_refresh(&self) -> Result<SearchOptionsHandle, SearchAddonError> {
+        let mut options = self.read()?;
+        options.matching.incremental = Some(true);
+        Ok(Rc::new(RefCell::new(options)))
+    }
     /// Read only decoration eligibility, without inspecting matching flags.
     fn decorations(&self) -> Result<Option<SearchDecorationOptionsHandle>, SearchAddonError> {
         Ok(self.read()?.decorations)
@@ -272,17 +279,13 @@ impl SearchAddon {
                             .borrow()
                             .clone()
                             .unwrap_or_else(|| Rc::new(super::term::Utf16Term(Vec::new())));
+                        // Source clears the cache before spreading options. A
+                        // getter may reenter or throw while copying the request.
+                        addon.inner.cached_term.borrow_mut().take();
                         let previous = addon.inner.last_options.borrow().clone();
                         let options = previous
-                            .map(|previous| {
-                                let mut options = previous.read()?;
-                                options.matching.incremental = Some(true);
-                                Ok::<SearchOptionsHandle, SearchAddonError>(Rc::new(RefCell::new(
-                                    options,
-                                )))
-                            })
+                            .map(|previous| previous.for_refresh())
                             .transpose()?;
-                        addon.inner.cached_term.borrow_mut().take();
                         addon.find_term_with_scroll(term, options, true, || Ok(true))?;
                     }
                     Ok(())

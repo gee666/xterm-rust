@@ -1,0 +1,113 @@
+{
+  "status": "passed",
+  "task": 369,
+  "base": "af04745",
+  "overallEquivalence": "NOT PROVEN",
+  "platform": "Windows win32 x86_64",
+  "rustc": "1.85.1",
+  "cargo": "1.85.1",
+  "node": "24.15.0",
+  "wasmBindgen": "0.2.100",
+  "counts": {
+    "sourceDirected": {
+      "discovered": 42,
+      "executed": 42,
+      "passed": 42,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0
+    },
+    "rustWasmFunctions": [
+      {
+        "name": "chromium",
+        "passed": 10,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      },
+      {
+        "name": "firefox",
+        "passed": 10,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      },
+      {
+        "name": "webkit",
+        "passed": 10,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    ],
+    "nativeAddon": {
+      "discovered": 35,
+      "executed": 35,
+      "passed": 35,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0
+    },
+    "portableSearch": {
+      "discovered": 34,
+      "executed": 34,
+      "passed": 34,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0
+    },
+    "unchangedSourceUnits": {
+      "discovered": 86,
+      "executed": 86,
+      "passed": 86,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0
+    },
+    "unchangedBrowser": {
+      "discovered": 81,
+      "executed": 81,
+      "passed": 81,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0
+    }
+  },
+  "negativeControl": {
+    "status": "failed-as-expected",
+    "browser": "chromium",
+    "discovered": 10,
+    "executed": null,
+    "passed": null,
+    "failed": null,
+    "unrun": null,
+    "reason": "Assertion catches missing spread getters. wasm test panic aborted without final function counts, do not infer subtotal."
+  },
+  "scope": "14 shared directed cases per engine within one of10 Rust WASM functions. Existing fixtures also rerun. Source baseline86 is JS execution, not86 Rust tests. No new random cases. Full347/322 and327 remain.",
+  "hashes": {
+    "crates/xterm-addons/src/search/addon.rs": "cceb6f1a13472f02e3558496b9cc3cd936357137dbb4fcf6b5639cf13188c5ec",
+    "crates/xterm-web/src/search_addon/options.rs": "86358006f52d5fc6f801b8d597b9d0244b4ba1c184d826c1d43a209402fa6545",
+    "crates/xterm-web/tests/search_cases/refresh.rs": "8eeb139a385b670601410676dba79faa210caf64149ac1af1debab413e54ac2d",
+    "crates/xterm-web/tests/search_addon.rs": "9dee7fdbc4ce648ae3a9a9ba40d08e15616cda780859cadfbe743c7a054a55a0",
+    "crates/xterm-web/tests/wasm_search_addon.rs": "3b0becc092afd35c35c18071f3994e7186111234850becdfae328197b70649f0",
+    "crates/xterm-web/tests/fixtures/search-refresh-options.js": "ee8a9c5bac81035f2f0507d9c1ff4c4b687bf47cd797951d8a939b2007585906",
+    "scripts/search-call-args-source.mjs": "9cd424961c63f46d301281f8bcdd4426b64af6b0d935848e36c7e17999215dfb",
+    "results/search-refresh-options/baseline-inputs.json": "e545c4507738c65aa4669606e1b7c9d0254114d53442fc71bd3ab125d48850b5",
+    "results/search-refresh-options/baseline.json": "d06335b3a39dca0e156a24b57cebbd55cdb1fc4a8061c85287024187a7cafa0e",
+    "results/search-refresh-options/browser-search.log": "b8f228046051f89766945feb694f4bca3ed0f003d259cf77a577a1e7a01fccf0",
+    "results/search-refresh-options/build.log": "18d61c7dd9a4321215059ff491993d98ec44f2695fb19f79836fba91aa4cdcb2",
+    "results/search-refresh-options/clippy-native.log": "55929d1d786e23f98ee6a84619500e6f766e21ab10650d2c184ef7e8a197b336",
+    "results/search-refresh-options/clippy-wasm.log": "9ae57ebb224108ee64c0192579bb4e2cc5bbc714aacccc319011759f9dce9aae",
+    "results/search-refresh-options/core-search.log": "9348d0a7487b6712544792b595810093f01f6f446dfd222dfd40d6bd434dd62c",
+    "results/search-refresh-options/core.json": "05af47bc3a85c0b56873748ad413fa67eabc7b7fab9272419a8005b9dcf4f47c",
+    "results/search-refresh-options/fmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/search-refresh-options/native.log": "f49f5b23771ff32b3c7336faa504fe2fd1136f0a0a42aa80bc39ea8ff402ffa4",
+    "results/search-refresh-options/oracle.json": "9117c10a8994706d559c75ad34a783a33b717d840a3dc332f716b178faa433a4",
+    "results/search-refresh-options/original.json": "7ce12e8bc150052bedfd78894dcb923b49058686aa610f0e4b45514a0ae9547b",
+    "results/search-refresh-options/source.json": "e0e27fc82a239d320efdb271101e7dc472b7c8ed88b8cfc3194c5ce5ebaa4c22",
+    "results/search-refresh-options/unchanged-playwright.json": "8a1776e36718e8bd4274a99a92a8307fff5aedee9e3645e5f7f2b5692e38d323",
+    "results/search-refresh-options/unchanged-summary.json": "651c17aa788dbebe1ebd4dd4c184fded02c13afe8c7ab7f65c3d3d35ac1efae4",
+    "results/search-refresh-options/unchanged.log": "a9e195269925b0fa70599aa6a2e866790b602bc98c6d15012faea56b2b98290e",
+    "results/search-refresh-options/wasm.json": "0fe57cf89244b85e00e238b8a8402ec352de0f8dcc047332b8608d6ae0b19432"
+  }
+}

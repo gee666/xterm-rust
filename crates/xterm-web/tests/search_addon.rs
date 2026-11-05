@@ -26,6 +26,8 @@ mod invalid;
 mod ranges;
 #[path = "search_cases/raw_marker.rs"]
 mod raw_marker;
+#[path = "search_cases/refresh.rs"]
+mod refresh;
 #[path = "search_cases/scroll_options.rs"]
 mod scroll_options;
 #[path = "search_cases/tracker.rs"]
