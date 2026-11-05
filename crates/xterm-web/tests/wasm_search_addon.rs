@@ -1,6 +1,6 @@
 #![cfg(target_arch = "wasm32")]
 // Copyright (c) 2017, 2026 The xterm.js authors. All rights reserved. MIT license.
-use js_sys::{Function, Promise};
+use js_sys::{Array, Function, Promise};
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_futures::JsFuture;
 use wasm_bindgen_test::*;
@@ -25,14 +25,13 @@ return (async()=>{try{if(opened)term.open(parent);
 "#;
     let script =
         format!("{setup}{body}\n}}finally{{term.dispose();parent.remove();style.remove();}}}})();");
+    let arguments = Array::new();
+    arguments.push(&terminal);
+    arguments.push(&addon);
+    arguments.push(&include_str!("../assets/xterm.css").into());
+    arguments.push(&opened.into());
     let promise = Function::new_with_args("term,addon,css,opened", &script)
-        .call4(
-            &JsValue::UNDEFINED,
-            &terminal,
-            &addon,
-            &include_str!("../../../browser/xterm.css").into(),
-            &opened.into(),
-        )
+        .apply(&JsValue::UNDEFINED, &arguments)
         .unwrap()
         .dyn_into::<Promise>()
         .unwrap();
