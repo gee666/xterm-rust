@@ -240,7 +240,7 @@ impl MousePolicy {
         if (event.button == MouseButton::Wheel && event.action == MouseAction::Move)
             || (event.button == MouseButton::None && event.action != MouseAction::Move)
             || (event.button != MouseButton::Wheel
-                && matches!(event.action, MouseAction::Left | MouseAction::Right))
+                && (event.action == MouseAction::Left || event.action == MouseAction::Right))
         {
             return Ok(false);
         }

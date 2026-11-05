@@ -1,0 +1,132 @@
+{
+  "phase": "source-format",
+  "status": "failed",
+  "commands": [
+    {
+      "name": "source-replay",
+      "command": "node",
+      "args": [
+        "scripts/mouse-raw-action-oracle.mjs"
+      ],
+      "status": 0,
+      "elapsedMs": 223,
+      "log": "results/mouse-raw-actions/quality/source-replay.log"
+    },
+    {
+      "name": "existing-source",
+      "command": "node",
+      "args": [
+        "scripts/mouse-state-oracle.mjs"
+      ],
+      "status": 0,
+      "elapsedMs": 196,
+      "log": "results/mouse-raw-actions/quality/existing-source.log"
+    },
+    {
+      "name": "existing-buttons",
+      "command": "node",
+      "args": [
+        "scripts/mouse-raw-button-oracle.mjs"
+      ],
+      "status": 0,
+      "elapsedMs": 135,
+      "log": "results/mouse-raw-actions/quality/existing-buttons.log"
+    },
+    {
+      "name": "script-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "scripts/mouse-raw-action-oracle.mjs"
+      ],
+      "status": 0,
+      "elapsedMs": 51,
+      "log": "results/mouse-raw-actions/quality/script-syntax.log"
+    },
+    {
+      "name": "fmt-xterm-core",
+      "command": "cargo",
+      "args": [
+        "fmt",
+        "-p",
+        "xterm-core",
+        "--",
+        "--check"
+      ],
+      "status": 0,
+      "elapsedMs": 1073,
+      "log": "results/mouse-raw-actions/quality/fmt-xterm-core.log"
+    },
+    {
+      "name": "fmt-xterm-web",
+      "command": "cargo",
+      "args": [
+        "fmt",
+        "-p",
+        "xterm-web",
+        "--",
+        "--check"
+      ],
+      "status": 0,
+      "elapsedMs": 1256,
+      "log": "results/mouse-raw-actions/quality/fmt-xterm-web.log"
+    },
+    {
+      "name": "fmt-xterm-addons",
+      "command": "cargo",
+      "args": [
+        "fmt",
+        "-p",
+        "xterm-addons",
+        "--",
+        "--check"
+      ],
+      "status": 0,
+      "elapsedMs": 462,
+      "log": "results/mouse-raw-actions/quality/fmt-xterm-addons.log"
+    },
+    {
+      "name": "fmt-xterm-wasm-support",
+      "command": "cargo",
+      "args": [
+        "fmt",
+        "-p",
+        "xterm-wasm-support",
+        "--",
+        "--check"
+      ],
+      "status": 0,
+      "elapsedMs": 177,
+      "log": "results/mouse-raw-actions/quality/fmt-xterm-wasm-support.log"
+    },
+    {
+      "name": "fmt-xterm-font-addons",
+      "command": "cargo",
+      "args": [
+        "fmt",
+        "-p",
+        "xterm-font-addons",
+        "--",
+        "--check"
+      ],
+      "status": 0,
+      "elapsedMs": 266,
+      "log": "results/mouse-raw-actions/quality/fmt-xterm-font-addons.log"
+    },
+    {
+      "name": "diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ],
+      "status": 0,
+      "elapsedMs": 85,
+      "log": "results/mouse-raw-actions/quality/diff-check.log"
+    }
+  ],
+  "workspaceFmt": {
+    "status": 1
+  },
+  "error": "Exact workspace fmt failed; per-package checks are separate passes."
+}

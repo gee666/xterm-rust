@@ -22,7 +22,12 @@ fn flag(value: &str) -> Option<bool> {
     }
 }
 
-fn compare_corpus(corpus: &str, expected_count: usize, require_surrogates: bool) {
+fn compare_corpus(
+    corpus: &str,
+    expected_count: usize,
+    require_surrogates: bool,
+    raw_actions: bool,
+) {
     let service = MouseStateService::<()>::new();
     let mut combinations = BTreeSet::new();
     let mut compared = 0;
@@ -36,14 +41,18 @@ fn compare_corpus(corpus: &str, expected_count: usize, require_surrogates: bool)
             x: fields[4].parse().unwrap(),
             y: fields[5].parse().unwrap(),
             button: MouseButton::Raw(fields[6].parse().unwrap()),
-            action: MouseAction::try_from(fields[7].parse::<u8>().unwrap()).unwrap(),
+            action: if raw_actions {
+                MouseAction::RawNumber(fields[7].parse().unwrap())
+            } else {
+                MouseAction::try_from(fields[7].parse::<u8>().unwrap()).unwrap()
+            },
             ctrl: flag(fields[8]),
             alt: flag(fields[9]),
             shift: flag(fields[10]),
         };
         let before = [event.col, event.row, event.x, event.y].map(f64::to_bits);
         let button_before = event.button.numeric_value().to_bits();
-        let action_before = event.action;
+        let action_before = event.action.numeric_value().to_bits();
         service.set_active_protocol(fields[0]).unwrap();
         service.set_active_encoding(fields[1]).unwrap();
         let accepted = service.restrict_mouse_event(&mut event).unwrap();
@@ -53,7 +62,8 @@ fn compare_corpus(corpus: &str, expected_count: usize, require_surrogates: bool)
             "restriction button row {index}: {row}"
         );
         assert_eq!(
-            event.action, action_before,
+            event.action.numeric_value().to_bits(),
+            action_before,
             "restriction action row {index}: {row}"
         );
         assert_eq!(
@@ -77,7 +87,8 @@ fn compare_corpus(corpus: &str, expected_count: usize, require_surrogates: bool)
             "button mutation row {index}: {row}"
         );
         assert_eq!(
-            event.action, action_before,
+            event.action.numeric_value().to_bits(),
+            action_before,
             "action mutation row {index}: {row}"
         );
         let expected = units(fields[15]);
@@ -106,12 +117,32 @@ fn compare_corpus(corpus: &str, expected_count: usize, require_surrogates: bool)
 
 #[test]
 fn matches_every_source_protocol_encoding_and_mutation_trace() {
-    compare_corpus(include_str!("fixtures/mouse-state.tsv"), 12_226, true);
+    compare_corpus(
+        include_str!("fixtures/mouse-state.tsv"),
+        12_226,
+        true,
+        false,
+    );
+}
+
+#[test]
+fn arbitrary_numeric_actions_match_source_without_early_integer_coercion() {
+    compare_corpus(
+        include_str!("fixtures/mouse-raw-actions.tsv"),
+        19_328,
+        false,
+        true,
+    );
 }
 
 #[test]
 fn raw_signed_buttons_match_source_bitwise_and_wheel_comparisons() {
-    compare_corpus(include_str!("fixtures/mouse-raw-buttons.tsv"), 4_200, false);
+    compare_corpus(
+        include_str!("fixtures/mouse-raw-buttons.tsv"),
+        4_200,
+        false,
+        false,
+    );
     assert_eq!(MouseButton::Raw(4), MouseButton::Wheel);
     assert_eq!(MouseButton::Raw(3), MouseButton::None);
     assert_eq!(MouseButton::Raw(0), MouseButton::Left);

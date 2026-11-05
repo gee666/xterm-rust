@@ -85,7 +85,7 @@ impl PartialEq for MouseButton {
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug)]
 #[repr(u8)]
 pub enum MouseAction {
     Up = 0,
@@ -93,6 +93,28 @@ pub enum MouseAction {
     Left = 2,
     Right = 3,
     Move = 32,
+    /// Preserve arbitrary JavaScript numbers until a policy explicitly performs
+    /// a strict comparison or bitwise conversion, including NaN and negative zero.
+    RawNumber(f64),
+}
+
+impl MouseAction {
+    pub fn numeric_value(self) -> f64 {
+        match self {
+            Self::Up => 0.0,
+            Self::Down => 1.0,
+            Self::Left => 2.0,
+            Self::Right => 3.0,
+            Self::Move => 32.0,
+            Self::RawNumber(value) => value,
+        }
+    }
+}
+
+impl PartialEq for MouseAction {
+    fn eq(&self, other: &Self) -> bool {
+        self.numeric_value() == other.numeric_value()
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

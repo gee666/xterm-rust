@@ -30,7 +30,7 @@ impl MouseFields for MouseEvent {
             Field::Alt => modifier(self.alt),
             Field::Shift => modifier(self.shift),
             Field::Button => Value::Number(self.button.numeric_value()),
-            Field::Action => Value::Number(f64::from(self.action as u8)),
+            Field::Action => Value::Number(self.action.numeric_value()),
             Field::Col => Value::Number(self.col),
             Field::Row => Value::Number(self.row),
             Field::X => Value::Number(self.x),
