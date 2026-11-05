@@ -1,0 +1,126 @@
+{
+  "package": "xterm-web",
+  "testName": "raw_scrollable_browser",
+  "testTimeoutMs": 60000,
+  "features": [
+    "acceptance-hooks"
+  ],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T19:01:17.207Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "raw_scrollable_browser",
+        "--features",
+        "acceptance-hooks",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 11164.2719,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 9.05869999999959,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\SloaneClock\\results\\acceptance-artifacts\\07388de5b290efd2762918301c2fad51b66383578283c1e6b9dad76e6b302560\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\SloaneClock\\results\\browser-host\\raw_scrollable_browser\\2026-11-05T19-01-17-206Z-7de2d7a8-d031-44fc-80ce-58d2456399fd\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1001.8171000000002,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__raw_scrollable_browser::live_clock_values_errors_and_reentry",
+        "__wbgt__raw_scrollable_browser::live_source_values_errors_and_coercion_reentry",
+        "__wbgt__raw_scrollable_browser::live_update_getters_reentry_and_error_identity"
+      ],
+      "errors": [],
+      "console": [],
+      "version": "148.0.7778.96",
+      "output": "running 3 tests\ntest live_update_getters_reentry_and_error_identity ... ok\ntest live_source_values_errors_and_coercion_reentry ... ok\ntest live_clock_values_errors_and_reentry ... FAIL\n\nfailures:\n\n---- live_clock_values_errors_and_reentry output ----\n    JS exception that was thrown:\n        Error: JsValue(Error: clock/start/duration-order\n        expected [[[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,[[200,300,100,1000,200,100,1000,300],[200,300],false,[[false,[\"undefined\",\"undefined\",0,0,0,0,0,0],[\"undefined\",\"undefined\",100,1000,0,100,1000,0],[true,true,false,true,true,false]],[true,[\"undefined\",\"undefined\",100,1000,0,100,1000,0],[\"undefined\",\"undefined\",100,1000,200,100,1000,300],[false,false,true,false,false,true]]],[[\"request\",1]],[]]]],[[\"duration\",\"default\"],[\"duration\",\"coerce\"],[\"clock\",\"call\"],[\"clock-sample\",\"number\"]]]\n        actual [[[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,[[200,300,100,1000,200,100,1000,300],[200,300],false,[[false,[\"undefined\",\"undefined\",0,0,0,0,0,0],[\"undefined\",\"undefined\",100,1000,0,100,1000,0],[true,true,false,true,true,false]],[true,[\"undefined\",\"undefined\",100,1000,0,100,1000,0],[\"undefined\",\"undefined\",100,1000,200,100,1000,300],[false,false,true,false,false,true]]],[[\"request\",1]],[]]]],[[\"clock\",\"call\"],[\"duration\",\"default\"],[\"duration\",\"coerce\"],[\"clock-sample\",\"number\"]]]\n        Error: clock/start/duration-order\n        expected [[[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,[[200,300,100,1000,200,100,1000,300],[200,300],false,[[false,[\"undefined\",\"undefined\",0,0,0,0,0,0],[\"undefined\",\"undefined\",100,1000,0,100,1000,0],[true,true,false,true,true,false]],[true,[\"undefined\",\"undefined\",100,1000,0,100,1000,0],[\"undefined\",\"undefined\",100,1000,200,100,1000,300],[false,false,true,false,false,true]]],[[\"request\",1]],[]]]],[[\"duration\",\"default\"],[\"duration\",\"coerce\"],[\"clock\",\"call\"],[\"clock-sample\",\"number\"]]]\n        actual [[[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,[[200,300,100,1000,200,100,1000,300],[200,300],false,[[false,[\"undefined\",\"undefined\",0,0,0,0,0,0],[\"undefined\",\"undefined\",100,1000,0,100,1000,0],[true,true,false,true,true,false]],[true,[\"undefined\",\"undefined\",100,1000,0,100,1000,0],[\"undefined\",\"undefined\",100,1000,200,100,1000,300],[false,false,true,false,false,true]]],[[\"request\",1]],[]]]],[[\"clock\",\"call\"],[\"duration\",\"default\"],[\"duration\",\"coerce\"],[\"clock-sample\",\"number\"]]]\n            at runClockCases (http://127.0.0.1:54268/snippets/xterm-web-f147851b6cb0c0ef/tests/raw_scrollable_oracle.js:695:64)\n            at http://127.0.0.1:54268/suite.js:6237:21\n            at handleError (http://127.0.0.1:54268/suite.js:173:18)\n            at imports.wbg.__wbg_runClockCases_ed17a6be5c7db83e (http://127.0.0.1:54268/suite.js:6236:76)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.__wbg_runClockCases_ed17a6be5c7db83e externref shim (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[46537]:0xafcbaa)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.raw_scrollable_browser::clock_cases::h1f5f094ca76318af (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[9023]:0x7cf2f0)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.raw_scrollable_browser::live_clock_values_errors_and_reentry::h405f8c6d16697221 (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[4342]:0x631df8)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.core::ops::function::FnOnce::call_once::h0bbfc9619debecdd (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[26947]:0xa6a5ec)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h32bb392a83cab1e7 (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[11469]:0x866020)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h76ecb54e6bfe0471 (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[16606]:0x94c5b6))\n            at imports.wbg.__wbindgen_error_new (http://127.0.0.1:54268/suite.js:6921:21)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.__wbindgen_error_new externref shim (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[37360]:0xadde6f)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.wasm_bindgen::JsError::new::h789e24cd7f22e112 (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[33671]:0xac536a)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::{{closure}}::h0ce9ac16ef7f2d50 (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[6239]:0x6f7be8)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.core::result::Result<T,E>::map_err::h5e737dde50bae5f0 (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[17917]:0x97c264)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::he21eb2cc58446946 (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[24367]:0xa355ef)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h32bb392a83cab1e7 (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[11469]:0x866038)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h76ecb54e6bfe0471 (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[16606]:0x94c5b6)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8 (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[26720]:0xa66386)\n            at __wbg_adapter_1308 (http://127.0.0.1:54268/suite.js:630:10)\n\nfailures:\n\n    live_clock_values_errors_and_reentry\n\ntest result: FAILED. 2 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.52s\n\n",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/07388de5b290efd2762918301c2fad51b66383578283c1e6b9dad76e6b302560/artifact.wasm",
+      "sha256": "07388de5b290efd2762918301c2fad51b66383578283c1e6b9dad76e6b302560",
+      "bytes": 19851225,
+      "originalPath": "O:/xterm-rust-swarm-16/tmp/SloaneClock/target\\wasm32-unknown-unknown\\debug\\deps\\raw_scrollable_browser-ea7e0e0ac6436d70.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\SloaneClock\\results\\browser-host\\raw_scrollable_browser\\2026-11-05T19-01-17-206Z-7de2d7a8-d031-44fc-80ce-58d2456399fd\\artifacts\\suite_bg.wasm",
+      "bytes": 16648169,
+      "sha256": "cb09e454b8dcc80e49744e62a2b267ba5b5c1324adc66e682e7ead3710a57625"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\SloaneClock\\results\\browser-host\\raw_scrollable_browser\\2026-11-05T19-01-17-206Z-7de2d7a8-d031-44fc-80ce-58d2456399fd\\artifacts\\suite.js",
+      "bytes": 246046,
+      "sha256": "4b5d5d583a02209331d4533e189fcb80351ee502fe2c06c2d241a983900f048c"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "08487662cd7f42ee9ff242609caebc379ccc463f036eca9b922fe2223bf8dd64"
+  },
+  "finishedAt": "2026-11-05T19:01:30.484Z"
+}

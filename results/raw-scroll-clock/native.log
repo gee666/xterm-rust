@@ -1,0 +1,121 @@
+   Compiling allocator-api2 v0.2.21
+   Compiling equivalent v1.0.3
+   Compiling memchr v2.8.3
+   Compiling foldhash v0.1.5
+   Compiling hashbrown v0.15.5
+   Compiling zmij v1.0.23
+   Compiling regress v0.10.4
+   Compiling serde_core v1.0.229
+   Compiling ryu-js v1.0.3
+   Compiling serde_json v1.0.154
+   Compiling adler2 v2.0.1
+   Compiling miniz_oxide v0.8.9
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\SloaneClock\crates\xterm-core)
+   Compiling itoa v1.0.18
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\SloaneClock\crates\xterm-addons)
+   Compiling xterm-wasm-support v0.1.0 (O:\xterm-rust-swarm-16\tmp\SloaneClock\crates\xterm-wasm-support)
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\SloaneClock\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 12.36s
+     Running unittests src\lib.rs (target\debug\deps\xterm_web-51174c681ad2b5aa.exe)
+
+running 56 tests
+test input::clipboard::tests::upstream_escape_sanitization ... ok
+test input::composition::tests::modifiers_suppress_and_immediate_enter_cancels_deferred_send ... ok
+test input::clipboard::tests::utf16_and_option_matrix ... ok
+test input::composition::tests::start_keeps_sent_offset_until_overlay_text_clear_commits ... ok
+test input::clipboard::tests::upstream_brackets ... ok
+test input::composition::tests::upstream_complex_characters ... ok
+test input::composition::tests::utf16_selection_preserves_unpaired_surrogates_and_reversed_range ... ok
+test char_size::tests::invalid_measurements_retain_last_size_and_changes_commit_before_event ... ok
+test input::composition::tests::standalone_229_diff_coalesces_and_handles_replace_and_delete ... ok
+test input::clipboard::tests::upstream_line_endings ... ok
+test input::composition::tests::upstream_complex_changes_with_following_character ... ok
+test input::composition::tests::upstream_different_length_conversion ... ok
+test input::composition::tests::upstream_input_immediately_after_composition ... ok
+test contrast_cache::tests::signed_number_keys_do_not_alias_unsigned_attributes ... ok
+test input::composition::tests::upstream_middle_insertion_does_not_resend_suffix ... ok
+test input::composition::tests::upstream_multicharacters ... ok
+test input::composition::tests::upstream_same_length_conversion ... ok
+test input::composition::tests::upstream_simple_characters ... ok
+test input::composition::tests::new_composition_cancels_pending_textarea_diff ... ok
+test input::composition_geometry::tests::clamps_wrap_pending_cursor_and_minimum_textarea ... ok
+test input::keyboard::tests::kitty_repeat_release_and_legacy_fallback ... ok
+test renderer::geometry::tests::fractional_dpr_preserves_source_rounding_order ... ok
+test renderer::geometry::tests::zero_metrics_and_negative_half_spacing_are_not_saturated ... ok
+test input::keyboard::tests::win32_priority_and_double_gating_matrix ... ok
+test input::keyboard::tests::mac_option_is_meta_passed_only_on_mac_for_kitty ... ok
+test renderer::raw_font::tests::captured_arguments_convert_in_source_order_for_each_variant ... ok
+test renderer::raw_font::tests::exact_utf16_and_ecma_trim_preserve_nel_surrogate_and_nul ... ok
+test renderer::raw_font::tests::initial_defaults_skip_and_nan_reconfigures_while_signed_zero_does_not ... ok
+test renderer::raw_font::tests::object_identity_is_the_key_not_its_later_string_value ... ok
+test renderer::raw_font::tests::text_metrics_converts_size_before_reading_family_and_does_not_trim ... ok
+test renderer::width_cache::reentry_tests::clear_during_measure_stores_in_the_new_current_map ... ok
+test renderer::width_cache::reentry_tests::disposal_in_variant_callback_prevents_next_variant_lookup ... ok
+test renderer::width_cache::reentry_tests::dispose_during_measure_retains_positive_flat_but_rejects_positive_holey_store ... ok
+test renderer::width_cache::reentry_tests::failed_configuration_commits_key_but_does_not_clear_or_retry ... ok
+test renderer::width_cache::reentry_tests::reentrant_set_font_keeps_inner_key_and_outer_captured_arguments ... ok
+test renderer::theme_css_utf16::tests::raw_color_units_are_not_replaced_or_recursively_decoded ... ok
+test renderer::width_cache::reentry_tests::weak_callback_handles_do_not_keep_cache_alive ... ok
+test renderer::theme_css_utf16::tests::font_conversion_mutations_are_visible_only_to_later_color_rules ... ok
+test renderer::width_cache::tests::disposed_cache_retains_cached_flat_values_but_cannot_measure ... ok
+test renderer::width_cache::tests::flat_values_round_only_on_subsequent_reads ... ok
+test renderer::width_cache::tests::nonpositive_nan_values_are_remeasured_and_suffix_collisions_are_retained ... ok
+test renderer::width_cache::tests::upstream_cache_values_and_clear ... ok
+test renderer::width_cache::tests::upstream_every_font_field_invalidates_and_unchanged_font_retains_entries ... ok
+test renderer::width_cache::tests::upstream_flat_and_holey_boundary ... ok
+test renderer::width_cache::tests::upstream_font_variants_and_arbitrary_strings ... ok
+test scroll::animation::tests::deltas_are_cached_but_final_endpoint_is_live ... ok
+test scroll::animation::tests::early_advance_and_exact_final_endpoint ... ok
+test scroll::animation::tests::long_animation_uses_two_edge_segments ... ok
+test scroll::scrollbar_state::tests::minimum_slider_can_exceed_track_and_desired_values_are_not_clamped ... ok
+test scroll::scrollbar_state::tests::opposite_size_is_deferred_but_clone_refreshes_it ... ok
+test scroll::scrollbar_state::tests::source_rounding_and_nan_propagation_are_not_rust_round_or_max ... ok
+test scroll::state::tests::bitwise_numbers_and_nan_comparisons_match_js ... ok
+test scroll::state::tests::raw_position_survives_clamping_and_dimension_growth ... ok
+test scroll::wheel_classifier::tests::first_integer_repeated_steps_and_diagonal_trackpad ... ok
+test scroll::wheel_classifier::tests::fractional_and_nonfinite_samples_are_not_integer_wheels ... ok
+test theme::css_text::tests::units_survive_nul_markers_and_lone_surrogates ... ok
+
+test result: ok. 56 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\scroll_clock.rs (target\debug\deps\scroll_clock-ee9fc407156fcca0.exe)
+
+running 3 tests
+test standalone_raw_clock_entrypoints_keep_numeric_animation ... ok
+test tick_keeps_receiver_when_clock_stops_current_animation ... ok
+test construction_selects_from_before_clock_reentry ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\scrollable.rs (target\debug\deps\scrollable-b5416e41163dd09f.exe)
+
+running 9 tests
+test dimensions_resolve_against_state_selected_before_getters ... ok
+test cancelled_smooth_fallback_fails_before_later_getter ... ok
+test dimensions_keep_raw_request_and_emit_precise_change_fields ... ok
+test event_callback_can_cancel_the_running_animation ... ok
+test identical_smooth_target_does_not_restart_or_cancel ... ok
+test scheduler_failures_retain_source_partial_state_and_cleanup_is_observable ... ok
+test immediate_and_validation_resolve_before_reentrant_state_replacement ... ok
+test smooth_tick_reuse_and_external_position_cancel ... ok
+test smooth_missing_axes_read_each_current_operation_after_getters ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\viewport_controller.rs (target\debug\deps\viewport_controller-de880546728c3a28.exe)
+
+running 11 tests
+test javascript_round_retains_negative_zero_ties_and_nonfinite_requests ... ok
+test scroll_requests_commit_latest_before_callbacks_and_prevent_nested_handling ... ok
+test synchronous_refresh_callback_still_assigns_returned_id_afterward ... ok
+test deferred_flag_clears_before_failed_render_sync ... ok
+test failed_dimension_call_preserves_sync_and_suppression_partial_state ... ok
+test queued_latest_row_is_updated_before_coalescing_and_activation_clears_it ... ok
+test dimension_feedback_and_nested_sync_are_suppressed_without_borrow_panics ... ok
+test synchronized_output_defers_until_render_and_rechecks_source_flag ... ok
+test line_absolute_and_touch_scroll_use_source_reuse_property_presence ... ok
+test thrown_scroll_listener_keeps_handling_flag_and_actual_error_identity ... ok
+test queue_coalesces_and_sync_reads_live_metrics_before_real_position_write ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

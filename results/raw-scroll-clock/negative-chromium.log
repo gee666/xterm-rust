@@ -1,0 +1,42 @@
+running 3 tests
+test live_update_getters_reentry_and_error_identity ... ok
+test live_source_values_errors_and_coercion_reentry ... ok
+test live_clock_values_errors_and_reentry ... FAIL
+
+failures:
+
+---- live_clock_values_errors_and_reentry output ----
+    JS exception that was thrown:
+        Error: JsValue(Error: clock/start/duration-order
+        expected [[[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,[[200,300,100,1000,200,100,1000,300],[200,300],false,[[false,["undefined","undefined",0,0,0,0,0,0],["undefined","undefined",100,1000,0,100,1000,0],[true,true,false,true,true,false]],[true,["undefined","undefined",100,1000,0,100,1000,0],["undefined","undefined",100,1000,200,100,1000,300],[false,false,true,false,false,true]]],[["request",1]],[]]]],[["duration","default"],["duration","coerce"],["clock","call"],["clock-sample","number"]]]
+        actual [[[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,[[200,300,100,1000,200,100,1000,300],[200,300],false,[[false,["undefined","undefined",0,0,0,0,0,0],["undefined","undefined",100,1000,0,100,1000,0],[true,true,false,true,true,false]],[true,["undefined","undefined",100,1000,0,100,1000,0],["undefined","undefined",100,1000,200,100,1000,300],[false,false,true,false,false,true]]],[["request",1]],[]]]],[["clock","call"],["duration","default"],["duration","coerce"],["clock-sample","number"]]]
+        Error: clock/start/duration-order
+        expected [[[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,[[200,300,100,1000,200,100,1000,300],[200,300],false,[[false,["undefined","undefined",0,0,0,0,0,0],["undefined","undefined",100,1000,0,100,1000,0],[true,true,false,true,true,false]],[true,["undefined","undefined",100,1000,0,100,1000,0],["undefined","undefined",100,1000,200,100,1000,300],[false,false,true,false,false,true]]],[["request",1]],[]]]],[["duration","default"],["duration","coerce"],["clock","call"],["clock-sample","number"]]]
+        actual [[[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,[[200,300,100,1000,200,100,1000,300],[200,300],false,[[false,["undefined","undefined",0,0,0,0,0,0],["undefined","undefined",100,1000,0,100,1000,0],[true,true,false,true,true,false]],[true,["undefined","undefined",100,1000,0,100,1000,0],["undefined","undefined",100,1000,200,100,1000,300],[false,false,true,false,false,true]]],[["request",1]],[]]]],[["clock","call"],["duration","default"],["duration","coerce"],["clock-sample","number"]]]
+            at runClockCases (http://127.0.0.1:54268/snippets/xterm-web-f147851b6cb0c0ef/tests/raw_scrollable_oracle.js:695:64)
+            at http://127.0.0.1:54268/suite.js:6237:21
+            at handleError (http://127.0.0.1:54268/suite.js:173:18)
+            at imports.wbg.__wbg_runClockCases_ed17a6be5c7db83e (http://127.0.0.1:54268/suite.js:6236:76)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.__wbg_runClockCases_ed17a6be5c7db83e externref shim (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[46537]:0xafcbaa)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.raw_scrollable_browser::clock_cases::h1f5f094ca76318af (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[9023]:0x7cf2f0)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.raw_scrollable_browser::live_clock_values_errors_and_reentry::h405f8c6d16697221 (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[4342]:0x631df8)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.core::ops::function::FnOnce::call_once::h0bbfc9619debecdd (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[26947]:0xa6a5ec)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h32bb392a83cab1e7 (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[11469]:0x866020)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h76ecb54e6bfe0471 (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[16606]:0x94c5b6))
+            at imports.wbg.__wbindgen_error_new (http://127.0.0.1:54268/suite.js:6921:21)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.__wbindgen_error_new externref shim (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[37360]:0xadde6f)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.wasm_bindgen::JsError::new::h789e24cd7f22e112 (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[33671]:0xac536a)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::{{closure}}::h0ce9ac16ef7f2d50 (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[6239]:0x6f7be8)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.core::result::Result<T,E>::map_err::h5e737dde50bae5f0 (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[17917]:0x97c264)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::he21eb2cc58446946 (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[24367]:0xa355ef)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h32bb392a83cab1e7 (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[11469]:0x866038)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h76ecb54e6bfe0471 (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[16606]:0x94c5b6)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8 (http://127.0.0.1:54268/suite_bg.wasm:wasm-function[26720]:0xa66386)
+            at __wbg_adapter_1308 (http://127.0.0.1:54268/suite.js:630:10)
+
+failures:
+
+    live_clock_values_errors_and_reentry
+
+test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.52s
+
