@@ -1,0 +1,38 @@
+running 3 tests
+test real_window_timeout_delivers_rows_retained_after_cancel ... ok
+test real_timer_scheduler_retains_raw_thrown_values ... ok
+test real_timer_scheduler_matches_source_reentry_and_errors ... FAIL
+
+failures:
+
+---- real_timer_scheduler_matches_source_reentry_and_errors output ----
+    JS exception that was thrown:
+        Error: JsValue(Error: timer nested delivery/clockGet/false expected [["get-clock"],["clock",true],["get-request"],["request",100,true],["result","dispose",true,null],["get-clock"],["clock",true],["get-request"],["request",100,true],["result","refresh",true,null],["result","refresh",true,null],["pending",[2,1]],["fire",2],["get-clock"],["fire",1],["get-clock"],["clock",true],["render",1,6],["clock",true],["get-clock"],["clock",true],["render",0,2],["result","refresh",true,null],["pending",[]],["result","dispose",true,null]] actual [["get-clock"],["clock",true],["get-request"],["request",100,true],["result","dispose",true,null],["get-clock"],["clock",true],["get-request"],["request",100,true],["result","refresh",true,null],["result","refresh",true,null],["pending",[2,1]],["fire",2],["get-clock"],["fire",1],["fire-error",{}],["get-clock"],["clock",true],["get-cancel"],["cancel",1,true],["render",0,6],["result","refresh",true,null],["pending",[]],["result","dispose",true,null]]
+        Error: timer nested delivery/clockGet/false expected [["get-clock"],["clock",true],["get-request"],["request",100,true],["result","dispose",true,null],["get-clock"],["clock",true],["get-request"],["request",100,true],["result","refresh",true,null],["result","refresh",true,null],["pending",[2,1]],["fire",2],["get-clock"],["fire",1],["get-clock"],["clock",true],["render",1,6],["clock",true],["get-clock"],["clock",true],["render",0,2],["result","refresh",true,null],["pending",[]],["result","dispose",true,null]] actual [["get-clock"],["clock",true],["get-request"],["request",100,true],["result","dispose",true,null],["get-clock"],["clock",true],["get-request"],["request",100,true],["result","refresh",true,null],["result","refresh",true,null],["pending",[2,1]],["fire",2],["get-clock"],["fire",1],["fire-error",{}],["get-clock"],["clock",true],["get-cancel"],["cancel",1,true],["render",0,6],["result","refresh",true,null],["pending",[]],["result","dispose",true,null]]
+            at runTimerSchedulerCases (http://127.0.0.1:56436/snippets/xterm-web-f147851b6cb0c0ef/tests/timer_scheduler_oracle.js:112:15)
+            at http://127.0.0.1:56436/suite.js:6321:21
+            at handleError (http://127.0.0.1:56436/suite.js:176:18)
+            at imports.wbg.__wbg_runTimerSchedulerCases_9b5cd3c573abefd3 (http://127.0.0.1:56436/suite.js:6320:85)
+            at timer_scheduler_browser-30bd3a5adfc66ab5.wasm.__wbg_runTimerSchedulerCases_9b5cd3c573abefd3 externref shim (http://127.0.0.1:56436/suite_bg.wasm:wasm-function[46425]:0xb0bf78)
+            at timer_scheduler_browser-30bd3a5adfc66ab5.wasm.timer_scheduler_browser::cases::ha9e01779ac3f5c71 (http://127.0.0.1:56436/suite_bg.wasm:wasm-function[9052]:0x7df9c8)
+            at timer_scheduler_browser-30bd3a5adfc66ab5.wasm.timer_scheduler_browser::real_timer_scheduler_matches_source_reentry_and_errors::h81bc11075f471f3b (http://127.0.0.1:56436/suite_bg.wasm:wasm-function[4367]:0x641c2c)
+            at timer_scheduler_browser-30bd3a5adfc66ab5.wasm.core::ops::function::FnOnce::call_once::he9366780a216f02b (http://127.0.0.1:56436/suite_bg.wasm:wasm-function[26932]:0xa7a1be)
+            at timer_scheduler_browser-30bd3a5adfc66ab5.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h85234fb66456a022 (http://127.0.0.1:56436/suite_bg.wasm:wasm-function[11512]:0x877593)
+            at timer_scheduler_browser-30bd3a5adfc66ab5.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h672f66039fc3fe11 (http://127.0.0.1:56436/suite_bg.wasm:wasm-function[16651]:0x95deac))
+            at imports.wbg.__wbindgen_error_new (http://127.0.0.1:56436/suite.js:6989:21)
+            at timer_scheduler_browser-30bd3a5adfc66ab5.wasm.__wbindgen_error_new externref shim (http://127.0.0.1:56436/suite_bg.wasm:wasm-function[37306]:0xaed478)
+            at timer_scheduler_browser-30bd3a5adfc66ab5.wasm.wasm_bindgen::JsError::new::h28e20dee60d80f01 (http://127.0.0.1:56436/suite_bg.wasm:wasm-function[33644]:0xad4c3d)
+            at timer_scheduler_browser-30bd3a5adfc66ab5.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::{{closure}}::h9c8eadcc9bb16e08 (http://127.0.0.1:56436/suite_bg.wasm:wasm-function[6269]:0x7081a4)
+            at timer_scheduler_browser-30bd3a5adfc66ab5.wasm.core::result::Result<T,E>::map_err::hc4eb6872350a4cc5 (http://127.0.0.1:56436/suite_bg.wasm:wasm-function[17952]:0x98d59b)
+            at timer_scheduler_browser-30bd3a5adfc66ab5.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::hfc419f2c5d5469fb (http://127.0.0.1:56436/suite_bg.wasm:wasm-function[24365]:0xa455c6)
+            at timer_scheduler_browser-30bd3a5adfc66ab5.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h85234fb66456a022 (http://127.0.0.1:56436/suite_bg.wasm:wasm-function[11512]:0x8775ab)
+            at timer_scheduler_browser-30bd3a5adfc66ab5.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h672f66039fc3fe11 (http://127.0.0.1:56436/suite_bg.wasm:wasm-function[16651]:0x95deac)
+            at timer_scheduler_browser-30bd3a5adfc66ab5.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8 (http://127.0.0.1:56436/suite_bg.wasm:wasm-function[26711]:0xa76127)
+            at __wbg_adapter_1327 (http://127.0.0.1:56436/suite.js:637:10)
+
+failures:
+
+    real_timer_scheduler_matches_source_reentry_and_errors
+
+test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.04s
+
