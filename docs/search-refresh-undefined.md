@@ -42,4 +42,6 @@ The negative controls restore all three old search producers from3fe9a262, keepi
 
 ## Review and integration
 
-Independent review and canonical integration are pending. No main reference has been changed by this lane. Preserve accepted source and concise raw evidence in Git before deleting owned temporary files.
+Task422 accepted source/evidence2d6da430 against base013bf319. The isolated reviewer independently ran native40/40, scoped warning-denied Clippy, affected-file rustfmt and diff checking. It verified all37 then-pinned files, both retained browser artifacts and all776 reference-manifest entries. It inspected source/WASM and control receipts without launching browsers. No files changed and no findings were raised. `review.txt` preserves the outcome; the final summary adds that receipt as its38th pin.
+
+Canonical integration is delegated to task309, not claimed complete. No main reference has been changed by this lane. Accepted source and concise raw evidence are preserved in Git before owned temporary cleanup.
