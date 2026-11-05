@@ -1,0 +1,27 @@
+
+running 1 test
+test full_source_constructor_operand_errors_and_ordering has been running for over 60 seconds
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\ShiminCffDict\crates\xterm-addons)
+warning: function `validate` is never used
+ --> crates\xterm-addons\src\ligatures\font_cff2_dict.rs:7:15
+  |
+7 | pub(super) fn validate(bytes: &[u8]) -> Result<(), FontError> {
+  |               ^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: function `read` is never used
+  --> crates\xterm-addons\src\ligatures\font_cff2_dict.rs:36:4
+   |
+36 | fn read(bytes: &[u8], position: &mut usize) -> Result<u8, FontError> {
+   |    ^^^^
+
+warning: function `take` is never used
+  --> crates\xterm-addons\src\ligatures\font_cff2_dict.rs:41:4
+   |
+41 | fn take(bytes: &[u8], position: &mut usize, length: usize) -> Result<(), FontError> {
+   |    ^^^^
+
+warning: `xterm-addons` (lib) generated 3 warnings
+    Finished `test` profile [unoptimized] target(s) in 5.15s
+     Running tests\font_cff2_dict.rs (target\debug\deps\font_cff2_dict-dc24a64dd5c4dd8e.exe)

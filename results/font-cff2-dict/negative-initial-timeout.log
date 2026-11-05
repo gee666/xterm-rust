@@ -1,0 +1,25 @@
+node:internal/child_process:1143
+    result.error = new ErrnoException(result.error, 'spawnSync ' + options.file);
+                   ^
+
+Error: spawnSync cargo ETIMEDOUT
+    at Object.spawnSync (node:internal/child_process:1143:20)
+    at spawnSync (node:child_process:911:24)
+    at run (file:///O:/xterm-rust-swarm-16/tmp/worktrees/ShiminCffDict/scripts/font-cff2-dict-negative.mjs:11:16)
+    at file:///O:/xterm-rust-swarm-16/tmp/worktrees/ShiminCffDict/scripts/font-cff2-dict-negative.mjs:18:24 {
+  errno: -4039,
+  code: 'ETIMEDOUT',
+  syscall: 'spawnSync cargo',
+  path: 'cargo',
+  spawnargs: [
+    'test',
+    '-j2',
+    '-p',
+    'xterm-addons',
+    '--test',
+    'font_cff2_dict',
+    'full_source_constructor_operand_errors_and_ordering',
+    '--',
+    '--exact'
+  ]
+}
