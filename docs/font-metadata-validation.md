@@ -14,7 +14,7 @@ Uncompressed metadata retains access to the original font's remaining bytes rath
 
 ## Evidence
 
-All commands ran on Windows with Node24.15.0 and Cargo jobs limited to2. New build and scratch outputs stayed in the owned O: worktree. `results/font-metadata/` contains command logs and the exact browser runner report. The latter retains execution-time paths and artifact hashes; temporary binaries are disposable, not committed.
+All commands ran on Windows with Node24.15.0 and Cargo jobs limited to2. Explicit build/test/script outputs stayed in the owned O: worktree. The later shell-environment audit and implicit scratch uncertainty are recorded in `docs/font-hmtx-validation.md`. `results/font-metadata/` contains command logs and the exact browser runner report. The latter retains execution-time paths and artifact hashes; temporary binaries are disposable, not committed.
 
 ```sh
 node scripts/font-metadata-oracle.mjs --source=PATH_TO_REFERENCE

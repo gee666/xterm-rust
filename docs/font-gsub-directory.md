@@ -29,7 +29,7 @@ Observed on Windows, Rust/Cargo1.85.1, Node24.15.0:
 
 The initial WASM test compilation identified a missing direct test-only miniz dependency in the new shared reconstruction module. `wasm-build-initial.log` retains that error; `wasm-build.log` retains the corrected build. The browser runner owns and closes its server/browsers in finally cleanup. `browser-summary.json` retains raw browser outcomes, source/artifact hashes and execution-time paths; generated binaries are temporary, not committed.
 
-Commands from the worktree, with Cargo jobs2 and TEMP/TMP under its O: scratch directory:
+For reproduction, use Cargo jobs2 and set TEMP first, then assign TMP and TMPDIR in separate shell commands to the O: scratch directory. The later environment audit in `docs/font-hmtx-validation.md` records that the original same-command assignment left TMP inherited; implicit scratch placement is not certified.
 
 ```sh
 node scripts/font-metadata-oracle.mjs --source=PATH_TO_REFERENCE

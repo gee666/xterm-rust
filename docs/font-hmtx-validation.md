@@ -40,4 +40,10 @@ WASM_PACKAGE=xterm-font-addons WASM_TEST=font_metadata_browser node scripts/brow
 cargo fmt --all -- --check
 ```
 
-All new scratch/build output stayed in the owned `O:/xterm-rust-swarm-16/tmp/L374` worktree with Cargo jobs2. Browser runners close their own servers/browsers. This scoped evidence is not a final native-platform/workspace release matrix, complete original addon suite result, or proof of full font parity.
+Explicit build/test/script output stayed in the owned `O:/xterm-rust-swarm-16/tmp/L374` worktree with Cargo jobs2. A post-gate environment audit found that the same-command shell assignment `export TEMP=O:... TMP=$TEMP` retained inherited `/tmp` in TMP. Implicit compiler/tool scratch placement therefore cannot be certified as O:-only. No unknown shared temporary directory was deleted. Future commands must assign TEMP first, then set TMP and TMPDIR in separate commands. Browser runners close their own servers/browsers.
+
+## Canonical integration
+
+The unchanged canonical helper integrated reviewed381 with accepted376/377/382 and reaccepted375 into main `d0f8a341b82b80d1610498e308429d6145cd7bbd`, based on `1729d89`. Owned font, serializer and mouse source files matched their reviewed refs before freeze; `integration-picks.json` records the exact selection and hashes. The gate passed changed core/addons/web all-target builds/tests, affected native/workspace checks and applicable WASM library checks, then removed the private target. Raw `canonical-merge.log` and `canonical-summary.json` record2046 passing default-feature test functions across390 summaries, zero failures/ignored tests. This is not a950-function count, nor a fresh original-browser/GC/full-suite run.
+
+This scoped evidence is not a final native-platform/workspace release matrix, complete original addon suite result, or proof of full font parity.
