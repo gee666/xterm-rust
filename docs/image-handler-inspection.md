@@ -29,6 +29,12 @@ After rebasing onto integrated maincbe72b5, all gates and the complete639 origin
 
 The first scoped check found an inference error in a new test's `Into` array. The first exact formatting invocation hit Windows OS206 at the longer owned path. Moving the same worktree to `O:tmp/Q` allowed the exact command to run and found one module-order formatting difference, which was fixed. No original assertion or production behavior changed to clear these checks.
 
+## Integration and cleanup
+
+Reviewed390 prerequisites and393 changes reached actual `main` at847b92b7 through the canonical helper. The helper tested the changed xterm-addons and xterm-web crates with512 passing tests across159 summaries, then passed affected-package, workspace and WASM checks. A fresh21×3 coordinator run also passed on the preceding canonical Base64 decoder union4ef03c27. The reviewed image source bytes were unchanged across that rebase. The helper removed the private target.
+
+The owned dependency junction was explicitly unlinked without traversing it. Cleanup preflight found9388 regular files,2287 directories, zero links or path redirects and no owned processes; the retained P: dependency installation remains present. The remaining owned Q worktree is disposable after the receipt commit and final clean-tree preflight. The older C311 empty-directory lock belongs to390's previously documented cleanup exception, not a new393 deletion target.
+
 ## Reproduce
 
 Use the reference and tool prerequisites from docs/image-canvas.md. Source tests and assertions must remain unchanged.
