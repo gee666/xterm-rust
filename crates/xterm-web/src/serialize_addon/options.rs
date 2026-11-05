@@ -57,15 +57,8 @@ pub(super) fn line_range(start: JsValue, end: JsValue) -> Result<LineRange, JsVa
         end: index(end)?,
     })
 }
-pub(super) fn scrollback_start(max: usize, rows: usize, value: JsValue) -> Result<usize, JsValue> {
-    let start = scrollback_row(max, rows, value)?;
-    if start.is_nan() {
-        return Err(js_sys::RangeError::new("Invalid array length").into());
-    }
-    index(JsValue::from_f64(start))
-}
-/// HTML traverses the result of source addition and clamp without ANSI's array
-/// allocation. Preserve NaN and fractional rows until that traversal is selected.
+/// Preserve the result of source addition and clamp until the caller selects
+/// ANSI's array allocation or HTML's raw numeric row traversal.
 pub(super) fn scrollback_row(max: usize, rows: usize, value: JsValue) -> Result<f64, JsValue> {
     if value.is_undefined() {
         return Ok(0.0);
