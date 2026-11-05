@@ -1,0 +1,164 @@
+{
+  "package": "xterm-font-addons",
+  "testName": "font_cff_index_browser",
+  "testTimeoutMs": 180000,
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T20:53:32.101Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-font-addons",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "font_cff_index_browser",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 5064.7838,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 15.707499999999527,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\HippolytaCff\\results\\acceptance-artifacts\\528fd59de8e37f69f9bc849af1e9f275368619ac1366a4b89815d70c82f0ed0f\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\HippolytaCff\\results\\browser-host\\xterm-font-addons__font_cff_index_browser\\2026-11-05T20-53-32-099Z-12601744-c418-4aaa-b118-ff5a362b3dc9\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 419.83810000000085,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "passed",
+      "tests": [
+        "__wbgt__font_cff_index_browser::actual_addon_index_rejection_caching_and_recovery",
+        "__wbgt__font_cff_index_browser::source_index_corpus_and_independent_input_recipes_match_wasm"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "log",
+          "text": "CFF INDEX actual addon raw errors/lifecycle: {\"first\":{\"loading\":[[1,4]],\"ranges\":[[1,4]],\"reads\":1,\"refreshes\":0},\"cached\":{\"reads\":1,\"refreshes\":0},\"recovery\":{\"loading\":[[1,4]],\"ranges\":[[1,4]],\"reads\":2,\"refreshes\":1},\"second\":{\"loading\":[[1,4]],\"ranges\":[[1,4]],\"reads\":3,\"refreshes\":1},\"final\":{\"loading\":[[1,4]],\"ranges\":[[1,4]],\"reads\":4,\"refreshes\":2},\"debug\":[null,{\"name\":\"RangeError\",\"message\":\"Font table offset is outside the input\"}]}"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 2 tests\ntest source_index_corpus_and_independent_input_recipes_match_wasm ... ok\ntest actual_addon_index_rejection_caching_and_recovery ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 filtered out; finished in 17.29s\n\n",
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "firefox",
+      "status": "failed",
+      "tests": [],
+      "errors": [
+        "page.waitForFunction: Timeout 180000ms exceeded.\n    at O:\\xterm-rust-swarm-16\\tmp\\worktrees\\HippolytaCff\\scripts\\browser-host-check.mjs:138:18\n    at async withArtifactServer (O:\\xterm-rust-swarm-16\\tmp\\worktrees\\HippolytaCff\\scripts\\browser-artifact-server.mjs:28:12)\n    at async file:///O:/xterm-rust-swarm-16/tmp/worktrees/HippolytaCff/scripts/browser-host-check.mjs:101:3"
+      ],
+      "console": [
+        {
+          "type": "log",
+          "text": "CFF INDEX actual addon raw errors/lifecycle: {\"first\":{\"loading\":[[1,4]],\"ranges\":[[1,4]],\"reads\":1,\"refreshes\":0},\"cached\":{\"reads\":1,\"refreshes\":0},\"recovery\":{\"loading\":[[1,4]],\"ranges\":[[1,4]],\"reads\":2,\"refreshes\":1},\"second\":{\"loading\":[[1,4]],\"ranges\":[[1,4]],\"reads\":3,\"refreshes\":1},\"final\":{\"loading\":[[1,4]],\"ranges\":[[1,4]],\"reads\":4,\"refreshes\":2},\"debug\":[null,{\"name\":\"RangeError\",\"message\":\"Font table offset is outside the input\"}]}"
+        }
+      ],
+      "version": "150.0.2"
+    },
+    {
+      "name": "webkit",
+      "status": "passed",
+      "tests": [
+        "__wbgt__font_cff_index_browser::actual_addon_index_rejection_caching_and_recovery",
+        "__wbgt__font_cff_index_browser::source_index_corpus_and_independent_input_recipes_match_wasm"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "log",
+          "text": "CFF INDEX actual addon raw errors/lifecycle: {\"first\":{\"loading\":[[1,4]],\"ranges\":[[1,4]],\"reads\":1,\"refreshes\":0},\"cached\":{\"reads\":1,\"refreshes\":0},\"recovery\":{\"loading\":[[1,4]],\"ranges\":[[1,4]],\"reads\":2,\"refreshes\":1},\"second\":{\"loading\":[[1,4]],\"ranges\":[[1,4]],\"reads\":3,\"refreshes\":1},\"final\":{\"loading\":[[1,4]],\"ranges\":[[1,4]],\"reads\":4,\"refreshes\":2},\"debug\":[null,{\"name\":\"RangeError\",\"message\":\"Font table offset is outside the input\"}]}"
+        }
+      ],
+      "version": "26.4",
+      "output": "running 2 tests\ntest source_index_corpus_and_independent_input_recipes_match_wasm ... ok\ntest actual_addon_index_rejection_caching_and_recovery ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 filtered out; finished in 22.60s\n\n",
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/528fd59de8e37f69f9bc849af1e9f275368619ac1366a4b89815d70c82f0ed0f/artifact.wasm",
+      "sha256": "528fd59de8e37f69f9bc849af1e9f275368619ac1366a4b89815d70c82f0ed0f",
+      "bytes": 22805671,
+      "originalPath": "O:/xterm-rust-swarm-16/tmp/worktrees/HippolytaCff/target\\wasm32-unknown-unknown\\debug\\deps\\font_cff_index_browser-39caf891b96eb170.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\HippolytaCff\\results\\browser-host\\xterm-font-addons__font_cff_index_browser\\2026-11-05T20-53-32-099Z-12601744-c418-4aaa-b118-ff5a362b3dc9\\artifacts\\suite_bg.wasm",
+      "bytes": 21754323,
+      "sha256": "0b3b60ed3ca5be1670b4c4890fa20abcee25e3319b52d6d6afdfb9771ad7becc"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\HippolytaCff\\results\\browser-host\\xterm-font-addons__font_cff_index_browser\\2026-11-05T20-53-32-099Z-12601744-c418-4aaa-b118-ff5a362b3dc9\\artifacts\\suite.js",
+      "bytes": 75118,
+      "sha256": "5d6f1cdd9d94818fdee8dd75bd1c5a1c26e406b010b2661d1478041463757270"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "fd216d859b055b62135343af821f3c2585cf3e02a3e02727c47dd5db57cafb9f"
+  },
+  "finishedAt": "2026-11-05T20:59:04.765Z"
+}

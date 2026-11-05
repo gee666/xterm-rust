@@ -24,14 +24,20 @@ extern "C" {
 }
 #[wasm_bindgen_test]
 fn source_index_corpus_and_independent_input_recipes_match_wasm() {
+    console_log!("INDEX corpus start {}", js_sys::Date::now());
     assertions::assert_corpus();
+    console_log!("INDEX corpus done {}", js_sys::Date::now());
     assertions::assert_header_regression();
+    console_log!("HEADER regression done {}", js_sys::Date::now());
     let fixture = assertions::fixture();
     let base = Uint8Array::from(
         include_bytes!("../../xterm-addons/tests/fixtures/ligature-fonts/FiraCode-Regular.otf")
             .as_slice(),
     );
-    for case in fixture["cases"].as_array().unwrap() {
+    for (i, case) in fixture["cases"].as_array().unwrap().iter().enumerate() {
+        if i % 64 == 0 {
+            console_log!("INDEX byte recipe {} at {}", i, js_sys::Date::now());
+        }
         let mut encoded = fixture["woffTemplates"]["otf"].clone();
         if let Some(overrides) = case["encoded"].as_object() {
             encoded.as_object_mut().unwrap().extend(overrides.clone());
@@ -52,6 +58,7 @@ fn source_index_corpus_and_independent_input_recipes_match_wasm() {
             assert_eq!(header_input(&base, &raw, &encoded).to_vec(), actual);
         }
     }
+    console_log!("INDEX byte recipes done {}", js_sys::Date::now());
 }
 #[wasm_bindgen_test(async)]
 async fn actual_addon_index_rejection_caching_and_recovery() {

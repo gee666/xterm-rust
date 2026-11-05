@@ -23,12 +23,22 @@ cargo test --locked -j2 -p xterm-addons --lib font_deflate::tests
 cargo clippy --locked -j2 -p xterm-addons --lib --test font_cff_index -- -D warnings
 cargo clippy --locked -j2 -p xterm-font-addons --target wasm32-unknown-unknown --test font_cff_index_browser -- -D warnings
 SOURCE_PACKAGE_JSON=/path/to/source_repo/package.json node scripts/font-cff-index-browser-source.mjs
-WASM_PACKAGE=xterm-font-addons WASM_TEST=font_cff_index_browser node scripts/browser-host-check.mjs
+WASM_PACKAGE=xterm-font-addons WASM_TEST=font_cff_index_browser WASM_TEST_TIMEOUT_MS=360000 node scripts/browser-host-check.mjs
 ```
 
 The source constructor corpus has476 recipes,56 accepted and420 RangeError bounds failures, seed0x472cff01. It covers all four initial indexes, truncation through count/width/offset/object bytes, signed and reversed ranges, widths0 and5..255, both directory tags, SFNT/WOFF, and eight CFF2 inputs whose count/width reads cross the cached prefix. Recipes preserve input SHA256 and FNV32 and expand independently in Rust and JavaScript. Original font bytes are not duplicated per case.
 
 Browser tests replay the native corpus and520 accepted457 header cases, compare all476 independent byte reconstructions, and load four actual LigaturesAddon fonts asynchronously. They assert rejection, failed-font caching, fallback ranges, recovery, read/refresh counts, and the prior RangeError's name. Raw source and Rust debug error receipts are retained separately. Results under `results/font-cff-index/` distinguish source execution, native Rust and actual WASM execution. Initial logs before the bounded-storage revision are historical, not final-source receipts.
+
+## Observed final execution
+
+Native Windows Rust1.85.1/Cargo1.85.1 and Node24.15.0 were used. All187 xterm-addons test functions in40 all-target/all-feature harnesses passed, with no failed or ignored tests. Scoped native/WASM warning-denied Clippy passed. Exact workspacefmt still fails with OS206; all five memberfmt checks pass.
+
+Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4 each passed476 source constructors and four source addon loads. Each engine also passed both actual Rust/WASM functions, including476 constructor outcomes,520 header regressions,476 independent byte-recipe comparisons and four asynchronous addon loads. Raw source and actual addon debug errors remain in the JSON receipts. Source messages vary by engine and differ from the Rust adapter message, as described below.
+
+The first actual matrix and a targeted Firefox diagnostic exceeded a180-second runner deadline. The diagnostic recorded completed phases of93.8 seconds for the INDEX corpus,84.6 seconds for header regressions and76.1 seconds for byte recipes, rather than an assertion failure or an infinite loop. Based on those measurements, the final unchanged assertion set used a bounded360-second deadline. It passed in17.64 seconds on Chromium,284.14 seconds on Firefox and30.83 seconds on WebKit. Both earlier failures and diagnostic progress remain retained. These are debug test workloads with fixture parsing/reconstruction, not release benchmarks or a claimed speed comparison.
+
+`final-artifacts.json` pins the inspected compiler/converted WASM, bindings, CSS and native test executables. The final raw compiler WASM is retained under acceptance-artifacts; generated temporary distributions can be recreated with the recorded commands. No release artifact size or end-user addon performance is inferred from a test binary.
 
 ## Explicit remaining gaps
 
