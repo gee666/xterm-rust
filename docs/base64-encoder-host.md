@@ -30,6 +30,12 @@ Native Windows evidence at base main85e0fd43 uses Node24.15.0, Rust/cargo1.85.1 
 
 Reports contain historical paths and digests for disposable compiler/browser artifacts, not committed distributions. Full workspace all-feature quality, native Linux/macOS runtime, unchanged original addon suites and browser/demo closure are not established by these scoped results.
 
+## Independent review and union
+
+The isolated task418 reviewer accepted original source commitfa4fef89 with no findings or tracked edits. It independently reran all86 source cases,48 browser executions,10 native tests, six-suite warning-denied WASM Clippy and all-five-package formatting. It checked final baseline/after hashes and all776 reference entries and reproduced exact full-workspace formatting OS206. `results/base64-encode-host/review.md` retains the verdict and scope.
+
+After a clean rebase onto actual maine8011592 as fb4cae70, the producer reran all48 browser executions,10 native regressions and six-suite WASM Clippy successfully. The `union-*` reports retain those results. The application hunk did not change. Main advanced independently during that run, so later main revisions are not implied to pass. Canonical integration and any final refresh remain309's responsibility.
+
 ## Reproduce
 
 Use the existing source-only esbuild/Playwright dependencies and wasm-bindgen0.2.100 via SOURCE_ROOT, PLAYWRIGHT_MODULE and WASM_BINDGEN. Set CARGO_BUILD_JOBS=2 and keep all scratch/private targets on O: under the team heavy-job limit.
