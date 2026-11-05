@@ -29,4 +29,6 @@ Historical component evidence and old task numbers in recovered documents remain
 
 The only owned temporary root is `O:/xterm-rust-swarm-16/tmp/worktrees/Clifford16`. The runner owns and closes browser/server processes. The temporary `source_repo/node_modules` junction points to the existing P: dependency install. Before whole-worktree cleanup, unlink it, reject remaining reparse points, inspect tracked/untracked changes, preserve required receipts and confirm HEAD is integrated. Do not remove the original reference or any old worktree.
 
-Final canonical gate and cleanup receipts must be added to `results/font-terminal/` and the coordination post before retiring. Malcolm owns integration/resource task309; do not independently write main while another producer has final-ref exclusivity.
+Canonical integration succeeded at main `6644767` from base `1c2bdbf`. The helper built/tested all five crates, checked affected native/workspace/WASM libraries and removed the private target. Native summaries report 1,962 passing tests across 354 summaries. `results/font-terminal/canonical-merge.{json,log}` retains the exact scoped gate. The attempted temporary R: mapping did not solve full-fmt OS206 and was removed; its receipts also remain in results.
+
+Final whole-worktree cleanup follows the receipt-only canonical merge and is reported in the coordination post. Malcolm owns integration/resource task309; do not independently write main while another producer has final-ref exclusivity.

@@ -37,7 +37,11 @@ Early new-test expectations incorrectly assumed unjoined ASCII cells always occu
 
 Task 307 tracks raw/malformed joiner-return compatibility, unused optional font metadata rejection, the unchanged 8-case legacy Node `LigaturesAddon.test.ts` suite and actual loaded-font shaping on a terminal. The current joiner adapter accepts arrays of finite nonnegative integer UTF16 offsets within the WASM index range. It reports invalid returns as handler errors rather than reproducing every JavaScript coercion or range-array identity mutation. This is a known compatibility gap, not evidence of equivalence.
 
-The empty fallback source hang remains the explicit Rust safety divergence documented in `font-addons.md`. Native Linux/macOS results and the final workspace all-feature/release/format matrix remain separate requirements. `cargo fmt --all -- --check` on this longer worktree path hit Windows OS206, so the scoped formatting pass does not satisfy that full gate.
+The empty fallback source hang remains the explicit Rust safety divergence documented in `font-addons.md`. Native Linux/macOS results and the final workspace all-feature/release/format matrix remain separate requirements. `cargo fmt --all -- --check` hit Windows OS206, including a trial through an unused temporary R: drive mapping. The mapping was removed in finally; the scoped formatting pass does not satisfy that full gate. `results/font-terminal/short-path-fmt.json` records the failed hypothesis.
+
+## Canonical integration
+
+The existing canonical helper integrated the reviewed producer through main `6644767`, after base `1c2bdbf`. All five workspace crates built and ran all-target tests. There were 354 native test summaries containing 1,962 passing tests, zero failures. Affected all-target checks, workspace checks and applicable WASM library checks passed. The helper removed the private target. Exact default-feature gate output is in `results/font-terminal/canonical-merge.log` and its machine-readable summary. This is not the full all-feature/release/native-platform matrix.
 
 ## Temporary resources
 
