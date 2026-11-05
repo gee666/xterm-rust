@@ -57,7 +57,9 @@ async function checkSearchCallArgs(term, addon, write, equal) {
               check('no color before failed argument', backgrounds, 0);
             } else {
               check('search result', found, query === 'foo');
-              check('final selection', term.getSelection(), query === 'foo' ? 'foo' : '');
+              // Nested search replaces the cached term and selected position;
+              // the outer search then expands from that nested selection.
+              check('final selection', term.getSelection(), query === 'foo' ? action.startsWith('nested') ? 'FOO' : 'foo' : '');
               check('distinct argument object colors', backgrounds, query === 'foo' && action !== 'skip' ? 2 : 0);
               check('decoration phase reads', reads, action === 'skip' ? 4 : 5);
               check('stored result count survives late getter', report, {resultIndex: -1, resultCount: query === 'foo' ? 2 : 0});
