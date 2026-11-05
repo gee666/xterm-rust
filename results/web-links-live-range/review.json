@@ -1,0 +1,19 @@
+{
+  "task": 450,
+  "verdict": "accept",
+  "sourceCommit": "428eee533299ff69b0ae7e9987a79d20c4f4896e",
+  "evidenceCommit": "0edb6534",
+  "concreteProblems": [],
+  "independentChecks": [
+    "All 24 source/production callback cases, with receipt writes suppressed",
+    "Rustfmt for the four changed Rust files and whitespace checks",
+    "All 20 receipt, 10 source, and 20 artifact hashes",
+    "Source-map contents for the five selected upstream files",
+    "Fixture consistency, retained three-engine pass receipts, compiled negative control comparison failure and exact restoration hashes"
+  ],
+  "notRunByReviewer": ["Cargo", "Browsers"],
+  "resourceRestriction": "Source/light only, no compiler or browser grant",
+  "findingSummary": "Scoped fix correct. URL discovery and snapshots stay in Rust, live JavaScript objects use the existing controller. Captured leave, double hover reads, options receiver and live link.range match source. Typed native API unchanged; default callback retains no terminal/provider/link.",
+  "scope": "Documentation distinguishes final and older regression evidence, OS206 remains a full-format failure, full321 and overall equivalence remain open.",
+  "lateReceiptNotice": "This review and the later cleanup receipt/index additions were not among the 20 receipt pins independently checked."
+}
