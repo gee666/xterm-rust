@@ -28,3 +28,7 @@ Audit passes706 repeated phase-input pins, seven artifacts, both776-file referen
 ## Cleanup
 
 Owned root O:/xterm-rust-swarm-16/tmp/worktrees/OseiImageCell. Review/evidence are committed before cleanup. Fresh process/filesystem/git preflight and exact generated-report-copy checks precede deleting only this root's regular target/tmp/physicalsource/generatedbrowseroutputs. Source branches and durable evidence are preserved. Final cleanup receipts will state absence/unregistration and original776hashes after whole removal. Do not replay cleanup or clean anyone else's paths. Artifact locations in retained reports become historical identities after cleanup, not permanent installations.
+
+## Final cleanup confirmation
+
+Own O: root is ABSENT/unregistered after normal worktree remove, no force. Fresh final preflight 12372files/2406dirs, zero links/redirects/ownedjobs. Original776manifest hashes PASS AFTER whole removal. Review receipt a8732da2 and generated-output cleanup e7b799ea precede this final receipt commit. Exact receipt in results/image-inactive-coordinates/cleanup-removed.json. No owned temporary paths, jobs, grants or pending personal replies remain. Never replay deletion.
