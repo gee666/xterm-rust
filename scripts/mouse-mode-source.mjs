@@ -17,6 +17,7 @@ const families = {
   modes: ['browser_mouse_mode_cases.js', 'mouse-modes'],
   'wheel-receiver': ['browser_wheel_receiver_cases.js', 'wheel-receiver'],
   'builtin-methods': ['browser_mouse_builtin_cases.js', 'mouse-builtin-methods'],
+  disposal: ['browser_mouse_dispose_cases.js', 'mouse-disposal'],
 };
 if (!Object.hasOwn(families, family)) throw new Error('Invalid MOUSE_CASE_FAMILY');
 const [caseFile, resultDirectory] = families[family];

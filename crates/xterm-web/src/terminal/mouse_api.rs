@@ -7,6 +7,7 @@ use js_sys::Function;
 use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 use xterm_core::{
+    lifecycle::Disposable,
     mouse_fields::{Encoding, Protocol},
     mouse_state::MouseStateService,
 };
@@ -115,5 +116,11 @@ impl BrowserMouseState {
 
     pub fn reset(&self) -> Result<(), JsValue> {
         self.service.reset().map_err(|error| to_js_error(&error))
+    }
+
+    /// Only the registered protocol emitter is disposed. Modes and mouse
+    /// policies remain usable through a retained service, as in the source.
+    pub fn dispose(&self) {
+        self.service.dispose();
     }
 }
