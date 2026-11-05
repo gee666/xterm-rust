@@ -37,19 +37,22 @@ function run(name,bg,fg,opts={}) {
   let bgMode=a.getBgColorMode(),fgMode=a.getFgColorMode(),bgColor=a.getBgColor(),fgColor=a.getFgColor();
   if(inverse){[bgMode,fgMode]=[fgMode,bgMode];[bgColor,fgColor]=[fgColor,bgColor];}
   const cache=dim?colors.halfContrastCache:colors.contrastCache;
-  if(cacheNull)cache.setColor(bg,fg,null);
+  const original=opts.original??[bg,fg];
+  if(cacheNull)cache.setColor(...original,null);
+  if(opts.seedColor!==undefined)cache.setColor(...original,rgba(opts.seedColor));
   let expected,error;
   try {
     const backgrounds=[],foregrounds=[];
     for(let i=0;i<2;i++) {
       backgrounds.push(atlas._getBackgroundColor(bgMode,bgColor,inverse,dim));
-      foregrounds.push(atlas._getForegroundColor(bg,bgMode,bgColor,fg,fgMode,fgColor,inverse,dim,bold,excluded));
+      foregrounds.push(atlas._getForegroundColor(original[0],bgMode,bgColor,original[1],fgMode,fgColor,inverse,dim,bold,excluded));
     }
-    const cached=cache.getColor(bg,fg);
+    const cached=cache.getColor(...original);
     expected={background:backgrounds[0],foreground:foregrounds[0],sameBackground:backgrounds[0]===backgrounds[1],sameForeground:foregrounds[0]===foregrounds[1],
       cache:cached===undefined?'missing':cached===null?'null':cached};
   }catch(e){error=e.message;}
-  cases.push({name,bg,fg,ratio,allowTransparency,bright,excluded,paletteLength,cacheNull,expected:expected??null,error:error??null});
+  cases.push({name,bg,fg,ratio,allowTransparency,bright,excluded,paletteLength,cacheNull,
+    ...(opts.original?{original,seedColor:opts.seedColor??null}:{}),expected:expected??null,error:error??null});
 }
 for(const allowTransparency of [false,true])for(const dim of [false,true])for(const inverse of [false,true])for(const bold of [false,true])
   for(const ratio of [1,4.5,21])for(const [bg,fg]of [[0,0],[0x1000003,0x1000002],[0x2000034,0x2000065],[0x3007777,0x3007766]])
@@ -66,6 +69,12 @@ for(let i=0;i<256;i++) {
   const value=m=>m|(random()&(m===0x3000000?0xffffff:255));
   run('seeded-'+i,value(bgMode),value(fgMode),{allowTransparency:!!(random()%2),dim:!!(random()%2),bold:!!(random()%2),inverse:!!(random()%2),
     ratio:[1,2,4.5,7,21][random()%5],bright:!!(random()%2),excluded:!!(random()%2)});
+}
+for(const dim of [false,true])for(const cacheNull of [false,true,null])
+  for(const signedBg of [false,true])for(const signedFg of [false,true]) {
+  const bg=0x80000000|(dim?0x08000000:0),fg=0x80000000;
+  run(`signed-${dim}-${cacheNull}-${signedBg}-${signedFg}`,bg,fg,{dim,cacheNull,ratio:21,
+    original:[signedBg?bg:bg>>>0,signedFg?fg|0:fg>>>0],...(cacheNull===false?{seedColor:0xff3456ff}:{})});
 }
 const output=path.resolve('crates/xterm-web/tests/fixtures/webgl-atlas-colors.json');
 await writeFile(output,JSON.stringify({seed:'0x3acb128f',inputs,wrapper,foreground,background,palette,cases})+'\n');

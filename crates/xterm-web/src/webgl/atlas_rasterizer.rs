@@ -96,9 +96,7 @@ impl Rasterizer {
     pub fn draw(
         &self,
         key: &GlyphKey,
-        bg: u32,
-        fg: u32,
-        ext: u32,
+        colors: [i64; 3],
         restrict: bool,
         element: Option<&HtmlElement>,
     ) -> Result<Option<GlyphBitmap>, JsValue> {
@@ -128,6 +126,7 @@ impl Rasterizer {
         }
         let ctx = Context(&self.context);
         ctx.op("save", &[])?;
+        let [bg, fg, ext] = colors.map(|word| word as u32);
         *self.attrs.borrow_mut() = AttributeData {
             bg,
             fg,
@@ -143,7 +142,7 @@ impl Rasterizer {
         let underline = attrs.is_underline() != 0;
         let overline = attrs.is_overline() != 0;
         let strikethrough = attrs.is_strikethrough() != 0;
-        let paint = AtlasColors::paint(&attrs);
+        let paint = AtlasColors::paint_with_colors(&attrs, [colors[0], colors[1]]);
         let background = self
             .colors
             .background_for(paint)

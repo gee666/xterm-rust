@@ -32,8 +32,8 @@ struct Paint {
 }
 #[derive(Clone, Copy)]
 pub struct GlyphPaint {
-    cache_bg: u32,
-    cache_fg: u32,
+    cache_bg: i64,
+    cache_fg: i64,
     bg: Paint,
     fg: Paint,
     inverse: bool,
@@ -59,7 +59,21 @@ impl AtlasColors {
         attrs: &AttributeData,
         exclude_contrast: bool,
     ) -> Result<GlyphColors, AtlasColorError> {
-        let paint = Self::paint(attrs);
+        self.resolve_with_colors(
+            attrs,
+            [i64::from(attrs.bg), i64::from(attrs.fg)],
+            exclude_contrast,
+        )
+    }
+    /// Color-cache keys are the renderer's original integer arguments, not the
+    /// packed attribute words. Signed and unsigned aliases must remain distinct.
+    pub fn resolve_with_colors(
+        &self,
+        attrs: &AttributeData,
+        colors: [i64; 2],
+        exclude_contrast: bool,
+    ) -> Result<GlyphColors, AtlasColorError> {
+        let paint = Self::paint_with_colors(attrs, colors);
         Ok(GlyphColors {
             background: self.background_for(paint)?,
             foreground: self.foreground_for(paint, exclude_contrast)?,
@@ -68,6 +82,11 @@ impl AtlasColors {
     /// Capture source local attribute values before any canvas callback. Color
     /// and cache lookups themselves remain deferred to their drawing phase.
     pub fn paint(attrs: &AttributeData) -> GlyphPaint {
+        Self::paint_with_colors(attrs, [i64::from(attrs.bg), i64::from(attrs.fg)])
+    }
+    /// Preserve the original integer cache keys alongside packed drawing state.
+    /// The supported source-renderer range is signed i32 through unsigned u32.
+    pub fn paint_with_colors(attrs: &AttributeData, colors: [i64; 2]) -> GlyphPaint {
         let inverse = attrs.is_inverse() != 0;
         let bold = attrs.is_bold() != 0;
         let dim = attrs.is_dim() != 0;
@@ -83,8 +102,8 @@ impl AtlasColors {
             std::mem::swap(&mut bg, &mut fg);
         }
         GlyphPaint {
-            cache_bg: attrs.bg,
-            cache_fg: attrs.fg,
+            cache_bg: colors[0],
+            cache_fg: colors[1],
             bg,
             fg,
             inverse,
@@ -238,7 +257,11 @@ impl AtlasColors {
         } else {
             &self.config.colors.contrast_cache
         };
-        if let Some(value) = cache.borrow().get_color(cache_bg, cache_fg).cloned() {
+        if let Some(value) = cache
+            .borrow()
+            .get_color(cache_bg as f64, cache_fg as f64)
+            .cloned()
+        {
             return Ok(value);
         }
         let adjusted = rgba::ensure_contrast_ratio(
@@ -249,7 +272,7 @@ impl AtlasColors {
         let result: Option<ColorRef> = adjusted.map(|rgba| rgb((rgba >> 8) as i32));
         cache
             .borrow_mut()
-            .set_color(cache_bg, cache_fg, result.clone());
+            .set_color(cache_bg as f64, cache_fg as f64, result.clone());
         Ok(result)
     }
 }

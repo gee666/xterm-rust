@@ -48,6 +48,20 @@ fn config(spec: &Value, runtime: &AtlasRuntime) -> Rc<xterm_web::webgl::config::
     colors.foreground = color(0xeeeeeeff);
     colors.background = color(0x102030ff);
     colors.ansi = (0..256).map(|i| color(((i * 65793) << 8) | 255)).collect();
+    if let Some(seeds) = spec["contrastSeeds"].as_array() {
+        for seed in seeds {
+            let cache = if seed["half"] == true {
+                &colors.half_contrast_cache
+            } else {
+                &colors.contrast_cache
+            };
+            cache.borrow_mut().set_color(
+                seed["bg"].as_f64().unwrap(),
+                seed["fg"].as_f64().unwrap(),
+                seed["rgba"].as_u64().map(|rgba| color(rgba as u32)),
+            );
+        }
+    }
     let options = AtlasOptions {
         letter_spacing: 0.0,
         line_height: spec["lineHeight"].as_f64().unwrap(),
@@ -262,6 +276,14 @@ fn disabled_custom_glyphs() {
 #[wasm_bindgen_test]
 fn contrast_and_dim() {
     scenario("contrast");
+}
+#[wasm_bindgen_test]
+fn signed_full_contrast_cache_colors_and_null_reach_real_atlas_pixels() {
+    scenario("signedContrast");
+}
+#[wasm_bindgen_test]
+fn signed_half_contrast_cache_colors_and_null_reach_real_atlas_pixels() {
+    scenario("signedHalfContrast");
 }
 #[wasm_bindgen_test]
 fn merge_updates_cached_aliases() {

@@ -1,5 +1,7 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
 use super::*;
+#[path = "texture_atlas_contrast_gpu.rs"]
+mod contrast;
 use web_sys::{HtmlCanvasElement, WebGl2RenderingContext as Gl};
 use xterm_web::{
     api::{CharacterDimensions, RenderDimensions, Size},

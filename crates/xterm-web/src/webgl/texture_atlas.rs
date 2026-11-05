@@ -154,10 +154,9 @@ impl TextureAtlas {
         if let Some(glyph) = cached {
             return Ok(glyph);
         }
-        let [bg, fg, ext] = colors.map(|word| word as u32);
         let bitmap = self
             .rasterizer
-            .draw(&cache_key.0, bg, fg, ext, restrict_height, element)?;
+            .draw(&cache_key.0, colors, restrict_height, element)?;
         let glyph = if let Some(bitmap) = bitmap {
             self.pack(bitmap)?
         } else {

@@ -28,7 +28,7 @@ fn unchanged_source_colors_identity_and_contrast_cache() {
     let fixture: Value =
         serde_json::from_str(include_str!("fixtures/webgl-atlas-colors.json")).unwrap();
     let cases = fixture["cases"].as_array().unwrap();
-    assert_eq!(cases.len(), 452);
+    assert_eq!(cases.len(), 476);
     for c in cases {
         let name = c["name"].as_str().unwrap();
         let theme = ThemeService::default();
@@ -73,20 +73,42 @@ fn unchanged_source_colors_identity_and_contrast_cache() {
         } else {
             &config.colors.contrast_cache
         };
-        if c["cacheNull"].as_bool().unwrap() {
-            cache.borrow_mut().set_color(attrs.bg, attrs.fg, None);
+        let numbers = c["original"]
+            .as_array()
+            .map_or([i64::from(attrs.bg), i64::from(attrs.fg)], |v| {
+                [v[0].as_i64().unwrap(), v[1].as_i64().unwrap()]
+            });
+        let seeded = c["seedColor"].as_u64().map(|rgba| color(rgba as u32));
+        if c["cacheNull"] == true {
+            cache
+                .borrow_mut()
+                .set_color(numbers[0] as f64, numbers[1] as f64, None);
+        } else if let Some(color) = &seeded {
+            cache
+                .borrow_mut()
+                .set_color(numbers[0] as f64, numbers[1] as f64, Some(color.clone()));
         }
         let resolver = AtlasColors::new(config.clone(), &factory);
-        let result = resolver.resolve(&attrs, c["excluded"].as_bool().unwrap());
+        let result =
+            resolver.resolve_with_colors(&attrs, numbers, c["excluded"].as_bool().unwrap());
         if let Some(error) = c["error"].as_str() {
             assert_eq!(result.err().unwrap().to_string(), error, "{name}");
             continue;
         }
         let first = result.unwrap();
+        if let Some(color) = seeded {
+            assert!(
+                first.foreground.same_object(&color),
+                "seeded color identity: {name}"
+            );
+        }
         let second = resolver
-            .resolve(&attrs, c["excluded"].as_bool().unwrap())
+            .resolve_with_colors(&attrs, numbers, c["excluded"].as_bool().unwrap())
             .unwrap();
-        let cached = cache.borrow().get_color(attrs.bg, attrs.fg).cloned();
+        let cached = cache
+            .borrow()
+            .get_color(numbers[0] as f64, numbers[1] as f64)
+            .cloned();
         let cache_value = match cached {
             None => json!("missing"),
             Some(None) => json!("null"),

@@ -21,6 +21,10 @@ export function createSourceAtlas(spec) {
   const palette=Array.from({length:256},(_,i)=>makeColor(((i*65793)<<8|255)>>>0));
   const colors={foreground:makeColor(0xeeeeeeff),background:makeColor(0x102030ff),ansi:palette,
     contrastCache:new ColorContrastCache(),halfContrastCache:new ColorContrastCache()};
+  for (const seed of spec.contrastSeeds??[]) {
+    const cache=seed.half?colors.halfContrastCache:colors.contrastCache;
+    cache.setColor(seed.bg,seed.fg,seed.rgba===null?null:makeColor(seed.rgba));
+  }
   const config={devicePixelRatio:spec.dpr,deviceMaxTextureSize:spec.maxTexture,
     deviceCellWidth:spec.cellWidth,deviceCellHeight:spec.cellHeight,deviceCharWidth:spec.charWidth,deviceCharHeight:spec.charHeight,
     fontSize:spec.fontSize,fontFamily:spec.fontFamily,fontWeight:400,fontWeightBold:700,letterSpacing:0,lineHeight:spec.lineHeight,
@@ -35,7 +39,25 @@ export function atlasScenario(name) {
   const spec={dpr:1,cellWidth:9,cellHeight:18,charWidth:8,charHeight:16,fontSize:15,
     lineHeight:1,fontFamily:'monospace',transparency:false,custom:true,ratio:1,maxPages:8,maxTexture:2048,steps:[]};
   const glyph=(value,bg=0,fg=0,ext=0,restrict=false)=>spec.steps.push({value:typeof value==='string'?Array.from({length:value.length},(_,i)=>value.charCodeAt(i)):value,bg:bg>>>0,fg:fg>>>0,ext:ext>>>0,restrict});
-  if (name.startsWith('styles')) {
+  if (name==='signedContrast'||name==='signedHalfContrast'||name==='signedGpuContrast') {
+    spec.ratio=7;
+    const half=name==='signedHalfContrast',dim=half?0x08000000:0;
+    spec.contrastSeeds=[];
+    for(const [bg,fg,rgba] of [
+      [-2147483648+dim,-2147483648,0xff0000ff],
+      [2147483648+dim,-2147483648,0x00ff00ff],
+      [-2147483648+dim,2147483648,0x0000ffff],
+      [2147483648+dim,2147483648,null]]) {
+      spec.contrastSeeds.push({half,bg,fg,rgba});
+      spec.steps.push({value:77,bg,fg,ext:0,restrict:false});
+    }
+    // Different glyphs exercise the shared color cache rather than glyph hits.
+    if(name!=='signedGpuContrast') {
+      for(const seed of spec.contrastSeeds)spec.steps.push({value:[103,103],bg:seed.bg,fg:seed.fg,ext:0,restrict:false});
+      spec.steps.push({value:65,bg:-2147483647+dim,fg:0x83080808|0,ext:0,restrict:false});
+      spec.steps.push({value:65,bg:2147483649+dim,fg:0x83080808,ext:0,restrict:false});
+    }
+  } else if (name.startsWith('styles')) {
     spec.dpr=name==='styles2'?2:1;
     if (spec.dpr===2) {spec.cellWidth=19;spec.cellHeight=38;spec.charWidth=18;spec.charHeight=32;spec.lineHeight=1.25;}
     spec.transparency=name==='stylesTransparent';
