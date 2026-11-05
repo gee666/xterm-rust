@@ -13,7 +13,7 @@ use xterm_web::{
 fn unchanged_source_rgba_and_bounds() {
     let input: Value =
         serde_json::from_str(include_str!("fixtures/webgl-atlas-pixels.json")).unwrap();
-    assert_eq!(input["cases"].as_array().unwrap().len(), 527);
+    assert_eq!(input["cases"].as_array().unwrap().len(), 656);
     for c in input["cases"].as_array().unwrap() {
         let name = c["name"].as_str().unwrap();
         let mut data = fixture::pixels(&c["pixels"]);

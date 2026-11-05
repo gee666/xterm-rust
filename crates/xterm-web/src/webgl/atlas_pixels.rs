@@ -149,10 +149,20 @@ pub fn find_glyph_bounds(
     let padded_width = width
         .checked_add(scan.padding)
         .ok_or(PixelError::ScanDimensions)?;
-    if padded_width > canvas_width || height > canvas_height {
+    if width > canvas_width || height > canvas_height {
         return Err(PixelError::ScanDimensions);
     }
-    let alpha = |x: usize, y: usize| pixels[(y * canvas_width + x) * CHANNELS + ALPHA] != 0;
+    // Padded horizontal scans deliberately cross row boundaries. When the
+    // canvas grew to allowedWidth, source reads past the final row as undefined;
+    // undefined !== 0 is true. Keep that behavior without unchecked indexing.
+    let alpha = |x: usize, y: usize| {
+        y.checked_mul(canvas_width)
+            .and_then(|n| n.checked_add(x))
+            .and_then(|n| n.checked_mul(CHANNELS))
+            .and_then(|n| n.checked_add(ALPHA))
+            .and_then(|index| pixels.get(index))
+            .is_none_or(|&value| value != 0)
+    };
     // Empty inner scans cannot find alpha. Avoid walking index-sized empty
     // rows/columns when a zero-area image has one very large dimension.
     let vertical_rows = if width == 0 { 0 } else { height };

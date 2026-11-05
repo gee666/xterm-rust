@@ -54,6 +54,7 @@ for(const extra of [{},{restricted:true},{custom:true}]) {
 run('empty-default-inclusive-bounds',3,2,Array(24).fill(0),scan(2,2,{padding:1}),0x000000ff,0xffffffff,false);
 run('padding-only-negative-width',3,1,[0,0,0,0,0,0,0,0,0,0,0,255],scan(0,1,{padding:3,cell:[0,1]}),0,0,true);
 run('js-round-large-integer',1,1,[255,255,255,255],scan(1,1,{custom:true,cell:[1,9007199254740994],character:[1,0],lineHeight:1.5}),0x000000ff,0xffffffff,false);
+run('grown-canvas-padded-row-crossing',4,2,[0,0,0,255,255,255,255,255,...Array(24).fill(0)],scan(4,2,{padding:4}),0x000000ff,0xffffffff,false);
 run('zero-size-empty-bounds',0,0,[],scan(0,0),0,0,true);
 let state=0x671ba92d;
 function random(){state^=state<<13;state^=state>>>17;state^=state<<5;return state>>>0;}
@@ -70,6 +71,14 @@ for(let i=0;i<512;i++) {
   const s=scan(allowedWidth,height,{padding,restricted:!!(random()%2),custom:!!(random()%2),
     cell:[random()%(width-padding+1),random()%(height+1)],character:[(random()%32)/2,(random()%32)/2],lineHeight:random()%2?1:1.25});
   run('seeded-'+i,width,height,pixels,s,bg,fg,!!(random()%2));
+}
+// Keep the original527 cases unchanged, then extend the stream for grown
+// canvases where the source's padded horizontal scan exceeds its row width.
+for(let i=0;i<128;i++) {
+  const width=random()%12+1,height=random()%8+1,padding=random()%4+1;
+  const pixels=Array.from({length:width*height*4},()=>random()%256);
+  run('grown-seeded-'+i,width,height,pixels,scan(width,height,{padding,custom:!!(random()%2),lineHeight:1.25}),
+      0x000000ff,0xffffffff,!!(random()%2));
 }
 const output=path.resolve('crates/xterm-web/tests/fixtures/webgl-atlas-pixels.json');
 await writeFile(output,JSON.stringify({seed:'0x671ba92d',privateExportWrapper:wrapper,inputs,cases})+'\n');

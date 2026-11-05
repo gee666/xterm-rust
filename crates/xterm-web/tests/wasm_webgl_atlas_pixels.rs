@@ -26,7 +26,7 @@ extern "C" {
 fn actual_image_data_matches_original_pixel_and_bounds_cases() {
     let input: Value =
         serde_json::from_str(include_str!("fixtures/webgl-atlas-pixels.json")).unwrap();
-    assert_eq!(input["cases"].as_array().unwrap().len(), 527);
+    assert_eq!(input["cases"].as_array().unwrap().len(), 656);
     for c in input["cases"].as_array().unwrap() {
         let (w, h) = (
             c["width"].as_u64().unwrap() as u32,
