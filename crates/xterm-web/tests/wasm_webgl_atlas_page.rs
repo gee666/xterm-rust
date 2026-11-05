@@ -214,7 +214,7 @@ fn merge_constructor_shares_glyphs_and_clock_but_does_not_copy_pixels() {
     page.add_glyph(glyph.clone()).unwrap();
     page.context.set_fill_style_str("lime");
     page.context.fill_rect(0.0, 0.0, 16.0, 16.0);
-    let merged = CanvasAtlasPage::new(&doc, 32, &clock, &[page.clone()]).unwrap();
+    let merged = CanvasAtlasPage::new(&doc, 32, &clock, std::slice::from_ref(&page)).unwrap();
     assert_eq!(merged.texture().version, 2);
     assert_eq!(merged.percentage_used(), 12.0 / 1024.0);
     assert!(Rc::ptr_eq(&merged.glyphs.borrow()[0], &glyph));
