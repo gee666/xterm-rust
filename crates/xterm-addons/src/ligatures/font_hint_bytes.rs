@@ -1,7 +1,6 @@
 // Constructor reads follow opentype.js. See licenses/opentype-js-MIT.txt.
+use super::super::font_deflate as deflate;
 use super::{FontError, Reader};
-#[path = "font_hint_deflate.rs"]
-mod deflate;
 
 // Hint values never affect ligature lookup, so validate constructor reads
 // without allocating a discarded list proportional to an untrusted length.

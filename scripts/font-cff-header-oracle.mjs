@@ -20,7 +20,7 @@ for(const c of cffHeaderCases()) {
   const base=fonts[c.base??'otf'],v=new DataView(base.buffer,base.byteOffset,base.byteLength),encoded={};
   const original=Array.from({length:v.getUint16(4)},(_,i)=>12+i*16).find(at=>String.fromCharCode(...base.slice(at,at+4))==='CFF ');
   const payload=c.data?Uint8Array.from(c.data):base.slice(v.getUint32(original+8),v.getUint32(original+8)+v.getUint32(original+12));
-  if(c.header)payload.set(c.header);encoded[c.tag]=c.compressedPayload??[...deflateSync(payload)];
+  if(c.header)payload.set(c.header);encoded[c.tag]=c.compressedPayload??[...deflateSync(c.inflated?Uint8Array.from(c.inflated):payload,c.compression)];
   if(c.other)encoded[c.other.tag]=[...deflateSync(Uint8Array.from(c.other.data))];
   const bytes=cffHeaderInput(base,c,{...woffTemplates[c.base??'otf'],...encoded}),initial=bytes.slice(),warnings=[];
   const sentinel={object:{},number:42,null:null,undefined:undefined}[c.throws];

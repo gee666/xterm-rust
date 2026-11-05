@@ -1,7 +1,8 @@
 // Discarded hint-table validation follows tinf in the supplied opentype.js.
 // Copyright (c) 2015-present Devon Govett. MIT license.
 // See licenses/tiny-inflate-MIT.txt and licenses/opentype-js-MIT.txt.
-// This source-derived adaptation retains no glyph hints or output bytes.
+// This source-derived adaptation discards hints. A caller may retain only a
+// bounded metadata prefix, without allocating the source's whole output table.
 use super::FontError;
 
 const CODE_LENGTH_ORDER: [usize; 19] = [
@@ -61,7 +62,7 @@ impl Bits<'_> {
         self.index >= self.bytes.len()
             && (self.index - self.bytes.len()).saturating_mul(8) >= usize::from(self.bits)
     }
-    fn stored(&mut self) -> Result<(), FontError> {
+    fn stored(&mut self, output: &mut Prefix<'_>) -> Result<(), FontError> {
         // Preserve the actual source rewind, not canonical byte alignment.
         // In particular, an exact8-bit remainder stays prefetched and skipped.
         while self.bits > 8 {
@@ -84,9 +85,39 @@ impl Bits<'_> {
         // Equality establishes an actual two-byte length. Missing payload is
         // stored as zero by the source typed array, with no later read effect.
         let length = usize::from(length.ok_or(FontError::Compression)?);
-        self.index = start.checked_add(4 + length).ok_or(FontError::Bounds)?;
+        self.index = start.checked_add(4).ok_or(FontError::Bounds)?;
+        for index in 0..length.min(output.remaining()) {
+            output.push(self.bytes.get(self.index + index).copied().unwrap_or(0));
+        }
+        self.index = self.index.checked_add(length).ok_or(FontError::Bounds)?;
         self.bits = 0;
         Ok(())
+    }
+}
+struct Prefix<'a> {
+    bytes: &'a mut [u8],
+    written: usize,
+}
+impl Prefix<'_> {
+    fn remaining(&self) -> usize {
+        self.bytes.len() - self.written
+    }
+    fn push(&mut self, value: u8) {
+        if let Some(slot) = self.bytes.get_mut(self.written) {
+            *slot = value;
+            self.written += 1;
+        }
+    }
+    fn copy(&mut self, count: usize, distance: usize) {
+        for _ in 0..count.min(self.remaining()) {
+            let value = self
+                .written
+                .checked_sub(distance)
+                .and_then(|index| self.bytes.get(index))
+                .copied()
+                .unwrap_or(0);
+            self.push(value);
+        }
     }
 }
 struct Tree {
@@ -181,30 +212,50 @@ fn dynamic(
     distances.build(&lengths[literal_count..literal_count + distance_count]);
     Ok(())
 }
-fn data(input: &mut Bits<'_>, literals: &Tree, distances: &Tree) -> Result<(), FontError> {
+fn extra(
+    input: &mut Bits<'_>,
+    index: Option<u16>,
+    delta: u16,
+    first: usize,
+) -> Result<Option<usize>, FontError> {
+    let Some(index) = index.filter(|i| *i < 30) else {
+        return Ok(None);
+    };
+    if delta == 4 && index == 28 {
+        return Ok(Some(258));
+    }
+    let mut base = first;
+    for i in 0..index {
+        base += 1_usize << (i.saturating_sub(delta) / delta);
+    }
+    let bits = index.saturating_sub(delta) / delta;
+    Ok(Some(base + usize::from(input.read(bits as u8)?)))
+}
+fn data(
+    input: &mut Bits<'_>,
+    literals: &Tree,
+    distances: &Tree,
+    output: &mut Prefix<'_>,
+) -> Result<(), FontError> {
     loop {
         let exhausted = input.exhausted();
         match literals.decode(input)? {
             Some(END_BLOCK) => return Ok(()),
-            Some(value) if value < END_BLOCK => {}
+            Some(value) if value < END_BLOCK => output.push(value as u8),
             value => {
-                if let Some(index) = value.and_then(|v| v.checked_sub(LENGTH_SYMBOL)) {
-                    if index < 30 {
-                        let bits = if index == 28 {
-                            0
-                        } else {
-                            index.saturating_sub(4) / 4
-                        };
-                        input.read(bits as u8)?;
-                    }
+                let length = extra(
+                    input,
+                    value.and_then(|v| v.checked_sub(LENGTH_SYMBOL)),
+                    4,
+                    3,
+                )?;
+                let distance_symbol = distances.decode(input)?;
+                let distance = extra(input, distance_symbol, 2, 1)?;
+                // An undefined length/distance makes the source loop condition
+                // false. A finite negative history index instead yields zero.
+                if let (Some(length), Some(distance)) = (length, distance) {
+                    output.copy(length, distance);
                 }
-                if let Some(distance) = distances.decode(input)? {
-                    if distance < 30 {
-                        input.read((distance.saturating_sub(2) / 2) as u8)?;
-                    }
-                }
-                // Source does not reject distances beyond the output array.
-                // All copied bytes are discarded by this constructor check.
             }
         }
         if exhausted {
@@ -216,6 +267,14 @@ fn data(input: &mut Bits<'_>, literals: &Tree, distances: &Tree) -> Result<(), F
     }
 }
 pub(super) fn validate(bytes: &[u8]) -> Result<(), FontError> {
+    prefix(bytes, &mut [])
+}
+pub(super) fn prefix(bytes: &[u8], prefix: &mut [u8]) -> Result<(), FontError> {
+    prefix.fill(0);
+    let mut output = Prefix {
+        bytes: prefix,
+        written: 0,
+    };
     let mut input = Bits {
         bytes,
         index: 0,
@@ -233,11 +292,11 @@ pub(super) fn validate(bytes: &[u8]) -> Result<(), FontError> {
     loop {
         let final_block = input.bit()? != 0;
         match input.read(2)? {
-            0 => input.stored()?,
-            1 => data(&mut input, &fixed_literals, &fixed_distances)?,
+            0 => input.stored(&mut output)?,
+            1 => data(&mut input, &fixed_literals, &fixed_distances, &mut output)?,
             2 => {
                 dynamic(&mut input, &mut literals, &mut distances, &mut codes)?;
-                data(&mut input, &literals, &distances)?;
+                data(&mut input, &literals, &distances, &mut output)?;
             }
             _ => return Err(FontError::Compression),
         }

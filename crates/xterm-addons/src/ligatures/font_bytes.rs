@@ -192,7 +192,8 @@ impl<'a> FontTables<'a> {
             let tag = record.bytes(0, 4)?;
             match tag {
                 b"cvt " | b"fpgm" | b"prep" => {
-                    hints::validate(reader, record, woff, tag == b"cvt ")?;
+                    let payload = Reader::new(refreshed.as_deref().unwrap_or(bytes));
+                    hints::validate(payload, record, woff, tag == b"cvt ")?;
                     continue;
                 }
                 b"glyf" => glyf = Some(record),
@@ -295,7 +296,7 @@ impl<'a> FontTables<'a> {
             let record = cff.or(cff2).ok_or(FontError::Invalid(
                 "Font doesn't contain TrueType, CFF or CFF2 outlines.",
             ))?;
-            super::font_cff_header::validate(&table_data(payload, record, woff, true)?)?;
+            super::font_cff_header::validate(payload, record, woff)?;
         }
         if let Some((glyf, loca)) = truetype {
             super::font_outline::validate(payload, glyf, loca, woff, glyph_count, short_loca)?;

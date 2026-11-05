@@ -75,6 +75,17 @@ export function cffHeaderCases() {
     add({tag,woff:true,mutation:'wrapper'});
     for(const throws of ['object','number','null','undefined'])add({tag,mutation:'throw',throws,header:[3,7]});
   }
+  for(const tag of ['CFF ','CFF2']) {
+    for(const count of [1,2,3,8,100,8192])for(const compression of [{level:0},{level:6},{level:9,strategy:4}]) {
+      const directoryLength=count===100?16:count===8192?128:128;
+      // Stored streams may exceed the short declared table. Force compression
+      // only when the encoded payload is actually smaller than this length.
+      if(compression.level===0&&count>=100)continue;
+      add({tag,woff:true,inflated:Array(count).fill(3),compression,directoryLength});
+    }
+    for(const compressedPayload of [[120,156,1,2,0,253,255,3],[120,156,1,2,0,253,255,3,7]])
+      add({tag,woff:true,compressedPayload,directoryLength:128});
+  }
   let seed=0x457cff01;
   for(let i=0;i<64;i++) {seed=(Math.imul(seed,1664525)+1013904223)>>>0;add({woff:!!(seed&1),tag:seed&2?'CFF ':'CFF2',data:[3+(seed%253),(seed>>>8)&255],seed});}
   return cases;

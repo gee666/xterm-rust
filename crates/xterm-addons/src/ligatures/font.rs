@@ -19,6 +19,8 @@ mod font_cmap;
 mod font_color;
 #[path = "font_fvar.rs"]
 mod font_fvar;
+#[path = "font_hint_deflate.rs"]
+mod font_deflate;
 #[path = "font_gdef.rs"]
 mod font_gdef;
 #[path = "font_gpos.rs"]
