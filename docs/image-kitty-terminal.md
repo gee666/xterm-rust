@@ -44,6 +44,10 @@ The green suite uses supported logLevel=off on both terminals for handler-reject
 
 After review, the producer rebased onto mainff0bec8 and batched accepted task374, exactda3847a, plus verified receipt-only commits7b73548/2b6ea8b from task370. All owned producer/test/runner bytes match reviewed6ed73ad. The union Kitty19-test matrix passes in all three browsers. Native workspace tests again pass2043 tests across401 summaries, workspace Clippy and full formatting pass, and the unchanged font oracle verifies885 constructor case outcomes. An earlier combined command reached its180-second deadline during Clippy after native tests finished; no owned child process remained, and the separate cached Clippy rerun passed. This is not a failed application test or a claimed gate pass for the interrupted command.
 
+## Canonical integration
+
+The canonical helper integrated tasks373/374 and the confirmed task370 receipts at main1729d893ec2eb73016b23ea4065150b4626ba422. It ran all five changed crates' builds/all-target native tests, affected native all-target checks, workspace check and applicable WASM library checks, then removed the private target. `canonical-merge.log` and `canonical-summary.json` retain the exact gate. An initial preflight safely refused the owned dirty union-verification report; the report was preserved under its own name and restored before the successful gate, without bypassing the guard.
+
 ## Independent review
 
 Task373 was accepted at6ed73ad. The isolated reviewer inspected source/native/browser phase ordering, retention and cleanup, then independently reran19 Kitty,12 IIP and15 SIXEL tests in each browser, both native APC tests, all2043 workspace tests across401 summaries, full formatting and native/scoped-WASM warning-denied Clippy. No findings remained. Its browser reports and focused native receipt are retained as `reviewer-*` under this task's results directory.
