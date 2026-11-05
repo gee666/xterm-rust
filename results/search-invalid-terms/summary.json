@@ -1,0 +1,93 @@
+{
+  "task": 363,
+  "scope": "Bounded raw invalid-term addon phases and identity, not full347/322 or equivalence.",
+  "base": "a2a125247d5ebeb4105fff27518fa3ef56b792e8",
+  "source": "91f81065285b4adea831d012d9c5dae2ff39a851",
+  "implementation": {
+    "crates/xterm-addons/src/search/addon.rs": "c64c14fa04c6240a120e5fc7d206d9e555a9ba49dc0282deb775c054e1ae8511",
+    "crates/xterm-addons/src/search/completion.rs": "4e00de267cf5c86c345b4e4d040a2c31b9dad1c00543703eca73e6253aad3106",
+    "crates/xterm-addons/src/search/find.rs": "99a2219493f8de5438f6496527755abbe2868cc7ce7b82d98d40d4edd6ec7dc8",
+    "crates/xterm-addons/src/search/mod.rs": "d157a03b1cf70afa95d051e58f09cc792f3b878573a5056ef75c43549a5f250e",
+    "crates/xterm-addons/src/search/term.rs": "1e4535b0aa4df9ab73cbe73a7b9fba272697f79a58552b8214f728f84a3029cc",
+    "crates/xterm-web/src/search_addon/mod.rs": "bcf1ce463391ba255fcc5178b972d045ea162deb9aaf735a456f166cee684db9",
+    "crates/xterm-web/src/search_addon/options.rs": "ebe7bda86a52bc8e32aa6d4dce6b5b4c5864eb1595140ca61fd0253197d1de11",
+    "crates/xterm-web/src/search_addon/term.rs": "1017a3880a0577bf05a34a18619c92d2335a8d461ff3283f9f388f075909882c",
+    "crates/xterm-web/tests/fixtures/search-invalid-terms.js": "c8e74b6f3c4510b695e4aa350414185b6889b43e514e9d4a9cf49f4bc21e4cb1",
+    "crates/xterm-web/tests/search_addon.rs": "f41b35ddaff38a41c6b0eb414b8d85d94357adcf4a26832672cfe5ba41ceaa81",
+    "crates/xterm-web/tests/search_cases/invalid.rs": "596c7e597efaa931f9da225651593ffbea00bb5e931cb32e8efb4b49adad2d66",
+    "crates/xterm-web/tests/wasm_search_addon.rs": "b3777adfc2c4c6c07f57a900982397a1b584cc9657949fc1c2b47f269fc0dc43",
+    "scripts/search-call-args-source.mjs": "06119f638da06b0fa3d0647363642762ce7a36b2afdce1280680a058d9598433"
+  },
+  "baseline": {
+    "base": "bb6eada9e6024d9f106ccb22dcb9e7a7dee6427e",
+    "producerHashes": {
+      "crates/xterm-addons/src/search/addon.rs": "dc5a51334d51ffc773f97535ee58a65b2117322e92ce5f294cb03b52c8bd6065",
+      "crates/xterm-addons/src/search/empty.rs": "7bdde91869569fe04673f28f0c87f4c02b0f05470cd0ba81f8425683ab5f80db",
+      "crates/xterm-addons/src/search/find.rs": "87bfac7b064b5bca0d2ef6f0a6884ef17c1170b8a4d2f27c2bdaa423ec38235e",
+      "crates/xterm-addons/src/search/mod.rs": "628256ff73edfc3763b0ccb43e582cf720f17a1a07b07e24dfa5c11eeb8e4095",
+      "crates/xterm-web/src/search_addon/mod.rs": "e322fd885bab6235a1bf560791e769bfb3de9ca075196eaa1b3fa7a070ce9843",
+      "crates/xterm-web/src/search_addon/options.rs": "bcbc43b352062f646e69c09fa56664cf42b80c9e5dd6f4a703d57a02f9619094"
+    },
+    "functions": {
+      "discovered": 9,
+      "executed": 9,
+      "passed": 8,
+      "failed": 1,
+      "ignored": 0,
+      "unrun": 0
+    },
+    "failure": "Repeated undefined cache collapses to empty string and invokes matching flag getters."
+  },
+  "evidence": {
+    "source.json": "7a5353dd289dd28246ee3ad8f88d88de54535e7c88360a5cb9d7f7700a5f4285",
+    "baseline-wasm.json": "913044ec7e0313debda4959096a55bb4d7fab888716a4283ca0555dfeffc2b80",
+    "wasm.json": "eeca0935365a9b4bd25377d9fee2c7071640b2bfa2cacf2796c460af4f4ba142",
+    "upstream-summary.json": "db2a12e2335bebac5151d742b2c3f238228675718605089cd3200de4d7d20c80",
+    "upstream-playwright.json": "10e1836d5c5a8762a26bd000599dffb20a66de661eb33f0cf9d171b25eb4eab0",
+    "native.log": "40635f8b35236ad5dd967c71a5a5b017431f185c330fa9189d55116801be10df",
+    "clippy-native.log": "89a2205b68e897787712500ea57e5f5033139a819eae7212be5c07034ed6a5b9",
+    "clippy-wasm.log": "60e1a3d2b49fe1c41f9c6c3b7ceb31c7bb50a392125a9297b4850209c7bb4e2a",
+    "fmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "counts": {
+    "sourceDirected": {
+      "perEngine": 240,
+      "engines": 3,
+      "passed": 720,
+      "failed": 0
+    },
+    "nativeFunctions": {
+      "passed": 32,
+      "failed": 0
+    },
+    "wasmFunctions": {
+      "perEngine": 9,
+      "engines": 3,
+      "passed": 27,
+      "failed": 0
+    },
+    "directedWithinWasm": {
+      "perEngine": 240,
+      "engines": 3,
+      "passed": 720,
+      "containedInWasmFunctionCount": true
+    },
+    "unchangedBrowser": {
+      "discovered": 81,
+      "executed": 81,
+      "passed": 81,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0
+    }
+  },
+  "notProven": [
+    "Valid boxed/overridden term matching",
+    "Per-line repeated options/engine length reads",
+    "Null matching options",
+    "Matching-flag nested replacement",
+    "Refresh spread enumeration",
+    "Full-family source assertion mapping and randomized raw traces",
+    "Native Linux/macOS runtime evidence"
+  ]
+}
