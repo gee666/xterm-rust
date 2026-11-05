@@ -25,7 +25,7 @@ Durable receipts are in results/raw-input356. Run with the installed Rust1.85.1 
 - Patched Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4 pass raw2, InputEvent4, input callbacks3, input7, keyboard-live15, terminal wheel5 and terminal writer5 test functions per engine. InputEvent additionally retains its288-case guard expansion. This is41 functions per engine, not41 source suites or complete port coverage.
 - Native core/web all-target warning-denied Clippy, focused WASM library/raw/InputEvent warning-denied Clippy and exact cargo fmt --all -- --check pass.
 
-Full browser library rerun awaits refreshed main containing accepted354; this branch began at4a38b52 before that viewport fixture/overview repair. No normalization or dropping of the known library failure is authorized here. Final integrated results belong in a separate canonical receipt.
+After rebasing onto main5ca9f593 containing accepted354, the complete WASM library passes26 functions in each of the three engines, and the raw2-function90-case suite passes again. Both source and Rust full-composition assertions remain intact. Scoped native/WASM Clippy and fullfmt pass on the refreshed branch. Final integrated results belong in a separate canonical receipt. Standalone text logs omit trailing empty lines only; JSON receipts retain the complete browser output.
 
 ## Owned temporary work
 
