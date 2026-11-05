@@ -19,7 +19,7 @@ cargo test --locked -p xterm-core --test erase_option -j2
 
 The 396 deterministic cases cover both initial buffers, selective and ordinary ED2, nine raw values and eleven actions. Values include false, true, zero, NaN, empty and nonempty strings, an object, null and undefined. Actions cover inspection, reset, activation of either buffer, resize, cursor or attribute mutation, getter errors before and after mutation, and scroll listeners that reset or throw. Each case starts beyond the allowed cursor column to verify the pre-getter clamp, including on error paths.
 
-The comparison includes both buffers and every cell's text, width and attributes, cursor, scrollback, margins, dimensions, modes, getter counts, callback checkpoint states, original callback-error identity and ordered scroll, resize, cursor and render events. The fixture contains 84 expected thrown results. Source baseline execution is not counted as a Rust test pass. Native Rust tests execute Rust, not the JavaScript engine.
+The comparison includes both buffers and every cell's text, width and attributes, cursor, scrollback, margins, dimensions, modes, getter counts, callback checkpoint states, original callback-error identity and ordered scroll, resize, cursor and render events. Empty event lists use `-` in the TSV to avoid trailing-tab whitespace. The generated fixture exceeds 350 lines because each line preserves one complete source case. The fixture contains 84 expected thrown results. Source baseline execution is not counted as a Rust test pass. Native Rust tests execute Rust, not the JavaScript engine.
 
 ## Verification status
 
