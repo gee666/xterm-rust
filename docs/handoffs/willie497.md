@@ -6,6 +6,6 @@ Five product modules preserve GSUB null feature/lookup slots and deferred FontIm
 
 Independent review found no problems. Verified20producerpins/nativeEXE/12browserartifacts+both776references; executed pinnednative and read-only3corpus Node parser/addon plus null/type9FontImpl replay. No compiler/browser in review.
 
-No main/reference/AGENTS/unrelated modifications. O:WillieGsubNull is sole owned temporary root;0jobs/grants. Retain this branch, source/regressions/logs before safe no-link preflight and cleanup. Final cleanup status is added below before retirement.
+No main/reference/AGENTS/unrelated modifications. O:WillieGsubNull is sole owned temporary root;0jobs/grants. Retain this branch, source/regressions/logs before safe no-link preflight and cleanup. Preflight found14299files/2791directories, zero links/redirects/processes and78 owned generated files. Final cleanup confirmation belongs linked thread650 and the private continuation note; do not replay removal.
 
 Full342/325 includes general null subtables, out-of-range referenced lookup errors, deeper decoding/class diagnostics/callbacks and full shaping. Native Linux/macOS, unchanged full original/browser/workspace/mapping/comparison requirements remain open. Full equivalence NOT PROVEN.
