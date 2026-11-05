@@ -1,0 +1,167 @@
+{
+  "scope": "Scoped overview ruler verification only. Overall equivalence NOT PROVEN.",
+  "recoveredFrom": "swarm/Cornelia49e6c92",
+  "sourceRoot": "supplied source_repo, unchanged",
+  "sourceHashes": {
+    "src/browser/decorations/OverviewRulerRenderer.ts": "e35949abcef24aca316a0ef85bd73fc38db07190e2390784dc62bec352a106dd",
+    "src/browser/decorations/ColorZoneStore.ts": "402ad5fe138428a7fa2589c783ed69c9769421e64601d73bdeef79820bef7409",
+    "src/browser/CoreBrowserTerminal.ts": "53800fdb234c4cfe9d449ebf18b055e0fcb06a88e3a0ca4d7a1af1c4d3d59114"
+  },
+  "oracle": {
+    "cases": 4,
+    "status": "passed",
+    "fixtureSha256": "78d4bf571f19ed66a5ae45236c605c0f18054ebdd46f1413518a38ab07ff462f"
+  },
+  "suites": [
+    {
+      "name": "overview_ruler_browser",
+      "status": "passed",
+      "date": "2026-11-05T08:38:27.045Z",
+      "platform": "win32",
+      "node": "v24.15.0",
+      "features": [],
+      "sourceSha256": "d5b49cbbbc0331a5b3acbcb2cd1789e97de40fa1badcf871d0c1c4b2374d830d",
+      "cargoLockSha256": "7e3d1071cfce3891a16fc4d6494e162566f5607a2c7680dbb686ee6cd4dec099",
+      "wasmSha256": "a3a9b046a0cc20371c93f411eb80a6b29469783e3628dee84f95b3fb5d11034f",
+      "browsers": [
+        {
+          "name": "chromium",
+          "status": "passed",
+          "tests": [
+            "__wbgt__overview_ruler_browser::source_rectangles_pixels_styles_and_cleanup_match"
+          ],
+          "errors": [],
+          "console": [],
+          "version": "148.0.7778.96",
+          "output": "running 1 test\ntest source_rectangles_pixels_styles_and_cleanup_match ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.06s\n\n",
+          "counts": {
+            "passed": 1,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        },
+        {
+          "name": "firefox",
+          "status": "passed",
+          "tests": [
+            "__wbgt__overview_ruler_browser::source_rectangles_pixels_styles_and_cleanup_match"
+          ],
+          "errors": [],
+          "console": [],
+          "version": "150.0.2",
+          "output": "running 1 test\ntest source_rectangles_pixels_styles_and_cleanup_match ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.05s\n\n",
+          "counts": {
+            "passed": 1,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        },
+        {
+          "name": "webkit",
+          "status": "passed",
+          "tests": [
+            "__wbgt__overview_ruler_browser::source_rectangles_pixels_styles_and_cleanup_match"
+          ],
+          "errors": [],
+          "console": [],
+          "version": "26.4",
+          "output": "running 1 test\ntest source_rectangles_pixels_styles_and_cleanup_match ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.12s\n\n",
+          "counts": {
+            "passed": 1,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "overview_terminal_browser",
+      "status": "passed",
+      "date": "2026-11-05T08:42:27.348Z",
+      "platform": "win32",
+      "node": "v24.15.0",
+      "features": [],
+      "sourceSha256": "9b3aff8bc49c33228d3bb34c246593964506b21babbe3dd98415278077bb8081",
+      "cargoLockSha256": "7e3d1071cfce3891a16fc4d6494e162566f5607a2c7680dbb686ee6cd4dec099",
+      "wasmSha256": "ce3df3713aebdbf2a7082399eb57cf56dca433f88c21255bac423e9ba5553d20",
+      "browsers": [
+        {
+          "name": "chromium",
+          "status": "passed",
+          "tests": [
+            "__wbgt__overview_terminal_browser::public_scrollbar_options_lazily_create_retain_resize_and_dispose_canvas",
+            "__wbgt__overview_terminal_browser::terminal_decorations_theme_and_alternate_buffer_update_live_canvas"
+          ],
+          "errors": [],
+          "console": [
+            {
+              "type": "warning",
+              "text": "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently"
+            }
+          ],
+          "version": "148.0.7778.96",
+          "output": "running 2 tests\ntest terminal_decorations_theme_and_alternate_buffer_update_live_canvas ... ok\ntest public_scrollbar_options_lazily_create_retain_resize_and_dispose_canvas ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.36s\n\n",
+          "counts": {
+            "passed": 2,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        },
+        {
+          "name": "firefox",
+          "status": "passed",
+          "tests": [
+            "__wbgt__overview_terminal_browser::public_scrollbar_options_lazily_create_retain_resize_and_dispose_canvas",
+            "__wbgt__overview_terminal_browser::terminal_decorations_theme_and_alternate_buffer_update_live_canvas"
+          ],
+          "errors": [],
+          "console": [],
+          "version": "150.0.2",
+          "output": "running 2 tests\ntest terminal_decorations_theme_and_alternate_buffer_update_live_canvas ... ok\ntest public_scrollbar_options_lazily_create_retain_resize_and_dispose_canvas ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.48s\n\n",
+          "counts": {
+            "passed": 2,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        },
+        {
+          "name": "webkit",
+          "status": "passed",
+          "tests": [
+            "__wbgt__overview_terminal_browser::public_scrollbar_options_lazily_create_retain_resize_and_dispose_canvas",
+            "__wbgt__overview_terminal_browser::terminal_decorations_theme_and_alternate_buffer_update_live_canvas"
+          ],
+          "errors": [],
+          "console": [],
+          "version": "26.4",
+          "output": "running 2 tests\ntest terminal_decorations_theme_and_alternate_buffer_update_live_canvas ... ok\ntest public_scrollbar_options_lazily_create_retain_resize_and_dispose_canvas ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.46s\n\n",
+          "counts": {
+            "passed": 2,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        }
+      ]
+    }
+  ],
+  "native": {
+    "command": "cargo test -p xterm-web --lib -j2",
+    "passed": 54,
+    "failed": 0,
+    "ignored": 0
+  },
+  "clippy": {
+    "command": "cargo clippy -p xterm-web --target wasm32-unknown-unknown --lib --test overview_ruler_browser --test overview_terminal_browser -j2 -- -D warnings",
+    "status": "passed"
+  },
+  "format": {
+    "scope": "11 owned Rust files",
+    "status": "passed"
+  }
+}

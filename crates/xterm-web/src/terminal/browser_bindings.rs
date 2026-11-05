@@ -60,7 +60,8 @@ impl BrowserServices {
         self.bind_events()?;
         self.bind_focus()?;
         self.bind_options()?;
-        super::accessibility_host::update(self)
+        super::accessibility_host::update(self)?;
+        self.install_overview()
     }
 
     pub fn bind_input(self: &Rc<Self>) -> Result<(), JsValue> {

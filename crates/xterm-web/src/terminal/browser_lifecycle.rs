@@ -142,6 +142,9 @@ impl BrowserServices {
         for listener in std::mem::take(&mut *self.listeners.borrow_mut()) {
             listener.dispose();
         }
+        if let Some(overview) = self.overview.borrow_mut().take() {
+            overview.dispose()?;
+        }
         self.render_service.dispose()?;
         if let Some(viewport) = self.viewport.get() {
             viewport.dispose()?;

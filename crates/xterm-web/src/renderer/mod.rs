@@ -12,6 +12,8 @@ pub mod dom;
 pub mod geometry;
 #[cfg(target_arch = "wasm32")]
 mod options;
+#[cfg(target_arch = "wasm32")]
+pub mod overview_ruler;
 pub mod raw_font;
 pub mod row;
 mod row_colors;
