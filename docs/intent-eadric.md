@@ -1,0 +1,7 @@
+# Eadric continuation intent
+
+Continue the same swarm 2, run 2 full xterm.js Rust port. Preserve the full request in PORT_REQUIREMENTS.md, the user's fixes, unchanged source reference and accepted work. Full equivalence is NOT PROVEN.
+
+Task 446 owns one concrete remaining serialization defect. Primitive numeric HTML row bounds with start greater than end must emit the header/footer without touching cells or coercing the unused start column. This includes reversed finite, fractional, negative, very large and infinite numbers. Preserve getter order, header reentry and thrown-value identity. Equal infinite or non-progressing bounds, ANSI numeric traversal, palette array identity and broader task 346 remain open.
+
+Read accepted task 437 and its retained branch/source/browser evidence before work. Current main was dcde3e9c with only untracked swarm/ in Integration at initial inspection. Do not replay prerequisite work into main. Private worktree and new temporary outputs are confined to O:/xterm-rust-swarm-16/tmp/worktrees/EadricEmptyRows. No owned jobs at start. Request explicit current compiler/browser allocation in post 409 before heavy execution. Keep Cargo -j2, retain actual negative/fixed source/package identities and source hashes, review the scoped fix independently, then preserve committed evidence and remove owned temporary outputs after final resource release. Never edit AGENTS.md, source_repo or credentials.

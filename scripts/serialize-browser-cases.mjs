@@ -197,6 +197,47 @@ export async function serializationCases() {
     }
     return values;
   });
+  await run('html-reversed-numeric-row-bounds', async (term, addon) => {
+    await write(term, '\x1b[31mcontent must not be traversed');
+    const bounds = [[3, 1], [-1, -3], [1.5, 0.5], [0, -0.5],
+      [Number.MAX_VALUE, 0], [Infinity, 0], [0, -Infinity], [Infinity, -Infinity]];
+    const log = [], unused = { [Symbol.toPrimitive](hint) { log.push(`unused:${hint}`); throw Error('unused column'); } };
+    Object.defineProperty(term.options, 'fontFamily', { configurable: true,
+      get() { log.push('fontFamily'); return 'raw\ud800'; } });
+    return bounds.flatMap(([start, end]) => [0, Symbol('unused'), unused].map(startCol => {
+      log.length = 0;
+      const range = { get startCol() { log.push('startCol'); return startCol; },
+        get startLine() { log.push('startLine'); return start; },
+        get endLine() { log.push('endLine'); return end; } };
+      const options = { get range() { log.push('range'); return range; },
+        get includeGlobalBackground() { log.push('background'); return false; } };
+      return { bounds: [String(start), String(end)], column: typeof startCol,
+        html: capture(() => addon.serializeAsHTML(options)), log: [...log] };
+    }));
+  });
+  await run('html-reversed-numeric-header-reentry', async (term, addon) => {
+    await write(term, 'ABCDEFGHIJKL\r\nsecond');
+    const values = [], log = [], sentinel = {};
+    for (const bounds of [[Infinity, 0], [-1, -3], [1.5, 0.5], [Number.MAX_VALUE, 0]]) {
+      let [start, end] = bounds;
+      const range = { get startCol() { log.push('startCol'); return Symbol('unused'); },
+        get startLine() { log.push('startLine'); return start; },
+        get endLine() { log.push('endLine'); return end; } };
+      Object.defineProperty(term.options, 'fontFamily', { configurable: true, get() {
+        log.push('fontFamily'); start = 0; end = 1; term.reset(); term.resize(6, 3); return 'monospace';
+      } });
+      log.length = 0;
+      values.push({ bounds: bounds.map(String), html: capture(() => addon.serializeAsHTML({ range })),
+        log: [...log], state: snapshot(term) });
+      [start, end] = bounds;
+      Object.defineProperty(term.options, 'fontFamily', { configurable: true,
+        get() { log.push('fontFamily'); throw sentinel; } });
+      log.length = 0; let same = false;
+      try { addon.serializeAsHTML({ range }); } catch (error) { same = error === sentinel; }
+      values.push({ same, log: [...log] });
+    }
+    return values;
+  });
   await run('html-nan-row-bounds', async (term, addon) => {
     await write(term, 'must not be traversed');
     const values = [];
