@@ -37,12 +37,12 @@ fn custom_encoder_mutates_the_original_event() {
             event.col = 7.5;
             event.ctrl = Some(true);
             event.button = MouseButton::Raw(-1);
-            vec![0xd800]
+            Ok(vec![0xd800])
         }),
     );
     service.set_active_encoding("MUTABLE").unwrap();
     let mut event = input();
-    assert_eq!(service.encode_mouse_event(&mut event), [0xd800]);
+    assert_eq!(service.encode_mouse_event(&mut event).unwrap(), [0xd800]);
     assert_eq!(event.col, 7.5);
     assert_eq!(event.ctrl, Some(true));
     assert_eq!(event.button.raw_value(), -1);
@@ -54,24 +54,24 @@ fn shared_protocol_external_edits_are_visible_in_multiple_services() {
     let second = Service::new();
     let protocol = Rc::new(SharedMouseProtocol::new(MouseProtocol {
         events: Events::DOWN,
-        restrict: Rc::new(|_| true),
+        restrict: Rc::new(|_| Ok(true)),
     }));
     for service in [&first, &second] {
         service.add_shared_protocol("SHARED", Rc::clone(&protocol));
         service.set_active_protocol("SHARED").unwrap();
         assert!(service.are_mouse_events_active());
-        assert!(service.restrict_mouse_event(&mut input()));
+        assert!(service.restrict_mouse_event(&mut input()).unwrap());
     }
     protocol.set_events(Events::NONE);
     protocol.set_restriction(Rc::new(|event| {
         event.row = 9.0;
-        false
+        Ok(false)
     }));
     assert_eq!(protocol.events(), Events::NONE);
     for service in [&first, &second] {
         assert!(!service.are_mouse_events_active());
         let mut event = input();
-        assert!(!service.restrict_mouse_event(&mut event));
+        assert!(!service.restrict_mouse_event(&mut event).unwrap());
         assert_eq!(event.row, 9.0);
     }
 }
@@ -81,17 +81,19 @@ fn protocol_replacement_during_callback_finishes_the_original_call() {
     let service = Service::new();
     let protocol = Rc::new(SharedMouseProtocol::new(MouseProtocol {
         events: Events::DOWN,
-        restrict: Rc::new(|_| false),
+        restrict: Rc::new(|_| Ok(false)),
     }));
     let weak = Rc::downgrade(&protocol);
     protocol.set_restriction(Rc::new(move |_| {
-        weak.upgrade().unwrap().set_restriction(Rc::new(|_| false));
-        true
+        weak.upgrade()
+            .unwrap()
+            .set_restriction(Rc::new(|_| Ok(false)));
+        Ok(true)
     }));
     service.add_shared_protocol("SHARED", protocol);
     service.set_active_protocol("SHARED").unwrap();
-    assert!(service.restrict_mouse_event(&mut input()));
-    assert!(!service.restrict_mouse_event(&mut input()));
+    assert!(service.restrict_mouse_event(&mut input()).unwrap());
+    assert!(!service.restrict_mouse_event(&mut input()).unwrap());
 }
 
 #[derive(Debug)]
@@ -141,10 +143,10 @@ fn replacing_callback_captures_releases_them_outside_service_borrows() {
         "CUSTOM",
         Rc::new(move |_| {
             let _retained = &captured;
-            Vec::new()
+            Ok(Vec::new())
         }),
     );
-    service.add_encoding("CUSTOM", Rc::new(|_| Vec::new()));
+    service.add_encoding("CUSTOM", Rc::new(|_| Ok(Vec::new())));
     assert_eq!(drops.get(), 1);
     let captured = guard();
     service.add_protocol(
@@ -153,7 +155,7 @@ fn replacing_callback_captures_releases_them_outside_service_borrows() {
             events: Events::DOWN,
             restrict: Rc::new(move |_| {
                 let _retained = &captured;
-                true
+                Ok(true)
             }),
         },
     );
@@ -161,7 +163,7 @@ fn replacing_callback_captures_releases_them_outside_service_borrows() {
         "CUSTOM",
         MouseProtocol {
             events: Events::DOWN,
-            restrict: Rc::new(|_| true),
+            restrict: Rc::new(|_| Ok(true)),
         },
     );
     assert_eq!(drops.get(), 2);

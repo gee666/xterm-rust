@@ -46,7 +46,7 @@ fn compare_corpus(corpus: &str, expected_count: usize, require_surrogates: bool)
         let action_before = event.action;
         service.set_active_protocol(fields[0]).unwrap();
         service.set_active_encoding(fields[1]).unwrap();
-        let accepted = service.restrict_mouse_event(&mut event);
+        let accepted = service.restrict_mouse_event(&mut event).unwrap();
         assert_eq!(
             event.button.numeric_value().to_bits(),
             button_before,
@@ -70,7 +70,7 @@ fn compare_corpus(corpus: &str, expected_count: usize, require_surrogates: bool)
             "coordinate mutation on row {index}"
         );
         // Encoding is independently callable upstream, even for rejected events.
-        let actual = service.encode_mouse_event(&mut event);
+        let actual = service.encode_mouse_event(&mut event).unwrap();
         assert_eq!(
             event.button.numeric_value().to_bits(),
             button_before,

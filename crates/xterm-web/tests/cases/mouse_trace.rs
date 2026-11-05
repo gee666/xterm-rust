@@ -63,7 +63,7 @@ fn unchanged_source_live_read_and_effect_traces_match() {
                 events,
                 restrict: Rc::new(move |_| {
                     restricted.borrow_mut().push("restrict".into());
-                    true
+                    Ok(true)
                 }),
             },
         );
@@ -72,7 +72,7 @@ fn unchanged_source_live_read_and_effect_traces_match() {
             "TRACE",
             Rc::new(move |_| {
                 encoded.borrow_mut().push("encode".into());
-                vec![33]
+                Ok(vec![33])
             }),
         );
         setup.host.input.mouse.set_active_protocol("TRACE").unwrap();

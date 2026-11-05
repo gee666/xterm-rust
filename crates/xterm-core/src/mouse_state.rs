@@ -204,11 +204,11 @@ impl<W> MouseStateService<W> {
 
     /// The callback is cloned before invocation so it may replace registrations
     /// or call other service methods without crossing a RefCell borrow.
-    pub fn restrict_mouse_event(&self, event: &mut MouseEvent) -> bool {
+    pub fn restrict_mouse_event(&self, event: &mut MouseEvent) -> Result<bool, EmitError> {
         (self.active_mouse_protocol().restrict)(event)
     }
 
-    pub fn encode_mouse_event(&self, event: &mut MouseEvent) -> Vec<u16> {
+    pub fn encode_mouse_event(&self, event: &mut MouseEvent) -> Result<Vec<u16>, EmitError> {
         let encoding = {
             let state = self.state.borrow();
             // The same registration invariant as active_mouse_protocol applies.

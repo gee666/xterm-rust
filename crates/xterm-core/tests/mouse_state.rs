@@ -69,7 +69,7 @@ fn upstream_setters_reset_and_errors() {
 #[test]
 fn upstream_add_encoding() {
     let service = Service::new();
-    service.add_encoding("XYZ", Rc::new(|_| Vec::new()));
+    service.add_encoding("XYZ", Rc::new(|_| Ok(Vec::new())));
     service.set_active_encoding("XYZ").unwrap();
     assert_eq!(service.active_encoding(), "XYZ");
 }
@@ -81,7 +81,7 @@ fn upstream_add_protocol() {
         "XYZ",
         MouseProtocol {
             events: Events::NONE,
-            restrict: Rc::new(|_| false),
+            restrict: Rc::new(|_| Ok(false)),
         },
     );
     service.set_active_protocol("XYZ").unwrap();
@@ -114,9 +114,9 @@ fn upstream_restrict_and_encode_mouse_event() {
     service.set_active_protocol("ANY").unwrap();
     service.set_active_encoding("DEFAULT").unwrap();
     let mut input = event();
-    assert!(service.restrict_mouse_event(&mut input));
+    assert!(service.restrict_mouse_event(&mut input).unwrap());
     assert_eq!(
-        service.encode_mouse_event(&mut input),
+        service.encode_mouse_event(&mut input).unwrap(),
         [0x1b, 0x5b, 0x4d, 0x20, 0x21, 0x21]
     );
 }
@@ -157,23 +157,23 @@ fn optional_modifiers_are_observable_and_x10_only_mutates_accepted_events() {
         MouseProtocol {
             events: Events::DOWN,
             restrict: Rc::new(|event| {
-                event.ctrl.is_none() && event.alt.is_none() && event.shift.is_none()
+                Ok(event.ctrl.is_none() && event.alt.is_none() && event.shift.is_none())
             }),
         },
     );
     service.set_active_protocol("OPTIONAL").unwrap();
-    assert!(service.restrict_mouse_event(&mut input));
+    assert!(service.restrict_mouse_event(&mut input).unwrap());
     assert_eq!(
-        service.encode_mouse_event(&mut input),
+        service.encode_mouse_event(&mut input).unwrap(),
         [0x1b, 0x5b, 0x4d, 0x20, 0x21, 0x21]
     );
     service.set_active_protocol("X10").unwrap();
     input.button = MouseButton::Wheel;
     let original = input.clone();
-    assert!(!service.restrict_mouse_event(&mut input));
+    assert!(!service.restrict_mouse_event(&mut input).unwrap());
     assert_eq!(input, original);
     input.button = MouseButton::Left;
-    assert!(service.restrict_mouse_event(&mut input));
+    assert!(service.restrict_mouse_event(&mut input).unwrap());
     assert_eq!(
         (input.ctrl, input.alt, input.shift),
         (Some(false), Some(false), Some(false))
@@ -192,23 +192,29 @@ fn active_overwrites_take_effect_without_notification_and_reset_retains_registry
         "NONE",
         MouseProtocol {
             events: Events::UP,
-            restrict: Rc::new(|_| true),
+            restrict: Rc::new(|_| Ok(true)),
         },
     );
-    service.add_encoding("DEFAULT", Rc::new(|_| vec![0xd800, 0xdfff]));
-    service.add_encoding("CUSTOM", Rc::new(|_| vec![1]));
+    service.add_encoding("DEFAULT", Rc::new(|_| Ok(vec![0xd800, 0xdfff])));
+    service.add_encoding("CUSTOM", Rc::new(|_| Ok(vec![1])));
     assert!(events.borrow().is_empty());
     assert!(service.are_mouse_events_active());
-    assert!(service.restrict_mouse_event(&mut event()));
-    assert_eq!(service.encode_mouse_event(&mut event()), [0xd800, 0xdfff]);
+    assert!(service.restrict_mouse_event(&mut event()).unwrap());
+    assert_eq!(
+        service.encode_mouse_event(&mut event()).unwrap(),
+        [0xd800, 0xdfff]
+    );
     service.set_active_protocol("X10").unwrap();
     service.set_active_encoding("CUSTOM").unwrap();
     service.reset().unwrap();
     assert_eq!(*events.borrow(), [Events::DOWN, Events::UP]);
     assert_eq!(service.active_encoding(), "DEFAULT");
-    assert_eq!(service.encode_mouse_event(&mut event()), [0xd800, 0xdfff]);
+    assert_eq!(
+        service.encode_mouse_event(&mut event()).unwrap(),
+        [0xd800, 0xdfff]
+    );
     service.set_active_encoding("CUSTOM").unwrap();
-    assert_eq!(service.encode_mouse_event(&mut event()), [1]);
+    assert_eq!(service.encode_mouse_event(&mut event()).unwrap(), [1]);
 }
 
 #[test]
@@ -224,7 +230,7 @@ fn custom_callbacks_invoked_once_and_mutations_are_not_hidden() {
                 calls.set(calls.get() + 1);
                 event.x = -10.5;
                 event.shift = None;
-                false
+                Ok(false)
             }),
         },
     );
@@ -236,14 +242,14 @@ fn custom_callbacks_invoked_once_and_mutations_are_not_hidden() {
             calls.set(calls.get() + 1);
             assert_eq!(event.x, -10.5);
             assert_eq!(event.shift, None);
-            vec![0xd800]
+            Ok(vec![0xd800])
         }),
     );
     service.set_active_encoding("CUSTOM").unwrap();
     let mut input = event();
-    assert!(!service.restrict_mouse_event(&mut input));
+    assert!(!service.restrict_mouse_event(&mut input).unwrap());
     assert_eq!(count.get(), 1);
-    assert_eq!(service.encode_mouse_event(&mut input), [0xd800]);
+    assert_eq!(service.encode_mouse_event(&mut input).unwrap(), [0xd800]);
     assert_eq!(count.get(), 2);
 }
 
@@ -293,9 +299,9 @@ fn disposal_is_idempotent_stops_notifications_but_not_service_operations() {
     service.set_active_protocol("ANY").unwrap();
     service.set_active_encoding("SGR").unwrap();
     assert_eq!(count.get(), 0);
-    assert!(service.restrict_mouse_event(&mut event()));
+    assert!(service.restrict_mouse_event(&mut event()).unwrap());
     assert_eq!(
-        service.encode_mouse_event(&mut event()),
+        service.encode_mouse_event(&mut event()).unwrap(),
         "\x1b[<0;1;1M".encode_utf16().collect::<Vec<_>>()
     );
     service.reset().unwrap();

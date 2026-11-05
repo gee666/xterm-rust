@@ -4,7 +4,10 @@ use super::mouse_coords::ReportCoords;
 use super::mouse_wheel::{WheelInput, WheelOptions, WheelState};
 use std::cell::RefCell;
 use std::fmt;
-use xterm_core::mouse_state::{MouseAction, MouseButton, MouseEvent, MouseStateService};
+use xterm_core::{
+    event::EmitError,
+    mouse_state::{MouseAction, MouseButton, MouseEvent, MouseStateService},
+};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum PointerEventKind {
@@ -68,6 +71,7 @@ pub enum MouseOutput {
 #[derive(Debug, PartialEq, Eq)]
 pub enum MouseRouteError<E> {
     MissingWheelPayload,
+    Callback(EmitError),
     Output(E),
 }
 impl<E: fmt::Display> fmt::Display for MouseRouteError<E> {
@@ -76,6 +80,7 @@ impl<E: fmt::Display> fmt::Display for MouseRouteError<E> {
             Self::MissingWheelPayload => {
                 f.write_str("wheel routing requires the original wheel event")
             }
+            Self::Callback(error) => error.fmt(f),
             Self::Output(error) => error.fmt(f),
         }
     }
@@ -83,6 +88,7 @@ impl<E: fmt::Display> fmt::Display for MouseRouteError<E> {
 impl<E: std::error::Error + 'static> std::error::Error for MouseRouteError<E> {
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
         match self {
+            Self::Callback(error) => Some(error),
             Self::Output(error) => Some(error),
             Self::MissingWheelPayload => None,
         }
@@ -144,7 +150,7 @@ impl MousePolicy {
         service: &MouseStateService<W>,
         input: MouseInput<'_, W>,
         routing: MouseRouting,
-        mut emit: impl FnMut(MouseOutput) -> Result<(), E>,
+        emit: impl FnMut(MouseOutput) -> Result<(), E>,
     ) -> Result<bool, MouseRouteError<E>> {
         let Some(pos) = input.coords else {
             return Ok(false);
@@ -217,9 +223,7 @@ impl MousePolicy {
             alt: Some(raw.alt && !alt_gate),
             shift: Some(raw.shift),
         };
-        self.trigger(service, &mut event, routing.cols, routing.rows, |output| {
-            emit(output).map_err(MouseRouteError::Output)
-        })
+        self.trigger(service, &mut event, routing.cols, routing.rows, emit)
     }
 
     pub fn trigger<W, E>(
@@ -229,7 +233,7 @@ impl MousePolicy {
         cols: f64,
         rows: f64,
         mut emit: impl FnMut(MouseOutput) -> Result<(), E>,
-    ) -> Result<bool, E> {
+    ) -> Result<bool, MouseRouteError<E>> {
         if event.col < 0.0 || event.col >= cols || event.row < 0.0 || event.row >= rows {
             return Ok(false);
         }
@@ -250,16 +254,22 @@ impl MousePolicy {
         {
             return Ok(false);
         }
-        if !service.restrict_mouse_event(event) {
+        if !service
+            .restrict_mouse_event(event)
+            .map_err(MouseRouteError::Callback)?
+        {
             return Ok(false);
         }
-        let report = service.encode_mouse_event(event);
+        let report = service
+            .encode_mouse_event(event)
+            .map_err(MouseRouteError::Callback)?;
         if !report.is_empty() {
             emit(if service.is_default_encoding() {
                 MouseOutput::Binary(report)
             } else {
                 MouseOutput::UserData(report)
-            })?;
+            })
+            .map_err(MouseRouteError::Output)?;
         }
         *self.last_event.borrow_mut() = Some(event.clone());
         Ok(true)

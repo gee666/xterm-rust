@@ -65,7 +65,7 @@ fn pa05_source_generated_complete_modes_snapshots() {
         "CUSTOM",
         MouseProtocol {
             events: MouseEventTypes::NONE,
-            restrict: Rc::new(|_| false),
+            restrict: Rc::new(|_| Ok(false)),
         },
     );
     let mut rows = 0;

@@ -162,4 +162,13 @@ pub(super) fn trigger(state: &State, event: &mut CoreMouseEvent) -> Result<bool,
         .trigger(&state.service, event, cols, rows, |output| {
             state.host.mouse_output(output)
         })
+        .map_err(|route_error| match route_error {
+            crate::input::mouse_policy::MouseRouteError::Callback(error) => {
+                crate::js_error::to_js_error(&error)
+            }
+            crate::input::mouse_policy::MouseRouteError::Output(error) => error,
+            crate::input::mouse_policy::MouseRouteError::MissingWheelPayload => {
+                error("wheel routing requires the original wheel event")
+            }
+        })
 }

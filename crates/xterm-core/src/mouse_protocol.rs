@@ -8,7 +8,10 @@ use std::rc::Rc;
 
 #[path = "mouse_fields_typed.rs"]
 mod typed_fields;
-use crate::mouse_fields::{Encoding, Protocol};
+use crate::{
+    event::EmitError,
+    mouse_fields::{Encoding, Protocol},
+};
 
 /// Button numbers are protocol values, including the eight auxiliary buttons.
 #[derive(Clone, Copy, Debug)]
@@ -169,9 +172,12 @@ impl BitOr for MouseEventTypes {
     }
 }
 
-pub type MouseRestriction = Rc<dyn Fn(&mut MouseEvent) -> bool>;
+/// A rejected event is `Ok(false)`, not a callback failure. Browser adapters
+/// retain thrown values inside `EmitError::Callback` without string conversion.
+pub type MouseRestriction = Rc<dyn Fn(&mut MouseEvent) -> Result<bool, EmitError>>;
 /// Encodings return UTF-16 because JavaScript strings can contain lone surrogates.
-pub type MouseEncoding = Rc<dyn Fn(&mut MouseEvent) -> Vec<u16>>;
+/// An empty successful report is distinct from a failed callback.
+pub type MouseEncoding = Rc<dyn Fn(&mut MouseEvent) -> Result<Vec<u16>, EmitError>>;
 
 #[derive(Clone)]
 pub struct MouseProtocol {
@@ -228,7 +234,7 @@ pub(super) fn default_protocols() -> Vec<(String, MouseProtocol)> {
         .into_iter()
         .map(|(name, events, policy)| {
             let restrict: MouseRestriction = Rc::new(move |event| match policy.restrict(event) {
-                Ok(value) => value,
+                Ok(value) => Ok(value),
                 Err(never) => match never {},
             });
             (name.into(), MouseProtocol { events, restrict })
@@ -249,7 +255,7 @@ pub(super) fn default_encodings() -> Vec<(String, MouseEncoding)> {
     .into_iter()
     .map(|(name, policy)| {
         let encode: MouseEncoding = Rc::new(move |event| match policy.encode(event) {
-            Ok(value) => value,
+            Ok(value) => Ok(value),
             Err(never) => match never {},
         });
         (name.into(), encode)

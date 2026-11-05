@@ -69,29 +69,29 @@ fn custom_restriction_and_encoder_can_replace_themselves_without_borrow_conflict
                     "CUSTOM",
                     MouseProtocol {
                         events: Events::UP,
-                        restrict: Rc::new(|_| false),
+                        restrict: Rc::new(|_| Ok(false)),
                     },
                 );
-                true
+                Ok(true)
             }),
         },
     );
     service.set_active_protocol("CUSTOM").unwrap();
-    assert!(service.restrict_mouse_event(&mut input()));
-    assert!(!service.restrict_mouse_event(&mut input()));
+    assert!(service.restrict_mouse_event(&mut input()).unwrap());
+    assert!(!service.restrict_mouse_event(&mut input()).unwrap());
     let weak = Rc::downgrade(&service);
     service.add_encoding(
         "CUSTOM",
         Rc::new(move |_| {
             weak.upgrade()
                 .unwrap()
-                .add_encoding("CUSTOM", Rc::new(|_| vec![2]));
-            vec![1]
+                .add_encoding("CUSTOM", Rc::new(|_| Ok(vec![2])));
+            Ok(vec![1])
         }),
     );
     service.set_active_encoding("CUSTOM").unwrap();
-    assert_eq!(service.encode_mouse_event(&mut input()), [1]);
-    assert_eq!(service.encode_mouse_event(&mut input()), [2]);
+    assert_eq!(service.encode_mouse_event(&mut input()).unwrap(), [1]);
+    assert_eq!(service.encode_mouse_event(&mut input()).unwrap(), [2]);
 }
 
 #[test]

@@ -231,7 +231,12 @@ fn output_failure_does_not_commit_cache_and_nested_output_sees_old_cache() {
     let error = policy.trigger(&service, &mut event(), 500.0, 500.0, |_| {
         Err("original output failure")
     });
-    assert_eq!(error, Err("original output failure"));
+    assert_eq!(
+        error,
+        Err(xterm_web::input::mouse_policy::MouseRouteError::Output(
+            "original output failure"
+        ))
+    );
     let reports = RefCell::new(Vec::new());
     assert!(policy
         .trigger(&service, &mut event(), 500.0, 500.0, |out| {
@@ -282,7 +287,7 @@ fn source_mutable_encoder_updates_event_before_cache_commit() {
         Rc::new(|event| {
             event.col = 9.0;
             event.shift = Some(true);
-            vec![u16::from(b'x')]
+            Ok(vec![u16::from(b'x')])
         }),
     );
     service.set_active_encoding("CUSTOM").unwrap();
