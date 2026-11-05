@@ -1,0 +1,130 @@
+{
+  "package": "xterm-web",
+  "testName": "webgl_renderer",
+  "testTimeoutMs": 60000,
+  "features": [
+    "acceptance-hooks"
+  ],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T19:37:39.412Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "webgl_renderer",
+        "--features",
+        "acceptance-hooks",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 12520.355399999999,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 10.376699999998891,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\Nova306\\results\\acceptance-artifacts\\bcd97833f0842bd26d0b65d0aaa89d483656ed79ddd00d971897c03fcbfe707a\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\Nova306\\results\\browser-host\\webgl_renderer\\2026-11-05T19-37-39-410Z-73a07265-d274-4167-9f4e-c30b37a5d48b\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1230.4041000000016,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__webgl_renderer::invalid_native_grid_and_nonprogressing_joins_are_errors",
+        "__wbgt__webgl_renderer::unchanged_webgl_renderer_model_and_frame_traces"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\webgl_renderer.rs:90:13:\nassertion `left == right` failed: \"large-positive-rows\" step0 trace\n  left: [Array [String(\"line\"), Number(2)], Array [String(\"joins\"), Number(2)], Array [String(\"load\"), Number(0)], Array [String(\"resolve\"), Number(0), Number(2), Number(65)], Array [String(\"glyph\"), Number(0), Number(0), Number(65), Number(0), Number(0), Number(0), Array [Number(65)], Number(1), Number(0)], Array [String(\"load\"), Number(1)], Array [String(\"resolve\"), Number(1), Number(2), Number(66)], Array [String(\"glyph\"), Number(1), Number(0), Number(66), Number(0), Number(0), Number(0), Array [Number(66)], Number(1), Number(0)], Array [String(\"load\"), Number(2)], Array [String(\"resolve\"), Number(2), Number(2), Number(67)], Array [String(\"glyph\"), Number(2), Number(0), Number(67), Number(0), Number(0), Number(0), Array [Number(67)], Number(1), Number(0)], Array [String(\"load\"), Number(3)], Array [String(\"resolve\"), Number(3), Number(2), Number(68)], Array [String(\"glyph\"), Number(3), Number(0), Number(68), Number(0), Number(0), Number(0), Array [Number(68)], Number(1), Number(0)], Array [String(\"load\"), Number(4)], Array [String(\"resolve\"), Number(4), Number(2), Number(69)], Array [String(\"glyph\"), Number(4), Number(0), Number(69), Number(0), Number(0), Number(0), Array [Number(69)], Number(1), Number(0)], Array [String(\"load\"), Number(5)], Array [String(\"resolve\"), Number(5), Number(2), Number(70)], Array [String(\"glyph\"), Number(5), Number(0), Number(70), Number(0), Number(0), Number(0), Array [Number(70)], Number(1), Number(0)], Array [String(\"backgrounds\")], Array [String(\"cursor\")], Array [String(\"blink\"), Bool(false)]]\n right: [Array [String(\"line\"), Number(4)], Array [String(\"glyph\"), Number(0), Number(2), Number(0), Number(0), Number(0), Number(0), Array [], Number(0), Number(0)], Array [String(\"glyph\"), Number(1), Number(2), Number(0), Number(0), Number(0), Number(0), Array [], Number(0), Number(0)], Array [String(\"glyph\"), Number(2), Number(2), Number(0), Number(0), Number(0), Number(0), Array [], Number(0), Number(0)], Array [String(\"glyph\"), Number(3), Number(2), Number(0), Number(0), Number(0), Number(0), Array [], Number(0), Number(0)], Array [String(\"glyph\"), Number(4), Number(2), Number(0), Number(0), Number(0), Number(0), Array [], Number(0), Number(0)], Array [String(\"glyph\"), Number(5), Number(2), Number(0), Number(0), Number(0), Number(0), Array [], Number(0), Number(0)], Array [String(\"backgrounds\")], Array [String(\"cursor\")], Array [String(\"blink\"), Bool(false)]]\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:50550/suite.js:5883:21)\n    at webgl_renderer-29f57484abdfc576.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:50550/suite_bg.wasm:wasm-function[39340]:0xb220a0)\n    at webgl_renderer-29f57484abdfc576.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:50550/suite_bg.wasm:wasm-function[25307]:0xa79c5e)\n    at webgl_renderer-29f57484abdfc576.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:50550/suite_bg.wasm:wasm-function[8525]:0x7cd996)\n    at webgl_renderer-29f57484abdfc576.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:50550/suite_bg.wasm:wasm-function[25308]:0xa79ce2)\n    at webgl_renderer-29f57484abdfc576.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:50550/suite_bg.wasm:wasm-function[13413]:0x8eef6d)\n    at webgl_renderer-29f57484abdfc576.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:50550/suite_bg.wasm:wasm-function[16927]:0x982538)\n    at webgl_renderer-29f57484abdfc576.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:50550/suite_bg.wasm:wasm-function[47393]:0xb3acb4)\n    at webgl_renderer-29f57484abdfc576.wasm.rust_begin_unwind (http://127.0.0.1:50550/suite_bg.wasm:wasm-function[32412]:0xaef945)\n    at webgl_renderer-29f57484abdfc576.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:50550/suite_bg.wasm:wasm-function[32413]:0xaef972)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 2 tests\ntest unchanged_webgl_renderer_model_and_frame_traces ... FAIL\ntest invalid_native_grid_and_nonprogressing_joins_are_errors ... ok\n\nfailures:\n\n---- unchanged_webgl_renderer_model_and_frame_traces output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at webgl_renderer-29f57484abdfc576.wasm.__rust_start_panic (http://127.0.0.1:50550/suite_bg.wasm:wasm-function[47924]:0xb3b9d1)\n            at webgl_renderer-29f57484abdfc576.wasm.rust_panic (http://127.0.0.1:50550/suite_bg.wasm:wasm-function[42956]:0xb2fdf2)\n            at webgl_renderer-29f57484abdfc576.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:50550/suite_bg.wasm:wasm-function[13413]:0x8eef9b)\n            at webgl_renderer-29f57484abdfc576.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:50550/suite_bg.wasm:wasm-function[16927]:0x982538)\n            at webgl_renderer-29f57484abdfc576.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:50550/suite_bg.wasm:wasm-function[47393]:0xb3acb4)\n            at webgl_renderer-29f57484abdfc576.wasm.rust_begin_unwind (http://127.0.0.1:50550/suite_bg.wasm:wasm-function[32412]:0xaef945)\n            at webgl_renderer-29f57484abdfc576.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:50550/suite_bg.wasm:wasm-function[32413]:0xaef972)\n            at webgl_renderer-29f57484abdfc576.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:50550/suite_bg.wasm:wasm-function[6044]:0x702012)\n            at webgl_renderer-29f57484abdfc576.wasm.core::panicking::assert_failed::h44f7fa283a9c9ad9 (http://127.0.0.1:50550/suite_bg.wasm:wasm-function[24287]:0xa630cb)\n            at webgl_renderer-29f57484abdfc576.wasm.webgl_renderer::unchanged_webgl_renderer_model_and_frame_traces::hf03b2f2ab8eac817 (http://127.0.0.1:50550/suite_bg.wasm:wasm-function[566]:0x5f971)\n\nfailures:\n\n    unchanged_webgl_renderer_model_and_frame_traces\n\ntest result: FAILED. 1 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.20s\n\n",
+      "counts": {
+        "passed": 1,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/bcd97833f0842bd26d0b65d0aaa89d483656ed79ddd00d971897c03fcbfe707a/artifact.wasm",
+      "sha256": "bcd97833f0842bd26d0b65d0aaa89d483656ed79ddd00d971897c03fcbfe707a",
+      "bytes": 21906365,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\Nova306\\target\\wasm32-unknown-unknown\\debug\\deps\\webgl_renderer-29f57484abdfc576.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\Nova306\\results\\browser-host\\webgl_renderer\\2026-11-05T19-37-39-410Z-73a07265-d274-4167-9f4e-c30b37a5d48b\\artifacts\\suite_bg.wasm",
+      "bytes": 18708318,
+      "sha256": "0a34ce7cb4f6078803da5df917b53a0872759c6414e4fc362dbde46e66c4b7d9"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\Nova306\\results\\browser-host\\webgl_renderer\\2026-11-05T19-37-39-410Z-73a07265-d274-4167-9f4e-c30b37a5d48b\\artifacts\\suite.js",
+      "bytes": 243214,
+      "sha256": "39811c059dea338d0eed19d41b1036ebc73085c34f55ad8041c721f42c2c83c8"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "0de1c45c45105902635c31fc28c28b56c358bdaf72871c61cc4bdac4cbba8953"
+  },
+  "finishedAt": "2026-11-05T19:37:54.054Z"
+}

@@ -1,0 +1,22 @@
+{
+  "sourceSha256": "b9ba26ceadd3927fc739aa7578ae4c10bfc7c43916233e058f5d86ad6d759379",
+  "restored": true,
+  "status": 1,
+  "error": null,
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "counts": {
+        "passed": 1,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "mutation": {
+    "fixed": "usize::try_from(v.max(0))\n                .unwrap_or(usize::MAX)\n                .min(c.rows - 1)",
+    "broken": "usize::try_from(v).unwrap_or(0).min(c.rows - 1)"
+  }
+}

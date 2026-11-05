@@ -1,5 +1,7 @@
 // Copyright (c) 2026 The xterm.js authors. All rights reserved. MIT license.
 mod webgl_renderer_support;
+#[cfg(target_arch = "wasm32")]
+wasm_bindgen_test::wasm_bindgen_test_configure!(run_in_browser);
 use serde_json::{json, Value};
 use webgl_renderer_support::{usize_value, Host};
 use xterm_web::{
@@ -44,7 +46,8 @@ fn context(c: &Value) -> UpdateContext {
         text_blink_on: c["textOn"].as_bool().unwrap(),
     }
 }
-#[test]
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
+#[cfg_attr(not(target_arch = "wasm32"), test)]
 fn unchanged_webgl_renderer_model_and_frame_traces() {
     let fixture: Value =
         serde_json::from_str(include_str!("fixtures/webgl-renderer.json")).unwrap();
@@ -133,12 +136,13 @@ fn unchanged_webgl_renderer_model_and_frame_traces() {
             );
         }
     }
-    assert_eq!(fixture["cases"].as_array().unwrap().len(), 162);
-    assert_eq!(steps, 455);
+    assert_eq!(fixture["cases"].as_array().unwrap().len(), 164);
+    assert_eq!(steps, 459);
     assert_eq!(errors, 4);
 }
 
-#[test]
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
+#[cfg_attr(not(target_arch = "wasm32"), test)]
 fn invalid_native_grid_and_nonprogressing_joins_are_errors() {
     use xterm_web::webgl::renderer_types::UpdateError;
     let fixture: Value =

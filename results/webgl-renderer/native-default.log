@@ -1,47 +1,47 @@
    Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\Nova306\crates\xterm-web)
-    Finished `test` profile [unoptimized] target(s) in 3.84s
+    Finished `test` profile [unoptimized] target(s) in 4.55s
      Running tests\webgl.rs (target\debug\deps\webgl-bba2f64f8a668833.exe)
 
 running 46 tests
-test math::projection_maps_source_unit_coordinates_to_clip_space ... ok
-test model::clear_and_resize_preserve_selection_and_cursor ... ok
-test math::growth_doubles_caps_and_truncates_without_aliasing ... ok
 test math::numeric_constructor_edges_match_typed_array_to_index ... ok
+test math::growth_doubles_caps_and_truncates_without_aliasing ... ok
+test math::projection_maps_source_unit_coordinates_to_clip_space ... ok
 test math::source_browser_baselines_and_dim_opacity ... ok
 test math::texture_version_retains_handle_identity_and_starts_dirty ... ok
-test model::constructor_and_packed_offsets_match_source ... ok
+test model::clear_and_resize_preserve_selection_and_cursor ... ok
 test model::dimension_overflow_returns_error_without_replacing_previous_storage ... ok
+test model::constructor_and_packed_offsets_match_source ... ok
+test config::generated_colors_share_objects_and_caches_but_not_ansi_vector_slots ... ok
 test model::resize_allocates_zeroed_arrays_only_when_total_packed_length_changes ... ok
 test model::zero_product_preserves_an_existing_zero_length_model ... ok
 test renderer_utils::every_source_emoji_range_endpoint_and_neighbor ... ok
-test renderer_utils::initial_dimensions_and_source_falsy_error_text ... ok
-test config::original_identical_configs ... ok
-test renderer_utils::powerline_and_background_ranges_preserve_every_boundary ... ok
-test renderer_utils::rescaling_threshold_width_and_every_exclusion ... ok
-test config::original_cell_width_differs ... ok
-test cache::reentrant_disposal_uses_the_captured_live_splice_index_without_borrow_panics ... ok
-test config::original_cell_height_differs ... ok
 test config::strict_number_and_string_semantics_and_packed_color_modes ... ok
-test config::generated_colors_share_objects_and_caches_but_not_ansi_vector_slots ... ok
 test config::ansi_length_comparison_preserves_source_asymmetry_and_error ... ok
-test cache::config_change_releases_one_owner_without_freeing_anothers_atlas ... ok
 test cache::same_owner_and_config_reuses_without_running_the_factory ... ok
-test renderer_utils::variant_offsets_preserve_js_round_ties_remainder_and_signed_zero ... ok
-test typed_array::fallback_preserves_legacy_negative_and_fractional_quirks ... ok
-test config::original_max_texture_size_differs ... ok
+test cache::reentrant_disposal_uses_the_captured_live_splice_index_without_borrow_panics ... ok
+test cache::config_change_releases_one_owner_without_freeing_anothers_atlas ... ok
+test config::original_identical_configs ... ok
+test renderer_utils::initial_dimensions_and_source_falsy_error_text ... ok
+test config::original_cell_width_differs ... ok
+test config::original_cell_height_differs ... ok
+test renderer_utils::powerline_and_background_ranges_preserve_every_boundary ... ok
 test cache::single_owner_change_disposes_before_creation_and_weak_owner_does_not_leak_terminal ... ok
-test typed_array::float32_array ... ok
+test renderer_utils::rescaling_threshold_width_and_every_exclusion ... ok
+test renderer_utils::variant_offsets_preserve_js_round_ties_remainder_and_signed_zero ... ok
 test cache::invalid_config_comparison_does_not_release_existing_owner ... ok
+test typed_array::fallback_preserves_legacy_negative_and_fractional_quirks ... ok
+test typed_array::float32_array ... ok
+test config::original_max_texture_size_differs ... ok
 test typed_array::float64_array ... ok
 test typed_array::floating_values_signed_zero_and_undefined_assignment ... ok
 test typed_array::int16_array ... ok
-test typed_array::int32_array ... ok
 test cache::failed_factory_and_disposal_preserve_source_partial_state ... ok
 test typed_array::int8_array ... ok
+test typed_array::int32_array ... ok
 test typed_array::nonfinite_indexes_follow_the_selected_source_operation ... ok
 test typed_array::omitted_empty_and_independent_storage ... ok
-test cache::equal_configs_share_and_only_final_owner_disposes_in_either_order ... ok
 test typed_array::original_end_cases ... ok
+test cache::equal_configs_share_and_only_final_owner_disposes_in_either_order ... ok
 test typed_array::original_start_cases ... ok
 test typed_array::uint16_array ... ok
 test typed_array::uint32_array ... ok
@@ -58,17 +58,17 @@ running 2 tests
 test source_palette_errors_are_explicit ... ok
 test unchanged_source_colors_identity_and_contrast_cache ... ok
 
-test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
 
      Running tests\webgl_atlas_pixels.rs (target\debug\deps\webgl_atlas_pixels-7ce1de528f7d7a49.exe)
 
 running 4 tests
 test color_empty_and_alpha_empty_are_deliberately_different ... ok
-test malformed_buffers_and_geometry_return_errors_without_mutation ... ok
 test zero_area_images_do_not_walk_unbacked_rows_or_columns ... ok
+test malformed_buffers_and_geometry_return_errors_without_mutation ... ok
 test unchanged_source_rgba_and_bounds ... ok
 
-test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
 
      Running tests\webgl_cell_colors.rs (target\debug\deps\webgl_cell_colors-0fa9728aae7f34a5.exe)
 
@@ -76,7 +76,7 @@ running 2 tests
 test missing_palette_reports_index_retains_base_and_recovers ... ok
 test unchanged_source_cell_colors_and_variants ... ok
 
-test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
 
      Running tests\webgl_glyphs.rs (target\debug\deps\webgl_glyphs-e9a71eefd7de876a.exe)
 
@@ -85,7 +85,7 @@ test dimension_changes_do_not_clear_vertices_until_resize ... ok
 test invalid_inputs_fail_without_losing_existing_geometry ... ok
 test unchanged_source_vertex_and_compaction_bits ... ok
 
-test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
 
      Running tests\webgl_rectangles.rs (target\debug\deps\webgl_rectangles-c6c8a4918fcab4e3.exe)
 
@@ -102,5 +102,5 @@ running 2 tests
 test invalid_native_grid_and_nonprogressing_joins_are_errors ... ok
 test unchanged_webgl_renderer_model_and_frame_traces ... ok
 
-test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
 

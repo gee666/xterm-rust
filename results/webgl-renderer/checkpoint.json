@@ -23,8 +23,8 @@
     "webgl-cell-colors": 7
   },
   "renderer": {
-    "cases": 162,
-    "steps": 455,
+    "cases": 164,
+    "steps": 459,
     "seed": "0x54b7d329",
     "seededCases": 128,
     "injectedErrors": 4,
@@ -60,7 +60,26 @@
     "negative": "Real unsigned-cache mutant:1PASS1FAIL, finally restored and hash-verified; fresh default/release PASS",
     "workspaceFmt": "FAIL Windows OS206; exact receipt retained",
     "memberWebFmt": "PASS; does not replace full-workspace gate",
-    "browser": "UNRUN",
+    "browser": {
+      "scope": "Typed renderer engine in actual32-bit WASM, NOT public-addon/GPU runtime",
+      "functionsPerEngine": 2,
+      "stepsPerEngine": 459,
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "filtered": 0,
+      "oldClampChromiumNegative": {
+        "passed": 1,
+        "failed": 1,
+        "restoredByteIdentically": true
+      }
+    },
+    "reviewFix": "Positive row overflow clamps to last row on32-bit; actualoldclamp negative retained",
     "fullWorkspaceTests": "UNRUN",
     "fullWorkspaceClippy": "UNRUN",
     "linuxNative": "UNRUN",
@@ -75,7 +94,8 @@
     "cargo clippy -j2 -p xterm-web --lib --test webgl_renderer --test webgl_cell_colors --all-features -- -D warnings",
     "cargo clippy -j2 -p xterm-web --target wasm32-unknown-unknown --lib --test webgl_renderer --test webgl_cell_colors --all-features -- -D warnings",
     "cargo fmt --all -- --check",
-    "cargo fmt -p xterm-web -- --check"
+    "cargo fmt -p xterm-web -- --check",
+    "WASM_TEST=webgl_renderer CARGO_BUILD_JOBS=2 CARGO_FEATURES=acceptance-hooks node scripts/browser-host-check.mjs"
   ],
   "pins": [
     {
@@ -90,13 +110,13 @@
     },
     {
       "path": "crates/xterm-web/src/webgl/renderer_types.rs",
-      "bytes": 4125,
-      "sha256": "648eb2b0004b03aa1fbac8defd36a57d32c52c7f436468cc9cbd5260dc52a3f2"
+      "bytes": 4197,
+      "sha256": "3e0aa5045cbc55eab5c759fde555151ab5b52acae427d33cb2c8a949ffe22a0c"
     },
     {
       "path": "crates/xterm-web/src/webgl/renderer_update.rs",
-      "bytes": 12445,
-      "sha256": "617b7a8dcf33c80ae6b56bf1665cdf4cce1c800a815c405382229aa7e189a8dd"
+      "bytes": 12658,
+      "sha256": "b9ba26ceadd3927fc739aa7578ae4c10bfc7c43916233e058f5d86ad6d759379"
     },
     {
       "path": "crates/xterm-web/src/webgl/renderer_frame.rs",
@@ -105,8 +125,8 @@
     },
     {
       "path": "crates/xterm-web/tests/webgl_renderer.rs",
-      "bytes": 6879,
-      "sha256": "a1977297e720ffa6b94bde4e51b772bf40082ae6278cfdfbdd926c032bd54b8b"
+      "bytes": 7201,
+      "sha256": "0de1c45c45105902635c31fc28c28b56c358bdaf72871c61cc4bdac4cbba8953"
     },
     {
       "path": "crates/xterm-web/tests/webgl_renderer_support/mod.rs",
@@ -120,8 +140,8 @@
     },
     {
       "path": "crates/xterm-web/tests/fixtures/webgl-renderer.json",
-      "bytes": 1704095,
-      "sha256": "d403e099d07b6ad0062f9690523c6519848e8e1e4936778b0d2962ca1c13e324"
+      "bytes": 1711549,
+      "sha256": "06aac61d7331253e7d75546d47d37f79eb4bd930401bbd5573e8b63f1b9ad0cc"
     },
     {
       "path": "crates/xterm-web/tests/fixtures/webgl-cell-colors.json",
@@ -130,8 +150,8 @@
     },
     {
       "path": "scripts/webgl-renderer-oracle.mjs",
-      "bytes": 11616,
-      "sha256": "2b3296ce0dc37452c17284491f65599b0751568048aa5dbd9db32e8d960ba9c1"
+      "bytes": 11840,
+      "sha256": "f83ee04cf60d9d798616c85a07f4fd2c14759f74b19398f8ff02e975d210b847"
     },
     {
       "path": "scripts/webgl-cell-color-oracle.mjs",
@@ -140,23 +160,53 @@
     },
     {
       "path": "docs/webgl-renderer-update.md",
-      "bytes": 6378,
-      "sha256": "e813401865b6d14077b3a2434422e4ae8818e8fdeecddad16b7943c2e479b618"
+      "bytes": 7367,
+      "sha256": "44554f9a0a4717ad7922a2268927b26ab4a3d140cb8fbfe65b953f104b7c8e0d"
     },
     {
       "path": ".pi/swarm/skills/webgl-renderer-check/SKILL.md",
-      "bytes": 2206,
-      "sha256": "875f51a92914808a6c989a6cd8c37b096fec23b516eb549e1f2e95bc5b5ad1c1"
+      "bytes": 2755,
+      "sha256": "678e8ba8fe91c8850757bc7578427c5c768e91fc0bddb5e2dbbe590e471f1a7e"
+    },
+    {
+      "path": "results/webgl-renderer/browser-run.log",
+      "bytes": 132,
+      "sha256": "b50cc98bde9c9124b3f1a0d78c2f99a819317a24da8ab3673174af53ce4418eb"
+    },
+    {
+      "path": "results/webgl-renderer/browser.json",
+      "bytes": 5726,
+      "sha256": "29c5011138143b564c1342975f4ba35fface4e4bb974b3d5da9df70e7d890d81"
+    },
+    {
+      "path": "results/webgl-renderer/clamp-negative-browser.json",
+      "bytes": 10640,
+      "sha256": "6d459cbf5c1450ab5007b9bb51386912661fdd89c32a36d45137abe8197dfe74"
+    },
+    {
+      "path": "results/webgl-renderer/clamp-negative-run.log",
+      "bytes": 50,
+      "sha256": "92ee943df356f7d9540a14f8c62bb08d425c93a21d98d9c8ecc67059f8665c32"
+    },
+    {
+      "path": "results/webgl-renderer/clamp-negative.json",
+      "bytes": 539,
+      "sha256": "6d98acce6862deb96856ed7038c6fbcf6f3a9ae2aed4d03f8d03e3b2885337cc"
+    },
+    {
+      "path": "results/webgl-renderer/clamp-negative.rs.txt",
+      "bytes": 12608,
+      "sha256": "91c2b83d3fdbee91a2a6503e7d99cbc5d42fef6439881571080711bfffac2cff"
     },
     {
       "path": "results/webgl-renderer/clippy-native.log",
       "bytes": 144,
-      "sha256": "272ab70336379dba3f478a4fbb115ae3e5ed40ad434a635b486de73b0b95a5a0"
+      "sha256": "0697a3d306ae2b252beb505b62e48d6d19778b9270e8f836fb6acb9b44d20947"
     },
     {
       "path": "results/webgl-renderer/clippy-wasm.log",
       "bytes": 144,
-      "sha256": "79763a964708cb962a18d5d2dc1217edf9279c3ce1eb280c8358a47a9537f8fc"
+      "sha256": "49c870dcb13a9ee72971fdcd727cf68135d65150bcfbdab3da17b7697b042649"
     },
     {
       "path": "results/webgl-renderer/color-oracle.log",
@@ -176,37 +226,47 @@
     {
       "path": "results/webgl-renderer/native-all-features.log",
       "bytes": 5663,
-      "sha256": "24bf72ff41c7b3220d66456f58323e6f63ce652278bc7652f6a9c38b77f50f81"
+      "sha256": "262a4259dbf3f08ba2670dd4d6fcfe29b6d541d0f381b856f50fd9219646a35d"
     },
     {
       "path": "results/webgl-renderer/native-default.log",
       "bytes": 5663,
-      "sha256": "9276c7dc8145d7d510715827a4599500c96102fd220ee36e695c492399dbf213"
+      "sha256": "ebb8db8745a8ec49b8d5a9aa5580b08011362a6f539d8ef5480917706517a498"
     },
     {
       "path": "results/webgl-renderer/oracle.log",
       "bytes": 111,
-      "sha256": "9315399f9ceed9c18a11ec2baee2dc5fc0c789c8ccc86730ff2de9bd7010661b"
+      "sha256": "18d783700d4fb7e6f8bd9df4c2c64007ef77fe62f1c27cb8b18557da16e347ba"
     },
     {
       "path": "results/webgl-renderer/release.log",
-      "bytes": 1484,
-      "sha256": "a8afbe27752ec47acca4156e716c55e00d0dde45fd3afae4c4cd90d217edc80b"
+      "bytes": 818,
+      "sha256": "d115201e57a58ca8ac99ce326b3a81d274232d0f45d904e0e39d78f2b359d251"
+    },
+    {
+      "path": "results/webgl-renderer/review-requested-changes.md",
+      "bytes": 1165,
+      "sha256": "8649ee6252c20a422ee60b640b2e6687f4a92c9f6a3a4b518146beb153a336a6"
     },
     {
       "path": "results/webgl-renderer/unsigned-cache-negative.json",
       "bytes": 345,
-      "sha256": "2d2043bc390eaffee950bf2b6fdc107bdbf24213a4c60f6cc58a89714d0c6cd8"
+      "sha256": "e342cf3881931d571925ec905d1692828796809ca658fc710bd1f739842764ea"
     },
     {
       "path": "results/webgl-renderer/unsigned-cache-negative.log",
       "bytes": 6618,
-      "sha256": "e2176c30121c391210814af053937fc1cf977298849ae90c6b11368e80603c71"
+      "sha256": "a8466f3f2fdc4e965b4a9ab559903504b7a61467a39a08c1f28c7751df14eeb9"
     },
     {
       "path": "results/webgl-renderer/unsigned-cache-negative.rs.txt",
-      "bytes": 12476,
-      "sha256": "eadb5dc1458aa1b7d95b429263fd373c2febe35b7e4c7aa9fce55e71210a7eff"
+      "bytes": 12689,
+      "sha256": "aa3d9b05ad0137c1ebc3ca12d9fe837118e6a503c6b33cb3bacbdf1150c31e37"
+    },
+    {
+      "path": "results/webgl-renderer/wasm-build.log",
+      "bytes": 46218,
+      "sha256": "20af7816f4078b5e344756d8400f61e6c2fd6910c937905e9ec1e7e4bf11988f"
     }
   ]
 }

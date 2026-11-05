@@ -14,6 +14,7 @@ pub struct UpdateContext {
     pub rows: usize,
     pub viewport_y: usize,
     pub cursor_x: usize,
+    /// Absolute buffer row, including the active buffer's base offset.
     pub cursor_y: usize,
     pub focused: bool,
     pub cursor_initialized: bool,

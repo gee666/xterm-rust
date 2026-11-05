@@ -1,0 +1,311 @@
+// Copyright (c) 2018-2026 The xterm.js authors. All rights reserved. MIT license.
+//! Incremental WebglRenderer._updateModel, independent of DOM and GPU ownership.
+use super::{
+    cell_colors::{CellColorResolver, CellColors},
+    glyphs::GlyphCell,
+    model::{
+        CursorRenderModel, CursorShape, ModelError, RenderModel, COMBINED_CHAR_BIT_MASK,
+        INDICES_PER_CELL,
+    },
+    renderer_types::{GlyphColorNumbers, ModelCell, UpdateContext, UpdateError, UpdateHost},
+};
+use xterm_core::buffer::{AttributeData, CellData};
+
+#[derive(Default)]
+pub struct RendererState {
+    pub model: RenderModel,
+    pub colors: CellColorResolver,
+    work_cell: CellData,
+    blinking_rows: Vec<bool>,
+    blinking_count: usize,
+}
+impl RendererState {
+    pub fn resize(&mut self, cols: usize, rows: usize) -> Result<(), ModelError> {
+        self.model.resize(cols, rows)?;
+        self.blinking_rows = vec![false; rows];
+        self.blinking_count = 0;
+        Ok(())
+    }
+    /// Model invalidation leaves resolver colors and blinking-row history alone.
+    /// They are stateful dependencies of the source's next incremental update.
+    pub fn clear_model(&mut self) {
+        self.model.clear();
+    }
+    pub fn reset_blinking_rows(&mut self) {
+        self.blinking_rows.fill(false);
+        self.blinking_count = 0;
+    }
+    pub fn blinking_row_count(&self) -> usize {
+        self.blinking_count
+    }
+    pub fn blinking_rows(&self) -> &[bool] {
+        &self.blinking_rows
+    }
+
+    pub fn update<H: UpdateHost>(
+        &mut self,
+        start: i64,
+        end: i64,
+        context: UpdateContext,
+        host: &mut H,
+    ) -> Result<(), UpdateError<H::Error>> {
+        let c = context;
+        let length = c
+            .cols
+            .checked_mul(c.rows)
+            .and_then(|n| n.checked_mul(INDICES_PER_CELL));
+        if c.cols == 0
+            || u32::try_from(c.cols).is_err()
+            || c.rows == 0
+            || length.is_none_or(|n| n > self.model.cells.len())
+            || c.rows > self.model.line_lengths.len()
+            || c.rows > self.blinking_rows.len()
+        {
+            return Err(UpdateError::InvalidGrid);
+        }
+        // Positive values above usize::MAX must clamp to the last row on WASM,
+        // not take the same fallback as a negative input.
+        let clamp = |v: i64| {
+            usize::try_from(v).unwrap_or(0).min(c.rows - 1)
+        };
+        let start = clamp(start);
+        let end = clamp(end);
+        let cursor_x = c.cursor_x.min(c.cols - 1);
+        let cursor_visible = c.cursor_initialized && !c.cursor_hidden && c.cursor_blink_visible;
+        self.model.cursor = None;
+        let mut updated = false;
+        let mut joined_work: Option<(CellData, usize)> = None;
+        for y in start..=end {
+            let row = y
+                .checked_add(c.viewport_y)
+                .ok_or(UpdateError::InvalidGrid)?;
+            if !host.has_line(row).map_err(UpdateError::Host)? {
+                self.model.line_lengths[y] = 0;
+                for x in 0..c.cols {
+                    updated = true;
+                    self.null_cell(x, y, c.cols, CellColors::default(), host)?;
+                }
+                self.set_blinking_row(y, false);
+                continue;
+            }
+            let mut blinking = false;
+            self.model.line_lengths[y] = 0;
+            let cursor_row = c.cursor_y == row;
+            let mut skip_until = 0;
+            let joins = host.joined_characters(row).map_err(UpdateError::Host)?;
+            let mut joins = joins.into_iter().peekable();
+            let mut last_cursor_x = None;
+            let mut x = 0;
+            while x < c.cols {
+                let last_bg = self.colors.result.bg;
+                let previous_background = self.colors.result_numbers()[0];
+                let target = match &mut joined_work {
+                    Some((cell, _)) => cell,
+                    None => &mut self.work_cell,
+                };
+                host.load_cell(row, x, target).map_err(UpdateError::Host)?;
+                let mut cell = if let Some((target, width)) = &joined_work {
+                    ModelCell {
+                        attributes: target.attributes.clone(),
+                        chars: target.combined_data.clone(),
+                        code: Some(0x1f_ffff),
+                        width: *width,
+                    }
+                } else {
+                    ModelCell::load(&self.work_cell).ok_or(UpdateError::InvalidGrid)?
+                };
+                let mut last_x = x;
+                let mut joined = false;
+                if joins.peek().is_some_and(|r| r[0] == x) && x >= skip_until {
+                    // Peek established that an element exists, without taking ownership twice.
+                    let range = *joins.peek().ok_or(UpdateError::InvalidGrid)?;
+                    joins.next();
+                    if range[1] <= range[0] || range[1] > c.cols {
+                        return Err(UpdateError::InvalidJoin(range));
+                    }
+                    let selected = self.selected(range[0], row);
+                    let uniform =
+                        (range[0] + 1..range[1]).all(|i| self.selected(i, row) == selected);
+                    if !uniform || (cursor_row && cursor_x >= range[0] && cursor_x < range[1]) {
+                        skip_until = range[1];
+                    } else {
+                        joined = true;
+                        cell.chars = host.joined_text(row, range).map_err(UpdateError::Host)?;
+                        cell.code = Some(0x1f_ffff);
+                        cell.width = range[1] - range[0];
+                        cell.attributes = AttributeData {
+                            fg: cell.attributes.fg,
+                            bg: cell.attributes.bg,
+                            ..AttributeData::default()
+                        };
+                        last_x = range[1] - 1;
+                        joined_work = Some((
+                            CellData {
+                                attributes: cell.attributes.clone(),
+                                combined_data: cell.chars.clone(),
+                                ..CellData::default()
+                            },
+                            cell.width,
+                        ));
+                    }
+                }
+                if cell.attributes.is_blink() != 0 {
+                    blinking = true;
+                }
+                let selected = self.selected(x, row);
+                host.resolve_colors(&cell, x, row, selected, &mut self.colors)
+                    .map_err(UpdateError::Host)?;
+                if cursor_visible && cursor_row {
+                    if x == cursor_x {
+                        self.model.cursor = Some(CursorRenderModel {
+                            x: cursor_x,
+                            y,
+                            width: cell.width,
+                            style: if c.focused {
+                                c.cursor_style
+                            } else {
+                                c.inactive_style
+                            },
+                            cursor_width: c.cursor_width,
+                            device_pixel_ratio: c.device_pixel_ratio,
+                        });
+                        last_cursor_x = cursor_x
+                            .checked_add(cell.width)
+                            .and_then(|n| n.checked_sub(1));
+                    }
+                    if x >= cursor_x
+                        && last_cursor_x.is_some_and(|last| x <= last)
+                        && (if c.focused {
+                            c.cursor_style
+                        } else {
+                            c.inactive_style
+                        }) == CursorShape::Block
+                    {
+                        let [accent, background] =
+                            host.cursor_colors().map_err(UpdateError::Host)?;
+                        self.colors.override_cursor(accent, background);
+                    }
+                }
+                if c.text_blink_enabled && !c.text_blink_on && cell.attributes.is_blink() != 0 {
+                    self.colors.hide_foreground();
+                }
+                let mut code = cell.code.unwrap_or(0);
+                // NaN from an empty combined cell is not strictly equal to zero in JS.
+                if cell.code != Some(0) {
+                    self.model.line_lengths[y] = (x + 1) as u32;
+                }
+                let index = (y * c.cols + x) * INDICES_PER_CELL;
+                let colors = self.colors.result;
+                let numbers = self.colors.result_numbers();
+                if cell.code.is_some()
+                    && self.model.cells[index..index + INDICES_PER_CELL]
+                        .iter()
+                        .map(|v| i64::from(*v))
+                        .eq([i64::from(code), numbers[0], numbers[1], numbers[2]])
+                {
+                    x += 1;
+                    continue;
+                }
+                updated = true;
+                // JS bitwise OR converts the combined sentinel to a signed number
+                // for the glyph callback, then Uint32Array stores its unsigned bits.
+                let combined = cell.chars.len() > 1;
+                if combined {
+                    code |= COMBINED_CHAR_BIT_MASK;
+                }
+                self.model.cells[index..index + INDICES_PER_CELL]
+                    .copy_from_slice(&[code, colors.bg, colors.fg, colors.ext]);
+                let glyph_code = cell.code.map(|_| {
+                    if combined {
+                        i64::from(code as i32)
+                    } else {
+                        i64::from(code)
+                    }
+                });
+                host.update_glyph(
+                    GlyphCell {
+                        x,
+                        y,
+                        code: glyph_code,
+                        bg: colors.bg,
+                        fg: colors.fg,
+                        ext: colors.ext,
+                        chars: &cell.chars,
+                        width: cell.width as f64,
+                        last_bg,
+                    },
+                    GlyphColorNumbers {
+                        current: numbers,
+                        previous_background,
+                    },
+                )
+                .map_err(UpdateError::Host)?;
+                if joined {
+                    joined_work = None;
+                    for column in x + 1..=last_x {
+                        self.null_cell(column, y, c.cols, colors, host)?;
+                    }
+                    x = last_x;
+                }
+                x += 1;
+            }
+            self.set_blinking_row(y, blinking);
+        }
+        if updated {
+            host.update_backgrounds(&self.model)
+                .map_err(UpdateError::Host)?;
+        }
+        host.update_cursor(&self.model).map_err(UpdateError::Host)?;
+        host.needs_text_blink(self.blinking_count > 0)
+            .map_err(UpdateError::Host)?;
+        Ok(())
+    }
+    fn selected(&self, x: usize, row: usize) -> bool {
+        self.model.selection.has_selection && self.model.selection.selection.contains(x, row)
+    }
+    fn set_blinking_row(&mut self, row: usize, value: bool) {
+        if self.blinking_rows[row] != value {
+            self.blinking_rows[row] = value;
+            if value {
+                self.blinking_count += 1;
+            } else {
+                self.blinking_count -= 1;
+            }
+        }
+    }
+    fn null_cell<H: UpdateHost>(
+        &mut self,
+        x: usize,
+        y: usize,
+        cols: usize,
+        colors: CellColors,
+        host: &mut H,
+    ) -> Result<(), UpdateError<H::Error>> {
+        host.update_glyph(
+            GlyphCell {
+                x,
+                y,
+                code: Some(0),
+                bg: colors.bg,
+                fg: colors.fg,
+                ext: colors.ext,
+                chars: &[],
+                width: 0.0,
+                last_bg: 0,
+            },
+            GlyphColorNumbers {
+                current: if colors == CellColors::default() {
+                    [0; 3]
+                } else {
+                    self.colors.result_numbers()
+                },
+                previous_background: 0,
+            },
+        )
+        .map_err(UpdateError::Host)?;
+        let i = (y * cols + x) * INDICES_PER_CELL;
+        self.model.cells[i..i + INDICES_PER_CELL]
+            .copy_from_slice(&[0, colors.bg, colors.fg, colors.ext]);
+        Ok(())
+    }
+}

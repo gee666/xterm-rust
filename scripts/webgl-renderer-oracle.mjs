@@ -98,6 +98,8 @@ for(const style of ['block','bar','underline','outline','none'])for(const focuse
 for(const flag of ['hidden','initialized','cursorVisible'])run(flag,{[flag]:flag==='hidden'});
 run('blink-transitions',{},[{},{context:{textOn:false},start:1,end:1},{lines:[initial()[0],Array(6).fill(cell(90)),null],start:1,end:1},{start:2,end:2}]);
 run('clamped-reversed',{},[{start:-10,end:100},{start:2,end:0},{start:100,end:100}]);
+run('large-positive-rows',{},[{start:4294967296,end:4294967296},{start:9007199254740991,end:9007199254740991},{start:-4294967296,end:-4294967296}]);
+run('large-negative-to-positive',{},[{start:-4294967296,end:4294967296}]);
 run('joined', {cursorY:100},[{joins:[[[0,3],[3,6]],[[2,4]],[]]},{},{selection:{start:[1,2],end:[4,2],column:false}},{context:{cursorY:2,cursorX:1}}]);
 run('column-selection', {cursorY:100},[{joins:[[[0,3]],[],[]],selection:{start:[4,2],end:[1,3],column:true}},{context:{textOn:false}}]);
 run('glyph-error',{},[{fail:{name:'glyph',at:2}},{},{fail:{name:'cursor',at:1}},{fail:{name:'blink',at:1}},{fail:{name:'backgrounds',at:1},context:{textOn:false}}]);

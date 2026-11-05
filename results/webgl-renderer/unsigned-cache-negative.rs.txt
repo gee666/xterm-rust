@@ -63,7 +63,13 @@ impl RendererState {
         {
             return Err(UpdateError::InvalidGrid);
         }
-        let clamp = |v: i64| usize::try_from(v).unwrap_or(0).min(c.rows - 1);
+        // Positive values above usize::MAX must clamp to the last row on WASM,
+        // not take the same fallback as a negative input.
+        let clamp = |v: i64| {
+            usize::try_from(v.max(0))
+                .unwrap_or(usize::MAX)
+                .min(c.rows - 1)
+        };
         let start = clamp(start);
         let end = clamp(end);
         let cursor_x = c.cursor_x.min(c.cols - 1);
