@@ -1,0 +1,77 @@
+{
+  "revision": "477a55bd9eb3f1d8fe02f331323ac4d6f6f8f175",
+  "base": "926d8355b77ddebe22aba2caffae0ebcf34ad127",
+  "rebase": "Only main receipt/docs delta013bf319..926d8355, no producer changes",
+  "node": "v24.15.0",
+  "toolchain": {
+    "rustc": "1.85.1 (4eb161250 2025-03-15)",
+    "cargo": "1.85.1 (d73d2caf9 2024-12-31)"
+  },
+  "counts": {
+    "constructorCases": 287,
+    "accepted": 55,
+    "rejected": 232,
+    "negativeControlMismatches": 218,
+    "nativeFunctions": 7,
+    "ligatureUnitFunctions": 7,
+    "browserFunctionsPerEngine": 2,
+    "addonResultRecords": 5
+  },
+  "producerHashes": [
+    {
+      "path": "crates/xterm-addons/src/ligatures/font.rs",
+      "sha256": "c9cc4f2e1c7b9077d4a22df08f909b0907d6cf7b560b08006fd661ed1f7ef1a1"
+    },
+    {
+      "path": "crates/xterm-addons/src/ligatures/font_bytes.rs",
+      "sha256": "31eb43e12cc8cc528d08b3e70432ce19680079dbf3e024e2ec03e9c6b000379e"
+    },
+    {
+      "path": "crates/xterm-addons/src/ligatures/font_fvar.rs",
+      "sha256": "e8fef5d22e6285046f62c6852ca5ae26d00d7037350cafd97c86e9f808488715"
+    },
+    {
+      "path": "crates/xterm-addons/tests/fixtures/font-fvar.json",
+      "sha256": "b9e5b70f402cbdb15beaa4fb53fdafac1872e525917b8b21c47598cb8374d820"
+    },
+    {
+      "path": "crates/xterm-addons/tests/font_fvar_constructor.rs",
+      "sha256": "0bdb0242c598b07ed7673046dc494100682eb061994092d140fec215e8e3daeb"
+    },
+    {
+      "path": "crates/xterm-addons/tests/support/font_fvar_assertions.rs",
+      "sha256": "9d9290a2faa588faa01274427a5438d7e627390ce589eae7c851f233df78a6e8"
+    },
+    {
+      "path": "crates/xterm-font-addons/tests/fixtures/font-fvar-addon.json",
+      "sha256": "d6141a13521582e61b16b8e3ed65a018450e9d7358a115153e936cbec5ca56d8"
+    },
+    {
+      "path": "crates/xterm-font-addons/tests/font_fvar_browser.rs",
+      "sha256": "9f022ae4e8ea53ce9285045bb3fa6394ebab2ef0b2d066a8ef417e01f4ab0940"
+    },
+    {
+      "path": "crates/xterm-font-addons/tests/support/font_fvar_scenarios.mjs",
+      "sha256": "182a484a9e9ebaa73cc74bbb5b416caa49051e42cf7cc05bc4da714d32390a0e"
+    },
+    {
+      "path": "docs/font-fvar-validation.md",
+      "sha256": "693e0af50dec9ce06c8df982ec74e573beb2c2b6a4bb52d54f9989c79f62da89"
+    },
+    {
+      "path": "scripts/font-fvar-oracle.mjs",
+      "sha256": "83eb8715cad3f5bc426f3170537f8e430e927a908f0c634217c0fbc35eccc714"
+    },
+    {
+      "path": "scripts/ligature-addon-oracle.mjs",
+      "sha256": "683e9658f765f907763c58f14e2e173b222bc743030d26b0302e10c14370f0ca"
+    }
+  ],
+  "browserReportSha256": "f1e388eea52dd4084f4a86d738900a6e10352e69ecbd48d7348104eaf45e4c1f",
+  "sourceIntegritySha256": "f821fc9fb6f57d36297f652c05ef96a3bea4d4a47b2c93e68c80fa3b71d4696a",
+  "limitations": [
+    "Full font/application equivalence NOT PROVEN",
+    "Full unchanged suites, real Terminal and native Linux/macOS not established by this task",
+    "Aggregate cargo fmt --all -- --check OS206; five member checks pass"
+  ]
+}
