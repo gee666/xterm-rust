@@ -980,8 +980,10 @@ export function runSyncHandleProgram(make, program) {
       mode(false);
       if (action === 'dispose') attempt('dispose-initial', () => command('dispose'));
       else attempt('flush', () => refresh(1, 1));
-      // Cancellation must not invalidate any callback a host retained.
-      for (let index = 0; index < records.length; index++) attempt(`retained-${index}`, () => deliver(index));
+      // Snapshot the count so a broken callback that schedules more work fails
+      // the trace comparison instead of growing an unbounded delivery loop.
+      const retainedCount = records.length;
+      for (let index = 0; index < retainedCount; index++) attempt(`retained-${index}`, () => deliver(index));
       mode(true); attempt('new-buffer', () => refresh(2, 2));
       mode(false); attempt('new-flush', () => refresh(0, 0));
       attempt('dispose', () => command('dispose'));
