@@ -26,6 +26,10 @@ cargo clippy --locked -j2 -p xterm-web --lib --target wasm32-unknown-unknown -- 
 
 WASM compilation is not a browser runtime test. Native Linux/macOS, complete common-family closure312, the full workspace quality/runtime matrix and full xterm.js equivalence are not established by this repair. Overall equivalence remains NOT PROVEN.
 
+## Independent review
+
+The isolated task366 reviewer accepted commit`c589b8a`. It independently ran all14 focused service tests, both core doctests, full-workspace formatting and warning-denied native core/web all-target/all-feature Clippy. It confirmed the compile-fail conversion fails with E0308, inspected the retained successful-compilation negative control, and checked implementation/reference hashes. It inspected but did not rerun the source oracle or WASM Clippy. No tracked files changed during review, and no concrete problem was found.
+
 ## Temporary ownership
 
 Only `O:/xterm-rust-swarm-16/tmp/A16` belongs to this task, including its regular private `target/` and `tmp/`. No browser or server was started. Preserve tracked source and evidence, then remove those disposable files after review/integration. No other worktree, cache or original reference is a cleanup target.
