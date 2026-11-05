@@ -1,0 +1,60 @@
+{
+  "task": 371,
+  "base": "2f1be3b980494d9618a9049fd1a7440534ff6444",
+  "status": "scoped fixture precondition corrected; equivalence NOT PROVEN",
+  "environment": {
+    "node": "v24.15.0",
+    "rust": "rustc 1.85.1 (4eb161250 2025-03-15)",
+    "platform": "win32"
+  },
+  "productionChanged": false,
+  "originalAssertionsPreserved": 11,
+  "testDeletedLines": 0,
+  "testAddedLines": 16,
+  "sourceCases": 8,
+  "nativeTestFunctions": 18,
+  "browserTests": [
+    {
+      "name": "chromium",
+      "version": "148.0.7778.96",
+      "status": "passed",
+      "tests": [
+        "__wbgt__wasm_buffer_cleanup::inactive_normal_and_active_alternate_are_both_scheduled",
+        "__wbgt__wasm_buffer_cleanup::real_idle_or_priority_callback_cleans_parser_populated_buffers",
+        "__wbgt__wasm_buffer_cleanup::reset_and_host_detach_cancel_real_pending_tokens",
+        "__wbgt__wasm_buffer_cleanup::scheduler_throw_preserves_the_original_js_object"
+      ]
+    },
+    {
+      "name": "firefox",
+      "version": "150.0.2",
+      "status": "passed",
+      "tests": [
+        "__wbgt__wasm_buffer_cleanup::inactive_normal_and_active_alternate_are_both_scheduled",
+        "__wbgt__wasm_buffer_cleanup::real_idle_or_priority_callback_cleans_parser_populated_buffers",
+        "__wbgt__wasm_buffer_cleanup::reset_and_host_detach_cancel_real_pending_tokens",
+        "__wbgt__wasm_buffer_cleanup::scheduler_throw_preserves_the_original_js_object"
+      ]
+    },
+    {
+      "name": "webkit",
+      "version": "26.4",
+      "status": "passed",
+      "tests": [
+        "__wbgt__wasm_buffer_cleanup::inactive_normal_and_active_alternate_are_both_scheduled",
+        "__wbgt__wasm_buffer_cleanup::real_idle_or_priority_callback_cleans_parser_populated_buffers",
+        "__wbgt__wasm_buffer_cleanup::reset_and_host_detach_cancel_real_pending_tokens",
+        "__wbgt__wasm_buffer_cleanup::scheduler_throw_preserves_the_original_js_object"
+      ]
+    }
+  ],
+  "hashes": {
+    "crates/xterm-web/tests/wasm_buffer_cleanup.rs": "378a66c83d02f660c0cbcb47e7445542511eafea312954a28b91b243b5290328",
+    "crates/xterm-core/tests/buffer_cleanup_resize.rs": "3fc313a7618badfd2a114414d035615b445fff50c25a49c3ef4d55f2fb65d465",
+    "crates/xterm-core/tests/fixtures/buffer-cleanup.tsv": "c4817ec16f7bfadecaa0e664920f2c59ec0067479149d49347d508bdb35e6fd4",
+    "scripts/buffer-cleanup-oracle.mjs": "5b9b94a8a4553784152b7f6d8afa455540887ffd4d14689ff00f5ea9169b4725"
+  },
+  "baselineReceipt": "results/task-queue-clock/baseline-buffer-browser.json",
+  "scope": "Controlled-source queue traces, native buffer state, actual browser timer/cleanup adapter. Full source Buffer suite and native Linux/macOS not run for task371.",
+  "generatedBinariesRetained": false
+}

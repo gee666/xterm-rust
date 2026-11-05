@@ -135,6 +135,22 @@ async fn inactive_normal_and_active_alternate_are_both_scheduled() {
     terminal.write("normal\x1b[?1049halt").unwrap();
     terminal.resize(3, 4).unwrap();
     let buffers = buffers(&terminal);
+    // Source only shrinks reflow-enabled rows. Alternate rows still have twelve
+    // cells, so grow the terminal to four to resize their retained storage too.
+    assert!(!buffers.buffers.alt().borrow().has_pending_cleanup());
+    assert_eq!(
+        buffers
+            .buffers
+            .alt()
+            .borrow()
+            .lines
+            .get(0)
+            .unwrap()
+            .borrow()
+            .len(),
+        12
+    );
+    terminal.resize(4, 4).unwrap();
     assert!(buffers.buffers.normal().borrow().has_pending_cleanup());
     assert!(buffers.buffers.alt().borrow().has_pending_cleanup());
     observer.completed().await;
