@@ -5,6 +5,7 @@ import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { createHash } from 'node:crypto';
 import assert from 'node:assert/strict';
+import {kernWarningScenarios} from '../crates/xterm-font-addons/tests/support/font_kern_warning_scenarios.mjs';
 import {metadataRejectionScenarios} from '../crates/xterm-font-addons/tests/support/font_metadata_scenarios.mjs';
 import { lifecycleScenarios, loadingScenarios } from '../crates/xterm-font-addons/tests/support/ligature_scenarios.mjs';
 const root = process.cwd();
@@ -36,12 +37,21 @@ for (const [name, binding] of [['opentype.js', 'parse'], ['lru-cache', 'LRUCache
 }
 const { LigaturesAddon } = await import(pathToFileURL(path.join(temporary, 'LigaturesAddon.js')));
 const metadata = process.argv.includes('--metadata');
-const bytes = new Uint8Array(await fs.readFile(path.join(root, 'crates/xterm-addons/tests/fixtures/ligature-fonts', metadata ? 'UbuntuMono-Regular.ttf' : 'FiraCode-Regular.otf')));
+const kernWarnings = process.argv.includes('--kern-warnings');
+const bytes = new Uint8Array(await fs.readFile(path.join(root, 'crates/xterm-addons/tests/fixtures/ligature-fonts', metadata || kernWarnings ? 'UbuntuMono-Regular.ttf' : 'FiraCode-Regular.otf')));
 const create = options => new LigaturesAddon(options);
-const result = metadata ? await metadataRejectionScenarios(create, bytes) : { lifecycle: lifecycleScenarios(create), loading: await loadingScenarios(create, bytes) };
+const result = kernWarnings ? await kernWarningScenarios(create, bytes) : metadata ? await metadataRejectionScenarios(create, bytes) : { lifecycle: lifecycleScenarios(create), loading: await loadingScenarios(create, bytes) };
 // Guard the dependency adapter: a broken OpenType import must not silently
 // turn every expected native result into an error/fallback trace.
-if (metadata) {
+if (kernWarnings) {
+  assert.equal(result.Valid.first.refreshes, 1);
+  assert.equal(result.Truncated.first.refreshes, 0);
+  assert.equal(result.Throw.previousIdentity, true);
+  assert.equal(result.GetterThrow.previousIdentity, true);
+  for (const mode of ['PrimitiveThrow', 'SymbolThrow', 'NullThrow', 'UndefinedThrow']) assert.equal(result[mode].previousIdentity, true);
+  assert.equal(result.Reenter.first.refreshes, 1);
+  assert.equal(result.Change.first.refreshes, 1);
+} else if (metadata) {
   assert.deepEqual(result.metadata.rejected, {ranges:[[0,3]],reads:1,refreshes:0});
   assert.deepEqual(result.metadata.accepted, {ranges:[],reads:2,refreshes:1});
   assert.deepEqual(result.kern, result.metadata);
@@ -50,10 +60,10 @@ if (metadata) {
   assert.deepEqual(result.loading.foundTrace, [['register', 0], ['refresh', 0, 4]]);
 }
 const content = JSON.stringify(result, null, 2) + '\n';
-const fixture = path.join(root, `crates/xterm-font-addons/tests/fixtures/${metadata ? 'font-metadata-addon' : 'ligature-addon'}.json`);
+const fixture = path.join(root, `crates/xterm-font-addons/tests/fixtures/${kernWarnings ? 'font-kern-warning-addon' : metadata ? 'font-metadata-addon' : 'ligature-addon'}.json`);
 if (process.argv.includes('--generate')) await fs.writeFile(fixture, content);
 else assert.equal(await fs.readFile(fixture, 'utf8'), content, 'Ligature addon source fixture drift');
 const directory = path.join(root, 'results/font-addons'); await fs.mkdir(directory, { recursive: true });
-const report = { node: process.version, scope: 'Source addon lifecycle/load boundary, not real Terminal renderer evidence', sourceHashes: hashes, fixtureSha256: hash(content), fontSha256: hash(bytes), comparedOperationFields: metadata ? Object.values(result).reduce((sum, item) => sum + Object.keys(item).length, 0) : Object.keys(result.lifecycle).length + Object.keys(result.loading).length };
-await fs.writeFile(path.join(directory, metadata ? 'font-metadata-addon-oracle.json' : 'ligature-addon-oracle.json'), JSON.stringify(report, null, 2) + '\n');
+const report = { node: process.version, scope: 'Source addon lifecycle/load boundary, not real Terminal renderer evidence', sourceHashes: hashes, fixtureSha256: hash(content), fontSha256: hash(bytes), comparedOperationFields: metadata || kernWarnings ? Object.values(result).reduce((sum, item) => sum + Object.keys(item).length, 0) : Object.keys(result.lifecycle).length + Object.keys(result.loading).length };
+await fs.writeFile(path.join(directory, kernWarnings ? 'font-kern-warning-addon-oracle.json' : metadata ? 'font-metadata-addon-oracle.json' : 'ligature-addon-oracle.json'), JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify(report));

@@ -1,0 +1,24 @@
+
+running 1 test
+test source_kern_warning_corpus_matches_native ... FAILED
+
+failures:
+
+---- source_kern_warning_corpus_matches_native stdout ----
+
+thread 'source_kern_warning_corpus_matches_native' panicked at crates\xterm-addons\tests\support\font_kern_warning_assertions.rs:36:9:
+assertion `left == right` failed: "Mac count2 size8 throwfalse SFNT"
+  left: Array []
+ right: Array [String("Only the first kern subtable is supported.")]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    source_kern_warning_corpus_matches_native
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.05s
+
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\H\crates\xterm-addons)
+    Finished `test` profile [unoptimized] target(s) in 2.43s
+     Running tests\font_metadata_constructor.rs (target\debug\deps\font_metadata_constructor-2de54daf484d09ee.exe)
+error: test failed, to rerun pass `-p xterm-addons --test font_metadata_constructor`

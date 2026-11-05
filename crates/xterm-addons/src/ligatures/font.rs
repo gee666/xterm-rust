@@ -29,6 +29,8 @@ mod font_tables;
 mod font_tree;
 #[path = "font_walk.rs"]
 mod font_walk;
+#[path = "font_warning.rs"]
+mod font_warning;
 #[path = "font_shape.rs"]
 mod shape;
 
@@ -47,6 +49,7 @@ use font_cmap::Cmap;
 use font_tables::Lookup;
 pub use font_tables::{Glyph, GlyphValue};
 use font_tree::{Arena, TreeId};
+pub use font_warning::{FontLoadError, FontWarning};
 use std::{cell::RefCell, collections::HashMap, rc::Rc};
 
 #[derive(Clone, Copy, Debug, Default)]
@@ -65,7 +68,27 @@ pub struct Font {
     cache: Option<Cache>,
 }
 impl Font {
+    /// Loads a snapshot without a diagnostic sink. Browser hosts should use
+    /// `load_buffer_with_warnings` to preserve observable console callbacks.
     pub fn load_buffer(bytes: &[u8], options: FontOptions) -> Result<Self, FontError> {
+        match Self::load_buffer_with_warnings(bytes, options, |_| {
+            Ok::<(), std::convert::Infallible>(())
+        }) {
+            Ok(font) => Ok(font),
+            Err(FontLoadError::Font(error)) => Err(error),
+            Err(FontLoadError::Warning(never)) => match never {},
+        }
+    }
+
+    /// Calls `warning` synchronously before later constructor reads. A callback
+    /// failure aborts construction unchanged, including before a later bounds
+    /// error. The callback may reenter font loading; no shared state is borrowed.
+    /// Input bytes are an immutable snapshot throughout construction.
+    pub fn load_buffer_with_warnings<E>(
+        bytes: &[u8],
+        options: FontOptions,
+        mut warning: impl FnMut(FontWarning) -> Result<(), E>,
+    ) -> Result<Self, FontLoadError<E>> {
         let tables = FontTables::parse(bytes)?;
         let cmap = Cmap::parse(&tables.cmap)?;
         if tables
@@ -74,16 +97,25 @@ impl Font {
         {
             return Err(FontError::Type(
                 "Cannot read properties of undefined (reading 'addUnicode')",
-            ));
+            )
+            .into());
         }
         // opentype assigns cmap glyph names before it reads deferred kern/GSUB
         // data, so those later errors must not replace an invalid-glyph error.
         if let Some(table) = tables.kern {
-            font_kern::validate(&table.load()?)?;
+            font_kern::validate(&table.load()?, &mut warning)?;
         }
+        Self::from_gsub(tables.gsub, cmap, options).map_err(FontLoadError::Font)
+    }
+
+    fn from_gsub(
+        table: Option<font_bytes::DeferredTable<'_>>,
+        cmap: Cmap,
+        options: FontOptions,
+    ) -> Result<Self, FontError> {
         let mut arena = Arena::default();
         let mut groups = Vec::new();
-        if let Some(table) = tables.gsub {
+        if let Some(table) = table {
             let gsub = font_gsub::parse(&table.load()?)?;
             for (lookup_index, lookup) in gsub.lookups.iter().enumerate() {
                 if !gsub.selected.contains(&lookup_index) {

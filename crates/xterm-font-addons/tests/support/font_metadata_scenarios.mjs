@@ -1,9 +1,9 @@
 // Shared source/Rust addon boundary input. This host records callbacks only.
-function withInvalidKern(bytes) {
+export function withKern(bytes, payload) {
   // Insert a directory entry without changing any original table payload.
   const original = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
   const count = original.getUint16(4), directoryEnd = 12 + count * 16;
-  const bad = new Uint8Array(bytes.length + 18);
+  const bad = new Uint8Array(bytes.length + 16 + payload.length);
   bad.set(bytes.subarray(0, directoryEnd));
   bad.set(bytes.subarray(directoryEnd), directoryEnd + 16);
   const view = new DataView(bad.buffer);
@@ -11,8 +11,8 @@ function withInvalidKern(bytes) {
   for (let i = 0; i < count; i++)view.setUint32(12 + i * 16 + 8, original.getUint32(12 + i * 16 + 8) + 16);
   view.setUint32(directoryEnd, 0x6b65726e);
   view.setUint32(directoryEnd + 8, bytes.length + 16);
-  view.setUint32(directoryEnd + 12, 2);
-  view.setUint16(bytes.length + 16, 2); // Unsupported kern table version.
+  view.setUint32(directoryEnd + 12, payload.length);
+  bad.set(payload, bytes.length + 16);
   return bad;
 }
 export async function metadataRejectionScenarios(create, bytes) {
@@ -21,7 +21,7 @@ export async function metadataRejectionScenarios(create, bytes) {
     const record = 12 + index * 16;
     if (view.getUint32(record) === 0x68656164) { bad[view.getUint32(record + 8) + 12] ^= 1; break; }
   }
-  const badKern = withInvalidKern(bytes);
+  const badKern = withKern(bytes, new Uint8Array([0, 2]));
   const nav = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
   const windowDescriptor = Object.getOwnPropertyDescriptor(globalThis, 'window');
   const owner = globalThis.window ?? {};

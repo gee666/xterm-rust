@@ -24,6 +24,8 @@ extern "C" {
     pub fn debug(terminal: &JsValue) -> Result<bool, JsValue>;
     #[wasm_bindgen(catch, js_name = refreshFont)]
     pub fn refresh(terminal: &JsValue) -> Result<(), JsValue>;
+    #[wasm_bindgen(catch, js_name = fontWarning)]
+    pub fn warning(message: &str) -> Result<(), JsValue>;
     #[wasm_bindgen(catch, js_name = fontFailure)]
     pub fn failure(previous: &JsValue) -> Result<(), JsValue>;
     #[wasm_bindgen(catch, js_name = finishFontLoad)]

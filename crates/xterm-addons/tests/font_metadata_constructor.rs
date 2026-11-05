@@ -3,6 +3,18 @@ use xterm_addons::ligatures::font::{Font, FontError, FontOptions};
 #[path = "support/font_metadata_data.rs"]
 mod corpus;
 use corpus::construct;
+#[path = "support/font_kern_warning_assertions.rs"]
+mod warnings;
+
+#[test]
+fn source_kern_warning_corpus_matches_native() {
+    warnings::assert_corpus();
+}
+
+#[test]
+fn kern_warnings_allow_reentry_and_follow_earlier_errors() {
+    warnings::assert_reentry_and_earlier_errors();
+}
 
 #[test]
 fn unchanged_source_metadata_constructor_outcomes() {

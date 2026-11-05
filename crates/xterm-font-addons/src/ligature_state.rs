@@ -9,7 +9,7 @@ use std::{
 };
 use wasm_bindgen::{closure::Closure, JsValue};
 use wasm_bindgen_futures::future_to_promise;
-use xterm_addons::ligatures::font::{Font, FontError, FontOptions};
+use xterm_addons::ligatures::font::{Font, FontError, FontLoadError, FontOptions};
 
 const SOURCE_FONT_CACHE_SIZE: usize = 100_000;
 #[derive(Clone, Copy, PartialEq)]
@@ -110,13 +110,17 @@ fn load(
             .load_value(&request)
             .await?
             .map(|font| {
-                Font::load_buffer(
+                Font::load_buffer_with_warnings(
                     &font.bytes,
                     FontOptions {
                         cache_size: SOURCE_FONT_CACHE_SIZE,
                     },
+                    |warning| host::warning(warning.message()),
                 )
-                .map_err(font_error)
+                .map_err(|error| match error {
+                    FontLoadError::Font(error) => font_error(error),
+                    FontLoadError::Warning(error) => error,
+                })
             })
             .transpose()?;
         *destination.borrow_mut() = Some(font);

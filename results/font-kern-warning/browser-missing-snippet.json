@@ -1,0 +1,150 @@
+{
+  "package": "xterm-font-addons",
+  "testName": "font_kern_warning_browser",
+  "testTimeoutMs": 60000,
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T15:46:06.817Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-font-addons",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "font_kern_warning_browser",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 534.8417,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 10.316600000000108,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\H\\results\\acceptance-artifacts\\ccb3e8dbad6f15bc479715f95ac506fc9fc790388eb0f7f97233173a0dea19be\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\H\\results\\browser-host\\xterm-font-addons__font_kern_warning_browser\\2026-11-05T15-46-06-815Z-68b116e8-9c7e-42fa-8edb-08c661429d7b\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 246.97940000000006,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [],
+      "errors": [
+        "TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:50766/suite.js"
+      ],
+      "console": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        }
+      ],
+      "version": "148.0.7778.96"
+    },
+    {
+      "name": "firefox",
+      "status": "failed",
+      "tests": [],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "[JavaScript Error: \"Loading module from “http://127.0.0.1:50766/snippets/xterm-font-addons-91879fe097c75eac/tests/support/font_metadata_scenarios.mjs” was blocked because of a disallowed MIME type (“”).\" {file: \"http://127.0.0.1:50766/\" line: 0}]"
+        },
+        {
+          "type": "warning",
+          "text": "[JavaScript Warning: \"Loading failed for the module with source “http://127.0.0.1:50766/snippets/xterm-font-addons-91879fe097c75eac/tests/support/font_metadata_scenarios.mjs”.\" {file: \"http://127.0.0.1:50766/snippets/xterm-font-addons-91879fe097c75eac/tests/support/font_kern_warning_scenarios.mjs\" line: 0}]"
+        }
+      ],
+      "version": "150.0.2"
+    },
+    {
+      "name": "webkit",
+      "status": "failed",
+      "tests": [],
+      "errors": [
+        "TypeError: Importing a module script failed."
+      ],
+      "console": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        }
+      ],
+      "version": "26.4"
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/ccb3e8dbad6f15bc479715f95ac506fc9fc790388eb0f7f97233173a0dea19be/artifact.wasm",
+      "sha256": "ccb3e8dbad6f15bc479715f95ac506fc9fc790388eb0f7f97233173a0dea19be",
+      "bytes": 5409355,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\H\\target\\wasm32-unknown-unknown\\debug\\deps\\font_kern_warning_browser-0bd2c838780e9692.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\H\\results\\browser-host\\xterm-font-addons__font_kern_warning_browser\\2026-11-05T15-46-06-815Z-68b116e8-9c7e-42fa-8edb-08c661429d7b\\artifacts\\suite_bg.wasm",
+      "bytes": 4388560,
+      "sha256": "60bb12c10b9d6ea004c2c5a7efd446cc3c0f9706012b39a522078d8dd945bd94"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\H\\results\\browser-host\\xterm-font-addons__font_kern_warning_browser\\2026-11-05T15-46-06-815Z-68b116e8-9c7e-42fa-8edb-08c661429d7b\\artifacts\\suite.js",
+      "bytes": 74472,
+      "sha256": "5b86aac41361cc04487dd1ce9acc66baa260a5e05098923a72c6f17763e87595"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "0c2e30e02720258e101736893d99f49e7a55d3256257514d2150c7789efb97fb"
+  },
+  "finishedAt": "2026-11-05T15:46:13.379Z"
+}
