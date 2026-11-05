@@ -117,13 +117,13 @@ fn explicit_range(host: &Shared, range: &JsValue) -> Result<Range, JsValue> {
             end: Position { x: end_col, y: 0 },
         }));
     }
-    let start_col = if col.is_undefined() {
-        end_col
-    } else if col
-        .as_f64()
-        .is_some_and(|col| col.is_nan() || col == f64::INFINITY)
+    let start_col = if col.is_undefined()
+        || col
+            .as_f64()
+            .is_some_and(|col| col.is_nan() || col == f64::INFINITY)
     {
-        // These primitives skip the first row's cells, not subsequent rows.
+        // Undefined also makes col < end false. Using the captured end column
+        // would wrongly visit new cells when callbacks grow a nonfinal row.
         usize::MAX
     } else {
         options::index(col)?
