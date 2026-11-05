@@ -104,35 +104,7 @@ impl SearchAddon {
             self.finish_search(term, options.as_ref())?;
             return Ok(false);
         }
-        let text = term.text()?;
-        // Before-search, highlight and validation callbacks can activate another
-        // terminal. Source resolves the selection host only at engine entry.
-        let host = self.host()?;
-        let selection = host.selection()?;
-        host.clear_selection()?;
-        // Matching option access can throw or reenter. The source has already
-        // captured and cleared selection and initialized its line cache here.
-        self.init_cache()?;
-        let flags = options
-            .as_ref()
-            .map(|options| options.matching_options())
-            .transpose()?
-            .unwrap_or_default();
-        let cached = self.inner.cached_term.borrow().clone();
-        let same = cached
-            .as_ref()
-            .is_some_and(|cached| term.equals(cached.as_ref()));
-        let result = self.run_engine(
-            &text,
-            &flags,
-            if reverse {
-                Operation::Previous
-            } else {
-                Operation::Next
-            },
-            selection,
-            same.then_some(text.as_ref()),
-        )?;
+        let result = self.find_selection(&term, options.as_ref(), reverse)?;
         // Source evaluates selection decorations after the engine returns,
         // even for a miss, and before reading internal noScroll or selecting.
         // No terminal/cache borrow may remain live across this getter.
@@ -142,9 +114,46 @@ impl SearchAddon {
             .transpose()?
             .flatten();
         let found = self.select_result(result, decorations.as_ref(), no_scroll()?)?;
-        drop(text);
         self.finish_search(term, options.as_ref())?;
         Ok(found)
+    }
+    fn find_selection(
+        &self,
+        term: &super::super::SearchTermHandle,
+        options: Option<&SearchOptionsHandle>,
+        reverse: bool,
+    ) -> Result<Option<SearchResult>, SearchAddonError> {
+        // Source captures the engine receiver before its raw length getter.
+        // An empty engine term clears that host, but is not the addon's invalid
+        // term path: selection arguments and result reporting must still run.
+        let host = self.host()?;
+        if !term.is_valid_for_engine()? {
+            host.clear_selection()?;
+            return Ok(None);
+        }
+        let selection = host.selection()?;
+        host.clear_selection()?;
+        self.init_cache()?;
+        let flags = options
+            .map(|options| options.matching_options())
+            .transpose()?
+            .unwrap_or_default();
+        let text = term.text()?;
+        let cached = self.inner.cached_term.borrow().clone();
+        let same = cached
+            .as_ref()
+            .is_some_and(|cached| term.equals(cached.as_ref()));
+        self.run_engine(
+            &text,
+            &flags,
+            if reverse {
+                Operation::Previous
+            } else {
+                Operation::Next
+            },
+            selection,
+            same.then_some(text.as_ref()),
+        )
     }
     fn highlight_all(
         &self,

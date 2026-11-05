@@ -8,6 +8,11 @@ use std::{any::Any, borrow::Cow, rc::Rc};
 pub trait SearchTermSource {
     fn as_any(&self) -> &dyn Any;
     fn is_valid(&self) -> Result<bool, SearchAddonError>;
+    /// Engine entry uses a separate raw read. JavaScript rejects only numeric
+    /// zero here, unlike the addon's relational `length > 0` validation.
+    fn is_valid_for_engine(&self) -> Result<bool, SearchAddonError> {
+        self.is_valid()
+    }
     fn is_truthy(&self) -> bool;
     /// Undefined is the source cache's absence sentinel, unlike other invalid terms.
     fn is_undefined(&self) -> bool {

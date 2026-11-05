@@ -40,6 +40,15 @@ return (async()=>{try{if(opened)term.open(parent);
 const DEFAULTS: &str = r#"{"cols":20,"rows":5,"scrollback":1000}"#;
 
 #[wasm_bindgen_test]
+async fn ordinary_engine_guard_preserves_raw_length_cutoffs_and_exact_errors() {
+    let body = format!(
+        "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),92);",
+        include_str!("fixtures/search-engine-guard.js")
+    );
+    run(&body, true, r#"{"cols":20,"rows":3,"scrollback":1000}"#).await;
+}
+
+#[wasm_bindgen_test]
 async fn retained_terms_and_late_internal_scroll_options_match_source() {
     let body = format!(
         "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),81);",

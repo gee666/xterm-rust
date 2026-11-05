@@ -7,11 +7,13 @@ use xterm_addons::search::{SearchAddonError, SearchTermSource};
 // Property access and relational conversion must use JS semantics, including
 // length getters, Symbol failures and reentry. Matching remains in Rust.
 #[wasm_bindgen(
-    inline_js = "export function searchAddonValidTerm(v){return !!(v && v.length > 0);}"
+    inline_js = "export function searchAddonValidTerm(v){return !!(v && v.length > 0);}\nexport function searchAddonEngineTerm(v){return !!v && v.length !== 0;}"
 )]
 extern "C" {
     #[wasm_bindgen(catch, js_name = searchAddonValidTerm)]
     fn valid(value: &JsValue) -> Result<bool, JsValue>;
+    #[wasm_bindgen(catch, js_name = searchAddonEngineTerm)]
+    fn engine_valid(value: &JsValue) -> Result<bool, JsValue>;
 }
 pub struct JsTerm(pub JsValue);
 impl SearchTermSource for JsTerm {
@@ -20,6 +22,9 @@ impl SearchTermSource for JsTerm {
     }
     fn is_valid(&self) -> Result<bool, SearchAddonError> {
         valid(&self.0).map_err(super::options::host_error)
+    }
+    fn is_valid_for_engine(&self) -> Result<bool, SearchAddonError> {
+        engine_valid(&self.0).map_err(super::options::host_error)
     }
     fn is_truthy(&self) -> bool {
         self.0.is_truthy()
