@@ -8,6 +8,7 @@ mod handlers;
 mod hooks;
 mod inspection;
 mod kitty_inspection;
+mod option_inspection;
 mod options;
 mod protocols;
 use super::{

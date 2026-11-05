@@ -1,6 +1,7 @@
 // Copyright (c) 2020 The xterm.js authors. All rights reserved. MIT license.
 use super::{
     handlers::{self, Handlers, ImageHandlersReader},
+    option_inspection::{self, ImageOptionsReader},
     options, State,
 };
 use crate::{
@@ -25,6 +26,7 @@ pub struct ImageAddon {
     state: Rc<State>,
     event: js_sys::Function,
     handlers: JsValue,
+    options: JsValue,
 }
 #[wasm_bindgen]
 impl ImageAddon {
@@ -32,13 +34,15 @@ impl ImageAddon {
     pub fn new(options: JsValue) -> Result<Self, JsValue> {
         let current = options::read(&options)?;
         let defaults = options::read(&options)?;
+        let options = Rc::new(Cell::new(current));
+        let option_view = option_inspection::inspection(ImageOptionsReader::new(options.clone()))?;
         let added = Emitter::new();
         let event = callable(added.event(), empty);
         let handlers = Rc::new(RefCell::new(Handlers::default()));
         let inspection = handlers::inspection(ImageHandlersReader::new(handlers.clone()))?;
         Ok(Self {
             state: Rc::new(State {
-                options: Rc::new(Cell::new(current)),
+                options,
                 defaults,
                 placeholder: Rc::new(Cell::new(current.show_placeholder)),
                 terminal: RefCell::new(Weak::new()),
@@ -51,6 +55,7 @@ impl ImageAddon {
             }),
             event,
             handlers: inspection,
+            options: option_view,
         })
     }
     pub fn activate(&self, terminal: &Terminal) -> Result<(), JsValue> {
@@ -72,6 +77,12 @@ impl ImageAddon {
     #[wasm_bindgen(getter, js_name = _handlers)]
     pub fn handler_inspection(&self) -> JsValue {
         self.handlers.clone()
+    }
+    /// Live read-only typed options. Raw writable JS option records are not
+    /// exposed by this diagnostic adapter.
+    #[wasm_bindgen(getter, js_name = _opts)]
+    pub fn option_inspection(&self) -> JsValue {
+        self.options.clone()
     }
     #[wasm_bindgen(getter, js_name = onImageAdded)]
     pub fn on_image_added(&self) -> js_sys::Function {

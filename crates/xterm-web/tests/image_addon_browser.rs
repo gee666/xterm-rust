@@ -5,6 +5,8 @@ mod handlers;
 mod inspection;
 #[path = "image_addon_support/inspection_activation.rs"]
 mod inspection_activation;
+#[path = "image_addon_support/options.rs"]
+mod options;
 #[path = "image_addon_support/mod.rs"]
 mod support;
 use support::*;
