@@ -167,14 +167,11 @@ impl ImageAddon {
         }
         Ok(())
     }
-    /// An inactive addon does not evaluate either coordinate. Keep raw arguments
-    /// outside the numeric WASM ABI until the optional storage call is taken.
+    /// Preserve optional storage and active row evaluation before inspecting x.
     #[wasm_bindgen(js_name = getImageAtBufferCell)]
     pub fn get_image_at_buffer_cell_raw(&self, x: JsValue, y: JsValue) -> Result<JsValue, JsValue> {
-        if self.state.storage().is_none() {
-            return Ok(JsValue::UNDEFINED);
-        }
-        self.get_image_at_buffer_cell(options::number(&x)?, options::number(&y)?)
+        self.state
+            .lookup_cell(&x, &y, super::coordinates::CellLookup::Image)
     }
     /// Like getImageAtBufferCell, an absent store skips argument conversion.
     #[wasm_bindgen(js_name = extractTileAtBufferCell)]
@@ -183,14 +180,12 @@ impl ImageAddon {
         x: JsValue,
         y: JsValue,
     ) -> Result<JsValue, JsValue> {
-        if self.state.storage().is_none() {
-            return Ok(JsValue::UNDEFINED);
-        }
-        self.extract_tile_at_buffer_cell(options::number(&x)?, options::number(&y)?)
+        self.state
+            .lookup_cell(&x, &y, super::coordinates::CellLookup::Tile)
     }
 }
 impl ImageAddon {
-    /// Native numeric access. JavaScript callers use the optional-storage guard.
+    /// Native numeric access. JavaScript callers use phased raw row lookup.
     pub fn get_image_at_buffer_cell(&self, x: f64, y: f64) -> Result<JsValue, JsValue> {
         self.state.storage().map_or(Ok(JsValue::UNDEFINED), |s| {
             surface(

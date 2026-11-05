@@ -4,7 +4,11 @@ use super::{
     constants::{attributes, bg_flags, content},
     AttributeData, CellData, CharData, ExtendedAttrs,
 };
-use std::{cell::RefCell, collections::BTreeMap};
+use std::{
+    cell::{Ref, RefCell},
+    collections::BTreeMap,
+    rc::Rc,
+};
 
 #[cfg(test)]
 #[path = "line_buffer_cleanup_tests.rs"]
@@ -13,6 +17,7 @@ mod buffer_cleanup_tests;
 mod edit;
 #[path = "line_numeric.rs"]
 mod numeric;
+pub use numeric::ExtendedAttributesRead;
 #[cfg(test)]
 #[path = "line_storage_tests.rs"]
 mod storage_tests;
@@ -27,7 +32,7 @@ pub struct BufferLine {
     data: Vec<[u32; 3]>,
     length: usize,
     combined: BTreeMap<usize, Vec<u16>>,
-    extended: BTreeMap<usize, ExtendedAttrs>,
+    extended: Rc<RefCell<BTreeMap<usize, ExtendedAttrs>>>,
     pub is_wrapped: bool,
     cache: RefCell<Option<(Vec<u16>, bool)>>,
 }
@@ -38,7 +43,7 @@ impl BufferLine {
             data: vec![[0; 3]; cols],
             length: cols,
             combined: BTreeMap::new(),
-            extended: BTreeMap::new(),
+            extended: Rc::new(RefCell::new(BTreeMap::new())),
             is_wrapped,
             cache: RefCell::new(None),
         };
@@ -66,8 +71,8 @@ impl BufferLine {
         &self.combined
     }
     /// Read the actual extended objects, including their shared opaque payloads.
-    pub fn extended_attributes(&self) -> &BTreeMap<usize, ExtendedAttrs> {
-        &self.extended
+    pub fn extended_attributes(&self) -> Ref<'_, BTreeMap<usize, ExtendedAttrs>> {
+        self.extended.borrow()
     }
     fn invalidate(&mut self) {
         *self.cache.get_mut() = None;
@@ -124,7 +129,7 @@ impl BufferLine {
     pub fn get_extended(&self, index: usize) -> Option<ExtendedAttrs> {
         let bg = self.get_bg(index)?;
         if bg & bg_flags::HAS_EXTENDED != 0 {
-            self.extended.get(&index).map(copy_extended)
+            self.extended.borrow().get(&index).map(copy_extended)
         } else {
             Some(ExtendedAttrs::default())
         }
@@ -177,7 +182,9 @@ impl BufferLine {
             self.combined.insert(index, cell.combined_data.clone());
         }
         if cell.bg & bg_flags::HAS_EXTENDED != 0 {
-            self.extended.insert(index, copy_extended(&cell.extended));
+            self.extended
+                .borrow_mut()
+                .insert(index, copy_extended(&cell.extended));
         }
         self.data[index] = [cell.content, cell.fg, cell.bg];
     }
@@ -193,7 +200,9 @@ impl BufferLine {
             return;
         }
         if attrs.bg & bg_flags::HAS_EXTENDED != 0 {
-            self.extended.insert(index, copy_extended(&attrs.extended));
+            self.extended
+                .borrow_mut()
+                .insert(index, copy_extended(&attrs.extended));
         }
         self.data[index] = [
             cp | ((width as u32) << content::WIDTH_SHIFT),
@@ -236,7 +245,7 @@ impl BufferLine {
             }
         } else {
             self.combined.retain(|&i, _| i < cols);
-            self.extended.retain(|&i, _| i < cols);
+            self.extended.borrow_mut().retain(|&i, _| i < cols);
         }
         self.needs_cleanup()
     }
@@ -255,7 +264,7 @@ impl BufferLine {
         self.invalidate();
         if !respect_protect {
             self.combined.clear();
-            self.extended.clear();
+            self.extended = Rc::new(RefCell::new(BTreeMap::new()));
         }
         for i in 0..self.length {
             if !respect_protect || self.is_protected(i) == Some(0) {
@@ -273,7 +282,7 @@ impl BufferLine {
         self.length = source.length;
         self.is_wrapped = source.is_wrapped;
         self.combined.clear();
-        self.extended.clear();
+        self.extended = Rc::new(RefCell::new(BTreeMap::new()));
         if !blank {
             for i in 0..source.length {
                 self.copy_maps(source, i, i);
@@ -292,8 +301,8 @@ impl BufferLine {
             }
         }
         if src.data[from][2] & bg_flags::HAS_EXTENDED != 0 {
-            if let Some(e) = src.extended.get(&from) {
-                self.extended.insert(to, copy_extended(e));
+            if let Some(e) = src.extended.borrow().get(&from) {
+                self.extended.borrow_mut().insert(to, copy_extended(e));
             }
         }
     }

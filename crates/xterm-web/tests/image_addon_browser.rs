@@ -25,6 +25,8 @@ mod raw_sixel_limit;
 mod raw_storage_limit;
 #[path = "image_addon_support/render_dimensions.rs"]
 mod render_dimensions;
+#[path = "image_addon_support/row_coordinates.rs"]
+mod row_coordinates;
 #[path = "image_addon_support/mod.rs"]
 mod support;
 #[path = "image_addon_support/visibility.rs"]

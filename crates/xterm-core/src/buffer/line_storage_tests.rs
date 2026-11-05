@@ -27,7 +27,7 @@ fn shrink_regrow_prunes_extended_identity() {
     fill.extended.set_url_id(17);
     let mut line = BufferLine::new(10, Some(&fill), true);
     assert!(line.resize(4, &cell("b")));
-    assert_eq!(line.extended.len(), 4);
+    assert_eq!(line.extended.borrow().len(), 4);
     assert!(line.resize(4, &cell("b")));
     assert!(line.cleanup_memory());
     assert!(!line.cleanup_memory());
@@ -70,7 +70,7 @@ fn blank_optimization_only_applies_to_blank_lines() {
     );
     assert!(cloned.is_wrapped);
     assert!(cloned.combined.is_empty());
-    assert!(cloned.extended.is_empty());
+    assert!(cloned.extended.borrow().is_empty());
     let mut copied = BufferLine::new(2, Some(&cell("x")), false);
     copied.copy_from(&blank, true);
     assert_eq!(copied.translate_to_string(true, None, None, None), vec![]);

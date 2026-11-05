@@ -4,6 +4,7 @@
 mod activation;
 mod bindings;
 mod controls;
+mod coordinates;
 mod handlers;
 mod hooks;
 mod inspection;

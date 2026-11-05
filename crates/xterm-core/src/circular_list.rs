@@ -14,8 +14,11 @@ use std::cell::RefCell;
 use std::fmt;
 use std::rc::Rc;
 
+#[path = "circular_list/number_read.rs"]
+mod number_read;
 #[path = "circular_list/storage.rs"]
 mod storage;
+pub use number_read::CircularListNumberRead;
 use storage::Storage;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

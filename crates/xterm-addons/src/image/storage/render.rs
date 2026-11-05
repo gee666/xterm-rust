@@ -155,30 +155,14 @@ impl ImageStorage {
         x: usize,
         y: usize,
     ) -> Result<Option<ImageResource>, StorageError> {
-        let Some((spec, _)) = self.spec_at(x, y)? else {
-            return Ok(None);
-        };
-        if spec.original.bitmap_close()?.is_some() {
-            return self
-                .inner
-                .renderer
-                .bitmap_to_canvas(&spec.original)
-                .map(Some);
-        }
-        Ok(Some(spec.original.clone()))
+        self.original_image(self.spec_at(x, y)?)
     }
     pub fn extract_tile_at_buffer_cell(
         &self,
         x: usize,
         y: usize,
     ) -> Result<Option<ImageResource>, StorageError> {
-        let Some((spec, tile)) = self.spec_at(x, y)? else {
-            return Ok(None);
-        };
-        if tile == -1.0 {
-            return Ok(None);
-        }
-        self.inner.renderer.extract_tile(&spec, tile)
+        self.extracted_tile(self.spec_at(x, y)?)
     }
     /// Number boundary for bindings, retaining signed/cyclic row lookup.
     pub fn get_image_at_buffer_cell_number(
@@ -186,7 +170,60 @@ impl ImageStorage {
         x: f64,
         y: f64,
     ) -> Result<Option<ImageResource>, StorageError> {
-        let Some((spec, _)) = self.spec_at_number(x, y)? else {
+        self.original_image(self.spec_at_number(x, y)?)
+    }
+    pub fn extract_tile_at_buffer_cell_number(
+        &self,
+        x: f64,
+        y: f64,
+    ) -> Result<Option<ImageResource>, StorageError> {
+        self.extracted_tile(self.spec_at_number(x, y)?)
+    }
+    /// Capture the active buffer's line array before a browser index conversion.
+    /// The returned read releases the buffer borrow before invoking user code.
+    pub fn prepare_buffer_line_read(
+        &self,
+    ) -> Result<
+        xterm_core::circular_list::CircularListNumberRead<xterm_core::buffer::LineRef>,
+        StorageError,
+    > {
+        let buffer = self.inner.terminal.buffer_service().buffer();
+        let read = buffer
+            .try_borrow()
+            .map_err(|_| StorageError::BorrowedBuffer)?
+            .lines
+            .prepare_number_read();
+        Ok(read)
+    }
+    /// Project the payload selected by a browser's phased extended-property read.
+    /// Reentry may have changed the active buffer, but not this storage receiver.
+    pub fn get_image_from_extended(
+        &self,
+        extended: &xterm_core::buffer::ExtendedAttrs,
+    ) -> Result<Option<ImageResource>, StorageError> {
+        self.original_image(self.spec_from_extended(extended))
+    }
+    pub fn extract_tile_from_extended(
+        &self,
+        extended: &xterm_core::buffer::ExtendedAttrs,
+    ) -> Result<Option<ImageResource>, StorageError> {
+        self.extracted_tile(self.spec_from_extended(extended))
+    }
+    fn spec_from_extended(
+        &self,
+        extended: &xterm_core::buffer::ExtendedAttrs,
+    ) -> Option<(Rc<ImageSpec>, f64)> {
+        self.spec_for_tile(
+            extended
+                .payload()
+                .and_then(|p| p.downcast::<super::ImageTileInfo>().ok()),
+        )
+    }
+    fn original_image(
+        &self,
+        value: Option<(Rc<ImageSpec>, f64)>,
+    ) -> Result<Option<ImageResource>, StorageError> {
+        let Some((spec, _)) = value else {
             return Ok(None);
         };
         if spec.original.bitmap_close()?.is_some() {
@@ -198,12 +235,11 @@ impl ImageStorage {
         }
         Ok(Some(spec.original.clone()))
     }
-    pub fn extract_tile_at_buffer_cell_number(
+    fn extracted_tile(
         &self,
-        x: f64,
-        y: f64,
+        value: Option<(Rc<ImageSpec>, f64)>,
     ) -> Result<Option<ImageResource>, StorageError> {
-        let Some((spec, tile)) = self.spec_at_number(x, y)? else {
+        let Some((spec, tile)) = value else {
             return Ok(None);
         };
         if tile == -1.0 {
@@ -221,12 +257,19 @@ impl ImageStorage {
         let Some(line) = line else {
             return Ok(None);
         };
+        self.spec_on_line_number(&line, x)
+    }
+    fn spec_on_line_number(
+        &self,
+        line: &xterm_core::buffer::LineRef,
+        x: f64,
+    ) -> Result<Option<(Rc<ImageSpec>, f64)>, StorageError> {
         // Storage creates payloads at integer cell addresses only. Other
         // extended-property keys have no ImageTileInfo assigned by this addon.
         if !x.is_finite() || x < 0.0 || x.fract() != 0.0 || x >= usize::MAX as f64 {
             return Ok(None);
         }
-        self.spec_on_line(&line, x as usize)
+        self.spec_on_line(line, x as usize)
     }
     fn spec_at(&self, x: usize, y: usize) -> Result<Option<(Rc<ImageSpec>, f64)>, StorageError> {
         let buffer = self.inner.terminal.buffer_service().buffer();
@@ -251,13 +294,16 @@ impl ImageStorage {
                 .map_err(|_| StorageError::BorrowedBuffer)?;
             tile_at(&line, x)
         };
-        let Some(tile) = tile.filter(|tile| tile.image_id.get() != 0 && tile.image_id.get() != -1)
-        else {
-            return Ok(None);
-        };
-        Ok(u64::try_from(tile.image_id.get())
+        Ok(self.spec_for_tile(tile))
+    }
+    fn spec_for_tile(
+        &self,
+        tile: Option<Rc<super::ImageTileInfo>>,
+    ) -> Option<(Rc<ImageSpec>, f64)> {
+        let tile = tile.filter(|tile| tile.image_id.get() != 0 && tile.image_id.get() != -1)?;
+        u64::try_from(tile.image_id.get())
             .ok()
             .and_then(|id| self.image_spec(id))
-            .map(|spec| (spec, tile.tile_id.get())))
+            .map(|spec| (spec, tile.tile_id.get()))
     }
 }

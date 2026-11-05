@@ -4,7 +4,7 @@
 // failures are recoverable; cloning a caller's T retains T's own contract.
 
 use super::CircularListError;
-use std::collections::HashMap;
+use std::{cell::RefCell, collections::HashMap, rc::Rc};
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 enum Key {
@@ -28,10 +28,19 @@ impl Key {
 }
 
 pub(super) struct Storage<T> {
-    slots: HashMap<Key, T>,
+    slots: Rc<RefCell<HashMap<Key, T>>>,
     start: usize,
     pub length: usize,
     pub max_length: usize,
+}
+
+pub(super) struct PhysicalRead<T> {
+    slots: Rc<RefCell<HashMap<Key, T>>>,
+}
+impl<T: Clone> PhysicalRead<T> {
+    pub fn get_number(&self, index: f64) -> Option<T> {
+        self.slots.borrow().get(&Key::from_number(index)).cloned()
+    }
 }
 
 // Supported pointer widths are at most 64 bits; this is a lossless widening.
@@ -42,11 +51,19 @@ fn number(index: usize) -> i128 {
 impl<T: Clone> Storage<T> {
     pub fn new(max_length: usize) -> Self {
         Self {
-            slots: HashMap::new(),
+            slots: Rc::new(RefCell::new(HashMap::new())),
             start: 0,
             length: 0,
             max_length,
         }
+    }
+    pub fn prepare_read(&self) -> (PhysicalRead<T>, usize) {
+        (
+            PhysicalRead {
+                slots: Rc::clone(&self.slots),
+            },
+            self.start,
+        )
     }
     fn cyclic_index(&self, index: usize) -> Key {
         Key::Integer((number(self.start) + number(index)) % number(self.max_length))
@@ -72,13 +89,13 @@ impl<T: Clone> Storage<T> {
         Ok(())
     }
     pub fn get(&self, index: usize) -> Option<T> {
-        self.slots.get(&self.cyclic_index(index)).cloned()
+        self.slots.borrow().get(&self.cyclic_index(index)).cloned()
     }
     pub fn get_signed(&self, index: i64) -> Option<T> {
-        self.slots.get(&self.signed_index(index)).cloned()
+        self.slots.borrow().get(&self.signed_index(index)).cloned()
     }
     pub fn get_number(&self, index: f64) -> Option<T> {
-        self.slots.get(&self.number_index(index)).cloned()
+        self.slots.borrow().get(&self.number_index(index)).cloned()
     }
     pub fn set(
         &mut self,
@@ -102,11 +119,12 @@ impl<T: Clone> Storage<T> {
         self.set_physical(self.number_index(index), value)
     }
     pub fn stored_values(&self) -> Result<Vec<T>, CircularListError> {
+        let slots = self.slots.borrow();
         let mut values = Vec::new();
         values
-            .try_reserve_exact(self.slots.len())
+            .try_reserve_exact(slots.len())
             .map_err(|_| CircularListError::AllocationFailed)?;
-        values.extend(self.slots.values().cloned());
+        values.extend(slots.values().cloned());
         Ok(values)
     }
     fn set_physical(
@@ -116,12 +134,13 @@ impl<T: Clone> Storage<T> {
     ) -> Result<Option<T>, CircularListError> {
         // On reserve failure the caller still owns the rejected value, so its
         // destructor also runs only after the storage borrow has ended.
-        if value.is_some() && !self.slots.contains_key(&index) {
-            reserve_slots(&mut self.slots, 1)?;
+        let mut slots = self.slots.borrow_mut();
+        if value.is_some() && !slots.contains_key(&index) {
+            reserve_slots(&mut slots, 1)?;
         }
         Ok(match value.take() {
-            Some(value) => self.slots.insert(index, value),
-            None => self.slots.remove(&index),
+            Some(value) => slots.insert(index, value),
+            None => slots.remove(&index),
         })
     }
     pub fn set_length(&mut self, length: usize) -> Vec<T> {
@@ -129,11 +148,12 @@ impl<T: Clone> Storage<T> {
             let old = number(self.length);
             // Scan materialized slots, not the potentially enormous length
             // range. Detach every cleared value before any destructor reenters.
-            let keys: Vec<_> = self.slots.keys().copied().filter(|key| {
+            let mut slots = self.slots.borrow_mut();
+            let keys: Vec<_> = slots.keys().copied().filter(|key| {
                 matches!(key, Key::Integer(index) if *index >= old && *index < number(length))
             }).collect();
             keys.into_iter()
-                .filter_map(|key| self.slots.remove(&key))
+                .filter_map(|key| slots.remove(&key))
                 .collect()
         } else {
             Vec::new()
@@ -149,7 +169,8 @@ impl<T: Clone> Storage<T> {
         let limit = number(capacity.min(self.length));
         // Reserve populated copies before cloning so impossible allocations fail
         // without cloning billions of entries or mutating the original storage.
-        let required = self.slots.keys().try_fold(0usize, |total, &physical| {
+        let previous = self.slots.borrow();
+        let required = previous.keys().try_fold(0usize, |total, &physical| {
             let Some(logical) = self.logical_index(physical) else {
                 return Ok(total);
             };
@@ -163,7 +184,7 @@ impl<T: Clone> Storage<T> {
                 .ok_or(CircularListError::SizeOverflow)
         })?;
         reserve_slots(&mut slots, required)?;
-        for (&physical, value) in &self.slots {
+        for (&physical, value) in previous.iter() {
             let Some(mut logical) = self.logical_index(physical) else {
                 continue;
             };
@@ -172,8 +193,9 @@ impl<T: Clone> Storage<T> {
                 logical += number(self.max_length);
             }
         }
+        drop(previous);
         let replacement = Self {
-            slots,
+            slots: Rc::new(RefCell::new(slots)),
             start: 0,
             length: self.length,
             max_length: capacity,
