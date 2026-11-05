@@ -123,13 +123,13 @@ impl State {
         while let Some(provider) = self.providers.get(index) {
             if use_cache {
                 let replies = self.replies.borrow().clone();
-                let selected =
-                    replies.try_cached_index(index, &request, self.providers.len(), |link| {
-                        Self::probe(link, position, self.cols.get())
-                    })?;
-                if let Some(selected) = selected {
-                    self.select(selected)?;
-                }
+                replies.try_cached_selecting(
+                    index,
+                    &request,
+                    self.providers.len(),
+                    |link| Self::probe(link, position, self.cols.get()),
+                    |link| self.select(link),
+                )?;
             } else {
                 let weak = Rc::downgrade(self);
                 let mouse_out = self.mouse_out.clone();
@@ -152,16 +152,14 @@ impl State {
                             return Ok(());
                         };
                         let replies = state.replies.borrow().clone();
-                        let selected = replies.try_receive_unfiltered(
+                        replies.try_receive_selecting(
                             index,
                             data,
                             &request,
                             state.providers.len(),
                             |link| Self::probe(link, request.position, state.cols.get()),
+                            |link| state.select(link),
                         )?;
-                        if let Some(selected) = selected {
-                            state.select(selected)?;
-                        }
                         // Selection callbacks can replace the active reply map.
                         let replies = state.replies.borrow().clone();
                         let occupied = Set::new(&JsValue::UNDEFINED);

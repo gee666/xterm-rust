@@ -19,9 +19,12 @@ The public provider path retains original JavaScript links, with directed source
 - Optional hover/leave/dispose properties are looked up at the same phase as source, with the original receiver. Preserve optional-nullish behavior and thrown-value identity. A captured wrapper must not freeze a replaceable JS function member.
 - Native Rust-only providers remain usable without a browser dependency. Keep typed native snapshots as one implementation of the shared contract; do not duplicate the priority/cache algorithm merely to add a live browser path.
 - Default and partial decoration objects retain the source defaults and dynamic setter timing. Underline callbacks can mutate state before pointer handling. Callback exceptions retain the source's partial current/cache state.
+- Provider callbacks assign their shared `linkProvided` result only after selection and hover finish. Nested provider replies observe the still-unassigned outer result; a thrown hover does not commit it. The source can therefore hover the same high-priority link twice during synchronous reentry.
 - All cache references, current link, mousedown reference, pending provider callbacks, selection reads and disposal traversal must use the same live identity. Avoid an alias map that grows on every mousemove or retains disposed terminals through a strong callback cycle.
 
 ## Proof
+
+Task 464 repairs provider selection callback transaction ordering in the shared Rust reply algorithm. [link-provider-reentry.md](link-provider-reentry.md) records six opened-Terminal source/Rust cases per engine, native/error regressions and exact old-controller negative evidence. This is not full family 321 closure.
 
 Run source and Rust-backed browser traces with deterministic initial links and mutations between events. Include equal replacement objects, URI changes, wrapped ranges, mousedown/mouseup changes, getters with ordered logs, throwing getters/Proxy traps, optional callbacks replaced during hover, mutations from callback ranges, nonzero scrollback and disposal. Retain exact traces and counterexamples under `results/links/` with seed and source hashes. Test Chromium, Firefox and WebKit through the exported Rust Terminal and the web-links addon. Existing static-range tests remain intact. Do not weaken their assertions or mark this work complete because a mutable object is returned.
 

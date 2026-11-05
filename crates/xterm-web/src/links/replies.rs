@@ -95,7 +95,20 @@ impl<T> ProviderReplies<T> {
         links: Option<Vec<Rc<T>>>,
         request: &ProviderRequest,
         count: usize,
+        probe: impl FnMut(Option<&Rc<T>>) -> Result<bool, E>,
+    ) -> Result<Option<Rc<T>>, E> {
+        self.try_receive_selecting(index, links, request, count, probe, |_| Ok(()))
+    }
+    /// Selection runs inside the request transaction. A callback can reenter or
+    /// throw before the outer caller assigns its local linkProvided result.
+    pub fn try_receive_selecting<E>(
+        &self,
+        index: usize,
+        links: Option<Vec<Rc<T>>>,
+        request: &ProviderRequest,
+        count: usize,
         mut probe: impl FnMut(Option<&Rc<T>>) -> Result<bool, E>,
+        mut select: impl FnMut(Rc<T>) -> Result<(), E>,
     ) -> Result<Option<Rc<T>>, E> {
         let old = {
             let mut state = self.state.borrow_mut();
@@ -107,19 +120,30 @@ impl<T> ProviderReplies<T> {
                 .insert(index, links.map(|links| Rc::new(RefCell::new(links))))
         };
         drop(old);
-        self.check(index, request, count, &mut probe)
+        self.check(index, request, count, &mut probe, &mut select)
     }
     pub fn try_cached_index<E>(
         &self,
         index: usize,
         request: &ProviderRequest,
         count: usize,
+        probe: impl FnMut(Option<&Rc<T>>) -> Result<bool, E>,
+    ) -> Result<Option<Rc<T>>, E> {
+        self.try_cached_selecting(index, request, count, probe, |_| Ok(()))
+    }
+    /// Cached requests use the same callback/assignment ordering as fresh replies.
+    pub fn try_cached_selecting<E>(
+        &self,
+        index: usize,
+        request: &ProviderRequest,
+        count: usize,
         mut probe: impl FnMut(Option<&Rc<T>>) -> Result<bool, E>,
+        mut select: impl FnMut(Rc<T>) -> Result<(), E>,
     ) -> Result<Option<Rc<T>>, E> {
         if !matches!(self.group(index), Some(Some(_))) {
             return Ok(None);
         }
-        self.check(index, request, count, &mut probe)
+        self.check(index, request, count, &mut probe, &mut select)
     }
     fn check<E>(
         &self,
@@ -127,6 +151,7 @@ impl<T> ProviderReplies<T> {
         request: &ProviderRequest,
         count: usize,
         probe: &mut impl FnMut(Option<&Rc<T>>) -> Result<bool, E>,
+        select: &mut impl FnMut(Rc<T>) -> Result<(), E>,
     ) -> Result<Option<Rc<T>>, E> {
         // Source passes linkProvided by value to this method. A reentrant reply
         // can change the outer flag, but normal return writes this local copy back.
@@ -135,6 +160,7 @@ impl<T> ProviderReplies<T> {
         let before = (0..index).any(|prior| !matches!(self.group(prior), Some(None)));
         if !before {
             if let Some(link) = self.find(links, probe)? {
+                select(link.clone())?;
                 request.link_provided.set(true);
                 return Ok(Some(link));
             }
@@ -143,6 +169,7 @@ impl<T> ProviderReplies<T> {
             let mut current = 0;
             while current < self.len() {
                 if let Some(link) = self.find(self.group(current).flatten(), probe)? {
+                    select(link.clone())?;
                     request.link_provided.set(true);
                     return Ok(Some(link));
                 }

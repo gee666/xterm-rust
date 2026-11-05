@@ -1,0 +1,26 @@
+{
+  "base": "32bf954467fe3389e9cfe42fdd8c34d425975b62",
+  "mode": "early-commit-mutation",
+  "files": {
+    "crates/xterm-web/src/links/replies.rs": {
+      "finalSha256": "52a01deccac6fe133f394510422f34b434bc74ac5c32be8bf726cf10e91a5a2a",
+      "baselineSha256": "615b2434e5ef95493ac5fb5fce8d7606cfcd52f9db13d7dab4d44bdcfc7a3687",
+      "restoredSha256": "52a01deccac6fe133f394510422f34b434bc74ac5c32be8bf726cf10e91a5a2a"
+    }
+  },
+  "status": "expected-runtime-failure",
+  "command": [
+    "cargo",
+    "test",
+    "--locked",
+    "-j2",
+    "-p",
+    "xterm-web",
+    "--test",
+    "link_provider_transactions",
+    "selection_reentry_observes_unassigned_outer_result",
+    "--",
+    "--exact"
+  ],
+  "exitCode": 101
+}

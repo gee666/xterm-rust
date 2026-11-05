@@ -8,7 +8,9 @@ import { withArtifactServer } from './browser-artifact-server.mjs';
 
 const reference = resolve(process.env.SOURCE_ROOT ?? 'source_repo');
 const osc = process.argv.includes('--osc-live');
-const name = osc ? 'osc-live-range' : 'public-link-provider';
+const reentry = process.argv.includes('--provider-reentry');
+assert(!(osc && reentry), 'Choose one link trace');
+const name = reentry ? 'link-provider-reentry' : osc ? 'osc-live-range' : 'public-link-provider';
 const output = resolve(`results/${name}`);
 const fixture = resolve(`crates/xterm-web/tests/fixtures/${name}.json`);
 const program = await readFile(`scripts/${name}-trace.js`, 'utf8');
@@ -54,7 +56,7 @@ try {
         }, program);
         if (expected === undefined) expected = entry.trace;
         assert.deepEqual(entry.trace, expected);
-        assert.equal(entry.trace.length, osc ? 17 : 21);
+        assert.equal(entry.trace.length, reentry ? 6 : osc ? 17 : 21);
         if (osc) {
           const phase = label => entry.trace.find(entry => entry.name === label);
           assert.equal(phase('same cell ignores mutation').pointer, true);

@@ -1,0 +1,507 @@
+{
+  "task": 464,
+  "base": "32bf954467fe3389e9cfe42fdd8c34d425975b62",
+  "scope": "Directed provider callback transaction ordering. Full family321 and global equivalence NOT PROVEN.",
+  "environment": {
+    "platform": "win32",
+    "node": "v24.15.0",
+    "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+    "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+    "cpus": 24,
+    "base": "32bf9544"
+  },
+  "sourcePins": [
+    {
+      "path": "Cargo.lock",
+      "sha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+      "bytes": 11108
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "2b7f2c68f0e0f20982832072dd108fd366a514f4665443bc5bd62958b3335bc2",
+      "bytes": 6208
+    },
+    {
+      "path": "crates/xterm-web/src/links/replies.rs",
+      "sha256": "52a01deccac6fe133f394510422f34b434bc74ac5c32be8bf726cf10e91a5a2a",
+      "bytes": 8143
+    },
+    {
+      "path": "crates/xterm-web/src/links/browser_linkifier_events.rs",
+      "sha256": "e4feefb53c3e650e457bd4ca099799352e8c58f84bc06cb14bce8a171e81277e",
+      "bytes": 9899
+    },
+    {
+      "path": "crates/xterm-web/tests/link_provider_transactions.rs",
+      "sha256": "22cae7b69e0aae159b564673484003fa0676e35370d57c75cba1db825fbb0864",
+      "bytes": 4380
+    },
+    {
+      "path": "crates/xterm-web/tests/wasm_link_provider_reentry.rs",
+      "sha256": "395d569fa7eaaf119dd20e28b252615f2b88a9d8f53f450f9139354a5077d391",
+      "bytes": 1296
+    },
+    {
+      "path": "crates/xterm-web/tests/fixtures/link-provider-reentry.json",
+      "sha256": "b5b12938c7a7aa57329ad1d3b92ff65969d8b0518eb2a24db5a3753b9996dded",
+      "bytes": 1652
+    },
+    {
+      "path": "scripts/public-link-provider-source.mjs",
+      "sha256": "cb1114d17d30c1743fdedd8974093f5aec98e707550727f333338777d0571186",
+      "bytes": 4952
+    },
+    {
+      "path": "scripts/link-provider-reentry-trace.js",
+      "sha256": "107ab48b45b17e5915ca878c2c2396d8410fc141520e01ea9d8f18d3983714a8",
+      "bytes": 4707
+    },
+    {
+      "path": "scripts/link-provider-transactions-source.mjs",
+      "sha256": "3668a40af7a89e090eef8b48007d53fce215a74caa93ca930b9144c94036eda1",
+      "bytes": 2835
+    },
+    {
+      "path": "scripts/link-provider-reentry-negative.mjs",
+      "sha256": "1d28038221a00fc92e92a802c0a7514ebf7dd7ef7d0cf28088ee746e8f60d7f7",
+      "bytes": 4076
+    },
+    {
+      "path": "docs/link-provider-reentry.md",
+      "sha256": "053e7541f4c933f37710579cb32d57aaf6734ebdf41718d3ffe498f8d4aa87b9",
+      "bytes": 6189
+    },
+    {
+      "path": "docs/live-link-acceptance.md",
+      "sha256": "d52e66b2607f626abffd1611d74e23970d55898ca5bf4585fefa62dbd67771ff",
+      "bytes": 5568
+    }
+  ],
+  "receiptPins": [
+    {
+      "path": "results/link-provider-reentry/browser.json",
+      "sha256": "e812c89bd6dda2f238a1538fd2005ce76e764cbd220b2c7eeebc9ff9f361272c",
+      "bytes": 5396
+    },
+    {
+      "path": "results/link-provider-reentry/builds/browser-bindgen-version.log",
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7",
+      "bytes": 21
+    },
+    {
+      "path": "results/link-provider-reentry/builds/browser-bindgen.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "results/link-provider-reentry/builds/browser-build.log",
+      "sha256": "a357bfc8719eac8569d824d5eb552a114b605597f64f077c7f0bb4a709dacd0e",
+      "bytes": 46576
+    },
+    {
+      "path": "results/link-provider-reentry/builds/negative-browser-bindgen-version.log",
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7",
+      "bytes": 21
+    },
+    {
+      "path": "results/link-provider-reentry/builds/negative-browser-bindgen.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "results/link-provider-reentry/builds/negative-browser-build.log",
+      "sha256": "057d39a69f4ad1f2486b25099157bcf268462ef416c1dfd0d7022cec266ac39a",
+      "bytes": 47682
+    },
+    {
+      "path": "results/link-provider-reentry/builds/wasm_link_disposal-bindgen-version.log",
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7",
+      "bytes": 21
+    },
+    {
+      "path": "results/link-provider-reentry/builds/wasm_link_disposal-bindgen.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "results/link-provider-reentry/builds/wasm_link_disposal-build.log",
+      "sha256": "c1facd611de115b181f46f0959c37716fe0bb7269b654d0ae526812053aa8c0e",
+      "bytes": 46542
+    },
+    {
+      "path": "results/link-provider-reentry/builds/wasm_linkifier-bindgen-version.log",
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7",
+      "bytes": 21
+    },
+    {
+      "path": "results/link-provider-reentry/builds/wasm_linkifier-bindgen.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "results/link-provider-reentry/builds/wasm_linkifier-build.log",
+      "sha256": "329d324f9ec43831461d38a81ce7e57618cee0bbbdce0cda1df763a7ad0e4b1f",
+      "bytes": 46526
+    },
+    {
+      "path": "results/link-provider-reentry/builds/wasm_public_link_provider-bindgen-version.log",
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7",
+      "bytes": 21
+    },
+    {
+      "path": "results/link-provider-reentry/builds/wasm_public_link_provider-bindgen.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "results/link-provider-reentry/builds/wasm_public_link_provider-build.log",
+      "sha256": "59ee1f6eea3e6ee5438e8168d0175c17c5eceb8abed355bcc557be27c3374502",
+      "bytes": 46570
+    },
+    {
+      "path": "results/link-provider-reentry/builds/wasm_terminal_links-bindgen-version.log",
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7",
+      "bytes": 21
+    },
+    {
+      "path": "results/link-provider-reentry/builds/wasm_terminal_links-bindgen.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "results/link-provider-reentry/builds/wasm_terminal_links-build.log",
+      "sha256": "6913e31f53376d0832d99891af5de3820cfffeeb6903ce1802f0d5c1058a2275",
+      "bytes": 46546
+    },
+    {
+      "path": "results/link-provider-reentry/changed-fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "results/link-provider-reentry/development-source-cache.json",
+      "sha256": "68d8008f42b6686d7c0db25e47801a85e96e5cadb27f85f3788cdd2bd6bba6e2",
+      "bytes": 1564
+    },
+    {
+      "path": "results/link-provider-reentry/development-source.json",
+      "sha256": "da4c1799eb520a9f6e1ee1df6800ec0b0dbe8d449edc928c8b2d5f135f31efa6",
+      "bytes": 1681
+    },
+    {
+      "path": "results/link-provider-reentry/environment.json",
+      "sha256": "ed56fc255c800692b06e425a58243200d93cf4d8d11b9d914d96471b65e11462",
+      "bytes": 184
+    },
+    {
+      "path": "results/link-provider-reentry/full-fmt.log",
+      "sha256": "a3c64adc493a218a5a8332dfc60b9e9fd0cf455d8215931a5888f9bc84a29c70",
+      "bytes": 817
+    },
+    {
+      "path": "results/link-provider-reentry/methods.json",
+      "sha256": "4d3b88507109a46ba7a103a4cf91c535ed00108a177576f08fd145f4d935cc20",
+      "bytes": 1756
+    },
+    {
+      "path": "results/link-provider-reentry/native-all.log",
+      "sha256": "128d24d417620887414407e12085b6b583c0ad1bf9e051fd7e6f0b42b32ede9f",
+      "bytes": 59621
+    },
+    {
+      "path": "results/link-provider-reentry/native-clippy.log",
+      "sha256": "778754635e5e3dbdc7b2dfc5f013f69de06cc1f2c86129c0b0daf03ac698051b",
+      "bytes": 850
+    },
+    {
+      "path": "results/link-provider-reentry/native.log",
+      "sha256": "c66c3231b7002a34930f7317f38e07828eb5b2911624c12b5c1062494e874804",
+      "bytes": 1452
+    },
+    {
+      "path": "results/link-provider-reentry/negative-browser.json",
+      "sha256": "a30f817bf0a8ed3060070666d9b59b53c1ef3ac2bc075ff25bc7df73e0cc0c20",
+      "bytes": 8724
+    },
+    {
+      "path": "results/link-provider-reentry/negative-command.log",
+      "sha256": "f97441ef0f903c16143647b5f45d4b3ba50b7ca5b1d77b4518403f4881651c0f",
+      "bytes": 50
+    },
+    {
+      "path": "results/link-provider-reentry/negative-native-command.log",
+      "sha256": "d10d598bf4666e625631546e3a642c197aa3411a0d35f9a5602d170167968a63",
+      "bytes": 1644
+    },
+    {
+      "path": "results/link-provider-reentry/negative-native.json",
+      "sha256": "1972a7c1527bc6d11c002484a3e6da57d6e97bf05dc24b61527e03b99e73f0d8",
+      "bytes": 723
+    },
+    {
+      "path": "results/link-provider-reentry/negative.json",
+      "sha256": "af33cb03135b46279c54831cf9e1f7743e403816c00c704bcb93dfccbeedc336",
+      "bytes": 934
+    },
+    {
+      "path": "results/link-provider-reentry/reference-after-tests.json",
+      "sha256": "2789b029f08f335a1e1a2999e2e0d3941d78d6b7154f882c7a3d8ecfc28957e7",
+      "bytes": 129
+    },
+    {
+      "path": "results/link-provider-reentry/reference-before.json",
+      "sha256": "2789b029f08f335a1e1a2999e2e0d3941d78d6b7154f882c7a3d8ecfc28957e7",
+      "bytes": 129
+    },
+    {
+      "path": "results/link-provider-reentry/source.json",
+      "sha256": "e38eca0bbce787ced2c9169e38385636f2af487dde0085e400d34aaf50c2b2b9",
+      "bytes": 7789
+    },
+    {
+      "path": "results/link-provider-reentry/wasm-all-clippy.log",
+      "sha256": "d9057debc34a1b9aaaff2a9fe37aa9481b6c1ef2b31203a9df06e7f0eb4adff3",
+      "bytes": 227
+    },
+    {
+      "path": "results/link-provider-reentry/wasm-lib-clippy.log",
+      "sha256": "cd1ed350ff254037e8646af284a0d246f0093f51ff736d1c85e65b03aa8be847",
+      "bytes": 1536
+    },
+    {
+      "path": "results/link-provider-reentry/wasm_link_disposal.json",
+      "sha256": "54a062cfc06040cd3d9823ff68f44f3336f6dd2c382b22eddf84aef216adc324",
+      "bytes": 6555
+    },
+    {
+      "path": "results/link-provider-reentry/wasm_linkifier.json",
+      "sha256": "7f63a71b05f80af5eb040745c75fb0c1fcc3dcae4ab886c120543ec6d7d0e47e",
+      "bytes": 8426
+    },
+    {
+      "path": "results/link-provider-reentry/wasm_public_link_provider.json",
+      "sha256": "a4eab2c333c2748e977b7e18d28115072f8c2ff84bcbba9915a4dcc8f919fcdd",
+      "bytes": 5391
+    },
+    {
+      "path": "results/link-provider-reentry/wasm_terminal_links.json",
+      "sha256": "e05484203c4ab8d74322c26e995bcd4ca588a1e9f4c233333a1e17799e8f674a",
+      "bytes": 7107
+    }
+  ],
+  "temporaryArtifactPins": [
+    {
+      "report": "browser.json",
+      "kind": "compiler",
+      "path": "results/acceptance-artifacts/87ef30d09d53ca541d73b487f099e6f9f19d11940f0c9e6a06f92374d106939c/artifact.wasm",
+      "sha256": "87ef30d09d53ca541d73b487f099e6f9f19d11940f0c9e6a06f92374d106939c",
+      "bytes": 19659909
+    },
+    {
+      "report": "browser.json",
+      "kind": "wasm",
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Chad464\\results\\browser-host\\wasm_link_provider_reentry\\2026-11-05T20-13-48-524Z-5af82975-6541-46b0-949b-6583d9e5d487\\artifacts\\suite_bg.wasm",
+      "sha256": "5d2a9565d6fff7695c1dcb8aec35ff422248e23ee5f38aac67bd8bc2360b89ff",
+      "bytes": 16505931
+    },
+    {
+      "report": "browser.json",
+      "kind": "bindings",
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Chad464\\results\\browser-host\\wasm_link_provider_reentry\\2026-11-05T20-13-48-524Z-5af82975-6541-46b0-949b-6583d9e5d487\\artifacts\\suite.js",
+      "sha256": "735a389ac73e3ebaf32b841ff3caaf043dccbd31bec3be99ed64d12b1bdecb86",
+      "bytes": 244185
+    },
+    {
+      "report": "browser.json",
+      "kind": "css",
+      "path": "crates/xterm-web/assets/xterm.css",
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d",
+      "bytes": 8154
+    },
+    {
+      "report": "negative-browser.json",
+      "kind": "compiler",
+      "path": "results/acceptance-artifacts/8667dfebe97095665fc04a25fe2326b7a593cf3855251deddd443f8bf1b8a7b9/artifact.wasm",
+      "sha256": "8667dfebe97095665fc04a25fe2326b7a593cf3855251deddd443f8bf1b8a7b9",
+      "bytes": 19658632
+    },
+    {
+      "report": "negative-browser.json",
+      "kind": "wasm",
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Chad464\\results\\browser-host\\wasm_link_provider_reentry\\2026-11-05T20-12-47-819Z-6778bdcb-5a14-41ea-9715-ebccbf6c9c80\\artifacts\\suite_bg.wasm",
+      "sha256": "713f6dd6c58756e09b0cd02a1f64986aae326de096d04cc06ab376775783770b",
+      "bytes": 16504942
+    },
+    {
+      "report": "negative-browser.json",
+      "kind": "bindings",
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Chad464\\results\\browser-host\\wasm_link_provider_reentry\\2026-11-05T20-12-47-819Z-6778bdcb-5a14-41ea-9715-ebccbf6c9c80\\artifacts\\suite.js",
+      "sha256": "489e866fae616bf5f82fb9a041d8f8803d8eab9b756d1bae95c381a9ff476e3a",
+      "bytes": 244156
+    },
+    {
+      "report": "negative-browser.json",
+      "kind": "css",
+      "path": "crates/xterm-web/assets/xterm.css",
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d",
+      "bytes": 8154
+    },
+    {
+      "report": "wasm_public_link_provider.json",
+      "kind": "compiler",
+      "path": "results/acceptance-artifacts/a6d44ecd951bdf1c3a7e62fe5fb59c21b507bcfc3635e8650a2133fd9a25a177/artifact.wasm",
+      "sha256": "a6d44ecd951bdf1c3a7e62fe5fb59c21b507bcfc3635e8650a2133fd9a25a177",
+      "bytes": 19666564
+    },
+    {
+      "report": "wasm_public_link_provider.json",
+      "kind": "wasm",
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Chad464\\results\\browser-host\\wasm_public_link_provider\\2026-11-05T20-14-31-274Z-28aa6f17-b90c-41ea-97f5-4ec7f3ef6467\\artifacts\\suite_bg.wasm",
+      "sha256": "1cb086309f704a8e60566f6f5e83cf2590994fb54de17d9956bfe04e9d046c3f",
+      "bytes": 16512586
+    },
+    {
+      "report": "wasm_public_link_provider.json",
+      "kind": "bindings",
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Chad464\\results\\browser-host\\wasm_public_link_provider\\2026-11-05T20-14-31-274Z-28aa6f17-b90c-41ea-97f5-4ec7f3ef6467\\artifacts\\suite.js",
+      "sha256": "735a389ac73e3ebaf32b841ff3caaf043dccbd31bec3be99ed64d12b1bdecb86",
+      "bytes": 244185
+    },
+    {
+      "report": "wasm_public_link_provider.json",
+      "kind": "css",
+      "path": "crates/xterm-web/assets/xterm.css",
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d",
+      "bytes": 8154
+    },
+    {
+      "report": "wasm_linkifier.json",
+      "kind": "compiler",
+      "path": "results/acceptance-artifacts/4323aef9ef94a8544546c627ec3066ee5662efe74d4b4c792aa59a4b19c3eb92/artifact.wasm",
+      "sha256": "4323aef9ef94a8544546c627ec3066ee5662efe74d4b4c792aa59a4b19c3eb92",
+      "bytes": 19469711
+    },
+    {
+      "report": "wasm_linkifier.json",
+      "kind": "wasm",
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Chad464\\results\\browser-host\\wasm_linkifier\\2026-11-05T20-14-41-583Z-6b4bbd20-20a7-424b-9697-d7a9d51a5e8d\\artifacts\\suite_bg.wasm",
+      "sha256": "63e95f1ec49643c023911e53a2a533389c0e9423ba0af615f915b132a57d9965",
+      "bytes": 16325663
+    },
+    {
+      "report": "wasm_linkifier.json",
+      "kind": "bindings",
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Chad464\\results\\browser-host\\wasm_linkifier\\2026-11-05T20-14-41-583Z-6b4bbd20-20a7-424b-9697-d7a9d51a5e8d\\artifacts\\suite.js",
+      "sha256": "c2b20166e0834b6f08b16fa7bb7211d25f223d8d18f8fd96b34461f6261a22b5",
+      "bytes": 243814
+    },
+    {
+      "report": "wasm_linkifier.json",
+      "kind": "css",
+      "path": "crates/xterm-web/assets/xterm.css",
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d",
+      "bytes": 8154
+    },
+    {
+      "report": "wasm_link_disposal.json",
+      "kind": "compiler",
+      "path": "results/acceptance-artifacts/b3eef8402471fb153d75a04b528778e213c17371fd311263be1ba30c3bb74767/artifact.wasm",
+      "sha256": "b3eef8402471fb153d75a04b528778e213c17371fd311263be1ba30c3bb74767",
+      "bytes": 19351307
+    },
+    {
+      "report": "wasm_link_disposal.json",
+      "kind": "wasm",
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Chad464\\results\\browser-host\\wasm_link_disposal\\2026-11-05T20-14-52-535Z-c98e2943-5cad-4a6e-88a9-69fc8d18c8ff\\artifacts\\suite_bg.wasm",
+      "sha256": "75c501e5b0c3b2d171bb04fd3a7b36a7b0a0b158761bbf8da7e23c66c8a5b54e",
+      "bytes": 16219020
+    },
+    {
+      "report": "wasm_link_disposal.json",
+      "kind": "bindings",
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Chad464\\results\\browser-host\\wasm_link_disposal\\2026-11-05T20-14-52-535Z-c98e2943-5cad-4a6e-88a9-69fc8d18c8ff\\artifacts\\suite.js",
+      "sha256": "18adf6e89e50033227ecd64964574147ca7c8f0eeaafd016b54c4b24a7937525",
+      "bytes": 243817
+    },
+    {
+      "report": "wasm_link_disposal.json",
+      "kind": "css",
+      "path": "crates/xterm-web/assets/xterm.css",
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d",
+      "bytes": 8154
+    },
+    {
+      "report": "wasm_terminal_links.json",
+      "kind": "compiler",
+      "path": "results/acceptance-artifacts/edd349dc5d5fa2fce17488f01fbca6d4f481ee90acd1cf29b691155d970861aa/artifact.wasm",
+      "sha256": "edd349dc5d5fa2fce17488f01fbca6d4f481ee90acd1cf29b691155d970861aa",
+      "bytes": 19790688
+    },
+    {
+      "report": "wasm_terminal_links.json",
+      "kind": "wasm",
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Chad464\\results\\browser-host\\wasm_terminal_links\\2026-11-05T20-15-02-855Z-2dfe8864-4e15-479d-b09f-28756e2ad080\\artifacts\\suite_bg.wasm",
+      "sha256": "b45198141c4191b873a60b5fee4bea42b5a338dd9bbd6157ede828b223cd1f69",
+      "bytes": 16626303
+    },
+    {
+      "report": "wasm_terminal_links.json",
+      "kind": "bindings",
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Chad464\\results\\browser-host\\wasm_terminal_links\\2026-11-05T20-15-02-855Z-2dfe8864-4e15-479d-b09f-28756e2ad080\\artifacts\\suite.js",
+      "sha256": "6c169d836c131c2ae1efc2fc4fab56c01afdcd93e39cdcbbd66d6059fedea26d",
+      "bytes": 245716
+    },
+    {
+      "report": "wasm_terminal_links.json",
+      "kind": "css",
+      "path": "crates/xterm-web/assets/xterm.css",
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d",
+      "bytes": 8154
+    }
+  ],
+  "copiedBuildLogs": [
+    "results/link-provider-reentry/builds/browser-build.log",
+    "results/link-provider-reentry/builds/browser-bindgen.log",
+    "results/link-provider-reentry/builds/browser-bindgen-version.log",
+    "results/link-provider-reentry/builds/negative-browser-build.log",
+    "results/link-provider-reentry/builds/negative-browser-bindgen.log",
+    "results/link-provider-reentry/builds/negative-browser-bindgen-version.log",
+    "results/link-provider-reentry/builds/wasm_public_link_provider-build.log",
+    "results/link-provider-reentry/builds/wasm_public_link_provider-bindgen.log",
+    "results/link-provider-reentry/builds/wasm_public_link_provider-bindgen-version.log",
+    "results/link-provider-reentry/builds/wasm_linkifier-build.log",
+    "results/link-provider-reentry/builds/wasm_linkifier-bindgen.log",
+    "results/link-provider-reentry/builds/wasm_linkifier-bindgen-version.log",
+    "results/link-provider-reentry/builds/wasm_link_disposal-build.log",
+    "results/link-provider-reentry/builds/wasm_link_disposal-bindgen.log",
+    "results/link-provider-reentry/builds/wasm_link_disposal-bindgen-version.log",
+    "results/link-provider-reentry/builds/wasm_terminal_links-build.log",
+    "results/link-provider-reentry/builds/wasm_terminal_links-bindgen.log",
+    "results/link-provider-reentry/builds/wasm_terminal_links-bindgen-version.log"
+  ],
+  "artifactLifecycle": "Temporary compiler/browser binaries verified before independent review; remove only owned O: worktree after preserving commits and review receipts.",
+  "counts": {
+    "originalMethods": 4,
+    "originalBrowserCasesPerEngine": 6,
+    "newRustFunctionsPerEngine": 1,
+    "existingRustFunctionsPerEngine": 15,
+    "engines": 3,
+    "nativeAllFeatures": 372,
+    "nativeSummaries": 152,
+    "nativeFailed": 0,
+    "nativeIgnored": 0,
+    "focusedNativeFunctions": 9,
+    "seededReplyOperations": 12219
+  },
+  "failedChecks": [
+    "Exact workspace cargo fmt --all -- --check: Windows OS206",
+    "Two original browser harness development failures retained",
+    "Old two-file controller Chromium negative fails intended 1-vs-2 hover",
+    "Native early-commit mutation fails intended 1-vs-2 selection"
+  ],
+  "unrun": [
+    "Complete unchanged selection/link family suites",
+    "Full workspace/platform/native OS matrix",
+    "Demo distribution integration"
+  ]
+}

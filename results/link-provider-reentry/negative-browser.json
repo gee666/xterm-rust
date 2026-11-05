@@ -1,0 +1,125 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_link_provider_reentry",
+  "testTimeoutMs": 60000,
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T20:12:47.821Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_link_provider_reentry",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 38168.9199,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 17.183499999999185,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Chad464\\results\\acceptance-artifacts\\8667dfebe97095665fc04a25fe2326b7a593cf3855251deddd443f8bf1b8a7b9\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Chad464\\results\\browser-host\\wasm_link_provider_reentry\\2026-11-05T20-12-47-819Z-6778bdcb-5a14-41ea-9715-ebccbf6c9c80\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1692.7842000000019,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_link_provider_reentry::provider_hover_reentry_preserves_outer_callback_assignment"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_link_provider_reentry.rs:24:48:\ncalled `Result::unwrap()` on an `Err` value: JsValue(Error: nested undefined: expected 2 hovers, got 1\nError: nested undefined: expected 2 hovers, got 1\n    at assert (eval at imports.wbg.__wbg_newwithargs_ab6ffe8cd6c19c04 (http://127.0.0.1:51069/suite.js:5926:21), <anonymous>:11:58)\n    at eval (eval at imports.wbg.__wbg_newwithargs_ab6ffe8cd6c19c04 (http://127.0.0.1:51069/suite.js:5926:21), <anonymous>:77:7))\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:51069/suite.js:5886:21)\n    at wasm_link_provider_reentry-1c0466e4f156b937.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:51069/suite_bg.wasm:wasm-function[38233]:0xaca3bd)\n    at wasm_link_provider_reentry-1c0466e4f156b937.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:51069/suite_bg.wasm:wasm-function[25209]:0xa33551)\n    at wasm_link_provider_reentry-1c0466e4f156b937.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:51069/suite_bg.wasm:wasm-function[8415]:0x794931)\n    at wasm_link_provider_reentry-1c0466e4f156b937.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:51069/suite_bg.wasm:wasm-function[25210]:0xa335d5)\n    at wasm_link_provider_reentry-1c0466e4f156b937.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:51069/suite_bg.wasm:wasm-function[13052]:0x8a5e93)\n    at wasm_link_provider_reentry-1c0466e4f156b937.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:51069/suite_bg.wasm:wasm-function[16521]:0x937565)\n    at wasm_link_provider_reentry-1c0466e4f156b937.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:51069/suite_bg.wasm:wasm-function[46086]:0xae24e3)\n    at wasm_link_provider_reentry-1c0466e4f156b937.wasm.rust_begin_unwind (http://127.0.0.1:51069/suite_bg.wasm:wasm-function[31516]:0xa993f2)\n    at wasm_link_provider_reentry-1c0466e4f156b937.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:51069/suite_bg.wasm:wasm-function[31517]:0xa9941f)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 1 test\ntest provider_hover_reentry_preserves_outer_callback_assignment ... FAIL\n\nfailures:\n\n---- provider_hover_reentry_preserves_outer_callback_assignment output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_link_provider_reentry-1c0466e4f156b937.wasm.__rust_start_panic (http://127.0.0.1:51069/suite_bg.wasm:wasm-function[46613]:0xae31f8)\n            at wasm_link_provider_reentry-1c0466e4f156b937.wasm.rust_panic (http://127.0.0.1:51069/suite_bg.wasm:wasm-function[41740]:0xad79ed)\n            at wasm_link_provider_reentry-1c0466e4f156b937.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:51069/suite_bg.wasm:wasm-function[13052]:0x8a5ebe)\n            at wasm_link_provider_reentry-1c0466e4f156b937.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:51069/suite_bg.wasm:wasm-function[16521]:0x937565)\n            at wasm_link_provider_reentry-1c0466e4f156b937.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:51069/suite_bg.wasm:wasm-function[46086]:0xae24e3)\n            at wasm_link_provider_reentry-1c0466e4f156b937.wasm.rust_begin_unwind (http://127.0.0.1:51069/suite_bg.wasm:wasm-function[31516]:0xa993f2)\n            at wasm_link_provider_reentry-1c0466e4f156b937.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:51069/suite_bg.wasm:wasm-function[31517]:0xa9941f)\n            at wasm_link_provider_reentry-1c0466e4f156b937.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:51069/suite_bg.wasm:wasm-function[19641]:0x9a4826)\n            at wasm_link_provider_reentry-1c0466e4f156b937.wasm.wasm_link_provider_reentry::provider_hover_reentry_preserves_outer_callback_assignment::{{closure}}::h439544d45e5ed7ce (http://127.0.0.1:51069/suite_bg.wasm:wasm-function[969]:0x29bd62)\n            at wasm_link_provider_reentry-1c0466e4f156b937.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h442de7a237286f54 (http://127.0.0.1:51069/suite_bg.wasm:wasm-function[3967]:0x5f2da6)\n\nfailures:\n\n    provider_hover_reentry_preserves_outer_callback_assignment\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.14s\n\n",
+      "counts": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/8667dfebe97095665fc04a25fe2326b7a593cf3855251deddd443f8bf1b8a7b9/artifact.wasm",
+      "sha256": "8667dfebe97095665fc04a25fe2326b7a593cf3855251deddd443f8bf1b8a7b9",
+      "bytes": 19658632,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Chad464\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_link_provider_reentry-1c0466e4f156b937.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Chad464\\results\\browser-host\\wasm_link_provider_reentry\\2026-11-05T20-12-47-819Z-6778bdcb-5a14-41ea-9715-ebccbf6c9c80\\artifacts\\suite_bg.wasm",
+      "bytes": 16504942,
+      "sha256": "713f6dd6c58756e09b0cd02a1f64986aae326de096d04cc06ab376775783770b"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Chad464\\results\\browser-host\\wasm_link_provider_reentry\\2026-11-05T20-12-47-819Z-6778bdcb-5a14-41ea-9715-ebccbf6c9c80\\artifacts\\suite.js",
+      "bytes": 244156,
+      "sha256": "489e866fae616bf5f82fb9a041d8f8803d8eab9b756d1bae95c381a9ff476e3a"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "395d569fa7eaaf119dd20e28b252615f2b88a9d8f53f450f9139354a5077d391"
+  },
+  "finishedAt": "2026-11-05T20:13:38.118Z"
+}
