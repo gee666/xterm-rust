@@ -1,13 +1,132 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
 #![cfg(target_arch = "wasm32")]
+use serde_json::Value;
 use std::{cell::RefCell, rc::Rc};
-use wasm_bindgen::JsCast;
+use wasm_bindgen::{prelude::*, JsCast};
 use wasm_bindgen_test::*;
 use xterm_web::webgl::{
     atlas_page::{AtlasRow, CanvasAtlasPage, PageClock, StoredGlyph},
     atlas_pixels::GlyphBounds,
 };
 wasm_bindgen_test_configure!(run_in_browser);
+#[wasm_bindgen(inline_js = "
+export function missingPageContext() {
+ return {createElement(tag) {
+  const canvas = document.createElement(tag);
+  canvas.getContext = () => null;
+  return canvas;
+ }};
+}
+")]
+extern "C" {
+    #[wasm_bindgen(js_name = missingPageContext)]
+    fn missing_page_context() -> JsValue;
+}
+
+#[wasm_bindgen_test]
+fn missing_context_consumes_the_source_version_before_failing() {
+    let clock = PageClock::default();
+    let fake_document = missing_page_context().unchecked_into();
+    let result = CanvasAtlasPage::new(&fake_document, 16, &clock, &[]);
+    assert!(result.is_err());
+    let error = js_sys::Reflect::get(&result.err().unwrap(), &"message".into()).unwrap();
+    assert_eq!(error.as_string().unwrap(), "value must not be falsy");
+    let doc = web_sys::window().unwrap().document().unwrap();
+    let page = CanvasAtlasPage::new(&doc, 16, &clock, &[]).unwrap();
+    assert_eq!(page.texture().version, 2);
+}
+
+fn assert_page(
+    page: &CanvasAtlasPage,
+    row: &xterm_web::webgl::atlas_page::RowRef,
+    glyphs: &[xterm_web::webgl::atlas_page::GlyphRef],
+    expected: &Value,
+) {
+    let current = page.current_row();
+    let state = *current.borrow();
+    let indices: Vec<_> = page
+        .glyphs
+        .borrow()
+        .iter()
+        .map(|g| {
+            glyphs
+                .iter()
+                .position(|candidate| Rc::ptr_eq(g, candidate))
+                .unwrap()
+        })
+        .collect();
+    assert_eq!(
+        page.texture().version,
+        expected["version"].as_u64().unwrap()
+    );
+    assert_eq!(
+        page.percentage_used(),
+        expected["percentageUsed"].as_f64().unwrap()
+    );
+    assert_eq!(serde_json::to_value(indices).unwrap(), expected["glyphs"]);
+    assert_eq!(state.x, expected["row"]["x"].as_f64().unwrap());
+    assert_eq!(state.y, expected["row"]["y"].as_f64().unwrap());
+    assert_eq!(state.height, expected["row"]["height"].as_f64().unwrap());
+    assert_eq!(
+        Rc::ptr_eq(row, &current),
+        expected["sameRow"].as_bool().unwrap()
+    );
+    assert_eq!(
+        page.fixed.borrow().len() as u64,
+        expected["fixedCount"].as_u64().unwrap()
+    );
+}
+
+#[wasm_bindgen_test]
+fn quad_and_fallback_page_metadata_match_unchanged_source() {
+    let fixture: Value =
+        serde_json::from_str(include_str!("fixtures/webgl-atlas-pages.json")).unwrap();
+    assert_eq!(fixture["cases"].as_array().unwrap().len(), 5);
+    let doc = web_sys::window().unwrap().document().unwrap();
+    for case in fixture["cases"].as_array().unwrap() {
+        let clock = PageClock::default();
+        let pages: Vec<_> = (0..4)
+            .map(|_| CanvasAtlasPage::new(&doc, 16, &clock, &[]).unwrap())
+            .collect();
+        let glyphs: Vec<_> = (0..4)
+            .map(|i| {
+                Rc::new(RefCell::new(StoredGlyph::new(GlyphBounds {
+                    top: 0,
+                    left: 0,
+                    right: i,
+                    bottom: i + 1,
+                    size: [(i + 1) as f64, (i + 2) as f64],
+                    offset: [0.0, 0.0],
+                })))
+            })
+            .collect();
+        for (page, glyph) in pages.iter().zip(&glyphs) {
+            page.add_glyph(glyph.clone()).unwrap();
+        }
+        let sources: Vec<_> = case["indices"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|i| pages[i.as_u64().unwrap() as usize].clone())
+            .collect();
+        let merged = CanvasAtlasPage::new(&doc, 32, &clock, &sources).unwrap();
+        let row = merged.current_row();
+        *row.borrow_mut() = AtlasRow {
+            x: 9.0,
+            y: 8.0,
+            height: 7.0,
+        };
+        merged.fixed.borrow_mut().push(row.clone());
+        assert_page(&merged, &row, &glyphs, &case["before"]);
+        merged.clear(&clock).unwrap();
+        assert_page(&merged, &row, &glyphs, &case["after"]);
+        pages[0].clear(&clock).unwrap();
+        assert_eq!(
+            pages[0].texture().version,
+            case["sourceVersionAfterClear"].as_u64().unwrap()
+        );
+    }
+}
 #[wasm_bindgen_test]
 fn page_clear_preserves_historical_glyph_aliases_and_used_pixels() {
     let doc = web_sys::window().unwrap().document().unwrap();

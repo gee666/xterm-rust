@@ -1,0 +1,74 @@
+   Compiling unicode-ident v1.0.27
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling wasm-bindgen-shared v0.2.100
+   Compiling syn v2.0.119
+   Compiling bumpalo v3.20.3
+   Compiling log v0.4.34
+   Compiling rustversion v1.0.23
+   Compiling wasm-bindgen v0.2.100
+   Compiling once_cell v1.21.4
+   Compiling cfg-if v1.0.5
+   Compiling allocator-api2 v0.2.21
+   Compiling wasm-bindgen-backend v0.2.100
+   Compiling wasm-bindgen-macro-support v0.2.100
+   Compiling equivalent v1.0.3
+   Compiling memchr v2.8.3
+   Compiling foldhash v0.1.5
+   Compiling hashbrown v0.15.5
+   Compiling wasm-bindgen-macro v0.2.100
+   Compiling regress v0.10.4
+   Compiling js-sys v0.3.77
+   Compiling ryu-js v1.0.3
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\L\crates\xterm-core)
+   Compiling wasm-bindgen-futures v0.4.50
+   Compiling adler2 v2.0.1
+   Compiling miniz_oxide v0.8.9
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling web-sys v0.3.77
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\L\crates\xterm-addons)
+   Compiling xterm-wasm-support v0.1.0 (O:\xterm-rust-swarm-16\tmp\L\crates\xterm-wasm-support)
+   Compiling serde_json v1.0.154
+   Compiling wasm-bindgen-test-macro v0.3.50
+   Compiling itoa v1.0.18
+   Compiling wasm-bindgen-test v0.3.50
+   Compiling xterm-font-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\L\crates\xterm-font-addons)
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\L\crates\xterm-web)
+error[E0277]: the trait bound `f64: From<usize>` is not satisfied
+  --> crates\xterm-web\tests\wasm_webgl_atlas_page.rs:98:28
+   |
+98 |                     size: [f64::from(i + 1), f64::from(i + 2)],
+   |                            ^^^ the trait `From<usize>` is not implemented for `f64`
+   |
+   = help: the following other types implement trait `From<T>`:
+             `f64` implements `From<&js_sys::Number>`
+             `f64` implements `From<bool>`
+             `f64` implements `From<f16>`
+             `f64` implements `From<f32>`
+             `f64` implements `From<i16>`
+             `f64` implements `From<i32>`
+             `f64` implements `From<i8>`
+             `f64` implements `From<js_sys::Number>`
+           and 3 others
+
+error[E0277]: the trait bound `f64: From<usize>` is not satisfied
+  --> crates\xterm-web\tests\wasm_webgl_atlas_page.rs:98:46
+   |
+98 |                     size: [f64::from(i + 1), f64::from(i + 2)],
+   |                                              ^^^ the trait `From<usize>` is not implemented for `f64`
+   |
+   = help: the following other types implement trait `From<T>`:
+             `f64` implements `From<&js_sys::Number>`
+             `f64` implements `From<bool>`
+             `f64` implements `From<f16>`
+             `f64` implements `From<f32>`
+             `f64` implements `From<i16>`
+             `f64` implements `From<i32>`
+             `f64` implements `From<i8>`
+             `f64` implements `From<js_sys::Number>`
+           and 3 others
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `xterm-web` (test "wasm_webgl_atlas_page") due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...

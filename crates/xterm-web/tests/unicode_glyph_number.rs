@@ -7,10 +7,10 @@ use std::{
 use xterm_core::{
     event::EmitError,
     unicode::{UnicodeCharProperties as Props, UnicodeCharWidth as Width, UnicodeVersionProvider},
+    unicode11::UnicodeV11,
     unicode_callbacks::UnicodeProviderCallbacks,
     unicode_graphemes::UnicodeGraphemeProvider,
     unicode_service::UnicodeService,
-    unicode11::UnicodeV11,
     unicode_v6::UnicodeV6,
 };
 #[test]
