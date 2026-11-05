@@ -6,7 +6,7 @@
   "env": {
     "CARGO_BUILD_JOBS": "2",
     "TEMP": "O:/xterm-rust-swarm-16/tmp/worktrees/Clifford16/tmp",
-    "TMP": "O:/xterm-rust-swarm-16/tmp/worktrees/Clifford16/tmp"
+    "TMP": "inherited Windows TMP, not overridden by simultaneous shell export"
   },
   "base": "1c2bdbf",
   "merged": "6644767",
@@ -2494,5 +2494,6 @@
       "filtered": 0
     }
   ],
-  "scope": "Default-feature canonical build/test/check gates only. Not complete all-feature/release/browser/platform equivalence."
+  "scope": "Default-feature canonical build/test/check gates only. Not complete all-feature/release/browser/platform equivalence.",
+  "temporaryEnvironmentCaveat": "TEMP pointed to owned O: scratch. The simultaneous export expanded TMP from its inherited value. A later shell probe confirmed inherited Windows TMP, while Node os.tmpdir used TEMP on O:. No claim that every tool used O: scratch; no unknown system-temp files deleted."
 }

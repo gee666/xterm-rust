@@ -12,7 +12,7 @@ The renderer invokes callbacks outside theme, width-cache and row borrows. A cal
 
 ## Observed checks on Windows
 
-Commands ran in the isolated O: Clifford16 worktree with `CARGO_BUILD_JOBS=2`, Rust/Cargo 1.85.1, Node 24.15.0, wasm-bindgen CLI 0.2.100 and the existing Playwright install. Browser versions were Chromium 148.0.7778.96, Firefox 150.0.2 and WebKit 26.4.
+Commands ran in the isolated O: Clifford16 worktree with `CARGO_BUILD_JOBS=2`, Rust/Cargo 1.85.1, Node 24.15.0, wasm-bindgen CLI 0.2.100 and the existing Playwright install. A later environment audit found the simultaneous shell export set TEMP to O: but left TMP inherited. Node's temporary-directory probe used TEMP on O:. Other tools' implicit scratch placement was not established. Set TEMP and TMP in separate commands for subsequent runs. Browser versions were Chromium 148.0.7778.96, Firefox 150.0.2 and WebKit 26.4.
 
 ```sh
 WASM_PACKAGE=xterm-font-addons WASM_TEST=ligatures_browser node scripts/browser-host-check.mjs
@@ -45,4 +45,4 @@ The existing canonical helper integrated the reviewed producer through main `664
 
 ## Temporary resources
 
-The owned worktree is `O:/xterm-rust-swarm-16/tmp/worktrees/Clifford16`. All new targets, browser outputs and scratch lived there. A temporary `source_repo/node_modules` junction reused the existing read-only dependency install. Unlink that junction before removing the worktree; never recurse through it. Browser runners closed their own servers and browsers. Final cleanup must preserve this branch and durable results before removing the owned worktree.
+The owned worktree is `O:/xterm-rust-swarm-16/tmp/worktrees/Clifford16`. Explicit targets, browser outputs and owned scratch lived there. The inherited TMP caveat above prevents a claim about every tool's implicit scratch. A temporary `source_repo/node_modules` junction reused the existing read-only dependency install. Unlink that junction before removing the worktree; never recurse through it. Browser runners closed their own servers and browsers. Final cleanup must preserve this branch and durable results before removing the owned worktree.
