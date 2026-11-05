@@ -1,0 +1,33 @@
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\Q422\crates\xterm-addons)
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\Q422\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 8.45s
+     Running tests\search_addon.rs (target\debug\deps\search_addon-4de7d175adac3b45.exe)
+
+running 3 tests
+test refresh_undefined::queued_refresh_after_cache_clear_does_not_cache_an_empty_string ... FAILED
+test refresh_undefined::refresh_captures_absence_before_reentrant_option_copy ... FAILED
+test refresh_undefined::queued_refresh_keeps_explicit_empty_text_distinct_from_absence ... ok
+
+failures:
+
+---- refresh_undefined::queued_refresh_after_cache_clear_does_not_cache_an_empty_string stdout ----
+
+thread 'refresh_undefined::queued_refresh_after_cache_clear_does_not_cache_an_empty_string' panicked at crates\xterm-web\tests\search_cases\refresh_undefined.rs:40:5:
+assertion `left == right` failed
+  left: 1
+ right: 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- refresh_undefined::refresh_captures_absence_before_reentrant_option_copy stdout ----
+
+thread 'refresh_undefined::refresh_captures_absence_before_reentrant_option_copy' panicked at crates\xterm-web\tests\search_cases\refresh_undefined.rs:38:25:
+called `Result::unwrap()` on an `Err` value: InvalidCoordinates
+
+
+failures:
+    refresh_undefined::queued_refresh_after_cache_clear_does_not_cache_an_empty_string
+    refresh_undefined::refresh_captures_absence_before_reentrant_option_copy
+
+test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 37 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p xterm-web --test search_addon`

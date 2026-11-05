@@ -1,0 +1,97 @@
+{
+  "sourceRevision": "fdb71129",
+  "base": "013bf319",
+  "platform": "Windows",
+  "rust": "1.85.1",
+  "cargo": "1.85.1",
+  "node": "24.15.0",
+  "wasmBindgen": "0.2.100",
+  "status": "scoped checks passed; overall equivalence NOT PROVEN",
+  "logNormalization": "Text log CRLF normalized to LF and one final newline; JSON browser output is unmodified.",
+  "counts": {
+    "source": {
+      "engines": 3,
+      "directedPerEngine": 38,
+      "executed": 114,
+      "passed": 114,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0
+    },
+    "native": {
+      "executed": 40,
+      "passed": 40,
+      "failed": 0,
+      "ignored": 0
+    },
+    "nativeNegative": {
+      "executed": 3,
+      "passed": 1,
+      "failed": 2,
+      "filtered": 37
+    },
+    "wasm": {
+      "engines": 3,
+      "functionsPerEngine": 12,
+      "executed": 36,
+      "passed": 36,
+      "failed": 0,
+      "ignored": 0,
+      "filtered": 0,
+      "directedCasesWithinFunctions": 114
+    },
+    "oldWasmControl": {
+      "engine": "chromium",
+      "executed": 12,
+      "passed": 12,
+      "failed": 0,
+      "ignored": 0,
+      "filtered": 0
+    }
+  },
+  "limitations": [
+    "No original81 suite rerun for422; inherited412 original81 evidence is not upgraded.",
+    "Exact cargo fmt --all -- --check still fails Windows OS206; affected-file rustfmt passes.",
+    "Old WASM producer control passes because raw JsTerm equality cannot match the native Utf16Term empty fallback; the concrete regression is in native typed search.",
+    "No new randomized corpus, native Linux/macOS runtime or full workspace proof. Full347/322 remain open."
+  ],
+  "pins": {
+    "Cargo.lock": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "crates/xterm-addons/src/search/addon.rs": "7c5e494a1e316db362e60afa361578a8ac678bfad4a0c7d10b52df32a7a0c4a2",
+    "crates/xterm-addons/src/search/find.rs": "0d3d88770139dc333577ee5af20b6c2c54234e69c25c72f1c0e032cd4dca34af",
+    "crates/xterm-addons/src/search/term.rs": "4f1e2fb0fd67f8b8016cd1f0345cdf5a9363d34705324660d9eb9c6c3956c7e3",
+    "crates/xterm-web/tests/search_addon.rs": "ba4d0619146c35b9f6e7bfce6f2bb41559c7fda98899e2f3335b689750962125",
+    "crates/xterm-web/tests/search_cases/refresh.rs": "8829c52a1217d70ba63421dfbfb2aafd6034fa5ba5077d5b01bc6c4bda05052e",
+    "crates/xterm-web/tests/search_cases/refresh_undefined.rs": "3b65f6218f6cfbc86f520d7b9c1094b02bd7b8720994d328c64b62d996f5118b",
+    "crates/xterm-web/tests/wasm_search_addon.rs": "ca4c21e02cdffade3c891d0c591e418c97156c47b33506a0acca0fddd66c8cd4",
+    "crates/xterm-web/tests/fixtures/search-refresh-undefined.js": "78aea8a4b2e47646ed9009a7c51fc915c2269178da1ac63d02a5d7eb36b60f8a",
+    "scripts/search-call-args-source.mjs": "5eff3354c021d04a8a74144114b7cff6278186eecca096cce4237480499c4346",
+    "scripts/browser-host-check.mjs": "63dc6978c20d94958c046cfd721f50f785fef16cd7db69332918fc712ba96536",
+    "results/search-refresh-undefined/final-commands.json": "22e3be8fba1d4e080fb7b93240f2eb50906a7a534a97f27659e4bfc9122f8766",
+    "results/search-refresh-undefined/final-wasm_search_addon-bindgen-version.log": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7",
+    "results/search-refresh-undefined/final-wasm_search_addon-bindgen.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/search-refresh-undefined/final-wasm_search_addon-build.log": "dc1f476b312cf5ce27f4257872d58dd37052df72cb3be13615aa56613a2a64e6",
+    "results/search-refresh-undefined/final-wasm_search_addon-chromium.log": "82bb87cf3dd9026eb62070092090691d30d80b909865f3380f594fcff2c7ea2e",
+    "results/search-refresh-undefined/final-wasm_search_addon-firefox.log": "0d6f3ec6a1d55396195984567a738b5b545f0737e6a7e02fd312ba9472705f79",
+    "results/search-refresh-undefined/final-wasm_search_addon-webkit.log": "e876b96ab855476e6944274f5eacffbcee836e052b8e647b1e2b743d8ac3e2cb",
+    "results/search-refresh-undefined/full-fmt.log": "a3aa819acd4a800a025151dd14103033e5af56ff3a5ed6a7dfb163d8c484bcc2",
+    "results/search-refresh-undefined/native-clippy-final.log": "c1ed93c1c338f7a1cd707e2aaab8a052d6625bac459baac801d3f2473c03e9b5",
+    "results/search-refresh-undefined/native-clippy.log": "1ca9053ea07995da73024dcfefaf440c7866534e495018768459a5d6aa050e3a",
+    "results/search-refresh-undefined/native-final.log": "3a97c006d52a2bff6c8f5be1e343ae8ab79d4252de3b7a108419eb954984092e",
+    "results/search-refresh-undefined/native-negative.json": "f98125d82a513f479f67f7e92965f209ae7f79a5d36e4b45427386ac2f2a0da2",
+    "results/search-refresh-undefined/native-negative.log": "c447618366a97b6205943f3903fb6ad877a866d67a141c4450e482264c5429af",
+    "results/search-refresh-undefined/native.log": "35f63c44cc59a28b78c4c30ed0659aa095192077451dc7c0cb19cadeb906c3c1",
+    "results/search-refresh-undefined/scoped-fmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/search-refresh-undefined/source.json": "3b8789c0ed58737b7df4a3ce6d5cfcf0e0c0b059e80e4d49982f767f6e88725d",
+    "results/search-refresh-undefined/source.log": "abf5a2f8db90193c0b47456a0cda8f0e3a2e4b198a24216dacc271d1c6978815",
+    "results/search-refresh-undefined/wasm-clippy-final.log": "c4cee105919a1573ee040ec4cc60ea837c1b88feff6cdda837258de38364d935",
+    "results/search-refresh-undefined/wasm-clippy.log": "a548f97f68f279e87ae01b0590b59d9198f5f26badada5f5618102c298fbe46e",
+    "results/search-refresh-undefined/wasm-compile.log": "7ef71e9825ad5b9a4af8a4da7d541a9822b1b745344ade6f4d7e82c88178eb75",
+    "results/search-refresh-undefined/wasm-final-browser.json": "c77574b025d3214da6e7ec2ee6bc90238e78ca4048ec52a95123c92c871904a9",
+    "results/search-refresh-undefined/wasm-final.log": "2bd1c067e3dd1daebcf41ed37da5068ecbb02e39e32e34e84629a560d3124ac0",
+    "results/search-refresh-undefined/wasm-negative-browser.json": "e478ea02fb63bc5c27318a44602d8af5a77a294a4e6eae43c94fda4b1ca302da",
+    "results/search-refresh-undefined/wasm-negative.json": "b769864c18e8860960707cb2751494ac65f0a94f11a51ba76ecec113a3c0402f",
+    "results/search-refresh-undefined/wasm-negative.log": "e9200a0f2e2c75c45f30efd2e8fb891e12de8cf5d1572cad83eb55e72e58d3cd",
+    "results/search-refresh-undefined/wasm.log": "2bd1c067e3dd1daebcf41ed37da5068ecbb02e39e32e34e84629a560d3124ac0"
+  }
+}
