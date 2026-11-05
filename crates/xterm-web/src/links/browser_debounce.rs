@@ -36,10 +36,6 @@ impl FrameScheduler for BrowserFrameScheduler {
         };
         Self::request(source, callback)
     }
-    fn cancel_frame_shared(scheduler: &RefCell<Self>, handle: i32) -> Result<(), JsValue> {
-        let source = scheduler.borrow().window.borrow().clone();
-        source().cancel_animation_frame(handle)
-    }
     fn cancel_frame_resolved(
         scheduler: &RefCell<Self>,
         resolve: impl FnOnce() -> Option<i32>,
