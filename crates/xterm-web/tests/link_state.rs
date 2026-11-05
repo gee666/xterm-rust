@@ -23,7 +23,7 @@ fn request() -> ProviderRequest {
 }
 #[test]
 fn cache_disposal_is_reply_insertion_order_not_provider_priority() {
-    let mut replies = ProviderReplies::default();
+    let replies = ProviderReplies::default();
     let request = request();
     replies.receive(2, Some(vec![link("third", 20, 22)]), &request, 3, 80);
     replies.receive(0, Some(vec![link("first", 3, 5)]), &request, 3, 80);
@@ -38,7 +38,7 @@ fn cache_disposal_is_reply_insertion_order_not_provider_priority() {
 }
 #[test]
 fn pending_and_empty_reply_delay_lower_priority() {
-    let mut replies = ProviderReplies::default();
+    let replies = ProviderReplies::default();
     let r = request();
     let lower = link("low", 4, 8);
     assert!(replies
@@ -49,7 +49,7 @@ fn pending_and_empty_reply_delay_lower_priority() {
 }
 #[test]
 fn undefined_higher_reply_allows_early_lower_selection() {
-    let mut replies = ProviderReplies::default();
+    let replies = ProviderReplies::default();
     let r = request();
     assert!(replies.receive(0, None, &r, 3, 80).is_none());
     let lower = link("low", 4, 8);
@@ -60,7 +60,7 @@ fn undefined_higher_reply_allows_early_lower_selection() {
 }
 #[test]
 fn all_replies_choose_provider_order_not_completion_order() {
-    let mut replies = ProviderReplies::default();
+    let replies = ProviderReplies::default();
     let r = request();
     let high = link("high", 4, 8);
     let low = link("low", 4, 8);
@@ -73,7 +73,7 @@ fn all_replies_choose_provider_order_not_completion_order() {
 }
 #[test]
 fn rejected_overlap_retains_partially_occupied_cells() {
-    let mut replies = ProviderReplies::default();
+    let replies = ProviderReplies::default();
     let r = request();
     replies.receive(0, Some(vec![link("first", 5, 6)]), &r, 2, 80);
     replies.receive(
