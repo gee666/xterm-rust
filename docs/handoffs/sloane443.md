@@ -1,0 +1,15 @@
+# Raw scrolling clock continuation
+
+Task443 is accepted at source4a581fd7 and evidence9952ed73 on swarm/SloaneClock. Pick these TWO commits, then the following review/handoff/cleanup receipt commit, only after accepted432. This branch privately cherry-picked432 as b35dd9f6/048b7406/0a3416c7 atop dcde3e9c. Those are prerequisites, NOT new443 producer work. Coordinator309 owns canonical432 pickup cef749ae/7d302606/9c7a9c0b. Do not replay private432 copies, f6e5afa5,417 or426. Main was observed at3aa04692 during final review, not changed by Sloane.
+
+Read docs/raw-scroll-clock.md and docs/reviews/sloane443.md. Public SmoothOperation::try_start_with_clock/try_tick_with_clock and Scrollable::try_new_with_clock retain raw fallible samples using the shared ScrollValue implementation. Numeric entry points preserve signatures. Duration addition precedes the sample; raw sample subtraction follows it. Tick selects the receiver before the clock, startTime after the callback, and duration after subtraction. No live model/animation borrow spans callbacks or coercion.
+
+Observed checks:79Windows native PASS; strict focused native/WASM Clippy PASS. All6535live/getter/clock programs plus540standalone programs per engine PASS in Chromium148/Firefox150/WebKit26.4. Six functions per engine, zero ignored/filtered. Initial and final live matrices passed. Negative clock-before-duration ordering in Chromium failed exactly2PASS1FAIL, then finally restoration and final full matrices/native/lints passed. Reviewer independently reran79native,17source/4exe/artifact/reference pins+3oracles+changedfmt, no compiler/browser. Five memberfmt PASS; exactaggregatefmt OS206 retained. These are not full workspace or Linux/macOS receipts.
+
+## Next301
+
+301 remains NEW with443 now an accepted dependency alongside289/409/417/426/432. It still needs raw BrowserScrollable/Element/scrollbar/Viewport migration including the actual numeric Date.now binding, returned state-object identity and external mutation, scheduler request/cancel reentry and raw event exceptions. Reuse the shared engine, raw getter resolvers and new raw clock boundary. Do not add a synchronized numeric shadow cache. FrameScheduler's current mutable borrow restriction remains. Public raw validation still projects Position rather than a mutable source state-object. Shared clock component passes do not close301.
+
+Compiler/browser grants2747/2767 were explicitly released2759/2797. Review was SOURCE/LIGHT only. Zero jobs or main-ref permission remain. A new task needs a fresh coordinator309 grant. Global full-scope intent remains Integration/docs/intent.md; scoped notes are .pi/swarm/work/2/sloane-intent.md, not a replacement intent.
+
+Owned temporary root is O:/xterm-rust-swarm-16/tmp/SloaneClock, with regular target/tmp and a physical reference copy. No reference links were created. Final cleanup preflight follows in results/raw-scroll-clock; central409 records actual removal. Preserve source branch/evidence, original source, credentials, AGENTS.md and other owners' files. Original scrollable.ts SHA010ddcb39e40b268e4f37afc1da968ae30b64eaf356c918bb08484558150eba4 remains unchanged.
