@@ -149,6 +149,9 @@ impl BrowserServices {
         if let Some(viewport) = self.viewport.get() {
             viewport.dispose()?;
         }
+        if let Some(renderer) = self.decoration_renderer.borrow_mut().take() {
+            renderer.dispose();
+        }
         self.metrics.state.dispose();
         self.core_browser.dispose()?;
         self.theme.dispose();

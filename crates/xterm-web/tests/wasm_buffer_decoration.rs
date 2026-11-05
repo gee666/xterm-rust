@@ -250,7 +250,7 @@ async fn real_microtask_cache_sync_is_independent_of_renderer_lifetime() {
             amount: 1,
         })
         .unwrap();
-    assert_eq!(decoration.marker().line(), 11);
+    assert_eq!(decoration.marker().line_number(), 11.0);
     assert!(fixture.decorations.line_cache().has_pending_sync());
     microtask().await;
     assert!(!fixture.decorations.line_cache().has_pending_sync());

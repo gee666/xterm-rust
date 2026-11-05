@@ -1,6 +1,6 @@
 # Live browser buffer decorations
 
-Task 193 ports `browser/decorations/BufferDecorationRenderer.ts` into the Rust/WASM renderer. The implementation uses actual Document, HtmlElement, CSSStyleDeclaration and requestAnimationFrame callbacks. It does not substitute a headless row model for browser rendering.
+`browser/decorations/BufferDecorationRenderer.ts` is implemented in the Rust/WASM renderer with actual Document, HtmlElement, CSSStyleDeclaration and requestAnimationFrame callbacks. The live Terminal now constructs it through `terminal/decoration_services.rs`; previously only controlled component fixtures constructed it.
 
 ## Contracts
 
@@ -24,15 +24,18 @@ Opaque core render handles contain the same `Rc<HtmlElement>` value used for ele
 
 ## Verification commands
 
-Use the controlled build queue with unchanged shared profiles and target directory:
+Run in an owned O: worktree with its private target and Cargo `-j2`. Coordinate the four-heavy-job and two-browser-matrix limits with the integration owner. The former global build queue is retired.
 
 ```sh
-node scripts/build-slot.mjs --owner decoration-source --lane wasm --timeout-ms 120000 -- node scripts/buffer-decoration-oracle.mjs --generate
-WASM_TEST=wasm_buffer_decoration node scripts/build-slot.mjs --owner decoration-wasm --lane wasm --timeout-ms 420000 -- node scripts/browser-host-check.mjs
+node scripts/buffer-decoration-oracle.mjs
+CARGO_BUILD_JOBS=2 WASM_TEST=wasm_buffer_decoration node scripts/browser-host-check.mjs
+CARGO_BUILD_JOBS=2 WASM_TEST=wasm_terminal_decoration node scripts/browser-host-check.mjs
 ```
+
+Point `PLAYWRIGHT_MODULE` and `WASM_BINDGEN` at the existing installed Playwright module and matching wasm-bindgen 0.2.100 CLI when they are outside the worktree. The source oracle uses the reference's existing Node dependencies. Do not install another copy just for this check.
 
 After deliberate initial generation, run the source oracle without `--generate` to verify fixture drift. It bundles the unchanged original component and real common Buffer/Decoration services, then records eight DOM observation steps in Chromium. No upstream BufferDecorationRenderer.test.ts exists, so the report records zero original test functions instead of inventing a baseline count. These observations are not the original full browser suite.
 
-Seven Rust WASM tests cover real CSS geometry/layers/identity, zero defaults, anchor/layer quirks, viewport/alternate transitions, marker disposal, registration during rendering, detached pending callbacks, microtask indexing independent of renderer lifetime, and the exported Rust Terminal open/refresh/dispose path. The browser host runs Chromium, Firefox and WebKit by default. A single-browser pass is not a three-browser pass.
+Eight Rust WASM tests cover real CSS geometry/layers/identity, zero defaults, anchor/layer quirks, viewport/alternate transitions, marker disposal, registration during rendering, detached pending callbacks, microtask indexing independent of renderer lifetime, and the exported Rust Terminal open/refresh/dispose path. A separate actual-Terminal regression covers pre-open cache sync, alternate/normal transitions, resize, reset and whole-terminal cancellation of a pending decoration callback. The browser host runs Chromium, Firefox and WebKit by default. A single-browser pass is not a three-browser pass.
 
-Current status: implementation and tests are written; Root BrowserServices integration is being wired by Xavier. The first source-oracle slot stopped at disk preflight before spawning a child, receipt `results/build-slots/1793150467482-29060-384c74a6-04be-442d-a065-e63f389995af`. No browser pass is claimed. Overall equivalence remains NOT PROVEN.
+The recovered component suite now passes eight tests per browser with the actual root overlay installed. Receipts and exact scope are retained under `results/browser-decoration/`. Public `registerMarker`, `markers` and `registerDecoration` browser bindings remain separate missing work. These tests register through the shared native service and do not prove those absent public APIs. Overall equivalence remains NOT PROVEN.

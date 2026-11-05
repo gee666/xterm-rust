@@ -54,6 +54,8 @@ pub struct BrowserServices {
     pub overview: RefCell<Option<Rc<crate::renderer::overview_ruler::OverviewRulerRenderer>>>,
     pub selection: Rc<SelectionService>,
     pub decorations: Rc<DecorationService>,
+    pub decoration_renderer:
+        RefCell<Option<Rc<crate::renderer::buffer_decoration::BufferDecorationRenderer>>>,
     pub theme: Rc<ThemeService>,
     pub joiners: Rc<CharacterJoinerService>,
     pub events: Rc<BrowserEvents>,
@@ -131,6 +133,7 @@ impl BrowserServices {
             overview: RefCell::new(None),
             selection: Rc::clone(&shared.selection),
             decorations: Rc::clone(&shared.decorations),
+            decoration_renderer: RefCell::new(None),
             theme,
             joiners,
             events: Rc::clone(&shared.browser_events),

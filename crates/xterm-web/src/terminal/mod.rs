@@ -14,6 +14,7 @@ mod browser_open;
 pub mod browser_services;
 pub mod buffer_api;
 pub mod buffer_cell;
+mod decoration_services;
 mod event_functions;
 pub(crate) mod events;
 pub mod input_host;
@@ -177,6 +178,8 @@ impl Terminal {
                 .map_err(|error| to_js_error(&error))?
                 .map_err(|error| to_js_error(&error))?,
         );
+        let decoration_microtasks =
+            crate::renderer::buffer_decoration::bind_microtasks(&decorations)?;
         Ok(Self {
             shared: Rc::new(Shared {
                 native,
@@ -190,7 +193,7 @@ impl Terminal {
                 selection,
                 decorations,
                 addons: addon_manager::BrowserAddonManager::new(),
-                listeners: vec![disposal, parsed, user_input],
+                listeners: vec![disposal, parsed, user_input, decoration_microtasks],
                 custom_key: Rc::new(RefCell::new(None)),
                 custom_wheel: Rc::new(RefCell::new(None)),
                 public_disposed: Cell::new(false),

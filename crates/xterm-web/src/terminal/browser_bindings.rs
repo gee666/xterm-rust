@@ -57,6 +57,7 @@ impl BrowserServices {
             selection_host,
         )?);
         *self.selection_dom.borrow_mut() = Some(selection);
+        self.install_decorations()?;
         self.bind_events()?;
         self.bind_focus()?;
         self.bind_options()?;
