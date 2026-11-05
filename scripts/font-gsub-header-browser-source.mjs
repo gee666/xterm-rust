@@ -41,7 +41,7 @@ try{
     assert.equal(actual.failure,undefined);assert.deepEqual(errors,[]);
     // Native DataView messages vary by engine. Missing required descriptors
     // also have different TypeError prose; assert the exact missing property.
-    const normalize=(result,field='outcome')=>result.map((o,i)=>{
+    const normalize=(result,field='outcome',browserMessages=true)=>result.map((o,i)=>{
      if(o.status==='error'&&o.name==='RangeError')return{status:'error',name:'RangeError'};
      if(o.status==='error'&&o.name==='TypeError'){
       if(corpus==='type9'){
@@ -55,7 +55,7 @@ try{
         firefox:"can't convert undefined to object",
         webkit:"undefined is not an object (evaluating 'Object.keys(description)')"
        };
-       assert.equal(o.message,messages[name]);
+       assert.equal(o.message,messages[browserMessages?name:'chromium']);
        return{status:'error',name:'TypeError',message:expected};
       }
       assert.ok(fixture.cases[i].remove?.length&&o.message.includes('compression'));
@@ -63,8 +63,8 @@ try{
      }
      return o;
     });
-    assert.deepEqual(normalize(actual.result.constructors),normalize(fixture.cases.map(c=>c.outcome)));
-    if(corpus==='type9')assert.deepEqual(normalize(actual.result.loads,'loadOutcome'),normalize(fixture.cases.map(c=>c.loadOutcome),'loadOutcome'));
+    assert.deepEqual(normalize(actual.result.constructors),normalize(fixture.cases.map(c=>c.outcome),'outcome',false));
+    if(corpus==='type9')assert.deepEqual(normalize(actual.result.loads,'loadOutcome'),normalize(fixture.cases.map(c=>c.loadOutcome),'loadOutcome',false));
     assert.deepEqual(actual.result.addon,addon);
     Object.assign(record,{status:'passed',constructors:fixture.cases.length,...(corpus==='type9'?{loads:fixture.cases.length,loadErrors:[...new Set(actual.result.loads.filter(o=>o.status==='error').map(o=>o.name+': '+o.message))]}:{}),addonCases:addon.length,errorMessages:[...new Set(actual.result.constructors.filter(o=>o.status==='error').map(o=>o.name+': '+o.message))]});
    }catch(error){record.status='failed';record.error=String(error.stack??error);throw error;}
