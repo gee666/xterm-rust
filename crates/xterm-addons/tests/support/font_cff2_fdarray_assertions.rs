@@ -1,14 +1,14 @@
 use serde_json::Value;
 use xterm_addons::ligatures::font::{Font, FontError, FontOptions};
 #[path = "font_cff2_entries_assertions.rs"]
-mod previous;
+mod entries;
 
 const MISSING: &str = "This is a CFF2 font, but FDArray information is missing";
 pub fn fixture() -> Value {
     serde_json::from_str(include_str!("../fixtures/font-cff2-fdarray.json")).unwrap()
 }
 pub fn construct(case: &Value, fixture: &Value) -> Vec<u8> {
-    previous::construct(case, fixture)
+    entries::construct(case, fixture)
 }
 pub fn assert_corpus() {
     let fixture = fixture();
@@ -75,7 +75,7 @@ pub fn assert_corpus() {
     assert!(failures.is_empty(), "{}", failures.join("\n"));
 }
 pub fn assert_previous() {
-    previous::assert_corpus();
-    previous::assert_directed();
-    previous::assert_previous();
+    entries::assert_corpus();
+    entries::assert_directed();
+    entries::assert_previous();
 }
