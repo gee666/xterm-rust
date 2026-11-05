@@ -22,10 +22,10 @@ mod decorations;
 mod ranges;
 #[path = "search_cases/raw_marker.rs"]
 mod raw_marker;
-#[path = "search_cases/tracker.rs"]
-mod tracker;
 #[path = "search_cases/scroll_options.rs"]
 mod scroll_options;
+#[path = "search_cases/tracker.rs"]
+mod tracker;
 
 #[test]
 fn use_before_activation_errors_without_search_events() {

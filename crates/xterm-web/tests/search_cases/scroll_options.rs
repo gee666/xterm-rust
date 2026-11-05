@@ -26,7 +26,9 @@ fn internal_getter_errors_skip_selection_and_after_event() {
     h.addon.find_next(&term("a"), None).unwrap();
     let after = Rc::new(Cell::new(false));
     let capture = Rc::clone(&after);
-    h.addon.on_after_search().subscribe(move |_| capture.set(true));
+    h.addon
+        .on_after_search()
+        .subscribe(move |_| capture.set(true));
     let result = h.addon.find_previous_with_scroll(&term("a"), None, || {
         assert!(h.selection().is_none());
         Err(SearchAddonError::InvalidCoordinates)

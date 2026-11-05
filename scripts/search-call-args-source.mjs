@@ -48,13 +48,13 @@ try {
     for (const name of ['chromium', 'firefox', 'webkit']) {
       const entry = {name, status: 'failed'};
       report.browsers.push(entry);
-      let browser;
+      let browser, deadline;
       try {
         browser = await playwright[name].launch({headless: true, timeout: 30000});
         entry.version = browser.version();
         const page = await browser.newPage();
         await page.goto(origin, {timeout: 30000});
-        entry.cases = await page.evaluate(async body => {
+        const evaluated = page.evaluate(async body => {
           const {Terminal, SearchAddon} = await import('/source.mjs');
           const term = new Terminal({cols: 20, rows: 3, scrollback: 1000, allowProposedApi: true});
           const addon = new SearchAddon();
@@ -70,10 +70,13 @@ try {
             return await new Function(body + '\nreturn checkSearchCallArgs;')()(term, addon, write, equal);
           } finally { term.dispose(); }
         }, body);
+        entry.cases = await Promise.race([evaluated, new Promise((_, reject) => {
+          deadline = setTimeout(() => reject(Error('Source search assertions exceeded30s')), 30000);
+        })]);
         assert.equal(entry.cases, 81);
         entry.status = 'passed';
       } catch (error) { entry.error = String(error.stack ?? error); }
-      finally { if (browser) await browser.close(); }
+      finally { clearTimeout(deadline); if (browser) await browser.close(); }
     }
   });
   report.referenceAfter = await hashes();
