@@ -1,0 +1,33 @@
+    Checking xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\V\crates\xterm-addons)
+error: this loop could be written as a `while let` loop
+  --> crates\xterm-addons\src\ligatures\font_walk.rs:60:5
+   |
+60 | /     loop {
+61 | |         let Some(glyph) = sequence.get(position).and_then(|value| value.number()) else {
+62 | |             break;
+63 | |         };
+...  |
+83 | |         tree = reverse;
+84 | |     }
+   | |_____^ help: try: `while let Some(glyph) = sequence.get(position).and_then(|value| value.number()) { .. }`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.97.0/index.html#while_let_loop
+   = note: `-D clippy::while-let-loop` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::while_let_loop)]`
+
+error: this loop could be written as a `while let` loop
+   --> crates\xterm-addons\src\web_links.rs:235:9
+    |
+235 | /         loop {
+236 | |             let Some(next) = bottom.checked_add(1) else {
+237 | |                 break;
+238 | |             };
+...   |
+253 | |         }
+    | |_________^ help: try: `while let Some(next) = bottom.checked_add(1) { .. }`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.97.0/index.html#while_let_loop
+
+error: could not compile `xterm-addons` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `xterm-addons` (lib test) due to 2 previous errors
