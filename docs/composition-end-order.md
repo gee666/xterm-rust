@@ -25,6 +25,12 @@ On native Windows x86_64, Node24.15.0, Rust1.85.1 and wasm-bindgen0.2.100:
 
 Raw reports, exact hashes and logs are under `results/composition395/`. Paths to generated WASM and browser glue in those reports are execution provenance, not committed distribution files. Disposable build artifacts are removed after integration; reports preserve their hashes.
 
+## Review and integration
+
+Independent task395 review accepted the fix after rerunning source-integrity3, native27, callbacks5 per engine, package formatting and focused warning-denied native/WASM Clippy. Full-workspace formatting hit Windows OS error206; it is not a pass.
+
+The canonical helper rebased onto main's accepted Base64 changes and integrated `a4e43ca600cfd00e9a60fc8bbe87986db95785c7`. Its changed-crate gate passed343 xterm-web tests across129 summaries with zero failed or ignored, affected native all-target checking, default workspace checking and applicable WASM library checking. All eight owned source hashes stayed unchanged. The helper removed its private target. `results/composition395/integration.log` retains the raw command output. This is not an all-features workspace test or a new browser run of unrelated Base64 behavior.
+
 ## Reproduce
 
 From a checkout with the matching Rust/WASM target and external browser tools configured:
