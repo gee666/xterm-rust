@@ -37,7 +37,7 @@ All fourteen addons are explicitly assigned. Search and serialize have criterion
 
 | Requirement | Criterion | Work |
 | --- | --- | --- |
-| User intent and exhaustive acceptance coverage | 445 | 287 accepted intent; 288 this plan |
+| User intent and exhaustive acceptance coverage | 445 | 287 accepted intent; 288 original plan; 403 run2 update |
 | Exactly16 complementary lanes and retained-work recovery | 446 | Subsystem claims and309 integration |
 | Every source/API/addon behavior and language representation | 447 | All family closure tasks and328 final reconciliation |
 | fmt, warning-denied Clippy, tests, doctests, release, features, WASM, unsafe checks | 448 | 302 prerequisite repairs and304 final stable-revision matrix |
@@ -59,7 +59,9 @@ Performance uses identical validated bytes, dimensions, scrollback, Unicode conf
 
 Review must inspect actual code and independently execute relevant checks. Safe Rust and explicit unsafe invariants, ownership/RAII, compatible dependency licenses, attribution, warning-free builds, focused functions and the 350-line rule remain mandatory. No dead code, successful stubs, weakened assertions, JS terminal-engine delegation or blanket lint suppression. Record unsupported Miri/sanitizer checks honestly.
 
-## Current complementary lanes
+## Original lane assignments, retained as history
+
+The table below records the initial assignments, not the current run2 ownership. The live task graph is authoritative. See `docs/handoffs/swarm2-run2-continuation.md` for the same-swarm resumption contract and criterion485. Do not reclaim another owner's files from this historical table.
 
 | Owner | Lane and current task |
 | --- | --- |

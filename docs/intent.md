@@ -12,6 +12,10 @@ Completion requires demonstrated acceptance criteria, accepted independent revie
 
 Do not change `AGENTS.md`, user-owned startup files, source assertions, or credentials. Use `O:/xterm-rust-swarm-16/tmp/` for all new temporary builds, worktrees and scratch files, as authorized by the current request. Clean every owned temporary file and folder after preserving finished source, regressions and concise durable evidence. Preserve others' retained work, caches and dependency links. Every shell command needs a timeout.
 
+## Same-swarm continuation for run 2
+
+The updated brief resumes the same swarm #2, its agents, sessions, work graph and prior progress after the user stopped it to apply fixes. Do not create a replacement swarm or restart the port. Before editing, inspect current main, the owned branch/worktree, updated instructions and recent changes. Reconcile saved findings and evidence with the current implementation; preserve the user's fixes and other owners' work rather than replaying stale patches or repeating completed changes. See `docs/handoffs/swarm2-run2-continuation.md` for the inspected baseline and acceptance delta. All original functionality, verification, resource and cleanup requirements below remain in force.
+
 ## Current working method
 
 The controlling continuation handoff is `docs/handoffs/new-swarm-16.md`, with its sibling repository snapshot. Actual integration is branch `main` at `C:/Users/user/.xterm-rust-target/7144d30a1fc3-worktrees/Integration`, not the older launch `master`. Inspect current main and recover prior agents' retained work and integrated tests before implementing replacements.
