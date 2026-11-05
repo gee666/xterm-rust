@@ -84,7 +84,7 @@ fn highlight_guard_runs_after_decoration_clear_before_cache_flags_and_text() {
                     guard: Rc::new(move || {
                         capture.set(capture.get() + 1);
                         assert!(host.terminal.selection_position()?.is_some());
-                        assert_eq!(host.decorations.decorations()?.count(), 0);
+                        assert_eq!(host.terminal.decorations.decorations().unwrap().count(), 0);
                         assert_eq!(host.clock.pending(), 0);
                         if reactivate {
                             weak.upgrade().unwrap().activate(next.clone())?;

@@ -26,7 +26,7 @@ async function checkSearchCallArgs(term, addon, write, equal) {
             check('captured highlight engine host cleared', term.hasSelection(), false);
             check('new terminal not cleared until addon invalid phase', other.hasSelection(), true);
           }
-          if (kind === 'late2' && decorations === 2 || kind === 'late3' && decorations === 3) throw value;
+          if ((kind === 'late2' && decorations === 2) || (kind === 'late3' && decorations === 3)) throw value;
           return {};
         },
         get regex() { flags++; if (kind === 'strict' || kind === 'strictObject') throw value; return false; }
