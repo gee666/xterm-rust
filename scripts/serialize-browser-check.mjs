@@ -12,14 +12,17 @@ import { configForRust, testCounts } from './e2e/upstream-config.mjs';
 import { runCommand } from './quality-process.mjs';
 import { referenceIntegrity } from './upstream-baseline-utils.mjs';
 import { serializationCases } from './serialize-browser-cases.mjs';
+import { serializationGc } from './serialize-browser-gc.mjs';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-if (process.argv.slice(2).some(arg => arg !== '--suite') || process.argv.length > 3) throw Error('Usage: node scripts/serialize-browser-check.mjs [--suite]');
+if (process.argv.slice(2).some(arg => !['--suite', '--gc'].includes(arg)) || process.argv.length > 3) throw Error('Usage: node scripts/serialize-browser-check.mjs [--suite|--gc]');
+const gcOnly = process.argv.includes('--gc');
 const reference = await realpath(process.env.SOURCE_ROOT ?? join(root, 'source_repo'));
-const output = join(root, 'results/serialize-browser');
-const temporary = join(root, 'tmp/serialize-browser');
+const output = join(root, gcOnly ? 'results/serialize-gc' : 'results/serialize-browser');
+const temporary = join(root, gcOnly ? 'tmp/serialize-gc' : 'tmp/serialize-browser');
 await mkdir(output, { recursive: true }); await mkdir(temporary, { recursive: true });
-const report = { status: 'failed', platform: process.platform, node: process.version, seed: '0x05e21a11', seededCases: 32,
-  scope: 'Callable SerializeAddon, directed host behavior and seeded full public-cell restoration. Not full equivalence.', browsers: [], suites: [] };
+const report = { status: 'failed', platform: process.platform, node: process.version, seed: gcOnly ? null : '0x05e21a11', seededCases: gcOnly ? 0 : 32,
+  scope: gcOnly ? 'Forced Chromium GC for SerializeAddon host retention and unreachable cycles. Firefox/WebKit unrun; not full equivalence.'
+    : 'Callable SerializeAddon, directed host behavior and seeded full public-cell restoration. Not full equivalence.', browsers: [], suites: [] };
 const assets = new Map([['/test', ['demo/test.html', 'text/html']], ['/xterm.css', ['css/xterm.css', 'text/css']],
   ['/dist/client-bundle.js', ['demo/dist/client-bundle.js', 'text/javascript']]]);
 let source, rust, lifetime;
@@ -28,7 +31,7 @@ try {
   report.referenceBefore = referenceIntegrity(reference, manifest);
   assert.equal(report.referenceBefore.mismatches.length, 0);
   report.source = await sourceIdentity(root); report.build = await verifyBuiltPackage(root, report.source);
-  const runnerFiles = ['scripts/serialize-browser-check.mjs', 'scripts/serialize-browser-cases.mjs', 'browser/xterm.mjs',
+  const runnerFiles = ['scripts/serialize-browser-check.mjs', 'scripts/serialize-browser-cases.mjs', 'scripts/serialize-browser-gc.mjs', 'browser/xterm.mjs',
     'scripts/e2e/build-bootstrap.mjs', 'scripts/e2e/fixture-server.mjs', 'scripts/e2e/test-page.mjs'];
   report.runner = await artifactIdentity(root, runnerFiles);
   report.declarations = await artifactIdentity(root, ['browser/pkg/xterm_web.d.ts']);
@@ -53,7 +56,8 @@ try {
   lifetime = setTimeout(() => source.closeAllConnections(), 360000);
   const origins = [['source', `http://127.0.0.1:${source.address().port}`], ['rust', rust.origin]];
   const playwright = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE ?? join(reference, 'node_modules/playwright/index.mjs')));
-  for (const name of ['chromium', 'firefox', 'webkit']) {
+  if (gcOnly) report.gc = await serializationGc(playwright, origins);
+  for (const name of gcOnly ? [] : ['chromium', 'firefox', 'webkit']) {
     let browser; const entry = { name, status: 'failed', mismatches: [] }; report.browsers.push(entry);
     try {
       browser = await playwright[name].launch({ headless: true, timeout: 30000 }); entry.version = browser.version();
@@ -115,7 +119,8 @@ try {
   assert.equal((await sourceIdentity(root)).sha256, report.source.sha256);
   assert.deepEqual(await artifactIdentity(root, runnerFiles), report.runner);
   report.referenceAfter = referenceIntegrity(reference, manifest); assert.equal(report.referenceAfter.mismatches.length, 0);
-  report.status = report.browsers.every(entry => entry.status === 'passed') && report.suites.every(entry => entry.result.status === 'passed') ? 'passed' : 'failed';
+  report.status = report.browsers.every(entry => entry.status === 'passed') && report.suites.every(entry => entry.result.status === 'passed')
+    && (!gcOnly || report.gc?.status === 'passed') ? 'passed' : 'failed';
   if (report.status !== 'passed') process.exitCode = 1;
 } catch (error) { report.error = String(error.stack ?? error); process.exitCode = 1; }
 finally {
@@ -133,4 +138,5 @@ finally {
   if (report.cleanupErrors.length) { report.status = 'failed'; process.exitCode = 1; }
   await writeFile(join(output, 'verification.json'), JSON.stringify(report, null, 2) + '\n');
 }
-console.log(`Serialize browser ${report.status}; ${report.browsers.map(entry => `${entry.name}:${entry.passed ?? 0}/${entry.executed ?? 0}`).join(', ')}`);
+console.log(gcOnly ? `Serialize Chromium GC ${report.status}`
+  : `Serialize browser ${report.status}; ${report.browsers.map(entry => `${entry.name}:${entry.passed ?? 0}/${entry.executed ?? 0}`).join(', ')}`);

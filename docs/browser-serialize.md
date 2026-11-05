@@ -2,7 +2,7 @@
 
 The compatible module is `browser/xterm.mjs`. It exports `SerializeAddon` with `activate`, `serialize`, `serializeAsHTML` and `dispose`. Both serializers read the actual Rust engine, not an xterm.js terminal. The WASM implementation is in `crates/xterm-web/src/serialize_addon/` and shares `xterm-core::serialize` with native consumers.
 
-The JavaScript subclass retains `_terminal`. Rust retains only a weak `Shared` reference. The existing Terminal addon-manager WeakMap owns the loaded addon records. An addon can keep its host alive without making the otherwise unreachable Terminal/addon cycle a Rust-held JavaScript root. Disposal deliberately does not clear the host, matching the original empty dispose method. Actual forced-GC and unreachable-cycle evidence is still required by task346.
+The JavaScript subclass retains `_terminal`. Rust retains only a weak `Shared` reference. The existing Terminal addon-manager WeakMap owns the loaded addon records. An addon can keep its host alive without making the otherwise unreachable Terminal/addon cycle a Rust-held JavaScript root. Disposal deliberately does not clear the host, matching the original empty dispose method. Task382 adds actual forced Chromium GC evidence for retained/disposed hosts and unreachable loaded cycles. Firefox/WebKit forced GC and broader raw contracts remain task346 work.
 
 ## Implemented paths
 
@@ -21,7 +21,7 @@ Full serialization equivalence is NOT PROVEN. Task346 and family322 retain SB01-
 - Public Terminal/buffer method or descriptor replacement is not fully honored. The serializer uses the actual native public namespace rather than calling arbitrary replaced methods.
 - Theme palette array replacement and element mutation during header reentry need array-identity modeling. Normal live theme/OSC changes between calls are covered; a copied list of color handles does not prove arbitrary reentrant palette mutation.
 - ANSI warning callbacks have fallible late reads for rows, buffer length, cursor and current attributes. Task377 also retains each ANSI/HTML traversal row through reset from a warning. Arbitrary replacement methods, source work-cell aliases and broader host/palette mutation still need full346 checks.
-- GC/WeakRef tests, every malformed UTF-16/number case, source/restored full internal margins/events and complete demo matrices remain unrun here.
+- Forced Chromium GC now covers four retention/cycle assertions against both engines. Firefox/WebKit forced GC, every malformed UTF-16/number case, source/restored full internal margins/events and complete demo matrices remain unrun here.
 - Equal infinite start/end bounds make the source row++ loop non-progressing. The numeric probe records that case as unrun rather than hanging a browser. No source-hang compatibility approval is claimed.
 
 ## Reproduction
