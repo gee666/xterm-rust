@@ -142,7 +142,10 @@ impl<S: Scheduler> TaskQueue<S> {
             self.state.scheduler.cancel(handle);
         }
         self.state.index.set(0);
-        self.state.tasks.borrow_mut().clear();
+        // Captures may run user Drop code. Publish the empty queue and release
+        // its borrow first, so cleanup can reenter and retain newly queued work.
+        let removed = std::mem::take(&mut *self.state.tasks.borrow_mut());
+        drop(removed);
     }
     pub fn has_pending_callback(&self) -> bool {
         self.state.pending.borrow().is_some()

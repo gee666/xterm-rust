@@ -1,0 +1,56 @@
+   Compiling equivalent v1.0.3
+   Compiling allocator-api2 v0.2.21
+   Compiling foldhash v0.1.5
+   Compiling memchr v2.8.3
+   Compiling hashbrown v0.15.5
+   Compiling regress v0.10.4
+   Compiling ryu-js v1.0.3
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\L16\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 7.08s
+     Running tests\task_queue_drop.rs (target\debug\deps\task_queue_drop-a5c6742c12eba308.exe)
+
+running 5 tests
+test clear_drops_captures_after_reset_and_preserves_reentrant_enqueue ... FAILED
+test completed_flush_and_dispatch_release_captures_outside_borrows ... FAILED
+test capture_panic_propagates_with_empty_reusable_queue ... ok
+test capture_can_clear_recursively_without_holding_the_task_borrow ... FAILED
+test capture_enqueue_before_panic_survives_unwinding ... FAILED
+
+failures:
+
+---- clear_drops_captures_after_reset_and_preserves_reentrant_enqueue stdout ----
+
+thread 'clear_drops_captures_after_reset_and_preserves_reentrant_enqueue' panicked at O:\xterm-rust-swarm-16\tmp\L16\crates\xterm-core\src\task_queue.rs:153:14:
+already mutably borrowed: BorrowError
+
+---- completed_flush_and_dispatch_release_captures_outside_borrows stdout ----
+
+thread 'completed_flush_and_dispatch_release_captures_outside_borrows' panicked at O:\xterm-rust-swarm-16\tmp\L16\crates\xterm-core\src\task_queue.rs:153:14:
+already mutably borrowed: BorrowError
+
+---- capture_can_clear_recursively_without_holding_the_task_borrow stdout ----
+
+thread 'capture_can_clear_recursively_without_holding_the_task_borrow' panicked at O:\xterm-rust-swarm-16\tmp\L16\crates\xterm-core\src\task_queue.rs:145:26:
+already borrowed: BorrowMutError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- capture_enqueue_before_panic_survives_unwinding stdout ----
+
+thread 'capture_enqueue_before_panic_survives_unwinding' panicked at O:\xterm-rust-swarm-16\tmp\L16\crates\xterm-core\src\task_queue.rs:127:26:
+already borrowed: BorrowMutError
+
+thread 'capture_enqueue_before_panic_survives_unwinding' panicked at crates\xterm-core\tests\task_queue_drop.rs:181:5:
+assertion `left == right` failed
+  left: None
+ right: Some("capture failed after enqueue")
+
+
+failures:
+    capture_can_clear_recursively_without_holding_the_task_borrow
+    capture_enqueue_before_panic_survives_unwinding
+    clear_drops_captures_after_reset_and_preserves_reentrant_enqueue
+    completed_flush_and_dispatch_release_captures_outside_borrows
+
+test result: FAILED. 1 passed; 4 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-core --test task_queue_drop`

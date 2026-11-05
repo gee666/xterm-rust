@@ -1,0 +1,63 @@
+{
+  "task": 355,
+  "scope": "Native TaskQueue capture destruction, not complete common/browser parity",
+  "base": "40f1798432ae133af7426d33a9247e2bc76db095",
+  "environment": {
+    "platform": "win32",
+    "node": "v24.15.0",
+    "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+    "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)"
+  },
+  "hashes": {
+    "crates/xterm-core/src/task_queue.rs": "68fe8f3c013b6ca5502afb86451d33a04980ee97cc09d09c07c98c14be71e2b9",
+    "crates/xterm-core/tests/task_queue_drop.rs": "653e2e532000c8851f63daed854beddf3b46226affb19d42e8108c693bd1fdd6",
+    "source_repo/src/common/TaskQueue.ts": "3a3c33a8d50aa767a7eaf355980ad6d53c1e9fc5acc287b14eabe0a72720142a"
+  },
+  "checks": [
+    {
+      "command": "cargo test --locked -j2 -p xterm-core --test task_queue_drop",
+      "phase": "baseline",
+      "passed": 1,
+      "failed": 4,
+      "ignored": 0,
+      "exit": 101,
+      "log": "baseline-tests.log"
+    },
+    {
+      "command": "cargo test --locked -j2 -p xterm-core --test task_queue --test task_queue_edges --test task_queue_drop --test platform_windows",
+      "passed": 28,
+      "failed": 0,
+      "ignored": 0,
+      "exit": 0,
+      "log": "native-tests.log"
+    },
+    {
+      "command": "cargo clippy --locked -j2 -p xterm-core -p xterm-web --all-targets --all-features -- -D warnings",
+      "exit": 0,
+      "log": "native-clippy.log"
+    },
+    {
+      "command": "cargo clippy --locked -j2 -p xterm-web --lib --target wasm32-unknown-unknown -- -D warnings",
+      "exit": 0,
+      "log": "wasm-clippy.log"
+    },
+    {
+      "command": "CARGO_BUILD_JOBS=2 node scripts/task-platform-oracle.mjs",
+      "exit": 0,
+      "log": "task-platform-oracle.log",
+      "report": "differential/oracle.json"
+    },
+    {
+      "command": "cargo fmt --all -- --check",
+      "exit": 0,
+      "log": "fmt.log"
+    }
+  ],
+  "unrun": [
+    "complete workspace runtime suites",
+    "browser timer/idle matrix",
+    "native Linux/macOS",
+    "release and complete feature matrix"
+  ],
+  "equivalence": "NOT PROVEN"
+}
