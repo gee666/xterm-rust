@@ -34,6 +34,10 @@ Windows x64, Rust/Cargo1.85.1 and Node24.15.0, initially based on main6b8f80c:
 
 An additional unchanged browser regression suite remains red. `wasm_buffer_cleanup::inactive_normal_and_active_alternate_are_both_scheduled` fails line139 because the alternate buffer has no pending cleanup. Both unmodified main6b8f80c production and the repair pass3/4 tests per browser and fail this same assertion in all three engines. The baseline was rebuilt after temporarily restoring only the four owned production files, then the repair was reapplied byte-for-byte. Raw reports and logs are retained under `browser/` and `baseline-buffer-browser.json`. No test assertion was changed. Follow-up task371 covers source diagnosis and repair under full-family314. This failure is not a scheduler parity pass.
 
+## Independent review
+
+The isolated task367 reviewer accepted8dabe05 against main e165104 with no findings or tracked edits. It independently reran all38 focused native tests, the source32-case oracle and the Rust/WASM32-case replay in all three browsers, full workspace formatting, native core/web all-target/all-feature Clippy and scoped WASM Clippy. All passed. It verified every source and fixture hash in `repair-verification.json` and inspected the identical retained baseline/repair alternate-buffer failure. That separate failure remains task371.
+
 ## Reproduction
 
 Run in an isolated worktree with an installed WASM target, matching wasm-bindgen0.2.100 CLI and existing Playwright installation. Set `XT_SOURCE_ROOT`, `PLAYWRIGHT_MODULE` and `WASM_BINDGEN` when using an external read-only reference or tool installation. Set `CARGO_BUILD_JOBS=2` and keep temporary output on the run-owned volume.
