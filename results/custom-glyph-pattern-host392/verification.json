@@ -16,15 +16,15 @@
     },
     {
       "path": "crates/xterm-web/src/webgl/custom_glyphs/patterns.js",
-      "sha256": "f630bc59431491d5d0f315c642779a70868781fbdabde2334125fce3b45f0ac2"
+      "sha256": "cb26ee8116b931ce37a9ae320058065efbaa67044dba71b4d15efa309483d36f"
     },
     {
       "path": "crates/xterm-web/tests/wasm_custom_glyph_pattern_host.rs",
-      "sha256": "f4ac1f3e0d22404f469a5935e1fec63f7f015033a6b601e6ccf484f05449715f"
+      "sha256": "8ad337494fee69da5fada48591206bf2e83bfd02e42472cc945a0a3188868f41"
     },
     {
       "path": "crates/xterm-web/tests/reference/custom-glyph-pattern-host.mjs",
-      "sha256": "3d0bfb85a4bbd97c2f65097383ad37b440b736d72868ba7b0f299bf8ce817952"
+      "sha256": "f3c19a207878f8ba6c1f301eb61a414e224ca60cf62a12cd8961a2a75c4a688f"
     },
     {
       "path": "crates/xterm-web/tests/support/custom_glyph_canvas.rs",
@@ -217,5 +217,171 @@
       ]
     }
   ],
-  "overallEquivalence": "NOT PROVEN"
+  "overallEquivalence": "NOT PROVEN",
+  "run2Native": {
+    "passed": 2069,
+    "failed": 0,
+    "ignored": 0,
+    "summaries": 420
+  },
+  "exactFullFormat": "Windows OS206, failure retained; every workspace-member format check passes",
+  "reviewFinding": "setTransform getter lookup precedes matrix construction; source Symbol must win",
+  "reviewFixedReports": [
+    {
+      "path": "wasm_custom_glyph_pattern_host-review-fixed-offscreen.json",
+      "status": "passed",
+      "testSource": "8ad337494fee69da5fada48591206bf2e83bfd02e42472cc945a0a3188868f41",
+      "wasm": "3943f6a349ddce50b7387433ac7afe8bb93bc98a3e504ca80e9ef36cc075324e",
+      "bindings": "1eb1c0e4c4b2435440759148b09aae2d0ab215c183ffb0b1ec7998233ae5bf53",
+      "browsers": [
+        {
+          "name": "chromium",
+          "status": "passed",
+          "counts": {
+            "passed": 5,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        },
+        {
+          "name": "firefox",
+          "status": "passed",
+          "counts": {
+            "passed": 5,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        },
+        {
+          "name": "webkit",
+          "status": "passed",
+          "counts": {
+            "passed": 5,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        }
+      ]
+    },
+    {
+      "path": "wasm_custom_glyph_pattern_host-review-fixed-dom.json",
+      "status": "passed",
+      "testSource": "8ad337494fee69da5fada48591206bf2e83bfd02e42472cc945a0a3188868f41",
+      "wasm": "3943f6a349ddce50b7387433ac7afe8bb93bc98a3e504ca80e9ef36cc075324e",
+      "bindings": "1eb1c0e4c4b2435440759148b09aae2d0ab215c183ffb0b1ec7998233ae5bf53",
+      "browsers": [
+        {
+          "name": "chromium",
+          "status": "passed",
+          "counts": {
+            "passed": 5,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        },
+        {
+          "name": "firefox",
+          "status": "passed",
+          "counts": {
+            "passed": 5,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        },
+        {
+          "name": "webkit",
+          "status": "passed",
+          "counts": {
+            "passed": 5,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        }
+      ]
+    },
+    {
+      "path": "wasm_custom_glyphs-review-fixed-offscreen.json",
+      "status": "passed",
+      "testSource": "d9a5ff3333a40d9f3ebd6911b87281c0d7e2221880a0be24eec0f464437fa801",
+      "wasm": "249ae8a1091564e21d9c7129e6a0e83109787ad08d9de706205d055a372fdac8",
+      "bindings": "a2c3ec5ce1c666ae6552d5675c9c865934e1929e52d6f65cf5b41a8b4dd2266e",
+      "browsers": [
+        {
+          "name": "chromium",
+          "status": "passed",
+          "counts": {
+            "passed": 5,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        },
+        {
+          "name": "firefox",
+          "status": "passed",
+          "counts": {
+            "passed": 5,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        },
+        {
+          "name": "webkit",
+          "status": "passed",
+          "counts": {
+            "passed": 5,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        }
+      ]
+    },
+    {
+      "path": "wasm_custom_glyphs-review-fixed-dom.json",
+      "status": "passed",
+      "testSource": "d9a5ff3333a40d9f3ebd6911b87281c0d7e2221880a0be24eec0f464437fa801",
+      "wasm": "249ae8a1091564e21d9c7129e6a0e83109787ad08d9de706205d055a372fdac8",
+      "bindings": "a2c3ec5ce1c666ae6552d5675c9c865934e1929e52d6f65cf5b41a8b4dd2266e",
+      "browsers": [
+        {
+          "name": "chromium",
+          "status": "passed",
+          "counts": {
+            "passed": 5,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        },
+        {
+          "name": "firefox",
+          "status": "passed",
+          "counts": {
+            "passed": 5,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        },
+        {
+          "name": "webkit",
+          "status": "passed",
+          "counts": {
+            "passed": 5,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        }
+      ]
+    }
+  ]
 }
