@@ -32,7 +32,9 @@ Observed native Windows results:
 - The final actual Rust/WASM suite passed18 functions in each of the three engines,54 total, with no failed, ignored or filtered tests. The92 shared cases are inside one function per engine, not92 extra functions. Both compiler artifacts contain the exact shared fixture bytes; their compiler/WASM/binding hashes were verified before cleanup.
 - Changed Rust formatting passed. Node24.15.0 and Rust/Cargo1.85.1 were used on native Windows; wasm-bindgen CLI0.2.100 matched the locked runtime.
 
-Independent review is pending at this checkpoint. Full workspace Clippy/tests, unchanged original Search E2E, seeded corpus, demo, native Linux/macOS and GC were not run for this task.
+Isolated review accepted the source/evidence checkpoint at7b586b06. The reviewer independently reran the SHA/size-pinned native executable,59PASS, and verified all42 then-current summary pins, all38 accepted469 pins, both776-file reference manifests, both restoration records and both compiler/WASM/binding sets with exact embedded fixture bytes. It inspected but did not rerun Cargo, source/browser matrices or Clippy. The later review receipt adds a43rd pin. Cleanup was not part of that verdict.
+
+Full workspace Clippy/tests, unchanged original Search E2E, seeded corpus, demo, native Linux/macOS and GC were not run for this task.
 
 Reproduce with prepared external tools and a private O: target:
 
