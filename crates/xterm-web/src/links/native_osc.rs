@@ -5,6 +5,7 @@ use super::{
         BrowserLink, BrowserLinkProvider, LinkCallback, LinkReply, NativeBrowserLink,
     },
     osc::{try_osc_links_with_policy, OscBuffer},
+    Link,
 };
 use crate::js_error::to_js_error;
 use std::{
@@ -65,14 +66,56 @@ impl OscBuffer for LiveBuffer {
     }
 }
 
-/// Reads URL ids and URI data from the SAME Rust terminal state used by OSC8
+enum Handler {
+    Native(Option<OscLinkHandler>),
+    JavaScript(JsValue),
+}
+impl Handler {
+    fn allow_non_http_protocols(&self) -> Result<bool, JsValue> {
+        match self {
+            Self::Native(handler) => handler
+                .as_ref()
+                .map(|handler| (handler.allow_non_http_protocols)())
+                .transpose()
+                .map(|value| value.unwrap_or(false)),
+            Self::JavaScript(handler) if handler.is_null() || handler.is_undefined() => Ok(false),
+            Self::JavaScript(handler) => {
+                super::browser_payload::property(handler, "allowNonHttpProtocols")
+                    .map(|value| value.is_truthy())
+            }
+        }
+    }
+    fn link(&self, data: Link, window: &Window) -> Result<BrowserLink, JsValue> {
+        match self {
+            Self::JavaScript(handler) => super::osc_browser_payload::link(data, handler, window),
+            Self::Native(handler) => {
+                let window = window.clone();
+                let activate = handler
+                    .as_ref()
+                    .map(|handler| handler.activate.clone())
+                    .unwrap_or_else(|| {
+                        Rc::new(move |_, link| default_activate(&window, &link.text))
+                    });
+                Ok(BrowserLink::Native(NativeBrowserLink {
+                    data: Rc::new(data),
+                    decorations: None,
+                    activate,
+                    hover: handler.as_ref().and_then(|handler| handler.hover.clone()),
+                    leave: handler.as_ref().and_then(|handler| handler.leave.clone()),
+                    dispose: None,
+                }))
+            }
+        }
+    }
+}
+/// Reads URL ids and URI data from the same Rust terminal state used by OSC8
 /// parsing and printing. No terminal engine or link discovery runs in JavaScript.
 /// Handler identity is sampled once for an existing row. The protocol getter is
 /// read for each finished run, after URI lookup and wrapped-range expansion.
 pub struct NativeOscLinkProvider {
     terminal: Weak<headless::Terminal>,
     window: Window,
-    handler: Rc<dyn Fn() -> Result<Option<OscLinkHandler>, JsValue>>,
+    handler: Rc<dyn Fn() -> Result<Handler, JsValue>>,
 }
 impl NativeOscLinkProvider {
     pub fn new(
@@ -83,7 +126,21 @@ impl NativeOscLinkProvider {
         Self {
             terminal,
             window,
-            handler: Rc::new(handler),
+            handler: Rc::new(move || handler().map(Handler::Native)),
+        }
+    }
+    /// Browser options retain raw handler values, including primitive receivers.
+    /// The same discovery algorithm supplies live JavaScript link ranges instead
+    /// of the immutable payload used by native Rust callbacks.
+    pub fn with_javascript_handler(
+        terminal: Weak<headless::Terminal>,
+        window: Window,
+        handler: impl Fn() -> Result<JsValue, JsValue> + 'static,
+    ) -> Self {
+        Self {
+            terminal,
+            window,
+            handler: Rc::new(move || handler().map(Handler::JavaScript)),
         }
     }
 }
@@ -125,37 +182,16 @@ impl BrowserLinkProvider for NativeOscLinkProvider {
                     })
                     .transpose()
             },
-            |text| {
-                let allow = handler
-                    .as_ref()
-                    .map(|handler| (handler.allow_non_http_protocols)())
-                    .transpose()?
-                    .unwrap_or(false);
-                Ok(allow || is_http_url(text))
-            },
+            |text| Ok(handler.allow_non_http_protocols()? || is_http_url(text)),
         )?;
-        let found = found.map(|links| {
-            links
-                .into_iter()
-                .map(|data| {
-                    let window = self.window.clone();
-                    let activate = handler
-                        .as_ref()
-                        .map(|handler| handler.activate.clone())
-                        .unwrap_or_else(|| {
-                            Rc::new(move |_, link| default_activate(&window, &link.text))
-                        });
-                    BrowserLink::Native(NativeBrowserLink {
-                        data: Rc::new(data),
-                        decorations: None,
-                        activate,
-                        hover: handler.as_ref().and_then(|handler| handler.hover.clone()),
-                        leave: handler.as_ref().and_then(|handler| handler.leave.clone()),
-                        dispose: None,
-                    })
-                })
-                .collect()
-        });
+        let found = found
+            .map(|links| {
+                links
+                    .into_iter()
+                    .map(|data| handler.link(data, &self.window))
+                    .collect()
+            })
+            .transpose()?;
         callback(found)
     }
 }

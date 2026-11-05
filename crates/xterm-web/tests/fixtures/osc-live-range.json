@@ -1,0 +1,159 @@
+[
+  {
+    "name": "hover mutates callback range",
+    "pointer": true,
+    "calls": [
+      [
+        "hover",
+        true,
+        "custom:resource",
+        true
+      ]
+    ],
+    "errors": []
+  },
+  {
+    "name": "same cell ignores mutation",
+    "pointer": true,
+    "calls": [],
+    "errors": []
+  },
+  {
+    "name": "next cell leaves mutated range",
+    "pointer": false,
+    "calls": [
+      [
+        "leave",
+        true,
+        "custom:resource",
+        true
+      ]
+    ],
+    "errors": []
+  },
+  {
+    "name": "cached mutated range reenters",
+    "pointer": true,
+    "calls": [
+      [
+        "hover",
+        true,
+        "custom:resource",
+        true
+      ]
+    ],
+    "errors": []
+  },
+  {
+    "name": "mousedown and current observe same mutation",
+    "pointer": true,
+    "calls": [
+      [
+        "activate",
+        true,
+        "custom:resource",
+        true
+      ]
+    ],
+    "errors": []
+  },
+  {
+    "name": "double click selects current mutated range",
+    "selection": "lmn"
+  },
+  {
+    "name": "replacement endpoints stay live",
+    "pointer": true,
+    "calls": [],
+    "errors": []
+  },
+  {
+    "name": "same cell avoids proxy getters",
+    "reads": []
+  },
+  {
+    "name": "hit test reads live proxy coordinates",
+    "reads": [
+      "start.y",
+      "start.x",
+      "end.y",
+      "end.x"
+    ]
+  },
+  {
+    "name": "hit test preserves thrown identity",
+    "pointer": true,
+    "calls": [],
+    "errors": [
+      "marker"
+    ]
+  },
+  {
+    "name": "replaced handler callback remains live",
+    "pointer": false,
+    "calls": [
+      [
+        "new leave",
+        true,
+        true
+      ]
+    ],
+    "errors": []
+  },
+  {
+    "name": "wrapped link with scrollback",
+    "pointer": true,
+    "calls": [
+      [
+        "wrapped hover",
+        true
+      ]
+    ],
+    "errors": []
+  },
+  {
+    "name": "wrapped coordinates",
+    "scrollback": true,
+    "start": {
+      "x": 1,
+      "y": 3
+    },
+    "end": {
+      "x": 7,
+      "y": 4
+    }
+  },
+  {
+    "name": "wrapped mutation leaves prior row",
+    "pointer": false,
+    "calls": [
+      [
+        "new leave",
+        true,
+        true
+      ]
+    ],
+    "errors": []
+  },
+  {
+    "name": "wrapped mutation reenters new row",
+    "pointer": true,
+    "calls": [
+      [
+        "wrapped hover",
+        false
+      ]
+    ],
+    "errors": []
+  },
+  {
+    "name": "wrapped selection samples mutation",
+    "selection": "opq"
+  },
+  {
+    "name": "disposed terminal has no pointer listeners",
+    "pointer": true,
+    "calls": [],
+    "errors": []
+  }
+]

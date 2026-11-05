@@ -17,6 +17,8 @@ mod hover;
 #[cfg(target_arch = "wasm32")]
 pub mod native_osc;
 mod osc;
+#[cfg(target_arch = "wasm32")]
+mod osc_browser_payload;
 mod provider;
 mod replies;
 pub mod time_debounce;

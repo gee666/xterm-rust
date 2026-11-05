@@ -31,20 +31,13 @@ fn probe(handler: JsValue, uri: String, actions: Array) -> Result<JsValue, JsVal
     )?;
     let links = result.borrow_mut().take().unwrap();
     let event = web_sys::MouseEvent::new("mousemove")?;
+    let invoke = Function::new_with_args("link,action,event", "link[action]?.(event, link.text);");
     for link in &links {
-        let xterm_web::links::browser_linkifier::BrowserLink::Native(link) = link else {
-            panic!("OSC produces a native link")
+        let xterm_web::links::browser_linkifier::BrowserLink::JavaScript(link) = link else {
+            panic!("Browser registry must retain a live OSC payload")
         };
         for action in actions.iter() {
-            let callback = match action.as_string().unwrap().as_str() {
-                "activate" => Some(&link.activate),
-                "hover" => link.hover.as_ref(),
-                "leave" => link.leave.as_ref(),
-                _ => panic!("fixed probe action list"),
-            };
-            if let Some(callback) = callback {
-                callback(&event, &link.data)?;
-            }
+            invoke.call3(&JsValue::UNDEFINED, link, &action, event.as_ref())?;
         }
     }
     Ok(JsValue::from_f64(links.len() as f64))
