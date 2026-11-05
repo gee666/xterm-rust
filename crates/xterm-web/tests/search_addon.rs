@@ -22,6 +22,8 @@ mod decorations;
 mod empty;
 #[path = "search_cases/falsy_stored_options.rs"]
 mod falsy_stored_options;
+#[path = "search_cases/highlight_options.rs"]
+mod highlight_options;
 #[path = "search_cases/invalid.rs"]
 mod invalid;
 #[path = "search_cases/live_stored_flags.rs"]

@@ -56,7 +56,7 @@ impl SearchDecorationSource for JsDecorations {
             SearchColor::ActiveBorder => "activeMatchBorder",
             SearchColor::ActiveOverview => "activeMatchColorOverviewRuler",
         };
-        property(&self.0, key)
+        flag(&self.0, key)
             .map(|value| value.as_string())
             .map_err(crate::js_error::callback_error)
     }
@@ -79,6 +79,11 @@ impl SearchOptionsSource for JsOptions {
         Ok(value
             .is_truthy()
             .then(|| Rc::new(JsDecorations(value)) as SearchDecorationOptionsHandle))
+    }
+    fn highlight_decorations(&self) -> Result<SearchDecorationOptionsHandle, SearchAddonError> {
+        flag(&self.0, "decorations")
+            .map(|value| Rc::new(JsDecorations(value)) as SearchDecorationOptionsHandle)
+            .map_err(host_error)
     }
     fn flags_changed(
         &self,

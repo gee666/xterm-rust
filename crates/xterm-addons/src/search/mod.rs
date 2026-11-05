@@ -45,6 +45,15 @@ pub trait SearchDecorationSource {
     fn color(&self, kind: SearchColor) -> Result<Option<String>, EmitError>;
 }
 pub type SearchDecorationOptionsHandle = Rc<dyn SearchDecorationSource>;
+
+// A getter may return an absent value after a truthy eligibility read. Defer
+// failure until a result actually reads a color, just as the source does.
+pub(super) struct MissingDecorations;
+impl SearchDecorationSource for MissingDecorations {
+    fn color(&self, _: SearchColor) -> Result<Option<String>, EmitError> {
+        Err(EmitError::callback(SearchAddonError::MissingDecorations))
+    }
+}
 impl SearchDecorationSource for SearchDecorationOptions {
     fn color(&self, kind: SearchColor) -> Result<Option<String>, EmitError> {
         Ok(match kind {
@@ -78,6 +87,7 @@ pub enum SearchAddonError {
     NotLoaded,
     Borrowed,
     MissingOptions,
+    MissingDecorations,
     InvalidCoordinates,
     Search(SearchError),
     Terminal(HeadlessError),
@@ -90,6 +100,9 @@ impl fmt::Display for SearchAddonError {
             Self::NotLoaded => f.write_str("Cannot use addon until it has been loaded"),
             Self::Borrowed => f.write_str("search terminal state is already borrowed"),
             Self::MissingOptions => f.write_str("cannot read flags of absent search options"),
+            Self::MissingDecorations => {
+                f.write_str("cannot read colors of absent search decorations")
+            }
             Self::InvalidCoordinates => {
                 f.write_str("search match coordinates are not representable by the host")
             }

@@ -112,6 +112,15 @@ async fn empty_search_skips_matching_getters_and_retains_source_phases() {
 }
 
 #[wasm_bindgen_test]
+async fn highlight_decorations_follow_results_and_reread_the_call_argument() {
+    let body = format!(
+        "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),184);",
+        include_str!("fixtures/search-highlight-options.js")
+    );
+    run(&body, true, DEFAULTS).await;
+}
+
+#[wasm_bindgen_test]
 async fn selection_decorations_follow_matching_before_scroll_and_selection() {
     let body = format!(
         "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),360);",

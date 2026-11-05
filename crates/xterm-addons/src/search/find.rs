@@ -94,7 +94,7 @@ impl SearchAddon {
                 if !term.is_valid()? {
                     self.clear_decorations(false)?;
                 } else if let Some(options) = &options {
-                    self.highlight_all(&term.text()?, &options.read()?)?;
+                    self.highlight_all(&term.text()?, options)?;
                 }
             }
         }
@@ -143,12 +143,16 @@ impl SearchAddon {
         self.finish_search(term, options.as_ref())?;
         Ok(found)
     }
-    fn highlight_all(&self, term: &[u16], options: &SearchOptions) -> Result<(), SearchAddonError> {
+    fn highlight_all(
+        &self,
+        term: &[u16],
+        options: &SearchOptionsHandle,
+    ) -> Result<(), SearchAddonError> {
         if term.is_empty() {
             return self.clear_decorations(false);
         }
         self.clear_decorations(true)?;
-        let flags = matching(options);
+        let flags = options.matching_options()?;
         let mut results = Vec::new();
         let mut previous: Option<SearchResult> = None;
         self.init_cache()?;
@@ -184,14 +188,17 @@ impl SearchAddon {
         self.inner
             .tracker
             .update_results(results.clone(), end as f64);
-        let manager = self
-            .inner
-            .manager
-            .borrow()
-            .clone()
-            .ok_or(SearchAddonError::NotLoaded)?;
-        if let Some(decorations) = &options.decorations {
-            manager.create_highlights(&results, decorations)?;
+        // Source stores results before eligibility, then captures the manager
+        // before reading the call argument. Either getter may reenter, replace
+        // that manager, return a falsy value, or throw.
+        if options.decorations()?.is_some() {
+            let manager = self
+                .inner
+                .manager
+                .borrow()
+                .clone()
+                .ok_or(SearchAddonError::NotLoaded)?;
+            manager.create_highlights(&results, &options.highlight_decorations()?)?;
         }
         Ok(())
     }
@@ -261,11 +268,5 @@ impl SearchAddon {
                 Operation::Previous => engine.find_previous(term, options, cached, selection),
             }
         })?)
-    }
-}
-fn matching(options: &SearchOptions) -> MatchOptions {
-    MatchOptions {
-        decorations: options.decorations.is_some(),
-        ..options.matching.clone()
     }
 }

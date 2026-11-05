@@ -27,6 +27,13 @@ pub trait SearchOptionsSource {
     fn matching_options(&self) -> Result<xterm_core::search::SearchOptions, SearchAddonError> {
         Ok(self.read()?.matching)
     }
+    /// Read the highlight call's argument separately from its eligibility check.
+    /// Unlike selection, a falsy second value still reaches decoration creation.
+    fn highlight_decorations(&self) -> Result<SearchDecorationOptionsHandle, SearchAddonError> {
+        Ok(self
+            .decorations()?
+            .unwrap_or_else(|| Rc::new(super::MissingDecorations)))
+    }
     /// Raw request truthiness, without invoking getters or coercion callbacks.
     /// Typed Rust option records are always truthy.
     fn is_truthy(&self) -> bool {
