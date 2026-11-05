@@ -24,6 +24,24 @@ cargo fmt --all -- --check
 
 Both browser runs use `crates/xterm-web/tests/fixtures/search-call-args.js`. It contains81 directed source-derived cases per engine, not81 unchanged upstream tests. It covers raw truthy/falsy retention and noScroll values, inherited getters, omitted/null/primitive internal options, callback and getter exceptions, no-match/empty/regex-error paths, pre-activation errors and nested search. The native addon target adds three focused hook/error tests. Original search290 evidence is retained on main in `results/search-browser`; these scoped additions do not replace its unchanged81-case suite or establish full-family coverage.
 
+## Observed results
+
+Windows, Rust/Cargo1.85.1, Node24.15.0, wasm-bindgen0.2.100. Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4.
+
+| Scope | Executed | Passed | Failed | Skipped/unrun |
+| --- | ---: | ---: | ---: | ---: |
+| Shared source call-argument cases | 243 | 243 | 0 | 0 |
+| Native search addon test functions | 28 | 28 | 0 | 0 |
+| Final optional-export Rust WASM test functions | 21 | 21 | 0 | 0 |
+| Shared call-argument cases inside final WASM tests | 243 | 243 | 0 | 0 |
+| Unchanged upstream Search browser suite | 81 | 81 | 0 | 0 |
+
+The final WASM suite runs seven test functions per engine. One function contains the81 directed shared cases, so do not add that243-case subtotal to the21-function count. The unchanged original81-case suite ran after the behavioral argument repair but before the final declaration-only opaque wrapper. The final wrapper reran the whole seven-function Rust WASM suite across three engines, including all raw argument cases. Both reports and source/build hashes are retained separately under `results/search-call-args/`. The earlier WASM export report is named `wasm-pre-optional.json`, not presented as the final wrapper run.
+
+Scoped native/WASM Clippy passes with warnings denied. Exact full `cargo fmt --all -- --check` passes from the shorter owned Windows worktree path. Main inherited a module-order formatting failure after marker integration; separate task353 fixes only that order in commit559daa9. Its independent reviewer reran full fmt and diff-check, and the canonical batch integrated that fix at main3baa698. This is not the complete workspace all-feature/release/platform matrix.
+
+The source driver verifies all manifest entries before and after execution. It bundles the unchanged source Terminal and SearchAddon classes. Original tests/assertions/timeouts are not edited. Browser processes and local servers are closed by the bounded runners. The sole owned reference dependency junction is explicitly unlinked after the unchanged-suite run. Generated WASM/bindings and copied build artifacts are disposable, not durable evidence.
+
 ## Remaining search contracts
 
 Task347 is the actionable raw-search followup under full-family322. Current `search_addon/options.rs::term` rejects every truthy non-string before native activation and before-search checks. Source `SearchState.isValidSearchTerm` instead evaluates `!!(term && term.length > 0)` during search phases. For example, an activated source addon returns false for `findNext(1)`; an unloaded source addon throws the not-loaded Error before inspecting the term. The current Rust binding throws TypeError first in both cases. Boxed strings, overridden methods, getter-backed length and identity-cached objects require preserving the raw value, not one eager string conversion.

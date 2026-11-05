@@ -1,0 +1,74 @@
+{
+  "status": "passed in stated scopes; full equivalence NOT PROVEN",
+  "task": 344,
+  "platform": "Windows",
+  "toolchain": {
+    "rustc": "1.85.1 (4eb161250 2025-03-15)",
+    "cargo": "1.85.1 (d73d2caf9 2024-12-31)",
+    "node": "24.15.0",
+    "wasmBindgen": "0.2.100"
+  },
+  "sourceHashes": {
+    "crates/xterm-addons/src/search/find.rs": "d4a8710d3a26547822ca6e7ff25fa40d204ee5e7389bb21caadf0249bc1a212b",
+    "crates/xterm-web/src/search_addon/mod.rs": "e322fd885bab6235a1bf560791e769bfb3de9ca075196eaa1b3fa7a070ce9843",
+    "crates/xterm-web/src/search_addon/options.rs": "651bea7ffde5256cccaaeae8d064d2f00eef8a8c8849ef6a92a321c61652ecc9",
+    "crates/xterm-web/tests/wasm_search_addon.rs": "ebbc2b93fa06b2f34ff2b6be7c141ce0931b0d0084191b4767ee12f090daab10",
+    "crates/xterm-web/tests/fixtures/search-call-args.js": "83d195a89c5c847b5df95f12339c4d5fbca2526ea44b9c0d63c91626232bbf7a",
+    "crates/xterm-web/tests/search_cases/scroll_options.rs": "ff4430bbc299a887d5344c5f0c4e673221a8cee349e37eb4c2d3c4f3666aecf0"
+  },
+  "counts": {
+    "nativeFunctions": {
+      "executed": 28,
+      "passed": 28,
+      "failed": 0,
+      "ignored": 0
+    },
+    "sourceCases": {
+      "perEngine": 81,
+      "engines": 3,
+      "executed": 243,
+      "passed": 243,
+      "failed": 0
+    },
+    "finalWasmFunctions": {
+      "perEngine": 7,
+      "engines": 3,
+      "executed": 21,
+      "passed": 21,
+      "failed": 0,
+      "ignored": 0
+    },
+    "embeddedSharedCases": {
+      "executed": 243,
+      "passed": 243,
+      "failed": 0,
+      "note": "Subtotal inside finalWasmFunctions; not additional test functions"
+    },
+    "unchangedUpstream": {
+      "executed": 81,
+      "passed": 81,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0,
+      "note": "After behavioral repair, before final optional declaration wrapper; exact earlier build retained in upstream-summary.json"
+    }
+  },
+  "commands": [
+    "node scripts/search-call-args-source.mjs",
+    "cargo test --locked -j2 -p xterm-web --test search_addon",
+    "cargo clippy --locked -j2 -p xterm-web --test search_addon -- -D warnings",
+    "cargo clippy --locked -j2 -p xterm-web --target wasm32-unknown-unknown --lib --test wasm_search_addon -- -D warnings",
+    "WASM_TEST=wasm_search_addon node scripts/browser-host-check.mjs",
+    "node scripts/e2e-upstream.mjs --suite addon-search --timeout-ms 180000",
+    "cargo fmt --all -- --check"
+  ],
+  "gaps": [
+    347,
+    346,
+    322
+  ],
+  "cleanup": {
+    "ownedDependencyJunction": "unlinked immediately after original suite; original dependencies intact",
+    "generatedBinariesAndBrowsers": "disposable; concise reports retained"
+  }
+}

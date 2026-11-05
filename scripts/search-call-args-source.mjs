@@ -13,7 +13,7 @@ const root = resolve(import.meta.dirname, '..');
 const reference = resolve(process.env.SOURCE_ROOT ?? resolve(root, 'source_repo'));
 const dependencies = resolve(process.env.SOURCE_DEPENDENCIES ?? reference, 'node_modules');
 const require = createRequire(resolve(dependencies, '../package.json'));
-const esbuild = require('esbuild');
+let esbuild;
 const temporary = resolve(root, 'tmp/search-call-args-source');
 const output = resolve(root, 'results/search-call-args');
 const fixture = 'crates/xterm-web/tests/fixtures/search-call-args.js';
@@ -23,7 +23,9 @@ const report = {status: 'failed', platform: process.platform, node: process.vers
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 await mkdir(temporary, {recursive: true});
 await mkdir(output, {recursive: true});
+await writeFile(resolve(output, 'source.json'), JSON.stringify(report, null, 2) + '\n');
 try {
+  esbuild = require('esbuild');
   const manifest = JSON.parse(await readFile(resolve(root, 'docs/baseline/reference-manifest.json'), 'utf8'));
   report.integrityBefore = referenceIntegrity(reference, manifest);
   assert.equal(report.integrityBefore.mismatches.length, 0, 'Original source changed');
@@ -91,7 +93,7 @@ try {
   report.status = 'passed';
 } catch (error) { report.error = String(error.stack ?? error); process.exitCode = 1; }
 finally {
-  esbuild.stop();
+  esbuild?.stop();
   await rm(temporary, {recursive: true, force: true});
   await writeFile(resolve(output, 'source.json'), JSON.stringify(report, null, 2) + '\n');
 }
