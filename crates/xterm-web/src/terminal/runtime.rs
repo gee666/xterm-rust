@@ -25,11 +25,15 @@ extern "C" {
     fn localizable_strings(pg: &JsValue, ps: &JsValue, og: &JsValue, os: &JsValue) -> Object;
 }
 
+type WebglAtlasCache =
+    crate::webgl::browser_cache::BrowserAtlasCache<xterm_core::headless::Terminal>;
+
 pub struct RuntimeContext {
     pub strings: LocalizableStrings,
     gestures: RefCell<Vec<(Document, Rc<GestureContext>)>>,
     queues: RefCell<WindowAnimationQueues>,
     scroll_environment: RefCell<Option<Rc<crate::scroll::environment::ScrollEnvironment>>>,
+    webgl_atlas_cache: RefCell<Option<Rc<WebglAtlasCache>>>,
 }
 impl Default for RuntimeContext {
     fn default() -> Self {
@@ -38,10 +42,19 @@ impl Default for RuntimeContext {
             gestures: RefCell::new(Vec::new()),
             queues: RefCell::new(WindowAnimationQueues::default()),
             scroll_environment: RefCell::new(None),
+            webgl_atlas_cache: RefCell::new(None),
         }
     }
 }
 impl RuntimeContext {
+    /// All WebGL renderers and canvas layers in this binding runtime use the
+    /// same pool. The first call supplies the source-global document; later
+    /// iframe/window moves do not change the atlas construction document.
+    pub fn webgl_atlas_cache(&self, document: &Document) -> Rc<WebglAtlasCache> {
+        let mut slot = self.webgl_atlas_cache.borrow_mut();
+        Rc::clone(slot.get_or_insert_with(|| Rc::new(WebglAtlasCache::new(document.clone()))))
+    }
+
     pub fn animation_queue(
         &self,
         window: &web_sys::Window,

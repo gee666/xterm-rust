@@ -21,6 +21,8 @@ mod atlas_rasterizer;
 mod atlas_store;
 #[cfg(target_arch = "wasm32")]
 mod atlas_styles;
+#[cfg(target_arch = "wasm32")]
+pub mod browser_cache;
 pub mod cache;
 pub mod cell_colors;
 pub mod config;

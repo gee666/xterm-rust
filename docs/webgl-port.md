@@ -10,7 +10,7 @@ The existing wasm-bindgen/js-sys/web-sys dependencies supply the GPU boundary. T
 
 The renderer must implement every required source `IRenderer` method. Optional viewport-visibility and atlas operations use capabilities, not successful no-op required methods. Activation replaces the live renderer through the shared service, and disposal restores/resizes the default renderer only while the terminal is alive. Before-open activation subscribes to real onWillOpen. A working class will not be advertised before that path exists.
 
-Source CharAtlasCache uses one module-global pool shared across terminals. The Rust design should use an explicitly owned shared atlas pool passed by the browser bootstrap to addons, rather than a mutable global in the portable core. Any JavaScript bootstrap is limited to obtaining/passing this Rust owner and forwarding binding calls, not drawing, rasterization, terminal execution or atlas policy. The bootstrap and ownership boundary need independent review before activation is considered implemented.
+Source CharAtlasCache uses one module-global pool shared across terminals. `terminal::runtime::RuntimeContext::webgl_atlas_cache` now owns the actual Rust browser pool and shared atlas runtime. See [shared browser atlas cache](webgl-browser-cache.md) for its stable terminal identity, source-global document, lazy service/error phases and exact test scope. The full browser renderer and addon still need to consume that owner. JavaScript bootstrap must only pass the Rust owner and forward binding calls, not implement drawing, rasterization, terminal execution or atlas policy.
 
 ## Source components
 
@@ -20,7 +20,7 @@ Source CharAtlasCache uses one module-global pool shared across terminals. The R
 | RenderModel.ts | `webgl/model.rs`, implemented but verification pending |
 | Types.ts | Cursor/storage types present; atlas/GPU contracts still to implement |
 | CharAtlasUtils.ts | Config generation/equality implemented using shared ColorSet/ColorRef/cache types; verification pending |
-| CharAtlasCache.ts | Explicit shared pool/weak terminal ownership and source-ordered release implemented; verification pending |
+| CharAtlasCache.ts | Portable ownership pool plus actual `BrowserAtlasCache`/`RuntimeContext` composition; focused evidence in `webgl-browser-cache.md`, full addon consumption remains open |
 | WebglUtils.ts | Projection/growth/version bookkeeping implemented; actual GPU resource operations still planned |
 | CellColorResolver.ts | Planned packed-color resolution over existing decoration/selection services |
 | GlyphRenderer.ts | Planned glyph instance model, uniforms, texture pages and shaders |
