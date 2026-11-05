@@ -9,7 +9,7 @@ import { artifactIdentity, sourceIdentity, verifyBuiltPackage } from '../../scri
 import { referenceIntegrity } from '../../scripts/upstream-baseline-utils.mjs';
 const root = process.cwd(), output = join(root, 'results/serialize-ansi-coercion');
 const scratch = join(root, 'tmp/ansi-coercion'), mode = process.argv[2];
-assert(['build', 'proof', 'quality', 'audit'].includes(mode));
+assert(['build', 'proof', 'quality', 'packages', 'audit'].includes(mode));
 const selectedPhase = process.argv[3] ?? 'both';
 assert(['baseline', 'fixed', 'both'].includes(selectedPhase));
 const prefix = 'ansi-scrollback-coercion-', total = 90, inheritedTotal = 85;
@@ -40,6 +40,16 @@ async function writeSources(bytes) {
 async function copyPackage(from, to) {
   await rm(to, { recursive: true, force: true });
   await cp(from, to, { recursive: true, errorOnExist: true });
+}
+async function packageFiles(directory) {
+  const files = [];
+  async function walk(relative = '') {
+    for (const entry of await readdir(join(directory, relative), { withFileTypes: true })) {
+      assert(!entry.isSymbolicLink()); const path = relative ? `${relative}/${entry.name}` : entry.name;
+      if (entry.isDirectory()) await walk(path); else { assert(entry.isFile()); files.push(path); }
+    }
+  }
+  await walk(); return artifactIdentity(directory, files.sort());
 }
 function validate(report, phase) {
   assert.equal(report.error, undefined); assert.deepEqual(report.cleanupErrors, []);
@@ -90,6 +100,7 @@ if (mode === 'build' || mode === 'proof') {
         await copyPackage(join(retained, 'pkg'), pkg);
         await writeFile(pointer, await readFile(join(retained, 'latest.json')));
         assert.deepEqual(await verifyBuiltPackage(root, input), built.build);
+        assert.deepEqual(await packageFiles(pkg), await json(join(directory, 'package-files.json')));
         const result = await command('browser', process.execPath, ['scripts/serialize-browser-check.mjs', '--suite'], directory);
         const files = ['verification.json', ...['chromium', 'firefox', 'webkit'].flatMap(name =>
           [`${name}-source.json`, `${name}-rust.json`, `${name}-terminal.png`]),
@@ -115,6 +126,27 @@ if (mode === 'build' || mode === 'proof') {
       assert.deepEqual(await optional(pointer), entryPointer);
     } else await verifyBuiltPackage(root, await sourceIdentity(root));
     await rm(entryBackup, { recursive: true, force: true });
+  }
+}
+if (mode === 'packages') {
+  for (const phase of ['baseline', 'fixed']) {
+    const directory = join(scratch, phase, 'pkg'), files = await packageFiles(directory);
+    const built = await json(join(output, phase, 'build-identity.json'));
+    for (const artifact of built.build.artifacts) {
+      assert.equal(files.find(file => `browser/pkg/${file.path}` === artifact.path)?.sha256, artifact.sha256);
+    }
+    const helpers = [];
+    for (const file of files.filter(file => file.path.endsWith('.js'))) {
+      const text = await readFile(join(directory, file.path), 'utf8');
+      if (text.includes('export function serializeMissingWrappedLineError()')) helpers.push({ ...file, text });
+    }
+    assert.equal(helpers.length, phase === 'fixed' ? 1 : 0);
+    if (phase === 'fixed') {
+      assert.match(helpers[0].text, /const nextLine = undefined; return nextLine\.isWrapped;/);
+      assert.deepEqual(await packageFiles(pkg), files);
+    }
+    await save(join(output, phase, 'package-files.json'), files);
+    await save(join(output, phase, 'missing-line-helper.json'), helpers);
   }
 }
 if (mode === 'quality') {
@@ -166,6 +198,7 @@ if (mode === 'audit') {
   try { await writeSources(baseline); assert.equal((await sourceIdentity(root)).sha256, before.input.sha256); }
   finally { await writeSources(fixed); }
   assert.equal((await sourceIdentity(root)).sha256, after.input.sha256);
+  assert.deepEqual(await packageFiles(pkg), await json(join(output, 'fixed/package-files.json')));
   assert.notEqual(before.build.artifacts[1].sha256, after.build.artifacts[1].sha256);
   await save(join(output, 'summary.json'), { status: 'scoped-pass', reports, traceAudit, baselineInput: before.input, fixedInput: after.input,
     baselineWasm: before.build.artifacts[1], fixedWasm: after.build.artifacts[1],
@@ -180,6 +213,7 @@ if (mode === 'audit') {
   await walk('results/serialize-ansi-coercion');
   await save(join(output, 'pins.json'), { revision: git(['rev-parse', 'HEAD']).toString().trim(), reference, copy,
     input: await sourceIdentity(root), package: await verifyBuiltPackage(root, await sourceIdentity(root)),
+    packageContents: await packageFiles(pkg),
     sources: await artifactIdentity(root, [...sources, 'scripts/serialize-browser-check.mjs', 'scripts/serialize-browser-cases.mjs']),
     artifacts: await artifactIdentity(root, files.sort()) });
 }
