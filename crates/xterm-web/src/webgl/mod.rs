@@ -9,8 +9,18 @@
 pub mod atlas_canvas;
 pub mod atlas_colors;
 #[cfg(target_arch = "wasm32")]
+mod atlas_context;
+#[cfg(target_arch = "wasm32")]
+mod atlas_pack;
+#[cfg(target_arch = "wasm32")]
 pub mod atlas_page;
 pub mod atlas_pixels;
+#[cfg(target_arch = "wasm32")]
+mod atlas_rasterizer;
+#[cfg(target_arch = "wasm32")]
+mod atlas_store;
+#[cfg(target_arch = "wasm32")]
+mod atlas_styles;
 pub mod cache;
 pub mod config;
 pub mod custom_glyphs;
@@ -18,6 +28,8 @@ pub mod glyphs;
 pub mod math;
 pub mod model;
 pub mod rectangles;
+#[cfg(target_arch = "wasm32")]
+pub mod texture_atlas;
 pub mod typed_array;
 
 #[cfg(target_arch = "wasm32")]
