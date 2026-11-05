@@ -1,0 +1,41 @@
+running 2 tests
+test live_update_getters_reentry_and_error_identity ... FAIL
+test live_source_values_errors_and_coercion_reentry ... ok
+
+failures:
+
+---- live_update_getters_reentry_and_error_identity output ----
+    JS exception that was thrown:
+        Error: JsValue(Error: rawSmooth/false/90/own/secondUndefined/none/1/scrollLeft
+        expected [[[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,[["NaN","NaN",100,1000,"NaN",100,1000,"NaN"],["NaN","NaN"],false,[[false,["undefined","undefined",0,0,0,0,0,0],["undefined","undefined",100,1000,0,100,1000,0],[true,true,false,true,true,false]],[true,["undefined","undefined",100,1000,0,100,1000,0],["undefined","undefined",100,1000,"NaN",100,1000,"NaN"],[false,false,true,false,false,true]],[true,["undefined","undefined",100,1000,"NaN",100,1000,"NaN"],["undefined","undefined",100,1000,"NaN",100,1000,"NaN"],[false,false,true,false,false,true]]],[["request",1],["request",2]],[]]]],[["get","scrollLeft",1,true],["get","scrollLeft",2,true],["get","scrollTop",1,true],["get","scrollTop",2,true]]]
+        actual [[[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,[["undefined","undefined",100,1000,"undefined",100,1000,"undefined"],["undefined","undefined"],false,[[false,["undefined","undefined",0,0,0,0,0,0],["undefined","undefined",100,1000,0,100,1000,0],[true,true,false,true,true,false]],[true,["undefined","undefined",100,1000,0,100,1000,0],["undefined","undefined",100,1000,"NaN",100,1000,"NaN"],[false,false,true,false,false,true]],[true,["undefined","undefined",100,1000,"NaN",100,1000,"NaN"],["undefined","undefined",100,1000,"undefined",100,1000,"undefined"],[false,false,true,false,false,true]]],[["request",1],["request",2]],[]]]],[["get","scrollLeft",1,true],["get","scrollLeft",2,true],["get","scrollTop",1,true],["get","scrollTop",2,true]]]
+        Error: rawSmooth/false/90/own/secondUndefined/none/1/scrollLeft
+        expected [[[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,[["NaN","NaN",100,1000,"NaN",100,1000,"NaN"],["NaN","NaN"],false,[[false,["undefined","undefined",0,0,0,0,0,0],["undefined","undefined",100,1000,0,100,1000,0],[true,true,false,true,true,false]],[true,["undefined","undefined",100,1000,0,100,1000,0],["undefined","undefined",100,1000,"NaN",100,1000,"NaN"],[false,false,true,false,false,true]],[true,["undefined","undefined",100,1000,"NaN",100,1000,"NaN"],["undefined","undefined",100,1000,"NaN",100,1000,"NaN"],[false,false,true,false,false,true]]],[["request",1],["request",2]],[]]]],[["get","scrollLeft",1,true],["get","scrollLeft",2,true],["get","scrollTop",1,true],["get","scrollTop",2,true]]]
+        actual [[[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,[["undefined","undefined",100,1000,"undefined",100,1000,"undefined"],["undefined","undefined"],false,[[false,["undefined","undefined",0,0,0,0,0,0],["undefined","undefined",100,1000,0,100,1000,0],[true,true,false,true,true,false]],[true,["undefined","undefined",100,1000,0,100,1000,0],["undefined","undefined",100,1000,"NaN",100,1000,"NaN"],[false,false,true,false,false,true]],[true,["undefined","undefined",100,1000,"NaN",100,1000,"NaN"],["undefined","undefined",100,1000,"undefined",100,1000,"undefined"],[false,false,true,false,false,true]]],[["request",1],["request",2]],[]]]],[["get","scrollLeft",1,true],["get","scrollLeft",2,true],["get","scrollTop",1,true],["get","scrollTop",2,true]]]
+            at runGetterCases (http://127.0.0.1:57108/snippets/xterm-web-f147851b6cb0c0ef/tests/raw_scrollable_oracle.js:695:64)
+            at http://127.0.0.1:57108/suite.js:6166:21
+            at handleError (http://127.0.0.1:57108/suite.js:171:18)
+            at imports.wbg.__wbg_runGetterCases_62e9696d448b3c45 (http://127.0.0.1:57108/suite.js:6165:77)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.__wbg_runGetterCases_62e9696d448b3c45 externref shim (http://127.0.0.1:57108/suite_bg.wasm:wasm-function[46481]:0xafac17)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.raw_scrollable_browser::getter_cases::h6f4b08d97a1e0f7e (http://127.0.0.1:57108/suite_bg.wasm:wasm-function[9018]:0x7cdae0)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.raw_scrollable_browser::live_update_getters_reentry_and_error_identity::h1d9ced4501a1c92d (http://127.0.0.1:57108/suite_bg.wasm:wasm-function[4339]:0x63092f)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.core::ops::function::FnOnce::call_once::h7eee0ce6d7ae2f5f (http://127.0.0.1:57108/suite_bg.wasm:wasm-function[26941]:0xa68e08)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h2d451bd70da560df (http://127.0.0.1:57108/suite_bg.wasm:wasm-function[11469]:0x864c3d)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h12017c7fe0b7f8df (http://127.0.0.1:57108/suite_bg.wasm:wasm-function[16602]:0x94aff3))
+            at imports.wbg.__wbindgen_error_new (http://127.0.0.1:57108/suite.js:6842:21)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.__wbindgen_error_new externref shim (http://127.0.0.1:57108/suite_bg.wasm:wasm-function[37314]:0xadbf8b)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.wasm_bindgen::JsError::new::h789e24cd7f22e112 (http://127.0.0.1:57108/suite_bg.wasm:wasm-function[33648]:0xac3743)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::{{closure}}::h0ce9ac16ef7f2d50 (http://127.0.0.1:57108/suite_bg.wasm:wasm-function[6237]:0x6f67c1)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.core::result::Result<T,E>::map_err::h5e737dde50bae5f0 (http://127.0.0.1:57108/suite_bg.wasm:wasm-function[17920]:0x97b0a3)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::he21eb2cc58446946 (http://127.0.0.1:57108/suite_bg.wasm:wasm-function[24356]:0xa33c4d)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h2d451bd70da560df (http://127.0.0.1:57108/suite_bg.wasm:wasm-function[11469]:0x864c55)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h12017c7fe0b7f8df (http://127.0.0.1:57108/suite_bg.wasm:wasm-function[16602]:0x94aff3)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8 (http://127.0.0.1:57108/suite_bg.wasm:wasm-function[26714]:0xa64bac)
+            at __wbg_adapter_1278 (http://127.0.0.1:57108/suite.js:621:10)
+
+failures:
+
+    live_update_getters_reentry_and_error_identity
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.44s
+

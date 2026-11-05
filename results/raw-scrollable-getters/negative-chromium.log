@@ -1,0 +1,41 @@
+running 2 tests
+test live_update_getters_reentry_and_error_identity ... FAIL
+test live_source_values_errors_and_coercion_reentry ... ok
+
+failures:
+
+---- live_update_getters_reentry_and_error_identity output ----
+    JS exception that was thrown:
+        Error: JsValue(Error: rawDimensions/false/0/own/defined/none/1/width
+        expected [[[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,[[0,0,40,1400,0,40,1400,0],[0,0],false,[[false,["undefined","undefined",0,0,0,0,0,0],["undefined","undefined",100,1000,0,100,1000,0],[true,true,false,true,true,false]],[false,["undefined","undefined",100,1000,0,100,1000,0],["undefined","undefined",40,1400,0,40,1400,0],[true,true,false,true,true,false]]],[],[]]]],[["get","width",1,true],["get","width",2,true],["get","scrollWidth",1,true],["get","scrollWidth",2,true],["get","height",1,true],["get","height",2,true],["get","scrollHeight",1,true],["get","scrollHeight",2,true]]]
+        actual [[[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,[[0,0,40,1400,0,40,1400,0],[0,0],false,[[false,["undefined","undefined",0,0,0,0,0,0],["undefined","undefined",100,1000,0,100,1000,0],[true,true,false,true,true,false]],[false,["undefined","undefined",100,1000,0,100,1000,0],["undefined","undefined",40,1400,0,40,1400,0],[true,true,false,true,true,false]]],[],[]]]],[["get","width",1,true],["get","scrollWidth",1,true],["get","height",1,true],["get","scrollHeight",1,true]]]
+        Error: rawDimensions/false/0/own/defined/none/1/width
+        expected [[[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,[[0,0,40,1400,0,40,1400,0],[0,0],false,[[false,["undefined","undefined",0,0,0,0,0,0],["undefined","undefined",100,1000,0,100,1000,0],[true,true,false,true,true,false]],[false,["undefined","undefined",100,1000,0,100,1000,0],["undefined","undefined",40,1400,0,40,1400,0],[true,true,false,true,true,false]]],[],[]]]],[["get","width",1,true],["get","width",2,true],["get","scrollWidth",1,true],["get","scrollWidth",2,true],["get","height",1,true],["get","height",2,true],["get","scrollHeight",1,true],["get","scrollHeight",2,true]]]
+        actual [[[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,"undefined"],[true,[[0,0,40,1400,0,40,1400,0],[0,0],false,[[false,["undefined","undefined",0,0,0,0,0,0],["undefined","undefined",100,1000,0,100,1000,0],[true,true,false,true,true,false]],[false,["undefined","undefined",100,1000,0,100,1000,0],["undefined","undefined",40,1400,0,40,1400,0],[true,true,false,true,true,false]]],[],[]]]],[["get","width",1,true],["get","scrollWidth",1,true],["get","height",1,true],["get","scrollHeight",1,true]]]
+            at runGetterCases (http://127.0.0.1:51480/snippets/xterm-web-f147851b6cb0c0ef/tests/raw_scrollable_oracle.js:695:64)
+            at http://127.0.0.1:51480/suite.js:6166:21
+            at handleError (http://127.0.0.1:51480/suite.js:171:18)
+            at imports.wbg.__wbg_runGetterCases_62e9696d448b3c45 (http://127.0.0.1:51480/suite.js:6165:77)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.__wbg_runGetterCases_62e9696d448b3c45 externref shim (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[46478]:0xafad19)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.raw_scrollable_browser::getter_cases::h6f4b08d97a1e0f7e (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[9018]:0x7cdd08)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.raw_scrollable_browser::live_update_getters_reentry_and_error_identity::h1d9ced4501a1c92d (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[4339]:0x630b7b)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.core::ops::function::FnOnce::call_once::h7eee0ce6d7ae2f5f (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[26939]:0xa68f48)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h2d451bd70da560df (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[11469]:0x864e65)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h12017c7fe0b7f8df (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[16602]:0x94b21c))
+            at imports.wbg.__wbindgen_error_new (http://127.0.0.1:51480/suite.js:6842:21)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.__wbindgen_error_new externref shim (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[37311]:0xadc08a)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.wasm_bindgen::JsError::new::h789e24cd7f22e112 (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[33645]:0xac383f)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::{{closure}}::h0ce9ac16ef7f2d50 (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[6237]:0x6f6a0d)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.core::result::Result<T,E>::map_err::h5e737dde50bae5f0 (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[17920]:0x97b2cc)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::he21eb2cc58446946 (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[24355]:0xa33de7)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h2d451bd70da560df (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[11469]:0x864e7d)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h12017c7fe0b7f8df (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[16602]:0x94b21c)
+            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8 (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[26712]:0xa64cec)
+            at __wbg_adapter_1278 (http://127.0.0.1:51480/suite.js:621:10)
+
+failures:
+
+    live_update_getters_reentry_and_error_identity
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.12s
+

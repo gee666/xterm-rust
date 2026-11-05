@@ -182,8 +182,10 @@ impl<S: FrameScheduler, V: ScrollValue + 'static> Scrollable<S, V> {
         let next = self
             .scroll_state()
             .try_with_position(PositionUpdate {
-                left: Some(update.position.left),
-                top: Some(update.position.top),
+                // Tick returns a plain update object. Undefined endpoints use
+                // the current raw request, unlike a selected second getter read.
+                left: (!update.position.left.is_undefined()).then_some(update.position.left),
+                top: (!update.position.top.is_undefined()).then_some(update.position.top),
             })
             .map_err(ScrollError::Value)?;
         self.set_state(next, true)?;

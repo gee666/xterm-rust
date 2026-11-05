@@ -1,0 +1,125 @@
+{
+  "package": "xterm-web",
+  "testName": "raw_scrollable_browser",
+  "testTimeoutMs": 60000,
+  "features": [
+    "acceptance-hooks"
+  ],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T18:37:22.486Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "raw_scrollable_browser",
+        "--features",
+        "acceptance-hooks",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 18807.804500000002,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 11.61279999999897,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\AmberGetters\\results\\acceptance-artifacts\\63edd3d5005eb103bf91de16c9d130a950a41cf0a960ed7437140fe8d622fbe7\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\AmberGetters\\results\\browser-host\\raw_scrollable_browser\\2026-11-05T18-37-22-484Z-fc044dd9-5409-46aa-9f2b-149ed0b95f01\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1074.1335,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__raw_scrollable_browser::live_source_values_errors_and_coercion_reentry",
+        "__wbgt__raw_scrollable_browser::live_update_getters_reentry_and_error_identity"
+      ],
+      "errors": [],
+      "console": [],
+      "version": "148.0.7778.96",
+      "output": "running 2 tests\ntest live_update_getters_reentry_and_error_identity ... FAIL\ntest live_source_values_errors_and_coercion_reentry ... ok\n\nfailures:\n\n---- live_update_getters_reentry_and_error_identity output ----\n    JS exception that was thrown:\n        Error: JsValue(Error: rawDimensions/false/0/own/defined/none/1/width\n        expected [[[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,[[0,0,40,1400,0,40,1400,0],[0,0],false,[[false,[\"undefined\",\"undefined\",0,0,0,0,0,0],[\"undefined\",\"undefined\",100,1000,0,100,1000,0],[true,true,false,true,true,false]],[false,[\"undefined\",\"undefined\",100,1000,0,100,1000,0],[\"undefined\",\"undefined\",40,1400,0,40,1400,0],[true,true,false,true,true,false]]],[],[]]]],[[\"get\",\"width\",1,true],[\"get\",\"width\",2,true],[\"get\",\"scrollWidth\",1,true],[\"get\",\"scrollWidth\",2,true],[\"get\",\"height\",1,true],[\"get\",\"height\",2,true],[\"get\",\"scrollHeight\",1,true],[\"get\",\"scrollHeight\",2,true]]]\n        actual [[[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,[[0,0,40,1400,0,40,1400,0],[0,0],false,[[false,[\"undefined\",\"undefined\",0,0,0,0,0,0],[\"undefined\",\"undefined\",100,1000,0,100,1000,0],[true,true,false,true,true,false]],[false,[\"undefined\",\"undefined\",100,1000,0,100,1000,0],[\"undefined\",\"undefined\",40,1400,0,40,1400,0],[true,true,false,true,true,false]]],[],[]]]],[[\"get\",\"width\",1,true],[\"get\",\"scrollWidth\",1,true],[\"get\",\"height\",1,true],[\"get\",\"scrollHeight\",1,true]]]\n        Error: rawDimensions/false/0/own/defined/none/1/width\n        expected [[[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,[[0,0,40,1400,0,40,1400,0],[0,0],false,[[false,[\"undefined\",\"undefined\",0,0,0,0,0,0],[\"undefined\",\"undefined\",100,1000,0,100,1000,0],[true,true,false,true,true,false]],[false,[\"undefined\",\"undefined\",100,1000,0,100,1000,0],[\"undefined\",\"undefined\",40,1400,0,40,1400,0],[true,true,false,true,true,false]]],[],[]]]],[[\"get\",\"width\",1,true],[\"get\",\"width\",2,true],[\"get\",\"scrollWidth\",1,true],[\"get\",\"scrollWidth\",2,true],[\"get\",\"height\",1,true],[\"get\",\"height\",2,true],[\"get\",\"scrollHeight\",1,true],[\"get\",\"scrollHeight\",2,true]]]\n        actual [[[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,\"undefined\"],[true,[[0,0,40,1400,0,40,1400,0],[0,0],false,[[false,[\"undefined\",\"undefined\",0,0,0,0,0,0],[\"undefined\",\"undefined\",100,1000,0,100,1000,0],[true,true,false,true,true,false]],[false,[\"undefined\",\"undefined\",100,1000,0,100,1000,0],[\"undefined\",\"undefined\",40,1400,0,40,1400,0],[true,true,false,true,true,false]]],[],[]]]],[[\"get\",\"width\",1,true],[\"get\",\"scrollWidth\",1,true],[\"get\",\"height\",1,true],[\"get\",\"scrollHeight\",1,true]]]\n            at runGetterCases (http://127.0.0.1:51480/snippets/xterm-web-f147851b6cb0c0ef/tests/raw_scrollable_oracle.js:695:64)\n            at http://127.0.0.1:51480/suite.js:6166:21\n            at handleError (http://127.0.0.1:51480/suite.js:171:18)\n            at imports.wbg.__wbg_runGetterCases_62e9696d448b3c45 (http://127.0.0.1:51480/suite.js:6165:77)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.__wbg_runGetterCases_62e9696d448b3c45 externref shim (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[46478]:0xafad19)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.raw_scrollable_browser::getter_cases::h6f4b08d97a1e0f7e (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[9018]:0x7cdd08)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.raw_scrollable_browser::live_update_getters_reentry_and_error_identity::h1d9ced4501a1c92d (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[4339]:0x630b7b)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.core::ops::function::FnOnce::call_once::h7eee0ce6d7ae2f5f (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[26939]:0xa68f48)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h2d451bd70da560df (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[11469]:0x864e65)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h12017c7fe0b7f8df (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[16602]:0x94b21c))\n            at imports.wbg.__wbindgen_error_new (http://127.0.0.1:51480/suite.js:6842:21)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.__wbindgen_error_new externref shim (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[37311]:0xadc08a)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.wasm_bindgen::JsError::new::h789e24cd7f22e112 (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[33645]:0xac383f)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::{{closure}}::h0ce9ac16ef7f2d50 (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[6237]:0x6f6a0d)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.core::result::Result<T,E>::map_err::h5e737dde50bae5f0 (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[17920]:0x97b2cc)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::he21eb2cc58446946 (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[24355]:0xa33de7)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h2d451bd70da560df (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[11469]:0x864e7d)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h12017c7fe0b7f8df (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[16602]:0x94b21c)\n            at raw_scrollable_browser-ea7e0e0ac6436d70.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8 (http://127.0.0.1:51480/suite_bg.wasm:wasm-function[26712]:0xa64cec)\n            at __wbg_adapter_1278 (http://127.0.0.1:51480/suite.js:621:10)\n\nfailures:\n\n    live_update_getters_reentry_and_error_identity\n\ntest result: FAILED. 1 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.12s\n\n",
+      "counts": {
+        "passed": 1,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/63edd3d5005eb103bf91de16c9d130a950a41cf0a960ed7437140fe8d622fbe7/artifact.wasm",
+      "sha256": "63edd3d5005eb103bf91de16c9d130a950a41cf0a960ed7437140fe8d622fbe7",
+      "bytes": 19829546,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\AmberGetters\\target\\wasm32-unknown-unknown\\debug\\deps\\raw_scrollable_browser-ea7e0e0ac6436d70.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\AmberGetters\\results\\browser-host\\raw_scrollable_browser\\2026-11-05T18-37-22-484Z-fc044dd9-5409-46aa-9f2b-149ed0b95f01\\artifacts\\suite_bg.wasm",
+      "bytes": 16638080,
+      "sha256": "651caa9327f9633f496b28a4e5bd6ee85d8b6e52c7e05dd4d4ca26b3e4142cc1"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\AmberGetters\\results\\browser-host\\raw_scrollable_browser\\2026-11-05T18-37-22-484Z-fc044dd9-5409-46aa-9f2b-149ed0b95f01\\artifacts\\suite.js",
+      "bytes": 242292,
+      "sha256": "0ad179a549e40b1e3284fd747fd9a221dbc932deded3a5b951d09c16bbf120a9"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "24e8c1796ee7819ba8d5fc5ac1c6513292a4d0a3519f6464029151cf88fe5bed"
+  },
+  "finishedAt": "2026-11-05T18:37:43.875Z"
+}
