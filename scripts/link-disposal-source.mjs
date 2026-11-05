@@ -49,7 +49,7 @@ try {
               terminal.registerLinkProvider({ provideLinks(y, callback) { replies[0].push(callback); } });
               terminal.registerLinkProvider({ provideLinks(y, callback) { replies[1].push(callback); } });
               const dimensions = terminal._core._renderService.dimensions;
-              const root = terminal.element;
+              const root = terminal.element.querySelector('.xterm-screen');
               const bounds = root.getBoundingClientRect();
               const move = row => root.dispatchEvent(new MouseEvent('mousemove', {
                 clientX: bounds.left + 2.5 * dimensions.css.cell.width,
@@ -80,7 +80,7 @@ try {
             const replies = [];
             terminal.registerLinkProvider({ provideLinks(y, callback) { replies.push(callback); } });
             const dimensions = terminal._core._renderService.dimensions;
-            const root = terminal.element;
+            const root = terminal.element.querySelector('.xterm-screen');
             const bounds = root.getBoundingClientRect();
             const move = row => root.dispatchEvent(new MouseEvent('mousemove', {
               clientX: bounds.left + 2.5 * dimensions.css.cell.width,
