@@ -1,34 +1,34 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. MIT license.
-//! ScrollState from browser/scrollable/scrollable.ts. Number fields retain JS
-//! NaN, infinity, signed zero and bitwise ToInt32 behavior at this boundary.
+//! One ScrollState algorithm for native numbers and raw browser values.
+use super::value::{infallible, ScrollValue};
 
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
-pub struct Position {
-    pub left: f64,
-    pub top: f64,
+pub struct Position<V = f64> {
+    pub left: V,
+    pub top: V,
 }
 #[derive(Clone, Copy, Debug, Default)]
-pub struct PositionUpdate {
-    pub left: Option<f64>,
-    pub top: Option<f64>,
+pub struct PositionUpdate<V = f64> {
+    pub left: Option<V>,
+    pub top: Option<V>,
 }
 #[derive(Clone, Copy, Debug, Default)]
-pub struct DimensionUpdate {
-    pub width: Option<f64>,
-    pub scroll_width: Option<f64>,
-    pub height: Option<f64>,
-    pub scroll_height: Option<f64>,
+pub struct DimensionUpdate<V = f64> {
+    pub width: Option<V>,
+    pub scroll_width: Option<V>,
+    pub height: Option<V>,
+    pub scroll_height: Option<V>,
 }
 #[derive(Clone, Copy, Debug)]
-pub struct ScrollState {
-    pub raw_left: f64,
-    pub raw_top: f64,
-    pub width: f64,
-    pub scroll_width: f64,
-    pub left: f64,
-    pub height: f64,
-    pub scroll_height: f64,
-    pub top: f64,
+pub struct ScrollState<V = f64> {
+    pub raw_left: V,
+    pub raw_top: V,
+    pub width: V,
+    pub scroll_width: V,
+    pub left: V,
+    pub height: V,
+    pub scroll_height: V,
+    pub top: V,
     integer_values: bool,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -40,14 +40,129 @@ pub struct Changes {
     pub scroll_height: bool,
     pub top: bool,
 }
-/// Previous/current records group the source's oldWidth/width and equivalent
-/// fields. Browser adapters flatten these into the original event names.
+/// Browser adapters flatten previous/current into the original event names.
 #[derive(Clone, Copy, Debug)]
-pub struct ScrollEvent {
+pub struct ScrollEvent<V = f64> {
     pub in_smooth_scrolling: bool,
-    pub previous: ScrollState,
-    pub current: ScrollState,
+    pub previous: ScrollState<V>,
+    pub current: ScrollState<V>,
     pub changed: Changes,
+}
+impl<V: ScrollValue> ScrollState<V> {
+    /// Preserve operator order, raw identity and failures of the source
+    /// constructor. No state is published if a coercion throws.
+    pub fn try_new(
+        integer_values: bool,
+        mut width: V,
+        mut scroll_width: V,
+        mut left: V,
+        mut height: V,
+        mut scroll_height: V,
+        mut top: V,
+    ) -> Result<Self, V::Error> {
+        if integer_values {
+            width = width.int32()?;
+            scroll_width = scroll_width.int32()?;
+            left = left.int32()?;
+            height = height.int32()?;
+            scroll_height = scroll_height.int32()?;
+            top = top.int32()?;
+        }
+        let raw_left = left.clone();
+        let raw_top = top.clone();
+        let zero = V::number(0.0);
+        if width.less(&zero)? {
+            width = zero.clone();
+        }
+        if left.add(&width)?.greater(&scroll_width)? {
+            left = scroll_width.subtract(&width)?;
+        }
+        if left.less(&zero)? {
+            left = zero.clone();
+        }
+        if height.less(&zero)? {
+            height = zero.clone();
+        }
+        if top.add(&height)?.greater(&scroll_height)? {
+            top = scroll_height.subtract(&height)?;
+        }
+        if top.less(&zero)? {
+            top = zero;
+        }
+        Ok(Self {
+            integer_values,
+            raw_left,
+            raw_top,
+            width,
+            scroll_width,
+            left,
+            height,
+            scroll_height,
+            top,
+        })
+    }
+    pub fn equals(&self, other: &Self) -> bool {
+        self.raw_left.strict_eq(&other.raw_left)
+            && self.raw_top.strict_eq(&other.raw_top)
+            && self.width.strict_eq(&other.width)
+            && self.scroll_width.strict_eq(&other.scroll_width)
+            && self.left.strict_eq(&other.left)
+            && self.height.strict_eq(&other.height)
+            && self.scroll_height.strict_eq(&other.scroll_height)
+            && self.top.strict_eq(&other.top)
+    }
+    pub fn position(&self) -> Position<V> {
+        Position {
+            left: self.left.clone(),
+            top: self.top.clone(),
+        }
+    }
+    pub fn try_with_dimensions(
+        &self,
+        update: DimensionUpdate<V>,
+        raw: bool,
+    ) -> Result<Self, V::Error> {
+        Self::try_new(
+            self.integer_values,
+            update.width.unwrap_or_else(|| self.width.clone()),
+            update
+                .scroll_width
+                .unwrap_or_else(|| self.scroll_width.clone()),
+            if raw { &self.raw_left } else { &self.left }.clone(),
+            update.height.unwrap_or_else(|| self.height.clone()),
+            update
+                .scroll_height
+                .unwrap_or_else(|| self.scroll_height.clone()),
+            if raw { &self.raw_top } else { &self.top }.clone(),
+        )
+    }
+    pub fn try_with_position(&self, update: PositionUpdate<V>) -> Result<Self, V::Error> {
+        Self::try_new(
+            self.integer_values,
+            self.width.clone(),
+            self.scroll_width.clone(),
+            update.left.unwrap_or_else(|| self.raw_left.clone()),
+            self.height.clone(),
+            self.scroll_height.clone(),
+            update.top.unwrap_or_else(|| self.raw_top.clone()),
+        )
+    }
+    pub fn event(&self, previous: Self, in_smooth_scrolling: bool) -> ScrollEvent<V> {
+        let changed = Changes {
+            width: !self.width.strict_eq(&previous.width),
+            scroll_width: !self.scroll_width.strict_eq(&previous.scroll_width),
+            left: !self.left.strict_eq(&previous.left),
+            height: !self.height.strict_eq(&previous.height),
+            scroll_height: !self.scroll_height.strict_eq(&previous.scroll_height),
+            top: !self.top.strict_eq(&previous.top),
+        };
+        ScrollEvent {
+            previous,
+            current: self.clone(),
+            in_smooth_scrolling,
+            changed,
+        }
+    }
 }
 impl ScrollState {
     pub fn new(
@@ -59,113 +174,21 @@ impl ScrollState {
         scroll_height: f64,
         top: f64,
     ) -> Self {
-        let [mut width, scroll_width, mut left, mut height, scroll_height, mut top] =
-            [width, scroll_width, left, height, scroll_height, top].map(|value| {
-                if integer_values {
-                    to_int32(value)
-                } else {
-                    value
-                }
-            });
-        let raw_left = left;
-        let raw_top = top;
-        if width < 0.0 {
-            width = 0.0;
-        }
-        if left + width > scroll_width {
-            left = scroll_width - width;
-        }
-        if left < 0.0 {
-            left = 0.0;
-        }
-        if height < 0.0 {
-            height = 0.0;
-        }
-        if top + height > scroll_height {
-            top = scroll_height - height;
-        }
-        if top < 0.0 {
-            top = 0.0;
-        }
-        Self {
+        infallible(Self::try_new(
             integer_values,
-            raw_left,
-            raw_top,
             width,
             scroll_width,
             left,
             height,
             scroll_height,
             top,
-        }
-    }
-    pub fn equals(&self, other: &Self) -> bool {
-        self.raw_left == other.raw_left
-            && self.raw_top == other.raw_top
-            && self.width == other.width
-            && self.scroll_width == other.scroll_width
-            && self.left == other.left
-            && self.height == other.height
-            && self.scroll_height == other.scroll_height
-            && self.top == other.top
-    }
-    pub fn position(&self) -> Position {
-        Position {
-            left: self.left,
-            top: self.top,
-        }
+        ))
     }
     pub fn with_dimensions(&self, update: DimensionUpdate, raw: bool) -> Self {
-        Self::new(
-            self.integer_values,
-            update.width.unwrap_or(self.width),
-            update.scroll_width.unwrap_or(self.scroll_width),
-            if raw { self.raw_left } else { self.left },
-            update.height.unwrap_or(self.height),
-            update.scroll_height.unwrap_or(self.scroll_height),
-            if raw { self.raw_top } else { self.top },
-        )
+        infallible(self.try_with_dimensions(update, raw))
     }
     pub fn with_position(&self, update: PositionUpdate) -> Self {
-        Self::new(
-            self.integer_values,
-            self.width,
-            self.scroll_width,
-            update.left.unwrap_or(self.raw_left),
-            self.height,
-            self.scroll_height,
-            update.top.unwrap_or(self.raw_top),
-        )
-    }
-    pub fn event(&self, previous: Self, in_smooth_scrolling: bool) -> ScrollEvent {
-        ScrollEvent {
-            previous,
-            current: *self,
-            in_smooth_scrolling,
-            changed: Changes {
-                width: self.width != previous.width,
-                scroll_width: self.scroll_width != previous.scroll_width,
-                left: self.left != previous.left,
-                height: self.height != previous.height,
-                scroll_height: self.scroll_height != previous.scroll_height,
-                top: self.top != previous.top,
-            },
-        }
-    }
-}
-fn to_int32(value: f64) -> f64 {
-    const MODULUS: f64 = 4_294_967_296.0;
-    const SIGN_BIT: f64 = 2_147_483_648.0;
-    if !value.is_finite() || value == 0.0 {
-        return 0.0;
-    }
-    let unsigned = value.trunc().rem_euclid(MODULUS);
-    if unsigned == 0.0 {
-        0.0
-    } else if unsigned >= SIGN_BIT {
-        unsigned - MODULUS
-    } else {
-        unsigned
+        infallible(self.try_with_position(update))
     }
 }
 

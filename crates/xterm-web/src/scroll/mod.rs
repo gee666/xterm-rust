@@ -79,9 +79,12 @@ pub mod mouse_event;
 pub mod options;
 #[cfg(target_arch = "wasm32")]
 pub mod pointer_monitor;
+#[cfg(target_arch = "wasm32")]
+pub mod raw_state;
 pub mod scrollable;
 pub mod scrollbar_state;
 pub mod state;
+pub mod value;
 #[cfg(target_arch = "wasm32")]
 pub mod vertical_scrollbar;
 pub mod visibility;
