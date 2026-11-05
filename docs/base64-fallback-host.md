@@ -30,6 +30,10 @@ Evidence is retained in `results/base64-decode-fallback/`:
 
 Node24.15.0, Rust/cargo1.85.1 and wasm-bindgen0.2.100 were used on native Windows. Full workspace all-feature quality, Linux/macOS runtime, complete unchanged original suites and full utility/status parity remain separate gates. Scoped passing tests are not full-port proof.
 
+## Independent review
+
+The isolated task400 reviewer accepted b3a93e33 with no findings and no tracked edits. It independently reran all25 new fallback,25 existing decode and16 encode source cases; all42 browser test executions; ten native utility tests; full-workspace formatting and focused warning-denied WASM Clippy. The baseline and passing reports remain scoped evidence, not full utility or port equivalence.
+
 ## Reproduce
 
 Use existing source-only Node dependencies, Playwright engines and wasm-bindgen0.2.100 through SOURCE_ROOT, PLAYWRIGHT_MODULE and WASM_BINDGEN. Keep new builds and scratch on O: under current team resource limits.
