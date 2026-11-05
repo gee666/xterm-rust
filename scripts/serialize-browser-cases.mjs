@@ -341,6 +341,78 @@ export async function serializationCases() {
     }
     return values;
   });
+  await run('html-scrollback-coercion-values', async (term, addon) => {
+    term.resize(5, 2); term.options.scrollback = 2;
+    await write(term, '\x1b[31mABCDE\r\nFGHIJ\r\nKLMNO\r\nPQRST\r\nUVWXY');
+    const inputs = [undefined, null, false, true, '', '0', '0.5', 'bad', 'NaN', '\ud800',
+      new Number(NaN), new Number(0.5), new Number(-2.5), new Number(Infinity),
+      [], [0.5], {}, { valueOf() { return NaN; } }, { valueOf() { return 0.5; } },
+      { [Symbol.toPrimitive]() { return -1.5; } }, Symbol('scrollback'), 1n];
+    return { state: snapshot(term), values: inputs.map((scrollback, index) => ({ index,
+      html: capture(() => addon.serializeAsHTML({ scrollback })) })) };
+  });
+  await run('html-scrollback-coercion-phases', async (term, addon) => {
+    const values = [];
+    for (const result of [NaN, 0.5, '0.5', -2.5]) {
+      term.reset(); term.resize(5, 2); term.options.scrollback = 2;
+      await write(term, '\x1b[32mABCDE\r\nFGHIJ\r\nKLMNO\r\nPQRST\r\nUVWXY');
+      const log = []; let nested;
+      const scrollback = { get [Symbol.toPrimitive]() { log.push('toPrimitive'); return hint => {
+        log.push(`coerce:${hint}`); term.reset(); term.resize(7, 3);
+        nested = addon.serializeAsHTML({ range: { startLine: 0, endLine: 0, startCol: 0 } });
+        return result;
+      }; } };
+      Object.defineProperty(term.options, 'fontFamily', { configurable: true,
+        get() { log.push('fontFamily'); return 'raw\ud800'; } });
+      const options = { get onlySelection() { log.push('onlySelection'); return false; },
+        get range() { log.push('range'); return undefined; },
+        get scrollback() { log.push('scrollback'); return scrollback; },
+        get includeGlobalBackground() { log.push('background'); return false; } };
+      const html = capture(() => addon.serializeAsHTML(options));
+      values.push({ result: String(result), html, nested, log, state: snapshot(term) });
+    }
+    return values;
+  });
+  await run('html-scrollback-coercion-throws', async (term, addon) => {
+    const sentinel = {}, values = [];
+    for (const phase of ['scrollback', 'toPrimitive', 'coerce', 'background', 'fontFamily', 'fontSize']) {
+      const log = []; let same = false;
+      const scrollback = { get [Symbol.toPrimitive]() {
+        log.push('toPrimitive'); if (phase === 'toPrimitive') throw sentinel;
+        return hint => { log.push(`coerce:${hint}`); if (phase === 'coerce') throw sentinel; return NaN; };
+      } };
+      Object.defineProperty(term.options, 'fontFamily', { configurable: true,
+        get() { log.push('fontFamily'); if (phase === 'fontFamily') throw sentinel; return 'monospace'; } });
+      Object.defineProperty(term.options, 'fontSize', { configurable: true,
+        get() { log.push('fontSize'); if (phase === 'fontSize') throw sentinel; return 15; } });
+      const options = { get scrollback() { log.push('scrollback'); if (phase === 'scrollback') throw sentinel; return scrollback; },
+        get includeGlobalBackground() { log.push('background'); if (phase === 'background') throw sentinel; return false; } };
+      try { addon.serializeAsHTML(options); } catch (error) { same = error === sentinel; }
+      values.push({ phase, same, log });
+    }
+    return values;
+  });
+  await run('html-scrollback-coercion-warning-reentry', async (term, addon) => {
+    const values = [];
+    for (const throws of [false, true]) {
+      term.reset(); term.resize(5, 2); term.options.scrollback = 1;
+      await write(term, '\x1b[31mABCDE\r\nFGHIJ\r\nKLMNO\r\nPQRST\r\nUVWXY');
+      const log = [], sentinel = {}, previous = console.warn; let count = 0, same = false;
+      const scrollback = { [Symbol.toPrimitive](hint) { log.push(`coerce:${hint}`); return -Number.EPSILON; } };
+      Object.defineProperty(term.options, 'fontFamily', { configurable: true,
+        get() { log.push('fontFamily'); term.resize(2, 2); return 'monospace'; } });
+      console.warn = (...args) => {
+        previous(...args); log.push('warn');
+        if (++count === 1) { term.reset(); term.resize(4, 3); if (throws) throw sentinel; }
+      };
+      try {
+        const html = capture(() => { try { return addon.serializeAsHTML({ scrollback }); }
+          catch (error) { same = error === sentinel; throw error; } });
+        values.push({ throws, html, count, same, log, state: snapshot(term) });
+      } finally { console.warn = previous; }
+    }
+    return values;
+  });
   await run('html-nan-scrollback-header-effects', async (term, addon) => {
     await write(term, '\x1b[31mMUST NOT APPEAR\r\nSECOND');
     const log = [];
