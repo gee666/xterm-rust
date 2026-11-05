@@ -223,7 +223,7 @@ async fn iip_separates_synchronous_bitmap_throws_from_promise_rejection() {
     let thrower = js_sys::Function::new_with_args("error", "return function(){throw error}")
         .call1(&JsValue::UNDEFINED, &sentinel)
         .unwrap();
-    let mut decoder = IipImageDecoder::default();
+    let decoder = IipImageDecoder::default();
     let patch = Patch::new(js_sys::global().into(), "createImageBitmap", thrower);
     let Err(error) = decoder.prepare(&png_request()) else {
         panic!("expected synchronous error")
@@ -259,7 +259,7 @@ fn iip_qoi_imagedata_failure_is_synchronous_without_fabricated_canvas() {
         .call1(&JsValue::UNDEFINED, &sentinel)
         .unwrap();
     let patch = Patch::new(js_sys::global().into(), "ImageData", constructor);
-    let mut decoder = IipImageDecoder::default();
+    let decoder = IipImageDecoder::default();
     let Err(error) = decoder.prepare(&request) else {
         panic!("expected ImageData error")
     };
@@ -273,9 +273,42 @@ fn iip_qoi_imagedata_failure_is_synchronous_without_fabricated_canvas() {
 
 #[wasm_bindgen_test(async)]
 async fn iip_corrupt_png_rejects_real_platform_decode() {
-    let mut decoder = IipImageDecoder::default();
+    let decoder = IipImageDecoder::default();
     let IipDecodedImage::Pending(pending) = decoder.prepare(&png_request()).unwrap() else {
         panic!("PNG must use asynchronous platform decoding")
     };
     assert!(pending.resolve().await.is_err());
+}
+
+#[wasm_bindgen_test]
+fn iip_imagedata_can_reset_the_shared_decoder_synchronously() {
+    let decoder = std::rc::Rc::new(IipImageDecoder::default());
+    let reentrant = decoder.clone();
+    let reset = wasm_bindgen::closure::Closure::<dyn FnMut()>::new(move || reentrant.reset());
+    let constructor = js_sys::Function::new_with_args(
+        "reset,Original",
+        "return function(...args){reset();return Reflect.construct(Original,args)}",
+    )
+    .call2(
+        &JsValue::UNDEFINED,
+        reset.as_ref(),
+        &get(&js_sys::global(), "ImageData"),
+    )
+    .unwrap();
+    let patch = Patch::new(js_sys::global().into(), "ImageData", constructor);
+    let mut request = png_request();
+    request.source.mime = ImageType::Qoi;
+    request.bytes = include_bytes!("../../../xterm-addons/tests/fixtures/qoi/palette.qoi").to_vec();
+    request.target = CellSize {
+        width: 640.0,
+        height: 80.0,
+    };
+    let IipDecodedImage::Immediate(image) = decoder.prepare(&request).unwrap() else {
+        panic!("reset must preserve dimensions and synchronous completion");
+    };
+    drop(patch);
+    assert_eq!(
+        pixels(&surface(&image)),
+        include_bytes!("../../../xterm-addons/tests/fixtures/qoi/palette.rgba")
+    );
 }

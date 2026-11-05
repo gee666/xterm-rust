@@ -98,7 +98,7 @@ async fn iip_palette_qoi_fast_path_matches_source_pixels_and_real_storage() {
     let sequence = sequence(PALETTE, 640, 80);
     let reference = source_image(&sequence).await;
     assert_eq!(get(&reference, "synchronous").as_bool(), Some(true));
-    let mut decoder = IipImageDecoder::default();
+    let decoder = IipImageDecoder::default();
     let IipDecodedImage::Immediate(image) = decoder.prepare(&request(&sequence)).unwrap() else {
         panic!("unscaled QOI must not cross a promise boundary");
     };
@@ -123,7 +123,7 @@ async fn iip_qoi_and_png_resize_match_source_and_pending_survives_decoder_reset(
         let sequence = sequence(bytes, 80, 40);
         let reference = source_image(&sequence).await;
         assert_eq!(get(&reference, "synchronous").as_bool(), Some(false));
-        let mut decoder = IipImageDecoder::default();
+        let decoder = IipImageDecoder::default();
         let IipDecodedImage::Pending(pending) = decoder.prepare(&request(&sequence)).unwrap()
         else {
             panic!("resized images require a bitmap promise");

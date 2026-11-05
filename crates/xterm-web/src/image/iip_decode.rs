@@ -6,6 +6,7 @@ use super::{
     BrowserImageSurface,
 };
 use js_sys::{Array, Promise, Uint8Array};
+use std::cell::RefCell;
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_futures::JsFuture;
 use xterm_addons::image::{
@@ -37,26 +38,29 @@ impl PendingImageBitmap {
 /// Retains QOI memory across transfers, following the source handler's lifetime.
 /// This consumes actual IIP display requests, never a JavaScript protocol engine.
 pub struct IipImageDecoder {
-    qoi: QoiDecoder,
+    qoi: RefCell<QoiDecoder>,
 }
 impl Default for IipImageDecoder {
     fn default() -> Self {
         Self {
-            qoi: QoiDecoder::new(DECODER_KEEP_BYTES as f64),
+            qoi: RefCell::new(QoiDecoder::new(DECODER_KEEP_BYTES as f64)),
         }
     }
 }
 impl IipImageDecoder {
-    pub fn reset(&mut self) {
-        self.qoi.release();
+    pub fn reset(&self) {
+        self.qoi.borrow_mut().release();
     }
 
     /// Prepare synchronously so QOI/ImageData/Blob and createImageBitmap call
     /// failures are not mistaken for rejected bitmap promises. The protocol
     /// handler already validates metrics and target dimensions before this call.
-    pub fn prepare(&mut self, request: &DisplayRequest) -> Result<IipDecodedImage, JsValue> {
+    pub fn prepare(&self, request: &DisplayRequest) -> Result<IipDecodedImage, JsValue> {
         let image = if request.source.mime == ImageType::Qoi {
-            let decoded = self.qoi.decode(&request.bytes).map_err(qoi_error)?;
+            // Native decode has no foreign callbacks. End its borrow before even
+            // constructing a JS error, so reset/transfer reentry stays possible.
+            let result = self.qoi.borrow_mut().decode(&request.bytes);
+            let decoded = result.map_err(qoi_error)?;
             let bytes = Uint8Array::from(decoded.pixels.as_slice());
             let clamped = construct(
                 "Uint8ClampedArray",
@@ -67,15 +71,17 @@ impl IipImageDecoder {
                 &[clamped, decoded.width.into(), decoded.height.into()],
             )?;
             // ImageData must succeed before release, including for malformed QOI.
-            self.qoi.release();
-            if request.target.width == f64::from(self.qoi.width)
-                && request.target.height == f64::from(self.qoi.height)
+            let (width, height) = {
+                let mut qoi = self.qoi.borrow_mut();
+                qoi.release();
+                // Reentrant ImageData construction may have changed the decoder.
+                // Source checks its live dimensions after that callback returns.
+                (qoi.width, qoi.height)
+            };
+            if request.target.width == f64::from(width)
+                && request.target.height == f64::from(height)
             {
-                let canvas = create_canvas(
-                    &JsValue::UNDEFINED,
-                    self.qoi.width.into(),
-                    self.qoi.height.into(),
-                )?;
+                let canvas = create_canvas(&JsValue::UNDEFINED, width.into(), height.into())?;
                 if let Some(context) = context(&canvas, None)? {
                     call(&context, "putImageData", &[image, 0.into(), 0.into()])?;
                 }
