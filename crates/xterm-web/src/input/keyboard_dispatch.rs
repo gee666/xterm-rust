@@ -212,21 +212,30 @@ impl KeyboardDispatch {
         event: TextInputEvent<'_>,
         host: &H,
     ) -> Result<bool, H::Error> {
-        let Some(key) = event.data.filter(|key| !key.is_empty()) else {
-            return Ok(false);
-        };
-        if !event.insert_text
-            || (event.composed && self.key_down_seen.get())
+        self.input_source(&event, host)
+    }
+
+    /// InputEvent properties may be getters that throw or synchronously reenter
+    /// input. Match the source guard order and reread data only after admission.
+    pub fn input_source<H: KeyboardHost>(
+        &self,
+        event: &impl TextInputEventSource<H::Error>,
+        host: &H,
+    ) -> Result<bool, H::Error> {
+        if !event.has_data()?
+            || !event.insert_text()?
+            || (event.composed()? && self.key_down_seen.get())
             || host.screen_reader_mode()?
             || self.key_press_handled.get()
         {
             return Ok(false);
         }
         self.unprocessed_dead_key.set(false);
+        let key = event.data()?;
         host.perform(
             None,
             KeyboardAction::Data {
-                key,
+                key: &key,
                 user_input: true,
             },
         )?;

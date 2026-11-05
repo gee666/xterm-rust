@@ -6,7 +6,7 @@ use super::{composition, listen, set_value, InputBindings, State};
 mod key_event;
 use crate::input::keyboard_dispatch::{
     KeyEventKind, KeyEventSource, KeyboardAction, KeyboardHost, KeyboardReadHost, KeyboardSnapshot,
-    TextInputEvent,
+    TextInputEventSource,
 };
 use crate::utf16::from_js_string;
 use key_event::LiveKeyEvent;
@@ -47,23 +47,34 @@ pub(super) fn bind(bindings: &mut InputBindings) -> Result<(), JsValue> {
     listen(bindings, area.as_ref(), "input", true, |state, event| {
         // Input events can also originate in a different same-origin realm.
         let event: InputEvent = event.unchecked_into();
-        let data = js_sys::Reflect::get(event.as_ref(), &JsValue::from_str("data"))?;
-        let data = if data.is_null() || data.is_undefined() {
-            None
-        } else {
-            Some(from_js_string(&data.dyn_into::<js_sys::JsString>()?))
-        };
-        state.keyboard.input(
-            TextInputEvent {
-                data: data.as_deref(),
-                insert_text: event.input_type() == "insertText",
-                composed: event.composed(),
-            },
-            &Adapter { state, event: None },
-        )?;
+        state
+            .keyboard
+            .input_source(&LiveTextInputEvent(&event), &Adapter { state, event: None })?;
         Ok(())
     })?;
     Ok(())
+}
+
+struct LiveTextInputEvent<'a>(&'a InputEvent);
+impl LiveTextInputEvent<'_> {
+    fn get(&self, name: &str) -> Result<JsValue, JsValue> {
+        js_sys::Reflect::get(self.0.as_ref(), &JsValue::from_str(name))
+    }
+}
+impl TextInputEventSource<JsValue> for LiveTextInputEvent<'_> {
+    fn has_data(&self) -> Result<bool, JsValue> {
+        Ok(self.get("data")?.is_truthy())
+    }
+    fn insert_text(&self) -> Result<bool, JsValue> {
+        Ok(self.get("inputType")? == JsValue::from_str("insertText"))
+    }
+    fn composed(&self) -> Result<bool, JsValue> {
+        Ok(self.get("composed")?.is_truthy())
+    }
+    fn data(&self) -> Result<std::borrow::Cow<'_, [u16]>, JsValue> {
+        let text = self.get("data")?.dyn_into::<js_sys::JsString>()?;
+        Ok(std::borrow::Cow::Owned(from_js_string(&text)))
+    }
 }
 
 struct Adapter<'a> {

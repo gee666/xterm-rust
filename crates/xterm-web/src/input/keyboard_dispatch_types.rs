@@ -2,6 +2,7 @@
 // Licensed under MIT. Contracts for CoreBrowserTerminal keyboard dispatch.
 
 use super::keyboard::KeyboardModes;
+use std::borrow::Cow;
 use xterm_core::input::keyboard::{KeyboardEvent, KeyboardResult};
 #[path = "keyboard_event.rs"]
 mod event;
@@ -135,12 +136,37 @@ pub trait KeyboardHost: KeyboardReadHost {
     ) -> Result<(), Self::Error>;
 }
 
-/// Fields read by CoreBrowserTerminal's input-event path.
+/// Lazy input-event reads. The truthiness guard does not convert data to text;
+/// data is read again after admission. Text payloads retain UTF-16 code units.
+pub trait TextInputEventSource<E> {
+    fn has_data(&self) -> Result<bool, E>;
+    fn insert_text(&self) -> Result<bool, E>;
+    fn composed(&self) -> Result<bool, E>;
+    fn data(&self) -> Result<Cow<'_, [u16]>, E>;
+}
+
+/// Immutable fields for native callers without observable property getters.
 #[derive(Clone, Copy, Debug)]
 pub struct TextInputEvent<'a> {
     pub data: Option<&'a [u16]>,
     pub insert_text: bool,
     pub composed: bool,
+}
+
+impl<E> TextInputEventSource<E> for TextInputEvent<'_> {
+    fn has_data(&self) -> Result<bool, E> {
+        Ok(self.data.is_some_and(|data| !data.is_empty()))
+    }
+    fn insert_text(&self) -> Result<bool, E> {
+        Ok(self.insert_text)
+    }
+    fn composed(&self) -> Result<bool, E> {
+        Ok(self.composed)
+    }
+    fn data(&self) -> Result<Cow<'_, [u16]>, E> {
+        // Immutable absent data never passes has_data; no property is reread.
+        Ok(Cow::Borrowed(self.data.unwrap_or_default()))
+    }
 }
 
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
