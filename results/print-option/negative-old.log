@@ -1,0 +1,235 @@
+command: cargo test --locked -p xterm-core --test print_option -j2
+exit: 101
+
+running 1 test
+test print_option_getter_matches_source_reentry_and_snapshot_phases ... FAILED
+
+failures:
+
+---- print_option_getter_matches_source_reentry_and_snapshot_phases stdout ----
+
+thread 'print_option_getter_matches_source_reentry_and_snapshot_phases' panicked at crates\xterm-core\tests\print_option.rs:231:5:
+204 mismatching cases:
+case 0 71,41,42,43,44 alt=0 a11y=0 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:3"
+case 1 71,41,42,43,44 alt=0 a11y=0 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/C/R0:3"
+case 2 71,41,42,43,44 alt=0 a11y=0 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/C/R0:3"
+case 3 71,41,42,43,44 alt=0 a11y=0 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:3"
+case 4 71,41,42,43,44 alt=0 a11y=0 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/C/R2:3"
+case 5 71,41,42,43,44 alt=0 a11y=0 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R0:2"
+case 6 71,41,42,43,44 alt=0 a11y=0 modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:2"
+case 7 71,41,42,43,44 alt=0 a11y=0 attributes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:3"
+case 8 71,41,42,43,44 alt=0 a11y=0 charset-replace: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:3"
+case 9 71,41,42,43,44 alt=0 a11y=0 charset-mutate: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:3"
+case 10 71,41,42,43,44 alt=0 a11y=0 nested-lf: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/S1/C/R0:3"
+case 11 71,41,42,43,44 alt=0 a11y=0 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 12 71,41,42,43,44 alt=0 a11y=0 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 13 71,41,42,43,44 alt=0 a11y=0 remove-row: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="R2:2"
+case 14 71,41,42,43,44 alt=0 a11y=0 missing-inspect: getter count, callback states
+case 15 71,41,42,43,44 alt=0 a11y=0 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/C/R0:3"
+case 16 71,41,42,43,44 alt=0 a11y=0 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 17 71,41,42,43,44 alt=0 a11y=1 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A51/A41/A42/A43/A44/C/R2:3"
+case 18 71,41,42,43,44 alt=0 a11y=1 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/A51/A41/A42/A43/A44/C/R0:3"
+case 19 71,41,42,43,44 alt=0 a11y=1 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/A51/A41/A42/A43/A44/C/R0:3"
+case 20 71,41,42,43,44 alt=0 a11y=1 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A51/A41/A42/A43/A44/C/R2:3"
+case 21 71,41,42,43,44 alt=0 a11y=1 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/A51/A41/A42/A43/A44/C/R2:3"
+case 22 71,41,42,43,44 alt=0 a11y=1 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A51/A41/A42/A43/A44/C/R0:2"
+case 23 71,41,42,43,44 alt=0 a11y=1 modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A51/A41/A42/A43/A44/C/R2:2"
+case 24 71,41,42,43,44 alt=0 a11y=1 attributes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A51/A41/A42/A43/A44/C/R2:3"
+case 25 71,41,42,43,44 alt=0 a11y=1 charset-replace: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A51/A41/A42/A43/A44/C/R2:3"
+case 26 71,41,42,43,44 alt=0 a11y=1 charset-mutate: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A4d/A41/A42/A43/A44/C/R2:3"
+case 27 71,41,42,43,44 alt=0 a11y=1 nested-lf: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/A51/A41/S1/A42/A43/A44/C/R0:3"
+case 28 71,41,42,43,44 alt=0 a11y=1 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 29 71,41,42,43,44 alt=0 a11y=1 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 30 71,41,42,43,44 alt=0 a11y=1 remove-row: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="R2:2"
+case 31 71,41,42,43,44 alt=0 a11y=1 missing-inspect: getter count, callback states
+case 32 71,41,42,43,44 alt=0 a11y=1 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/A51/A41/A42/A43/A44/C/R0:3"
+case 33 71,41,42,43,44 alt=0 a11y=1 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 34 71,41,42,43,44 alt=1 a11y=0 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:3"
+case 35 71,41,42,43,44 alt=1 a11y=0 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/C/R0:3"
+case 36 71,41,42,43,44 alt=1 a11y=0 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:3"
+case 37 71,41,42,43,44 alt=1 a11y=0 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/C/R0:3"
+case 38 71,41,42,43,44 alt=1 a11y=0 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/C/R2:3"
+case 39 71,41,42,43,44 alt=1 a11y=0 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R0:2"
+case 40 71,41,42,43,44 alt=1 a11y=0 modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:2"
+case 41 71,41,42,43,44 alt=1 a11y=0 attributes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:3"
+case 42 71,41,42,43,44 alt=1 a11y=0 charset-replace: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:3"
+case 43 71,41,42,43,44 alt=1 a11y=0 charset-mutate: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:3"
+case 44 71,41,42,43,44 alt=1 a11y=0 nested-lf: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/S0/C/R0:3"
+case 45 71,41,42,43,44 alt=1 a11y=0 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 46 71,41,42,43,44 alt=1 a11y=0 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 47 71,41,42,43,44 alt=1 a11y=0 remove-row: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="R2:2"
+case 48 71,41,42,43,44 alt=1 a11y=0 missing-inspect: getter count, callback states
+case 49 71,41,42,43,44 alt=1 a11y=0 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/C/R0:3"
+case 50 71,41,42,43,44 alt=1 a11y=0 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 51 71,41,42,43,44 alt=1 a11y=1 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A51/A41/A42/A43/A44/C/R2:3"
+case 52 71,41,42,43,44 alt=1 a11y=1 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/A51/A41/A42/A43/A44/C/R0:3"
+case 53 71,41,42,43,44 alt=1 a11y=1 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A51/A41/A42/A43/A44/C/R2:3"
+case 54 71,41,42,43,44 alt=1 a11y=1 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/A51/A41/A42/A43/A44/C/R0:3"
+case 55 71,41,42,43,44 alt=1 a11y=1 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/A51/A41/A42/A43/A44/C/R2:3"
+case 56 71,41,42,43,44 alt=1 a11y=1 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A51/A41/A42/A43/A44/C/R0:2"
+case 57 71,41,42,43,44 alt=1 a11y=1 modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A51/A41/A42/A43/A44/C/R2:2"
+case 58 71,41,42,43,44 alt=1 a11y=1 attributes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A51/A41/A42/A43/A44/C/R2:3"
+case 59 71,41,42,43,44 alt=1 a11y=1 charset-replace: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A51/A41/A42/A43/A44/C/R2:3"
+case 60 71,41,42,43,44 alt=1 a11y=1 charset-mutate: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A4d/A41/A42/A43/A44/C/R2:3"
+case 61 71,41,42,43,44 alt=1 a11y=1 nested-lf: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/A51/A41/S0/A42/A43/A44/C/R0:3"
+case 62 71,41,42,43,44 alt=1 a11y=1 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 63 71,41,42,43,44 alt=1 a11y=1 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 64 71,41,42,43,44 alt=1 a11y=1 remove-row: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="R2:2"
+case 65 71,41,42,43,44 alt=1 a11y=1 missing-inspect: getter count, callback states
+case 66 71,41,42,43,44 alt=1 a11y=1 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/A51/A41/A42/A43/A44/C/R0:3"
+case 67 71,41,42,43,44 alt=1 a11y=1 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 68 754c,71,42,43 alt=0 a11y=0 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:3"
+case 69 754c,71,42,43 alt=0 a11y=0 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/C/R0:3"
+case 70 754c,71,42,43 alt=0 a11y=0 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/C/R0:3"
+case 71 754c,71,42,43 alt=0 a11y=0 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:3"
+case 72 754c,71,42,43 alt=0 a11y=0 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/C/R2:3"
+case 73 754c,71,42,43 alt=0 a11y=0 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R0:2"
+case 74 754c,71,42,43 alt=0 a11y=0 modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:2"
+case 75 754c,71,42,43 alt=0 a11y=0 attributes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:3"
+case 76 754c,71,42,43 alt=0 a11y=0 charset-replace: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:3"
+case 77 754c,71,42,43 alt=0 a11y=0 charset-mutate: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:3"
+case 78 754c,71,42,43 alt=0 a11y=0 nested-lf: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/S1/C/R0:3"
+case 79 754c,71,42,43 alt=0 a11y=0 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 80 754c,71,42,43 alt=0 a11y=0 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 81 754c,71,42,43 alt=0 a11y=0 remove-row: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="R2:2"
+case 82 754c,71,42,43 alt=0 a11y=0 missing-inspect: getter count, callback states
+case 83 754c,71,42,43 alt=0 a11y=0 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/C/R0:3"
+case 84 754c,71,42,43 alt=0 a11y=0 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 85 754c,71,42,43 alt=0 a11y=1 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A754c/A51/A42/A43/C/R2:3"
+case 86 754c,71,42,43 alt=0 a11y=1 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/A754c/A51/A42/A43/C/R0:3"
+case 87 754c,71,42,43 alt=0 a11y=1 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/A754c/A51/A42/A43/C/R0:3"
+case 88 754c,71,42,43 alt=0 a11y=1 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A754c/A51/A42/A43/C/R2:3"
+case 89 754c,71,42,43 alt=0 a11y=1 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/A754c/A51/A42/A43/C/R2:3"
+case 90 754c,71,42,43 alt=0 a11y=1 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A754c/A51/A42/A43/C/R0:2"
+case 91 754c,71,42,43 alt=0 a11y=1 modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A754c/A51/A42/A43/C/R2:2"
+case 92 754c,71,42,43 alt=0 a11y=1 attributes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A754c/A51/A42/A43/C/R2:3"
+case 93 754c,71,42,43 alt=0 a11y=1 charset-replace: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A754c/A51/A42/A43/C/R2:3"
+case 94 754c,71,42,43 alt=0 a11y=1 charset-mutate: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A754c/A4d/A42/A43/C/R2:3"
+case 95 754c,71,42,43 alt=0 a11y=1 nested-lf: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/A754c/S1/A51/A42/A43/C/R0:3"
+case 96 754c,71,42,43 alt=0 a11y=1 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 97 754c,71,42,43 alt=0 a11y=1 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 98 754c,71,42,43 alt=0 a11y=1 remove-row: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="R2:2"
+case 99 754c,71,42,43 alt=0 a11y=1 missing-inspect: getter count, callback states
+case 100 754c,71,42,43 alt=0 a11y=1 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/A754c/A51/A42/A43/C/R0:3"
+case 101 754c,71,42,43 alt=0 a11y=1 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 102 754c,71,42,43 alt=1 a11y=0 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:3"
+case 103 754c,71,42,43 alt=1 a11y=0 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/C/R0:3"
+case 104 754c,71,42,43 alt=1 a11y=0 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:3"
+case 105 754c,71,42,43 alt=1 a11y=0 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/C/R0:3"
+case 106 754c,71,42,43 alt=1 a11y=0 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/C/R2:3"
+case 107 754c,71,42,43 alt=1 a11y=0 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R0:2"
+case 108 754c,71,42,43 alt=1 a11y=0 modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:2"
+case 109 754c,71,42,43 alt=1 a11y=0 attributes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:3"
+case 110 754c,71,42,43 alt=1 a11y=0 charset-replace: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:3"
+case 111 754c,71,42,43 alt=1 a11y=0 charset-mutate: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R2:3"
+case 112 754c,71,42,43 alt=1 a11y=0 nested-lf: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/S0/C/R0:3"
+case 113 754c,71,42,43 alt=1 a11y=0 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 114 754c,71,42,43 alt=1 a11y=0 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 115 754c,71,42,43 alt=1 a11y=0 remove-row: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="R2:2"
+case 116 754c,71,42,43 alt=1 a11y=0 missing-inspect: getter count, callback states
+case 117 754c,71,42,43 alt=1 a11y=0 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/C/R0:3"
+case 118 754c,71,42,43 alt=1 a11y=0 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 119 754c,71,42,43 alt=1 a11y=1 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A754c/A51/A42/A43/C/R2:3"
+case 120 754c,71,42,43 alt=1 a11y=1 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/A754c/A51/A42/A43/C/R0:3"
+case 121 754c,71,42,43 alt=1 a11y=1 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A754c/A51/A42/A43/C/R2:3"
+case 122 754c,71,42,43 alt=1 a11y=1 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/A754c/A51/A42/A43/C/R0:3"
+case 123 754c,71,42,43 alt=1 a11y=1 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/A754c/A51/A42/A43/C/R2:3"
+case 124 754c,71,42,43 alt=1 a11y=1 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A754c/A51/A42/A43/C/R0:2"
+case 125 754c,71,42,43 alt=1 a11y=1 modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A754c/A51/A42/A43/C/R2:2"
+case 126 754c,71,42,43 alt=1 a11y=1 attributes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A754c/A51/A42/A43/C/R2:3"
+case 127 754c,71,42,43 alt=1 a11y=1 charset-replace: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A754c/A51/A42/A43/C/R2:3"
+case 128 754c,71,42,43 alt=1 a11y=1 charset-mutate: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="A754c/A4d/A42/A43/C/R2:3"
+case 129 754c,71,42,43 alt=1 a11y=1 nested-lf: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/A754c/S0/A51/A42/A43/C/R0:3"
+case 130 754c,71,42,43 alt=1 a11y=1 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 131 754c,71,42,43 alt=1 a11y=1 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 132 754c,71,42,43 alt=1 a11y=1 remove-row: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="R2:2"
+case 133 754c,71,42,43 alt=1 a11y=1 missing-inspect: getter count, callback states
+case 134 754c,71,42,43 alt=1 a11y=1 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/A754c/A51/A42/A43/C/R0:3"
+case 135 754c,71,42,43 alt=1 a11y=1 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 136 ad alt=0 a11y=0 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="" expected="R2:2"
+case 137 ad alt=0 a11y=0 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/C/R0:3"
+case 138 ad alt=0 a11y=0 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/R0:3"
+case 139 ad alt=0 a11y=0 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="" expected="R2:2"
+case 140 ad alt=0 a11y=0 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/R2:2"
+case 141 ad alt=0 a11y=0 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R0:2"
+case 142 ad alt=0 a11y=0 modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="R2:2"
+case 143 ad alt=0 a11y=0 attributes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="R2:2"
+case 144 ad alt=0 a11y=0 charset-replace: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="" expected="R2:2"
+case 145 ad alt=0 a11y=0 charset-mutate: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="" expected="R2:2"
+case 146 ad alt=0 a11y=0 nested-lf: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 147 ad alt=0 a11y=0 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 148 ad alt=0 a11y=0 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 149 ad alt=0 a11y=0 remove-row: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="R2:2"
+case 150 ad alt=0 a11y=0 missing-inspect: getter count, callback states
+case 151 ad alt=0 a11y=0 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/C/R0:3"
+case 152 ad alt=0 a11y=0 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 153 ad alt=0 a11y=1 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="" expected="R2:2"
+case 154 ad alt=0 a11y=1 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/C/R0:3"
+case 155 ad alt=0 a11y=1 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/R0:3"
+case 156 ad alt=0 a11y=1 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="" expected="R2:2"
+case 157 ad alt=0 a11y=1 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/R2:2"
+case 158 ad alt=0 a11y=1 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R0:2"
+case 159 ad alt=0 a11y=1 modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="R2:2"
+case 160 ad alt=0 a11y=1 attributes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="R2:2"
+case 161 ad alt=0 a11y=1 charset-replace: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="" expected="R2:2"
+case 162 ad alt=0 a11y=1 charset-mutate: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="" expected="R2:2"
+case 163 ad alt=0 a11y=1 nested-lf: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 164 ad alt=0 a11y=1 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 165 ad alt=0 a11y=1 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 166 ad alt=0 a11y=1 remove-row: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="R2:2"
+case 167 ad alt=0 a11y=1 missing-inspect: getter count, callback states
+case 168 ad alt=0 a11y=1 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/C/R0:3"
+case 169 ad alt=0 a11y=1 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 170 ad alt=1 a11y=0 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="" expected="R2:2"
+case 171 ad alt=1 a11y=0 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/C/R0:3"
+case 172 ad alt=1 a11y=0 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="" expected="R2:2"
+case 173 ad alt=1 a11y=0 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/R0:3"
+case 174 ad alt=1 a11y=0 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/R2:2"
+case 175 ad alt=1 a11y=0 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R0:2"
+case 176 ad alt=1 a11y=0 modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="R2:2"
+case 177 ad alt=1 a11y=0 attributes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="R2:2"
+case 178 ad alt=1 a11y=0 charset-replace: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="" expected="R2:2"
+case 179 ad alt=1 a11y=0 charset-mutate: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="" expected="R2:2"
+case 180 ad alt=1 a11y=0 nested-lf: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 181 ad alt=1 a11y=0 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 182 ad alt=1 a11y=0 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 183 ad alt=1 a11y=0 remove-row: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="R2:2"
+case 184 ad alt=1 a11y=0 missing-inspect: getter count, callback states
+case 185 ad alt=1 a11y=0 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/C/R0:3"
+case 186 ad alt=1 a11y=0 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 187 ad alt=1 a11y=1 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="" expected="R2:2"
+case 188 ad alt=1 a11y=1 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/C/R0:3"
+case 189 ad alt=1 a11y=1 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="" expected="R2:2"
+case 190 ad alt=1 a11y=1 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/R0:3"
+case 191 ad alt=1 a11y=1 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/R2:2"
+case 192 ad alt=1 a11y=1 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="C/R0:2"
+case 193 ad alt=1 a11y=1 modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="R2:2"
+case 194 ad alt=1 a11y=1 attributes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="R2:2"
+case 195 ad alt=1 a11y=1 charset-replace: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="" expected="R2:2"
+case 196 ad alt=1 a11y=1 charset-mutate: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="" expected="R2:2"
+case 197 ad alt=1 a11y=1 nested-lf: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 198 ad alt=1 a11y=1 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 199 ad alt=1 a11y=1 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 200 ad alt=1 a11y=1 remove-row: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="R2:2"
+case 201 ad alt=1 a11y=1 missing-inspect: getter count, callback states
+case 202 ad alt=1 a11y=1 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/C/R0:3"
+case 203 ad alt=1 a11y=1 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    print_option_getter_matches_source_reentry_and_snapshot_phases
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+   Compiling allocator-api2 v0.2.21
+   Compiling foldhash v0.1.5
+   Compiling equivalent v1.0.3
+   Compiling memchr v2.8.3
+   Compiling hashbrown v0.15.5
+   Compiling regress v0.10.4
+   Compiling ryu-js v1.0.3
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\AlfhildPrint\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 8.41s
+     Running tests\print_option.rs (target\debug\deps\print_option-8fd23e80e0b76a69.exe)
+error: test failed, to rerun pass `-p xterm-core --test print_option`

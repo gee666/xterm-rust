@@ -92,6 +92,14 @@ impl PrintRun {
         data: &[u32],
         preceding: &Cell<u32>,
     ) -> Result<Option<Self>, TerminalError> {
+        // Only charset identity precedes this getter in InputHandler.print.
+        // The getter can reset, resize or switch buffers, so release ownership
+        // before calling it and capture all remaining print state afterwards.
+        let (charset, options) = {
+            let state = shared.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+            (state.charset.charset.clone(), Rc::clone(&state.options))
+        };
+        let a11y = options.get("screenReaderMode")?.is_truthy();
         let mut state = shared
             .try_borrow_mut()
             .map_err(|_| TerminalError::Borrowed)?;
@@ -109,13 +117,13 @@ impl PrintRun {
             shared: Rc::clone(shared),
             service: Rc::clone(&state.buffer_service),
             unicode: Rc::clone(&state.unicode),
-            charset: state.charset.charset.clone(),
+            charset,
             attributes: Rc::clone(&state.attributes_identity),
             row,
             cols: state.cols(),
             wraparound: state.core.dec_private_modes.borrow().wraparound,
             insert: state.core.modes.borrow().insert_mode,
-            a11y: state.option_bool("screenReaderMode")?,
+            a11y,
             info: UnicodeCharProperties::from_raw(preceding.get()),
         };
         state.dirty_row(buffer.y);

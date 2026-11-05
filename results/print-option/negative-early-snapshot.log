@@ -1,0 +1,116 @@
+command: cargo test --locked -p xterm-core --test print_option -j2
+exit: 101
+
+running 1 test
+test print_option_getter_matches_source_reentry_and_snapshot_phases ... FAILED
+
+failures:
+
+---- print_option_getter_matches_source_reentry_and_snapshot_phases stdout ----
+
+thread 'print_option_getter_matches_source_reentry_and_snapshot_phases' panicked at crates\xterm-core\tests\print_option.rs:231:5:
+92 mismatching cases:
+case 1 71,41,42,43,44 alt=0 a11y=0 reset: final state
+case 2 71,41,42,43,44 alt=0 a11y=0 alt: final state
+case 4 71,41,42,43,44 alt=0 a11y=0 resize: final state
+case 5 71,41,42,43,44 alt=0 a11y=0 cursor: final state, ordered events actual="C/R1:2" expected="C/R0:2"
+case 6 71,41,42,43,44 alt=0 a11y=0 modes: final state, ordered events actual="C/R2:3" expected="C/R2:2"
+case 10 71,41,42,43,44 alt=0 a11y=0 nested-lf: final state
+case 13 71,41,42,43,44 alt=0 a11y=0 remove-row: final state, ordered events actual="C/R2:3" expected="R2:2"
+case 14 71,41,42,43,44 alt=0 a11y=0 missing-inspect: getter count, callback states
+case 15 71,41,42,43,44 alt=0 a11y=0 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/C/R0:3"
+case 16 71,41,42,43,44 alt=0 a11y=0 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 18 71,41,42,43,44 alt=0 a11y=1 reset: final state
+case 19 71,41,42,43,44 alt=0 a11y=1 alt: final state
+case 21 71,41,42,43,44 alt=0 a11y=1 resize: final state
+case 22 71,41,42,43,44 alt=0 a11y=1 cursor: final state, ordered events actual="A51/A41/A42/A43/A44/C/R1:2" expected="A51/A41/A42/A43/A44/C/R0:2"
+case 23 71,41,42,43,44 alt=0 a11y=1 modes: final state, ordered events actual="A51/A41/A42/A43/A44/C/R2:3" expected="A51/A41/A42/A43/A44/C/R2:2"
+case 27 71,41,42,43,44 alt=0 a11y=1 nested-lf: final state
+case 30 71,41,42,43,44 alt=0 a11y=1 remove-row: final state, ordered events actual="A51/A41/A42/A43/A44/C/R2:3" expected="R2:2"
+case 31 71,41,42,43,44 alt=0 a11y=1 missing-inspect: getter count, callback states
+case 32 71,41,42,43,44 alt=0 a11y=1 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/A51/A41/A42/A43/A44/C/R0:3"
+case 33 71,41,42,43,44 alt=0 a11y=1 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 35 71,41,42,43,44 alt=1 a11y=0 reset: final state
+case 37 71,41,42,43,44 alt=1 a11y=0 normal: final state
+case 38 71,41,42,43,44 alt=1 a11y=0 resize: final state
+case 39 71,41,42,43,44 alt=1 a11y=0 cursor: final state, ordered events actual="C/R1:2" expected="C/R0:2"
+case 40 71,41,42,43,44 alt=1 a11y=0 modes: final state, ordered events actual="C/R2:3" expected="C/R2:2"
+case 44 71,41,42,43,44 alt=1 a11y=0 nested-lf: final state
+case 47 71,41,42,43,44 alt=1 a11y=0 remove-row: final state, ordered events actual="C/R2:3" expected="R2:2"
+case 48 71,41,42,43,44 alt=1 a11y=0 missing-inspect: getter count, callback states
+case 49 71,41,42,43,44 alt=1 a11y=0 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/C/R0:3"
+case 50 71,41,42,43,44 alt=1 a11y=0 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 52 71,41,42,43,44 alt=1 a11y=1 reset: final state
+case 54 71,41,42,43,44 alt=1 a11y=1 normal: final state
+case 55 71,41,42,43,44 alt=1 a11y=1 resize: final state
+case 56 71,41,42,43,44 alt=1 a11y=1 cursor: final state, ordered events actual="A51/A41/A42/A43/A44/C/R1:2" expected="A51/A41/A42/A43/A44/C/R0:2"
+case 57 71,41,42,43,44 alt=1 a11y=1 modes: final state, ordered events actual="A51/A41/A42/A43/A44/C/R2:3" expected="A51/A41/A42/A43/A44/C/R2:2"
+case 61 71,41,42,43,44 alt=1 a11y=1 nested-lf: final state
+case 64 71,41,42,43,44 alt=1 a11y=1 remove-row: final state, ordered events actual="A51/A41/A42/A43/A44/C/R2:3" expected="R2:2"
+case 65 71,41,42,43,44 alt=1 a11y=1 missing-inspect: getter count, callback states
+case 66 71,41,42,43,44 alt=1 a11y=1 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/A51/A41/A42/A43/A44/C/R0:3"
+case 67 71,41,42,43,44 alt=1 a11y=1 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 69 754c,71,42,43 alt=0 a11y=0 reset: final state
+case 70 754c,71,42,43 alt=0 a11y=0 alt: final state
+case 72 754c,71,42,43 alt=0 a11y=0 resize: final state
+case 73 754c,71,42,43 alt=0 a11y=0 cursor: final state, ordered events actual="C/R1:2" expected="C/R0:2"
+case 74 754c,71,42,43 alt=0 a11y=0 modes: final state, ordered events actual="C/R2:3" expected="C/R2:2"
+case 78 754c,71,42,43 alt=0 a11y=0 nested-lf: final state
+case 81 754c,71,42,43 alt=0 a11y=0 remove-row: final state, ordered events actual="C/R2:3" expected="R2:2"
+case 82 754c,71,42,43 alt=0 a11y=0 missing-inspect: getter count, callback states
+case 83 754c,71,42,43 alt=0 a11y=0 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/C/R0:3"
+case 84 754c,71,42,43 alt=0 a11y=0 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 86 754c,71,42,43 alt=0 a11y=1 reset: final state
+case 87 754c,71,42,43 alt=0 a11y=1 alt: final state
+case 89 754c,71,42,43 alt=0 a11y=1 resize: final state
+case 90 754c,71,42,43 alt=0 a11y=1 cursor: final state, ordered events actual="A754c/A51/A42/A43/C/R1:2" expected="A754c/A51/A42/A43/C/R0:2"
+case 91 754c,71,42,43 alt=0 a11y=1 modes: final state, ordered events actual="A754c/A51/A42/A43/C/R2:3" expected="A754c/A51/A42/A43/C/R2:2"
+case 95 754c,71,42,43 alt=0 a11y=1 nested-lf: final state
+case 98 754c,71,42,43 alt=0 a11y=1 remove-row: final state, ordered events actual="A754c/A51/A42/A43/C/R2:3" expected="R2:2"
+case 99 754c,71,42,43 alt=0 a11y=1 missing-inspect: getter count, callback states
+case 100 754c,71,42,43 alt=0 a11y=1 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/A754c/A51/A42/A43/C/R0:3"
+case 101 754c,71,42,43 alt=0 a11y=1 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 103 754c,71,42,43 alt=1 a11y=0 reset: final state
+case 105 754c,71,42,43 alt=1 a11y=0 normal: final state
+case 106 754c,71,42,43 alt=1 a11y=0 resize: final state
+case 107 754c,71,42,43 alt=1 a11y=0 cursor: final state, ordered events actual="C/R1:2" expected="C/R0:2"
+case 108 754c,71,42,43 alt=1 a11y=0 modes: final state, ordered events actual="C/R2:3" expected="C/R2:2"
+case 112 754c,71,42,43 alt=1 a11y=0 nested-lf: final state
+case 115 754c,71,42,43 alt=1 a11y=0 remove-row: final state, ordered events actual="C/R2:3" expected="R2:2"
+case 116 754c,71,42,43 alt=1 a11y=0 missing-inspect: getter count, callback states
+case 117 754c,71,42,43 alt=1 a11y=0 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/C/R0:3"
+case 118 754c,71,42,43 alt=1 a11y=0 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 120 754c,71,42,43 alt=1 a11y=1 reset: final state
+case 122 754c,71,42,43 alt=1 a11y=1 normal: final state
+case 123 754c,71,42,43 alt=1 a11y=1 resize: final state
+case 124 754c,71,42,43 alt=1 a11y=1 cursor: final state, ordered events actual="A754c/A51/A42/A43/C/R1:2" expected="A754c/A51/A42/A43/C/R0:2"
+case 125 754c,71,42,43 alt=1 a11y=1 modes: final state, ordered events actual="A754c/A51/A42/A43/C/R2:3" expected="A754c/A51/A42/A43/C/R2:2"
+case 129 754c,71,42,43 alt=1 a11y=1 nested-lf: final state
+case 132 754c,71,42,43 alt=1 a11y=1 remove-row: final state, ordered events actual="A754c/A51/A42/A43/C/R2:3" expected="R2:2"
+case 133 754c,71,42,43 alt=1 a11y=1 missing-inspect: getter count, callback states
+case 134 754c,71,42,43 alt=1 a11y=1 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/A754c/A51/A42/A43/C/R0:3"
+case 135 754c,71,42,43 alt=1 a11y=1 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 150 ad alt=0 a11y=0 missing-inspect: getter count, callback states
+case 151 ad alt=0 a11y=0 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/C/R0:3"
+case 152 ad alt=0 a11y=0 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 167 ad alt=0 a11y=1 missing-inspect: getter count, callback states
+case 168 ad alt=0 a11y=1 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/C/R0:3"
+case 169 ad alt=0 a11y=1 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 184 ad alt=1 a11y=0 missing-inspect: getter count, callback states
+case 185 ad alt=1 a11y=0 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/C/R0:3"
+case 186 ad alt=1 a11y=0 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+case 201 ad alt=1 a11y=1 missing-inspect: getter count, callback states
+case 202 ad alt=1 a11y=1 missing-reset: getter count, callback states, final state, ordered events actual="R2:2" expected="S0/C/R0:3"
+case 203 ad alt=1 a11y=1 missing-error: result=Ok(()), getter count, callback states, ordered events actual="R2:2" expected=""
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    print_option_getter_matches_source_reentry_and_snapshot_phases
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\AlfhildPrint\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 6.35s
+     Running tests\print_option.rs (target\debug\deps\print_option-8fd23e80e0b76a69.exe)
+error: test failed, to rerun pass `-p xterm-core --test print_option`
