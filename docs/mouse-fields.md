@@ -24,6 +24,12 @@ The source oracle bundles the unchanged MouseStateService and dependencies. `tes
 
 Observed Windows evidence: 27 core tests passed; the raw WASM test passed all 1,125 cases in Chromium 148.0.7778.96, Firefox 150.0.2 and WebKit 26.4. Exact browser commands/logs are under `results/browser-host/wasm_mouse_fields/`. Warning-free native and WASM library Clippy and focused rustfmt passed. Native browser-policy tests passed 13/13 after the refactor. `cargo fmt --all -- --check` could not launch rustfmt on Windows because its argument list exceeded the OS limit, error 206. That workspace gate is not passed. Native browser-policy results and outstanding Root compilation failures are recorded separately.
 
+## Current-main recovery, 2026-11-05
+
+Recovered the policy code from `swarm/Tuah` c307ed3 and its module-format correction into `swarm/Wyatt16`, based on main 3ee576a. The current browser runner already supports `WASM_PACKAGE`, so its newer artifact identity and cleanup handling remain unchanged.
+
+Fresh Windows runs verified all 1,125 unchanged-source cases, passed 27 core tests and 13 native web policy/routing tests, and passed the raw WASM suite in Chromium 148.0.7778.96, Firefox 150.0.2 and WebKit 26.4. Native test logs and WASM library warning-denied Clippy are under `results/mouse-fields/*-recovery.log`. Browser commands, source/build hashes and per-engine logs are under `results/browser-host/xterm-wasm-support__wasm_mouse_fields/2026-11-05T08-27-23-449Z-9ffc7e6d-086e-40f2-9873-0eff7e9f9d97/`. Generated binding/WASM artifacts were removed after this run; hashes remain in the report. Focused rustfmt passed after sorting current support module declarations. This does not establish the full workspace or raw-service facade gates.
+
 ## Scope still open
 
 These are callable builtin policies, not a completed raw MouseStateService facade. Task 171 retains ordinary-object registries, prototype/numeric names, actual stable service receiver, custom callback returns, shared live Core mode authority, event ordering, lifecycle and real DOM routing. Task 85 still needs its actual web-crate WASM run after the committed Root graph builds. Full equivalence remains NOT PROVEN.
