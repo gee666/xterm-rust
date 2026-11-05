@@ -1,0 +1,26 @@
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\DaisySearchCached\crates\xterm-addons)
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\DaisySearchCached\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 6.13s
+     Running tests\search_addon.rs (target\debug\deps\search_addon-4de7d175adac3b45.exe)
+
+running 2 tests
+test cached_argument::engine_cached_argument_precedes_guard_flags_and_text_reentry ... FAILED
+test cached_argument::thrown_engine_callback_keeps_nested_cached_term_and_selection ... ok
+
+failures:
+
+---- cached_argument::engine_cached_argument_precedes_guard_flags_and_text_reentry stdout ----
+
+thread 'cached_argument::engine_cached_argument_precedes_guard_flags_and_text_reentry' panicked at crates\xterm-web\tests\search_cases\cached_argument.rs:137:21:
+assertion `left == right` failed: phase=0 reverse=false cached=None nested=Some(1)
+  left: 2
+ right: 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    cached_argument::engine_cached_argument_precedes_guard_flags_and_text_reentry
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 62 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-web --test search_addon`

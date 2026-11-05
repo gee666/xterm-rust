@@ -14,7 +14,18 @@ Two native test functions expand 60 scenarios. One covers 54 combinations of gua
 
 The shared fixture has 90 cases inside one WASM function per browser, including 18 pre-engine decoration-getter controls which must still change the argument before engine entry. It covers both directions, absent/same/different cached strings, regex/caseSensitive/wholeWord getter reentry, same/different nested searches, cache clearing, exact thrown identity, before/after event ordering and follow-up outer/nested cache behavior. It runs unchanged against source classes and actual Rust/WASM public bindings. Existing source assertions are not edited.
 
-Results are pending. Durable commands, logs, negative controls and exact source restores will be recorded in `results/search-cached-argument/`. The old-code control swaps only `crates/xterm-addons/src/search/find.rs` with accepted 493 bytes and restores exact fixed bytes in `finally`.
+Observed native Windows results are retained in `results/search-cached-argument/`:
+
+- All 64 native functions passed, zero failed, ignored or filtered. The two new functions expand 60 scenarios.
+- Swapping only `crates/xterm-addons/src/search/find.rs` with accepted 493 bytes produced one pass and one failure among the two new functions, with 62 retained functions filtered. Exact fixed bytes were restored in `finally`, then all 64 passed again.
+- Scoped native library/search-test and actual WASM library/search-test Clippy passed with `-D warnings`. Changed Rust formatting and all five workspace member formatting checks passed. Exact `cargo fmt --all -- --check` failed with Windows OS206, which is retained rather than reported as a full pass.
+- The unchanged original source passed all 90 shared cases in each of Chromium 148.0.7778.96, Firefox 150.0.2 and WebKit 26.4, 270 cases total.
+- Actual Rust/WASM passed 20 functions in each engine, 60 functions total. All 90 shared cases are inside one function per engine, not 90 extra functions.
+- Actual old-code WASM failed only the new function in Chromium, with 19 retained functions passing. The finally block restored the exact fixed source hash before all 20 functions passed in all three engines. Both variants require actual Cargo `fresh=false`, distinct WASM hashes and exact shared fixture bytes embedded in both compiler artifacts.
+
+Both original and physical reference-copy manifests passed all 776 hashes before and after execution. The 54 accepted 493 evidence pins were checked against immutable Git objects before its exact four-commit private reuse. An initial shell export set TEMP to owned O: but expanded TMP from the inherited C: value. No known owned files remained there. Both drivers were corrected to set TEMP and TMP explicitly inside Node, then the scoped native gates and actual old/final compilations were rerun before the successful browser matrix. The correction is retained in `environment-correction.json`.
+
+Full workspace Clippy/tests, original complete SearchAddon suites, seeded corpus, release, demo, GC and native Linux/macOS were not run for 508. Scoped passes do not establish full SearchAddon or full-port parity. Temporary native/WASM binaries are retained only until independent review and safe cleanup.
 
 ## Reproduce
 
