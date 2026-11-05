@@ -7,7 +7,7 @@ use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_test::*;
 use web_sys::{HtmlElement, MouseEvent};
 use xterm_web::links::{
-    browser_linkifier::{BrowserLink, BrowserLinkProvider, BrowserLinkifier, LinkReply},
+    browser_linkifier::{BrowserLink, BrowserLinkProvider, BrowserLinkifier, LinkReply, NativeBrowserLink},
     Link, Position, Range, RangePosition,
 };
 wasm_bindgen_test_configure!(run_in_browser);
@@ -21,7 +21,7 @@ impl BrowserLinkProvider for Provider {
     }
 }
 fn link(x: u64, dispose: impl Fn() -> Result<(), JsValue> + 'static) -> BrowserLink {
-    BrowserLink {
+    BrowserLink::Native(NativeBrowserLink {
         data: Rc::new(Link {
             text: format!("link{x}").encode_utf16().collect(),
             range: Range {
@@ -34,7 +34,7 @@ fn link(x: u64, dispose: impl Fn() -> Result<(), JsValue> + 'static) -> BrowserL
         hover: None,
         leave: None,
         dispose: Some(Rc::new(dispose)),
-    }
+    })
 }
 fn move_to(root: &HtmlElement, x: i32, y: i32) {
     let create = js_sys::Function::new_with_args(

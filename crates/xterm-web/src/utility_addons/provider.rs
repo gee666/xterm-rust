@@ -1,7 +1,7 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved.
 // Licensed under MIT. Rust web-links addon to browser linkifier bridge.
 use crate::links::{
-    browser_linkifier::{BrowserLink, BrowserLinkProvider, BrowserProviders, LinkReply},
+    browser_linkifier::{BrowserLink, BrowserLinkProvider, BrowserProviders, LinkReply, NativeBrowserLink},
     Link, Range, RangePosition,
 };
 use std::rc::Rc;
@@ -29,7 +29,7 @@ impl BrowserLinkProvider for ProviderBridge {
         for link in links {
             let activate = link.activate;
             let hover = link.hover;
-            result.push(BrowserLink {
+            result.push(BrowserLink::Native(NativeBrowserLink {
                 data: Rc::new(Link {
                     text: link.text,
                     range: Range {
@@ -54,7 +54,7 @@ impl BrowserLinkProvider for ProviderBridge {
                         leave(event, &link.text).map_err(error)
                     }) as crate::links::browser_linkifier::LinkCallback
                 }),
-            });
+            }));
         }
         callback(Some(result))
     }

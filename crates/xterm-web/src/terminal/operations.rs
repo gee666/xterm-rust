@@ -9,7 +9,7 @@ use js_sys::{Function, JsString};
 use std::rc::Rc;
 use wasm_bindgen::{prelude::*, JsCast};
 use web_sys::FocusOptions;
-use xterm_core::input::write_buffer::{WriteCallback, WriteData, WriteError};
+use xterm_core::{input::write_buffer::{WriteCallback, WriteData, WriteError}, lifecycle::Disposable};
 
 fn data(value: JsValue) -> Result<WriteData, JsValue> {
     if value.is_string() {
@@ -210,6 +210,7 @@ impl Terminal {
         if let Some(dom) = self.shared.dom.borrow().as_ref() {
             dom.element.remove();
         }
+        self.shared.link_providers.dispose();
         self.shared.custom_key.borrow_mut().take();
         self.shared.custom_wheel.borrow_mut().take();
         for listener in &self.shared.listeners {

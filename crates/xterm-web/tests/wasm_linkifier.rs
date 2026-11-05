@@ -8,7 +8,7 @@ use wasm_bindgen_test::*;
 use web_sys::{HtmlElement, MouseEvent};
 use xterm_web::links::native_osc::{NativeOscLinkProvider, OscLinkHandler};
 use xterm_web::links::{
-    browser_linkifier::{BrowserLink, BrowserLinkProvider, BrowserLinkifier, LinkReply},
+    browser_linkifier::{BrowserLink, BrowserLinkProvider, BrowserLinkifier, LinkReply, NativeBrowserLink},
     Link, Position, Range, RangePosition,
 };
 wasm_bindgen_test_configure!(run_in_browser);
@@ -43,7 +43,7 @@ fn link(log: Rc<RefCell<Vec<String>>>) -> BrowserLink {
     let hover = log.clone();
     let leave = log.clone();
     let dispose = log;
-    BrowserLink {
+    BrowserLink::Native(NativeBrowserLink {
         data: Rc::new(Link {
             text: "https://example.com/".encode_utf16().collect(),
             range: Range {
@@ -68,7 +68,7 @@ fn link(log: Rc<RefCell<Vec<String>>>) -> BrowserLink {
             dispose.borrow_mut().push("dispose".into());
             Ok(())
         })),
-    }
+    })
 }
 #[wasm_bindgen_test]
 fn dom_hover_activation_decorations_and_cached_leave() {
@@ -296,7 +296,8 @@ fn throwing_leave_preserves_current_until_successful_callback_completion() {
     let marker: JsValue = js_sys::Object::new().into();
     let thrown = marker.clone();
     let mut provided = link(Rc::new(RefCell::new(Vec::new())));
-    provided.leave = Some(Rc::new(move |_, _| {
+    let BrowserLink::Native(native) = &mut provided else { panic!("test constructs a native link") };
+    native.leave = Some(Rc::new(move |_, _| {
         assert!(weak
             .borrow()
             .as_ref()

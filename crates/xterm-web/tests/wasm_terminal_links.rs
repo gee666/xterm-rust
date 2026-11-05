@@ -138,6 +138,7 @@ async fn exported_terminal_writes_rust_osc8_renders_hovers_clicks_and_disposes()
             .unwrap()
             .current_link()
             .unwrap()
+            .snapshot().unwrap()
             .text,
         "https://example.com/rust"
             .encode_utf16()
@@ -198,7 +199,7 @@ async fn viewport_render_requeries_the_link_under_a_stationary_mouse() {
     let links = terminal.linkifier_handle().unwrap();
     let current = links.current_link().unwrap();
     assert_eq!(
-        String::from_utf16(&current.text).unwrap(),
+        String::from_utf16(&current.snapshot().unwrap().text).unwrap(),
         "https://example.com/first"
     );
     assert!(root.class_list().contains("xterm-cursor-pointer"));
@@ -213,7 +214,7 @@ async fn viewport_render_requeries_the_link_under_a_stationary_mouse() {
     )
     .await;
     assert_eq!(
-        String::from_utf16(&links.current_link().unwrap().text).unwrap(),
+        String::from_utf16(&links.current_link().unwrap().snapshot().unwrap().text).unwrap(),
         "https://example.com/second",
         "a render must requery the stationary mouse against new Rust cells"
     );

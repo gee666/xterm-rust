@@ -82,7 +82,7 @@ fn addon_provider_real_dom_hover_callbacks_underline_and_dispose() {
         .unwrap();
     let active = linkifier.current_link().unwrap();
     assert_eq!(
-        String::from_utf16(&active.text).unwrap(),
+        String::from_utf16(&active.snapshot().unwrap().text).unwrap(),
         "http://example.com"
     );
     assert_eq!(hover.borrow().len(), 1);

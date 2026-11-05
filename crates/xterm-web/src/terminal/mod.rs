@@ -27,6 +27,7 @@ mod internal_buffer;
 mod internal_modes;
 mod internal_render;
 mod joiner_api;
+mod link_api;
 pub mod link_services;
 mod marker_api;
 mod modes_api;

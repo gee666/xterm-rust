@@ -1,7 +1,7 @@
 // Copyright (c) 2022-2026 The xterm.js authors. All rights reserved. MIT license.
 use super::{
     browser::{default_activate, is_http_url},
-    browser_linkifier::{BrowserLink, BrowserLinkProvider, LinkCallback, LinkReply},
+    browser_linkifier::{BrowserLink, BrowserLinkProvider, LinkCallback, LinkReply, NativeBrowserLink},
     osc::{try_osc_links_with_policy, OscBuffer},
 };
 use crate::js_error::to_js_error;
@@ -143,14 +143,14 @@ impl BrowserLinkProvider for NativeOscLinkProvider {
                         .unwrap_or_else(|| {
                             Rc::new(move |_, link| default_activate(&window, &link.text))
                         });
-                    BrowserLink {
+                    BrowserLink::Native(NativeBrowserLink {
                         data: Rc::new(data),
                         decorations: None,
                         activate,
                         hover: handler.as_ref().and_then(|handler| handler.hover.clone()),
                         leave: handler.as_ref().and_then(|handler| handler.leave.clone()),
                         dispose: None,
-                    }
+                    })
                 })
                 .collect()
         });

@@ -1,229 +1,142 @@
 // Copyright (c) 2019-2026 The xterm.js authors. All rights reserved. MIT license.
-use super::State;
-use crate::links::{HoverEffect, Position, ProviderRequest};
+use super::{BrowserLink, State};
+use crate::links::{Position, ProviderRequest};
+use js_sys::Set;
 use std::rc::Rc;
 use wasm_bindgen::{JsCast, JsValue};
-use web_sys::{Element, MouseEvent};
+use web_sys::{Element, Event, MouseEvent};
 
 impl State {
     pub(super) fn mouse_move(self: &Rc<Self>, event: MouseEvent) -> Result<(), JsValue> {
         *self.last_event.borrow_mut() = Some(event.clone());
-        let Some(position) = (self.coordinates)(&event)? else {
-            return Ok(());
-        };
+        let Some(position) = (self.coordinates)(&event)? else { return Ok(()) };
         self.mouse_out.set(false);
         for target in event.composed_path().iter() {
-            let Some(element) = target.dyn_ref::<Element>() else {
-                continue;
-            };
-            if element.class_list().contains("xterm") {
-                break;
-            }
-            if element.class_list().contains("xterm-hover") {
-                return Ok(());
-            }
+            let Some(element) = target.dyn_ref::<Element>() else { continue };
+            if element.class_list().contains("xterm") { break; }
+            if element.class_list().contains("xterm-hover") { return Ok(()); }
         }
-        if self.last_cell.get() == Some(position) {
-            return Ok(());
-        }
+        if self.last_cell.get() == Some(position) { return Ok(()); }
         if self.active_line.get() != Some(position.y) || self.resized.get() {
             self.clear_current()?;
             self.ask(position, false)?;
             self.resized.set(false);
-        } else if !self.hover.borrow().contains(position) {
-            self.clear_current()?;
-            self.ask(position, true)?;
+        } else {
+            let current = self.hover.borrow().current().cloned();
+            let contains = match current { Some(link) => link.contains(position, self.cols.get())?, None => false };
+            if !contains {
+                self.clear_current()?;
+                self.ask(position, true)?;
+            }
         }
         self.last_cell.set(Some(position));
         Ok(())
     }
-    pub(super) fn clear_current(&self) -> Result<(), JsValue> {
-        if self.last_event.borrow().is_none() {
-            return Ok(());
+    pub(super) fn mouse_up(&self, event: Event) -> Result<(), JsValue> {
+        // Keep the source's no-current-link return before event/geometry reads.
+        if self.hover.borrow().current().is_none() { return Ok(()); }
+        let event = event.dyn_into::<MouseEvent>().map_err(|_| JsValue::from_str("mouseup was not a MouseEvent"))?;
+        let Some(position) = (self.coordinates)(&event)? else { return Ok(()) };
+        let down = self.hover.borrow().mouse_down_link();
+        if let Some(down) = down {
+            // A geometry getter can reenter and clear the current link.
+            let current = self.hover.borrow().current().cloned().ok_or_else(|| js_sys::TypeError::new("Cannot read properties of undefined (reading 'link')"))?;
+            if down.equals(&current)? {
+                let current = self.hover.borrow().current().cloned().ok_or_else(|| js_sys::TypeError::new("Cannot read properties of undefined (reading 'link')"))?;
+                if current.contains(position, self.cols.get())? {
+                    let current = self.hover.borrow().current().cloned().ok_or_else(|| js_sys::TypeError::new("Cannot read properties of undefined (reading 'link')"))?;
+                    current.invoke("activate", &event)?;
+                }
+            }
         }
-        let effects = self.hover.borrow_mut().leave();
-        self.apply(effects, None)?;
+        Ok(())
+    }
+    pub(super) fn clear_current(&self) -> Result<(), JsValue> {
+        let current = self.hover.borrow().current().cloned();
+        let event = self.last_event.borrow().clone();
+        let (Some(link), Some(event)) = (current, event) else { return Ok(()) };
+        self.hover.borrow_mut().begin_leave();
+        if self.decoration_values.borrow().0.is_truthy() { self.fire_underline(&link, false)?; }
+        if self.current_pointer()? {
+            self.element.class_list().remove_1("xterm-cursor-pointer")?;
+        }
+        link.invoke("leave", &event)?;
         self.hover.borrow_mut().clear_current();
         Ok(())
     }
     pub(super) fn ask(self: &Rc<Self>, position: Position, use_cache: bool) -> Result<(), JsValue> {
         if !use_cache || self.active_line.get().is_none() {
-            // Map.forEach observes later replies inserted/replaced by a disposal
-            // callback. Retain this map and each current array if nested pointer
-            // handling replaces the active cache, just as the source call does.
+            // Map.forEach retains this map identity but observes later insertions.
             let replies = self.replies.borrow().clone();
             let mut ordinal = 0;
             while let Some(group) = replies.disposal_group(ordinal) {
                 if let Some(group) = group {
                     let length = group.borrow().len();
                     for index in 0..length {
-                        let handler = group.borrow().get(index).cloned();
-                        if let Some(dispose) =
-                            handler.as_ref().and_then(|link| link.dispose.as_ref())
-                        {
-                            dispose()?;
-                        }
+                        let link = group.borrow().get(index).cloned();
+                        if let Some(link) = link { link.dispose()?; }
                     }
                 }
                 ordinal += 1;
             }
             *self.replies.borrow_mut() = Rc::new(Default::default());
-            let handlers = std::mem::take(&mut *self.handlers.borrow_mut());
-            drop(handlers);
             self.active_line.set(Some(position.y));
         }
         let request = ProviderRequest::new(position);
         let mut index = 0;
         while let Some(provider) = self.providers.get(index) {
             if use_cache {
-                let selected = self.replies.borrow().from_cache_index(
-                    index,
-                    &request,
-                    self.providers.len(),
-                    self.cols.get(),
-                );
-                if let Some(selected) = selected {
-                    self.select(selected)?;
-                }
+                let replies = self.replies.borrow().clone();
+                let selected = replies.try_cached_index(index, &request, self.providers.len(), |link| Self::probe(link, position, self.cols.get()))?;
+                if let Some(selected) = selected { self.select(selected)?; }
             } else {
                 let weak = Rc::downgrade(self);
                 let request = request.clone();
-                provider.provide_links(
-                    position.y,
-                    Box::new(move |links| {
-                        let Some(state) = weak
-                            .upgrade()
-                            .filter(|s| !s.disposed.get() && !s.mouse_out.get())
-                        else {
-                            return Ok(());
-                        };
-                        let data = links.map(|links| {
-                            links
-                                .into_iter()
-                                .map(|link| {
-                                    let link = Rc::new(link);
-                                    state
-                                        .handlers
-                                        .borrow_mut()
-                                        .insert(Rc::as_ptr(&link.data), link.clone());
-                                    link
-                                })
-                                .collect()
-                        });
-                        let selected = state.replies.borrow().receive_unfiltered(
-                            index,
-                            data,
-                            &request,
-                            state.providers.len(),
-                            state.cols.get(),
-                        );
-                        if let Some(selected) = selected {
-                            state.select(selected)?;
-                        }
-                        state.replies.borrow().filter_complete(
-                            request.position.y,
-                            state.providers.len(),
-                            state.cols.get(),
-                        );
-                        Ok(())
-                    }),
-                )?;
+                provider.provide_links_lazy(position.y, Box::new(move |resolve| {
+                    let Some(state) = weak.upgrade().filter(|s| !s.disposed.get() && !s.mouse_out.get()) else { return Ok(()) };
+                    let data = resolve()?.map(|links| links.into_iter().map(Rc::new).collect());
+                    let replies = state.replies.borrow().clone();
+                    let selected = replies.try_receive_unfiltered(index, data, &request, state.providers.len(), |link| Self::probe(link, request.position, state.cols.get()))?;
+                    if let Some(selected) = selected { state.select(selected)?; }
+                    // Selection callbacks can replace the active reply map.
+                    let replies = state.replies.borrow().clone();
+                    let occupied = Set::new(&JsValue::UNDEFINED);
+                    replies.try_filter_complete(state.providers.len(), |link| link.keep_nonintersecting(request.position.y, state.cols.get(), &occupied))?;
+                    Ok(())
+                }))?;
             }
             index += 1;
         }
         Ok(())
     }
-    fn select(&self, link: Rc<super::BrowserLink>) -> Result<(), JsValue> {
-        let data = link.data.clone();
+    fn probe(link: Option<&Rc<BrowserLink>>, position: Position, cols: usize) -> Result<bool, JsValue> {
+        link.ok_or_else(|| js_sys::TypeError::new("Cannot read properties of undefined (reading 'link')"))?.contains(position, cols)
+    }
+    fn select(self: &Rc<Self>, link: Rc<BrowserLink>) -> Result<(), JsValue> {
         let event = self.last_event.borrow().clone();
-        let position = match event.as_ref() {
-            Some(event) => (self.coordinates)(event)?,
-            None => None,
-        };
-        let Some(position) = position else {
-            return Ok(());
-        };
-        if data.range.contains(position, self.cols.get()) {
-            let effects = self.hover.borrow_mut().enter(data, link.decorations);
-            self.apply(effects, None)?;
+        let Some(event) = event else { return Ok(()) };
+        let Some(position) = (self.coordinates)(&event)? else { return Ok(()) };
+        if link.contains(position, self.cols.get())? {
+            // Assign current before invoking decorations getters, just as source.
+            self.hover.borrow_mut().begin_enter(link.clone(), Default::default());
+            let values = link.decorations()?;
+            self.hover.borrow_mut().update_decorations(super::super::Decorations { underline: values.0.is_truthy(), pointer_cursor: values.1.is_truthy() });
+            *self.decoration_values.borrow_mut() = values;
+            if self.decoration_values.borrow().0.is_truthy() { self.fire_underline(&link, true)?; }
+            if self.current_pointer()? { self.element.class_list().add_1("xterm-cursor-pointer")?; }
+            link.invoke("hover", &event)?;
+            self.install_decorations(&link)?;
         }
         Ok(())
     }
-    pub(super) fn apply(
-        &self,
-        effects: Vec<HoverEffect>,
-        event: Option<&MouseEvent>,
-    ) -> Result<(), JsValue> {
-        let transition = effects
-            .iter()
-            .any(|effect| matches!(effect, HoverEffect::Hover(_) | HoverEffect::Leave(_)));
-        let mouse_event = event.cloned().or_else(|| self.last_event.borrow().clone());
-        // A callback can replace the row cache during an underline event. Hold
-        // the original link's callbacks just as the source's local link does.
-        let effects: Vec<_> = effects
-            .into_iter()
-            .map(|effect| {
-                let data = match &effect {
-                    HoverEffect::Hover(data)
-                    | HoverEffect::Leave(data)
-                    | HoverEffect::Activate(data) => Some(data),
-                    _ => None,
-                };
-                let handler = data
-                    .map(|data| {
-                        self.handlers
-                            .borrow()
-                            .get(&Rc::as_ptr(data))
-                            .cloned()
-                            .ok_or_else(|| JsValue::from_str("link callback identity missing"))
-                    })
-                    .transpose()?;
-                Ok((effect, handler))
-            })
-            .collect::<Result<_, JsValue>>()?;
-        for (effect, handler) in effects {
-            match &effect {
-                HoverEffect::Underline { show, event } => (self.underline)(*show, *event)?,
-                HoverEffect::Pointer(enabled) if !transition => {
-                    self.element
-                        .class_list()
-                        .toggle_with_force("xterm-cursor-pointer", *enabled)?;
-                }
-                HoverEffect::Pointer(_) => {
-                    // Hover/leave re-read pointer state below, after underline
-                    // listeners have had the opportunity to change decorations.
-                }
-                HoverEffect::Hover(data)
-                | HoverEffect::Leave(data)
-                | HoverEffect::Activate(data) => {
-                    if !matches!(effect, HoverEffect::Activate(_)) {
-                        let decorations = self.hover.borrow().decorations().ok_or_else(|| {
-                            js_sys::TypeError::new(
-                                "Cannot read properties of undefined (reading 'state')",
-                            )
-                        })?;
-                        if decorations.pointer_cursor {
-                            self.element.class_list().toggle_with_force(
-                                "xterm-cursor-pointer",
-                                matches!(effect, HoverEffect::Hover(_)),
-                            )?;
-                        }
-                    }
-                    // This variant always carries its original callback identity.
-                    let handler = handler
-                        .ok_or_else(|| JsValue::from_str("link callback identity missing"))?;
-                    let callback = match &effect {
-                        HoverEffect::Hover(_) => handler.hover.clone(),
-                        HoverEffect::Leave(_) => handler.leave.clone(),
-                        HoverEffect::Activate(_) => Some(handler.activate.clone()),
-                        _ => unreachable!("link callback effects only"),
-                    };
-                    if let (Some(callback), Some(event)) = (callback, mouse_event.as_ref()) {
-                        callback(event, data)?;
-                    }
-                }
-            }
+    fn current_pointer(&self) -> Result<bool, JsValue> {
+        if self.hover.borrow().current().is_none() {
+            return Err(js_sys::TypeError::new("Cannot read properties of undefined (reading 'state')").into());
         }
-        Ok(())
+        Ok(self.decoration_values.borrow().1.is_truthy())
+    }
+    pub(super) fn fire_underline(&self, link: &BrowserLink, show: bool) -> Result<(), JsValue> {
+        let (cols, offset) = self.hover.borrow().geometry();
+        (self.underline)(show, link.underline_event(cols, offset)?)
     }
 }

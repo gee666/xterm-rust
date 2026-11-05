@@ -58,6 +58,7 @@ impl SelectionHost for WeakBrowserServices {
         let Some(link) = linkifier.and_then(|linkifier| linkifier.current_link()) else {
             return Ok(None);
         };
+        let link = link.snapshot()?;
         let start_x = i64::try_from(link.range.start.x)
             .map_err(|error| js_sys::Error::new(&error.to_string()))?
             - 1;

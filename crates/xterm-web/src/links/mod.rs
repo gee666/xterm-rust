@@ -8,6 +8,8 @@ pub mod browser;
 pub mod browser_debounce;
 #[cfg(target_arch = "wasm32")]
 pub mod browser_linkifier;
+#[cfg(target_arch = "wasm32")]
+pub(crate) mod browser_payload;
 pub mod debounce;
 #[cfg(target_arch = "wasm32")]
 pub mod dom_helpers;

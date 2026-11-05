@@ -26,15 +26,15 @@ pub enum HoverEffect {
     Activate(Rc<Link>),
 }
 
-pub struct HoverState {
-    current: Option<Rc<Link>>,
-    mouse_down: Option<Rc<Link>>,
+pub struct HoverState<T = Link> {
+    current: Option<Rc<T>>,
+    mouse_down: Option<Rc<T>>,
     decorations: Decorations,
     hovered: bool,
     cols: usize,
     scroll_offset: usize,
 }
-impl HoverState {
+impl<T> HoverState<T> {
     pub fn new(cols: usize, scroll_offset: usize) -> Self {
         Self {
             current: None,
@@ -45,7 +45,7 @@ impl HoverState {
             scroll_offset,
         }
     }
-    pub fn current(&self) -> Option<&Rc<Link>> {
+    pub fn current(&self) -> Option<&Rc<T>> {
         self.current.as_ref()
     }
     pub fn decorations(&self) -> Option<Decorations> {
@@ -55,15 +55,44 @@ impl HoverState {
         self.cols = cols;
         self.scroll_offset = scroll_offset;
     }
+    pub fn mouse_down_link(&self) -> Option<Rc<T>> {
+        self.mouse_down.clone()
+    }
+    pub fn is_hovered(&self) -> bool {
+        self.hovered
+    }
+    pub fn geometry(&self) -> (usize, usize) {
+        (self.cols, self.scroll_offset)
+    }
+    /// Browser callers perform fallible host reads after committing this state,
+    /// without holding a RefCell borrow across getters or callbacks.
+    pub fn begin_enter(&mut self, link: Rc<T>, decorations: Decorations) {
+        self.current = Some(link);
+        self.decorations = decorations;
+        self.hovered = true;
+    }
+    pub fn begin_leave(&mut self) {
+        self.hovered = false;
+    }
+    pub fn update_decorations(&mut self, decorations: Decorations) {
+        self.decorations = decorations;
+    }
+    /// A throwing leave callback keeps the current link, as upstream does.
+    pub fn clear_current(&mut self) {
+        self.current = None;
+    }
+    pub fn mouse_down(&mut self) {
+        self.mouse_down.clone_from(&self.current);
+    }
+}
+impl HoverState<Link> {
     pub fn contains(&self, position: Position) -> bool {
         self.current
             .as_ref()
             .is_some_and(|link| link.range.contains(position, self.cols))
     }
     pub fn enter(&mut self, link: Rc<Link>, decorations: Option<Decorations>) -> Vec<HoverEffect> {
-        self.current = Some(Rc::clone(&link));
-        self.decorations = decorations.unwrap_or_default();
-        self.hovered = true;
+        self.begin_enter(Rc::clone(&link), decorations.unwrap_or_default());
         let mut effects = Vec::new();
         if self.decorations.underline {
             effects.push(HoverEffect::Underline {
@@ -94,14 +123,6 @@ impl HoverState {
         }
         effects.push(HoverEffect::Leave(link));
         effects
-    }
-    /// Call after leave effects succeed. A throwing leave callback keeps the
-    /// current link visible to subsequent calls, as upstream does.
-    pub fn clear_current(&mut self) {
-        self.current = None;
-    }
-    pub fn mouse_down(&mut self) {
-        self.mouse_down.clone_from(&self.current);
     }
     pub fn mouse_up(&self, position: Option<Position>) -> Option<HoverEffect> {
         let link = self.current.as_ref()?;

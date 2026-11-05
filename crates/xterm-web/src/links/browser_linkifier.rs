@@ -1,12 +1,11 @@
 // Copyright (c) 2019-2026 The xterm.js authors. All rights reserved. MIT license.
 use super::{
-    Decorations, HoverState, Link, LinkProviderService, Position, ProviderRegistration,
-    ProviderReplies, UnderlineEvent,
+    HoverState, Link, LinkProviderService, Position, ProviderRegistration, ProviderReplies,
+    UnderlineEvent,
 };
 use crate::dom_listener::DomListener;
 use std::{
     cell::{Cell, RefCell},
-    collections::HashMap,
     rc::Rc,
 };
 use wasm_bindgen::{JsCast, JsValue};
@@ -14,31 +13,28 @@ use web_sys::{HtmlElement, MouseEvent};
 
 #[path = "browser_linkifier_events.rs"]
 mod events;
+#[path = "browser_linkifier_decorations.rs"]
+mod decorations;
+pub use super::browser_payload::{BrowserLink, NativeBrowserLink};
 
 pub type LinkCallback = Rc<dyn Fn(&MouseEvent, &Link) -> Result<(), JsValue>>;
 pub type LinkDisposal = Rc<dyn Fn() -> Result<(), JsValue>>;
 pub type LinkReply = Box<dyn Fn(Option<Vec<BrowserLink>>) -> Result<(), JsValue>>;
+pub type LinkResolution = Box<dyn FnOnce() -> Result<Option<Vec<BrowserLink>>, JsValue>>;
+pub type LazyLinkReply = Box<dyn Fn(LinkResolution) -> Result<(), JsValue>>;
 pub type MouseCoordinates = Rc<dyn Fn(&MouseEvent) -> Option<Position>>;
 pub type FallibleMouseCoordinates = Rc<dyn Fn(&MouseEvent) -> Result<Option<Position>, JsValue>>;
 pub type UnderlineCallback = Rc<dyn Fn(bool, UnderlineEvent) -> Result<(), JsValue>>;
 
-#[derive(Clone)]
-pub struct BrowserLink {
-    pub data: Rc<Link>,
-    pub decorations: Option<Decorations>,
-    pub activate: LinkCallback,
-    pub hover: Option<LinkCallback>,
-    pub leave: Option<LinkCallback>,
-    pub dispose: Option<LinkDisposal>,
-}
-impl AsRef<Link> for BrowserLink {
-    fn as_ref(&self) -> &Link {
-        &self.data
-    }
-}
-
 pub trait BrowserLinkProvider {
     fn provide_links(&self, y: usize, callback: LinkReply) -> Result<(), JsValue>;
+    /// Ignore replies after mouse-out/disposal before touching a raw reply's map.
+    fn provide_links_lazy(&self, y: usize, callback: LazyLinkReply) -> Result<(), JsValue> {
+        self.provide_links(y, Box::new(move |links| callback(Box::new(move || Ok(links)))))
+    }
+    fn javascript_identity(&self) -> Option<&JsValue> {
+        None
+    }
 }
 pub type BrowserProviders = Rc<LinkProviderService<dyn BrowserLinkProvider>>;
 
@@ -46,8 +42,8 @@ pub(super) struct State {
     element: HtmlElement,
     providers: BrowserProviders,
     replies: RefCell<Rc<ProviderReplies<BrowserLink>>>,
-    handlers: RefCell<HashMap<*const Link, Rc<BrowserLink>>>,
-    hover: RefCell<HoverState>,
+    hover: RefCell<HoverState<BrowserLink>>,
+    decoration_values: RefCell<(JsValue, JsValue)>,
     coordinates: FallibleMouseCoordinates,
     underline: UnderlineCallback,
     last_event: RefCell<Option<MouseEvent>>,
@@ -115,8 +111,8 @@ impl BrowserLinkifier {
             element: element.clone(),
             providers,
             replies: RefCell::new(Rc::new(ProviderReplies::default())),
-            handlers: RefCell::new(HashMap::new()),
             hover: RefCell::new(HoverState::new(cols, scroll_offset)),
+            decoration_values: RefCell::new((JsValue::TRUE, JsValue::TRUE)),
             coordinates,
             underline,
             last_event: RefCell::new(None),
@@ -152,21 +148,7 @@ impl BrowserLinkifier {
                             state.hover.borrow_mut().mouse_down();
                             Ok(())
                         }
-                        "mouseup" => {
-                            // Unlinked mouseup must not observe geometry getters or
-                            // renderer errors. Source checks currentLink first.
-                            if state.hover.borrow().current().is_none() {
-                                return Ok(());
-                            }
-                            event
-                                .dyn_into::<MouseEvent>()
-                                .map_err(|_| JsValue::from_str("mouseup was not a MouseEvent"))
-                                .and_then(|e| {
-                                    let position = (state.coordinates)(&e)?;
-                                    let effect = state.hover.borrow().mouse_up(position);
-                                    state.apply(effect.into_iter().collect(), Some(&e))
-                                })
-                        }
+                        "mouseup" => state.mouse_up(event),
                         _ => unreachable!("fixed event type list"),
                     }
                 },
@@ -183,7 +165,7 @@ impl BrowserLinkifier {
     ) -> ProviderRegistration<dyn BrowserLinkProvider> {
         self.state.providers.register(provider)
     }
-    pub fn current_link(&self) -> Option<Rc<Link>> {
+    pub fn current_link(&self) -> Option<Rc<BrowserLink>> {
         self.state.hover.borrow().current().cloned()
     }
     pub fn resize(&self, cols: usize, scroll_offset: usize) -> Result<(), JsValue> {
@@ -203,7 +185,11 @@ impl BrowserLinkifier {
             .set_geometry(self.state.cols.get(), scroll_offset);
     }
     pub fn on_render(&self, start: f64, end: f64) -> Result<(), JsValue> {
-        let invalidated = self.state.hover.borrow().invalidated_by_render(start, end);
+        let current = self.current_link();
+        let (_, offset) = self.state.hover.borrow().geometry();
+        let start = if start == 0.0 { 0.0 } else { start + 1.0 + offset as f64 };
+        let end = offset as f64 + 1.0 + end;
+        let invalidated = match current { Some(link) => link.invalidated(start, end)?, None => false }; 
         if invalidated {
             self.state.clear_current()?;
             let event = self.state.last_event.borrow().clone();
@@ -218,12 +204,18 @@ impl BrowserLinkifier {
         Ok(())
     }
     pub fn set_current_underline(&self, value: bool) -> Result<(), JsValue> {
-        let effect = self.state.hover.borrow_mut().set_underline(value);
-        self.state.apply(effect.into_iter().collect(), None)
+        let current = self.current_link();
+        if let Some(link) = current {
+            self.state.set_decoration(true, value.into(), &link)?;
+        }
+        Ok(())
     }
     pub fn set_current_pointer_cursor(&self, value: bool) -> Result<(), JsValue> {
-        let effect = self.state.hover.borrow_mut().set_pointer_cursor(value);
-        self.state.apply(effect.into_iter().collect(), None)
+        let current = self.current_link();
+        if let Some(link) = current {
+            self.state.set_decoration(false, value.into(), &link)?;
+        }
+        Ok(())
     }
     pub fn dispose(&self) -> Result<(), JsValue> {
         self.state.disposed.set(true);
@@ -231,8 +223,7 @@ impl BrowserLinkifier {
             listener.dispose()?;
         }
         self.state.last_event.borrow_mut().take();
-        self.state.replies.borrow_mut().clear();
-        self.state.handlers.borrow_mut().clear();
+        self.state.replies.borrow().reset();
         Ok(())
     }
 }
