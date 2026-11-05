@@ -16,6 +16,8 @@ Windows, Rust/Cargo1.85.1, Node24.15.0 and wasm-bindgen0.2.100:
 - The directed coordinator matrix passes24 tests in each of Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4. Three new tests cover default/custom/null/inherited/getter constructor inputs, the separate reset-default copy, retained view identity, DECSET and graphics updates, soft/hard reset, successful and failing public setters, disposal and explicit rejection of diagnostic writes.
 - The unchanged original `addon-image` constructor-option family discovers6 case-projects, executes6, passes6 and has0 failed, skipped or unrun cases. The production browser binding, not only a Rust helper, supplies this view.
 
+- After refreshing onto main5082b32a, the directed24×3 matrix passes again. The full unchanged image family discovers639 case-projects, executes635, passes622, fails13, skips4 and leaves0 unrun. The thirteen failure titles, projects and messages exactly match the preceding handler-inspection report after removing the six constructor-option failures. Nine still require private core/render services; four still report the retained source-baseline165-versus160 image geometry discrepancy. No assertion was changed or rounded.
+
 Raw directed/source/input identities, original Playwright assertions, reference hashes and native gate logs are retained under `results/image-option-inspection`. Temporary paths in the reports identify the historical build. Generated packages and duplicate test output are disposable after review. Reference copies were hashed against the retained P: source files and match.
 
 ## Reproduce
@@ -31,4 +33,4 @@ WASM_TEST=image_addon_browser CARGO_BUILD_JOBS=2 node scripts/image-canvas-check
 node scripts/e2e-upstream.mjs --suite addon-image --grep 'ctor options' --timeout-ms 180000
 ```
 
-This is scoped typed inspection evidence. Full image suites, img01..48, raw options, private core services and cross-platform/runtime equivalence remain NOT PROVEN. The previous full639 report in `docs/image-handler-inspection.md` is historical, not a new full-family pass from this task.
+This is scoped typed inspection evidence. The full image suite is executed but not passing. img01..48, raw options, private core services and cross-platform/runtime equivalence remain NOT PROVEN.
