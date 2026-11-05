@@ -153,6 +153,7 @@ impl Drop for BrowserRenderDebouncer {
 
 /// Reusable browser timeout/clock adapter. The caller owns any Rust Closure
 /// behind callback and must cancel outstanding jobs before releasing that owner.
+#[derive(Clone)]
 pub struct BrowserTimerScheduler {
     window: Window,
     performance: Performance,
@@ -177,9 +178,10 @@ impl TimerScheduler for BrowserTimerScheduler {
         self.performance.now()
     }
     fn request_timeout(&mut self, delay: f64) -> Result<i32, JsValue> {
-        let callback = self.callback.borrow();
-        let callback = callback
-            .as_ref()
+        let callback = self
+            .callback
+            .borrow()
+            .clone()
             .ok_or_else(|| JsValue::from_str("timer callback not initialized"))?;
         // Calling the binding with an i32 would clamp in Rust before WebIDL's
         // conversion. Reflect.apply retains JS number conversion for all delays.
@@ -187,7 +189,7 @@ impl TimerScheduler for BrowserTimerScheduler {
             js_sys::Reflect::get(self.window.as_ref(), &JsValue::from_str("setTimeout"))?
                 .dyn_into()?;
         let args = js_sys::Array::new();
-        args.push(callback);
+        args.push(&callback);
         args.push(&JsValue::from_f64(delay));
         let handle = set_timeout
             .apply(self.window.as_ref(), &args)?
@@ -203,6 +205,29 @@ impl TimerScheduler for BrowserTimerScheduler {
             js_sys::Reflect::get(self.window.as_ref(), &JsValue::from_str("clearTimeout"))?
                 .dyn_into()?;
         clear_timeout.call1(self.window.as_ref(), &JsValue::from_f64(f64::from(handle)))?;
+        Ok(())
+    }
+    fn now_shared(scheduler: &RefCell<Self>) -> Result<f64, JsValue> {
+        let performance = scheduler.borrow().performance.clone();
+        let now: Function =
+            js_sys::Reflect::get(performance.as_ref(), &"now".into())?.unchecked_into();
+        now.call0(performance.as_ref())?
+            .as_f64()
+            .ok_or_else(|| JsValue::from_str("performance.now did not return a number"))
+    }
+    fn request_timeout_shared(scheduler: &RefCell<Self>, delay: f64) -> Result<i32, JsValue> {
+        let mut host = scheduler.borrow().clone();
+        host.request_timeout(delay)
+    }
+    fn cancel_timeout_resolved(
+        scheduler: &RefCell<Self>,
+        resolve: impl FnOnce() -> Option<i32>,
+    ) -> Result<(), JsValue> {
+        let window = scheduler.borrow().window.clone();
+        let cancel: Function =
+            js_sys::Reflect::get(window.as_ref(), &"clearTimeout".into())?.unchecked_into();
+        let handle = resolve().map_or(JsValue::UNDEFINED, JsValue::from);
+        cancel.call1(window.as_ref(), &handle)?;
         Ok(())
     }
     fn cleanup_error(&mut self, error: JsValue) {

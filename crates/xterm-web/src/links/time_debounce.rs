@@ -14,6 +14,37 @@ pub trait TimerScheduler {
     fn request_timeout(&mut self, delay_ms: f64) -> Result<Self::Handle, Self::Error>;
     fn cancel_timeout(&mut self, handle: Self::Handle) -> Result<(), Self::Error>;
     fn cleanup_error(&mut self, error: Self::Error);
+    /// Reentrant hosts copy their clock handles and release this borrow before
+    /// entering host code. Existing non-reentrant schedulers keep their API.
+    fn now_shared(scheduler: &RefCell<Self>) -> Result<f64, Self::Error>
+    where
+        Self: Sized,
+    {
+        Ok(scheduler.borrow().now())
+    }
+    fn request_timeout_shared(
+        scheduler: &RefCell<Self>,
+        delay_ms: f64,
+    ) -> Result<Self::Handle, Self::Error>
+    where
+        Self: Sized,
+    {
+        scheduler.borrow_mut().request_timeout(delay_ms)
+    }
+    /// Resolve the pending ID after the host's cancellation method lookup.
+    /// A getter can reenter and replace or clear that ID before arguments run.
+    fn cancel_timeout_resolved(
+        scheduler: &RefCell<Self>,
+        resolve: impl FnOnce() -> Option<Self::Handle>,
+    ) -> Result<(), Self::Error>
+    where
+        Self: Sized,
+    {
+        match resolve() {
+            Some(handle) => scheduler.borrow_mut().cancel_timeout(handle),
+            None => Ok(()),
+        }
+    }
 }
 
 type Render<S> =
@@ -85,12 +116,12 @@ impl<S: TimerScheduler> TimeBasedDebouncer<S> {
         count: f64,
     ) -> Result<(), S::Error> {
         self.state.rows.borrow_mut().add(start, end, count);
-        let now = self.state.scheduler.borrow().now();
+        let now = S::now_shared(&self.state.scheduler)?;
         let elapsed = now - self.state.last_refresh.get();
         if elapsed >= self.state.threshold {
-            let pending = self.state.pending.borrow().clone();
-            if let Some(handle) = pending {
-                self.state.scheduler.borrow_mut().cancel_timeout(handle)?;
+            let has_pending = self.state.pending.borrow().is_some();
+            if has_pending {
+                self.cancel_pending()?;
                 self.state.pending.borrow_mut().take();
                 self.state.additional.set(false);
             }
@@ -98,11 +129,8 @@ impl<S: TimerScheduler> TimeBasedDebouncer<S> {
             self.render()?;
         } else if !self.state.additional.get() {
             self.state.additional.set(true);
-            let handle = self
-                .state
-                .scheduler
-                .borrow_mut()
-                .request_timeout(self.state.threshold - elapsed)?;
+            let handle =
+                S::request_timeout_shared(&self.state.scheduler, self.state.threshold - elapsed)?;
             *self.state.pending.borrow_mut() = Some(handle);
         }
         Ok(())
@@ -124,16 +152,16 @@ impl<S: TimerScheduler> TimeBasedDebouncer<S> {
     pub fn on_timeout(&self) -> Result<(), S::Error> {
         self.state
             .last_refresh
-            .set(self.state.scheduler.borrow().now());
+            .set(S::now_shared(&self.state.scheduler)?);
         self.render()?;
         self.state.additional.set(false);
         self.state.pending.borrow_mut().take();
         Ok(())
     }
     pub fn dispose(&self) -> Result<(), S::Error> {
-        let pending = self.state.pending.borrow().clone();
-        if let Some(handle) = pending {
-            self.state.scheduler.borrow_mut().cancel_timeout(handle)?;
+        let has_pending = self.state.pending.borrow().is_some();
+        if has_pending {
+            self.cancel_pending()?;
             self.state.pending.borrow_mut().take();
         }
         self.state.additional.set(false);
@@ -141,6 +169,11 @@ impl<S: TimerScheduler> TimeBasedDebouncer<S> {
     }
     pub fn has_pending_timeout(&self) -> bool {
         self.state.pending.borrow().is_some()
+    }
+    fn cancel_pending(&self) -> Result<(), S::Error> {
+        S::cancel_timeout_resolved(&self.state.scheduler, || {
+            self.state.pending.borrow().clone()
+        })
     }
     fn render(&self) -> Result<(), S::Error> {
         let range = self.state.rows.borrow_mut().take();
