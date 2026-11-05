@@ -19,10 +19,14 @@ function entries(bytes) {
  });
 }
 const original=entries(base);
+function duplicate(change) {
+ return change.duplicateTable??(change.duplicateName?{tag:'name',position:change.duplicateName}:undefined);
+}
 function construct(change) {
  const records=original.filter(record=>record.tag!==change.tag&&!change.remove?.includes(record.tag));
  if(change.data)records.push({tag:change.tag,data:Buffer.from(change.data)});
- if(change.duplicateName)records[change.duplicateName==='first'?'unshift':'push']({tag:'name',data:Buffer.alloc(0)});
+ const extra=duplicate(change);
+ if(extra)records[extra.position==='first'?'unshift':'push']({tag:extra.tag,data:extra.invalidCompression?Buffer.from(Array.from({length:16},(_,i)=>i+1)):Buffer.alloc(0)});
  const header=Buffer.alloc(12+records.length*16);base.copy(header,0,0,12);header.writeUInt16BE(records.length,4);
  let cursor=header.length;const pieces=[header];
  records.forEach(({tag,data},index)=>{
@@ -85,13 +89,21 @@ function woff(bytes) {
  header.writeUInt32BE(cursor,8);return Buffer.concat(pieces);
 }
 for(const position of ['first','last'])for(const compressed of [false,true])changes.push({name:`invalid ${position} name descriptor ${compressed?'WOFF':'SFNT'}`,duplicateName:position,woff:compressed});
+// Empty script/feature/lookup lists form a valid GSUB with no substitutions.
+const emptyGsub=[0,1,0,0,0,10,0,12,0,14,0,0,0,0,0,0];
+for(const compressed of [false,true]) {
+ changes.push({name:`valid empty GSUB ${compressed?'WOFF':'SFNT'}`,tag:'GSUB',data:emptyGsub,woff:compressed});
+ for(const position of ['first','last'])changes.push({name:`invalid ${position} GSUB descriptor ${compressed?'WOFF':'SFNT'}`,tag:'GSUB',data:emptyGsub,woff:compressed,duplicateTable:{tag:'GSUB',position}});
+}
+changes.push({name:'ignored first GSUB invalid compressed data',tag:'GSUB',data:emptyGsub,woff:true,duplicateTable:{tag:'GSUB',position:'first',invalidCompression:true}});
 const cases=[];
 for(const change of changes) {
  let bytes=construct(change);
  if(change.woff)bytes=woff(bytes);
- if(change.duplicateName) {
-  const index=change.duplicateName==='first'?0:bytes.readUInt16BE(change.woff?12:4)-1,at=(change.woff?44:12)+index*(change.woff?20:16);
-  bytes.writeUInt32BE(0xfffffff0,at+(change.woff?4:8));
+ const extra=duplicate(change);
+ if(extra) {
+  const index=extra.position==='first'?0:bytes.readUInt16BE(change.woff?12:4)-1,at=(change.woff?44:12)+index*(change.woff?20:16);
+  if(!extra.invalidCompression)bytes.writeUInt32BE(0xfffffff0,at+(change.woff?4:8));
   bytes.writeUInt32BE(128,at+12);
   if(change.woff)bytes.writeUInt32BE(16,at+8);
  }

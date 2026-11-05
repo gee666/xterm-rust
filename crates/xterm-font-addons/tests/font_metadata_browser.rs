@@ -3,6 +3,30 @@ use js_sys::{Function, Reflect, Uint8Array};
 use wasm_bindgen::{closure::Closure, prelude::*};
 use wasm_bindgen_test::*;
 use xterm_font_addons::LigaturesAddon;
+#[path = "../../xterm-addons/tests/support/font_metadata_data.rs"]
+mod corpus;
+
+#[wasm_bindgen_test]
+fn source_constructor_corpus_matches_in_wasm() {
+    use xterm_addons::ligatures::font::{Font, FontOptions};
+    let fixture: serde_json::Value = serde_json::from_str(include_str!(
+        "../../xterm-addons/tests/fixtures/font-metadata.json"
+    ))
+    .unwrap();
+    let mut failures = Vec::new();
+    for case in fixture["cases"].as_array().unwrap() {
+        let actual = Font::load_buffer(&corpus::construct(case), FontOptions::default());
+        if actual.is_ok() != (case["outcome"]["status"] == "ok") {
+            failures.push(format!(
+                "{}: expected {}, got {:?}",
+                case["name"],
+                case["outcome"],
+                actual.err()
+            ));
+        }
+    }
+    assert!(failures.is_empty(), "{}", failures.join("\n"));
+}
 
 wasm_bindgen_test_configure!(run_in_browser);
 #[wasm_bindgen(module = "/tests/support/font_metadata_scenarios.mjs")]

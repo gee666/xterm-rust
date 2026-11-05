@@ -132,10 +132,15 @@ impl<'a> FontTables<'a> {
                 b"loca" => loca = true,
                 b"CFF " | b"CFF2" => cff = true,
                 b"hmtx" => hmtx = true,
-                b"name" => {
-                    // The constructor selects the last directory entry without
-                    // touching earlier data, including invalid/compressed data.
-                    name = Some(record);
+                b"name" | b"GSUB" => {
+                    // Both tables are deferred by the source constructor. Select
+                    // the final descriptor without touching earlier data, even
+                    // when its offset or compressed payload is invalid.
+                    if tag == b"name" {
+                        name = Some(record);
+                    } else {
+                        gsub = Some(record);
+                    }
                     continue;
                 }
                 _ => {}
@@ -144,14 +149,13 @@ impl<'a> FontTables<'a> {
                 tag,
                 b"head" | b"hhea" | b"maxp" | b"OS/2" | b"post" | b"ltag"
             );
-            if tag != b"cmap" && tag != b"GSUB" && !metadata {
+            if tag != b"cmap" && !metadata {
                 continue;
             }
             let offset = record.offset32(if woff { 4 } else { 8 })?;
             let table = table_data(reader, record, woff, metadata)?;
             match tag {
                 b"cmap" => cmap = Some(table),
-                b"GSUB" => gsub = Some(table),
                 b"maxp" => {
                     super::font_metadata::immediate(tag, &table)?;
                     glyph_count = Some(Reader::new(&table).u16(4)?);
@@ -182,7 +186,9 @@ impl<'a> FontTables<'a> {
         }
         Ok(Self {
             cmap: cmap.ok_or(FontError::MissingTable("cmap"))?,
-            gsub,
+            gsub: gsub
+                .map(|record| table_data(reader, record, woff, false))
+                .transpose()?,
             glyph_count: if glyf && loca {
                 Some(glyph_count.unwrap_or(0))
             } else {
