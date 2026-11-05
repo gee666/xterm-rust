@@ -23,6 +23,8 @@ mod font_merge_range;
 mod font_metadata;
 #[path = "font_overlap.rs"]
 mod font_overlap;
+#[path = "font_svg.rs"]
+mod font_svg;
 #[path = "font_tables.rs"]
 mod font_tables;
 #[path = "font_tree.rs"]

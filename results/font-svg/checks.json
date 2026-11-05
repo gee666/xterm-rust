@@ -1,0 +1,84 @@
+{
+  "scope": "Scoped SVG constructor fix, not full font or terminal parity",
+  "base": "5082b32a",
+  "platform": "native Windows",
+  "rust": "1.85.1",
+  "cargo": "1.85.1",
+  "node": "v24.15.0",
+  "nativeNegativeControl": {
+    "mismatches": 113,
+    "incorrectlyAccepted": 109,
+    "wrongErrorPrecedence": 4
+  },
+  "commands": [
+    {
+      "command": "cargo test --locked -j2 -p xterm-addons --test font_svg_constructor",
+      "status": "expected-failure",
+      "log": "baseline.log",
+      "sha256": "52ebd7ff8fd80d450b755cd438550d3e7a9e8b078c0c7fe528b989a48ab5bd32"
+    },
+    {
+      "command": "cargo test --locked -j2 -p xterm-addons --test font_svg_constructor",
+      "status": "passed",
+      "log": "native.log",
+      "sha256": "a0d766fc4244ca539f134c73c3041b208cbbefb69b17e624e7b97658c3910298"
+    },
+    {
+      "command": "cargo test --locked -j2 -p xterm-addons --test font_metadata_constructor",
+      "status": "passed",
+      "log": "metadata.log",
+      "sha256": "4e57cfed5020424acbc9adf2e8f60078746a8d310734aaae8ab6963644d00b02"
+    },
+    {
+      "command": "cargo test --locked -j2 -p xterm-addons --lib ligatures",
+      "status": "passed",
+      "log": "ligatures.log",
+      "sha256": "ec864dd815eb8712554d415e077a2e24a48ebcf2846e3a456bc75f9cdd807ce1"
+    },
+    {
+      "command": "cargo clippy --locked -j2 -p xterm-addons --all-targets --all-features -- -D warnings",
+      "status": "passed",
+      "log": "clippy-native.log",
+      "sha256": "b9725a146a8710a25b85b6ec2e3e660d97cea6ec83db882dc3498fc59a3729c9"
+    },
+    {
+      "command": "cargo clippy --locked -j2 -p xterm-font-addons --target wasm32-unknown-unknown --test font_svg_browser -- -D warnings",
+      "status": "passed",
+      "log": "clippy-wasm.log",
+      "sha256": "67e02180bd8fb567d3edd66249322a2cb1f0b5043b309096875e2cb63a880d83"
+    },
+    {
+      "command": "cargo fmt --all -- --check",
+      "status": "failed-os206",
+      "log": "fmt.log",
+      "sha256": "a3c64adc493a218a5a8332dfc60b9e9fd0cf455d8215931a5888f9bc84a29c70"
+    },
+    {
+      "command": "cargo +1.97.1 fmt --all -- --check",
+      "status": "failed-os206",
+      "log": "fmt-1.97.log",
+      "sha256": "a3c64adc493a218a5a8332dfc60b9e9fd0cf455d8215931a5888f9bc84a29c70"
+    },
+    {
+      "command": "cargo fmt -p xterm-core -p xterm-addons -- --check",
+      "status": "passed",
+      "log": "fmt-core-addons.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": "cargo fmt -p xterm-web -p xterm-font-addons -p xterm-wasm-support -- --check",
+      "status": "passed",
+      "log": "fmt-web.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "sourceHashes": {
+    "crates/xterm-addons/src/ligatures/font_svg.rs": "5b26f78ec2a5b54d29fe1b52543fa4eff30b88c1603d0a51a06be27be65eb711",
+    "crates/xterm-addons/src/ligatures/font.rs": "e4e1d57c0754bee7603464602866ae4fa6afc3c6b90d1f621ccf6a551bd6d3ac",
+    "crates/xterm-addons/src/ligatures/font_bytes.rs": "8ecbe09a3c72f49781817bd78ed3325b55ea60bec432a3a0a3e281c51f29596b",
+    "crates/xterm-addons/tests/support/font_svg_assertions.rs": "e91b1c8487f145a86e1ef6fecbe6d54dd814993c6abc6e04cca4c3e36503d3c2",
+    "crates/xterm-font-addons/tests/font_svg_browser.rs": "aac97caa6a5e8fb24a7db27d0356cd146bd3fe88ae86cb3ebdc4a902ca73e654",
+    "crates/xterm-font-addons/tests/support/font_svg_scenarios.mjs": "dccf047fdae28f7116a092b84b0af8b6c1e0947756c341af33c8059453298554",
+    "crates/xterm-addons/tests/fixtures/font-metadata.json": "21e94dfade4926259ab23e8f314cddf8acbd1acad512f90359aaa853fe902ba2"
+  }
+}

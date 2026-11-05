@@ -177,7 +177,7 @@ impl<'a> FontTables<'a> {
             }
             let metadata = matches!(
                 tag,
-                b"head" | b"hhea" | b"maxp" | b"OS/2" | b"post" | b"ltag"
+                b"head" | b"hhea" | b"maxp" | b"OS/2" | b"post" | b"ltag" | b"SVG "
             );
             if tag != b"cmap" && !metadata {
                 continue;
@@ -186,6 +186,7 @@ impl<'a> FontTables<'a> {
             let table = table_data(reader, record, woff, metadata)?;
             match tag {
                 b"cmap" => cmap = Some(table),
+                b"SVG " => super::font_svg::validate(&table)?,
                 b"hhea" => {
                     super::font_metadata::immediate(tag, &table)?;
                     metric_count = Reader::new(&table).u16(34)?;
