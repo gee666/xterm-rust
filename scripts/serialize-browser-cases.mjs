@@ -144,7 +144,8 @@ export async function serializationCases() {
   }, true);
   await run('html-fractional-scrollback-clamps', async (term, addon) => {
     await write(term, '\x1b[31mABC\r\n\x1b[32mDEF\r\nGHI\r\nJKL\r\nMNO\r\nPQR');
-    return [-100.5, -4.5, -3.75, -0.5, 0.5, 1.25, 20.5].map(scrollback => {
+    return [-100.5, -4.5, -3.75, -3.0000000000000004, -2.9999999999999996,
+      -0.5, -Number.EPSILON, -Number.MIN_VALUE, Number.MIN_VALUE, 0.5, 1.25, 20.5].map(scrollback => {
       const log = [];
       const options = { get scrollback() { log.push('scrollback'); return scrollback; },
         get includeGlobalBackground() { log.push('background'); return false; } };
