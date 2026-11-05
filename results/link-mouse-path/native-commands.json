@@ -1,0 +1,120 @@
+{
+  "phase": "native",
+  "env": {
+    "CARGO_BUILD_JOBS": "2",
+    "CARGO_TARGET_DIR": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\NabonidusLinkPath/target",
+    "TEMP": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\NabonidusLinkPath/tmp/scratch",
+    "TMP": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\NabonidusLinkPath/tmp/scratch"
+  },
+  "commands": [
+    {
+      "name": "native-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-j2",
+        "-p",
+        "xterm-web",
+        "--all-targets",
+        "--all-features"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 179748.9563,
+      "status": "passed"
+    },
+    {
+      "name": "native-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "-j2",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 65510.615499999985,
+      "status": "passed"
+    },
+    {
+      "name": "wasm-lib-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "-j2",
+        "--workspace",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--lib",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 57637.25509999998,
+      "status": "passed"
+    },
+    {
+      "name": "wasm-test-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "-j2",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_link_mouse_path",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 9269.521500000032,
+      "status": "passed"
+    }
+  ],
+  "headroom": {
+    "date": "2026-11-05T22:51:03.049Z",
+    "ram": 31703871488,
+    "free": 2683040284672
+  }
+}
