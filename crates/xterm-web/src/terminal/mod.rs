@@ -19,6 +19,7 @@ pub(crate) mod events;
 pub mod input_host;
 mod input_services;
 mod internal_api;
+mod joiner_api;
 pub mod link_services;
 mod modes_api;
 mod operations;

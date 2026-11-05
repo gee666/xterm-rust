@@ -1,6 +1,6 @@
 # Font addons
 
-Full font-addon equivalence is NOT PROVEN. Native shaping task119 and metadata resolver158 passed independent review. Task40 still needs real terminal joiner integration and full original addon-suite evidence; task235 covers unused-metadata constructor rejection. Task274 adds source-trace ligature lifecycle and loading checks.
+Full font-addon equivalence is NOT PROVEN. The historical native shaping and metadata work passed scoped independent review. The current integration adds real terminal joiners and passes the unchanged original WebFontsAddon suite in all three browsers. See `font-terminal-integration.md` for current evidence and task307 for raw joiner, metadata rejection and legacy ligature-suite gaps.
 
 ## Code
 
@@ -9,7 +9,7 @@ Full font-addon equivalence is NOT PROVEN. Native shaping task119 and metadata r
 - `font_set.rs` selects, deduplicates and loads actual FontFace objects.
 - `font_addons.rs` implements WebFontsAddon relayout and disposal.
 - `local_fonts.rs` implements legacy/modern discovery, permission handling, blob loading and shared metadata cache. Query APIs are explicitly mocked in component tests; promises and Blob run in browsers.
-- `ligatures_addon.rs`, `ligature_state.rs` and the small `ligature_host` browser adapter implement the class and direct `enableLigatures` helper. Their addon lifecycle/load boundary now has source comparisons; actual terminal integration remains task40.
+- `ligatures_addon.rs`, `ligature_state.rs` and the small `ligature_host` browser adapter implement the class and direct `enableLigatures` helper. Their lifecycle/load boundary has source comparisons. Public terminal registrations now use the real DOM renderer's joiner service.
 
 ## Checks
 
@@ -38,7 +38,7 @@ Observed results:
 - Ligatures:4 Rust/WASM test functions pass in each browser. The shared source/Rust scenarios compare38 operation fields covering defaults/custom/live fallback arrays, UTF16 matching, shape-range clones, stale success/failure, malformed and missing families, registration/style errors and disposal. A real CSSStyleDeclaration test passes. Reentrant font-family reads initially exposed the mutable WASM callback guard; an immutable callback fixes recursion without holding state borrows across JS calls. See `docs/ligature-browser-verification.md`.
 - A WebKit test fixture was corrected: constructor quote characters are literal there, unlike Firefox's quoted CSS family attribute. The test now explicitly supplies the quoted attribute it intends to verify; implementation assertions remain unchanged.
 
-These are component results, not proof of full terminal/rendering integration or native Linux/macOS results. Use the existing GitHub workflow for native platform runs.
+The historical counts above are component results. Current actual-terminal checks and original web-font-suite results are in `font-terminal-integration.md`. Neither establishes full font equivalence or native Linux/macOS results. Use the existing GitHub workflow for native platform runs.
 
 ## Compatibility notes
 
