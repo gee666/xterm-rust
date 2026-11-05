@@ -1,11 +1,11 @@
 {
   "componentOnly": true,
   "equivalence": "NOT PROVEN",
-  "base": "1729d89",
+  "base": "d8ac6a04c5e14b413005cca3591322df5f603e48",
   "platform": "win32",
   "node": "v24.15.0",
   "seed": "0x671ba92d",
-  "cases": 527,
+  "cases": 656,
   "originalInputs": [
     {
       "path": "addons/addon-webgl/src/TextureAtlas.ts",
@@ -72,7 +72,7 @@
   "browser": {
     "engines": 3,
     "testFunctionsPerEngine": 3,
-    "fixtureCasesPerEngine": 527,
+    "fixtureCasesPerEngine": 656,
     "imageModesPerPositiveSizeCase": 2,
     "expectedZeroSizeConstructorErrorsPerEngine": 1
   },
@@ -96,7 +96,7 @@
     },
     {
       "path": "crates/xterm-web/src/webgl/atlas_pixels.rs",
-      "sha256": "2129b0904d6b5c862d39f2fd514bcdcb1074fdb35ca5fe1aec1d2e49ead12c42"
+      "sha256": "bd104f781d5d645c76c6791abb1b28056113aec1160719aed5ecdbc6e7ac2798"
     },
     {
       "path": "crates/xterm-web/src/webgl/atlas_canvas.rs",
@@ -104,11 +104,11 @@
     },
     {
       "path": "crates/xterm-web/tests/webgl_atlas_pixels.rs",
-      "sha256": "c3ea100aaae3000a668171c9f9adda85c9731616fbd55c6ec7b20914f06cc1ba"
+      "sha256": "93107b827b7647889f975dc91b74817254414730ec343ecc262274fb91a6d357"
     },
     {
       "path": "crates/xterm-web/tests/wasm_webgl_atlas_pixels.rs",
-      "sha256": "18f04f5b278299af172c76423a0ff4de9b615dae55f6be4ff2ee9d112371638e"
+      "sha256": "b1d38c112309e373cc00dbb16fcd206796ae24182203747312265526b60079a0"
     },
     {
       "path": "crates/xterm-web/tests/support/atlas_pixel_fixture.rs",
@@ -116,16 +116,22 @@
     },
     {
       "path": "scripts/webgl-atlas-pixel-oracle.mjs",
-      "sha256": "ae30faa80639d556ad2d21bb380133f249e5a9be7dc81cc04f93e597e4f9a4c6"
+      "sha256": "2f10b129a5fe40eb155762e90c324b85fdc502d9bac8da68a91c35d1df2c11ab"
     },
     {
       "path": "crates/xterm-web/tests/fixtures/webgl-atlas-pixels.json",
-      "sha256": "e236539f8400dac468533ca48bf200055459c8b741abf0e586533444dc86d962"
+      "sha256": "b38e30b03ffe649cca09992f3e768bbf981cf30c7ba217446ed31fb64ea61aa7"
     }
   ],
   "unrun": [
     "Full TextureAtlas/custom glyph/renderer/addon suites",
     "Native Linux/macOS",
     "Final integrated full quality matrix"
-  ]
+  ],
+  "hotfix": {
+    "retainedCasesUnchanged": 527,
+    "newCases": 129,
+    "scope": "Normal grown glyph canvases require padded flat-index row crossings and undefined alpha reads",
+    "isolatedFrom306": true
+  }
 }
