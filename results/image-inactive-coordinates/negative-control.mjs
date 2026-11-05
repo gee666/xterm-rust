@@ -3,7 +3,7 @@
 import {readFile, writeFile, copyFile, mkdir} from 'node:fs/promises';
 import {spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
-import {resolve} from 'node:path';
+import {resolve, dirname} from 'node:path';
 import {runCommand} from '../../scripts/quality-process.mjs';
 const base = '5088f8fdd475e55b2408e9f2e7bfaf92e83ca656';
 const files = ['crates/xterm-web/src/image/addon/bindings.rs', 'crates/xterm-web/src/image/addon/options.rs'];
@@ -33,6 +33,10 @@ try {
     ['results/image-addon/verification.json', 'negative-verification.json']
   ]) await copyFile(from, resolve(out, to));
   const report = JSON.parse(await readFile(resolve(out, 'negative-browser.json'), 'utf8'));
+  if (report.artifacts) {
+    const run = dirname(dirname(report.artifacts.wasm.path));
+    await copyFile(resolve(run, 'image_addon_browser-build.log'), resolve(out, 'negative-build.log'));
+  }
   if (audit.command.exitCode !== 1 || audit.command.timedOut || audit.command.error || audit.command.terminationError) {
     throw Error('Expected completed failing assertions, not a process/build failure');
   }
