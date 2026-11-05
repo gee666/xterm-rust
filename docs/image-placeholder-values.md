@@ -36,7 +36,11 @@ cargo clippy --locked -j2 -p xterm-web --target wasm32-unknown-unknown --lib --t
 cargo fmt --all -- --check
 ```
 
-Overall equivalence is NOT PROVEN. Independent review is pending.
+## Independent review
+
+Task431 was accepted atb51b383d plus evidenceb02c70c5. The independent reviewer inspected both commits, reran31/31 tests in each browser, passed focused warning-denied WASM Clippy and xterm-web formatting, and verified all97 Rust pins,121 original comparator source files and seven baseline/fixed files. No changes were requested. The reviewer checked the retained negative control but did not repeat it. Fresh reports are retained as `review-browser.json` and `review-verification.json`.
+
+Overall equivalence is NOT PROVEN.
 
 ## Remaining work
 
