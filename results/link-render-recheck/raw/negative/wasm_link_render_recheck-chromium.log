@@ -1,0 +1,41 @@
+running 2 tests
+test render_recheck::render_rechecks_short_circuit_errors_and_reentrant_current_link ... FAIL
+test opened_terminal_rechecks_live_link_range_before_leaving_on_render ... FAIL
+
+failures:
+
+---- render_recheck::render_rechecks_short_circuit_errors_and_reentrant_current_link output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.__rust_start_panic (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[47232]:0xb1ada1)
+            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.rust_panic (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[42323]:0xb0f44f)
+            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[13285]:0x8d74fc)
+            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[16795]:0x96a81a)
+            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[46689]:0xb1a01f)
+            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.rust_begin_unwind (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[31961]:0xad00f2)
+            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[31962]:0xad011f)
+            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[19928]:0x9d8254)
+            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.wasm_link_render_recheck::render_recheck::render_rechecks_short_circuit_errors_and_reentrant_current_link::h681a5d3b0872cb7e (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[688]:0x145c78)
+            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.core::ops::function::FnOnce::call_once::h736786b171d83b41 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[31377]:0xac986d)
+
+---- opened_terminal_rechecks_live_link_range_before_leaving_on_render output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.__rust_start_panic (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[47232]:0xb1ada1)
+            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.rust_panic (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[42323]:0xb0f44f)
+            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[13285]:0x8d74fc)
+            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[16795]:0x96a81a)
+            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[46689]:0xb1a01f)
+            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.rust_begin_unwind (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[31961]:0xad00f2)
+            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[31962]:0xad011f)
+            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[19928]:0x9d8254)
+            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.wasm_link_render_recheck::opened_terminal_rechecks_live_link_range_before_leaving_on_render::{{closure}}::h078216ba59879f4c (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[1007]:0x2b3abc)
+            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::hed8f214a16acf2b4 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[4049]:0x618e5d)
+
+failures:
+
+    render_recheck::render_rechecks_short_circuit_errors_and_reentrant_current_link
+    opened_terminal_rechecks_live_link_range_before_leaving_on_render
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 filtered out; finished in 0.14s
+

@@ -1,0 +1,130 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_link_render_recheck",
+  "testTimeoutMs": 60000,
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T23:49:56.412Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_link_render_recheck",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 11268.5357,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 12.174399999999878,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\PaulLinkRender\\results\\acceptance-artifacts\\0cac32c8d196c06c887b42827ae7d8c396d99907c7da6dccc046c75ad93929fb\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\PaulLinkRender\\results\\browser-host\\wasm_link_render_recheck\\2026-11-05T23-49-56-410Z-da824232-2d85-497f-b5e9-8b7bfb0d7421\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1142.0643999999993,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_link_render_recheck::opened_terminal_rechecks_live_link_range_before_leaving_on_render",
+        "__wbgt__wasm_link_render_recheck::render_recheck::render_rechecks_short_circuit_errors_and_reentrant_current_link"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\linkifier\\render_recheck.rs:73:14:\ncalled `Result::unwrap()` on an `Err` value: JsValue(Error: plain: range reads [\"start:1\",\"end:1\"]\nError: plain: range reads [\"start:1\",\"end:1\"]\n    at assert (eval at imports.wbg.__wbg_newwithargs_ab6ffe8cd6c19c04 (http://127.0.0.1:53671/suite.js:6024:21), <anonymous>:5:56)\n    at Object.verify (eval at imports.wbg.__wbg_newwithargs_ab6ffe8cd6c19c04 (http://127.0.0.1:53671/suite.js:6024:21), <anonymous>:28:3)\n    at http://127.0.0.1:53671/suite.js:4934:26\n    at handleError (http://127.0.0.1:53671/suite.js:177:18)\n    at imports.wbg.__wbg_call_7cccdd69e0791ae2 (http://127.0.0.1:53671/suite.js:4933:67)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.__wbg_call_7cccdd69e0791ae2 externref shim (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[34087]:0xae47e8)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.js_sys::Function::call1::hed7af4ee62ca61cd (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[7822]:0x78a9f1)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.wasm_link_render_recheck::render_recheck::render_rechecks_short_circuit_errors_and_reentrant_current_link::h681a5d3b0872cb7e (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[688]:0x145bef)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.core::ops::function::FnOnce::call_once::h736786b171d83b41 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[31377]:0xac986d)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h525e779ab0926ad6 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[12825]:0x8c0e69))\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:53671/suite.js:5980:21)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[38759]:0xb01a89)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[25566]:0xa68c34)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[8569]:0x7c1628)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[25567]:0xa68cb8)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[13285]:0x8d74d1)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[16795]:0x96a81a)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[46689]:0xb1a01f)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.rust_begin_unwind (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[31961]:0xad00f2)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[31962]:0xad011f)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_link_render_recheck.rs:26:48:\ncalled `Result::unwrap()` on an `Err` value: JsValue(Error: plain: range recheck reads [\"start:1\",\"end:1\"]\nError: plain: range recheck reads [\"start:1\",\"end:1\"]\n    at assert (eval at imports.wbg.__wbg_newwithargs_ab6ffe8cd6c19c04 (http://127.0.0.1:53671/suite.js:6024:21), <anonymous>:9:58)\n    at eval (eval at imports.wbg.__wbg_newwithargs_ab6ffe8cd6c19c04 (http://127.0.0.1:53671/suite.js:6024:21), <anonymous>:71:7))\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:53671/suite.js:5980:21)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[38759]:0xb01a89)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[25566]:0xa68c34)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[8569]:0x7c1628)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[25567]:0xa68cb8)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[13285]:0x8d74d1)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[16795]:0x96a81a)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[46689]:0xb1a01f)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.rust_begin_unwind (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[31961]:0xad00f2)\n    at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[31962]:0xad011f)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 2 tests\ntest render_recheck::render_rechecks_short_circuit_errors_and_reentrant_current_link ... FAIL\ntest opened_terminal_rechecks_live_link_range_before_leaving_on_render ... FAIL\n\nfailures:\n\n---- render_recheck::render_rechecks_short_circuit_errors_and_reentrant_current_link output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.__rust_start_panic (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[47232]:0xb1ada1)\n            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.rust_panic (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[42323]:0xb0f44f)\n            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[13285]:0x8d74fc)\n            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[16795]:0x96a81a)\n            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[46689]:0xb1a01f)\n            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.rust_begin_unwind (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[31961]:0xad00f2)\n            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[31962]:0xad011f)\n            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[19928]:0x9d8254)\n            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.wasm_link_render_recheck::render_recheck::render_rechecks_short_circuit_errors_and_reentrant_current_link::h681a5d3b0872cb7e (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[688]:0x145c78)\n            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.core::ops::function::FnOnce::call_once::h736786b171d83b41 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[31377]:0xac986d)\n\n---- opened_terminal_rechecks_live_link_range_before_leaving_on_render output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.__rust_start_panic (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[47232]:0xb1ada1)\n            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.rust_panic (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[42323]:0xb0f44f)\n            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[13285]:0x8d74fc)\n            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[16795]:0x96a81a)\n            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[46689]:0xb1a01f)\n            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.rust_begin_unwind (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[31961]:0xad00f2)\n            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[31962]:0xad011f)\n            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[19928]:0x9d8254)\n            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.wasm_link_render_recheck::opened_terminal_rechecks_live_link_range_before_leaving_on_render::{{closure}}::h078216ba59879f4c (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[1007]:0x2b3abc)\n            at wasm_link_render_recheck-9e92dd41d03f66ed.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::hed8f214a16acf2b4 (http://127.0.0.1:53671/suite_bg.wasm:wasm-function[4049]:0x618e5d)\n\nfailures:\n\n    render_recheck::render_rechecks_short_circuit_errors_and_reentrant_current_link\n    opened_terminal_rechecks_live_link_range_before_leaving_on_render\n\ntest result: FAILED. 0 passed; 2 failed; 0 ignored; 0 filtered out; finished in 0.14s\n\n",
+      "counts": {
+        "passed": 0,
+        "failed": 2,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/0cac32c8d196c06c887b42827ae7d8c396d99907c7da6dccc046c75ad93929fb/artifact.wasm",
+      "sha256": "0cac32c8d196c06c887b42827ae7d8c396d99907c7da6dccc046c75ad93929fb",
+      "bytes": 19992219,
+      "originalPath": "O:/xterm-rust-swarm-16/tmp/worktrees/PaulLinkRender/target\\wasm32-unknown-unknown\\debug\\deps\\wasm_link_render_recheck-9e92dd41d03f66ed.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\PaulLinkRender\\results\\browser-host\\wasm_link_render_recheck\\2026-11-05T23-49-56-410Z-da824232-2d85-497f-b5e9-8b7bfb0d7421\\artifacts\\suite_bg.wasm",
+      "bytes": 16805644,
+      "sha256": "25f9393bd478bbe5a5c3e9c8a15f3dd54e5171a59ecfa201624240112656d98b"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\PaulLinkRender\\results\\browser-host\\wasm_link_render_recheck\\2026-11-05T23-49-56-410Z-da824232-2d85-497f-b5e9-8b7bfb0d7421\\artifacts\\suite.js",
+      "bytes": 250133,
+      "sha256": "b4226178fd89307747de46e047cdc7a9608681310feae8f7accd842601bed70a"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "951edca0cfe5685319e272dee9276392c6a55913b7e57941707763ba0dd4f740"
+  },
+  "finishedAt": "2026-11-05T23:50:09.925Z"
+}
