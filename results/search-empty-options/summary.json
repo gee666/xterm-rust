@@ -1,0 +1,62 @@
+{
+  "status": "passed",
+  "task": 357,
+  "platform": "win32",
+  "node": "v24.15.0",
+  "rust": "rustc 1.85.1 (4eb161250 2025-03-15)",
+  "base": "4a38b52267251b4fb7b6476fae262299ae939145",
+  "scope": "Empty-string option access only. Raw347 and complete322 remain open; equivalence NOT PROVEN.",
+  "counts": {
+    "sourceCases": {
+      "executed": 162,
+      "passed": 162,
+      "failed": 0,
+      "skipped": 0
+    },
+    "baselineChromiumFunctions": {
+      "discovered": 8,
+      "executedConfirmed": 1,
+      "passedClaimed": 0,
+      "failedConfirmed": 1,
+      "outcomesUnreported": 7,
+      "reason": "Runtime abort prevents summary; no other function passes inferred."
+    },
+    "nativeFunctions": {
+      "executed": 30,
+      "passed": 30,
+      "failed": 0,
+      "skipped": 0
+    },
+    "fixedBrowserFunctions": {
+      "executed": 24,
+      "passed": 24,
+      "failed": 0,
+      "skipped": 0
+    },
+    "embeddedEmptyCases": {
+      "executed": 162,
+      "passed": 162,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "hashes": {
+    "crates/xterm-addons/src/search/addon.rs": "dc5a51334d51ffc773f97535ee58a65b2117322e92ce5f294cb03b52c8bd6065",
+    "crates/xterm-addons/src/search/empty.rs": "7bdde91869569fe04673f28f0c87f4c02b0f05470cd0ba81f8425683ab5f80db",
+    "crates/xterm-addons/src/search/find.rs": "87bfac7b064b5bca0d2ef6f0a6884ef17c1170b8a4d2f27c2bdaa423ec38235e",
+    "crates/xterm-web/src/search_addon/options.rs": "bcbc43b352062f646e69c09fa56664cf42b80c9e5dd6f4a703d57a02f9619094",
+    "crates/xterm-web/tests/search_addon.rs": "33adb51ba465ca14ce3d7c82f4131a84f0cf4e630cbd0b82bef8bf0a6a295be6",
+    "crates/xterm-web/tests/search_cases/empty.rs": "a7b958406956293dabdc536f5a2a61028278c9e84aa40b02c382a7173af5b6dc",
+    "crates/xterm-web/tests/wasm_search_addon.rs": "e30587956bfb6d2f251d9b22c896fe2e64558f3fb5f4dabce6efcc56fad45120",
+    "crates/xterm-web/tests/fixtures/search-empty-options.js": "cff358385414df5098aed6cdd32a0f98b11ea53cd5f1c89d5b585289b22b4e71",
+    "scripts/search-call-args-source.mjs": "4d2d18c2e0c33d143cc831f9a6a12336d2f4be13b2c3bde56e3d997bb608ce3e"
+  },
+  "checks": [
+    "cargo test --locked -j2 -p xterm-web --test search_addon",
+    "cargo clippy --locked -j2 -p xterm-web --test search_addon -- -D warnings",
+    "cargo clippy --locked -j2 -p xterm-web --target wasm32-unknown-unknown --lib --test wasm_search_addon -- -D warnings",
+    "cargo fmt --all -- --check"
+  ],
+  "baseline": "Only new test/fixture added over unchanged three producer files from base; baseline runner restored fixed files in finally.",
+  "artifacts": "Build/compiler/bindings artifacts are temporary, to be removed after review. Hashes and reports retained; no distribution or platform equivalence claim."
+}

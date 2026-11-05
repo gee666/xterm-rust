@@ -15,10 +15,13 @@ const dependencies = resolve(process.env.SOURCE_DEPENDENCIES ?? reference, 'node
 const require = createRequire(resolve(dependencies, '../package.json'));
 let esbuild;
 const temporary = resolve(root, 'tmp/search-call-args-source');
-const output = resolve(root, 'results/search-call-args');
-const fixture = 'crates/xterm-web/tests/fixtures/search-call-args.js';
+const caseName = process.env.SEARCH_CASES ?? 'search-call-args';
+if (!['search-call-args', 'search-empty-options'].includes(caseName)) throw Error('Unknown search fixture');
+const expectedCases = caseName === 'search-empty-options' ? 54 : 81;
+const output = resolve(root, 'results', caseName);
+const fixture = `crates/xterm-web/tests/fixtures/${caseName}.js`;
 const report = {status: 'failed', platform: process.platform, node: process.version,
-  scope: '81 shared source-derived callable search argument cases per browser. Not the complete upstream suite or equivalence.',
+  scope: `${expectedCases} shared source-derived ${caseName} cases per browser. Not the complete upstream suite or equivalence.`,
   browsers: []};
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 await mkdir(temporary, {recursive: true});
@@ -79,7 +82,7 @@ try {
         entry.cases = await Promise.race([evaluated, new Promise((_, reject) => {
           deadline = setTimeout(() => reject(Error('Source search assertions exceeded30s')), 30000);
         })]);
-        assert.equal(entry.cases, 81);
+        assert.equal(entry.cases, expectedCases);
         entry.status = 'passed';
       } catch (error) { entry.error = String(error.stack ?? error); }
       finally { clearTimeout(deadline); if (browser) await browser.close(); }
@@ -97,4 +100,4 @@ finally {
   await rm(temporary, {recursive: true, force: true});
   await writeFile(resolve(output, 'source.json'), JSON.stringify(report, null, 2) + '\n');
 }
-console.log(`Search source arguments ${report.status}: ${report.browsers.map(entry => `${entry.name} ${entry.cases ?? 0}/81`).join(', ')}`);
+console.log(`Search source arguments ${report.status}: ${report.browsers.map(entry => `${entry.name} ${entry.cases ?? 0}/${expectedCases}`).join(', ')}`);

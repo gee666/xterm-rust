@@ -1,7 +1,7 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
 use super::{
-    DecorationManager, NumericHighlightLimit, SearchAddonError, SearchHighlightLimit, SearchHost,
-    SearchOptions, SearchResultTracker,
+    DecorationManager, NumericHighlightLimit, SearchAddonError, SearchDecorationOptionsHandle,
+    SearchHighlightLimit, SearchHost, SearchOptions, SearchResultTracker,
 };
 use std::{
     cell::{Cell, RefCell},
@@ -13,11 +13,26 @@ use xterm_core::{
     search::{SearchLineCache, SearchState},
     terminal::TerminalEvent,
 };
+#[path = "empty.rs"]
+mod empty;
 #[path = "find.rs"]
 mod find;
 
 pub trait SearchOptionsSource {
     fn read(&self) -> Result<SearchOptions, SearchAddonError>;
+    /// Read only decoration eligibility, without inspecting matching flags.
+    fn decorations(&self) -> Result<Option<SearchDecorationOptionsHandle>, SearchAddonError> {
+        Ok(self.read()?.decorations)
+    }
+    /// The source stores the incoming options before comparing them. Host
+    /// accessors can therefore change between two reads of this same request.
+    fn flags_changed(&self) -> Result<bool, SearchAddonError> {
+        let left = self.read()?.matching;
+        let right = self.read()?.matching;
+        Ok(left.case_sensitive != right.case_sensitive
+            || left.regex != right.regex
+            || left.whole_word != right.whole_word)
+    }
 }
 impl SearchOptionsSource for RefCell<SearchOptions> {
     fn read(&self) -> Result<SearchOptions, SearchAddonError> {
@@ -238,11 +253,12 @@ impl SearchAddon {
         Self::cancel(&self.inner.highlight_timeout);
         let term = self.inner.state.borrow().cached_search_term.clone();
         let options = self.inner.last_options.borrow().clone();
-        let request = options.map(|options| options.read()).transpose()?;
         if term.as_ref().is_some_and(|term| !term.is_empty())
-            && request
-                .as_ref()
-                .is_some_and(|options| options.decorations.is_some())
+            && options
+                .map(|options| options.decorations())
+                .transpose()?
+                .flatten()
+                .is_some()
         {
             let weak = Rc::downgrade(&self.inner);
             let timer = self.host()?.timeout(

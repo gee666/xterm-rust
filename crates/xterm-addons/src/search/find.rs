@@ -62,6 +62,9 @@ impl SearchAddon {
         let host = self.host()?;
         self.inner.before.fire(&())?;
         *self.inner.last_options.borrow_mut() = options.clone();
+        if term.is_empty() {
+            return self.find_empty(options.as_ref());
+        }
         // The source stores the new options before asking whether they changed.
         // Preserve that order, including its unchanged-term highlight behavior.
         let flags = options
@@ -85,31 +88,21 @@ impl SearchAddon {
             .map(|o| o.read())
             .transpose()?
             .unwrap_or_default();
-        let result = if term.is_empty() {
-            host.clear_selection()?;
-            self.clear_decorations(false)?;
-            None
-        } else {
-            let selection = host.selection()?;
-            host.clear_selection()?;
-            let cached = self.inner.state.borrow().cached_search_term.clone();
-            self.run_engine(
-                term,
-                &matching(&request),
-                if reverse {
-                    Operation::Previous
-                } else {
-                    Operation::Next
-                },
-                selection,
-                cached.as_deref(),
-            )?
-        };
-        let found = if term.is_empty() {
-            false
-        } else {
-            self.select_result(result, request.decorations.as_ref(), no_scroll()?)?
-        };
+        let selection = host.selection()?;
+        host.clear_selection()?;
+        let cached = self.inner.state.borrow().cached_search_term.clone();
+        let result = self.run_engine(
+            term,
+            &matching(&request),
+            if reverse {
+                Operation::Previous
+            } else {
+                Operation::Next
+            },
+            selection,
+            cached.as_deref(),
+        )?;
+        let found = self.select_result(result, request.decorations.as_ref(), no_scroll()?)?;
         self.inner
             .tracker
             .fire_results_changed(request.decorations.is_some())?;

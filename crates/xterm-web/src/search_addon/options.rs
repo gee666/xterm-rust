@@ -58,6 +58,22 @@ impl SearchDecorationSource for JsDecorations {
 }
 pub struct JsOptions(pub JsValue);
 impl SearchOptionsSource for JsOptions {
+    fn decorations(&self) -> Result<Option<SearchDecorationOptionsHandle>, SearchAddonError> {
+        let value = property(&self.0, "decorations").map_err(host_error)?;
+        Ok(value
+            .is_truthy()
+            .then(|| Rc::new(JsDecorations(value)) as SearchDecorationOptionsHandle))
+    }
+    fn flags_changed(&self) -> Result<bool, SearchAddonError> {
+        for key in ["caseSensitive", "regex", "wholeWord"] {
+            let left = property(&self.0, key).map_err(host_error)?;
+            let right = property(&self.0, key).map_err(host_error)?;
+            if left != right {
+                return Ok(true);
+            }
+        }
+        Ok(false)
+    }
     fn read(&self) -> Result<SearchOptions, SearchAddonError> {
         let optional_bool = |key| {
             property(&self.0, key)

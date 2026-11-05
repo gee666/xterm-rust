@@ -18,6 +18,8 @@ use xterm_core::{
 mod clocks;
 #[path = "search_cases/decorations.rs"]
 mod decorations;
+#[path = "search_cases/empty.rs"]
+mod empty;
 #[path = "search_cases/ranges.rs"]
 mod ranges;
 #[path = "search_cases/raw_marker.rs"]
