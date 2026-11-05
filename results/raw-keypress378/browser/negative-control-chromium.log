@@ -1,0 +1,40 @@
+running 2 tests
+test raw_charcode_which_and_fallback_keycode_match_unchanged_source ... FAIL
+test conversion_getter_and_callback_errors_and_reentry_preserve_source_flags ... FAIL
+
+failures:
+
+---- raw_charcode_which_and_fallback_keycode_match_unchanged_source output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at wasm_keypress_raw-75f37e4aecfaa458.wasm.__rust_start_panic (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[40204]:0x930273)
+            at wasm_keypress_raw-75f37e4aecfaa458.wasm.rust_panic (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[35900]:0x926037)
+            at wasm_keypress_raw-75f37e4aecfaa458.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[11113]:0x741a9a)
+            at wasm_keypress_raw-75f37e4aecfaa458.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[14091]:0x7be81f)
+            at wasm_keypress_raw-75f37e4aecfaa458.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[39735]:0x92f6a8)
+            at wasm_keypress_raw-75f37e4aecfaa458.wasm.rust_begin_unwind (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[27077]:0x8f08c6)
+            at wasm_keypress_raw-75f37e4aecfaa458.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[27078]:0x8f08f3)
+            at wasm_keypress_raw-75f37e4aecfaa458.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[16807]:0x81d51c)
+            at wasm_keypress_raw-75f37e4aecfaa458.wasm.wasm_keypress_raw::raw_charcode_which_and_fallback_keycode_match_unchanged_source::hb560630c7fe86d4f (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[1065]:0x2d5a72)
+            at wasm_keypress_raw-75f37e4aecfaa458.wasm.core::ops::function::FnOnce::call_once::h1318308478f1f433 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[26585]:0x8eb0df)
+
+---- conversion_getter_and_callback_errors_and_reentry_preserve_source_flags output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at wasm_keypress_raw-75f37e4aecfaa458.wasm.__rust_start_panic (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[40204]:0x930273)
+            at wasm_keypress_raw-75f37e4aecfaa458.wasm.rust_panic (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[35900]:0x926037)
+            at wasm_keypress_raw-75f37e4aecfaa458.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[11113]:0x741a9a)
+            at wasm_keypress_raw-75f37e4aecfaa458.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[14091]:0x7be81f)
+            at wasm_keypress_raw-75f37e4aecfaa458.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[39735]:0x92f6a8)
+            at wasm_keypress_raw-75f37e4aecfaa458.wasm.rust_begin_unwind (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[27077]:0x8f08c6)
+            at wasm_keypress_raw-75f37e4aecfaa458.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[27078]:0x8f08f3)
+            at wasm_keypress_raw-75f37e4aecfaa458.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[16807]:0x81d51c)
+            at wasm_keypress_raw-75f37e4aecfaa458.wasm.wasm_keypress_raw::conversion_getter_and_callback_errors_and_reentry_preserve_source_flags::h1751a4bbc11ca8d0 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[1628]:0x3adca3)
+            at wasm_keypress_raw-75f37e4aecfaa458.wasm.core::ops::function::FnOnce::call_once::h39e98ba321348942 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[26584]:0x8eb0b4)
+
+failures:
+
+    raw_charcode_which_and_fallback_keycode_match_unchanged_source
+    conversion_getter_and_callback_errors_and_reentry_preserve_source_flags
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 filtered out; finished in 0.17s

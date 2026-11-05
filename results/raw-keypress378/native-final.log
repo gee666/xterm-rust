@@ -1,0 +1,57 @@
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\KP\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 3.50s
+     Running tests\input_event_getters.rs (target\debug\deps\input_event_getters-8e03ad5417f30e7b.exe)
+
+running 6 tests
+test rejected_input_short_circuits_before_unused_getters ... ok
+test admitted_input_rereads_payload_and_preserves_empty_or_unpaired_utf16 ... ok
+test immutable_input_remains_compatible_with_the_shared_trace_adapter ... ok
+test composed_getter_reentry_is_seen_before_keydown_guard ... ok
+test dead_key_is_cleared_before_second_data_getter_even_if_it_throws ... ok
+test duplicate_keypress_and_screen_reader_guard_do_not_reread_data ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\keyboard_dispatch.rs (target\debug\deps\keyboard_dispatch-bd627b31787004f6.exe)
+
+running 9 tests
+test enter_clears_textarea_before_key_and_can_cancel_twice ... ok
+test charcode_which_zero_absence_and_utf16_modulo_are_not_interchangeable ... ok
+test composition_rejection_scrolls_only_when_required_and_mac_option_bypasses_it ... ok
+test dead_key_and_uppercase_routes_preserve_partial_state ... ok
+test input_composed_seen_and_keyup_veto_order ... ok
+test screen_reader_handled_state_suppresses_following_keypress ... ok
+test shared_trace_adapter_runs_ordered_enter ... ok
+test source_custom_handler_veto_precedes_composition_and_all_effects ... ok
+test source_mac_and_windows_altgraph_printable_keypress_cases ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\keyboard_dispatch_callbacks.rs (target\debug\deps\keyboard_dispatch_callbacks-56a4a36583278c1b.exe)
+
+running 3 tests
+test shared_trace_adapter_after_callback_sequence ... ok
+test callback_error_stops_effects_and_reentry_observes_live_state ... ok
+test input_and_keypress_commit_dead_state_on_opposite_sides_of_data_callback ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\keyboard_dispatch_getters.rs (target\debug\deps\keyboard_dispatch_getters-b54eee278116ee37.exe)
+
+running 2 tests
+test windows_alt_control_short_circuits_altgraph_but_meta_does_not ... ok
+test veto_and_composition_short_circuit_unread_throwing_options ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\keypress_raw_values.rs (target\debug\deps\keypress_raw_values-fb31b9a295866e90.exe)
+
+running 6 tests
+test modifier_guard_does_not_convert_a_truthy_raw_payload ... ok
+test changed_second_read_is_retested_for_truthiness_without_using_first_value ... ok
+test null_which_fallback_retains_raw_keycode_until_conversion ... ok
+test string_zero_is_truthy_and_converts_to_nul_after_admission ... ok
+test conversion_throw_precedes_key_effects_and_keeps_dead_key_state ... ok
+test conversion_can_reenter_input_before_outer_key_and_data_effects ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s

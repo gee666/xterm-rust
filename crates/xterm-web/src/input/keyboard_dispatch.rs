@@ -180,7 +180,7 @@ impl KeyboardDispatch {
         let code = if event.char_code()?.truthy() {
             event.char_code()?
         } else if event.which()? == EventNumber::Null || event.which()? == EventNumber::Undefined {
-            EventNumber::Number(event.key_code()?)
+            event.key_press_code()?
         } else if !event.which()?.is_zero() && !event.char_code()?.is_zero() {
             event.which()?
         } else {
@@ -192,7 +192,7 @@ impl KeyboardDispatch {
         {
             return Ok(false);
         }
-        let key = [to_uint16(code.to_number())];
+        let key = [to_uint16(code.to_number()?)];
         host.perform(Some(event), KeyboardAction::OnKey(&key))?;
         host.perform(Some(event), KeyboardAction::ShowCursor)?;
         host.perform(

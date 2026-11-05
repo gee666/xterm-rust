@@ -30,7 +30,7 @@ impl LiveKeyEvent<'_> {
         })?;
         Ok(Cow::Owned(from_js_string(&string)))
     }
-    fn optional_number(&self, name: &str) -> Result<EventNumber, JsValue> {
+    fn optional_number(&self, name: &str) -> Result<EventNumber<JsValue>, JsValue> {
         let value = self.get(name)?;
         if value.is_undefined() {
             return Ok(EventNumber::Undefined);
@@ -40,6 +40,26 @@ impl LiveKeyEvent<'_> {
         }
         value.as_f64().map(EventNumber::Number).ok_or_else(|| {
             js_sys::TypeError::new(&format!("KeyboardEvent.{name} must be a number")).into()
+        })
+    }
+    fn keypress_number(&self, name: &str) -> Result<EventNumber<JsValue>, JsValue> {
+        let value = self.get(name)?;
+        if value.is_undefined() {
+            return Ok(EventNumber::Undefined);
+        }
+        if value.is_null() {
+            return Ok(EventNumber::Null);
+        }
+        if let Some(number) = value.as_f64() {
+            return Ok(EventNumber::Number(number));
+        }
+        Ok(EventNumber::Other {
+            truthy: value.is_truthy(),
+            convert: std::rc::Rc::new(move || {
+                xterm_wasm_support::options::from_js(&value)?
+                    .to_number()
+                    .map_err(|error| crate::js_error::to_js_error(&error))
+            }),
         })
     }
 }
@@ -90,11 +110,14 @@ impl KeyEventSource for LiveKeyEvent<'_> {
     fn repeat(&self) -> Result<bool, JsValue> {
         Ok(self.get("repeat")?.is_truthy())
     }
-    fn char_code(&self) -> Result<EventNumber, JsValue> {
-        self.optional_number("charCode")
+    fn char_code(&self) -> Result<EventNumber<JsValue>, JsValue> {
+        self.keypress_number("charCode")
     }
-    fn which(&self) -> Result<EventNumber, JsValue> {
-        self.optional_number("which")
+    fn which(&self) -> Result<EventNumber<JsValue>, JsValue> {
+        self.keypress_number("which")
+    }
+    fn key_press_code(&self) -> Result<EventNumber<JsValue>, JsValue> {
+        self.keypress_number("keyCode")
     }
     fn is_key_press(&self) -> Result<bool, JsValue> {
         Ok(self.get("type")? == JsValue::from_str("keypress"))
