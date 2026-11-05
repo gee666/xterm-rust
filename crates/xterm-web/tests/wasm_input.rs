@@ -191,7 +191,7 @@ async fn composition_overlay_deferred_suffix_and_real_event_order() {
 
 #[wasm_bindgen_test(async)]
 async fn dispose_cancels_pending_composition_and_removes_all_input_listeners() {
-    let mut setup = Setup::new();
+    let setup = Setup::new();
     setup
         .dom
         .textarea
