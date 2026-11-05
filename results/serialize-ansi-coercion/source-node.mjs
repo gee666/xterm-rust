@@ -21,7 +21,8 @@ for (const entry of traces) assert.equal(entry.thrown, undefined);
 assert(traces.find(entry => entry.name.endsWith('throws')).result.every(entry => entry.same));
 const missing = traces.find(entry => entry.name === 'ansi-scrollback-captured-missing-line');
 for (const entry of [missing.result.reentry, ...missing.result.explicit]) {
-  assert.deepEqual(entry.ansi, { error: 'TypeError', message: "Cannot read properties of undefined (reading 'isWrapped')" });
+  assert.deepEqual(entry.ansi, { error: 'TypeError', message: "Cannot read properties of undefined (reading 'isWrapped')",
+    nativeTypeError: true, constructor: true });
 }
 await writeFile(join(root, 'results/serialize-ansi-coercion/source-node.json'), JSON.stringify({
   platform: process.platform, node: process.version, scope: 'Original headless engine and original compiled serializer. Not Rust or browser proof.', traces

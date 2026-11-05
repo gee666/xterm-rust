@@ -167,6 +167,10 @@ export async function serializationCases() {
   // Retain captured and explicit missing-line diagnostics alongside allocation
   // cases, including the engine-specific property expression in the TypeError.
   await run('ansi-scrollback-captured-missing-line', async (term, addon) => {
+    const missing = fn => { try { return { value: fn() }; } catch (error) {
+      return { error: error.name, message: error.message,
+        nativeTypeError: Object.getPrototypeOf(error) === TypeError.prototype, constructor: error.constructor === TypeError };
+    } };
     await write(term, '\x1b[32mnormal\r\nsecond\r\nthird\r\nfourth\r\nfifth\x1b[?1049hALT');
     const log = []; let nested;
     const raw = { [Symbol.toPrimitive](hint) {
@@ -177,10 +181,10 @@ export async function serializationCases() {
       get scrollback() { log.push('scrollback'); return raw; },
       get excludeAltBuffer() { log.push('alt'); return false; },
       get excludeModes() { log.push('modes'); return false; } };
-    const reentry = { ansi: capture(() => addon.serialize(options)), nested, log, state: snapshot(term) };
+    const reentry = { ansi: missing(() => addon.serialize(options)), nested, log, state: snapshot(term) };
     const length = term.buffer.normal.length;
     const explicit = [[0, length], [length, length + 1]].map(([start, end]) => ({ start, end,
-      ansi: capture(() => addon.serialize({ range: { start, end } })), state: snapshot(term) }));
+      ansi: missing(() => addon.serialize({ range: { start, end } })), state: snapshot(term) }));
     return { reentry, explicit };
   });
   await run('ansi-scrollback-coercion-throws', async (term, addon) => {
