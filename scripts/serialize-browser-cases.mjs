@@ -154,7 +154,7 @@ export async function serializationCases() {
       const log = []; let nested;
       const raw = { [Symbol.toPrimitive](hint) {
         log.push(`primitive:${hint}`); nested = addon.serialize({ scrollback: 0 });
-        term.reset(); term.resize(6, 2); return result;
+        term.reset(); term.resize(6, 6); return result;
       } };
       const options = { get range() { log.push('range'); return undefined; },
         get scrollback() { log.push('scrollback'); return raw; },
@@ -163,6 +163,21 @@ export async function serializationCases() {
       values.push({ result: String(result), ansi: capture(() => addon.serialize(options)), nested, log, state: snapshot(term) });
     }
     return values;
+  });
+  // Keep the unrelated missing-line diagnostic counterexample in the complete
+  // runner. It must remain an honest failure until browser-native errors match.
+  await run('ansi-scrollback-captured-missing-line', async (term, addon) => {
+    await write(term, '\x1b[32mnormal\r\nsecond\r\nthird\r\nfourth\r\nfifth\x1b[?1049hALT');
+    const log = []; let nested;
+    const raw = { [Symbol.toPrimitive](hint) {
+      log.push(`primitive:${hint}`); nested = addon.serialize({ scrollback: 0 });
+      term.reset(); term.resize(6, 2); return 0;
+    } };
+    const options = { get range() { log.push('range'); return undefined; },
+      get scrollback() { log.push('scrollback'); return raw; },
+      get excludeAltBuffer() { log.push('alt'); return false; },
+      get excludeModes() { log.push('modes'); return false; } };
+    return { ansi: capture(() => addon.serialize(options)), nested, log, state: snapshot(term) };
   });
   await run('ansi-scrollback-coercion-throws', async (term, addon) => {
     await write(term, 'normal\r\nsecond\r\nthird\r\nfourth\r\nfifth');
