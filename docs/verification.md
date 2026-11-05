@@ -14,6 +14,8 @@ The controlling continuation uses exactly16 agents and actual integration branch
 
 [The postrepair all-target CI run](wasm-ci-postrepair.md) records observed success of all eight jobs at integrated `e7cea61d6e11fab4b614b3905cff0489cb64be80`. It includes all six native MSRV/stable OS matrices, focused Miri, and the strengthened WASM all-target check and warning-denied Clippy gate. The earlier failed run, real fixes, bounded cold-build timeout and tool-environment caveat remain preserved. This is still not later-source or full browser/API equivalence, nor final task304.
 
+[The later 3aa04692 checkpoint](native-quality-3aa04692.md) records run42090157228 with all six native Windows/Linux/macOS MSRV1.85.1/current-stable1.99.1 jobs and focused Miri passing. The run still FAILED because WASM all-target compilation passed but warning-denied Clippy exposed one atlas-page test lint. All eight original artifact ZIPs/logs, source provenance and counts remain retained. [The scoped task452 repair](quality-atlas-page-lint452.md) preserves that failure and its verification limits; neither this checkpoint nor the repair closes final304 or browser/source equivalence.
+
 ## Resume after disk exhaustion
 
 Main reported that the P: drive reached about 7 MB free, interrupting the swarm with SQLite `cannot rollback - no transaction is active`. Main's database quick check passed. The original 45-worker run resumed; no second swarm was launched. Main removed only generated Cargo artifacts, recovering about 3 GiB, and committed `.cargo/config.toml` as `705104c`. See `docs/resume-run2.md` for the preserved scope and resource policy.
