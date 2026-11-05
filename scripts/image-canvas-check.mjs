@@ -7,13 +7,14 @@ import { mkdir, readFile, writeFile, readdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const test = process.env.WASM_TEST ?? 'image_canvas_browser';
-if (!['image_canvas_browser', 'image_lifecycle_browser'].includes(test)) throw new Error('Invalid image test suite');
+if (!['image_canvas_browser', 'image_lifecycle_browser', 'image_iip_terminal_browser'].includes(test)) throw new Error('Invalid image test suite');
 if (process.argv.length > 2) throw new Error('Image checks now compile the full browser crate; isolated-component mode was retired');
 const reference = resolve(process.env.SOURCE_REPO ?? resolve(root, 'source_repo'));
 const dependencies = resolve(process.env.REFERENCE_NODE_MODULES ?? resolve(reference, 'node_modules'));
 const require = createRequire(resolve(dependencies, '../package.json'));
 const work = resolve(root, 'tmp/image-canvas');
-const results = resolve(root, test === 'image_canvas_browser' ? 'results/image-canvas' : 'results/image-lifecycle');
+const resultNames = { image_canvas_browser: 'image-canvas', image_lifecycle_browser: 'image-lifecycle', image_iip_terminal_browser: 'image-iip-terminal' };
+const results = resolve(root, 'results', resultNames[test]);
 await mkdir(work, { recursive: true });
 await mkdir(results, { recursive: true });
 const verificationPath = resolve(results, 'verification.json');
@@ -26,9 +27,11 @@ try {
   const esbuild = require('esbuild');
   const oracle = resolve(work, 'source-renderer.js');
   const entry = resolve(work, 'image-comparators.ts');
-  await writeFile(entry, ['ImageRenderer', 'IIPHandler'].map(name =>
+  const exports = ['ImageRenderer', 'IIPHandler', ...(test === 'image_iip_terminal_browser' ? ['ImageStorage', 'IIPImageStorage'] : [])].map(name =>
     `export { ${name} } from ${JSON.stringify(resolve(reference, `addons/addon-image/src/${name}.ts`))};`
-  ).join('\n'));
+  );
+  if (test === 'image_iip_terminal_browser') exports.push(`export { Terminal } from ${JSON.stringify(resolve(reference, 'src/browser/public/Terminal.ts'))};`);
+  await writeFile(entry, exports.join('\n'));
   const build = await esbuild.build({
     entryPoints: [entry],
     bundle: true, write: false, platform: 'browser', format: 'iife',
@@ -37,7 +40,7 @@ try {
       'xterm-wasm-parts': resolve(dependencies, 'xterm-wasm-parts') },
     nodePaths: [dependencies], metafile: true
   });
-  await writeFile(oracle, build.outputFiles[0].text + '\nglobalThis.SourceImageRenderer = SourceImageRendererBundle.ImageRenderer;\nglobalThis.SourceIIPHandler = SourceImageRendererBundle.IIPHandler;\n');
+  await writeFile(oracle, build.outputFiles[0].text + '\nObject.keys(SourceImageRendererBundle).forEach(name => { globalThis[`Source${name}`] = SourceImageRendererBundle[name]; });\n');
   const sourceInputs = [];
   for (const name of Object.keys(build.metafile.inputs)) {
     const path = resolve(name);
@@ -60,14 +63,15 @@ try {
     }
   }
   for (const path of [`crates/xterm-web/tests/${test}.rs`, 'Cargo.lock',
-    'scripts/image-canvas-check.mjs', 'scripts/browser-host-check.mjs']) {
+    'scripts/image-canvas-check.mjs', 'scripts/browser-host-check.mjs',
+    ...(test === 'image_iip_terminal_browser' ? ['crates/xterm-web/tests/image_iip_terminal_support/mod.rs', 'crates/xterm-web/tests/image_iip_terminal_support/failures.rs'] : [])]) {
     rustInputs.push({ path, sha256: sha256(await readFile(resolve(root, path))) });
   }
   const passed = browsers.status === 'passed';
   await persist({
-    status: passed ? 'passed-renderer-component' : 'failed',
+    status: passed ? (test === 'image_iip_terminal_browser' ? 'passed-iip-terminal-producer' : 'passed-renderer-component') : 'failed',
     isolatedComponent: false, browserReport, rustInputs, sourceInputs,
-    seed: test === 'image_canvas_browser' ? '0x272389' : null,
+    seed: test === 'image_canvas_browser' ? '0x272389' : test === 'image_iip_terminal_browser' ? '0x1337365' : null,
     seededDrawAndExtractPairsPerBrowser: test === 'image_canvas_browser' ? 128 : 0,
     remaining: ['complete ImageAddon/parser/browser integration and original image suites', 'native OS and full workspace gates']
   });

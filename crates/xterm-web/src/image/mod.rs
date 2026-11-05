@@ -4,6 +4,7 @@
 mod drawing;
 mod iip_decode;
 mod iip_memory;
+mod iip_protocol;
 mod js;
 mod layers;
 mod lifecycle;
@@ -14,6 +15,7 @@ mod storage;
 mod terminal_host;
 
 pub use iip_decode::{IipDecodedImage, IipImageDecoder, PendingImageBitmap};
+pub use iip_protocol::BrowserIipProtocol;
 use js::{get, set};
 pub use lifecycle::ImageRendererLifecycle;
 pub use resource::BrowserImageSurface;

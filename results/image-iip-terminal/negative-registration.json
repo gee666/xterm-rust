@@ -1,0 +1,42 @@
+{
+  "mutation": "IIP_OSC changed from1337 to1338; restored after run",
+  "status": "failed",
+  "browsers": [
+    {
+      "name": "chromium",
+      "version": "148.0.7778.96",
+      "counts": {
+        "passed": 0,
+        "failed": 11,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "tests": [
+        "__wbgt__image_iip_terminal_browser::actual_png_and_resized_qoi_pause_before_trailing_print_and_match_pixels",
+        "__wbgt__image_iip_terminal_browser::cell_report_uses_live_open_geometry_dpr_and_native_input_route",
+        "__wbgt__image_iip_terminal_browser::failures::bitmap_rejection_is_warned_with_cause_identity_and_parser_resumes",
+        "__wbgt__image_iip_terminal_browser::failures::create_bitmap_synchronous_exception_preserves_original_identity_and_parser_tail",
+        "__wbgt__image_iip_terminal_browser::failures::immediate_storage_error_propagates_but_bitmap_storage_error_is_caught",
+        "__wbgt__image_iip_terminal_browser::failures::pending_bitmap_keeps_terminal_alive_until_storage_commit_without_parser_cycle",
+        "__wbgt__image_iip_terminal_browser::failures::pending_real_bitmap_inserts_after_protocol_reset_storage_disposal_and_unregister",
+        "__wbgt__image_iip_terminal_browser::multipart_bytewise_st_cancellation_and_disabled_inline_match_source",
+        "__wbgt__image_iip_terminal_browser::real_browser_write_queue_waits_for_bitmap_and_delivers_completion",
+        "__wbgt__image_iip_terminal_browser::streaming_qoi_real_parser_tiles_cells_and_pixels_match_source",
+        "__wbgt__image_iip_terminal_browser::unregister_removes_parser_hook_and_reregister_restores_execution"
+      ],
+      "failures": [
+        "panicked at crates\\xterm-web\\tests\\image_iip_terminal_support\\mod.rs:266:9:\nassertion `left == right` failed: cursor/scroll field 0\n  left: JsValue(0)\n right: JsValue(1)\n",
+        "panicked at crates\\xterm-web\\tests\\image_iip_terminal_support\\mod.rs:266:9:\nassertion `left == right` failed: cursor/scroll field 0\n  left: JsValue(2)\n right: JsValue(3)\n",
+        "panicked at crates\\xterm-web\\tests\\image_iip_terminal_browser.rs:193:5:\nassertion `left == right` failed\n  left: 0\n right: 1\n",
+        "panicked at crates\\xterm-web\\tests\\image_iip_terminal_support\\mod.rs:266:9:\nassertion `left == right` failed: cursor/scroll field 0\n  left: JsValue(1)\n right: JsValue(2)\n",
+        "panicked at crates\\xterm-web\\tests\\image_iip_terminal_support\\failures.rs:167:5:\nassertion failed: live.begin(&text)\n",
+        "panicked at crates\\xterm-web\\tests\\image_iip_terminal_support\\failures.rs:237:5:\nassertion failed: matches!(native.write(&sequence(PNG,\n    \"width=14px;height=10px;preserveAspectRatio=0\")),\n    Err(xterm_core::headless::HeadlessError::Engine(xterm_core::terminal::TerminalError::Pending)))\n",
+        "panicked at crates\\xterm-web\\tests\\image_iip_terminal_support\\failures.rs:138:77:\ncalled `Result::unwrap_err()` on an `Ok` value: ()\n",
+        "panicked at crates\\xterm-web\\tests\\image_iip_terminal_support\\failures.rs:63:60:\ncalled `Result::unwrap_err()` on an `Ok` value: ()\n",
+        "panicked at crates\\xterm-web\\tests\\image_iip_terminal_support\\failures.rs:85:5:\nassertion failed: live.begin(&text)\n",
+        "panicked at crates\\xterm-web\\tests\\image_iip_terminal_browser.rs:139:13:\nassertion `left == right` failed\n  left: 0\n right: 1\n",
+        "panicked at crates\\xterm-web\\tests\\image_iip_terminal_browser.rs:77:9:\nassertion failed: live.begin(&text)\n"
+      ]
+    }
+  ]
+}
