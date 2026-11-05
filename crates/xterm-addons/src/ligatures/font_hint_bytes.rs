@@ -42,11 +42,33 @@ pub(super) fn validate(
 }
 
 fn validate_deflate(mut input: &[u8]) -> Result<(), FontError> {
+    // Source reads past the typed array as undefined. Bitwise operations and
+    // destination writes turn that into zero, including missing stored payload.
+    // A stored block has at most u16::MAX bytes plus its four-byte header. This
+    // finite tail completes a final stored block or reaches a later invalid
+    // zero header, without following the source into infinite virtual input.
+    const VIRTUAL_INPUT_LIMIT: usize = u16::MAX as usize + 4;
     let mut state = InflateState::new_boxed(DataFormat::Raw);
     let mut discard = [0; 4096];
+    let zeroes = [0; 4096];
+    let mut virtual_read = 0;
     loop {
-        let result = inflate(&mut state, input, &mut discard, MZFlush::None);
-        input = &input[result.bytes_consumed..];
+        let virtual_input = input.is_empty();
+        let source = if virtual_input {
+            let remaining = VIRTUAL_INPUT_LIMIT - virtual_read;
+            if remaining == 0 {
+                return Err(FontError::Compression);
+            }
+            &zeroes[..remaining.min(zeroes.len())]
+        } else {
+            input
+        };
+        let result = inflate(&mut state, source, &mut discard, MZFlush::None);
+        if virtual_input {
+            virtual_read += result.bytes_consumed;
+        } else {
+            input = &input[result.bytes_consumed..];
+        }
         match result.status {
             Ok(MZStatus::StreamEnd) => return Ok(()),
             Ok(_) if result.bytes_consumed != 0 || result.bytes_written != 0 => {}

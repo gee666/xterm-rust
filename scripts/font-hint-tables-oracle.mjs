@@ -47,6 +47,15 @@ for (const tag of ['cvt ','fpgm','prep']) for (const woff of [false,true]) {
     add(tag,true,'compressed invalid stream',[{data:Array(12).fill(0),length:64}]);
     add(tag,true,'compressed odd length precedes array failure',[{data:Array(12).fill(0),length:65}]);
     add(tag,true,'compressed invalid offset',[{data:payload,length:64,offset:0xfffffff0}]);
+    // The source stored-block loop reads missing payload as undefined and its
+    // Uint8Array destination stores zero. Header failures still precede cvt's
+    // fractional Array length. These inputs all terminate in the source.
+    const stored = [1,4,0,251,255,0,0,0,0];
+    for (let size=0;size<=stored.length;size++) for (const length of [64,65]) {
+      add(tag,true,'stored truncated'+size+' length'+length,[{data:[120,156,...stored.slice(0,size)],length}]);
+    }
+    add(tag,true,'stored maximum missing payload',[{data:[120,156,1,255,255,0,0],length:64}]);
+    add(tag,true,'stored maximum missing inverse header',[{data:[120,156,1,255,255],length:64}]);
   }
 }
 for (const c of cases) {

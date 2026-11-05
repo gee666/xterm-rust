@@ -1,0 +1,24 @@
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\G420\crates\xterm-addons)
+    Finished `test` profile [unoptimized] target(s) in 5.15s
+     Running tests\font_hint_tables.rs (target\debug\deps\font_hint_tables-b08b281f1c0c1d0a.exe)
+
+running 1 test
+test unchanged_source_hint_table_constructor_outcomes_and_error_order ... FAILED
+
+failures:
+
+---- unchanged_source_hint_table_constructor_outcomes_and_error_order stdout ----
+
+thread 'unchanged_source_hint_table_constructor_outcomes_and_error_order' panicked at crates\xterm-addons\tests\support\font_hint_tables.rs:141:9:
+assertion `left == right` failed: "cvt  WOFF stored truncated5 length64"
+  left: Some(Compression)
+ right: None
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    unchanged_source_hint_table_constructor_outcomes_and_error_order
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+error: test failed, to rerun pass `-p xterm-addons --test font_hint_tables`
