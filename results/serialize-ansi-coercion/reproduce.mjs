@@ -3,11 +3,14 @@ import assert from 'node:assert/strict';
 import { cp, mkdir, readFile, readdir, rm, statfs, writeFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { freemem } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { runCommand } from '../../scripts/quality-process.mjs';
 import { artifactIdentity, sourceIdentity, verifyBuiltPackage } from '../../scripts/e2e/build-identity.mjs';
 import { referenceIntegrity } from '../../scripts/upstream-baseline-utils.mjs';
-const root = process.cwd(), output = join(root, 'results/serialize-ansi-coercion');
+const root = resolve(fileURLToPath(new URL('../../', import.meta.url)));
+assert.equal(resolve(process.cwd()), root, 'Run from this owned worktree root');
+const output = join(root, 'results/serialize-ansi-coercion');
 const scratch = join(root, 'tmp/ansi-coercion'), mode = process.argv[2];
 assert(['build', 'proof', 'quality', 'packages', 'audit'].includes(mode));
 const selectedPhase = process.argv[3] ?? 'both';
@@ -24,6 +27,7 @@ const pointer = join(root, 'results/demos/build/latest.json'), pkg = join(root, 
 const json = async file => JSON.parse(await readFile(file, 'utf8'));
 const save = (file, data) => writeFile(file, JSON.stringify(data, null, 2) + '\n');
 const git = args => execFileSync('git', args, { cwd: root, timeout: 30000 });
+assert.match(git(['branch', '--show-current']).toString().trim(), /^swarm\//, 'Never run source swaps on main or legacy master');
 async function optional(file) { try { return await readFile(file); } catch (error) { if (error.code !== 'ENOENT') throw error; return null; } }
 async function headroom() {
   const disk = await statfs(root), free = Number(disk.bavail) * Number(disk.bsize);
@@ -53,14 +57,20 @@ async function packageFiles(directory) {
 }
 function validate(report, phase) {
   assert.equal(report.error, undefined); assert.deepEqual(report.cleanupErrors, []);
+  for (const phase of ['referenceBefore', 'referenceAfter']) {
+    assert.equal(report[phase].files, 776); assert.deepEqual(report[phase].mismatches, []);
+  }
   assert.equal(report.browsers.length, 3); assert.equal(report.suites.length, 2);
   for (const engine of report.browsers) {
     assert.equal(engine.error, undefined); assert.equal(engine.discovered, total); assert.equal(engine.executed, total);
     assert.deepEqual(engine.mismatches.map(entry => entry.name), expectedFailures(phase, engine.name));
     assert.equal(engine.failed, expectedFailures(phase, engine.name).length);
+    assert.equal(engine.passed, total - engine.failed);
+    assert.equal(engine.status, engine.failed ? 'failed' : 'passed');
   }
   for (const suite of report.suites) {
-    assert.equal(suite.result.status, 'passed'); assert.equal(suite.counts.passed, 120);
+    assert.equal(suite.result.status, 'passed'); assert.deepEqual(suite.errors, []);
+    for (const field of ['discovered', 'executed', 'passed']) assert.equal(suite.counts[field], 120);
     for (const field of ['failed', 'skipped', 'unrun']) assert.equal(suite.counts[field], 0);
   }
   assert.equal(report.status, phase === 'baseline' ? 'failed' : 'passed');
