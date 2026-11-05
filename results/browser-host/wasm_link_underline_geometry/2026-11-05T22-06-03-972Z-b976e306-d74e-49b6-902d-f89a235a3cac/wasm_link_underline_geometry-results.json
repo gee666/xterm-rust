@@ -1,0 +1,130 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_link_underline_geometry",
+  "testTimeoutMs": 60000,
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T22:06:03.974Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_link_underline_geometry",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 13359.192000000001,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 24.758499999999913,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\HopeUnderline\\results\\acceptance-artifacts\\0465a08d44bd0c193b50deed774266a7b565c0a94e242590e7d28f11706221ab\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\HopeUnderline\\results\\browser-host\\wasm_link_underline_geometry\\2026-11-05T22-06-03-972Z-b976e306-d74e-49b6-902d-f89a235a3cac\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1135.8256999999994,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_link_underline_geometry::underline_geometry::underline_event_snapshots_offset_after_range_and_columns_after_arithmetic",
+        "__wbgt__wasm_link_underline_geometry::underline_geometry_samples_live_offset_and_columns_at_source_phases"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_link_underline_geometry.rs:26:48:\ncalled `Result::unwrap()` on an `Err` value: JsValue(Error: range scroll: underline rows [\"ow1abcdefghij\",\"row2abcd\",\"\",\"\"]\nError: range scroll: underline rows [\"ow1abcdefghij\",\"row2abcd\",\"\",\"\"]\n    at assert (eval at imports.wbg.__wbg_newwithargs_ab6ffe8cd6c19c04 (http://127.0.0.1:51105/suite.js:6007:21), <anonymous>:10:58)\n    at eval (eval at imports.wbg.__wbg_newwithargs_ab6ffe8cd6c19c04 (http://127.0.0.1:51105/suite.js:6007:21), <anonymous>:72:9))\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:51105/suite.js:5963:21)\n    at wasm_link_underline_geometry-c5a227d34128651d.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[38679]:0xaf8f00)\n    at wasm_link_underline_geometry-c5a227d34128651d.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[25508]:0xa60547)\n    at wasm_link_underline_geometry-c5a227d34128651d.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[8540]:0x7baa50)\n    at wasm_link_underline_geometry-c5a227d34128651d.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[25509]:0xa605cb)\n    at wasm_link_underline_geometry-c5a227d34128651d.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[13234]:0x8cf2e5)\n    at wasm_link_underline_geometry-c5a227d34128651d.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[16734]:0x961f07)\n    at wasm_link_underline_geometry-c5a227d34128651d.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[46603]:0xb11416)\n    at wasm_link_underline_geometry-c5a227d34128651d.wasm.rust_begin_unwind (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[31889]:0xac763e)\n    at wasm_link_underline_geometry-c5a227d34128651d.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[31890]:0xac766b)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\linkifier\\underline_geometry.rs:108:17:\nassertion `left == right` failed: range\n  left: (2, 3)\n right: (1, 2)\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:51105/suite.js:5963:21)\n    at wasm_link_underline_geometry-c5a227d34128651d.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[38679]:0xaf8f00)\n    at wasm_link_underline_geometry-c5a227d34128651d.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[25508]:0xa60547)\n    at wasm_link_underline_geometry-c5a227d34128651d.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[8540]:0x7baa50)\n    at wasm_link_underline_geometry-c5a227d34128651d.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[25509]:0xa605cb)\n    at wasm_link_underline_geometry-c5a227d34128651d.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[13234]:0x8cf2e5)\n    at wasm_link_underline_geometry-c5a227d34128651d.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[16734]:0x961f07)\n    at wasm_link_underline_geometry-c5a227d34128651d.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[46603]:0xb11416)\n    at wasm_link_underline_geometry-c5a227d34128651d.wasm.rust_begin_unwind (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[31889]:0xac763e)\n    at wasm_link_underline_geometry-c5a227d34128651d.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[31890]:0xac766b)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 2 tests\ntest underline_geometry_samples_live_offset_and_columns_at_source_phases ... FAIL\ntest underline_geometry::underline_event_snapshots_offset_after_range_and_columns_after_arithmetic ... FAIL\n\nfailures:\n\n---- underline_geometry_samples_live_offset_and_columns_at_source_phases output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_link_underline_geometry-c5a227d34128651d.wasm.__rust_start_panic (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[47144]:0xb1218c)\n            at wasm_link_underline_geometry-c5a227d34128651d.wasm.rust_panic (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[42233]:0xb06825)\n            at wasm_link_underline_geometry-c5a227d34128651d.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[13234]:0x8cf310)\n            at wasm_link_underline_geometry-c5a227d34128651d.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[16734]:0x961f07)\n            at wasm_link_underline_geometry-c5a227d34128651d.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[46603]:0xb11416)\n            at wasm_link_underline_geometry-c5a227d34128651d.wasm.rust_begin_unwind (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[31889]:0xac763e)\n            at wasm_link_underline_geometry-c5a227d34128651d.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[31890]:0xac766b)\n            at wasm_link_underline_geometry-c5a227d34128651d.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[19876]:0x9cfdf2)\n            at wasm_link_underline_geometry-c5a227d34128651d.wasm.wasm_link_underline_geometry::underline_geometry_samples_live_offset_and_columns_at_source_phases::{{closure}}::h42dd20b7c44609f4 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[999]:0x2b02ab)\n            at wasm_link_underline_geometry-c5a227d34128651d.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::hd0e980b62e45806e (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[4031]:0x61346e)\n\n---- underline_geometry::underline_event_snapshots_offset_after_range_and_columns_after_arithmetic output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_link_underline_geometry-c5a227d34128651d.wasm.__rust_start_panic (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[47144]:0xb1218c)\n            at wasm_link_underline_geometry-c5a227d34128651d.wasm.rust_panic (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[42233]:0xb06825)\n            at wasm_link_underline_geometry-c5a227d34128651d.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[13234]:0x8cf310)\n            at wasm_link_underline_geometry-c5a227d34128651d.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[16734]:0x961f07)\n            at wasm_link_underline_geometry-c5a227d34128651d.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[46603]:0xb11416)\n            at wasm_link_underline_geometry-c5a227d34128651d.wasm.rust_begin_unwind (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[31889]:0xac763e)\n            at wasm_link_underline_geometry-c5a227d34128651d.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[31890]:0xac766b)\n            at wasm_link_underline_geometry-c5a227d34128651d.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[5968]:0x6e96d0)\n            at wasm_link_underline_geometry-c5a227d34128651d.wasm.core::panicking::assert_failed::h87b6c73eaf3c441a (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[23940]:0xa3defd)\n            at wasm_link_underline_geometry-c5a227d34128651d.wasm.wasm_link_underline_geometry::underline_geometry::underline_event_snapshots_offset_after_range_and_columns_after_arithmetic::h0d1090c9d63a413f (http://127.0.0.1:51105/suite_bg.wasm:wasm-function[630]:0xdbe2d)\n\nfailures:\n\n    underline_geometry_samples_live_offset_and_columns_at_source_phases\n    underline_geometry::underline_event_snapshots_offset_after_range_and_columns_after_arithmetic\n\ntest result: FAILED. 0 passed; 2 failed; 0 ignored; 0 filtered out; finished in 0.13s\n\n",
+      "counts": {
+        "passed": 0,
+        "failed": 2,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/0465a08d44bd0c193b50deed774266a7b565c0a94e242590e7d28f11706221ab/artifact.wasm",
+      "sha256": "0465a08d44bd0c193b50deed774266a7b565c0a94e242590e7d28f11706221ab",
+      "bytes": 19942094,
+      "originalPath": "O:/xterm-rust-swarm-16/tmp/worktrees/HopeUnderline/target\\wasm32-unknown-unknown\\debug\\deps\\wasm_link_underline_geometry-c5a227d34128651d.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\HopeUnderline\\results\\browser-host\\wasm_link_underline_geometry\\2026-11-05T22-06-03-972Z-b976e306-d74e-49b6-902d-f89a235a3cac\\artifacts\\suite_bg.wasm",
+      "bytes": 16763640,
+      "sha256": "e80fad930232ed99b4e6f7746ee0f9f473d4be745eb1add5ef78d26ba1480f27"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\HopeUnderline\\results\\browser-host\\wasm_link_underline_geometry\\2026-11-05T22-06-03-972Z-b976e306-d74e-49b6-902d-f89a235a3cac\\artifacts\\suite.js",
+      "bytes": 248847,
+      "sha256": "17ef98beb93a0a9ac7da30d8ed50c82993bf39d5103e59e04f318eab9f6557b0"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "a89173ff03ecd6b3abd924c9ee496d3a2894ab001ab19b560fb15cae2abbc8aa"
+  },
+  "finishedAt": "2026-11-05T22:06:21.020Z"
+}
