@@ -18,8 +18,11 @@ try {
   await fs.writeFile(file,original.toString().replace(from,to));
   const {result,output}=await run('negative');
   if(result.status==='passed'||!output.includes('running 1 test')||!output.includes('test source_fdarray_guard_corpus ... FAILED'))throw Error('Negative control did not execute the guard bypass');
-  record.mismatches=(output.match(/expected Some\(Invalid\("This is a CFF2 font, but FDArray information is missing"\)\), got None/g)??[]).length;
-  if(record.mismatches!==188)throw Error(`Expected188 executed missing-FDArray mismatches, got${record.mismatches}`);
+  const lines=output.split('\n').filter(line=>line.includes('expected Some(Invalid("This is a CFF2 font, but FDArray information is missing")), got '));
+  record.mismatches=lines.length;
+  record.bypassedSuccesses=lines.filter(line=>line.endsWith(', got None')).length;
+  record.laterHmtxErrors=lines.filter(line=>line.endsWith(', got Some(MissingTable("hmtx"))')).length;
+  if(record.mismatches!==188||record.bypassedSuccesses!==128||record.laterHmtxErrors!==60)throw Error(`Unexpected executed guard mismatches ${JSON.stringify(record)}`);
   record.negative=result;
 } finally {
   await fs.writeFile(file,original);
