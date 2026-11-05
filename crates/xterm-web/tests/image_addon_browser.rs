@@ -200,7 +200,11 @@ async fn repeated_activation_keeps_old_protocol_and_current_parent_contexts() {
     let original =
         eval("new SourceTerminal({cols:40,rows:12,allowProposedApi:true,logLevel:'off'})");
     pair.addon.activate(&second).unwrap();
-    call(&get(&pair.source, "addon"), "activate", &[original.clone()]);
+    call(
+        &get(&pair.source, "addon"),
+        "activate",
+        std::slice::from_ref(&original),
+    );
     pair.ready().await;
     pair.write(sixel()).await;
     pair.compare();

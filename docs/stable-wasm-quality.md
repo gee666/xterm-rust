@@ -38,6 +38,10 @@ Final browser checks passed in Chromium 148.0.7778.96, Firefox 150.0.2 and WebKi
 
 Image suites used the existing source-comparator wrapper, not the generic runner without its prelude. Browser runners closed their owned servers/browsers. Raw local logs, browser reports and input/artifact hashes are retained under `results/quality/stable-wasm-repair389/`. These are scoped checks, not complete image/buffer/application equivalence.
 
+## Integrated union refresh
+
+Rebasing the reviewed repair onto integrated `da0acdf0` preserved every original repair file byte-for-byte. The full stable WASM lint then exposed one additional cloned one-item slice in the newly integrated `image_addon_browser.rs` activation test. It received the same behavior-preserving `from_ref` correction. The failed and passing union logs are retained separately. Full union stable WASM Clippy passes. This extra assertion call remains unchanged in meaning and is included in the resumed independent review before integration.
+
 ## Tool environment caveat
 
 All explicit targets and scratch paths are under owned `O:/xterm-rust-swarm-16/tmp/Q`; TEMP, TMP and TMPDIR were exported separately to its `tmp/`. Rust 1.99.1 and its Clippy/WASM components were installed into private `tmp/rustup199`. The private compiler installation was intentional, but I omitted `--no-self-update`. Rustup automatically updated the shared manager from 1.29.0 to 1.29.3. The shared installed compiler list and default remain Rust 1.85.1 plus 1.97.1. No credentials were printed, copied or modified.
