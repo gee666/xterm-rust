@@ -10,8 +10,9 @@ const reference = resolve(process.env.SOURCE_ROOT ?? 'source_repo');
 const osc = process.argv.includes('--osc-live');
 const reentry = process.argv.includes('--provider-reentry');
 const hoverEvent = process.argv.includes('--hover-event');
-assert([osc, reentry, hoverEvent].filter(Boolean).length <= 1, 'Choose one link trace');
-const name = hoverEvent ? 'link-hover-event' : reentry ? 'link-provider-reentry' : osc ? 'osc-live-range' : 'public-link-provider';
+const liveCols = process.argv.includes('--live-cols');
+assert([osc, reentry, hoverEvent, liveCols].filter(Boolean).length <= 1, 'Choose one link trace');
+const name = liveCols ? 'link-live-cols' : hoverEvent ? 'link-hover-event' : reentry ? 'link-provider-reentry' : osc ? 'osc-live-range' : 'public-link-provider';
 const output = resolve(`results/${name}`);
 const fixture = resolve(`crates/xterm-web/tests/fixtures/${name}.json`);
 const program = await readFile(`scripts/${name}-trace.js`, 'utf8');
@@ -57,7 +58,7 @@ try {
         }, program);
         if (expected === undefined) expected = entry.trace;
         assert.deepEqual(entry.trace, expected);
-        assert.equal(entry.trace.length, hoverEvent ? 7 : reentry ? 6 : osc ? 17 : 21);
+        assert.equal(entry.trace.length, liveCols ? 10 : hoverEvent ? 7 : reentry ? 6 : osc ? 17 : 21);
         if (osc) {
           const phase = label => entry.trace.find(entry => entry.name === label);
           assert.equal(phase('same cell ignores mutation').pointer, true);

@@ -34,7 +34,7 @@ impl State {
         } else {
             let current = self.hover.borrow().current().cloned();
             let contains = match current {
-                Some(link) => link.contains(position, self.cols.get())?,
+                Some(link) => link.contains_with_columns(position, || self.cols.get())?,
                 None => false,
             };
             if !contains {
@@ -66,7 +66,7 @@ impl State {
                 let current = self.hover.borrow().current().cloned().ok_or_else(|| {
                     js_sys::TypeError::new("Cannot read properties of undefined (reading 'link')")
                 })?;
-                if current.contains(position, self.cols.get())? {
+                if current.contains_with_columns(position, || self.cols.get())? {
                     let current = self.hover.borrow().current().cloned().ok_or_else(|| {
                         js_sys::TypeError::new(
                             "Cannot read properties of undefined (reading 'link')",
@@ -127,7 +127,7 @@ impl State {
                     index,
                     &request,
                     self.providers.len(),
-                    |link| Self::probe(link, position, self.cols.get()),
+                    |link| self.probe(link, position),
                     |link| self.select(link),
                 )?;
             } else {
@@ -157,7 +157,7 @@ impl State {
                             data,
                             &request,
                             state.providers.len(),
-                            |link| Self::probe(link, request.position, state.cols.get()),
+                            |link| state.probe(link, request.position),
                             |link| state.select(link),
                         )?;
                         // Selection callbacks can replace the active reply map.
@@ -179,14 +179,14 @@ impl State {
         Ok(())
     }
     fn probe(
+        &self,
         link: Option<&Rc<CachedBrowserLink>>,
         position: Position,
-        cols: usize,
     ) -> Result<bool, JsValue> {
         link.ok_or_else(|| {
             js_sys::TypeError::new("Cannot read properties of undefined (reading 'link')")
         })?
-        .contains(position, cols)
+        .contains_with_columns(position, || self.cols.get())
     }
     fn select(self: &Rc<Self>, link: Rc<CachedBrowserLink>) -> Result<(), JsValue> {
         let event = self.last_event.borrow().clone();
@@ -194,7 +194,7 @@ impl State {
         let Some(position) = (self.coordinates)(&event)? else {
             return Ok(());
         };
-        if link.contains(position, self.cols.get())? {
+        if link.contains_with_columns(position, || self.cols.get())? {
             // Assign current before invoking decorations getters, just as source.
             self.hover
                 .borrow_mut()

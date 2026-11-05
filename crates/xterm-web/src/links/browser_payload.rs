@@ -69,20 +69,33 @@ impl BrowserLink {
         }
     }
     pub fn contains(&self, position: Position, cols: usize) -> Result<bool, JsValue> {
+        self.contains_with_columns(position, || cols)
+    }
+    pub(super) fn contains_with_columns(
+        &self,
+        position: Position,
+        columns: impl Fn() -> usize,
+    ) -> Result<bool, JsValue> {
         if let Self::Native(link) = self {
-            return Ok(link.data.range.contains(position, cols));
+            return Ok(link.data.range.contains(position, columns()));
         }
-        let current = JsValue::from_f64(position.y as f64 * cols as f64 + position.x as f64);
-        let cols = JsValue::from_f64(cols as f64);
-        // The complete upper operand is evaluated even when lower > current.
+        // Each range getter or numeric coercion can resize the terminal. Source
+        // samples cols after each y getter, before coercion, and once more last.
         let lower = add(
-            &multiply(&self.endpoint("start", "y")?, &cols)?,
+            &multiply(
+                &self.endpoint("start", "y")?,
+                &JsValue::from_f64(columns() as f64),
+            )?,
             &self.endpoint("start", "x")?,
         )?;
         let upper = add(
-            &multiply(&self.endpoint("end", "y")?, &cols)?,
+            &multiply(
+                &self.endpoint("end", "y")?,
+                &JsValue::from_f64(columns() as f64),
+            )?,
             &self.endpoint("end", "x")?,
         )?;
+        let current = JsValue::from_f64(position.y as f64 * columns() as f64 + position.x as f64);
         Ok(less_equal(&lower, &current)? && less_equal(&current, &upper)?)
     }
     pub(super) fn equals(&self, other: &Self) -> Result<bool, JsValue> {
