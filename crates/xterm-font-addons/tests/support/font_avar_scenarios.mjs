@@ -3,7 +3,10 @@ export function avarPayload({major=1,minor=0,axes=0,positions=[],length}={}) {
   const data=new Uint8Array(length??8+2*axes+positions.reduce((n,p)=>n+4*p,0)),view=new DataView(data.buffer);
   const set=(at,value)=>{if(at+2<=data.length)view.setUint16(at,value);};
   set(0,major);set(2,minor);set(4,65535);set(6,axes);
-  let at=8;for(let i=0;i<axes;i++){const count=positions[i]??0;set(at,count);at+=2+4*count;}
+  let at=8;for(let i=0;i<axes;i++){
+    const count=positions[i]??0;set(at,count);at+=2;
+    for(let j=0;j<count;j++){set(at,j%2?65535:32768);set(at+2,32767);at+=4;}
+  }
   return data;
 }
 export function avarCases() {
