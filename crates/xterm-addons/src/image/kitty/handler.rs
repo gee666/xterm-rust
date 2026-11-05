@@ -47,7 +47,25 @@ impl KittyGraphicsHandler {
         factory: Rc<dyn EncodedSourceFactory>,
         options: KittyOptions,
     ) -> Self {
-        let max_encoded = (options.size_limit * 4.0 / 3.0).ceil();
+        Self::new_with_encoded_limit(
+            host,
+            storage,
+            factory,
+            options,
+            (options.size_limit * 4.0 / 3.0).ceil(),
+        )
+    }
+
+    /// Use the host's already evaluated encoded limit. Browser adapters must
+    /// perform raw JavaScript coercion outside controller borrows and preserve
+    /// its exceptions. As upstream, decoder settings are checked at first use.
+    pub fn new_with_encoded_limit(
+        host: Rc<dyn KittyGraphicsHost>,
+        storage: Rc<KittyImageStorage>,
+        factory: Rc<dyn EncodedSourceFactory>,
+        options: KittyOptions,
+        max_encoded: f64,
+    ) -> Self {
         let initial_encoded = if max_encoded.is_nan() {
             f64::NAN
         } else {

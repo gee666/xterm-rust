@@ -65,16 +65,17 @@ impl State {
         if self.options.get().kitty_support {
             // Source first coerces this raw value in the enabled handler's
             // constructor. Keep state borrows released across user conversion.
-            let size_limit = super::options::kitty_size_number(&self.kitty_size_limit)?;
+            let encoded_limit = super::options::kitty_encoded_limit(&self.kitty_size_limit)?;
             let options = self.options.get();
-            let protocol = BrowserKittyProtocol::new(
+            let protocol = BrowserKittyProtocol::new_with_encoded_limit(
                 terminal,
                 renderer.renderer(),
                 storage,
                 KittyOptions {
                     pixel_limit: options.pixel_limit,
-                    size_limit,
+                    size_limit: options.kitty_size_limit,
                 },
+                encoded_limit,
             );
             self.add_handler(Protocol::Kitty(protocol.clone()))?;
             let cleanup: Cleanup = Rc::new({

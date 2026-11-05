@@ -13,16 +13,21 @@ export function imageAddonOptions(options) {
   }, options);
 }
 export function imageOptionNumber(value) { return +value; }
-// Multiplication requests a number primitive and rejects mixed BigInt operands.
-export function imageKittySizeNumber(value) { return value * 1; }
+// Preserve the operand expression too: some engines include it in TypeErrors.
+function kittyEncodedLimit() {
+  return Math.ceil(this._opts.kittySizeLimit * 4 / 3);
+}
+export function imageKittyEncodedLimit(kittySizeLimit) {
+  return kittyEncodedLimit.call({_opts: {kittySizeLimit}});
+}
 ")]
 extern "C" {
     #[wasm_bindgen(catch, js_name = imageAddonOptions)]
     fn clone_options(options: &JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch, js_name = imageOptionNumber)]
     fn number(value: &JsValue) -> Result<f64, JsValue>;
-    #[wasm_bindgen(catch, js_name = imageKittySizeNumber)]
-    pub(super) fn kitty_size_number(value: &JsValue) -> Result<f64, JsValue>;
+    #[wasm_bindgen(catch, js_name = imageKittyEncodedLimit)]
+    pub(super) fn kitty_encoded_limit(value: &JsValue) -> Result<f64, JsValue>;
 }
 pub(super) struct ConstructorOptions {
     pub current: ImageOptions,

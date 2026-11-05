@@ -108,6 +108,22 @@ impl BrowserKittyProtocol {
         storage: ImageStorage,
         options: KittyOptions,
     ) -> Self {
+        Self::new_with_encoded_limit(
+            terminal,
+            renderer,
+            storage,
+            options,
+            (options.size_limit * 4.0 / 3.0).ceil(),
+        )
+    }
+    /// Construct after the coordinator evaluates the raw JavaScript limit.
+    pub(crate) fn new_with_encoded_limit(
+        terminal: &Terminal,
+        renderer: Rc<BrowserImageRenderer>,
+        storage: ImageStorage,
+        options: KittyOptions,
+        max_encoded: f64,
+    ) -> Self {
         let storage = Rc::new(KittyImageStorage::new(Rc::new(storage)));
         let host = Rc::new(Host {
             terminal: Rc::downgrade(&terminal.shared),
@@ -115,11 +131,12 @@ impl BrowserKittyProtocol {
         });
         Self {
             terminal: Rc::downgrade(&terminal.shared),
-            handler: Rc::new(KittyGraphicsHandler::new(
+            handler: Rc::new(KittyGraphicsHandler::new_with_encoded_limit(
                 host,
                 Rc::clone(&storage),
                 Rc::new(BlobFactory),
                 options,
+                max_encoded,
             )),
             storage,
         }
