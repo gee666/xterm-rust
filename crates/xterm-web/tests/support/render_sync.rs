@@ -7,6 +7,10 @@ extern "C" {
     fn source_program(program: &str) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch, js_name = rustSyncCancelProgram)]
     fn rust_program(program: &str, callback: &js_sys::Function) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch, js_name = sourceSyncHandleProgram)]
+    fn source_handle_program(program: &str) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch, js_name = rustSyncHandleProgram)]
+    fn rust_handle_program(program: &str, callback: &js_sys::Function) -> Result<JsValue, JsValue>;
 }
 struct Fixture {
     service: Rc<RenderService>,
@@ -78,9 +82,14 @@ fn strings(value: JsValue) -> Vec<String> {
         .map(|value| value.as_string().unwrap())
         .collect()
 }
-fn check_programs(expected_count: usize, predicate: impl Fn(&str) -> bool) {
-    let fixture: serde_json::Value =
-        serde_json::from_str(include_str!("../fixtures/render-sync-cancel.json")).unwrap();
+fn check_results(
+    fixture: &str,
+    expected_count: usize,
+    predicate: impl Fn(&str) -> bool,
+    source_program: fn(&str) -> Result<JsValue, JsValue>,
+    rust_program: fn(&str, &js_sys::Function) -> Result<JsValue, JsValue>,
+) {
+    let fixture: serde_json::Value = serde_json::from_str(fixture).unwrap();
     let mut count = 0;
     for result in fixture["results"].as_array().unwrap() {
         let program = result["program"].as_str().unwrap();
@@ -121,6 +130,45 @@ fn check_programs(expected_count: usize, predicate: impl Fn(&str) -> bool) {
         slot.borrow_mut().take();
     }
     assert_eq!(count, expected_count);
+}
+fn check_programs(expected_count: usize, predicate: impl Fn(&str) -> bool) {
+    check_results(
+        include_str!("../fixtures/render-sync-cancel.json"),
+        expected_count,
+        predicate,
+        source_program,
+        rust_program,
+    );
+}
+#[wasm_bindgen_test]
+fn sync_handle_raw_identity_nullish_scheduling_and_retained_delivery() {
+    check_results(
+        include_str!("../fixtures/render-sync-handles.json"),
+        48,
+        |name| {
+            matches!(
+                name.split_once('/').unwrap().1,
+                "flush" | "dispose" | "deliver"
+            )
+        },
+        source_handle_program,
+        rust_handle_program,
+    );
+}
+#[wasm_bindgen_test]
+fn sync_handle_set_and_clear_reentry_throw_identity_and_partial_assignment() {
+    check_results(
+        include_str!("../fixtures/render-sync-handles.json"),
+        68,
+        |name| {
+            !matches!(
+                name.split_once('/').unwrap().1,
+                "flush" | "dispose" | "deliver"
+            )
+        },
+        source_handle_program,
+        rust_handle_program,
+    );
 }
 #[wasm_bindgen_test]
 fn sync_cancel_live_handle_and_reentrant_buffer_flush_replace_dispose() {

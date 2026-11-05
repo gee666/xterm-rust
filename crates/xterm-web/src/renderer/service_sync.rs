@@ -1,7 +1,10 @@
 // Copyright (c) 2026 The xterm.js authors. All rights reserved. MIT license.
 use super::{js_max, js_min};
 use crate::links::debounce::RenderRange;
-use std::{cell::Cell, rc::Rc};
+use std::{
+    cell::{Cell, RefCell},
+    rc::Rc,
+};
 use wasm_bindgen::{closure::Closure, JsCast, JsValue};
 use web_sys::Window;
 use xterm_core::core_service::CoreService;
@@ -12,20 +15,20 @@ struct State {
     core: Rc<CoreService>,
     range: Cell<RenderRange>,
     buffering: Cell<bool>,
-    timeout: Cell<Option<i32>>,
+    timeout: RefCell<JsValue>,
     on_timeout: Rc<dyn Fn() -> Result<(), JsValue>>,
 }
 impl State {
     fn cancel_timer(&self) -> Result<(), JsValue> {
-        if self.timeout.get().is_some() {
+        if !self.timeout.borrow().is_undefined() {
             let window = (self.window)();
             let cancel = js_sys::Reflect::get(window.as_ref(), &"clearTimeout".into())?
                 .unchecked_into::<js_sys::Function>();
             // The method getter can flush or replace the pending timer. Source
             // reads its argument after that getter and clears only on success.
-            let handle = self.timeout.get().map_or(JsValue::UNDEFINED, JsValue::from);
+            let handle = self.timeout.borrow().clone();
             js_sys::Reflect::apply(&cancel, window.as_ref(), &[handle].into_iter().collect())?;
-            self.timeout.set(None);
+            self.timeout.replace(JsValue::UNDEFINED);
         }
         Ok(())
     }
@@ -53,7 +56,7 @@ impl SynchronizedOutput {
                 end: 0.0,
             }),
             buffering: Cell::new(false),
-            timeout: Cell::new(None),
+            timeout: RefCell::new(JsValue::UNDEFINED),
             on_timeout: Rc::new(on_timeout),
         }))
     }
@@ -68,11 +71,20 @@ impl SynchronizedOutput {
             RenderRange { start, end }
         };
         self.0.range.set(range);
-        if self.0.timeout.get().is_none() {
+        // Source uses ??= to schedule, but !== undefined to cancel. In
+        // particular a host returning null is canceled and also rescheduled.
+        let needs_timeout = {
+            let handle = self.0.timeout.borrow();
+            handle.is_null() || handle.is_undefined()
+        };
+        if needs_timeout {
+            let window = (self.0.window)();
+            let schedule = js_sys::Reflect::get(window.as_ref(), &"setTimeout".into())?
+                .unchecked_into::<js_sys::Function>();
             let weak = Rc::downgrade(&self.0);
             let callback: Callback = Closure::wrap(Box::new(move || {
                 if let Some(state) = weak.upgrade() {
-                    state.timeout.set(None);
+                    state.timeout.replace(JsValue::UNDEFINED);
                     state
                         .core
                         .dec_private_modes
@@ -87,12 +99,14 @@ impl SynchronizedOutput {
             // JS-owned closure pattern so that callback remains callable, even
             // when a shim retains it then throws. ES2021 GC reclaims it.
             let callback = callback.into_js_value();
-            let window = (self.0.window)();
-            let handle = window.set_timeout_with_callback_and_timeout_and_arguments_0(
-                callback.unchecked_ref(),
-                SYNCHRONIZED_OUTPUT_TIMEOUT_MS,
-            )?;
-            self.0.timeout.set(Some(handle));
+            // web-sys's typed timer binding coerces the host result to i32.
+            // Keep the original value, including objects and nullish handles,
+            // and do not borrow the slot across getter/call reentry.
+            let arguments = [callback, SYNCHRONIZED_OUTPUT_TIMEOUT_MS.into()]
+                .into_iter()
+                .collect();
+            let handle = js_sys::Reflect::apply(&schedule, window.as_ref(), &arguments)?;
+            self.0.timeout.replace(handle);
         }
         Ok(())
     }

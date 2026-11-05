@@ -48,11 +48,14 @@ for (const path of Object.keys(compiled.metafile.inputs).filter(p => p.startsWit
   pins.push({ path, sha256: createHash('sha256').update(await readFile(resolve(root, path))).digest('hex') });
 }
 const cases = await readFile(resolve(root, 'crates/xterm-web/tests/support/render_sync_cases.mjs'), 'utf8');
+const handleCases = await readFile(resolve(root, 'crates/xterm-web/tests/support/render_sync_handles.mjs'), 'utf8');
 const output = resolve(root, 'crates/xterm-web/tests/support/render_sync_oracle.mjs');
 const fixture = '// Copyright (c) 2019 The xterm.js authors. All rights reserved. MIT license.\n'
-  + '// Generated test-only intact source oracle. SHA-256: ' + hash + '\n' + compiled.outputFiles[0].text + '\n' + cases
+  + '// Generated test-only intact source oracle. SHA-256: ' + hash + '\n' + compiled.outputFiles[0].text + '\n' + cases + '\n' + handleCases
   + '\nexport function sourceSyncCancelProgram(program) { return runSyncCancelProgram(makeSource, program); }\n'
-  + 'export function rustSyncCancelProgram(program, callback) { return runSyncCancelProgram(host => command => callback(host, command), program); }\n';
+  + 'export function rustSyncCancelProgram(program, callback) { return runSyncCancelProgram(host => command => callback(host, command), program); }\n'
+  + 'export function sourceSyncHandleProgram(program) { return runSyncHandleProgram(makeSource, program); }\n'
+  + 'export function rustSyncHandleProgram(program, callback) { return runSyncHandleProgram(host => command => callback(host, command), program); }\n';
 if (args[0] === '--write') await writeFile(output, fixture);
 else if (await readFile(output, 'utf8') !== fixture) throw new Error('Synchronized output oracle differs from unchanged source');
 const oracle = await import(pathToFileURL(output).href + '?source-check');
@@ -63,5 +66,12 @@ if (args[0] === '--write') await writeFile(fixturePath, json);
 else if (await readFile(fixturePath, 'utf8') !== json) throw new Error('Synchronized output source fixture drift');
 await mkdir(resolve(root, 'results/render-sync-cancel'), { recursive: true });
 await writeFile(resolve(root, 'results/render-sync-cancel/source.json'), json);
-console.log(JSON.stringify({ source, sha256: hash, programs: results.length, pins: pins.length,
+const handles = JSON.stringify({ source, sha256: hash, pins, results: oracle.runSyncHandleCases(oracle.makeSource) }, null, 2) + '\n';
+const handlesPath = resolve(root, 'crates/xterm-web/tests/fixtures/render-sync-handles.json');
+if (args[0] === '--write') await writeFile(handlesPath, handles);
+else if (await readFile(handlesPath, 'utf8') !== handles) throw new Error('Synchronized output handle fixture drift');
+await mkdir(resolve(root, 'results/render-sync-handles'), { recursive: true });
+await writeFile(resolve(root, 'results/render-sync-handles/source.json'), handles);
+console.log(JSON.stringify({ source, sha256: hash, programs: results.length,
+  handlePrograms: oracle.syncHandlePrograms.length, pins: pins.length,
   scope: 'source-only component corpus; not Rust or full terminal equivalence' }));
