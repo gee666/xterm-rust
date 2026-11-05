@@ -1,0 +1,15 @@
+# Raw Scrollable getter continuation
+
+Task432 is accepted at sourcecef749ae plus7d302606 on swarm/AmberGetters. Pick BOTH source commits, then the following receipt/handoff/cleanup commit. Do not replay privatef6e5afa5 or417. Main dcde3e9c already has accepted426 through canonical435. Verified426 production state/animation/scheduler bytes identical before432 browser testing. No main ref operation was performed by Amber.
+
+Read docs/raw-scrollable-getters.md and docs/reviews/amber432.md. Typed/raw updates use one engine with resolver phases. Dimensions, now and validation capture state before getters. Active smooth reads each missing axis from the operation current after that getter, then selects state after expansion. Second-read undefined remains explicit in direct updates but is absent after source smooth-object expansion. Browser tests found an additional real plain tick-update bug, fixed by defaulting undefined tick coordinates to currentraw requests.
+
+Observed final checks: Windows native76, focused strict native/WASM all-feature Clippy, source3oracles, changed/five-member format PASS. Actual5804getter+605live programs each in Chromium148/Firefox150.0.2/WebKit26.4 PASS, two functions/engine,0ignored/filter. Initial final-tick failures all3 retained. Read-once Chromium negative control failed expected getter trace; finally restoration and full final checks passed. Reviewer independently reran existing76native, format/oracle and13source/artifact/log pins, no new compiler/browser. Exact aggregate fmtOS206 retained. Full equivalence NOT PROVEN.
+
+## Next301
+
+301 remains new, dependencies289/409/417/426/432 accepted. BrowserScrollable, Element, scrollbar geometry and Viewport remain numeric. Raw browser scheduler/Element bindings, returned state-object identity and external mutation, raw event exceptions and arbitrary replaced Date.now values/errors remain open. Reuse shared engine and these raw resolver entrypoints, not a synchronized numeric cache. FrameScheduler still prohibits recursive request/cancel while borrowed. Public raw setters live in raw_state.rs; raw browser validation projects Position rather than full mutable source state-object, which still needs binding work.
+
+Amber's compiler/browser allocation2622 was explicitly released2652; isolated review was source/light only. Central409 current owner Bhaskara controls new grants, measured temporary5focused-heavy/Cargo-j2 and browser2 at this checkpoint. No jobs, servers, browsers or main-ref permissions are held. New work needs fresh grants, not process sampling alone.
+
+Owned temporary root is O:/xterm-rust-swarm-16/tmp/AmberGetters. Only generated browser-host reports/artifacts, target, tmp and physical reference copy remain for cleanup after the durable commit. No reference links were created. Final cleanup proof follows in results/raw-scrollable-getters and central409. Do not delete any other owner's paths. Original source scrollable.ts SHA010ddcb39e40b268e4f37afc1da968ae30b64eaf356c918bb08484558150eba4 remains unchanged.
