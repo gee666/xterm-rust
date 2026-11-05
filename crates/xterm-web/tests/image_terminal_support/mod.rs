@@ -1,15 +1,15 @@
 // Copyright (c) 2023 The xterm.js authors. MIT license.
 mod patch;
+mod snapshot;
 pub use patch::{thrower, try_call, Patch};
+pub use snapshot::snapshot;
 use std::{
     cell::{Cell, RefCell},
     rc::Rc,
 };
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_futures::JsFuture;
-use xterm_addons::image::storage::{
-    ImageStorage, ImageStorageOptions, ImageTileInfo, TerminalStorageHost,
-};
+use xterm_addons::image::storage::{ImageStorage, ImageStorageOptions, TerminalStorageHost};
 use xterm_core::{headless::HeadlessError, lifecycle::DisposableHandle, terminal::TerminalError};
 use xterm_web::{
     image::{BrowserImageRenderer, BrowserImageSurface, ImageRendererLifecycle},
@@ -147,47 +147,7 @@ impl<P> Live<P> {
             .value()
     }
     pub fn snapshot(&self) -> JsValue {
-        self.terminal
-            .shared_native()
-            .with_state(|state| {
-                let buffer = state.active_buffer();
-                let buffer = buffer.borrow();
-                let rows = js_sys::Array::new();
-                for y in 0..buffer.lines.len() {
-                    let line = buffer.lines.get(y).unwrap();
-                    let line = line.borrow();
-                    let cells = js_sys::Array::new();
-                    for x in 0..20 {
-                        let image = line
-                            .get_extended(x)
-                            .and_then(|e| e.payload())
-                            .and_then(|p| p.downcast::<ImageTileInfo>().ok());
-                        cells.push(&js_sys::Array::of5(
-                            &js_sys::JsString::from_char_code(&line.get_string(x).unwrap()).into(),
-                            &line.get_width(x).unwrap().into(),
-                            &line.get_fg(x).unwrap().into(),
-                            &line.get_bg(x).unwrap().into(),
-                            &image.map_or(JsValue::NULL, |p| {
-                                js_sys::Array::of2(
-                                    &(p.image_id.get() as f64).into(),
-                                    &p.tile_id.get().into(),
-                                )
-                                .into()
-                            }),
-                        ));
-                    }
-                    rows.push(&js_sys::Array::of2(&line.is_wrapped.into(), &cells));
-                }
-                js_sys::Array::of5(
-                    &(buffer.x as f64).into(),
-                    &(buffer.y as f64).into(),
-                    &(buffer.ybase as f64).into(),
-                    &(buffer.ydisp as f64).into(),
-                    &rows,
-                )
-                .into()
-            })
-            .unwrap()
+        snapshot(&self.terminal)
     }
 }
 impl<P> Drop for Live<P> {
@@ -218,7 +178,7 @@ impl Source {
           reset(){h.reset()},
           snapshot(){const b=t._core._bufferService.buffer;return [b.x,b.y,b.ybase,b.ydisp,
             Array.from({length:b.lines.length},(_,y)=>{const l=b.lines.get(y);return [l.isWrapped,
-              Array.from({length:20},(_,x)=>{const e=l.getExtended(x)?.payload;return [l.getString(x),l.getWidth(x),l.getFg(x),l.getBg(x),
+              Array.from({length:t.cols},(_,x)=>{const e=l.getExtended(x)?.payload;return [l.getString(x),l.getWidth(x),l.getFg(x),l.getBg(x),
                 e?.imageId===undefined?null:[e.imageId,e.tileId]]})]})]},
           image(x,y){return store.getImageAtBufferCell(x,y)},
           dispose(){registration.dispose();store.dispose();renderer.dispose();t.dispose();parent.remove()}
@@ -243,6 +203,7 @@ impl Drop for Source {
         call(&self.0, "dispose", &[]);
     }
 }
+
 pub fn same_state<P>(live: &Live<P>, source: &Source) {
     let replies = js_sys::Array::from(&get(&source.0, "replies"));
     assert_eq!(live.replies.borrow().len(), replies.length() as usize);

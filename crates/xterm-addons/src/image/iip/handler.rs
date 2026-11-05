@@ -25,12 +25,16 @@ pub struct IipHandler {
 }
 impl IipHandler {
     pub fn new(options: IipOptions, policy: NameDecodePolicy) -> Result<Self, IipError> {
-        let encoded_limit = options
-            .size_limit
-            .checked_mul(4)
-            .and_then(|n| n.checked_add(2))
-            .map(|n| n / 3)
-            .ok_or(crate::image::base64::InvalidSettings)?;
+        // Source rounds the encoded limit after floating-point arithmetic.
+        // In particular, fractional byte limits must not be truncated first.
+        let encoded_limit = (options.size_limit * 4.0 / 3.0).ceil();
+        if !encoded_limit.is_finite()
+            || !(0.0..=crate::image::base64::MAX_BYTES as f64).contains(&encoded_limit)
+        {
+            return Err(crate::image::base64::InvalidSettings.into());
+        }
+        // The checked protocol cap fits usize on all supported targets.
+        let encoded_limit = encoded_limit as usize;
         let decoder = PayloadDecoder::new(
             DECODER_KEEP_BYTES,
             encoded_limit,

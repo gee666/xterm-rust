@@ -1,6 +1,7 @@
 // Copyright (c) 2020 The xterm.js authors. All rights reserved. MIT license.
 //! Browser canvas operations for shared image storage. ImageRendererLifecycle
 //! binds these operations to the Rust terminal's open/options/renderer lifecycle.
+mod addon;
 mod drawing;
 mod iip_decode;
 mod iip_memory;
@@ -19,6 +20,7 @@ mod sixel_protocol;
 mod storage;
 mod terminal_host;
 
+pub use addon::ImageAddon;
 pub use iip_decode::{IipDecodedImage, IipImageDecoder, PendingImageBitmap};
 pub use iip_protocol::BrowserIipProtocol;
 use js::{get, set};

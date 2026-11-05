@@ -10,7 +10,7 @@ use std::error::Error;
 use std::fmt;
 
 const DECODE_THRESHOLD: usize = 131_072;
-const MAX_BYTES: usize = 4_294_901_760;
+pub(super) const MAX_BYTES: usize = 4_294_901_760;
 const DATA_OFFSET: usize = 5_152;
 const PAGE_BYTES: usize = 65_536;
 

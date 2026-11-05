@@ -12,13 +12,13 @@ pub const DECODER_INITIAL_BYTES: usize = 1_048_576;
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct IipOptions {
     pub pixel_limit: f64,
-    pub size_limit: usize,
+    pub size_limit: f64,
 }
 impl Default for IipOptions {
     fn default() -> Self {
         Self {
             pixel_limit: 16_777_216.0,
-            size_limit: 33_554_432,
+            size_limit: 33_554_432.0,
         }
     }
 }

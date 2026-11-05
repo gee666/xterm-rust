@@ -99,9 +99,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 handler = IipHandler::new(
                     IipOptions {
                         pixel_limit: number(&input["pixelLimit"])?,
-                        size_limit: usize::try_from(
-                            input["sizeLimit"].as_u64().ok_or("missing size limit")?,
-                        )?,
+                        size_limit: number(&input["sizeLimit"])?,
                     },
                     NameDecodePolicy::NodeBuffer,
                 )?

@@ -13,6 +13,25 @@ export class SerializeAddon extends wasm.SerializeAddon {
   }
 }
 
+// Keep activation hosts in the JS heap. Native parser/storage owners use weak
+// terminal handles so unreachable addon/Terminal cycles remain collectible.
+const imageAddonOwners = new WeakMap();
+export class ImageAddon extends wasm.ImageAddon {
+  activate(terminal) {
+    this._terminal = terminal;
+    (this._imageTerminals ??= []).push(terminal);
+    super.activate(terminal);
+    let owners = imageAddonOwners.get(terminal);
+    if (!owners) imageAddonOwners.set(terminal, owners = new Set());
+    owners.add(this);
+  }
+  dispose() {
+    super.dispose();
+    for (const terminal of this._imageTerminals ?? []) imageAddonOwners.get(terminal)?.delete(this);
+    this._imageTerminals = [];
+  }
+}
+
 let runtime;
 function sharedRuntime() { return runtime ??= new wasm.BrowserRuntime(); }
 

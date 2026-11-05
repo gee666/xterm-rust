@@ -67,7 +67,7 @@ fn inline_disabled_failure_and_overflow_recover_at_next_start() {
     ));
     let mut limited = IipHandler::new(
         IipOptions {
-            size_limit: 1,
+            size_limit: 1.0,
             ..IipOptions::default()
         },
         NameDecodePolicy::NodeBuffer,
@@ -284,5 +284,21 @@ fn fixed_three_preserves_source_ties_subnormals_and_special_numbers() {
         (f64::NEG_INFINITY, "-Infinity"),
     ] {
         assert_eq!(fixed_three(number), expected, "{number:?}");
+    }
+}
+
+#[test]
+fn fractional_size_limit_rounds_encoded_capacity_before_integer_conversion() {
+    for (limit, accepted) in [(2.0, false), (2.5, true)] {
+        let mut limited = IipHandler::new(
+            IipOptions {
+                size_limit: limit,
+                ..IipOptions::default()
+            },
+            NameDecodePolicy::NodeBuffer,
+        )
+        .unwrap();
+        sequence(&mut limited, "File=inline=1:AAAA", true);
+        assert_eq!(!limited.is_aborted(), accepted);
     }
 }

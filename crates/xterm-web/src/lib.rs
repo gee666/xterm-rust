@@ -15,6 +15,8 @@ pub mod character_joiner;
 pub mod contrast_cache;
 #[cfg(target_arch = "wasm32")]
 pub mod image;
+#[cfg(target_arch = "wasm32")]
+pub use image::ImageAddon;
 pub mod input;
 pub mod links;
 pub mod renderer;
