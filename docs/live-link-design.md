@@ -1,6 +1,6 @@
 # Proposed live-link representation
 
-Task210 owns this migration. The current code is still the snapshot implementation. This document is a proposal for Cameron, Lane and Xavier to agree before changing callers.
+This historical design remains the full-family target. Task415 implements its retained live public custom-provider path using the existing generic reply algorithm. Native OSC and utility links still use typed snapshots. Current code, exact tests and remaining raw/OSC gaps are in [public-link-provider.md](public-link-provider.md); family321 remains open.
 
 ## Keep browser objects live
 
@@ -8,7 +8,7 @@ A browser link handle should own the original JavaScript ILink object, not a Rus
 
 The intended interface is an opaque cloneable `BrowserLink`, constructed from an original JS object, with fallible operations for current text/range reads, contains/equality tests, callback dispatch and disposal. A native Rust convenience constructor may build a plain data object with Rust callbacks. It must not freeze a user-supplied JS object or create a strong Rust/JS self-reference cycle.
 
-`BrowserLinkifier.current_link` must become fallible or expose a fallible live-handle method used by all production consumers. Selection and mousedown matching must read live data. Do not retain an old Option-returning method that silently hides getter failures.
+`BrowserLinkifier.current_link` now returns a retained payload without observing getters. Its field/query methods must remain fallible and are used by production consumers. Selection and mousedown matching must read live data. Do not retain an old Option-returning method that silently hides getter failures.
 
 ## Share the algorithm, not snapshots
 

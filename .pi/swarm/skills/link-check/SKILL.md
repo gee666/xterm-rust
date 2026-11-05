@@ -14,6 +14,10 @@ node scripts/link-replies-oracle.mjs
 cargo test -p xterm-web --test links --test link_state --test osc_links_differential --test osc_links_live --test debounce --test debounce_errors --test debounce_differential --test link_replies_differential
 WASM_TEST=wasm_links node scripts/browser-host-check.mjs
 WASM_TEST=wasm_linkifier node scripts/browser-host-check.mjs
+node scripts/public-link-provider-source.mjs
+WASM_TEST=wasm_public_link_provider node scripts/browser-host-check.mjs
+node scripts/e2e-upstream.mjs --suite core --grep registerLinkProvider --timeout-ms 180000
+node scripts/e2e-upstream.mjs --suite addon-web-links --no-build --timeout-ms 180000
 WASM_TEST=wasm_dom_support node scripts/browser-host-check.mjs
 ```
 
@@ -21,10 +25,12 @@ The first command transpiles original TypeScript modules in memory, runs all sev
 
 The other source oracles generate 8,192 debounce operations with seed `0x6deb0ace` and 12,219 reply/cache operations across 2,048 scenarios with seed `0x11f1e255`. Both use the shared read-only in-memory source loader. The negative-zero counterexample is retained under `results/links/`.
 
-The WASM runner owns a temporary HTTP server and closes it plus each browser in finally blocks. It uses the shared Cargo target directory and checks free space before builds. It records failed builds as failures, not browser passes. Do not create duplicate Cargo build directories or override the repository's low-disk dev/test profile settings.
+The WASM runner owns a temporary HTTP server and closes it plus each browser in finally blocks. Use a private O: worktree/target and bounded team resource coordination. It checks free space before builds. It records failed builds as failures, not browser passes. Do not create duplicate Cargo build directories or override the repository's low-disk dev/test profile settings.
 
 Preserve source quirks: a new single-cell run at trimmed EOL does not flush, and wrapped-range probing mutates the same work cell held by the outer scan. See `results/links/counterexample-shared-work-cell.json`.
 
 Use the `worktree` skill for a private branch and Cargo target. Build only the needed crates, run tests in parallel, and merge only a tested branch. The old global build-slot queue is retired. Keep evidence to the command and result.
+
+The public provider source runner checks an existing original bundle/source-map against its source files. `SOURCE_ROOT` and `PLAYWRIGHT_MODULE` may point at the retained read-only reference and installed tools. Regenerate `public-link-provider.json` only from source with `--generate`, never from Rust. See `docs/public-link-provider.md` for the directed scope and remaining raw/OSC gaps.
 
 Read `docs/links.md` for exact current gaps and `docs/link-acceptance.md` for full acceptance. Native helper tests are not proof of full DOM/terminal integration. Never edit expected fixtures to conceal a mismatch.

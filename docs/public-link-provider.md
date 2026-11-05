@@ -22,7 +22,11 @@ WASM_TEST=wasm_public_link_provider node scripts/browser-host-check.mjs
 node scripts/e2e-upstream.mjs --suite core --grep registerLinkProvider --timeout-ms 180000
 ```
 
-The original six Terminal integration tests run in all three browsers, for 18 expanded cases. Source assertions and fixtures are unchanged. Final command accounting and raw receipts are retained under `results/public-link-provider/`.
+On source commit `c39052d5`, the original six Terminal integration tests pass in all three browsers, for 18 expanded cases. The unchanged web-links addon suite passes 1,503 expanded cases. Both have zero skipped or unrun cases. Source assertions and fixtures are unchanged.
+
+Six Rust browser suites pass 19 test functions per engine, including the 20-phase public trace. The source trace also passes all three engines. Native Windows workspace all-target/all-feature tests pass 2,077 test functions across 432 result summaries, with zero ignored tests. Workspace doctests pass two tests. Native workspace and WASM all-target/all-feature Clippy pass with warnings denied. All five individual workspace package format checks pass. Exact `cargo fmt --all -- --check` still fails with Windows OS206, retained in `fmt-all.log`; the package checks are not represented as that command passing.
+
+Tool versions are Rust/Cargo1.85.1, Node24.15.0, wasm-bindgen0.2.100, Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4. Final command accounting, source/build identities, exact original Playwright reports and 80 raw reports/logs are indexed with SHA-256 hashes in `results/public-link-provider/index.json`. Reports retain historical O: artifact paths and hashes; compiler/browser binary outputs are temporary and are not committed.
 
 ## Remaining family work
 

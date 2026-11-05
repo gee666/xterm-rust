@@ -2,6 +2,10 @@
 
 Status: partial implementation, full browser equivalence NOT PROVEN.
 
+## Current public provider binding
+
+Task415 exposes `Terminal.registerLinkProvider` on the existing Rust registry/controller. Original public-provider cases pass18/18 and the unchanged web-links addon suite passes1503/1503 across Chromium, Firefox and WebKit. A shared20-phase opened-terminal source/Rust trace checks live public link objects, mutation, decoration timing, async priority and thrown identity. See [public-link-provider.md](public-link-provider.md) for exact receipts and remaining raw/OSC family gaps. These scoped passes do not establish full equivalence.
+
 ## Current viewport repair
 
 The 2026-11-05 repair connects live Terminal viewport rendering to link invalidation. Stationary hover now follows rewritten OSC8 cells and disappears when the link is erased. The pre-fix failure and post-fix three-browser Terminal/component results are documented in [link-viewport-invalidation.md](link-viewport-invalidation.md). Earlier observations below describe historical snapshots, not current build blockers or current team ownership.
