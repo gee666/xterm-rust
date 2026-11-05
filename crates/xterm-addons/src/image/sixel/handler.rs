@@ -130,16 +130,33 @@ impl SixelHandler {
     /// preserves source state if console.warn throws or reenters the addon.
     #[must_use]
     pub fn put(&mut self, data: &[u32], size_limit: f64) -> SixelPut {
-        if self.aborted {
+        let Some(size) = self.begin_put(data.len()) else {
             return SixelPut::Continue;
+        };
+        if size > size_limit {
+            return SixelPut::Warning(SixelWarning::TooMuchData);
         }
+        self.decode_put(data)
+    }
+
+    /// Commit the packet size before a host's fallible limit comparison. A host
+    /// must release this borrow before coercion, then either warn/finish_abort or
+    /// call decode_put. Reentry may change the live decoder between these steps.
+    pub fn begin_put(&mut self, length: usize) -> Option<f64> {
+        if self.aborted || self.decoder.is_none() {
+            return None;
+        }
+        self.size += length as f64;
+        Some(self.size)
+    }
+
+    /// Continue a started packet without repeating the abort/readiness guard.
+    /// Source coercion can reset or hook the handler before decoder.decode.
+    #[must_use]
+    pub fn decode_put(&mut self, data: &[u32]) -> SixelPut {
         let Some(decoder) = &mut self.decoder else {
             return SixelPut::Continue;
         };
-        self.size += data.len() as f64;
-        if self.size > size_limit {
-            return SixelPut::Warning(SixelWarning::TooMuchData);
-        }
         match decoder.decode(data) {
             Ok(()) => SixelPut::Continue,
             Err(error) => SixelPut::Warning(SixelWarning::Decoding(error)),

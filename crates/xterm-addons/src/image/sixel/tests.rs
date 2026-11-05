@@ -168,6 +168,38 @@ fn readiness_stale_p2_abort_and_height_only_end() {
 }
 
 #[test]
+fn staged_put_commits_size_before_host_failure_and_uses_live_decoder() {
+    let mut handler = SixelHandler::pending();
+    assert_eq!(handler.begin_put(12), None);
+    assert_eq!(handler.size(), 0.0);
+    handler.complete_loading(
+        SixelDecoder::new(SixelHandler::decoder_options(16_777_216.0, 4096.0)).unwrap(),
+    );
+    let mut params = Params::default();
+    params.add_param(0).unwrap();
+    params.add_param(1).unwrap();
+    handler.hook(&params, 4096.0, || Ok::<_, ()>(0)).unwrap();
+    let packet: Vec<_> = "\"1;1;1;6~".bytes().map(u32::from).collect();
+    assert_eq!(handler.begin_put(packet.len()), Some(packet.len() as f64));
+    // A failed host comparison neither decodes nor rolls back the increment.
+    assert_eq!(handler.end_plan(true), SixelEndPlan::Handled);
+    assert!(!handler.aborted());
+    assert_eq!(handler.begin_put(1), Some((packet.len() + 1) as f64));
+    // Coercion can reset/hook and replace decoder state before continuation.
+    handler.reset(4096.0);
+    handler.hook(&params, 4096.0, || Ok::<_, ()>(0)).unwrap();
+    assert_eq!(handler.size(), 0.0);
+    assert_eq!(handler.decode_put(&packet), SixelPut::Continue);
+    assert_eq!(handler.end_plan(true), SixelEndPlan::Image { width: 1, height: 6 });
+    handler.finish_abort();
+    assert_eq!(handler.begin_put(1), None);
+    assert_eq!(handler.size(), 0.0);
+    // Continuation must not recheck aborted after user code changed it.
+    assert_eq!(handler.decode_put(&packet), SixelPut::Continue);
+    assert!(handler.aborted());
+}
+
+#[test]
 fn active_inverse_background_and_missing_theme() {
     let ansi = [0x1020_3040, 0x5060_7080];
     let colors = ActiveColors {

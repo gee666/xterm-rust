@@ -34,6 +34,11 @@ extern "C" {
     #[wasm_bindgen(catch, js_name = sixelTrapText)]
     fn sixel_trap_text(kind: &str) -> Result<String, JsValue>;
 }
+#[wasm_bindgen(inline_js = "export function sixelSizeExceeded(size, limit) { return size > limit; }")]
+extern "C" {
+    #[wasm_bindgen(catch, js_name = sixelSizeExceeded)]
+    fn size_exceeded(size: f64, limit: &JsValue) -> Result<bool, JsValue>;
+}
 fn warning_text(warning: SixelWarning) -> Result<String, JsValue> {
     let kind = match warning {
         SixelWarning::Decoding(DecodeError::PaletteZero) => Some("remainder"),
@@ -55,6 +60,8 @@ struct State {
     renderer: Rc<BrowserImageRenderer>,
     storage: ImageStorage,
     options: Rc<Cell<ImageOptions>>,
+    // None keeps the native typed constructor's live option contract.
+    size_limit: Option<JsValue>,
     handler: RefCell<SixelHandler>,
 }
 fn dispatch(error: JsValue) -> DispatchError {
@@ -172,11 +179,19 @@ impl DcsHandlerTrait for StreamingHandler {
             .map_err(dispatch)
     }
     fn put(&mut self, data: &[u32]) -> Result<(), DispatchError> {
-        let result = self
-            .0
-            .handler
-            .borrow_mut()
-            .put(data, self.0.options.get().sixel_size_limit);
+        let size = self.0.handler.borrow_mut().begin_put(data.len());
+        let Some(size) = size else { return Ok(()) };
+        // Source increments size before > coercion. Never hold the handler
+        // borrow over user code, and do not repeat its guard after reentry.
+        let exceeded = match &self.0.size_limit {
+            Some(limit) => size_exceeded(size, limit).map_err(dispatch)?,
+            None => size > self.0.options.get().sixel_size_limit,
+        };
+        let result = if exceeded {
+            SixelPut::Warning(SixelWarning::TooMuchData)
+        } else {
+            self.0.handler.borrow_mut().decode_put(data)
+        };
         if let SixelPut::Warning(warning) = result {
             let console = js::get(&js_sys::global(), "console").map_err(dispatch)?;
             let warn = js::get(&console, "warn").map_err(dispatch)?;
@@ -210,11 +225,32 @@ impl BrowserSixelProtocol {
         storage: ImageStorage,
         options: Rc<Cell<ImageOptions>>,
     ) -> Self {
+        Self::create(terminal, renderer, storage, options, None)
+    }
+    /// Browser addon path. Preserve raw values until each ready packet's
+    /// relational comparison, including BigInts and exact thrown values.
+    pub fn new_with_size_limit(
+        terminal: &Terminal,
+        renderer: Rc<BrowserImageRenderer>,
+        storage: ImageStorage,
+        options: Rc<Cell<ImageOptions>>,
+        size_limit: JsValue,
+    ) -> Self {
+        Self::create(terminal, renderer, storage, options, Some(size_limit))
+    }
+    fn create(
+        terminal: &Terminal,
+        renderer: Rc<BrowserImageRenderer>,
+        storage: ImageStorage,
+        options: Rc<Cell<ImageOptions>>,
+        size_limit: Option<JsValue>,
+    ) -> Self {
         Self(Rc::new(State {
             terminal: Rc::downgrade(&terminal.shared),
             renderer,
             storage,
             options,
+            size_limit,
             handler: RefCell::new(SixelHandler::pending()),
         }))
     }

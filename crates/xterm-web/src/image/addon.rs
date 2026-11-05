@@ -56,6 +56,7 @@ struct State {
     placeholder: Rc<Cell<bool>>,
     // Raw public value is authoritative; the bool above is its storage policy.
     placeholder_value: Rc<RefCell<JsValue>>,
+    sixel_size_limit: JsValue,
     terminal: RefCell<Weak<Shared>>,
     renderer: RefCell<Option<Rc<ImageRendererLifecycle>>>,
     storage: RefCell<Option<ImageStorage>>,

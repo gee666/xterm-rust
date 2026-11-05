@@ -19,17 +19,20 @@ pub struct ImageOptionsReader {
     options: Rc<Cell<ImageOptions>>,
     placeholder: Rc<RefCell<JsValue>>,
     storage_limit: Rc<RefCell<JsValue>>,
+    sixel_size_limit: JsValue,
 }
 impl ImageOptionsReader {
     pub(super) fn new(
         options: Rc<Cell<ImageOptions>>,
         placeholder: Rc<RefCell<JsValue>>,
         storage_limit: Rc<RefCell<JsValue>>,
+        sixel_size_limit: JsValue,
     ) -> Self {
         Self {
             options,
             placeholder,
             storage_limit,
+            sixel_size_limit,
         }
     }
 }
@@ -43,7 +46,7 @@ impl ImageOptionsReader {
             "sixelSupport" => options.sixel_support.into(),
             "sixelScrolling" => options.sixel_scrolling.into(),
             "sixelPaletteLimit" => options.sixel_palette_limit.into(),
-            "sixelSizeLimit" => options.sixel_size_limit.into(),
+            "sixelSizeLimit" => self.sixel_size_limit.clone(),
             "storageLimit" => self.storage_limit.borrow().clone(),
             "showPlaceholder" => self.placeholder.borrow().clone(),
             "iipSupport" => options.iip_support.into(),
