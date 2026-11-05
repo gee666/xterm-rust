@@ -1,0 +1,1156 @@
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\M\crates\xterm-addons)
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\M\crates\xterm-web)
+    Finished `dev` profile [unoptimized] target(s) in 4.51s
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\M\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 42.48s
+     Running unittests src\lib.rs (target\debug\deps\xterm_web-c4f7b731165afe5a.exe)
+
+running 55 tests
+test input::clipboard::tests::upstream_brackets ... ok
+test input::clipboard::tests::upstream_line_endings ... ok
+test input::clipboard::tests::upstream_escape_sanitization ... ok
+test input::composition::tests::modifiers_suppress_and_immediate_enter_cancels_deferred_send ... ok
+test input::composition::tests::new_composition_cancels_pending_textarea_diff ... ok
+test contrast_cache::tests::signed_number_keys_do_not_alias_unsigned_attributes ... ok
+test char_size::tests::invalid_measurements_retain_last_size_and_changes_commit_before_event ... ok
+test input::composition::tests::start_keeps_sent_offset_until_overlay_text_clear_commits ... ok
+test input::composition::tests::standalone_229_diff_coalesces_and_handles_replace_and_delete ... ok
+test input::composition::tests::upstream_complex_changes_with_following_character ... ok
+test input::composition::tests::upstream_different_length_conversion ... ok
+test input::composition::tests::upstream_input_immediately_after_composition ... ok
+test input::composition::tests::upstream_middle_insertion_does_not_resend_suffix ... ok
+test input::clipboard::tests::utf16_and_option_matrix ... ok
+test input::composition::tests::upstream_same_length_conversion ... ok
+test input::composition::tests::upstream_complex_characters ... ok
+test input::keyboard::tests::win32_priority_and_double_gating_matrix ... ok
+test input::composition::tests::upstream_simple_characters ... ok
+test input::composition::tests::utf16_selection_preserves_unpaired_surrogates_and_reversed_range ... ok
+test renderer::geometry::tests::fractional_dpr_preserves_source_rounding_order ... ok
+test input::keyboard::tests::mac_option_is_meta_passed_only_on_mac_for_kitty ... ok
+test input::composition::tests::upstream_multicharacters ... ok
+test renderer::geometry::tests::zero_metrics_and_negative_half_spacing_are_not_saturated ... ok
+test input::keyboard::tests::kitty_repeat_release_and_legacy_fallback ... ok
+test input::composition_geometry::tests::clamps_wrap_pending_cursor_and_minimum_textarea ... ok
+test renderer::raw_font::tests::exact_utf16_and_ecma_trim_preserve_nel_surrogate_and_nul ... ok
+test renderer::raw_font::tests::captured_arguments_convert_in_source_order_for_each_variant ... ok
+test renderer::raw_font::tests::initial_defaults_skip_and_nan_reconfigures_while_signed_zero_does_not ... ok
+test renderer::raw_font::tests::object_identity_is_the_key_not_its_later_string_value ... ok
+test renderer::raw_font::tests::text_metrics_converts_size_before_reading_family_and_does_not_trim ... ok
+test renderer::width_cache::reentry_tests::clear_during_measure_stores_in_the_new_current_map ... ok
+test renderer::width_cache::reentry_tests::disposal_in_variant_callback_prevents_next_variant_lookup ... ok
+test renderer::width_cache::reentry_tests::failed_configuration_commits_key_but_does_not_clear_or_retry ... ok
+test renderer::width_cache::reentry_tests::dispose_during_measure_retains_positive_flat_but_rejects_positive_holey_store ... ok
+test renderer::width_cache::reentry_tests::reentrant_set_font_keeps_inner_key_and_outer_captured_arguments ... ok
+test renderer::theme_css_utf16::tests::raw_color_units_are_not_replaced_or_recursively_decoded ... ok
+test renderer::width_cache::reentry_tests::weak_callback_handles_do_not_keep_cache_alive ... ok
+test renderer::theme_css_utf16::tests::font_conversion_mutations_are_visible_only_to_later_color_rules ... ok
+test renderer::width_cache::tests::disposed_cache_retains_cached_flat_values_but_cannot_measure ... ok
+test renderer::width_cache::tests::flat_values_round_only_on_subsequent_reads ... ok
+test renderer::width_cache::tests::nonpositive_nan_values_are_remeasured_and_suffix_collisions_are_retained ... ok
+test renderer::width_cache::tests::upstream_cache_values_and_clear ... ok
+test renderer::width_cache::tests::upstream_every_font_field_invalidates_and_unchanged_font_retains_entries ... ok
+test renderer::width_cache::tests::upstream_flat_and_holey_boundary ... ok
+test renderer::width_cache::tests::upstream_font_variants_and_arbitrary_strings ... ok
+test scroll::animation::tests::early_advance_and_exact_final_endpoint ... ok
+test scroll::animation::tests::long_animation_uses_two_edge_segments ... ok
+test scroll::scrollbar_state::tests::minimum_slider_can_exceed_track_and_desired_values_are_not_clamped ... ok
+test scroll::scrollbar_state::tests::opposite_size_is_deferred_but_clone_refreshes_it ... ok
+test scroll::scrollbar_state::tests::source_rounding_and_nan_propagation_are_not_rust_round_or_max ... ok
+test scroll::state::tests::bitwise_numbers_and_nan_comparisons_match_js ... ok
+test scroll::state::tests::raw_position_survives_clamping_and_dimension_growth ... ok
+test scroll::wheel_classifier::tests::first_integer_repeated_steps_and_diagonal_trackpad ... ok
+test scroll::wheel_classifier::tests::fractional_and_nonfinite_samples_are_not_integer_wheels ... ok
+test theme::css_text::tests::units_survive_nul_markers_and_lone_surrogates ... ok
+
+test result: ok. 55 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests\accessibility_differential.rs (target\debug\deps\accessibility_differential-37842e16560acab3.exe)
+
+running 2 tests
+test every_bmp_key_matches_the_original_unicode_control_regex ... ok
+test directed_and_seeded_announcements_match_every_original_state_transition ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.37s
+
+     Running tests\accessibility_state.rs (target\debug\deps\accessibility_state-812ab1b90a331bc3.exe)
+
+running 9 tests
+test cell_mapping_counts_utf16_units_and_normalizes_right_edge_once ... ok
+test echo_consumes_one_complete_string_and_mismatch_still_announces ... ok
+test changed_overflow_label_does_not_reset_limit_and_empty_label_uses_equality ... ok
+test key_and_blur_clear_only_line_count_not_pending_or_echo_queue ... ok
+test exact_newline21_limit_and_render_clear_transition ... ok
+test invalid_range_errors_and_multiline_cell_count_are_exact ... ok
+test embedded_newlines_and_repeated_spaces_are_not_linefeed_events ... ok
+test localized_defaults_aliasing_utf16_and_independent_runtimes ... ok
+test every_bmp_unit_matches_control_key_suppression_and_utf16_echo ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests\api.rs (target\debug\deps\api-2d3a225461a4a8eb.exe)
+
+running 3 tests
+test constructor_only_and_proposed_errors_match_upstream ... ok
+test positive_validator_preserves_upstream_truthiness_guard ... ok
+test integer_boundary_matches_number_semantics ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\buffer_capacity_wasm.rs (target\debug\deps\buffer_capacity_wasm-ca2b436a3d540f56.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\canvas_css_browser.rs (target\debug\deps\canvas_css_browser-9efbc70bafe651fe.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\character_joiner_upstream.rs (target\debug\deps\character_joiner_upstream-1d08158e422408a2.exe)
+
+running 1 test
+test replay_every_original_character_joiner_assertion ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\color_zone_differential.rs (target\debug\deps\color_zone_differential-915ce644a76f57d4.exe)
+
+running 1 test
+test all_2048_zone_operations_and_retained_identities_match_javascript ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests\color_zone_store.rs (target\debug\deps\color_zone_store-1d5fde6c884536f1.exe)
+
+running 10 tests
+test external_zone_mutations_remain_visible_to_merging ... ok
+test all_positions_distinguish_absence_from_full_and_color_identity ... ok
+test borrowed_external_objects_are_recoverable_errors_not_panics ... ok
+test fractional_nan_negative_padding_and_nonfinite_lines_follow_js ... ok
+test should_reuse_zone_objects ... ok
+test missing_settings_padding_and_mutable_padding_identity ... ok
+test should_merge_adjacent_zones ... ok
+test should_not_merge_non_adjacent_zones ... ok
+test getter_trims_pool_and_list_identity_and_lone_surrogates_survive ... ok
+test first_matching_zone_extends_without_coalescing_later_zones ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\core_browser_service_wasm.rs (target\debug\deps\core_browser_service_wasm-20779cf146d44b86.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\debounce.rs (target\debug\deps\debounce-aacbbeb91ddc11ea.exe)
+
+running 9 tests
+test callback_only_frame_is_ordered_and_receives_zero ... ok
+test disposal_retains_callbacks_and_rows_for_reuse ... ok
+test frame_coalesces_clamps_and_uses_latest_count ... ok
+test callbacks_added_during_callback_are_visited_in_same_frame ... ok
+test immediate_refresh_cancels_pending_timeout ... ok
+test last_handle_drop_cancels_but_clone_drop_does_not ... ok
+test reentrant_render_preserves_next_frame_rows ... ok
+test trailing_callback_reentrancy_does_not_schedule_until_next_request ... ok
+test time_threshold_first_wait_trailing_coalescence_and_equality ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\debounce_differential.rs (target\debug\deps\debounce_differential-c8f135dd40184e74.exe)
+
+running 1 test
+test seeded_original_frame_and_time_debounce_trace ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\debounce_errors.rs (target\debug\deps\debounce_errors-a203dbb3c695cbd2.exe)
+
+running 3 tests
+test failed_frame_render_leaves_callbacks_but_consumes_rows_and_frame ... ok
+test failed_refresh_callback_retains_original_array_and_stops_later_callbacks ... ok
+test failed_trailing_render_preserves_pending_flags_until_immediate_refresh ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\dom_font_browser.rs (target\debug\deps\dom_font_browser-73005c00bbf5a407.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\image_addon_browser.rs (target\debug\deps\image_addon_browser-45eec9ad95aa4a8c.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\image_canvas_browser.rs (target\debug\deps\image_canvas_browser-ba5c7f3d55679a81.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\image_iip_terminal_browser.rs (target\debug\deps\image_iip_terminal_browser-dbb2d603302a3826.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\image_kitty_terminal_browser.rs (target\debug\deps\image_kitty_terminal_browser-2fbf6421e6b77ef5.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\image_lifecycle_browser.rs (target\debug\deps\image_lifecycle_browser-c8cf55d5df92878e.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\image_sixel_terminal_browser.rs (target\debug\deps\image_sixel_terminal_browser-20ce5f0f0e828050.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\input_event_getters.rs (target\debug\deps\input_event_getters-8e03ad5417f30e7b.exe)
+
+running 6 tests
+test rejected_input_short_circuits_before_unused_getters ... ok
+test composed_getter_reentry_is_seen_before_keydown_guard ... ok
+test dead_key_is_cleared_before_second_data_getter_even_if_it_throws ... ok
+test admitted_input_rereads_payload_and_preserves_empty_or_unpaired_utf16 ... ok
+test immutable_input_remains_compatible_with_the_shared_trace_adapter ... ok
+test duplicate_keypress_and_screen_reader_guard_do_not_reread_data ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\input_upstream.rs (target\debug\deps\input_upstream-45012627a634141c.exe)
+
+running 2 tests
+test directed_deferred_and_utf16_regressions ... ok
+test every_original_clipboard_and_ime_trace_step ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\keyboard_dispatch.rs (target\debug\deps\keyboard_dispatch-bd627b31787004f6.exe)
+
+running 9 tests
+test input_composed_seen_and_keyup_veto_order ... ok
+test source_custom_handler_veto_precedes_composition_and_all_effects ... ok
+test enter_clears_textarea_before_key_and_can_cancel_twice ... ok
+test composition_rejection_scrolls_only_when_required_and_mac_option_bypasses_it ... ok
+test charcode_which_zero_absence_and_utf16_modulo_are_not_interchangeable ... ok
+test screen_reader_handled_state_suppresses_following_keypress ... ok
+test dead_key_and_uppercase_routes_preserve_partial_state ... ok
+test source_mac_and_windows_altgraph_printable_keypress_cases ... ok
+test shared_trace_adapter_runs_ordered_enter ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\keyboard_dispatch_callbacks.rs (target\debug\deps\keyboard_dispatch_callbacks-56a4a36583278c1b.exe)
+
+running 3 tests
+test input_and_keypress_commit_dead_state_on_opposite_sides_of_data_callback ... ok
+test shared_trace_adapter_after_callback_sequence ... ok
+test callback_error_stops_effects_and_reentry_observes_live_state ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\keyboard_dispatch_getters.rs (target\debug\deps\keyboard_dispatch_getters-b54eee278116ee37.exe)
+
+running 2 tests
+test windows_alt_control_short_circuits_altgraph_but_meta_does_not ... ok
+test veto_and_composition_short_circuit_unread_throwing_options ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\keypress_raw_values.rs (target\debug\deps\keypress_raw_values-fb31b9a295866e90.exe)
+
+running 6 tests
+test changed_second_read_is_retested_for_truthiness_without_using_first_value ... ok
+test modifier_guard_does_not_convert_a_truthy_raw_payload ... ok
+test null_which_fallback_retains_raw_keycode_until_conversion ... ok
+test conversion_throw_precedes_key_effects_and_keeps_dead_key_state ... ok
+test conversion_can_reenter_input_before_outer_key_and_data_effects ... ok
+test string_zero_is_truthy_and_converts_to_nul_after_admission ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\link_replies_differential.rs (target\debug\deps\link_replies_differential-3a864777fdd01b60.exe)
+
+running 1 test
+test original_priority_cache_and_overlap_seeded_scenarios ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running tests\link_replies_live.rs (target\debug\deps\link_replies_live-30615da8aefab56e.exe)
+
+running 4 tests
+test overlap_traversal_retains_old_array_after_map_entry_replacement ... ok
+test probe_can_mutate_reply_array_without_held_borrow_and_missing_slot_propagates ... ok
+test matching_reads_live_payload_after_provider_reply ... ok
+test normal_return_restores_local_selection_flag_after_reentrant_reply ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\link_state.rs (target\debug\deps\link_state-5a2c209dca7af210.exe)
+
+running 7 tests
+test dynamic_decorations_and_viewport_invalidation ... ok
+test hover_effect_order_and_mouseup_text_range_equality ... ok
+test pending_and_empty_reply_delay_lower_priority ... ok
+test all_replies_choose_provider_order_not_completion_order ... ok
+test rejected_overlap_retains_partially_occupied_cells ... ok
+test cache_disposal_is_reply_insertion_order_not_provider_priority ... ok
+test undefined_higher_reply_allows_early_lower_selection ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\links.rs (target\debug\deps\links-1b238cabf3ee9eb1.exe)
+
+running 12 tests
+test generated_endpoint_beyond_u32_survives_wasm_pointer_width ... ok
+test scroll_offset_can_place_underline_above_viewport ... ok
+test upstream_hide_underline ... ok
+test matches_source_single_cell_eol_early_continue ... ok
+test upstream_expands_backward ... ok
+test missing_empty_and_protocol_policy ... ok
+test upstream_expands_forward ... ok
+test upstream_hide_wrapped_underline ... ok
+test upstream_show_underline ... ok
+test upstream_different_ids_do_not_merge ... ok
+test provider_identity_duplicates_and_repeated_disposal ... ok
+test upstream_show_wrapped_underline ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\mouse_failures.rs (target\debug\deps\mouse_failures-965f797046d8e70d.exe)
+
+running 2 tests
+test callback_can_replace_itself_reenter_and_then_fail_without_rolling_back_inner_cache ... ok
+test restriction_and_encoding_failures_keep_error_identity_and_do_not_commit_cache ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\mouse_policy.rs (target\debug\deps\mouse_policy-8501d973f63045cd.exe)
+
+running 6 tests
+test upstream_viewport_bounds ... ok
+test upstream_clicked_cell ... ok
+test every_source_touch_operation_preserves_accumulator_and_cursor_output ... ok
+test every_source_wheel_operation_preserves_partial_accumulator ... ok
+test every_source_coordinate_snapshot_matches_ieee_and_padding_semantics ... ok
+test every_original_trigger_invocation_matches_report_and_mutation ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\mouse_routing.rs (target\debug\deps\mouse_routing-2e3adde577e1ae5f.exe)
+
+running 7 tests
+test wheel_veto_zero_shift_and_missing_coordinates_do_not_consume_state ... ok
+test empty_encoding_still_commits_last_event_and_reset_clears_it ... ok
+test source_mutable_encoder_updates_event_before_cache_commit ... ok
+test touch_assignment_commits_captured_accumulator_after_reentrant_reset ... ok
+test upstream_alt_required_report_strips_only_nonwheel_alt ... ok
+test move_buttons_priority_fallback_override_and_invalid_button_pairs ... ok
+test output_failure_does_not_commit_cache_and_nested_output_sees_old_cache ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\osc_links_differential.rs (target\debug\deps\osc_links_differential-6cdeb3d2f035ec70.exe)
+
+running 1 test
+test source_seeded_cell_id_and_wrap_cases ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+     Running tests\osc_links_live.rs (target\debug\deps\osc_links_live-fb82651691caf8f5.exe)
+
+running 2 tests
+test live_row_borrow_failures_are_not_missing_rows ... ok
+test high_safe_integer_url_id_is_not_truncated ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\osc_links_policy.rs (target\debug\deps\osc_links_policy-89bc682e00bedbb7.exe)
+
+running 3 tests
+test empty_uri_suppresses_policy_and_getter_failure_stops_scanning ... ok
+test policy_getter_runs_for_each_finished_nonempty_uri_after_lookup ... ok
+test outer_scan_retains_original_row_when_policy_replaces_buffer_row ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\overview_ruler_browser.rs (target\debug\deps\overview_ruler_browser-0ed5859e39286404.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\overview_terminal_browser.rs (target\debug\deps\overview_terminal_browser-3d209f99c3201970.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\public_adapters_wasm.rs (target\debug\deps\public_adapters_wasm-3594c77d35db53c8.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\public_buffer_numbers_wasm.rs (target\debug\deps\public_buffer_numbers_wasm-9506eebfcb07adbd.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\render_service_browser.rs (target\debug\deps\render_service_browser-8ed0b5d9486234c9.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\row_factory_browser.rs (target\debug\deps\row_factory_browser-e644daf79c1c211d.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\scrollable.rs (target\debug\deps\scrollable-86a8a7f31f1f966b.exe)
+
+running 5 tests
+test identical_smooth_target_does_not_restart_or_cancel ... ok
+test scheduler_failures_retain_source_partial_state_and_cleanup_is_observable ... ok
+test dimensions_keep_raw_request_and_emit_precise_change_fields ... ok
+test event_callback_can_cancel_the_running_animation ... ok
+test smooth_tick_reuse_and_external_position_cancel ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\scrollbar_construction_browser.rs (target\debug\deps\scrollbar_construction_browser-2078a795bb1da80e.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\scrollbar_helpers_browser.rs (target\debug\deps\scrollbar_helpers_browser-ffc915e93db15b39.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\scrollbar_state_differential.rs (target\debug\deps\scrollbar_state_differential-460053b8307a7d81.exe)
+
+running 1 test
+test source_geometry_mutations_and_clones_match_1024_snapshots ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\scrollbar_visibility.rs (target\debug\deps\scrollbar_visibility-ba7fbcde0401638b.exe)
+
+running 7 tests
+test disposed_timer_errors_after_visible_commit_and_allows_source_hide_path ... ok
+test request_failure_retains_source_committed_visible_flag ... ok
+test cancellation_failure_keeps_pending_and_visible_until_recovery ... ok
+test pending_reveal_uses_current_target_but_target_replacement_does_not_force_reveal ... ok
+test class_setters_reenter_without_borrow_panics_and_weak_dispatch_does_not_leak ... ok
+test reveal_is_deferred_and_hide_uses_distinct_fade_rules ... ok
+test visibility_strings_do_not_coerce_to_known_numeric_modes ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\search_addon.rs (target\debug\deps\search_addon-4f9f2ab256eb5ac6.exe)
+
+running 35 tests
+test refresh::native_refresh_copy_is_incremental_and_independent_of_original_mutation ... ok
+test empty::empty_decoration_getter_can_start_nested_search_without_state_borrow ... ok
+test on_before_search_can_mutate_the_same_options_object ... ok
+test active_styles_preserve_source_false_argument_and_border_once ... ok
+test clearing_and_result_events_are_reentrant_without_internal_borrows ... ok
+test original_only_one_overview_marker_per_buffer_line ... ok
+test scroll_options::empty_and_unloaded_searches_skip_internal_getters_but_no_match_reads_them ... ok
+test clocks::disposal_cancels_debounce_and_cache_and_removes_actual_decorations ... ok
+test refresh::refresh_copy_runs_before_events_with_cleared_cache_and_no_live_state_borrow ... ok
+test ranges::expanding_lowercase_at_last_column_preserves_zero_width_first_range ... ok
+test clearing_decorations_does_not_clear_selection_despite_typing_comment ... ok
+test decorations::borders_are_read_live_at_each_render_even_after_first_outline_assignment ... ok
+test ranges::negative_decoration_width_reaches_public_guard_not_a_successful_noop ... ok
+test clocks::disposal_from_result_callback_does_not_retain_a_mutable_borrow ... ok
+test original_wrapped_match_decoration_ranges_and_overview_rows ... ok
+test raw_marker::overview_dedup_distinguishes_string_numbers_and_coalesces_nan ... ok
+test clocks::parsed_writes_refresh_at_200ms_and_replace_pending_refresh ... ok
+test refresh::refresh_copy_failure_keeps_cache_cleared_and_does_not_start_search ... ok
+test clocks::cache_ttl_refreshes_last_access_without_replacing_every_timer ... ok
+test tracker::result_event_can_reenter_tracker_reset_without_a_live_results_borrow ... ok
+test invalid::invalid_length_access_can_reenter_without_state_or_buffer_borrows ... ok
+test invalid::invalid_cache_preserves_identity_and_raw_truthiness_on_write ... ok
+test decorations::a_throwing_live_border_getter_retains_error_identity_and_existing_style ... ok
+test tracker::tracker_preserves_slice_order_and_ignores_term_in_identity ... ok
+test scroll_options::internal_getter_errors_skip_selection_and_after_event ... ok
+test use_before_activation_errors_without_search_events ... ok
+test scroll_options::no_scroll_is_read_after_matching_and_can_reenter_without_state_borrows ... ok
+test tracker::selected_decoration_disposes_its_marker_and_subscription_once ... ok
+test tracker::selected_failure_retains_original_error_and_tracker_until_retry ... ok
+test selections_decorations_result_indices_and_event_order_share_real_services ... ok
+test tracker::selected_replacement_inside_disposal_is_cleared_like_source_assignment ... ok
+test clocks::linefeed_cursor_and_resize_each_cancel_the_live_cache_timer ... ok
+test unchanged_term_option_change_preserves_source_highlight_order_bug ... ok
+test empty::empty_search_and_subsequent_writes_do_not_snapshot_matching_flags ... ok
+test fractional_and_nonfinite_limits_retain_slice_and_highlight_distinction ... ok
+
+test result: ok. 35 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\selection_model.rs (target\debug\deps\selection_model-15f4a38a72730899.exe)
+
+running 23 tests
+test clear_selection_should_clear_the_final_selection ... ok
+test clear_when_trimmed_in_entirety ... ok
+test dimensions_are_live_for_select_all ... ok
+test end_inside_minimum_uses_minimum ... ok
+test explicit_end_after_minimum_wins ... ok
+test final_start_without_end ... ok
+test not_reversed_when_end_follows_start ... ok
+test overflow_with_end_in_between ... ok
+test exact_wrap_with_explicit_same_row_end_preserves_source_branch ... ok
+test select_all_starts_at_origin ... ok
+test signed_search_positions_and_lengths_are_not_clamped ... ok
+test no_end_without_start ... ok
+test numeric_overflow_is_recoverable_and_trim_atomic ... ok
+test overflow_to_following_row ... ok
+test end_uses_start_plus_length_without_end ... ok
+test reset_start_to_origin_when_start_row_trimmed ... ok
+test reversed_when_end_precedes_start ... ok
+test select_all_ends_at_buffer_end ... ok
+test end_uses_start_plus_length_when_reversed ... ok
+test final_start_reverses_values ... ok
+test trim_a_portion_of_selection ... ok
+test trim_returns_false_for_coordinate_only_move ... ok
+test no_trailing_eol_at_end_of_line ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\selection_service.rs (target\debug\deps\selection_service-45c3d6d72866d0a0.exe)
+
+running 7 tests
+test source_force_alt_requirement_precedes_mac_option ... ok
+test drag_scroll_threshold_rounding_and_bounds ... ok
+test source_cell_membership_assertions ... ok
+test source_force_modifier_matrix_and_column_mode ... ok
+test set_selection_change_deduplicates_and_reentry_releases_model ... ok
+test clear_order_refresh_coalescing_and_reentrant_state ... ok
+test rejected_frame_request_does_not_prevent_the_next_refresh ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\selection_service_differential.rs (target\debug\deps\selection_service_differential-d728685f7766ecb2.exe)
+
+running 1 test
+test faithfully_replay_source_suite_operations ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.28s
+
+     Running tests\theme_css.rs (target\debug\deps\theme_css-d5b84c04c6de00b0.exe)
+
+running 2 tests
+test selection_palette_and_inverted_default_have_exact_scope ... ok
+test complete_css_matches_unchanged_source_on_73_theme_cases ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+     Running tests\theme_css_raw.rs (target\debug\deps\theme_css_raw-51b3db23ddf68ee2.exe)
+
+running 3 tests
+test fast_color_css_and_rgba_match_source_without_replacing_lone_surrogates ... ok
+test live_callbacks_match_source_hint_order_and_full_text_after_mutations ... ok
+test every_raw_stylesheet_unit_matches_the_unchanged_source ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests\theme_edges.rs (target\debug\deps\theme_edges-4b33a8438ce90c18.exe)
+
+running 8 tests
+test cache_saves_and_gets_color_values ... ok
+test cache_clear_removes_both_stores_and_preserves_tuple_order ... ok
+test cache_saves_and_gets_css_values ... ok
+test restore_retains_color_identity_and_not_temporary_replacements ... ok
+test invalid_and_transparent_foregrounds_remain_distinct ... ok
+test cache_invalidation_matches_the_exact_source_option_path ... ok
+test opaque_selections_are_blended_before_transparent_copy_adjustment ... ok
+test color_events_commit_state_before_reentrant_listeners ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\theme_upstream.rs (target\debug\deps\theme_upstream-76d5d9da2b158631.exe)
+
+running 8 tests
+test empty_theme_does_not_throw ... ok
+test constructor_fills_all_color_fields_and_ansi ... ok
+test constructor_fills_all_240_explicit_expected_palette_values ... ok
+test one_extended_ansi_color_does_not_change_the_next_default ... ok
+test partial_theme_reverts_unspecified_colors_to_defaults ... ok
+test shortening_extended_ansi_resets_the_remaining_entries ... ok
+test all_extended_ansi_colors_can_be_set_in_reverse_order ... ok
+test empty_or_absent_extended_ansi_restores_defaults ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\touch_histories.rs (target\debug\deps\touch_histories-f1bffe3fb4841ce4.exe)
+
+running 3 tests
+test initial_and_first_rolling_getter_values_remain_distinct ... ok
+test nested_commit_can_grow_history_beyond_four_source_samples ... ok
+test partial_pushes_preserve_unequal_and_empty_array_tails ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\touch_policy.rs (target\debug\deps\touch_policy-8aa44b5d3cf15720.exe)
+
+running 7 tests
+test captured_old_record_can_commit_after_active_record_replacement ... ok
+test equal_and_nonfinite_clocks_retain_javascript_arithmetic ... ok
+test hold_and_distance_thresholds_are_strict_and_per_axis ... ok
+test start_and_translation_do_not_commit_before_dispatch ... ok
+test rolling_velocity_uses_four_samples_but_hold_uses_initial_position ... ok
+test tap_counter_is_one_or_two_with_exact_source_reset_boundary ... ok
+test every_original_source_policy_snapshot_matches_rust ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\unicode_addon_bindings.rs (target\debug\deps\unicode_addon_bindings-424ff2e2c1355718.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\unicode_addons.rs (target\debug\deps\unicode_addons-47dda5d27d46543e.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\unicode_internal_service.rs (target\debug\deps\unicode_internal_service-c8cb0b753f43ad84.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\unicode_public_api.rs (target\debug\deps\unicode_public_api-fdda0a7127f6ac79.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\viewport_controller.rs (target\debug\deps\viewport_controller-e46423e19e9845e7.exe)
+
+running 11 tests
+test deferred_flag_clears_before_failed_render_sync ... ok
+test failed_dimension_call_preserves_sync_and_suppression_partial_state ... ok
+test dimension_feedback_and_nested_sync_are_suppressed_without_borrow_panics ... ok
+test line_absolute_and_touch_scroll_use_source_reuse_property_presence ... ok
+test scroll_requests_commit_latest_before_callbacks_and_prevent_nested_handling ... ok
+test javascript_round_retains_negative_zero_ties_and_nonfinite_requests ... ok
+test synchronized_output_defers_until_render_and_rechecks_source_flag ... ok
+test synchronous_refresh_callback_still_assigns_returned_id_afterward ... ok
+test thrown_scroll_listener_keeps_handling_flag_and_actual_error_identity ... ok
+test queue_coalesces_and_sync_reads_live_metrics_before_real_position_write ... ok
+test queued_latest_row_is_updated_before_coalescing_and_activation_clears_it ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_accessibility.rs (target\debug\deps\wasm_accessibility-6c87ac1d5d5f3d9e.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_accessibility_terminal.rs (target\debug\deps\wasm_accessibility_terminal-20bfad4bb3d9b1fb.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_base64_decode.rs (target\debug\deps\wasm_base64_decode-71e45a64f3baf7d2.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_base64_encode.rs (target\debug\deps\wasm_base64_encode-f7442f5eecfa23a8.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_base64_fallback.rs (target\debug\deps\wasm_base64_fallback-9d998acc64dd7c73.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_buffer_cleanup.rs (target\debug\deps\wasm_buffer_cleanup-9070f6f634dfb906.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_buffer_decoration.rs (target\debug\deps\wasm_buffer_decoration-95c628ee28f424ac.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_clipboard_values.rs (target\debug\deps\wasm_clipboard_values-53085cde6ed628ff.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_core_views.rs (target\debug\deps\wasm_core_views-fc6eed8d7163a4d9.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_dom_support.rs (target\debug\deps\wasm_dom_support-7b067cf8ce0622da.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_fast_dom_differential.rs (target\debug\deps\wasm_fast_dom_differential-c692a1a9d08aeef0.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_font_shaping.rs (target\debug\deps\wasm_font_shaping-370cc31413a0ecf3.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_font_terminal.rs (target\debug\deps\wasm_font_terminal-e4a75fdd2425689c.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_host.rs (target\debug\deps\wasm_host-8ee8fad0daa0cebd.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_input.rs (target\debug\deps\wasm_input-24660a291b8401b5.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_input_callbacks.rs (target\debug\deps\wasm_input_callbacks-9a42f2b1110f477d.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_input_event.rs (target\debug\deps\wasm_input_event-b9997d1844154e09.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_input_raw.rs (target\debug\deps\wasm_input_raw-6cc52242cb19671b.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_joiner_raw.rs (target\debug\deps\wasm_joiner_raw-f4e390f63b3a3e47.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_joiner_row.rs (target\debug\deps\wasm_joiner_row-bfba15357dfbd579.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_joiner_row_live.rs (target\debug\deps\wasm_joiner_row_live-3354e62a2a66271d.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_keyboard_live.rs (target\debug\deps\wasm_keyboard_live-1f30aff5b8e0a97e.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_keypress_raw.rs (target\debug\deps\wasm_keypress_raw-9e8c68248662b84c.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_link_disposal.rs (target\debug\deps\wasm_link_disposal-c790c9e9ea6195ea.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_linkifier.rs (target\debug\deps\wasm_linkifier-a4ba39179638ebe7.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_links.rs (target\debug\deps\wasm_links-828baa1f2cd96e3f.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_logger.rs (target\debug\deps\wasm_logger-1b9647703b5c4918.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_mouse.rs (target\debug\deps\wasm_mouse-25d199057d32359e.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_osc_handler.rs (target\debug\deps\wasm_osc_handler-61a375cb3c7a516e.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_osc_policy.rs (target\debug\deps\wasm_osc_policy-e8a3e9f2f707bcfa.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_pointer_monitor.rs (target\debug\deps\wasm_pointer_monitor-c6dd83f09301b1d2.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_raw_font_terminal.rs (target\debug\deps\wasm_raw_font_terminal-159b979620015f19.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_scheduler.rs (target\debug\deps\wasm_scheduler-3cc6b2f3cda469bf.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_scroll_element.rs (target\debug\deps\wasm_scroll_element-2bf9b69d513b7008.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_scrollbar_arrow.rs (target\debug\deps\wasm_scrollbar_arrow-be71ae251c044f54.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_scrollbars.rs (target\debug\deps\wasm_scrollbars-ab70116d270fdd3f.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_search_addon.rs (target\debug\deps\wasm_search_addon-1b17a90f5feb73a9.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_selection.rs (target\debug\deps\wasm_selection-e6d52dce31611e15.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_socket_view.rs (target\debug\deps\wasm_socket_view-3013dddce457f4e9.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_status_addons.rs (target\debug\deps\wasm_status_addons-28ce01ca21335a4c.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_status_clear.rs (target\debug\deps\wasm_status_clear-7e5c81d10a79fc18.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_status_coercion.rs (target\debug\deps\wasm_status_coercion-7a85570f7ec28857.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_task_queue_clock.rs (target\debug\deps\wasm_task_queue_clock-80e3ae284cfe3098.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_task_queue_errors.rs (target\debug\deps\wasm_task_queue_errors-3848ed91486149d2.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_terminal_decoration.rs (target\debug\deps\wasm_terminal_decoration-718dabcbc4065bc6.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_terminal_links.rs (target\debug\deps\wasm_terminal_links-76a25d3fd4835f04.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_terminal_markers.rs (target\debug\deps\wasm_terminal_markers-cc6695f51071f6ff.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_terminal_mouse_errors.rs (target\debug\deps\wasm_terminal_mouse_errors-46e65aeddf8d4786.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_terminal_mouse_modes.rs (target\debug\deps\wasm_terminal_mouse_modes-be2e6ea43a971487.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_terminal_selection.rs (target\debug\deps\wasm_terminal_selection-25ea6cf46678660c.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_terminal_wheel.rs (target\debug\deps\wasm_terminal_wheel-2f0f09a2d40c7ee3.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_terminal_writer.rs (target\debug\deps\wasm_terminal_writer-46552ed8e0c84347.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_touch.rs (target\debug\deps\wasm_touch-3b24dc55dae323e2.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_touch_live.rs (target\debug\deps\wasm_touch_live-2ca333ba05aa9d95.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_utility_addons.rs (target\debug\deps\wasm_utility_addons-4f4e4d2c3ec1d46d.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_utility_bindings.rs (target\debug\deps\wasm_utility_bindings-2351ed1ff663249a.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_utility_links.rs (target\debug\deps\wasm_utility_links-ff530331f95c45a2.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_visibility_differential.rs (target\debug\deps\wasm_visibility_differential-5376b7df603cd16a.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_web_regex.rs (target\debug\deps\wasm_web_regex-f49e4d186ad5932a.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_webgl_atlas_pixels.rs (target\debug\deps\wasm_webgl_atlas_pixels-226450fb226cdb0e.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_webgl_glyphs.rs (target\debug\deps\wasm_webgl_glyphs-87d9cab3122978a7.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_webgl_rectangles.rs (target\debug\deps\wasm_webgl_rectangles-ba18a6c23fcb7044.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wasm_widget_differential.rs (target\debug\deps\wasm_widget_differential-88093f73ed16f904.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\webgl.rs (target\debug\deps\webgl-acb513931eab49e4.exe)
+
+running 46 tests
+test math::numeric_constructor_edges_match_typed_array_to_index ... ok
+test math::source_browser_baselines_and_dim_opacity ... ok
+test math::growth_doubles_caps_and_truncates_without_aliasing ... ok
+test math::projection_maps_source_unit_coordinates_to_clip_space ... ok
+test math::texture_version_retains_handle_identity_and_starts_dirty ... ok
+test model::clear_and_resize_preserve_selection_and_cursor ... ok
+test model::constructor_and_packed_offsets_match_source ... ok
+test model::dimension_overflow_returns_error_without_replacing_previous_storage ... ok
+test config::generated_colors_share_objects_and_caches_but_not_ansi_vector_slots ... ok
+test model::resize_allocates_zeroed_arrays_only_when_total_packed_length_changes ... ok
+test config::original_cell_width_differs ... ok
+test model::zero_product_preserves_an_existing_zero_length_model ... ok
+test config::ansi_length_comparison_preserves_source_asymmetry_and_error ... ok
+test renderer_utils::every_source_emoji_range_endpoint_and_neighbor ... ok
+test renderer_utils::initial_dimensions_and_source_falsy_error_text ... ok
+test cache::reentrant_disposal_uses_the_captured_live_splice_index_without_borrow_panics ... ok
+test config::original_cell_height_differs ... ok
+test renderer_utils::powerline_and_background_ranges_preserve_every_boundary ... ok
+test config::original_identical_configs ... ok
+test renderer_utils::rescaling_threshold_width_and_every_exclusion ... ok
+test config::original_max_texture_size_differs ... ok
+test cache::same_owner_and_config_reuses_without_running_the_factory ... ok
+test cache::single_owner_change_disposes_before_creation_and_weak_owner_does_not_leak_terminal ... ok
+test renderer_utils::variant_offsets_preserve_js_round_ties_remainder_and_signed_zero ... ok
+test typed_array::fallback_preserves_legacy_negative_and_fractional_quirks ... ok
+test config::strict_number_and_string_semantics_and_packed_color_modes ... ok
+test typed_array::float32_array ... ok
+test cache::invalid_config_comparison_does_not_release_existing_owner ... ok
+test typed_array::float64_array ... ok
+test cache::config_change_releases_one_owner_without_freeing_anothers_atlas ... ok
+test typed_array::floating_values_signed_zero_and_undefined_assignment ... ok
+test typed_array::int16_array ... ok
+test cache::failed_factory_and_disposal_preserve_source_partial_state ... ok
+test typed_array::int32_array ... ok
+test typed_array::int8_array ... ok
+test typed_array::nonfinite_indexes_follow_the_selected_source_operation ... ok
+test typed_array::omitted_empty_and_independent_storage ... ok
+test typed_array::original_end_cases ... ok
+test typed_array::original_start_cases ... ok
+test typed_array::uint16_array ... ok
+test cache::equal_configs_share_and_only_final_owner_disposes_in_either_order ... ok
+test typed_array::uint32_array ... ok
+test typed_array::uint8_array ... ok
+test typed_array::uint8_clamped_array ... ok
+test config::each_remaining_config_field_participates_in_equality ... ok
+test config::every_ansi_entry_is_checked_and_css_is_not_compared ... ok
+
+test result: ok. 46 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests\webgl_atlas_pixels.rs (target\debug\deps\webgl_atlas_pixels-be93e8ef023cb9ef.exe)
+
+running 4 tests
+test color_empty_and_alpha_empty_are_deliberately_different ... ok
+test malformed_buffers_and_geometry_return_errors_without_mutation ... ok
+test zero_area_images_do_not_walk_unbacked_rows_or_columns ... ok
+test unchanged_source_rgba_and_bounds ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running tests\webgl_glyphs.rs (target\debug\deps\webgl_glyphs-7b5aade517bd731f.exe)
+
+running 3 tests
+test invalid_inputs_fail_without_losing_existing_geometry ... ok
+test dimension_changes_do_not_clear_vertices_until_resize ... ok
+test unchanged_source_vertex_and_compaction_bits ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+     Running tests\webgl_rectangles.rs (target\debug\deps\webgl_rectangles-0a8ac154d447e911.exe)
+
+running 3 tests
+test invalid_native_model_and_palette_are_errors_not_panics ... ok
+test resize_and_theme_only_refresh_viewport_and_cached_cursor_color ... ok
+test unchanged_source_vertices_match_directed_and_seeded_cases_bit_for_bit ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running unittests examples\input_trace.rs (target\debug\examples\input_trace-a5291f3b01ea8535.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples\keyboard_dispatch_oracle.rs (target\debug\examples\keyboard_dispatch_oracle-cd1775e387a4bb3b.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples\selection_oracle.rs (target\debug\examples\selection_oracle-23eb03300a657218.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+    Checking xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\M\crates\xterm-core)
+    Checking xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\M\crates\xterm-addons)
+    Checking xterm-wasm-support v0.1.0 (O:\xterm-rust-swarm-16\tmp\M\crates\xterm-wasm-support)
+    Checking xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\M\crates\xterm-web)
+    Finished `dev` profile [unoptimized] target(s) in 8.75s
+    Checking xterm-font-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\M\crates\xterm-font-addons)
+    Finished `dev` profile [unoptimized] target(s) in 0.07s
+    Checking xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\M\crates\xterm-core)
+    Checking xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\M\crates\xterm-addons)
+    Checking xterm-wasm-support v0.1.0 (O:\xterm-rust-swarm-16\tmp\M\crates\xterm-wasm-support)
+    Checking xterm-font-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\M\crates\xterm-font-addons)
+    Checking xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\M\crates\xterm-web)
+    Finished `dev` profile [unoptimized] target(s) in 9.99s
+Merged swarm/M402 into main: 959f9d0f196841f3e2f516f8933082c0707f220b
+Changed crates tested: xterm-web; private target removed.

@@ -20,6 +20,12 @@ Windows, Rust/Cargo1.85.1, Node24.15.0 and wasm-bindgen0.2.100:
 
 Raw directed/source/input identities, original Playwright assertions, reference hashes and native gate logs are retained under `results/image-option-inspection`. Temporary paths in the reports identify the historical build. Generated packages and duplicate test output are disposable after review. Reference copies were hashed against the retained P: source files and match.
 
+## Integration and cleanup
+
+Reviewed source and the complete-family refresh reached actual main959f9d0f through the canonical helper. Its changed xterm-web build and all-target tests pass344 tests across132 summaries. Affected native all-target, workspace and applicable WASM checks also pass. All seven owned implementation/test/runner source files remain byte-identical to reviewedb936a8de. The helper removed the private target.
+
+The owned dependency junction was explicitly unlinked without traversing it. A cleanup preflight scanned9482 regular files and2234 directories with zero links or path redirects; the retained P: dependency installation is intact. The owned M worktree is disposable after preserving this receipt and checking the final clean tree. No old C311 lock or another owner's path is part of this cleanup.
+
 ## Reproduce
 
 Use the prerequisite paths in `docs/image-canvas.md`. Keep source tests unchanged.
