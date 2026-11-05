@@ -72,7 +72,7 @@ async function checkSearchCallArgs(term, addon, write, equal) {
             child.onBeforeSearch(() => events.push('before'));
             child.onAfterSearch(() => events.push('after'));
             fire();
-            check(label + ' option copy', copies(), 1);
+            check(label + ' option copy', copies(), label === 'clear' || label === 'retain' ? 1 : 0);
             check(label + ' refresh events', events, ['before', 'after']);
             check(label + ' refreshed selection', term.getSelection(), selected ? 'foo' : '');
             probe(child, direction, flags);
