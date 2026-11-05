@@ -1,0 +1,53 @@
+{
+  "node": "v24.15.0",
+  "status": "passed",
+  "scope": "Unchanged-source GSUB header constructor/addon baseline, not Rust",
+  "fixtureSha256": "1018823a5512829221091ab2a097f5ce7fbb01884e5c88d0b49ab384643a3cb0",
+  "sourceSha256": "737212d8aae53d1996ef10b315e4369a1542ebb9b94c13c5f99793914745d484",
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "passed",
+      "version": "148.0.7778.96",
+      "constructors": 1496,
+      "addonCases": 1496,
+      "errorMessages": [
+        "RangeError: Offset is outside the bounds of the DataView",
+        "Error: Unsupported GSUB table version.",
+        "Error: GPOS/GSUB feature variations table unknown.",
+        "Error: Unsupported META table version.",
+        "TypeError: Cannot read properties of undefined (reading 'compression')"
+      ]
+    },
+    {
+      "name": "firefox",
+      "status": "passed",
+      "version": "150.0.2",
+      "constructors": 1496,
+      "addonCases": 1496,
+      "errorMessages": [
+        "RangeError: offset is outside the bounds of the DataView",
+        "Error: Unsupported GSUB table version.",
+        "Error: GPOS/GSUB feature variations table unknown.",
+        "Error: Unsupported META table version.",
+        "TypeError: can't access property \"compression\", tableEntry is undefined",
+        "TypeError: can't access property \"compression\" of undefined"
+      ]
+    },
+    {
+      "name": "webkit",
+      "status": "passed",
+      "version": "26.4",
+      "constructors": 1496,
+      "addonCases": 1496,
+      "errorMessages": [
+        "RangeError: Out of bounds access",
+        "Error: Unsupported GSUB table version.",
+        "Error: GPOS/GSUB feature variations table unknown.",
+        "Error: Unsupported META table version.",
+        "TypeError: undefined is not an object (evaluating 'tableEntry.compression')"
+      ]
+    }
+  ],
+  "bundleSha256": "40ba0472fc614c6e869734b1de2e27d45f3318eaaf6bea5148c7d8e2f2a3d916"
+}

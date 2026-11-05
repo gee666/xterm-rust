@@ -13,27 +13,23 @@ pub fn parse(bytes: &[u8]) -> Result<Gsub, FontError> {
     let root = Reader::new(bytes);
     let major = root.u16(0)?;
     let minor = root.u16(2)?;
-    if major != 1 || minor > 1 {
-        return Err(FontError::UnsupportedFormat("GSUB version", major));
+    // parseVersion(1) uses major + minor / 10, not a fixed-point version.
+    let version = u32::from(major) * 10 + u32::from(minor);
+    if !matches!(version, 10 | 11) {
+        return Err(FontError::Invalid("Unsupported GSUB table version."));
     }
-    validate_scripts(root.child16(4)?)?;
-    let features = root.child16(6)?;
-    let feature_count = usize::from(features.u16(0)?);
-    features.bytes(2, feature_count * 6)?;
-    let mut selected = Vec::new();
-    for index in 0..feature_count {
-        let entry = 2 + index * 6;
-        let table = features.child16(entry + 4)?;
-        let count = usize::from(table.u16(2)?);
-        let indices = table.words(4, count)?;
-        if features.bytes(entry, 4)? == b"calt" {
-            selected.try_reserve(indices.len())?;
-            selected.extend(indices.into_iter().map(usize::from));
-        }
+    if let Some(scripts) = pointer(root, 4)? {
+        validate_scripts(scripts)?;
     }
+    let selected = selected_features(root)?;
+    let offsets = if let Some(list) = pointer(root, 8)? {
+        let count = usize::from(list.u16(0)?);
+        list.words(2, count)?
+    } else {
+        Vec::new()
+    };
     let list = root.child16(8)?;
-    let count = usize::from(list.u16(0)?);
-    let offsets = list.words(2, count)?;
+    let count = offsets.len();
     let mut lookups = Vec::new();
     lookups.try_reserve_exact(count)?;
     for offset in offsets {
@@ -81,7 +77,7 @@ pub fn parse(bytes: &[u8]) -> Result<Gsub, FontError> {
             _ => return Err(FontError::UnsupportedFormat("GSUB lookup type", kind)),
         }
     }
-    if minor == 1 {
+    if version == 11 {
         let variations = root.offset32(10)?;
         if variations != 0 {
             validate_feature_variations(root.at(variations)?)?;
@@ -170,19 +166,48 @@ pub(super) fn records(
     Ok(records)
 }
 
+fn pointer(table: Reader<'_>, field: usize) -> Result<Option<Reader<'_>>, FontError> {
+    let offset = table.u16(field)?;
+    (offset != 0)
+        .then(|| table.at(usize::from(offset)))
+        .transpose()
+}
+
+fn selected_features(root: Reader<'_>) -> Result<Vec<usize>, FontError> {
+    let mut selected = Vec::new();
+    if let Some(features) = pointer(root, 6)? {
+        let count = usize::from(features.u16(0)?);
+        for index in 0..count {
+            let entry = 2 + index * 6;
+            let tag = features.bytes(entry, 4)?;
+            let table = features.child16(entry + 4)?;
+            table.u16(0)?;
+            let count = usize::from(table.u16(2)?);
+            let indices = table.words(4, count)?;
+            if tag == b"calt" {
+                selected.try_reserve(indices.len())?;
+                selected.extend(indices.into_iter().map(usize::from));
+            }
+        }
+    }
+    Ok(selected)
+}
+
 fn validate_scripts(table: Reader<'_>) -> Result<(), FontError> {
     let count = usize::from(table.u16(0)?);
     table.bytes(2, count * 6)?;
     for index in 0..count {
-        let script = table.child16(6 + index * 6)?;
-        let default = script.u16(0)?;
-        if default != 0 {
-            validate_language(script.at(usize::from(default))?)?;
-        }
-        let count = usize::from(script.u16(2)?);
-        script.bytes(4, count * 6)?;
-        for index in 0..count {
-            validate_language(script.child16(8 + index * 6)?)?;
+        if let Some(script) = pointer(table, 6 + index * 6)? {
+            if let Some(default) = pointer(script, 0)? {
+                validate_language(default)?;
+            }
+            let count = usize::from(script.u16(2)?);
+            script.bytes(4, count * 6)?;
+            for index in 0..count {
+                if let Some(language) = pointer(script, 8 + index * 6)? {
+                    validate_language(language)?;
+                }
+            }
         }
     }
     Ok(())
@@ -194,32 +219,16 @@ fn validate_language(table: Reader<'_>) -> Result<(), FontError> {
     Ok(())
 }
 fn validate_feature_variations(table: Reader<'_>) -> Result<(), FontError> {
-    // The ligature engine does not apply variation records, but the source
-    // parser still reads their offsets, conditions and feature substitutions.
-    table.u16(0)?;
-    table.u16(2)?;
-    let count = table.offset32(4)?;
-    table.bytes(8, count.checked_mul(8).ok_or(FontError::Bounds)?)?;
-    for index in 0..count {
-        let conditions = table.at(table.offset32(8 + index * 8)?)?;
-        let condition_count = usize::from(conditions.u16(0)?);
-        conditions.bytes(2, condition_count * 4)?;
-        for index in 0..condition_count {
-            let condition = conditions.at(conditions.offset32(2 + index * 4)?)?;
-            if condition.u16(0)? != 1 {
-                return Err(FontError::Invalid("Unsupported GSUB variation condition"));
-            }
-            condition.bytes(2, 6)?;
-        }
-        let substitutions = table.at(table.offset32(12 + index * 8)?)?;
-        substitutions.u16(0)?;
-        substitutions.u16(2)?;
-        let count = usize::from(substitutions.u16(4)?);
-        substitutions.bytes(6, count * 6)?;
-        for index in 0..count {
-            let feature = substitutions.at(substitutions.offset32(8 + index * 6)?)?;
-            feature.words(4, usize::from(feature.u16(2)?))?;
-        }
+    let major = table.u16(0)?;
+    let minor = table.u16(2)?;
+    if major != 1 || minor != 0 {
+        return Err(FontError::Invalid(
+            "GPOS/GSUB feature variations table unknown.",
+        ));
     }
+    let count = table.offset32(4)?;
+    // opentype retains these offsets but never follows conditions or feature
+    // substitutions. Invalid targets must not reject an otherwise valid font.
+    table.bytes(8, count.checked_mul(8).ok_or(FontError::Bounds)?)?;
     Ok(())
 }
