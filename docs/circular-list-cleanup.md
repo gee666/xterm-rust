@@ -36,6 +36,10 @@ The existing oracle was reused without modification. Its generated `verification
 
 Browser runtime, native Linux/macOS, complete common-family closure312, full workspace/release/features and final equivalence are not established by this task. Overall equivalence remains NOT PROVEN.
 
+## Independent review
+
+The isolated task358 reviewer accepted HEADb141da9 against mainbb6eada. It independently reran all53 focused tests, exact full-workspace formatting and both warning-denied Clippy commands. It inspected success, recoverable failure and unwind ownership, checked27 retained source/implementation hash entries, and found no concrete problem. The reviewer did not rerun the report-writing oracle, browser suites or other native platforms. No source files changed during review.
+
 ## Temporary ownership
 
 Owned root: `O:/xterm-rust-swarm-16/tmp/Y16`, with regular private `target/` and `tmp/` directories. `tmp/baseline/` holds copied utility modules and two standalone negative-control binaries. No server or browser was started. These disposable paths must be removed after review/integration while preserving the source branch and tracked evidence. No other worktree or original reference is a cleanup target.
