@@ -1,0 +1,266 @@
+{
+  "status": "passed",
+  "engine": "Rust WASM",
+  "suite": "addon-search",
+  "project": "all original projects",
+  "mode": "runtime",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "counts": {
+    "discovered": 81,
+    "executed": 81,
+    "passed": 81,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0
+  },
+  "errors": [],
+  "commands": [
+    {
+      "stage": "build",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/build-demo.mjs",
+        "--debug"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1429.2215999999999,
+      "status": "passed",
+      "log": "build.log"
+    },
+    {
+      "stage": "playwright",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\S16\\source_repo\\node_modules\\@playwright\\test\\cli.js",
+        "test",
+        "--config=O:\\xterm-rust-swarm-16\\tmp\\S16\\tmp\\e2e\\2026-11-05T11-00-54-693Z-6d68bf77-28e1-465e-bf4d-8bae0e60e9cf\\playwright.cjs",
+        "--reporter=json",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=179500",
+        "--output=O:\\xterm-rust-swarm-16\\tmp\\S16\\results\\e2e\\upstream\\2026-11-05T11-00-54-693Z-6d68bf77-28e1-465e-bf4d-8bae0e60e9cf\\artifacts"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 26020.1741,
+      "status": "passed",
+      "log": "playwright.log"
+    }
+  ],
+  "scope": "This run does not establish complete terminal or cross-platform equivalence.",
+  "source": {
+    "revision": "91f81065285b4adea831d012d9c5dae2ff39a851",
+    "sha256": "3561618a25ae90dbe97531fe01c510350ae880cd77010c73519a0dba59031ca7",
+    "files": 1409
+  },
+  "reference": [
+    {
+      "path": "demo/test.html",
+      "bytes": 545,
+      "sha256": "35f81ad165aee291f49ac3ffea10068bf164207aad8d5fe4e5a558ada0e5ceed"
+    },
+    {
+      "path": "addons/addon-search/test/playwright.config.ts",
+      "bytes": 626,
+      "sha256": "84a4cd16b01f399f9d7e447c817237ed4616d79c9a1e9071851261e1d06c31f9"
+    }
+  ],
+  "fixture": [
+    {
+      "path": "scripts/e2e-upstream.mjs",
+      "bytes": 7780,
+      "sha256": "12d881e3127c7865f00d7a55251bad4de8b611c24403fe3e14867798e6e16977"
+    },
+    {
+      "path": "scripts/e2e/fixture-server.mjs",
+      "bytes": 7410,
+      "sha256": "4790325527ed20905ecbaf0ceba34272325ccdecdd36060c9cf6bf5ec7a0b2ef"
+    },
+    {
+      "path": "scripts/e2e/test-page.mjs",
+      "bytes": 1867,
+      "sha256": "58a7f3ff1c587dff8b78d8c5775b9b7a3ac72b144f800d893d80bd8e98d20b28"
+    },
+    {
+      "path": "scripts/e2e/build-bootstrap.mjs",
+      "bytes": 905,
+      "sha256": "487154862b39623222d248d465c66aa06ee08467631b6dacdbe5c43f3a51f801"
+    },
+    {
+      "path": "scripts/e2e/upstream-config.mjs",
+      "bytes": 1388,
+      "sha256": "0ff88d3d995ad09fa7308bd6ac5675a82d10992f22f5b9b8304a9fee9590aa2f"
+    },
+    {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    }
+  ],
+  "build": {
+    "report": "results/demos/build/2026-11-05T11-00-54-911Z/report.json",
+    "source": {
+      "revision": "91f81065285b4adea831d012d9c5dae2ff39a851",
+      "sha256": "3561618a25ae90dbe97531fe01c510350ae880cd77010c73519a0dba59031ca7",
+      "files": 1409
+    },
+    "artifacts": [
+      {
+        "path": "browser/pkg/xterm_web.js",
+        "bytes": 178872,
+        "sha256": "0c151cb2f6d662533e03c0882ab5ec5385d9e979b166f45fa54f5f968a194d73"
+      },
+      {
+        "path": "browser/pkg/xterm_web_bg.wasm",
+        "bytes": 13573282,
+        "sha256": "177a300677f1dc2bfff04ef96370e1353f2cb4c16ba45135550e3d4a02b75b33"
+      }
+    ]
+  },
+  "bindings": [
+    {
+      "path": "browser/xterm.mjs",
+      "bytes": 1119,
+      "sha256": "3c6937bc590937d8678cf8d507b5b44448071d81bd0a4e4ecac8a2e0f0319c30"
+    }
+  ],
+  "command": [
+    "C:\\nvm4w\\nodejs\\node.exe",
+    "O:\\xterm-rust-swarm-16\\tmp\\S16\\source_repo\\node_modules\\@playwright\\test\\cli.js",
+    "test",
+    "--config=O:\\xterm-rust-swarm-16\\tmp\\S16\\tmp\\e2e\\2026-11-05T11-00-54-693Z-6d68bf77-28e1-465e-bf4d-8bae0e60e9cf\\playwright.cjs",
+    "--reporter=json",
+    "--workers=2",
+    "--retries=0",
+    "--global-timeout=179500",
+    "--output=O:\\xterm-rust-swarm-16\\tmp\\S16\\results\\e2e\\upstream\\2026-11-05T11-00-54-693Z-6d68bf77-28e1-465e-bf4d-8bae0e60e9cf\\artifacts"
+  ],
+  "playwrightStats": {
+    "startTime": "2026-11-05T11:00:57.378Z",
+    "duration": 25593.426,
+    "expected": 81,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "requests": [
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=a2452bdc-0619-4c84-acd6-d4f2cabfad5f",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=a2452bdc-0619-4c84-acd6-d4f2cabfad5f&missing=ImageAddon%2CWebglAddon",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=660345b7-f73b-48fd-ac41-b068955e1a6a",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/favicon.ico",
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=660345b7-f73b-48fd-ac41-b068955e1a6a&missing=ImageAddon%2CWebglAddon",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=665822cf-5819-4655-b5ce-a5bdcdf49286",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=665822cf-5819-4655-b5ce-a5bdcdf49286&missing=ImageAddon%2CWebglAddon",
+      "status": 204
+    }
+  ],
+  "serverErrors": [],
+  "runtimes": [
+    {
+      "state": "ready",
+      "missingBindings": [
+        "ImageAddon",
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "ImageAddon",
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "ImageAddon",
+        "WebglAddon"
+      ]
+    }
+  ]
+}

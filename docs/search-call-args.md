@@ -48,7 +48,7 @@ Task344 accepted reviewed commit9f3aa4a. The isolated reviewer independently rer
 
 ## Remaining search contracts
 
-Task347 is the actionable raw-search followup under full-family322. Current `search_addon/options.rs::term` rejects every truthy non-string before native activation and before-search checks. Source `SearchState.isValidSearchTerm` instead evaluates `!!(term && term.length > 0)` during search phases. For example, an activated source addon returns false for `findNext(1)`; an unloaded source addon throws the not-loaded Error before inspecting the term. The current Rust binding throws TypeError first in both cases. Boxed strings, overridden methods, getter-backed length and identity-cached objects require preserving the raw value, not one eager string conversion.
+Task347 is the actionable raw-search followup under full-family322. At task344's checkpoint, `search_addon/options.rs::term` rejected every truthy non-string before native activation and before-search checks. Later task363 retains raw invalid terms, validates length at addon phases and preserves raw cache identity. See `docs/search-invalid-terms.md` for its scope and evidence. Valid boxed strings, overridden matching methods and additional engine length/accessor phases still need source matching semantics.
 
 `request(null)` currently treats null options like undefined. Source optional chaining permits the initial decoration test, but `_findInLine` defaults only undefined and then reads `searchOptions.regex`, so null can throw later after selection clearing. Preserve that phase.
 
