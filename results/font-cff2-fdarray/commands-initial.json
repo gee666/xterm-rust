@@ -1,0 +1,58 @@
+{
+  "task": 519,
+  "scope": "Focused changed addon gates; not a full workspace/native OS matrix",
+  "node": "v24.15.0",
+  "headroom": {
+    "ramGiB": 27.765430450439453,
+    "diskGiB": 2500.058277130127
+  },
+  "commands": [
+    {
+      "name": "native",
+      "command": [
+        "cargo",
+        "test",
+        "-j2",
+        "-p",
+        "xterm-addons",
+        "--all-targets",
+        "--all-features"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 170136.9368,
+      "status": "passed"
+    },
+    {
+      "name": "clippy-native",
+      "command": [
+        "cargo",
+        "clippy",
+        "-j2",
+        "-p",
+        "xterm-addons",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 17793.975999999995,
+      "status": "failed"
+    }
+  ]
+}

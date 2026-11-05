@@ -39,7 +39,11 @@ The negative control bypasses only the presence guard, requires 188 actual runti
 
 Source Node passed 860 cases, with 852 complete outcomes and 8 presence observations. Predecessor505's 898 source recipes replay unchanged. Its 14 original producer pins were verified against `archive/Ian505-complete`, plus 776 original and 776 owned physical-copy reference hashes. Running the old505 audit directly after modifying its parser pin correctly failed at that pin, and was not called a current pass.
 
-Native, strict lint, format and three-browser execution are pending. Raw results will be retained under `results/font-cff2-fdarray/`. No Linux/macOS runtime result, full original-suite result or overall equivalence is claimed.
+Native Windows addon all-target/all-feature tests passed 208 functions across 48 harnesses, with zero failed or ignored. Strict all-target/all-feature Clippy passed for native xterm-addons and WASM xterm-font-addons. Affected workspace native library checks and strict WASM library Clippy passed. The new WASM test compiled. Five member format checks passed; exact `cargo fmt --all -- --check` still failed with Windows OS206 and is not reported green.
+
+The negative guard bypass executed all 188 required mismatches, consisting of 128 accepted inputs and 60 later hmtx errors. Exact source SHA restoration and the positive replay passed. An initial helper module-inception lint failure was fixed by renaming the owned test module, with no suppression. The initial negative counter wrongly expected all mismatches to be successes rather than including those later hmtx errors. It was corrected to require the exact 188/128/60 split, without changing the corpus or any assertion. Both initial failures and successful reruns are retained.
+
+Three-browser execution is pending. Raw results are under `results/font-cff2-fdarray/`. These are focused gates, not a new full workspace test pass. No Linux/macOS runtime result, full original-suite result or overall equivalence is claimed.
 
 ## Integration boundary
 

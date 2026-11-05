@@ -1,0 +1,317 @@
+{
+  "task": 519,
+  "scope": "Focused changed addon gates; not a full workspace/native OS matrix",
+  "node": "v24.15.0",
+  "headroom": {
+    "ramGiB": 28.842750549316406,
+    "diskGiB": 2496.1234092712402
+  },
+  "commands": [
+    {
+      "name": "native",
+      "command": [
+        "cargo",
+        "test",
+        "-j2",
+        "-p",
+        "xterm-addons",
+        "--all-targets",
+        "--all-features"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 105096.6743,
+      "status": "passed"
+    },
+    {
+      "name": "clippy-native",
+      "command": [
+        "cargo",
+        "clippy",
+        "-j2",
+        "-p",
+        "xterm-addons",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1718.1100000000006,
+      "status": "passed"
+    },
+    {
+      "name": "clippy-wasm",
+      "command": [
+        "cargo",
+        "clippy",
+        "-j2",
+        "-p",
+        "xterm-font-addons",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 19681.486699999994,
+      "status": "passed"
+    },
+    {
+      "name": "dependents-native",
+      "command": [
+        "cargo",
+        "check",
+        "-j2",
+        "--workspace",
+        "--all-features",
+        "--lib"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 5536.741300000009,
+      "status": "passed"
+    },
+    {
+      "name": "dependents-wasm",
+      "command": [
+        "cargo",
+        "clippy",
+        "-j2",
+        "--workspace",
+        "--all-features",
+        "--lib",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 21620.512699999992,
+      "status": "passed"
+    },
+    {
+      "name": "wasm-build",
+      "command": [
+        "cargo",
+        "test",
+        "-j2",
+        "-p",
+        "xterm-font-addons",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "font_cff2_fdarray_browser",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 15068.026199999993,
+      "status": "passed"
+    },
+    {
+      "name": "negative-run",
+      "command": [
+        "node",
+        "scripts/font-cff2-fdarray-negative.mjs"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 20631.579499999993,
+      "status": "failed"
+    },
+    {
+      "name": "negative-run",
+      "command": [
+        "node",
+        "scripts/font-cff2-fdarray-negative.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 29112.435599999997,
+      "status": "passed"
+    },
+    {
+      "name": "fmt-workspace",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 221.85119999999733,
+      "status": "failed"
+    },
+    {
+      "name": "fmt-xterm-core",
+      "command": [
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "crates/xterm-core/Cargo.toml",
+        "--",
+        "--check"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 2717.690899999998,
+      "status": "passed"
+    },
+    {
+      "name": "fmt-xterm-addons",
+      "command": [
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "crates/xterm-addons/Cargo.toml",
+        "--",
+        "--check"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 487.70750000000044,
+      "status": "passed"
+    },
+    {
+      "name": "fmt-xterm-web",
+      "command": [
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "crates/xterm-web/Cargo.toml",
+        "--",
+        "--check"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 3272.570599999999,
+      "status": "passed"
+    },
+    {
+      "name": "fmt-xterm-wasm-support",
+      "command": [
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "crates/xterm-wasm-support/Cargo.toml",
+        "--",
+        "--check"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 271.62050000000454,
+      "status": "passed"
+    },
+    {
+      "name": "fmt-xterm-font-addons",
+      "command": [
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "crates/xterm-font-addons/Cargo.toml",
+        "--",
+        "--check"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 315.6582999999955,
+      "status": "passed"
+    }
+  ]
+}
