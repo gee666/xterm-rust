@@ -1,0 +1,15 @@
+{
+  "task": 392,
+  "verdict": "accepted",
+  "reviewedCommit": "9b4b9b88",
+  "firstReviewFinding": "Read pattern.setTransform before constructing DOMMatrix so the callee getter's thrown value wins",
+  "findingNegativeControl": {"chromiumPassed": 4, "chromiumFailed": 1},
+  "reviewerExecutedBrowserFunctions": 30,
+  "reviewerBrowserModes": ["OffscreenCanvas", "forced DOM fallback"],
+  "reviewerBrowsers": ["chromium", "firefox", "webkit"],
+  "reviewerChecks": ["scoped WASM library and both glyph test binary warning-denied Clippy", "all five complete workspace-member format checks", "reference hashes and fresh in-memory source prelude hashes", "implementation/test receipt hashes", "unchanged glyph fixture"],
+  "exactWorkspaceFormatting": "cargo fmt --all -- --check fails Windows OS206; independently reproduced and NOT waived",
+  "remainingTaskFindings": [],
+  "scope": "Custom glyph pattern host-call phases only; full WebGL/native-final/port equivalence not established",
+  "overallEquivalence": "NOT PROVEN"
+}
