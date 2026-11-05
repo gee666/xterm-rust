@@ -1,0 +1,13 @@
+# Input and accessibility continuation
+
+Task399 was independently accepted. Its reviewed source is archive/Archimedes399-reviewed at64559baf, comprising9565cb68 plus a test-log newline cleanup. It splits compositionstart suffix capture from clearing already-sent IME text. The live overlay textContent setter must succeed first. Existing code sent YZ after a failing setter where the unchanged source sends Z. The callback adapter now catches setter failures and does not hold a composition RefCell borrow over JavaScript. Earlier accepted395 remains intact.
+
+Read docs/composition-start-order.md and results/composition399 before repeating work. Native63, source-body integrity5, callbacks7 functions per engine and existing input7 per engine pass. The input oracle reran unchanged11 cases/16assertions and252412 comparisons with seed1229800758. The reviewer independently reran63native/source5/callbacks7 per engine/scoped fmt/native and WASM Clippy. The failed baseline intentionally records two exact mismatches and a subsequent WASM test-runner table-index exception. It must not be called a pass.
+
+Task319 remains unfinished. It owns complete keyboard/IME/focus/clipboard/accessibility mapping, original suites, full-Terminal delivery, every decorated event/DOM value, callback/reentry/timer/disposal behavior and platform evidence. Prior343/356/378/395 must not be recreated. No new complete-family or full-Terminal E2E claim follows from399.
+
+A source-review lead, not a verified regression, is clipboard getData returning an object with a custom replace method. Source paste calls text.replace, while input/dom/clipboard.rs get_clipboard_data rejects every non-string. Check existing producer work and unchanged source before creating a task. Decorated selection getters and geometry/style setter ordering are also outside399.
+
+The current branch also contains accepted Stephanie396 commits0c810178/6b9752fa/80d7dd3b, picked in that order. All nine owned source/test/fixture/script hashes exactly match results/osc-handler/owned-hashes.json. docs/osc-primitive-handlers.md and its independent-review receipt explain scoped primitive OSC policy/receiver behavior. Canonical integration will rebase and test the accepted union.
+
+Owned temporary worktree O:/xterm-rust-swarm-16/tmp/worktrees/Archimedes319 was created from actual maincbe72b5. Its source_repo is a physical copy. New source/artifacts are confined to this tree. Stop owned processes and preserve source/evidence first, then require clean tracked status, explicit untracked whitelist and zero reparse points before removing it. Never clean other O: paths or old reference/dependency links. Overall equivalence NOT PROVEN.

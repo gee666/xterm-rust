@@ -19,7 +19,7 @@ Run from the producer worktree with Cargo target and TEMP/TMP in its owned O: di
 - `node scripts/browser-input-oracle.mjs` reruns unchanged clipboard/IME cases and deterministic seeded comparisons without fixture regeneration.
 - `WASM_TEST=wasm_input_callbacks node scripts/browser-host-check.mjs` runs seven test functions per engine, including four new source-body scenarios across two functions. Plain success, throwing setter, nested compositionstart, and nested compositionend followed by throw compare identical state/event/error traces.
 - `WASM_TEST=wasm_input node scripts/browser-host-check.mjs` checks existing DOM input behavior in all three engines.
-- Native and wasm32 callback-target Clippy pass with `-D warnings`. Changed Rust files pass rustfmt check. Full-workspace gates and native Linux/macOS remain outside this scoped producer run.
+- Native and wasm32 callback-target Clippy pass with `-D warnings`. Changed Rust files pass rustfmt check. The attempted full-workspace `cargo fmt --all -- --check` failed before formatting with Windows OS206 at this long worktree path, retained in workspace-fmt.log. Changed-file formatting passed separately. Full-workspace Clippy/test gates and native Linux/macOS remain outside this scoped producer run.
 
 The producer and independent reviewer each passed 63 native tests, five source-body integrity tests, scoped rustfmt and native/WASM warning-denied Clippy. Callback tests passed seven functions per engine on each run. The producer also passed input seven per engine and 252,412 policy comparisons with seed1229800758, including 11 unchanged cases with 16 assertions.
 
