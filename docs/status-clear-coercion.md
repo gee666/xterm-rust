@@ -24,7 +24,8 @@ Evidence under `results/status-clear/` includes:
 
 - `source.json`:17 discovered/executed/passed, zero failed/skipped/unrun.
 - `before.json`: baseline Rust test fails in Chromium, Firefox and WebKit. `before-diagnostic.json` retains the exact Chromium expected/actual rows, including null clearing all records and boxed string exact-id removal.
-- `after.json`: focused test passes in all three engines,51 matching operation traces total. Browser versions and source/artifact hashes are retained.
+- `after.json`: final-source focused test passes in all three engines,51 matching operation traces total. Browser versions and source/artifact hashes are retained.
+- `wasm_status_addons.json` and `wasm_status_coercion.json`:19 and7 test functions pass per engine. Together with the focused clear test, all81 browser test executions pass. The original rerun found9 preexisting Progress assertion ports failing at JS compilation, not terminal execution. Their ordinary Rust strings consumed the JS ST escape, leaving a backslash before the closing quote. Task350 changes only those9 literals to raw strings, preserving all sequence text and expected assertions. `wasm_status_addons-failed.json` retains the10-pass/9-fail baseline per browser; it is not hidden by the later pass.
 - `native.log`:51 passing test functions across program_status_addon12, program_status_store12, progress_upstream12, status_addons_differential3 and status_live_terminal12. The differential tests replay the retained2215 parser and2048 progress operations. A new native assertion checks foreign-prefix exact-id exclusion, single-event dispatch and no-op snapshot identity.
 - `clippy-native.log`: warning-denied xterm-addons all-target/all-feature check passed. `clippy-wasm.log`: warning-denied WASM status suites check passed.
 - `fmt.log`: the initial long-path full fmt hit Windows OS206. `fmt-short-path.log`: the exact `cargo fmt --all -- --check` succeeded after moving only this owned regular worktree from `.../tmp/worktrees/Angela16` to `.../tmp/A`. No junction or suppression was used.
@@ -44,4 +45,6 @@ cargo clippy -j2 -p xterm-web --target wasm32-unknown-unknown --test wasm_status
 cargo fmt --all -- --check
 ```
 
-Use `node scripts/status-clear-oracle.mjs --generate` only after reviewing an actual source change. The focused results do not establish full workspace/all-platform quality, complete status addon equivalence, or complete browser/demo acceptance. Those gates remain separate tasks.
+Use `node scripts/status-clear-oracle.mjs --generate` only after reviewing an actual source change. Task340's isolated reviewer independently replayed all17 source traces in memory, rechecked all776 source manifest entries and verified fixture/report hashes and changed-file formatting. That review inspected native and browser receipts but did not rerun heavy commands because no slot was allocated. The final-source browser refresh above ran after acceptance.
+
+The focused results do not establish full workspace/all-platform quality, complete status addon equivalence, or complete browser/demo acceptance. Those gates remain separate tasks.

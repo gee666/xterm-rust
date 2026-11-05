@@ -129,15 +129,39 @@ progress_case!(
     initial_progress_zero_zero,
     "equal(addon.progress,{state:0,value:0});"
 );
-progress_case!(remove_ignores_progress,"await write('\x1b]9;4;0\x1b\\');equal(stack,[{state:0,value:0}]);await write('\x1b]9;4;0;12\x1b\\');equal(stack,[{state:0,value:0},{state:0,value:0}]);");
-progress_case!(set_progress_values,"await write('\x1b]9;4;1;10\x1b\\');equal(stack,[{state:1,value:10}]);await write('\x1b]9;4;1;50\x1b\\');equal(stack,[{state:1,value:10},{state:1,value:50}]);await write('\x1b]9;4;1;23\x1b\\');equal(stack,[{state:1,value:10},{state:1,value:50},{state:1,value:23}]);");
-progress_case!(set_special_sequences,"await write('\x1b]9;4;1\x1b\\');equal(stack,[{state:1,value:0}]);await write('\x1b]9;4;1;12x\x1b\\');equal(stack,[{state:1,value:0}]);await write('\x1b]9;4;1;123\x1b\\');equal(stack,[{state:1,value:0},{state:1,value:100}]);");
-progress_case!(error_preserves_empty_zero,"await write('\x1b]9;4;1;12\x1b\\');await write('\x1b]9;4;2\x1b\\');await write('\x1b]9;4;2;\x1b\\');await write('\x1b]9;4;2;0\x1b\\');equal(stack,[{state:1,value:12},{state:2,value:12},{state:2,value:12},{state:2,value:12}]);");
-progress_case!(error_accepts_new_progress,"await write('\x1b]9;4;1;12\x1b\\');await write('\x1b]9;4;2;25\x1b\\');await write('\x1b]9;4;2;123\x1b\\');equal(stack,[{state:1,value:12},{state:2,value:25},{state:2,value:100}]);");
-progress_case!(indeterminate_keeps_progress,"await write('\x1b]9;4;1;12\x1b\\');await write('\x1b]9;4;3\x1b\\');await write('\x1b]9;4;3;123\x1b\\');equal(stack,[{state:1,value:12},{state:3,value:12},{state:3,value:12}]);");
-progress_case!(pause_preserves_empty_zero,"await write('\x1b]9;4;1;12\x1b\\');await write('\x1b]9;4;4\x1b\\');await write('\x1b]9;4;4;\x1b\\');await write('\x1b]9;4;4;0\x1b\\');equal(stack,[{state:1,value:12},{state:4,value:12},{state:4,value:12},{state:4,value:12}]);");
-progress_case!(pause_accepts_new_progress,"await write('\x1b]9;4;1;12\x1b\\');await write('\x1b]9;4;4;25\x1b\\');await write('\x1b]9;4;4;123\x1b\\');equal(stack,[{state:1,value:12},{state:4,value:25},{state:4,value:100}]);");
+progress_case!(
+    remove_ignores_progress,
+    r#"await write('\x1b]9;4;0\x1b\\');equal(stack,[{state:0,value:0}]);await write('\x1b]9;4;0;12\x1b\\');equal(stack,[{state:0,value:0},{state:0,value:0}]);"#
+);
+progress_case!(
+    set_progress_values,
+    r#"await write('\x1b]9;4;1;10\x1b\\');equal(stack,[{state:1,value:10}]);await write('\x1b]9;4;1;50\x1b\\');equal(stack,[{state:1,value:10},{state:1,value:50}]);await write('\x1b]9;4;1;23\x1b\\');equal(stack,[{state:1,value:10},{state:1,value:50},{state:1,value:23}]);"#
+);
+progress_case!(
+    set_special_sequences,
+    r#"await write('\x1b]9;4;1\x1b\\');equal(stack,[{state:1,value:0}]);await write('\x1b]9;4;1;12x\x1b\\');equal(stack,[{state:1,value:0}]);await write('\x1b]9;4;1;123\x1b\\');equal(stack,[{state:1,value:0},{state:1,value:100}]);"#
+);
+progress_case!(
+    error_preserves_empty_zero,
+    r#"await write('\x1b]9;4;1;12\x1b\\');await write('\x1b]9;4;2\x1b\\');await write('\x1b]9;4;2;\x1b\\');await write('\x1b]9;4;2;0\x1b\\');equal(stack,[{state:1,value:12},{state:2,value:12},{state:2,value:12},{state:2,value:12}]);"#
+);
+progress_case!(
+    error_accepts_new_progress,
+    r#"await write('\x1b]9;4;1;12\x1b\\');await write('\x1b]9;4;2;25\x1b\\');await write('\x1b]9;4;2;123\x1b\\');equal(stack,[{state:1,value:12},{state:2,value:25},{state:2,value:100}]);"#
+);
+progress_case!(
+    indeterminate_keeps_progress,
+    r#"await write('\x1b]9;4;1;12\x1b\\');await write('\x1b]9;4;3\x1b\\');await write('\x1b]9;4;3;123\x1b\\');equal(stack,[{state:1,value:12},{state:3,value:12},{state:3,value:12}]);"#
+);
+progress_case!(
+    pause_preserves_empty_zero,
+    r#"await write('\x1b]9;4;1;12\x1b\\');await write('\x1b]9;4;4\x1b\\');await write('\x1b]9;4;4;\x1b\\');await write('\x1b]9;4;4;0\x1b\\');equal(stack,[{state:1,value:12},{state:4,value:12},{state:4,value:12},{state:4,value:12}]);"#
+);
+progress_case!(
+    pause_accepts_new_progress,
+    r#"await write('\x1b]9;4;1;12\x1b\\');await write('\x1b]9;4;4;25\x1b\\');await write('\x1b]9;4;4;123\x1b\\');equal(stack,[{state:1,value:12},{state:4,value:25},{state:4,value:100}]);"#
+);
 progress_case!(
     invalid_sequences_do_not_emit,
-    "await write('\x1b]9;4;5;12\x1b\\');await write('\x1b]9;4;1; 123xxxx\x1b\\');equal(stack,[]);"
+    r#"await write('\x1b]9;4;5;12\x1b\\');await write('\x1b]9;4;1; 123xxxx\x1b\\');equal(stack,[]);"#
 );
