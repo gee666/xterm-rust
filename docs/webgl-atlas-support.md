@@ -30,3 +30,9 @@ The original 452 palette cases and 112 signed-width cases regenerate byte-identi
 `results/webgl-atlas-support/checkpoint.json` and the earlier logs describe the original unreviewed checkpoint. Run-2 receipts use a `run2-` prefix so the old results are not mislabelled as current evidence. The original iframe-removal failure is retained. Browser test compile diagnostics during test development are not runtime failures and are recorded separately.
 
 The exact workspace `cargo fmt --all -- --check` command hits Windows OS206 after main's test inventory grew, even in the short O: worktree and with Rust 1.85.1 and 1.97.1. All five workspace members are formatted and checked separately. This is not reported as an exact-command pass or a final quality-gate result.
+
+## Integration
+
+Task 411 was independently accepted and integrated together with independently accepted task 413 through the unmodified canonical helper onto main `2b291838`. The helper passed changed-core/wasm-support/web builds and all-target tests, 1,900 passing tests across 386 result summaries, none failed or ignored. Affected dependents' native all-target checks, workspace native checks and applicable WASM library checks passed. This gate uses default features and is not the full all-feature/platform acceptance matrix. The private target was removed by the helper.
+
+The scoped 411 files are byte-identical to the reviewed `a916a857` source; the 413 lifecycle-view files are byte-identical to accepted `043c703a`. The raw gate and source/cleanup preflight receipt are `results/webgl-atlas-support/run2-canonical411-413.log` and `run2-integration.json`. Full atlas/renderer/addon implementation and final equivalence are still unfinished.
