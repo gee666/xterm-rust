@@ -30,4 +30,14 @@ The browser test includes three new Rust test functions expanding54 programs and
 
 ## Remaining scope
 
-This change retains typed numeric timeout IDs and the existing infallible BrowserService window contract. It does not establish arbitrary raw timeout IDs, throwing window resolution, all setTimeout getter/call phases, complete synchronized-output/root integration, whole-renderer pixel equivalence, original complete browser/demo suites, final stable workspace gates or native Linux/macOS runtime evidence. Full-port equivalence remains NOT PROVEN. Test receipts and negative-control results will be recorded separately after execution.
+This change retains typed numeric timeout IDs and the existing infallible BrowserService window contract. It does not establish arbitrary raw timeout IDs, throwing window resolution, all setTimeout getter/call phases, complete synchronized-output/root integration, whole-renderer pixel equivalence, original complete browser/demo suites, final stable workspace gates or native Linux/macOS runtime evidence. Full-port equivalence remains NOT PROVEN.
+
+## Executed checks
+
+Receipts are in `results/render-sync-cancel`. On Rust1.85.1 Windows/MSVC, the scoped native xterm-web all-target/all-feature run passed415 tests across171 harnesses with zero failed, ignored, measured or filtered tests. Initial and final warning-denied native all-target/all-feature Clippy and actual WASM library/render_service_browser Clippy passed. The WASM test build passed.
+
+Both the initial and restored final Chromium/Firefox/WebKit matrices passed all four Rust functions per engine. Three new functions expand54 source/Rust programs in each engine; the fourth is the retained RenderService trace. The early-take/noncatch cancellation control failed all three new functions while the retained function passed. The old Rust-owned callback control failed the delivery function while the other three passed. Both controls ran in Chromium only. Exact production bytes were restored in finally blocks.
+
+The initial/final compiler artifact, served WASM and binding-JS hashes are identical. The audit verified296 generated-stage pins,14 source/build-input pins,28 durable raw report/log copies and all776 reference hashes in both the original and private physical copy. Compiler pins use the helper's immutable acceptance-artifact snapshots, not Cargo's reused output filename. Generated runtime artifacts are retained through review, then removed during owned cleanup. Their recorded hashes remain in the receipts.
+
+All five workspace package formatting checks passed. The exact aggregate `cargo fmt --all -- --check` still failed with Windows OS206. That is recorded as a failure, not upgraded to a full formatting pass. The native tests are scoped to xterm-web, not a full final workspace or OS matrix. Browser tests are actual RenderService component tests, not complete terminal/demo equivalence.

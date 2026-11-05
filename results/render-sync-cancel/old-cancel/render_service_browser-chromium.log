@@ -1,0 +1,58 @@
+running 4 tests
+test synchronized::sync_cancel_timer_delivery_during_getter_or_call_remains_callable ... FAIL
+test synchronized::sync_cancel_live_handle_and_reentrant_buffer_flush_replace_dispose ... FAIL
+test synchronized::sync_cancel_failures_keep_identity_state_and_callable_timer ... FAIL
+test exact_source_trace_covers_frames_sync_visibility_replacement_errors_and_disposal ... ok
+
+failures:
+
+---- synchronized::sync_cancel_timer_delivery_during_getter_or_call_remains_callable output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at render_service_browser-be4f0ae79d5c4b81.wasm.__rust_start_panic (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[48070]:0xb5598e)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.rust_panic (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[43083]:0xb49d19)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[13516]:0x90864e)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[17060]:0x99cff1)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[47528]:0xb54c0e)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.rust_begin_unwind (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[32529]:0xb09a2b)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[32530]:0xb09a58)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[6089]:0x717f08)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::assert_failed::hf731556fe5406d76 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[24399]:0xa7cfb1)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.render_service_browser::synchronized::check_programs::h1ef4b8ec67175a54 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[1082]:0x301dcd)
+
+---- synchronized::sync_cancel_live_handle_and_reentrant_buffer_flush_replace_dispose output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at render_service_browser-be4f0ae79d5c4b81.wasm.__rust_start_panic (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[48070]:0xb5598e)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.rust_panic (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[43083]:0xb49d19)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[13516]:0x90864e)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[17060]:0x99cff1)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[47528]:0xb54c0e)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.rust_begin_unwind (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[32529]:0xb09a2b)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[32530]:0xb09a58)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[6089]:0x717f08)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::assert_failed::hf731556fe5406d76 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[24399]:0xa7cfb1)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.render_service_browser::synchronized::check_programs::h4a14c0e01e95fd59 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[1083]:0x302a87)
+
+---- synchronized::sync_cancel_failures_keep_identity_state_and_callable_timer output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at render_service_browser-be4f0ae79d5c4b81.wasm.__rust_start_panic (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[48070]:0xb5598e)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.rust_panic (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[43083]:0xb49d19)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[13516]:0x90864e)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[17060]:0x99cff1)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[47528]:0xb54c0e)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.rust_begin_unwind (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[32529]:0xb09a2b)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[32530]:0xb09a58)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[6089]:0x717f08)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::assert_failed::hf731556fe5406d76 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[24399]:0xa7cfb1)
+            at render_service_browser-be4f0ae79d5c4b81.wasm.render_service_browser::synchronized::check_programs::h573301310c8fe36e (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[1084]:0x303741)
+
+failures:
+
+    synchronized::sync_cancel_timer_delivery_during_getter_or_call_remains_callable
+    synchronized::sync_cancel_live_handle_and_reentrant_buffer_flush_replace_dispose
+    synchronized::sync_cancel_failures_keep_identity_state_and_callable_timer
+
+test result: FAILED. 1 passed; 3 failed; 0 ignored; 0 filtered out; finished in 0.08s
+

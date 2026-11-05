@@ -1,0 +1,140 @@
+{
+  "package": "xterm-web",
+  "testName": "render_service_browser",
+  "testTimeoutMs": 60000,
+  "features": [
+    "acceptance-hooks"
+  ],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T22:47:14.956Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "render_service_browser",
+        "--features",
+        "acceptance-hooks",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 27234.1096,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 11.53900000000067,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\CadwaladrSync\\results\\acceptance-artifacts\\16070c267dc3ee893cdb2231fd32abf1296f1314864be2a6f0ecfee1452d1fca\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\CadwaladrSync\\results\\browser-host\\render_service_browser\\2026-11-05T22-47-14-955Z-960e7318-22e1-4d4b-a9d3-2078f0a7ce74\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1542.469000000001,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__render_service_browser::exact_source_trace_covers_frames_sync_visibility_replacement_errors_and_disposal",
+        "__wbgt__render_service_browser::synchronized::sync_cancel_failures_keep_identity_state_and_callable_timer",
+        "__wbgt__render_service_browser::synchronized::sync_cancel_live_handle_and_reentrant_buffer_flush_replace_dispose",
+        "__wbgt__render_service_browser::synchronized::sync_cancel_timer_delivery_during_getter_or_call_remains_callable"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\support\\render_sync.rs:118:9:\nassertion `left == right` failed: Rust get-deliver\n  left: [\"set:2:1000:true\", \"get-clear\", \"hook:get\", \"clear:2:true\", \"A.rows:1:1\", \"viewport:1:1\", \"render:1:1\", \"flush:ok\", \"state:false:{\\\"frames\\\":1,\\\"timers\\\":0,\\\"idle\\\":0,\\\"observers\\\":1}\", \"set:4:1000:true\", \"buffer-again:ok\", \"state:true:{\\\"frames\\\":1,\\\"timers\\\":1,\\\"idle\\\":0,\\\"observers\\\":1}\", \"get-clear\", \"clear:4:true\", \"A.rows:0:2\", \"viewport:0:2\", \"render:0:2\", \"flush-again:ok\", \"state:false:{\\\"frames\\\":1,\\\"timers\\\":0,\\\"idle\\\":0,\\\"observers\\\":1}\", \"A.dispose\", \"dispose:ok\", \"state:false:{\\\"frames\\\":0,\\\"timers\\\":0,\\\"idle\\\":0,\\\"observers\\\":0}\"]\n right: [\"set:2:1000:true\", \"get-clear\", \"hook:get\", \"clear:undefined:true\", \"A.rows:1:1\", \"viewport:1:1\", \"render:1:1\", \"flush:ok\", \"state:false:{\\\"frames\\\":1,\\\"timers\\\":0,\\\"idle\\\":0,\\\"observers\\\":1}\", \"set:4:1000:true\", \"buffer-again:ok\", \"state:true:{\\\"frames\\\":1,\\\"timers\\\":1,\\\"idle\\\":0,\\\"observers\\\":1}\", \"get-clear\", \"clear:4:true\", \"A.rows:0:2\", \"viewport:0:2\", \"render:0:2\", \"flush-again:ok\", \"state:false:{\\\"frames\\\":1,\\\"timers\\\":0,\\\"idle\\\":0,\\\"observers\\\":1}\", \"A.dispose\", \"dispose:ok\", \"state:false:{\\\"frames\\\":0,\\\"timers\\\":0,\\\"idle\\\":0,\\\"observers\\\":0}\"]\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:53375/suite.js:5980:21)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[39444]:0xb3bec2)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[26000]:0xaa0150)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[8717]:0x7edb18)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[26001]:0xaa01d4)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[13516]:0x908620)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[17060]:0x99cff1)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[47528]:0xb54c0e)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.rust_begin_unwind (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[32529]:0xb09a2b)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[32530]:0xb09a58)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\support\\render_sync.rs:118:9:\nassertion `left == right` failed: Rust get-buffer\n  left: [\"set:2:1000:true\", \"get-clear\", \"hook:get\", \"set:3:1000:true\", \"clear:2:true\", \"flush:ok\", \"state:true:{\\\"frames\\\":0,\\\"timers\\\":1,\\\"idle\\\":0,\\\"observers\\\":1}\", \"buffer-again:ok\", \"state:true:{\\\"frames\\\":0,\\\"timers\\\":1,\\\"idle\\\":0,\\\"observers\\\":1}\", \"get-clear\", \"clear:3:true\", \"A.rows:0:2\", \"viewport:0:2\", \"render:0:2\", \"flush-again:ok\", \"state:false:{\\\"frames\\\":0,\\\"timers\\\":0,\\\"idle\\\":0,\\\"observers\\\":1}\", \"A.dispose\", \"dispose:ok\", \"state:false:{\\\"frames\\\":0,\\\"timers\\\":0,\\\"idle\\\":0,\\\"observers\\\":0}\"]\n right: [\"set:2:1000:true\", \"get-clear\", \"hook:get\", \"clear:2:true\", \"set:3:1000:true\", \"flush:ok\", \"state:true:{\\\"frames\\\":0,\\\"timers\\\":1,\\\"idle\\\":0,\\\"observers\\\":1}\", \"buffer-again:ok\", \"state:true:{\\\"frames\\\":0,\\\"timers\\\":1,\\\"idle\\\":0,\\\"observers\\\":1}\", \"get-clear\", \"clear:3:true\", \"A.rows:0:2\", \"viewport:0:2\", \"render:0:2\", \"flush-again:ok\", \"state:false:{\\\"frames\\\":0,\\\"timers\\\":0,\\\"idle\\\":0,\\\"observers\\\":1}\", \"A.dispose\", \"dispose:ok\", \"state:false:{\\\"frames\\\":0,\\\"timers\\\":0,\\\"idle\\\":0,\\\"observers\\\":0}\"]\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:53375/suite.js:5980:21)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[39444]:0xb3bec2)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[26000]:0xaa0150)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[8717]:0x7edb18)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[26001]:0xaa01d4)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[13516]:0x908620)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[17060]:0x99cff1)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[47528]:0xb54c0e)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.rust_begin_unwind (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[32529]:0xb09a2b)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[32530]:0xb09a58)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\support\\render_sync.rs:118:9:\nassertion `left == right` failed: Rust get-buffer-throw-object\n  left: [\"set:2:1000:true\", \"get-clear\", \"hook:get\", \"set:3:1000:true\", \"flush:same-error\", \"state:true:{\\\"frames\\\":0,\\\"timers\\\":2,\\\"idle\\\":0,\\\"observers\\\":1}\", \"deliver-after-error:ok\", \"state:false:{\\\"frames\\\":1,\\\"timers\\\":1,\\\"idle\\\":0,\\\"observers\\\":1}\", \"set:5:1000:true\", \"buffer-again:ok\", \"state:true:{\\\"frames\\\":1,\\\"timers\\\":2,\\\"idle\\\":0,\\\"observers\\\":1}\", \"get-clear\", \"clear:5:true\", \"A.rows:0:2\", \"viewport:0:2\", \"render:0:2\", \"flush-again:ok\", \"state:false:{\\\"frames\\\":1,\\\"timers\\\":1,\\\"idle\\\":0,\\\"observers\\\":1}\", \"A.dispose\", \"dispose:ok\", \"state:false:{\\\"frames\\\":0,\\\"timers\\\":1,\\\"idle\\\":0,\\\"observers\\\":0}\"]\n right: [\"set:2:1000:true\", \"get-clear\", \"hook:get\", \"flush:same-error\", \"state:true:{\\\"frames\\\":0,\\\"timers\\\":1,\\\"idle\\\":0,\\\"observers\\\":1}\", \"deliver-after-error:ok\", \"state:false:{\\\"frames\\\":1,\\\"timers\\\":0,\\\"idle\\\":0,\\\"observers\\\":1}\", \"set:4:1000:true\", \"buffer-again:ok\", \"state:true:{\\\"frames\\\":1,\\\"timers\\\":1,\\\"idle\\\":0,\\\"observers\\\":1}\", \"get-clear\", \"clear:4:true\", \"A.rows:0:2\", \"viewport:0:2\", \"render:0:2\", \"flush-again:ok\", \"state:false:{\\\"frames\\\":1,\\\"timers\\\":0,\\\"idle\\\":0,\\\"observers\\\":1}\", \"A.dispose\", \"dispose:ok\", \"state:false:{\\\"frames\\\":0,\\\"timers\\\":0,\\\"idle\\\":0,\\\"observers\\\":0}\"]\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:53375/suite.js:5980:21)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[39444]:0xb3bec2)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[26000]:0xaa0150)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[8717]:0x7edb18)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[26001]:0xaa01d4)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[13516]:0x908620)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[17060]:0x99cff1)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[47528]:0xb54c0e)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.rust_begin_unwind (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[32529]:0xb09a2b)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[32530]:0xb09a58)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 4 tests\ntest synchronized::sync_cancel_timer_delivery_during_getter_or_call_remains_callable ... FAIL\ntest synchronized::sync_cancel_live_handle_and_reentrant_buffer_flush_replace_dispose ... FAIL\ntest synchronized::sync_cancel_failures_keep_identity_state_and_callable_timer ... FAIL\ntest exact_source_trace_covers_frames_sync_visibility_replacement_errors_and_disposal ... ok\n\nfailures:\n\n---- synchronized::sync_cancel_timer_delivery_during_getter_or_call_remains_callable output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at render_service_browser-be4f0ae79d5c4b81.wasm.__rust_start_panic (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[48070]:0xb5598e)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.rust_panic (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[43083]:0xb49d19)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[13516]:0x90864e)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[17060]:0x99cff1)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[47528]:0xb54c0e)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.rust_begin_unwind (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[32529]:0xb09a2b)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[32530]:0xb09a58)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[6089]:0x717f08)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::assert_failed::hf731556fe5406d76 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[24399]:0xa7cfb1)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.render_service_browser::synchronized::check_programs::h1ef4b8ec67175a54 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[1082]:0x301dcd)\n\n---- synchronized::sync_cancel_live_handle_and_reentrant_buffer_flush_replace_dispose output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at render_service_browser-be4f0ae79d5c4b81.wasm.__rust_start_panic (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[48070]:0xb5598e)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.rust_panic (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[43083]:0xb49d19)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[13516]:0x90864e)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[17060]:0x99cff1)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[47528]:0xb54c0e)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.rust_begin_unwind (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[32529]:0xb09a2b)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[32530]:0xb09a58)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[6089]:0x717f08)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::assert_failed::hf731556fe5406d76 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[24399]:0xa7cfb1)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.render_service_browser::synchronized::check_programs::h4a14c0e01e95fd59 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[1083]:0x302a87)\n\n---- synchronized::sync_cancel_failures_keep_identity_state_and_callable_timer output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at render_service_browser-be4f0ae79d5c4b81.wasm.__rust_start_panic (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[48070]:0xb5598e)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.rust_panic (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[43083]:0xb49d19)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[13516]:0x90864e)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[17060]:0x99cff1)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[47528]:0xb54c0e)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.rust_begin_unwind (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[32529]:0xb09a2b)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[32530]:0xb09a58)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[6089]:0x717f08)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::assert_failed::hf731556fe5406d76 (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[24399]:0xa7cfb1)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.render_service_browser::synchronized::check_programs::h573301310c8fe36e (http://127.0.0.1:53375/suite_bg.wasm:wasm-function[1084]:0x303741)\n\nfailures:\n\n    synchronized::sync_cancel_timer_delivery_during_getter_or_call_remains_callable\n    synchronized::sync_cancel_live_handle_and_reentrant_buffer_flush_replace_dispose\n    synchronized::sync_cancel_failures_keep_identity_state_and_callable_timer\n\ntest result: FAILED. 1 passed; 3 failed; 0 ignored; 0 filtered out; finished in 0.08s\n\n",
+      "counts": {
+        "passed": 1,
+        "failed": 3,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/16070c267dc3ee893cdb2231fd32abf1296f1314864be2a6f0ecfee1452d1fca/artifact.wasm",
+      "sha256": "16070c267dc3ee893cdb2231fd32abf1296f1314864be2a6f0ecfee1452d1fca",
+      "bytes": 20428789,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\CadwaladrSync\\target\\wasm32-unknown-unknown\\debug\\deps\\render_service_browser-be4f0ae79d5c4b81.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\CadwaladrSync\\results\\browser-host\\render_service_browser\\2026-11-05T22-47-14-955Z-960e7318-22e1-4d4b-a9d3-2078f0a7ce74\\artifacts\\suite_bg.wasm",
+      "bytes": 17177459,
+      "sha256": "36cb678ec7126a3008cba818bc15a4fc349df4293dd1846f60ca4695c93cc384"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\CadwaladrSync\\results\\browser-host\\render_service_browser\\2026-11-05T22-47-14-955Z-960e7318-22e1-4d4b-a9d3-2078f0a7ce74\\artifacts\\suite.js",
+      "bytes": 249916,
+      "sha256": "b52a4827e7d568c260ec6d7799ec70d72d596d9eed78cff70f719808165eb648"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "15d20b46d46c210b0b13386a0c5f0d90dbf9c4878109ec41d5f2434a2bd66806"
+  },
+  "finishedAt": "2026-11-05T22:47:46.990Z"
+}
