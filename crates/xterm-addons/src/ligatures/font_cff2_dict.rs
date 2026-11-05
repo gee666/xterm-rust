@@ -3,10 +3,19 @@ use super::FontError;
 
 const ESCAPED_OPERATOR: u16 = 1200;
 const KEY_COUNT: usize = ESCAPED_OPERATOR as usize + 256;
+const FD_ARRAY: u16 = 1236;
+const MISSING_FD_ARRAY: &str = "This is a CFF2 font, but FDArray information is missing";
+
+pub(super) fn validate(bytes: &[u8]) -> Result<(), FontError> {
+    if !dictionary(bytes)? {
+        return Err(FontError::Invalid(MISSING_FD_ARRAY));
+    }
+    Ok(())
+}
 
 /// Operand reads finish before entriesToObject can report a duplicate key.
-/// Retain the first duplicate, but let every later lexical error win over it.
-pub(super) fn validate(bytes: &[u8]) -> Result<(), FontError> {
+/// Return FDArray truthiness only after these earlier dictionary phases succeed.
+fn dictionary(bytes: &[u8]) -> Result<bool, FontError> {
     let mut position = 0;
     let mut operands = Vec::new();
     // Each operand needs at least one byte. This bound also covers blend reuse.
@@ -14,6 +23,7 @@ pub(super) fn validate(bytes: &[u8]) -> Result<(), FontError> {
     let mut keys = [None; KEY_COUNT];
     let mut duplicate = None;
     let mut negative_blend = false;
+    let mut fd_array = false;
     while position < bytes.len() {
         let byte = read(bytes, &mut position)?;
         match byte {
@@ -47,6 +57,14 @@ pub(super) fn validate(bytes: &[u8]) -> Result<(), FontError> {
                     [value] => !value.is_nan(),
                     _ => false,
                 });
+                if key == FD_ARRAY {
+                    // entriesToObject unwraps one operand to a number, but keeps
+                    // zero or multiple operands as arrays. Even [] is truthy.
+                    fd_array = match operands.as_slice() {
+                        [value] => *value != 0.0 && !value.is_nan(),
+                        _ => true,
+                    };
+                }
                 operands.clear();
             }
             28 => {
@@ -76,7 +94,7 @@ pub(super) fn validate(bytes: &[u8]) -> Result<(), FontError> {
     if negative_blend {
         return Err(FontError::Invalid("CFF2 blend count cannot be negative"));
     }
-    duplicate.map_or(Ok(()), |key| Err(FontError::CffDuplicate(key)))
+    duplicate.map_or(Ok(fd_array), |key| Err(FontError::CffDuplicate(key)))
 }
 fn read(bytes: &[u8], position: &mut usize) -> Result<u8, FontError> {
     let byte = *bytes.get(*position).ok_or(FontError::Bounds)?;
@@ -149,6 +167,39 @@ fn float_prefix(text: &str) -> Result<f64, FontError> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    // These existing assertions test the lexical/entries phase. The constructor
+    // presence guard is a later phase, covered separately below.
+    fn validate(bytes: &[u8]) -> Result<(), FontError> {
+        dictionary(bytes).map(|_| ())
+    }
+
+    #[test]
+    fn fd_array_presence_uses_js_truthiness_after_dictionary_errors() {
+        for bytes in [&[][..], &[139, 12, 36], &[30, 0xff, 12, 36]] {
+            assert_eq!(
+                super::validate(bytes),
+                Err(FontError::Invalid(MISSING_FD_ARRAY))
+            );
+        }
+        for bytes in [&[12, 36][..], &[139, 140, 12, 36], &[138, 12, 36]] {
+            assert_eq!(super::validate(bytes), Ok(()));
+        }
+        assert_eq!(
+            super::validate(&[139, 12, 36, 0, 0]),
+            Err(FontError::CffDuplicate(0))
+        );
+        assert_eq!(
+            super::validate(&[139, 12, 36, 0, 0, 31]),
+            Err(FontError::CffOperand(31))
+        );
+        // A NaN previous value permits a replacement, including replacement by0.
+        assert_eq!(super::validate(&[30, 0xff, 12, 36, 140, 12, 36]), Ok(()));
+        assert_eq!(
+            super::validate(&[30, 0xff, 12, 36, 139, 12, 36]),
+            Err(FontError::Invalid(MISSING_FD_ARRAY))
+        );
+    }
 
     #[test]
     fn all_single_byte_operands_and_operators() {
