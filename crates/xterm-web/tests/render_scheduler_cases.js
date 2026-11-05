@@ -41,7 +41,10 @@ export function sourceRun(host,program) {
     try {
       let result;
       if(args[0]==='refresh') model.refresh(args[1],args[2],args[3]);
-      else if(args[0]==='callback') result=model.addRefreshCallback(time=>host.events.push(['callback',args[1],time]));
+      else if(args[0]==='callback') result=model.addRefreshCallback(time=>{
+        host.events.push(['callback',args[1],time]);
+        args[2]?.(time);
+      });
       else if(args[0]==='dispose') model.dispose();
       else throw new Error('unknown render action');
       return [true,result];

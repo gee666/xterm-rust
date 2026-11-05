@@ -105,11 +105,12 @@ pub(crate) fn js_max(a: f64, b: f64) -> f64 {
 type Render<S> =
     Rc<dyn Fn(&RenderDebouncer<S>, RenderRange) -> Result<(), <S as FrameScheduler>::Error>>;
 type Refresh<S> = Rc<dyn Fn(&RenderDebouncer<S>, f64) -> Result<(), <S as FrameScheduler>::Error>>;
+type RefreshCallbacks<S> = Rc<RefCell<Vec<Refresh<S>>>>;
 struct FrameState<S: FrameScheduler> {
     scheduler: RefCell<S>,
     rows: RefCell<Rows>,
     pending: RefCell<Option<S::Handle>>,
-    callbacks: RefCell<Vec<Refresh<S>>>,
+    callbacks: RefCell<RefreshCallbacks<S>>,
     render: Render<S>,
 }
 impl<S: FrameScheduler> Drop for FrameState<S> {
@@ -151,7 +152,7 @@ impl<S: FrameScheduler> RenderDebouncer<S> {
                 scheduler: RefCell::new(scheduler),
                 rows: RefCell::new(Rows::default()),
                 pending: RefCell::new(None),
-                callbacks: RefCell::new(Vec::new()),
+                callbacks: RefCell::new(Rc::default()),
                 render: Rc::new(render),
             }),
         }
@@ -178,7 +179,11 @@ impl<S: FrameScheduler> RenderDebouncer<S> {
         &self,
         callback: impl Fn(&Self, f64) -> Result<(), S::Error> + 'static,
     ) -> Result<S::Handle, S::Error> {
-        self.state.callbacks.borrow_mut().push(Rc::new(callback));
+        self.state
+            .callbacks
+            .borrow()
+            .borrow_mut()
+            .push(Rc::new(callback));
         self.schedule()
     }
     pub fn dispose(&self) -> Result<(), S::Error> {
@@ -215,16 +220,18 @@ impl<S: FrameScheduler> RenderDebouncer<S> {
         if let Some(range) = range {
             (self.state.render)(self, range)?;
         }
-        // JS array iteration sees callbacks appended while iteration is active.
+        // A JS for-of iterator retains its array even if a nested frame replaces
+        // the current list. Appends to that retained array remain visible.
+        let callbacks = self.state.callbacks.borrow().clone();
         let mut index = 0;
         loop {
-            let callback = self.state.callbacks.borrow().get(index).cloned();
+            let callback = callbacks.borrow().get(index).cloned();
             let Some(callback) = callback else { break };
             callback(self, 0.0)?;
             index += 1;
         }
-        let callbacks = std::mem::take(&mut *self.state.callbacks.borrow_mut());
-        drop(callbacks);
+        let previous = self.state.callbacks.replace(Rc::default());
+        drop(previous);
         Ok(())
     }
     fn schedule(&self) -> Result<S::Handle, S::Error> {

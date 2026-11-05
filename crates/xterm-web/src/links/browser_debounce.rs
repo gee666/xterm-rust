@@ -9,7 +9,7 @@ use wasm_bindgen::{closure::Closure, JsCast, JsValue};
 use web_sys::{Performance, Window};
 
 type CallbackSlot = Rc<RefCell<Option<Function>>>;
-type FrameCallback = Closure<dyn FnMut(f64) -> Result<(), JsValue>>;
+type FrameCallback = Closure<dyn Fn(f64) -> Result<(), JsValue>>;
 type TimerCallback = Closure<dyn Fn() -> Result<(), JsValue>>;
 pub type WindowSource = Rc<dyn Fn() -> Window>;
 /// Resolves the current owner without erasing a host getter's thrown value.
@@ -109,8 +109,10 @@ impl BrowserRenderDebouncer {
             move |_, rows| render(rows),
         );
         let dispatch = inner.weak_dispatcher();
+        // A reentrant host can retain several requests and deliver one while
+        // another is running. Dispatch has shared state and must allow reentry.
         let callback = Closure::wrap(
-            Box::new(move |_: f64| dispatch()) as Box<dyn FnMut(f64) -> Result<(), JsValue>>
+            Box::new(move |_: f64| dispatch()) as Box<dyn Fn(f64) -> Result<(), JsValue>>
         );
         *slot.borrow_mut() = Some(callback.as_ref().unchecked_ref::<Function>().clone());
         Self {

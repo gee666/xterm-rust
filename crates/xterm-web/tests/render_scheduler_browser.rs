@@ -11,6 +11,8 @@ extern "C" {
     fn cases(run: &Function) -> Result<u32, JsValue>;
     #[wasm_bindgen(catch, js_name = runRenderWindowFailureCases)]
     fn window_failures(run: &Function) -> Result<u32, JsValue>;
+    #[wasm_bindgen(catch, js_name = runRenderCallbackCases)]
+    fn callback_cases(run: &Function) -> Result<u32, JsValue>;
 }
 fn invoke(host: &JsValue, name: &str, args: &Array) -> Result<JsValue, JsValue> {
     let function: Function = js_sys::Reflect::get(host, &name.into())?.dyn_into()?;
@@ -48,13 +50,18 @@ fn run(host: JsValue, program: Function) -> Result<JsValue, JsValue> {
             Some("callback") => {
                 let events = events.clone();
                 let tag = args.get(1);
+                let action = args.get(2).dyn_into::<Function>().ok();
                 dispatch_model
-                    .add_refresh_callback(move |time| {
+                    .add_try_refresh_callback(move |time| {
                         events.push(
                             &[JsValue::from("callback"), tag.clone(), time.into()]
                                 .into_iter()
                                 .collect::<Array>(),
                         );
+                        if let Some(action) = &action {
+                            action.call1(&JsValue::UNDEFINED, &time.into())?;
+                        }
+                        Ok(())
                     })
                     .map(JsValue::from)
             }
@@ -84,6 +91,14 @@ fn current_window_preserves_every_javascript_thrown_value() -> Result<(), JsValu
     let run =
         Closure::wrap(Box::new(run) as Box<dyn Fn(JsValue, Function) -> Result<JsValue, JsValue>>);
     assert_eq!(window_failures(run.as_ref().unchecked_ref())?, 42);
+    Ok(())
+}
+
+#[wasm_bindgen_test]
+fn nested_refresh_callbacks_preserve_array_identity_and_errors() -> Result<(), JsValue> {
+    let run =
+        Closure::wrap(Box::new(run) as Box<dyn Fn(JsValue, Function) -> Result<JsValue, JsValue>>);
+    assert_eq!(callback_cases(run.as_ref().unchecked_ref())?, 64);
     Ok(())
 }
 
