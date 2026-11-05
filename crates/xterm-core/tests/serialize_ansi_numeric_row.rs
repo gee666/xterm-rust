@@ -86,7 +86,7 @@ fn integral_and_negative_zero_match_native_single_row() {
     assert_eq!(numeric(&buffer, -0.0), numeric(&buffer, 0.0));
 }
 #[test]
-fn nonprogressing_source_rows_are_not_reported_as_success() {
+fn nonfinite_and_out_of_safe_domain_rows_are_explicit_errors() {
     let buffer = ring();
     for row in [
         f64::NAN,
