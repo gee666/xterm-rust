@@ -17,7 +17,7 @@ use xterm_core::{
 )]
 extern "C" {
     #[wasm_bindgen(catch, js_name = serializeMissingCell)]
-    fn warn(row: usize, col: usize) -> Result<(), JsValue>;
+    fn warn(row: f64, col: usize) -> Result<(), JsValue>;
 }
 pub(super) fn error(error: &(dyn Error + 'static)) -> JsValue {
     let mut current = Some(error);
@@ -56,6 +56,18 @@ impl<'a> BrowserView<'a> {
             traversal_line: RefCell::default(),
         })
     }
+    fn capture(&self, line: Option<LineRef>) -> Result<Option<usize>, SerializeError> {
+        let length = line
+            .as_ref()
+            .map(|line| {
+                line.try_borrow()
+                    .map(|line| line.len())
+                    .map_err(|_| SerializeError::BorrowedLine)
+            })
+            .transpose()?;
+        *self.traversal_line.borrow_mut() = line;
+        Ok(length)
+    }
 }
 impl BufferAccess for BrowserView<'_> {
     fn len(&self) -> usize {
@@ -68,17 +80,17 @@ impl BufferAccess for BrowserView<'_> {
         self.captured.cell(row, col)
     }
     fn capture_line(&self, row: usize) -> Result<Option<usize>, SerializeError> {
-        let line = self.view.get_line(row)?;
-        let length = line
-            .as_ref()
-            .map(|line| {
-                line.try_borrow()
-                    .map(|line| line.len())
-                    .map_err(|_| SerializeError::BorrowedLine)
-            })
-            .transpose()?;
-        *self.traversal_line.borrow_mut() = line;
-        Ok(length)
+        self.capture(self.view.get_line(row)?)
+    }
+    fn capture_numeric_line(&self, row: f64) -> Result<Option<usize>, SerializeError> {
+        self.capture(self.view.get_line_number(row)?)
+    }
+    fn captured_numeric_cell(
+        &self,
+        _: f64,
+        col: usize,
+    ) -> Result<Option<CellData>, SerializeError> {
+        self.captured_cell(0, col)
     }
     fn captured_cell(&self, _: usize, col: usize) -> Result<Option<CellData>, SerializeError> {
         let line = self.traversal_line.borrow();
@@ -121,6 +133,9 @@ impl BufferAccess for BrowserView<'_> {
             .map_err(native_error)
     }
     fn missing_cell(&self, row: usize, col: usize) -> Result<(), SerializeError> {
+        self.missing_numeric_cell(row as f64, col)
+    }
+    fn missing_numeric_cell(&self, row: f64, col: usize) -> Result<(), SerializeError> {
         warn(row, col).map_err(|cause| {
             BufferError::Dispatch(EmitError::callback(JsCallbackError(cause))).into()
         })

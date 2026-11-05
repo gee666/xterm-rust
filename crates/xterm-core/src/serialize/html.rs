@@ -54,7 +54,8 @@ pub fn serialize_html(
 }
 
 /// Serialize a finite numeric HTML row range without truncating its coordinates.
-/// Missing negative, fractional or out-of-bounds rows emit empty row fragments.
+/// Row lookup retains host numeric array/ring semantics. Missing rows emit empty
+/// row fragments, while aliases can resolve negative, fractional or large keys.
 /// Bounds outside JavaScript's exact-integer domain return `InvalidRange`, since
 /// incrementing such a coordinate can hang the source loop. NaN and infinite
 /// bounds are not accepted by this entry point.
@@ -91,17 +92,15 @@ fn serialize_rows(
         let mut previous = CellData::default();
         for row in rows {
             append(&mut output, "<div><span>");
-            if let Some(index) = row.index {
-                if let Some(length) = buffer.capture_line(index)? {
-                    let end = row.end_col.unwrap_or(length);
-                    for col in row.start_col..end {
-                        if let Some(cell) = buffer.captured_cell(index, col)? {
-                            emit_cell(&mut output, &cell, &previous, palette);
-                            // BaseSerializeHandler advances oldCell even for placeholders.
-                            previous = cell;
-                        } else {
-                            buffer.missing_cell(index, col)?;
-                        }
+            if let Some(length) = row.capture(buffer)? {
+                let end = row.end_col.unwrap_or(length);
+                for col in row.start_col..end {
+                    if let Some(cell) = row.cell(buffer, col)? {
+                        emit_cell(&mut output, &cell, &previous, palette);
+                        // BaseSerializeHandler advances oldCell even for placeholders.
+                        previous = cell;
+                    } else {
+                        row.missing_cell(buffer, col)?;
                     }
                 }
             }

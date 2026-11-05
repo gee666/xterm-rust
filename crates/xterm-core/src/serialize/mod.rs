@@ -37,6 +37,24 @@ pub trait BufferAccess {
     fn captured_cell(&self, row: usize, col: usize) -> Result<Option<CellData>, SerializeError> {
         self.cell(row, col)
     }
+    /// Numeric browser row keys must reach the host's array/ring arithmetic
+    /// before conversion. Ordinary integral-only adapters use missing rows for
+    /// keys they cannot represent; source-backed ring adapters override this.
+    fn capture_numeric_line(&self, row: f64) -> Result<Option<usize>, SerializeError> {
+        numeric_index(row).map_or(Ok(None), |row| self.capture_line(row))
+    }
+    fn captured_numeric_cell(
+        &self,
+        row: f64,
+        col: usize,
+    ) -> Result<Option<CellData>, SerializeError> {
+        numeric_index(row).map_or(Ok(None), |row| self.captured_cell(row, col))
+    }
+    /// A browser warning must interpolate the original coordinate, not its
+    /// wrapped storage index. Native hosts keep their ordinary diagnostic hook.
+    fn missing_numeric_cell(&self, row: f64, col: usize) -> Result<(), SerializeError> {
+        numeric_index(row).map_or(Ok(()), |row| self.missing_cell(row, col))
+    }
     fn is_wrapped(&self, row: usize) -> Result<bool, SerializeError>;
     fn cursor_x(&self) -> usize;
     fn cursor_y(&self) -> usize;
@@ -187,6 +205,14 @@ pub fn serialize_buffer(
         return Err(SerializeError::InvalidRange);
     }
     ansi::serialize(buffer, cols, rows, attrs, range, exclude_final_cursor)
+}
+
+fn numeric_index(row: f64) -> Option<usize> {
+    if row.is_finite() && row >= 0.0 && row.fract() == 0.0 && row < usize::MAX as f64 {
+        Some(row as usize)
+    } else {
+        None
+    }
 }
 
 pub(crate) fn append(output: &mut Vec<u16>, text: &str) {

@@ -172,6 +172,29 @@ export async function serializationCases() {
       return { same, log: [...log] };
     });
   });
+  await run('html-rotated-ring-numeric-aliases', async (term, addon) => {
+    term.resize(3, 2); term.options.scrollback = 0;
+    await write(term, 'abc\r\ndef\r\nghi');
+    const bounds = [-1, -0.5, Number.MIN_VALUE, 0, 1, 2, 2 ** 32, Number.MAX_SAFE_INTEGER];
+    return { state: snapshot(term), values: bounds.map(row => ({ row: String(row),
+      html: capture(() => addon.serializeAsHTML({ range: { startLine: row, endLine: row, startCol: 0 } })) })) };
+  });
+  await run('html-rotated-ring-warning-reentry', async (term, addon) => {
+    term.resize(3, 2); term.options.scrollback = 0;
+    const values = [];
+    for (const row of [-1, Number.MIN_VALUE, 2 ** 32, Number.MAX_SAFE_INTEGER]) {
+      term.reset(); term.resize(3, 2); await write(term, 'abc\r\ndef\r\nghi');
+      Object.defineProperty(term.options, 'fontFamily', { configurable: true,
+        get() { term.resize(1, 2); return 'monospace'; } });
+      const previous = console.warn; let count = 0;
+      console.warn = (...args) => { previous(...args); if (++count === 1) term.reset(); };
+      try {
+        values.push({ row: String(row), html: capture(() => addon.serializeAsHTML({
+          range: { startLine: row, endLine: row, startCol: 0 } })), count, state: snapshot(term) });
+      } finally { console.warn = previous; }
+    }
+    return values;
+  });
   await run('html-nan-row-bounds', async (term, addon) => {
     await write(term, 'must not be traversed');
     const values = [];

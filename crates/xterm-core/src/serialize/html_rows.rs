@@ -1,5 +1,6 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved. MIT license.
-use super::{CellRange, SerializeError};
+use super::{BufferAccess, CellRange, SerializeError};
+use crate::buffer::CellData;
 
 /// HTML row coordinates retain JavaScript numeric values rather than truncating
 /// them to buffer indexes. Columns remain integral and the end is exclusive.
@@ -12,9 +13,44 @@ pub struct HtmlNumericRange {
 }
 
 pub(super) struct Row {
-    pub index: Option<usize>,
+    index: Index,
     pub start_col: usize,
     pub end_col: Option<usize>,
+}
+enum Index {
+    Integral(usize),
+    Numeric(f64),
+}
+impl Row {
+    pub(super) fn capture(
+        &self,
+        buffer: &dyn BufferAccess,
+    ) -> Result<Option<usize>, SerializeError> {
+        match self.index {
+            Index::Integral(row) => buffer.capture_line(row),
+            Index::Numeric(row) => buffer.capture_numeric_line(row),
+        }
+    }
+    pub(super) fn cell(
+        &self,
+        buffer: &dyn BufferAccess,
+        col: usize,
+    ) -> Result<Option<CellData>, SerializeError> {
+        match self.index {
+            Index::Integral(row) => buffer.captured_cell(row, col),
+            Index::Numeric(row) => buffer.captured_numeric_cell(row, col),
+        }
+    }
+    pub(super) fn missing_cell(
+        &self,
+        buffer: &dyn BufferAccess,
+        col: usize,
+    ) -> Result<(), SerializeError> {
+        match self.index {
+            Index::Integral(row) => buffer.missing_cell(row, col),
+            Index::Numeric(row) => buffer.missing_numeric_cell(row, col),
+        }
+    }
 }
 
 pub(super) enum Rows {
@@ -59,7 +95,7 @@ impl Iterator for Rows {
             Self::Integral { range, rows } => {
                 let row = rows.next()?;
                 Some(Row {
-                    index: Some(row),
+                    index: Index::Integral(row),
                     start_col: if row == range.start.y {
                         range.start.x
                     } else {
@@ -74,15 +110,11 @@ impl Iterator for Rows {
                     return None;
                 }
                 *next += 1.0;
-                // Public getLine does not find negative, fractional or
-                // out-of-address-space array keys. They still emit an HTML row.
-                let index = if row >= 0.0 && row.fract() == 0.0 && row < usize::MAX as f64 {
-                    Some(row as usize)
-                } else {
-                    None
-                };
+                // Keep the key raw through lookup. CircularList adds its
+                // current start index before remainder, which can round even a
+                // fractional key into an existing slot.
                 Some(Row {
-                    index,
+                    index: Index::Numeric(row),
                     start_col: if row == range.start_line {
                         range.start_col
                     } else {

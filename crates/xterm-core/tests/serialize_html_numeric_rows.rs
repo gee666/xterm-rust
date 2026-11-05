@@ -2,10 +2,16 @@
 mod serialize_html_support;
 use serialize_html_support::*;
 use xterm_core::serialize::{
-    serialize_html_numeric_rows, HtmlNumericRange, HtmlOptions, SerializeError,
+    serialize_html_numeric_rows, BufferAccess, HtmlNumericRange, HtmlOptions, SerializeError,
 };
 
-fn numeric(buffer: &Buffer, start: f64, end: f64, start_col: usize, end_col: usize) -> String {
+fn numeric(
+    buffer: &dyn BufferAccess,
+    start: f64,
+    end: f64,
+    start_col: usize,
+    end_col: usize,
+) -> String {
     String::from_utf16(
         &serialize_html_numeric_rows(
             buffer,
@@ -72,6 +78,52 @@ fn native_integral_output_and_negative_zero_are_unchanged() {
         &config(),
     );
     assert_eq!(numeric(&text, -0.0, 1.0, 1, 2), expected);
+}
+
+#[test]
+fn full_rotated_ring_preserves_raw_numeric_key_aliases() {
+    use std::{cell::RefCell, rc::Rc};
+    use xterm_core::{
+        buffer::{AttributeData, Buffer as NativeBuffer},
+        options::{OptionValue, OptionsService},
+        public_api::{BufferApiView, BufferType},
+        serialize::PublicBufferView,
+    };
+    let options = Rc::new(OptionsService::new(
+        false,
+        [("scrollback", OptionValue::Number(0.0))],
+    ));
+    let mut buffer = NativeBuffer::new(true, 3, 2, options).unwrap();
+    buffer.fill_viewport_rows(None).unwrap();
+    buffer.lines.recycle().unwrap();
+    for (row, text) in ["def", "ghi"].iter().enumerate() {
+        let line = buffer.lines.get(row).unwrap();
+        for (col, ch) in text.chars().enumerate() {
+            line.borrow_mut().set_cell_from_codepoint(
+                col,
+                u32::from(ch),
+                1,
+                &AttributeData::default(),
+            );
+        }
+    }
+    let expected = [
+        (-1.0, "ghi"),
+        (f64::from_bits(1), "def"),
+        (4_294_967_296.0, "def"),
+        (9_007_199_254_740_991.0, "ghi"),
+    ];
+    for (row, text) in expected {
+        assert_eq!(rows(&numeric(&buffer, row, row, 0, 3)), [text]);
+    }
+    let view = PublicBufferView::new(Rc::new(BufferApiView::new(
+        Rc::new(RefCell::new(buffer)),
+        BufferType::Normal,
+    )))
+    .unwrap();
+    for (row, text) in expected {
+        assert_eq!(rows(&numeric(&view, row, row, 0, 3)), [text]);
+    }
 }
 
 #[test]
