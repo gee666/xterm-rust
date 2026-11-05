@@ -22,9 +22,10 @@ try {
       catch(e){outcome={status:'error',name:e.name,message:e.message};}finally{console.warn=warn;console.error=error;}
       constructors.push({outcome,warnings});
       if(JSON.stringify(c.data)==='[2,0,5,0,2,0,0,0,0,0,0]'&&c.tag==='CFF '&&!c.woff&&!c.remove)inputs.BadCff=bytes;
-      if(JSON.stringify(c.data)==='[2,0,5,0,2,0,0,0,0,0,0,0]'&&c.tag==='CFF2'&&c.woff&&!c.remove)inputs.BadCff2=bytes;
+      if(JSON.stringify(c.data)==='[2,0,5,0,2,0,0,0,0,0,0]'&&c.tag==='CFF2'&&c.woff&&!c.remove)inputs.BadCff2=bytes;
       if(!c.data){if(c.tag==='CFF '&&!c.woff)inputs.GoodCff=bytes;if(c.tag==='CFF2'&&c.woff)inputs.GoodCff2=bytes;}
-    }return {constructors,addon:await cffHeaderAddonScenarios(o=>new LigaturesAddon(o),inputs)};}`,
+    }if(Object.keys(inputs).length!==4)throw Error('Missing addon input recipe');
+    return {constructors,addon:await cffHeaderAddonScenarios(o=>new LigaturesAddon(o),inputs)};}`,
     resolveDir:root,sourcefile:'cff2-entries-source-entry.mjs'},bundle:true,format:'esm',platform:'browser',outfile:path.join(work,'source.js'),logLevel:'silent'});
   report.bundleSha256=sha(await fs.readFile(path.join(work,'source.js')));
   const playwright=await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE??require.resolve('playwright/index.mjs')));

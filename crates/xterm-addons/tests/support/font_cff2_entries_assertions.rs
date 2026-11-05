@@ -71,7 +71,7 @@ fn assert_cases(directed: bool) {
             );
         }
     }
-    assert_eq!(count, if directed { 16 } else { 894 });
+    assert_eq!(count, if directed { 16 } else { 898 });
     assert!(failures.is_empty(), "{}", failures.join("\n"));
 }
 pub fn assert_previous() {

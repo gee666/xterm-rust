@@ -24,6 +24,7 @@ export function cff2EntriesCases() {
     // If key0 is replaceable, the later key26 duplicate must be reported.
     for(const prefix of prefixes)make([...prefix,0,0,26,26],{woff,tag});
     for(const tail of [[31],[255],[12],[28],[29],[30],[247]])make([0,0,...tail],{woff,tag});
+    make([0,0],{woff,tag});
     make([0,0],{woff,tag,badGlobal:true});
     make([0,0],{woff,tag,remove:['name']});
     make([0,0],{woff,tag,remove:['hmtx']});
