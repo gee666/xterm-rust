@@ -14,7 +14,7 @@ The existing `scripts/task-platform-oracle.mjs` also passes. It compares4519 res
 
 ## Verification
 
-Local checks used Windows, Rust/Cargo1.85.1 and Node24.15.0, based on main40f1798 with this task's changes. Raw logs and source/implementation hashes are in `results/task-queue-drop/`.
+Local checks used Windows, Rust/Cargo1.85.1 and Node24.15.0, initially based on main40f1798 with this task's changes. After rebasing onto main4a38b52, all28 focused tests, native core/web Clippy, WASM library Clippy and full formatting passed again. Raw logs and source/implementation hashes are in `results/task-queue-drop/`.
 
 - Before the fix, the five new native tests produced one pass and four failures from task-list borrow panics. The retained baseline log contains the exact failures.
 - After the fix,28 focused tests passed. This comprises five new capture-cleanup tests,15 existing queue tests and eight platform/wrapping tests, with no ignored tests.
