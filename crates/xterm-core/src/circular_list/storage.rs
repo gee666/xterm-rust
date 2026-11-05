@@ -80,13 +80,25 @@ impl<T: Clone> Storage<T> {
     pub fn get_number(&self, index: f64) -> Option<T> {
         self.slots.get(&self.number_index(index)).cloned()
     }
-    pub fn set(&mut self, index: usize, value: Option<T>) -> Result<(), CircularListError> {
+    pub fn set(
+        &mut self,
+        index: usize,
+        value: &mut Option<T>,
+    ) -> Result<Option<T>, CircularListError> {
         self.set_physical(self.cyclic_index(index), value)
     }
-    pub fn set_signed(&mut self, index: i64, value: Option<T>) -> Result<(), CircularListError> {
+    pub fn set_signed(
+        &mut self,
+        index: i64,
+        value: &mut Option<T>,
+    ) -> Result<Option<T>, CircularListError> {
         self.set_physical(self.signed_index(index), value)
     }
-    pub fn set_number(&mut self, index: f64, value: Option<T>) -> Result<(), CircularListError> {
+    pub fn set_number(
+        &mut self,
+        index: f64,
+        value: &mut Option<T>,
+    ) -> Result<Option<T>, CircularListError> {
         self.set_physical(self.number_index(index), value)
     }
     pub fn stored_values(&self) -> Result<Vec<T>, CircularListError> {
@@ -97,33 +109,41 @@ impl<T: Clone> Storage<T> {
         values.extend(self.slots.values().cloned());
         Ok(values)
     }
-    fn set_physical(&mut self, index: Key, value: Option<T>) -> Result<(), CircularListError> {
-        match value {
-            Some(value) => {
-                if !self.slots.contains_key(&index) {
-                    reserve_slots(&mut self.slots, 1)?;
-                }
-                self.slots.insert(index, value);
-            }
-            None => {
-                self.slots.remove(&index);
-            }
+    fn set_physical(
+        &mut self,
+        index: Key,
+        value: &mut Option<T>,
+    ) -> Result<Option<T>, CircularListError> {
+        // On reserve failure the caller still owns the rejected value, so its
+        // destructor also runs only after the storage borrow has ended.
+        if value.is_some() && !self.slots.contains_key(&index) {
+            reserve_slots(&mut self.slots, 1)?;
         }
-        Ok(())
+        Ok(match value.take() {
+            Some(value) => self.slots.insert(index, value),
+            None => self.slots.remove(&index),
+        })
     }
-    pub fn set_length(&mut self, length: usize) {
-        if length > self.length {
+    pub fn set_length(&mut self, length: usize) -> Vec<T> {
+        let removed = if length > self.length {
             let old = number(self.length);
-            self.slots.retain(|&key, _| match key {
-                Key::Integer(index) => index < old || index >= number(length),
-                Key::Fraction(_) | Key::Nan => true,
-            });
-        }
+            // Scan materialized slots, not the potentially enormous length
+            // range. Detach every cleared value before any destructor reenters.
+            let keys: Vec<_> = self.slots.keys().copied().filter(|key| {
+                matches!(key, Key::Integer(index) if *index >= old && *index < number(length))
+            }).collect();
+            keys.into_iter()
+                .filter_map(|key| self.slots.remove(&key))
+                .collect()
+        } else {
+            Vec::new()
+        };
         self.length = length;
+        removed
     }
-    pub fn set_max_length(&mut self, capacity: usize) -> Result<(), CircularListError> {
+    pub fn set_max_length(&mut self, capacity: usize) -> Result<Option<Self>, CircularListError> {
         if capacity == self.max_length {
-            return Ok(());
+            return Ok(None);
         }
         let mut slots = HashMap::new();
         let limit = number(capacity.min(self.length));
@@ -152,10 +172,13 @@ impl<T: Clone> Storage<T> {
                 logical += number(self.max_length);
             }
         }
-        self.slots = slots;
-        self.max_length = capacity;
-        self.start = 0;
-        Ok(())
+        let replacement = Self {
+            slots,
+            start: 0,
+            length: self.length,
+            max_length: capacity,
+        };
+        Ok(Some(std::mem::replace(self, replacement)))
     }
     fn logical_index(&self, physical: Key) -> Option<i128> {
         // A new JS array copies only nonnegative cyclic integer slots. Named

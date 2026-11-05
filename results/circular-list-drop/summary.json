@@ -1,0 +1,165 @@
+{
+  "base": "5ca9f5932284e78bb06c89bdd209801e7304d8db",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "rust": "1.85.1",
+  "baseline": {
+    "passed": 0,
+    "failed": 5,
+    "exit": 101,
+    "originalSource": {
+      "circular_list.rs": "57d4a402ca532cc0ef05792e54603eede9bde07fafbcb3f7790736020d3171b2",
+      "circular_list/storage.rs": "597c1b2510cb2f5ec4a90e821e904531f4dca2df07204940abddb54240e175c8"
+    }
+  },
+  "focused": {
+    "passed": 53,
+    "failed": 0,
+    "ignored": 0
+  },
+  "sourceOracle": {
+    "original": {
+      "discovered": 26,
+      "executed": 26,
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0,
+      "assertions": 95,
+      "outcomes": [
+        {
+          "name": "Emitter / should fire with 0 listeners without error",
+          "status": "passed"
+        },
+        {
+          "name": "Emitter / should fire with 1 listener",
+          "status": "passed"
+        },
+        {
+          "name": "Emitter / should fire with 1 listener using thisArgs",
+          "status": "passed"
+        },
+        {
+          "name": "Emitter / should fire with multiple listeners",
+          "status": "passed"
+        },
+        {
+          "name": "Emitter / should handle listener removal during fire",
+          "status": "passed"
+        },
+        {
+          "name": "Emitter / should not fire after dispose",
+          "status": "passed"
+        },
+        {
+          "name": "Emitter / should allow disposing a listener",
+          "status": "passed"
+        },
+        {
+          "name": "CircularList / push / should push values onto the array",
+          "status": "passed"
+        },
+        {
+          "name": "CircularList / push / should push old values from the start out of the array when max length is reached",
+          "status": "passed"
+        },
+        {
+          "name": "CircularList / maxLength / should increase the size of the list",
+          "status": "passed"
+        },
+        {
+          "name": "CircularList / maxLength / should return the maximum length of the list",
+          "status": "passed"
+        },
+        {
+          "name": "CircularList / length / should return the current length of the list, capped at the maximum length",
+          "status": "passed"
+        },
+        {
+          "name": "CircularList / splice / should delete items",
+          "status": "passed"
+        },
+        {
+          "name": "CircularList / splice / should insert items",
+          "status": "passed"
+        },
+        {
+          "name": "CircularList / splice / should delete items then insert items",
+          "status": "passed"
+        },
+        {
+          "name": "CircularList / splice / should wrap the array correctly when more items are inserted than deleted",
+          "status": "passed"
+        },
+        {
+          "name": "CircularList / trimStart / should remove items from the beginning of the list",
+          "status": "passed"
+        },
+        {
+          "name": "CircularList / trimStart / should remove all items if the requested trim amount is larger than the list's length",
+          "status": "passed"
+        },
+        {
+          "name": "CircularList / shiftElements / should not mutate the list when count is 0",
+          "status": "passed"
+        },
+        {
+          "name": "CircularList / shiftElements / should throw for invalid args",
+          "status": "passed"
+        },
+        {
+          "name": "CircularList / shiftElements / should shift an element forward",
+          "status": "passed"
+        },
+        {
+          "name": "CircularList / shiftElements / should shift elements forward",
+          "status": "passed"
+        },
+        {
+          "name": "CircularList / shiftElements / should shift elements forward, expanding the list if needed",
+          "status": "passed"
+        },
+        {
+          "name": "CircularList / shiftElements / should shift elements forward, wrapping the list if needed",
+          "status": "passed"
+        },
+        {
+          "name": "CircularList / shiftElements / should shift an element backwards",
+          "status": "passed"
+        },
+        {
+          "name": "CircularList / shiftElements / should shift elements backwards",
+          "status": "passed"
+        }
+      ]
+    },
+    "directed": 25,
+    "rust": {
+      "tests": 96,
+      "discovered": 96,
+      "executed": 96,
+      "passed": 96,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0,
+      "upstreamMapped": 26,
+      "added": 70,
+      "log": "results/events-circular-list/runs/2026-11-05T10-36-53-632Z-2dc3e808-8efd-4817-acc9-775b415c87aa/rust-tests.log"
+    },
+    "differential": {
+      "seed": 3249275303,
+      "circleIterations": 20000,
+      "circleComparedStates": 20047,
+      "eventIterations": 10000,
+      "eventComparedTraces": 10008,
+      "failures": 0,
+      "comparison": "all wrapped slots, length, capacity, fullness, operation result, event order/payload and event-time storage snapshots; listener traces, nested dispatch, additions/removals and disposal errors"
+    }
+  },
+  "reviewedSource": {
+    "crates/xterm-core/src/circular_list.rs": "58e728ce15060db691ac297305dd7fe8a6cee9bfc7df54433b4e8764cdd09690",
+    "crates/xterm-core/src/circular_list/storage.rs": "ff9216629e979ab9188f4201656083706f5b604e17dd41a7b2258a5e4a0d0010",
+    "crates/xterm-core/tests/circular_list_drop.rs": "78f04fe9a5130bad584bfe62e67ca6e4a1a9030b62eae7772a8356232fd8e51f"
+  },
+  "scope": "Scoped native resource ownership and utility differential. Browser runtime and Linux/macOS unrun; overall equivalence NOT PROVEN."
+}

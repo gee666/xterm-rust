@@ -1,0 +1,51 @@
+
+running 5 tests
+test expanding_length_publishes_all_removals_before_cleanup ... FAILED
+test capacity_change_publishes_copied_slots_before_cleanup ... FAILED
+test cleanup_panic_keeps_committed_storage_reusable ... FAILED
+test push_releases_overwritten_value_before_trim_event ... FAILED
+test replacing_and_removing_slots_allows_cleanup_to_read_and_write ... FAILED
+
+failures:
+
+---- expanding_length_publishes_all_removals_before_cleanup stdout ----
+
+thread 'expanding_length_publishes_all_removals_before_cleanup' panicked at O:\xterm-rust-swarm-16\tmp\Y16\tmp/baseline/src\circular_list.rs:89:22:
+already mutably borrowed: BorrowError
+
+---- capacity_change_publishes_copied_slots_before_cleanup stdout ----
+
+thread 'capacity_change_publishes_copied_slots_before_cleanup' panicked at O:\xterm-rust-swarm-16\tmp\Y16\tmp/baseline/src\circular_list.rs:86:22:
+already mutably borrowed: BorrowError
+
+---- cleanup_panic_keeps_committed_storage_reusable stdout ----
+
+thread 'cleanup_panic_keeps_committed_storage_reusable' panicked at O:\xterm-rust-swarm-16\tmp\Y16\tmp/baseline/src\circular_list.rs:118:22:
+already borrowed: BorrowMutError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'cleanup_panic_keeps_committed_storage_reusable' panicked at crates/xterm-core/tests/circular_list_drop.rs:131:9:
+assertion `left == right` failed
+  left: None
+ right: Some("circular value cleanup failed")
+
+---- push_releases_overwritten_value_before_trim_event stdout ----
+
+thread 'push_releases_overwritten_value_before_trim_event' panicked at O:\xterm-rust-swarm-16\tmp\Y16\tmp/baseline/src\circular_list.rs:89:22:
+already mutably borrowed: BorrowError
+
+---- replacing_and_removing_slots_allows_cleanup_to_read_and_write stdout ----
+
+thread 'replacing_and_removing_slots_allows_cleanup_to_read_and_write' panicked at O:\xterm-rust-swarm-16\tmp\Y16\tmp/baseline/src\circular_list.rs:86:22:
+already mutably borrowed: BorrowError
+
+
+failures:
+    capacity_change_publishes_copied_slots_before_cleanup
+    cleanup_panic_keeps_committed_storage_reusable
+    expanding_length_publishes_all_removals_before_cleanup
+    push_releases_overwritten_value_before_trim_event
+    replacing_and_removing_slots_allows_cleanup_to_read_and_write
+
+test result: FAILED. 0 passed; 5 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

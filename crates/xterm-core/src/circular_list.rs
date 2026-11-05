@@ -5,7 +5,8 @@
 //! Values are cloned when slots are copied. Use `Rc` elements for JavaScript-like
 //! shared object identity. Capacity must be positive; invalid size/range arguments
 //! are rejected before mutation instead of producing negative JavaScript lengths.
-//! No storage borrow crosses an event callback, permitting reentrant mutation.
+//! No storage borrow crosses an event callback or destruction of removed values.
+//! Cleanup observes the committed mutation and may reenter the list.
 
 use crate::event::{EmitError, Emitter};
 use crate::lifecycle::Disposable;
@@ -101,12 +102,15 @@ impl<T: Clone> CircularList<T> {
         if capacity == 0 {
             return Err(CircularListError::ZeroCapacity);
         }
-        self.storage.borrow_mut().set_max_length(capacity)
+        let removed = self.storage.borrow_mut().set_max_length(capacity)?;
+        drop(removed);
+        Ok(())
     }
 
     /// New slots are cleared by physical index, not cyclic index, as upstream.
     pub fn set_length(&self, length: usize) {
-        self.storage.borrow_mut().set_length(length);
+        let removed = self.storage.borrow_mut().set_length(length);
+        drop(removed);
     }
 
     /// Indexing deliberately wraps regardless of logical length.
@@ -114,8 +118,10 @@ impl<T: Clone> CircularList<T> {
         self.storage.borrow().get(index)
     }
 
-    pub fn set(&self, index: usize, value: Option<T>) -> Result<(), CircularListError> {
-        self.storage.borrow_mut().set(index, value)
+    pub fn set(&self, index: usize, mut value: Option<T>) -> Result<(), CircularListError> {
+        let removed = self.storage.borrow_mut().set(index, &mut value);
+        drop(removed?);
+        Ok(())
     }
 
     /// Preserve JavaScript's signed remainder and negative array-property slots.
@@ -129,8 +135,10 @@ impl<T: Clone> CircularList<T> {
     }
 
     /// JavaScript-number assignment, including fractional and NaN properties.
-    pub fn set_number(&self, index: f64, value: Option<T>) -> Result<(), CircularListError> {
-        self.storage.borrow_mut().set_number(index, value)
+    pub fn set_number(&self, index: f64, mut value: Option<T>) -> Result<(), CircularListError> {
+        let removed = self.storage.borrow_mut().set_number(index, &mut value);
+        drop(removed?);
+        Ok(())
     }
 
     /// Unordered snapshot of materialized slots, including stale/negative ones.
@@ -139,8 +147,10 @@ impl<T: Clone> CircularList<T> {
         self.storage.borrow().stored_values()
     }
 
-    pub fn set_signed(&self, index: i64, value: Option<T>) -> Result<(), CircularListError> {
-        self.storage.borrow_mut().set_signed(index, value)
+    pub fn set_signed(&self, index: i64, mut value: Option<T>) -> Result<(), CircularListError> {
+        let removed = self.storage.borrow_mut().set_signed(index, &mut value);
+        drop(removed?);
+        Ok(())
     }
 
     pub fn push(&self, value: T) -> Result<(), CircularListError> {
