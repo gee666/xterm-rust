@@ -47,4 +47,8 @@ WASM_TEST=image_canvas_browser CARGO_BUILD_JOBS=2 node scripts/image-canvas-chec
 WASM_TEST=image_lifecycle_browser CARGO_BUILD_JOBS=2 node scripts/image-canvas-check.mjs
 ```
 
+## Independent review
+
+Task370 was accepted at `4520a1f`. The isolated reviewer inspected the implementation, the diagnostic-only WASM helper, original-source comparator and fixture extraction. It independently reran15 SIXEL and12 IIP tests per browser, two native streaming tests, all2036 workspace tests across396 summaries, native workspace/scoped WASM warning-denied Clippy, full formatting and JS syntax checks. No findings remained. Its browser reports and focused native log are retained as `results/image-sixel-terminal/reviewer-*`.
+
 The runner retains source/Rust input hashes and compiler/WASM/bindings/CSS identities. Generated binaries and browser run directories are disposable; concise reports are copied to this task's results directory. Full ImageAddon initialization/coordinator/lifecycle hooks, Kitty integration, raw constructor options, complete original image suites and img01..48, all malformed input/host-mutation behavior, final cross-platform matrices and overall equivalence remain NOT PROVEN under tasks311/324/327.
