@@ -11,6 +11,26 @@ function git(...args) {
   return cache.get(key);
 }
 const text = (...args) => git(...args).toString().trim();
+const trees = new Map();
+function exists(ref, file) {
+  if (!trees.has(ref)) trees.set(ref, new Set(text('ls-tree', '-r', '--name-only', ref).split('\n')));
+  return trees.get(ref).has(file);
+}
+function prime(specs) {
+  const unique = [...new Set(specs)];
+  const output = execFileSync(process.env.GIT ?? 'git', ['cat-file', '--batch'],
+    {input: unique.join('\n') + '\n', timeout: 30000, maxBuffer: 128 * 1024 * 1024});
+  let cursor = 0;
+  for (const spec of unique) {
+    const end = output.indexOf(10, cursor), header = output.subarray(cursor, end).toString();
+    const match = /^\S+ blob (\d+)$/.exec(header);
+    if (!match) throw Error(`Invalid object ${spec}: ${header}`);
+    const size = Number(match[1]), start = end + 1;
+    cache.set(JSON.stringify(['show', spec]), output.subarray(start, start + size));
+    cursor = start + size + 1;
+  }
+  if (cursor !== output.length) throw Error('Unexpected batch object suffix');
+}
 const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
 const plan = JSON.parse(fs.readFileSync('results/integration463/plan.json'));
 const blob = (ref, file) => git('show', `${ref}:${file}`).toString();
@@ -87,15 +107,20 @@ for (const batch of plan.batches) {
   report.batches.push({...batch, chain, paths: paths.length});
   for (const file of paths) {
     if (file === 'results/demos/build/latest.json') continue;
-    const present = text('ls-tree', chain.at(-1), '--', file) !== '';
+    const present = exists(chain.at(-1), file);
     expected.set(file, {task: batch.task, ref: chain.at(-1), present});
     if (source(file)) owners.set(file, [...new Set([...(owners.get(file) ?? []), batch.task])]);
   }
 }
 expected.set(font + 'font_error.rs', {task: 463, ref: null, present: true});
+const baseline = JSON.parse(git('show', `${plan.base}:results/integration448/manifest.json`));
+const oldPins = [...baseline.sourcePins, ...baseline.preservedBasePins];
+prime([...expected].filter(([file, entry]) => entry.present && (source(file) || file.startsWith('results/')))
+  .flatMap(([file, entry]) => [...(entry.ref ? [`${entry.ref}:${file}`] : []), `HEAD:${file}`])
+  .concat(oldPins.flatMap(({path: file}) => [`${plan.base}:${file}`, `HEAD:${file}`])));
 for (const [file, entry] of expected) {
   if (!source(file) && !file.startsWith('results/')) continue;
-  const actualPresent = text('ls-tree', 'HEAD', '--', file) !== '';
+  const actualPresent = exists('HEAD', file);
   if (!entry.present) {
     report.receiptPins.push({path: file, deleted: true, matches: !actualPresent});
     continue;
@@ -114,8 +139,7 @@ for (const [file, entry] of expected) {
     report.sourcePins.push(pin);
   } else report.receiptPins.push(pin);
 }
-const baseline = JSON.parse(git('show', `${plan.base}:results/integration448/manifest.json`));
-for (const {path: file} of [...baseline.sourcePins, ...baseline.preservedBasePins]) {
+for (const {path: file} of oldPins) {
   const updated = report.sourcePins.find(pin => pin.path === file);
   const wanted = updated?.expectedSha256 ?? sha(git('show', `${plan.base}:${file}`));
   const actual = sha(git('show', `HEAD:${file}`));
