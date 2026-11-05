@@ -1,0 +1,102 @@
+{
+  "node": "v24.15.0",
+  "platform": "win32",
+  "scope": "Unchanged legacy Node assertions; font-finder mock is upstream legacy setup, not real font loading proof",
+  "sourceTest": "source_repo\\addons\\addon-ligatures\\test\\LigaturesAddon.test.ts",
+  "sourceSha256": "1dd9dbf034580287dd2261e9834d5ada7e4254287945502bf799f2d5f4198b2f",
+  "rustArtifact": {
+    "bindings": "tmp\\font-node\\xterm_font_addons.js",
+    "bindingsSha256": "8c36da70f3cb8f86d96772f94e0ce1fd0b8323f11e688f1103b190d1f3502584",
+    "wasm": "tmp\\font-node\\xterm_font_addons_bg.wasm",
+    "wasmBytes": 2533683,
+    "wasmSha256": "7ef0d8c6249a8f5bc3adaa09cc6cce579a17e81e4d72e6af161ed108e3cf2d9d"
+  },
+  "runs": [
+    {
+      "implementation": "source",
+      "discovered": 8,
+      "executed": 8,
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0,
+      "outcomes": [
+        {
+          "name": "LigaturesAddon registers itself correctly",
+          "status": "passed"
+        },
+        {
+          "name": "LigaturesAddon registers itself correctly when called directly",
+          "status": "passed"
+        },
+        {
+          "name": "LigaturesAddon returns an empty set of ranges on the first call while the font is loading",
+          "status": "passed"
+        },
+        {
+          "name": "LigaturesAddon fails if it finds but cannot load the font",
+          "status": "passed"
+        },
+        {
+          "name": "LigaturesAddon returns nothing if the font is not present on the system",
+          "status": "passed"
+        },
+        {
+          "name": "LigaturesAddon returns nothing if no specific font is specified",
+          "status": "passed"
+        },
+        {
+          "name": "LigaturesAddon returns nothing if no fonts are provided",
+          "status": "passed"
+        },
+        {
+          "name": "LigaturesAddon fails when given malformed inputs",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "implementation": "rust-wasm",
+      "discovered": 8,
+      "executed": 8,
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0,
+      "outcomes": [
+        {
+          "name": "LigaturesAddon registers itself correctly",
+          "status": "passed"
+        },
+        {
+          "name": "LigaturesAddon registers itself correctly when called directly",
+          "status": "passed"
+        },
+        {
+          "name": "LigaturesAddon returns an empty set of ranges on the first call while the font is loading",
+          "status": "passed"
+        },
+        {
+          "name": "LigaturesAddon fails if it finds but cannot load the font",
+          "status": "passed"
+        },
+        {
+          "name": "LigaturesAddon returns nothing if the font is not present on the system",
+          "status": "passed"
+        },
+        {
+          "name": "LigaturesAddon returns nothing if no specific font is specified",
+          "status": "passed"
+        },
+        {
+          "name": "LigaturesAddon returns nothing if no fonts are provided",
+          "status": "passed"
+        },
+        {
+          "name": "LigaturesAddon fails when given malformed inputs",
+          "status": "passed"
+        }
+      ]
+    }
+  ]
+}

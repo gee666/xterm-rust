@@ -13,10 +13,17 @@ cargo test -p xterm-addons --test font_addons
 cargo clippy -p xterm-addons --lib --test font_addons -- -D warnings
 WASM_TEST=web_fonts_browser node scripts/browser-host-check.mjs
 WASM_TEST=web_fonts_async_browser node scripts/browser-host-check.mjs
+WASM_TEST=wasm_font_terminal node scripts/browser-host-check.mjs
+WASM_TEST=wasm_font_shaping node scripts/browser-host-check.mjs
+cargo build -j2 -p xterm-font-addons --target wasm32-unknown-unknown
+wasm-bindgen target/wasm32-unknown-unknown/debug/xterm_font_addons.wasm --target nodejs --out-dir tmp/font-node
+SOURCE_PACKAGE_JSON=/path/to/installed/source_repo/package.json node scripts/ligature-legacy-check.mjs tmp/font-node/xterm_font_addons.js
 ```
 
-Reuse the browser-host-check skill for WASM CLI and Playwright setup. It closes servers and browsers and uses the shared target directory with disk checks. Browser tests run Rust/WASM, not source_repo's terminal engine.
+Reuse the browser-host-check skill for WASM CLI and Playwright setup. It closes servers and browsers and uses the private target directory with disk checks. Set TEMP and TMP separately to the owned O: scratch directory. Browser tests run Rust/WASM, not source_repo's terminal engine.
 
 Oracle checks are read-only for tracked fixtures by default. Use --generate only after inspecting drift retained under tmp/font-oracle/*.actual. Never regenerate expected values merely to pass. It executes16 original parser test bodies and assertions, verifies8224 UTF16 parser rows and4156 fallback rows. Seed0xF017CA5E. Reference hashes, exact counts and outputs are in results/font-addons/. Browser results are per-target under results/browser-host/.
 
-See docs/font-addons.md for typed API and empty-pattern safety deviations, fixture formats, current evidence and unimplemented GSUB/local-font/terminal integration. Native helper or component browser success does not prove complete addon equivalence.
+The legacy runner executes all8 unchanged Node test bodies and assertions against source and Rust/WASM, adapting only imports and TypeScript. That legacy suite mocks font-finder, but current source uses browser font discovery, so it does not prove installed-font shaping. The separate wasm_font_shaping test loads real Fira Code bytes into FontFace and the Rust addon, disables all fallbacks, and checks actual terminal DOM spans and load-triggered refresh in three engines.
+
+See docs/font-addons.md and docs/font-legacy-and-shaping.md for contracts, commands, evidence and remaining raw joiner/optional metadata gaps. Native helper or component browser success does not prove complete addon equivalence.

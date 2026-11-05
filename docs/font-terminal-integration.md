@@ -35,7 +35,7 @@ Early new-test expectations incorrectly assumed unjoined ASCII cells always occu
 
 ## Remaining work
 
-Task 307 tracks raw/malformed joiner-return compatibility, unused optional font metadata rejection, the unchanged 8-case legacy Node `LigaturesAddon.test.ts` suite and actual loaded-font shaping on a terminal. The current joiner adapter accepts arrays of finite nonnegative integer UTF16 offsets within the WASM index range. It reports invalid returns as handler errors rather than reproducing every JavaScript coercion or range-array identity mutation. This is a known compatibility gap, not evidence of equivalence.
+Task307 subsequently verified the unchanged8-case legacy Node `LigaturesAddon.test.ts` suite and actual loaded-font shaping on a terminal, documented in `font-legacy-and-shaping.md`. Raw/malformed joiner-return compatibility is task335; unused optional font metadata constructor rejection is task339. The current joiner adapter accepts arrays of finite nonnegative integer UTF16 offsets within the WASM index range. It reports invalid returns as handler errors rather than reproducing every JavaScript coercion or range-array identity mutation. This is a known compatibility gap, not evidence of equivalence.
 
 The empty fallback source hang remains the explicit Rust safety divergence documented in `font-addons.md`. Native Linux/macOS results and the final workspace all-feature/release/format matrix remain separate requirements. `cargo fmt --all -- --check` hit Windows OS206, including a trial through an unused temporary R: drive mapping. The mapping was removed in finally; the scoped formatting pass does not satisfy that full gate. `results/font-terminal/short-path-fmt.json` records the failed hypothesis.
 
