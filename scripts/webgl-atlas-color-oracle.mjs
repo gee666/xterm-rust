@@ -70,11 +70,11 @@ for(let i=0;i<256;i++) {
   run('seeded-'+i,value(bgMode),value(fgMode),{allowTransparency:!!(random()%2),dim:!!(random()%2),bold:!!(random()%2),inverse:!!(random()%2),
     ratio:[1,2,4.5,7,21][random()%5],bright:!!(random()%2),excluded:!!(random()%2)});
 }
-for(const dim of [false,true])for(const cacheNull of [false,true,null])
+for(const dim of [false,true])for(const seed of ['color','null','missing'])
   for(const signedBg of [false,true])for(const signedFg of [false,true]) {
   const bg=0x80000000|(dim?0x08000000:0),fg=0x80000000;
-  run(`signed-${dim}-${cacheNull}-${signedBg}-${signedFg}`,bg,fg,{dim,cacheNull,ratio:21,
-    original:[signedBg?bg:bg>>>0,signedFg?fg|0:fg>>>0],...(cacheNull===false?{seedColor:0xff3456ff}:{})});
+  run(`signed-${dim}-${seed}-${signedBg}-${signedFg}`,bg,fg,{dim,cacheNull:seed==='null',ratio:21,
+    original:[signedBg?bg:bg>>>0,signedFg?fg|0:fg>>>0],...(seed==='color'?{seedColor:0xff3456ff}:{})});
 }
 const output=path.resolve('crates/xterm-web/tests/fixtures/webgl-atlas-colors.json');
 await writeFile(output,JSON.stringify({seed:'0x3acb128f',inputs,wrapper,foreground,background,palette,cases})+'\n');

@@ -79,7 +79,7 @@ fn unchanged_source_colors_identity_and_contrast_cache() {
                 [v[0].as_i64().unwrap(), v[1].as_i64().unwrap()]
             });
         let seeded = c["seedColor"].as_u64().map(|rgba| color(rgba as u32));
-        if c["cacheNull"] == true {
+        if c["cacheNull"].as_bool().unwrap() {
             cache
                 .borrow_mut()
                 .set_color(numbers[0] as f64, numbers[1] as f64, None);
