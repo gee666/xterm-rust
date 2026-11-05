@@ -99,6 +99,91 @@ export async function serializationCases() {
     get excludeModes() { log.push('modes'); return false; } };
     return { ansi: capture(() => addon.serialize(options)), nested, log, state: snapshot(term) };
   });
+  await run('ansi-scrollback-coercion-values', async (term, addon) => {
+    await write(term, '\x1b[31mfirst\r\nsecond\r\nthird\r\nfourth\r\nfifth\r\nsixth');
+    const values = [];
+    for (const alternate of [false, true]) {
+      if (alternate) await write(term, '\x1b[?1049hALT');
+      for (const [label, create] of [
+        ['undefined', () => undefined], ['null', () => null], ['true', () => true], ['false', () => false],
+        ['string-zero', () => '0'], ['string-fraction', () => '-1.5'], ['string-invalid', () => 'invalid'],
+        ['empty-array', () => []], ['array-zero', () => [0]], ['array-fraction', () => [-1.5]],
+        ['object', () => ({})], ['boxed-nan', () => new Number(NaN)],
+        ['boxed-fraction', () => new Number(-1.5)], ['boxed-zero-retained', () => new Number(-4)],
+        ['boxed-infinity', () => new Number(Infinity)], ['boxed-string', () => new String('invalid')],
+        ['custom-nan', () => ({ valueOf() { return NaN; } })],
+        ['custom-fraction', () => ({ valueOf() { return -1.5; } })],
+        ['custom-zero-retained', () => ({ valueOf() { return -4; } })],
+        ['symbol', () => Symbol('scrollback')], ['bigint', () => 0n]
+      ]) {
+        const log = [];
+        const options = { get range() { log.push('range'); return undefined; },
+          get scrollback() { log.push('scrollback'); return create(); },
+          get excludeAltBuffer() { log.push('alt'); return false; },
+          get excludeModes() { log.push('modes'); return false; } };
+        values.push({ alternate, label, ansi: capture(() => addon.serialize(options)), log });
+      }
+    }
+    return { values, state: snapshot(term) };
+  });
+  await run('ansi-scrollback-coercion-default-hint', async (term, addon) => {
+    await write(term, '\x1b[34mnormal\r\nsecond\r\nthird\r\nfourth\r\nfifth');
+    const values = [];
+    for (const alternate of [false, true]) {
+      if (alternate) await write(term, '\x1b[?1049hALT');
+      for (const result of [NaN, -1.5, -4, 0, 'invalid']) {
+        const log = [];
+        const raw = { get [Symbol.toPrimitive]() {
+          log.push('primitive-get');
+          return hint => { log.push(`primitive:${hint}`); return result; };
+        } };
+        const options = { get range() { log.push('range'); return undefined; },
+          get scrollback() { log.push('scrollback'); return raw; },
+          get excludeAltBuffer() { log.push('alt'); return false; },
+          get excludeModes() { log.push('modes'); return false; } };
+        values.push({ alternate, result: String(result), ansi: capture(() => addon.serialize(options)), log });
+      }
+    }
+    return { values, state: snapshot(term) };
+  });
+  await run('ansi-scrollback-coercion-reentry', async (term, addon) => {
+    const values = [];
+    for (const result of [NaN, -1.5, -4, 0]) {
+      term.reset(); term.resize(12, 4);
+      await write(term, '\x1b[32mnormal\r\nsecond\r\nthird\r\nfourth\r\nfifth\x1b[?1049hALT');
+      const log = []; let nested;
+      const raw = { [Symbol.toPrimitive](hint) {
+        log.push(`primitive:${hint}`); nested = addon.serialize({ scrollback: 0 });
+        term.reset(); term.resize(6, 2); return result;
+      } };
+      const options = { get range() { log.push('range'); return undefined; },
+        get scrollback() { log.push('scrollback'); return raw; },
+        get excludeAltBuffer() { log.push('alt'); return false; },
+        get excludeModes() { log.push('modes'); return false; } };
+      values.push({ result: String(result), ansi: capture(() => addon.serialize(options)), nested, log, state: snapshot(term) });
+    }
+    return values;
+  });
+  await run('ansi-scrollback-coercion-throws', async (term, addon) => {
+    await write(term, 'normal\r\nsecond\r\nthird\r\nfourth\r\nfifth');
+    const values = [];
+    for (const phase of ['scrollback', 'primitive-get', 'primitive-call', 'valueOf-get', 'valueOf-call', 'toString-get', 'toString-call']) {
+      const log = [], sentinel = {};
+      const fail = name => { log.push(name); if (name === phase) throw sentinel; };
+      const raw = phase.startsWith('primitive') ? { get [Symbol.toPrimitive]() {
+        fail('primitive-get'); return hint => { fail('primitive-call'); log.push(hint); return -1.5; };
+      } } : { get valueOf() { fail('valueOf-get'); return () => { fail('valueOf-call'); return {}; }; },
+        get toString() { fail('toString-get'); return () => { fail('toString-call'); return 'invalid'; }; } };
+      const options = { get range() { log.push('range'); return undefined; },
+        get scrollback() { fail('scrollback'); return raw; },
+        get excludeAltBuffer() { log.push('alt'); return false; },
+        get excludeModes() { log.push('modes'); return false; } };
+      let same = false, error;
+      try { addon.serialize(options); } catch (thrown) { same = thrown === sentinel; error = { name: thrown.name, message: thrown.message }; }
+      values.push({ phase, same, error, log, state: snapshot(term) });
+    }
+    return values;
+  });
   await run('ansi-getter-phases', async (term, addon) => {
     await write(term, 'content'); const log = [];
     const range = { get start() { log.push('start'); return 0; }, get end() { log.push('end'); return 0; } };
