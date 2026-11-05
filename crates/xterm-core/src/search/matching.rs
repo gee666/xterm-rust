@@ -6,8 +6,7 @@ const NON_WORD_CHARACTERS: &str = " ~!@#$%^&*()+`-=[]{}|\\;:\"',./<>?";
 
 pub(super) fn find(
     term: &[u16],
-    line: &[u16],
-    lowercase_line: Option<&[u16]>,
+    search_line: &[u16],
     offset: usize,
     options: &SearchOptions,
     reverse: bool,
@@ -15,11 +14,8 @@ pub(super) fn find(
     let insensitive = options.case_sensitive != Some(true);
     let regex = options.regex == Some(true);
     let mut matched_term = None;
-    let search_line = if insensitive && !regex {
-        lowercase_line.map_or_else(|| Cow::Owned(lowercase(line)), Cow::Borrowed)
-    } else {
-        Cow::Borrowed(line)
-    };
+    // The engine supplies the cached lowercase line for plain insensitive
+    // matching. Regex input remains raw so its own case folding stays intact.
     let index = if regex {
         let flags = regress::Flags {
             icase: insensitive,
@@ -30,9 +26,9 @@ pub(super) fn find(
         let re = regress::Regex::from_unicode(term.iter().copied().map(u32::from), flags)
             .map_err(|e| SearchError::InvalidRegex(e.to_string()))?;
         let slice = if reverse {
-            &line[..offset.min(line.len())]
+            &search_line[..offset.min(search_line.len())]
         } else {
-            &line[offset.min(line.len())..]
+            &search_line[offset.min(search_line.len())..]
         };
         let mut found = None;
         let mut start = 0;
@@ -83,7 +79,7 @@ pub(super) fn find(
     };
     Ok(index.and_then(|i| {
         let matched = matched_term.unwrap_or(term);
-        if options.whole_word == Some(true) && !is_whole_word(i, &search_line, matched) {
+        if options.whole_word == Some(true) && !is_whole_word(i, search_line, matched) {
             None
         } else {
             Some((i, matched.to_vec()))
