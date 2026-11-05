@@ -1,0 +1,11 @@
+# Cassia483 pickup
+
+Task483 is ACCEPTED, not integrated. Main735e114a already contains original473 as2a39d6b3. New producer chain ONLY a68f9c1e -> bf7120f1 ->16129eda ->23fabaa8 ->a8120aa9, then483 review/cleanup receipt commits. Private prerequisite86996eb4 is a local copy of473, never replay it. Canonical integration belongs309, currently Janice.
+
+Four product modules change type9 behavior in the native Rust font parser. GSUB accepts empty/null type9 subtables, rejects nonnull pointers with the source missing-parser TypeError before later reads, and retains null counts. Selected9 is ignored by the source. Type6 references to a null9 subtable fail on coverage in both scalar/range paths. Shared actual-addon lifecycle assertions now serve both lookup/type9 suites. Default lookup/header oracle modes remain intact. Preserve source473 invalid-type/mark-filter ordering.
+
+Read docs/font-gsub-type9.md and results/font-gsub-type9. New1038 SFNT/WOFF cases have72 parser accepts/966 rejects and64 FontImpl accepts/974 rejects. Source parser+FontImpl+actual-addon1038 EACH3engines passed. Actual new2 Rust/WASM functions EACH3 passed; retained lookup2 EACH3 passed after shared helper extraction. Native old358mismatches -> finally4exactSHArestore -> fixed pass. Alltarget/allfeature addons188pass/42summaries0failed/ignored. Strict native Clippy, final strict WASM BOTH affected tests/helper, affected WASM libs and all5memberfmt passed. Aggregatefmt WindowsOS206 failed, retained honestly.
+
+Initial review found a real normalizer bug.16129eda checks actual engine messages separately from canonical Node expectations. Exact Chromium/Firefox/WebKit TypeErrors now pass. Independent resumed review accepted, verified19producer pins/both suites artifacts and logs, deliberately wrong diagnostic rejection, and ran pinned native EXE. It did not compile or launch browsers.
+
+Full342/325 remains open, including general null records, decoder diagnostics, class warnings/mutations, snapshots and full shaping. Full equivalence is NOT PROVEN. No main/source_repo/AGENTS/unrelated changes.0ownedjobs/grants after3521. Only temporary root O:/xterm-rust-swarm-16/tmp/worktrees/CassiaGsub9. Review artifacts remain until safe preflight and removal. Final cleanup confirmation is posted624/409 and private continuation note; do not replay removal.
