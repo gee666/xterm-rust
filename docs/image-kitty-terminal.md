@@ -40,6 +40,10 @@ The first12-test Chromium run passed every Rust assertion but reported five seco
 
 The green suite uses supported logLevel=off on both terminals for handler-rejection tests. Its raw-DEFLATE case exercises the explicit retry through a synchronous DecompressionStream constructor failure, then performs actual browser raw decompression. It does not claim that malformed/default-zlib writer rejections are free of secondary errors. No page-error filtering or source/assertion changes were added. The initial diagnostic is retained separately as `initial-source-error-diagnostic.json`; broad unhandled-rejection timing remains unproven.
 
+## Integrated-base refresh
+
+After review, the producer rebased onto mainff0bec8 and batched accepted task374, exactda3847a, plus verified receipt-only commits7b73548/2b6ea8b from task370. All owned producer/test/runner bytes match reviewed6ed73ad. The union Kitty19-test matrix passes in all three browsers. Native workspace tests again pass2043 tests across401 summaries, workspace Clippy and full formatting pass, and the unchanged font oracle verifies885 constructor case outcomes. An earlier combined command reached its180-second deadline during Clippy after native tests finished; no owned child process remained, and the separate cached Clippy rerun passed. This is not a failed application test or a claimed gate pass for the interrupted command.
+
 ## Independent review
 
 Task373 was accepted at6ed73ad. The isolated reviewer inspected source/native/browser phase ordering, retention and cleanup, then independently reran19 Kitty,12 IIP and15 SIXEL tests in each browser, both native APC tests, all2043 workspace tests across401 summaries, full formatting and native/scoped-WASM warning-denied Clippy. No findings remained. Its browser reports and focused native receipt are retained as `reviewer-*` under this task's results directory.
