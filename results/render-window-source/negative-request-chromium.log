@@ -1,0 +1,64 @@
+running 3 tests
+test real_render_scheduler_matches_source_reentry_and_error_identity ... FAIL
+test real_animation_frame_delivers_retained_rows_then_zero_time_callbacks ... ok
+test current_window_preserves_every_javascript_thrown_value ... FAIL
+
+failures:
+
+---- real_render_scheduler_matches_source_reentry_and_error_identity output ----
+    JS exception that was thrown:
+        Error: JsValue(Error: render scheduler/refresh/source/throw expected [["source"],["hook","source","throw"],["result","refresh",false,"original-token"],["pending",[]],["source"],["get-request",0],["request",0,true],["result","callback",true,1],["result","refresh",true,null],["frame",1],["render",0,5],["callback","tail",0],["pending",[]],["result","dispose",true,null]] actual [["source"],["hook","source","throw"],["result","refresh",false,null],["pending",[]],["source"],["get-request",0],["request",0,true],["result","callback",true,1],["result","refresh",true,null],["frame",1],["render",0,5],["callback","tail",0],["pending",[]],["result","dispose",true,null]]
+        Error: render scheduler/refresh/source/throw expected [["source"],["hook","source","throw"],["result","refresh",false,"original-token"],["pending",[]],["source"],["get-request",0],["request",0,true],["result","callback",true,1],["result","refresh",true,null],["frame",1],["render",0,5],["callback","tail",0],["pending",[]],["result","dispose",true,null]] actual [["source"],["hook","source","throw"],["result","refresh",false,null],["pending",[]],["source"],["get-request",0],["request",0,true],["result","callback",true,1],["result","refresh",true,null],["frame",1],["render",0,5],["callback","tail",0],["pending",[]],["result","dispose",true,null]]
+            at runRenderSchedulerCases (http://127.0.0.1:56597/snippets/xterm-web-f147851b6cb0c0ef/tests/render_scheduler_oracle.js:151:19)
+            at http://127.0.0.1:56597/suite.js:6260:21
+            at handleError (http://127.0.0.1:56597/suite.js:175:18)
+            at imports.wbg.__wbg_runRenderSchedulerCases_37a8ec64559c096c (http://127.0.0.1:56597/suite.js:6259:86)
+            at render_scheduler_browser-5377cb87252f4565.wasm.__wbg_runRenderSchedulerCases_37a8ec64559c096c externref shim (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[46387]:0xb06e7d)
+            at render_scheduler_browser-5377cb87252f4565.wasm.render_scheduler_browser::cases::h0fac81d2e763f6fc (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[9023]:0x7daf6f)
+            at render_scheduler_browser-5377cb87252f4565.wasm.render_scheduler_browser::real_render_scheduler_matches_source_reentry_and_error_identity::h5ff107e1a3de8d85 (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[4353]:0x63e560)
+            at render_scheduler_browser-5377cb87252f4565.wasm.core::ops::function::FnOnce::call_once::hf07ed0dab403e3db (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[26902]:0xa751f9)
+            at render_scheduler_browser-5377cb87252f4565.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::hc7d270a8457362c7 (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[11475]:0x87232b)
+            at render_scheduler_browser-5377cb87252f4565.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::hec414484ff06f0c7 (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[16614]:0x958b4d))
+            at imports.wbg.__wbindgen_error_new (http://127.0.0.1:56597/suite.js:6932:21)
+            at render_scheduler_browser-5377cb87252f4565.wasm.__wbindgen_error_new externref shim (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[37265]:0xae8381)
+            at render_scheduler_browser-5377cb87252f4565.wasm.wasm_bindgen::JsError::new::he956fd85533682a7 (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[33604]:0xacfb26)
+            at render_scheduler_browser-5377cb87252f4565.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::{{closure}}::h269da69370041f04 (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[6254]:0x7048d6)
+            at render_scheduler_browser-5377cb87252f4565.wasm.core::result::Result<T,E>::map_err::h83a98eb55a10df3e (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[17921]:0x988595)
+            at render_scheduler_browser-5377cb87252f4565.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::he9d5ab92d1660713 (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[24334]:0xa40598)
+            at render_scheduler_browser-5377cb87252f4565.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::hc7d270a8457362c7 (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[11475]:0x872343)
+            at render_scheduler_browser-5377cb87252f4565.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::hec414484ff06f0c7 (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[16614]:0x958b4d)
+            at render_scheduler_browser-5377cb87252f4565.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8 (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[26681]:0xa71162)
+            at __wbg_adapter_1307 (http://127.0.0.1:56597/suite.js:639:10)
+
+---- current_window_preserves_every_javascript_thrown_value output ----
+    JS exception that was thrown:
+        Error: JsValue(Error: render scheduler/refresh/source/throw expected [["source"],["hook","source","throw"],["result","refresh",false,"original-token"],["pending",[]],["source"],["get-request",0],["request",0,true],["result","callback",true,1],["result","refresh",true,null],["frame",1],["render",0,5],["callback","tail",0],["pending",[]],["result","dispose",true,null]] actual [["source"],["hook","source","throw"],["result","refresh",false,null],["pending",[]],["source"],["get-request",0],["request",0,true],["result","callback",true,1],["result","refresh",true,null],["frame",1],["render",0,5],["callback","tail",0],["pending",[]],["result","dispose",true,null]]
+        Error: render scheduler/refresh/source/throw expected [["source"],["hook","source","throw"],["result","refresh",false,"original-token"],["pending",[]],["source"],["get-request",0],["request",0,true],["result","callback",true,1],["result","refresh",true,null],["frame",1],["render",0,5],["callback","tail",0],["pending",[]],["result","dispose",true,null]] actual [["source"],["hook","source","throw"],["result","refresh",false,null],["pending",[]],["source"],["get-request",0],["request",0,true],["result","callback",true,1],["result","refresh",true,null],["frame",1],["render",0,5],["callback","tail",0],["pending",[]],["result","dispose",true,null]]
+            at runRenderSchedulerCases (http://127.0.0.1:56597/snippets/xterm-web-f147851b6cb0c0ef/tests/render_scheduler_oracle.js:151:19)
+            at runRenderWindowFailureCases (http://127.0.0.1:56597/snippets/xterm-web-f147851b6cb0c0ef/tests/render_scheduler_oracle.js:159:10)
+            at http://127.0.0.1:56597/suite.js:6264:21
+            at handleError (http://127.0.0.1:56597/suite.js:175:18)
+            at imports.wbg.__wbg_runRenderWindowFailureCases_b3873a3e656a245c (http://127.0.0.1:56597/suite.js:6263:90)
+            at render_scheduler_browser-5377cb87252f4565.wasm.__wbg_runRenderWindowFailureCases_b3873a3e656a245c externref shim (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[46388]:0xb06e86)
+            at render_scheduler_browser-5377cb87252f4565.wasm.render_scheduler_browser::window_failures::h447bb4ecc9e96337 (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[9024]:0x7db0a0)
+            at render_scheduler_browser-5377cb87252f4565.wasm.render_scheduler_browser::current_window_preserves_every_javascript_thrown_value::h91094b2ce6dc77b6 (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[4354]:0x63e768)
+            at render_scheduler_browser-5377cb87252f4565.wasm.core::ops::function::FnOnce::call_once::hf41717f0ef487219 (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[26903]:0xa75242)
+            at render_scheduler_browser-5377cb87252f4565.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h36f5d124d774b203 (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[11474]:0x872243))
+            at imports.wbg.__wbindgen_error_new (http://127.0.0.1:56597/suite.js:6932:21)
+            at render_scheduler_browser-5377cb87252f4565.wasm.__wbindgen_error_new externref shim (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[37265]:0xae8381)
+            at render_scheduler_browser-5377cb87252f4565.wasm.wasm_bindgen::JsError::new::he956fd85533682a7 (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[33604]:0xacfb26)
+            at render_scheduler_browser-5377cb87252f4565.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::{{closure}}::h269da69370041f04 (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[6254]:0x7048d6)
+            at render_scheduler_browser-5377cb87252f4565.wasm.core::result::Result<T,E>::map_err::h83a98eb55a10df3e (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[17921]:0x988595)
+            at render_scheduler_browser-5377cb87252f4565.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::he9d5ab92d1660713 (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[24334]:0xa40598)
+            at render_scheduler_browser-5377cb87252f4565.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h36f5d124d774b203 (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[11474]:0x87225b)
+            at render_scheduler_browser-5377cb87252f4565.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::hd10c36943885cedd (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[16613]:0x958aa9)
+            at render_scheduler_browser-5377cb87252f4565.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8 (http://127.0.0.1:56597/suite_bg.wasm:wasm-function[26681]:0xa71162)
+            at __wbg_adapter_1307 (http://127.0.0.1:56597/suite.js:639:10)
+
+failures:
+
+    real_render_scheduler_matches_source_reentry_and_error_identity
+    current_window_preserves_every_javascript_thrown_value
+
+test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 filtered out; finished in 0.02s
+

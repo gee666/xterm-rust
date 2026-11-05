@@ -1,0 +1,126 @@
+{
+  "package": "xterm-web",
+  "testName": "render_scheduler_browser",
+  "testTimeoutMs": 60000,
+  "features": [
+    "acceptance-hooks"
+  ],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T20:46:42.987Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "render_scheduler_browser",
+        "--features",
+        "acceptance-hooks",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 11297.086,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 9.45350000000144,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\TheodoreRenderWindow\\results\\acceptance-artifacts\\3656f3fe42155325d6bbb083e49ca858cfa3b7ea002fb5435928786b02d519bd\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\TheodoreRenderWindow\\results\\browser-host\\render_scheduler_browser\\2026-11-05T20-46-42-985Z-3c1efbac-5175-4eba-9e87-20c9597c0b86\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1129.5820999999996,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__render_scheduler_browser::current_window_preserves_every_javascript_thrown_value",
+        "__wbgt__render_scheduler_browser::real_animation_frame_delivers_retained_rows_then_zero_time_callbacks",
+        "__wbgt__render_scheduler_browser::real_render_scheduler_matches_source_reentry_and_error_identity"
+      ],
+      "errors": [],
+      "console": [],
+      "version": "148.0.7778.96",
+      "output": "running 3 tests\ntest real_render_scheduler_matches_source_reentry_and_error_identity ... FAIL\ntest real_animation_frame_delivers_retained_rows_then_zero_time_callbacks ... ok\ntest current_window_preserves_every_javascript_thrown_value ... FAIL\n\nfailures:\n\n---- real_render_scheduler_matches_source_reentry_and_error_identity output ----\n    JS exception that was thrown:\n        Error: JsValue(Error: render scheduler/dispose/source/throw expected [[\"source\"],[\"get-request\",0],[\"request\",0,true],[\"result\",\"refresh\",true,null],[\"source\"],[\"hook\",\"source\",\"throw\"],[\"result\",\"dispose\",false,\"original-token\"],[\"pending\",[1]],[\"result\",\"callback\",true,1],[\"result\",\"refresh\",true,null],[\"frame\",1],[\"render\",0,3],[\"callback\",\"tail\",0],[\"pending\",[]],[\"result\",\"dispose\",true,null]] actual [[\"source\"],[\"get-request\",0],[\"request\",0,true],[\"result\",\"refresh\",true,null],[\"source\"],[\"hook\",\"source\",\"throw\"],[\"result\",\"dispose\",false,null],[\"pending\",[1]],[\"result\",\"callback\",true,1],[\"result\",\"refresh\",true,null],[\"frame\",1],[\"render\",0,3],[\"callback\",\"tail\",0],[\"pending\",[]],[\"result\",\"dispose\",true,null]]\n        Error: render scheduler/dispose/source/throw expected [[\"source\"],[\"get-request\",0],[\"request\",0,true],[\"result\",\"refresh\",true,null],[\"source\"],[\"hook\",\"source\",\"throw\"],[\"result\",\"dispose\",false,\"original-token\"],[\"pending\",[1]],[\"result\",\"callback\",true,1],[\"result\",\"refresh\",true,null],[\"frame\",1],[\"render\",0,3],[\"callback\",\"tail\",0],[\"pending\",[]],[\"result\",\"dispose\",true,null]] actual [[\"source\"],[\"get-request\",0],[\"request\",0,true],[\"result\",\"refresh\",true,null],[\"source\"],[\"hook\",\"source\",\"throw\"],[\"result\",\"dispose\",false,null],[\"pending\",[1]],[\"result\",\"callback\",true,1],[\"result\",\"refresh\",true,null],[\"frame\",1],[\"render\",0,3],[\"callback\",\"tail\",0],[\"pending\",[]],[\"result\",\"dispose\",true,null]]\n            at runRenderSchedulerCases (http://127.0.0.1:54569/snippets/xterm-web-f147851b6cb0c0ef/tests/render_scheduler_oracle.js:151:19)\n            at http://127.0.0.1:54569/suite.js:6260:21\n            at handleError (http://127.0.0.1:54569/suite.js:175:18)\n            at imports.wbg.__wbg_runRenderSchedulerCases_37a8ec64559c096c (http://127.0.0.1:54569/suite.js:6259:86)\n            at render_scheduler_browser-5377cb87252f4565.wasm.__wbg_runRenderSchedulerCases_37a8ec64559c096c externref shim (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[46387]:0xb06e91)\n            at render_scheduler_browser-5377cb87252f4565.wasm.render_scheduler_browser::cases::h0fac81d2e763f6fc (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[9023]:0x7daf83)\n            at render_scheduler_browser-5377cb87252f4565.wasm.render_scheduler_browser::real_render_scheduler_matches_source_reentry_and_error_identity::h5ff107e1a3de8d85 (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[4353]:0x63e574)\n            at render_scheduler_browser-5377cb87252f4565.wasm.core::ops::function::FnOnce::call_once::hf07ed0dab403e3db (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[26902]:0xa7520d)\n            at render_scheduler_browser-5377cb87252f4565.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::hc7d270a8457362c7 (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[11475]:0x87233f)\n            at render_scheduler_browser-5377cb87252f4565.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::hec414484ff06f0c7 (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[16614]:0x958b61))\n            at imports.wbg.__wbindgen_error_new (http://127.0.0.1:54569/suite.js:6932:21)\n            at render_scheduler_browser-5377cb87252f4565.wasm.__wbindgen_error_new externref shim (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[37265]:0xae8395)\n            at render_scheduler_browser-5377cb87252f4565.wasm.wasm_bindgen::JsError::new::he956fd85533682a7 (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[33604]:0xacfb3a)\n            at render_scheduler_browser-5377cb87252f4565.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::{{closure}}::h269da69370041f04 (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[6254]:0x7048ea)\n            at render_scheduler_browser-5377cb87252f4565.wasm.core::result::Result<T,E>::map_err::h83a98eb55a10df3e (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[17921]:0x9885a9)\n            at render_scheduler_browser-5377cb87252f4565.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::he9d5ab92d1660713 (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[24334]:0xa405ac)\n            at render_scheduler_browser-5377cb87252f4565.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::hc7d270a8457362c7 (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[11475]:0x872357)\n            at render_scheduler_browser-5377cb87252f4565.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::hec414484ff06f0c7 (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[16614]:0x958b61)\n            at render_scheduler_browser-5377cb87252f4565.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8 (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[26681]:0xa71176)\n            at __wbg_adapter_1307 (http://127.0.0.1:54569/suite.js:639:10)\n\n---- current_window_preserves_every_javascript_thrown_value output ----\n    JS exception that was thrown:\n        Error: JsValue(Error: render scheduler/dispose/source/throw expected [[\"source\"],[\"get-request\",0],[\"request\",0,true],[\"result\",\"refresh\",true,null],[\"source\"],[\"hook\",\"source\",\"throw\"],[\"result\",\"dispose\",false,\"original-token\"],[\"pending\",[1]],[\"result\",\"callback\",true,1],[\"result\",\"refresh\",true,null],[\"frame\",1],[\"render\",0,3],[\"callback\",\"tail\",0],[\"pending\",[]],[\"result\",\"dispose\",true,null]] actual [[\"source\"],[\"get-request\",0],[\"request\",0,true],[\"result\",\"refresh\",true,null],[\"source\"],[\"hook\",\"source\",\"throw\"],[\"result\",\"dispose\",false,null],[\"pending\",[1]],[\"result\",\"callback\",true,1],[\"result\",\"refresh\",true,null],[\"frame\",1],[\"render\",0,3],[\"callback\",\"tail\",0],[\"pending\",[]],[\"result\",\"dispose\",true,null]]\n        Error: render scheduler/dispose/source/throw expected [[\"source\"],[\"get-request\",0],[\"request\",0,true],[\"result\",\"refresh\",true,null],[\"source\"],[\"hook\",\"source\",\"throw\"],[\"result\",\"dispose\",false,\"original-token\"],[\"pending\",[1]],[\"result\",\"callback\",true,1],[\"result\",\"refresh\",true,null],[\"frame\",1],[\"render\",0,3],[\"callback\",\"tail\",0],[\"pending\",[]],[\"result\",\"dispose\",true,null]] actual [[\"source\"],[\"get-request\",0],[\"request\",0,true],[\"result\",\"refresh\",true,null],[\"source\"],[\"hook\",\"source\",\"throw\"],[\"result\",\"dispose\",false,null],[\"pending\",[1]],[\"result\",\"callback\",true,1],[\"result\",\"refresh\",true,null],[\"frame\",1],[\"render\",0,3],[\"callback\",\"tail\",0],[\"pending\",[]],[\"result\",\"dispose\",true,null]]\n            at runRenderSchedulerCases (http://127.0.0.1:54569/snippets/xterm-web-f147851b6cb0c0ef/tests/render_scheduler_oracle.js:151:19)\n            at runRenderWindowFailureCases (http://127.0.0.1:54569/snippets/xterm-web-f147851b6cb0c0ef/tests/render_scheduler_oracle.js:159:10)\n            at http://127.0.0.1:54569/suite.js:6264:21\n            at handleError (http://127.0.0.1:54569/suite.js:175:18)\n            at imports.wbg.__wbg_runRenderWindowFailureCases_b3873a3e656a245c (http://127.0.0.1:54569/suite.js:6263:90)\n            at render_scheduler_browser-5377cb87252f4565.wasm.__wbg_runRenderWindowFailureCases_b3873a3e656a245c externref shim (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[46388]:0xb06e9a)\n            at render_scheduler_browser-5377cb87252f4565.wasm.render_scheduler_browser::window_failures::h447bb4ecc9e96337 (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[9024]:0x7db0b4)\n            at render_scheduler_browser-5377cb87252f4565.wasm.render_scheduler_browser::current_window_preserves_every_javascript_thrown_value::h91094b2ce6dc77b6 (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[4354]:0x63e77c)\n            at render_scheduler_browser-5377cb87252f4565.wasm.core::ops::function::FnOnce::call_once::hf41717f0ef487219 (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[26903]:0xa75256)\n            at render_scheduler_browser-5377cb87252f4565.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h36f5d124d774b203 (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[11474]:0x872257))\n            at imports.wbg.__wbindgen_error_new (http://127.0.0.1:54569/suite.js:6932:21)\n            at render_scheduler_browser-5377cb87252f4565.wasm.__wbindgen_error_new externref shim (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[37265]:0xae8395)\n            at render_scheduler_browser-5377cb87252f4565.wasm.wasm_bindgen::JsError::new::he956fd85533682a7 (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[33604]:0xacfb3a)\n            at render_scheduler_browser-5377cb87252f4565.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::{{closure}}::h269da69370041f04 (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[6254]:0x7048ea)\n            at render_scheduler_browser-5377cb87252f4565.wasm.core::result::Result<T,E>::map_err::h83a98eb55a10df3e (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[17921]:0x9885a9)\n            at render_scheduler_browser-5377cb87252f4565.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::he9d5ab92d1660713 (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[24334]:0xa405ac)\n            at render_scheduler_browser-5377cb87252f4565.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h36f5d124d774b203 (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[11474]:0x87226f)\n            at render_scheduler_browser-5377cb87252f4565.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::hd10c36943885cedd (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[16613]:0x958abd)\n            at render_scheduler_browser-5377cb87252f4565.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8 (http://127.0.0.1:54569/suite_bg.wasm:wasm-function[26681]:0xa71176)\n            at __wbg_adapter_1307 (http://127.0.0.1:54569/suite.js:639:10)\n\nfailures:\n\n    real_render_scheduler_matches_source_reentry_and_error_identity\n    current_window_preserves_every_javascript_thrown_value\n\ntest result: FAILED. 1 passed; 2 failed; 0 ignored; 0 filtered out; finished in 0.03s\n\n",
+      "counts": {
+        "passed": 1,
+        "failed": 2,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/3656f3fe42155325d6bbb083e49ca858cfa3b7ea002fb5435928786b02d519bd/artifact.wasm",
+      "sha256": "3656f3fe42155325d6bbb083e49ca858cfa3b7ea002fb5435928786b02d519bd",
+      "bytes": 19863923,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\TheodoreRenderWindow\\target\\wasm32-unknown-unknown\\debug\\deps\\render_scheduler_browser-5377cb87252f4565.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\TheodoreRenderWindow\\results\\browser-host\\render_scheduler_browser\\2026-11-05T20-46-42-985Z-3c1efbac-5175-4eba-9e87-20c9597c0b86\\artifacts\\suite_bg.wasm",
+      "bytes": 16682528,
+      "sha256": "07685d6ac4346cb67407a76a7b02e7e401ee2ada53f2edc6c03ad6c831380b45"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\TheodoreRenderWindow\\results\\browser-host\\render_scheduler_browser\\2026-11-05T20-46-42-985Z-3c1efbac-5175-4eba-9e87-20c9597c0b86\\artifacts\\suite.js",
+      "bytes": 246693,
+      "sha256": "c9ffabcfcd6141d639cad6b769ba7e768a65965f9cdca8eceeefa7a1c608ac68"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "4168f8e0d510cf53242a410d32641ede4112212c0494bea5adf4f9a78182e685"
+  },
+  "finishedAt": "2026-11-05T20:46:56.151Z"
+}
