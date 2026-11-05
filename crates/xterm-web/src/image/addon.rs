@@ -58,6 +58,7 @@ struct State {
     placeholder_value: Rc<RefCell<JsValue>>,
     sixel_size_limit: JsValue,
     kitty_size_limit: JsValue,
+    iip_size_limit: JsValue,
     terminal: RefCell<Weak<Shared>>,
     renderer: RefCell<Option<Rc<ImageRendererLifecycle>>>,
     storage: RefCell<Option<ImageStorage>>,

@@ -1,0 +1,80 @@
+{
+  "base": "7b20151c",
+  "files": [
+    {
+      "file": "crates/xterm-addons/src/image/iip/handler.rs",
+      "baselineSha256": "c05416e56a8e76c49f3b4426e65de6097f4c7fcd5fb6f66d5adfe3f74cf7c1c5",
+      "fixedSha256": "716207875bde00f07b945c84864c1d6a6e062a6f1c8477b89cc2f756dbdf665b",
+      "restoredSha256": "716207875bde00f07b945c84864c1d6a6e062a6f1c8477b89cc2f756dbdf665b"
+    },
+    {
+      "file": "crates/xterm-addons/src/image/iip/mod.rs",
+      "baselineSha256": "801dcbcfb382a522cb26c92cb2675e6aace15f9906aea70a9db0897f1199f041",
+      "fixedSha256": "8b2817276880e38049eb0b4c695f678cd43646a21b46e01082f76a138184fd65",
+      "restoredSha256": "8b2817276880e38049eb0b4c695f678cd43646a21b46e01082f76a138184fd65"
+    },
+    {
+      "file": "crates/xterm-web/src/image/iip_protocol.rs",
+      "baselineSha256": "56a1bdf9647d56d297cb697722e3f48b203285c027a079296e7519b910c2d018",
+      "fixedSha256": "960989e3a8a9e8597964adcb096ee7632a5ffd15026f08c84d4637d871689e73",
+      "restoredSha256": "960989e3a8a9e8597964adcb096ee7632a5ffd15026f08c84d4637d871689e73"
+    },
+    {
+      "file": "crates/xterm-web/src/image/addon.rs",
+      "baselineSha256": "d121089c64acd3d8bda65a7030384e38832049900fdff548021a7a7aeee4dcec",
+      "fixedSha256": "ab08ef4970eb91e60f5a74dffe80f34dd426e042b4c9233e88087e04524e1efe",
+      "restoredSha256": "ab08ef4970eb91e60f5a74dffe80f34dd426e042b4c9233e88087e04524e1efe"
+    },
+    {
+      "file": "crates/xterm-web/src/image/addon/bindings.rs",
+      "baselineSha256": "91ee16514d0885e763f9cf28e0bae57b22bb782bb5e91ec561a96d875952f51f",
+      "fixedSha256": "7c93f34cb69eb7bf595a4d0b2cf991e49cf78d3d5a98cbfeaaa509662058ee61",
+      "restoredSha256": "7c93f34cb69eb7bf595a4d0b2cf991e49cf78d3d5a98cbfeaaa509662058ee61"
+    },
+    {
+      "file": "crates/xterm-web/src/image/addon/option_inspection.rs",
+      "baselineSha256": "6b476fa6005808316ee44153e29a8b1db511181cd59273fdfa0a10da6bc1459e",
+      "fixedSha256": "3d8963e49eae2e90db93b39d2865c0bbfa3b06d25dcc7e001badb8acc893af28",
+      "restoredSha256": "3d8963e49eae2e90db93b39d2865c0bbfa3b06d25dcc7e001badb8acc893af28"
+    },
+    {
+      "file": "crates/xterm-web/src/image/addon/options.rs",
+      "baselineSha256": "51fdfc2215e8a187a488c28900f4f50bd9edcc2821ea4d67656d92f3ecc54791",
+      "fixedSha256": "b2b2e28f6e746a5af2dc3cedb69f83f3430526687adbe4782c25f80606bf7ba0",
+      "restoredSha256": "b2b2e28f6e746a5af2dc3cedb69f83f3430526687adbe4782c25f80606bf7ba0"
+    },
+    {
+      "file": "crates/xterm-web/src/image/addon/protocols.rs",
+      "baselineSha256": "a31cd81e80f7f3e5e490491e3bfc71490d14a4305c715269ada9728c78b0eda6",
+      "fixedSha256": "db92445adc94fe421866498aa657dac0b4c41d2d1ae72c673b3b806a7d28b294",
+      "restoredSha256": "db92445adc94fe421866498aa657dac0b4c41d2d1ae72c673b3b806a7d28b294"
+    }
+  ],
+  "restored": true,
+  "command": [
+    "node",
+    "scripts/image-canvas-check.mjs"
+  ],
+  "exit": 1,
+  "error": null,
+  "browsers": [
+    {
+      "name": "chromium",
+      "counts": {
+        "passed": 49,
+        "failed": 5,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "status": "failed"
+    }
+  ],
+  "failedTests": [
+    "raw_iip_limit::raw_iip_limit_nonfinite_and_negative_settings_are_only_constructed",
+    "raw_iip_limit::raw_iip_limit_disabled_never_converts_or_decodes",
+    "raw_iip_limit::raw_iip_limit_conversion_can_reset_or_dispose_before_registration",
+    "raw_iip_limit::raw_iip_limit_constructor_retains_identity_and_two_copy_order",
+    "raw_iip_limit::raw_iip_limit_activation_errors_preserve_prior_work_and_skip_kitty"
+  ],
+  "status": "passed-negative-control"
+}

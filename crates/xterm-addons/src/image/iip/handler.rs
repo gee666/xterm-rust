@@ -1,12 +1,13 @@
 // Copyright (c) 2023 The xterm.js authors. MIT license.
 //! OSC1337 streaming transfer state. Real image decoding is an explicit host effect.
+use super::decoder::IipDecoder;
 use super::geometry::{IipGeometry, SizeRequest};
 use super::reports::cell_size_report;
 use super::types::{
     default_header, merge_header, number_truthy, truthy, DisplayRequest, EndPreparation, IipEffect,
-    IipError, IipOptions, PendingEnd, PendingKind, DECODER_INITIAL_BYTES, DECODER_KEEP_BYTES,
+    IipError, IipOptions, PendingEnd, PendingKind,
 };
-use crate::image::base64::{DecodeStatus, PayloadDecoder};
+use crate::image::base64::DecodeStatus;
 use crate::image::header::{
     HeaderFields, HeaderParser, HeaderState, HeaderValue, ParseOutcome, SequenceType,
 };
@@ -19,7 +20,7 @@ pub struct IipHandler {
     aborted: bool,
     parser: HeaderParser,
     header: HeaderFields,
-    decoder: PayloadDecoder,
+    decoder: IipDecoder,
     multipart: bool,
     abort_multipart: bool,
 }
@@ -27,19 +28,18 @@ impl IipHandler {
     pub fn new(options: IipOptions, policy: NameDecodePolicy) -> Result<Self, IipError> {
         // Source rounds the encoded limit after floating-point arithmetic.
         // In particular, fractional byte limits must not be truncated first.
-        let encoded_limit = (options.size_limit * 4.0 / 3.0).ceil();
-        if !encoded_limit.is_finite()
-            || !(0.0..=crate::image::base64::MAX_BYTES as f64).contains(&encoded_limit)
-        {
-            return Err(crate::image::base64::InvalidSettings.into());
-        }
-        // The checked protocol cap fits usize on all supported targets.
-        let encoded_limit = encoded_limit as usize;
-        let decoder = PayloadDecoder::new(
-            DECODER_KEEP_BYTES,
-            encoded_limit,
-            DECODER_INITIAL_BYTES.min(encoded_limit),
-        )?;
+        Self::new_with_encoded_limit(options, policy, (options.size_limit * 4.0 / 3.0).ceil())
+    }
+    /// Accept the encoded-byte cap already evaluated by a browser host. Raw JS
+    /// conversion and its exceptions must happen before borrowing the handler.
+    /// NaN/negative settings construct as upstream but fail safely on decoder
+    /// initialization; compatibility with those decoder paths is not claimed.
+    pub fn new_with_encoded_limit(
+        options: IipOptions,
+        policy: NameDecodePolicy,
+        encoded_limit: f64,
+    ) -> Result<Self, IipError> {
+        let decoder = IipDecoder::new(encoded_limit)?;
         Ok(Self {
             options,
             owner: std::rc::Rc::new(()),
@@ -128,7 +128,7 @@ impl IipHandler {
                         self.aborted = true;
                         return Ok(());
                     }
-                    self.decoder.init(None, None)?;
+                    self.decoder.init()?;
                 } else if self.abort_multipart {
                     self.aborted = true;
                     return Ok(());
@@ -179,7 +179,7 @@ impl IipHandler {
             self.multipart = true;
             self.abort_multipart = false;
             self.decoder.release();
-            self.decoder.init(None, None)?;
+            self.decoder.init()?;
             return Ok(EndPreparation::Complete(Vec::new()));
         }
         if is_type(&self.parser.fields, SequenceType::FileEnd) {

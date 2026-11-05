@@ -20,6 +20,13 @@ function kittyEncodedLimit() {
 export function imageKittyEncodedLimit(kittySizeLimit) {
   return kittyEncodedLimit.call({_opts: {kittySizeLimit}});
 }
+// Keep this operand spelling for engine-specific generated TypeError messages.
+function iipEncodedLimit() {
+  return Math.ceil(this._opts.iipSizeLimit * 4 / 3);
+}
+export function imageIipEncodedLimit(iipSizeLimit) {
+  return iipEncodedLimit.call({_opts: {iipSizeLimit}});
+}
 ")]
 extern "C" {
     #[wasm_bindgen(catch, js_name = imageAddonOptions)]
@@ -28,6 +35,8 @@ extern "C" {
     fn number(value: &JsValue) -> Result<f64, JsValue>;
     #[wasm_bindgen(catch, js_name = imageKittyEncodedLimit)]
     pub(super) fn kitty_encoded_limit(value: &JsValue) -> Result<f64, JsValue>;
+    #[wasm_bindgen(catch, js_name = imageIipEncodedLimit)]
+    pub(super) fn iip_encoded_limit(value: &JsValue) -> Result<f64, JsValue>;
 }
 pub(super) struct ConstructorOptions {
     pub current: ImageOptions,
@@ -36,6 +45,7 @@ pub(super) struct ConstructorOptions {
     pub storage_limit: JsValue,
     pub sixel_size_limit: JsValue,
     pub kitty_size_limit: JsValue,
+    pub iip_size_limit: JsValue,
 }
 pub(super) fn read(options: &JsValue) -> Result<ConstructorOptions, JsValue> {
     // Keep source's two Object.assign passes contiguous. A failure in the
@@ -46,6 +56,7 @@ pub(super) fn read(options: &JsValue) -> Result<ConstructorOptions, JsValue> {
         placeholder: js::get(&current, "showPlaceholder")?,
         sixel_size_limit: js::get(&current, "sixelSizeLimit")?,
         kitty_size_limit: js::get(&current, "kittySizeLimit")?,
+        iip_size_limit: js::get(&current, "iipSizeLimit")?,
         current: typed(&current)?,
         defaults: typed(&defaults)?,
         storage_limit: js::get(&current, "storageLimit")?,
@@ -65,7 +76,7 @@ fn typed(options: &JsValue) -> Result<ImageOptions, JsValue> {
         storage_limit: ImageOptions::default().storage_limit,
         show_placeholder: boolean("showPlaceholder")?,
         iip_support: boolean("iipSupport")?,
-        iip_size_limit: numeric("iipSizeLimit")?,
+        iip_size_limit: ImageOptions::default().iip_size_limit,
         kitty_support: boolean("kittySupport")?,
         kitty_size_limit: ImageOptions::default().kitty_size_limit,
     })

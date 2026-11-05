@@ -199,13 +199,33 @@ impl BrowserIipProtocol {
         storage: ImageStorage,
         options: IipOptions,
     ) -> Result<Self, JsValue> {
+        Self::new_with_encoded_limit(
+            terminal,
+            renderer,
+            storage,
+            options,
+            (options.size_limit * 4.0 / 3.0).ceil(),
+        )
+    }
+    /// Use the host-evaluated cap without repeating observable JS conversion.
+    pub fn new_with_encoded_limit(
+        terminal: &Terminal,
+        renderer: Rc<BrowserImageRenderer>,
+        storage: ImageStorage,
+        options: IipOptions,
+        encoded_limit: f64,
+    ) -> Result<Self, JsValue> {
         Ok(Self(Rc::new(State {
             terminal: Rc::downgrade(&terminal.shared),
             renderer,
             storage: IipImageStorage::new(storage),
             handler: RefCell::new(
-                IipHandler::new(options, NameDecodePolicy::BrowserAtob)
-                    .map_err(|e| to_js_error(&e))?,
+                IipHandler::new_with_encoded_limit(
+                    options,
+                    NameDecodePolicy::BrowserAtob,
+                    encoded_limit,
+                )
+                .map_err(|e| to_js_error(&e))?,
             ),
             decoder: IipImageDecoder::default(),
         })))

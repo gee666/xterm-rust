@@ -5,10 +5,10 @@ use wasm_bindgen::{closure::Closure, JsValue};
 use wasm_bindgen_test::*;
 use xterm_web::{image::ImageAddon, Terminal};
 
-fn json(value: &JsValue) -> String {
+pub(super) fn json(value: &JsValue) -> String {
     js_sys::JSON::stringify(value).unwrap().as_string().unwrap()
 }
-fn token(value: &JsValue) -> JsValue {
+pub(super) fn token(value: &JsValue) -> JsValue {
     js_sys::Function::new_with_args("v", "return v?.token")
         .call1(&JsValue::UNDEFINED, value)
         .unwrap()
@@ -16,13 +16,19 @@ fn token(value: &JsValue) -> JsValue {
 fn raw(addon: &JsValue) -> JsValue {
     get(&get(addon, "_opts"), "kittySizeLimit")
 }
-struct Activation {
-    addon: ImageAddon,
+// IIP and Kitty share activation mechanics, but differ in registration order
+// and decoder construction. Reuse the paired host, not protocol expectations.
+pub(super) struct Activation {
+    pub addon: ImageAddon,
     terminal: Terminal,
-    source: JsValue,
+    pub source: JsValue,
+    key: &'static str,
 }
 impl Activation {
     fn new(expression: &str) -> Self {
+        Self::with_key(expression, "kittySizeLimit")
+    }
+    pub(super) fn with_key(expression: &str, key: &'static str) -> Self {
         // Construct before allocating either terminal, including in old-code controls.
         let addon = ImageAddon::new(eval(expression)).unwrap();
         let source = js_sys::Function::new_with_args(
@@ -39,22 +45,23 @@ impl Activation {
             addon,
             terminal,
             source,
+            key,
         }
     }
-    fn activate(&self) -> (Result<(), JsValue>, Result<JsValue, JsValue>) {
+    pub(super) fn activate(&self) -> (Result<(), JsValue>, Result<JsValue, JsValue>) {
         let actual = self.addon.activate(&self.terminal);
         let expected = js_sys::Function::new_with_args("s", "return s.addon.activate(s.terminal)")
             .call1(&JsValue::UNDEFINED, &self.source);
         (actual, expected)
     }
-    fn value(&self, rust: bool) -> JsValue {
+    pub(super) fn value(&self, rust: bool) -> JsValue {
         if rust {
-            get(&self.addon.option_inspection(), "kittySizeLimit")
+            get(&self.addon.option_inspection(), self.key)
         } else {
-            raw(&get(&self.source, "addon"))
+            get(&get(&get(&self.source, "addon"), "_opts"), self.key)
         }
     }
-    fn compare_membership(&self) {
+    pub(super) fn compare_membership(&self) {
         let source = get(&get(&self.source, "addon"), "_handlers");
         let actual = self.addon.handler_inspection();
         assert_eq!(get(&actual, "size"), get(&source, "size"));

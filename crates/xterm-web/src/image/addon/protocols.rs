@@ -49,8 +49,11 @@ impl State {
             self.cleanups.borrow_mut().push(token(protocol.register()?));
         }
         if self.options.get().iip_support {
+            // Conversion may reset/dispose the addon. Read live typed options
+            // afterwards, with no state borrow held across the host callback.
+            let encoded_limit = super::options::iip_encoded_limit(&self.iip_size_limit)?;
             let options = self.options.get();
-            let protocol = BrowserIipProtocol::new(
+            let protocol = BrowserIipProtocol::new_with_encoded_limit(
                 terminal,
                 renderer.renderer(),
                 storage.clone(),
@@ -58,6 +61,7 @@ impl State {
                     pixel_limit: options.pixel_limit,
                     size_limit: options.iip_size_limit,
                 },
+                encoded_limit,
             )?;
             self.add_handler(Protocol::Iip(protocol.clone()))?;
             self.cleanups.borrow_mut().push(token(protocol.register()?));

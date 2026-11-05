@@ -50,7 +50,7 @@ function snapshot(){return{aborted:handler._aborted,multipart:handler._isMultipa
 async function operation(op){
  effects=[];error=null;let result;
  switch(op.op){
-  case'new':handler=new IIPHandler({pixelLimit:fromBits(op.pixelLimit),iipSizeLimit:op.sizeLimit},renderer,recordingStorage,terminal);break;
+  case'new':handler=new IIPHandler({pixelLimit:fromBits(op.pixelLimit),iipSizeLimit:fromBits(op.sizeLimit)},renderer,recordingStorage,terminal);break;
   case'start':handler.start();break;
   case'reset':handler.reset();break;
   case'put':handler.put(Uint32Array.from(op.data),op.start,op.end);break;
@@ -67,7 +67,7 @@ async function operation(op){
  }
  operations.push(op);expected.push(JSON.parse(JSON.stringify(result??snapshot())));
 }
-const fresh=async(pixelLimit=16777216,sizeLimit=33554432)=>operation({op:'new',pixelLimit:inputBits(pixelLimit),sizeLimit});
+const fresh=async(pixelLimit=16777216,sizeLimit=33554432)=>operation({op:'new',pixelLimit:inputBits(pixelLimit),sizeLimit:inputBits(sizeLimit)});
 async function write(text,success=true,chunk=9999,metrics=geometry()){
  await operation({op:'start'});const data=typeof text==='string'?units(text):text;
  for(let index=0;index<data.length;index+=chunk){const part=[999,...data.slice(index,index+chunk),998];await operation({op:'put',data:part,start:1,end:part.length-1});}
@@ -102,7 +102,7 @@ for(let i=0;i<1000;i++){
 for(const value of[0,-0,1.0625,-1.0625,0.0625,1.0005,1e21,1e21-131072,Infinity,-Infinity,NaN,Number.MIN_VALUE,-Number.MIN_VALUE])await operation({op:'fixed',value:inputBits(value)});
 for(let i=0;i<3000;i++){const buffer=Buffer.alloc(8);buffer.writeUInt32LE(random(0x100000000),0);buffer.writeUInt32LE(random(0x100000000),4);await operation({op:'fixed',value:buffer.toString('hex').match(/../g).reverse().join('')});}
 const replay=operations.map(op=>JSON.stringify(op)).join('\n')+'\n';fs.writeFileSync(path.join(output,'operations.ndjson'),replay);
-const implementationPaths=['crates/xterm-addons/src/image/iip/handler.rs','crates/xterm-addons/src/image/iip/geometry.rs','crates/xterm-addons/src/image/iip/reports.rs','crates/xterm-addons/src/image/numeric.rs','crates/xterm-addons/src/image/iip/types.rs','crates/xterm-addons/src/image/base64.rs','crates/xterm-addons/examples/image_iip_trace.rs','scripts/image-iip-oracle.mjs'];
+const implementationPaths=['crates/xterm-addons/src/image/iip/handler.rs','crates/xterm-addons/src/image/iip/decoder.rs','crates/xterm-addons/src/image/iip/geometry.rs','crates/xterm-addons/src/image/iip/reports.rs','crates/xterm-addons/src/image/numeric.rs','crates/xterm-addons/src/image/iip/types.rs','crates/xterm-addons/src/image/base64.rs','crates/xterm-addons/examples/image_iip_trace.rs','scripts/image-iip-oracle.mjs'];
 const implementation=implementationPaths.map(file=>({path:file,sha256:digest(fs.readFileSync(path.join(root,file)))}));
 const dependencyHashes=['base64/Base64Decoder.wasm.js','qoi/QoiDecoder.wasm.js'].map(file=>({path:`source_repo/node_modules/xterm-wasm-parts/lib/${file}`,sha256:digest(fs.readFileSync(path.join(dependencies,'xterm-wasm-parts/lib',file)))}));
 if(process.argv.includes('--reference-only')){

@@ -9,6 +9,8 @@ mod inspection;
 mod inspection_activation;
 #[path = "image_addon_support/options.rs"]
 mod options;
+#[path = "image_addon_support/raw_iip_limit.rs"]
+mod raw_iip_limit;
 #[path = "image_addon_support/raw_kitty_limit.rs"]
 mod raw_kitty_limit;
 #[path = "image_addon_support/raw_placeholder.rs"]
