@@ -21,6 +21,7 @@ pub mod input_host;
 mod input_services;
 mod internal_api;
 mod joiner_api;
+mod marker_api;
 pub mod link_services;
 mod modes_api;
 mod operations;
@@ -58,6 +59,8 @@ pub(crate) struct Shared {
     pub internal: JsValue,
     pub selection: Rc<crate::selection::service::SelectionService>,
     pub decorations: Rc<xterm_core::decoration::DecorationService>,
+    pub marker_handles: Rc<marker_api::MarkerHandles>,
+    pub marker_lists: marker_api::MarkerLists,
     pub platform: xterm_core::platform::Platform,
     pub addons: addon_manager::BrowserAddonManager,
     pub runtime: RefCell<Rc<runtime::RuntimeContext>>,
@@ -192,6 +195,8 @@ impl Terminal {
                 platform,
                 selection,
                 decorations,
+                marker_handles: Rc::new(marker_api::MarkerHandles::default()),
+                marker_lists: marker_api::MarkerLists::default(),
                 addons: addon_manager::BrowserAddonManager::new(),
                 listeners: vec![disposal, parsed, user_input, decoration_microtasks],
                 custom_key: Rc::new(RefCell::new(None)),
