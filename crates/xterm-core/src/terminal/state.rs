@@ -85,9 +85,6 @@ impl TerminalState {
             ..AttributeData::default()
         }
     }
-    pub(crate) fn option_bool(&self, key: &str) -> Result<bool, TerminalError> {
-        Ok(self.options.get(key)?.is_truthy())
-    }
     pub(crate) fn reply(&mut self, text: &str) -> Result<(), TerminalError> {
         self.pending_replies
             .push_back(text.encode_utf16().collect());
