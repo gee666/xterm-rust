@@ -20,6 +20,12 @@ Full workspace formatting, focused WASM Clippy with warnings denied and WASM lib
 
 Raw source captures, browser results/logs, original Playwright JSON and summary, build metadata and scoped quality logs are retained in `results/mouse-modes/`. Reports contain historical owned temporary paths and artifact hashes. Generated binaries and browser packages are disposable, not checked-in evidence. Rebuild them to rerun.
 
+## Independent review
+
+The isolated task375 reviewer accepted source commit `884e080` with no findings or file edits. It reran workspace formatting, warning-denied focused WASM Clippy and regression-target compilation. It verified the three retained source captures agree, the freshly compiled WASM hash matches the recorded five-test browser artifact, and the raw original Playwright report has462 discovered,437 passed,25 skipped and no failures or unrun cases. It did not independently rerun browsers because the resource grant was pending.
+
+After the review grant arrived, the owner reran the tightened source script in default equality-check mode and all five Rust WASM tests in all three browsers. Both passed. The retained `source-report.json` now includes public Terminal, MouseStateService, InputHandler and shared-case hashes. The `final-*` reports/logs preserve this rerun. This post-review execution did not change production source.
+
 ## Reproduction
 
 Use installed reference Node dependencies, Rust's `wasm32-unknown-unknown` target and wasm-bindgen CLI0.2.100. See the existing browser-host-check skill for dependency overrides. Use a private Cargo target and temporary paths as required by the current swarm work agreement.
