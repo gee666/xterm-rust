@@ -1,0 +1,155 @@
+{
+  "package": "xterm-web",
+  "testName": "image_addon_browser",
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T13:54:21.625Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "image_addon_browser",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 16225.5345,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 11.059199999999691,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\M\\results\\acceptance-artifacts\\9676b45fb532051cd1309221780cb1a8beaf8856d50a0fdeb1766cbef0515d97\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\M\\results\\browser-host\\image_addon_browser\\2026-11-05T13-54-21-623Z-71ae3057-d2b2-4a15-9378-74a54f197232\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 971.2020999999986,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__image_addon_browser::all_protocols_share_public_storage_events_and_pixels",
+        "__wbgt__image_addon_browser::alternate_resize_public_reset_and_disposal_match_source",
+        "__wbgt__image_addon_browser::configured_protocol_size_and_pixel_limits_reach_actual_producers",
+        "__wbgt__image_addon_browser::constructor_getters_are_copied_twice_and_reset_uses_second_defaults",
+        "__wbgt__image_addon_browser::graphics_queries_scrolling_limits_and_reset_match_source",
+        "__wbgt__image_addon_browser::image_added_can_reenter_reset_without_borrowing_native_state",
+        "__wbgt__image_addon_browser::inactive_properties_and_constructor_copy_match_source",
+        "__wbgt__image_addon_browser::pending_bitmap_finishes_after_coordinator_disposal_without_new_events",
+        "__wbgt__image_addon_browser::repeated_activation_keeps_old_protocol_and_current_parent_contexts",
+        "__wbgt__image_addon_browser::shipped_public_constructor_and_terminal_addon_manager_are_connected",
+        "__wbgt__image_addon_browser::support_flags_disabled_before_open_and_window_reports_match_source",
+        "__wbgt__image_addon_browser::throwing_renderer_disposal_preserves_tokens_storage_and_event_emitter"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\image_addon_support\\mod.rs:157:9:\nassertion `left == right` failed\n  left: \"[\\\"\\\\u001b[?1;2c\\\"]\"\n right: \"[]\"\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:56391/suite.js:4910:21)\n    at image_addon_browser-445b3f586a45f39b.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[36802]:0xa7d019)\n    at image_addon_browser-445b3f586a45f39b.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[23794]:0x9e0ad0)\n    at image_addon_browser-445b3f586a45f39b.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[8030]:0x75d19b)\n    at image_addon_browser-445b3f586a45f39b.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[23795]:0x9e0b54)\n    at image_addon_browser-445b3f586a45f39b.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[12619]:0x86cd54)\n    at image_addon_browser-445b3f586a45f39b.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[15999]:0x8fa950)\n    at image_addon_browser-445b3f586a45f39b.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[44428]:0xa946c6)\n    at image_addon_browser-445b3f586a45f39b.wasm.rust_begin_unwind (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[30433]:0xa4e847)\n    at image_addon_browser-445b3f586a45f39b.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[30434]:0xa4e874)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\image_addon_support\\mod.rs:157:9:\nassertion `left == right` failed\n  left: \"[\\\"\\\\u001b[?1;2c\\\"]\"\n right: \"[\\\"\\\\u001b[?62;4;9;22c\\\"]\"\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:56391/suite.js:4910:21)\n    at image_addon_browser-445b3f586a45f39b.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[36802]:0xa7d019)\n    at image_addon_browser-445b3f586a45f39b.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[23794]:0x9e0ad0)\n    at image_addon_browser-445b3f586a45f39b.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[8030]:0x75d19b)\n    at image_addon_browser-445b3f586a45f39b.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[23795]:0x9e0b54)\n    at image_addon_browser-445b3f586a45f39b.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[12619]:0x86cd54)\n    at image_addon_browser-445b3f586a45f39b.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[15999]:0x8fa950)\n    at image_addon_browser-445b3f586a45f39b.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[44428]:0xa946c6)\n    at image_addon_browser-445b3f586a45f39b.wasm.rust_begin_unwind (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[30433]:0xa4e847)\n    at image_addon_browser-445b3f586a45f39b.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[30434]:0xa4e874)\n\n"
+        },
+        {
+          "type": "warning",
+          "text": "SIXEL: too much data, aborting"
+        },
+        {
+          "type": "warning",
+          "text": "SIXEL: too much data, aborting"
+        },
+        {
+          "type": "warning",
+          "text": "IIP: image dimension issue 2x2"
+        },
+        {
+          "type": "warning",
+          "text": "IIP: image dimension issue 2x2"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 12 tests\ntest throwing_renderer_disposal_preserves_tokens_storage_and_event_emitter ... ok\ntest support_flags_disabled_before_open_and_window_reports_match_source ... ok\ntest shipped_public_constructor_and_terminal_addon_manager_are_connected ... ok\ntest repeated_activation_keeps_old_protocol_and_current_parent_contexts ... FAIL\ntest pending_bitmap_finishes_after_coordinator_disposal_without_new_events ... ok\ntest inactive_properties_and_constructor_copy_match_source ... ok\ntest image_added_can_reenter_reset_without_borrowing_native_state ... ok\ntest graphics_queries_scrolling_limits_and_reset_match_source ... FAIL\ntest constructor_getters_are_copied_twice_and_reset_uses_second_defaults ... ok\ntest configured_protocol_size_and_pixel_limits_reach_actual_producers ... ok\ntest alternate_resize_public_reset_and_disposal_match_source ... ok\ntest all_protocols_share_public_storage_events_and_pixels ... ok\n\nfailures:\n\n---- repeated_activation_keeps_old_protocol_and_current_parent_contexts output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at image_addon_browser-445b3f586a45f39b.wasm.__rust_start_panic (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[44943]:0xa95393)\n            at image_addon_browser-445b3f586a45f39b.wasm.rust_panic (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[40242]:0xa8a25f)\n            at image_addon_browser-445b3f586a45f39b.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[12619]:0x86cd7f)\n            at image_addon_browser-445b3f586a45f39b.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[15999]:0x8fa950)\n            at image_addon_browser-445b3f586a45f39b.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[44428]:0xa946c6)\n            at image_addon_browser-445b3f586a45f39b.wasm.rust_begin_unwind (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[30433]:0xa4e847)\n            at image_addon_browser-445b3f586a45f39b.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[30434]:0xa4e874)\n            at image_addon_browser-445b3f586a45f39b.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[5705]:0x69e9fc)\n            at image_addon_browser-445b3f586a45f39b.wasm.core::panicking::assert_failed::h071140c43d9c192a (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[22818]:0x9caefe)\n            at image_addon_browser-445b3f586a45f39b.wasm.image_addon_browser::support::Pair::compare::hcc166397a86d8670 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[1003]:0x2cc7f3)\n\n---- graphics_queries_scrolling_limits_and_reset_match_source output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at image_addon_browser-445b3f586a45f39b.wasm.__rust_start_panic (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[44943]:0xa95393)\n            at image_addon_browser-445b3f586a45f39b.wasm.rust_panic (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[40242]:0xa8a25f)\n            at image_addon_browser-445b3f586a45f39b.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[12619]:0x86cd7f)\n            at image_addon_browser-445b3f586a45f39b.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[15999]:0x8fa950)\n            at image_addon_browser-445b3f586a45f39b.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[44428]:0xa946c6)\n            at image_addon_browser-445b3f586a45f39b.wasm.rust_begin_unwind (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[30433]:0xa4e847)\n            at image_addon_browser-445b3f586a45f39b.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[30434]:0xa4e874)\n            at image_addon_browser-445b3f586a45f39b.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[5705]:0x69e9fc)\n            at image_addon_browser-445b3f586a45f39b.wasm.core::panicking::assert_failed::h071140c43d9c192a (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[22818]:0x9caefe)\n            at image_addon_browser-445b3f586a45f39b.wasm.image_addon_browser::support::Pair::compare::hcc166397a86d8670 (http://127.0.0.1:56391/suite_bg.wasm:wasm-function[1003]:0x2cc7f3)\n\nfailures:\n\n    repeated_activation_keeps_old_protocol_and_current_parent_contexts\n    graphics_queries_scrolling_limits_and_reset_match_source\n\ntest result: FAILED. 10 passed; 2 failed; 0 ignored; 0 filtered out; finished in 0.88s\n\n",
+      "counts": {
+        "passed": 10,
+        "failed": 2,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/9676b45fb532051cd1309221780cb1a8beaf8856d50a0fdeb1766cbef0515d97/artifact.wasm",
+      "sha256": "9676b45fb532051cd1309221780cb1a8beaf8856d50a0fdeb1766cbef0515d97",
+      "bytes": 19065892,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\M\\target\\wasm32-unknown-unknown\\debug\\deps\\image_addon_browser-445b3f586a45f39b.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\M\\results\\browser-host\\image_addon_browser\\2026-11-05T13-54-21-623Z-71ae3057-d2b2-4a15-9378-74a54f197232\\artifacts\\suite_bg.wasm",
+      "bytes": 16009499,
+      "sha256": "97d5826fa0002b3091d6c07d62185bb8f90c330ba6d4112d40209901b0001fc6"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\M\\results\\browser-host\\image_addon_browser\\2026-11-05T13-54-21-623Z-71ae3057-d2b2-4a15-9378-74a54f197232\\artifacts\\suite.js",
+      "bytes": 212211,
+      "sha256": "f12355db5343a61edd01399c2a371c6672642c643408c668feb70a4885798f91"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "7bbe31f5809276f0e7a3bed268cd4a0ce198300a4850617604d53536cff5f0d8"
+  },
+  "finishedAt": "2026-11-05T13:54:40.330Z"
+}
