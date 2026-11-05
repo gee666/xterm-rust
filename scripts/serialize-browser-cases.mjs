@@ -238,6 +238,36 @@ export async function serializationCases() {
     }
     return values;
   });
+  await run('html-nan-scrollback-header-effects', async (term, addon) => {
+    await write(term, '\x1b[31mMUST NOT APPEAR\r\nSECOND');
+    const log = [];
+    Object.defineProperty(term.options, 'fontFamily', { configurable: true, get() {
+      log.push('fontFamily'); term.reset(); term.resize(6, 3); return 'raw\ud800';
+    } });
+    const options = { get onlySelection() { log.push('onlySelection'); return false; },
+      get range() { log.push('range'); return undefined; },
+      get scrollback() { log.push('scrollback'); term.resize(18, 4); return NaN; },
+      get includeGlobalBackground() { log.push('background'); return true; } };
+    return { html: capture(() => addon.serializeAsHTML(options)), log, state: snapshot(term) };
+  });
+  await run('html-nan-scrollback-header-throw', async (term, addon) => {
+    const values = [], log = [], sentinel = {};
+    for (const phase of ['background', 'fontFamily', 'fontSize']) {
+      log.length = 0;
+      Object.defineProperty(term.options, 'fontFamily', { configurable: true, get() {
+        log.push('fontFamily'); if (phase === 'fontFamily') throw sentinel; return 'monospace';
+      } });
+      Object.defineProperty(term.options, 'fontSize', { configurable: true, get() {
+        log.push('fontSize'); if (phase === 'fontSize') throw sentinel; return 15;
+      } });
+      let same = false;
+      const options = { get scrollback() { log.push('scrollback'); return NaN; },
+        get includeGlobalBackground() { log.push('background'); if (phase === 'background') throw sentinel; return false; } };
+      try { addon.serializeAsHTML(options); } catch (error) { same = error === sentinel; }
+      values.push({ phase, same, log: [...log] });
+    }
+    return values;
+  });
   await run('html-nan-row-bounds', async (term, addon) => {
     await write(term, 'must not be traversed');
     const values = [];
