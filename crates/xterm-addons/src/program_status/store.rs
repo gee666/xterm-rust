@@ -52,8 +52,11 @@ impl ProgramStatusStore {
 
     /// Empty id clears all records, not just the root record.
     pub fn clear(&mut self, id: &str) -> bool {
-        let prefix = format!("{id}/");
-        self.remove(|r| id.is_empty() || r.id == id || r.id.starts_with(&prefix))
+        self.clear_with_prefix(Some(id), &format!("{id}/"))
+    }
+
+    pub(super) fn clear_with_prefix(&mut self, id: Option<&str>, prefix: &str) -> bool {
+        self.remove(|r| id == Some("") || id == Some(r.id.as_str()) || r.id.starts_with(prefix))
     }
 
     pub fn remove_active_records(&mut self) -> bool {

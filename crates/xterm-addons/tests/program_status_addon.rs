@@ -105,6 +105,29 @@ fn clear_removes_only_id_and_descendants() {
     assert_eq!(changes.borrow().len(), 4);
 }
 #[test]
+fn foreign_prefix_clear_keeps_exact_id_and_emits_one_snapshot() {
+    let (term, addon, changes) = setup();
+    for id in ["a", "a/b", "a/b/c", "ab"] {
+        term.osc(7501, &format!("state=working:id={id}"));
+    }
+    let before = changes.borrow().len();
+    addon.clear_with_prefix(None, "a/").unwrap();
+    assert_eq!(
+        addon
+            .records()
+            .iter()
+            .map(|r| r.id.as_str())
+            .collect::<Vec<_>>(),
+        ["a", "ab"]
+    );
+    assert_eq!(changes.borrow().len(), before + 1);
+    let snapshot = addon.records();
+    addon.clear_with_prefix(None, "a/").unwrap();
+    assert!(Rc::ptr_eq(&snapshot, &addon.records()));
+    assert_eq!(changes.borrow().len(), before + 1);
+}
+
+#[test]
 fn process_exit_and_prompt_remove_only_active_records() {
     for prompt in [false, true] {
         let (term, addon, changes) = setup();

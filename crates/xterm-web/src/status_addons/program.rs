@@ -10,6 +10,14 @@ use xterm_addons::{
 };
 use xterm_core::lifecycle::Disposable;
 
+// Only the JS addition operator belongs at this boundary. Rust owns record
+// selection, mutation and event dispatch, after coercion callbacks have returned.
+#[wasm_bindgen(inline_js = "export function statusClearPrefix(id) { return id + '/'; }")]
+extern "C" {
+    #[wasm_bindgen(catch, js_name = statusClearPrefix)]
+    fn clear_prefix(id: &JsValue) -> Result<String, JsValue>;
+}
+
 type Snapshot = Rc<[StatusRecord]>;
 #[derive(Default)]
 struct SnapshotCache {
@@ -131,9 +139,14 @@ impl ProgramStatusAddon {
     pub fn on_change(&self) -> JsValue {
         event_function(&self.event)
     }
-    pub fn clear(&self, id: Option<String>) -> Result<(), JsValue> {
+    pub fn clear(&self, id: JsValue) -> Result<(), JsValue> {
+        let id = if id.is_undefined() { "".into() } else { id };
+        let prefix = clear_prefix(&id)?;
+        // Protocol ids contain only ASCII. Lossy UTF-16 conversion cannot turn
+        // an invalid id or prefix into a match for any stored record.
+        let exact = id.as_string();
         self.addon
-            .clear(id.as_deref().unwrap_or(""))
+            .clear_with_prefix(exact.as_deref(), &prefix)
             .map_err(event_error)
     }
     #[wasm_bindgen(js_name=processExited)]

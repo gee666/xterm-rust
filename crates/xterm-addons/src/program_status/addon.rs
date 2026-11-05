@@ -26,7 +26,11 @@ impl Inner {
     }
 
     fn clear(&self, id: &str) -> Result<(), EmitError> {
-        let changed = self.store.borrow_mut().clear(id);
+        self.clear_with_prefix(Some(id), &format!("{id}/"))
+    }
+
+    fn clear_with_prefix(&self, id: Option<&str>, prefix: &str) -> Result<(), EmitError> {
+        let changed = self.store.borrow_mut().clear_with_prefix(id, prefix);
         if changed {
             self.fire()?;
         }
@@ -98,6 +102,14 @@ impl ProgramStatusAddon {
 
     pub fn clear(&self, id: &str) -> Result<(), EmitError> {
         self.inner.clear(id)
+    }
+
+    /// Clears strict id matches and descendants of a separately evaluated prefix.
+    /// Browser adapters use `None` for non-string ids: their string coercion can
+    /// select descendants, but must not select an equal-looking exact id.
+    /// Evaluate foreign coercion before calling this method, outside store borrows.
+    pub fn clear_with_prefix(&self, id: Option<&str>, prefix: &str) -> Result<(), EmitError> {
+        self.inner.clear_with_prefix(id, prefix)
     }
 
     pub fn process_exited(&self) -> Result<(), EmitError> {
