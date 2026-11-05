@@ -23,4 +23,10 @@ WASM_TEST=render_scheduler_browser node scripts/browser-host-check.mjs
 WASM_TEST=render_service_browser node scripts/browser-host-check.mjs
 ```
 
-Runtime evidence will be recorded under results/render-scheduler after execution, not inferred from source-only corpus checks.
+All 74 focused Windows native tests passed with no failures, ignored tests or filtering. Strict focused native/WASM Clippy and both WASM test builds passed. Initial and restored final Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4 runs each passed the 66-program differential and actualWindow RAF test. Existing render_service_browser passed its one test per engine.
+
+The exclusive-request negative control failed exactly one Chromium Rust test during nested scheduling. A second early-handle negative failed exactly one test when nested disposal during source-window resolution cleared the pending ID. Original production bytes were restored in finally after each control and SHA-256 matched. Complete final browser, native and strict-lint checks passed afterward. No assertions or watchdogs were weakened.
+
+Exact cargo fmt --all -- --check still fails with Windows OS206 before formatting. All five member-specific format checks passed. This is not a full workspace formatting pass.
+
+Commands, raw logs, source and native executable pins, browser reports, restoration records and generated artifact hashes are retained under results/render-scheduler. Negative compiler target paths were reused by subsequent builds, while their per-run generated WASM/bindings remain available through review. Source-only corpus execution is recorded separately and never counted as Rust coverage.
