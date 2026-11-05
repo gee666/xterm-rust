@@ -10,7 +10,7 @@ use xterm_addons::search::{
 // Symbol semantics. All matching, traversal, result state and decoration layout
 // remain Rust. Static module imports also work under a no-eval CSP.
 #[wasm_bindgen(
-    inline_js = "export function searchAddonGet(v,k){return v?.[k];}\nexport function searchAddonFlag(v,k){return v[k];}\nexport function searchAddonRegex(v){return v.regex;}\nexport function searchAddonRefresh(v){return {...v,incremental:true};}\nexport function searchAddonLimitReached(v,n){return n>=v;}\nexport function searchAddonLimitEnd(v,n){let x=+v;if(Number.isNaN(x))x=0;x=Math.trunc(x);return x<0?Math.max(n+x,0):Math.min(x,n);}"
+    inline_js = "export function searchAddonGet(v,k){return v?.[k];}\nexport function searchAddonFlag(v,k){return v[k];}\nexport function searchAddonRegex(v){return v.regex;}\nexport function searchAddonMatchBackground(v){return v.matchBackground;}\nexport function searchAddonRefresh(v){return {...v,incremental:true};}\nexport function searchAddonLimitReached(v,n){return n>=v;}\nexport function searchAddonLimitEnd(v,n){let x=+v;if(Number.isNaN(x))x=0;x=Math.trunc(x);return x<0?Math.max(n+x,0):Math.min(x,n);}"
 )]
 extern "C" {
     #[wasm_bindgen(catch, js_name = searchAddonGet)]
@@ -19,6 +19,8 @@ extern "C" {
     fn flag(value: &JsValue, key: &str) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch, js_name = searchAddonRegex)]
     fn regex(value: &JsValue) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch, js_name = searchAddonMatchBackground)]
+    fn match_background(value: &JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch, js_name = searchAddonRefresh)]
     fn refresh(value: &JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch, js_name = searchAddonLimitReached)]
@@ -56,7 +58,14 @@ impl SearchDecorationSource for JsDecorations {
             SearchColor::ActiveBorder => "activeMatchBorder",
             SearchColor::ActiveOverview => "activeMatchColorOverviewRuler",
         };
-        flag(&self.0, key)
+        // Highlight arguments may be nullish. Preserve the failing property
+        // name in WebKit TypeErrors instead of an opaque computed-key access.
+        let value = if kind == SearchColor::MatchBackground {
+            match_background(&self.0)
+        } else {
+            flag(&self.0, key)
+        };
+        value
             .map(|value| value.as_string())
             .map_err(crate::js_error::callback_error)
     }

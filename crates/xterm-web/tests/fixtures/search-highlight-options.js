@@ -77,7 +77,10 @@ async function checkSearchCallArgs(term, addon, write, equal) {
           try { child[method](query, request); } catch (error) { failed = true; caught = error; }
           const invalid = value == null && query === 'foo';
           check('raw falsy argument failure', failed, invalid);
-          if (invalid) check('nullish colors are TypeError', caught instanceof TypeError, true);
+          if (invalid) {
+            check('nullish colors are TypeError', caught instanceof TypeError, true);
+            check('nullish color error identifies matchBackground', caught.message.includes('matchBackground'), true);
+          }
           check('raw falsy argument read count', reads, invalid ? 3 : 5);
           cases++;
         } finally { child.dispose(); }
