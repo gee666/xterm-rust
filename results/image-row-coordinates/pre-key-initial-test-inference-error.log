@@ -1,0 +1,29 @@
+   Compiling equivalent v1.0.3
+   Compiling foldhash v0.1.5
+   Compiling allocator-api2 v0.2.21
+   Compiling memchr v2.8.3
+   Compiling hashbrown v0.15.5
+   Compiling ryu-js v1.0.3
+   Compiling regress v0.10.4
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\HypatiaImageRows\crates\xterm-core)
+error[E0283]: type annotations needed for `CircularList<_>`
+  --> crates\xterm-core\tests\circular_list_phased_reads.rs:70:9
+   |
+70 |     let list = CircularList::new(4).unwrap();
+   |         ^^^^   -------------------- type must be known at this point
+   |
+   = note: cannot satisfy `_: Clone`
+note: required by a bound in `CircularList::<T>::new`
+  --> O:\xterm-rust-swarm-16\tmp\worktrees\HypatiaImageRows\crates\xterm-core\src\circular_list.rs:76:9
+   |
+76 | impl<T: Clone> CircularList<T> {
+   |         ^^^^^ required by this bound in `CircularList::<T>::new`
+77 |     pub fn new(max_length: usize) -> Result<Self, CircularListError> {
+   |            --- required by a bound in this associated function
+help: consider giving `list` an explicit type, where the type for type parameter `T` is specified
+   |
+70 |     let list: CircularList<T> = CircularList::new(4).unwrap();
+   |             +++++++++++++++++
+
+For more information about this error, try `rustc --explain E0283`.
+error: could not compile `xterm-core` (test "circular_list_phased_reads") due to 1 previous error
