@@ -26,6 +26,10 @@ The source addon probe has twelve records. It exercises CPAL/COLR rejection cach
 
 Exact `cargo fmt --all -- --check` fails on this physical Windows path with OS206. Separate checks pass for all five workspace members. That is not an aggregate formatting pass. Full workspace gates, native Linux/macOS, original font suites, Terminal rendering and addon distribution acceptance remain open.
 
+## Independent review
+
+Task442 was accepted at7d82edcf after isolated code review, independent source-oracle runs, direct execution of the eight pinned native executables, and verification of all input/artifact/reference hashes. No new compiler or browser job ran during review. `results/font-color/review.md` records the exact scope and restrictions. Canonical main integration remains a later task309 batch after448.
+
 ## Reproduction
 
 Use a private O: target, Cargo jobs2 and a current compiler/browser resource grant.
