@@ -1,0 +1,42 @@
+running 3 tests
+test nested_mousemove_does_not_redirect_an_outer_disposal_to_the_new_cache ... ok
+test disposal_visits_the_replacement_not_the_previous_later_provider_reply ... FAIL
+test disposal_visits_a_provider_reply_completed_by_an_earlier_dispose_callback ... FAIL
+
+failures:
+
+---- disposal_visits_the_replacement_not_the_previous_later_provider_reply output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.__rust_start_panic (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[39004]:0x8c5c99)
+            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.rust_panic (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[34823]:0x8bbf5a)
+            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[10643]:0x6e3dba)
+            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[13523]:0x75cab9)
+            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[38547]:0x8c5122)
+            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.rust_begin_unwind (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[26216]:0x887ced)
+            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[26217]:0x887d1a)
+            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[4717]:0x557981)
+            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.core::panicking::assert_failed::hd88fba42a0e85fbd (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[19172]:0x80ba04)
+            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.wasm_link_disposal::run::h36d4631d9f13a2bb (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[617]:0x1772ca)
+
+---- disposal_visits_a_provider_reply_completed_by_an_earlier_dispose_callback output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.__rust_start_panic (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[39004]:0x8c5c99)
+            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.rust_panic (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[34823]:0x8bbf5a)
+            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[10643]:0x6e3dba)
+            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[13523]:0x75cab9)
+            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[38547]:0x8c5122)
+            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.rust_begin_unwind (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[26216]:0x887ced)
+            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[26217]:0x887d1a)
+            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[4717]:0x557981)
+            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.core::panicking::assert_failed::hd88fba42a0e85fbd (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[19172]:0x80ba04)
+            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.wasm_link_disposal::run::h36d4631d9f13a2bb (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[617]:0x1772ca)
+
+failures:
+
+    disposal_visits_the_replacement_not_the_previous_later_provider_reply
+    disposal_visits_a_provider_reply_completed_by_an_earlier_dispose_callback
+
+test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 filtered out; finished in 0.02s
+

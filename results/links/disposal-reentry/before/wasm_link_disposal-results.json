@@ -1,0 +1,130 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_link_disposal",
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T09:55:38.577Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_link_disposal",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 592.298,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 10.788499999999999,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\J\\results\\acceptance-artifacts\\a8d4b92eb8bd3544e6214470d9bcbd35ecc00ea7417fc3992fc65df547b111a8\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\J\\results\\browser-host\\wasm_link_disposal\\2026-11-05T09-55-38-576Z-eb224363-9607-43c7-957e-050f4e545278\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 813.5925000000001,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_link_disposal::disposal_visits_a_provider_reply_completed_by_an_earlier_dispose_callback",
+        "__wbgt__wasm_link_disposal::disposal_visits_the_replacement_not_the_previous_later_provider_reply",
+        "__wbgt__wasm_link_disposal::nested_mousemove_does_not_redirect_an_outer_disposal_to_the_new_cache"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_link_disposal.rs:97:5:\nassertion `left == right` failed: Map traversal must visit a newly completed or replaced later provider reply\n  left: [\"first\", \"old\"]\n right: [\"first\", \"new\"]\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:56319/suite.js:4047:21)\n    at wasm_link_disposal-32f86df9eb5a7fa8.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[31797]:0x8b0711)\n    at wasm_link_disposal-32f86df9eb5a7fa8.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[20852]:0x8311cf)\n    at wasm_link_disposal-32f86df9eb5a7fa8.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[6825]:0x602cf6)\n    at wasm_link_disposal-32f86df9eb5a7fa8.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[20853]:0x831253)\n    at wasm_link_disposal-32f86df9eb5a7fa8.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[10643]:0x6e3d8f)\n    at wasm_link_disposal-32f86df9eb5a7fa8.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[13523]:0x75cab9)\n    at wasm_link_disposal-32f86df9eb5a7fa8.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[38547]:0x8c5122)\n    at wasm_link_disposal-32f86df9eb5a7fa8.wasm.rust_begin_unwind (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[26216]:0x887ced)\n    at wasm_link_disposal-32f86df9eb5a7fa8.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[26217]:0x887d1a)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_link_disposal.rs:97:5:\nassertion `left == right` failed: Map traversal must visit a newly completed or replaced later provider reply\n  left: [\"first\"]\n right: [\"first\", \"new\"]\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:56319/suite.js:4047:21)\n    at wasm_link_disposal-32f86df9eb5a7fa8.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[31797]:0x8b0711)\n    at wasm_link_disposal-32f86df9eb5a7fa8.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[20852]:0x8311cf)\n    at wasm_link_disposal-32f86df9eb5a7fa8.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[6825]:0x602cf6)\n    at wasm_link_disposal-32f86df9eb5a7fa8.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[20853]:0x831253)\n    at wasm_link_disposal-32f86df9eb5a7fa8.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[10643]:0x6e3d8f)\n    at wasm_link_disposal-32f86df9eb5a7fa8.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[13523]:0x75cab9)\n    at wasm_link_disposal-32f86df9eb5a7fa8.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[38547]:0x8c5122)\n    at wasm_link_disposal-32f86df9eb5a7fa8.wasm.rust_begin_unwind (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[26216]:0x887ced)\n    at wasm_link_disposal-32f86df9eb5a7fa8.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[26217]:0x887d1a)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 3 tests\ntest nested_mousemove_does_not_redirect_an_outer_disposal_to_the_new_cache ... ok\ntest disposal_visits_the_replacement_not_the_previous_later_provider_reply ... FAIL\ntest disposal_visits_a_provider_reply_completed_by_an_earlier_dispose_callback ... FAIL\n\nfailures:\n\n---- disposal_visits_the_replacement_not_the_previous_later_provider_reply output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.__rust_start_panic (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[39004]:0x8c5c99)\n            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.rust_panic (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[34823]:0x8bbf5a)\n            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[10643]:0x6e3dba)\n            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[13523]:0x75cab9)\n            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[38547]:0x8c5122)\n            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.rust_begin_unwind (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[26216]:0x887ced)\n            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[26217]:0x887d1a)\n            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[4717]:0x557981)\n            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.core::panicking::assert_failed::hd88fba42a0e85fbd (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[19172]:0x80ba04)\n            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.wasm_link_disposal::run::h36d4631d9f13a2bb (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[617]:0x1772ca)\n\n---- disposal_visits_a_provider_reply_completed_by_an_earlier_dispose_callback output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.__rust_start_panic (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[39004]:0x8c5c99)\n            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.rust_panic (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[34823]:0x8bbf5a)\n            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[10643]:0x6e3dba)\n            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[13523]:0x75cab9)\n            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[38547]:0x8c5122)\n            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.rust_begin_unwind (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[26216]:0x887ced)\n            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[26217]:0x887d1a)\n            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[4717]:0x557981)\n            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.core::panicking::assert_failed::hd88fba42a0e85fbd (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[19172]:0x80ba04)\n            at wasm_link_disposal-32f86df9eb5a7fa8.wasm.wasm_link_disposal::run::h36d4631d9f13a2bb (http://127.0.0.1:56319/suite_bg.wasm:wasm-function[617]:0x1772ca)\n\nfailures:\n\n    disposal_visits_the_replacement_not_the_previous_later_provider_reply\n    disposal_visits_a_provider_reply_completed_by_an_earlier_dispose_callback\n\ntest result: FAILED. 1 passed; 2 failed; 0 ignored; 0 filtered out; finished in 0.02s\n\n",
+      "counts": {
+        "passed": 1,
+        "failed": 2,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/a8d4b92eb8bd3544e6214470d9bcbd35ecc00ea7417fc3992fc65df547b111a8/artifact.wasm",
+      "sha256": "a8d4b92eb8bd3544e6214470d9bcbd35ecc00ea7417fc3992fc65df547b111a8",
+      "bytes": 16240333,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\J\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_link_disposal-32f86df9eb5a7fa8.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\J\\results\\browser-host\\wasm_link_disposal\\2026-11-05T09-55-38-576Z-eb224363-9607-43c7-957e-050f4e545278\\artifacts\\suite_bg.wasm",
+      "bytes": 13455343,
+      "sha256": "74147c5cea2c5dfa4d06d45ba1cbac0b24662ff0776baa20231a6b27b9e3345e"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\J\\results\\browser-host\\wasm_link_disposal\\2026-11-05T09-55-38-576Z-eb224363-9607-43c7-957e-050f4e545278\\artifacts\\suite.js",
+      "bytes": 178159,
+      "sha256": "059de13955b6e5fb36a93a9d8fd946a7a7afd58464eee7814c1f14947364934c"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "881fc404e6547d9e18179d08b588751922c4d668c023248cb4da9af9f86d59a9",
+    "testSourceSha256": "f7f52ba39e93a8e0a69963fd3968a6b3afbedea6b051e915c9e6a02290edbb5f"
+  },
+  "finishedAt": "2026-11-05T09:55:40.705Z"
+}
