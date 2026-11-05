@@ -94,7 +94,7 @@ impl SearchAddon {
                 if !term.is_valid()? {
                     self.clear_decorations(false)?;
                 } else if let Some(options) = &options {
-                    self.highlight_all(&term.text()?, options)?;
+                    self.highlight_all(&term, options)?;
                 }
             }
         }
@@ -157,18 +157,13 @@ impl SearchAddon {
     }
     fn highlight_all(
         &self,
-        term: &[u16],
+        term: &super::super::SearchTermHandle,
         options: &SearchOptionsHandle,
     ) -> Result<(), SearchAddonError> {
-        if term.is_empty() {
-            return self.clear_decorations(false);
-        }
         self.clear_decorations(true)?;
-        let flags = options.matching_options()?;
         let mut results = Vec::new();
         let mut previous: Option<SearchResult> = None;
-        self.init_cache()?;
-        let mut result = self.run_engine(term, &flags, Operation::At(0, 0), None, None)?;
+        let mut result = self.find_highlight(term, options, 0, 0)?;
         while let Some(found) = result {
             if previous
                 .as_ref()
@@ -192,9 +187,7 @@ impl SearchAddon {
             }
             previous = Some(found.clone());
             results.push(found);
-            self.init_cache()?;
-            result =
-                self.run_engine(term, &flags, Operation::At(next_row, next_col), None, None)?;
+            result = self.find_highlight(term, options, next_row, next_col)?;
         }
         let end = self.inner.highlight_limit.end_index(results.len())?;
         self.inner
@@ -213,6 +206,26 @@ impl SearchAddon {
             manager.create_highlights(&results, &options.highlight_decorations()?)?;
         }
         Ok(())
+    }
+    fn find_highlight(
+        &self,
+        term: &super::super::SearchTermHandle,
+        options: &SearchOptionsHandle,
+        row: isize,
+        col: isize,
+    ) -> Result<Option<SearchResult>, SearchAddonError> {
+        // Each highlight engine call captures its receiver before reading raw
+        // length. Empty/throwing guards must not initialize cache or read flags
+        // or matching text, even after a previous highlight found a result.
+        let host = self.host()?;
+        if !term.is_valid_for_engine()? {
+            host.clear_selection()?;
+            return Ok(None);
+        }
+        self.init_cache()?;
+        let flags = options.matching_options()?;
+        let text = term.text()?;
+        self.run_engine(&text, &flags, Operation::At(row, col), None, None)
     }
     fn select_result(
         &self,

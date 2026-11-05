@@ -24,6 +24,8 @@ mod empty;
 mod engine_guard;
 #[path = "search_cases/falsy_stored_options.rs"]
 mod falsy_stored_options;
+#[path = "search_cases/highlight_guard.rs"]
+mod highlight_guard;
 #[path = "search_cases/highlight_options.rs"]
 mod highlight_options;
 #[path = "search_cases/invalid.rs"]
