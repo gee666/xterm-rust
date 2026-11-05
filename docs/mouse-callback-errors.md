@@ -21,7 +21,7 @@ On Windows with Rust/Cargo1.85.1, Node24.15.0 and wasm-bindgen0.2.100, final sco
 - 43 native tests in eight targets, including the two new failure tests and all16,426 retained differential rows. No ignored tests.
 - Real Terminal error suite2/2, existing wheel suite5/5 and mouse DOM suite24/24 in each of Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4. These are31 tests per engine,93 expanded cases, not93 original suites.
 - Source-only interop11/11 groups. The two new groups cover16 exception cases and2 recursive replacement cases. Original upstream suites executed by this probe remain0.
-- Native core/web all-target/all-feature warning-denied Clippy, three scoped WASM suites plus library warning-denied Clippy, and exact `cargo fmt --all -- --check`.
+- Native core/web all-target/all-feature warning-denied Clippy and three scoped WASM suites plus library warning-denied Clippy. Exact `cargo fmt --all -- --check` passed against c0dd42b plus the owned changes. After rebasing onto a656b8f, the unchanged inherited `terminal/mod.rs` marker declaration order fails full formatting. This later failure is retained rather than relabeled as a pass.
 
 `results/mouse-callback-errors/` retains raw reports, browser artifact hashes and full command logs. The browser runner's generic `componentOnly` field is unchanged; these two new tests actually construct/open Terminal. Reproduce from a worktree with the documented existing Playwright/esbuild dependencies, wasm-bindgen0.2.100, and Cargo-j2:
 
@@ -37,6 +37,12 @@ cargo fmt --all -- --check
 ```
 
 The existing mouse DOM matrix initially passed23/24 in each engine. Its iframe fixture tried casting a child-realm HTMLDocument using the parent realm's `instanceof Document`, failing before any mouse assertion. Using the existing typed `HtmlIFrameElement::content_document` getter fixes that setup without changing any assertion or production routing. The retained before-fixture-fix report contains all three failures; the final matrix passes24/24. Initial WASM checks on old32fe51f found the already-repaired stale input test host. Rebasing onto c0dd42b reused the accepted input repair. It then exposed two unused imports and two missing Default implementations in mouse test helpers; those causes are fixed without suppressions.
+
+## Independent review
+
+Task345 accepted HEAD2449524 against a656b8f. The isolated reviewer reran all43 focused native tests and warning-denied native core/web all-target/all-feature Clippy successfully, inspected the error/borrow/cache paths and verified every retained browser report and generated WASM/binding hash. No browser rerun was authorized in that compiler-only review slot; none is claimed.
+
+The reviewer reproduced an inherited full-format failure at `terminal/mod.rs`: `mod marker_api;` must follow `pub mod link_services;`. Task337 introduced that module ordering in the integrated base. This is recorded in `post-rebase-fmt.log` and routed to the integration/quality owner. It does not change task345's reviewed callback behavior. The concise review receipt distinguishes this from the earlier c0dd42b full-format pass.
 
 ## Remaining work
 
