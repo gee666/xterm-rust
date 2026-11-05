@@ -34,4 +34,8 @@ cargo fmt --all -- --check
 
 The five new tests cover direct clear with reentrant enqueue, recursive clear, completed flush and dispatch with a processed prefix, cleanup panic and queue reuse, and enqueue followed by cleanup panic. They assert task counts, callback cancellation/dispatch and exact panic payloads. Captured test resources use weak queue handles rather than strong reference cycles.
 
+## Independent review
+
+The isolated task355 reviewer accepted HEAD5d2be77 against main4a38b52. The reviewer independently reran all28 focused tests, full-workspace formatting, warning-denied core/web all-target/all-feature Clippy and WASM library Clippy. It inspected the reentry, panic and weak-handle paths and verified that retained oracle hashes match the reviewed files. It did not rerun the JavaScript oracle or browser suites. No concrete problems were found and no source files changed during review.
+
 This task does not complete the common/lifecycle family, the raw mouse facade, the original browser suites, full workspace/release/feature gates, or native Linux/macOS execution. Overall equivalence remains NOT PROVEN.
