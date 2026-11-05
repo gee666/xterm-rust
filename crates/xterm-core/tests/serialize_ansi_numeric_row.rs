@@ -46,6 +46,9 @@ fn raw_numeric_rows_keep_rotated_ring_aliases() {
         (4_294_967_296.0, "def"),
         (9_007_199_254_740_991.0, "ghi"),
         (-0.5, ""),
+        (0.4, ""),
+        (3.429227000030392, "undefined"),
+        (1.300047319391903, "undefined"),
     ];
     for (row, text) in expected {
         assert_eq!(numeric(&buffer, row), text);

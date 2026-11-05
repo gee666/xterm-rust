@@ -61,9 +61,9 @@ pub fn serialize_numeric_row(
     if !row.is_finite() || row.abs() > MAX_SAFE_INTEGER {
         return Err(SerializeError::InvalidRange);
     }
-    // With one row and no final cursor movement, the origin cancels in the
-    // output trimming arithmetic. Keep handler offsets local while lookups and
-    // diagnostics retain the raw coordinate. Cell/style/finish logic is shared.
+    // No final cursor movement or wrapping lookahead needs this row's origin.
+    // Lookup and diagnostics keep the raw key, as does the floating-point
+    // trimming expression, whose rounding can expose an absent array entry.
     let mut h = Handler::new(buffer, rows, 0);
     if buffer.capture_numeric_line(row)?.is_some() {
         for col in 0..cols {
@@ -75,7 +75,7 @@ pub fn serialize_numeric_row(
         }
     }
     h.row_end(0, true)?;
-    h.finish(attrs, true)
+    h.finish_numeric_row(attrs, row)
 }
 
 impl<'a> Handler<'a> {
@@ -235,12 +235,43 @@ impl<'a> Handler<'a> {
         } else {
             self.all.len()
         };
+        self.finish_output(attrs, exclude_cursor, row_end, false)
+    }
+
+    fn finish_numeric_row(
+        self,
+        attrs: &AttributeData,
+        row: f64,
+    ) -> Result<Vec<u16>, SerializeError> {
+        let trim = self.buffer.current_length()? as f64 - row
+            <= self.buffer.current_rows(self.rows)? as f64;
+        // In source this is a floating loop limit. Rounding above1 performs a
+        // second iteration, appending the missing array entry as `undefined`.
+        let undefined_row = trim && row + 1.0 - row > 1.0;
+        self.finish_output(
+            attrs,
+            true,
+            if undefined_row { 2 } else { 1 },
+            undefined_row,
+        )
+    }
+
+    fn finish_output(
+        self,
+        attrs: &AttributeData,
+        exclude_cursor: bool,
+        row_end: usize,
+        undefined_row: bool,
+    ) -> Result<Vec<u16>, SerializeError> {
         let mut output = Vec::new();
         for (i, (text, separator)) in self.all.iter().take(row_end).enumerate() {
             output.extend(text);
             if i + 1 < row_end {
                 append(&mut output, separator);
             }
+        }
+        if undefined_row {
+            append(&mut output, "undefined");
         }
         if !exclude_cursor {
             let cursor = self.buffer.current_cursor()?;

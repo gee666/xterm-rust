@@ -397,7 +397,7 @@ export async function serializationCases() {
     term.resize(12, 2); term.options.scrollback = 0;
     await write(term, '\x1b[31mABC\r\n\x1b[32mDEF\r\n\x1b[34mGHI');
     const bounds = [-2, -1, -0, -0.5, 0.5, Number.MIN_VALUE, 2 ** 32, 2 ** 32 + 1,
-      Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER];
+      Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER, 0.4, 3.429227000030392, 1.300047319391903];
     return bounds.map(row => {
       const log = [];
       const range = { get start() { log.push('start'); return row; }, get end() { log.push('end'); return row; } };
