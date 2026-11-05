@@ -21,13 +21,17 @@ use xterm_web::{
 };
 wasm_bindgen_test_configure!(run_in_browser);
 #[wasm_bindgen(
-    inline_js = "export function getSourceAtlasScenario(name){return globalThis.sourceAtlasScenario(name);} export function captureAtlasWarmup(f){return globalThis.captureAtlasCallbacks(f);}"
+    inline_js = "export function getSourceAtlasScenario(name){return globalThis.sourceAtlasScenario(name);} export function captureAtlasWarmup(f){return globalThis.captureAtlasCallbacks(f);} export function beginUploads(){globalThis.beginAtlasUploads();} export function endUploads(){return globalThis.endAtlasUploads();}"
 )]
 extern "C" {
     #[wasm_bindgen(catch,js_name=getSourceAtlasScenario)]
     fn source_scenario(name: &str) -> Result<String, JsValue>;
     #[wasm_bindgen(catch, js_name=captureAtlasWarmup)]
     fn capture_warmup(invoke: &js_sys::Function) -> Result<u32, JsValue>;
+    #[wasm_bindgen(catch,js_name=beginUploads)]
+    fn begin_uploads() -> Result<(), JsValue>;
+    #[wasm_bindgen(catch,js_name=endUploads)]
+    fn end_uploads() -> Result<String, JsValue>;
 }
 fn config(spec: &Value, runtime: &AtlasRuntime) -> Rc<xterm_web::webgl::config::AtlasConfig> {
     let theme = ThemeService::default();
@@ -144,6 +148,28 @@ fn scenario(name: &str) {
             Ok(())
         });
     }
+    let nested = Rc::new(std::cell::RefCell::new(None));
+    if spec["nested"] == true {
+        let weak = Rc::downgrade(&atlas);
+        let done = std::cell::Cell::new(false);
+        let output = nested.clone();
+        atlas.on_add_canvas().try_subscribe(move |_| {
+            if !done.replace(true) {
+                let glyph = weak
+                    .upgrade()
+                    .unwrap()
+                    .get_glyph(GlyphKey::Number(103), 0, 0, 0, false, None)
+                    .map_err(|e| {
+                        xterm_core::event::EmitError::callback(
+                            xterm_wasm_support::js_error::JsCallbackError(e),
+                        )
+                    })?;
+                *output.borrow_mut() = Some(glyph);
+            }
+            Ok(())
+        });
+        begin_uploads().unwrap();
+    }
     let removed = events.clone();
     atlas
         .on_remove_canvas()
@@ -193,6 +219,11 @@ fn scenario(name: &str) {
         refs.push(g);
         layouts.push(atlas.page_layout_version());
     }
+    let uploads: Value = if spec["nested"] == true {
+        serde_json::from_str(&end_uploads().unwrap()).unwrap()
+    } else {
+        json!([])
+    };
     let pages:Vec<_>=atlas.pages().iter().map(|p|{
         let data=p.context.get_image_data(0.0,0.0,p.canvas.width().into(),p.canvas.height().into()).unwrap().data().0;
         let mut hash=2166136261u32;let mut nonzero=0;
@@ -208,7 +239,8 @@ fn scenario(name: &str) {
         .map(|g| refs.iter().position(|h| Rc::ptr_eq(g, h)).unwrap())
         .collect();
     let actual = json!({"initial":initial,"final":refs.iter().map(glyph).collect::<Vec<_>>(),"layouts":layouts,
-        "events":*events.borrow(),"pages":pages,"aliases":aliases,"scheduled":scheduled,"attached":element.query_selector("canvas").unwrap().is_some()});
+        "events":*events.borrow(),"pages":pages,"aliases":aliases,"scheduled":scheduled,"uploads":uploads,
+        "nested":nested.borrow().as_ref().map(glyph),"attached":element.query_selector("canvas").unwrap().is_some()});
     atlas.dispose().unwrap();
     element.remove();
     assert_same(&actual, &source["expected"], name);
@@ -264,4 +296,8 @@ mod host_cases;
 #[wasm_bindgen_test]
 fn seeded_mixed_styles_pack_like_source() {
     scenario("seeded");
+}
+#[wasm_bindgen_test]
+fn nested_page_listener_overwrites_shared_upload_crop() {
+    scenario("nested");
 }

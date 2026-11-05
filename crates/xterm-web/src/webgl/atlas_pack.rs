@@ -36,16 +36,23 @@ impl TextureAtlas {
             row.height = row.height.max(height);
             row.x += width;
         }
-        page.context
-            .put_image_data_with_dirty_x_and_dirty_y_and_dirty_width_and_dirty_height(
-                &bitmap.image,
-                position[0] - bitmap.bounds.left as f64,
-                position[1] - bitmap.bounds.top as f64,
-                bitmap.bounds.left as f64,
-                bitmap.bounds.top as f64,
-                width,
-                height,
-            )?;
+        let context = super::atlas_context::Context(&page.context);
+        let upload = context.method("putImageData")?;
+        // Source reads its shared work box after page events and callee lookup.
+        // Nested rasterization can change the crop, but not the outer glyph size.
+        let [left, top] = self.rasterizer.upload_origin();
+        context.apply(
+            &upload,
+            &[
+                bitmap.image.into(),
+                (position[0] - left).into(),
+                (position[1] - top).into(),
+                left.into(),
+                top.into(),
+                width.into(),
+                height.into(),
+            ],
+        )?;
         let glyph = Rc::new(RefCell::new(glyph));
         page.add_glyph(glyph.clone())?;
         page.touch(&self.runtime.clock)?;

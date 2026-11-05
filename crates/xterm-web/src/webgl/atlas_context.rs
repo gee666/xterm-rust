@@ -20,11 +20,15 @@ impl Context<'_> {
     pub fn string(&self, name: &str, units: &[u16]) -> Result<(), JsValue> {
         self.set(name, to_js_string(units).as_ref())
     }
+    pub fn method(&self, name: &str) -> Result<js_sys::Function, JsValue> {
+        self.get(name)?
+            .dyn_into::<js_sys::Function>()
+            .map_err(|_| js_sys::TypeError::new(&format!("{name} is not a function")).into())
+    }
     pub fn call(&self, name: &str, args: &[JsValue]) -> Result<JsValue, JsValue> {
-        let method = self.get(name)?;
-        let function = method
-            .dyn_ref::<js_sys::Function>()
-            .ok_or_else(|| js_sys::TypeError::new(&format!("{name} is not a function")))?;
+        self.apply(&self.method(name)?, args)
+    }
+    pub fn apply(&self, function: &js_sys::Function, args: &[JsValue]) -> Result<JsValue, JsValue> {
         let array = js_sys::Array::new();
         for value in args {
             array.push(value);

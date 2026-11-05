@@ -58,8 +58,9 @@ export function atlasScenario(name) {
   } else if (name==='contrast') {
     spec.ratio=7;
     for (const bg of [0,0x08000000,0x03121212]) for (const fg of [0x03808080,0x0b202020,0x04000000]) glyph(77,bg,fg);
-  } else if (name==='merge'||name==='evict'||name==='reentry') {
+  } else if (name==='merge'||name==='evict'||name==='reentry'||name==='nested') {
     if(name==='reentry')spec.reenter=true;
+    if(name==='nested')spec.nested=true;
     Object.assign(spec,{cellWidth:128,cellHeight:128,charWidth:128,charHeight:128,fontSize:120,maxPages:4});
     if(name==='evict')spec.maxTexture=512;
     for(let i=0;i<48;i++)glyph(0x2588,0,0x03000000|(i+1)*1037);
@@ -87,11 +88,17 @@ export function atlasScenario(name) {
   } else throw new Error(`Unknown atlas scenario ${name}`);
   const atlas=createSourceAtlas(spec);
   const element=document.createElement('div');document.body.append(element);
-  let cleared=false;
-  const events=[];atlas.onAddTextureAtlasCanvas(c=>{events.push(['add',c.width]);if(spec.reenter&&!cleared){cleared=true;atlas.clearTexture();}});
+  let cleared=false,nested=false,nestedGlyph=null;
+  const events=[];atlas.onAddTextureAtlasCanvas(c=>{
+    events.push(['add',c.width]);
+    if(spec.reenter&&!cleared){cleared=true;atlas.clearTexture();}
+    if(spec.nested&&!nested){nested=true;nestedGlyph=atlas.getRasterizedGlyph(103,0,0,0,false,element);}
+  });
   atlas.onRemoveTextureAtlasCanvas(c=>events.push(['remove',c.width]));
   const refs=[],initial=[],layouts=[];
+  let tracing=false;
   try {
+    if(spec.nested){beginAtlasUploads();tracing=true;}
     const scheduled=spec.warmup?captureAtlasCallbacks(()=>{atlas.warmUp();atlas.warmUp();}):null;
     for(const step of spec.steps) {
       if(step.clear){atlas.clearTexture();layouts.push(atlas.pageLayoutVersion);continue;}
@@ -100,14 +107,30 @@ export function atlasScenario(name) {
       const g=atlas[method](value,step.bg,step.fg,step.ext,step.restrict,element);
       refs.push(g);initial.push(glyphSnapshot(g));layouts.push(atlas.pageLayoutVersion);
     }
+    const uploads=tracing?endAtlasUploads():[];tracing=false;
     const pages=atlas.pages.map(p=>({width:p.canvas.width,height:p.canvas.height,version:p.version,
       row:{...p.currentRow},fixed:p.fixedRows.map(r=>({...r})),used:p.percentageUsed,
       glyphs:p.glyphs.length,...hashPixels(p.canvas)}));
     return JSON.stringify({spec,expected:{initial,final:refs.map(glyphSnapshot),events,layouts,pages,
-      aliases:refs.map(g=>refs.indexOf(g)),scheduled,attached:atlas._tmpCanvas.parentElement===element}});
-  } finally {atlas.dispose();element.remove();}
+      aliases:refs.map(g=>refs.indexOf(g)),scheduled,uploads,nested:nestedGlyph?glyphSnapshot(nestedGlyph):null,attached:atlas._tmpCanvas.parentElement===element}});
+  } finally {if(tracing)endAtlasUploads();atlas.dispose();element.remove();}
 }
 globalThis.sourceAtlasScenario=atlasScenario;
+let uploadTrace;
+export function beginAtlasUploads(){
+  if(uploadTrace)throw new Error('Upload trace already active');
+  const proto=CanvasRenderingContext2D.prototype;
+  const descriptor=Object.getOwnPropertyDescriptor(proto,'putImageData'),calls=[];
+  uploadTrace={descriptor,calls};
+  Object.defineProperty(proto,'putImageData',{configurable:true,writable:true,value:function(...args){calls.push(args.slice(1));return descriptor.value.apply(this,args);}});
+}
+export function endAtlasUploads(){
+  const {descriptor,calls}=uploadTrace;
+  Object.defineProperty(CanvasRenderingContext2D.prototype,'putImageData',descriptor);uploadTrace=undefined;
+  return calls;
+}
+globalThis.beginAtlasUploads=beginAtlasUploads;
+globalThis.endAtlasUploads=()=>JSON.stringify(endAtlasUploads());
 export function captureAtlasCallbacks(invoke) {
   const names=['requestIdleCallback','setTimeout','cancelIdleCallback','clearTimeout'];
   const descriptors=names.map(name=>Object.getOwnPropertyDescriptor(globalThis,name));

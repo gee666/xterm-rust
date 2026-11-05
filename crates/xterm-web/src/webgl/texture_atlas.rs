@@ -70,7 +70,7 @@ pub struct TextureAtlas {
     pub(super) layout_version: Cell<u64>,
     pub(super) added: Emitter<HtmlCanvasElement>,
     pub(super) removed: Emitter<HtmlCanvasElement>,
-    rasterizer: Rasterizer,
+    pub(super) rasterizer: Rasterizer,
     warmups: RefCell<Vec<BrowserTaskQueue>>,
 }
 impl TextureAtlas {

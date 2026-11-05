@@ -17,7 +17,10 @@ use crate::{
     },
     utf16::set_property,
 };
-use std::{cell::RefCell, rc::Rc};
+use std::{
+    cell::{Cell, RefCell},
+    rc::Rc,
+};
 use wasm_bindgen::{JsCast, JsValue};
 use web_sys::{CanvasRenderingContext2d, Document, HtmlCanvasElement, HtmlElement};
 use xterm_core::{
@@ -33,6 +36,7 @@ pub(super) struct Rasterizer {
     pub attrs: RefCell<AttributeData>,
     canvas: HtmlCanvasElement,
     context: CanvasRenderingContext2d,
+    upload_origin: Cell<[f64; 2]>,
     unicode: Rc<UnicodeService>,
     log: Rc<LogService>,
 }
@@ -73,9 +77,13 @@ impl Rasterizer {
             attrs: RefCell::new(AttributeData::default()),
             canvas,
             context,
+            upload_origin: Cell::new([0.0, 0.0]),
             unicode,
             log,
         })
+    }
+    pub fn upload_origin(&self) -> [f64; 2] {
+        self.upload_origin.get()
     }
     pub fn remove_canvas(&self) -> Result<(), JsValue> {
         let method = js_sys::Reflect::get(self.canvas.as_ref(), &"remove".into())?;
@@ -250,7 +258,7 @@ impl Rasterizer {
         ctx.op("restore", &[])?;
         let background_rgba = background.borrow().rgba;
         let foreground_rgba = foreground.borrow().rgba;
-        prepare_canvas(
+        let bitmap = prepare_canvas(
             &self.context,
             GlyphScan {
                 allowed_width: allowed as usize,
@@ -273,7 +281,12 @@ impl Rasterizer {
                 allow_transparency: self.config.options.allow_transparency,
                 clear_threshold: threshold,
             },
-        )
+        )?;
+        if let Some(bitmap) = &bitmap {
+            self.upload_origin
+                .set([bitmap.bounds.left as f64, bitmap.bounds.top as f64]);
+        }
+        Ok(bitmap)
     }
     fn font(&self, bold: bool, italic: bool) -> Vec<u16> {
         let o = &self.config.options;
