@@ -120,10 +120,11 @@ fn explicit_range(host: &Shared, range: &JsValue) -> Result<Range, JsValue> {
     let start_col = if col.is_undefined()
         || col
             .as_f64()
-            .is_some_and(|col| col.is_nan() || col == f64::INFINITY)
+            .is_some_and(|col| col.is_nan() || col >= u32::MAX as f64)
     {
-        // Undefined also makes col < end false. Using the captured end column
-        // would wrongly visit new cells when callbacks grow a nonfinal row.
+        // No native wasm32 line can have a valid column this large. Like NaN
+        // and undefined, it skips the first-row loop even after header resize.
+        // Substituting the captured end column would visit newly grown cells.
         usize::MAX
     } else {
         options::index(col)?
