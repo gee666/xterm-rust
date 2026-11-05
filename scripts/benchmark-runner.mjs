@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync, rmSync, lstatSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync, rmSync, lstatSync, openSync, readSync, closeSync } from 'node:fs';
 import { join, resolve, dirname, relative, isAbsolute } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runCommand } from './quality-process.mjs';
@@ -7,10 +7,25 @@ import { validateManifest, validateResult } from './benchmark-contract.mjs';
 
 const MAX_RESULT_BYTES = 8 * 1024 * 1024;
 const within = (parent, child) => { const path = relative(parent, child); return !isAbsolute(path) && path !== '..' && !path.startsWith(`..${process.platform === 'win32' ? '\\' : '/'}`); };
-function readBounded(path) {
-  const info = lstatSync(path);
-  assert.ok(info.isFile() && !info.isSymbolicLink() && info.size <= MAX_RESULT_BYTES, 'Invalid or oversized benchmark output');
-  return readFileSync(path, 'utf8');
+const DIAGNOSTIC_BYTES = 64 * 1024;
+function evidence(path) {
+  let info;
+  try { info = lstatSync(path); }
+  catch (error) { if (error.code === 'ENOENT') return null; throw error; }
+  assert.ok(info.isFile() && !info.isSymbolicLink(), 'Invalid benchmark output file');
+  const truncated = info.size > MAX_RESULT_BYTES;
+  const buffer = Buffer.alloc(Math.min(info.size, truncated ? DIAGNOSTIC_BYTES : MAX_RESULT_BYTES));
+  const fd = openSync(path, 'r');
+  try {
+    const count = readSync(fd, buffer, 0, buffer.length, 0);
+    return { raw: buffer.subarray(0, count).toString('utf8'), bytes: info.size, truncated };
+  } finally { closeSync(fd); }
+}
+function checkSize(paths) {
+  for (const path of paths) {
+    try { assert.ok(lstatSync(path).size <= MAX_RESULT_BYTES, 'Benchmark output size limit exceeded'); }
+    catch (error) { if (error.code !== 'ENOENT') throw error; }
+  }
 }
 /** Each adapter receives one shared manifest path and its own fresh result path.
  * Adapters own awaiting writes/frames and monotonic steady-state measurement.
@@ -40,13 +55,20 @@ export async function runBenchmarks({ manifest, adapters, scratchRoot, output, t
       assert.ok(Array.isArray(adapter.args) && adapter.args.every(value => typeof value === 'string'));
       const resultPath = join(owned, `${engine}.json`), log = join(owned, `${engine}.log`);
       const command = await runCommand(adapter.program, [...adapter.args, '--benchmark-manifest', input, '--benchmark-output', resultPath],
-        { cwd: adapter.cwd, env: process.env, log, timeoutMs });
-      receipt.commands.push({ engine, ...command, output: readBounded(log) });
+        { cwd: adapter.cwd, env: process.env, log, timeoutMs, monitorMs: 100,
+          resourceCheck: () => checkSize([log, resultPath]) });
+      // Record process outcomes before file inspection, which can itself fail.
+      const record = { engine, ...command };
+      receipt.commands.push(record);
+      const logEvidence = evidence(log);
+      record.output = logEvidence;
+      const captured = evidence(resultPath);
+      if (captured) receipt.results[engine] = captured;
+      assert.ok(!logEvidence?.truncated && !captured?.truncated, 'Benchmark output size limit exceeded');
       assert.equal(command.status, 'passed', `${engine} adapter failed`);
-      const raw = readBounded(resultPath);
-      // Retain malformed output as well as valid output for failure diagnosis.
-      receipt.results[engine] = { raw };
-      const parsed = JSON.parse(raw);
+      assert.ok(captured, 'Missing benchmark output');
+      // Partial/malformed results survive even nonzero exit or timeout cleanup.
+      const parsed = JSON.parse(captured.raw);
       summaries[engine] = validateResult(manifest, parsed, engine);
     }
     receipt.summary = summaries.javascript.map((row, index) => {

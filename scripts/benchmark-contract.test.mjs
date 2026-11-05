@@ -120,9 +120,9 @@ test('runner passes shared input to both engines and removes only owned scratch'
   assert.equal(JSON.parse(readFileSync(settings.output, 'utf8')).status, 'passed');
 }));
 
-for (const mode of ['nonzero', 'signal', 'malformed', 'missing', 'pending', 'timeout']) test(`runner retains ${mode} failure without ratios or leaked scratch`, () => temporary(async owned => {
+for (const mode of ['nonzero', 'signal', 'malformed', 'missing', 'pending', 'timeout', 'partial-nonzero', 'partial-timeout', 'oversized', 'oversized-monitor']) test(`runner retains ${mode} failure without ratios or leaked scratch`, () => temporary(async owned => {
   const settings = config(owned, mode);
-  if (mode === 'timeout') settings.timeoutMs = 300;
+  if (mode === 'timeout' || mode === 'partial-timeout') settings.timeoutMs = 300;
   writeFileSync(settings.output, '{"status":"passed","summary":"stale"}');
   const receipt = await runBenchmarks(settings);
   assert.equal(receipt.status, 'failed'); assert.equal(receipt.summary, null); assert.ok(receipt.error);
@@ -131,6 +131,17 @@ for (const mode of ['nonzero', 'signal', 'malformed', 'missing', 'pending', 'tim
   if (mode === 'timeout') assert.equal(receipt.commands[0].timedOut, true);
   if (mode === 'nonzero') assert.equal(receipt.commands[0].exitCode, 7);
   if (mode === 'malformed') assert.equal(receipt.results.javascript.raw, '{broken');
+  if (mode.startsWith('partial-')) assert.equal(receipt.results.javascript.raw, '{partial-result}');
+  if (mode === 'partial-nonzero' || mode === 'oversized') assert.equal(receipt.commands[0].exitCode, 7);
+  if (mode.startsWith('oversized')) {
+    assert.equal(receipt.commands[0].output.truncated, true);
+    assert.ok(receipt.commands[0].output.bytes > 8 * 1024 * 1024);
+    assert.ok(receipt.commands[0].output.raw.length <= 64 * 1024);
+  }
+  if (mode === 'oversized-monitor') {
+    assert.match(receipt.commands[0].resourceError, /size limit exceeded/);
+    assert.equal(receipt.commands[0].timedOut, false);
+  }
 }));
 
 test('CLI exits nonzero and retains invalid-manifest failure', () => temporary(owned => {
