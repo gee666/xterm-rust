@@ -211,7 +211,7 @@ impl BrowserLinkifier {
             .set_geometry(self.state.cols.get(), scroll_offset);
     }
     pub fn on_render(&self, start: f64, end: f64) -> Result<(), JsValue> {
-        if self.current_link().is_none() {
+        if self.state.hover.borrow().current().is_none() {
             return Ok(());
         }
         let (_, offset) = self.state.hover.borrow().geometry();

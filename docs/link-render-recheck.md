@@ -21,10 +21,10 @@ cargo clippy -p xterm-web --test wasm_link_render_recheck --all-features --targe
 cargo fmt --all -- --check
 ```
 
-Generation is only for the original oracle. Rust must compare against the retained fixture, not regenerate it. The unchanged-source methods cover ten cases. Eight are also run against opened original and Rust Terminals using public providers, DOM mouse events and real refreshes. Two additional direct-controller cases clear the current link by dispatching mouseleave from a range getter. The direct controller preserves exact exception values; the public trace checks error values captured from the render callback's window error event. Expected read sequences and leave/requery decisions are asserted before fixture comparison.
+Generation is only for the original oracle. Rust must compare against the retained fixture, not regenerate it. The unchanged-source methods cover twelve cases. Eight are also run against opened original and Rust Terminals using public providers, DOM mouse events and real refreshes. Four additional direct-controller cases clear the current link by dispatching mouseleave from a range getter. The direct controller preserves exact exception values; the public trace checks error values captured from the render callback's window error event. Expected read sequences and leave/requery decisions are asserted before fixture comparison.
 
 `public-link-provider-source.mjs` adds `--render-recheck` and retains all existing modes, including task 500's `--underline-geometry`. Task 514's independent `--mouse-path` mode is pending coordinator integration. Its runner additions must be retained when composing both producers. There are no private 514 prerequisite copies on this branch.
 
 ## Evidence status
 
-The unchanged-source method checks passed all ten directed cases. Browser execution, negative control and strict quality checks are not yet recorded. Missing evidence is not a pass. See `results/link-render-recheck/` for exact receipts as they are produced. Native OS/browser/global matrices remain outside this scoped repair.
+The unchanged-source method checks passed all twelve directed cases. Browser execution, negative control and strict quality checks are not yet recorded. Missing evidence is not a pass. See `results/link-render-recheck/` for exact receipts as they are produced. Native OS/browser/global matrices remain outside this scoped repair.

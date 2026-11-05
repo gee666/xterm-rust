@@ -8,7 +8,7 @@ const { source, load, hashes, typescript } = sourceLoader(root);
 const { Linkifier } = load(resolve(source, 'src/browser/Linkifier.ts'));
 const cases = [];
 for (const mode of ['plain', 'second start outside', 'second end outside', 'throw second start',
-  'throw second end', 'first start outside', 'first end outside', 'zero start', 'clear first start', 'clear second start']) {
+  'throw second end', 'first start outside', 'first end outside', 'zero start', 'clear first start', 'clear second start', 'clear first end', 'clear second end']) {
   const target = Object.create(Linkifier.prototype), reads = [], events = [], marker = {};
   let listener, armed = false, startReads = 0, endReads = 0, requested = false, caught;
   target._lastMouseEvent = {};
@@ -23,7 +23,7 @@ for (const mode of ['plain', 'second start outside', 'second end outside', 'thro
     const ordinal = end ? ++endReads : ++startReads;
     reads.push(`${end ? 'end' : 'start'}:${ordinal}`);
     if (mode === `throw second ${end ? 'end' : 'start'}` && ordinal === 2) throw marker;
-    if (!end && mode === `clear ${ordinal === 1 ? 'first' : 'second'} start`) target._clearCurrentLink();
+    if (mode === `clear ${ordinal === 1 ? 'first' : 'second'} ${end ? 'end' : 'start'}`) target._clearCurrentLink();
     if (mode === `${ordinal === 1 ? 'first' : 'second'} ${end ? 'end' : 'start'} outside`) return end ? 3 : 1;
     return 2;
   } });
@@ -32,12 +32,12 @@ for (const mode of ['plain', 'second start outside', 'second end outside', 'thro
   target._handleNewLink({ link });
   armed = true;
   try { listener({ start: mode === 'zero start' ? 0 : 1, end: 1 }); } catch (error) { caught = error; }
-  if (mode.startsWith('clear')) assert(caught instanceof TypeError && caught.message.includes('link'));
+  if (mode.startsWith('clear') && mode !== 'clear first end') assert(caught instanceof TypeError && caught.message.includes('link'));
   else assert.equal(caught, mode.startsWith('throw') ? marker : undefined);
   assert.deepEqual(events, ['plain', 'zero start'].includes(mode) || mode.startsWith('clear') ? ['leave'] : []);
-  assert.equal(requested, ['plain', 'zero start', 'second start outside', 'second end outside'].includes(mode));
+  assert.equal(requested, ['plain', 'zero start', 'second start outside', 'second end outside', 'clear first end'].includes(mode));
   assert.deepEqual(reads, mode === 'first start outside' || mode === 'clear first start' ? ['start:1']
-    : mode === 'first end outside' || mode === 'zero start' ? ['start:1', 'end:1']
+    : ['first end outside', 'zero start', 'clear first end'].includes(mode) ? ['start:1', 'end:1']
     : ['second start outside', 'throw second start', 'clear second start'].includes(mode) ? ['start:1', 'end:1', 'start:2']
     : ['start:1', 'end:1', 'start:2', 'end:2']);
   cases.push({ mode, reads, events, requested, caughtMarker: caught === marker, caughtTypeError: caught instanceof TypeError });
