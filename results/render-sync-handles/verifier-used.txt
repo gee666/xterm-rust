@@ -1,0 +1,94 @@
+import { readFile, writeFile, mkdir, copyFile, readdir, statfs } from 'node:fs/promises';
+import { resolve, join, dirname } from 'node:path';
+import { createHash } from 'node:crypto';
+import { spawnSync } from 'node:child_process';
+import { freemem } from 'node:os';
+import { runCommand } from '../scripts/quality-process.mjs';
+const root = resolve(import.meta.dirname, '..'), out = resolve(root, 'results/render-sync-handles');
+await mkdir(out, { recursive: true });
+const hash = bytes => createHash('sha256').update(bytes).digest('hex');
+const file = resolve(root, 'crates/xterm-web/src/renderer/service_sync.rs');
+const env = { ...process.env, TEMP: resolve(root, 'tmp'), TMP: resolve(root, 'tmp'),
+  CARGO_TARGET_DIR: resolve(root, 'target'), CARGO_BUILD_JOBS: '2', CARGO: 'C:/Users/user/.cargo/bin/cargo.exe',
+  CARGO_FEATURES: 'acceptance-hooks', WASM_TEST: 'render_service_browser',
+  WASM_BINDGEN: 'P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe',
+  PLAYWRIGHT_MODULE: 'P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/node_modules/playwright/index.mjs' };
+async function headroom() {
+  const disk = await statfs(root, { bigint: true });
+  const probe = { availableRamGiB: freemem() / 2 ** 30, freeOGiB: Number(disk.bavail * disk.bsize) / 2 ** 30 };
+  if (probe.availableRamGiB < 8 || probe.freeOGiB < 10) throw Error('Insufficient headroom ' + JSON.stringify(probe));
+  return probe;
+}
+const mode = process.argv[2];
+await writeFile(resolve(out, `${mode}-headroom.json`), JSON.stringify(await headroom(), null, 2) + '\n');
+if (mode === 'compiler' || mode === 'final-lint') {
+  const commands = mode === 'compiler' ? [
+    ['native-tests', ['test', '--locked', '-p', 'xterm-web', '--all-targets', '--all-features']],
+    ['native-clippy', ['clippy', '--locked', '-p', 'xterm-web', '--all-targets', '--all-features', '--', '-D', 'warnings']],
+    ['wasm-clippy', ['clippy', '--locked', '-p', 'xterm-web', '--target', 'wasm32-unknown-unknown', '--lib', '--test', 'render_service_browser', '--all-features', '--', '-D', 'warnings']]
+  ] : [
+    ['final-native-clippy', ['clippy', '--locked', '-p', 'xterm-web', '--all-targets', '--all-features', '--', '-D', 'warnings']],
+    ['final-wasm-clippy', ['clippy', '--locked', '-p', 'xterm-web', '--target', 'wasm32-unknown-unknown', '--lib', '--test', 'render_service_browser', '--all-features', '--', '-D', 'warnings']]
+  ];
+  const records = [];
+  for (const [name, args] of commands) {
+    console.log('START ' + name);
+    const record = await runCommand(env.CARGO, args, { cwd: root, env, log: resolve(out, name + '.log'), timeoutMs: 600000, resourceCheck: headroom });
+    records.push({ name, ...record });
+    await writeFile(resolve(out, mode + '-commands.json'), JSON.stringify(records, null, 2) + '\n');
+    console.log(name + ' ' + record.status);
+    if (record.status !== 'passed') throw Error('Failed ' + name);
+  }
+} else if (mode === 'browser') {
+  const original = await readFile(file), records = [];
+  async function stage(name, browsers, expected) {
+    console.log('START ' + name);
+    const record = await runCommand(process.execPath, ['scripts/browser-host-check.mjs'], {
+      cwd: root, env: { ...env, BROWSERS: browsers }, log: resolve(out, name + '.log'), timeoutMs: 600000, resourceCheck: headroom });
+    const report = JSON.parse(await readFile(resolve(root, 'results/browser-host/render_service_browser-results.json')));
+    if (!report.artifacts) throw Error('No browser artifacts ' + report.error);
+    const run = dirname(dirname(report.artifacts.wasm.path));
+    const folder = resolve(out, name); await mkdir(folder, { recursive: true });
+    for (const entry of await readdir(run, { withFileTypes: true })) if (entry.isFile()) await copyFile(join(run, entry.name), join(folder, entry.name));
+    const pins = [];
+    async function tree(dir) {
+      for (const entry of await readdir(dir, { withFileTypes: true })) {
+        const path = join(dir, entry.name);
+        if (entry.isDirectory()) await tree(path);
+        else if (entry.isFile()) pins.push({ path, sha256: hash(await readFile(path)) });
+        else throw Error('Unexpected generated link ' + path);
+      }
+    }
+    await tree(resolve(run, 'artifacts'));
+    pins.push({ path: resolve(root, report.artifacts.compiler.path), sha256: report.artifacts.compiler.sha256 });
+    const result = { name, productionSha256: hash(await readFile(file)), record, report, pins };
+    records.push(result);
+    await writeFile(resolve(out, 'browser-stages.json'), JSON.stringify(records, null, 2) + '\n');
+    console.log(name + ' ' + record.status + ' ' + JSON.stringify(report.browsers.map(b => ({ name: b.name, status: b.status, counts: b.counts }))));
+    if (report.status !== expected || expected === 'passed' && record.status !== 'passed') throw Error('Unexpected stage result ' + name);
+    if (expected === 'passed' && (report.browsers.length !== 3 || report.browsers.some(b =>
+      b.counts?.passed !== 6 || b.counts?.failed !== 0 || b.counts?.ignored !== 0 || b.counts?.filtered !== 0))) throw Error('Expected six passing functions in each of three engines');
+    if (expected === 'failed') {
+      const result = report.browsers[0];
+      if (report.browsers.length !== 1 || result.counts?.failed !== 2 || result.counts?.passed !== 4 || result.counts?.ignored !== 0 || result.counts?.filtered !== 0) throw Error('Control must fail exactly two new tests');
+      for (const test of ['sync_handle_raw_identity_nullish_scheduling_and_retained_delivery',
+        'sync_handle_set_and_clear_reentry_throw_identity_and_partial_assignment']) {
+        if (!result.output.includes(`test synchronized::${test} ... FAIL`)) throw Error('Wrong failed control function ' + test);
+      }
+    }
+  }
+  try {
+    await stage('initial', 'chromium,firefox,webkit', 'passed');
+    const previous = spawnSync('C:/Program Files/Git/cmd/git.exe', ['show', 'bfe4fe60:crates/xterm-web/src/renderer/service_sync.rs'], { cwd: root, encoding: null, timeout: 30000 });
+    if (previous.error || previous.status !== 0) throw Error('Cannot load exact accepted typed-handle control');
+    await writeFile(file, previous.stdout);
+    try { await stage('old-typed-handle', 'chromium', 'failed'); }
+    finally { await writeFile(file, original); }
+  } finally {
+    await writeFile(file, original);
+    const after = hash(await readFile(file));
+    if (after !== hash(original)) throw Error('Production restoration mismatch');
+    await writeFile(resolve(out, 'restoration.json'), JSON.stringify({ before: hash(original), after, identical: true }, null, 2) + '\n');
+  }
+  await stage('final', 'chromium,firefox,webkit', 'passed');
+} else throw Error('Expected compiler, browser or final-lint');

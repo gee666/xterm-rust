@@ -1,0 +1,50 @@
+import { readFile, writeFile, readdir } from 'node:fs/promises';
+import { resolve, join } from 'node:path';
+import { createHash } from 'node:crypto';
+const root = resolve(import.meta.dirname, '..'), out = resolve(root, 'results/render-sync-handles');
+const hash = bytes => createHash('sha256').update(bytes).digest('hex');
+const read = async path => JSON.parse(await readFile(resolve(out, path), 'utf8'));
+const stages = await read('browser-stages.json');
+let generatedStagePins = 0;
+for (const stage of stages) for (const pin of stage.pins) {
+  if (hash(await readFile(pin.path)) !== pin.sha256) throw Error('Generated stage drift ' + pin.path);
+  generatedStagePins++;
+}
+const inputs = await read('input-pins.json');
+for (const pin of inputs) if (hash(await readFile(resolve(root, pin.path))) !== pin.sha256) throw Error('Input drift ' + pin.path);
+const references = [];
+const manifest = JSON.parse(await readFile(resolve(root, 'docs/baseline/reference-manifest.json')));
+for (const base of ['P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo', resolve(root, 'source_repo')]) {
+  for (const pin of manifest) if (hash(await readFile(join(base, pin.path))) !== pin.sha256) throw Error('Reference drift ' + pin.path);
+  references.push({ root: base, count: manifest.length, status: 'passed' });
+}
+await writeFile(resolve(out, 'reference-final.json'), JSON.stringify(references, null, 2) + '\n');
+const first = stages.find(s => s.name === 'initial'), last = stages.find(s => s.name === 'final');
+const control = stages.find(s => s.name === 'old-typed-handle');
+if (control.productionSha256 === first.productionSha256 || control.report.artifacts.compiler.sha256 === first.report.artifacts.compiler.sha256) throw Error('Negative control must use distinct production/compiler bytes');
+const initialFinalSame = {};
+for (const kind of ['compiler', 'wasm', 'bindings']) {
+  const a = first.report.artifacts[kind].sha256, b = last.report.artifacts[kind].sha256;
+  if (a !== b) throw Error('Initial/final artifact mismatch ' + kind);
+  initialFinalSame[kind] = a;
+}
+const native = await readFile(resolve(out, 'native-tests.log'), 'utf8');
+const matches = [...native.matchAll(/test result: ok\. (\d+) passed; (\d+) failed; (\d+) ignored; (\d+) measured; (\d+) filtered out/g)];
+if (!matches.length) throw Error('No native summaries');
+const totals = Array.from({ length: 5 }, (_, index) => matches.reduce((sum, m) => sum + Number(m[index + 1]), 0));
+if (totals.slice(1).some(Boolean)) throw Error('Native failure/ignore/filter');
+const rawPins = [];
+for (const stage of stages) for (const entry of await readdir(resolve(out, stage.name), { withFileTypes: true })) {
+  if (!entry.isFile()) throw Error('Unexpected raw entry');
+  const path = `results/render-sync-handles/${stage.name}/${entry.name}`;
+  rawPins.push({ path, sha256: hash(await readFile(resolve(root, path))) });
+}
+await writeFile(resolve(out, 'raw-pins.json'), JSON.stringify(rawPins, null, 2) + '\n');
+const summary = { status: 'scoped pass; full-port equivalence NOT PROVEN', node: process.version,
+  cancellationPrograms: 54, rawHandlePrograms: 116, sourcePins: 8,
+  native: { harnesses: matches.length, totals }, generatedStagePins, inputPins: inputs.length,
+  rawFiles: rawPins.length, references, initialFinalSame,
+  stages: stages.map(s => ({ name: s.name, productionSha256: s.productionSha256, status: s.report.status,
+    browsers: s.report.browsers.map(b => ({ name: b.name, version: b.version, status: b.status, counts: b.counts })) })) };
+await writeFile(resolve(out, 'summary.json'), JSON.stringify(summary, null, 2) + '\n');
+console.log(JSON.stringify(summary, null, 2));

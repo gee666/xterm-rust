@@ -1,0 +1,138 @@
+{
+  "package": "xterm-web",
+  "testName": "render_service_browser",
+  "testTimeoutMs": 60000,
+  "features": [
+    "acceptance-hooks"
+  ],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T23:39:23.059Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "render_service_browser",
+        "--features",
+        "acceptance-hooks",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 14809.5934,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 13.181700000001001,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\AldonaSyncHandle\\results\\acceptance-artifacts\\d961acf77b7280a7fd01747abd0aecd44b5e06b345613342737cf20ed0d09404\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\AldonaSyncHandle\\results\\browser-host\\render_service_browser\\2026-11-05T23-39-23-058Z-740f42fd-d74f-4bd5-a20d-694a921cc519\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1480.486100000002,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__render_service_browser::exact_source_trace_covers_frames_sync_visibility_replacement_errors_and_disposal",
+        "__wbgt__render_service_browser::synchronized::sync_cancel_failures_keep_identity_state_and_callable_timer",
+        "__wbgt__render_service_browser::synchronized::sync_cancel_live_handle_and_reentrant_buffer_flush_replace_dispose",
+        "__wbgt__render_service_browser::synchronized::sync_cancel_timer_delivery_during_getter_or_call_remains_callable",
+        "__wbgt__render_service_browser::synchronized::sync_handle_raw_identity_nullish_scheduling_and_retained_delivery",
+        "__wbgt__render_service_browser::synchronized::sync_handle_set_and_clear_reentry_throw_identity_and_partial_assignment"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\support\\render_sync.rs:126:79:\ncalled `Result::unwrap()` on an `Err` value: JsValue(Error: Timer handle converted\nError: Timer handle converted\n    at Object.converted (http://127.0.0.1:57119/snippets/xterm-web-f147851b6cb0c0ef/tests/support/render_sync_oracle.mjs:900:83)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.__wbg_setTimeout_f2fe5af8e3debeb3 externref shim (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[40434]:0xb46343)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.web_sys::features::gen_Window::Window::set_timeout_with_callback_and_timeout_and_arguments_0::hae06bacbcc04f036 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[7955]:0x7b94e3)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.xterm_web::renderer::service::synchronized::SynchronizedOutput::buffer_rows::hadc8e24b408474c8 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[2367]:0x509fcf)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.xterm_web::renderer::service::RenderService::refresh_rows::h3a004bfce8d53ca9 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[1582]:0x418ff9)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.render_service_browser::synchronized::Fixture::command::he00304c1cb85c69b (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[879]:0x2496da)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.render_service_browser::synchronized::check_results::{{closure}}::h92a22bfecea12a79 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[2839]:0x5715e8)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.<dyn core::ops::function::Fn<(A,B)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::hae6b1bd711d57065 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[10148]:0x8523c8)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.closure2 externref shim (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[34505]:0xb229e7)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.closure2 externref shim multivalue shim (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[31992]:0xb09416))\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:57119/suite.js:5980:21)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[39523]:0xb425ad)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[26052]:0xaa647c)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[8739]:0x7f2d96)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[26053]:0xaa6500)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[13542]:0x90dc23)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[17092]:0x9a29d7)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[47627]:0xb5b404)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.rust_begin_unwind (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[32589]:0xb0fef4)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[32590]:0xb0ff21)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\support\\render_sync.rs:126:79:\ncalled `Result::unwrap()` on an `Err` value: JsValue(Error: Coerced or foreign timer handle\nError: Coerced or foreign timer handle\n    at Object.<anonymous> (http://127.0.0.1:57119/snippets/xterm-web-f147851b6cb0c0ef/tests/support/render_sync_oracle.mjs:960:54)\n    at http://127.0.0.1:57119/suite.js:4867:29\n    at handleError (http://127.0.0.1:57119/suite.js:178:18)\n    at imports.wbg.__wbg_apply_eb9e9b97497f91e4 (http://127.0.0.1:57119/suite.js:4866:68)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.__wbg_apply_eb9e9b97497f91e4 externref shim (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[34734]:0xb24895)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.js_sys::Reflect::apply::ha953c4798ad61902 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[7983]:0x7bb77d)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.xterm_web::renderer::service::synchronized::State::cancel_timer::h7c6456a68109b913 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[2091]:0x4c2c3e)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.xterm_web::renderer::service::synchronized::SynchronizedOutput::flush::h3ae40d2712d6cbf2 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[4941]:0x6a477c)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.xterm_web::renderer::service::RenderService::refresh_rows::h3a004bfce8d53ca9 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[1582]:0x418f58)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.render_service_browser::synchronized::Fixture::command::he00304c1cb85c69b (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[879]:0x2496da))\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:57119/suite.js:5980:21)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[39523]:0xb425ad)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[26052]:0xaa647c)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[8739]:0x7f2d96)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[26053]:0xaa6500)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[13542]:0x90dc23)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[17092]:0x9a29d7)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[47627]:0xb5b404)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.rust_begin_unwind (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[32589]:0xb0fef4)\n    at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[32590]:0xb0ff21)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 6 tests\ntest synchronized::sync_handle_set_and_clear_reentry_throw_identity_and_partial_assignment ... FAIL\ntest synchronized::sync_handle_raw_identity_nullish_scheduling_and_retained_delivery ... FAIL\ntest synchronized::sync_cancel_timer_delivery_during_getter_or_call_remains_callable ... ok\ntest synchronized::sync_cancel_live_handle_and_reentrant_buffer_flush_replace_dispose ... ok\ntest synchronized::sync_cancel_failures_keep_identity_state_and_callable_timer ... ok\ntest exact_source_trace_covers_frames_sync_visibility_replacement_errors_and_disposal ... ok\n\nfailures:\n\n---- synchronized::sync_handle_set_and_clear_reentry_throw_identity_and_partial_assignment output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at render_service_browser-be4f0ae79d5c4b81.wasm.__rust_start_panic (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[48171]:0xb5c190)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.rust_panic (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[43172]:0xb504a1)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[13542]:0x90dc51)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[17092]:0x9a29d7)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[47627]:0xb5b404)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.rust_begin_unwind (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[32589]:0xb0fef4)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[32590]:0xb0ff21)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[20286]:0xa126a5)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.render_service_browser::synchronized::check_results::h5a2b5af9af3cf0d8 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[1089]:0x305cef)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.render_service_browser::synchronized::sync_handle_set_and_clear_reentry_throw_identity_and_partial_assignment::h33441f9a3228facb (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[33367]:0xb18394)\n\n---- synchronized::sync_handle_raw_identity_nullish_scheduling_and_retained_delivery output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at render_service_browser-be4f0ae79d5c4b81.wasm.__rust_start_panic (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[48171]:0xb5c190)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.rust_panic (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[43172]:0xb504a1)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[13542]:0x90dc51)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[17092]:0x9a29d7)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[47627]:0xb5b404)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.rust_begin_unwind (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[32589]:0xb0fef4)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[32590]:0xb0ff21)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[20286]:0xa126a5)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.render_service_browser::synchronized::check_results::h1a2e674808d81db9 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[1088]:0x30503a)\n            at render_service_browser-be4f0ae79d5c4b81.wasm.render_service_browser::synchronized::sync_handle_raw_identity_nullish_scheduling_and_retained_delivery::h2fa49f6cb2dda1e0 (http://127.0.0.1:57119/suite_bg.wasm:wasm-function[33366]:0xb18367)\n\nfailures:\n\n    synchronized::sync_handle_set_and_clear_reentry_throw_identity_and_partial_assignment\n    synchronized::sync_handle_raw_identity_nullish_scheduling_and_retained_delivery\n\ntest result: FAILED. 4 passed; 2 failed; 0 ignored; 0 filtered out; finished in 0.15s\n\n",
+      "counts": {
+        "passed": 4,
+        "failed": 2,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/d961acf77b7280a7fd01747abd0aecd44b5e06b345613342737cf20ed0d09404/artifact.wasm",
+      "sha256": "d961acf77b7280a7fd01747abd0aecd44b5e06b345613342737cf20ed0d09404",
+      "bytes": 20657141,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\AldonaSyncHandle\\target\\wasm32-unknown-unknown\\debug\\deps\\render_service_browser-be4f0ae79d5c4b81.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\AldonaSyncHandle\\results\\browser-host\\render_service_browser\\2026-11-05T23-39-23-058Z-740f42fd-d74f-4bd5-a20d-694a921cc519\\artifacts\\suite_bg.wasm",
+      "bytes": 17393949,
+      "sha256": "e1bb406a78883e2ad00a547813002b75e9acc8b80f198db1d722f76e61d995b6"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\AldonaSyncHandle\\results\\browser-host\\render_service_browser\\2026-11-05T23-39-23-058Z-740f42fd-d74f-4bd5-a20d-694a921cc519\\artifacts\\suite.js",
+      "bytes": 250465,
+      "sha256": "169e5f95bb84290b96725f3633fb3d443ff2389c14e7d9cff418fc9de90965a0"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "15d20b46d46c210b0b13386a0c5f0d90dbf9c4878109ec41d5f2434a2bd66806"
+  },
+  "finishedAt": "2026-11-05T23:39:41.217Z"
+}
