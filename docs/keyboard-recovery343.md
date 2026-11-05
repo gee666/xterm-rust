@@ -38,6 +38,8 @@ cargo fmt --all -- --check
 node scripts/keyboard-realm-node.mjs
 WASM_TEST=lib node scripts/browser-host-check.mjs
 WASM_TEST=wasm_keyboard_live node scripts/browser-host-check.mjs
+WASM_TEST=wasm_input_event node scripts/browser-host-check.mjs
+node scripts/keyboard-recovery-report.mjs
 ```
 
 Set WASM_BINDGEN and PLAYWRIGHT_MODULE to existing installed tools if they are not on PATH. The reference copy is physical and unchanged. Node realm temporary bindings are removed in finally. Browser runners close browsers and their HTTP server in finally; temporary generated artifacts are removed after retaining reports.
@@ -53,18 +55,24 @@ Fresh checks so far:
 | Win32 original and differential | 64 original tests,13904 comparisons pass, seed5714738 |
 | Core library plus retained native keyboard targets | 80 tests pass,67 library and13 integration |
 | Dispatch native targets | 14 tests pass |
-| Added portable raw Kitty contracts | 4 tests pending execution |
+| Added portable raw Kitty contracts | 4 tests pass,84 native core tests across the two commands |
 | WASM library and live keyboard test compilation | Pass |
-| Scoped core and WASM warning-denied Clippy | Pass before added native Kitty test |
+| Scoped core and WASM warning-denied Clippy | Final reruns pass including added native Kitty tests |
 | Exact full workspace rustfmt | Pass after shortening the owned worktree path |
-| Node/WASM realm and Chromium/Firefox/WebKit matrices | Pending |
+| Node/WASM raw realm | 2 tests pass,10224 Kitty and592 Win32 comparisons |
+| Chromium/Firefox/WebKit raw realm | Both raw tests pass in every engine with the same10224+592 comparisons |
+| Complete WASM library in every browser | 24 pass,1 viewport test fails,0 ignored/filtered |
+| Real DOM keyboard in every browser | 15 tests pass,0 failed/ignored/filtered |
+| InputEvent regression in every browser | 4 tests pass, including288 guard combinations per engine |
 
 Source-only negative controls detect missing prototypes in4440 cases, wrong string hints in1080, premature numeric conversion in2166, lossy UTF-16 in2048, and replaced exceptions in924. A separate Win32 probe detects all five deliberate mutations. These controls validate the comparator, not Rust behavior. Raw control results remain in `results/kitty-realm/negative-controls.json` and `results/win32-independent/negative-controls.json`.
 
-The retained realm matrix compares10224 Kitty cases and560 Win32 cases per host, including own/inherited entries, receiver and persistent mutation, falsy values, native intrinsics, BigInt/Symbol/boxed/proxy values, throwing lookup/conversion, strict special-key equality and reentry. Real textarea tests cover the production listener's callback mutation, conversion-error identity, persistent tables, mode switching, nested dispatch and disposal. These matrices must be freshly executed before task acceptance.
+The raw realm matrix compares10224 Kitty cases and592 Win32 cases per host, including own/inherited entries, receiver and persistent mutation, falsy values, native intrinsics, BigInt/Symbol/boxed/proxy values, throwing lookup/conversion, strict special-key equality and reentry. It preserves the retained560 Win32 cases and adds32 changing-key-to-empty getter traces. The hypothesis that these should emit undefined was disproved by the unchanged source's explicit `codePointAt(0) || 0`; no production codepoint change was made. Real textarea tests cover the production listener's callback mutation, conversion-error identity, persistent tables, mode switching, nested dispatch and disposal.
 
 The first exact workspace rustfmt attempt failed with Windows OS206 at the long private path. A safe Git worktree move to `O:/xterm-rust-swarm-16/tmp/H` allowed the unchanged exact command to pass, without a junction or partial-format substitute. The failed log is retained.
 
-## Remaining scope
+## Retained failure and remaining scope
+
+The unfiltered WASM library suite runs25 tests in each browser. Both raw keyboard tests pass, but `viewport::browser::tests::constructor_uses_actual_scroll_element_source_getter_order_and_theme_css` fails at `viewport_browser_tests.rs:116`. Its expected getter trace has4 entries and the actual trace has10. No viewport source/assertion was changed or failure normalized. The complete failed reports and three logs are retained alongside the passing DOM/InputEvent receipts. Post432 routes this failure to task317. `verification.json` records the library failures separately from scoped raw keyboard success.
 
 No native Linux/macOS runtime, final full workspace feature/release/platform matrix, complete unchanged input/accessibility suite or whole-terminal equivalence is claimed. In particular, admitted InputEvent second reads returning non-string values remain task319, as do raw event fields outside declared primitive types. This recovery does not coerce those values to empty text or waive their lifecycle/error-order contracts.

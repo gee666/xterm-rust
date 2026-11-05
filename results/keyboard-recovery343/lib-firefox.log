@@ -1,0 +1,99 @@
+running 25 tests
+test viewport::browser::touch_tests::actual_touch_drag_inertia_cancellation_and_disposal_control_terminal_scroll ... ok
+test viewport::browser::tests::public_scroll_wrappers_preserve_relative_fractional_model_position ... ok
+test viewport::browser::tests::overridable_style_getter_returns_the_original_thrown_symbol ... ok
+test viewport::browser::tests::live_options_and_mouse_protocol_update_the_provided_element ... ok
+test viewport::browser::tests::constructor_uses_actual_scroll_element_source_getter_order_and_theme_css ... FAIL
+test viewport::browser::tests::actual_element_fractional_pixels_request_real_core_rows_without_feedback ... ok
+test viewport::browser::state_tests::synchronized_output_defers_external_scroll_until_real_render_completion ... ok
+test viewport::browser::state_tests::alternate_activation_and_resize_use_live_buffer_and_renderer_dimensions ... ok
+test viewport::browser::public_tests::unopened_public_scroll_wrappers_keep_native_clamping_and_validation ... ok
+test viewport::browser::public_tests::opened_scroll_lines_retains_pixels_and_zero_delta_leaves_position_unchanged ... ok
+test terminal::a11y_event_tests::thrown_javascript_values_keep_identity_and_stop_before_cell_write ... ok
+test terminal::a11y_event_tests::real_browser_accessibility_host_forwards_unpaired_units_losslessly ... ok
+test terminal::a11y_event_tests::native_a11y_events_reach_javascript_with_exact_utf16_units ... ok
+test terminal::a11y_event_tests::disabled_a11y_and_pending_high_surrogates_do_not_invent_callbacks ... ok
+test terminal::a11y_event_tests::custom_charset_payloads_keep_source_first_unit_and_nul_behavior ... ok
+test renderer::canvas_width::browser_tests::raw_utf16_and_bigint_reach_real_canvas_setters_in_variant_order ... ok
+test renderer::canvas_width::browser_tests::javascript_font_coercion_can_dispose_cache_without_an_outer_borrow ... ok
+test renderer::canvas_width::browser_tests::iframe_canvas_measures_and_flat_cache_rounds_only_after_first_read ... ok
+test renderer::canvas_width::browser_tests::canvas_setter_failure_retains_exact_exception_and_committed_font_key ... ok
+test input::dom::keyboard::key_event::win32_tests::win32_prototype_values_and_coercion_match_source_in_this_browser_realm ... ok
+test input::dom::keyboard::key_event::kitty_tests::kitty_raw_lookup_values_match_source_in_this_realm ... ok
+test char_size_browser::tests::strict_font_assignment_keeps_original_throw_and_lone_surrogate_value ... ok
+test char_size_browser::tests::live_metrics_read_size_then_family_with_string_hint_and_raw_units ... ok
+test char_size_browser::tests::iframe_canvas_fallback_retains_surrogate_comment_and_pixel_color ... ok
+test char_size_browser::tests::dom_measurement_passes_family_object_to_setter_without_early_coercion ... ok
+
+failures:
+
+---- viewport::browser::tests::constructor_uses_actual_scroll_element_source_getter_order_and_theme_css output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable executed
+        xterm_web-205002384ced212e.wasm.__rust_start_panic@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[41046]:0x962883
+        xterm_web-205002384ced212e.wasm.rust_panic@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[36631]:0x9581b2
+        xterm_web-205002384ced212e.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[11196]:0x767f7e
+        xterm_web-205002384ced212e.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[14196]:0x7e5b29
+        xterm_web-205002384ced212e.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[40560]:0x961c45
+        xterm_web-205002384ced212e.wasm.rust_begin_unwind@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[27608]:0x92175c
+        xterm_web-205002384ced212e.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[27609]:0x921789
+        xterm_web-205002384ced212e.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[5016]:0x5cb072
+        xterm_web-205002384ced212e.wasm.core::panicking::assert_failed::h527b24675ef9ddf2@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[20195]:0x89f443
+        xterm_web-205002384ced212e.wasm.xterm_web::viewport::browser::tests::constructor_uses_actual_scroll_element_source_getter_order_and_theme_css::h472cffbfbab93bc9@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[693]:0x1bb85e
+        xterm_web-205002384ced212e.wasm.core::ops::function::FnOnce::call_once::h4d8108b1304a0527@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[27174]:0x91ca4d
+        xterm_web-205002384ced212e.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h8d649b85308814af@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[10792]:0x7543cf
+        xterm_web-205002384ced212e.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::hfcf11f57e567e5b8@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[14224]:0x7e6cce
+        xterm_web-205002384ced212e.wasm.<dyn core::ops::function::FnMut<()>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h8e8727097f5b701b@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[18317]:0x86ea86
+        __wbg_adapter_77@http://127.0.0.1:51163/suite.js:467:10
+        cb0@http://127.0.0.1:51163/suite.js:4744:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:51163/suite.js:4749:30
+        handleError@http://127.0.0.1:51163/suite.js:154:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:51163/suite.js:4737:76
+        xterm_web-205002384ced212e.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[6760]:0x65cef2
+        xterm_web-205002384ced212e.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::hafa385f6c0b09168@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[13030]:0x7b83c5
+        xterm_web-205002384ced212e.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::h5033d85583d341a7@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[16257]:0x82eebb
+        xterm_web-205002384ced212e.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::hf30f6a5f1685b52e@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[1867]:0x402517
+        xterm_web-205002384ced212e.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[823]:0x23b02f
+        xterm_web-205002384ced212e.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[3701]:0x53ed9d
+        xterm_web-205002384ced212e.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[1770]:0x3e9779
+        xterm_web-205002384ced212e.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[3669]:0x53b04b
+        xterm_web-205002384ced212e.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[3309]:0x50c881
+        xterm_web-205002384ced212e.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[20716]:0x8ab861
+        xterm_web-205002384ced212e.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[16870]:0x8436e2
+        xterm_web-205002384ced212e.wasm.closure2203 externref shim@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[32869]:0x9492ff
+        __wbg_adapter_125@http://127.0.0.1:51163/suite.js:580:10
+        real@http://127.0.0.1:51163/suite.js:220:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:51163/suite.js:4303:23
+        xterm_web-205002384ced212e.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[40601]:0x961dcb
+        xterm_web-205002384ced212e.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[31944]:0x943e2f
+        xterm_web-205002384ced212e.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[5602]:0x600e00
+        xterm_web-205002384ced212e.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::{{closure}}::h95b28db559806c13@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[36962]:0x9591ab
+        xterm_web-205002384ced212e.wasm.wasm_bindgen_futures::queue::Queue::with::h9bd5fdd801f7dec4@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[31945]:0x943e42
+        xterm_web-205002384ced212e.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::h42fed9c117de84b9@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[2879]:0x4ccece
+        xterm_web-205002384ced212e.wasm.wasm_bindgen_futures::spawn_local::h3dc491f304d42e44@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[11979]:0x78b470
+        xterm_web-205002384ced212e.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::h15c44db32e5b7614@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[9276]:0x703786
+        xterm_web-205002384ced212e.wasm.wasm_bindgen::convert::closures::invoke2_mut::hba2fa4cbb261e43e@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[19147]:0x88520a
+        xterm_web-205002384ced212e.wasm.closure2838 externref shim@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[29480]:0x93355f
+        __wbg_adapter_1173@http://127.0.0.1:51163/suite.js:588:10
+        cb0@http://127.0.0.1:51163/suite.js:4072:28
+        __wbg_get_imports/imports.wbg.__wbg_new_23a2665fac83c611@http://127.0.0.1:51163/suite.js:4077:25
+        xterm_web-205002384ced212e.wasm.__wbg_new_23a2665fac83c611 externref shim@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[32479]:0x94702b
+        xterm_web-205002384ced212e.wasm.js_sys::Promise::new::hf39a358a769dc6ed@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[13530]:0x7cbe1d
+        xterm_web-205002384ced212e.wasm.wasm_bindgen_futures::future_to_promise::h65257425de8480bc@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[10656]:0x74d6f3
+        xterm_web-205002384ced212e.wasm.wasm_bindgen_test::__rt::Context::run::he8da95eeed777e80@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[1473]:0x391163
+        xterm_web-205002384ced212e.wasm.wasmbindgentestcontext_run@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[9813]:0x7218f1
+        xterm_web-205002384ced212e.wasm.wasmbindgentestcontext_run externref shim@http://127.0.0.1:51163/suite_bg.wasm:wasm-function[32861]:0x949233
+        run@http://127.0.0.1:51163/suite.js:2931:26
+        globalThis.testRun<@debugger eval code line 302 > eval:11:42
+        async*@debugger eval code line 302 > eval:14:11
+        evaluate@debugger eval code:304:16
+        @debugger eval code:1:44
+        @debugger eval code:1:62
+
+failures:
+
+    viewport::browser::tests::constructor_uses_actual_scroll_element_source_getter_order_and_theme_css
+
+test result: FAILED. 24 passed; 1 failed; 0 ignored; 0 filtered out; finished in 3.41s
+

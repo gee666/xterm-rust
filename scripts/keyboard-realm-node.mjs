@@ -53,7 +53,7 @@ const context = new bindings.WasmBindgenTestContext();
   assert.match(result, /2 passed; 0 failed; 0 ignored; 0 filtered out/);
   report.kittyCases = 10224;
   report.win32RetainedCases = 212;
-  report.win32IndependentCases = 348;
+  report.win32IndependentCases = 380;
   report.status = 'passed';
 } catch (error) {
   report.status = 'failed';

@@ -674,6 +674,28 @@ function capture(Encoder, spec) {
   }
 }
 
+// A getter can change a one-unit key to empty before codePointAt. Source uses
+// an explicit || 0 fallback here; preserve zero and all later field reads.
+function captureMissingCodepoint(Encoder, mask, down) {
+  const encoder = new Encoder();
+  const trace = [];
+  let keyReads = 0;
+  const controlLookups = (mask & 4) && !(mask & 2) && !(mask & 8) ? 3 : 1;
+  const event = {};
+  const fields = { code: 'KeyA', key: '', keyCode: 65, shiftKey: !!(mask & 1),
+    altKey: !!(mask & 2), ctrlKey: !!(mask & 4), metaKey: !!(mask & 8) };
+  for (const [name, value] of Object.entries(fields)) Object.defineProperty(event, name, {
+    get() {
+      trace.push(name);
+      if (name !== 'key') return value;
+      keyReads++;
+      return keyReads <= controlLookups ? '__missing_codepoint__'
+        : keyReads === controlLookups + 1 ? 'a' : '';
+    }
+  });
+  return { returned: record(encoder.evaluateKeyboardEvent(event, down)), trace };
+}
+
 function compareIndependentWin32(Source, Port) {
   const failures = [];
   let cases = 0;
@@ -685,6 +707,14 @@ function compareIndependentWin32(Source, Port) {
       const expected = capture(Source, spec);
       const actual = capture(Port, spec);
       if (JSON.stringify(actual) !== JSON.stringify(expected)) failures.push({ id, expected, actual });
+    }
+  }
+  for (let mask = 0; mask < 16; mask++) for (const down of [false, true]) {
+    cases++;
+    const expected = captureMissingCodepoint(Source, mask, down);
+    const actual = captureMissingCodepoint(Port, mask, down);
+    if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+      failures.push({ id: `missing-codepoint-${mask}-${Number(down)}`, expected, actual });
     }
   }
   return { cases, failures };

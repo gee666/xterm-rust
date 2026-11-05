@@ -18,7 +18,7 @@ assert.ok(resultEnum);
 const Source = vm.runInNewContext([strip(resultEnum), strip(sources[1].toString()),
   strip(sources[2].toString()), 'Win32InputMode'].join('\n'), {}, { timeout: 5000 });
 const identity = compareIndependentWin32(Source, Source);
-assert.equal(identity.cases, 348);
+assert.equal(identity.cases, 380);
 assert.deepEqual(identity.failures, []);
 
 class ConstantOutput extends Source {

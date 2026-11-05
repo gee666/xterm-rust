@@ -1,0 +1,336 @@
+{
+  "scope": "Task343 raw Kitty/Win32 lookup recovery. Full input and terminal equivalence NOT PROVEN.",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "source": [
+    {
+      "path": "src/common/Types.ts",
+      "sha256": "55f33764a24eae132a8c0bbabd6770355ef1fc3d6110eb6645e41cae15b80cb8"
+    },
+    {
+      "path": "src/common/data/EscapeSequences.ts",
+      "sha256": "d891e05aaf5982ee46f73649804c84eb407e603e360e84f8f89b9fcaa83f6276"
+    },
+    {
+      "path": "src/common/input/KittyKeyboard.ts",
+      "sha256": "b2e17f3ce40ff0660c8dd8a167a3ce8a775dfd0b66da72410ce92fa43bcebe82"
+    },
+    {
+      "path": "src/common/input/KittyKeyboard.test.ts",
+      "sha256": "add3781638e39a1ebd547235d4c7205251296922109ade29795780ae4602e68b"
+    },
+    {
+      "path": "src/common/input/Win32InputMode.ts",
+      "sha256": "e5cc4d3507391f9e249e731a078f35494c5e65ba2d46c81eea3378493da857c7"
+    },
+    {
+      "path": "src/common/input/Win32InputMode.test.ts",
+      "sha256": "3254be7830d256b201c78f8df76b78e5b03992eb90103484c506c803924ce099"
+    }
+  ],
+  "implementation": [
+    {
+      "path": "crates/xterm-core/src/input/keyboard_event_source.rs",
+      "sha256": "065b8e35a8e1a0df47c4f9596479fe4e086fef0b77bbcc07abf58b61e41edccf"
+    },
+    {
+      "path": "crates/xterm-core/src/input/keyboard_lookup.rs",
+      "sha256": "13fe2255c2dc25d2abc1d442bde669fd47913e8b710813174b7ef4b634693ee0"
+    },
+    {
+      "path": "crates/xterm-core/src/input/keyboard_map_inherited.rs",
+      "sha256": "4e20fab55ab85701780f27db8372ee6cd4a6d1958d7b3cec9740b6a2e9b1e319"
+    },
+    {
+      "path": "crates/xterm-core/src/input/kitty_keyboard.rs",
+      "sha256": "1363f454a7d4fa209d383d3e31a2aa76755ce0ab3fc7332391ce736d812fa27d"
+    },
+    {
+      "path": "crates/xterm-core/src/input/kitty_keyboard/lookup.rs",
+      "sha256": "a6f2e41b22df41f11d5863d75d77c02b5e0e3eaa14569a6d992cd19d6887e23d"
+    },
+    {
+      "path": "crates/xterm-core/src/input/kitty_keyboard/live.rs",
+      "sha256": "12396f4f047e010f769d43dd80f5fefb7fb2712b68f295253cdc43523dd20493"
+    },
+    {
+      "path": "crates/xterm-core/src/input/kitty_keyboard/live_fields.rs",
+      "sha256": "20f8c78a05a5461e125d456f304b5c0de98ab0b91af669776b1c82210b5cb34d"
+    },
+    {
+      "path": "crates/xterm-core/src/input/kitty_keyboard/keys.rs",
+      "sha256": "baa2712a670f1ac07e673e89309684478e80f7798169d8f25968668d85f44136"
+    },
+    {
+      "path": "crates/xterm-core/src/input/win32_input_mode.rs",
+      "sha256": "cc1ad4512c542ba2108f36cc41997ee28e40ab22d383b8a08c04c7428f1dd583"
+    },
+    {
+      "path": "crates/xterm-core/src/input/win32_lookup.rs",
+      "sha256": "31e80bd73802605ede32bc9dfebd9cfa09d01dd8361ee6facc64a6b9c84d3dc1"
+    },
+    {
+      "path": "crates/xterm-core/src/input/win32_key_codes.rs",
+      "sha256": "eecdc3f715eca30e5faa57e4d33f7b257bda91f46e27d5ea8b0bdcca55ceba99"
+    },
+    {
+      "path": "crates/xterm-web/src/input/keyboard_lookup.rs",
+      "sha256": "f4df47ee19906284a1ed6c790f3360c42857800296a418e5904e8fb3d25f1a9b"
+    },
+    {
+      "path": "crates/xterm-web/src/input/win32_lookup.rs",
+      "sha256": "b468cce7309c04d04de35ab1ff484e202a1218057134b9eaa5342c69ef8bde5d"
+    },
+    {
+      "path": "crates/xterm-web/src/input/win32_tables.js",
+      "sha256": "91e6c09c1e5255223495f79e3aa3852bd169736f4083aa687bbeca9f9b485caf"
+    },
+    {
+      "path": "crates/xterm-web/src/input/kitty_tables.js",
+      "sha256": "00cbbbf0e3a4378cc9c3b2f73d5bf1190427bc9dcddf1ded2cfe1f973469f07e"
+    },
+    {
+      "path": "crates/xterm-web/src/input/dom/key_event.rs",
+      "sha256": "542151772f756ed01a62907637de7fece29f7ab1b2b8f3acfa50127cb4d1aafe"
+    },
+    {
+      "path": "crates/xterm-web/src/input/dom/keyboard.rs",
+      "sha256": "98667c1553fa0b0a2dbffd965fd32c1cce9fffbb38931b2da94282ef2963ffc0"
+    },
+    {
+      "path": "crates/xterm-web/src/input/dom/mod.rs",
+      "sha256": "a7bb33ff4efb106b119def7cecd40a992b64ea2c41f244702b5aa7d15e11c256"
+    },
+    {
+      "path": "crates/xterm-web/tests/fixtures/kitty_lookup_cases.mjs",
+      "sha256": "c60fb3a5c58b0942321473bda965d64e658c6804604e32d06a5b012b6dba3590"
+    },
+    {
+      "path": "crates/xterm-web/tests/fixtures/kitty_lookup_driver.js",
+      "sha256": "5bebd4b29d56ff8bd850ae565708aceaa73501791ed23db5343536057a2e256b"
+    },
+    {
+      "path": "crates/xterm-web/tests/fixtures/win32-prototype-cases.mjs",
+      "sha256": "ba434bd2f349d0cc89d84dab20cb59be26a48b7e94385637fb44aa6a5150db6c"
+    },
+    {
+      "path": "crates/xterm-web/tests/fixtures/win32_independent_cases.mjs",
+      "sha256": "2175a157ebafe3f511b1c71979e302386a1f4f6f14c2a7c65f68a42e70dbd120"
+    },
+    {
+      "path": "crates/xterm-web/tests/fixtures/win32_prototype_driver.js",
+      "sha256": "7822b0096ffdb2af60a6cf711573882b722fc0b6bfce98bc76fa2f2f74d96f94"
+    }
+  ],
+  "rawKeyboardStatus": "passed",
+  "kittyCasesPerRealm": 10224,
+  "win32CasesPerRealm": 592,
+  "win32Families": {
+    "retainedRawMaps": 212,
+    "independentRawMaps": 348,
+    "changingEmptyCodepoint": 32
+  },
+  "nodeReceipt": "results/kitty-realm/node/2026-11-05T09-41-43-613Z/verification.json",
+  "nodeWasmSha256": "ea45aa92cc1b6d09e2bf5f6417a0dba70ca0f32a9aa191a4fa25c0e24c9c2731",
+  "libraries": [
+    {
+      "name": "chromium",
+      "version": "148.0.7778.96",
+      "status": "failed",
+      "counts": {
+        "passed": 24,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "rawKeyboardTestsPassed": 2,
+      "failures": [
+        "test viewport::browser::tests::constructor_uses_actual_scroll_element_source_getter_order_and_theme_css ... FAIL"
+      ]
+    },
+    {
+      "name": "firefox",
+      "version": "150.0.2",
+      "status": "failed",
+      "counts": {
+        "passed": 24,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "rawKeyboardTestsPassed": 2,
+      "failures": [
+        "test viewport::browser::tests::constructor_uses_actual_scroll_element_source_getter_order_and_theme_css ... FAIL"
+      ]
+    },
+    {
+      "name": "webkit",
+      "version": "26.4",
+      "status": "failed",
+      "counts": {
+        "passed": 24,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "rawKeyboardTestsPassed": 2,
+      "failures": [
+        "test viewport::browser::tests::constructor_uses_actual_scroll_element_source_getter_order_and_theme_css ... FAIL"
+      ]
+    }
+  ],
+  "dom": [
+    {
+      "name": "chromium",
+      "version": "148.0.7778.96",
+      "status": "passed",
+      "counts": {
+        "passed": 15,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "firefox",
+      "version": "150.0.2",
+      "status": "passed",
+      "counts": {
+        "passed": 15,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "webkit",
+      "version": "26.4",
+      "status": "passed",
+      "counts": {
+        "passed": 15,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "inputEvent": [
+    {
+      "name": "chromium",
+      "version": "148.0.7778.96",
+      "status": "passed",
+      "counts": {
+        "passed": 4,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "firefox",
+      "version": "150.0.2",
+      "status": "passed",
+      "counts": {
+        "passed": 4,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "webkit",
+      "version": "26.4",
+      "status": "passed",
+      "counts": {
+        "passed": 4,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "lib": {
+      "compiler": {
+        "path": "results/acceptance-artifacts/a339ca2b2ad9abb6f2fc78e3a6f1577ec5f0bcdce71f613d89762b2501fb5014/artifact.wasm",
+        "sha256": "a339ca2b2ad9abb6f2fc78e3a6f1577ec5f0bcdce71f613d89762b2501fb5014",
+        "bytes": 17271217,
+        "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\H\\target\\wasm32-unknown-unknown\\debug\\deps\\xterm_web-205002384ced212e.wasm"
+      },
+      "wasm": {
+        "path": "O:\\xterm-rust-swarm-16\\tmp\\H\\results\\browser-host\\lib\\2026-11-05T09-42-53-961Z-5fc63391-7bf5-4c79-b080-8b41fff51929\\artifacts\\suite_bg.wasm",
+        "bytes": 14341887,
+        "sha256": "f89f6a82b79c4b9e93c265da9f511038d7ab4945892f8e681a7e09c40b480050"
+      },
+      "bindings": {
+        "path": "O:\\xterm-rust-swarm-16\\tmp\\H\\results\\browser-host\\lib\\2026-11-05T09-42-53-961Z-5fc63391-7bf5-4c79-b080-8b41fff51929\\artifacts\\suite.js",
+        "bytes": 182735,
+        "sha256": "1831f8239b7ed344c3437d73cb617071bb230a5b273d1245056b0d5cd32b8f99"
+      },
+      "css": {
+        "path": "crates/xterm-web/assets/xterm.css",
+        "bytes": 8154,
+        "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+      },
+      "cargoLockSha256": "881fc404e6547d9e18179d08b588751922c4d668c023248cb4da9af9f86d59a9",
+      "testSourceSha256": "7515cb12dfe6ab187370b0b99dae82ac771e15815d15cd52bd1c32bc1f298ce0"
+    },
+    "wasm_keyboard_live": {
+      "compiler": {
+        "path": "results/acceptance-artifacts/83d24bfa8483a502ab93530838d7aff81c82155f5a686ba1153b6f78846f33f5/artifact.wasm",
+        "sha256": "83d24bfa8483a502ab93530838d7aff81c82155f5a686ba1153b6f78846f33f5",
+        "bytes": 16457917,
+        "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\H\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_keyboard_live-6e766956ec0f865f.wasm"
+      },
+      "wasm": {
+        "path": "O:\\xterm-rust-swarm-16\\tmp\\H\\results\\browser-host\\wasm_keyboard_live\\2026-11-05T09-43-50-624Z-f940b0a7-0efb-4991-a168-2bbc9aba2484\\artifacts\\suite_bg.wasm",
+        "bytes": 13624013,
+        "sha256": "4030f5e0124d00a3b34a9a836e6e9112c94b1965c693a144e03d6f09e3628e71"
+      },
+      "bindings": {
+        "path": "O:\\xterm-rust-swarm-16\\tmp\\H\\results\\browser-host\\wasm_keyboard_live\\2026-11-05T09-43-50-624Z-f940b0a7-0efb-4991-a168-2bbc9aba2484\\artifacts\\suite.js",
+        "bytes": 177079,
+        "sha256": "c14b1e37c353f5e7feed00bcf0e1d1cc528d112903416cb60a5556ba0815f1d7"
+      },
+      "css": {
+        "path": "crates/xterm-web/assets/xterm.css",
+        "bytes": 8154,
+        "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+      },
+      "cargoLockSha256": "881fc404e6547d9e18179d08b588751922c4d668c023248cb4da9af9f86d59a9",
+      "testSourceSha256": "ef2a62cc11797855f8efe1aa6e34ce1834f9ab86f0f539e38d1af24729474663"
+    },
+    "wasm_input_event": {
+      "compiler": {
+        "path": "results/acceptance-artifacts/08e81f94f84c90b3b054237dbe2d68292a72646a58a0a2f029c17cc57858a3ed/artifact.wasm",
+        "sha256": "08e81f94f84c90b3b054237dbe2d68292a72646a58a0a2f029c17cc57858a3ed",
+        "bytes": 16282793,
+        "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\H\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_input_event-0a0bd72e4f6b7f00.wasm"
+      },
+      "wasm": {
+        "path": "O:\\xterm-rust-swarm-16\\tmp\\H\\results\\browser-host\\wasm_input_event\\2026-11-05T09-44-04-795Z-4cb15e16-57f4-4dc3-bb1d-faeaf3701a24\\artifacts\\suite_bg.wasm",
+        "bytes": 13488361,
+        "sha256": "1b29224a38ceb1fbe4e7064e779248399a1b05fef9badbd9f2b176267974b193"
+      },
+      "bindings": {
+        "path": "O:\\xterm-rust-swarm-16\\tmp\\H\\results\\browser-host\\wasm_input_event\\2026-11-05T09-44-04-795Z-4cb15e16-57f4-4dc3-bb1d-faeaf3701a24\\artifacts\\suite.js",
+        "bytes": 176405,
+        "sha256": "31957401b0247a7e33abebe43f40e0450e651aca13b61b0ad0adf91313f0284e"
+      },
+      "css": {
+        "path": "crates/xterm-web/assets/xterm.css",
+        "bytes": 8154,
+        "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+      },
+      "cargoLockSha256": "881fc404e6547d9e18179d08b588751922c4d668c023248cb4da9af9f86d59a9",
+      "testSourceSha256": "0a3ee97492c78f18a464d9e30738ec9d03ff293521289223448fea1bf90a57ce"
+    }
+  },
+  "unproven": [
+    "Full input/accessibility family319 including admitted nonstring InputEvent",
+    "Complete unchanged browser/terminal/addon suites",
+    "Native Linux/macOS runtime",
+    "Final workspace feature/release/platform matrix",
+    "Canonical main integration"
+  ]
+}

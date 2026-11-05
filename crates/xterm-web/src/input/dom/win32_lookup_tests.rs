@@ -64,7 +64,7 @@ fn win32_prototype_values_and_coercion_match_source_in_this_browser_realm() {
         js_sys::Reflect::get(&independent, &"cases".into())
             .unwrap()
             .as_f64(),
-        Some(348.0)
+        Some(380.0)
     );
     let failures =
         js_sys::Array::from(&js_sys::Reflect::get(&independent, &"failures".into()).unwrap());
