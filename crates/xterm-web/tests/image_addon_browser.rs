@@ -1,4 +1,6 @@
 #![cfg(target_arch = "wasm32")]
+#[path = "image_addon_support/inspection.rs"]
+mod inspection;
 #[path = "image_addon_support/mod.rs"]
 mod support;
 use support::*;
@@ -11,6 +13,7 @@ wasm_bindgen_test_configure!(run_in_browser);
 fn inactive_properties_and_constructor_copy_match_source() {
     let rust = ImageAddon::new(JsValue::UNDEFINED).unwrap();
     let source = eval("new SourceImageAddon()");
+    assert!(rust.storage_inspection().is_undefined());
     assert_eq!(
         rust.storage_limit(),
         get(&source, "storageLimit").as_f64().unwrap()

@@ -38,6 +38,7 @@ impl ImageAddon {
                 terminal: RefCell::new(Weak::new()),
                 renderer: RefCell::new(None),
                 storage: RefCell::new(None),
+                inspection: RefCell::new(None),
                 cleanups: RefCell::new(Vec::new()),
                 handlers: RefCell::new(Vec::new()),
                 added,
@@ -53,6 +54,12 @@ impl ImageAddon {
     }
     pub fn reset(&self) -> Result<bool, JsValue> {
         self.state.reset()
+    }
+    /// Live read-only storage inspection. Writable source-private fields are not
+    /// part of this binding; image decoding and storage remain authoritative Rust.
+    #[wasm_bindgen(getter, js_name = _storage)]
+    pub fn storage_inspection(&self) -> JsValue {
+        self.state.inspection()
     }
     #[wasm_bindgen(getter, js_name = onImageAdded)]
     pub fn on_image_added(&self) -> js_sys::Function {
@@ -124,7 +131,7 @@ impl ImageAddon {
         })
     }
 }
-fn surface(resource: Option<ImageResource>) -> Result<JsValue, JsValue> {
+pub(super) fn surface(resource: Option<ImageResource>) -> Result<JsValue, JsValue> {
     resource.map_or(Ok(JsValue::UNDEFINED), |image| {
         image
             .surface::<BrowserImageSurface>()

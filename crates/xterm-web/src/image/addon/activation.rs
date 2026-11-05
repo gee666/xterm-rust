@@ -42,6 +42,7 @@ impl State {
         )
         .map_err(|e| to_js_error(&e))?;
         *self.storage.borrow_mut() = Some(storage.clone());
+        self.inspect_storage(storage.clone())?;
         let weak = Rc::downgrade(self);
         storage.set_on_image_added(Some(Rc::new(move || {
             if let Some(state) = weak.upgrade() {

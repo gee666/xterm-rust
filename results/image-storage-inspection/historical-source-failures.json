@@ -1,0 +1,127 @@
+{
+  "scope": "Historical unchanged JavaScript baseline, not a new execution or a Rust pass.",
+  "baseline": "P:/workshop/Windows_Worshop/oira666/xterm-rust/results/upstream-browser/runs/2026-10-27T23-59-39-134Z-65e3d213-db85-489a-811d-1d08350d2e8b/addon-image-all-runtime.json",
+  "sha256": "dde295da0d990e7e43fcd2ebe1e4efe8de00115d6035a80b306060c8956c7b26",
+  "stats": {
+    "startTime": "2026-10-28T00:00:50.291Z",
+    "duration": 77081.591,
+    "expected": 627,
+    "skipped": 4,
+    "unexpected": 8,
+    "flaky": 0
+  },
+  "failures": [
+    {
+      "title": "ImageAddon.test.js / ImageAddon / scrolling & cursor modes / testdata default (scrolling with VT240 cursor pos)",
+      "project": "WebKit",
+      "error": {
+        "message": "AssertionError: Expected values to be strictly deep-equal:\n\u001b[32m+ actual\u001b[39m \u001b[31m- expected\u001b[39m\n\n\u001b[39m  [\n\u001b[39m    0,\n\u001b[32m+\u001b[39m   0\n\u001b[31m-\u001b[39m   4\n\u001b[39m  ]\n",
+        "stack": "AssertionError: Expected values to be strictly deep-equal:\n\u001b[32m+ actual\u001b[39m \u001b[31m- expected\u001b[39m\n\n\u001b[39m  [\n\u001b[39m    0,\n\u001b[32m+\u001b[39m   0\n\u001b[31m-\u001b[39m   4\n\u001b[39m  ]\n\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:172:7",
+        "location": {
+          "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts",
+          "column": 7,
+          "line": 172
+        },
+        "snippet": "  170 |       const dim = await getDimensions();\n  171 |       await ctx.proxy.write(SIXEL_SEQ_0);\n> 172 |       deepStrictEqual(await getCursor(), [0, Math.floor(TESTDATA.height/dim.cellHeight)]);\n      |       ^\n  173 |       // moved to right by 10 cells\n  174 |       await ctx.proxy.write('#'.repeat(10) + SIXEL_SEQ_0);\n  175 |       deepStrictEqual(await getCursor(), [10, Math.floor(TESTDATA.height/dim.cellHeight) * 2]);"
+      }
+    },
+    {
+      "title": "ImageAddon.test.js / ImageAddon / image lifecycle & eviction / onImageAdded fires for each image",
+      "project": "WebKit",
+      "error": {
+        "message": "AssertionError: pollFor max duration exceeded.\nLast comparison: 0 (actual) !== 1 (expected)\nStack: Error: \n    at pollFor (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts:531:21)\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:205:13\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:3045:9\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:2537:11\n    at TimeoutManager.withRunnable (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:1816:14)\n    at TestInfoImpl._runWithTimeout (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:2535:7)\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:3043:7\n    at WorkerMain._runTest (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:3016:5)\n    at WorkerMain.runTestGroup (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:2911:9)\n    at process.<anonymous> (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\common\\index.js:1955:25)\n\n0 !== 1\n",
+        "stack": "AssertionError: pollFor max duration exceeded.\nLast comparison: 0 (actual) !== 1 (expected)\nStack: Error: \n    at pollFor (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts:531:21)\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:205:13\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:3045:9\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:2537:11\n    at TimeoutManager.withRunnable (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:1816:14)\n    at TestInfoImpl._runWithTimeout (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:2535:7)\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:3043:7\n    at WorkerMain._runTest (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:3016:5)\n    at WorkerMain.runTestGroup (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:2911:9)\n    at process.<anonymous> (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\common\\index.js:1955:25)\n\n0 !== 1\n\n    at pollFor (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts:531:21)\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:205:13\n    at pollFor (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts:556:22)\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:205:7",
+        "location": {
+          "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts",
+          "column": 21,
+          "line": 531
+        },
+        "snippet": "   at ..\\..\\..\\test\\playwright\\TestUtils.ts:531\n\n  529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {\n  530 |   options ??= {};\n> 531 |   options.stack ??= new Error().stack;\n      |                     ^\n  532 |   if (preFn) {\n  533 |     await preFn();\n  534 |   }"
+      }
+    },
+    {
+      "title": "ImageAddon.test.js / ImageAddon / image lifecycle & eviction / clear alternate images on buffer change",
+      "project": "WebKit",
+      "error": {
+        "message": "AssertionError: The expression evaluated to a falsy value:\n\n  (Math.abs((await ctx.page.evaluate(\"window.imageAddon.storageUsage\")) - 640 * 80 * 4 / 1e6) < 0.05)\n",
+        "stack": "AssertionError: The expression evaluated to a falsy value:\n\n  (Math.abs((await ctx.page.evaluate(\"window.imageAddon.storageUsage\")) - 640 * 80 * 4 / 1e6) < 0.05)\n\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:263:7",
+        "location": {
+          "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts",
+          "column": 7,
+          "line": 263
+        },
+        "snippet": "  261 |       strictEqual(await ctx.page.evaluate('window.imageAddon.storageUsage'), 0);\n  262 |       await ctx.proxy.write('\\x1b[?1049h' + SIXEL_SEQ_0);\n> 263 |       ok(Math.abs((await ctx.page.evaluate<number>('window.imageAddon.storageUsage')) - 640 * 80 * 4 / 1000000) < 0.05);\n      |       ^\n  264 |       await ctx.proxy.write('\\x1b[?1049l');\n  265 |       strictEqual(await ctx.page.evaluate('window.imageAddon.storageUsage'), 0);\n  266 |     });"
+      }
+    },
+    {
+      "title": "ImageAddon.test.js / ImageAddon / IIP - resizing / palette.png: N --> width=20 height=5 preserveAspectRatio=0",
+      "project": "Chromium",
+      "error": {
+        "message": "AssertionError: Expected values to be strictly deep-equal:\n\u001b[32m+ actual\u001b[39m \u001b[31m- expected\u001b[39m\n\n\u001b[39m  [\n\u001b[32m+\u001b[39m   165,\n\u001b[31m-\u001b[39m   160,\n\u001b[39m    90\n\u001b[39m  ]\n",
+        "stack": "AssertionError: Expected values to be strictly deep-equal:\n\u001b[32m+ actual\u001b[39m \u001b[31m- expected\u001b[39m\n\n\u001b[39m  [\n\u001b[32m+\u001b[39m   165,\n\u001b[31m-\u001b[39m   160,\n\u001b[39m    90\n\u001b[39m  ]\n\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:409:9",
+        "location": {
+          "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts",
+          "column": 9,
+          "line": 409
+        },
+        "snippet": "  407 |         await ctx.proxy.write(`\\x1b]1337;File=inline=1;size=${size};${header}:${payload}\\x07`);\n  408 |         const dim = await getDimensions();\n> 409 |         deepStrictEqual(await getOrigSize(1), [dim.cellWidth * 20, dim.cellHeight * 5]);\n      |         ^\n  410 |       });\n  411 |       test(name + ': Npx --> width=320px height=160px preserveAspectRatio=0', async () => {\n  412 |         // pixel based resize"
+      }
+    },
+    {
+      "title": "ImageAddon.test.js / ImageAddon / IIP - resizing / palette.qoi: N --> width=20 height=5 preserveAspectRatio=0",
+      "project": "Chromium",
+      "error": {
+        "message": "AssertionError: Expected values to be strictly deep-equal:\n\u001b[32m+ actual\u001b[39m \u001b[31m- expected\u001b[39m\n\n\u001b[39m  [\n\u001b[32m+\u001b[39m   165,\n\u001b[31m-\u001b[39m   160,\n\u001b[39m    90\n\u001b[39m  ]\n",
+        "stack": "AssertionError: Expected values to be strictly deep-equal:\n\u001b[32m+ actual\u001b[39m \u001b[31m- expected\u001b[39m\n\n\u001b[39m  [\n\u001b[32m+\u001b[39m   165,\n\u001b[31m-\u001b[39m   160,\n\u001b[39m    90\n\u001b[39m  ]\n\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:409:9",
+        "location": {
+          "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts",
+          "column": 9,
+          "line": 409
+        },
+        "snippet": "  407 |         await ctx.proxy.write(`\\x1b]1337;File=inline=1;size=${size};${header}:${payload}\\x07`);\n  408 |         const dim = await getDimensions();\n> 409 |         deepStrictEqual(await getOrigSize(1), [dim.cellWidth * 20, dim.cellHeight * 5]);\n      |         ^\n  410 |       });\n  411 |       test(name + ': Npx --> width=320px height=160px preserveAspectRatio=0', async () => {\n  412 |         // pixel based resize"
+      }
+    },
+    {
+      "title": "ImageAddon.test.js / ImageAddon / IIP - resizing / palette.png: N --> width=20 height=5 preserveAspectRatio=0",
+      "project": "FirefoxStable",
+      "error": {
+        "message": "AssertionError: Expected values to be strictly deep-equal:\n\u001b[32m+ actual\u001b[39m \u001b[31m- expected\u001b[39m\n\n\u001b[39m  [\n\u001b[32m+\u001b[39m   165,\n\u001b[31m-\u001b[39m   160,\n\u001b[39m    90\n\u001b[39m  ]\n",
+        "stack": "AssertionError: Expected values to be strictly deep-equal:\n\u001b[32m+ actual\u001b[39m \u001b[31m- expected\u001b[39m\n\n\u001b[39m  [\n\u001b[32m+\u001b[39m   165,\n\u001b[31m-\u001b[39m   160,\n\u001b[39m    90\n\u001b[39m  ]\n\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:409:9",
+        "location": {
+          "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts",
+          "column": 9,
+          "line": 409
+        },
+        "snippet": "  407 |         await ctx.proxy.write(`\\x1b]1337;File=inline=1;size=${size};${header}:${payload}\\x07`);\n  408 |         const dim = await getDimensions();\n> 409 |         deepStrictEqual(await getOrigSize(1), [dim.cellWidth * 20, dim.cellHeight * 5]);\n      |         ^\n  410 |       });\n  411 |       test(name + ': Npx --> width=320px height=160px preserveAspectRatio=0', async () => {\n  412 |         // pixel based resize"
+      }
+    },
+    {
+      "title": "ImageAddon.test.js / ImageAddon / IIP - resizing / palette.qoi: N --> width=20 height=5 preserveAspectRatio=0",
+      "project": "FirefoxStable",
+      "error": {
+        "message": "AssertionError: Expected values to be strictly deep-equal:\n\u001b[32m+ actual\u001b[39m \u001b[31m- expected\u001b[39m\n\n\u001b[39m  [\n\u001b[32m+\u001b[39m   165,\n\u001b[31m-\u001b[39m   160,\n\u001b[39m    90\n\u001b[39m  ]\n",
+        "stack": "AssertionError: Expected values to be strictly deep-equal:\n\u001b[32m+ actual\u001b[39m \u001b[31m- expected\u001b[39m\n\n\u001b[39m  [\n\u001b[32m+\u001b[39m   165,\n\u001b[31m-\u001b[39m   160,\n\u001b[39m    90\n\u001b[39m  ]\n\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:409:9",
+        "location": {
+          "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts",
+          "column": 9,
+          "line": 409
+        },
+        "snippet": "  407 |         await ctx.proxy.write(`\\x1b]1337;File=inline=1;size=${size};${header}:${payload}\\x07`);\n  408 |         const dim = await getDimensions();\n> 409 |         deepStrictEqual(await getOrigSize(1), [dim.cellWidth * 20, dim.cellHeight * 5]);\n      |         ^\n  410 |       });\n  411 |       test(name + ': Npx --> width=320px height=160px preserveAspectRatio=0', async () => {\n  412 |         // pixel based resize"
+      }
+    },
+    {
+      "title": "ImageAddon.test.js / ImageAddon / text overwrite removes tiles / sixel",
+      "project": "WebKit",
+      "error": {
+        "message": "AssertionError: pollFor max duration exceeded.\nLast comparison: false (actual) !== true (expected)\nStack: Error: \n    at pollFor (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts:531:21)\n    at assertTextClearsTiles (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:491:9)\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:441:7\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:3045:9\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:2537:11\n    at TimeoutManager.withRunnable (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:1816:14)\n    at TestInfoImpl._runWithTimeout (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:2535:7)\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:3043:7\n    at WorkerMain._runTest (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:3016:5)\n    at WorkerMain.runTestGroup (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:2911:9)\n    at process.<anonymous> (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\common\\index.js:1955:25)\n\nfalse !== true\n",
+        "stack": "AssertionError: pollFor max duration exceeded.\nLast comparison: false (actual) !== true (expected)\nStack: Error: \n    at pollFor (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts:531:21)\n    at assertTextClearsTiles (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:491:9)\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:441:7\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:3045:9\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:2537:11\n    at TimeoutManager.withRunnable (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:1816:14)\n    at TestInfoImpl._runWithTimeout (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:2535:7)\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:3043:7\n    at WorkerMain._runTest (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:3016:5)\n    at WorkerMain.runTestGroup (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\worker\\workerProcessEntry.js:2911:9)\n    at process.<anonymous> (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\playwright\\lib\\common\\index.js:1955:25)\n\nfalse !== true\n\n    at pollFor (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts:531:21)\n    at assertTextClearsTiles (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:491:9)\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:441:7\n    at pollFor (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts:556:22)\n    at assertTextClearsTiles (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:491:3)\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:441:7",
+        "location": {
+          "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts",
+          "column": 21,
+          "line": 531
+        },
+        "snippet": "   at ..\\..\\..\\test\\playwright\\TestUtils.ts:531\n\n  529 | export async function pollFor<T>(page: playwright.Page, evalOrFn: string | (() => MaybeAsync<T>), val: T, preFn?: () => Promise<void>, options?: IPollForOptions<T>): Promise<void> {\n  530 |   options ??= {};\n> 531 |   options.stack ??= new Error().stack;\n      |                     ^\n  532 |   if (preFn) {\n  533 |     await preFn();\n  534 |   }"
+      }
+    }
+  ]
+}

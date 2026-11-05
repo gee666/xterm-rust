@@ -1,7 +1,9 @@
 // Copyright (c) 2020 The xterm.js authors. All rights reserved. MIT license.
 //! Shared image ownership and buffer tiles. Platform drawing is an explicit host.
 mod budget;
+mod entries;
 mod error;
+pub use entries::ImageEntries;
 mod host;
 mod native;
 mod placement;

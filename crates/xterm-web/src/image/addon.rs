@@ -5,6 +5,7 @@ mod activation;
 mod bindings;
 mod controls;
 mod hooks;
+mod inspection;
 mod options;
 mod protocols;
 use super::{
@@ -51,6 +52,7 @@ struct State {
     terminal: RefCell<Weak<Shared>>,
     renderer: RefCell<Option<Rc<ImageRendererLifecycle>>>,
     storage: RefCell<Option<ImageStorage>>,
+    inspection: RefCell<Option<JsValue>>,
     cleanups: RefCell<Vec<Cleanup>>,
     handlers: RefCell<Vec<Protocol>>,
     added: Emitter<()>,
