@@ -1,7 +1,7 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved. MIT license.
 use super::{
-    append, scrollback_start, style, BufferAccess, CellRange, HtmlConfig, HtmlFontSize,
-    HtmlOptions, Position, SerializeError,
+    append, html_rows::Rows, scrollback_start, style, BufferAccess, CellRange, HtmlConfig,
+    HtmlFontSize, HtmlNumericRange, HtmlOptions, Position, SerializeError,
 };
 use crate::buffer::{constants::underline_style, CellData};
 
@@ -45,6 +45,39 @@ pub fn serialize_html(
             },
         })
     };
+    serialize_rows(
+        buffer,
+        range.map(Rows::integral),
+        config,
+        options.include_global_background,
+    )
+}
+
+/// Serialize a finite numeric HTML row range without truncating its coordinates.
+/// Missing negative, fractional or out-of-bounds rows emit empty row fragments.
+/// Bounds outside JavaScript's exact-integer domain return `InvalidRange`, since
+/// incrementing such a coordinate can hang the source loop. NaN and infinite
+/// bounds are not accepted by this entry point.
+pub fn serialize_html_numeric_rows(
+    buffer: &dyn BufferAccess,
+    range: HtmlNumericRange,
+    config: &HtmlConfig,
+    include_global_background: bool,
+) -> Result<Vec<u16>, SerializeError> {
+    serialize_rows(
+        buffer,
+        Some(Rows::numeric(range)?),
+        config,
+        include_global_background,
+    )
+}
+
+fn serialize_rows(
+    buffer: &dyn BufferAccess,
+    rows: Option<Rows>,
+    config: &HtmlConfig,
+    include_global_background: bool,
+) -> Result<Vec<u16>, SerializeError> {
     let defaults;
     let palette = match &config.ansi_colors {
         Some(colors) => colors,
@@ -53,29 +86,22 @@ pub fn serialize_html(
             &defaults
         }
     };
-    let mut output = header(config, options.include_global_background);
-    if let Some(range) = range {
+    let mut output = header(config, include_global_background);
+    if let Some(rows) = rows {
         let mut previous = CellData::default();
-        for row in range.start.y..=range.end.y {
+        for row in rows {
             append(&mut output, "<div><span>");
-            if let Some(length) = buffer.capture_line(row)? {
-                let start = if row == range.start.y {
-                    range.start.x
-                } else {
-                    0
-                };
-                let end = if row == range.end.y {
-                    range.end.x
-                } else {
-                    length
-                };
-                for col in start..end {
-                    if let Some(cell) = buffer.captured_cell(row, col)? {
-                        emit_cell(&mut output, &cell, &previous, palette);
-                        // BaseSerializeHandler advances oldCell even for placeholders.
-                        previous = cell;
-                    } else {
-                        buffer.missing_cell(row, col)?;
+            if let Some(index) = row.index {
+                if let Some(length) = buffer.capture_line(index)? {
+                    let end = row.end_col.unwrap_or(length);
+                    for col in row.start_col..end {
+                        if let Some(cell) = buffer.captured_cell(index, col)? {
+                            emit_cell(&mut output, &cell, &previous, palette);
+                            // BaseSerializeHandler advances oldCell even for placeholders.
+                            previous = cell;
+                        } else {
+                            buffer.missing_cell(index, col)?;
+                        }
                     }
                 }
             }

@@ -140,6 +140,38 @@ export async function serializationCases() {
     term.options.theme = {}; values.push(addon.serializeAsHTML());
     return values;
   }, true);
+  await run('html-finite-numeric-row-bounds', async (term, addon) => {
+    await write(term, '\x1b[31mABC\r\n\x1b[32mDEF\r\nGHI');
+    const bounds = [[-2, 1], [-0, 1], [-0.5, 1.5], [0.5, 1.5], [0, 1.5], [1, -1],
+      [2 ** 32, 2 ** 32 + 1], [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]];
+    return bounds.flatMap(([start, end]) => [0, 2, undefined].map(startCol => {
+      const log = [];
+      const range = { get startCol() { log.push('startCol'); return startCol; },
+        get startLine() { log.push('startLine'); return start; },
+        get endLine() { log.push('endLine'); return end; } };
+      return { bounds: [String(start), String(end)], startCol: String(startCol),
+        html: capture(() => addon.serializeAsHTML({ range })), log };
+    }));
+  });
+  await run('html-finite-row-header-reentry', async (term, addon) => {
+    await write(term, '\x1b[31mABCDEFGHIJKL\r\nDEF');
+    const log = [];
+    Object.defineProperty(term.options, 'fontFamily', { configurable: true,
+      get() { log.push('fontFamily'); term.reset(); term.resize(6, 3); return 'raw\ud800'; } });
+    const html = capture(() => addon.serializeAsHTML({ range: { startLine: -1, endLine: 1, startCol: 0 } }));
+    return { html, log, state: snapshot(term) };
+  });
+  await run('html-finite-row-header-throw', async (term, addon) => {
+    const sentinel = {}, log = [];
+    Object.defineProperty(term.options, 'fontFamily', { configurable: true,
+      get() { log.push('fontFamily'); throw sentinel; } });
+    return [[-1, 1], [0.5, 1.5], [2 ** 32, 2 ** 32]].map(([startLine, endLine]) => {
+      log.length = 0; let same = false;
+      try { addon.serializeAsHTML({ range: { startLine, endLine, startCol: 0 } }); }
+      catch (error) { same = error === sentinel; }
+      return { same, log: [...log] };
+    });
+  });
   await run('html-nan-row-bounds', async (term, addon) => {
     await write(term, 'must not be traversed');
     const values = [];

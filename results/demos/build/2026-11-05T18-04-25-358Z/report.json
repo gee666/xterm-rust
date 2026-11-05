@@ -1,0 +1,169 @@
+{
+  "status": "passed",
+  "command": "node scripts/build-demo.mjs",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "profile": "debug",
+  "commands": [
+    {
+      "command": [
+        "rustc",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 40.64670000000001,
+      "status": "passed",
+      "log": "results/demos/build/2026-11-05T18-04-25-358Z/rustc-version.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 50.03570000000002,
+      "status": "passed",
+      "log": "results/demos/build/2026-11-05T18-04-25-358Z/cargo-version.log"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 12.713199999999972,
+      "status": "passed",
+      "log": "results/demos/build/2026-11-05T18-04-25-358Z/bindgen-version.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "-p",
+        "xterm-web",
+        "--lib",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 15858.643,
+      "status": "passed",
+      "log": "results/demos/build/2026-11-05T18-04-25-358Z/debug-wasm.log"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\PeterRows\\target\\wasm32-unknown-unknown\\debug\\xterm_web.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\PeterRows\\browser\\pkg",
+        "--out-name",
+        "xterm_web"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 922.8361999999997,
+      "status": "passed",
+      "log": "results/demos/build/2026-11-05T18-04-25-358Z/bindgen.log"
+    }
+  ],
+  "output": "browser/pkg",
+  "artifacts": [
+    {
+      "path": "browser/pkg/xterm_web.js",
+      "bytes": 228812,
+      "sha256": "df0784590b2d75011955bd994bfccde302f5a86f1ab84466c1dbeeb0dadb9921"
+    },
+    {
+      "path": "browser/pkg/xterm_web_bg.wasm",
+      "bytes": 15605789,
+      "sha256": "d9483ea8fcfd74d820d5d28e69341f123cca2647bd4dbde91fd76646aade4e67"
+    },
+    {
+      "path": "browser/xterm.mjs",
+      "bytes": 1817,
+      "sha256": "1171d2d1d5287d95252976d6d5e1795850936e170dcb37172aea69bf8fe1efc0"
+    },
+    {
+      "path": "browser/demo/index.html",
+      "bytes": 3588,
+      "sha256": "361337a3ea286d2caa8a4c37fcb52865ea092026250a5a905b5c720c49be4dd2"
+    },
+    {
+      "path": "browser/demo/app.mjs",
+      "bytes": 6517,
+      "sha256": "973c91aaf79e5effbf7e7aaeb4b8bd981cd1176c4a6c7a42fc6295ee505b71f7"
+    },
+    {
+      "path": "browser/demo/controls.mjs",
+      "bytes": 8164,
+      "sha256": "ff62cd8be3cf17b938e424db965060344174743a336e9d762bc62b7e6f31cf64"
+    },
+    {
+      "path": "browser/demo/addons.mjs",
+      "bytes": 3289,
+      "sha256": "dbef3a6a47cdde82639a04699dc1159c926f6969fb07c3b3de3b29b69ba2af69"
+    },
+    {
+      "path": "browser/demo/themes.mjs",
+      "bytes": 1693,
+      "sha256": "58cc53d24dda1bd41054e5288a0fb7e3731e7f948ae45dc1d2260c949b0488f1"
+    },
+    {
+      "path": "browser/demo/demo.css",
+      "bytes": 1975,
+      "sha256": "b2429cede5b632bd9a53f8c5b87ce978f657ab9b8f389cb191836bdfef963881"
+    },
+    {
+      "path": "browser/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    }
+  ],
+  "scope": "Rust WASM production library build only, not browser runtime equivalence or matched-feature benchmark proof.",
+  "source": {
+    "revision": "9b262a5341fdc9857baecb6c3d57ada5a2218b21",
+    "sha256": "632d8eaf2843610964700b876e2ea62200841e03c9fec5d38916b9fc9ccb3b8f",
+    "files": 1580
+  },
+  "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+  "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+  "bindgen": "wasm-bindgen 0.2.100"
+}

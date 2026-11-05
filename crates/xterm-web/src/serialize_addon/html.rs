@@ -8,8 +8,14 @@ use crate::{
 };
 use wasm_bindgen::prelude::*;
 use xterm_core::serialize::{
-    serialize_html, CellRange, HtmlConfig, HtmlFontSize, HtmlOptions, Position,
+    serialize_html, serialize_html_numeric_rows, CellRange, HtmlConfig, HtmlFontSize,
+    HtmlNumericRange, HtmlOptions, Position,
 };
+
+enum Range {
+    Integral(CellRange),
+    Numeric(HtmlNumericRange),
+}
 
 pub(super) fn serialize(addon: &SerializeAddon, raw: JsValue) -> Result<Vec<u16>, JsValue> {
     let host = addon.host()?;
@@ -37,7 +43,7 @@ pub(super) fn serialize(addon: &SerializeAddon, raw: JsValue) -> Result<Vec<u16>
         }
         let start = get(&selection, "start")?;
         let end = get(&selection, "end")?;
-        CellRange {
+        Range::Integral(CellRange {
             start: Position {
                 x: options::index(get(&start, "x")?)?,
                 y: options::index(get(&start, "y")?)?,
@@ -46,19 +52,19 @@ pub(super) fn serialize(addon: &SerializeAddon, raw: JsValue) -> Result<Vec<u16>
                 x: options::index(get(&end, "x")?)?,
                 y: options::index(get(&end, "y")?)?,
             },
-        }
+        })
     } else {
         let max = active.len().map_err(|error| to_js_error(&error))?;
         let scrollback = options::property(&raw, "scrollback")?;
         let rows = host.native.rows().map_err(|error| to_js_error(&error))?;
         let start = options::scrollback_start(max, rows, scrollback)?;
-        CellRange {
+        Range::Integral(CellRange {
             start: Position { x: 0, y: start },
             end: Position {
                 x: columns(&host)?,
                 y: max.saturating_sub(1),
             },
-        }
+        })
     };
     let include_background = options::property(&raw, "includeGlobalBackground")?.is_truthy();
     let mut config = header(&host, include_background)?;
@@ -75,21 +81,26 @@ pub(super) fn serialize(addon: &SerializeAddon, raw: JsValue) -> Result<Vec<u16>
     }
     let view = view::BrowserView::new(active, &host)?;
     let rows = host.native.rows().map_err(|error| to_js_error(&error))?;
-    serialize_html(
-        &view,
-        columns(&host)?,
-        rows,
-        Some(range),
-        &config,
-        &HtmlOptions {
-            only_selection: true,
-            include_global_background: include_background,
-            ..HtmlOptions::default()
-        },
-    )
+    match range {
+        Range::Numeric(range) => {
+            serialize_html_numeric_rows(&view, range, &config, include_background)
+        }
+        Range::Integral(range) => serialize_html(
+            &view,
+            columns(&host)?,
+            rows,
+            Some(range),
+            &config,
+            &HtmlOptions {
+                only_selection: true,
+                include_global_background: include_background,
+                ..HtmlOptions::default()
+            },
+        ),
+    }
     .map_err(|error| view::error(&error))
 }
-fn explicit_range(host: &Shared, range: &JsValue) -> Result<CellRange, JsValue> {
+fn explicit_range(host: &Shared, range: &JsValue) -> Result<Range, JsValue> {
     let col = get(range, "startCol")?;
     get(range, "startLine")?;
     let start = get(range, "startLine")?;
@@ -101,33 +112,42 @@ fn explicit_range(host: &Shared, range: &JsValue) -> Result<CellRange, JsValue> 
         // Numeric NaN makes the source row comparison false. A reversed native
         // range keeps header/footer generation without reading or coercing cells.
         // Objects still need their source-specific late coercion under task346.
-        return Ok(CellRange {
+        return Ok(Range::Integral(CellRange {
             start: Position { x: 0, y: 1 },
             end: Position { x: end_col, y: 0 },
-        });
+        }));
     }
-    Ok(CellRange {
+    let start_col = if col.is_undefined() {
+        end_col
+    } else if col
+        .as_f64()
+        .is_some_and(|col| col.is_nan() || col == f64::INFINITY)
+    {
+        // These primitives skip the first row's cells, not subsequent rows.
+        usize::MAX
+    } else {
+        options::index(col)?
+    };
+    if let (Some(start), Some(end)) = (start.as_f64(), end.as_f64()) {
+        if start.is_finite() && end.is_finite() {
+            return Ok(Range::Numeric(HtmlNumericRange {
+                start_line: start,
+                end_line: end,
+                start_col,
+                end_col,
+            }));
+        }
+    }
+    Ok(Range::Integral(CellRange {
         start: Position {
-            x: if col.is_undefined() {
-                end_col
-            } else if col
-                .as_f64()
-                .is_some_and(|col| col.is_nan() || col == f64::INFINITY)
-            {
-                // These numeric primitives make col < end false. The maximum
-                // index skips only the first row's cells, not header/row output
-                // or later rows. Object late-coercion remains a separate gap.
-                usize::MAX
-            } else {
-                options::index(col)?
-            },
+            x: start_col,
             y: options::index(start)?,
         },
         end: Position {
             x: end_col,
             y: options::index(end)?,
         },
-    })
+    }))
 }
 fn header(host: &Shared, include_background: bool) -> Result<HtmlConfig, JsValue> {
     let (foreground, background) = if include_background {
