@@ -130,7 +130,7 @@ pub fn install(
     let coordinates = Rc::downgrade(services);
     let underline = Rc::downgrade(services);
     let linkifier = BrowserLinkifier::with_fallible_providers(
-        services.dom.element.clone(),
+        services.dom.screen.clone(),
         cols,
         offset,
         Rc::new(move |event| {
@@ -179,7 +179,7 @@ fn snapshot(services: &BrowserServices) -> Result<(usize, usize, usize), JsValue
         .map_err(|error| to_js_error(&error))?
 }
 fn coords(services: &BrowserServices, event: &MouseEvent) -> Result<Option<Position>, JsValue> {
-    let element = &services.dom.element;
+    let element = &services.dom.screen;
     let bounds = element.get_bounding_client_rect();
     let window = services.core_browser.window();
     let style = window

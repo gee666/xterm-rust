@@ -1,0 +1,131 @@
+{
+  "snapshots": [
+    {
+      "label": "root movement ignored",
+      "rootPointer": false,
+      "screenPointer": false,
+      "log": []
+    },
+    {
+      "label": "screen hover",
+      "rootPointer": false,
+      "screenPointer": true,
+      "log": [
+        [
+          "hover",
+          "mousemove",
+          "https://example.com/screen",
+          6,
+          6
+        ]
+      ]
+    },
+    {
+      "label": "root click ignored",
+      "rootPointer": false,
+      "screenPointer": true,
+      "log": [
+        [
+          "hover",
+          "mousemove",
+          "https://example.com/screen",
+          6,
+          6
+        ]
+      ]
+    },
+    {
+      "label": "screen click",
+      "rootPointer": false,
+      "screenPointer": true,
+      "log": [
+        [
+          "hover",
+          "mousemove",
+          "https://example.com/screen",
+          6,
+          6
+        ],
+        [
+          "activate",
+          "mouseup",
+          "https://example.com/screen",
+          6,
+          6
+        ]
+      ]
+    },
+    {
+      "label": "root leave ignored",
+      "rootPointer": false,
+      "screenPointer": true,
+      "log": [
+        [
+          "hover",
+          "mousemove",
+          "https://example.com/screen",
+          6,
+          6
+        ],
+        [
+          "activate",
+          "mouseup",
+          "https://example.com/screen",
+          6,
+          6
+        ]
+      ]
+    },
+    {
+      "label": "nonbubbling screen leave",
+      "rootPointer": false,
+      "screenPointer": false,
+      "log": [
+        [
+          "hover",
+          "mousemove",
+          "https://example.com/screen",
+          6,
+          6
+        ],
+        [
+          "activate",
+          "mouseup",
+          "https://example.com/screen",
+          6,
+          6
+        ],
+        [
+          "leave",
+          "mousemove",
+          "https://example.com/screen",
+          6,
+          6
+        ]
+      ]
+    }
+  ],
+  "afterDispose": [
+    [
+      "hover",
+      "mousemove",
+      "https://example.com/screen",
+      6,
+      6
+    ],
+    [
+      "activate",
+      "mouseup",
+      "https://example.com/screen",
+      6,
+      6
+    ],
+    [
+      "leave",
+      "mousemove",
+      "https://example.com/screen",
+      6,
+      6
+    ]
+  ]
+}

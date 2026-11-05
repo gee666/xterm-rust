@@ -10,6 +10,8 @@ use wasm_bindgen_test::*;
 use web_sys::{HtmlElement, MouseEvent};
 use xterm_web::{utf16::from_js_string, Terminal};
 wasm_bindgen_test_configure!(run_in_browser);
+#[path = "terminal_links/screen.rs"]
+mod screen;
 fn mouse(root: &HtmlElement, kind: &str, x: f64, y: f64) {
     let create = Function::new_with_args(
         "type,x,y",
@@ -127,11 +129,17 @@ async fn exported_terminal_writes_rust_osc8_renders_hovers_clicks_and_disposes()
         .text_content()
         .unwrap()
         .contains("linked!"));
-    let rect = root.get_bounding_client_rect();
+    let screen: HtmlElement = root
+        .query_selector(".xterm-screen")
+        .unwrap()
+        .unwrap()
+        .unchecked_into();
+    let rect = screen.get_bounding_client_rect();
     let x = rect.left() + 2.5 * dimensions.css.cell.width;
     let y = rect.top() + 0.5 * dimensions.css.cell.height;
-    mouse(&root, "mousemove", x, y);
-    assert!(root.class_list().contains("xterm-cursor-pointer"));
+    mouse(&screen, "mousemove", x, y);
+    assert!(screen.class_list().contains("xterm-cursor-pointer"));
+    assert!(!root.class_list().contains("xterm-cursor-pointer"));
     assert_eq!(
         terminal
             .linkifier_handle()
@@ -144,8 +152,8 @@ async fn exported_terminal_writes_rust_osc8_renders_hovers_clicks_and_disposes()
             .encode_utf16()
             .collect::<Vec<_>>()
     );
-    mouse(&root, "mousedown", x, y);
-    mouse(&root, "mouseup", x, y);
+    mouse(&screen, "mousedown", x, y);
+    mouse(&screen, "mouseup", x, y);
     assert_eq!(clicks.get(), 1);
     let ranges = ranges.borrow();
     assert_eq!(ranges.len(), 2);
@@ -163,9 +171,9 @@ async fn exported_terminal_writes_rust_osc8_renders_hovers_clicks_and_disposes()
     drop(ranges);
     terminal.dispose().unwrap();
     assert!(!root.is_connected());
-    mouse(&root, "mousemove", x, y);
-    mouse(&root, "mousedown", x, y);
-    mouse(&root, "mouseup", x, y);
+    mouse(&screen, "mousemove", x, y);
+    mouse(&screen, "mousedown", x, y);
+    mouse(&screen, "mouseup", x, y);
     assert_eq!(clicks.get(), 1);
     parent.remove();
     style.remove();
@@ -189,9 +197,14 @@ async fn viewport_render_requeries_the_link_under_a_stationary_mouse() {
     .await;
     let root = terminal.element().unwrap();
     let dimensions = terminal.render_dimensions().unwrap();
-    let bounds = root.get_bounding_client_rect();
+    let screen: HtmlElement = root
+        .query_selector(".xterm-screen")
+        .unwrap()
+        .unwrap()
+        .unchecked_into();
+    let bounds = screen.get_bounding_client_rect();
     mouse(
-        &root,
+        &screen,
         "mousemove",
         bounds.left() + 1.5 * dimensions.css.cell.width,
         bounds.top() + 0.5 * dimensions.css.cell.height,
@@ -202,7 +215,8 @@ async fn viewport_render_requeries_the_link_under_a_stationary_mouse() {
         String::from_utf16(&current.snapshot().unwrap().text).unwrap(),
         "https://example.com/first"
     );
-    assert!(root.class_list().contains("xterm-cursor-pointer"));
+    assert!(screen.class_list().contains("xterm-cursor-pointer"));
+    assert!(!root.class_list().contains("xterm-cursor-pointer"));
     refresh(&terminal, 1.0, 1.0).await;
     assert!(
         Rc::ptr_eq(&current, &links.current_link().unwrap()),
@@ -233,6 +247,7 @@ async fn viewport_render_requeries_the_link_under_a_stationary_mouse() {
     );
     write_and_render(&terminal, "\r\x1b[2Kplain").await;
     assert!(links.current_link().is_none());
+    assert!(!screen.class_list().contains("xterm-cursor-pointer"));
     assert!(!root.class_list().contains("xterm-cursor-pointer"));
     terminal.dispose().unwrap();
     assert!(!root.is_connected());
