@@ -19,10 +19,9 @@ impl TerminalState {
         Ok(())
     }
     fn reverse_index(&mut self) -> Result<(), TerminalError> {
+        self.restrict_csi_cursor(self.cols() - 1)?;
         let active = self.active_buffer();
         let mut b = active.borrow_mut();
-        b.x = b.x.min(self.cols() - 1);
-        b.y = b.y.min(self.rows() - 1);
         if b.y == b.scroll_top {
             let top = b.ybase + b.y;
             let height = b.scroll_bottom - b.scroll_top;
@@ -36,7 +35,8 @@ impl TerminalState {
             self.dirty_row(b.scroll_bottom);
         } else {
             b.y = b.y.saturating_sub(1);
-            self.dirty_row(b.y);
+            drop(b);
+            self.restrict_csi_cursor(self.cols() - 1)?;
         }
         Ok(())
     }

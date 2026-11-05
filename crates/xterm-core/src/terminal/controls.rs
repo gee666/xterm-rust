@@ -154,14 +154,13 @@ impl TerminalState {
     }
     fn backspace(&mut self) -> Result<(), TerminalError> {
         let reverse = self.core.dec_private_modes.borrow().reverse_wraparound;
-        let active = self.active_buffer();
-        let mut b = active.borrow_mut();
-        b.x = b.x.min(if reverse {
+        self.restrict_csi_cursor(if reverse {
             self.cols()
         } else {
             self.cols() - 1
-        });
-        b.y = b.y.min(self.rows() - 1);
+        })?;
+        let active = self.active_buffer();
+        let mut b = active.borrow_mut();
         if b.x > 0 {
             b.x -= 1;
         } else if reverse && b.y > b.scroll_top && b.y <= b.scroll_bottom {
@@ -183,8 +182,10 @@ impl TerminalState {
                 }
             }
         }
-        b.x = b.x.min(self.cols() - 1);
-        self.dirty_row(b.y);
+        drop(b);
+        if reverse {
+            self.restrict_csi_cursor(self.cols() - 1)?;
+        }
         Ok(())
     }
 }
