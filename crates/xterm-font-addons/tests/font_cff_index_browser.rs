@@ -11,6 +11,12 @@ extern "C" {
     #[wasm_bindgen(js_name = cffIndexInput)]
     fn input(base: &Uint8Array, case: &JsValue, encoded: &JsValue) -> Uint8Array;
 }
+// Explicitly include the input module imported by the shared INDEX recipes.
+#[wasm_bindgen(module = "/tests/support/font_cff_header_input.mjs")]
+extern "C" {
+    #[wasm_bindgen(js_name = cffHeaderInput)]
+    fn header_input(base: &Uint8Array, case: &JsValue, encoded: &JsValue) -> Uint8Array;
+}
 #[wasm_bindgen(module = "/tests/support/font_cff_header_addon.mjs")]
 extern "C" {
     #[wasm_bindgen(catch, js_name = cffHeaderAddonScenarios)]
@@ -32,12 +38,19 @@ fn source_index_corpus_and_independent_input_recipes_match_wasm() {
         }
         let encoded = js_sys::JSON::parse(&encoded.to_string()).unwrap();
         let raw = js_sys::JSON::parse(&case.to_string()).unwrap();
+        let actual = input(&base, &raw, &encoded).to_vec();
         assert_eq!(
-            input(&base, &raw, &encoded).to_vec(),
+            actual,
             assertions::construct(case, &fixture),
             "input {}",
             case["name"]
         );
+        if ["patches", "truncate", "data", "fillLength"]
+            .iter()
+            .all(|key| case[key].is_null())
+        {
+            assert_eq!(header_input(&base, &raw, &encoded).to_vec(), actual);
+        }
     }
 }
 #[wasm_bindgen_test(async)]
