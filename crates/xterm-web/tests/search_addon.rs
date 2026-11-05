@@ -26,6 +26,8 @@ mod falsy_stored_options;
 mod highlight_options;
 #[path = "search_cases/invalid.rs"]
 mod invalid;
+#[path = "search_cases/live_host.rs"]
+mod live_host;
 #[path = "search_cases/live_stored_flags.rs"]
 mod live_stored_flags;
 #[path = "search_cases/matching_errors.rs"]

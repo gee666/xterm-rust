@@ -63,7 +63,7 @@ impl SearchAddon {
         reverse: bool,
         no_scroll: impl FnOnce() -> Result<bool, SearchAddonError>,
     ) -> Result<bool, SearchAddonError> {
-        let host = self.host()?;
+        self.host()?;
         self.inner.before.fire(&())?;
         *self.inner.last_options.borrow_mut() = options.clone();
         let decorations = options
@@ -99,12 +99,15 @@ impl SearchAddon {
             }
         }
         if !term.is_valid()? {
-            host.clear_selection()?;
+            self.host()?.clear_selection()?;
             self.clear_decorations(false)?;
             self.finish_search(term, options.as_ref())?;
             return Ok(false);
         }
         let text = term.text()?;
+        // Before-search, highlight and validation callbacks can activate another
+        // terminal. Source resolves the selection host only at engine entry.
+        let host = self.host()?;
         let selection = host.selection()?;
         host.clear_selection()?;
         // Matching option access can throw or reenter. The source has already
