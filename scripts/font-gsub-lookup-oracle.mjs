@@ -8,6 +8,9 @@ import {deflateSync} from 'node:zlib';
 import {spawnSync} from 'node:child_process';
 import {pathToFileURL} from 'node:url';
 import {buildHeaderFont,headerAddonCases} from '../crates/xterm-font-addons/tests/support/font_gsub_header_scenarios.mjs';
+const corpus=process.env.GSUB_CORPUS??'lookup';
+if(!['lookup','type9'].includes(corpus))throw new Error('GSUB_CORPUS must be lookup or type9');
+const prefix=`font-gsub-${corpus}`;
 const generate=process.argv.includes('--generate');
 if(process.argv.slice(2).some(arg=>arg!=='--generate'))throw new Error('Use --generate only');
 const require=createRequire(path.resolve(process.env.SOURCE_PACKAGE_JSON??'source_repo/package.json'));
@@ -31,7 +34,8 @@ function construct(change){
 }
 const words=values=>{const d=Buffer.alloc(2*values.length);values.forEach((v,i)=>d.writeUInt16BE(v,i*2));return [...d];};
 const cases=[];
-for(const woff of [false,true]){
+if(corpus==='type9')cases.push(...(await import('./font-gsub-type9-recipes.mjs')).type9Cases());
+else for(const woff of [false,true]){
  const add=(name,data,extra={})=>cases.push({name:name+(woff?' WOFF':' SFNT'),tag:'GSUB',data,woff,...extra});
  for(const kind of [0,10,11,65535])for(const flags of [0,16,65535])for(const count of [0,1,65535]){
   const data=words([1,0,0,0,10,1,4,kind,flags,count,2,0]);
@@ -62,12 +66,16 @@ for(const item of cases){
 }
 const fixture={sourceSha256:hash(await fs.readFile(dependency)),fontSha256:hash(base),woffTemplate,cases};
 async function check(file,value){const content=JSON.stringify(value)+'\n';if(generate)await fs.writeFile(file,content);else assert.equal(await fs.readFile(file,'utf8'),content,file+' drift');return hash(content);}
-const fixtureSha256=await check('crates/xterm-addons/tests/fixtures/font-gsub-lookup.json',fixture);
 const baseline=spawnSync(process.execPath,['scripts/ligature-addon-oracle.mjs'],{encoding:'utf8',timeout:120000,env:process.env});
 if(baseline.error||baseline.status!==0)throw new Error(baseline.error?.message??baseline.stderr);
 const {LigaturesAddon}=await import(pathToFileURL(path.resolve('tmp/ligature-addon-oracle/LigaturesAddon.js')));
+if(corpus==='type9'){
+ const {loadBuffer}=await import(pathToFileURL(path.resolve('tmp/ligature-addon-oracle/fontLigatures/index.js')));
+ for(const item of cases){const bytes=construct(item);try{loadBuffer(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.length));item.loadOutcome={status:'ok'};}catch(error){item.loadOutcome={status:'error',name:error.name,message:error.message};}}
+}
+const fixtureSha256=await check(`crates/xterm-addons/tests/fixtures/${prefix}.json`,fixture);
 const addon=await headerAddonCases(o=>new LigaturesAddon(o),i=>new Uint8Array(construct(cases[i])),cases.length);
-for(const [i,record]of addon.entries()){const accepted=cases[i].outcome.status==='ok';assert.deepEqual(record,{loading:[[0,3]],ranges:accepted?[]:[[0,3]],reads:1,cacheReads:0,refreshes:accepted?1:0},cases[i].name);}
-const addonSha256=await check('crates/xterm-font-addons/tests/fixtures/font-gsub-lookup-addon.json',addon);
-const report={scope:'GSUB invalid lookup types outside1..9 and mark-filter read order only; full parity NOT PROVEN',node:process.version,sourceSha256:fixture.sourceSha256,fontSha256:fixture.fontSha256,fixtureSha256,addonSha256,cases:cases.length,accepted:cases.filter(c=>c.outcome.status==='ok').length,rejected:cases.filter(c=>c.outcome.status==='error').length,addonCases:addon.length,errors:[...new Set(cases.filter(c=>c.outcome.status==='error').map(c=>c.outcome.name+': '+c.outcome.message))]};
-await fs.mkdir('results/font-gsub-lookup',{recursive:true});await fs.writeFile('results/font-gsub-lookup/oracle.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));
+for(const [i,record]of addon.entries()){const accepted=(cases[i].loadOutcome??cases[i].outcome).status==='ok';assert.deepEqual(record,{loading:[[0,3]],ranges:accepted?[]:[[0,3]],reads:1,cacheReads:0,refreshes:accepted?1:0},cases[i].name);}
+const addonSha256=await check(`crates/xterm-font-addons/tests/fixtures/${prefix}-addon.json`,addon);
+const report={scope:`GSUB ${corpus} constructor reads only; full parity NOT PROVEN`,node:process.version,sourceSha256:fixture.sourceSha256,fontSha256:fixture.fontSha256,fixtureSha256,addonSha256,cases:cases.length,accepted:cases.filter(c=>c.outcome.status==='ok').length,rejected:cases.filter(c=>c.outcome.status==='error').length,addonCases:addon.length,...(corpus==='type9'?{loadAccepted:cases.filter(c=>c.loadOutcome.status==='ok').length,loadRejected:cases.filter(c=>c.loadOutcome.status==='error').length}:{}),errors:[...new Set(cases.filter(c=>c.outcome.status==='error').map(c=>c.outcome.name+': '+c.outcome.message))]};
+await fs.mkdir(`results/${prefix}`,{recursive:true});await fs.writeFile(`results/${prefix}/oracle.json`,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));

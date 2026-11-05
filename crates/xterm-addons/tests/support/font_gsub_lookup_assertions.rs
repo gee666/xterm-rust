@@ -23,11 +23,23 @@ pub fn input(fixture: &Value, case: &Value) -> Vec<u8> {
     bytes
 }
 fn expected_error(case: &Value) -> Option<FontError> {
-    if case["outcome"]["status"] == "ok" {
+    if case.get("loadOutcome").unwrap_or(&case["outcome"])["status"] == "ok" {
         return None;
     }
-    let outcome = &case["outcome"];
+    let outcome = case.get("loadOutcome").unwrap_or(&case["outcome"]);
     let message = outcome["message"].as_str().unwrap();
+    if outcome["name"] == "TypeError" {
+        assert!(matches!(
+            message,
+            "Cannot convert undefined or null to object"
+                | "Cannot read properties of undefined (reading 'coverage')"
+        ));
+        return Some(FontError::Type(if message.contains("coverage") {
+            "Cannot read properties of undefined (reading 'coverage')"
+        } else {
+            "Cannot convert undefined or null to object"
+        }));
+    }
     if outcome["name"] == "RangeError" {
         assert_eq!(message, "Offset is outside the bounds of the DataView");
         return corpus::constructor_error(case);
@@ -68,10 +80,12 @@ fn expected_error(case: &Value) -> Option<FontError> {
     Some(FontError::UnsupportedFormat(error, format))
 }
 pub fn assert_corpus() {
-    let fixture = fixture();
+    assert_fixture(&fixture());
+}
+pub fn assert_fixture(fixture: &Value) {
     let mut failures = Vec::new();
     for case in fixture["cases"].as_array().unwrap() {
-        let actual = Font::load_buffer(&input(&fixture, case), FontOptions::default()).err();
+        let actual = Font::load_buffer(&input(fixture, case), FontOptions::default()).err();
         let expected = expected_error(case);
         if actual != expected {
             failures.push(format!(

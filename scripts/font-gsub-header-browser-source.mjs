@@ -7,7 +7,7 @@ import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import {withArtifactServer} from './browser-artifact-server.mjs';
 const corpus=process.env.GSUB_CORPUS??'header';
-if(!['header','lookup'].includes(corpus))throw new Error('GSUB_CORPUS must be header or lookup');
+if(!['header','lookup','type9'].includes(corpus))throw new Error('GSUB_CORPUS must be header, lookup or type9');
 const prefix=`font-gsub-${corpus}`;
 const root=process.cwd(),work=path.join(root,`tmp/gsub-${corpus}-source`);
 const require=createRequire(path.resolve(process.env.SOURCE_PACKAGE_JSON??'source_repo/package.json'));
@@ -19,11 +19,12 @@ const base=[...await fs.readFile('crates/xterm-addons/tests/fixtures/ligature-fo
 const report={node:process.version,status:'running',scope:`Unchanged-source GSUB ${corpus} constructor/addon baseline, not Rust`,fixtureSha256:hash(fixtureBytes),sourceSha256:hash(await fs.readFile(parse)),browsers:[]};
 await fs.mkdir(work,{recursive:true});
 try{
- await esbuild.build({stdin:{contents:`import {LigaturesAddon} from ${JSON.stringify(path.join(source,'addons/addon-ligatures/src/LigaturesAddon.ts'))};import {parse} from ${JSON.stringify(parse)};import {buildHeaderFont,headerAddonCases} from ${JSON.stringify(path.join(root,'crates/xterm-font-addons/tests/support/font_gsub_header_scenarios.mjs'))};
+ await esbuild.build({stdin:{contents:`import {LigaturesAddon} from ${JSON.stringify(path.join(source,'addons/addon-ligatures/src/LigaturesAddon.ts'))};import {parse} from ${JSON.stringify(parse)};import {loadBuffer} from ${JSON.stringify(path.join(source,'addons/addon-ligatures/src/fontLigatures/index.ts'))};import {buildHeaderFont,headerAddonCases} from ${JSON.stringify(path.join(root,'crates/xterm-font-addons/tests/support/font_gsub_header_scenarios.mjs'))};
  export async function run(base,fixture){
   const bytes=new Uint8Array(base),input=i=>buildHeaderFont(bytes,fixture,fixture.cases[i]);
   const constructors=fixture.cases.map((item,i)=>{try{parse(input(i).buffer);return{status:'ok'};}catch(error){return{status:'error',name:error.name,message:error.message};}});
-  return{constructors,addon:await headerAddonCases(o=>new LigaturesAddon(o),input,fixture.cases.length)};
+  const loads=fixture.cases[0].loadOutcome?fixture.cases.map((item,i)=>{try{loadBuffer(input(i).buffer);return{status:'ok'};}catch(error){return{status:'error',name:error.name,message:error.message};}}):undefined;
+  return{constructors,loads,addon:await headerAddonCases(o=>new LigaturesAddon(o),input,fixture.cases.length)};
  }`,resolveDir:root,sourcefile:'gsub-header-source-entry.mjs'},bundle:true,format:'esm',platform:'browser',outfile:path.join(work,'source.js'),logLevel:'silent'});
  report.bundleSha256=hash(await fs.readFile(path.join(work,'source.js')));
  const playwright=await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE??path.join(path.dirname(require.resolve('playwright')),'index.mjs')));
@@ -40,17 +41,32 @@ try{
     assert.equal(actual.failure,undefined);assert.deepEqual(errors,[]);
     // Native DataView messages vary by engine. Missing required descriptors
     // also have different TypeError prose; assert the exact missing property.
-    const normalize=result=>result.map((o,i)=>{
+    const normalize=(result,field='outcome')=>result.map((o,i)=>{
      if(o.status==='error'&&o.name==='RangeError')return{status:'error',name:'RangeError'};
      if(o.status==='error'&&o.name==='TypeError'){
+      if(corpus==='type9'){
+       const expected=fixture.cases[i][field].message;
+       const messages=expected.includes('coverage')?{
+        chromium:"Cannot read properties of undefined (reading 'coverage')",
+        firefox:'can\'t access property "coverage", table is undefined',
+        webkit:"undefined is not an object (evaluating 'table.coverage')"
+       }:{
+        chromium:'Cannot convert undefined or null to object',
+        firefox:"can't convert undefined to object",
+        webkit:"undefined is not an object (evaluating 'Object.keys(description)')"
+       };
+       assert.equal(o.message,messages[name]);
+       return{status:'error',name:'TypeError',message:expected};
+      }
       assert.ok(fixture.cases[i].remove?.length&&o.message.includes('compression'));
       return{status:'error',name:'TypeError',missing:fixture.cases[i].remove[0],property:'compression'};
      }
      return o;
     });
     assert.deepEqual(normalize(actual.result.constructors),normalize(fixture.cases.map(c=>c.outcome)));
+    if(corpus==='type9')assert.deepEqual(normalize(actual.result.loads,'loadOutcome'),normalize(fixture.cases.map(c=>c.loadOutcome),'loadOutcome'));
     assert.deepEqual(actual.result.addon,addon);
-    Object.assign(record,{status:'passed',constructors:fixture.cases.length,addonCases:addon.length,errorMessages:[...new Set(actual.result.constructors.filter(o=>o.status==='error').map(o=>o.name+': '+o.message))]});
+    Object.assign(record,{status:'passed',constructors:fixture.cases.length,...(corpus==='type9'?{loads:fixture.cases.length,loadErrors:[...new Set(actual.result.loads.filter(o=>o.status==='error').map(o=>o.name+': '+o.message))]}:{}),addonCases:addon.length,errorMessages:[...new Set(actual.result.constructors.filter(o=>o.status==='error').map(o=>o.name+': '+o.message))]});
    }catch(error){record.status='failed';record.error=String(error.stack??error);throw error;}
    finally{if(browser)await browser.close();}
   }

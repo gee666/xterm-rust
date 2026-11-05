@@ -253,6 +253,8 @@ pub enum Lookup {
     Chain(Vec<ChainTable>),
     Reverse(Vec<ReverseTable>),
     Other(Vec<GenericTable>),
+    /// Type9 has no source parser; only absent subtable pointers survive.
+    NullSubtables(usize),
 }
 
 #[derive(Clone, Debug)]

@@ -17,6 +17,7 @@ enum Replacement {
     Undefined,
 }
 enum SubView<'a> {
+    Missing,
     Single(&'a SingleSubstitution),
     Other {
         coverage: Option<&'a Coverage>,
@@ -26,6 +27,9 @@ enum SubView<'a> {
 impl SubView<'_> {
     fn glyph(&self, glyph: Glyph) -> Result<Option<GlyphValue>, FontError> {
         match self {
+            Self::Missing => Err(FontError::Type(
+                "Cannot read properties of undefined (reading 'coverage')",
+            )),
             Self::Single(table) => Ok(table.glyph(glyph)),
             Self::Other {
                 coverage,
@@ -53,7 +57,9 @@ impl SubView<'_> {
     ) -> Result<Vec<(GlyphSet, Option<GlyphValue>)>, FontError> {
         match self {
             Self::Single(table) => table.range(start, end),
-            Self::Other { .. } => source_segments(start, end, |glyph| self.glyph(glyph)),
+            Self::Missing | Self::Other { .. } => {
+                source_segments(start, end, |glyph| self.glyph(glyph))
+            }
         }
     }
 }
@@ -63,11 +69,13 @@ fn subtable_count(lookup: &Lookup) -> usize {
         Lookup::Chain(tables) => tables.len(),
         Lookup::Reverse(tables) => tables.len(),
         Lookup::Other(tables) => tables.len(),
+        Lookup::NullSubtables(count) => *count,
     }
 }
 fn view(lookup: &Lookup, index: usize) -> SubView<'_> {
     // The caller obtains this index from the same lookup's subtable count.
     match lookup {
+        Lookup::NullSubtables(_) => SubView::Missing,
         Lookup::Single(tables) => SubView::Single(&tables[index]),
         Lookup::Chain(tables) => match &tables[index] {
             ChainTable::Glyphs { coverage, .. } => SubView::Other {

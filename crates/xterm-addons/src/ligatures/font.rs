@@ -235,7 +235,7 @@ impl Font {
                     // Source FontImpl retains calt groups of every type, but
                     // only types6/8 build lookup trees. Empty groups still
                     // affect its cache path, so do not discard them here.
-                    Lookup::Single(_) | Lookup::Other(_) => {}
+                    Lookup::Single(_) | Lookup::Other(_) | Lookup::NullSubtables(_) => {}
                 }
                 let merged = font_merge::merge(&mut arena, &trees)?;
                 let tree = arena.flatten(merged)?;

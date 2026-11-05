@@ -41,41 +41,55 @@ pub fn parse(bytes: &[u8]) -> Result<Gsub, FontError> {
         }
         let flags = table.u16(2)?;
         let count = usize::from(table.u16(4)?);
-        let offsets = table.words(6, count)?;
-        match kind {
-            1 => {
-                let mut subtables = Vec::new();
-                subtables.try_reserve_exact(count)?;
-                for offset in offsets {
-                    subtables.push(other::single(table.at(usize::from(offset))?)?);
+        if kind == 9 {
+            // Source has no type9 parser. Null pointers skip parseStruct, but a
+            // nonnull pointer fails on Object.keys(undefined) before any target
+            // bytes or later offsets are read.
+            for index in 0..count {
+                if table.u16(6 + index * 2)? != 0 {
+                    return Err(FontError::Type(
+                        "Cannot convert undefined or null to object",
+                    ));
                 }
-                lookups.push(Lookup::Single(subtables));
             }
-            6 => {
-                let mut subtables = Vec::new();
-                subtables.try_reserve_exact(count)?;
-                for offset in offsets {
-                    subtables.push(chain::parse(table.at(usize::from(offset))?)?);
+            lookups.push(Lookup::NullSubtables(count));
+        } else {
+            let offsets = table.words(6, count)?;
+            match kind {
+                1 => {
+                    let mut subtables = Vec::new();
+                    subtables.try_reserve_exact(count)?;
+                    for offset in offsets {
+                        subtables.push(other::single(table.at(usize::from(offset))?)?);
+                    }
+                    lookups.push(Lookup::Single(subtables));
                 }
-                lookups.push(Lookup::Chain(subtables));
-            }
-            8 => {
-                let mut subtables = Vec::new();
-                subtables.try_reserve_exact(count)?;
-                for offset in offsets {
-                    subtables.push(other::reverse(table.at(usize::from(offset))?)?);
+                6 => {
+                    let mut subtables = Vec::new();
+                    subtables.try_reserve_exact(count)?;
+                    for offset in offsets {
+                        subtables.push(chain::parse(table.at(usize::from(offset))?)?);
+                    }
+                    lookups.push(Lookup::Chain(subtables));
                 }
-                lookups.push(Lookup::Reverse(subtables));
-            }
-            2..=5 | 7 => {
-                let mut subtables = Vec::new();
-                subtables.try_reserve_exact(count)?;
-                for offset in offsets {
-                    subtables.push(other::generic(kind, table.at(usize::from(offset))?)?);
+                8 => {
+                    let mut subtables = Vec::new();
+                    subtables.try_reserve_exact(count)?;
+                    for offset in offsets {
+                        subtables.push(other::reverse(table.at(usize::from(offset))?)?);
+                    }
+                    lookups.push(Lookup::Reverse(subtables));
                 }
-                lookups.push(Lookup::Other(subtables));
+                2..=5 | 7 => {
+                    let mut subtables = Vec::new();
+                    subtables.try_reserve_exact(count)?;
+                    for offset in offsets {
+                        subtables.push(other::generic(kind, table.at(usize::from(offset))?)?);
+                    }
+                    lookups.push(Lookup::Other(subtables));
+                }
+                _ => return Err(FontError::UnsupportedFormat("GSUB lookup type", kind)),
             }
-            _ => return Err(FontError::UnsupportedFormat("GSUB lookup type", kind)),
         }
         // Subtable errors precede the optional trailing mark-filter word.
         if flags & 0x0010 != 0 {
