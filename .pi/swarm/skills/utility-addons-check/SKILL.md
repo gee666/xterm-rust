@@ -7,6 +7,8 @@ Run `node scripts/utility-addons-oracle.mjs` with Node24 to check the fixed seed
 
 Run `cargo test -p xterm-addons --test utility_attach --test utility_clipboard --test utility_oracle --test utility_live_terminal` for portable and real Rust parser integration. Run `node scripts/utility-addon-browser-check.mjs` with cargo on PATH for wasm_utility_addons via browser-host-check. It starts an ephemeral WebSocket peer and closes it in finally. Browser and WASM prerequisites and target-specific logs are described by browser-host-check skill. Do not run the socket test without the wrapper, which supplies its peer URL at compile time.
 
-Respect .cargo/config.toml shared dev/test artifact settings and inspect free disk before large builds. Do not create separate target directories. Record failed builds during shared API edits as failures, not passing runtime checks.
+Use the current worktree/resource policy. For the16-agent continuation, private worktrees and regular Cargo targets live on O:, with Cargo -j2 and at most four heavy jobs/two browser matrices team-wide. Preserve dev/test profile settings. Record failed builds as failures, not passing runtime checks.
 
-Read docs/utility-addons-acceptance.md. Current component assertions are not the unchanged full browser suites or proof of complete exported Terminal integration. Keep these missing checks explicit.
+After building the actual Rust distribution, run `node scripts/fit-browser-oracle.mjs` to compare12 live geometry snapshots per engine. `--suite` additionally runs the unchanged original Fit suite against JavaScript and returns failure for any original failures. `SOURCE_ROOT` can select the existing reference with its built demo bundle/dependencies. The command removes its temporary files and closes browsers/servers. See docs/fit-browser-geometry.md for the observed Windows17/27 baseline shared by both engines. Do not force stability or change default fonts to hide source rounding behavior.
+
+Read docs/utility-addons-acceptance.md. Focused geometry/component assertions are not the full browser suites or proof of complete exported Terminal integration. Keep missing checks explicit.
