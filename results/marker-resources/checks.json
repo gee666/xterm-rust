@@ -1,0 +1,86 @@
+{
+  "status": "passed",
+  "base": "1729d893ec2eb73016b23ea4065150b4626ba422",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+  "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+  "sources": [
+    {
+      "path": "crates/xterm-core/src/buffer/marker.rs",
+      "sha256": "0a3f9f33308c36e5a0c109fdec2e93f0ebe9e9446b5f527ac0f6f2bebc372023"
+    },
+    {
+      "path": "crates/xterm-core/tests/marker_resources.rs",
+      "sha256": "36899c110d333d37ddd3c7883186a1a2de1d4df26bcd5e3c5008ebc96614086b"
+    },
+    {
+      "path": "crates/xterm-web/src/terminal/marker_api.rs",
+      "sha256": "a4c3bbfe9a218aa9c60ee98bf97b7eca9dc76690c68833e70a827a166b391f72"
+    },
+    {
+      "path": "crates/xterm-web/tests/browser_marker_cases.js",
+      "sha256": "eb981ceab3941168a2e7c9cb2270072f0260592e9f66da357d6c4517ebbcd408"
+    },
+    {
+      "path": "crates/xterm-web/tests/wasm_terminal_markers.rs",
+      "sha256": "710a877a84921dccca3349d66c692c65b415378684d2c4f1828b1d5186a1e4aa"
+    },
+    {
+      "path": "scripts/terminal-marker-oracle.mjs",
+      "sha256": "ee1094f5068e370c16e6c4ccd1c98a2ea0f8f28fccaad34d1da8e8764dbcc0ae"
+    }
+  ],
+  "commands": [
+    {
+      "command": "cargo test -p xterm-core --test marker_resources --test buffer_range_marker -j2",
+      "passed": 18,
+      "failed": 0,
+      "log": "results/marker-resources/native.log"
+    },
+    {
+      "command": "cargo fmt --all -- --check",
+      "log": "results/marker-resources/fmt.log"
+    },
+    {
+      "command": "cargo clippy -p xterm-core --test marker_resources --test buffer_range_marker -j2 -- -D warnings",
+      "log": "results/marker-resources/clippy-native.log"
+    },
+    {
+      "command": "cargo clippy -p xterm-web --target wasm32-unknown-unknown --lib --test wasm_terminal_markers -j2 -- -D warnings",
+      "log": "results/marker-resources/clippy-wasm.log"
+    },
+    {
+      "command": "MARKER_ORACLE_REPORT=results/marker-resources/source.json node scripts/terminal-marker-oracle.mjs",
+      "passed": 12,
+      "failed": 0,
+      "report": "results/marker-resources/source.json"
+    },
+    {
+      "command": "WASM_TEST=wasm_terminal_markers node scripts/browser-host-check.mjs",
+      "passed": 12,
+      "failed": 0,
+      "report": "results/marker-resources/rust.json"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --all-features -j2 -- -D warnings",
+      "log": "results/marker-resources/clippy-workspace.log"
+    },
+    {
+      "command": "cargo test --workspace --all-targets --all-features -j2",
+      "passed": 2046,
+      "failed": 0,
+      "summaries": 402,
+      "log": "results/marker-resources/test-workspace.log"
+    }
+  ],
+  "scope": "Task385 marker registered resources only; full331 and equivalence remain open",
+  "environment": {
+    "TEMP": "O:\\xterm-rust-swarm-16\\tmp\\V\\tmp",
+    "TMP": "O:\\xterm-rust-swarm-16\\tmp\\V\\tmp",
+    "CARGO_BUILD_JOBS": "2"
+  },
+  "notes": [
+    "Initial focused native invocation assigned TEMP and TMP in one export, so TMP could retain its inherited path. The retained focused native receipt was rerun with both assigned separately. All later compiler/browser/workspace invocations used separate TEMP then TMP assignments. No broad cleanup of unknown shared temporary paths was attempted."
+  ]
+}

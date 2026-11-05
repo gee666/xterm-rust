@@ -18,6 +18,8 @@ export function validateMarkerOffset(value) {
   return value;
 }
 export function markerPosition(base, offset) { return base + offset; }
+// Look up dispose when invoked, not during registration. Preserve its receiver.
+export function disposeMarkerResource(value) { value.dispose(); }
 export function markerWeakRef(value) { return new WeakRef(value); }
 export function markerDeref(value) { return value.deref(); }
 export function markerList(read) {
@@ -42,6 +44,8 @@ extern "C" {
     fn validate_offset(value: JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch, js_name = markerPosition)]
     fn position(base: f64, offset: JsValue) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch, js_name = disposeMarkerResource)]
+    fn dispose_resource(value: &JsValue) -> Result<(), JsValue>;
     #[wasm_bindgen(js_name = markerWeakRef)]
     fn weak_ref(value: &JsValue) -> JsValue;
     #[wasm_bindgen(js_name = markerDeref)]
@@ -134,6 +138,15 @@ impl BrowserMarker {
     #[wasm_bindgen(getter, js_name = onDispose)]
     pub fn on_dispose(&self) -> Function {
         self.on_dispose.clone()
+    }
+    /// Retain the original raw resource without inspecting it until disposal.
+    /// Duplicate and late registrations are intentional source behavior.
+    pub fn register(&self, resource: JsValue) -> JsValue {
+        let value = resource.clone();
+        self.marker.register_fallible(Rc::new(move || {
+            dispose_resource(&value).map_err(crate::js_error::callback_error)
+        }));
+        resource
     }
     pub fn dispose(&self) -> Result<(), JsValue> {
         self.marker.dispose().map_err(|error| to_js_error(&error))

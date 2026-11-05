@@ -34,9 +34,10 @@ must not be described as equivalent here.
 
 ## Remaining contracts
 
-Task331 retains source mutable-array behavior, writable marker fields and the
-extra internal Marker.register method, full registerDecoration/returned decoration
-bindings with live raw option identity, render callbacks and error order. Public
+Task331 retains source mutable-array behavior, writable marker fields and full
+registerDecoration/returned decoration bindings with live raw option identity,
+render callbacks and error order. Marker.register resource lifecycle is now
+implemented separately by task385. See [marker registered resources](marker-resources.md). Public
 marker fields are getter-only in this checkpoint. Decoration rendering through
 native services does not prove those missing public bindings. GC/lifecycle
 coverage beyond the listed cases, the unchanged complete original browser suite,

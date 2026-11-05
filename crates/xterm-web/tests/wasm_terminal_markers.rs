@@ -14,6 +14,8 @@ extern "C" {
     fn validation_case(terminal: JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(js_name = markerLifecycleCase)]
     fn lifecycle_case(terminal: JsValue) -> Promise;
+    #[wasm_bindgen(catch, js_name = markerResourcesCase)]
+    fn resources_case(terminal: JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(js_name = markerBufferCase)]
     fn buffer_case(terminal: JsValue) -> Promise;
 }
@@ -54,6 +56,17 @@ async fn marker_handles_follow_native_trim_and_source_disposal_dispatch() {
         serde_json::json!({
             "seen": [[true, true, true, -1]], "disposed": [true, true, true],
             "lines": [-1, -1, -1], "remaining": 0
+        }),
+    );
+}
+
+#[wasm_bindgen_test]
+fn marker_resources_preserve_live_methods_receiver_errors_and_traversal() {
+    assert_capture(
+        resources_case(terminal()).unwrap(),
+        serde_json::json!({
+            "log": ["event", "resource", "resource", "event-added", "appended", "appended", "changed"],
+            "gets": 2, "errors": [true, true, true, true]
         }),
     );
 }

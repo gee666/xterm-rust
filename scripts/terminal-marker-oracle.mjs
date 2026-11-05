@@ -11,8 +11,8 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const reference = resolve(process.env.REFERENCE_ROOT ?? resolve(root, 'source_repo'));
 await mkdir(resolve(root, 'tmp'), { recursive: true });
 const temporary = await mkdtemp(resolve(root, 'tmp/terminal-marker-oracle-'));
-const output = resolve(root, 'results/browser-markers/source.json');
-const report = { status: 'failed', scope: 'Marker registration/handles, not full array/decorations parity',
+const output = resolve(root, process.env.MARKER_ORACLE_REPORT ?? 'results/browser-markers/source.json');
+const report = { status: 'failed', scope: 'Marker registration/handles/resources, not full array/decorations parity',
   platform: process.platform, node: process.version, sources: [], browsers: [] };
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 // Independent expectations also appear in the Rust assertions. Source and Rust
@@ -24,6 +24,8 @@ const expected = [
   { seen: [[true, true, true, -1]], disposed: [true, true, true], lines: [-1, -1, -1], remaining: 0 },
   { before: 1, alternateDisposed: true, capturedLine: 3, capturedInCurrentBuffer: false,
     hints: ['number', 'number', 'default'] },
+  { log: ['event', 'resource', 'resource', 'event-added', 'appended', 'appended', 'changed'],
+    gets: 2, errors: [true, true, true, true] },
 ];
 await mkdir(dirname(output), { recursive: true });
 try {
@@ -57,7 +59,8 @@ try {
         await page.evaluate(() => {
           const make = () => new MarkerOracle.Terminal({ rows: 3, scrollback: 2 });
           const run = async () => [MarkerOracle.markerValidationCase(make()),
-            await MarkerOracle.markerLifecycleCase(make()), await MarkerOracle.markerBufferCase(make())];
+            await MarkerOracle.markerLifecycleCase(make()), await MarkerOracle.markerBufferCase(make()),
+            MarkerOracle.markerResourcesCase(make())];
           run().then(captures => { globalThis.markerResult = { captures }; },
             error => { globalThis.markerResult = { error: String(error.stack ?? error) }; });
         });

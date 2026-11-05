@@ -63,6 +63,69 @@ export async function markerLifecycleCase(term) {
   } finally { term.dispose(); }
 }
 
+export function markerResourcesCase(term) {
+  try {
+    const log = [];
+    const marker = term.registerMarker();
+    let gets = 0;
+    const resource = { get dispose() {
+      gets++;
+      return function () {
+        require(this === resource, 'resource receiver');
+        require(marker.isDisposed && marker.line === -1, 'resource invalidation order');
+        log.push('resource');
+        marker.dispose();
+        marker.register({ dispose() { log.push('appended'); } });
+      };
+    } };
+    require(marker.register(resource) === resource, 'register return identity');
+    marker.register(resource);
+    require(gets === 0, 'resource inspected during registration');
+    marker.onDispose(() => {
+      log.push('event');
+      marker.register({ dispose() { log.push('event-added'); } });
+    });
+    marker.dispose();
+    marker.dispose();
+    marker.register({ dispose() { throw new Error('late registration disposed'); } });
+    marker.dispose();
+
+    const changed = term.registerMarker();
+    const mutable = { dispose() { throw new Error('captured stale method'); } };
+    changed.register(mutable);
+    mutable.dispose = function () { require(this === mutable, 'changed receiver'); log.push('changed'); };
+    changed.dispose();
+
+    const errors = [];
+    for (const kind of ['method', 'getter', 'null', 'noncallable']) {
+      const current = term.registerMarker();
+      const token = {};
+      const bad = kind === 'method' ? { dispose() { throw token; } }
+        : kind === 'getter' ? { get dispose() { throw token; } }
+        : kind === 'null' ? null : { dispose: 7 };
+      require(current.register(bad) === bad, 'raw resource rejected during registration');
+      current.register({ dispose() { throw new Error('continued after resource error'); } });
+      let caught = false;
+      try { current.dispose(); }
+      catch (error) {
+        caught = true;
+        errors.push(kind === 'method' || kind === 'getter' ? error === token : error instanceof TypeError);
+      }
+      require(caught, 'resource error hidden');
+      require(current.isDisposed && current.line === -1, 'failed resource marker state');
+      current.dispose();
+    }
+    const eventFirst = term.registerMarker();
+    const token = {};
+    eventFirst.onDispose(() => { throw token; });
+    eventFirst.register({ dispose() { throw new Error('resource ran after event failure'); } });
+    try { eventFirst.dispose(); throw new Error('listener error hidden'); }
+    catch (error) { require(error === token, 'event error changed by resource adapter'); }
+    eventFirst.dispose();
+    return { log, gets, errors };
+  } finally { term.dispose(); }
+}
+
 export async function markerBufferCase(term) {
   try {
     await write(term, 'a\r\nb\r\nc');

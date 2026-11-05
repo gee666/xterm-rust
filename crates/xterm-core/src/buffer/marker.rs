@@ -22,12 +22,32 @@ fn following_id(id: u64) -> u64 {
     (id + 1).min(JS_ID_LIMIT)
 }
 
+/// A host resource can fail without losing its original error or retrying cleanup.
+pub type MarkerResource = Rc<dyn Fn() -> Result<(), EmitError>>;
+
+#[derive(Clone)]
+enum Resource {
+    Native(DisposableHandle),
+    Fallible(MarkerResource),
+}
+impl Resource {
+    fn dispose(&self) -> Result<(), EmitError> {
+        match self {
+            Self::Native(resource) => {
+                resource.dispose();
+                Ok(())
+            }
+            Self::Fallible(resource) => resource(),
+        }
+    }
+}
+
 struct State {
     id: u64,
     line: RefCell<MarkerLine>,
     disposed: Cell<bool>,
     on_dispose: Emitter<()>,
-    resources: RefCell<Vec<DisposableHandle>>,
+    resources: RefCell<Vec<Resource>>,
 }
 
 /// A clone is another handle to the same marker, not a new marker with a new id.
@@ -129,7 +149,21 @@ impl Marker {
     /// Retain duplicates and late registrations, returning the exact same handle.
     /// Unlike DisposableStore, registration after disposal does not invoke it.
     pub fn register(&self, resource: DisposableHandle) -> DisposableHandle {
-        self.state.resources.borrow_mut().push(Rc::clone(&resource));
+        self.state
+            .resources
+            .borrow_mut()
+            .push(Resource::Native(Rc::clone(&resource)));
+        resource
+    }
+
+    /// Retain a fallible host capability using the same live disposal order as
+    /// native resources. An error stops traversal and leaves resources retained;
+    /// the already-disposed marker never retries them.
+    pub fn register_fallible(&self, resource: MarkerResource) -> MarkerResource {
+        self.state
+            .resources
+            .borrow_mut()
+            .push(Resource::Fallible(Rc::clone(&resource)));
         resource
     }
 
@@ -153,7 +187,7 @@ impl Marker {
             let Some(resource) = resource else {
                 break;
             };
-            resource.dispose();
+            resource.dispose()?;
             index += 1;
         }
         let removed = self.state.resources.take();
