@@ -1,0 +1,89 @@
+{
+  "scope": "RectangleRenderer component only; full addon NOT IMPLEMENTED",
+  "platform": "win32",
+  "arch": "x64",
+  "date": "2026-11-05T08:49:05.119Z",
+  "base": "3ee576a9b01c774d2305936ec9e44993df7f0b5d",
+  "toolchain": {
+    "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+    "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+    "node": "v24.15.0"
+  },
+  "sourceOracle": {
+    "command": "SOURCE_ROOT=<original source_repo with esbuild installed> node scripts/webgl-rectangle-oracle.mjs",
+    "seed": "0x57e61a23",
+    "cases": 141,
+    "sourceHashesIn": "crates/xterm-web/tests/fixtures/webgl-rectangles.json"
+  },
+  "native": {
+    "command": "cargo test --locked -j2 -p xterm-web --test webgl_rectangles",
+    "passed": 3,
+    "failed": 0,
+    "ignored": 0
+  },
+  "checks": [
+    {
+      "command": "cargo clippy --locked -j2 -p xterm-web --test webgl_rectangles -- -D warnings",
+      "status": "passed"
+    },
+    {
+      "command": "cargo clippy --locked -j2 -p xterm-web --target wasm32-unknown-unknown --test wasm_webgl_rectangles -- -D warnings",
+      "status": "passed"
+    }
+  ],
+  "browser": {
+    "command": "WASM_TEST=wasm_webgl_rectangles node scripts/browser-host-check.mjs",
+    "status": "passed",
+    "engines": [
+      {
+        "name": "chromium",
+        "version": "148.0.7778.96",
+        "status": "passed",
+        "counts": {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 0,
+          "filtered": 0
+        }
+      },
+      {
+        "name": "firefox",
+        "version": "150.0.2",
+        "status": "passed",
+        "counts": {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 0,
+          "filtered": 0
+        }
+      },
+      {
+        "name": "webkit",
+        "version": "26.4",
+        "status": "passed",
+        "counts": {
+          "passed": 4,
+          "failed": 0,
+          "ignored": 0,
+          "filtered": 0
+        }
+      }
+    ],
+    "raw": "browser-results.json",
+    "artifactRetention": "Raw browser receipt includes hashes and historical temporary compiler/bindgen paths. Temporary binaries are removed after integration; source and outputs remain."
+  },
+  "hashes": {
+    "crates/xterm-web/src/webgl/rectangles.rs": "cbe85325139029cb045a6b6a878133c30255ca3f1726a0364959915f0dfc8ec7",
+    "crates/xterm-web/src/webgl/rectangle_gpu.rs": "75ebec09bd59b305afce2fdc506c35f3e481a71f3dee8ec3f333e51cf1ffcd86",
+    "crates/xterm-web/src/webgl/gpu_resources.rs": "d5abe34210fbbbf05780474dab59d56e22da96e657ad812939ea53c11c27c037",
+    "crates/xterm-web/tests/fixtures/webgl-rectangles.json": "7b68f5284729215ed48cd08ee6374a2f388fcb2fd9f2f22ceee679e65013b663",
+    "crates/xterm-web/tests/webgl_rectangles.rs": "d37f5b3d5e46212df870054612e224db8719b007612eb6f26a906ccda481900e",
+    "crates/xterm-web/tests/wasm_webgl_rectangles.rs": "cfdf5c748d8ea5eae934ca855740f786e02c35001e0dc2bccb2eb77f8d3d26fe",
+    "scripts/webgl-rectangle-oracle.mjs": "851b57ccc631d02f6265eca2cba9dc59641fcf4cc9e8e01cff8e1c2411145f7e"
+  },
+  "unrun": [
+    "Full WebglAddon/original WebGL integration suites and demo",
+    "Native Linux/macOS runtime",
+    "Full integrated workspace gate pending canonical integration"
+  ]
+}
