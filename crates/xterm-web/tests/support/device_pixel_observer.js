@@ -112,7 +112,7 @@ export async function nativeObserver(factory) {
   element.style.cssText = 'width:123.25px;height:37.5px';
   doc.body.appendChild(element);
   const Original = win.ResizeObserver;
-  let delivery, timer, disposable, constructors = 0, disconnects = 0;
+  let delivery, timer, disposable, control, constructors = 0, disconnects = 0, observeError = null;
   const callbacks = [], sizes = [];
   const next = () => new Promise((resolve, reject) => {
     delivery = resolve;
@@ -129,25 +129,46 @@ export async function nativeObserver(factory) {
         delivery();
       });
     }
+    observe(...args) {
+      try { super.observe(...args); }
+      catch (error) { observeError = error.name; throw error; }
+    }
     disconnect() { disconnects++; super.disconnect(); }
   };
   try {
     const first = next();
     disposable = factory(element, win, (w, h) => callbacks.push([w, h]));
+    if (observeError !== null) { clearTimeout(timer); delivery(); }
     await first;
     // An unsupported implementation disconnects itself on first delivery.
-    if (sizes[0] !== null) {
+    if (sizes.length && sizes[0] !== null) {
       const resized = next();
       element.style.width = '141.75px';
       await resized;
     }
     disposable.dispose();
     disposable.dispose();
-    return JSON.stringify({constructors, disconnects, callbacks, sizes});
+    // Independent default-box delivery proves this realm's actual observer works,
+    // even when its device-pixel option is rejected. It is not an addon fallback.
+    let contentControl;
+    const controlled = next();
+    control = new Original(entries => {
+      const rect = entries[0].contentRect;
+      contentControl = [rect.width, rect.height];
+      clearTimeout(timer);
+      delivery();
+    });
+    control.observe(element);
+    await controlled;
+    const result = {constructors, disconnects, callbacks, sizes, observeError, contentControl};
+    console.info('native-device-pixel', JSON.stringify({
+      implementation: factory === globalThis.sourceObserveDevicePixelDimensions ? 'source' : 'rust', result}));
+    return JSON.stringify(result);
   } finally {
     clearTimeout(timer);
-    if (disposable) disposable.dispose();
-    iframe.remove();
+    if (control) control.disconnect();
+    try { if (disposable) disposable.dispose(); }
+    finally { iframe.remove(); }
   }
 }
 

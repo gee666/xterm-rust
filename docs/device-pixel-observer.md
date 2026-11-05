@@ -24,9 +24,9 @@ cargo clippy -p xterm-web --target wasm32-unknown-unknown --lib --test wasm_devi
 WASM_TEST=wasm_device_pixel_observer CARGO_FEATURES=acceptance-hooks WASM_PRELUDE="$PWD/tmp/device-pixel-observer/prelude.js" node scripts/browser-host-check.mjs
 ```
 
-Set `WASM_BINDGEN` and `PLAYWRIGHT_MODULE` to the existing tools if they are not on PATH. The browser runner executes every test in Chromium, Firefox and WebKit and closes its browser/server resources. The oracle prelude runs unchanged source for the expected side only. Rust execution uses the new Rust component.
+Set `WASM_BINDGEN` and `PLAYWRIGHT_MODULE` to the existing tools if they are not on PATH. The browser runner executes every test in Chromium, Firefox and WebKit and closes its browser/server resources. The accepted artifact-server cleanup fix from task 495 is required by these recorded runs. The oracle prelude runs unchanged source for the expected side only. Rust execution uses the new Rust component.
 
-The shared test inputs cover 25 lifecycle/getter/error scenarios, including repeated disposal, bounded reentry, retained predicates, zero/NaN dimensions, inherited properties, getter/proxy order, primitive/empty/null boxes, raw BigInt and coercion cutoffs. Another test observes actual physical dimensions and resizing in a supplied iframe window. Unsupported native device-pixel boxes must produce a real delivery and disconnect, not a skipped success. A third test verifies deterministic Rust Drop cleanup and expired callback state.
+The shared test inputs cover 25 lifecycle/getter/error scenarios, including repeated disposal, bounded reentry, retained predicates, zero/NaN dimensions, inherited properties, getter/proxy order, primitive/empty/null boxes, raw BigInt and coercion cutoffs. Another test observes actual physical dimensions and resizing in a supplied iframe window. Native device-pixel behavior is recorded explicitly. Browsers that reject this observation option must match the source's rejection/disconnect path, without pretending they delivered device-pixel measurements. A separate default-box observation proves actual native delivery in that realm; it is not an addon fallback. A third test verifies deterministic Rust Drop cleanup and expired callback state.
 
 ## Verification status
 
@@ -34,4 +34,10 @@ Native retained WebGL tests: 46 passed, zero failed/ignored/filtered. Strict nat
 
 The exact workspace formatting command still fails with Windows OS206. Changed-file rustfmt checks pass. This does not replace full workspace quality gates.
 
-Three-engine execution and negative-control receipts are pending. Results belong in `results/device-pixel-observer/`. Full equivalence remains NOT PROVEN.
+Final Chromium 148.0.7778.96, Firefox 150.0.2 and WebKit 26.4 each passed all three functions, zero failures/ignored/filtered. Each compared all 25 source scenarios. Chromium and Firefox delivered actual device sizes `[123,38]` then `[142,38]`, equal on source and Rust sides. WebKit rejected the native device-pixel box option with TypeError. Source and Rust both disconnected once and produced no device-pixel callbacks. Its independent default-box observer delivered `[123.25,37.5]`. No supported-device delivery is claimed for WebKit.
+
+The first matrix retained a WebKit 2-pass/1-fail source-oracle timeout. Diagnosis confirmed actual native option rejection, not a Rust behavior difference. The test now asserts that rejection/disconnect path and independent native delivery rather than waiting for an event the unchanged source cannot produce. Both the raw failed report and corrected/final reports remain under `results/device-pixel-observer/`.
+
+The production negative control changes the observe catch from required to optional disconnect. Chromium then passes exactly two functions and fails only `observer_lifecycle_and_live_getters_match_unchanged_source` at the synchronous unsupported-delivery/throw trace. The script restores exact source bytes in finally and records matching pre/post SHA-256. The final full three-engine matrix and strict WASM lint passed after restoration. Run `node scripts/device-pixel-observer-negative.mjs` with the same environment to reproduce. It mutates only this owned source file while running, so do not run it concurrently with edits.
+
+Receipts and raw outputs are under `results/device-pixel-observer/`, including initial compiler/lint failures, source/native traces, immutable compiler/binding/module hashes, exact negative-control restoration, final strict lint and OS206 formatting failure. Generated runtime binaries are inspected before cleanup and are not durable source distributions. Independent review and owned-path cleanup receipts follow there. Full equivalence remains NOT PROVEN.

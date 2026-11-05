@@ -73,18 +73,25 @@ fn rust_drop_disconnects_once_and_releases_callback_state() {
 }
 
 #[wasm_bindgen_test]
-async fn actual_parent_window_resize_delivery_matches_unchanged_source() {
+async fn actual_parent_window_observation_matches_unchanged_source() {
     let expected = JsFuture::from(oracle_native()).await.unwrap();
     let actual = JsFuture::from(native_observer(&factory())).await.unwrap();
     assert_eq!(actual, expected);
     let result: serde_json::Value = serde_json::from_str(&actual.as_string().unwrap()).unwrap();
     assert_eq!(result["constructors"], 1);
+    assert!(result["contentControl"][0].as_f64().unwrap() > 0.0);
+    assert!(result["contentControl"][1].as_f64().unwrap() > 0.0);
+    let rejected = !result["observeError"].is_null();
+    let unsupported = result["sizes"][0].is_null();
     assert_eq!(
         result["disconnects"],
-        if result["sizes"][0].is_null() { 1 } else { 2 }
+        if rejected || unsupported { 1 } else { 2 }
     );
-    assert!(!result["sizes"].as_array().unwrap().is_empty());
-    if result["sizes"][0].is_null() {
+    if rejected {
+        assert_eq!(result["sizes"], serde_json::json!([]));
+        assert_eq!(result["callbacks"], serde_json::json!([]));
+        assert_eq!(result["observeError"], "TypeError");
+    } else if unsupported {
         assert_eq!(result["callbacks"], serde_json::json!([]));
     } else {
         assert_eq!(result["sizes"], result["callbacks"]);
