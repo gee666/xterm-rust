@@ -19,6 +19,8 @@ Observed on Windows with Rust/Cargo 1.85.1, Node 24.15.0 and wasm-bindgen 0.2.10
 - The coordinate-model oracle passed all 18 original assertion bodies and 61,310 comparisons, including 20,000 seeded cases with seed `0x051ec710`. The service corpus uses seed `0x5e1ec710`.
 - Scoped WASM library/test Clippy passed with warnings denied. Changed-file rustfmt checks and Node syntax checks passed.
 
+Independent review accepted source commit `c5ed709`. The reviewer inspected the callback ownership and regression, verified retained WASM/binding/test-source hashes and original embedded source identity, and reran the unchanged 26-case source suite with the 4,297-case corpus, Node syntax, changed-file rustfmt and whitespace checks. It found no concrete problems. Native Cargo and browser execution were not independently rerun because the shared runtime allocation remained unapproved; the retained three-engine runtime results above are producer executions.
+
 Concise reports, the before-fix failure, source hashes and logs are under `results/selection-service/reentry/`. The latest coordinate report is `results/selection-model/oracle.json`. Browser reports contain hashes and paths of the exact generated artifacts used at execution time. Disposable binaries are not retained after cleanup.
 
 ## Commands
