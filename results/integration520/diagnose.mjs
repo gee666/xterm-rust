@@ -47,7 +47,14 @@ try {
   } else {
     report.result = await runCommand(process.execPath,['scripts/serialize-browser-check.mjs','--suite'],{
       cwd:root,env:process.env,timeoutMs:600000,resourceCheck:headroom,log:join(out,`serialize-browser-${mode}.log`)});
-    await cp(join(root,'results/serialize-browser'),join(out,`browser-${mode}`),{recursive:true});
+    const browserFiles = ['verification.json', ...['chromium','firefox','webkit'].flatMap(name =>
+      [`${name}-source.json`,`${name}-rust.json`,`${name}-terminal.png`]),
+      ...['source-suite','rust-suite'].flatMap(name => ['configuration.cjs.txt','playwright.json','playwright.log'].map(file => `${name}/${file}`))];
+    for (const file of browserFiles) {
+      const destination = join(join(out,`browser-${mode}`),file);
+      await mkdir(join(destination,'..'),{recursive:true});
+      await cp(join(root,'results/serialize-browser',file),destination);
+    }
     const final = await json(join(out,`browser-${mode}/verification.json`));
     assert.equal(final.error,undefined); assert.deepEqual(final.cleanupErrors,[]);
     assert.equal(final.browsers.length,3);

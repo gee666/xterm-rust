@@ -63,7 +63,14 @@ if (mode === 'browser') {
     const builtPointer = await json(pointer);
     await save('browser-build-pointer.json', builtPointer);
     const result = await run('serialize-browser', process.execPath, ['scripts/serialize-browser-check.mjs','--suite'], 600000);
-    await cp(join(root, 'results/serialize-browser'), join(out,'browser'), {recursive:true});
+    const browserFiles = ['verification.json', ...['chromium','firefox','webkit'].flatMap(name =>
+      [`${name}-source.json`,`${name}-rust.json`,`${name}-terminal.png`]),
+      ...['source-suite','rust-suite'].flatMap(name => ['configuration.cjs.txt','playwright.json','playwright.log'].map(file => `${name}/${file}`))];
+    for (const file of browserFiles) {
+      const destination = join(join(out,'browser'),file);
+      await mkdir(join(destination,'..'),{recursive:true});
+      await cp(join(root,'results/serialize-browser',file),destination);
+    }
     const report = await json(join(out, 'browser/verification.json'));
     assert.equal(report.error, undefined); assert.deepEqual(report.cleanupErrors, []);
     assert.equal(report.browsers.length, 3);
