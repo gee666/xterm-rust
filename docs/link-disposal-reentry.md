@@ -49,4 +49,6 @@ cargo clippy --locked -j2 -p xterm-web --target wasm32-unknown-unknown --lib --t
 cargo fmt --all -- --check
 ```
 
+The isolated task351 reviewer accepted `ebaba6e` after independently rerunning full rustfmt, all30 focused native tests, native all-target/all-feature Clippy and the scoped WASM Clippy command. The reviewer inspected all retained hashes and baseline/fixed test identity, and verified the42 browser pass records without rerunning browsers. No source change followed that review.
+
 Full equivalence remains NOT PROVEN. The browser cache still uses typed text/range data. Live JavaScript link objects, getter/Proxy timing, live callback replacement, dynamic decorations, public custom-provider registration and the complete source family remain work in321. `docs/live-link-acceptance.md` retains the full contract. This repair must not be treated as implementing that contract.
