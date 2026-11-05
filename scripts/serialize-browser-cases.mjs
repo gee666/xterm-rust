@@ -67,6 +67,38 @@ export async function serializationCases() {
     try { addon.serialize({ get excludeModes() { throw sentinel; } }); } catch (error) { same = error === sentinel; }
     return { ansi, log, same };
   });
+  await run('ansi-warning-reset-restores-current-attrs', async (term, addon) => {
+    await write(term, '\x1b[31mABC');
+    const previous = console.warn; let count = 0;
+    console.warn = (...args) => { previous(...args); count++; term.reset(); };
+    try {
+      const range = { start: 0, get end() { term.resize(11, 4); return 0; } };
+      return { ansi: addon.serialize({ range, excludeAltBuffer: true, excludeModes: true }), count };
+    } finally { console.warn = previous; }
+  });
+  await run('ansi-warning-nested-serialization', async (term, addon) => {
+    await write(term, '\x1b[34mABC');
+    const previous = console.warn; let nested;
+    console.warn = (...args) => {
+      previous(...args);
+      nested = addon.serialize({ range: { start: 0, end: 0 }, excludeAltBuffer: true, excludeModes: true });
+      term.reset();
+    };
+    try {
+      const range = { start: 0, get end() { term.resize(11, 4); return 0; } };
+      return { ansi: addon.serialize({ range, excludeAltBuffer: true, excludeModes: true }), nested };
+    } finally { console.warn = previous; }
+  });
+  await run('ansi-warning-exception-identity', async (term, addon) => {
+    await write(term, '\x1b[31mABC');
+    const sentinel = {}, previous = console.warn; let same = false;
+    console.warn = () => { throw sentinel; };
+    try {
+      addon.serialize({ range: { start: 0, get end() { term.resize(11, 4); return 0; } } });
+    } catch (error) { same = error === sentinel; }
+    finally { console.warn = previous; }
+    return same;
+  });
   await run('html-selection-range', async (term, addon) => {
     await write(term, 'abc<&\r\nsecond\r\nthird');
     const values = [addon.serializeAsHTML({ onlySelection: true }), addon.serializeAsHTML()];

@@ -93,7 +93,7 @@ pub(super) fn serialize(addon: &SerializeAddon, raw: JsValue) -> Result<Vec<u16>
                 .map_err(|_| js_sys::Error::new("Theme palette does not contain 256 colors"))?,
         );
     }
-    let view = view::BrowserView::new(active)?;
+    let view = view::BrowserView::new(active, &host)?;
     let rows = host.native.rows().map_err(|error| to_js_error(&error))?;
     serialize_html(
         &view,

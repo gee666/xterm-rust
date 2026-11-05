@@ -1,12 +1,15 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved. MIT license.
-use crate::js_error::{to_js_error, JsCallbackError};
+use crate::{
+    js_error::{to_js_error, JsCallbackError},
+    terminal::Shared,
+};
 use std::{error::Error, rc::Rc};
 use wasm_bindgen::prelude::*;
 use xterm_core::{
-    buffer::{BufferError, CellData},
+    buffer::{AttributeData, BufferError, CellData},
     event::EmitError,
     public_api::BufferApiView,
-    serialize::{BufferAccess, PublicBufferView, SerializeError},
+    serialize::{BufferAccess, Position, PublicBufferView, SerializeError},
 };
 
 #[wasm_bindgen(
@@ -34,35 +37,63 @@ pub(super) fn error(error: &(dyn Error + 'static)) -> JsValue {
     }
     to_js_error(error)
 }
-pub(super) struct BrowserView(PublicBufferView);
-impl BrowserView {
-    pub(super) fn new(view: Rc<BufferApiView>) -> Result<Self, JsValue> {
-        PublicBufferView::new(view)
-            .map(Self)
-            .map_err(|cause| error(&cause))
+fn native_error(cause: impl Error + 'static) -> SerializeError {
+    BufferError::Dispatch(EmitError::callback(JsCallbackError(to_js_error(&cause)))).into()
+}
+pub(super) struct BrowserView<'a> {
+    captured: PublicBufferView,
+    view: Rc<BufferApiView>,
+    host: &'a Shared,
+}
+impl<'a> BrowserView<'a> {
+    pub(super) fn new(view: Rc<BufferApiView>, host: &'a Shared) -> Result<Self, JsValue> {
+        let captured = PublicBufferView::new(view.clone()).map_err(|cause| error(&cause))?;
+        Ok(Self {
+            captured,
+            view,
+            host,
+        })
     }
 }
-impl BufferAccess for BrowserView {
+impl BufferAccess for BrowserView<'_> {
     fn len(&self) -> usize {
-        self.0.len()
+        self.captured.len()
     }
     fn line_len(&self, row: usize) -> Result<Option<usize>, SerializeError> {
-        self.0.line_len(row)
+        self.captured.line_len(row)
     }
     fn cell(&self, row: usize, col: usize) -> Result<Option<CellData>, SerializeError> {
-        self.0.cell(row, col)
+        self.captured.cell(row, col)
     }
     fn is_wrapped(&self, row: usize) -> Result<bool, SerializeError> {
-        self.0.is_wrapped(row)
+        self.captured.is_wrapped(row)
     }
     fn cursor_x(&self) -> usize {
-        self.0.cursor_x()
+        self.captured.cursor_x()
     }
     fn cursor_y(&self) -> usize {
-        self.0.cursor_y()
+        self.captured.cursor_y()
     }
     fn base_y(&self) -> usize {
-        self.0.base_y()
+        self.captured.base_y()
+    }
+    fn current_rows(&self, _: usize) -> Result<usize, SerializeError> {
+        self.host.native.rows().map_err(native_error)
+    }
+    fn current_length(&self) -> Result<usize, SerializeError> {
+        self.view.len().map_err(Into::into)
+    }
+    fn current_cursor(&self) -> Result<Position, SerializeError> {
+        Ok(Position {
+            y: self.view.base_y()? + self.view.cursor_y()?,
+            x: self.view.cursor_x()?,
+        })
+    }
+    fn current_attrs(&self, _: &AttributeData) -> Result<AttributeData, SerializeError> {
+        self.host
+            .native
+            .with_state(|state| state.attributes.clone())
+            .map_err(native_error)
     }
     fn missing_cell(&self, row: usize, col: usize) -> Result<(), SerializeError> {
         warn(row, col).map_err(|cause| {

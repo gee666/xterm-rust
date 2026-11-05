@@ -17,8 +17,8 @@ pub use terminal::{serialize_terminal, MouseTracking, SerializeModes, SerializeS
 
 use crate::buffer::{AttributeData, CellData};
 
-/// Read-only buffer operations used by both serializers. Implementations should
-/// return a consistent view for the duration of a serialization call.
+/// Read-only buffer operations used by both serializers. Browser callbacks may
+/// mutate the terminal during a diagnostic; late state reads are fallible hooks.
 pub trait BufferAccess {
     fn len(&self) -> usize;
     fn is_empty(&self) -> bool {
@@ -30,6 +30,23 @@ pub trait BufferAccess {
     fn cursor_x(&self) -> usize;
     fn cursor_y(&self) -> usize;
     fn base_y(&self) -> usize;
+    /// Native callers supply immutable dimensions; browser hosts read live rows.
+    fn current_rows(&self, fallback: usize) -> Result<usize, SerializeError> {
+        Ok(fallback)
+    }
+    fn current_length(&self) -> Result<usize, SerializeError> {
+        Ok(self.len())
+    }
+    fn current_cursor(&self) -> Result<Position, SerializeError> {
+        Ok(Position {
+            x: self.cursor_x(),
+            y: self.base_y() + self.cursor_y(),
+        })
+    }
+    /// Cursor attributes are restored after traversal, not captured before it.
+    fn current_attrs(&self, fallback: &AttributeData) -> Result<AttributeData, SerializeError> {
+        Ok(fallback.clone())
+    }
     /// Browser hosts preserve the source diagnostic for a missing traversed cell.
     fn missing_cell(&self, _row: usize, _col: usize) -> Result<(), SerializeError> {
         Ok(())

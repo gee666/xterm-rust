@@ -146,7 +146,7 @@ fn buffer(
         .native
         .with_state(|state| state.attributes.clone())
         .map_err(|error| to_js_error(&error))?;
-    let view = view::BrowserView::new(view)?;
+    let view = view::BrowserView::new(view, host)?;
     serialize_buffer(&view, columns(host)?, rows, &attrs, range, exclude_cursor)
         .map_err(|error| view::error(&error))
 }

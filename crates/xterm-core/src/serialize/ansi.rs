@@ -55,7 +55,7 @@ pub(super) fn serialize(
         }
         h.row_end(row, row == range.end.y)?;
     }
-    Ok(h.finish(attrs, exclude_cursor))
+    h.finish(attrs, exclude_cursor)
 }
 
 impl Handler<'_> {
@@ -112,7 +112,7 @@ impl Handler<'_> {
         }
         let mut separator = String::new();
         if !last {
-            if row - self.first >= self.rows {
+            if row - self.first >= self.buffer.current_rows(self.rows)? {
                 if let Some(cell) = self
                     .buffer
                     .cell(self.style_position.0, self.style_position.1)?
@@ -186,8 +186,14 @@ impl Handler<'_> {
         Ok(out)
     }
 
-    fn finish(mut self, attrs: &AttributeData, exclude_cursor: bool) -> Vec<u16> {
-        let row_end = if self.buffer.len().saturating_sub(self.first) <= self.rows {
+    fn finish(
+        mut self,
+        attrs: &AttributeData,
+        exclude_cursor: bool,
+    ) -> Result<Vec<u16>, SerializeError> {
+        let row_end = if self.buffer.current_length()?.saturating_sub(self.first)
+            <= self.buffer.current_rows(self.rows)?
+        {
             self.cursor = self.content_cursor;
             self.content_cursor.0 + 1 - self.first
         } else {
@@ -201,20 +207,16 @@ impl Handler<'_> {
             }
         }
         if !exclude_cursor {
-            movement(
-                &mut output,
-                self.buffer.base_y() + self.buffer.cursor_y(),
-                self.cursor.0,
-                'B',
-                'A',
-            );
-            movement(&mut output, self.buffer.cursor_x(), self.cursor.1, 'C', 'D');
+            let cursor = self.buffer.current_cursor()?;
+            movement(&mut output, cursor.y, self.cursor.0, 'B', 'A');
+            movement(&mut output, cursor.x, self.cursor.1, 'C', 'D');
         }
-        let sgr = style::diff(attrs, &self.cursor_style);
+        let attrs = self.buffer.current_attrs(attrs)?;
+        let sgr = style::diff(&attrs, &self.cursor_style);
         if !sgr.is_empty() {
             append(&mut output, &format!("\x1b[{sgr}m"));
         }
-        output
+        Ok(output)
     }
 }
 
