@@ -12,7 +12,7 @@ Each cached wrapper owns its optional hover state. A throwing decoration getter 
 
 `scripts/public-link-provider-trace.js` runs unchanged against the original opened Terminal and the exported Rust Terminal. The source runner checks the original bundle source map against the supplied Linkifier, LinkProviderService and public Terminal source bytes. Its fixture is generated only from the original.
 
-The 20 phases cover pre-open registration, hover and descriptor flags, lossless UTF-16 callback text, mutable text/range/callbacks, mousedown equality, same-cell suppression, raw and undefined decoration values, old descriptors, ordered range getters, partial-decoration timing, duplicate disposal, asynchronous priority, ignored mouse-out replies, exact provider/range/decoration/hover thrown-object identity, partial hover state and late disposed replies.
+The final 21 phases cover pre-open registration, hover and descriptor flags, lossless UTF-16 callback text, mutable text/range/callbacks, mousedown equality, same-cell suppression, raw and undefined decoration values, old descriptors, ordered range getters, partial-decoration timing, duplicate disposal and removal/re-registration through an old detached token, asynchronous priority, ignored mouse-out replies, exact provider/range/decoration/hover thrown-object identity, partial hover state and late disposed replies.
 
 Commands from the repository root, using the existing installed matching wasm-bindgen and Playwright tools:
 
@@ -26,7 +26,15 @@ On source commit `c39052d5`, the original six Terminal integration tests pass in
 
 Six Rust browser suites pass 19 test functions per engine, including the 20-phase public trace. The source trace also passes all three engines. Native Windows workspace all-target/all-feature tests pass 2,077 test functions across 432 result summaries, with zero ignored tests. Workspace doctests pass two tests. Native workspace and WASM all-target/all-feature Clippy pass with warnings denied. All five individual workspace package format checks pass. Exact `cargo fmt --all -- --check` still fails with Windows OS206, retained in `fmt-all.log`; the package checks are not represented as that command passing.
 
-Tool versions are Rust/Cargo1.85.1, Node24.15.0, wasm-bindgen0.2.100, Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4. Final command accounting, source/build identities, exact original Playwright reports and 80 raw reports/logs are indexed with SHA-256 hashes in `results/public-link-provider/index.json`. Reports retain historical O: artifact paths and hashes; compiler/browser binary outputs are temporary and are not committed.
+Tool versions are Rust/Cargo1.85.1, Node24.15.0, wasm-bindgen0.2.100, Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4. Final command accounting, source/build identities, exact original Playwright reports and raw reports/logs are indexed with SHA-256 hashes in `results/public-link-provider/index.json`. Reports retain historical O: artifact paths and hashes; compiler/browser binary outputs are temporary and are not committed.
+
+## Independent review correction
+
+The first isolated review verified all 80 initial indexed evidence hashes and found a real identity defect. Wrapper reuse consulted only active registrations. An old disposal token therefore failed to remove a later re-registration after the original wrapper had been removed. Source removes the first registration of the original JavaScript provider on every disposal invocation.
+
+Source commit `475bc199` fixes disposal-time lookup by original JS identity. The token holds its provider reference on the JavaScript side, rather than making a Rust closure strongly own the provider. The shared source/Rust trace now has 21 phases and passes all three engines, including the exact review sequence and a detached disposal method. Native workspace tests/Clippy and focused all-target/all-feature WASM Clippy pass again.
+
+After the correction, unchanged public cases pass18/18. The full addon replay records1,002 passed, one Firefox `beforeAll` setup timeout and500 unrun. The timeout occurs in unchanged `createTestContext` while exposing `onBell`, before `openTerminal`. One bounded Firefox-only replay passes501/501 against the identical WASM/binding hashes, with no assertion or timeout edits. The failed full run remains distinct from the replay. This is not relabeled as a clean full-matrix run. Current review-fix receipts and all106 indexed files are retained under `results/public-link-provider/`.
 
 ## Remaining family work
 

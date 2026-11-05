@@ -1,0 +1,83 @@
+
+Running 1503 tests using 2 workers
+················································································
+·····························T°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
+°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
+°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
+°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
+°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
+°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
+°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°······························
+················································································
+················································································
+················································································
+················································································
+················································································
+················································································
+················································································
+················································································
+················································································
+················································································
+·······························································
+
+  1) [FirefoxStable] › addons\addon-web-links\test\WebLinksAddon.test.ts:69:9 › WebLinksAddon › .ac 
+
+    [31m"beforeAll" hook timeout of 10000ms exceeded.[39m
+
+      25 |
+      26 | let ctx: ITestContext;
+    > 27 | test.beforeAll(async ({ browser }) => {
+         |      ^
+      28 |   ctx = await createTestContext(browser);
+      29 |   await openTerminal(ctx, { cols: 40 });
+      30 | });
+        at O:\xterm-rust-swarm-16\tmp\E415\source_repo\addons\addon-web-links\test\WebLinksAddon.test.ts:27:6
+
+    TypeError: Cannot read properties of undefined (reading 'page')
+
+      29 |   await openTerminal(ctx, { cols: 40 });
+      30 | });
+    > 31 | test.afterAll(async () => await ctx.page.close());
+         |                                     ^
+      32 |
+      33 | test.describe('WebLinksAddon', () => {
+      34 |
+        at O:\xterm-rust-swarm-16\tmp\E415\source_repo\addons\addon-web-links\test\WebLinksAddon.test.ts:31:37
+
+    Error: page.exposeFunction: Test ended.
+
+       at ..\..\..\test\playwright\TestUtils.ts:143
+
+      141 |    */
+      142 |   public async initPage(): Promise<void> {
+    > 143 |     await this._page.exposeFunction('onBell', () => this._onBell.fire());
+          |                      ^
+      144 |     await this._page.exposeFunction('onBinary', (e: string) => this._onBinary.fire(e));
+      145 |     await this._page.exposeFunction('onCursorMove', () => this._onCursorMove.fire());
+      146 |     await this._page.exposeFunction('onData', (e: string) => this._onData.fire(e));
+        at TerminalProxy.initPage (O:\xterm-rust-swarm-16\tmp\E415\source_repo\test\playwright\TestUtils.ts:143:22)
+        at createTestContext (O:\xterm-rust-swarm-16\tmp\E415\source_repo\test\playwright\TestUtils.ts:31:9)
+        at O:\xterm-rust-swarm-16\tmp\E415\source_repo\addons\addon-web-links\test\WebLinksAddon.test.ts:28:9
+
+    Error: page.evaluate: Test ended.
+
+       at ..\..\..\test\playwright\TestUtils.ts:466
+
+      464 |   // HACK: Tests may have side effects that could cause the terminal not to be removed. This
+      465 |   //       assertion catches this case early.
+    > 466 |   strictEqual(await ctx.page.evaluate(`document.querySelector('#terminal-container').children.length`), 0, 'there must be no terminals on the page');
+          |                              ^
+      467 |
+      468 |   let script = `
+      469 |     window.term = new window.Terminal(${JSON.stringify({ allowProposedApi: true, ...options })});
+        at openTerminal (O:\xterm-rust-swarm-16\tmp\E415\source_repo\test\playwright\TestUtils.ts:466:30)
+        at O:\xterm-rust-swarm-16\tmp\E415\source_repo\addons\addon-web-links\test\WebLinksAddon.test.ts:29:3
+
+    Error Context: ..\results\e2e\upstream\2026-11-05T18-06-12-408Z-e25ddd04-1ca4-4f3b-9ad3-08aa5c89362a\artifacts\WebLinksAddon-WebLinksAddon-ac-FirefoxStable\error-context.md
+
+    Error Context: ..\results\e2e\upstream\2026-11-05T18-06-12-408Z-e25ddd04-1ca4-4f3b-9ad3-08aa5c89362a\artifacts\WebLinksAddon-WebLinksAddon-ac-FirefoxStable\error-context.md
+
+  1 failed
+    [FirefoxStable] › addons\addon-web-links\test\WebLinksAddon.test.ts:69:9 › WebLinksAddon › .ac ─
+  500 did not run
+  1002 passed (1.6m)

@@ -4,7 +4,7 @@ Status: partial implementation, full browser equivalence NOT PROVEN.
 
 ## Current public provider binding
 
-Task415 exposes `Terminal.registerLinkProvider` on the existing Rust registry/controller. Original public-provider cases pass18/18 and the unchanged web-links addon suite passes1503/1503 across Chromium, Firefox and WebKit. A shared20-phase opened-terminal source/Rust trace checks live public link objects, mutation, decoration timing, async priority and thrown identity. See [public-link-provider.md](public-link-provider.md) for exact receipts and remaining raw/OSC family gaps. These scoped passes do not establish full equivalence.
+Task415 exposes `Terminal.registerLinkProvider` on the existing Rust registry/controller. Original public-provider cases pass18/18 and the unchanged web-links addon suite passes1503/1503 across Chromium, Firefox and WebKit. A shared21-phase opened-terminal source/Rust trace checks live public link objects, mutation, decoration timing, async priority and thrown identity. The post-review addon replay has a retained Firefox setup timeout and a successful same-build Firefox-only replay. See [public-link-provider.md](public-link-provider.md) for exact per-run receipts, the old-token identity correction and remaining raw/OSC family gaps. These scoped passes do not establish full equivalence.
 
 ## Current viewport repair
 
