@@ -34,6 +34,10 @@ The retained OSC handler, policy, typed linkifier, public-provider and link-disp
 
 Rust/Cargo1.85.1, Node24.15.0 and wasm-bindgen0.2.100 were used on native Windows. Reports, commands, producer identities, negative-control hashes and raw quality logs are indexed by `results/osc-live-range/index.json`. Browser reports retain original temporary artifact paths and exact compiler/binding hashes. Binary build outputs are disposable, not evidence to commit.
 
+## Independent review
+
+The isolated review accepted source `2d0258cb` and evidence `73c126b0` with no findings. Under a source/light-only resource grant, it independently ran both original callback expressions and the production factory against all 31 retained handler cases, plus endpoint/callback replacement and exact thrown-identity checks. It verified 18 receipt files, 10 producer paths, source maps, 27 artifact hashes and negative baseline/restoration hashes. It did not rerun compiler or browser jobs and did not claim those retained results as fresh executions. The exact review scope is retained in `results/osc-live-range/review.json`.
+
 ## Remaining work
 
 This scoped fix does not close selection/links task321 or public API task315. Utility web-links still uses typed snapshots. Arbitrary mapped reply containers, malformed/sparse payloads, out-of-domain drawing/selection coordinates, complete reentrant getter/Proxy coverage, randomized mutation and full lifecycle/GC equivalence remain open. Native Linux/macOS runtime, complete original/browser/demo matrices and final workspace quality are separate requirements. Full equivalence is NOT PROVEN.
