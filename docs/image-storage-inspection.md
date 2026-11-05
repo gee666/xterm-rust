@@ -10,8 +10,8 @@ Image values expose the actual original and resized canvas/bitmap, cell sizes, t
 
 Windows, Rust/Cargo1.85.1, Node24.15.0, wasm-bindgen0.2.100:
 
-- The complete directed coordinator matrix now passes15 tests per engine in Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4. Three new tests compare real source/Rust storage keys, identity, original pixels, layers, reset/disposal, live iteration and reset from a forEach callback.
-- Focused native storage tests pass21 tests, including two new live-traversal tests. Full native all-target/all-feature workspace execution passes2063 tests across410 summaries, with zero failures or ignored tests. This does not execute WASM assertions.
+- The complete directed coordinator matrix now passes16 tests per engine in Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4. Four new tests compare real source/Rust storage keys, identity, original pixels, layers, reset/disposal, retained activations, live iteration, callback error identity and reset from a forEach callback.
+- Focused native storage tests pass21 tests, including two new live-traversal tests. Full native all-target/all-feature workspace execution passes2064 tests across412 summaries, with zero failures or ignored tests. This does not execute WASM assertions.
 - Exact `cargo fmt --all -- --check`, native workspace warning-denied Clippy and scoped WASM warning-denied Clippy pass.
 - An initial new native test placed successive images on the same tile, so ordinary overwrite eviction correctly removed earlier entries. The test now places images on different cells to exercise traversal. No production overwrite behavior or source assertion changed.
 

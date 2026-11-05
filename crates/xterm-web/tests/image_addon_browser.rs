@@ -1,6 +1,8 @@
 #![cfg(target_arch = "wasm32")]
 #[path = "image_addon_support/inspection.rs"]
 mod inspection;
+#[path = "image_addon_support/inspection_activation.rs"]
+mod inspection_activation;
 #[path = "image_addon_support/mod.rs"]
 mod support;
 use support::*;

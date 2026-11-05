@@ -107,6 +107,28 @@ async fn inspection_for_each_releases_borrows_before_reset_callback() {
       return JSON.stringify(receiver.seen);
     "#,
     );
+    let check_error = js_sys::Function::new_with_args(
+        "map",
+        r#"
+      const token={};
+      const callback=()=>{throw token};
+      callback.call=()=>{throw Error('callback.call must not be read')};
+      try {map.forEach(callback)} catch(error){if(error===token)return true;throw error}
+      throw Error('callback exception was swallowed');
+    "#,
+    );
+    assert_eq!(
+        check_error
+            .call1(&JsValue::UNDEFINED, &images(&pair))
+            .unwrap(),
+        JsValue::TRUE
+    );
+    assert_eq!(
+        check_error
+            .call1(&JsValue::UNDEFINED, &source_images(&pair))
+            .unwrap(),
+        JsValue::TRUE
+    );
     let native = pair.terminal.shared_native();
     let reset = wasm_bindgen::closure::Closure::<dyn FnMut()>::new(move || {
         native.write("\x1b[!p").unwrap();
