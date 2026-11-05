@@ -4,23 +4,25 @@ use super::*;
 
 pub(super) fn bind(state: &Rc<State>) -> Result<(), JsValue> {
     let weak = Rc::downgrade(state);
-    let listener = DomListener::new(state.element.as_ref(), "mousedown", false, move |event| {
-        if let Some(state) = weak.upgrade() {
-            if state.disposed.get() {
-                return;
-            }
-            match event.dyn_into::<MouseEvent>() {
-                Ok(event) => {
-                    if let Err(error) = mouse_down(&state, &event) {
-                        state.host.report_error(error);
-                    }
+    // Selection-change listeners can synchronously dispatch another mousedown.
+    let listener =
+        DomListener::new_reentrant(state.element.as_ref(), "mousedown", false, move |event| {
+            if let Some(state) = weak.upgrade() {
+                if state.disposed.get() {
+                    return;
                 }
-                Err(_) => state
-                    .host
-                    .report_error(error("selection requires MouseEvent")),
+                match event.dyn_into::<MouseEvent>() {
+                    Ok(event) => {
+                        if let Err(error) = mouse_down(&state, &event) {
+                            state.host.report_error(error);
+                        }
+                    }
+                    Err(_) => state
+                        .host
+                        .report_error(error("selection requires MouseEvent")),
+                }
             }
-        }
-    })?;
+        })?;
     state.listeners.borrow_mut().push(listener);
     Ok(())
 }

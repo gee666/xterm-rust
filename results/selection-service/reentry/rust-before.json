@@ -1,0 +1,120 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_terminal_selection",
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T09:21:16.203Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_terminal_selection",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 635.3073,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 10.912799999999947,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Jonas16\\results\\acceptance-artifacts\\4dbd7c2b8d770c211e75a0f3de1572effad5bf7f4d726b15edfd3088dade7eb1\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Jonas16\\results\\browser-host\\wasm_terminal_selection\\2026-11-05T09-21-16-201Z-5c6c4b8a-ad73-452c-a71a-ca8f0c0c0d32\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 860.0016,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_terminal_selection::selection_change_can_dispatch_nested_mousedown_then_drag"
+      ],
+      "errors": [
+        "Error: closure invoked recursively or after being dropped\n    at imports.wbg.__wbindgen_throw (http://127.0.0.1:52739/suite.js:4866:15)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.wasm_bindgen::throw_str::hafcbf37ca70bab9b (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[30851]:0x89bdb8)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::hcca3ff39635c472c (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[15870]:0x7a5dd6)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.closure1262 externref shim (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[30888]:0x89c141)\n    at __wbg_adapter_54 (http://127.0.0.1:52739/suite.js:415:10)\n    at HTMLDivElement.real (http://127.0.0.1:52739/suite.js:211:20)\n    at http://127.0.0.1:52739/suite.js:3445:26\n    at handleError (http://127.0.0.1:52739/suite.js:145:18)\n    at imports.wbg.__wbg_dispatchEvent_9e259d7c1d603dfb (http://127.0.0.1:52739/suite.js:3444:76)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.__wbg_dispatchEvent_9e259d7c1d603dfb externref shim (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[34479]:0x8aa491)",
+        "RuntimeError: null function\n    at wasm_terminal_selection-de57c1b286a54201.wasm.<core::task::wake::Waker as core::ops::drop::Drop>::drop::h7d02e83b12351a19 (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[27638]:0x886ff0)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.core::ptr::drop_in_place<core::task::wake::Waker>::hb275f40d9901d1c5 (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[38105]:0x8b31f4)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.core::ptr::drop_in_place<core::option::Option<core::task::wake::Waker>>::h0df9f5f9c6f1f5df (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[25934]:0x876a13)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.core::ptr::drop_in_place<wasm_bindgen_futures::Inner>::h34acfc062c327e9d (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[25933]:0x8769d7)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.core::ptr::drop_in_place<core::cell::UnsafeCell<wasm_bindgen_futures::Inner>>::h8f074a1aec216f0a (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[38110]:0x8b3226)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.core::ptr::drop_in_place<core::cell::RefCell<wasm_bindgen_futures::Inner>>::h546a07ed07f3d3b0 (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[30466]:0x899a1a)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.alloc::rc::Rc<T,A>::drop_slow::h098787354e506141 (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[17061]:0x7c9baa)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.<alloc::rc::Rc<T,A> as core::ops::drop::Drop>::drop::hcb259ca744e776b3 (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[23916]:0x85cc48)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.core::ptr::drop_in_place<alloc::rc::Rc<core::cell::RefCell<wasm_bindgen_futures::Inner>>>::hc642bec338296693 (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[38099]:0x8b31b9)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.core::ptr::drop_in_place<wasm_bindgen_futures::JsFuture>::h53bc417942d48d19 (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[36774]:0x8aff92)"
+      ],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_terminal_selection.rs:77:5:\nassertion `left == right` failed\n  left: \"abcdefghij\\r\\n\\r\\n\\r\\n\"\n right: \"efg\"\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:52739/suite.js:3960:21)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[31443]:0x89ebfc)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[20644]:0x8210db)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[6767]:0x5f8d96)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[20645]:0x82115f)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[10539]:0x6d735f)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[13396]:0x74f128)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[38133]:0x8b330a)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.rust_begin_unwind (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[25940]:0x876b26)\n    at wasm_terminal_selection-de57c1b286a54201.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:52739/suite_bg.wasm:wasm-function[25941]:0x876b53)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96"
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/4dbd7c2b8d770c211e75a0f3de1572effad5bf7f4d726b15edfd3088dade7eb1/artifact.wasm",
+      "sha256": "4dbd7c2b8d770c211e75a0f3de1572effad5bf7f4d726b15edfd3088dade7eb1",
+      "bytes": 16113551,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Jonas16\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_terminal_selection-de57c1b286a54201.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Jonas16\\results\\browser-host\\wasm_terminal_selection\\2026-11-05T09-21-16-201Z-5c6c4b8a-ad73-452c-a71a-ca8f0c0c0d32\\artifacts\\suite_bg.wasm",
+      "bytes": 13346115,
+      "sha256": "e44e08c849b066ae4568faa64e5440b0f86284ecb96c52a3abe9c7011dafba7e"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Jonas16\\results\\browser-host\\wasm_terminal_selection\\2026-11-05T09-21-16-201Z-5c6c4b8a-ad73-452c-a71a-ca8f0c0c0d32\\artifacts\\suite.js",
+      "bytes": 175359,
+      "sha256": "fcdb058ffb5b7df538fb5021c320af214c8598f691d3b804455863ad9f134942"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "881fc404e6547d9e18179d08b588751922c4d668c023248cb4da9af9f86d59a9",
+    "testSourceSha256": "8515a529f97bb01b2d0b0b78ece54044287d20d8d82d5a696ced20d43ab85274"
+  },
+  "finishedAt": "2026-11-05T09:21:18.406Z"
+}

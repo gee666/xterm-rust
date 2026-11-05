@@ -39,7 +39,7 @@ pub(super) fn drag(state: &Rc<State>) -> Result<(), JsValue> {
     for (event_type, move_event) in [("mousemove", true), ("mouseup", false)] {
         let weak = Rc::downgrade(state);
         let listener =
-            DomListener::new(state.document.as_ref(), event_type, false, move |event| {
+            DomListener::new_reentrant(state.document.as_ref(), event_type, false, move |event| {
                 if let Some(state) = weak.upgrade() {
                     if state.disposed.get() {
                         return;
