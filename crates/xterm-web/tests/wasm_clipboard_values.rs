@@ -25,7 +25,7 @@ fn default_base64_uses_text_encoder_argument_coercion() {
         );
     }
     assert!(codec
-        .encode_text(js_sys::Symbol::new(None).into())
+        .encode_text(js_sys::Symbol::iterator().into())
         .unwrap_err()
         .is_instance_of::<TypeError>());
 }
