@@ -1,4 +1,6 @@
 // Shared original/Rust operations. All engine calls run in the page's realm.
+// Cohesive browser fixture exceeds 350 lines because Playwright serializes this
+// function into each realm; local helpers and directed cases must travel with it.
 export async function serializationCases() {
   const output = [];
   const write = (term, data) => new Promise(resolve => term.write(data, resolve));
@@ -268,6 +270,26 @@ export async function serializationCases() {
     Object.defineProperty(term.options, 'fontFamily', { configurable: true, get() { term.resize(6, 4); return 'monospace'; } });
     return addon.serializeAsHTML({ range: { startLine: 0, endLine: 0, startCol: 0 } });
   });
+  for (const phase of ['header', 'endLine']) {
+    await run(`html-omitted-column-${phase}-resize`, async (term, addon) => {
+      await write(term, '\x1b[31mABCDEFGHIJKL\r\n\x1b[32mSECOND');
+      const log = [];
+      Object.defineProperty(term.options, 'fontFamily', { configurable: true, get() {
+        log.push('fontFamily'); if (phase === 'header') term.resize(18, 4); return 'monospace';
+      } });
+      const range = { get startLine() { log.push('startLine'); return 0; },
+        get endLine() { log.push('endLine'); if (phase === 'endLine') term.resize(18, 4); return 1; } };
+      const omitted = addon.serializeAsHTML({ range });
+      const firstLog = [...log]; log.length = 0;
+      const explicitUndefined = addon.serializeAsHTML({ range: { ...range, startCol: undefined } });
+      const explicitZero = addon.serializeAsHTML({ range: { startLine: 0, endLine: 1, startCol: 0 } });
+      const sentinel = {}; let same = false;
+      Object.defineProperty(term.options, 'fontFamily', { configurable: true, get() { throw sentinel; } });
+      try { addon.serializeAsHTML({ range: { startLine: 0, endLine: 1 } }); }
+      catch (error) { same = error === sentinel; }
+      return { omitted, explicitUndefined, explicitZero, log: firstLog, same, state: snapshot(term) };
+    });
+  }
   await run('html-header-alt-view', async (term, addon) => {
     await write(term, 'normal');
     Object.defineProperty(term.options, 'fontFamily', { configurable: true, get() { term.write('\x1b[?1049hALT'); term.resize(10, 4); return 'monospace'; } });
