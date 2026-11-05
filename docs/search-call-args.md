@@ -42,6 +42,10 @@ Scoped native/WASM Clippy passes with warnings denied. Exact full `cargo fmt --a
 
 The source driver verifies all manifest entries before and after execution. It bundles the unchanged source Terminal and SearchAddon classes. Original tests/assertions/timeouts are not edited. Browser processes and local servers are closed by the bounded runners. The sole owned reference dependency junction is explicitly unlinked after the unchanged-suite run. Generated WASM/bindings and copied build artifacts are disposable, not durable evidence.
 
+## Independent review
+
+Task344 accepted reviewed commit9f3aa4a. The isolated reviewer independently reran native28/28, scoped warning-denied Clippy and exact full fmt. It verified six implementation/test hashes, all776 reference entries, final WASM/compiler/binding artifacts, CSS, Cargo.lock and generated optional declarations. Browser evidence was inspected, not rerun during review. Task353 received separate independent full-fmt and diff-check review before its formatting-only integration.
+
 ## Remaining search contracts
 
 Task347 is the actionable raw-search followup under full-family322. Current `search_addon/options.rs::term` rejects every truthy non-string before native activation and before-search checks. Source `SearchState.isValidSearchTerm` instead evaluates `!!(term && term.length > 0)` during search phases. For example, an activated source addon returns false for `findNext(1)`; an unloaded source addon throws the not-loaded Error before inspecting the term. The current Rust binding throws TypeError first in both cases. Boxed strings, overridden methods, getter-backed length and identity-cached objects require preserving the raw value, not one eager string conversion.
