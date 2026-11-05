@@ -1,0 +1,148 @@
+Verified 106 indexed files
+Identity: {
+  "preReviewProductionCommit": "c39052d54f8dfa670f05a95f0e343fdeda05a727",
+  "reviewFix": {
+    "productionCommit": "475bc199cc98c24ab396b0ed403538dbea9d1cc3",
+    "finding": "Old disposal token must remove later re-registration of same JS identity",
+    "sourcePhases": 21,
+    "publicWasm": [
+      {
+        "name": "chromium",
+        "status": "passed",
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "filtered": 0
+        }
+      },
+      {
+        "name": "firefox",
+        "status": "passed",
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "filtered": 0
+        }
+      },
+      {
+        "name": "webkit",
+        "status": "passed",
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "filtered": 0
+        }
+      }
+    ],
+    "originals": [
+      {
+        "label": "public",
+        "status": "passed",
+        "counts": {
+          "discovered": 18,
+          "executed": 18,
+          "passed": 18,
+          "failed": 0,
+          "skipped": 0,
+          "unrun": 0
+        },
+        "build": {
+          "report": "results/demos/build/2026-11-05T18-05-53-150Z/report.json",
+          "source": {
+            "revision": "5852cf701866f436f46c19d4106f0d9c84a67233",
+            "sha256": "c495356819e503efe85b757bfffaec1adaffca476dd6fefd7ab5d73c16192643",
+            "files": 1586
+          },
+          "artifacts": [
+            {
+              "path": "browser/pkg/xterm_web.js",
+              "bytes": 232142,
+              "sha256": "6cf9a27c93e242f2d7cf362cf3a81eda9bcd3e764c5bb719fd5100549772f667"
+            },
+            {
+              "path": "browser/pkg/xterm_web_bg.wasm",
+              "bytes": 15583977,
+              "sha256": "0d678d29a10838958db134e585fbfc235c952bf50c71c7fea73c7155f810a88d"
+            }
+          ]
+        }
+      },
+      {
+        "label": "addon-setup-failure",
+        "status": "failed",
+        "counts": {
+          "discovered": 1503,
+          "executed": 1003,
+          "passed": 1002,
+          "failed": 1,
+          "skipped": 0,
+          "unrun": 500
+        },
+        "build": {
+          "report": "results/demos/build/2026-11-05T18-05-53-150Z/report.json",
+          "source": {
+            "revision": "5852cf701866f436f46c19d4106f0d9c84a67233",
+            "sha256": "c495356819e503efe85b757bfffaec1adaffca476dd6fefd7ab5d73c16192643",
+            "files": 1586
+          },
+          "artifacts": [
+            {
+              "path": "browser/pkg/xterm_web.js",
+              "bytes": 232142,
+              "sha256": "6cf9a27c93e242f2d7cf362cf3a81eda9bcd3e764c5bb719fd5100549772f667"
+            },
+            {
+              "path": "browser/pkg/xterm_web_bg.wasm",
+              "bytes": 15583977,
+              "sha256": "0d678d29a10838958db134e585fbfc235c952bf50c71c7fea73c7155f810a88d"
+            }
+          ]
+        }
+      },
+      {
+        "label": "addon-firefox-replay",
+        "status": "passed",
+        "counts": {
+          "discovered": 501,
+          "executed": 501,
+          "passed": 501,
+          "failed": 0,
+          "skipped": 0,
+          "unrun": 0
+        },
+        "build": {
+          "report": "results/demos/build/2026-11-05T18-05-53-150Z/report.json",
+          "source": {
+            "revision": "5852cf701866f436f46c19d4106f0d9c84a67233",
+            "sha256": "c495356819e503efe85b757bfffaec1adaffca476dd6fefd7ab5d73c16192643",
+            "files": 1586
+          },
+          "artifacts": [
+            {
+              "path": "browser/pkg/xterm_web.js",
+              "bytes": 232142,
+              "sha256": "6cf9a27c93e242f2d7cf362cf3a81eda9bcd3e764c5bb719fd5100549772f667"
+            },
+            {
+              "path": "browser/pkg/xterm_web_bg.wasm",
+              "bytes": 15583977,
+              "sha256": "0d678d29a10838958db134e585fbfc235c952bf50c71c7fea73c7155f810a88d"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+public raw totals {"executed":18,"passed":18,"failed":0,"skipped":0,"errors":0} summary {"discovered":18,"executed":18,"passed":18,"failed":0,"skipped":0,"unrun":0} status passed
+public build identities [{"path":"browser/pkg/xterm_web.js","bytes":232142,"sha256":"6cf9a27c93e242f2d7cf362cf3a81eda9bcd3e764c5bb719fd5100549772f667"},{"path":"browser/pkg/xterm_web_bg.wasm","bytes":15583977,"sha256":"0d678d29a10838958db134e585fbfc235c952bf50c71c7fea73c7155f810a88d"}]
+addon-setup-failure FirefoxStable .ac [{"location":{"file":"O:\\xterm-rust-swarm-16\\tmp\\E415\\source_repo\\addons\\addon-web-links\\test\\WebLinksAddon.test.ts","column":6,"line":27},"message":"\u001b[31m\"beforeAll\" hook timeout of 10000ms exceeded.\u001b[39m\n\n  25 |\n  26 | let ctx: ITestContext;\n> 27 | test.beforeAll(async ({ browser }) => {\n     |      ^\n  28 |   ctx = await createTestContext(browser);\n  29 |   await openTerminal(ctx, { cols: 40 });\n  30 | });\n    at O:\\xterm-rust-swarm-16\\tmp\\E415\\source_repo\\addons\\addon-web-links\\test\\WebLinksAddon.test.ts:27:6"},{"location":{"file":"O:\\xterm-rust-swarm-16\\tmp\\E415\\source_repo\\addons\\addon-web-links\\test\\WebLinksAddon.test.ts","column":37,"line":31},"message":"TypeError: Cannot read properties of undefined (reading 'page')\n\n  29 |   await openTerminal(ctx, { cols: 40 });\n  30 | });\n> 31 | test.afterAll(async () => await ctx.page.close());\n     |                                     ^\n  32 |\n  33 | test.describe('WebLinksAddon', () => {\n  34 |\n    at O:\\xterm-rust-swarm-16\\tmp\\E415\\source_repo\\addons\\addon-web-links\\test\\WebLinksAddon.test.ts:31:37"},{"location":{"file":"O:\\xterm-rust-swarm-16\\tmp\\E415\\source_repo\\test\\playwright\\TestUtils.ts","column":22,"line":143},"message":"Error: page.exposeFunction: Test ended.\n\n   at ..\\..\\..\\test\\playwright\\TestUtils.ts:143\n\n  141 |    */\n  142 |   public async initPage(): Promise<void> {\n> 143 |     await this._page.exposeFunction('onBell', () => this._onBell.fire());\n      |                      ^\n  144 |     await this._page.exposeFunction('onBinary', (e: string) => this._onBinary.fire(e));\n  145 |     await this._page.exposeFunction('onCursorMove', () => this._onCursorMove.fire());\n  146 |     await this._page.exposeFunction('onData', (e: string) => this._onData.fire(e));\n    at TerminalProxy.initPage (O:\\xterm-rust-swarm-16\\tmp\\E415\\source_repo\\test\\playwright\\TestUtils.ts:143:22)\n    at createTestContext (O:\\xterm-rust-swarm-16\\tmp\\E415\\source_repo\\test\\playwright\\TestUtils.ts:31:9)\n    at O:\\xterm-rust-swarm-16\\tmp\\E415\\source_repo\\addons\\addon-web-links\\test\\WebLinksAddon.test.ts:28:9"},{"location":{"file":"O:\\xterm-rust-swarm-16\\tmp\\E415\\source_repo\\test\\playwright\\TestUtils.ts","column":30,"line":466},"message":"Error: page.evaluate: Test ended.\n\n   at ..\\..\\..\\test\\playwright\\TestUtils.ts:466\n\n  464 |   // HACK: Tests may have side effects that could cause the terminal not to be removed. This\n  465 |   //       assertion catches this case early.\n> 466 |   strictEqual(await ctx.page.evaluate(`document.querySelector('#terminal-container').children.length`), 0, 'there must be no terminals on the page');\n      |                              ^\n  467 |\n  468 |   let script = `\n  469 |     window.term = new window.Terminal(${JSON.stringify({ allowProposedApi: true, ...options })});\n    at openTerminal (O:\\xterm-rust-swarm-16\\tmp\\E415\\source_repo\\test\\playwright\\TestUtils.ts:466:30)\n    at O:\\xterm-rust-swarm-16\\tmp\\E415\\source_repo\\addons\\addon-web-links\\test\\WebLinksAddon.test.ts:29:3"}]
+addon-setup-failure raw totals {"executed":1003,"passed":1002,"failed":1,"skipped":500,"errors":0} summary {"discovered":1503,"executed":1003,"passed":1002,"failed":1,"skipped":0,"unrun":500} status failed
+addon-setup-failure build identities [{"path":"browser/pkg/xterm_web.js","bytes":232142,"sha256":"6cf9a27c93e242f2d7cf362cf3a81eda9bcd3e764c5bb719fd5100549772f667"},{"path":"browser/pkg/xterm_web_bg.wasm","bytes":15583977,"sha256":"0d678d29a10838958db134e585fbfc235c952bf50c71c7fea73c7155f810a88d"}]
+addon-firefox-replay raw totals {"executed":501,"passed":501,"failed":0,"skipped":0,"errors":0} summary {"discovered":501,"executed":501,"passed":501,"failed":0,"skipped":0,"unrun":0} status passed
+addon-firefox-replay build identities [{"path":"browser/pkg/xterm_web.js","bytes":232142,"sha256":"6cf9a27c93e242f2d7cf362cf3a81eda9bcd3e764c5bb719fd5100549772f667"},{"path":"browser/pkg/xterm_web_bg.wasm","bytes":15583977,"sha256":"0d678d29a10838958db134e585fbfc235c952bf50c71c7fea73c7155f810a88d"}]
+review-fix-native-tests.log summaries 432 passed/failed/ignored [ 2077, 0, 0 ]
+Independent 21-phase traces match the source-generated fixture in all 3 engines
