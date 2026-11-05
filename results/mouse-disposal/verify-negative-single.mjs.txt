@@ -1,0 +1,47 @@
+import {readFile,writeFile,copyFile} from 'node:fs/promises';
+import {resolve,dirname} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {withArtifactServer} from '../scripts/browser-artifact-server.mjs';
+const root=resolve(import.meta.dirname,'..');
+const report=JSON.parse(await readFile(resolve(root,'results/mouse-disposal/negative.json'),'utf8'));
+const playwright=await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE));
+const result={scope:'one unchanged synchronous Rust assertion selected from eight on exact old-API binary',
+  compiler:report.artifacts.compiler, wasm:report.artifacts.wasm, bindings:report.artifacts.bindings,
+  expectedFailure:true, skipped:0, unrun:7};
+await copyFile(report.artifacts.compiler.originalPath,resolve(root,'results/mouse-disposal/artifacts/negative-compiler.wasm'));
+await withArtifactServer({directory:dirname(report.artifacts.bindings.path),
+  css:await readFile(resolve(root,'crates/xterm-web/assets/xterm.css')),
+  html:'<!doctype html><link rel="stylesheet" href="/xterm.css"><pre id="output"></pre>'},async origin=>{
+  const browser=await playwright.chromium.launch({headless:true,timeout:30000});
+  try{
+    result.version=browser.version();
+    const page=await browser.newPage();
+    page.setDefaultTimeout(60000);
+    result.errors=[];
+    result.console=[];
+    page.on('console',event=>result.console.push({type:event.type(),text:event.text()}));
+    page.on('pageerror',error=>result.errors.push(String(error.stack??error)));
+    await page.goto(origin);
+    await page.evaluate(()=>{
+      globalThis.__wbg_test_invoke=callback=>callback();
+      (async()=>{
+        const bindings=await import('/suite.js');
+        const exports=await bindings.default();
+        const all=Object.keys(exports).filter(name=>name.startsWith('__wbgt_')).sort();
+        const selected=all.filter(name=>name.endsWith('::direct_disposal_preserves_modes_methods_identity_and_retained_handles'));
+        if(all.length!==8||selected.length!==1)throw Error('unexpected Rust test discovery');
+        const context=new bindings.WasmBindgenTestContext();
+        try{return{discovered:all,selected,passed:await context.run(selected.map(name=>exports[name])),
+          output:document.querySelector('#output').textContent};}
+        finally{context.free();}
+      })().then(value=>{globalThis.result={value};},error=>{globalThis.result={error:String(error.stack??error)};});
+    });
+    await page.waitForFunction(()=>globalThis.result!==undefined);
+    Object.assign(result,await page.evaluate(()=>globalThis.result));
+  }finally{await browser.close();}
+});
+await writeFile(resolve(root,'results/mouse-disposal/negative-single.json'),JSON.stringify(result,null,2)+'\n');
+if(result.error||result.errors.length||result.value?.passed!==false||
+  !result.value?.output?.includes('0 passed; 1 failed; 0 ignored; 0 filtered out')||
+  !result.console.some(entry=>entry.text.includes('mouse.dispose is not a function')))throw Error('isolated old API control did not fail as expected');
+console.log('old binary: discovered8, selected1, executed1, failed1, unrun7; expected missing dispose');

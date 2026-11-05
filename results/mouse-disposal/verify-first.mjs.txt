@@ -1,0 +1,56 @@
+import {readFile,writeFile,copyFile,mkdir,cp} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+import {resolve,dirname} from 'node:path';
+import {runCommand} from '../scripts/quality-process.mjs';
+const root=resolve(import.meta.dirname,'..');
+const output=resolve(root,'results/mouse-disposal');
+const hash=b=>createHash('sha256').update(b).digest('hex');
+const records=[];
+async function run(args,label,extra={},expected=0){
+  const record=await runCommand(process.execPath,args,{cwd:root,
+    env:{...process.env,...extra},log:resolve(output,`${label}.log`),timeoutMs:180000});
+  records.push({label,...record});
+  await writeFile(resolve(output,'browser-commands.json'),JSON.stringify(records,null,2)+'\n');
+  if(record.exitCode!==expected||record.timedOut||record.error)throw Error(`${label} unexpected command result`);
+  return record;
+}
+async function browser(test,label,extra={},expected=0){
+  const record=await run(['scripts/browser-host-check.mjs'],label,{WASM_TEST:test,...extra},expected);
+  const report=JSON.parse(await readFile(resolve(root,`results/browser-host/${test}-results.json`),'utf8'));
+  await writeFile(resolve(output,`${label}.json`),JSON.stringify(report,null,2)+'\n');
+  if(expected===0&&report.status!=='passed')throw Error(`${label} did not pass`);
+  return {record,report};
+}
+await run(['scripts/mouse-mode-source.mjs'],'source-check',{MOUSE_CASE_FAMILY:'disposal'});
+await browser('wasm_terminal_mouse_disposal','initial');
+const path=resolve(root,'crates/xterm-web/src/terminal/mouse_api.rs');
+const fixed=await readFile(path);
+const prior=execFileSync(process.env.GIT??'git',['show','e15966ec:crates/xterm-web/src/terminal/mouse_api.rs'],{cwd:root,timeout:30000});
+const restoration={path:'crates/xterm-web/src/terminal/mouse_api.rs',oldRef:'e15966ec',
+  finalSha256:hash(fixed),oldSha256:hash(prior)};
+let negative;
+try{
+  await writeFile(path,prior);
+  negative=await browser('wasm_terminal_mouse_disposal','negative',{BROWSERS:'chromium'},1);
+  const counts=negative.report.browsers[0]?.counts;
+  if(counts?.passed!==0||counts.failed!==8||counts.ignored!==0)throw Error('negative must fail all eight disposal assertions');
+  await copyFile(negative.report.artifacts.compiler.originalPath,resolve(output,'artifacts/negative-compiler.wasm'));
+}finally{
+  await writeFile(path,fixed);
+  const restored=await readFile(path);
+  restoration.restoredSha256=hash(restored);
+  restoration.byteExactRestoration=fixed.equals(restored);
+  await writeFile(resolve(output,'restoration.json'),JSON.stringify(restoration,null,2)+'\n');
+  if(!restoration.byteExactRestoration)throw Error('production restoration mismatch');
+}
+const final=await browser('wasm_terminal_mouse_disposal','final');
+await mkdir(resolve(output,'artifacts/browser'),{recursive:true});
+await cp(dirname(final.report.artifacts.bindings.path),resolve(output,'artifacts/browser'),{recursive:true});
+await copyFile(final.report.artifacts.compiler.originalPath,resolve(output,'artifacts/browser-compiler.wasm'));
+await copyFile(resolve(root,'crates/xterm-web/assets/xterm.css'),resolve(output,'artifacts/browser/xterm.css'));
+for (const [test,label] of [['wasm_terminal_mouse_modes','modes'],['wasm_terminal_mouse_builtins','builtins']]) {
+  const {report}=await browser(test,label);
+  await copyFile(report.artifacts.compiler.originalPath,resolve(output,`artifacts/${label}-compiler.wasm`));
+}
+console.log('source8×3; initial8×3; negative0P8F; exactrestore; final8×3; modes5×3; builtins4×3 PASS');

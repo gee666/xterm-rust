@@ -1,0 +1,1 @@
+export function xtermAssignProperty(target, key, value) { 'use strict'; target[key] = value; }

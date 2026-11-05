@@ -1,0 +1,47 @@
+{
+  "scope": "one unchanged synchronous Rust assertion selected from eight on exact old-API binary",
+  "compiler": {
+    "path": "results/acceptance-artifacts/5dc548d6b4758b5ad3d946c70758ed519c8a3d78163971c7093ffb0bc089b864/artifact.wasm",
+    "sha256": "5dc548d6b4758b5ad3d946c70758ed519c8a3d78163971c7093ffb0bc089b864",
+    "bytes": 19882094,
+    "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\CasimirMouseDispose\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_terminal_mouse_disposal-37cd6b983169589b.wasm"
+  },
+  "wasm": {
+    "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\CasimirMouseDispose\\results\\browser-host\\wasm_terminal_mouse_disposal\\2026-11-05T21-03-58-089Z-d2c04044-9298-4d04-b16f-74733b333b51\\artifacts\\suite_bg.wasm",
+    "bytes": 16702134,
+    "sha256": "26f5117b80ffd22538bf88e08d14bab8f89537e38e96b75b00b1db1b16ff2ac3"
+  },
+  "bindings": {
+    "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\CasimirMouseDispose\\results\\browser-host\\wasm_terminal_mouse_disposal\\2026-11-05T21-03-58-089Z-d2c04044-9298-4d04-b16f-74733b333b51\\artifacts\\suite.js",
+    "bytes": 249010,
+    "sha256": "d78fbe61a2846c3082f3cb9d953712ed7ed2a2e574512d4c3910cea95005691a"
+  },
+  "expectedFailure": true,
+  "skipped": 0,
+  "unrun": 7,
+  "version": "148.0.7778.96",
+  "errors": [],
+  "console": [
+    {
+      "type": "error",
+      "text": "panicked at crates\\xterm-web\\tests\\wasm_terminal_mouse_disposal.rs:52:55:\ncalled `Result::unwrap()` on an `Err` value: JsValue(TypeError: mouse.dispose is not a function\nTypeError: mouse.dispose is not a function\n    at directMouseDisposal (http://127.0.0.1:53950/snippets/xterm-web-f147851b6cb0c0ef/tests/browser_mouse_dispose_cases.js:19:26)\n    at http://127.0.0.1:53950/suite.js:5198:21\n    at handleError (http://127.0.0.1:53950/suite.js:177:18)\n    at imports.wbg.__wbg_directMouseDisposal_d3a06d3525821252 (http://127.0.0.1:53950/suite.js:5197:82)\n    at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.__wbg_directMouseDisposal_d3a06d3525821252 externref shim (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[35176]:0xadc569)\n    at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.wasm_terminal_mouse_disposal::direct::h64ff134b709d4a04 (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[9086]:0x7dc176)\n    at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.wasm_terminal_mouse_disposal::direct_disposal_preserves_modes_methods_identity_and_retained_handles::h582441b5182dad04 (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[13153]:0x8c6078)\n    at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.core::ops::function::FnOnce::call_once::h9165acbc9a315eaf (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[31198]:0xab812c)\n    at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h37a66be8e6288993 (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[12746]:0x8b2260)\n    at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h171a4da964c6bc43 (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[16701]:0x95b19a))\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:53950/suite.js:5958:21)\n    at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[38557]:0xaeffca)\n    at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[25423]:0xa57ffd)\n    at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[8519]:0x7b45cc)\n    at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[25424]:0xa58081)\n    at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[13207]:0x8c89d4)\n    at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[16694]:0x95ad4b)\n    at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[46453]:0xb083a8)\n    at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.rust_begin_unwind (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[31781]:0xabe977)\n    at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[31782]:0xabe9a4)\n\n"
+    }
+  ],
+  "value": {
+    "discovered": [
+      "__wbgt__wasm_terminal_mouse_disposal::added_listener_snapshot_survives_disposal_of_current_array",
+      "__wbgt__wasm_terminal_mouse_disposal::cleared_listener_array_interrupts_reset_before_encoding_change",
+      "__wbgt__wasm_terminal_mouse_disposal::direct_disposal_preserves_modes_methods_identity_and_retained_handles",
+      "__wbgt__wasm_terminal_mouse_disposal::direct_service_disposal_retains_real_dom_routing_and_wheel_hook",
+      "__wbgt__wasm_terminal_mouse_disposal::listener_disposal_preserves_original_thrown_identity",
+      "__wbgt__wasm_terminal_mouse_disposal::parsed_modes_and_reset_remain_live_without_notifications",
+      "__wbgt__wasm_terminal_mouse_disposal::removed_listener_snapshot_survives_disposal_of_current_array",
+      "__wbgt__wasm_terminal_mouse_disposal::single_listener_disposal_supports_reentrant_reset"
+    ],
+    "selected": [
+      "__wbgt__wasm_terminal_mouse_disposal::direct_disposal_preserves_modes_methods_identity_and_retained_handles"
+    ],
+    "passed": false,
+    "output": "running 1 test\ntest direct_disposal_preserves_modes_methods_identity_and_retained_handles ... FAIL\n\nfailures:\n\n---- direct_disposal_preserves_modes_methods_identity_and_retained_handles output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.__rust_start_panic (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[46991]:0xb09101)\n            at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.rust_panic (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[42104]:0xafd87c)\n            at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[13207]:0x8c89ff)\n            at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[16694]:0x95ad4b)\n            at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[46453]:0xb083a8)\n            at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.rust_begin_unwind (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[31781]:0xabe977)\n            at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[31782]:0xabe9a4)\n            at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[19827]:0x9c87e6)\n            at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.wasm_terminal_mouse_disposal::direct_disposal_preserves_modes_methods_identity_and_retained_handles::h582441b5182dad04 (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[13153]:0x8c60e5)\n            at wasm_terminal_mouse_disposal-37cd6b983169589b.wasm.core::ops::function::FnOnce::call_once::h9165acbc9a315eaf (http://127.0.0.1:53950/suite_bg.wasm:wasm-function[31198]:0xab812c)\n\nfailures:\n\n    direct_disposal_preserves_modes_methods_identity_and_retained_handles\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.04s\n\n"
+  }
+}
