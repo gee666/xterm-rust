@@ -25,27 +25,7 @@ pub(super) fn serialize(addon: &SerializeAddon, raw: JsValue) -> Result<Vec<u16>
     let only_selection = options::property(&raw, "onlySelection")?.is_truthy();
     let range = options::property(&raw, "range")?;
     let range = if range.is_truthy() {
-        let col = get(&range, "startCol")?;
-        let start_col = if col.is_undefined() {
-            columns(&host)?
-        } else {
-            options::index(col)?
-        };
-        get(&range, "startLine")?;
-        let start_line = options::index(get(&range, "startLine")?)?;
-        let end_col = columns(&host)?;
-        get(&range, "endLine")?;
-        let end_line = options::index(get(&range, "endLine")?)?;
-        CellRange {
-            start: Position {
-                x: start_col,
-                y: start_line,
-            },
-            end: Position {
-                x: end_col,
-                y: end_line,
-            },
-        }
+        explicit_range(&host, &range)?
     } else if only_selection {
         let selection_host = addon.host()?;
         let selection = Terminal {
@@ -108,6 +88,38 @@ pub(super) fn serialize(addon: &SerializeAddon, raw: JsValue) -> Result<Vec<u16>
         },
     )
     .map_err(|error| view::error(&error))
+}
+fn explicit_range(host: &Shared, range: &JsValue) -> Result<CellRange, JsValue> {
+    let col = get(range, "startCol")?;
+    get(range, "startLine")?;
+    let start = get(range, "startLine")?;
+    let end_col = columns(host)?;
+    get(range, "endLine")?;
+    let end = get(range, "endLine")?;
+    if matches!((start.as_f64(), end.as_f64()), (Some(start), Some(end)) if start.is_nan() || end.is_nan())
+    {
+        // Numeric NaN makes the source row comparison false. A reversed native
+        // range keeps header/footer generation without reading or coercing cells.
+        // Objects still need their source-specific late coercion under task346.
+        return Ok(CellRange {
+            start: Position { x: 0, y: 1 },
+            end: Position { x: end_col, y: 0 },
+        });
+    }
+    Ok(CellRange {
+        start: Position {
+            x: if col.is_undefined() {
+                end_col
+            } else {
+                options::index(col)?
+            },
+            y: options::index(start)?,
+        },
+        end: Position {
+            x: end_col,
+            y: options::index(end)?,
+        },
+    })
 }
 fn header(host: &Shared, include_background: bool) -> Result<HtmlConfig, JsValue> {
     let (foreground, background) = if include_background {

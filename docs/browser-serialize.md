@@ -16,7 +16,7 @@ The core `BufferAccess::missing_cell` hook lets the browser emit the original co
 
 Full serialization equivalence is NOT PROVEN. Task346 and family322 retain SB01-SB08 in `docs/serialize-browser-acceptance.md`.
 
-- Native row/column ranges are unsigned integers. Negative/fractional/NaN/infinite/large JS coordinates are not equivalent. The browser returns an explicit representation error rather than truncating them. This is a compatibility gap, not a source-approved divergence.
+- Native row/column ranges are unsigned integers. Task410 supports numeric-NaN HTML row bounds as zero row iterations, retaining headers and thrown values. Other negative/fractional/NaN/infinite/large JS coordinates are not equivalent. The browser returns an explicit representation error rather than truncating them. This is a compatibility gap, not a source-approved divergence.
 - Marker getters and custom coordinate coercions need their exact late source evaluation points. Numeric coercion currently happens earlier than source traversal.
 - Public Terminal/buffer method or descriptor replacement is not fully honored. The serializer uses the actual native public namespace rather than calling arbitrary replaced methods.
 - Theme palette array replacement and element mutation during header reentry need array-identity modeling. Normal live theme/OSC changes between calls are covered; a copied list of color handles does not prove arbitrary reentrant palette mutation.
@@ -53,6 +53,10 @@ Reproduce using the commands above plus `cargo test --locked -j2 -p xterm-core -
 ## Traversal row identity
 
 Task377 retains the source row object through missing-cell warnings in both ANSI and HTML traversal. A warning can reset the public buffer view to a different buffer, but subsequent cells in that row must still come from the captured line. Wrapping/style lookahead remains live. See `docs/serialize-line-identity.md` for the two three-browser negative controls, native tests and exact scope. The current browser corpus has53 cases,52 matching per engine; raw-numeric-boundaries remains the sole known corpus mismatch, and full346/322 remain open.
+
+## Numeric NaN HTML rows
+
+Task410 preserves the source empty traversal when numeric primitive row bounds contain NaN. Header getters still run, their exceptions retain identity, and unused column values are not coerced. The two new probes match in all three browsers; the negative control fails both. The current corpus matches54/55 cases per browser, still exiting nonzero for the remaining raw-coordinate mismatch. The unchanged original suite passes120/120 source and120/120 Rust cases. See `docs/serialize-nan.md` for exact scope, hashes and the Windows OS206 formatting limitation.
 
 ## Public cell enumeration repair
 

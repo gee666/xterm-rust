@@ -140,6 +140,32 @@ export async function serializationCases() {
     term.options.theme = {}; values.push(addon.serializeAsHTML());
     return values;
   }, true);
+  await run('html-nan-row-bounds', async (term, addon) => {
+    await write(term, 'must not be traversed');
+    const values = [];
+    const log = [];
+    Object.defineProperty(term.options, 'fontFamily', { configurable: true,
+      get() { log.push('fontFamily'); return 'monospace'; } });
+    for (const [start, end] of [[NaN, 0], [0, NaN], [NaN, NaN], [NaN, -Infinity], [Infinity, NaN]]) {
+      const range = {
+        get startCol() { log.push('startCol'); return Symbol('unused column'); },
+        get startLine() { log.push('startLine'); return start; },
+        get endLine() { log.push('endLine'); return end; }
+      };
+      log.length = 0;
+      values.push({ html: capture(() => addon.serializeAsHTML({ range })), log: [...log] });
+    }
+    return values;
+  });
+  await run('html-nan-header-exception-identity', async (term, addon) => {
+    const sentinel = {}, log = [];
+    Object.defineProperty(term.options, 'fontFamily', { configurable: true,
+      get() { log.push('fontFamily'); throw sentinel; } });
+    let same = false;
+    try { addon.serializeAsHTML({ range: { startLine: NaN, endLine: 0, startCol: 0 } }); }
+    catch (error) { same = error === sentinel; }
+    return { same, log };
+  });
   await run('html-header-reentry-reset', async (term, addon) => {
     await write(term, 'content'); const log = [];
     Object.defineProperty(term.options, 'fontFamily', { configurable: true, get() { log.push('fontFamily'); term.reset(); return 'raw\ud800'; } });
