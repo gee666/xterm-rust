@@ -100,7 +100,7 @@ try {
           try {parse(command + '\x1b[?1$pZ');} catch (error) {failure = error;}
           assert.equal(failure, action.endsWith('error') ? original : undefined);
           output.push([hex(command), key, +alternate, valueName, action, calls,
-            records.join('~'), snapshot(terminal), events.join('/')].join('\t'));
+            records.join('~'), snapshot(terminal), events.join('/') || '-'].join('\t'));
           terminal.dispose();
         }
       }

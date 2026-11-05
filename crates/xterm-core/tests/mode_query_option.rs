@@ -218,10 +218,15 @@ fn decrqm_raw_option_getters_match_source_reentry_reply_and_error_phases() {
         if projection::snapshot(&terminal) != fields[7] {
             mismatches.push("final state".into());
         }
-        if events.borrow().join("/") != fields[8] {
+        let event_text = events.borrow().join("/");
+        let event_text = if event_text.is_empty() {
+            "-"
+        } else {
+            &event_text
+        };
+        if event_text != fields[8] {
             mismatches.push(format!(
-                "ordered events actual={:?} expected={:?}",
-                events.borrow().join("/"),
+                "ordered events actual={event_text:?} expected={:?}",
                 fields[8]
             ));
         }
