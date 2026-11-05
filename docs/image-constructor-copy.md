@@ -31,6 +31,10 @@ cargo clippy --locked -j2 -p xterm-web --target wasm32-unknown-unknown --lib --t
 cargo fmt --all -- --check
 ```
 
+## Independent review
+
+Task425 was accepted at8b05bb23. The independent reviewer inspected the producer and test changes, reran28/28 tests in each browser, passed focused warning-denied WASM Clippy and xterm-web formatting, and checked both negative-control hashes and all121 source comparator files against the original checkout. Its raw rerun is retained as `review-browser.json` and `review-verification.json`. No source or test changes were requested.
+
 ## Remaining differences
 
 Successful constructor copies still undergo Rust's existing eager typed numeric conversion. The source stores raw values and defers coercion to consumers. This task fixes the precedence of failures in the two copy passes only. It does not claim raw numeric/object option parity, a writable `_opts` record, complete private `_inputHandler` bindings, original full image suites, img01..48 or full native/browser equivalence. Those remain311/324 and the full project acceptance work. Overall equivalence is NOT PROVEN.
