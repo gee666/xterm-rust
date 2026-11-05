@@ -148,6 +148,9 @@ for (const {path: file} of oldPins) {
 }
 report.receiptPins.push({path: 'results/demos/build/latest.json', preservedMainPointer: true,
   matches: git('show', `${plan.base}:results/demos/build/latest.json`).equals(git('show', 'HEAD:results/demos/build/latest.json'))});
+report.unexpectedSource = text('diff', '--name-only', plan.base, 'HEAD').split('\n')
+  .filter(file => source(file) && !expected.has(file));
+if (report.unexpectedSource.length) throw Error(`Unexpected source files: ${report.unexpectedSource.join(', ')}`);
 const mismatches = [...report.sourcePins, ...report.receiptPins, ...report.preservedBasePins].filter(p => !p.matches);
 report.status = mismatches.length ? 'failed' : 'passed';
 if (process.argv.includes('--write')) fs.writeFileSync('results/integration463/manifest.json', JSON.stringify(report, null, 2) + '\n');
