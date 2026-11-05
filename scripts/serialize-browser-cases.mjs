@@ -142,6 +142,67 @@ export async function serializationCases() {
     term.options.theme = {}; values.push(addon.serializeAsHTML());
     return values;
   }, true);
+  await run('html-fractional-scrollback-clamps', async (term, addon) => {
+    await write(term, '\x1b[31mABC\r\n\x1b[32mDEF\r\nGHI\r\nJKL\r\nMNO\r\nPQR');
+    return [-100.5, -4.5, -3.75, -0.5, 0.5, 1.25, 20.5].map(scrollback => {
+      const log = [];
+      const options = { get scrollback() { log.push('scrollback'); return scrollback; },
+        get includeGlobalBackground() { log.push('background'); return false; } };
+      return { scrollback: String(scrollback), html: capture(() => addon.serializeAsHTML(options)), log,
+        ansi: capture(() => addon.serialize({ scrollback, excludeAltBuffer: true, excludeModes: true })) };
+    });
+  });
+  await run('html-fractional-scrollback-header-reentry', async (term, addon) => {
+    const values = [];
+    for (const scrollback of [-3.75, -0.5, 0.5, 20.5]) {
+      term.reset(); term.resize(12, 4); await write(term, '\x1b[31mABCDEFGHIJKL\r\nSECOND\r\nTHIRD\r\nFOURTH\r\nFIFTH');
+      const log = [];
+      Object.defineProperty(term.options, 'fontFamily', { configurable: true, get() {
+        log.push('fontFamily'); term.reset(); term.resize(6, 3); return 'raw\ud800';
+      } });
+      const options = { get onlySelection() { log.push('onlySelection'); return false; },
+        get range() { log.push('range'); return undefined; },
+        get scrollback() { log.push('scrollback'); term.resize(10, 3); return scrollback; },
+        get includeGlobalBackground() { log.push('background'); return false; } };
+      values.push({ scrollback: String(scrollback), html: capture(() => addon.serializeAsHTML(options)),
+        log, state: snapshot(term) });
+    }
+    return values;
+  });
+  await run('html-fractional-scrollback-header-throws', async (term, addon) => {
+    const values = [];
+    for (const phase of ['background', 'fontFamily', 'fontSize']) {
+      const log = [], sentinel = {}; let same = false;
+      for (const key of ['fontFamily', 'fontSize']) Object.defineProperty(term.options, key, {
+        configurable: true, get() { log.push(key); if (phase === key) throw sentinel; return key === 'fontSize' ? 15 : 'raw\ud800'; }
+      });
+      const options = { get scrollback() { log.push('scrollback'); return -0.5; },
+        get includeGlobalBackground() { log.push('background'); if (phase === 'background') throw sentinel; return false; } };
+      try { addon.serializeAsHTML(options); } catch (error) { same = error === sentinel; }
+      values.push({ phase, same, log });
+    }
+    return values;
+  });
+  await run('html-fractional-scrollback-ring-warning-reentry', async (term, addon) => {
+    const values = [];
+    for (const throws of [false, true]) {
+      term.reset(); term.resize(12, 2); term.options.scrollback = 1;
+      await write(term, '\x1b[31mABCDEFGHIJKL\r\nMNOPQRSTUVWX\r\nYZabcdefghij\r\nklmnopqrstuv\r\nwxyzABCDEFGH');
+      Object.defineProperty(term.options, 'fontFamily', { configurable: true,
+        get() { term.resize(6, 2); return 'monospace'; } });
+      const log = [], sentinel = {}, previous = console.warn; let count = 0, same = false;
+      console.warn = (...args) => {
+        previous(...args); log.push('warn');
+        if (++count === 1) { term.reset(); term.resize(8, 3); if (throws) throw sentinel; }
+      };
+      try {
+        const html = capture(() => { try { return addon.serializeAsHTML({ scrollback: -Number.EPSILON }); }
+          catch (error) { same = error === sentinel; throw error; } });
+        values.push({ throws, html, count, same, log, state: snapshot(term) });
+      } finally { console.warn = previous; }
+    }
+    return values;
+  });
   await run('html-finite-numeric-row-bounds', async (term, addon) => {
     await write(term, '\x1b[31mABC\r\n\x1b[32mDEF\r\nGHI');
     const bounds = [[-2, 1], [-0, 1], [-0.5, 1.5], [0.5, 1.5], [0, 1.5], [1, -1],
