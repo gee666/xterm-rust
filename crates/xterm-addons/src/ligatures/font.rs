@@ -19,6 +19,8 @@ mod font_color;
 mod font_fvar;
 #[path = "font_gdef.rs"]
 mod font_gdef;
+#[path = "font_gpos.rs"]
+mod font_gpos;
 #[path = "font_gsub.rs"]
 mod font_gsub;
 #[path = "font_kern.rs"]
@@ -150,6 +152,9 @@ impl Font {
         }
         if let Some(table) = tables.gdef {
             font_gdef::validate(&table, bytes, &mut refreshed, &mut warning)?;
+        }
+        if let Some(table) = tables.gpos {
+            font_gpos::validate(&table, bytes, &mut refreshed, &mut warning)?;
         }
         let current = refreshed.as_deref().unwrap_or(bytes);
         let gsub = tables

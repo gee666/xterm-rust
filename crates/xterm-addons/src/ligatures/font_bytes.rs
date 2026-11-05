@@ -13,6 +13,9 @@ pub enum FontError {
     Signature([u8; 4]),
     UnsupportedFormat(&'static str, u16),
     KernVersion(u16),
+    GposVersion { major: u16, minor: u16 },
+    GposLookupType(u16),
+    GposFormat { offset: usize, kind: u16 },
     CoverageFormat { offset: usize },
     Invalid(&'static str),
     Type(&'static str),
@@ -34,6 +37,16 @@ impl fmt::Display for FontError {
             Self::KernVersion(version) => {
                 write!(f, "Unsupported kern table version ({version}).")
             }
+            Self::GposVersion { major, minor } => write!(
+                f,
+                "Unsupported GPOS table version {}",
+                f64::from(*major) + f64::from(*minor) / 10.0
+            ),
+            Self::GposLookupType(kind) => write!(f, "GPOS/GSUB lookup type {kind} unknown."),
+            Self::GposFormat { offset, kind } => write!(
+                f,
+                "0x{offset:x}: GPOS lookup type {kind} format must be 1 or 2."
+            ),
             Self::CoverageFormat { offset } => {
                 write!(f, "0x{offset:x}: Coverage format must be 1 or 2.")
             }
@@ -122,6 +135,7 @@ pub struct FontTables<'a> {
     pub cmap: Cmap,
     pub gsub: Option<DeferredTable<'a>>,
     pub gdef: Option<DeferredTable<'a>>,
+    pub gpos: Option<DeferredTable<'a>>,
     pub kern: Option<DeferredTable<'a>>,
     pub meta: Option<DeferredTable<'a>>,
     pub fvar: Option<DeferredTable<'a>>,
@@ -159,6 +173,7 @@ impl<'a> FontTables<'a> {
         let mut cmap = None;
         let mut gsub = None;
         let mut gdef = None;
+        let mut gpos = None;
         let mut kern = None;
         let mut meta = None;
         let mut fvar = None;
@@ -182,7 +197,8 @@ impl<'a> FontTables<'a> {
                 b"glyf" => glyf = true,
                 b"loca" => loca = true,
                 b"CFF " | b"CFF2" => cff = true,
-                b"name" | b"GSUB" | b"GDEF" | b"hmtx" | b"kern" | b"meta" | b"fvar" | b"avar" => {
+                b"name" | b"GSUB" | b"GDEF" | b"GPOS" | b"hmtx" | b"kern" | b"meta" | b"fvar"
+                | b"avar" => {
                     // These tables are deferred by the source constructor. Select
                     // the final descriptor without touching earlier data, even
                     // when its offset or compressed payload is invalid.
@@ -190,6 +206,7 @@ impl<'a> FontTables<'a> {
                         b"name" => name = Some(record),
                         b"GSUB" => gsub = Some(record),
                         b"GDEF" => gdef = Some(record),
+                        b"GPOS" => gpos = Some(record),
                         b"kern" => kern = Some(record),
                         b"meta" => meta = Some(record),
                         b"fvar" => fvar = Some(record),
@@ -277,15 +294,17 @@ impl<'a> FontTables<'a> {
         if glyf && loca {
             validate_hmtx(payload, hmtx, woff, glyph_count.unwrap_or(0), metric_count)?;
         }
+        let deferred = |record| DeferredTable { record, woff };
         Ok((
             Self {
                 cmap: cmap.ok_or(FontError::MissingTable("cmap"))?,
-                gdef: gdef.map(|record| DeferredTable { record, woff }),
-                gsub: gsub.map(|record| DeferredTable { record, woff }),
-                kern: kern.map(|record| DeferredTable { record, woff }),
-                meta: meta.map(|record| DeferredTable { record, woff }),
-                fvar: fvar.map(|record| DeferredTable { record, woff }),
-                avar: avar.map(|record| DeferredTable { record, woff }),
+                gdef: gdef.map(deferred),
+                gpos: gpos.map(deferred),
+                gsub: gsub.map(deferred),
+                kern: kern.map(deferred),
+                meta: meta.map(deferred),
+                fvar: fvar.map(deferred),
+                avar: avar.map(deferred),
                 glyph_count: if glyf && loca {
                     Some(glyph_count.unwrap_or(0))
                 } else {
