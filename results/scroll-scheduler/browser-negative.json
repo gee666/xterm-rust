@@ -1,0 +1,129 @@
+{
+  "package": "xterm-web",
+  "testName": "browser_scroll_scheduler",
+  "testTimeoutMs": 60000,
+  "features": [
+    "acceptance-hooks"
+  ],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T19:48:11.346Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "browser_scroll_scheduler",
+        "--features",
+        "acceptance-hooks",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 11234.148500000001,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 10.100400000001173,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\Thomas454\\results\\acceptance-artifacts\\a9f86feaa6471ce0dfd82d6b71ca5eda413a48bbcae8ec62ad5d5acac50d0172\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\Thomas454\\results\\browser-host\\browser_scroll_scheduler\\2026-11-05T19-48-11-345Z-ce74f98a-b15b-4399-a526-8e4ab70d7dc8\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1005.331900000001,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__browser_scroll_scheduler::actual_browser_queue_source_can_reenter_and_throw_original_value"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\src\\scroll\\browser_scheduler.rs:39:19:\nalready borrowed: BorrowMutError\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:54136/suite.js:5900:21)\n    at browser_scroll_scheduler-befb027016f667a7.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[38187]:0xacaf0d)\n    at browser_scroll_scheduler-befb027016f667a7.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[25132]:0xa33917)\n    at browser_scroll_scheduler-befb027016f667a7.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[8372]:0x796167)\n    at browser_scroll_scheduler-befb027016f667a7.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[25133]:0xa3399b)\n    at browser_scroll_scheduler-befb027016f667a7.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[13001]:0x8a6f22)\n    at browser_scroll_scheduler-befb027016f667a7.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[16457]:0x937d26)\n    at browser_scroll_scheduler-befb027016f667a7.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[46033]:0xae2fda)\n    at browser_scroll_scheduler-befb027016f667a7.wasm.rust_begin_unwind (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[31459]:0xa99ef6)\n    at browser_scroll_scheduler-befb027016f667a7.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[31460]:0xa99f23)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 1 test\ntest actual_browser_queue_source_can_reenter_and_throw_original_value ... FAIL\n\nfailures:\n\n---- actual_browser_queue_source_can_reenter_and_throw_original_value output ----\n    JS exception that was thrown:\n        Error: JsValue(Error: browser queue/initial/smooth expected [[true,null],[true,null],[true,null],[true,null],[true,null],[true,[100,1000,100,1000,0,300,true]],[true,null],[true,null],[true,[100,1000,100,1000,9,9,false]],[true,null]] actual [[true,null],[true,null],[true,null],[false,{}],[true,[100,1000,100,1000,0,300,true]],[true,null],[true,null],[true,[100,1000,100,1000,9,9,false]],[true,null]]\n        Error: browser queue/initial/smooth expected [[true,null],[true,null],[true,null],[true,null],[true,null],[true,[100,1000,100,1000,0,300,true]],[true,null],[true,null],[true,[100,1000,100,1000,9,9,false]],[true,null]] actual [[true,null],[true,null],[true,null],[false,{}],[true,[100,1000,100,1000,0,300,true]],[true,null],[true,null],[true,[100,1000,100,1000,9,9,false]],[true,null]]\n            at runBrowserSchedulerCases (http://127.0.0.1:54136/snippets/xterm-web-f147851b6cb0c0ef/tests/browser_scroll_scheduler_oracle.js:523:15)\n            at http://127.0.0.1:54136/suite.js:6238:21\n            at handleError (http://127.0.0.1:54136/suite.js:172:18)\n            at imports.wbg.__wbg_runBrowserSchedulerCases_ec98671aca6beb13 (http://127.0.0.1:54136/suite.js:6237:87)\n            at browser_scroll_scheduler-befb027016f667a7.wasm.__wbg_runBrowserSchedulerCases_ec98671aca6beb13 externref shim (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[46039]:0xae3017)\n            at browser_scroll_scheduler-befb027016f667a7.wasm.browser_scroll_scheduler::cases::hf81f92db1b7da37d (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[8944]:0x7be2ac)\n            at browser_scroll_scheduler-befb027016f667a7.wasm.browser_scroll_scheduler::actual_browser_queue_source_can_reenter_and_throw_original_value::h3c1420af2925bf01 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[4289]:0x62301d)\n            at browser_scroll_scheduler-befb027016f667a7.wasm.core::ops::function::FnOnce::call_once::h1511c6ca06402f9a (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[26673]:0xa5242d)\n            at browser_scroll_scheduler-befb027016f667a7.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::hfcb80fd036567842 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[11364]:0x8535fe)\n            at browser_scroll_scheduler-befb027016f667a7.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h7834331376ab6531 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[16458]:0x937d9d))\n            at imports.wbg.__wbindgen_error_new (http://127.0.0.1:54136/suite.js:6890:21)\n            at browser_scroll_scheduler-befb027016f667a7.wasm.__wbindgen_error_new externref shim (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[36965]:0xac4819)\n            at browser_scroll_scheduler-befb027016f667a7.wasm.wasm_bindgen::JsError::new::h1bef089614f19d40 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[33325]:0xaac200)\n            at browser_scroll_scheduler-befb027016f667a7.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::{{closure}}::h58380821ae9394b1 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[6176]:0x6e7e34)\n            at browser_scroll_scheduler-befb027016f667a7.wasm.core::result::Result<T,E>::map_err::he6809d682aa546d6 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[17753]:0x9670df)\n            at browser_scroll_scheduler-befb027016f667a7.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::h0be35baed77620d3 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[24117]:0xa1dbc7)\n            at browser_scroll_scheduler-befb027016f667a7.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::hfcb80fd036567842 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[11364]:0x853616)\n            at browser_scroll_scheduler-befb027016f667a7.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h7834331376ab6531 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[16458]:0x937d9d)\n            at browser_scroll_scheduler-befb027016f667a7.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[26452]:0xa4e396)\n            at __wbg_adapter_1292 (http://127.0.0.1:54136/suite.js:629:10)\n\nfailures:\n\n    actual_browser_queue_source_can_reenter_and_throw_original_value\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.02s\n\n",
+      "counts": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/a9f86feaa6471ce0dfd82d6b71ca5eda413a48bbcae8ec62ad5d5acac50d0172/artifact.wasm",
+      "sha256": "a9f86feaa6471ce0dfd82d6b71ca5eda413a48bbcae8ec62ad5d5acac50d0172",
+      "bytes": 19666059,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\Thomas454\\target\\wasm32-unknown-unknown\\debug\\deps\\browser_scroll_scheduler-befb027016f667a7.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\Thomas454\\results\\browser-host\\browser_scroll_scheduler\\2026-11-05T19-48-11-345Z-ce74f98a-b15b-4399-a526-8e4ab70d7dc8\\artifacts\\suite_bg.wasm",
+      "bytes": 16492992,
+      "sha256": "0d48d024defdb9becaa6f045a1f9c02d649c1568e10c35e8368e728645d056bd"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\Thomas454\\results\\browser-host\\browser_scroll_scheduler\\2026-11-05T19-48-11-345Z-ce74f98a-b15b-4399-a526-8e4ab70d7dc8\\artifacts\\suite.js",
+      "bytes": 244531,
+      "sha256": "386f1a2bfa1ef268f9f5be43f0735067d83eaf894ef2553829077d6fec7bed63"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "37330e854f109a874bbd88e1d1abfdc381f6846161ca03ac9a679e530932cd93"
+  },
+  "finishedAt": "2026-11-05T19:48:24.317Z"
+}

@@ -1,0 +1,36 @@
+running 1 test
+test actual_browser_queue_source_can_reenter_and_throw_original_value ... FAIL
+
+failures:
+
+---- actual_browser_queue_source_can_reenter_and_throw_original_value output ----
+    JS exception that was thrown:
+        Error: JsValue(Error: browser queue/initial/smooth expected [[true,null],[true,null],[true,null],[true,null],[true,null],[true,[100,1000,100,1000,0,300,true]],[true,null],[true,null],[true,[100,1000,100,1000,9,9,false]],[true,null]] actual [[true,null],[true,null],[true,null],[false,{}],[true,[100,1000,100,1000,0,300,true]],[true,null],[true,null],[true,[100,1000,100,1000,9,9,false]],[true,null]]
+        Error: browser queue/initial/smooth expected [[true,null],[true,null],[true,null],[true,null],[true,null],[true,[100,1000,100,1000,0,300,true]],[true,null],[true,null],[true,[100,1000,100,1000,9,9,false]],[true,null]] actual [[true,null],[true,null],[true,null],[false,{}],[true,[100,1000,100,1000,0,300,true]],[true,null],[true,null],[true,[100,1000,100,1000,9,9,false]],[true,null]]
+            at runBrowserSchedulerCases (http://127.0.0.1:54136/snippets/xterm-web-f147851b6cb0c0ef/tests/browser_scroll_scheduler_oracle.js:523:15)
+            at http://127.0.0.1:54136/suite.js:6238:21
+            at handleError (http://127.0.0.1:54136/suite.js:172:18)
+            at imports.wbg.__wbg_runBrowserSchedulerCases_ec98671aca6beb13 (http://127.0.0.1:54136/suite.js:6237:87)
+            at browser_scroll_scheduler-befb027016f667a7.wasm.__wbg_runBrowserSchedulerCases_ec98671aca6beb13 externref shim (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[46039]:0xae3017)
+            at browser_scroll_scheduler-befb027016f667a7.wasm.browser_scroll_scheduler::cases::hf81f92db1b7da37d (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[8944]:0x7be2ac)
+            at browser_scroll_scheduler-befb027016f667a7.wasm.browser_scroll_scheduler::actual_browser_queue_source_can_reenter_and_throw_original_value::h3c1420af2925bf01 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[4289]:0x62301d)
+            at browser_scroll_scheduler-befb027016f667a7.wasm.core::ops::function::FnOnce::call_once::h1511c6ca06402f9a (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[26673]:0xa5242d)
+            at browser_scroll_scheduler-befb027016f667a7.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::hfcb80fd036567842 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[11364]:0x8535fe)
+            at browser_scroll_scheduler-befb027016f667a7.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h7834331376ab6531 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[16458]:0x937d9d))
+            at imports.wbg.__wbindgen_error_new (http://127.0.0.1:54136/suite.js:6890:21)
+            at browser_scroll_scheduler-befb027016f667a7.wasm.__wbindgen_error_new externref shim (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[36965]:0xac4819)
+            at browser_scroll_scheduler-befb027016f667a7.wasm.wasm_bindgen::JsError::new::h1bef089614f19d40 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[33325]:0xaac200)
+            at browser_scroll_scheduler-befb027016f667a7.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::{{closure}}::h58380821ae9394b1 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[6176]:0x6e7e34)
+            at browser_scroll_scheduler-befb027016f667a7.wasm.core::result::Result<T,E>::map_err::he6809d682aa546d6 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[17753]:0x9670df)
+            at browser_scroll_scheduler-befb027016f667a7.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::h0be35baed77620d3 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[24117]:0xa1dbc7)
+            at browser_scroll_scheduler-befb027016f667a7.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::hfcb80fd036567842 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[11364]:0x853616)
+            at browser_scroll_scheduler-befb027016f667a7.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h7834331376ab6531 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[16458]:0x937d9d)
+            at browser_scroll_scheduler-befb027016f667a7.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8 (http://127.0.0.1:54136/suite_bg.wasm:wasm-function[26452]:0xa4e396)
+            at __wbg_adapter_1292 (http://127.0.0.1:54136/suite.js:629:10)
+
+failures:
+
+    actual_browser_queue_source_can_reenter_and_throw_original_value
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.02s
+
