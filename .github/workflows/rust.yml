@@ -18,6 +18,8 @@ jobs:
         toolchain: ["1.85.1", stable]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 35
+    env:
+      XTERM_QUALITY_ROOT: ${{ github.workspace }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -27,20 +29,76 @@ jobs:
         with:
           toolchain: ${{ matrix.toolchain }}
           components: rustfmt, clippy
+      # cargo-fmt canonicalizes every target path before spawning rustfmt. A
+      # drive alias does not shorten that command line on Windows.
+      - name: Create a short physical Windows quality worktree
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $short = Join-Path $env:RUNNER_TEMP 'q'
+          if (Test-Path -LiteralPath $short) { throw "Refusing existing path $short" }
+          "XTERM_OWNED_QUALITY_ROOT=$short" >> $env:GITHUB_ENV
+          git worktree add --detach $short $env:GITHUB_SHA
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot create the short quality worktree' }
+          "XTERM_QUALITY_ROOT=$short" >> $env:GITHUB_ENV
+      - name: Record the actual Windows formatting path budget
+        if: runner.os == 'Windows'
+        shell: pwsh
+        working-directory: ${{ env.XTERM_QUALITY_ROOT }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $metadataText = cargo metadata --no-deps --format-version 1 --locked
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot inventory formatting targets' }
+          $metadata = $metadataText | ConvertFrom-Json
+          $packages = @($metadata.packages | Where-Object { $metadata.workspace_members -contains $_.id })
+          $targets = @($packages | ForEach-Object { $_.targets })
+          $groups = @($targets | Group-Object edition | ForEach-Object {
+            $characters = 0
+            foreach ($target in $_.Group) {
+              # Rust canonical paths add four characters; allow quotes and a separator.
+              $characters += $target.src_path.Length + 7
+            }
+            [ordered]@{ edition = $_.Name; roots = $_.Count; quotedFileArguments = $characters }
+          })
+          [ordered]@{ physicalRoot = $PWD.ProviderPath; groups = $groups } | ConvertTo-Json -Depth 4
       - name: Verify the quality runner
-        run: node --test scripts/quality-process.test.mjs scripts/quality-policy.test.mjs scripts/quality-snapshot.test.mjs scripts/quality-managed.test.mjs scripts/build-queue-retired.test.mjs scripts/target-relocation.test.mjs
+        working-directory: ${{ env.XTERM_QUALITY_ROOT }}
+        run: node --test scripts/quality-process.test.mjs scripts/quality-policy.test.mjs scripts/quality-snapshot.test.mjs scripts/quality-managed.test.mjs scripts/build-queue-retired.test.mjs scripts/target-relocation.test.mjs scripts/windows-quality-worktree.test.mjs
       - name: Probe the Windows cache-copy boundary without compiling Rust
         if: runner.os == 'Windows'
+        working-directory: ${{ env.XTERM_QUALITY_ROOT }}
         run: node scripts/target-relocation-windows-probe.mjs
       - name: Run native library quality gates
+        working-directory: ${{ env.XTERM_QUALITY_ROOT }}
         run: node scripts/quality-gates.mjs --out results/quality/${{ matrix.os }}-${{ matrix.toolchain }} --timeout-ms 600000
       - name: Preserve command logs and native provenance
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: quality-${{ matrix.os }}-${{ matrix.toolchain }}
-          path: results/quality/${{ matrix.os }}-${{ matrix.toolchain }}/
+          path: ${{ env.XTERM_QUALITY_ROOT }}/results/quality/${{ matrix.os }}-${{ matrix.toolchain }}/
           if-no-files-found: error
+      - name: Remove only the owned short Windows worktree
+        if: always() && runner.os == 'Windows'
+        shell: pwsh
+        working-directory: ${{ github.workspace }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:XTERM_OWNED_QUALITY_ROOT) {
+            $short = Join-Path $env:RUNNER_TEMP 'q'
+            if ($env:XTERM_OWNED_QUALITY_ROOT -ne $short) { throw 'Unexpected owned quality path' }
+            if (Test-Path -LiteralPath $short) {
+              $root = Get-Item -LiteralPath $short -Force
+              if (-not $root.PSIsContainer -or ($root.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+                throw "Refusing non-directory or linked quality root $short"
+              }
+              $links = @(Get-ChildItem -LiteralPath $short -Recurse -Force -Attributes ReparsePoint)
+              if ($links.Count) { throw "Refusing linked quality worktree cleanup at $short" }
+              git worktree remove --force $short
+              if ($LASTEXITCODE -ne 0) { throw 'Cannot remove the owned quality worktree' }
+            }
+          }
 
   miri-focused:
     name: Focused core lifecycle and cell Miri tests

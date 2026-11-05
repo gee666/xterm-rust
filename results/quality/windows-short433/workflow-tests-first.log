@@ -1,0 +1,43 @@
+✔ native gates and artifacts use the selected physical root without changing gate commands (0.5011ms)
+▶ Windows setup and cleanup preserve ownership, source identity and linked data
+  ✔ setup checks out the requested SHA and publishes only the owned root (345.6279ms)
+  ✖ an existing path is preserved and setup fails visibly (270.4693ms)
+  ✔ cleanup rejects an unexpected ownership marker (271.6387ms)
+  ✔ cleanup refuses a child junction and preserves its target (268.6728ms)
+  ✔ cleanup removes owned generated files after an earlier failed step (315.8105ms)
+✖ Windows setup and cleanup preserve ownership, source identity and linked data (1837.6168ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 5
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1895.006
+
+✖ failing tests:
+
+test at scripts\windows-quality-worktree.test.mjs:75:13
+✖ an existing path is preserved and setup fails visibly (270.4693ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'immutable source\r\n'
+  - 'immutable source\n'
+                      ^
+  
+      at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/X304/scripts/windows-quality-worktree.test.mjs:79:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at TestContext.test (node:internal/test_runner/test:377:20)
+      at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/X304/scripts/windows-quality-worktree.test.mjs:75:13)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'immutable source\r\n',
+    expected: 'immutable source\n',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
