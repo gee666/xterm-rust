@@ -24,6 +24,12 @@ The oracle freshly compiles the unchanged CharacterJoinerService source and all2
 
 The shared raw cases cover retained identities, wide-cell offsets, array-likes, falsy heads, frozen containers, getter/setter/coercion failures, console error identity, live handler registration, receiver-record mutation, primitive endpoints and all nine merge branches. The WASM tests compare the complete resulting JSON, including mutation traces, against the source fixture and replay the same27 original captured calls with raw browser storage. A separate real Terminal test checks mutation visible in the caller's range, joined DOM spans, conversion exception identity and handler error logging through the active renderer.
 
+## Observed scoped results
+
+On Windows, the unchanged source suite passed24/24 tests. All292 shared raw cases matched the Rust browser result. Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4 each passed all three wasm_joiner_raw tests, all four dom_font_browser tests, all three wasm_font_terminal tests and the loaded-Fira wasm_font_shaping test. Each engine also replayed the27 original captured service calls inside the raw test suite. The focused WASM library/test Clippy check denied warnings and passed. Native xterm-web all-target/all-feature Clippy and the27-call native replay passed before rebasing onto8ab2dd3.
+
+Exact command outcomes, browser counts and artifact hashes are under results/joiner-raw/. Large generated WASM/browser bundles are disposable build outputs, not source deliverables. Full workspace formatting passed before the337 marker-module import-order defect arrived from main; that unrelated one-line fix is separately owned by task353 and must be present at integration. These results are scoped producer evidence, not the final workspace or cross-platform matrix.
+
 ## Remaining work
 
 Full equivalence is NOT PROVEN. Task348 owns replacing the DOM row factory's eager typed projection with raw, source-timed consumption. Accessors reached after service conversion, endpoint arithmetic, zero-length and malformed ranges, and out-of-bounds row behavior still need that work. No full raw DOM row parity, complete font metadata parsing, pixel equivalence, native Linux/macOS runtime or full original browser suite claim follows from these focused tests. Task342 retains complex font metadata, and the full suite and audit tasks remain open.
