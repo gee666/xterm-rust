@@ -52,6 +52,20 @@ export function atlasScenario(name) {
     glyph(65,0x03123456,0x03abcdef);
     // First draw wins despite different restriction and parent container.
     glyph(103,0,0x10000000,0,true);glyph(103,0,0x10000000,0,false);
+  } else if (name==='signedCache'||name==='signedCombinedCache') {
+    const value=name==='signedCache'?103:'gg';
+    const raw=(bg,fg,ext,restrict=false)=>spec.steps.push({value:typeof value==='string'?Array.from(value,c=>c.charCodeAt(0)):value,bg,fg,ext,restrict});
+    const base=[0,0,0],high=0x80000000,signed=-0x80000000;
+    for(let field=0;field<3;field++) {
+      const words=base.slice();words[field]=high;raw(...words);
+      words[field]=signed;raw(...words);
+      words[field]=high;raw(...words,true);
+      words[field]=signed;raw(...words,true);
+    }
+    raw(0,0,0);raw(-0,0,0,true);raw(0,-0,0);raw(0,0,-0);
+    // Clear invalidates the old aliases; repeated fresh keys must be reused.
+    spec.steps.push({clear:true});
+    raw(high,0,0);raw(signed,0,0);raw(high,0,0,true);raw(signed,0,0,true);
   } else if (name==='noCustom') {
     spec.custom=false;
     for (const code of [0x2588,0x2500,0xe0b0,0x2801,103,95]) glyph(code,0,0x10000000);

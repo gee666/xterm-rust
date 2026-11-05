@@ -267,7 +267,14 @@ impl GlyphRenderer {
         let glyph = if cell.code.is_some_and(|code| code != 0) {
             self.atlas
                 .as_ref()
-                .map(|atlas| atlas.rasterize(cell, cell.chars.len() > 1, self.element.as_ref()))
+                .map(|atlas| {
+                    atlas.rasterize_with_colors(
+                        cell,
+                        numbers,
+                        cell.chars.len() > 1,
+                        self.element.as_ref(),
+                    )
+                })
                 .transpose()?
         } else {
             None

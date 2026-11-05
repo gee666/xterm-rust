@@ -206,11 +206,9 @@ fn scenario(name: &str) {
             )
         };
         let g = atlas
-            .get_glyph(
+            .get_glyph_with_colors(
                 key,
-                step["bg"].as_u64().unwrap() as u32,
-                step["fg"].as_u64().unwrap() as u32,
-                step["ext"].as_u64().unwrap() as u32,
+                ["bg", "fg", "ext"].map(|field| step[field].as_i64().unwrap()),
                 step["restrict"].as_bool().unwrap(),
                 Some(element.unchecked_ref()),
             )
@@ -300,4 +298,12 @@ fn seeded_mixed_styles_pack_like_source() {
 #[wasm_bindgen_test]
 fn nested_page_listener_overwrites_shared_upload_crop() {
     scenario("nested");
+}
+#[wasm_bindgen_test]
+fn signed_color_numbers_keep_distinct_cache_aliases() {
+    scenario("signedCache");
+}
+#[wasm_bindgen_test]
+fn signed_combined_color_numbers_keep_distinct_cache_aliases() {
+    scenario("signedCombinedCache");
 }

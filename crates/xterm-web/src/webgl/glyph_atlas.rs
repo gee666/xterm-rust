@@ -1,6 +1,6 @@
 // Copyright (c) 2018-2026 The xterm.js authors. All rights reserved.
 // Licensed under MIT. Browser atlas contract consumed by GlyphRenderer.
-use super::glyphs::{GlyphCell, RasterizedGlyph};
+use super::glyphs::{GlyphCell, GlyphColorNumbers, RasterizedGlyph};
 use wasm_bindgen::JsValue;
 use web_sys::{HtmlCanvasElement, HtmlElement};
 
@@ -25,4 +25,15 @@ pub trait GlyphAtlas {
         combined: bool,
         element: Option<&HtmlElement>,
     ) -> Result<RasterizedGlyph, JsValue>;
+    /// Supplies original integer color numbers before packed-word conversion.
+    /// Atlases without a numeric cache may use the packed rasterization contract.
+    fn rasterize_with_colors(
+        &self,
+        cell: GlyphCell<'_>,
+        _numbers: GlyphColorNumbers,
+        combined: bool,
+        element: Option<&HtmlElement>,
+    ) -> Result<RasterizedGlyph, JsValue> {
+        self.rasterize(cell, combined, element)
+    }
 }

@@ -55,7 +55,9 @@ pub enum GlyphKey {
     Number(i32),
     Text(Vec<u16>),
 }
-type Cache = HashMap<(GlyphKey, u32, u32, u32), GlyphRef>;
+// Source FourKeyMap indexes the original numbers before bitwise rasterization.
+// The renderer emits integer color words, including negative bitwise results.
+type Cache = HashMap<(GlyphKey, [i64; 3]), GlyphRef>;
 
 pub struct TextureAtlas {
     pub(super) document: Document,
@@ -129,11 +131,30 @@ impl TextureAtlas {
         restrict_height: bool,
         element: Option<&HtmlElement>,
     ) -> Result<GlyphRef, JsValue> {
-        let cache_key = (key, bg, fg, ext);
+        self.get_glyph_with_colors(
+            key,
+            [i64::from(bg), i64::from(fg), i64::from(ext)],
+            restrict_height,
+            element,
+        )
+    }
+    /// Preserves the renderer's original integer color arguments as cache keys.
+    /// Signed and unsigned numbers with identical packed bits are distinct keys.
+    /// Rasterization still applies JavaScript's low-32-bit attribute operations.
+    /// This typed entry does not represent arbitrary JavaScript objects or fractions.
+    pub fn get_glyph_with_colors(
+        &self,
+        key: GlyphKey,
+        colors: [i64; 3],
+        restrict_height: bool,
+        element: Option<&HtmlElement>,
+    ) -> Result<GlyphRef, JsValue> {
+        let cache_key = (key, colors);
         let cached = self.cache.borrow().get(&cache_key).cloned();
         if let Some(glyph) = cached {
             return Ok(glyph);
         }
+        let [bg, fg, ext] = colors.map(|word| word as u32);
         let bitmap = self
             .rasterizer
             .draw(&cache_key.0, bg, fg, ext, restrict_height, element)?;
@@ -207,12 +228,21 @@ impl GlyphAtlas for TextureAtlas {
         combined: bool,
         element: Option<&HtmlElement>,
     ) -> Result<RasterizedGlyph, JsValue> {
+        self.rasterize_with_colors(cell, cell.into(), combined, element)
+    }
+    fn rasterize_with_colors(
+        &self,
+        cell: GlyphCell<'_>,
+        numbers: super::glyphs::GlyphColorNumbers,
+        combined: bool,
+        element: Option<&HtmlElement>,
+    ) -> Result<RasterizedGlyph, JsValue> {
         let key = if combined {
             GlyphKey::Text(cell.chars.to_vec())
         } else {
             GlyphKey::Number(cell.code.unwrap_or(0) as i32)
         };
-        let glyph = self.get_glyph(key, cell.bg, cell.fg, cell.ext, false, element)?;
+        let glyph = self.get_glyph_with_colors(key, numbers.current, false, element)?;
         let raster = glyph.borrow().raster;
         Ok(raster)
     }

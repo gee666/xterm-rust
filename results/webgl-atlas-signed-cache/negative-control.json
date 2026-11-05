@@ -1,0 +1,112 @@
+{
+  "date": "2026-11-05T20:25:19.824Z",
+  "mutations": [
+    {
+      "name": "packed-cache-negative",
+      "path": "crates/xterm-web/src/webgl/texture_atlas.rs",
+      "from": "let cache_key = (key, colors);",
+      "to": "let cache_key = (key, colors.map(|word| i64::from(word as u32)));",
+      "passed": 15,
+      "failed": 3,
+      "before": "60e7bdfc673adad85a20e7aa8d17e08d81e4de00633f86e5a7caf267dfac9829",
+      "mutant": "23082ecb9773074ac1e4e38b7648fd4359130b382c2a9e282a66e5fef194e0fb",
+      "counts": {
+        "passed": 15,
+        "failed": 3,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "failedTests": [],
+      "restored": "60e7bdfc673adad85a20e7aa8d17e08d81e4de00633f86e5a7caf267dfac9829"
+    },
+    {
+      "name": "packed-gpu-negative",
+      "path": "crates/xterm-web/src/webgl/glyph_gpu.rs",
+      "from": "atlas.rasterize_with_colors(\n                        cell,\n                        numbers,\n                        cell.chars.len() > 1,\n                        self.element.as_ref(),\n                    )",
+      "to": "atlas.rasterize(cell, cell.chars.len() > 1, self.element.as_ref())",
+      "passed": 17,
+      "failed": 1,
+      "before": "45a0bd74439336a033fb45d33fa2d60a7702949049d78673044fe31c54013d9c",
+      "mutant": "277dfaef5545228db5c27b59e1b51806664398d68410061949aab85f905c97a1",
+      "counts": {
+        "passed": 17,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "failedTests": [],
+      "restored": "45a0bd74439336a033fb45d33fa2d60a7702949049d78673044fe31c54013d9c"
+    }
+  ],
+  "commands": [
+    {
+      "name": "packed-cache-negative",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/browser-host-check.mjs"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 19703.3151,
+      "status": "failed"
+    },
+    {
+      "name": "packed-gpu-negative",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/browser-host-check.mjs"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 15025.553999999996,
+      "status": "failed"
+    },
+    {
+      "name": "final-atlas",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/browser-host-check.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 39310.57859999999,
+      "status": "passed"
+    },
+    {
+      "name": "final-gpu",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/browser-host-check.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 18848.180300000007,
+      "status": "passed"
+    }
+  ],
+  "finishedAt": "2026-11-05T20:26:52.774Z"
+}
