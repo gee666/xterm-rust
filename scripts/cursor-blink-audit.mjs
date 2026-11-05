@@ -6,7 +6,14 @@ const root = path.resolve(import.meta.dirname, '..');
 const source = path.resolve(process.env.SOURCE_ROOT ?? path.join(root, 'source_repo'));
 const output = path.join(root, 'results/cursor-blink/audit.json');
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
-const pin = async file => ({path:path.relative(root, file).replaceAll('\\', '/'), sha256:hash(await readFile(file))});
+const pin = async file => {
+  const bytes = await readFile(file);
+  // Markdown follows Git's native newline conversion. Code and raw evidence
+  // remain byte-exact; only documentation is checked as canonical LF text.
+  const normalization = file.endsWith('.md') ? 'LF' : undefined;
+  return {path:path.relative(root, file).replaceAll('\\', '/'), normalization,
+    sha256:hash(normalization ? bytes.toString().replaceAll('\r\n', '\n') : bytes)};
+};
 async function files(directory) {
   const result = [];
   for (const entry of await readdir(directory, {withFileTypes:true})) {
@@ -63,7 +70,9 @@ if (process.argv.includes('--record')) {
 }
 const receipt = JSON.parse(await readFile(output));
 for (const entry of [...receipt.source, ...receipt.durable, ...(process.argv.includes('--runtime') ? receipt.runtime : [])]) {
-  if (hash(await readFile(path.resolve(root, entry.path))) !== entry.sha256) throw Error(`Pin changed: ${entry.path}`);
+  const bytes = await readFile(path.resolve(root, entry.path));
+  const actual = hash(entry.normalization === 'LF' ? bytes.toString().replaceAll('\r\n', '\n') : bytes);
+  if (actual !== entry.sha256) throw Error(`Pin changed: ${entry.path}`);
 }
 if (process.argv.includes('--runtime')) {
   for (const entry of receipt.durable.filter(entry => entry.path.endsWith('-results.json'))) {
