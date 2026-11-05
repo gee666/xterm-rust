@@ -30,4 +30,12 @@ The existing `scripts/github-quality.mjs` safely read GitHub Actions using the c
 
 The workflow reported six failed native Windows/Linux/macOS MSRV/stable jobs, a successful focused Miri job, and successful WASM library compilation. This is historical workflow status, not final native runtime proof, nor proof of the reasons those native jobs failed. The raw API status is retained in `results/quality/ci-40733999151/run.json`. Access works; there is no demonstrated external OS/CI blocker. Task 304 must obtain source-bound native execution evidence after the producer changes integrate.
 
+## Canonical integration
+
+The isolated review accepted task 302 at `b51ef4a`, independently checking repair diffs, log hashes and test totals and rerunning the complete fmt command. The reviewed pre-rebase history is retained as `archive/Zhao16-quality-pre-rebase` so the command-source references above remain reachable.
+
+The canonical helper rebased the repairs onto `c17bff2` and merged `1ad04e1b043e539856f52fc9b8f9668a67a4d8d9` into main. It built and all-target tested all four changed crates with default features, checked affected dependents/all workspace code and the applicable WASM libraries, and removed the private target. Its log has 1,962 passing tests and 350 harness summaries, including empty harnesses. It does not add an all-feature/release/platform/browser claim. Exact output and SHA-256 are retained in `results/quality/zhao16/canonical-merge.{log,json}`.
+
+The first helper invocation correctly refused three tracked reports that the earlier tests had refreshed. I inspected and restored only those generated report paths to preserve the earlier failure evidence. The second invocation completed without waived gates.
+
 Overall equivalence remains NOT PROVEN.
