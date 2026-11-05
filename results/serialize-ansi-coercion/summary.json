@@ -1,0 +1,185 @@
+{
+  "status": "scoped-pass",
+  "reports": [
+    {
+      "phase": "baseline",
+      "fullRunnerStatus": "failed",
+      "browsers": [
+        {
+          "name": "chromium",
+          "passed": 87,
+          "failed": 3,
+          "mismatches": [
+            "ansi-scrollback-coercion-values",
+            "ansi-scrollback-coercion-default-hint",
+            "ansi-scrollback-coercion-reentry"
+          ]
+        },
+        {
+          "name": "firefox",
+          "passed": 86,
+          "failed": 4,
+          "mismatches": [
+            "ansi-scrollback-coercion-values",
+            "ansi-scrollback-coercion-default-hint",
+            "ansi-scrollback-coercion-reentry",
+            "ansi-scrollback-captured-missing-line"
+          ]
+        },
+        {
+          "name": "webkit",
+          "passed": 86,
+          "failed": 4,
+          "mismatches": [
+            "ansi-scrollback-coercion-values",
+            "ansi-scrollback-coercion-default-hint",
+            "ansi-scrollback-coercion-reentry",
+            "ansi-scrollback-captured-missing-line"
+          ]
+        }
+      ],
+      "suites": [
+        {
+          "engine": "source",
+          "counts": {
+            "discovered": 120,
+            "executed": 120,
+            "passed": 120,
+            "failed": 0,
+            "skipped": 0,
+            "unrun": 0
+          }
+        },
+        {
+          "engine": "rust",
+          "counts": {
+            "discovered": 120,
+            "executed": 120,
+            "passed": 120,
+            "failed": 0,
+            "skipped": 0,
+            "unrun": 0
+          }
+        }
+      ]
+    },
+    {
+      "phase": "fixed",
+      "fullRunnerStatus": "passed",
+      "browsers": [
+        {
+          "name": "chromium",
+          "passed": 90,
+          "failed": 0,
+          "mismatches": []
+        },
+        {
+          "name": "firefox",
+          "passed": 90,
+          "failed": 0,
+          "mismatches": []
+        },
+        {
+          "name": "webkit",
+          "passed": 90,
+          "failed": 0,
+          "mismatches": []
+        }
+      ],
+      "suites": [
+        {
+          "engine": "source",
+          "counts": {
+            "discovered": 120,
+            "executed": 120,
+            "passed": 120,
+            "failed": 0,
+            "skipped": 0,
+            "unrun": 0
+          }
+        },
+        {
+          "engine": "rust",
+          "counts": {
+            "discovered": 120,
+            "executed": 120,
+            "passed": 120,
+            "failed": 0,
+            "skipped": 0,
+            "unrun": 0
+          }
+        }
+      ]
+    }
+  ],
+  "traceAudit": [
+    {
+      "browser": "chromium",
+      "sourceStable": true,
+      "fixedExact": 90,
+      "fixedTotal": 90,
+      "retainedFailures": [],
+      "allocationCasesExact": 4,
+      "missingLineCaseExact": true,
+      "inheritedUnchanged": 85,
+      "repaired": [
+        "ansi-scrollback-coercion-values",
+        "ansi-scrollback-coercion-default-hint",
+        "ansi-scrollback-coercion-reentry"
+      ]
+    },
+    {
+      "browser": "firefox",
+      "sourceStable": true,
+      "fixedExact": 90,
+      "fixedTotal": 90,
+      "retainedFailures": [],
+      "allocationCasesExact": 4,
+      "missingLineCaseExact": true,
+      "inheritedUnchanged": 85,
+      "repaired": [
+        "ansi-scrollback-coercion-values",
+        "ansi-scrollback-coercion-default-hint",
+        "ansi-scrollback-coercion-reentry",
+        "ansi-scrollback-captured-missing-line"
+      ]
+    },
+    {
+      "browser": "webkit",
+      "sourceStable": true,
+      "fixedExact": 90,
+      "fixedTotal": 90,
+      "retainedFailures": [],
+      "allocationCasesExact": 4,
+      "missingLineCaseExact": true,
+      "inheritedUnchanged": 85,
+      "repaired": [
+        "ansi-scrollback-coercion-values",
+        "ansi-scrollback-coercion-default-hint",
+        "ansi-scrollback-coercion-reentry",
+        "ansi-scrollback-captured-missing-line"
+      ]
+    }
+  ],
+  "baselineInput": {
+    "revision": "e13f06caa669065b0bd08cf3d2252e335fd8eeee",
+    "sha256": "9a2e2a8b88a42466b42bb3033e8ad3945aedddd3def46aaa321324fd753e6e86",
+    "files": 1811
+  },
+  "fixedInput": {
+    "revision": "e13f06caa669065b0bd08cf3d2252e335fd8eeee",
+    "sha256": "38ed97813604607bb05a4b0e81c5943ff64d9f6b98d8697d3762a61747e25c86",
+    "files": 1811
+  },
+  "baselineWasm": {
+    "path": "browser/pkg/xterm_web_bg.wasm",
+    "bytes": 15971925,
+    "sha256": "1b18a506bc8a9a6fc8186e8bd74f0935204412b0a850b78f2f86436e92ce1207"
+  },
+  "fixedWasm": {
+    "path": "browser/pkg/xterm_web_bg.wasm",
+    "bytes": 15971390,
+    "sha256": "7a01c760b0e6d36a28a66c289ec3f4c9d221e24f1989dafc5deb45ce5086e033"
+  },
+  "scope": "Nonnumeric ANSI scrollback allocation phases521 and browser-native missing-line diagnostics526. Full346/322 and overall equivalence NOT PROVEN."
+}

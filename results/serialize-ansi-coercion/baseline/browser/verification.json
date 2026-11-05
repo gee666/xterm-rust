@@ -1,0 +1,487 @@
+{
+  "status": "failed",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "seed": "0x05e21a11",
+  "seededCases": 32,
+  "scope": "Callable SerializeAddon, directed host behavior and seeded full public-cell restoration. Not full equivalence.",
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "mismatches": [
+        {
+          "name": "ansi-scrollback-coercion-values",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    name: 'ansi-scrollback-coercion-values',\n    result: {\n      state: {\n        active: 'alternate',\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'Invalid array length'\n          },\n          label: 'boxed-fraction',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'Invalid array length'\n          },\n          label: 'custom-fraction',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'Invalid array length'\n          },\n          label: 'boxed-fraction',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'Invalid array length'\n          },\n          label: 'custom-fraction',\n          log: [\n            'range',\n            'scrollback'\n"
+        },
+        {
+          "name": "ansi-scrollback-coercion-default-hint",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    name: 'ansi-scrollback-coercion-default-hint',\n    result: {\n      state: {\n        active: 'alternate',\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'Invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback',\n            'primitive-get',\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'Invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback',\n            'primitive-get',\n"
+        },
+        {
+          "name": "ansi-scrollback-coercion-reentry",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    name: 'ansi-scrollback-coercion-reentry',\n    result: [\n      {\n        ansi: {\n...\n          error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         message: 'Invalid array length'\n        },\n        log: [\n          'range',\n          'scrollback',\n          'primitive:default'\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "discovered": 90,
+      "executed": 90,
+      "passed": 87,
+      "failed": 3
+    },
+    {
+      "name": "firefox",
+      "status": "failed",
+      "mismatches": [
+        {
+          "name": "ansi-scrollback-coercion-values",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    name: 'ansi-scrollback-coercion-values',\n    result: {\n      state: {\n        active: 'alternate',\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          label: 'string-fraction',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          label: 'string-invalid',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          label: 'array-fraction',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          label: 'object',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          label: 'boxed-nan',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'invalid array length'\n          },\n          label: 'boxed-fraction',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          label: 'boxed-zero-retained',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          label: 'boxed-string',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          label: 'custom-nan',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'invalid array length'\n          },\n          label: 'custom-fraction',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          label: 'custom-zero-retained',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          label: 'string-fraction',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          label: 'string-invalid',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          label: 'array-fraction',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          label: 'object',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          label: 'boxed-nan',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'invalid array length'\n          },\n          label: 'boxed-fraction',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          label: 'boxed-zero-retained',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          label: 'boxed-string',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          label: 'custom-nan',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'invalid array length'\n          },\n          label: 'custom-fraction',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          label: 'custom-zero-retained',\n          log: [\n            'range',\n            'scrollback'\n"
+        },
+        {
+          "name": "ansi-scrollback-coercion-default-hint",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    name: 'ansi-scrollback-coercion-default-hint',\n    result: {\n      state: {\n        active: 'alternate',\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback',\n            'primitive-get',\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback',\n            'primitive-get',\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback',\n            'primitive-get',\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback',\n            'primitive-get',\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback',\n            'primitive-get',\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback',\n            'primitive-get',\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback',\n            'primitive-get',\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback',\n            'primitive-get',\n"
+        },
+        {
+          "name": "ansi-scrollback-coercion-reentry",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    name: 'ansi-scrollback-coercion-reentry',\n    result: [\n      {\n        ansi: {\n          error: 'RangeError',\n+         message: 'Invalid array length'\n-         message: 'invalid array length'\n        },\n        log: [\n          'range',\n          'scrollback',\n          'primitive:default'\n...\n          error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         message: 'invalid array length'\n        },\n        log: [\n          'range',\n          'scrollback',\n          'primitive:default'\n...\n          error: 'RangeError',\n+         message: 'Invalid array length'\n-         message: 'invalid array length'\n        },\n        log: [\n          'range',\n          'scrollback',\n          'primitive:default'\n"
+        },
+        {
+          "name": "ansi-scrollback-captured-missing-line",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    name: 'ansi-scrollback-captured-missing-line',\n    result: {\n      explicit: [\n        {\n...\n            error: 'TypeError',\n+           message: \"Cannot read properties of undefined (reading 'isWrapped')\",\n-           message: `can't access property \"isWrapped\", nextLine is undefined`,\n            nativeTypeError: true\n          },\n          end: 2,\n          start: 0,\n          state: {\n...\n            error: 'TypeError',\n+           message: \"Cannot read properties of undefined (reading 'isWrapped')\",\n-           message: `can't access property \"isWrapped\", nextLine is undefined`,\n            nativeTypeError: true\n          },\n          end: 3,\n          start: 2,\n          state: {\n...\n          error: 'TypeError',\n+         message: \"Cannot read properties of undefined (reading 'isWrapped')\",\n-         message: `can't access property \"isWrapped\", nextLine is undefined`,\n          nativeTypeError: true\n        },\n        log: [\n          'range',\n          'scrollback',\n"
+        }
+      ],
+      "version": "150.0.2",
+      "discovered": 90,
+      "executed": 90,
+      "passed": 86,
+      "failed": 4
+    },
+    {
+      "name": "webkit",
+      "status": "failed",
+      "mismatches": [
+        {
+          "name": "ansi-scrollback-coercion-values",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    name: 'ansi-scrollback-coercion-values',\n    result: {\n      state: {\n        active: 'alternate',\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'string-fraction',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'string-invalid',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'array-fraction',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'object',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'boxed-nan',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'boxed-fraction',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'boxed-zero-retained',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'boxed-string',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'custom-nan',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'custom-fraction',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'custom-zero-retained',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'string-fraction',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'string-invalid',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'array-fraction',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'object',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'boxed-nan',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'boxed-fraction',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'boxed-zero-retained',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'boxed-string',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'custom-nan',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'custom-fraction',\n          log: [\n            'range',\n            'scrollback'\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          label: 'custom-zero-retained',\n          log: [\n            'range',\n            'scrollback'\n"
+        },
+        {
+          "name": "ansi-scrollback-coercion-default-hint",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    name: 'ansi-scrollback-coercion-default-hint',\n    result: {\n      state: {\n        active: 'alternate',\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          log: [\n            'range',\n            'scrollback',\n            'primitive-get',\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          log: [\n            'range',\n            'scrollback',\n            'primitive-get',\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          log: [\n            'range',\n            'scrollback',\n            'primitive-get',\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          log: [\n            'range',\n            'scrollback',\n            'primitive-get',\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          log: [\n            'range',\n            'scrollback',\n            'primitive-get',\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          log: [\n            'range',\n            'scrollback',\n            'primitive-get',\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          log: [\n            'range',\n            'scrollback',\n            'primitive-get',\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          log: [\n            'range',\n            'scrollback',\n            'primitive-get',\n"
+        },
+        {
+          "name": "ansi-scrollback-coercion-reentry",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    name: 'ansi-scrollback-coercion-reentry',\n    result: [\n      {\n        ansi: {\n          error: 'RangeError',\n+         message: 'Invalid array length'\n-         message: 'Array length must be a positive integer of safe magnitude.'\n        },\n        log: [\n          'range',\n          'scrollback',\n          'primitive:default'\n...\n          error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         message: 'Array length must be a positive integer of safe magnitude.'\n        },\n        log: [\n          'range',\n          'scrollback',\n          'primitive:default'\n...\n          error: 'RangeError',\n+         message: 'Invalid array length'\n-         message: 'Array length must be a positive integer of safe magnitude.'\n        },\n        log: [\n          'range',\n          'scrollback',\n          'primitive:default'\n"
+        },
+        {
+          "name": "ansi-scrollback-captured-missing-line",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    name: 'ansi-scrollback-captured-missing-line',\n    result: {\n      explicit: [\n        {\n...\n            error: 'TypeError',\n+           message: \"Cannot read properties of undefined (reading 'isWrapped')\",\n-           message: \"undefined is not an object (evaluating 'nextLine.isWrapped')\",\n            nativeTypeError: true\n          },\n          end: 2,\n          start: 0,\n          state: {\n...\n            error: 'TypeError',\n+           message: \"Cannot read properties of undefined (reading 'isWrapped')\",\n-           message: \"undefined is not an object (evaluating 'nextLine.isWrapped')\",\n            nativeTypeError: true\n          },\n          end: 3,\n          start: 2,\n          state: {\n...\n          error: 'TypeError',\n+         message: \"Cannot read properties of undefined (reading 'isWrapped')\",\n-         message: \"undefined is not an object (evaluating 'nextLine.isWrapped')\",\n          nativeTypeError: true\n        },\n        log: [\n          'range',\n          'scrollback',\n"
+        }
+      ],
+      "version": "26.4",
+      "discovered": 90,
+      "executed": 90,
+      "passed": 86,
+      "failed": 4
+    }
+  ],
+  "suites": [
+    {
+      "engine": "source",
+      "counts": {
+        "discovered": 120,
+        "executed": 120,
+        "passed": 120,
+        "failed": 0,
+        "skipped": 0,
+        "unrun": 0
+      },
+      "errors": [],
+      "result": {
+        "command": [
+          "C:\\nvm4w\\nodejs\\node.exe",
+          "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\@playwright\\test\\cli.js",
+          "test",
+          "--config=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\EmeryAnsiCoercion\\tmp\\serialize-browser\\source-playwright.cjs",
+          "--reporter=json",
+          "--workers=2",
+          "--retries=0",
+          "--global-timeout=120000",
+          "--output=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\EmeryAnsiCoercion\\tmp\\serialize-browser\\source-artifacts"
+        ],
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "aborted": false,
+        "abortError": null,
+        "timedOut": false,
+        "terminationError": null,
+        "resourceError": null,
+        "elapsedMs": 7698.765500000001,
+        "status": "passed"
+      },
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\@playwright\\test\\cli.js",
+        "test",
+        "--config=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\EmeryAnsiCoercion\\tmp\\serialize-browser\\source-playwright.cjs",
+        "--reporter=json",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=120000",
+        "--output=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\EmeryAnsiCoercion\\tmp\\serialize-browser\\source-artifacts"
+      ]
+    },
+    {
+      "engine": "rust",
+      "counts": {
+        "discovered": 120,
+        "executed": 120,
+        "passed": 120,
+        "failed": 0,
+        "skipped": 0,
+        "unrun": 0
+      },
+      "errors": [],
+      "result": {
+        "command": [
+          "C:\\nvm4w\\nodejs\\node.exe",
+          "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\@playwright\\test\\cli.js",
+          "test",
+          "--config=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\EmeryAnsiCoercion\\tmp\\serialize-browser\\rust-playwright.cjs",
+          "--reporter=json",
+          "--workers=2",
+          "--retries=0",
+          "--global-timeout=120000",
+          "--output=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\EmeryAnsiCoercion\\tmp\\serialize-browser\\rust-artifacts"
+        ],
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "aborted": false,
+        "abortError": null,
+        "timedOut": false,
+        "terminationError": null,
+        "resourceError": null,
+        "elapsedMs": 9798.7071,
+        "status": "passed"
+      },
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\@playwright\\test\\cli.js",
+        "test",
+        "--config=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\EmeryAnsiCoercion\\tmp\\serialize-browser\\rust-playwright.cjs",
+        "--reporter=json",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=120000",
+        "--output=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\EmeryAnsiCoercion\\tmp\\serialize-browser\\rust-artifacts"
+      ]
+    }
+  ],
+  "referenceBefore": {
+    "files": 776,
+    "mismatches": []
+  },
+  "source": {
+    "revision": "9d812bed25d9e0ffed1101e335bc79925576bc5d",
+    "sha256": "9a2e2a8b88a42466b42bb3033e8ad3945aedddd3def46aaa321324fd753e6e86",
+    "files": 1811
+  },
+  "build": {
+    "report": "results/demos/build/2026-11-05T23-20-53-950Z/report.json",
+    "source": {
+      "revision": "e13f06caa669065b0bd08cf3d2252e335fd8eeee",
+      "sha256": "9a2e2a8b88a42466b42bb3033e8ad3945aedddd3def46aaa321324fd753e6e86",
+      "files": 1811
+    },
+    "artifacts": [
+      {
+        "path": "browser/pkg/xterm_web.js",
+        "bytes": 237899,
+        "sha256": "7de6a88d582b9d21a91c7e86b090461f9a424fb85492103a8d12ad582110f74a"
+      },
+      {
+        "path": "browser/pkg/xterm_web_bg.wasm",
+        "bytes": 15971925,
+        "sha256": "1b18a506bc8a9a6fc8186e8bd74f0935204412b0a850b78f2f86436e92ce1207"
+      }
+    ]
+  },
+  "runner": [
+    {
+      "path": "scripts/serialize-browser-check.mjs",
+      "bytes": 10731,
+      "sha256": "efd0375455d94ffb75603f6f807abf4d2cd6ac892b7a2a202ac888cd2394dfa6"
+    },
+    {
+      "path": "scripts/serialize-browser-cases.mjs",
+      "bytes": 47826,
+      "sha256": "095e74bb807ab9244c44b435912dd87a22cd7860361b424299afb5a4b0815614"
+    },
+    {
+      "path": "scripts/serialize-browser-gc.mjs",
+      "bytes": 4436,
+      "sha256": "af8353e568600f11a2e31397f635bc6c33272a3e03ebb81fe0fdb50c30d867be"
+    },
+    {
+      "path": "browser/xterm.mjs",
+      "bytes": 1817,
+      "sha256": "1171d2d1d5287d95252976d6d5e1795850936e170dcb37172aea69bf8fe1efc0"
+    },
+    {
+      "path": "scripts/e2e/build-bootstrap.mjs",
+      "bytes": 905,
+      "sha256": "487154862b39623222d248d465c66aa06ee08467631b6dacdbe5c43f3a51f801"
+    },
+    {
+      "path": "scripts/e2e/fixture-server.mjs",
+      "bytes": 7410,
+      "sha256": "4790325527ed20905ecbaf0ceba34272325ccdecdd36060c9cf6bf5ec7a0b2ef"
+    },
+    {
+      "path": "scripts/e2e/test-page.mjs",
+      "bytes": 1867,
+      "sha256": "58a7f3ff1c587dff8b78d8c5775b9b7a3ac72b144f800d893d80bd8e98d20b28"
+    }
+  ],
+  "declarations": [
+    {
+      "path": "browser/pkg/xterm_web.d.ts",
+      "bytes": 48771,
+      "sha256": "971743b8ccd5e33ff76f7759305a2cce3e50bd84128234be4c9cad85028eaa93"
+    }
+  ],
+  "reference": [
+    {
+      "path": "demo/test.html",
+      "bytes": 545,
+      "sha256": "35f81ad165aee291f49ac3ffea10068bf164207aad8d5fe4e5a558ada0e5ceed"
+    },
+    {
+      "path": "css/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    {
+      "path": "demo/dist/client-bundle.js",
+      "bytes": 2196837,
+      "sha256": "d01c661ea2b96ae26c1b1f20e1e11c213b7b811707baa37b2ba8dbd4c5b995b4"
+    },
+    {
+      "path": "addons/addon-serialize/src/SerializeAddon.ts",
+      "bytes": 31152,
+      "sha256": "b1d55be06175129a76ebe9045a3c5d088ee9211ba264e5b2885f71c02078eca6"
+    },
+    {
+      "path": "addons/addon-serialize/test/SerializeAddon.test.ts",
+      "bytes": 26541,
+      "sha256": "d67eef5179a58c42261abcc6f9eb093effa05b237e1a56e8ac88644875295bc3"
+    }
+  ],
+  "referenceAfter": {
+    "files": 776,
+    "mismatches": []
+  },
+  "cleanupErrors": [],
+  "requests": [
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=d6be7351-1e36-4e57-baf4-46b0b5eb5076",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=d6be7351-1e36-4e57-baf4-46b0b5eb5076&missing=WebglAddon",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=a7f2c755-f949-42b3-ba1e-475ef2b49dbf",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/favicon.ico",
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=a7f2c755-f949-42b3-ba1e-475ef2b49dbf&missing=WebglAddon",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=b768bb19-02c0-4d11-8f06-52e81a8295f9",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=b768bb19-02c0-4d11-8f06-52e81a8295f9&missing=WebglAddon",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=34c2b765-b798-4930-b86a-0d7ee24c82e4",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=34c2b765-b798-4930-b86a-0d7ee24c82e4&missing=WebglAddon",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=431f87ba-ce1a-41a0-b1ce-347692e7ea63",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=431f87ba-ce1a-41a0-b1ce-347692e7ea63&missing=WebglAddon",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=534e86fb-b363-4859-8749-902ae65bc7b3",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/favicon.ico",
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=534e86fb-b363-4859-8749-902ae65bc7b3&missing=WebglAddon",
+      "status": 204
+    }
+  ],
+  "runtimes": [
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    }
+  ],
+  "serverErrors": []
+}
