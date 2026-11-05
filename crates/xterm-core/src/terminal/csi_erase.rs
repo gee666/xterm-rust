@@ -204,10 +204,15 @@ fn erase_above(shared: &Shared, x: usize, y: usize, selective: bool) -> Result<(
     dirty(shared, 0)
 }
 fn erase_all(shared: &Shared, selective: bool) -> Result<(), TerminalError> {
-    let scroll = shared
-        .try_borrow()
-        .map_err(|_| TerminalError::Borrowed)?
-        .option_bool("scrollOnEraseInDisplay")?;
+    let options = Rc::clone(
+        &shared
+            .try_borrow()
+            .map_err(|_| TerminalError::Borrowed)?
+            .options,
+    );
+    // The getter may reset, resize or activate another buffer. Resolve rows and
+    // the erase receiver only after it returns, without retaining state borrows.
+    let scroll = options.get("scrollOnEraseInDisplay")?.is_truthy();
     let row_count = rows(shared)?;
     if !scroll {
         dirty(shared, row_count - 1)?;
