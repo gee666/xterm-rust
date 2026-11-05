@@ -9,6 +9,7 @@ pub enum FontError {
     Signature([u8; 4]),
     UnsupportedFormat(&'static str, u16),
     Invalid(&'static str),
+    Type(&'static str),
     Capacity,
     Compression,
     Borrowed,
@@ -23,7 +24,7 @@ impl fmt::Display for FontError {
             Self::UnsupportedFormat(table, value) => {
                 write!(f, "Unsupported {table} format {value}")
             }
-            Self::Invalid(reason) => f.write_str(reason),
+            Self::Invalid(reason) | Self::Type(reason) => f.write_str(reason),
             Self::Capacity => f.write_str("Cannot allocate font table storage"),
             Self::Compression => f.write_str("Invalid compressed WOFF table"),
             Self::Borrowed => f.write_str("A mutable font result is already borrowed"),
@@ -91,6 +92,7 @@ impl<'a> Reader<'a> {
 pub struct FontTables<'a> {
     pub cmap: Cow<'a, [u8]>,
     pub gsub: Option<Cow<'a, [u8]>>,
+    pub glyph_count: Option<u16>,
 }
 impl<'a> FontTables<'a> {
     pub fn parse(bytes: &'a [u8]) -> Result<Self, FontError> {
@@ -118,10 +120,25 @@ impl<'a> FontTables<'a> {
         reader.bytes(start, count.checked_mul(width).ok_or(FontError::Bounds)?)?;
         let mut cmap = None;
         let mut gsub = None;
+        let mut name = None;
+        let mut tags = None;
+        let mut glyph_count = None;
+        let (mut glyf, mut loca, mut cff, mut hmtx) = (false, false, false, false);
         for index in 0..count {
             let record = reader.at(start + index * width)?;
             let tag = record.bytes(0, 4)?;
-            if tag != b"cmap" && tag != b"GSUB" {
+            match tag {
+                b"glyf" => glyf = true,
+                b"loca" => loca = true,
+                b"CFF " | b"CFF2" => cff = true,
+                b"hmtx" => hmtx = true,
+                _ => {}
+            }
+            let metadata = matches!(
+                tag,
+                b"head" | b"hhea" | b"maxp" | b"OS/2" | b"post" | b"ltag" | b"name"
+            );
+            if tag != b"cmap" && tag != b"GSUB" && !metadata {
                 continue;
             }
             let offset = record.offset32(if woff { 4 } else { 8 })?;
@@ -138,20 +155,62 @@ impl<'a> FontTables<'a> {
                     }
                     Cow::Owned(inflated)
                 } else {
-                    Cow::Borrowed(reader.bytes(offset, length)?)
+                    Cow::Borrowed(reader.bytes(
+                        offset,
+                        if metadata {
+                            bytes.len().saturating_sub(offset)
+                        } else {
+                            length
+                        },
+                    )?)
                 }
             } else {
-                Cow::Borrowed(reader.bytes(offset, length)?)
+                // Uncompressed metadata readers in opentype.js use the original
+                // DataView, not the table directory length. Following records
+                // may therefore satisfy an otherwise truncated table.
+                Cow::Borrowed(reader.bytes(
+                    offset,
+                    if metadata {
+                        bytes.len().saturating_sub(offset)
+                    } else {
+                        length
+                    },
+                )?)
             };
-            if tag == b"cmap" {
-                cmap = Some(table);
-            } else {
-                gsub = Some(table);
+            match tag {
+                b"cmap" => cmap = Some(table),
+                b"GSUB" => gsub = Some(table),
+                b"name" => name = Some(table),
+                b"maxp" => {
+                    super::font_metadata::immediate(tag, &table)?;
+                    glyph_count = Some(Reader::new(&table).u16(4)?);
+                }
+                b"ltag" => tags = Some(super::font_metadata::ltag(Reader::new(&table))?),
+                b"post" if matches!(&table, Cow::Borrowed(_)) => {
+                    // Signed Pascal lengths can read backwards into preceding
+                    // tables, since the source retains the full font DataView.
+                    super::font_metadata::post(reader, offset)?;
+                }
+                _ => super::font_metadata::immediate(tag, &table)?,
             }
+        }
+        super::font_metadata::name(&name.ok_or(FontError::MissingTable("name"))?, tags)?;
+        if !(glyf && loca || cff) {
+            return Err(FontError::Invalid(
+                "Font doesn\'t contain TrueType, CFF or CFF2 outlines.",
+            ));
+        }
+        if !hmtx {
+            return Err(FontError::MissingTable("hmtx"));
         }
         Ok(Self {
             cmap: cmap.ok_or(FontError::MissingTable("cmap"))?,
             gsub,
+            glyph_count: if glyf && loca {
+                Some(glyph_count.unwrap_or(0))
+            } else {
+                None
+            },
         })
     }
 }

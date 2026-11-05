@@ -38,7 +38,9 @@ impl Default for JoinState {
 fn font_error(error: FontError) -> JsValue {
     match error {
         FontError::Bounds => js_sys::RangeError::new(&error.to_string()).into(),
-        FontError::CacheEmptyKey => js_sys::TypeError::new(&error.to_string()).into(),
+        FontError::CacheEmptyKey | FontError::Type(_) => {
+            js_sys::TypeError::new(&error.to_string()).into()
+        }
         _ => js_sys::Error::new(&error.to_string()).into(),
     }
 }

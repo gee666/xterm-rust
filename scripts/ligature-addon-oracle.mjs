@@ -5,6 +5,7 @@ import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { createHash } from 'node:crypto';
 import assert from 'node:assert/strict';
+import {metadataRejectionScenarios} from '../crates/xterm-font-addons/tests/support/font_metadata_scenarios.mjs';
 import { lifecycleScenarios, loadingScenarios } from '../crates/xterm-font-addons/tests/support/ligature_scenarios.mjs';
 const root = process.cwd();
 const require = createRequire(process.env.SOURCE_PACKAGE_JSON ?? path.join(root, 'source_repo/package.json'));
@@ -34,18 +35,24 @@ for (const [name, binding] of [['opentype.js', 'parse'], ['lru-cache', 'LRUCache
   await fs.writeFile(path.join(temporary, name + '.js'), `import {createRequire} from 'node:module'; const require=createRequire(${JSON.stringify(require.resolve(name))}); export const ${binding}=require(${JSON.stringify(name)}).${binding};\n`);
 }
 const { LigaturesAddon } = await import(pathToFileURL(path.join(temporary, 'LigaturesAddon.js')));
-const bytes = new Uint8Array(await fs.readFile(path.join(root, 'crates/xterm-addons/tests/fixtures/ligature-fonts/FiraCode-Regular.otf')));
+const metadata = process.argv.includes('--metadata');
+const bytes = new Uint8Array(await fs.readFile(path.join(root, 'crates/xterm-addons/tests/fixtures/ligature-fonts', metadata ? 'UbuntuMono-Regular.ttf' : 'FiraCode-Regular.otf')));
 const create = options => new LigaturesAddon(options);
-const result = { lifecycle: lifecycleScenarios(create), loading: await loadingScenarios(create, bytes) };
+const result = metadata ? {metadata: await metadataRejectionScenarios(create, bytes)} : { lifecycle: lifecycleScenarios(create), loading: await loadingScenarios(create, bytes) };
 // Guard the dependency adapter: a broken OpenType import must not silently
 // turn every expected native result into an error/fallback trace.
-assert.deepEqual(result.loading.nativeRanges, [[1, 3]]);
-assert.deepEqual(result.loading.foundTrace, [['register', 0], ['refresh', 0, 4]]);
+if (metadata) {
+  assert.deepEqual(result.metadata.rejected, {ranges:[[0,3]],reads:1,refreshes:0});
+  assert.deepEqual(result.metadata.accepted, {ranges:[],reads:2,refreshes:1});
+} else {
+  assert.deepEqual(result.loading.nativeRanges, [[1, 3]]);
+  assert.deepEqual(result.loading.foundTrace, [['register', 0], ['refresh', 0, 4]]);
+}
 const content = JSON.stringify(result, null, 2) + '\n';
-const fixture = path.join(root, 'crates/xterm-font-addons/tests/fixtures/ligature-addon.json');
+const fixture = path.join(root, `crates/xterm-font-addons/tests/fixtures/${metadata ? 'font-metadata-addon' : 'ligature-addon'}.json`);
 if (process.argv.includes('--generate')) await fs.writeFile(fixture, content);
 else assert.equal(await fs.readFile(fixture, 'utf8'), content, 'Ligature addon source fixture drift');
 const directory = path.join(root, 'results/font-addons'); await fs.mkdir(directory, { recursive: true });
-const report = { node: process.version, scope: 'Source addon lifecycle/load boundary, not real Terminal renderer evidence', sourceHashes: hashes, fixtureSha256: hash(content), fontSha256: hash(bytes), comparedOperationFields: Object.keys(result.lifecycle).length + Object.keys(result.loading).length };
-await fs.writeFile(path.join(directory, 'ligature-addon-oracle.json'), JSON.stringify(report, null, 2) + '\n');
+const report = { node: process.version, scope: 'Source addon lifecycle/load boundary, not real Terminal renderer evidence', sourceHashes: hashes, fixtureSha256: hash(content), fontSha256: hash(bytes), comparedOperationFields: metadata ? Object.keys(result.metadata).length : Object.keys(result.lifecycle).length + Object.keys(result.loading).length };
+await fs.writeFile(path.join(directory, metadata ? 'font-metadata-addon-oracle.json' : 'ligature-addon-oracle.json'), JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify(report));

@@ -4,7 +4,7 @@ use super::{
     font_tables::Glyph,
 };
 #[path = "font_mac_tables.rs"]
-mod mac;
+pub(super) mod mac;
 
 #[derive(Clone, Debug)]
 struct Segment {
@@ -99,6 +99,32 @@ impl Cmap {
             },
             _ => return Err(FontError::UnsupportedFormat("cmap", format)),
         }))
+    }
+
+    pub fn valid_glyph_indices(&self, count: u16) -> bool {
+        let valid = |codepoint| self.glyph(codepoint) < Glyph::from(count);
+        match &self.0 {
+            Mapping::Bytes { glyphs, decoding } => {
+                // The source copies byte keys, then overwrites Unicode keys.
+                // Missing bytes in its always-128-entry decode pass become
+                // undefined glyph references rather than glyph zero.
+                glyphs.len() >= 256
+                    && (0..glyphs.len()).all(|index| u32::try_from(index).is_ok_and(valid))
+                    && decoding.iter().all(|&unit| valid(u32::from(unit)))
+            }
+            Mapping::Segments(segments) => segments
+                .iter()
+                .all(|segment| (u32::from(segment.start)..=u32::from(segment.end)).all(valid)),
+            Mapping::Groups { groups, .. } => {
+                // Each surviving group interval is monotonic. Its maximum is at
+                // an original end or immediately before another group's start.
+                // Read through glyph() so later overlapping groups still win.
+                groups
+                    .iter()
+                    .filter(|group| group.start <= group.end)
+                    .all(|group| valid(group.end) && (group.start == 0 || valid(group.start - 1)))
+            }
+        }
     }
 
     pub fn glyph(&self, codepoint: u32) -> Glyph {

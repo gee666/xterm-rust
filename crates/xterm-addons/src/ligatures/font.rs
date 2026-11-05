@@ -17,6 +17,8 @@ mod font_gsub;
 mod font_merge;
 #[path = "font_merge_range.rs"]
 mod font_merge_range;
+#[path = "font_metadata.rs"]
+mod font_metadata;
 #[path = "font_overlap.rs"]
 mod font_overlap;
 #[path = "font_tables.rs"]
@@ -64,6 +66,14 @@ impl Font {
     pub fn load_buffer(bytes: &[u8], options: FontOptions) -> Result<Self, FontError> {
         let tables = FontTables::parse(bytes)?;
         let cmap = Cmap::parse(&tables.cmap)?;
+        if tables
+            .glyph_count
+            .is_some_and(|count| !cmap.valid_glyph_indices(count))
+        {
+            return Err(FontError::Type(
+                "Cannot read properties of undefined (reading 'addUnicode')",
+            ));
+        }
         let mut arena = Arena::default();
         let mut groups = Vec::new();
         if let Some(bytes) = tables.gsub {

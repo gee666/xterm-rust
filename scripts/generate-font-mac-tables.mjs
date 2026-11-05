@@ -2,7 +2,7 @@
 import fs from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
-const sourcePath='source_repo/node_modules/opentype.js/dist/opentype.mjs';
+const sourcePath=process.env.OPENTYPE_SOURCE??'source_repo/node_modules/opentype.js/dist/opentype.mjs';
 const source=await fs.readFile(sourcePath,'utf8');
 function table(name) {
  const start=source.indexOf('var '+name+' = ');
@@ -34,4 +34,18 @@ output=formatted.stdout;
 const target='crates/xterm-addons/src/ligatures/font_mac_tables.rs';
 if(process.argv.includes('--generate'))await fs.writeFile(target,output);
 else if(await fs.readFile(target,'utf8')!==output)throw new Error('Font Mac decoding table drift; inspect before --generate');
-console.log(JSON.stringify({source:sourcePath,sourceSha256:createHash('sha256').update(source).digest('hex'),target,tables:Object.keys(maps).length,entries:Object.values(maps).reduce((sum,value)=>sum+value.length,0)}));
+// Name strings are decoded only for recognized languages. Keep membership data
+// separate from text decoding; validation does not need translated names.
+let names='// Language membership from opentype.js. See licenses/opentype-js-MIT.txt.\n';
+names+='// Source SHA256 '+createHash('sha256').update(source).digest('hex')+'\n';
+for(const [name,key]of [['mac','macLanguages'],['windows','windowsLanguages']]) {
+ const ids=Object.keys(table(key)).map(Number).sort((a,b)=>a-b);
+ names+=`pub fn ${name}(id: u16) -> bool { ${name.toUpperCase()}.binary_search(&id).is_ok() }\n`;
+ names+=`const ${name.toUpperCase()}: &[u16] = &[${ids.join(', ')}];\n`;
+}
+const nameOutput=spawnSync(process.env.RUSTFMT??'rustfmt',['--edition','2021'],{input:names,encoding:'utf8',timeout:10000});
+if(nameOutput.error||nameOutput.status!==0)throw new Error('Name language rustfmt failed: '+nameOutput.stderr);
+const nameTarget='crates/xterm-addons/src/ligatures/font_name_languages.rs';
+if(process.argv.includes('--generate'))await fs.writeFile(nameTarget,nameOutput.stdout);
+else if(await fs.readFile(nameTarget,'utf8')!==nameOutput.stdout)throw new Error('Font name language drift; inspect before --generate');
+console.log(JSON.stringify({source:sourcePath,sourceSha256:createHash('sha256').update(source).digest('hex'),target,nameTarget,tables:Object.keys(maps).length,entries:Object.values(maps).reduce((sum,value)=>sum+value.length,0)}));

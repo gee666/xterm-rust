@@ -1,0 +1,13 @@
+{
+  "scope": "First implementation run against the unchanged constructor oracle, not an initial-main baseline",
+  "command": "cargo test --locked -j2 -p xterm-addons --test font_metadata_constructor",
+  "testFunctionsPassed": 1,
+  "testFunctionsFailed": 1,
+  "outcomeMismatches": 13,
+  "groups": [
+    {"cases": 10, "cause": "Reduced maxp glyph count was accepted even though source glyph-name assignment rejects an out-of-range cmap glyph", "fix": "Validate TrueType cmap references against maxp glyph count"},
+    {"cases": 3, "cause": "Nonempty post2.5 was accepted even though source GlyphNames reads an absent glyphNameIndex array", "fix": "Return a typed constructor TypeError after reading the post offset data"}
+  ],
+  "rawFirstRunLog": "Not retained as a separate file; its output was observed and the same native.log path was overwritten by the corrected rerun. The original corpus and source messages remain in the committed fixture.",
+  "finalEvidence": "native-final.log, oracle.json and browser-summary.json"
+}
