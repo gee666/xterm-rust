@@ -11,6 +11,8 @@ mod font_bytes;
 mod font_cache;
 #[path = "font_cmap.rs"]
 mod font_cmap;
+#[path = "font_fvar.rs"]
+mod font_fvar;
 #[path = "font_gsub.rs"]
 mod font_gsub;
 #[path = "font_kern.rs"]
@@ -134,12 +136,16 @@ impl Font {
                 header.finish(&loaded)?;
             }
         }
+        let current = refreshed.as_deref().unwrap_or(bytes);
         let gsub = tables
             .gsub
-            .map(|table| font_gsub::parse(&table.load_from(refreshed.as_deref().unwrap_or(bytes))?))
+            .map(|table| font_gsub::parse(&table.load_from(current)?))
             .transpose()?;
+        if let Some(table) = tables.fvar {
+            font_fvar::validate(&table.load_from(current)?)?;
+        }
         if let Some(table) = tables.meta {
-            font_metadata::meta(&table.load_from(refreshed.as_deref().unwrap_or(bytes))?)?;
+            font_metadata::meta(&table.load_from(current)?)?;
         }
         // FontImpl builds lookup trees only after opentype finishes all
         // constructor tables. A tree error must not hide a later meta error.
