@@ -1,0 +1,29 @@
+{
+  "task": 335,
+  "reviewedCommit": "dc582cd",
+  "base": "4e21849",
+  "verdict": "accept",
+  "problems": [],
+  "independentReruns": {
+    "unchangedSourceSuite": {
+      "passed": 24,
+      "failed": 0
+    },
+    "sourceOracle": {
+      "matched": 293,
+      "seed": "0x335C0DE"
+    },
+    "nativeCapturedCalls": {
+      "matched": 27
+    },
+    "fmt": "full workspace pass",
+    "clippy": [
+      "native xterm-web all-target/all-feature -D warnings",
+      "focused WASM lib/raw/dom/font/shaping -D warnings"
+    ]
+  },
+  "browserIndependentRerun": false,
+  "browserReview": "Reviewer reran raw3x3 before first finding, then checked retained compiler/WASM/bindings/CSS hashes after correction. Producer corrected raw3x3 all pass; no reviewer browser start after allocation release.",
+  "retainedFinding": "review-counterexample.json",
+  "scope": "Raw service and live renderer conversion/error propagation only. Full raw DOM row consumption348 and overall equivalence remain NOT PROVEN."
+}
