@@ -1,11 +1,16 @@
 //! Built-in mouse modes expose the same service used by parsing and DOM input.
-//! Raw JavaScript registry/callback contracts are a separate, unfinished adapter.
+//! Raw built-in fields use the shared Rust policies; custom registries remain
+//! a separate, unfinished adapter.
 use super::events;
 use crate::js_error::to_js_error;
 use js_sys::Function;
 use std::rc::Rc;
 use wasm_bindgen::prelude::*;
-use xterm_core::mouse_state::MouseStateService;
+use xterm_core::{
+    mouse_fields::{Encoding, Protocol},
+    mouse_state::MouseStateService,
+};
+use xterm_wasm_support::{mouse_fields::RawMouseEvent, utf16::to_js_string};
 
 #[wasm_bindgen]
 pub struct BrowserMouseState {
@@ -70,6 +75,42 @@ impl BrowserMouseState {
     #[wasm_bindgen(getter, js_name = onProtocolChange)]
     pub fn on_protocol_change(&self) -> Function {
         self.on_protocol_change.clone()
+    }
+
+    /// Read the native active mode before touching the event. A field accessor
+    /// may switch modes recursively, but the current call keeps its policy.
+    #[wasm_bindgen(js_name = restrictMouseEvent)]
+    pub fn restrict_mouse_event(&self, event: JsValue) -> Result<bool, JsValue> {
+        let policy = match self.service.active_protocol().as_str() {
+            "NONE" => Protocol::None,
+            "X10" => Protocol::X10,
+            "VT200" => Protocol::Vt200,
+            "DRAG" => Protocol::Drag,
+            "ANY" => Protocol::Any,
+            name => {
+                return Err(js_sys::Error::new(&format!(
+                    "unsupported raw mouse protocol \"{name}\""
+                ))
+                .into())
+            }
+        };
+        policy.restrict(&mut RawMouseEvent(event))
+    }
+
+    #[wasm_bindgen(js_name = encodeMouseEvent)]
+    pub fn encode_mouse_event(&self, event: JsValue) -> Result<JsValue, JsValue> {
+        let policy = match self.service.active_encoding().as_str() {
+            "DEFAULT" => Encoding::Default,
+            "SGR" => Encoding::Sgr,
+            "SGR_PIXELS" => Encoding::SgrPixels,
+            name => {
+                return Err(js_sys::Error::new(&format!(
+                    "unsupported raw mouse encoding \"{name}\""
+                ))
+                .into())
+            }
+        };
+        Ok(to_js_string(&policy.encode(&RawMouseEvent(event))?).into())
     }
 
     pub fn reset(&self) -> Result<(), JsValue> {

@@ -1,0 +1,1 @@
+export function checkSerializeArrayLength(length) { new Array(length); }
