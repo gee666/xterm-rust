@@ -28,6 +28,8 @@ The exact `cargo fmt --all -- --check` fails Windows OS error 206. All five comp
 
 Producer runtime receipts remain historical and scoped to their exact source inputs. Combining them does not prove current-union browser behavior. Full family tasks 312-325, browser raw state, mouse custom registries, WebGL browser renderer/Addon/Root, image, unchanged suites/demo, mapping and comparisons remain unfinished. Accepted CFF INDEX bounds diagnostics, raw search matching and other documented gaps are not claimed equivalent.
 
-## Pending execution
+## Executed canonical gate
 
-The unchanged canonical merge helper must build/test changed crates and check affected native/WASM dependents before moving main. The frozen branch and main must remain unchanged during execution. Independent review and final link/process-safe owned cleanup follow the gate. No full completion claim is permitted.
+The unchanged `node scripts/worktree-merge.mjs --main main` exited zero and advanced main to `5088f8fdd475e55b2408e9f2e7bfaf92e83ca656`. Its frozen source and main head guards were unchanged. Changed xterm-core, xterm-addons, xterm-font-addons and xterm-web default builds/all-target tests passed, followed by affected native all-target, workspace and applicable WASM library checks. The raw `canonical-merge.log` contains 2,160 passes across 477 test summaries, with zero failed, ignored, measured or filtered tests. This is not an all-feature workspace test or Clippy pass. The helper removed the private target. The receipt-only records will be carried by the next source batch, not replayed through a cold gate.
+
+All 14 changed application JS modules passed `node --check`. Immutable source audit passed again after canonical integration. The exact full fmt failure and all five member passes remain recorded. Fresh pre-gate resources were 28.52 GiB available RAM and 2501.95 GiB free on O:. All owned heavy work was explicitly released after the gate. Independent review and link/process-safe owned cleanup remain required. No full completion claim is permitted.
