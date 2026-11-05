@@ -189,7 +189,7 @@ impl BrowserLinkifier {
             .borrow_mut()
             .set_geometry(self.state.cols.get(), scroll_offset);
     }
-    pub fn on_render(&self, start: usize, end: usize) -> Result<(), JsValue> {
+    pub fn on_render(&self, start: f64, end: f64) -> Result<(), JsValue> {
         let invalidated = self.state.hover.borrow().invalidated_by_render(start, end);
         if invalidated {
             self.state.clear_current()?;

@@ -22,6 +22,39 @@ fn mouse(root: &HtmlElement, kind: &str, x: f64, y: f64) {
         .unwrap();
     root.dispatch_event(&event).unwrap();
 }
+async fn refresh(terminal: &Terminal, start: f64, end: f64) {
+    let resolver: Rc<RefCell<Option<Function>>> = Rc::default();
+    let resolution = resolver.clone();
+    let rendered = Promise::new(&mut |resolve, _| {
+        *resolver.borrow_mut() = Some(resolve);
+    });
+    let observer = Closure::wrap(Box::new(move |_: JsValue| -> Result<(), JsValue> {
+        if let Some(resolve) = resolution.borrow_mut().take() {
+            resolve.call0(&JsValue::UNDEFINED)?;
+        }
+        Ok(())
+    }) as Box<dyn FnMut(JsValue) -> Result<(), JsValue>>);
+    let subscription = terminal
+        .on_render()
+        .call1(&JsValue::UNDEFINED, observer.as_ref())
+        .unwrap();
+    terminal.refresh(start, end).unwrap();
+    JsFuture::from(rendered).await.unwrap();
+    let unsubscribe: Function = Reflect::get(&subscription, &"dispose".into())
+        .unwrap()
+        .dyn_into()
+        .unwrap();
+    unsubscribe.call0(&subscription).unwrap();
+}
+async fn write_and_render(terminal: &Terminal, data: &str) {
+    let written = Promise::new(&mut |resolve, _| {
+        terminal
+            .write(JsString::from(data).into(), Some(resolve))
+            .unwrap();
+    });
+    JsFuture::from(written).await.unwrap();
+    refresh(terminal, 0.0, terminal.rows().unwrap() - 1.0).await;
+}
 #[wasm_bindgen_test(async)]
 async fn exported_terminal_writes_rust_osc8_renders_hovers_clicks_and_disposes() {
     let document = web_sys::window().unwrap().document().unwrap();
@@ -83,29 +116,7 @@ async fn exported_terminal_writes_rust_osc8_renders_hovers_clicks_and_disposes()
             .unwrap();
     });
     JsFuture::from(written).await.unwrap();
-    let resolver: Rc<RefCell<Option<Function>>> = Rc::new(RefCell::new(None));
-    let resolution = resolver.clone();
-    let rendered = Promise::new(&mut |resolve, _| {
-        *resolver.borrow_mut() = Some(resolve);
-    });
-    let observer = Closure::wrap(Box::new(move |_: JsValue| -> Result<(), JsValue> {
-        if let Some(resolve) = resolution.borrow_mut().take() {
-            resolve.call0(&JsValue::UNDEFINED)?;
-        }
-        Ok(())
-    }) as Box<dyn FnMut(JsValue) -> Result<(), JsValue>>);
-    let subscription = terminal
-        .on_render()
-        .call1(&JsValue::UNDEFINED, observer.as_ref())
-        .unwrap();
-    terminal.refresh(0.0, 3.0).unwrap();
-    JsFuture::from(rendered).await.unwrap();
-    let unsubscribe: Function = Reflect::get(&subscription, &"dispose".into())
-        .unwrap()
-        .dyn_into()
-        .unwrap();
-    unsubscribe.call0(&subscription).unwrap();
-    drop(observer);
+    refresh(&terminal, 0.0, 3.0).await;
     let root = terminal.element().unwrap();
     let dimensions = terminal.render_dimensions().unwrap();
     assert!(dimensions.css.cell.width > 0.0 && dimensions.css.cell.height > 0.0);
@@ -157,4 +168,72 @@ async fn exported_terminal_writes_rust_osc8_renders_hovers_clicks_and_disposes()
     assert_eq!(clicks.get(), 1);
     parent.remove();
     style.remove();
+}
+
+#[wasm_bindgen_test(async)]
+async fn viewport_render_requeries_the_link_under_a_stationary_mouse() {
+    let document = web_sys::window().unwrap().document().unwrap();
+    let parent: HtmlElement = document.create_element("div").unwrap().unchecked_into();
+    parent.style().set_css_text("width:800px;height:160px;");
+    document.body().unwrap().append_child(&parent).unwrap();
+    let options = Object::new();
+    Reflect::set(&options, &"cols".into(), &20.0.into()).unwrap();
+    Reflect::set(&options, &"rows".into(), &4.0.into()).unwrap();
+    let terminal = Terminal::new(options.into()).unwrap();
+    terminal.open(parent.clone().into()).unwrap();
+    write_and_render(
+        &terminal,
+        "\x1b]8;;https://example.com/first\x1b\\first\x1b]8;;\x1b\\",
+    )
+    .await;
+    let root = terminal.element().unwrap();
+    let dimensions = terminal.render_dimensions().unwrap();
+    let bounds = root.get_bounding_client_rect();
+    mouse(
+        &root,
+        "mousemove",
+        bounds.left() + 1.5 * dimensions.css.cell.width,
+        bounds.top() + 0.5 * dimensions.css.cell.height,
+    );
+    let links = terminal.linkifier_handle().unwrap();
+    let current = links.current_link().unwrap();
+    assert_eq!(
+        String::from_utf16(&current.text).unwrap(),
+        "https://example.com/first"
+    );
+    assert!(root.class_list().contains("xterm-cursor-pointer"));
+    refresh(&terminal, 1.0, 1.0).await;
+    assert!(
+        Rc::ptr_eq(&current, &links.current_link().unwrap()),
+        "an unrelated row must not invalidate the hovered link"
+    );
+    write_and_render(
+        &terminal,
+        "\r\x1b[2K\x1b]8;;https://example.com/second\x1b\\second\x1b]8;;\x1b\\",
+    )
+    .await;
+    assert_eq!(
+        String::from_utf16(&links.current_link().unwrap().text).unwrap(),
+        "https://example.com/second",
+        "a render must requery the stationary mouse against new Rust cells"
+    );
+    let spans = root
+        .query_selector_all(".xterm-rows > div:first-child span")
+        .unwrap();
+    assert!(
+        (0..spans.length()).any(|index| {
+            let span: HtmlElement = spans.item(index).unwrap().unchecked_into();
+            span.style()
+                .get_property_value("text-decoration")
+                .unwrap()
+                .contains("underline")
+        }),
+        "the replacement link must be underlined in the actual DOM"
+    );
+    write_and_render(&terminal, "\r\x1b[2Kplain").await;
+    assert!(links.current_link().is_none());
+    assert!(!root.class_list().contains("xterm-cursor-pointer"));
+    terminal.dispose().unwrap();
+    assert!(!root.is_connected());
+    parent.remove();
 }

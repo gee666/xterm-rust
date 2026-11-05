@@ -140,7 +140,22 @@ pub fn install(
         }),
         providers,
     )?;
-    Ok(Rc::new(linkifier))
+    let linkifier = Rc::new(linkifier);
+    let weak = Rc::downgrade(&linkifier);
+    services.listeners.borrow_mut().push(
+        services
+            .render_service
+            .on_rendered_viewport_change()
+            .try_subscribe(move |range| {
+                if let Some(linkifier) = weak.upgrade() {
+                    linkifier
+                        .on_render(range.start, range.end)
+                        .map_err(crate::js_error::callback_error)?;
+                }
+                Ok(())
+            }),
+    );
+    Ok(linkifier)
 }
 fn snapshot(services: &BrowserServices) -> Result<(usize, usize, usize), JsValue> {
     services

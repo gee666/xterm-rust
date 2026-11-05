@@ -92,7 +92,7 @@ fn addon_provider_real_dom_hover_callbacks_underline_and_dispose() {
         .iter()
         .any(|(enabled, range)| *enabled && range.x1 == 4 && range.x2 == 22));
     addon.dispose();
-    linkifier.on_render(0, 0).unwrap();
+    linkifier.on_render(0.0, 0.0).unwrap();
     assert!(linkifier.current_link().is_none());
     drop(terminal);
     drop(linkifier);

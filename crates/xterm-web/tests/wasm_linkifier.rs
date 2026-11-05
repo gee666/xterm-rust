@@ -160,9 +160,9 @@ fn rendered_rows_clear_requery_and_dispose_old_cached_links() {
     let _registration = controller.register_provider(provider.clone());
     event(&root, "mousemove");
     provider.callbacks.borrow_mut().remove(0)(Some(vec![link(log.clone())])).unwrap();
-    controller.on_render(1, 3).unwrap();
+    controller.on_render(1.0, 3.0).unwrap();
     assert_eq!(provider.requests.get(), 1);
-    controller.on_render(0, 0).unwrap();
+    controller.on_render(0.0, 0.0).unwrap();
     assert_eq!(provider.requests.get(), 2);
     assert_eq!(*log.borrow(), vec!["hover", "leave", "dispose"]);
     root.remove();
@@ -232,7 +232,7 @@ fn real_rust_osc8_cells_resolve_wrap_activate_and_expire_on_trim() {
     native
         .with_state(|state| assert!(state.links.get_link_data(id).is_none()))
         .unwrap();
-    controller.on_render(0, 2).unwrap();
+    controller.on_render(0.0, 2.0).unwrap();
     assert!(controller.current_link().is_none());
     root.remove();
 }

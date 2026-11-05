@@ -136,15 +136,15 @@ impl HoverState {
     }
     /// The source invalidates a link only if its full range is contained in the
     /// rendered buffer rows. Start zero also clears links above the viewport.
-    pub fn invalidated_by_render(&self, start: usize, end: usize) -> bool {
-        let start = if start == 0 {
-            0
+    pub fn invalidated_by_render(&self, start: f64, end: f64) -> bool {
+        let start = if start == 0.0 {
+            0.0
         } else {
-            start as u64 + 1 + self.scroll_offset as u64
+            start + 1.0 + self.scroll_offset as f64
         };
-        let end = self.scroll_offset as u64 + 1 + end as u64;
-        self.current
-            .as_ref()
-            .is_some_and(|link| link.range.start.y >= start && link.range.end.y <= end)
+        let end = self.scroll_offset as f64 + 1.0 + end;
+        self.current.as_ref().is_some_and(|link| {
+            link.range.start.y as f64 >= start && link.range.end.y as f64 <= end
+        })
     }
 }

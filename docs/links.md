@@ -2,6 +2,10 @@
 
 Status: partial implementation, full browser equivalence NOT PROVEN.
 
+## Current viewport repair
+
+The 2026-11-05 repair connects live Terminal viewport rendering to link invalidation. Stationary hover now follows rewritten OSC8 cells and disappears when the link is erased. The pre-fix failure and post-fix three-browser Terminal/component results are documented in [link-viewport-invalidation.md](link-viewport-invalidation.md). Earlier observations below describe historical snapshots, not current build blockers or current team ownership.
+
 ## Implemented contracts
 
 `crates/xterm-web/src/links/` contains portable OSC 8 discovery, provider registration, asynchronous reply prioritization, overlap filtering, hover/activation decisions, underline coordinates, animation-frame and time-based render debouncing. URI text is raw UTF-16, including lone surrogates. Host callbacks are explicit effects rather than invoked under a mutable state borrow.

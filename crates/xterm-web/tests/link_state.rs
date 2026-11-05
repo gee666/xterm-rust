@@ -139,8 +139,12 @@ fn dynamic_decorations_and_viewport_invalidation() {
         state.set_pointer_cursor(true),
         Some(HoverEffect::Pointer(true))
     );
-    assert!(state.invalidated_by_render(0, 0));
-    assert!(!state.invalidated_by_render(1, 5));
+    assert!(state.invalidated_by_render(0.0, 0.0));
+    assert!(!state.invalidated_by_render(1.0, 5.0));
+    assert!(!state.invalidated_by_render(f64::NAN, 5.0));
+    assert!(!state.invalidated_by_render(0.0, f64::NAN));
+    assert!(!state.invalidated_by_render(0.25, 5.0));
+    assert!(state.invalidated_by_render(-1.0, 0.0));
     let effects = state.leave();
     assert!(matches!(
         effects[0],
