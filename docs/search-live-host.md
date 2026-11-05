@@ -26,7 +26,7 @@ Observed on native Windows with Node24.15.0 and Rust/Cargo1.85.1:
 - Restored native suite passed56 functions, none failed, ignored or filtered.
 - Scoped native and WASM Clippy with `-D warnings` passed. Fixed WASM17-function executable built. Changed Rust formatting passed. Exact workspace formatting failed with Windows OS206, not a successful workspace gate.
 - Actual Rust/WASM negative control replaced only `find.rs` with accepted458 bytes. Chromium passed16 functions and failed the new reactivation function. A `finally` restored the exact fixed bytes. The final suite passed17 functions in each of Chromium, Firefox and WebKit,51 functions total with no failures, ignored or filtered tests. The40 shared cases are inside one function per engine, not40 extra functions. Compiler artifacts contain the exact shared fixture bytes.
-- Raw reports, command records, restore hashes and artifact provenance are in `results/search-live-host/`. Independent review is pending at this evidence checkpoint.
+- Raw reports, command records, restore hashes and artifact provenance are in `results/search-live-host/`. Isolated independent review accepted the source/evidence checkpoint. It reran the hash-verified existing native executable,56PASS, and verified all37 then-current pins, all48 inherited pins, both776-file reference trees, both WASM variants, embedded fixture bytes, restore hashes and changed formatting. It inspected but did not rerun Cargo/browser matrices. The later review receipt adds the38th pin. Cleanup was not part of the review verdict.
 
 Reproduction from a prepared checkout:
 
