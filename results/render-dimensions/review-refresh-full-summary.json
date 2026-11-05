@@ -1,0 +1,304 @@
+{
+  "source": {
+    "revision": "dddab9c68d5954a81d67e7e2e87b73e6bd7bea3e",
+    "sha256": "78e444aa97efe5b5ccb19600c475c0b3e09a7e5f0992d6234473332ce25f5f5c",
+    "files": 1545
+  },
+  "referenceHashes": [
+    {
+      "path": "src/browser/services/RenderService.ts",
+      "sha256": "17edb34b5e757cc7a20ece8384ce44d8bcaccf09b36b081f5da5ec985b2805fa"
+    },
+    {
+      "path": "src/browser/renderer/dom/DomRenderer.ts",
+      "sha256": "9973c533fc763b068c78ee73d58ac27af163b39a1e9b94d123973133a2015851"
+    },
+    {
+      "path": "addons/addon-image/test/ImageAddon.test.ts",
+      "sha256": "44c2308fa259ac6d1e84da144e9f366af5be8f3bf75ddc450d7d3f7a9e7f9814"
+    },
+    {
+      "path": "addons/addon-image/test/KittyGraphics.test.ts",
+      "sha256": "b66f1ce1183c005cb78871ca7b33292c6987ec74a555ccfe97f6be77250a363a"
+    }
+  ],
+  "referenceRoot": "P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo",
+  "artifact": [
+    {
+      "path": "tmp/review414-refresh/browser/pkg/xterm_web_bg.wasm",
+      "bytes": 15559719,
+      "sha256": "cad60aa823df4145a17e7eb6b2da53124e9202f3fd174dbea8f79df1303fbdca"
+    },
+    {
+      "path": "tmp/review414-refresh/browser/pkg/xterm_web.js",
+      "bytes": 228290,
+      "sha256": "72ee1596122eb64243b7ef1e19cc5e32bf6a4812d618591b92326a6ce1979617"
+    },
+    {
+      "path": "tmp/review414-refresh/browser/xterm.mjs",
+      "bytes": 1817,
+      "sha256": "1171d2d1d5287d95252976d6d5e1795850936e170dcb37172aea69bf8fe1efc0"
+    }
+  ],
+  "command": [
+    "P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/node_modules/@playwright/test/cli.js",
+    "test",
+    "--config=O:\\xterm-rust-swarm-16\\tmp\\H\\tmp\\review414-refresh\\full-image/playwright.cjs",
+    "--reporter=json",
+    "--workers=2",
+    "--retries=0",
+    "--global-timeout=299500",
+    "--output=O:\\xterm-rust-swarm-16\\tmp\\H\\tmp\\review414-refresh\\full-image/artifacts"
+  ],
+  "record": {
+    "command": [
+      "C:\\nvm4w\\nodejs\\node.exe",
+      "P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/node_modules/@playwright/test/cli.js",
+      "test",
+      "--config=O:\\xterm-rust-swarm-16\\tmp\\H\\tmp\\review414-refresh\\full-image/playwright.cjs",
+      "--reporter=json",
+      "--workers=2",
+      "--retries=0",
+      "--global-timeout=299500",
+      "--output=O:\\xterm-rust-swarm-16\\tmp\\H\\tmp\\review414-refresh\\full-image/artifacts"
+    ],
+    "exitCode": 1,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 85782.18089999999,
+    "status": "failed"
+  },
+  "counts": {
+    "discovered": 639,
+    "executed": 426,
+    "passed": 420,
+    "failed": 6,
+    "skipped": 3,
+    "unrun": 210
+  },
+  "failures": [
+    {
+      "title": "ImageAddon.test.ts > ImageAddon > test for private accessors",
+      "project": "Chromium",
+      "status": "failed",
+      "errors": [
+        {
+          "location": {
+            "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts",
+            "column": 18,
+            "line": 114
+          },
+          "message": "AssertionError: problem at _core._inputHandler\n\nfalse !== true\n\n\n  112 |     ];\n  113 |     for (const prop of accessors) {\n> 114 |       strictEqual(\n      |                  ^\n  115 |         await ctx.page.evaluate('(() => { const v = window.term.' + prop + '; return v !== undefined && v !== null; })()'),\n  116 |         true, `problem at ${prop}`\n  117 |       );\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:114:18"
+        }
+      ]
+    },
+    {
+      "title": "ImageAddon.test.ts > ImageAddon > test for private accessors",
+      "project": "FirefoxStable",
+      "status": "timedOut",
+      "errors": [
+        {
+          "location": {
+            "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts",
+            "column": 6,
+            "line": 84
+          },
+          "message": "\u001b[31m\"beforeAll\" hook timeout of 10000ms exceeded.\u001b[39m\n\n  82 |\n  83 | let ctx: ITestContext;\n> 84 | test.beforeAll(async ({ browser }) => {\n     |      ^\n  85 |   ctx = await createTestContext(browser);\n  86 |   await openTerminal(ctx, { cols: 80, rows: 24 });\n  87 | });\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:84:6"
+        },
+        {
+          "location": {
+            "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts",
+            "column": 37,
+            "line": 88
+          },
+          "message": "TypeError: Cannot read properties of undefined (reading 'page')\n\n  86 |   await openTerminal(ctx, { cols: 80, rows: 24 });\n  87 | });\n> 88 | test.afterAll(async () => await ctx.page.close());\n     |                                     ^\n  89 |\n  90 | test.describe('ImageAddon', () => {\n  91 |\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:88:37"
+        },
+        {
+          "message": "Error: "
+        },
+        {
+          "location": {
+            "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts",
+            "column": 28,
+            "line": 35
+          },
+          "message": "Error: page.evaluateHandle: Test ended.\n\n   at ..\\..\\..\\test\\playwright\\TestUtils.ts:35\n\n  33 |     browser,\n  34 |     page,\n> 35 |     termHandle: await page.evaluateHandle('window.term'),\n     |                            ^\n  36 |     proxy\n  37 |   };\n  38 | }\n    at createTestContext (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts:35:28)\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:85:9"
+        }
+      ]
+    },
+    {
+      "title": "ImageAddon.test.ts > ImageAddon > test for private accessors",
+      "project": "WebKit",
+      "status": "failed",
+      "errors": [
+        {
+          "location": {
+            "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts",
+            "column": 18,
+            "line": 114
+          },
+          "message": "AssertionError: problem at _core._inputHandler\n\nfalse !== true\n\n\n  112 |     ];\n  113 |     for (const prop of accessors) {\n> 114 |       strictEqual(\n      |                  ^\n  115 |         await ctx.page.evaluate('(() => { const v = window.term.' + prop + '; return v !== undefined && v !== null; })()'),\n  116 |         true, `problem at ${prop}`\n  117 |       );\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:114:18"
+        }
+      ]
+    },
+    {
+      "title": "ImageAddon.test.ts > ImageAddon > IIP - resizing > palette.png: N --> width=20 height=5 preserveAspectRatio=0",
+      "project": "Chromium",
+      "status": "failed",
+      "errors": [
+        {
+          "location": {
+            "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts",
+            "column": 24,
+            "line": 409
+          },
+          "message": "AssertionError: Expected values to be strictly deep-equal:\n\u001b[32m+ actual\u001b[39m \u001b[31m- expected\u001b[39m\n\n\u001b[39m  [\n\u001b[32m+\u001b[39m   165,\n\u001b[31m-\u001b[39m   160,\n\u001b[39m    90\n\u001b[39m  ]\n\n\n  407 |         await ctx.proxy.write(`\\x1b]1337;File=inline=1;size=${size};${header}:${payload}\\x07`);\n  408 |         const dim = await getDimensions();\n> 409 |         deepStrictEqual(await getOrigSize(1), [dim.cellWidth * 20, dim.cellHeight * 5]);\n      |                        ^\n  410 |       });\n  411 |       test(name + ': Npx --> width=320px height=160px preserveAspectRatio=0', async () => {\n  412 |         // pixel based resize\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:409:24"
+        }
+      ]
+    },
+    {
+      "title": "ImageAddon.test.ts > ImageAddon > IIP - resizing > palette.qoi: N --> width=20 height=5 preserveAspectRatio=0",
+      "project": "Chromium",
+      "status": "failed",
+      "errors": [
+        {
+          "location": {
+            "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts",
+            "column": 24,
+            "line": 409
+          },
+          "message": "AssertionError: Expected values to be strictly deep-equal:\n\u001b[32m+ actual\u001b[39m \u001b[31m- expected\u001b[39m\n\n\u001b[39m  [\n\u001b[32m+\u001b[39m   165,\n\u001b[31m-\u001b[39m   160,\n\u001b[39m    90\n\u001b[39m  ]\n\n\n  407 |         await ctx.proxy.write(`\\x1b]1337;File=inline=1;size=${size};${header}:${payload}\\x07`);\n  408 |         const dim = await getDimensions();\n> 409 |         deepStrictEqual(await getOrigSize(1), [dim.cellWidth * 20, dim.cellHeight * 5]);\n      |                        ^\n  410 |       });\n  411 |       test(name + ': Npx --> width=320px height=160px preserveAspectRatio=0', async () => {\n  412 |         // pixel based resize\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\ImageAddon.test.ts:409:24"
+        }
+      ]
+    },
+    {
+      "title": "KittyGraphics.test.ts > Kitty Graphics Protocol > Basic transmission and storage > stores 1x1 black PNG with a=T (transmit and display)",
+      "project": "FirefoxStable",
+      "status": "timedOut",
+      "errors": [
+        {
+          "location": {
+            "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\KittyGraphics.test.ts",
+            "column": 6,
+            "line": 97
+          },
+          "message": "\u001b[31m\"beforeAll\" hook timeout of 10000ms exceeded.\u001b[39m\n\n   95 |\n   96 | let ctx: ITestContext;\n>  97 | test.beforeAll(async ({ browser }) => {\n      |      ^\n   98 |   ctx = await createTestContext(browser);\n   99 |   await openTerminal(ctx, { cols: 80, rows: 24 });\n  100 | });\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\KittyGraphics.test.ts:97:6"
+        },
+        {
+          "location": {
+            "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\KittyGraphics.test.ts",
+            "column": 37,
+            "line": 101
+          },
+          "message": "TypeError: Cannot read properties of undefined (reading 'page')\n\n   99 |   await openTerminal(ctx, { cols: 80, rows: 24 });\n  100 | });\n> 101 | test.afterAll(async () => await ctx.page.close());\n      |                                     ^\n  102 |\n  103 | test.describe('Kitty Graphics Protocol', () => {\n  104 |   // TODO: Add tests for larger images with various dimensions\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\KittyGraphics.test.ts:101:37"
+        },
+        {
+          "location": {
+            "file": "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts",
+            "column": 14,
+            "line": 29
+          },
+          "message": "Error: page.goto: Test ended.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:59496/test\", waiting until \"load\"\u001b[22m\n\n\n   at ..\\..\\..\\test\\playwright\\TestUtils.ts:29\n\n  27 |   page.on('console', e => console.log(`[${browser.browserType().name()}:${e.type()}]`, e));\n  28 |   page.on('pageerror', e => console.error(`[${browser.browserType().name()}]`, e));\n> 29 |   await page.goto('/test');\n     |              ^\n  30 |   const proxy = new TerminalProxy(page);\n  31 |   proxy.initPage();\n  32 |   return {\n    at createTestContext (P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\test\\playwright\\TestUtils.ts:29:14)\n    at P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\addons\\addon-image\\test\\KittyGraphics.test.ts:98:9"
+        }
+      ]
+    }
+  ],
+  "kitty": [
+    {
+      "title": "only c specified computes r from aspect ratio",
+      "project": "Chromium",
+      "status": "passed"
+    },
+    {
+      "title": "only r specified computes c from aspect ratio",
+      "project": "Chromium",
+      "status": "passed"
+    },
+    {
+      "title": "only c specified computes r from aspect ratio",
+      "project": "FirefoxStable",
+      "status": "skipped"
+    },
+    {
+      "title": "only r specified computes c from aspect ratio",
+      "project": "FirefoxStable",
+      "status": "skipped"
+    },
+    {
+      "title": "only c specified computes r from aspect ratio",
+      "project": "WebKit",
+      "status": "passed"
+    },
+    {
+      "title": "only r specified computes c from aspect ratio",
+      "project": "WebKit",
+      "status": "passed"
+    }
+  ],
+  "errors": [],
+  "sourceUnchanged": true,
+  "serverErrors": [
+    "Rust fixture initialization timed out"
+  ],
+  "runtimes": [
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    }
+  ]
+}

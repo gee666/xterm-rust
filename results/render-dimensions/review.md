@@ -1,0 +1,9 @@
+# Independent review
+
+The isolated task414 reviewer accepted21abe5d3, then accepted its constructor-seam rebase dddab9c6 atop e8011592. No concrete findings were reported. The shared-seam review confirmed that task413's CoreDisposalStore and Shared.core_disposed still share the same Rc<Cell<bool>>, with no new disposal authority.
+
+The reviewer independently ran26/26 directed image tests in each of Chromium, Firefox and WebKit,3/3 disposal tests in each engine, focused warning-denied WASM Clippy, xterm-web formatting and6/6 unchanged Kitty placement assertions against a fresh production package. The review-generated reports are copied here with review-first-* and review-refresh-* names. Generated packages/binaries are not retained as source evidence.
+
+The independent full image attempt remains incomplete. It discovered639, executed426, passed420, failed6, skipped3 and left210 unrun. Two failures were original Firefox beforeAll10-second timeouts. Other observed failures were two missing _core._inputHandler assertions and two Chromium165-versus160 IIP geometry mismatches. This is not a full-family pass, and does not overwrite the preceding complete task402 checkpoint. Both incomplete attempts are retained.
+
+The review reports originally lived under owned tmp/review414 and tmp/review414-refresh. Historical paths remain in the raw reports; durable copies are in this directory. The two constructor-seam conflicted files were subsequently rebased cleanly onto14f25027; the render implementation and its two tests remained unchanged. Search412 was picked as the standalone five-commit chain through4e78c8d7. All eight owned source/test/runner paths are byte-identical to independently accepted343a7044. It has no source overlap with414. The canonical merge gate tests the union separately.
