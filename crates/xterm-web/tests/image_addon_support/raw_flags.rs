@@ -143,6 +143,7 @@ async fn raw_scrolling_controls_and_resets_preserve_real_sixel_state_and_pixels(
             let source = get(&pair.source, "addon");
             // Objects/symbols are independently constructed on each side.
             if control.is_empty() || control == "\x1b[!p" || control == "\x1bc" {
+                identical(&get(&view, "sixelScrolling"), &retained);
                 identical(&get(&get(&source, "_opts"), "sixelScrolling"), &original);
             } else {
                 identical(
