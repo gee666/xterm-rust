@@ -79,7 +79,7 @@ fn run(host: JsValue, program: Function) -> Result<JsValue, JsValue> {
 fn real_render_scheduler_matches_source_reentry_and_error_identity() -> Result<(), JsValue> {
     let run =
         Closure::wrap(Box::new(run) as Box<dyn Fn(JsValue, Function) -> Result<JsValue, JsValue>>);
-    assert_eq!(cases(run.as_ref().unchecked_ref())?, 57);
+    assert_eq!(cases(run.as_ref().unchecked_ref())?, 66);
     Ok(())
 }
 

@@ -40,6 +40,18 @@ impl FrameScheduler for BrowserFrameScheduler {
         let source = scheduler.borrow().window.borrow().clone();
         source().cancel_animation_frame(handle)
     }
+    fn cancel_frame_resolved(
+        scheduler: &RefCell<Self>,
+        resolve: impl FnOnce() -> Option<i32>,
+    ) -> Result<(), JsValue> {
+        let source = scheduler.borrow().window.borrow().clone();
+        let window = source();
+        let cancel: Function =
+            js_sys::Reflect::get(window.as_ref(), &"cancelAnimationFrame".into())?.unchecked_into();
+        let handle = resolve().map_or(JsValue::UNDEFINED, JsValue::from);
+        js_sys::Reflect::apply(&cancel, window.as_ref(), &[handle].into_iter().collect())?;
+        Ok(())
+    }
     fn cleanup_error(&mut self, error: JsValue) {
         web_sys::console::error_1(&error);
     }

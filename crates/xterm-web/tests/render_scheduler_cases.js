@@ -54,7 +54,7 @@ export function runRenderSchedulerCases(run) {
   for(const operation of ['refresh','callback','dispose']) {
     const sites=operation==='dispose'?['source','cancelGet','cancel']:['source','requestGet','request'];
     for(const site of sites)
-      for(const reaction of ['refresh','callback','dispose','frame','window','throw','refreshThrow']) {
+      for(const reaction of ['refresh','callback','dispose','frame','frameRefresh','window','throw','refreshThrow']) {
         // WindowSource is a typed infallible native contract. Throw identity is
         // tested at both actual WebIDL method lookups/calls, not hidden there.
         if(site==='source'&&(reaction==='throw'||reaction==='refreshThrow'))continue;
@@ -69,7 +69,8 @@ export function runRenderSchedulerCases(run) {
             if(reaction==='refresh'||reaction==='refreshThrow')act('refresh',4,15,12);
             if(reaction==='callback')act('callback','nested');
             if(reaction==='dispose')act('dispose');
-            if(reaction==='frame')host.frame();
+            if(reaction==='frame'||reaction==='frameRefresh')host.frame();
+            if(reaction==='frameRefresh')act('refresh',6,11,14);
             if(reaction==='window')host.switchWindow();
             if(reaction==='throw'||reaction==='refreshThrow')throw host.token;
           });

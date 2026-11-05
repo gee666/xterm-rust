@@ -30,6 +30,22 @@ pub trait FrameScheduler {
     {
         scheduler.borrow_mut().cancel_frame(handle)
     }
+    /// Resolve the pending handle at the host's argument-evaluation boundary.
+    /// Browser hosts override this to look up the cancellation method first and
+    /// pass undefined if that lookup cleared the pending frame. The default
+    /// has no host lookup before resolution, preserving typed native schedulers.
+    fn cancel_frame_resolved(
+        scheduler: &RefCell<Self>,
+        resolve: impl FnOnce() -> Option<Self::Handle>,
+    ) -> Result<(), Self::Error>
+    where
+        Self: Sized,
+    {
+        match resolve() {
+            Some(handle) => Self::cancel_frame_shared(scheduler, handle),
+            None => Ok(()),
+        }
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -167,9 +183,11 @@ impl<S: FrameScheduler> RenderDebouncer<S> {
     }
     pub fn dispose(&self) -> Result<(), S::Error> {
         // Source retains row bounds and callbacks after cancellation.
-        let pending = self.state.pending.borrow().clone();
-        if let Some(handle) = pending {
-            S::cancel_frame_shared(&self.state.scheduler, handle)?;
+        let has_pending = self.state.pending.borrow().is_some();
+        if has_pending {
+            S::cancel_frame_resolved(&self.state.scheduler, || {
+                self.state.pending.borrow().clone()
+            })?;
             self.state.pending.borrow_mut().take();
         }
         Ok(())
