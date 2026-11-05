@@ -1,0 +1,105 @@
+running 59 tests
+test visibility::paired_images_remain_visible_when_harness_output_exceeds_viewport ... ok
+test throwing_renderer_disposal_preserves_tokens_storage_and_event_emitter ... ok
+test support_flags_disabled_before_open_and_window_reports_match_source ... ok
+test shipped_public_constructor_and_terminal_addon_manager_are_connected ... ok
+test repeated_activation_keeps_old_protocol_and_current_parent_contexts ... ok
+test render_dimensions::renderer_replacement_changes_dimension_identity_and_retains_old_views ... ok
+test render_dimensions::internal_dimensions_are_absent_before_open_and_live_after_open ... ok
+test raw_storage_limit::storage_constructor_and_inactive_setters_keep_raw_identity_without_conversion ... ok
+test raw_storage_limit::raw_limit_eviction_commits_pixels_before_image_deletion_and_raw_after_success ... ok
+test raw_storage_limit::raw_constructor_limit_is_deferred_to_activation_with_source_fallback_diagnostics ... ok
+test raw_storage_limit::active_primitive_and_object_limits_match_raw_identity_and_validation ... ok
+test raw_storage_limit::active_limit_repeats_coercion_and_orders_nested_assignment_throw_and_disposal ... ok
+test raw_sixel_limit::raw_sixel_limit_throw_keeps_committed_size_and_exact_value ... ok
+test raw_sixel_limit::raw_sixel_limit_skips_disabled_pending_and_aborted_packets ... ok
+test raw_sixel_limit::raw_sixel_limit_relational_primitives_match_real_image_pixels ... ok
+test raw_sixel_limit::raw_sixel_limit_constructor_keeps_first_copy_without_coercion ... ok
+test raw_sixel_limit::raw_sixel_limit_coercion_reset_and_warning_failures_use_live_state ... ok
+test raw_placeholder::constructor_keeps_first_placeholder_copy_and_does_not_reset_it ... ok
+test raw_placeholder::constructor_and_inactive_setters_preserve_raw_placeholder_identity ... ok
+test raw_placeholder::active_placeholder_uses_truthiness_and_preserves_values_on_host_failure_and_reentry ... ok
+test raw_kitty_limit::raw_kitty_limit_numeric_forms_enforce_real_stream_limit_and_pixels ... ok
+test raw_kitty_limit::raw_kitty_limit_disabled_never_converts ... ok
+test raw_kitty_limit::raw_kitty_limit_constructor_retains_values_and_first_copy ... ok
+test raw_kitty_limit::raw_kitty_limit_activation_preserves_errors_and_prior_registrations ... ok
+test raw_kitty_limit::raw_kitty_limit_activation_converts_first_copy_once_per_activation ... ok
+test raw_kitty_limit::raw_kitty_limit_activation_callbacks_can_reset_or_dispose ... ok
+test raw_iip_limit::raw_iip_limit_nonfinite_and_negative_settings_are_only_constructed ... ok
+test raw_iip_limit::raw_iip_limit_finite_numeric_forms_enforce_stream_threshold_and_pixels ... ok
+test raw_iip_limit::raw_iip_limit_disabled_never_converts_or_decodes ... ok
+test raw_iip_limit::raw_iip_limit_conversion_can_reset_or_dispose_before_registration ... ok
+test raw_iip_limit::raw_iip_limit_constructor_retains_identity_and_two_copy_order ... ok
+test raw_iip_limit::raw_iip_limit_activation_errors_preserve_prior_work_and_skip_kitty ... ok
+test raw_flags::raw_support_flags_activate_by_truthiness_without_conversion ... ok
+test raw_flags::raw_scrolling_controls_and_resets_preserve_real_sixel_state_and_pixels ... FAIL
+test raw_flags::raw_flag_values_retain_identity_without_primitive_conversion ... ok
+test raw_flags::raw_flag_getters_copy_twice_but_reset_only_replaces_scrolling ... ok
+test raw_flags::image_added_reset_reentry_restores_second_raw_scrolling_copy ... ok
+test pending_bitmap_finishes_after_coordinator_disposal_without_new_events ... ok
+test options::typed_constructor_option_inspection_matches_source ... ok
+test options::retained_option_view_tracks_controls_setters_and_reset ... ok
+test options::option_diagnostic_rejects_writes_and_survives_owner_release ... ok
+test inspection_activation::retained_inspection_stays_with_its_original_activation ... ok
+test inspection::storage_inspection_reads_real_surfaces_identity_and_layers ... ok
+test inspection::retained_storage_iteration_observes_reset_appends_and_exhaustion ... ok
+test inspection::inspection_for_each_releases_borrows_before_reset_callback ... ok
+test inactive_properties_and_constructor_copy_match_source ... ok
+test image_added_can_reenter_reset_without_borrowing_native_state ... ok
+test handlers::retained_handler_maps_observe_activation_replacement_and_live_clear_iteration ... ok
+test handlers::pending_membership_tracks_chunks_delete_completion_and_reset ... ok
+test handlers::kitty_map_callbacks_can_reset_without_borrows_and_preserve_thrown_values ... ok
+test handlers::kitty_image_views_expose_actual_blobs_and_distinct_replacement_records ... ok
+test handlers::handler_view_is_stable_before_activation_and_disabled_entries_are_absent ... ok
+test graphics_queries_scrolling_limits_and_reset_match_source ... ok
+test constructor_order::second_option_copy_exceptions_precede_numeric_coercion ... ok
+test constructor_order::option_copy_passes_keep_current_and_reset_defaults_distinct ... ok
+test constructor_getters_are_copied_twice_and_reset_uses_second_defaults ... ok
+test configured_protocol_size_and_pixel_limits_reach_actual_producers ... ok
+test alternate_resize_public_reset_and_disposal_match_source ... ok
+test all_protocols_share_public_storage_events_and_pixels ... ok
+
+failures:
+
+---- raw_flags::raw_scrolling_controls_and_resets_preserve_real_sixel_state_and_pixels output ----
+    JS exception that was thrown:
+        RuntimeError: Unreachable code should not be executed (evaluating 'wasm.wasm_bindgen__convert__closures__invoke0_mut__h6ccbabcefd85a5b8(arg0, arg1)')
+        47609@wasm-function[47609]
+        42700@wasm-function[42700]
+        13278@wasm-function[13278]
+        16783@wasm-function[16783]
+        47027@wasm-function[47027]
+        32169@wasm-function[32169]
+        32170@wasm-function[32170]
+        29469@wasm-function[29469]
+        29907@wasm-function[29907]
+        655@wasm-function[655]
+        4966@wasm-function[4966]
+        16798@wasm-function[16798]
+        wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@image_addon_browser-788850bdf0a123c0.wasm:wasm-function[26929]
+        __wbg_adapter_1299@http://127.0.0.1:51764/suite.js:621:73
+        cb0@http://127.0.0.1:51764/suite.js:6702:46
+        @
+        @http://127.0.0.1:51764/suite.js:6707:30
+        handleError@http://127.0.0.1:51764/suite.js:173:23
+        wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@image_addon_browser-788850bdf0a123c0.wasm:wasm-function[8074]
+        15428@wasm-function[15428]
+        19067@wasm-function[19067]
+        2301@wasm-function[2301]
+        <wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@image_addon_browser-788850bdf0a123c0.wasm:wasm-function[1024]
+        wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@image_addon_browser-788850bdf0a123c0.wasm:wasm-function[4520]
+        wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@image_addon_browser-788850bdf0a123c0.wasm:wasm-function[2186]
+        wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@image_addon_browser-788850bdf0a123c0.wasm:wasm-function[4478]
+        wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@image_addon_browser-788850bdf0a123c0.wasm:wasm-function[4039]
+        wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@image_addon_browser-788850bdf0a123c0.wasm:wasm-function[24347]
+        <dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@image_addon_browser-788850bdf0a123c0.wasm:wasm-function[19914]
+        closure3164 externref shim@image_addon_browser-788850bdf0a123c0.wasm:wasm-function[38390]
+        __wbg_adapter_129@http://127.0.0.1:51764/suite.js:617:36
+        real@http://127.0.0.1:51764/suite.js:239:21
+
+failures:
+
+    raw_flags::raw_scrolling_controls_and_resets_preserve_real_sixel_state_and_pixels
+
+test result: FAILED. 58 passed; 1 failed; 0 ignored; 0 filtered out; finished in 8.68s
+

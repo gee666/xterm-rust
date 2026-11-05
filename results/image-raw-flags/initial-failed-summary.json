@@ -1,0 +1,49 @@
+{
+  "status": "failed-assertion-and-server-close-timeout",
+  "sourceCommit": "c3fd6e2c",
+  "outerCommandTimeoutSeconds": 300,
+  "runnerReportStatus": "running-with-no-final-persistence",
+  "summaryProvenance": "Parsed directly from each retained per-engine wasm test log, not reconstructed as a completed runner report.",
+  "browsers": [
+    {
+      "name": "chromium",
+      "counts": {
+        "passed": 58,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "failedTests": [
+        "raw_flags::raw_scrolling_controls_and_resets_preserve_real_sixel_state_and_pixels"
+      ],
+      "log": "initial-failed-image_addon_browser-chromium.log"
+    },
+    {
+      "name": "firefox",
+      "counts": {
+        "passed": 58,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "failedTests": [
+        "raw_flags::raw_scrolling_controls_and_resets_preserve_real_sixel_state_and_pixels"
+      ],
+      "log": "initial-failed-image_addon_browser-firefox.log"
+    },
+    {
+      "name": "webkit",
+      "counts": {
+        "passed": 58,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "failedTests": [
+        "raw_flags::raw_scrolling_controls_and_resets_preserve_real_sixel_state_and_pixels"
+      ],
+      "log": "initial-failed-image_addon_browser-webkit.log"
+    }
+  ],
+  "diagnosis": "New test incorrectly assumed CSI80:1h is ignored. Unchanged Params.toArray returns [80,[1]], so both implementations set false. Corrected test keeps80:1 as explicitly handled and81:80 as ignored subarray. Task495 fixes separate ownedHTTPconnection cleanup hang after all engines finished."
+}

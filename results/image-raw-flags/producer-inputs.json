@@ -1,0 +1,87 @@
+{
+  "sourceCommit": "c5a93363",
+  "baseCommit": "fdd3d621",
+  "files": [
+    {
+      "path": "crates/xterm-web/src/image/addon.rs",
+      "sha256": "fcb938b1c2a4b5768f89d4bb1f6e44335e0c840ffe0354b8b3c2569b4fc675fa"
+    },
+    {
+      "path": "crates/xterm-web/src/image/addon/options.rs",
+      "sha256": "aba682cc202c79939f78bf94359ec0783c863ebd0d09465f28b611b4f23792da"
+    },
+    {
+      "path": "crates/xterm-web/src/image/addon/bindings.rs",
+      "sha256": "37603a31228a74ec3804a4e768298fdd958aaf5e74a6b84502207d75fdac00df"
+    },
+    {
+      "path": "crates/xterm-web/src/image/addon/option_inspection.rs",
+      "sha256": "43c4ed724cc6e98d9a003db062e070c7107754cb13ba39ce3bcc84fd9979f40b"
+    },
+    {
+      "path": "crates/xterm-web/src/image/addon/controls.rs",
+      "sha256": "75e1401680b939c95c53284edddb515cf7d3ec1c0213e10b6496d8f18871556d"
+    },
+    {
+      "path": "crates/xterm-web/tests/image_addon_browser.rs",
+      "sha256": "154ade079e1ea106a7e90f55499305154c626b1bb5e17b31d7789498d3d5c470"
+    },
+    {
+      "path": "crates/xterm-web/tests/image_addon_support/raw_flags.rs",
+      "sha256": "c18a06d7d886e45a2f7c5232a45d103bd6253d0fdbdcf4be896f0d2d4d31a176"
+    },
+    {
+      "path": "scripts/image-canvas-check.mjs",
+      "sha256": "39e6ae066965226b2d93b34bdde7a486166554def5fe7dfe1390fbaa621b959f"
+    }
+  ],
+  "fmt": {
+    "memberPackages": [
+      "xterm-core",
+      "xterm-addons",
+      "xterm-web",
+      "xterm-font-addons",
+      "xterm-wasm-support"
+    ],
+    "memberExitCodes": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "aggregateExitCode": 1,
+    "aggregateError": "Windows OS206 filename or extension too long"
+  },
+  "compilation": {
+    "command": "cargo test --locked -j2 -p xterm-web --target wasm32-unknown-unknown --test image_addon_browser --no-run",
+    "exitCode": 0,
+    "log": "wasm-build.log"
+  },
+  "clippy": [
+    {
+      "command": "cargo clippy --locked -j2 -p xterm-web --all-targets --all-features -- -D warnings",
+      "exitCode": 0,
+      "log": "clippy-native.log"
+    },
+    {
+      "command": "cargo clippy --locked -j2 -p xterm-web --target wasm32-unknown-unknown --lib --test image_addon_browser --all-features -- -D warnings",
+      "exitCode": 0,
+      "log": "clippy-wasm.log"
+    }
+  ],
+  "environment": {
+    "node": "24.15.0",
+    "rustc": "1.85.1",
+    "cargo": "1.85.1",
+    "wasmBindgen": "0.2.100",
+    "platform": "Windows x86_64"
+  },
+  "helperCommit": "f08773fa",
+  "finalWasmClippy": {
+    "command": "cargo clippy --locked -j2 -p xterm-web --target wasm32-unknown-unknown --lib --test image_addon_browser --all-features -- -D warnings",
+    "exitCode": 0,
+    "log": "clippy-wasm-final.log"
+  },
+  "scope": "raw five image flags only; full image and whole port equivalence NOT PROVEN"
+}

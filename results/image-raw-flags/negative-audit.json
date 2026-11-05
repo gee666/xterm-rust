@@ -1,0 +1,60 @@
+{
+  "base": "fdd3d621",
+  "files": [
+    {
+      "file": "crates/xterm-web/src/image/addon.rs",
+      "baselineSha256": "ab08ef4970eb91e60f5a74dffe80f34dd426e042b4c9233e88087e04524e1efe",
+      "fixedSha256": "fcb938b1c2a4b5768f89d4bb1f6e44335e0c840ffe0354b8b3c2569b4fc675fa",
+      "restoredSha256": "fcb938b1c2a4b5768f89d4bb1f6e44335e0c840ffe0354b8b3c2569b4fc675fa"
+    },
+    {
+      "file": "crates/xterm-web/src/image/addon/bindings.rs",
+      "baselineSha256": "7c93f34cb69eb7bf595a4d0b2cf991e49cf78d3d5a98cbfeaaa509662058ee61",
+      "fixedSha256": "37603a31228a74ec3804a4e768298fdd958aaf5e74a6b84502207d75fdac00df",
+      "restoredSha256": "37603a31228a74ec3804a4e768298fdd958aaf5e74a6b84502207d75fdac00df"
+    },
+    {
+      "file": "crates/xterm-web/src/image/addon/controls.rs",
+      "baselineSha256": "d1cc7abaf848faa9014b19cfce7f321871c1265464b5c341f4e9184b671d3b2c",
+      "fixedSha256": "75e1401680b939c95c53284edddb515cf7d3ec1c0213e10b6496d8f18871556d",
+      "restoredSha256": "75e1401680b939c95c53284edddb515cf7d3ec1c0213e10b6496d8f18871556d"
+    },
+    {
+      "file": "crates/xterm-web/src/image/addon/option_inspection.rs",
+      "baselineSha256": "3d8963e49eae2e90db93b39d2865c0bbfa3b06d25dcc7e001badb8acc893af28",
+      "fixedSha256": "43c4ed724cc6e98d9a003db062e070c7107754cb13ba39ce3bcc84fd9979f40b",
+      "restoredSha256": "43c4ed724cc6e98d9a003db062e070c7107754cb13ba39ce3bcc84fd9979f40b"
+    },
+    {
+      "file": "crates/xterm-web/src/image/addon/options.rs",
+      "baselineSha256": "b2b2e28f6e746a5af2dc3cedb69f83f3430526687adbe4782c25f80606bf7ba0",
+      "fixedSha256": "aba682cc202c79939f78bf94359ec0783c863ebd0d09465f28b611b4f23792da",
+      "restoredSha256": "aba682cc202c79939f78bf94359ec0783c863ebd0d09465f28b611b4f23792da"
+    }
+  ],
+  "restored": true,
+  "command": [
+    "node",
+    "scripts/image-canvas-check.mjs"
+  ],
+  "exit": 1,
+  "error": null,
+  "browsers": [
+    {
+      "name": "chromium",
+      "counts": {
+        "passed": 56,
+        "failed": 3,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "status": "failed"
+    }
+  ],
+  "failedTests": [
+    "raw_flags::image_added_reset_reentry_restores_second_raw_scrolling_copy",
+    "raw_flags::raw_flag_getters_copy_twice_but_reset_only_replaces_scrolling",
+    "raw_flags::raw_flag_values_retain_identity_without_primitive_conversion"
+  ],
+  "status": "passed-negative-control"
+}
