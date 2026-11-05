@@ -17,6 +17,8 @@ This is NOT complete FDArray support. Later FDArray INDEX traversal, per-font/pr
 - 852 cases compare the complete constructor result in Rust, including 188 exact missing-FDArray errors.
 - 8 separately marked `presenceOnly` cases retain a source Bounds error from the later unported INDEX phase. Rust checks only that this guard does not incorrectly reject their truthy array/infinity value. They are NOT reported as full constructor matches. Multi-element truthiness also has a direct Rust dictionary test.
 
+Small oracle and runner entry points follow the adjacent CFF checks so this task retains standalone hash-pinned receipts. Container reconstruction, addon scenarios and predecessor assertions are shared rather than copied.
+
 Actual WASM tests reconstruct each input independently in JavaScript, compare bytes with the Rust recipe, run the Rust corpus and predecessor assertions, and load bad/good inputs through the actual `LigaturesAddon`. The existing asynchronous source-addon scenario tests error logging, cached rejection, fallback ranges, good-font recovery, reads, refreshes and disposal. Source and Rust use the same scenario, not a JavaScript font parser in production.
 
 ## Reproduction
@@ -43,7 +45,7 @@ Native Windows addon all-target/all-feature tests passed 208 functions across 48
 
 The negative guard bypass executed all 188 required mismatches, consisting of 128 accepted inputs and 60 later hmtx errors. Exact source SHA restoration and the positive replay passed. An initial helper module-inception lint failure was fixed by renaming the owned test module, with no suppression. The initial negative counter wrongly expected all mismatches to be successes rather than including those later hmtx errors. It was corrected to require the exact 188/128/60 split, without changing the corpus or any assertion. Both initial failures and successful reruns are retained.
 
-Three-browser execution is pending. Raw results are under `results/font-cff2-fdarray/`. For command logs with CRLF or extra terminal blank lines, `raw-log-bytes.json` retains the exact original bytes as base64 and SHA-256. The readable `.log` views normalize only those line endings and terminal blank lines so Git whitespace checks pass. These are focused gates, not a new full workspace test pass. No Linux/macOS runtime result, full original-suite result or overall equivalence is claimed.
+Source constructors passed all 860 cases plus four actual addon loads in each of Chromium, Firefox and WebKit. Actual Rust/WASM passed two test functions per engine, including 852 complete constructor comparisons, eight limited presence observations, the reused 505/492/header assertions and actual addon loading/caching/recovery/disposal. Chromium took 19.18s, Firefox 278.83s and WebKit 24.24s for the Rust functions. All three passed on the first launch, with zero failures, ignored or filtered tests. Raw results are under `results/font-cff2-fdarray/`. For command logs with CRLF or extra terminal blank lines, `raw-log-bytes.json` retains the exact original bytes as base64 and SHA-256. The readable `.log` views normalize only those line endings and terminal blank lines so Git whitespace checks pass. These are focused gates, not a new full workspace test pass. No Linux/macOS runtime result, full original-suite result or overall equivalence is claimed.
 
 ## Integration boundary
 
