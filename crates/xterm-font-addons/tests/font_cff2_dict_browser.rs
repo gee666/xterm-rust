@@ -19,6 +19,7 @@ extern "C" {
 #[wasm_bindgen_test]
 fn source_operand_corpus_and_independent_input_recipes_match_wasm() {
     assertions::assert_corpus();
+    assertions::assert_directed();
     assertions::assert_header_regression();
     let fixture = assertions::fixture();
     let base = Uint8Array::from(

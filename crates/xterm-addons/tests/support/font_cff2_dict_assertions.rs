@@ -10,9 +10,25 @@ pub fn construct(case: &Value, fixture: &Value) -> Vec<u8> {
     header::construct(case, fixture)
 }
 pub fn assert_corpus() {
+    assert_cases(|_| true);
+}
+pub fn assert_directed() {
+    assert_cases(|case| {
+        case["remove"].is_null()
+            && [31, 255, 28, 30]
+                .iter()
+                .any(|byte| case["data"] == serde_json::json!([2, 0, 5, 0, 1, byte, 0, 0, 0, 0]))
+    });
+}
+fn assert_cases(selected: impl Fn(&Value) -> bool) {
     let fixture = fixture();
     let mut failures = Vec::new();
-    for case in fixture["cases"].as_array().unwrap() {
+    for case in fixture["cases"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter(|case| selected(case))
+    {
         let bytes = construct(case, &fixture);
         let hash = bytes.iter().fold(2166136261_u32, |h, b| {
             (h ^ u32::from(*b)).wrapping_mul(16777619)

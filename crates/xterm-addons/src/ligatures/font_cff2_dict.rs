@@ -1,5 +1,5 @@
 // CFF dictionary operand reads follow opentype.js. See licenses/opentype-js-MIT.txt.
-use super::super::font_bytes::FontError;
+use super::FontError;
 
 /// The source completes all operand reads before entriesToObject interprets
 /// values or detects duplicate keys. Keep that lexical phase separate so an

@@ -8,7 +8,7 @@ if(original.toString().split(from).length!==2)throw Error('Unique operand hook r
 const record={originalSha256:hash(original),status:'running'};
 await fs.mkdir('results/font-cff2-dict',{recursive:true});
 async function run(name) {
-  const result=spawnSync(process.env.CARGO??'cargo',['test','-j2','-p','xterm-addons','--test','font_cff2_dict','full_source_constructor_operand_errors_and_ordering','--','--exact'],{encoding:'utf8',timeout:180000,maxBuffer:8*1024*1024,env:process.env});
+  const result=spawnSync(process.env.CARGO??'cargo',['test','-j2','-p','xterm-addons','--test','font_cff2_dict','directed_source_constructor_operand_errors','--','--exact'],{encoding:'utf8',timeout:180000,maxBuffer:8*1024*1024,env:process.env});
   await fs.writeFile(`results/font-cff2-dict/${name}.log`,`${result.stdout??''}${result.stderr??''}`);
   if(result.error||result.signal)throw result.error??Error(result.signal);
   return result;

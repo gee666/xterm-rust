@@ -5,6 +5,10 @@ fn full_source_constructor_operand_errors_and_ordering() {
     assertions::assert_corpus();
 }
 #[test]
+fn directed_source_constructor_operand_errors() {
+    assertions::assert_directed();
+}
+#[test]
 fn existing_cff_header_regression() {
     assertions::assert_header_regression();
 }
