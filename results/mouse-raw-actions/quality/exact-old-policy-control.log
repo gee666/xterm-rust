@@ -1,0 +1,25 @@
+
+running 2 tests
+test raw_and_named_move_actions_share_debounce_and_preserve_fractional_moves ... ok
+test normalized_reports_match_every_source_numeric_action_trace ... FAILED
+
+failures:
+
+---- normalized_reports_match_every_source_numeric_action_trace stdout ----
+
+thread 'normalized_reports_match_every_source_numeric_action_trace' panicked at crates\xterm-web\tests\mouse_action_numeric.rs:40:9:
+assertion `left == right` failed: row 13
+  left: 1.0
+ right: 0.0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    normalized_reports_match_every_source_numeric_action_trace
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\JeremyMouseAction\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 2.23s
+     Running tests\mouse_action_numeric.rs (target\debug\deps\mouse_action_numeric-78311b0ccde00b0f.exe)
+error: test failed, to rerun pass `-p xterm-web --test mouse_action_numeric`

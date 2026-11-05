@@ -24,6 +24,16 @@ The normalized report fixture contains 2,160 rows through original range/pair ch
 
 ## Evidence and limits
 
-`results/mouse-raw-actions/source.json` records source hashes, corpus hashes, seed, tool versions and exact row counts. Native results and independent review are pending.
+`results/mouse-raw-actions/source.json` records source hashes, corpus hashes, seed, tool versions and exact row counts. Execution used Node.js 24.15.0 and Rust/Cargo 1.85.1 on native Windows. The original and physical-copy references each matched all 776 manifest entries before testing.
+
+`results/mouse-raw-actions/quality/native.json` retains exact commands, exit statuses, timing and restoration hashes. Raw logs and `counts.json` record:
+
+- Focused debug tests passed 33 core tests and 17 web tests. Focused release tests passed five core tests and 17 web tests.
+- `cargo test -j2 --workspace --all-targets --all-features` passed 2,193 tests across 499 harness summaries, with zero failures, ignored tests, filtered tests or warnings. Workspace all-feature doctests passed two tests.
+- Warning-denied Clippy passed for native workspace/all-target/all-feature code and WASM workspace/all-feature libraries.
+- The exact `1106d480` native `mouse_policy.rs` file, with the new action representation retained, failed the intended normalized-report test. The separate debounce test passed. A `finally` block restored the exact final SHA-256, followed by both new web tests passing. This is a one-file policy control, not an old-core build claim.
+- The exact workspace-format command failed with Windows OS error 206. All five complete package-format checks passed separately. The workspace failure remains a failure, not a waived green gate.
+
+`source-pins.json` binds changed Rust/script/fixture bytes to the source commit. `native-pins.json` identifies retained executables for independent replay. Review is pending. An initial pin-collection command hit Node's default Git-output buffer limit on the large fixture; increasing that read-only command's bounded buffer completed collection. No tests or source changed for that tooling correction.
 
 This work changes numeric representation and native normalized report behavior. It does not implement ordinary-object protocol/encoding registries, inherited keys, arbitrary nonnumeric values or raw callback returns. It does not establish real browser/DOM routing or native Linux/macOS execution. Those checks remain separate tasks. Overall terminal equivalence remains NOT PROVEN.

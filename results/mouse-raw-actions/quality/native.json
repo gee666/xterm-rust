@@ -1,0 +1,221 @@
+{
+  "phase": "native",
+  "status": "passed",
+  "commands": [
+    {
+      "name": "versions",
+      "command": "rustc",
+      "args": [
+        "--version",
+        "--verbose"
+      ],
+      "status": 0,
+      "elapsedMs": 73,
+      "log": "results/mouse-raw-actions/quality/versions.log"
+    },
+    {
+      "name": "core-focused",
+      "command": "cargo",
+      "args": [
+        "test",
+        "-j2",
+        "-p",
+        "xterm-core",
+        "--test",
+        "mouse_action_numeric",
+        "--test",
+        "mouse_differential",
+        "--test",
+        "mouse_state",
+        "--test",
+        "mouse_callbacks",
+        "--test",
+        "mouse_custom",
+        "--test",
+        "mouse_button_numeric",
+        "--test",
+        "mouse_registry_names"
+      ],
+      "status": 0,
+      "elapsedMs": 10999,
+      "log": "results/mouse-raw-actions/quality/core-focused.log"
+    },
+    {
+      "name": "web-focused",
+      "command": "cargo",
+      "args": [
+        "test",
+        "-j2",
+        "-p",
+        "xterm-web",
+        "--test",
+        "mouse_action_numeric",
+        "--test",
+        "mouse_policy",
+        "--test",
+        "mouse_routing",
+        "--test",
+        "mouse_failures"
+      ],
+      "status": 0,
+      "elapsedMs": 15879,
+      "log": "results/mouse-raw-actions/quality/web-focused.log"
+    },
+    {
+      "name": "exact-old-policy-control",
+      "command": "cargo",
+      "args": [
+        "test",
+        "-j2",
+        "-p",
+        "xterm-web",
+        "--test",
+        "mouse_action_numeric"
+      ],
+      "status": 101,
+      "elapsedMs": 2356,
+      "log": "results/mouse-raw-actions/quality/exact-old-policy-control.log"
+    },
+    {
+      "name": "restored-web-focused",
+      "command": "cargo",
+      "args": [
+        "test",
+        "-j2",
+        "-p",
+        "xterm-web",
+        "--test",
+        "mouse_action_numeric"
+      ],
+      "status": 0,
+      "elapsedMs": 2409,
+      "log": "results/mouse-raw-actions/quality/restored-web-focused.log"
+    },
+    {
+      "name": "workspace-all",
+      "command": "cargo",
+      "args": [
+        "test",
+        "-j2",
+        "--workspace",
+        "--all-targets",
+        "--all-features"
+      ],
+      "status": 0,
+      "elapsedMs": 352962,
+      "log": "results/mouse-raw-actions/quality/workspace-all.log"
+    },
+    {
+      "name": "workspace-docs",
+      "command": "cargo",
+      "args": [
+        "test",
+        "-j2",
+        "--workspace",
+        "--all-features",
+        "--doc"
+      ],
+      "status": 0,
+      "elapsedMs": 1062,
+      "log": "results/mouse-raw-actions/quality/workspace-docs.log"
+    },
+    {
+      "name": "strict-native",
+      "command": "cargo",
+      "args": [
+        "clippy",
+        "-j2",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "status": 0,
+      "elapsedMs": 31025,
+      "log": "results/mouse-raw-actions/quality/strict-native.log"
+    },
+    {
+      "name": "strict-wasm-libs",
+      "command": "cargo",
+      "args": [
+        "clippy",
+        "-j2",
+        "--workspace",
+        "--all-features",
+        "--lib",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "status": 0,
+      "elapsedMs": 32313,
+      "log": "results/mouse-raw-actions/quality/strict-wasm-libs.log"
+    },
+    {
+      "name": "core-release",
+      "command": "cargo",
+      "args": [
+        "test",
+        "-j2",
+        "--release",
+        "-p",
+        "xterm-core",
+        "--test",
+        "mouse_action_numeric",
+        "--test",
+        "mouse_differential"
+      ],
+      "status": 0,
+      "elapsedMs": 21141,
+      "log": "results/mouse-raw-actions/quality/core-release.log"
+    },
+    {
+      "name": "web-release",
+      "command": "cargo",
+      "args": [
+        "test",
+        "-j2",
+        "--release",
+        "-p",
+        "xterm-web",
+        "--test",
+        "mouse_action_numeric",
+        "--test",
+        "mouse_policy",
+        "--test",
+        "mouse_routing",
+        "--test",
+        "mouse_failures"
+      ],
+      "status": 0,
+      "elapsedMs": 19206,
+      "log": "results/mouse-raw-actions/quality/web-release.log"
+    },
+    {
+      "name": "diff-check-final",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ],
+      "status": 0,
+      "elapsedMs": 236,
+      "log": "results/mouse-raw-actions/quality/diff-check-final.log"
+    }
+  ],
+  "resources": {
+    "availableRam": 30015004672,
+    "availableDisk": 2680258080768
+  },
+  "control": {
+    "file": "crates/xterm-web/src/input/mouse_policy.rs",
+    "baselineRef": "1106d480",
+    "baselineSha256": "240fd8177a46d7d06ef293839ff21e313a076db94a6a8c90b1a2c531568fa15f",
+    "finalSha256": "1c07bae6de0f7df9a089af6d02c32d7e4470e9869dedb62c763c948ad50f9e66",
+    "restoredSha256": "1c07bae6de0f7df9a089af6d02c32d7e4470e9869dedb62c763c948ad50f9e66"
+  }
+}

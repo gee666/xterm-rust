@@ -28,9 +28,12 @@ Call `encodeMouseEvent` independently, including on events rejected by restricti
 - Preserve lone surrogate code units, including `-10272 + 32 -> 0xd800` and `-8225 + 32 -> 0xdfff`. A Rust UTF-8 `String` cannot represent all outputs; expose `Vec<u16>` and document the binding conversion.
 - SGR is exactly `ESC[<code;col;rowM` or final `m` for UP on a non-wheel button. SGR_PIXELS uses x/y instead. Both have no coordinate limit and must retain JS formatting for NaN, infinities, fractions, large exponents, and negative zero. There is no coordinate +1 conversion in this service.
 - Every defined button/action and all modifier masks must match exact UTF-16 output in each encoder, including combinations not produced by a normal browser.
+- Raw numeric actions retain fractions, negative zero, NaN, infinities and 32-bit wrap boundaries until the builtin policy explicitly converts them. Named/raw numeric equality follows JavaScript strict number equality. In particular, raw 4294967297 is not DOWN, raw 32.5 is not MOVE, and raw 2/3 cannot bypass normalized non-wheel pair rejection. `TryFrom<u8>` remains a validated constant conversion rather than an untrusted-input adapter.
 - Custom encoders run exactly once, receive the original mutable event, may alter any representable field, return empty output or lone surrogates, and replace existing names without an activation change. The caller observes mutations after encoding.
 
 The checked-in corpus must include all 7,800 defined protocol/encoding/button/action/modifier combinations, numeric boundary rows, and 4,096 xorshift32 inputs at seed `0x6d0a5e`. After adding surrogate boundaries it has 12,226 rows. Never edit expected units manually.
+
+`scripts/mouse-raw-action-oracle.mjs` adds 19,328 numeric-action rows at seed `0x524ac710` and 2,160 normalized-report rows without replacing the existing corpus. Core tests retain named-action inputs for the older fixtures and use raw-number actions for the new fixture. Check custom callback action-bit retention and mutation, plus raw/named MOVE debounce. See [numeric mouse actions](../mouse-action-numbers.md) for commands, evidence and scope limits.
 
 ## Registry and activation
 
