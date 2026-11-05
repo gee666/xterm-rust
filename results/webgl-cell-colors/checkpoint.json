@@ -1,0 +1,153 @@
+{
+  "task": 441,
+  "scope": "Typed WebGL CellColorResolver only; full306 and equivalence NOT PROVEN",
+  "base": "dcde3e9c",
+  "atlasPrerequisite": "423 accepted e7923bbd, reused as private bc383aea..0455e606; pending separate438 canonical pickup",
+  "environment": {
+    "os": "Windows",
+    "rust": "1.85.1",
+    "cargo": "1.85.1",
+    "node": "v24.15.0"
+  },
+  "cases": 2956,
+  "seed": "0x7a12c431",
+  "sourceImports": [
+    {
+      "path": "addons/addon-webgl/src/CellColorResolver.ts",
+      "sha256": "2977cdd683b2ad2ddb9a92c5e2eac4d9ad15a0ce36b5728aab5cbe112c5b3383"
+    },
+    {
+      "path": "addons/addon-webgl/src/customGlyphs/CustomGlyphDefinitions.ts",
+      "sha256": "20886522bb30c56cb57c78c245a15e5cf4f7676541f8d3261a3a32d5b0ae1b01"
+    },
+    {
+      "path": "addons/addon-webgl/src/customGlyphs/Types.ts",
+      "sha256": "2c1cba0968cce086e7b4bfdffafc51660b410b188f6d8e072fd3c2301ef1a2eb"
+    },
+    {
+      "path": "src/browser/renderer/shared/RendererUtils.ts",
+      "sha256": "9401f9bd11bf524ded84ff0a5bdb81445430cd33bdb5f01976038efffa78a0ff"
+    },
+    {
+      "path": "src/common/Color.ts",
+      "sha256": "18899f9607f8a11c8e317c2bae8676eeb660cc9ed1d69ca7d016a003724fa057"
+    },
+    {
+      "path": "src/common/buffer/AttributeData.ts",
+      "sha256": "09a9dc9693200cd7c34a98af3c1fc97b47b4354828cb02a76ab561a03515748a"
+    },
+    {
+      "path": "src/common/buffer/Constants.ts",
+      "sha256": "0342c709b580e7a7c62fffb61bab359f93511b82529f5a155374797ca4799f21"
+    }
+  ],
+  "oracleReproduction": "byte-identical",
+  "native": {
+    "targets": 6,
+    "passed": 60,
+    "failed": 0,
+    "ignored": 0,
+    "filtered": 0
+  },
+  "release": {
+    "targets": 1,
+    "passed": 2,
+    "failed": 0,
+    "ignored": 0,
+    "filtered": 0
+  },
+  "clippy": {
+    "native": "scoped lib/test all-features -D warnings PASS",
+    "wasm": "scoped lib/test all-features -D warnings PASS"
+  },
+  "format": {
+    "exactWorkspace": "FAIL Windows OS206",
+    "member": "xterm-web PASS"
+  },
+  "negativeControl": {
+    "mutation": "retain selected DIM flag",
+    "expected": "1 passed, 1 failed, matrix-36 packed background mismatch",
+    "restored": "exact SHA256, then native all-feature and release PASS"
+  },
+  "notRun": [
+    "full workspace test/Clippy",
+    "browser runtime",
+    "native Linux runtime",
+    "native macOS runtime",
+    "unchanged full WebGL/demo suites"
+  ],
+  "pins": [
+    {
+      "path": "crates/xterm-web/tests/fixtures/webgl-cell-colors.json",
+      "sha256": "9d1f04312c67800b70864cc691f769ad18f2ea4b38c2a9785dd3f0fba6936569"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/cell_colors.rs",
+      "sha256": "9d42154b279dfc55a5e934be0ce7f910518d44b49c7bee5578350e7e592dc631"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/mod.rs",
+      "sha256": "455999e5efb5474697005a061dcabba0152a291b6e6d697cd7081eec3e04811b"
+    },
+    {
+      "path": "crates/xterm-web/tests/webgl_cell_colors.rs",
+      "sha256": "8467def2847aab885c6b4dd086794c3b5c59c555bceb3bb92f1014f4ef33e3a8"
+    },
+    {
+      "path": "scripts/webgl-cell-color-oracle.mjs",
+      "sha256": "e7e383759f02c72c68180fbdf84f66761c653ebcbcaf08849e6695f403780ef1"
+    },
+    {
+      "path": "docs/webgl-cell-colors.md",
+      "sha256": "a7de5f0f8f2523e959a509eac6c505b06a69c05987ba4b8709c845c084094513"
+    },
+    {
+      "path": ".pi/swarm/skills/webgl-cell-color-check/SKILL.md",
+      "sha256": "53d5dd2602321f4570ff20b8ec2e3fc9ec7c7eb61481b80afa9b7c584da6b6dc"
+    },
+    {
+      "path": "results/webgl-cell-colors/oracle.log",
+      "sha256": "6223d78ccb7deae1769d949e913be6a36defab723e10b74f13083a7aa15e25b0"
+    },
+    {
+      "path": "results/webgl-cell-colors/native.log",
+      "sha256": "e3f1823331e415f2901ff438766969b8c9514af421c5b5b9c3ff23146e142f59"
+    },
+    {
+      "path": "results/webgl-cell-colors/native-all-features.log",
+      "sha256": "12722eef623f7914fae77d801398cc66a9d5906e141bffea32ace5386075792c"
+    },
+    {
+      "path": "results/webgl-cell-colors/clippy-native.log",
+      "sha256": "d7e2536095599f4a93d590d19fef27ff35b86d9a93b3ef126f752cadd97554ad"
+    },
+    {
+      "path": "results/webgl-cell-colors/clippy-wasm.log",
+      "sha256": "32d0cfb1e32a872be09bc5d465dbf92214205bd86baa3fdaad4c2a6ed0d69016"
+    },
+    {
+      "path": "results/webgl-cell-colors/release.log",
+      "sha256": "339ee0f26f999322ee8998a35883836070d7c882355a0ad972de56b785a7f8ef"
+    },
+    {
+      "path": "results/webgl-cell-colors/exact-fmt.log",
+      "sha256": "a3c64adc493a218a5a8332dfc60b9e9fd0cf455d8215931a5888f9bc84a29c70"
+    },
+    {
+      "path": "results/webgl-cell-colors/web-fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/webgl-cell-colors/dim-negative.log",
+      "sha256": "e74d5d158a592e4f1f66838df54e3085c6abb7c206c7ae065a9b590f9cb3d573"
+    },
+    {
+      "path": "results/webgl-cell-colors/dim-negative.json",
+      "sha256": "63cd17aae0a3453896b9481b4eeadfbcc77ab98a2058b470bb6217c1f2674916"
+    },
+    {
+      "path": "results/webgl-cell-colors/dim-negative-baseline.rs.txt",
+      "sha256": "ecbd5ad4ec7284e4669b13cbc6ab484768949f947d8aed54a943bbfb5437b922"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+
+running 2 tests
+test missing_palette_reports_index_retains_base_and_recovers ... ok
+test unchanged_source_cell_colors_and_variants ... FAILED
+
+failures:
+
+---- unchanged_source_cell_colors_and_variants stdout ----
+
+thread 'unchanged_source_cell_colors_and_variants' panicked at crates\xterm-web\tests\webgl_cell_colors.rs:100:13:
+assertion `left == right` failed: matrix-36
+  left: Object {"bg": Number(187119173), "ext": Number(0), "fg": Number(134217728)}
+ right: Object {"bg": Number(52901445), "ext": Number(0), "fg": Number(134217728)}
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    unchanged_source_cell_colors_and_variants
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\Asher306\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 2.37s
+     Running tests\webgl_cell_colors.rs (target\debug\deps\webgl_cell_colors-269f483353637f2e.exe)
+error: test failed, to rerun pass `-p xterm-web --test webgl_cell_colors`

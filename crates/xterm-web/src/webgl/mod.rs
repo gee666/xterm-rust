@@ -22,6 +22,7 @@ mod atlas_store;
 #[cfg(target_arch = "wasm32")]
 mod atlas_styles;
 pub mod cache;
+pub mod cell_colors;
 pub mod config;
 pub mod custom_glyphs;
 pub mod glyphs;

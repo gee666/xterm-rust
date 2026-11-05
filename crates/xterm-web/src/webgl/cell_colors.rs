@@ -1,0 +1,212 @@
+// Copyright (c) 2026 The xterm.js authors. All rights reserved. MIT license.
+//! Packed WebGL cell colors, ported from addon-webgl/src/CellColorResolver.ts.
+use super::{atlas_colors::AtlasColorError, custom_glyphs::is_block_pattern};
+use crate::{renderer::row_types::RowDecoration, theme::ColorSet};
+use xterm_core::{
+    buffer::{
+        constants::{attributes as a, bg_flags as bg, ext_flags, fg_flags as fg, underline_style},
+        AttributeData,
+    },
+    color::rgba,
+};
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct CellColors {
+    pub bg: u32,
+    pub fg: u32,
+    pub ext: u32,
+}
+
+/// Positions are absolute buffer coordinates. Selection is supplied by the
+/// shared SelectionRenderModel, not recomputed by an independent selection.
+#[derive(Clone, Copy, Debug)]
+pub struct CellColorContext {
+    pub x: f64,
+    pub y: f64,
+    pub device_cell_width: f64,
+    pub device_cell_height: f64,
+    pub font_size: f64,
+    pub device_pixel_ratio: f64,
+    pub selected: bool,
+    pub focused: bool,
+}
+
+/// Typed cell-color component. Callers supply decorations at this cell in their
+/// service iteration order. Bottom and top layers are visited separately, with
+/// selection between them. This API has no browser getter/callback boundary.
+#[derive(Default)]
+pub struct CellColorResolver {
+    pub result: CellColors,
+}
+impl CellColorResolver {
+    pub fn resolve(
+        &mut self,
+        cell: &AttributeData,
+        code: u32,
+        context: CellColorContext,
+        colors: &ColorSet,
+        decorations: &[RowDecoration],
+    ) -> Result<(), AtlasColorError> {
+        self.result = CellColors {
+            bg: cell.bg,
+            fg: cell.fg,
+            ext: if cell.bg & bg::HAS_EXTENDED != 0 {
+                cell.extended.ext()
+            } else {
+                0
+            },
+        };
+        let variant = variant_offset(cell, code, context);
+        let mut overrides = Overrides::default();
+        overrides.decorations(decorations, false);
+        if context.selected {
+            overrides.selection(cell, code, context.focused, colors)?;
+        }
+        overrides.decorations(decorations, true);
+        self.result = overrides.finish(cell, context.selected, colors, self.result);
+        self.result.ext = (self.result.ext & !ext_flags::VARIANT_OFFSET)
+            | ((to_uint32(variant) << 29) & ext_flags::VARIANT_OFFSET);
+        Ok(())
+    }
+}
+
+#[derive(Default)]
+struct Overrides {
+    bg: Option<u32>,
+    fg: Option<u32>,
+}
+impl Overrides {
+    fn decorations(&mut self, decorations: &[RowDecoration], top: bool) {
+        for decoration in decorations.iter().filter(|d| d.top == top) {
+            if let Some(color) = &decoration.background {
+                self.bg = Some(color.rgba >> 8);
+            }
+            if let Some(color) = &decoration.foreground {
+                self.fg = Some(color.rgba >> 8);
+            }
+        }
+    }
+    fn selection(
+        &mut self,
+        cell: &AttributeData,
+        code: u32,
+        focused: bool,
+        colors: &ColorSet,
+    ) -> Result<(), AtlasColorError> {
+        let selection = if focused {
+            colors.selection_background_opaque.borrow().rgba
+        } else {
+            colors.selection_inactive_background_opaque.borrow().rgba
+        };
+        let inverse = cell.fg & fg::INVERSE != 0;
+        self.bg = Some(if inverse || cell.bg & a::CM_MASK != a::CM_DEFAULT {
+            let background = if inverse {
+                resolve_rgba(cell.fg, colors.foreground.borrow().rgba, colors)?
+            } else {
+                // The source leaves the bottom-layer work value alone in its
+                // unreachable default branch. Only non-default bg reaches here.
+                resolve_rgba(cell.bg, self.bg.unwrap_or(0), colors)?
+            };
+            blend_selection(background, selection)
+        } else {
+            selection >> 8
+        });
+        if let Some(color) = &colors.selection_foreground {
+            self.fg = Some(color.borrow().rgba >> 8);
+        }
+        if crate::renderer::utils::treat_glyph_as_background_color(code) {
+            self.fg = Some(if inverse && cell.bg & a::CM_MASK == a::CM_DEFAULT {
+                selection >> 8
+            } else {
+                let foreground = if inverse {
+                    resolve_rgba(cell.bg, self.fg.unwrap_or(0), colors)?
+                } else {
+                    resolve_rgba(cell.fg, colors.foreground.borrow().rgba, colors)?
+                };
+                blend_selection(foreground, selection)
+            });
+        }
+        Ok(())
+    }
+    fn finish(
+        self,
+        cell: &AttributeData,
+        selected: bool,
+        colors: &ColorSet,
+        mut result: CellColors,
+    ) -> CellColors {
+        let mut background = self.bg.map(|value| {
+            let flags = cell.bg & !a::RGB_MASK;
+            (if selected { flags & !bg::DIM } else { flags }) | value | a::CM_RGB
+        });
+        let mut foreground = self
+            .fg
+            .map(|value| (cell.fg & !a::RGB_MASK & !fg::INVERSE) | value | a::CM_RGB);
+        if cell.fg & fg::INVERSE != 0 {
+            if background.is_some() && foreground.is_none() {
+                let color = if cell.bg & a::CM_MASK == a::CM_DEFAULT {
+                    (colors.background.borrow().rgba >> 8) | a::CM_RGB
+                } else {
+                    cell.bg & (a::RGB_MASK | a::CM_MASK)
+                };
+                foreground = Some((cell.fg & !(a::RGB_MASK | fg::INVERSE | a::CM_MASK)) | color);
+            }
+            if background.is_none() && foreground.is_some() {
+                let color = if cell.fg & a::CM_MASK == a::CM_DEFAULT {
+                    (colors.foreground.borrow().rgba >> 8) | a::CM_RGB
+                } else {
+                    cell.fg & (a::RGB_MASK | a::CM_MASK)
+                };
+                background = Some((cell.bg & !(a::RGB_MASK | a::CM_MASK)) | color);
+            }
+        }
+        result.bg = background.unwrap_or(result.bg);
+        result.fg = foreground.unwrap_or(result.fg);
+        result
+    }
+}
+
+fn resolve_rgba(value: u32, default: u32, colors: &ColorSet) -> Result<u32, AtlasColorError> {
+    Ok(match value & a::CM_MASK {
+        a::CM_P16 | a::CM_P256 => {
+            let index = value & a::PCOLOR_MASK;
+            colors
+                .ansi
+                .get(index as usize)
+                .ok_or(AtlasColorError {
+                    index: index as i32,
+                })?
+                .borrow()
+                .rgba
+        }
+        a::CM_RGB => ((value & a::RGB_MASK) << 8) | 255,
+        _ => default,
+    })
+}
+fn blend_selection(color: u32, selection: u32) -> u32 {
+    rgba::blend(color, (selection & 0xffff_ff00) | 0x80) >> 8
+}
+fn variant_offset(cell: &AttributeData, code: u32, context: CellColorContext) -> f64 {
+    let mut offset = 0.0;
+    if code != 0 && cell.extended.underline_style() == underline_style::DOTTED {
+        let width = (context.font_size * context.device_pixel_ratio / 15.0).floor();
+        // Math.max propagates NaN; Rust's f64::max intentionally does not.
+        let width = if width.is_nan() {
+            width
+        } else {
+            width.max(1.0)
+        };
+        offset = context.x * context.device_cell_width % (width * 2.0);
+    }
+    if offset == 0.0 && is_block_pattern(code) {
+        offset = ((context.x * context.device_cell_width) % 2.0) * 2.0
+            + (context.y * context.device_cell_height) % 2.0;
+    }
+    offset
+}
+fn to_uint32(value: f64) -> u32 {
+    if !value.is_finite() {
+        return 0;
+    }
+    value.trunc().rem_euclid(4_294_967_296.0) as u32
+}
