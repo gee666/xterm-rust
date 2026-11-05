@@ -1,0 +1,11 @@
+# Task406 continuation
+
+Task406 is independently accepted, not yet integrated into main. Source producer `fa54658c` and check receipt `27938cfa` are on `swarm/C406`, based on main `85e0fd43`. Main remains a separate integration branch in `C:/Users/user/.xterm-rust-target/7144d30a1fc3-worktrees/Integration`. Do not confuse launch master with it.
+
+Read `docs/font-buffer-mutations.md`, `results/font-buffer-mutations/independent-review.md` and `checks.json` on this branch. The change preserves retained ArrayBuffer writes during Mac kern warning callbacks. The unchanged snapshot APIs remain valid. Native constructor and real browser addon tests cover39 mutation cases across SFNT/raw WOFF/compressed kern. New and retained398 binaries each pass2 functions per browser; full native workspace passes2068 tests across419 summaries. Native/workspace and focused WASM Clippy pass with warnings denied. All five package fmt checks pass; the aggregate command's Windows OS206 is honestly retained. Original776 hashes match both owned copy and original.
+
+Independent review reran source39+39, native5 functions, newly rebuilt mutation2 functions in each engine, lint/format/hash checks and found no problems. No JS font parser/dependency/unsafe was added. Task342 remains open for broader metadata and exact errors, including detached/resized buffer errors. Full equivalence remains NOT PROVEN.
+
+Akiko407 is basing deferred META parsing on accepted406, using `DeferredTable::load_from` with refreshed bytes after warning and adding warning-to-META mutation coverage. Carter408 SVG is accepted, exact source `3e9a6567` then receipt `94bba7fa` on `swarm/CarterSVG`; its O: checkout was already removed. Posts529/548/550 coordinate the font union. Only accepted406 and408 may be picked before407 is reviewed. The final font union should preserve their exact reviewed bytes except explicit407 phase integration, rerun affected suites and use the canonical tested merge helper. Vesna owns309 final ref coordination.
+
+Owned temporary root is `O:/xterm-rust-swarm-16/tmp/C406`. No process remains. All durable source/fixtures/results are committed on `swarm/C406`. Cleanup status will be reported in post550 after a complete no-link/process preflight and worktree removal. Never replay stale patches, remove other owners' files or traverse reference junctions.
