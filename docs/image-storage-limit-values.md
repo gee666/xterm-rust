@@ -33,6 +33,10 @@ cargo fmt --all -- --check
 
 Retained reports and logs are under results/image-storage-limit-values. Historical temporary paths identify the actual build, not permanent installations. The identity audit checks the final Rust input pins, unchanged comparator source files against the supplied P: reference and all seven control files against their Git baseline and saved fixed hashes.
 
+## Independent review
+
+Task439 was independently accepted through522deaf2. The reviewer reran23 native tests,33 browser test functions in each engine, focused native and WASM warning-denied Clippy and formatting for both changed packages. The reviewer also checked101 Rust input pins,121 unchanged comparator files and seven control baselines/restored files. No code changes were requested. The retained negative control was inspected rather than repeated. Fresh browser reports are review-browser.json and review-verification.json under results/image-storage-limit-values.
+
 ## Limits
 
 This scoped branch starts at dcde3e9c. The integration coordinator owns accepted431 and its shared-file union. Other raw options, writable private records, input-handler inspection, full original image suites, img01..48, final workspace gates and native Windows/Linux/macOS matrices remain unfinished311/324 and project work. Full equivalence is NOT PROVEN.
