@@ -1,0 +1,177 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_terminal_wheel",
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T08:55:51.186Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_terminal_wheel",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 639.5757,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 8.347200000000043,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Fatima16\\results\\acceptance-artifacts\\34ca92e59f947ccb8ba1850647179892c63eae6545b8eb0c6bb83227ff4ba147\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Fatima16\\results\\browser-host\\wasm_terminal_wheel\\2026-11-05T08-55-51-184Z-1864c9af-1336-44b6-91ef-eb2af5d1fb03\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 740.5929,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_terminal_wheel::active_and_passive_hooks_ignore_own_call_and_keep_event_identity",
+        "__wbgt__wasm_terminal_wheel::hook_replacement_and_recursive_dispatch_do_not_hold_service_borrows",
+        "__wbgt__wasm_terminal_wheel::only_literal_false_vetoes_both_live_routes",
+        "__wbgt__wasm_terminal_wheel::thrown_values_retain_identity_and_stop_output"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_terminal_wheel.rs:143:13:\ncallback.call must not be read\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:57064/suite.js:3803:21)\n    at wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:57064/suite_bg.wasm:wasm-function[28905]:0x7cb6ae)\n    at wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:57064/suite_bg.wasm:wasm-function[18898]:0x7573e1)\n    at wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:57064/suite_bg.wasm:wasm-function[6204]:0x55c902)\n    at wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:57064/suite_bg.wasm:wasm-function[18899]:0x757465)\n    at wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:57064/suite_bg.wasm:wasm-function[9671]:0x62998b)\n    at wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:57064/suite_bg.wasm:wasm-function[12266]:0x696712)\n    at wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:57064/suite_bg.wasm:wasm-function[35127]:0x7de6ce)\n    at wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.rust_begin_unwind (http://127.0.0.1:57064/suite_bg.wasm:wasm-function[23750]:0x7a5d39)\n    at wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:57064/suite_bg.wasm:wasm-function[23751]:0x7a5d66)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 4 tests\ntest thrown_values_retain_identity_and_stop_output ... ok\ntest only_literal_false_vetoes_both_live_routes ... ok\ntest hook_replacement_and_recursive_dispatch_do_not_hold_service_borrows ... ok\ntest active_and_passive_hooks_ignore_own_call_and_keep_event_identity ... FAIL\n\nfailures:\n\n---- active_and_passive_hooks_ignore_own_call_and_keep_event_identity output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.__rust_start_panic (http://127.0.0.1:57064/suite_bg.wasm:wasm-function[35546]:0x7df15f)\n            at wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.rust_panic (http://127.0.0.1:57064/suite_bg.wasm:wasm-function[31697]:0x7d60e2)\n            at wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:57064/suite_bg.wasm:wasm-function[9671]:0x6299b6)\n            at wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:57064/suite_bg.wasm:wasm-function[12266]:0x696712)\n            at wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:57064/suite_bg.wasm:wasm-function[35127]:0x7de6ce)\n            at wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.rust_begin_unwind (http://127.0.0.1:57064/suite_bg.wasm:wasm-function[23750]:0x7a5d39)\n            at wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:57064/suite_bg.wasm:wasm-function[23751]:0x7a5d66)\n            at wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_terminal_wheel::active_and_passive_hooks_ignore_own_call_and_keep_event_identity::h212a25eee984f611 (http://127.0.0.1:57064/suite_bg.wasm:wasm-function[758]:0x1f7424)\n            at wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.core::ops::function::FnOnce::call_once::h7bf6f2e0afb49893 (http://127.0.0.1:57064/suite_bg.wasm:wasm-function[23301]:0x7a0ceb)\n            at wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h544fd8ca67fbf8ca (http://127.0.0.1:57064/suite_bg.wasm:wasm-function[9325]:0x618bea)\n\nfailures:\n\n    active_and_passive_hooks_ignore_own_call_and_keep_event_identity\n\ntest result: FAILED. 3 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.16s\n\n",
+      "counts": {
+        "passed": 3,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "firefox",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_terminal_wheel::active_and_passive_hooks_ignore_own_call_and_keep_event_identity",
+        "__wbgt__wasm_terminal_wheel::hook_replacement_and_recursive_dispatch_do_not_hold_service_borrows",
+        "__wbgt__wasm_terminal_wheel::only_literal_false_vetoes_both_live_routes",
+        "__wbgt__wasm_terminal_wheel::thrown_values_retain_identity_and_stop_output"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_terminal_wheel.rs:143:13:\ncallback.call must not be read\n\nStack:\n\n__wbg_get_imports/imports.wbg.__wbg_new_78093c5bd701d017@http://127.0.0.1:57064/suite.js:3803:21\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.__wbg_new_78093c5bd701d017 externref shim@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[28905]:0x7cb6ae\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[18898]:0x7573e1\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[6204]:0x55c902\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[18899]:0x757465\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[9671]:0x62998b\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[12266]:0x696712\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[35127]:0x7de6ce\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.rust_begin_unwind@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[23750]:0x7a5d39\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[23751]:0x7a5d66\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_terminal_wheel::active_and_passive_hooks_ignore_own_call_and_keep_event_identity::h212a25eee984f611@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[758]:0x1f7424\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.core::ops::function::FnOnce::call_once::h7bf6f2e0afb49893@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[23301]:0x7a0ceb\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h544fd8ca67fbf8ca@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[9325]:0x618bea\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h10a7adbf6e899f7e@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[12267]:0x69675b\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[19929]:0x76bff3\n__wbg_adapter_936@http://127.0.0.1:57064/suite.js:548:10\ncb0@http://127.0.0.1:57064/suite.js:4373:28\nglobalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52\n__wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:57064/suite.js:4378:30\nhandleError@http://127.0.0.1:57064/suite.js:143:18\n__wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:57064/suite.js:4366:76\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[5851]:0x543368\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::h4de4207119d6a099@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[11240]:0x66e6d5\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::hecfda7b8de000418@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[14007]:0x6d43cb\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::h597d7f078f676c6c@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[1544]:0x33048e\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[682]:0x1bb648\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[3160]:0x44782f\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[1477]:0x31ef17\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[3136]:0x444a4b\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[2831]:0x41d600\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[17929]:0x742320\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[14641]:0x6e98c1\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.closure2400 externref shim@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[28410]:0x7c909c\n__wbg_adapter_118@http://127.0.0.1:57064/suite.js:544:10\nreal@http://127.0.0.1:57064/suite.js:209:20\nVoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:57064/suite.js:3983:23\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[35223]:0x7dea7b\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[28017]:0x7c6c60\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[4864]:0x4f5002\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::{{closure}}::h95b28db559806c13@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[32062]:0x7d71ff\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::queue::Queue::with::h9bd5fdd801f7dec4@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[28018]:0x7c6c73\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::h42fed9c117de84b9@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[2444]:0x3e461d\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::spawn_local::h3dc491f304d42e44@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[10446]:0x64c71d\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::h15c44db32e5b7614@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[8081]:0x5d687a\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen::convert::closures::invoke2_mut::hba2fa4cbb261e43e@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[16522]:0x71fd6b\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.closure2423 externref shim@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[25388]:0x7b5835\n__wbg_adapter_1045@http://127.0.0.1:57064/suite.js:556:10\ncb0@http://127.0.0.1:57064/suite.js:3779:28\n__wbg_get_imports/imports.wbg.__wbg_new_23a2665fac83c611@http://127.0.0.1:57064/suite.js:3784:25\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.__wbg_new_23a2665fac83c611 externref shim@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[28083]:0x7c7359\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.js_sys::Promise::new::hf39a358a769dc6ed@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[11675]:0x67f7fd\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::future_to_promise::h65257425de8480bc@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[9284]:0x616b0a\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_test::__rt::Context::run::he8da95eeed777e80@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[1211]:0x2d00b0\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasmbindgentestcontext_run@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[8537]:0x5effbd\nwasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasmbindgentestcontext_run externref shim@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[28405]:0x7c901b\nrun@http://127.0.0.1:57064/suite.js:2781:26\nglobalThis.testRun<@debugger eval code line 302 > eval:11:42\nasync*@debugger eval code line 302 > eval:14:11\nevaluate@debugger eval code:304:16\n@debugger eval code:1:44\n@debugger eval code:1:62\n\n\n"
+        }
+      ],
+      "version": "150.0.2",
+      "output": "running 4 tests\ntest thrown_values_retain_identity_and_stop_output ... ok\ntest only_literal_false_vetoes_both_live_routes ... ok\ntest hook_replacement_and_recursive_dispatch_do_not_hold_service_borrows ... ok\ntest active_and_passive_hooks_ignore_own_call_and_keep_event_identity ... FAIL\n\nfailures:\n\n---- active_and_passive_hooks_ignore_own_call_and_keep_event_identity output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable executed\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.__rust_start_panic@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[35546]:0x7df15f\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.rust_panic@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[31697]:0x7d60e2\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[9671]:0x6299b6\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[12266]:0x696712\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[35127]:0x7de6ce\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.rust_begin_unwind@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[23750]:0x7a5d39\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[23751]:0x7a5d66\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_terminal_wheel::active_and_passive_hooks_ignore_own_call_and_keep_event_identity::h212a25eee984f611@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[758]:0x1f7424\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.core::ops::function::FnOnce::call_once::h7bf6f2e0afb49893@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[23301]:0x7a0ceb\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h544fd8ca67fbf8ca@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[9325]:0x618bea\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h10a7adbf6e899f7e@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[12267]:0x69675b\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[19929]:0x76bff3\n        __wbg_adapter_936@http://127.0.0.1:57064/suite.js:548:10\n        cb0@http://127.0.0.1:57064/suite.js:4373:28\n        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52\n        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:57064/suite.js:4378:30\n        handleError@http://127.0.0.1:57064/suite.js:143:18\n        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:57064/suite.js:4366:76\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[5851]:0x543368\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::h4de4207119d6a099@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[11240]:0x66e6d5\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::hecfda7b8de000418@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[14007]:0x6d43cb\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::h597d7f078f676c6c@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[1544]:0x33048e\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[682]:0x1bb648\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[3160]:0x44782f\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[1477]:0x31ef17\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[3136]:0x444a4b\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[2831]:0x41d600\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[17929]:0x742320\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[14641]:0x6e98c1\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.closure2400 externref shim@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[28410]:0x7c909c\n        __wbg_adapter_118@http://127.0.0.1:57064/suite.js:544:10\n        real@http://127.0.0.1:57064/suite.js:209:20\n        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:57064/suite.js:3983:23\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[35223]:0x7dea7b\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[28017]:0x7c6c60\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[4864]:0x4f5002\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::{{closure}}::h95b28db559806c13@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[32062]:0x7d71ff\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::queue::Queue::with::h9bd5fdd801f7dec4@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[28018]:0x7c6c73\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::h42fed9c117de84b9@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[2444]:0x3e461d\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::spawn_local::h3dc491f304d42e44@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[10446]:0x64c71d\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::h15c44db32e5b7614@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[8081]:0x5d687a\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen::convert::closures::invoke2_mut::hba2fa4cbb261e43e@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[16522]:0x71fd6b\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.closure2423 externref shim@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[25388]:0x7b5835\n        __wbg_adapter_1045@http://127.0.0.1:57064/suite.js:556:10\n        cb0@http://127.0.0.1:57064/suite.js:3779:28\n        __wbg_get_imports/imports.wbg.__wbg_new_23a2665fac83c611@http://127.0.0.1:57064/suite.js:3784:25\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.__wbg_new_23a2665fac83c611 externref shim@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[28083]:0x7c7359\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.js_sys::Promise::new::hf39a358a769dc6ed@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[11675]:0x67f7fd\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_futures::future_to_promise::h65257425de8480bc@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[9284]:0x616b0a\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasm_bindgen_test::__rt::Context::run::he8da95eeed777e80@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[1211]:0x2d00b0\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasmbindgentestcontext_run@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[8537]:0x5effbd\n        wasm_terminal_wheel-ef5d23766e6cc9c7.wasm.wasmbindgentestcontext_run externref shim@http://127.0.0.1:57064/suite_bg.wasm:wasm-function[28405]:0x7c901b\n        run@http://127.0.0.1:57064/suite.js:2781:26\n        globalThis.testRun<@debugger eval code line 302 > eval:11:42\n        async*@debugger eval code line 302 > eval:14:11\n        evaluate@debugger eval code:304:16\n        @debugger eval code:1:44\n        @debugger eval code:1:62\n\nfailures:\n\n    active_and_passive_hooks_ignore_own_call_and_keep_event_identity\n\ntest result: FAILED. 3 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.31s\n\n",
+      "counts": {
+        "passed": 3,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "webkit",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_terminal_wheel::active_and_passive_hooks_ignore_own_call_and_keep_event_identity",
+        "__wbgt__wasm_terminal_wheel::hook_replacement_and_recursive_dispatch_do_not_hold_service_borrows",
+        "__wbgt__wasm_terminal_wheel::only_literal_false_vetoes_both_live_routes",
+        "__wbgt__wasm_terminal_wheel::thrown_values_retain_identity_and_stop_output"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_terminal_wheel.rs:143:13:\ncallback.call must not be read\n\nStack:\n\n@http://127.0.0.1:57064/suite.js:3803:30\n28905@wasm-function[28905]\n18898@wasm-function[18898]\n6204@wasm-function[6204]\n18899@wasm-function[18899]\n9671@wasm-function[9671]\n12266@wasm-function[12266]\n35127@wasm-function[35127]\n23750@wasm-function[23750]\n23751@wasm-function[23751]\n758@wasm-function[758]\n23301@wasm-function[23301]\n9325@wasm-function[9325]\n12267@wasm-function[12267]\n19929@wasm-function[19929]\n__wbg_adapter_936@http://127.0.0.1:57064/suite.js:548:73\ncb0@http://127.0.0.1:57064/suite.js:4373:45\n@\n@http://127.0.0.1:57064/suite.js:4378:30\nhandleError@http://127.0.0.1:57064/suite.js:143:23\n5851@wasm-function[5851]\n11240@wasm-function[11240]\n14007@wasm-function[14007]\n1544@wasm-function[1544]\n682@wasm-function[682]\n3160@wasm-function[3160]\n1477@wasm-function[1477]\n3136@wasm-function[3136]\n2831@wasm-function[2831]\n17929@wasm-function[17929]\n14641@wasm-function[14641]\n28410@wasm-function[28410]\n__wbg_adapter_118@http://127.0.0.1:57064/suite.js:544:36\nreal@http://127.0.0.1:57064/suite.js:209:21\n\n"
+        }
+      ],
+      "version": "26.4",
+      "output": "running 4 tests\ntest thrown_values_retain_identity_and_stop_output ... ok\ntest only_literal_false_vetoes_both_live_routes ... ok\ntest hook_replacement_and_recursive_dispatch_do_not_hold_service_borrows ... ok\ntest active_and_passive_hooks_ignore_own_call_and_keep_event_identity ... FAIL\n\nfailures:\n\n---- active_and_passive_hooks_ignore_own_call_and_keep_event_identity output ----\n    JS exception that was thrown:\n        RuntimeError: Unreachable code should not be executed (evaluating 'wasm.wasm_bindgen__convert__closures__invoke0_mut__h6ccbabcefd85a5b8(arg0, arg1)')\n        35546@wasm-function[35546]\n        31697@wasm-function[31697]\n        9671@wasm-function[9671]\n        12266@wasm-function[12266]\n        35127@wasm-function[35127]\n        23750@wasm-function[23750]\n        23751@wasm-function[23751]\n        758@wasm-function[758]\n        23301@wasm-function[23301]\n        9325@wasm-function[9325]\n        12267@wasm-function[12267]\n        19929@wasm-function[19929]\n        __wbg_adapter_936@http://127.0.0.1:57064/suite.js:548:73\n        cb0@http://127.0.0.1:57064/suite.js:4373:45\n        @\n        @http://127.0.0.1:57064/suite.js:4378:30\n        handleError@http://127.0.0.1:57064/suite.js:143:23\n        5851@wasm-function[5851]\n        11240@wasm-function[11240]\n        14007@wasm-function[14007]\n        1544@wasm-function[1544]\n        682@wasm-function[682]\n        3160@wasm-function[3160]\n        1477@wasm-function[1477]\n        3136@wasm-function[3136]\n        2831@wasm-function[2831]\n        17929@wasm-function[17929]\n        14641@wasm-function[14641]\n        28410@wasm-function[28410]\n        __wbg_adapter_118@http://127.0.0.1:57064/suite.js:544:36\n        real@http://127.0.0.1:57064/suite.js:209:21\n\nfailures:\n\n    active_and_passive_hooks_ignore_own_call_and_keep_event_identity\n\ntest result: FAILED. 3 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.32s\n\n",
+      "counts": {
+        "passed": 3,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/34ca92e59f947ccb8ba1850647179892c63eae6545b8eb0c6bb83227ff4ba147/artifact.wasm",
+      "sha256": "34ca92e59f947ccb8ba1850647179892c63eae6545b8eb0c6bb83227ff4ba147",
+      "bytes": 14815220,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Fatima16\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_terminal_wheel-ef5d23766e6cc9c7.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Fatima16\\results\\browser-host\\wasm_terminal_wheel\\2026-11-05T08-55-51-184Z-1864c9af-1336-44b6-91ef-eb2af5d1fb03\\artifacts\\suite_bg.wasm",
+      "bytes": 12166970,
+      "sha256": "155b09abb014d4b6edee040c4bf11a59b88184cc9bfa2f7a80b81b4dc420a1d7"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Fatima16\\results\\browser-host\\wasm_terminal_wheel\\2026-11-05T08-55-51-184Z-1864c9af-1336-44b6-91ef-eb2af5d1fb03\\artifacts\\suite.js",
+      "bytes": 166897,
+      "sha256": "313866c8913188b635bb6a97abb52f61bbc455085c574b2faefe097d17e03daa"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "7e3d1071cfce3891a16fc4d6494e162566f5607a2c7680dbb686ee6cd4dec099",
+    "testSourceSha256": "58eb77e960d05f01fda777054229294a9c5ae5fed92742ca7b514546f613f191"
+  },
+  "finishedAt": "2026-11-05T08:56:00.014Z"
+}
