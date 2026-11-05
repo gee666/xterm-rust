@@ -125,18 +125,19 @@ impl SearchAddon {
     ) -> Result<Option<SearchResult>, SearchAddonError> {
         // cachedSearchTerm is an engine argument, evaluated before its raw
         // guard, cache setup and matching callbacks can replace addon state.
+        let engine = self.engine()?;
         let cached = self.inner.cached_term.borrow().clone();
         // Source captures the engine receiver before its raw length getter.
         // An empty engine term clears that host, but is not the addon's invalid
         // term path: selection arguments and result reporting must still run.
-        let host = self.host()?;
+        let host = &engine.host;
         if !term.is_valid_for_engine()? {
             host.clear_selection()?;
             return Ok(None);
         }
         let selection = host.selection()?;
         host.clear_selection()?;
-        self.init_cache()?;
+        engine.init()?;
         let flags = options
             .map(|options| options.matching_options())
             .transpose()?
@@ -145,7 +146,8 @@ impl SearchAddon {
         let same = cached
             .as_ref()
             .is_some_and(|cached| term.equals(cached.as_ref()));
-        self.run_engine(
+        Self::run_engine(
+            &engine,
             &text,
             &flags,
             if reverse {
@@ -219,15 +221,15 @@ impl SearchAddon {
         // Each highlight engine call captures its receiver before reading raw
         // length. Empty/throwing guards must not initialize cache or read flags
         // or matching text, even after a previous highlight found a result.
-        let host = self.host()?;
+        let engine = self.engine()?;
         if !term.is_valid_for_engine()? {
-            host.clear_selection()?;
+            engine.host.clear_selection()?;
             return Ok(None);
         }
-        self.init_cache()?;
+        engine.init()?;
         let flags = options.matching_options()?;
         let text = term.text()?;
-        self.run_engine(&text, &flags, Operation::At(row, col), None, None)
+        Self::run_engine(&engine, &text, &flags, Operation::At(row, col), None, None)
     }
     fn select_result(
         &self,
@@ -269,21 +271,20 @@ impl SearchAddon {
         Ok(true)
     }
     fn run_engine(
-        &self,
+        context: &EngineContext,
         term: &[u16],
         options: &MatchOptions,
         operation: Operation,
         selection: Option<SearchSelection>,
         cached: Option<&[u16]>,
     ) -> Result<Option<SearchResult>, SearchAddonError> {
-        let host = self.host()?;
+        let host = &context.host;
         let terminal = host.terminal();
         let active = terminal.with_state(|state| state.active_buffer())?;
         let buffer = active
             .try_borrow()
             .map_err(|_| SearchAddonError::Borrowed)?;
-        let mut cache = self
-            .inner
+        let mut cache = context
             .cache
             .try_borrow_mut()
             .map_err(|_| SearchAddonError::Borrowed)?;

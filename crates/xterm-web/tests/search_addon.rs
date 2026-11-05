@@ -24,6 +24,8 @@ mod decorations;
 mod empty;
 #[path = "search_cases/engine_guard.rs"]
 mod engine_guard;
+#[path = "search_cases/engine_receiver.rs"]
+mod engine_receiver;
 #[path = "search_cases/falsy_stored_options.rs"]
 mod falsy_stored_options;
 #[path = "search_cases/highlight_guard.rs"]

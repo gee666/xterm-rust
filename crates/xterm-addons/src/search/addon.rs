@@ -15,8 +15,11 @@ use xterm_core::{
 };
 #[path = "completion.rs"]
 mod completion;
+#[path = "engine.rs"]
+mod engine;
 #[path = "find.rs"]
 mod find;
+use engine::EngineContext;
 
 pub trait SearchOptionsSource {
     /// Host adapters use their retained raw values for strict flag equality.
@@ -87,16 +90,13 @@ const DEFAULT_HIGHLIGHT_LIMIT: f64 = 1000.0;
 const REFRESH_DELAY_MS: u64 = 200;
 
 pub(super) struct Inner {
-    host: RefCell<Option<Rc<dyn SearchHost>>>,
+    engine: RefCell<Option<Rc<EngineContext>>>,
     manager: RefCell<Option<Rc<DecorationManager>>>,
     cached_term: RefCell<Option<SearchTermHandle>>,
     last_options: RefCell<Option<SearchOptionsHandle>>,
-    cache: RefCell<SearchLineCache>,
     tracker: SearchResultTracker,
     highlight_limit: Rc<dyn SearchHighlightLimit>,
     highlight_timeout: RefCell<Option<DisposableHandle>>,
-    cache_timeout: RefCell<Option<DisposableHandle>>,
-    cache_listener: RefCell<Option<DisposableHandle>>,
     listeners: RefCell<Vec<DisposableHandle>>,
     before: Emitter<()>,
     after: Emitter<()>,
@@ -136,16 +136,13 @@ impl SearchAddon {
     pub fn with_limit(highlight_limit: Rc<dyn SearchHighlightLimit>) -> Self {
         Self {
             inner: Rc::new(Inner {
-                host: RefCell::new(None),
+                engine: RefCell::new(None),
                 manager: RefCell::new(None),
                 cached_term: RefCell::new(None),
                 last_options: RefCell::new(None),
-                cache: RefCell::new(SearchLineCache::default()),
                 tracker: SearchResultTracker::default(),
                 highlight_limit,
                 highlight_timeout: RefCell::new(None),
-                cache_timeout: RefCell::new(None),
-                cache_listener: RefCell::new(None),
                 listeners: RefCell::new(Vec::new()),
                 before: Emitter::new(),
                 after: Emitter::new(),
@@ -154,8 +151,14 @@ impl SearchAddon {
         }
     }
     pub fn activate(&self, host: Rc<dyn SearchHost>) -> Result<(), SearchAddonError> {
-        self.invalidate_cache();
-        *self.inner.host.borrow_mut() = Some(Rc::clone(&host));
+        let engine = EngineContext::new(Rc::clone(&host));
+        if self.inner.disposed.get() {
+            engine.dispose();
+        }
+        let previous = self.inner.engine.replace(Some(engine));
+        if let Some(previous) = previous {
+            previous.dispose();
+        }
         *self.inner.manager.borrow_mut() = Some(Rc::new(DecorationManager::new(Rc::clone(&host))));
         let weak = Rc::downgrade(&self.inner);
         let listener = host.terminal().on_event().try_subscribe(move |event| {
@@ -208,7 +211,9 @@ impl SearchAddon {
             return Ok(());
         }
         Self::cancel(&self.inner.highlight_timeout);
-        self.invalidate_cache();
+        if let Some(engine) = self.inner.engine.borrow().as_ref() {
+            engine.dispose();
+        }
         let listeners = self.inner.listeners.take();
         for listener in listeners {
             listener.dispose();
@@ -219,8 +224,11 @@ impl SearchAddon {
         self.clear_decorations(false)
     }
     fn host(&self) -> Result<Rc<dyn SearchHost>, SearchAddonError> {
+        Ok(Rc::clone(&self.engine()?.host))
+    }
+    fn engine(&self) -> Result<Rc<EngineContext>, SearchAddonError> {
         self.inner
-            .host
+            .engine
             .borrow()
             .clone()
             .ok_or(SearchAddonError::NotLoaded)
@@ -230,65 +238,6 @@ impl SearchAddon {
         if let Some(handle) = handle {
             handle.dispose();
         }
-    }
-    fn invalidate_cache(&self) {
-        self.inner.cache.borrow_mut().invalidate();
-        Self::cancel(&self.inner.cache_timeout);
-        Self::cancel(&self.inner.cache_listener);
-    }
-    fn init_cache(&self) -> Result<(), SearchAddonError> {
-        let host = self.host()?;
-        self.inner.cache.borrow_mut().init(host.now_ms());
-        if self.inner.disposed.get() {
-            return Ok(());
-        }
-        if self.inner.cache_listener.borrow().is_none() {
-            let weak = Rc::downgrade(&self.inner);
-            let listener = host.terminal().on_event().try_subscribe(move |event| {
-                if matches!(
-                    event,
-                    TerminalEvent::LineFeed
-                        | TerminalEvent::CursorMove
-                        | TerminalEvent::Resize { .. }
-                ) {
-                    if let Some(inner) = weak.upgrade() {
-                        SearchAddon { inner }.invalidate_cache();
-                    }
-                }
-                Ok(())
-            });
-            *self.inner.cache_listener.borrow_mut() = Some(listener);
-        }
-        if self.inner.cache_timeout.borrow().is_none() {
-            self.schedule_cache_timeout()?;
-        }
-        Ok(())
-    }
-    fn schedule_cache_timeout(&self) -> Result<(), SearchAddonError> {
-        let host = self.host()?;
-        let deadline = self.inner.cache.borrow().deadline_ms();
-        if let Some(deadline) = deadline {
-            let weak = Rc::downgrade(&self.inner);
-            let timer = host.timeout(
-                deadline.saturating_sub(host.now_ms()),
-                Rc::new(move || {
-                    if let Some(inner) = weak.upgrade() {
-                        let addon = SearchAddon { inner };
-                        Self::cancel(&addon.inner.cache_timeout);
-                        let host = addon.host()?;
-                        addon.inner.cache.borrow_mut().expire(host.now_ms());
-                        if addon.inner.cache.borrow().deadline_ms().is_none() {
-                            addon.invalidate_cache();
-                        } else {
-                            addon.schedule_cache_timeout()?;
-                        }
-                    }
-                    Ok(())
-                }),
-            )?;
-            *self.inner.cache_timeout.borrow_mut() = Some(timer);
-        }
-        Ok(())
     }
     fn update_matches(&self) -> Result<(), SearchAddonError> {
         Self::cancel(&self.inner.highlight_timeout);
