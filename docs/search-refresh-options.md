@@ -42,6 +42,12 @@ The negative control restored the two old producers from baseaf04745 while keepi
 
 Task369 accepted d69d5ac against baseaf04745. The isolated reviewer inspected source copy/cache ordering, callback borrow boundaries and both adapters. It independently checked both JavaScript syntax checks, all24 summary hashes, retained WASM artifact hashes, both negative-control producer hashes and all776 reference-manifest entries. It inspected the native/source/WASM/original-suite receipts without rerunning Cargo or browsers because the local grant had been released. No changes were requested. Clean rebase onto main5051454 preserves the source/evidence hashes as1affb84 plus intent receiptbd2accf.
 
+## Canonical integration
+
+Source and reviewed receipts integrated at main e1651049cf208ae47965b9c9f7e206fecf36cdd6. The canonical helper built/tested changed xterm-addons/xterm-web, checked affected dependents, the default workspace and applicable WASM libraries. All499 tests across146 summaries passed, with zero failures/ignored tests. Exact union formatting passed. The helper removed the private target. This is not a full all-feature workspace/runtime pass or a post-rebase browser rerun. Original directed browser receipts remain scoped to the source-pinned baseaf04745 run.
+
+The same batch includes exact accepted docs/evidence receipts c62ef60, c25723e, 9baa071 and ec6bc9b. The CI checkpoint in those receipts predates this search repair. Its platform results are not silently upgraded to a test of e1651049. Cleanup preflight found7273 files/1078 directories, zero links/redirects, zero owned matched processes and no target. All207 untracked runner paths were individually whitelisted for removal. Canonical logs/counts and preflight are retained alongside the earlier evidence.
+
 ## Remaining work
 
 This closes only delayed refresh copying within347. Valid boxed/overridden string matching, null matching options, repeated per-line flag reads, flag-getter reentry replacing stored options, and raw length/method mutation between matching phases remain347/322. Refresh after an intervening cache clear still needs the source undefined-term representation audited. Complete source-module mapping, full raw-option randomized coverage, native Linux/macOS and full workspace/end-to-end evidence are not supplied by this task. Overall equivalence is NOT PROVEN.

@@ -1,0 +1,9 @@
+# Melanie16 handoff
+
+Task369 accepted and integrated main e1651049cf208ae47965b9c9f7e206fecf36cdd6. `docs/search-refresh-options.md` and `results/search-refresh-options/` describe delayed own-enumerable option copying and pre-copy cache clearing. Source42/Rust30/native35/core34/unchanged Search browser81/unchanged JS unit86 pass, scoped Clippy/fullfmt pass. Negative control catches missing spread getters and aborts without final function counts. Canonical499/146summaries passes. Full347/322 and all overall equivalence remain NOT PROVEN.
+
+Main also contains exact accepted docs-only receipts c62ef60/c25723e/9baa071/ec6bc9b through the same gate. b86a22b was already patch-equivalent to main972f00a and was not replayed.
+
+Next priority is full original/browser/demo task327, not another search slice. Existing `scripts/e2e-upstream.mjs`, `scripts/demo-e2e.mjs`, `scripts/check-native-demo.mjs` and source baselines exist. The source integration wrapper inventories core and13 addon Playwright configs. Ligatures are a separately required family, not a fourteenth wrapper config. Reuse current main, read exact scoped receipts and keep every original assertion. `--no-build` requires a source-identical local build report. Physical reference dependencies were linked only for two bounded Search commands and unlinked in finally. New work/builds stay on owned O: under coordinator six-heavy/two-browser/-j2 policy, not the retired global queue.
+
+O:Me16 is owned disposable work. All commands returned and browser/server finally blocks completed, target was removed by canonical helper, and preflight sees no links/redirects or owned matched processes. Preserve the receipt-only branch commit before deleting the207 individually whitelisted untracked runner files and removing the clean worktree without force. No other worktree/reference/dependency cache is a deletion target. Final actual deletion is reported in swarm posts409/458 after this durable preflight record.
