@@ -215,7 +215,6 @@ impl Terminal {
         }
         self.shared.link_providers.dispose();
         self.shared.custom_key.borrow_mut().take();
-        self.shared.custom_wheel.borrow_mut().take();
         for listener in &self.shared.listeners {
             listener.dispose();
         }

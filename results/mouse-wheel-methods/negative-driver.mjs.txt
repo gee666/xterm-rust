@@ -1,0 +1,34 @@
+import {readFile, writeFile} from 'node:fs/promises';
+import {spawnSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+const files = ['browser_open.rs','browser_services.rs','input_services.rs','mod.rs','operations.rs']
+  .map(name => `crates/xterm-web/src/terminal/${name}`);
+const hash = bytes => createHash('sha256').update(bytes).digest('hex');
+const before = new Map(await Promise.all(files.map(async file => [file, await readFile(file)])));
+const report = {base:'e64f4870', files:[], negative:null, restored:false};
+const output = 'results/mouse-wheel-methods';
+try {
+  for (const file of files) {
+    const git = spawnSync('git', ['show', `e64f4870:${file}`], {timeout:30000});
+    if (git.status !== 0 || git.error) throw new Error(`git show failed for ${file}`);
+    await writeFile(file, git.stdout);
+    report.files.push({file, baselineSha256:hash(git.stdout), fixedSha256:hash(before.get(file))});
+  }
+  const result = spawnSync(process.execPath, ['scripts/browser-host-check.mjs'], {
+    env:{...process.env, BROWSERS:'chromium', WASM_TEST:'wasm_terminal_mouse_wheel_methods'},
+    timeout:180000, encoding:'utf8', maxBuffer:4*1024*1024
+  });
+  await writeFile(`${output}/negative-browser-driver.log`, (result.stdout??'')+(result.stderr??''));
+  const browser = JSON.parse(await readFile('results/browser-host/wasm_terminal_mouse_wheel_methods-results.json','utf8'));
+  await writeFile(`${output}/negative-browser-results.json`, JSON.stringify(browser,null,2)+'\n');
+  report.negative = {status:result.status,error:result.error?.message,
+    reportStatus:browser.status,browsers:browser.browsers.map(b=>({name:b.name,status:b.status,tests:b.tests.length}))};
+  if (result.status !== 1 || browser.status !== 'failed' || browser.browsers.length !== 1 ||
+      browser.browsers[0].tests.length !== 7) throw new Error('negative control did not execute/fail all 7 functions');
+} finally {
+  for (const [file, bytes] of before) await writeFile(file, bytes);
+  report.restored = (await Promise.all(files.map(async file => hash(await readFile(file)) === hash(before.get(file))))).every(Boolean);
+  await writeFile(`${output}/restoration.json`, JSON.stringify(report,null,2)+'\n');
+  if (!report.restored) throw new Error('fixed source restoration failed');
+}
+console.log(JSON.stringify(report,null,2));

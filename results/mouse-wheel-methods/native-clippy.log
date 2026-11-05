@@ -1,0 +1,39 @@
+    Checking equivalent v1.0.3
+    Checking foldhash v0.1.5
+    Checking allocator-api2 v0.2.21
+    Checking memchr v2.8.3
+    Checking hashbrown v0.15.5
+    Checking ryu-js v1.0.3
+    Checking adler2 v2.0.1
+    Checking miniz_oxide v0.8.9
+    Checking regress v0.10.4
+    Checking serde_core v1.0.229
+    Checking xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\RaelynnWheel\crates\xterm-core)
+    Checking zmij v1.0.23
+    Checking itoa v1.0.18
+    Checking serde_json v1.0.154
+    Checking xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\RaelynnWheel\crates\xterm-addons)
+    Checking xterm-wasm-support v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\RaelynnWheel\crates\xterm-wasm-support)
+    Checking xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\RaelynnWheel\crates\xterm-web)
+    Checking xterm-font-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\RaelynnWheel\crates\xterm-font-addons)
+error: called `Iterator::last` on a `DoubleEndedIterator`; this will needlessly iterate the entire iterator
+   --> crates\xterm-addons\tests\support\font_cff_header_assertions.rs:176:14
+    |
+176 |       let at = (0..count)
+    |  ______________^
+177 | |         .map(|i| start + i * width)
+178 | |         .filter(|at| &bytes[*at..*at + 4] == case["tag"].as_str().unwrap().as_bytes())
+179 | |         .last()
+    | |_______________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#double_ended_iterator_last
+    = note: `-D clippy::double-ended-iterator-last` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::double_ended_iterator_last)]`
+help: try
+    |
+179 -         .last()
+179 +         .next_back()
+    |
+
+error: could not compile `xterm-addons` (test "font_cff2_dict") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

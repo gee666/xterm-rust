@@ -16,6 +16,7 @@ const family = process.env.MOUSE_CASE_FAMILY ?? 'modes';
 const families = {
   modes: ['browser_mouse_mode_cases.js', 'mouse-modes'],
   'wheel-receiver': ['browser_wheel_receiver_cases.js', 'wheel-receiver'],
+  'wheel-methods': ['browser_mouse_wheel_method_cases.js', 'mouse-wheel-methods'],
   'builtin-methods': ['browser_mouse_builtin_cases.js', 'mouse-builtin-methods'],
   disposal: ['browser_mouse_dispose_cases.js', 'mouse-disposal'],
   'name-errors': ['browser_mouse_name_cases.js', 'mouse-name-errors'],

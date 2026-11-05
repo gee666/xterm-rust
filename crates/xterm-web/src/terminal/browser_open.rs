@@ -94,8 +94,13 @@ impl Terminal {
         *self.shared.custom_key.borrow_mut() = Some(handler);
     }
     #[wasm_bindgen(js_name = attachCustomWheelEventHandler)]
-    pub fn attach_custom_wheel_event_handler(&self, handler: js_sys::Function) {
-        *self.shared.custom_wheel.borrow_mut() = Some(handler);
+    pub fn attach_custom_wheel_event_handler(&self, handler: JsValue) -> Result<(), JsValue> {
+        super::mouse_wheel::call_method(
+            &self.shared.mouse_receiver,
+            "setCustomWheelEventHandler",
+            &handler,
+        )?;
+        Ok(())
     }
 
     pub fn paste(&self, data: js_sys::JsString) -> Result<(), JsValue> {

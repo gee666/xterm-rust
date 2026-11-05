@@ -1,0 +1,31 @@
+running 7 tests
+test recursive_replacement_and_reset ... ok
+test raw_handlers_results_and_errors ... ok
+test public_internal_and_dom_share_handler_across_lifecycle ... ok
+test prototype_identity_descriptors_and_overrides ... FAIL
+test live_method_overrides_and_exceptions ... ok
+test borrowed_receivers_and_inherited_properties ... ok
+test accessor_order_and_errors ... ok
+
+failures:
+
+---- prototype_identity_descriptors_and_overrides output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.__rust_start_panic (http://127.0.0.1:53814/suite_bg.wasm:wasm-function[47234]:0xb1d59f)
+            at wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.rust_panic (http://127.0.0.1:53814/suite_bg.wasm:wasm-function[42336]:0xb11cb6)
+            at wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:53814/suite_bg.wasm:wasm-function[13297]:0x8da2a0)
+            at wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:53814/suite_bg.wasm:wasm-function[16801]:0x96d193)
+            at wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:53814/suite_bg.wasm:wasm-function[46693]:0xb1c82f)
+            at wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.rust_begin_unwind (http://127.0.0.1:53814/suite_bg.wasm:wasm-function[31962]:0xad28c0)
+            at wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:53814/suite_bg.wasm:wasm-function[31963]:0xad28ed)
+            at wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:53814/suite_bg.wasm:wasm-function[6007]:0x6f2d4e)
+            at wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.core::panicking::assert_failed::h64be4497a873b719 (http://127.0.0.1:53814/suite_bg.wasm:wasm-function[24001]:0xa48f53)
+            at wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_terminal_mouse_wheel_methods::compare::h4e2526e0be60ab8a (http://127.0.0.1:53814/suite_bg.wasm:wasm-function[1377]:0x3a38e6)
+
+failures:
+
+    prototype_identity_descriptors_and_overrides
+
+test result: FAILED. 6 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.15s
+

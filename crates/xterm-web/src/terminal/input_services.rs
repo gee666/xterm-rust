@@ -150,19 +150,12 @@ impl BrowserInputServices for WeakBrowserServices {
     }
     fn custom_wheel(&self, event: &WheelEvent) -> Result<bool, JsValue> {
         let services = self.upgrade()?;
-        let handler = services.custom_wheel.borrow().clone();
-        match handler {
-            // Source calls a MouseStateService property, preserving its receiver
-            // without reading an own `call` property. Clone before reentrant input.
-            Some(handler) => Ok(js_sys::Reflect::apply(
-                &handler,
-                &services.mouse_receiver,
-                &js_sys::Array::of1(event.as_ref()),
-            )?
-            .as_bool()
-                != Some(false)),
-            None => Ok(true),
-        }
+        Ok(super::mouse_wheel::call_method(
+            &services.mouse_receiver,
+            "allowCustomWheelEvent",
+            event.as_ref(),
+        )?
+        .is_truthy())
     }
     fn on_data_value(&self, data: &JsValue) -> Result<(), JsValue> {
         self.upgrade()?

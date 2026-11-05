@@ -1,0 +1,82 @@
+running 7 tests
+test recursive_replacement_and_reset ... ok
+test raw_handlers_results_and_errors ... ok
+test public_internal_and_dom_share_handler_across_lifecycle ... ok
+test prototype_identity_descriptors_and_overrides ... FAIL
+test live_method_overrides_and_exceptions ... ok
+test borrowed_receivers_and_inherited_properties ... ok
+test accessor_order_and_errors ... ok
+
+failures:
+
+---- prototype_identity_descriptors_and_overrides output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable executed
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.__rust_start_panic@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[47234]:0xb1d59f
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.rust_panic@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[42336]:0xb11cb6
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[13297]:0x8da2a0
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[16801]:0x96d193
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[46693]:0xb1c82f
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.rust_begin_unwind@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[31962]:0xad28c0
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[31963]:0xad28ed
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[6007]:0x6f2d4e
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.core::panicking::assert_failed::h64be4497a873b719@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[24001]:0xa48f53
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_terminal_mouse_wheel_methods::compare::h4e2526e0be60ab8a@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[1377]:0x3a38e6
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_terminal_mouse_wheel_methods::prototype_identity_descriptors_and_overrides::h56123f53a93fd38d@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[37647]:0xafe6fe
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.core::ops::function::FnOnce::call_once::ha97cfc0609eb0025@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[31375]:0xacbfc6
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h23b819c2242cb85f@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[12837]:0x8c3bb1
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h6a33cbbc67c566f0@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[16807]:0x96d53e
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[26883]:0xa85e52
+        __wbg_adapter_1347@http://127.0.0.1:53814/suite.js:634:10
+        cb0@http://127.0.0.1:53814/suite.js:6763:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:53814/suite.js:6768:30
+        handleError@http://127.0.0.1:53814/suite.js:178:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:53814/suite.js:6756:76
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[8059]:0x79e9df
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::h1e0eb024282eb890@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[15446]:0x938488
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::ha4180787f18a9029@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[18996]:0x9bb609
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::h2737f9392898f3aa@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[2242]:0x4d0e63
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[1014]:0x2b4426
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[4464]:0x64eb25
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[2153]:0x4b9d92
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[4419]:0x6494d7
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[3969]:0x60f1cb
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[24242]:0xa4e85e
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[19833]:0x9d7959
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.closure2933 externref shim@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[38112]:0xb0105f
+        __wbg_adapter_132@http://127.0.0.1:53814/suite.js:630:10
+        real@http://127.0.0.1:53814/suite.js:244:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:53814/suite.js:6208:23
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[46805]:0xb1cc7a
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[37519]:0xafd960
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[6726]:0x734b24
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::{{closure}}::h95b28db559806c13@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[42850]:0xb1352c
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_bindgen_futures::queue::Queue::with::h9bd5fdd801f7dec4@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[37520]:0xafd973
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::h42fed9c117de84b9@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[3451]:0x5c29f3
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_bindgen_futures::spawn_local::h3dc491f304d42e44@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[14295]:0x9070d3
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::h15c44db32e5b7614@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[11011]:0x8625f7
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_bindgen::convert::closures::invoke2_mut::hba2fa4cbb261e43e@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[22393]:0xa214c7
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.closure2956 externref shim@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[34097]:0xae70c6
+        __wbg_adapter_1498@http://127.0.0.1:53814/suite.js:642:10
+        cb0@http://127.0.0.1:53814/suite.js:5953:28
+        __wbg_get_imports/imports.wbg.__wbg_new_23a2665fac83c611@http://127.0.0.1:53814/suite.js:5958:25
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.__wbg_new_23a2665fac83c611 externref shim@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[37619]:0xafe40d
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.js_sys::Promise::new::hf39a358a769dc6ed@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[16042]:0x94fac2
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_bindgen_futures::future_to_promise::h65257425de8480bc@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[12780]:0x8c0df1
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasm_bindgen_test::__rt::Context::run::he8da95eeed777e80@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[1782]:0x44b7c3
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasmbindgentestcontext_run@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[11701]:0x888f53
+        wasm_terminal_mouse_wheel_methods-89da456cab41178e.wasm.wasmbindgentestcontext_run externref shim@http://127.0.0.1:53814/suite_bg.wasm:wasm-function[38108]:0xb00ff3
+        run@http://127.0.0.1:53814/suite.js:4585:26
+        globalThis.testRun<@debugger eval code line 302 > eval:11:42
+        async*@debugger eval code line 302 > eval:14:11
+        evaluate@debugger eval code:304:16
+        @debugger eval code:1:44
+        @debugger eval code:1:62
+
+failures:
+
+    prototype_identity_descriptors_and_overrides
+
+test result: FAILED. 6 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.19s
+

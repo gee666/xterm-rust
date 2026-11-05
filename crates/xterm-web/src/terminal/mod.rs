@@ -32,6 +32,7 @@ pub mod link_services;
 mod marker_api;
 mod modes_api;
 mod mouse_api;
+mod mouse_wheel;
 mod operations;
 pub mod options;
 mod overview_services;
@@ -81,7 +82,6 @@ pub(crate) struct Shared {
     pub link_providers: crate::links::browser_linkifier::BrowserProviders,
     pub listeners: Vec<xterm_core::lifecycle::DisposableHandle>,
     pub custom_key: Rc<RefCell<Option<Function>>>,
-    pub custom_wheel: Rc<RefCell<Option<Function>>>,
     pub public_disposed: Cell<bool>,
     pub core_disposed: Rc<Cell<bool>>,
 }
@@ -180,6 +180,7 @@ impl Terminal {
             Rc::clone(&internal_render),
         )?;
         let mouse_receiver = internal.mouse_state_service();
+        mouse_wheel::install(&mouse_receiver)?;
         let internal = internal.into();
         let link_providers = link_services::create_registry(Rc::clone(&native), &window)?;
         let selection = Rc::new(crate::selection::service::SelectionService::new(
@@ -225,7 +226,6 @@ impl Terminal {
                     data_disposal,
                 ],
                 custom_key: Rc::new(RefCell::new(None)),
-                custom_wheel: Rc::new(RefCell::new(None)),
                 public_disposed: Cell::new(false),
                 core_disposed,
                 link_providers,
