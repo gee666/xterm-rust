@@ -115,9 +115,8 @@ impl<'a> FontTables<'a> {
         let mut name = None;
         let mut tags = None;
         let mut glyph_count = None;
-        let (mut glyf, mut loca) = (None, None);
+        let (mut glyf, mut loca, mut cff, mut cff2) = (None, None, None, None);
         let mut short_loca = false;
-        let (mut cff, mut cff2) = (None, None);
         let mut hmtx = None;
         // Missing hhea leaves the source metric count undefined. Its numeric
         // comparison then reads no metrics, the same boundary as zero here.
@@ -227,14 +226,13 @@ impl<'a> FontTables<'a> {
         )?;
         super::font_metadata::name(&name, tags)?;
         let truetype = glyf.zip(loca);
-        if truetype.is_none() {
+        if let Some((glyf, loca)) = truetype {
+            super::font_outline::validate(payload, glyf, loca, woff, glyph_count, short_loca)?;
+        } else {
             let record = cff.or(cff2).ok_or(FontError::Invalid(
                 "Font doesn't contain TrueType, CFF or CFF2 outlines.",
             ))?;
             super::font_cff_header::validate(payload, record, woff)?;
-        }
-        if let Some((glyf, loca)) = truetype {
-            super::font_outline::validate(payload, glyf, loca, woff, glyph_count, short_loca)?;
         }
         let hmtx = hmtx.ok_or(FontError::MissingTable("hmtx"))?;
         if truetype.is_some() {

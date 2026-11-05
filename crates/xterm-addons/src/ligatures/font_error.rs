@@ -34,6 +34,9 @@ impl fmt::Display for FontError {
             Self::KernVersion(version) => {
                 write!(f, "Unsupported kern table version ({version}).")
             }
+            Self::CffVersion { major, minor } => {
+                write!(f, "Unsupported CFF table version {major}.{minor}")
+            }
             Self::GposVersion { major, minor } => write!(
                 f,
                 "Unsupported GPOS table version {}",
@@ -44,9 +47,6 @@ impl fmt::Display for FontError {
                 f,
                 "0x{offset:x}: GPOS lookup type {kind} format must be 1 or 2."
             ),
-            Self::CffVersion { major, minor } => {
-                write!(f, "Unsupported CFF table version {major}.{minor}")
-            }
             Self::CoverageFormat { offset } => {
                 write!(f, "0x{offset:x}: Coverage format must be 1 or 2.")
             }
