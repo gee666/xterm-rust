@@ -37,6 +37,12 @@ cargo fmt --all -- --check
 
 The oracle removes its scratch bundle in finally. Use `--generate` only after reviewing a real source or trace change. Never alter the original source to clear a failure. Browser wrappers close all browser processes, the HTTP listener and every WebSocket peer in finally. Retained JSON reports include historical temporary artifact paths and hashes, not committed WASM binaries.
 
+## Independent review and integration status
+
+The isolated task404 reviewer accepted the implementation and setup-cleanup commits with no findings or tracked edits. It independently reran all11 unchanged-source traces,24 browser executions,16 native tests, focused warning-denied WASM Clippy and all-five-package formatting. It reproduced exact full-workspace formatting OS206 and checked baseline artifact hashes. `results/attach-reentry/review.md` and `review-browser.json` retain its verdict and refreshed browser hash.
+
+After rebasing cleanly onto actual main d29e4bad, the producer reran all11 source cases,24 browser executions,16 native tests and focused WASM Clippy successfully. The `union-*` reports retain the new results. No application hunk was changed by the rebase. Canonical integration remains task309's responsibility; this document does not claim a main merge before its guarded helper succeeds.
+
 ## Temporary ownership
 
 Only `O:/xterm-rust-swarm-16/tmp/E` is owned by this task. It contains its private target, source reference copy, scratch bundles and generated browser artifacts. Existing source dependencies and wasm-bindgen are reused read-only through environment paths. Preserve regression source and concise reports on actual main before removing this worktree. No source junctions, persistent server, global build queue or credential changes are needed.
