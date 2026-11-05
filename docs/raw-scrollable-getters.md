@@ -12,7 +12,7 @@ Update phases live in `scroll/scrollable/updates.rs`, separate from event/animat
 
 ## Scope
 
-This closes only live update-object evaluation. BrowserScrollable, Element, scrollbar geometry and Viewport still use numeric state. State-object identity and mutation, arbitrary Date.now values/errors, raw event exceptions and browser scheduler reentry remain301. The test scheduler does not prove those contracts. Full equivalence is NOT PROVEN.
+This closes only live update-object evaluation. BrowserScrollable, Element, scrollbar geometry and Viewport still use numeric state. State-object identity and mutation, raw event exceptions and browser scheduler reentry remain301. Task443 adds raw Date.now samples/errors in the shared engine; the numeric BrowserScrollable clock binding still needs migration. See docs/raw-scroll-clock.md. The test scheduler does not prove those contracts. Full equivalence is NOT PROVEN.
 
 ## Tests and commands
 

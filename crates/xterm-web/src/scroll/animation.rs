@@ -117,14 +117,32 @@ impl<V: ScrollValue> SmoothOperation<V> {
         duration: V,
         now: impl FnOnce() -> f64,
     ) -> Result<Self, V::Error> {
+        Self::try_start_with_clock(from, to, duration, || Ok(V::number(now())))
+    }
+    /// Raw Date.now may return an object or throw. Subtraction performs its
+    /// coercion only after the duration addition and clock invocation.
+    pub fn try_start_with_clock(
+        from: ScrollState<V>,
+        to: ScrollState<V>,
+        duration: V,
+        now: impl FnOnce() -> Result<V, V::Error>,
+    ) -> Result<Self, V::Error> {
         let duration = duration.add(&V::number(ADVANCE_MS))?;
-        Self::try_new(from, to, V::number(now() - ADVANCE_MS), duration)
+        let start_time = now()?.subtract(&V::number(ADVANCE_MS))?;
+        Self::try_new(from, to, start_time, duration)
     }
     pub fn try_accept_dimensions(&mut self, state: ScrollState<V>) -> Result<(), V::Error> {
         super::animation_live::accept_dimensions(&std::cell::RefCell::new(self), state)
     }
     pub fn try_tick(&self, now: f64) -> Result<AnimationUpdate<V>, V::Error> {
-        super::animation_live::tick(&std::cell::RefCell::new(self), || now)
+        self.try_tick_with_clock(|| Ok(V::number(now)))
+    }
+    /// Samples the fallible clock before reading the operation's start time.
+    pub fn try_tick_with_clock(
+        &self,
+        now: impl FnOnce() -> Result<V, V::Error>,
+    ) -> Result<AnimationUpdate<V>, V::Error> {
+        super::animation_live::tick(&std::cell::RefCell::new(self), now)
     }
 }
 impl SmoothOperation {

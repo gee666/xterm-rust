@@ -20,6 +20,8 @@ wasm_bindgen_test_configure!(run_in_browser);
 extern "C" {
     #[wasm_bindgen(catch, js_name = runLiveCases)]
     fn cases(run: &Function) -> Result<u32, JsValue>;
+    #[wasm_bindgen(catch, js_name = runClockCases)]
+    fn clock_cases(run: &Function) -> Result<u32, JsValue>;
     #[wasm_bindgen(catch, js_name = runGetterCases)]
     fn getter_cases(run: &Function) -> Result<u32, JsValue>;
 }
@@ -94,13 +96,23 @@ fn error(error: ScrollError<JsValue, JsValue>) -> JsValue {
         ScrollError::MissingAnimation => js_sys::TypeError::new("animation removed").into(),
     }
 }
+#[derive(Clone)]
+enum Clock {
+    Value(JsValue),
+    Callback(Function),
+}
 fn run(duration: JsValue, setup: Function) -> Result<JsValue, JsValue> {
-    let now = Rc::new(Cell::new(1000.0));
+    let now = Rc::new(RefCell::new(Clock::Value(1000.0.into())));
     let read_now = now.clone();
     let frames = Rc::new(Frames::default());
-    let model = Scrollable::try_new(Scheduler(frames.clone()), false, duration, move || {
-        read_now.get()
-    })?;
+    let model =
+        Scrollable::try_new_with_clock(Scheduler(frames.clone()), false, duration, move || {
+            let clock = read_now.borrow().clone();
+            match clock {
+                Clock::Value(value) => Ok(value),
+                Clock::Callback(callback) => callback.call0(&JsValue::UNDEFINED),
+            }
+        })?;
     let events = Rc::new(RefCell::new(Vec::new()));
     let output = events.clone();
     let listener = model.on_scroll().subscribe(move |event| {
@@ -160,7 +172,11 @@ fn run(duration: JsValue, setup: Function) -> Result<JsValue, JsValue> {
                 Ok(JsValue::UNDEFINED)
             }
             Some("clock") => {
-                now.set(args.get(1).as_f64().unwrap());
+                *now.borrow_mut() = Clock::Value(args.get(1));
+                Ok(JsValue::UNDEFINED)
+            }
+            Some("clockFn") => {
+                *now.borrow_mut() = Clock::Callback(args.get(1).dyn_into::<Function>()?);
                 Ok(JsValue::UNDEFINED)
             }
             Some("frame") => {
@@ -224,6 +240,13 @@ fn live_source_values_errors_and_coercion_reentry() -> Result<(), JsValue> {
     let run =
         Closure::wrap(Box::new(run) as Box<dyn Fn(JsValue, Function) -> Result<JsValue, JsValue>>);
     assert_eq!(cases(run.as_ref().unchecked_ref())?, 605);
+    Ok(())
+}
+#[wasm_bindgen_test]
+fn live_clock_values_errors_and_reentry() -> Result<(), JsValue> {
+    let run =
+        Closure::wrap(Box::new(run) as Box<dyn Fn(JsValue, Function) -> Result<JsValue, JsValue>>);
+    assert_eq!(clock_cases(run.as_ref().unchecked_ref())?, 126);
     Ok(())
 }
 #[wasm_bindgen_test]

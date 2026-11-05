@@ -59,9 +59,9 @@ pub(super) fn accept_dimensions<V: ScrollValue, T: BorrowMut<SmoothOperation<V>>
 
 pub(super) fn tick<V: ScrollValue, T: Borrow<SmoothOperation<V>>>(
     cell: &RefCell<T>,
-    now: impl FnOnce() -> f64,
+    now: impl FnOnce() -> Result<V, V::Error>,
 ) -> Result<AnimationUpdate<V>, V::Error> {
-    let now = V::number(now());
+    let now = now()?;
     let start_time = read(cell, |operation| operation.start_time.clone());
     let elapsed = now.subtract(&start_time)?;
     let duration = read(cell, |operation| operation.duration.clone());

@@ -53,15 +53,15 @@ struct Animation<S: FrameScheduler, V> {
     pending: RefCell<Option<S::Handle>>,
 }
 type SharedAnimation<S, V> = Rc<Animation<S, V>>;
-struct State<S: FrameScheduler, V> {
+struct State<S: FrameScheduler, V: ScrollValue> {
     scheduler: RefCell<S>,
-    now: Rc<dyn Fn() -> f64>,
+    now: Rc<dyn Fn() -> Result<V, V::Error>>,
     scroll: RefCell<ScrollState<V>>,
     smooth: RefCell<Option<SharedAnimation<S, V>>>,
     duration: RefCell<V>,
     event: Emitter<ScrollEvent<V>>,
 }
-impl<S: FrameScheduler, V> Drop for State<S, V> {
+impl<S: FrameScheduler, V: ScrollValue> Drop for State<S, V> {
     fn drop(&mut self) {
         if let Some(animation) = self.smooth.get_mut().take() {
             if let Some(handle) = animation.pending.borrow_mut().take() {
@@ -73,25 +73,25 @@ impl<S: FrameScheduler, V> Drop for State<S, V> {
         }
     }
 }
-pub struct Scrollable<S: FrameScheduler, V = f64> {
+pub struct Scrollable<S: FrameScheduler, V: ScrollValue = f64> {
     state: Rc<State<S, V>>,
 }
-pub struct WeakScrollable<S: FrameScheduler, V = f64> {
+pub struct WeakScrollable<S: FrameScheduler, V: ScrollValue = f64> {
     state: Weak<State<S, V>>,
 }
-impl<S: FrameScheduler, V> Clone for WeakScrollable<S, V> {
+impl<S: FrameScheduler, V: ScrollValue> Clone for WeakScrollable<S, V> {
     fn clone(&self) -> Self {
         Self {
             state: self.state.clone(),
         }
     }
 }
-impl<S: FrameScheduler, V> WeakScrollable<S, V> {
+impl<S: FrameScheduler, V: ScrollValue> WeakScrollable<S, V> {
     pub fn upgrade(&self) -> Option<Scrollable<S, V>> {
         self.state.upgrade().map(|state| Scrollable { state })
     }
 }
-impl<S: FrameScheduler, V> Clone for Scrollable<S, V> {
+impl<S: FrameScheduler, V: ScrollValue> Clone for Scrollable<S, V> {
     fn clone(&self) -> Self {
         Self {
             state: self.state.clone(),
@@ -106,6 +106,18 @@ impl<S: FrameScheduler, V: ScrollValue + 'static> Scrollable<S, V> {
         integer_values: bool,
         duration: V,
         now: impl Fn() -> f64 + 'static,
+    ) -> Result<Self, V::Error> {
+        Self::try_new_with_clock(scheduler, integer_values, duration, move || {
+            Ok(V::number(now()))
+        })
+    }
+    /// Uses raw, fallible clock samples on the frame timeline. Neither calling
+    /// the clock nor coercing its result holds a model borrow.
+    pub fn try_new_with_clock(
+        scheduler: S,
+        integer_values: bool,
+        duration: V,
+        now: impl Fn() -> Result<V, V::Error> + 'static,
     ) -> Result<Self, V::Error> {
         Ok(Self {
             state: Rc::new(State {

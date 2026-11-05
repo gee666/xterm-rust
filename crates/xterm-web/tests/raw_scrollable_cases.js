@@ -1,9 +1,9 @@
 // Source and Rust receive independent inputs and the same action program.
 function sourceRun(duration, setup) {
-  let now=1000, next=0, failRequest, failCancel;
+  let now=1000, clockFn, next=0, failRequest, failCancel;
   const active=new Map(), trace=[], events=[];
   const oldNow=Date.now;
-  Date.now=()=>now;
+  Date.now=()=>clockFn?clockFn():now;
   const model=new Scrollable({forceIntegerValues:false, smoothScrollDuration:duration,
     scheduleAtNextAnimationFrame(callback) {
       if(failRequest!==undefined)throw failRequest;
@@ -27,7 +27,8 @@ function sourceRun(duration, setup) {
         case 'rawSmooth': result=model.setScrollPositionSmooth(a[1],a[2]);break;
         case 'rawValidate': {const p=model.validateScrollPosition(a[1]);result=[p.scrollLeft,p.scrollTop];break;}
         case 'duration': result=model.setSmoothScrollDuration(a[1]);break;
-        case 'clock': now=a[1];break;
+        case 'clock': now=a[1];clockFn=undefined;break;
+        case 'clockFn': clockFn=a[1];break;
         case 'frame': {const item=active.entries().next().value;if(item){active.delete(item[0]);item[1]();}break;}
         case 'failRequest': failRequest=a[1];break;
         case 'failCancel': failCancel=a[1];break;
@@ -82,7 +83,7 @@ function scenario(program) {
       }});
       return value;
     };
-    program({act,object,token,update});
+    program({act,object,token,update,log:coercions});
     // Events expose dimensions/positions, not private raw requests. Strip the
     // latter from both event snapshots without altering public assertions.
     const snapshot=act('snapshot');
@@ -165,6 +166,58 @@ export function runLiveCases(run) {
       }
     }]);
   }
+  for(const [label,program] of tests) {
+    const expected=sourceRun(90,scenario(program)), actual=run(90,scenario(program));
+    if(JSON.stringify(actual)!==JSON.stringify(expected))throw new Error(`${label}\nexpected ${JSON.stringify(expected)}\nactual ${JSON.stringify(actual)}`);
+  }
+  return tests.length;
+}
+export function runClockCases(run) {
+  const tests=[];
+  const values=[0,-0,1000,1040,1200,-3,'1040','bad',true,false,null,undefined,NaN,Infinity,-Infinity,2n,Symbol('clock')];
+  for(const value of values)for(const phase of ['start','replace','reuse','tick']) {
+    tests.push([`clock/${phase}/${String(value)}`,({act})=>{
+      if(phase!=='start')act('smooth',100,200,false);
+      act('clock',value);
+      if(phase==='tick')act('frame');
+      else act('smooth',200,300,phase==='reuse');
+      act('clock',1300);act('frame');
+    }]);
+  }
+  for(const phase of ['start','replace','reuse','tick'])
+    for(const location of ['call','coerce'])
+      for(const reaction of ['none','now','smooth','dimensions','duration','clock','throw']) {
+        tests.push([`clock/${phase}/${location}/${reaction}`,({act,object,token,log})=>{
+          if(phase!=='start')act('smooth',100,200,false);
+          let armed=true;
+          const react=()=>{
+            if(!armed)return;
+            armed=false;
+            if(reaction==='throw')throw token;
+            if(reaction==='now')act('now',5,7);
+            if(reaction==='smooth')act('smooth',350,400,false);
+            if(reaction==='dimensions')act('dimensions',120,1400,80,1300,true);
+            if(reaction==='duration')act('duration',40);
+            if(reaction==='clock')act('clock',1100);
+          };
+          const sample=object('clock-sample',1040,location==='coerce'?react:undefined);
+          act('clockFn',()=>{
+            log.push(['clock','call']);
+            if(location==='call')react();
+            return sample;
+          });
+          if(phase==='tick')act('frame');
+          else act('smooth',200,300,phase==='reuse');
+          act('clock',1300);act('frame');
+        }]);
+      }
+  for(const phase of ['start','tick'])tests.push([`clock/${phase}/duration-order`,({act,object,log})=>{
+    if(phase==='tick')act('smooth',100,200,false);
+    act('duration',object('duration',90,()=>log.push(['duration','coerce'])));
+    act('clockFn',()=>{log.push(['clock','call']);return object('clock-sample',1040);});
+    if(phase==='tick')act('frame');else act('smooth',200,300,false);
+    act('clock',1300);act('frame');
+  }]);
   for(const [label,program] of tests) {
     const expected=sourceRun(90,scenario(program)), actual=run(90,scenario(program));
     if(JSON.stringify(actual)!==JSON.stringify(expected))throw new Error(`${label}\nexpected ${JSON.stringify(expected)}\nactual ${JSON.stringify(actual)}`);

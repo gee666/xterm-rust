@@ -131,7 +131,7 @@ impl<S: FrameScheduler, V: ScrollValue + 'static> Scrollable<S, V> {
     fn start(&self, target: ScrollState<V>) -> Result<SmoothOperation<V>, V::Error> {
         let from = self.scroll_state();
         let duration = self.state.duration.borrow().clone();
-        SmoothOperation::try_start(from, target, duration, || (self.state.now)())
+        SmoothOperation::try_start_with_clock(from, target, duration, || (self.state.now)())
     }
     fn resolve_smooth_axis(
         &self,
