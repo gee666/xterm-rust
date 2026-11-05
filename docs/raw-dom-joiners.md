@@ -33,6 +33,12 @@ Final producer and independent-review runs passed all seven suites in Chromium14
 
 Existing regressions separately replay565 captured original row calls and27 captured original joiner calls. Counts for source tests, captured calls, directed cases and WASM functions describe different checks and are not summed into one assertion total. Browser receipts under results/joiner-row retain commands, engine versions, test names and artifact hashes. Generated WASM bundles are disposable outputs.
 
+## Canonical integration
+
+Tasks348 and366 integrated together at main6b8f80c2 after rebasing onto af047454. The canonical helper passed locked changed-core/web builds and default-feature all-target tests, affected native all-target checks, the default workspace check and applicable WASM library checks. The retained log records1868 passing tests across351 summaries with zero failures or ignored tests. The helper removed the private target. Original reviewed row and366 source/test diffs stayed empty across rebase. Sigrun's receipt-only b86a22b was included. These are scoped canonical native/WASM compile gates, not a fresh post-merge browser or full-feature/cross-platform matrix.
+
+Cleanup preflight found9012 files,1544 directories, zero links/redirects and zero root-matched owned workload processes. The baseline HB worktree was already removed and the canonical helper had removed H/target. The remaining owned H tree is removed only after this receipt is committed and disposable runner outputs are verified untracked.
+
 ## Limits and safety decisions
 
 Overall equivalence is NOT PROVEN. Task364 retains broader raw renderer callback behavior, including live theme/options/decorations and host DOM mutation, missing packed attributes and source-hang decisions. Task342 retains complex font metadata. Full original suite and native platform proof remain separate open work.
