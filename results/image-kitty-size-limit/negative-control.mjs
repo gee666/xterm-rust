@@ -2,7 +2,7 @@ import {readFile,writeFile,copyFile,mkdir} from 'node:fs/promises';
 import {spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 const base='a618ff27';
-const files=['crates/xterm-web/src/image/addon.rs','crates/xterm-web/src/image/addon/bindings.rs','crates/xterm-web/src/image/addon/option_inspection.rs','crates/xterm-web/src/image/addon/options.rs','crates/xterm-web/src/image/addon/protocols.rs'];
+const files=['crates/xterm-addons/src/image/kitty/handler.rs','crates/xterm-web/src/image/kitty_protocol.rs','crates/xterm-web/src/image/addon.rs','crates/xterm-web/src/image/addon/bindings.rs','crates/xterm-web/src/image/addon/option_inspection.rs','crates/xterm-web/src/image/addon/options.rs','crates/xterm-web/src/image/addon/protocols.rs'];
 const hash=value=>createHash('sha256').update(value).digest('hex');
 const saved=new Map(),audit={base,files:[],restored:false};
 const out='results/image-kitty-size-limit';await mkdir(out,{recursive:true});

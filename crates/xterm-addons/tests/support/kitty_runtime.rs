@@ -113,6 +113,14 @@ pub struct Runtime {
 }
 impl Runtime {
     pub fn new(limit: f64) -> Self {
+        Self::build(limit, None)
+    }
+    pub fn with_encoded_limit(limit: f64) -> Self {
+        // The separately supplied cap, not this deliberately zero decoded size,
+        // must control streaming in the browser construction path.
+        Self::build(0.0, Some((limit * 4.0 / 3.0).ceil()))
+    }
+    fn build(limit: f64, encoded: Option<f64>) -> Self {
         let events = Events::default();
         let host = Rc::new(Host {
             events: Rc::clone(&events),
@@ -120,15 +128,26 @@ impl Runtime {
             throwing: Cell::new(false),
         });
         let storage = Rc::new(KittyImageStorage::new(Rc::new(Placements::default())));
-        let handler = KittyGraphicsHandler::new(
-            host.clone(),
-            Rc::clone(&storage),
-            Rc::new(MemorySourceFactory),
-            KittyOptions {
-                size_limit: limit,
-                pixel_limit: 16_777_216.0,
-            },
-        );
+        let options = KittyOptions {
+            size_limit: limit,
+            pixel_limit: 16_777_216.0,
+        };
+        let handler = if let Some(encoded) = encoded {
+            KittyGraphicsHandler::new_with_encoded_limit(
+                host.clone(),
+                Rc::clone(&storage),
+                Rc::new(MemorySourceFactory),
+                options,
+                encoded,
+            )
+        } else {
+            KittyGraphicsHandler::new(
+                host.clone(),
+                Rc::clone(&storage),
+                Rc::new(MemorySourceFactory),
+                options,
+            )
+        };
         Self {
             handler,
             host,

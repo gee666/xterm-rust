@@ -9,6 +9,15 @@ use serde_json::Value;
 
 #[test]
 fn original_kitty_protocol_state_replies_and_async_phases_match_native() {
+    replay(false);
+}
+
+#[test]
+fn host_evaluated_limit_preserves_original_kitty_traces() {
+    replay(true);
+}
+
+fn replay(encoded: bool) {
     let corpus: Vec<Value> =
         serde_json::from_str(include_str!("fixtures/kitty-protocol.json")).unwrap();
     assert_eq!(corpus.len(), 235);
@@ -18,7 +27,12 @@ fn original_kitty_protocol_state_replies_and_async_phases_match_native() {
         let operations = row["operations"].as_array().unwrap();
         let snapshots = row["snapshots"].as_array().unwrap();
         assert_eq!(operations.len(), snapshots.len(), "{name}");
-        let mut actual = runtime::Runtime::new(row["limit"].as_f64().unwrap());
+        let limit = row["limit"].as_f64().unwrap();
+        let mut actual = if encoded {
+            runtime::Runtime::with_encoded_limit(limit)
+        } else {
+            runtime::Runtime::new(limit)
+        };
         for (step, operation) in operations.iter().enumerate() {
             actual.step(operation);
             assert_eq!(
