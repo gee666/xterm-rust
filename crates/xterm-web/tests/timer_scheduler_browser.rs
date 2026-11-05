@@ -1,6 +1,6 @@
 #![cfg(target_arch = "wasm32")]
 use js_sys::{Array, Function};
-use std::rc::Rc;
+use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::{closure::Closure, prelude::*, JsCast};
 use wasm_bindgen_test::*;
 use xterm_web::links::browser_debounce::BrowserTimeDebouncer;
@@ -66,5 +66,50 @@ fn real_timer_scheduler_retains_raw_thrown_values() -> Result<(), JsValue> {
     let run =
         Closure::wrap(Box::new(run) as Box<dyn Fn(JsValue, Function) -> Result<JsValue, JsValue>>);
     assert_eq!(raw_cases(run.as_ref().unchecked_ref())?, 42);
+    Ok(())
+}
+#[wasm_bindgen_test(async)]
+async fn real_window_timeout_delivers_rows_retained_after_cancel() -> Result<(), JsValue> {
+    let events = Rc::new(RefCell::new(Vec::new()));
+    let owner = RefCell::new(None);
+    let promise = js_sys::Promise::new(&mut |resolve, reject| {
+        let setup = || {
+            let output = events.clone();
+            let resolve = resolve.clone();
+            // Infinity always takes the trailing branch. WebIDL converts its
+            // timeout delay to zero, so delivery is asynchronous without a sleep
+            // or an assumption about how long the page has been alive.
+            let model = BrowserTimeDebouncer::try_new(
+                web_sys::window().expect("browser window"),
+                f64::INFINITY,
+                move |range| {
+                    output.borrow_mut().push((range.start, range.end));
+                    resolve.call0(&JsValue::UNDEFINED).map(|_| ())
+                },
+            )?;
+            model.refresh(Some(3.0), Some(9.0), 10.0)?;
+            model.dispose()?;
+            model.refresh(Some(2.0), Some(6.0), 8.0)?;
+            assert!(events.borrow().is_empty());
+            Ok::<_, JsValue>(model)
+        };
+        match setup() {
+            Ok(model) => {
+                owner.replace(Some(model));
+            }
+            Err(error) => {
+                reject
+                    .call1(&JsValue::UNDEFINED, &error)
+                    .expect("reject test promise");
+            }
+        }
+    });
+    wasm_bindgen_futures::JsFuture::from(promise).await?;
+    assert_eq!(*events.borrow(), [(2.0, 7.0)]);
+    owner
+        .borrow()
+        .as_ref()
+        .expect("initialized timer")
+        .dispose()?;
     Ok(())
 }
