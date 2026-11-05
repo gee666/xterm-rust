@@ -250,7 +250,13 @@ impl<'buffer, 'cache> SearchEngine<'buffer, 'cache> {
             return Err(SearchError::InvalidCacheEntry);
         }
         let offset = buffer_cols_to_string_offset(self.buffer, row, position.col)?;
-        let Some((index, matched)) = matching::find(term, &entry.text, offset, options, reverse)?
+        let lowercase = if options.case_sensitive != Some(true) && options.regex != Some(true) {
+            self.cache.lowercase(row)
+        } else {
+            None
+        };
+        let Some((index, matched)) =
+            matching::find(term, &entry.text, lowercase, offset, options, reverse)?
         else {
             return Ok(None);
         };

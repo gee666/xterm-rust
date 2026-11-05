@@ -7,6 +7,7 @@ const NON_WORD_CHARACTERS: &str = " ~!@#$%^&*()+`-=[]{}|\\;:\"',./<>?";
 pub(super) fn find(
     term: &[u16],
     line: &[u16],
+    lowercase_line: Option<&[u16]>,
     offset: usize,
     options: &SearchOptions,
     reverse: bool,
@@ -15,7 +16,7 @@ pub(super) fn find(
     let regex = options.regex == Some(true);
     let mut matched_term = None;
     let search_line = if insensitive && !regex {
-        Cow::Owned(lowercase(line))
+        lowercase_line.map_or_else(|| Cow::Owned(lowercase(line)), Cow::Borrowed)
     } else {
         Cow::Borrowed(line)
     };
@@ -98,7 +99,7 @@ fn is_whole_word(index: usize, line: &[u16], term: &[u16]) -> bool {
         && (index + term.len() == line.len() || delimiter(line.get(index + term.len())))
 }
 
-fn lowercase(value: &[u16]) -> Vec<u16> {
+pub(super) fn lowercase(value: &[u16]) -> Vec<u16> {
     let mut output = Vec::new();
     let mut valid = String::new();
     for decoded in char::decode_utf16(value.iter().copied()) {

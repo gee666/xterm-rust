@@ -1,6 +1,6 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
 use super::{SearchBuffer, SearchError};
-use std::collections::BTreeMap;
+use std::{cell::OnceCell, collections::BTreeMap};
 
 pub const CACHE_TTL_MS: u64 = 15_000;
 
@@ -10,11 +10,17 @@ pub struct LineCacheEntry {
     pub offsets: Vec<usize>,
 }
 
+#[derive(Debug)]
+struct CachedLine {
+    value: LineCacheEntry,
+    lowercase: OnceCell<Vec<u16>>,
+}
+
 /// The adapter supplies a monotonic clock and timer instead of requiring a
 /// browser event loop or a background thread in the portable terminal core.
 #[derive(Debug, Default)]
 pub struct SearchLineCache {
-    entries: Option<BTreeMap<isize, LineCacheEntry>>,
+    entries: Option<BTreeMap<isize, CachedLine>>,
     last_access: u64,
 }
 
@@ -25,11 +31,28 @@ impl SearchLineCache {
         self.last_access = now_ms;
     }
     pub fn get(&self, row: isize) -> Option<&LineCacheEntry> {
-        self.entries.as_ref()?.get(&row)
+        Some(&self.entries.as_ref()?.get(&row)?.value)
+    }
+    pub(super) fn lowercase(&self, row: isize) -> Option<&[u16]> {
+        let entry = self.entries.as_ref()?.get(&row)?;
+        // A long wrapped line can contain thousands of matches. Lowercasing
+        // the same cached text for every match makes highlight-all quadratic.
+        // This derived text expires with the source line, including replacement.
+        Some(
+            entry
+                .lowercase
+                .get_or_init(|| super::matching::lowercase(&entry.value.text)),
+        )
     }
     pub fn set(&mut self, row: isize, entry: LineCacheEntry) {
         if let Some(entries) = &mut self.entries {
-            entries.insert(row, entry);
+            entries.insert(
+                row,
+                CachedLine {
+                    value: entry,
+                    lowercase: OnceCell::new(),
+                },
+            );
         }
     }
     /// Call on line feed, cursor move, resize and addon disposal.
@@ -85,5 +108,52 @@ impl SearchLineCache {
             row = next_row;
         }
         Ok(LineCacheEntry { text, offsets })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn entry(text: &[u16]) -> LineCacheEntry {
+        LineCacheEntry {
+            text: text.to_vec(),
+            offsets: vec![0],
+        }
+    }
+
+    #[test]
+    fn lowercase_is_lazy_and_reuses_full_utf16_context() {
+        let mut cache = SearchLineCache::default();
+        cache.init(0);
+        let mut text: Vec<_> = "ΟΣ İ".encode_utf16().collect();
+        text.extend([0xd800, u16::from(b'A')]);
+        cache.set(0, entry(&text));
+        assert!(cache.entries.as_ref().unwrap()[&0]
+            .lowercase
+            .get()
+            .is_none());
+        let first = cache.lowercase(0).unwrap();
+        let mut expected: Vec<_> = "ος i\u{307}".encode_utf16().collect();
+        expected.extend([0xd800, u16::from(b'a')]);
+        assert_eq!(first, expected);
+        assert!(std::ptr::eq(first, cache.lowercase(0).unwrap()));
+    }
+
+    #[test]
+    fn lowercase_is_replaced_and_expires_with_source_entry() {
+        let mut cache = SearchLineCache::default();
+        cache.init(0);
+        cache.set(-1, entry(&[u16::from(b'A')]));
+        assert_eq!(cache.lowercase(-1), Some(&[u16::from(b'a')][..]));
+        cache.set(-1, entry(&[u16::from(b'B')]));
+        assert_eq!(cache.lowercase(-1), Some(&[u16::from(b'b')][..]));
+        cache.expire(CACHE_TTL_MS);
+        assert!(cache.lowercase(-1).is_none());
+        cache.init(CACHE_TTL_MS);
+        cache.set(-1, entry(&[u16::from(b'C')]));
+        assert_eq!(cache.lowercase(-1), Some(&[u16::from(b'c')][..]));
+        cache.invalidate();
+        assert!(cache.lowercase(-1).is_none());
     }
 }
