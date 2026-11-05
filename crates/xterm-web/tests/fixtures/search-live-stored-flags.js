@@ -17,6 +17,7 @@ async function checkSearchCallArgs(term, addon, write, equal) {
       equal(child.findNext('foo'), true);
       child.onBeforeSearch(() => events.push('before'));
       child.onAfterSearch(() => events.push('after'));
+      child.onDidChangeResults(() => events.push('results'));
       const state = configure({trace, nestedFind, armed:() => armed});
       const request = {get decorations() {
         if (!entered) { entered = true; equal(nestedFind(state.stored), true); armed = true; }
