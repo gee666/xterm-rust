@@ -1,0 +1,186 @@
+{
+  "scope": "Task467 oversized primitive HTML startCol only; full equivalence NOT PROVEN",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "seed": "0x05e21a11",
+  "browsers": [
+    {
+      "phase": "baseline",
+      "engine": "chromium",
+      "count": 68,
+      "mismatches": [
+        "html-oversized-start-column-reentry",
+        "html-oversized-start-column-header-throw",
+        "raw-numeric-boundaries"
+      ]
+    },
+    {
+      "phase": "baseline",
+      "engine": "firefox",
+      "count": 68,
+      "mismatches": [
+        "html-oversized-start-column-reentry",
+        "html-oversized-start-column-header-throw",
+        "raw-numeric-boundaries"
+      ]
+    },
+    {
+      "phase": "baseline",
+      "engine": "webkit",
+      "count": 68,
+      "mismatches": [
+        "html-oversized-start-column-reentry",
+        "html-oversized-start-column-header-throw",
+        "raw-numeric-boundaries"
+      ]
+    },
+    {
+      "phase": "fixed",
+      "engine": "chromium",
+      "count": 68,
+      "mismatches": [
+        "raw-numeric-boundaries"
+      ]
+    },
+    {
+      "phase": "fixed",
+      "engine": "firefox",
+      "count": 68,
+      "mismatches": [
+        "raw-numeric-boundaries"
+      ]
+    },
+    {
+      "phase": "fixed",
+      "engine": "webkit",
+      "count": 68,
+      "mismatches": [
+        "raw-numeric-boundaries"
+      ]
+    }
+  ],
+  "baseline": {
+    "source": {
+      "revision": "d6372662ca71566a5692443f876d1756325da0d1",
+      "sha256": "f29a86b90f38364bb9318b552369354b065085d8b0ee0cc4fbb541926e491fa9",
+      "files": 1660
+    },
+    "build": {
+      "report": "results/demos/build/2026-11-05T20-13-13-259Z/report.json",
+      "source": {
+        "revision": "f0ef7ddec9422c61f5f2d363899370996840005a",
+        "sha256": "f29a86b90f38364bb9318b552369354b065085d8b0ee0cc4fbb541926e491fa9",
+        "files": 1660
+      },
+      "artifacts": [
+        {
+          "path": "browser/pkg/xterm_web.js",
+          "bytes": 233698,
+          "sha256": "0ee6f017654dff95942a407feba33b1f92b9b1031c304acccf2e00ae6e720149"
+        },
+        {
+          "path": "browser/pkg/xterm_web_bg.wasm",
+          "bytes": 15728563,
+          "sha256": "7c43bfe402f79f4e14a58db35e5269498c0962e132578cc1f1f32c4f3d9b93a7"
+        }
+      ]
+    },
+    "referenceBefore": {
+      "files": 776,
+      "mismatches": []
+    },
+    "referenceAfter": {
+      "files": 776,
+      "mismatches": []
+    },
+    "suites": []
+  },
+  "fixed": {
+    "source": {
+      "revision": "d6372662ca71566a5692443f876d1756325da0d1",
+      "sha256": "be1f294b88b19b69096ee4c2ed9b7869e9acb20bf13fd4100701e22fb93132ed",
+      "files": 1660
+    },
+    "build": {
+      "report": "results/demos/build/2026-11-05T20-14-37-138Z/report.json",
+      "source": {
+        "revision": "d6372662ca71566a5692443f876d1756325da0d1",
+        "sha256": "be1f294b88b19b69096ee4c2ed9b7869e9acb20bf13fd4100701e22fb93132ed",
+        "files": 1660
+      },
+      "artifacts": [
+        {
+          "path": "browser/pkg/xterm_web.js",
+          "bytes": 233762,
+          "sha256": "51ad6817a0d8318f3b594300ddfd6fd6d5becb9a40442646f72c50d13931622e"
+        },
+        {
+          "path": "browser/pkg/xterm_web_bg.wasm",
+          "bytes": 15728629,
+          "sha256": "8416eb292495fa51bcb6e29cdbf0a0bf535bbad996eaae49f6138ff8c9fcf613"
+        }
+      ]
+    },
+    "referenceBefore": {
+      "files": 776,
+      "mismatches": []
+    },
+    "referenceAfter": {
+      "files": 776,
+      "mismatches": []
+    },
+    "suites": [
+      {
+        "engine": "source",
+        "counts": {
+          "discovered": 120,
+          "executed": 120,
+          "passed": 120,
+          "failed": 0,
+          "skipped": 0,
+          "unrun": 0
+        }
+      },
+      {
+        "engine": "rust",
+        "counts": {
+          "discovered": 120,
+          "executed": 120,
+          "passed": 120,
+          "failed": 0,
+          "skipped": 0,
+          "unrun": 0
+        }
+      }
+    ]
+  },
+  "currentSource": {
+    "revision": "d6372662ca71566a5692443f876d1756325da0d1",
+    "sha256": "be1f294b88b19b69096ee4c2ed9b7869e9acb20bf13fd4100701e22fb93132ed",
+    "files": 1660
+  },
+  "native": {
+    "executables": 15,
+    "passed": 64,
+    "failed": 0,
+    "ignored": 0
+  },
+  "quality": [
+    {
+      "name": "native",
+      "status": "passed"
+    },
+    {
+      "name": "clippy-wasm",
+      "status": "passed"
+    },
+    {
+      "name": "clippy-native",
+      "status": "passed"
+    },
+    {
+      "name": "fmt-web",
+      "status": "passed"
+    }
+  ]
+}
