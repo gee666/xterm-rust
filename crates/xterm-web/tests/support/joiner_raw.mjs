@@ -165,6 +165,15 @@ export function joinerRawScenarios(create) {
     try { service.get(); return { threw: false }; }
     catch (error) { return { threw: true, name: error.name, logged: errors.length }; }
   });
+  save('mathLookupOrder', service => {
+    const previous = Math.min;
+    const trace = [];
+    const added = { get 0() { Math.min = () => { trace.push('replacement'); return 99; }; return 1; }, 1: 2 };
+    service.register(() => [[0, 3]]);
+    service.register(() => [added]);
+    try { return {out:service.get(), trace}; }
+    finally { Math.min = previous; }
+  });
   save('mergeGetterError', (service, errors) => {
     const marker = {};
     const range = [0, 2];

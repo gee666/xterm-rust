@@ -1,13 +1,15 @@
 //! JavaScript operators only. Joining policy stays in Rust; accesses intentionally
 //! repeat where upstream repeats them, since getters can mutate or throw.
+//! Math lookup and its operand reads share one call because an operand getter
+//! can replace Math.min/Math.max after the source has resolved the function.
 use wasm_bindgen::prelude::*;
 #[wasm_bindgen(inline_js = r#"
 export function joinerGet(v,k) { return v[k]; }
 export function joinerSet(v,k,x) { 'use strict'; v[k]=x; }
 export function joinerLess(a,b) { return a<b; }
 export function joinerLessEqual(a,b) { return a<=b; }
-export function joinerMin(a,b) { return Math.min(a,b); }
-export function joinerMax(a,b) { return Math.max(a,b); }
+export function joinerMinStart(a,b) { return Math.min(a[0],b[0]); }
+export function joinerMaxEnd(a,b) { return Math.max(a[1],b[1]); }
 export function joinerSubtractOne(a) { return a-1; }
 export function joinerInsert(v,i,x) { v.splice(i,0,x); }
 export function joinerRemove(v,i) { v.splice(i,1); }
@@ -31,10 +33,10 @@ extern "C" {
     pub fn less(a: &JsValue, b: &JsValue) -> Result<bool, JsValue>;
     #[wasm_bindgen(catch, js_name = joinerLessEqual)]
     pub fn le(a: &JsValue, b: &JsValue) -> Result<bool, JsValue>;
-    #[wasm_bindgen(catch, js_name = joinerMin)]
-    pub fn min(a: &JsValue, b: &JsValue) -> Result<JsValue, JsValue>;
-    #[wasm_bindgen(catch, js_name = joinerMax)]
-    pub fn max(a: &JsValue, b: &JsValue) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch, js_name = joinerMinStart)]
+    pub fn min_start(a: &JsValue, b: &JsValue) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch, js_name = joinerMaxEnd)]
+    pub fn max_end(a: &JsValue, b: &JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch, js_name = joinerSubtractOne)]
     pub fn subtract_one(a: &JsValue) -> Result<f64, JsValue>;
     #[wasm_bindgen(catch, js_name = joinerInsert)]
