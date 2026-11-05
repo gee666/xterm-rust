@@ -16,7 +16,9 @@ The source Node oracle uses the existing in-memory TypeScript loader, with direc
 
 The source Node baseline and native528-case constructor comparison pass. Pre-union Windows workspace tests pass2072 tests across425 summaries, with zero failures or ignored tests. Native workspace and focused WASM Clippy pass with warnings denied. Removing only the eager hook makes the retained test fail at `cvt  SFNT bytes0 length1`; restoration passes. The aggregate fmt command fails with Windows OS206, and each of all five package fmt checks passes. These results are scoped checkpoints, not final stable-union or native Linux/macOS evidence.
 
-Three-engine source and Rust matrices and final rebased checks are pending. Read `results/font-hint-tables/` for exact raw results; do not treat compilation as a browser pass.
+After rebasing onto main926d8355, which includes accepted406/407/408, the unchanged source baseline passes528 constructor outcomes and528 addon records in each of Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4. The actual Rust browser binary passes two test functions per engine. Those functions replay all528 constructors, compare both input builders byte-for-byte and check all528 real addon load/cache records. Rebased workspace tests pass2078 tests across433 summaries, with zero failures or ignored tests; native workspace and focused WASM warning-denied Clippy pass. The repeated aggregate fmt still hits OS206, and all five package checks pass. Both original and copied reference manifests match all776 hashes.
+
+Read `results/font-hint-tables/` for raw logs, browser reports and producer hashes. Initial and `union-` receipts have distinct scopes. Browser reports retain exact compiled artifact hashes, but disposable local binaries are not distribution artifacts and are removed during owned cleanup. Compilation is not counted as a browser pass.
 
 ## Reproduce
 
@@ -33,7 +35,7 @@ cargo test --locked -j2 --workspace --all-targets --all-features
 cargo fmt --all -- --check
 ```
 
-`--generate` deliberately regenerates the Node source fixture. It is not used to conceal a Rust failure. The browser baseline runner closes its browser/server and removes its owned source bundle in finally blocks. All temporary build artifacts remain owned under O:G420 until review/integration pickup and verified cleanup.
+`--generate` deliberately regenerates the Node source fixture. It is not used to conceal a Rust failure. The browser baseline runner closes its browser/server and removes its owned source bundle in finally blocks. Temporary build artifacts remain owned under `O:/xterm-rust-swarm-16/tmp/G420` until review/integration pickup and verified cleanup.
 
 ## Remaining scope
 
