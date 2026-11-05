@@ -32,6 +32,12 @@ Windows x64, Node24.15.0, Rust/Cargo1.85.1, base main2f1be3b:
 
 Raw logs and the browser runner report are in `results/buffer-cleanup/`. Generated WASM/bindings and private compiler outputs are disposable, not committed. The report retains their hashes and original run paths, not a promise that those temporary paths still exist.
 
+## Independent review and integration
+
+The isolated task371 reviewer accepted commit `a683fc3` with no findings or tracked edits. It independently reran all8 source traces, all18 focused native tests, all4 browser tests in each engine, workspace formatting and both scoped Clippy checks. `review-browser-results.json` retains its final-source browser report.
+
+The canonical helper integrated accepted source and review evidence into main `00dbec3`. It passed1873 native tests across355 result summaries for the changed core/web crates, affected-dependent all-target checks, workspace native checks and applicable WASM library checks. Those are default-feature canonical integration gates, not the final full-feature/platform matrix. `canonical.log` retains the gate output. The helper removed the private compiler target after successful integration.
+
 ## Reproduction
 
 Run in an isolated checkout with Rust's WASM target, wasm-bindgen0.2.100 CLI and the existing source Node dependencies. Set `XT_SOURCE_ROOT` or `XT_NODE_MODULES` for an external reference/tool installation. Set `PLAYWRIGHT_MODULE` and `WASM_BINDGEN` when they are not installed at the default runner paths. Keep temporary builds on the run-owned O: volume and set `CARGO_BUILD_JOBS=2`.
