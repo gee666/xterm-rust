@@ -26,6 +26,7 @@ export function clipboardString(value) { return `${value}`; }
 export function clipboardEncoderInput(value) { return value === undefined ? '' : `${value}`; }
 export function clipboardFromBase64(value) { return Uint8Array.fromBase64(value); }
 export function clipboardAtob(value) { return atob(value); }
+export function clipboardBtoa(value) { return btoa(value); }
 export function clipboardPromise(value) { return value instanceof Promise; }
 export function clipboardReadThen(promise, invoke) { return promise.then(data => invoke(data)); }
 export function clipboardWriteThen(promise) { return promise.then(() => true); }
@@ -47,6 +48,8 @@ extern "C" {
     fn from_base64(value: &JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch,js_name=clipboardAtob)]
     fn atob(value: &JsValue) -> Result<JsString, JsValue>;
+    #[wasm_bindgen(catch,js_name=clipboardBtoa)]
+    fn btoa(value: &JsString) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch,js_name=clipboardPromise)]
     fn is_promise(value: &JsValue) -> Result<bool, JsValue>;
     #[wasm_bindgen(catch,js_name=clipboardReadThen)]
@@ -54,6 +57,25 @@ extern "C" {
     #[wasm_bindgen(catch,js_name=clipboardWriteThen)]
     fn write_then(value: &JsValue) -> Result<JsValue, JsValue>;
 }
+pub fn encode_default(value: &JsValue) -> Result<JsValue, JsValue> {
+    let text = encoder_input(value)?;
+    let text = String::from_utf16_lossy(&from_js_string(&text));
+    let bytes = Uint8Array::from(text.as_bytes());
+    // Source reads the capability once, then reads it again for invocation.
+    // Keep the raw result: an overridden host method may return any JS value.
+    if !super::js_property::get(bytes.as_ref(), "toBase64")?.is_undefined() {
+        return super::js_property::call(bytes.as_ref(), "toBase64", &js_sys::Array::new());
+    }
+    // The capability getter can mutate the byte array before choosing fallback.
+    let mut binary = Vec::new();
+    let mut index = 0;
+    while index < bytes.length() {
+        binary.push(u16::from(bytes.get_index(index)));
+        index += 1;
+    }
+    btoa(&to_js_string(&binary))
+}
+
 pub fn decode_default(value: &JsValue) -> Result<Vec<u16>, JsValue> {
     // The source checks this property outside its inner try/catch, then reads it
     // again for invocation. Keep host capability/getter errors at those points.

@@ -1,0 +1,179 @@
+[
+  {
+    "name": "native byte encoding",
+    "log": [],
+    "result": {
+      "type": "string",
+      "value": "QeKCrO+/vQ=="
+    }
+  },
+  {
+    "name": "modern method receiver and two reads",
+    "log": [
+      "get",
+      "get",
+      {
+        "receiver": true,
+        "bytes": [
+          65,
+          226,
+          130,
+          172,
+          239,
+          191,
+          189
+        ],
+        "args": 0
+      }
+    ],
+    "result": {
+      "type": "string",
+      "value": "modern"
+    }
+  },
+  {
+    "name": "modern raw object return",
+    "log": [],
+    "result": {
+      "marker": true
+    }
+  },
+  {
+    "name": "modern undefined return",
+    "log": [],
+    "result": {
+      "type": "undefined",
+      "value": null
+    }
+  },
+  {
+    "name": "modern null return",
+    "log": [],
+    "result": {
+      "type": "object",
+      "value": null
+    }
+  },
+  {
+    "name": "modern numeric return",
+    "log": [],
+    "result": {
+      "type": "number",
+      "value": 42
+    }
+  },
+  {
+    "name": "getter throws original value",
+    "log": [],
+    "result": {
+      "thrownMarker": true,
+      "type": "marker"
+    }
+  },
+  {
+    "name": "method throws original value",
+    "log": [],
+    "result": {
+      "thrownMarker": true,
+      "type": "marker"
+    }
+  },
+  {
+    "name": "null is present but noncallable",
+    "log": [],
+    "result": {
+      "thrownMarker": false,
+      "type": "TypeError"
+    }
+  },
+  {
+    "name": "second getter value is invoked",
+    "log": [
+      1,
+      2
+    ],
+    "result": {
+      "thrownMarker": false,
+      "type": "TypeError"
+    }
+  },
+  {
+    "name": "fallback raw return and binary argument",
+    "log": [
+      "get",
+      {
+        "receiver": true,
+        "args": 1,
+        "units": [
+          65,
+          226,
+          130,
+          172,
+          239,
+          191,
+          189
+        ]
+      }
+    ],
+    "result": {
+      "marker": true
+    }
+  },
+  {
+    "name": "fallback sees byte mutation by capability getter",
+    "log": [
+      [
+        66,
+        226,
+        130,
+        172,
+        239,
+        191,
+        189
+      ]
+    ],
+    "result": {
+      "type": "string",
+      "value": "mutated"
+    }
+  },
+  {
+    "name": "fallback throws original value",
+    "log": [],
+    "result": {
+      "thrownMarker": true,
+      "type": "marker"
+    }
+  },
+  {
+    "name": "coercion precedes capability reads",
+    "log": [
+      "string",
+      "get",
+      "get",
+      "call"
+    ],
+    "result": {
+      "type": "string",
+      "value": "done"
+    }
+  },
+  {
+    "name": "undefined input encodes empty bytes",
+    "log": [
+      []
+    ],
+    "result": {
+      "type": "string",
+      "value": "empty"
+    }
+  },
+  {
+    "name": "Symbol conversion precedes capability reads",
+    "log": [],
+    "result": {
+      "thrownMarker": false,
+      "type": "TypeError"
+    }
+  }
+]

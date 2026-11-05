@@ -1,0 +1,207 @@
+{
+  "status": "passed",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "scope": "Original Base64 encodeText with shared host-method traces, not a full original terminal suite.",
+  "before": {
+    "files": 776,
+    "mismatches": []
+  },
+  "cases": [
+    {
+      "name": "native byte encoding",
+      "log": [],
+      "result": {
+        "type": "string",
+        "value": "QeKCrO+/vQ=="
+      }
+    },
+    {
+      "name": "modern method receiver and two reads",
+      "log": [
+        "get",
+        "get",
+        {
+          "receiver": true,
+          "bytes": [
+            65,
+            226,
+            130,
+            172,
+            239,
+            191,
+            189
+          ],
+          "args": 0
+        }
+      ],
+      "result": {
+        "type": "string",
+        "value": "modern"
+      }
+    },
+    {
+      "name": "modern raw object return",
+      "log": [],
+      "result": {
+        "marker": true
+      }
+    },
+    {
+      "name": "modern undefined return",
+      "log": [],
+      "result": {
+        "type": "undefined",
+        "value": null
+      }
+    },
+    {
+      "name": "modern null return",
+      "log": [],
+      "result": {
+        "type": "object",
+        "value": null
+      }
+    },
+    {
+      "name": "modern numeric return",
+      "log": [],
+      "result": {
+        "type": "number",
+        "value": 42
+      }
+    },
+    {
+      "name": "getter throws original value",
+      "log": [],
+      "result": {
+        "thrownMarker": true,
+        "type": "marker"
+      }
+    },
+    {
+      "name": "method throws original value",
+      "log": [],
+      "result": {
+        "thrownMarker": true,
+        "type": "marker"
+      }
+    },
+    {
+      "name": "null is present but noncallable",
+      "log": [],
+      "result": {
+        "thrownMarker": false,
+        "type": "TypeError"
+      }
+    },
+    {
+      "name": "second getter value is invoked",
+      "log": [
+        1,
+        2
+      ],
+      "result": {
+        "thrownMarker": false,
+        "type": "TypeError"
+      }
+    },
+    {
+      "name": "fallback raw return and binary argument",
+      "log": [
+        "get",
+        {
+          "receiver": true,
+          "args": 1,
+          "units": [
+            65,
+            226,
+            130,
+            172,
+            239,
+            191,
+            189
+          ]
+        }
+      ],
+      "result": {
+        "marker": true
+      }
+    },
+    {
+      "name": "fallback sees byte mutation by capability getter",
+      "log": [
+        [
+          66,
+          226,
+          130,
+          172,
+          239,
+          191,
+          189
+        ]
+      ],
+      "result": {
+        "type": "string",
+        "value": "mutated"
+      }
+    },
+    {
+      "name": "fallback throws original value",
+      "log": [],
+      "result": {
+        "thrownMarker": true,
+        "type": "marker"
+      }
+    },
+    {
+      "name": "coercion precedes capability reads",
+      "log": [
+        "string",
+        "get",
+        "get",
+        "call"
+      ],
+      "result": {
+        "type": "string",
+        "value": "done"
+      }
+    },
+    {
+      "name": "undefined input encodes empty bytes",
+      "log": [
+        []
+      ],
+      "result": {
+        "type": "string",
+        "value": "empty"
+      }
+    },
+    {
+      "name": "Symbol conversion precedes capability reads",
+      "log": [],
+      "result": {
+        "thrownMarker": false,
+        "type": "TypeError"
+      }
+    }
+  ],
+  "counts": {
+    "discovered": 16,
+    "executed": 16,
+    "passed": 16,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0
+  },
+  "fixtureSha256": "f1986d463f6f597aeddbc56f1f6ca8b46e9d6b5690b903a02732c3df0682b1c8",
+  "traceSha256": "c96a34e4773f0c77e567520eab461c73cf4c190425c067e458295f7ae72d736a",
+  "source": {
+    "path": "addons/addon-clipboard/src/ClipboardAddon.ts",
+    "sha256": "fecc80248d701a46d3c427e60b41def404151496942be9cc0aa875a5242cf121"
+  },
+  "after": {
+    "files": 776,
+    "mismatches": []
+  }
+}
