@@ -301,7 +301,13 @@ impl<'a> FontTables<'a> {
         }
         let hmtx = hmtx.ok_or(FontError::MissingTable("hmtx"))?;
         if truetype.is_some() {
-            validate_hmtx(payload, hmtx, woff, glyph_count.unwrap_or(0), metric_count)?;
+            super::font_outline::validate_metrics(
+                payload,
+                hmtx,
+                woff,
+                glyph_count.unwrap_or(0),
+                metric_count,
+            )?;
         }
         let deferred = |record| DeferredTable { record, woff };
         Ok((
@@ -323,28 +329,6 @@ impl<'a> FontTables<'a> {
             refreshed,
         ))
     }
-}
-
-const HORIZONTAL_METRIC_SIZE: usize = 4;
-fn validate_hmtx(
-    reader: Reader<'_>,
-    record: Reader<'_>,
-    woff: bool,
-    glyph_count: u16,
-    metric_count: u16,
-) -> Result<(), FontError> {
-    let required = usize::from(glyph_count.min(metric_count)) * HORIZONTAL_METRIC_SIZE;
-    if woff && record.offset32(8)? < record.offset32(12)? {
-        // Source decompression precedes the glyph loop, including a loop that
-        // reads no metric bytes. Do not turn those failures into success.
-        let bytes = table_data(reader, record, woff, true)?;
-        Reader::new(&bytes).bytes(0, required)?;
-    } else if required != 0 {
-        // Uncompressed offsets are never dereferenced by a zero-read loop.
-        // Directory lengths do not constrain the source's original DataView.
-        reader.bytes(record.offset32(if woff { 4 } else { 8 })?, required)?;
-    }
-    Ok(())
 }
 
 pub(super) fn table_data<'a>(

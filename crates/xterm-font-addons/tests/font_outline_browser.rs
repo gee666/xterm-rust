@@ -25,10 +25,11 @@ extern "C" {
 
 #[wasm_bindgen_test(async)]
 async fn real_addon_preserves_outline_rejection_cache_and_recovery() {
-    let create = Closure::wrap(
-        Box::new(|options: JsValue| LigaturesAddon::new(options).map(JsValue::from))
-            as Box<dyn FnMut(JsValue) -> Result<JsValue, JsValue>>,
-    );
+    let create =
+        Closure::wrap(
+            Box::new(|options: JsValue| LigaturesAddon::new(options).map(JsValue::from))
+                as Box<dyn FnMut(JsValue) -> Result<JsValue, JsValue>>,
+        );
     let fixture = outline::fixture();
     let inputs = Object::new();
     for (mode, name) in [
@@ -38,8 +39,11 @@ async fn real_addon_preserves_outline_rejection_cache_and_recovery() {
         ("EmptyGlyf", "glyf empty lazy body WOFF"),
     ] {
         let case = fixture["cases"]
-            .as_array().unwrap().iter()
-            .find(|c| c["name"] == name).unwrap();
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|c| c["name"] == name)
+            .unwrap();
         let bytes = Uint8Array::from(outline::input(&fixture, case).as_slice());
         Reflect::set(&inputs, &mode.into(), &bytes).unwrap();
     }
@@ -47,7 +51,9 @@ async fn real_addon_preserves_outline_rejection_cache_and_recovery() {
         include_bytes!("../../xterm-addons/tests/fixtures/ligature-fonts/UbuntuMono-Regular.ttf")
             .as_slice(),
     );
-    let actual = loading(create.as_ref().unchecked_ref(), &inputs, &good).await.unwrap();
+    let actual = loading(create.as_ref().unchecked_ref(), &inputs, &good)
+        .await
+        .unwrap();
     let expected = js_sys::JSON::parse(include_str!("fixtures/font-outline-addon.json")).unwrap();
     assert_eq!(
         js_sys::JSON::stringify(&actual).unwrap(),

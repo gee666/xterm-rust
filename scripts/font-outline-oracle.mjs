@@ -64,7 +64,7 @@ for(const woff of [false,true]) {
   for(const tag of ['loca','glyf'])add(tag+' missing '+missing+suffix,tag,[],{woff,remove:[missing]});
  }
  for(const tag of ['glyf','loca'])for(const position of ['first','last']) {
-  add(tag+' invalid '+position+' duplicate'+suffix,tag,table(tag),{woff,duplicateTable:{tag,position}});
+  add(tag+' invalid '+position+' duplicate'+suffix,tag,tag==='glyf'?[]:table(tag),{woff,duplicateTable:{tag,position}});
  }
  add('glyf empty lazy body'+suffix,'glyf',[],{woff});
  add('glyf arbitrary unread body'+suffix,'glyf',[255],{woff});
@@ -73,6 +73,13 @@ for(const woff of [false,true]) {
  for(const missing of ['name','hmtx'])add('loca before missing '+missing+suffix,'loca',[],{woff,remove:[missing]});
  for(const tag of ['kern','GSUB','GDEF','meta'])add('loca before '+tag+suffix,'loca',[],{woff,remove:[tag],extraTables:[{tag,data:[0,2,0,0]}]});
 }
+const color={tag:'CPAL',data:[0,1,0,0,0,0,0,0,0,0,0,14,0,0]};
+for(const [name,warningMutation,woff] of [
+ ['loca refresh invalid compressed body',{tag:'loca',at:2,value:1792},true],
+ ['loca keeps captured head format',{tag:'head',at:50,value:1},false],
+ ['loca keeps captured glyph count',{tag:'maxp',at:4,value:65535},false],
+ ['loca descriptor remains fixed',{tag:'loca',descriptor:true,value:65535},false],
+])add(name,'loca',Buffer.alloc(table('loca').length),{woff,extraTables:[color],warningMutation});
 let seed=0x10CA453;
 const random=()=>{seed^=seed<<13;seed^=seed>>>17;seed^=seed<<5;return seed>>>0;};
 for(let i=0;i<128;i++){
@@ -80,12 +87,27 @@ for(let i=0;i<128;i++){
  const size=random()%8192,data=Buffer.alloc(size);for(let j=0;j<size;j++)data[j]=random()%256;
  add('loca seeded '+i,'loca',data,{woff:i%2===0,glyphCount:count,remove:['head'],extraTables:[{tag:'head',data:[...head]}]});
 }
+function mutate(bytes,m){
+ const woff=bytes.toString('latin1',0,4)==='wOFF',start=woff?44:12,width=woff?20:16;
+ for(let i=0;i<bytes.readUInt16BE(woff?12:4);i++){
+  const at=start+i*width;if(bytes.toString('latin1',at,at+4)!==m.tag)continue;
+  const offset=m.descriptor?at+(woff?4:8):bytes.readUInt32BE(at+(woff?4:8))+m.at;
+  bytes.writeUInt16BE(m.value,offset);return;
+ }throw new Error('Mutation target missing');
+}
 for(const change of cases) {
  const bytes=Buffer.from(Uint8Array.from(construct(change)).buffer);
  change.bytesSha256=hash(bytes);change.inputHash=inputHash(bytes);
  if(change.woff)change.woffPayloads=Object.fromEntries([...(change.extraTables??[]),{tag:change.tag,data:change.data}].map(({tag,data})=>[tag,[...deflateSync(Buffer.from(data))]]));
- try {parse(bytes.buffer);change.outcome={status:'ok'};}
- catch(error){change.outcome={status:'error',name:error.name,message:error.message};}
+ const warn=Object.getOwnPropertyDescriptor(console,'warn'),warnings=[];
+ try {
+  Object.defineProperty(console,'warn',{configurable:true,value(message){
+   warnings.push(message);if(warnings.length===1&&change.warningMutation)mutate(bytes,change.warningMutation);
+  }});
+  try {parse(bytes.buffer);change.outcome={status:'ok'};}
+  catch(error){change.outcome={status:'error',name:error.name,message:error.message};}
+ }finally{Object.defineProperty(console,'warn',warn);}
+ change.warnings=warnings;
  if(change.data.length>64&&change.data.every(v=>v===change.data[0])) {
   change.fillLength=change.data.length;change.fillValue=change.data[0];delete change.data;
  }

@@ -20,6 +20,18 @@ pub(super) fn validate(
     read_constructor_table(reader, glyf, woff, 0)
 }
 
+pub(super) fn validate_metrics(
+    reader: Reader<'_>,
+    record: Reader<'_>,
+    woff: bool,
+    glyph_count: u16,
+    metric_count: u16,
+) -> Result<(), FontError> {
+    const HORIZONTAL_METRIC_SIZE: usize = 4;
+    let required = usize::from(glyph_count.min(metric_count)) * HORIZONTAL_METRIC_SIZE;
+    read_constructor_table(reader, record, woff, required)
+}
+
 fn read_constructor_table(
     reader: Reader<'_>,
     record: Reader<'_>,

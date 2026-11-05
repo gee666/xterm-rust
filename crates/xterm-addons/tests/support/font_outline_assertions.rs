@@ -16,7 +16,11 @@ pub fn input(fixture: &Value, case: &Value) -> Vec<u8> {
     if case["woff"] == true {
         change.as_object_mut().unwrap().remove("directoryLength");
     }
-    let mut bytes = corpus::construct_with_woff_payloads(&change, fixture.get("woffTemplate"));
+    let mut bytes = if case["woff"] == true {
+        corpus::construct_with_woff_payloads(&change, fixture.get("woffTemplate"))
+    } else {
+        corpus::construct(&change)
+    };
     if case["woff"] == true {
         if let Some(length) = case["directoryLength"].as_u64() {
             let count = usize::from(u16::from_be_bytes(bytes[12..14].try_into().unwrap()));
@@ -35,6 +39,36 @@ pub fn input(fixture: &Value, case: &Value) -> Vec<u8> {
     );
     bytes
 }
+fn mutate(bytes: &mut [u8], mutation: &Value) {
+    let woff = &bytes[..4] == b"wOFF";
+    let (start, width, count_at) = if woff { (44, 20, 12) } else { (12, 16, 4) };
+    let count = usize::from(u16::from_be_bytes(
+        bytes[count_at..count_at + 2].try_into().unwrap(),
+    ));
+    for index in 0..count {
+        let at = start + index * width;
+        if &bytes[at..at + 4] != mutation["tag"].as_str().unwrap().as_bytes() {
+            continue;
+        }
+        let offset_at = at + if woff { 4 } else { 8 };
+        let offset = if mutation["descriptor"] == true {
+            offset_at
+        } else {
+            usize::try_from(u32::from_be_bytes(
+                bytes[offset_at..offset_at + 4].try_into().unwrap(),
+            ))
+            .unwrap()
+                + usize::try_from(mutation["at"].as_u64().unwrap()).unwrap()
+        };
+        bytes[offset..offset + 2].copy_from_slice(
+            &u16::try_from(mutation["value"].as_u64().unwrap())
+                .unwrap()
+                .to_be_bytes(),
+        );
+        return;
+    }
+    panic!("Mutation target missing");
+}
 pub fn assert_corpus() {
     let fixture = fixture();
     let mut failures = Vec::new();
@@ -44,10 +78,32 @@ pub fn assert_corpus() {
             Some("Data error") => Some(FontError::Compression),
             _ => corpus::constructor_error(case),
         };
-        let actual = Font::load_buffer(&bytes, FontOptions::default()).err();
-        if actual != expected {
+        let mut current = bytes.clone();
+        let mut warnings = Vec::new();
+        let actual = Font::load_buffer_with_refresh(&bytes, FontOptions::default(), |warning| {
+            warnings.push(warning.message().into_owned());
+            if warnings.len() == 1 && case["warningMutation"].is_object() {
+                mutate(&mut current, &case["warningMutation"]);
+                return Ok::<_, ()>(Some(current.clone()));
+            }
+            Ok(None)
+        })
+        .err()
+        .map(|error| match error {
+            xterm_addons::ligatures::font::FontLoadError::Font(error) => error,
+            xterm_addons::ligatures::font::FontLoadError::Warning(()) => {
+                panic!("No throwing callback")
+            }
+        });
+        let expected_warnings: Vec<_> = case["warnings"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|v| v.as_str().unwrap())
+            .collect();
+        if actual != expected || warnings != expected_warnings {
             failures.push(format!(
-                "{}: expected {expected:?}, got {actual:?}",
+                "{}: expected {expected:?} {expected_warnings:?}, got {actual:?} {warnings:?}",
                 case["name"]
             ));
         }
