@@ -105,8 +105,9 @@ impl IipImageDecoder {
         self.prepare_image(request, None)
     }
 
-    /// Prepare a real protocol transfer. No handler borrow crosses a browser
-    /// call. Source releases the live BASE64 decoder only after ImageData/QOI
+    /// Prepare a real protocol transfer after ending the handler borrow used
+    /// to produce the request. No handler borrow crosses a browser call.
+    /// Source releases the live BASE64 decoder only after ImageData/QOI
     /// preparation or Blob construction succeeds, including on nested transfer.
     pub fn prepare_transfer(
         &self,

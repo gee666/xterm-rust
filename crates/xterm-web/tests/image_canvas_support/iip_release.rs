@@ -81,7 +81,8 @@ fn payload_release_matches_source_on_constructor_failure_and_reentry() {
           try{const result=write(text);if(result instanceof Promise)throw Error('unexpected pending result')}
           catch(error){if(error!==failure)throw error;caught=true}
           finally{Object.defineProperty(target,key,original)}
-          return {states,loaded:h._dec.loadedBytes,caught};")
+          return {states,loaded:h._dec.loadedBytes,caught,multipart:h._isMultipart,
+            aborted:h._aborted,abortMulti:h._abortMulti,parserState:h._hp.state};")
             .apply(&JsValue::UNDEFINED, &js_sys::Array::of4(&text.clone().into(), &key.into(), &nested.into(), &throws.into()))
             .unwrap();
         let handler = Rc::new(RefCell::new(
@@ -163,6 +164,25 @@ fn payload_release_matches_source_on_constructor_failure_and_reentry() {
             "{key}, nested={nested}"
         );
         assert_eq!(get(&reference, "caught").as_bool(), Some(caught), "{key}");
+        {
+            let handler = handler.borrow();
+            assert_eq!(
+                get(&reference, "multipart").as_bool(),
+                Some(handler.is_multipart())
+            );
+            assert_eq!(
+                get(&reference, "aborted").as_bool(),
+                Some(handler.is_aborted())
+            );
+            assert_eq!(
+                get(&reference, "abortMulti").as_bool(),
+                Some(handler.is_multipart_aborted())
+            );
+            assert_eq!(
+                get(&reference, "parserState").as_f64(),
+                Some(handler.header_parser().state as u8 as f64)
+            );
+        }
         if key == "ImageData" || key == "Blob" {
             assert!(expected[0] > 0);
         } else {

@@ -28,6 +28,9 @@ fn sequence(bytes: &[u8], width: u32, height: u32) -> String {
     format!("File=inline=1;width={width}px;height={height}px;preserveAspectRatio=0:{base64}")
 }
 fn request(sequence: &str) -> DisplayRequest {
+    transfer(sequence).1
+}
+fn transfer(sequence: &str) -> (std::cell::RefCell<IipHandler>, DisplayRequest) {
     let mut handler =
         IipHandler::new(IipOptions::default(), NameDecodePolicy::BrowserAtob).unwrap();
     handler.start();
@@ -49,7 +52,7 @@ fn request(sequence: &str) -> DisplayRequest {
         .unwrap();
     assert_eq!(effects.len(), 1);
     match effects.remove(0) {
-        IipEffect::Display(request) => request,
+        IipEffect::Display(request) => (std::cell::RefCell::new(handler), request),
         effect => panic!("expected display, got {effect:?}"),
     }
 }
@@ -67,7 +70,7 @@ async fn source_image(sequence: &str) -> JsValue {
           const result=handler.end(true);
           const synchronous=!(result instanceof Promise);
           await result;
-          return {image,synchronous};
+          return {image,synchronous,loaded:handler._dec.loadedBytes};
         })();",
     );
     let promise = run
@@ -99,9 +102,13 @@ async fn iip_palette_qoi_fast_path_matches_source_pixels_and_real_storage() {
     let reference = source_image(&sequence).await;
     assert_eq!(get(&reference, "synchronous").as_bool(), Some(true));
     let decoder = IipImageDecoder::default();
-    let IipDecodedImage::Immediate(image) = decoder.prepare(&request(&sequence)).unwrap() else {
+    let (handler, request) = transfer(&sequence);
+    let IipDecodedImage::Immediate(image) = decoder.prepare_transfer(&request, &handler).unwrap()
+    else {
         panic!("unscaled QOI must not cross a promise boundary");
     };
+    assert_eq!(get(&reference, "loaded").as_f64(), Some(0.0));
+    assert_eq!(handler.borrow().loaded_bytes(), 0);
     assert_eq!(pixels(&surface(&image)), RGBA);
     assert_eq!(pixels(&get(&reference, "image")), RGBA);
     let h = Harness::new(3.0, 4.0);
@@ -124,10 +131,16 @@ async fn iip_qoi_and_png_resize_match_source_and_pending_survives_decoder_reset(
         let reference = source_image(&sequence).await;
         assert_eq!(get(&reference, "synchronous").as_bool(), Some(false));
         let decoder = IipImageDecoder::default();
-        let IipDecodedImage::Pending(pending) = decoder.prepare(&request(&sequence)).unwrap()
+        let (handler, request) = transfer(&sequence);
+        let IipDecodedImage::Pending(pending) =
+            decoder.prepare_transfer(&request, &handler).unwrap()
         else {
             panic!("resized images require a bitmap promise");
         };
+        assert_eq!(get(&reference, "loaded").as_f64(), Some(0.0));
+        assert_eq!(handler.borrow().loaded_bytes(), 0);
+        handler.borrow_mut().reset();
+        drop(handler);
         decoder.reset();
         drop(decoder);
         let actual = pending.resolve().await.unwrap();

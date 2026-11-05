@@ -4,7 +4,7 @@ The recovered `image::qoi` codec and `xterm_web::image::IipImageDecoder` turn na
 
 ## Host contract
 
-Keep one `IipImageDecoder` per IIP handler. Call `prepare` synchronously after the native `IipHandler` emits a `DisplayRequest`.
+Keep one `IipImageDecoder` per IIP handler. Call `prepare_transfer` synchronously after the native `IipHandler` emits a `DisplayRequest`, passing the actual protocol controller. This retains BASE64 state until ImageData/QOI or Blob preparation succeeds and releases it before canvas or bitmap calls. Standalone `prepare` handles owned requests without protocol state. See `docs/iip-payload-release.md`.
 
 - `Immediate` contains a real canvas for unscaled QOI. Insert it into `IipImageStorage` immediately, without awaiting a future. The source does not yield in this path.
 - `Pending` owns the actual `createImageBitmap` promise. Await `resolve`, then insert its bitmap into storage. Both promise rejection and storage insertion failure belong to the source IIP warning path. The decoder does not swallow either error or report successful insertion.
@@ -36,6 +36,6 @@ The canonical helper merged the accepted image source and reviewed link, font-te
 
 ## Still missing
 
-This is not a public `ImageAddon` constructor or complete addon acceptance. Task311 must connect the existing control policy, SIXEL, IIP, Kitty, storage and lifecycle owners to the real browser terminal and addon manager. It must preserve source registration/disposal order, raw JS options and reentry. Current native `IipHandler` copies and releases its base64 payload before emitting `DisplayRequest`; the complete coordinator must revisit that boundary to prove source decoder-release ordering on synchronous host failure. The component tests do not establish that state ordering.
+This is not a public `ImageAddon` constructor or complete addon acceptance. Task311 must connect the existing control policy, SIXEL, IIP, Kitty, storage and lifecycle owners to the real browser terminal and addon manager. It must preserve source registration/disposal order, raw JS options and reentry. The native handler now retains its BASE64 payload when emitting `DisplayRequest`; `prepare_transfer` owns the source release boundary. Focused host-failure and nested-transfer comparisons are in `docs/iip-payload-release.md`. The complete coordinator must use this entry point and still prove full lifecycle ordering.
 
 Full original image suites, img01 through img48, all formats at terminal level, late storage insertion after full addon disposal, release/platform/feature gates and broader performance comparisons remain open. Overall image addon equivalence is NOT PROVEN.

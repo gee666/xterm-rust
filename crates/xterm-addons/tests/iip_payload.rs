@@ -1,3 +1,4 @@
+// Copyright (c) 2023 The xterm.js authors. MIT license.
 use xterm_addons::image::{
     iip::{
         geometry::IipGeometry,
