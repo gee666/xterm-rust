@@ -51,7 +51,7 @@ async fn highlight_engine_guard_preserves_raw_length_cutoffs_and_exact_errors() 
 #[wasm_bindgen_test]
 async fn cached_engine_argument_precedes_reentrant_matching_getters() {
     let body = format!(
-        "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),72);",
+        "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),90);",
         include_str!("fixtures/search-cached-argument.js")
     );
     run(&body, true, r#"{"cols":20,"rows":3,"scrollback":1000}"#).await;

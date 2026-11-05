@@ -53,5 +53,32 @@ async function checkSearchCallArgs(term, addon, write, equal) {
       }
     }
   }
+  // The snapshot must not move to addon entry. Earlier decoration getters
+  // still replace the cached argument which the engine is about to receive.
+  for (const reverse of [false, true]) {
+    for (const cached of [undefined, 'a', 'b']) {
+      for (const nested of ['a', 'b', 'clear']) {
+        addon.clearDecorations();
+        term.clearSelection();
+        if (cached !== undefined) addon.findNext(cached);
+        const col = reverse ? 2 : 0;
+        term.select(col, 0, 1);
+        let armed = true;
+        const request = {get decorations() {
+          if (armed) {
+            armed = false;
+            if (nested === 'clear') addon.clearDecorations();
+            else addon.findNext(nested);
+            term.select(col, 0, 1);
+          }
+          return undefined;
+        }};
+        equal(addon[reverse ? 'findPrevious' : 'findNext']('a', request), true);
+        equal(term.getSelectionPosition(), position(reverse !== (nested === 'a') ? 2 : 0));
+        equal(armed, false);
+        cases++;
+      }
+    }
+  }
   return cases;
 }
