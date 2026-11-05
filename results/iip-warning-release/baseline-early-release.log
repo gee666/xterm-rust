@@ -1,0 +1,48 @@
+   Compiling equivalent v1.0.3
+   Compiling memchr v2.8.3
+   Compiling allocator-api2 v0.2.21
+   Compiling foldhash v0.1.5
+   Compiling hashbrown v0.15.5
+   Compiling zmij v1.0.23
+   Compiling serde_core v1.0.229
+   Compiling regress v0.10.4
+   Compiling ryu-js v1.0.3
+   Compiling adler2 v2.0.1
+   Compiling serde_json v1.0.154
+   Compiling miniz_oxide v0.8.9
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\C\crates\xterm-core)
+   Compiling itoa v1.0.18
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\C\crates\xterm-addons)
+    Finished `test` profile [unoptimized] target(s) in 8.96s
+     Running tests\iip_warning.rs (target\debug\deps\iip_warning-33e8726afba80b86.exe)
+
+running 3 tests
+test warning_reset_reentry_does_not_borrow_the_controller_across_callback ... ok
+test diagnostic_payload_survives_until_successful_host_warning ... FAILED
+test successful_warning_releases_nested_live_transfer_but_failure_retains_it ... FAILED
+
+failures:
+
+---- diagnostic_payload_survives_until_successful_host_warning stdout ----
+
+thread 'diagnostic_payload_survives_until_successful_host_warning' panicked at crates\xterm-addons\tests\iip_warning.rs:54:9:
+assertion `left == right` failed
+  left: 0
+ right: 1
+
+---- successful_warning_releases_nested_live_transfer_but_failure_retains_it stdout ----
+
+thread 'successful_warning_releases_nested_live_transfer_but_failure_retains_it' panicked at crates\xterm-addons\tests\iip_warning.rs:73:13:
+assertion `left == right` failed
+  left: 0
+ right: 4
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    diagnostic_payload_survives_until_successful_host_warning
+    successful_warning_releases_nested_live_transfer_but_failure_retains_it
+
+test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-addons --test iip_warning`

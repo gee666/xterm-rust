@@ -16,11 +16,14 @@ pub(super) struct Patch {
 }
 impl Patch {
     pub(super) fn new(target: JsValue, key: &str, value: JsValue) -> Self {
+        let replacement = eval("({configurable:true,writable:true})");
+        js_sys::Reflect::set(&replacement, &"value".into(), &value).unwrap();
+        Self::with_descriptor(target, key, replacement)
+    }
+    pub(super) fn with_descriptor(target: JsValue, key: &str, replacement: JsValue) -> Self {
         let object = js_sys::Object::from(target.clone());
         let descriptor =
             js_sys::Reflect::get_own_property_descriptor(&object, &key.into()).unwrap();
-        let replacement = eval("({configurable:true,writable:true})");
-        js_sys::Reflect::set(&replacement, &"value".into(), &value).unwrap();
         assert!(
             js_sys::Reflect::define_property(&object, &key.into(), &replacement.into()).unwrap()
         );

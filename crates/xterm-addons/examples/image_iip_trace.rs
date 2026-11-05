@@ -158,11 +158,12 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
             _ => return Err("unknown IIP replay operation".into()),
         }
-        // This recording host models successful Blob construction, not pixels.
-        // Release only after the display request reaches that host boundary.
+        // This recording host models successful Blob/warning delivery, not
+        // pixels. Neither callback reenters or throws in this policy replay.
+        // Release only after the effect reaches that successful host boundary.
         if effects
             .iter()
-            .any(|effect| matches!(effect, IipEffect::Display(_)))
+            .any(|effect| matches!(effect, IipEffect::Display(_) | IipEffect::Warning(_)))
         {
             handler.release_payload();
         }

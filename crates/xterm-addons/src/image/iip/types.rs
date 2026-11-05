@@ -37,6 +37,9 @@ pub struct DisplayRequest {
 #[must_use = "protocol effects must be applied to the real terminal and image host"]
 pub enum IipEffect {
     Report(Vec<u16>),
+    /// Deliver through `IipHandler::report_warning` after releasing the
+    /// controller borrow. Payload release follows successful host delivery,
+    /// never effect creation or a throwing warning callback.
     Warning(String),
     HostWarning {
         message: String,

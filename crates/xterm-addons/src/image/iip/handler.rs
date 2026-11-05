@@ -82,6 +82,19 @@ impl IipHandler {
         self.decoder.release();
     }
 
+    /// Deliver an end warning without holding the controller borrow across host
+    /// code. A thrown/failed callback retains payload state. A successful callback
+    /// releases the live decoder, including a transfer started by that callback.
+    pub fn report_warning<E>(
+        handler: &std::cell::RefCell<Self>,
+        message: &str,
+        report: impl FnOnce(&str) -> Result<(), E>,
+    ) -> Result<(), E> {
+        report(message)?;
+        handler.borrow_mut().release_payload();
+        Ok(())
+    }
+
     pub fn put(&mut self, data: &[u32], start: usize, end: usize) -> Result<(), IipError> {
         if start > end || end > data.len() {
             return Err(crate::image::header::HeaderRangeError.into());
@@ -179,14 +192,12 @@ impl IipHandler {
             return Ok(EndPreparation::Complete(Vec::new()));
         }
         if self.decoder.end()? != DecodeStatus::Ok {
-            self.decoder.release();
             return Ok(EndPreparation::Complete(vec![IipEffect::Warning(
                 "IIP: error during BASE64 decoding".to_owned(),
             )]));
         }
         let metrics = image_type(self.decoder.data());
         if metrics.mime == ImageType::Unsupported {
-            self.decoder.release();
             return Ok(EndPreparation::Complete(vec![IipEffect::Warning(
                 "IIP: unsupported image type".to_owned(),
             )]));
@@ -198,7 +209,6 @@ impl IipHandler {
             || width * height >= self.options.pixel_limit
             || self.options.pixel_limit.is_nan()
         {
-            self.decoder.release();
             return Ok(EndPreparation::Complete(vec![IipEffect::Warning(format!(
                 "IIP: image dimension issue {}x{}",
                 metrics.width, metrics.height
