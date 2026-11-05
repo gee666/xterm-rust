@@ -1,0 +1,22 @@
+{
+  "task": 464,
+  "verdict": "accepted",
+  "freeze": "89f3dc6731baa7d5afb3440aacd8f9670f6cc47e",
+  "base": "32bf954467fe3389e9cfe42fdd8c34d425975b62",
+  "findings": [],
+  "independentlyExecuted": {
+    "compiledNativeTests": 9,
+    "unchangedSourceMethodTraces": 4,
+    "changedRustfmt": "passed"
+  },
+  "independentlyVerifiedPins": {
+    "source": 13,
+    "receipts": 42,
+    "temporaryArtifacts": 24,
+    "originalReference": 776
+  },
+  "artifactInspection": "Final and negative compiled WASM artifacts contain the exact shared trace and fixture.",
+  "semanticReview": "Selection runs before shared request flag commit. Successful outer calls commit after reentry; thrown callbacks skip outer writeback without undoing nested writes. Fresh and cached browser paths share the algorithm, typed signatures are unchanged, and no table/group borrow spans selection.",
+  "notRepeated": ["Cargo compilation", "Browser execution"],
+  "remaining": ["Full selection/link family321", "Complete platform/workspace matrix", "Workspace fmt OS206", "Global equivalence NOT PROVEN"]
+}
