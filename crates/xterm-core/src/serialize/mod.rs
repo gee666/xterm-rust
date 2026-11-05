@@ -4,6 +4,7 @@
 mod addon;
 mod ansi;
 pub use addon::{serialize_live_html, serialize_live_state, AddonSerializeError, SerializeAddon};
+pub use ansi::serialize_numeric_row;
 mod buffer;
 mod html;
 mod html_rows;

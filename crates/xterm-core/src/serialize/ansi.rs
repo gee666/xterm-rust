@@ -24,19 +24,7 @@ pub(super) fn serialize(
     range: CellRange,
     exclude_cursor: bool,
 ) -> Result<Vec<u16>, SerializeError> {
-    let mut h = Handler {
-        buffer,
-        rows,
-        first: range.start.y,
-        current: Vec::new(),
-        all: Vec::new(),
-        nulls: 0,
-        cursor_style: CellData::default(),
-        style_position: (0, 0),
-        background: CellData::default(),
-        cursor: (range.start.y, 0),
-        content_cursor: (range.start.y, 0),
-    };
+    let mut h = Handler::new(buffer, rows, range.start.y);
     for row in range.start.y..=range.end.y {
         if let Some(len) = buffer.capture_line(row)? {
             let start = if row == range.start.y {
@@ -58,7 +46,55 @@ pub(super) fn serialize(
     h.finish(attrs, exclude_cursor)
 }
 
-impl Handler<'_> {
+/// Serialize an equal finite numeric row range with no final cursor movement.
+/// Raw row lookup preserves browser ring-buffer aliases before index conversion.
+/// Values outside the JS safe domain are rejected rather than reproducing a
+/// nonprogressing `row++` loop. This does not support arbitrary numeric ranges.
+pub fn serialize_numeric_row(
+    buffer: &dyn BufferAccess,
+    cols: usize,
+    rows: usize,
+    attrs: &AttributeData,
+    row: f64,
+) -> Result<Vec<u16>, SerializeError> {
+    const MAX_SAFE_INTEGER: f64 = 9_007_199_254_740_991.0;
+    if !row.is_finite() || row.abs() > MAX_SAFE_INTEGER {
+        return Err(SerializeError::InvalidRange);
+    }
+    // With one row and no final cursor movement, the origin cancels in the
+    // output trimming arithmetic. Keep handler offsets local while lookups and
+    // diagnostics retain the raw coordinate. Cell/style/finish logic is shared.
+    let mut h = Handler::new(buffer, rows, 0);
+    if buffer.capture_numeric_line(row)?.is_some() {
+        for col in 0..cols {
+            if let Some(cell) = buffer.captured_numeric_cell(row, col)? {
+                h.next(&cell, 0, col);
+            } else {
+                buffer.missing_numeric_cell(row, col)?;
+            }
+        }
+    }
+    h.row_end(0, true)?;
+    h.finish(attrs, true)
+}
+
+impl<'a> Handler<'a> {
+    fn new(buffer: &'a dyn BufferAccess, rows: usize, first: usize) -> Self {
+        Self {
+            buffer,
+            rows,
+            first,
+            current: Vec::new(),
+            all: Vec::new(),
+            nulls: 0,
+            cursor_style: CellData::default(),
+            style_position: (0, 0),
+            background: CellData::default(),
+            cursor: (first, 0),
+            content_cursor: (first, 0),
+        }
+    }
+
     fn emit(&mut self, s: &str) {
         append(&mut self.current, s);
     }

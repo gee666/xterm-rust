@@ -16,7 +16,9 @@ use std::{
 use wasm_bindgen::prelude::*;
 use xterm_core::{
     public_api::BufferApiView,
-    serialize::{serialize_buffer, serialize_live_modes, CellRange, Position},
+    serialize::{
+        serialize_buffer, serialize_live_modes, serialize_numeric_row, CellRange, Position,
+    },
 };
 
 #[wasm_bindgen]
@@ -54,22 +56,19 @@ impl SerializeAddon {
             let start = options::marker(&range, "start")?;
             let cols = columns(&host)?;
             let end = options::marker(&range, "end")?;
-            let range = options::line_range(start, end)?;
-            buffer(
-                &host,
-                normal,
-                CellRange {
-                    start: Position {
-                        x: 0,
-                        y: range.start,
-                    },
-                    end: Position {
-                        x: cols,
-                        y: range.end,
-                    },
-                },
-                true,
-            )?
+            if let (Some(start_row), Some(end_row)) = (start.as_f64(), end.as_f64()) {
+                const MAX_SAFE_INTEGER: f64 = 9_007_199_254_740_991.0;
+                if start_row == end_row
+                    && start_row.is_finite()
+                    && start_row.abs() <= MAX_SAFE_INTEGER
+                {
+                    numeric_row(&host, normal, cols, start_row)?
+                } else {
+                    range_buffer(&host, normal, cols, start, end)?
+                }
+            } else {
+                range_buffer(&host, normal, cols, start, end)?
+            }
         } else {
             let scrollback = options::property(&options, "scrollback")?;
             scrollback_buffer(&host, normal, scrollback)?
@@ -119,6 +118,45 @@ impl SerializeAddon {
 }
 fn columns(host: &Shared) -> Result<usize, JsValue> {
     host.native.cols().map_err(|error| to_js_error(&error))
+}
+fn range_buffer(
+    host: &Shared,
+    view: Rc<BufferApiView>,
+    cols: usize,
+    start: JsValue,
+    end: JsValue,
+) -> Result<Vec<u16>, JsValue> {
+    let range = options::line_range(start, end)?;
+    buffer(
+        host,
+        view,
+        CellRange {
+            start: Position {
+                x: 0,
+                y: range.start,
+            },
+            end: Position {
+                x: cols,
+                y: range.end,
+            },
+        },
+        true,
+    )
+}
+fn numeric_row(
+    host: &Shared,
+    view: Rc<BufferApiView>,
+    cols: usize,
+    row: f64,
+) -> Result<Vec<u16>, JsValue> {
+    // Match the ordinary range path's state-read phases before raw lookup.
+    let rows = host.native.rows().map_err(|error| to_js_error(&error))?;
+    let attrs = host
+        .native
+        .with_state(|state| state.attributes.clone())
+        .map_err(|error| to_js_error(&error))?;
+    let view = view::BrowserView::new(view, host)?;
+    serialize_numeric_row(&view, cols, rows, &attrs, row).map_err(|error| view::error(&error))
 }
 fn scrollback_buffer(
     host: &Shared,
