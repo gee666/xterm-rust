@@ -112,6 +112,15 @@ async fn empty_search_skips_matching_getters_and_retains_source_phases() {
 }
 
 #[wasm_bindgen_test]
+async fn selection_decorations_follow_matching_before_scroll_and_selection() {
+    let body = format!(
+        "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),360);",
+        include_str!("fixtures/search-selection-options.js")
+    );
+    run(&body, true, DEFAULTS).await;
+}
+
+#[wasm_bindgen_test]
 async fn actual_shared_selection_and_search_events_through_public_binding() {
     run(r#"
 let events=[];addon.onBeforeSearch(()=>events.push('before'));addon.onAfterSearch(()=>events.push('after'));

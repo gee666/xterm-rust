@@ -110,9 +110,9 @@ impl SearchAddon {
         // Matching option access can throw or reenter. The source has already
         // captured and cleared selection and initialized its line cache here.
         self.init_cache()?;
-        let request = options
+        let flags = options
             .as_ref()
-            .map(|o| o.read())
+            .map(|options| options.matching_options())
             .transpose()?
             .unwrap_or_default();
         let cached = self.inner.cached_term.borrow().clone();
@@ -121,7 +121,7 @@ impl SearchAddon {
             .is_some_and(|cached| term.equals(cached.as_ref()));
         let result = self.run_engine(
             &text,
-            &matching(&request),
+            &flags,
             if reverse {
                 Operation::Previous
             } else {
@@ -130,7 +130,15 @@ impl SearchAddon {
             selection,
             same.then_some(text.as_ref()),
         )?;
-        let found = self.select_result(result, request.decorations.as_ref(), no_scroll()?)?;
+        // Source evaluates selection decorations after the engine returns,
+        // even for a miss, and before reading internal noScroll or selecting.
+        // No terminal/cache borrow may remain live across this getter.
+        let decorations = options
+            .as_ref()
+            .map(|options| options.decorations())
+            .transpose()?
+            .flatten();
+        let found = self.select_result(result, decorations.as_ref(), no_scroll()?)?;
         drop(text);
         self.finish_search(term, options.as_ref())?;
         Ok(found)

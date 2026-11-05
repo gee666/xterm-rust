@@ -22,6 +22,11 @@ pub trait SearchOptionsSource {
     /// Host adapters use their retained raw values for strict flag equality.
     fn as_any(&self) -> &dyn std::any::Any;
     fn read(&self) -> Result<SearchOptions, SearchAddonError>;
+    /// Read engine flags without evaluating selection decoration accessors.
+    /// Browser hosts override this to preserve the later decoration-read phase.
+    fn matching_options(&self) -> Result<xterm_core::search::SearchOptions, SearchAddonError> {
+        Ok(self.read()?.matching)
+    }
     /// Raw request truthiness, without invoking getters or coercion callbacks.
     /// Typed Rust option records are always truthy.
     fn is_truthy(&self) -> bool {

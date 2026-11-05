@@ -111,30 +111,32 @@ impl SearchOptionsSource for JsOptions {
         Ok(false)
     }
     fn read(&self) -> Result<SearchOptions, SearchAddonError> {
+        let decorations = self.decorations()?;
+        let mut matching = self.matching_options()?;
+        matching.decorations = decorations.is_some();
+        Ok(SearchOptions {
+            matching,
+            decorations,
+        })
+    }
+    fn matching_options(&self) -> Result<xterm_core::search::SearchOptions, SearchAddonError> {
         let optional_bool = |value: Result<JsValue, JsValue>| {
             value
                 .map(|value| (!value.is_undefined()).then(|| value.is_truthy()))
                 .map_err(host_error)
         };
-        let decorations = property(&self.0, "decorations").map_err(host_error)?;
-        let decorations: Option<SearchDecorationOptionsHandle> = decorations
-            .is_truthy()
-            .then(|| Rc::new(JsDecorations(decorations)) as SearchDecorationOptionsHandle);
-        Ok(SearchOptions {
-            matching: xterm_core::search::SearchOptions {
-                // Unlike addon-level optional reads, engine matching requires
-                // a non-null request and first accesses the regex property.
-                // Keep a named property access so engine TypeErrors identify
-                // regex in WebKit too, rather than an opaque computed key.
-                regex: optional_bool(regex(&self.0))?,
-                case_sensitive: optional_bool(flag(&self.0, "caseSensitive"))?,
-                whole_word: optional_bool(flag(&self.0, "wholeWord"))?,
-                // The upstream engine does not read incremental during a
-                // normal search. In particular, do not invoke its JS getter.
-                incremental: None,
-                decorations: decorations.is_some(),
-            },
-            decorations,
+        Ok(xterm_core::search::SearchOptions {
+            // Unlike addon-level optional reads, engine matching requires
+            // a non-null request and first accesses the regex property.
+            // Keep a named property access so engine TypeErrors identify
+            // regex in WebKit too, rather than an opaque computed key.
+            regex: optional_bool(regex(&self.0))?,
+            case_sensitive: optional_bool(flag(&self.0, "caseSensitive"))?,
+            whole_word: optional_bool(flag(&self.0, "wholeWord"))?,
+            // The upstream engine does not read incremental during a
+            // normal search. In particular, do not invoke its JS getter.
+            incremental: None,
+            decorations: false,
         })
     }
 }

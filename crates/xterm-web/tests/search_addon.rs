@@ -38,6 +38,8 @@ mod refresh;
 mod refresh_undefined;
 #[path = "search_cases/scroll_options.rs"]
 mod scroll_options;
+#[path = "search_cases/selection_options.rs"]
+mod selection_options;
 #[path = "search_cases/tracker.rs"]
 mod tracker;
 
