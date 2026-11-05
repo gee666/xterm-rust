@@ -1,0 +1,230 @@
+{
+  "status": "failed",
+  "engine": "Rust WASM",
+  "suite": "addon-search",
+  "project": "FirefoxStable",
+  "mode": "runtime",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "counts": {
+    "discovered": 2,
+    "executed": 2,
+    "passed": 0,
+    "failed": 2,
+    "skipped": 0,
+    "unrun": 0
+  },
+  "errors": [
+    "Error: Original Playwright assertions failed against Rust\n    at file:///O:/xterm-rust-swarm-16/tmp/worktrees/Clarence16/scripts/e2e-upstream.mjs:93:65"
+  ],
+  "commands": [
+    {
+      "stage": "playwright",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Clarence16\\source_repo\\node_modules\\@playwright\\test\\cli.js",
+        "test",
+        "--config=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Clarence16\\tmp\\e2e\\2026-11-05T08-32-58-498Z-a41ab9c5-081a-46f6-a8ed-01c3b670983a\\playwright.cjs",
+        "--reporter=json",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=89500",
+        "--output=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Clarence16\\results\\e2e\\upstream\\2026-11-05T08-32-58-498Z-a41ab9c5-081a-46f6-a8ed-01c3b670983a\\artifacts",
+        "--project=FirefoxStable",
+        "--grep=more than 1k"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 32807.432499999995,
+      "status": "failed",
+      "log": "playwright.log"
+    }
+  ],
+  "scope": "This run does not establish complete terminal or cross-platform equivalence.",
+  "source": {
+    "revision": "3ee576a9b01c774d2305936ec9e44993df7f0b5d",
+    "sha256": "6ccdb5195e4140064727b047e5d6acc145707ac12411613a9ac8015c74a19300",
+    "files": 1259
+  },
+  "reference": [
+    {
+      "path": "demo/test.html",
+      "bytes": 545,
+      "sha256": "35f81ad165aee291f49ac3ffea10068bf164207aad8d5fe4e5a558ada0e5ceed"
+    },
+    {
+      "path": "addons/addon-search/test/playwright.config.ts",
+      "bytes": 626,
+      "sha256": "84a4cd16b01f399f9d7e447c817237ed4616d79c9a1e9071851261e1d06c31f9"
+    }
+  ],
+  "fixture": [
+    {
+      "path": "scripts/e2e-upstream.mjs",
+      "bytes": 7780,
+      "sha256": "12d881e3127c7865f00d7a55251bad4de8b611c24403fe3e14867798e6e16977"
+    },
+    {
+      "path": "scripts/e2e/fixture-server.mjs",
+      "bytes": 7410,
+      "sha256": "4790325527ed20905ecbaf0ceba34272325ccdecdd36060c9cf6bf5ec7a0b2ef"
+    },
+    {
+      "path": "scripts/e2e/test-page.mjs",
+      "bytes": 1867,
+      "sha256": "58a7f3ff1c587dff8b78d8c5775b9b7a3ac72b144f800d893d80bd8e98d20b28"
+    },
+    {
+      "path": "scripts/e2e/build-bootstrap.mjs",
+      "bytes": 905,
+      "sha256": "487154862b39623222d248d465c66aa06ee08467631b6dacdbe5c43f3a51f801"
+    },
+    {
+      "path": "scripts/e2e/upstream-config.mjs",
+      "bytes": 1388,
+      "sha256": "0ff88d3d995ad09fa7308bd6ac5675a82d10992f22f5b9b8304a9fee9590aa2f"
+    },
+    {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    }
+  ],
+  "build": {
+    "report": "results/demos/build/2026-11-05T08-31-39-883Z/report.json",
+    "source": {
+      "revision": "3ee576a9b01c774d2305936ec9e44993df7f0b5d",
+      "sha256": "6ccdb5195e4140064727b047e5d6acc145707ac12411613a9ac8015c74a19300",
+      "files": 1259
+    },
+    "artifacts": [
+      {
+        "path": "browser/pkg/xterm_web.js",
+        "bytes": 155108,
+        "sha256": "5d11ec1a59b99b4e54faf4ba6329245c38a0609726ee60b303816589c896447d"
+      },
+      {
+        "path": "browser/pkg/xterm_web_bg.wasm",
+        "bytes": 11639227,
+        "sha256": "19a8e3056c5f25db6f0e8aecc807c99582249284f990c6faffb79feadc5c43af"
+      }
+    ]
+  },
+  "bindings": [
+    {
+      "path": "browser/xterm.mjs",
+      "bytes": 818,
+      "sha256": "1fa45337d7991c71e6fc521012b192790a561e8881bb460ebcdfa3d845a00926"
+    }
+  ],
+  "command": [
+    "C:\\nvm4w\\nodejs\\node.exe",
+    "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Clarence16\\source_repo\\node_modules\\@playwright\\test\\cli.js",
+    "test",
+    "--config=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Clarence16\\tmp\\e2e\\2026-11-05T08-32-58-498Z-a41ab9c5-081a-46f6-a8ed-01c3b670983a\\playwright.cjs",
+    "--reporter=json",
+    "--workers=2",
+    "--retries=0",
+    "--global-timeout=89500",
+    "--output=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Clarence16\\results\\e2e\\upstream\\2026-11-05T08-32-58-498Z-a41ab9c5-081a-46f6-a8ed-01c3b670983a\\artifacts",
+    "--project=FirefoxStable",
+    "--grep=more than 1k"
+  ],
+  "playwrightStats": {
+    "startTime": "2026-11-05T08:32:59.608Z",
+    "duration": 32356.739,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  },
+  "requests": [
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=41c35deb-71a6-4777-b516-23a82a70d52d",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=41c35deb-71a6-4777-b516-23a82a70d52d&missing=ImageAddon%2CSerializeAddon%2CLigaturesAddon%2CWebglAddon",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": "/favicon.ico",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=a6aea8d7-9c88-4276-98bb-b287a091a6f4",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=a6aea8d7-9c88-4276-98bb-b287a091a6f4&missing=ImageAddon%2CSerializeAddon%2CLigaturesAddon%2CWebglAddon",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": "/favicon.ico",
+      "status": 404
+    }
+  ],
+  "serverErrors": [],
+  "runtimes": [
+    {
+      "state": "ready",
+      "missingBindings": [
+        "ImageAddon",
+        "SerializeAddon",
+        "LigaturesAddon",
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "ImageAddon",
+        "SerializeAddon",
+        "LigaturesAddon",
+        "WebglAddon"
+      ]
+    }
+  ]
+}
