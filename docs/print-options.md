@@ -32,6 +32,8 @@ Base main is `5088f8fd`. Commands and raw receipts are retained under `results/p
 - Warning-denied native workspace Clippy passes all targets and features. Native workspace all-feature library checking and WASM workspace all-feature library Clippy also pass. These are not full workspace runtime tests or browser runtime evidence.
 - The first headroom probe could not locate PowerShell on PATH. The next Windows command wrapper had a syntax error before Cargo ran. Using absolute tool paths and invoking Cargo directly resolved these launcher errors. `first-shell-error.log` retains the command failure; neither launcher failure is counted as a negative-control pass.
 - Whole-core tests refreshed three existing buffer/serialize result files. Their diffs were inspected and restored only in this owned worktree. The scoped regenerated buffer summary is preserved here, not attributed to this repair.
-- No browser, CI, native Linux/macOS, release or performance checks ran for this task. Temporary driver scripts and the live native binary remain available for independent review before owned cleanup. `source-pins.json`, `receipt-pins.json` and `binary-pins.json` identify exact review inputs.
+- No browser, CI, native Linux/macOS, release or performance checks ran for this task. Temporary driver scripts and the live native binary were supplied for independent review before owned cleanup. `source-pins.json`, `receipt-pins.json` and `binary-pins.json` identify exact review inputs.
+
+Independent review accepted task 504 with no findings after running the pinned native regression and source replay and checking all 31 source, receipt and binary pins. See `results/print-option/review.md`.
 
 Full family work remains in tasks 313, 327 and 304. Browser raw-option integration and complete original-suite coverage are not established by this native regression corpus.
