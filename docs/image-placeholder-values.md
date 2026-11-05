@@ -18,9 +18,25 @@ This is a browser binding representation change. Rust callers use `set_show_plac
 
 Existing boolean assertions are unchanged in meaning; their Rust argument and expected-value types were adapted to `JsValue`.
 
-## Verification status
+## Verification
 
-Focused browser and quality runs are pending. Record exact commands, counts, baseline control and source hashes here before review. Overall equivalence is NOT PROVEN.
+On Windows with Rust/Cargo1.85.1, Node24.15.0 and wasm-bindgen0.2.100, the directed image-addon target passes31/31 test functions in each of Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4. The target contains28 retained tests and the three new placeholder tests. It is not the full original639-case family or img01..48.
+
+A negative control restored all four production files to their exact pre431 implementation at0ddac49b, plus the three existing Rust test files whose argument types changed. The new tests remained registered. Chromium passed28 and failed exactly the three new tests. All seven files were restored byte-for-byte in `finally`; the fixed target then passed31/31 in all three engines again. `negative-audit.json` records baseline, control and restored hashes. No original source or assertion changed.
+
+Focused WASM Clippy passes with warnings denied. Formatting passes separately for all five workspace packages. The exact aggregate `cargo fmt --all -- --check` command still fails with Windows OS206, command line too long. Its failed receipt is retained, not reported as a pass. No native Linux/macOS runtime, full-workspace gate or complete addon equivalence is established here.
+
+Raw browser reports, source hashes, negative control and quality logs are in `results/image-placeholder-values/`. `identity-audit.json` verifies all97 Rust input pins, all121 original comparator source files against the supplied P: reference, and all seven old/restored files against Git and saved fixed bytes. Historical paths identify the owned O: test checkout and are not promised to remain after cleanup.
+
+Use the dependency/tool environment described in `docs/image-canvas.md`, with all temporary work on O:.
+
+```sh
+WASM_TEST=image_addon_browser CARGO_BUILD_JOBS=2 node scripts/image-canvas-check.mjs
+cargo clippy --locked -j2 -p xterm-web --target wasm32-unknown-unknown --lib --test image_addon_browser -- -D warnings
+cargo fmt --all -- --check
+```
+
+Overall equivalence is NOT PROVEN. Independent review is pending.
 
 ## Remaining work
 
