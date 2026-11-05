@@ -14,27 +14,59 @@ const MAX_CODE_LENGTH: usize = 15;
 struct Bits<'a> {
     bytes: &'a [u8],
     index: usize,
-    bit: u8,
+    tag: u32,
+    bits: u8,
 }
 impl Bits<'_> {
-    fn read(&mut self, count: u8) -> Result<u16, FontError> {
-        let mut value = 0;
-        for shift in 0..count {
-            // Source bitwise operations turn undefined source bytes into zero.
-            let byte = self.bytes.get(self.index).copied().unwrap_or(0);
-            value |= u16::from((byte >> self.bit) & 1) << shift;
-            self.bit += 1;
-            if self.bit == 8 {
-                self.index = self.index.checked_add(1).ok_or(FontError::Bounds)?;
-                self.bit = 0;
-            }
-        }
+    fn byte(&mut self) -> Result<u32, FontError> {
+        // Source bitwise operations turn undefined source bytes into zero.
+        let value = u32::from(self.bytes.get(self.index).copied().unwrap_or(0));
+        self.index = self.index.checked_add(1).ok_or(FontError::Bounds)?;
         Ok(value)
     }
+    fn fill(&mut self) -> Result<(), FontError> {
+        while self.bits < 24 {
+            let byte = self.byte()?;
+            self.tag |= byte << self.bits;
+            self.bits += 8;
+        }
+        Ok(())
+    }
+    fn buffered_bit(&mut self) -> u16 {
+        // Decode fills at least24 bits before consuming at most16. The header
+        // bit path fills one byte whenever its buffer is empty.
+        let value = (self.tag & 1) as u16;
+        self.tag >>= 1;
+        self.bits -= 1;
+        value
+    }
+    fn bit(&mut self) -> Result<u16, FontError> {
+        if self.bits == 0 {
+            self.tag = self.byte()?;
+            self.bits = 8;
+        }
+        Ok(self.buffered_bit())
+    }
+    fn read(&mut self, count: u8) -> Result<u16, FontError> {
+        if count == 0 {
+            return Ok(0);
+        }
+        self.fill()?;
+        let value = (self.tag & ((1 << count) - 1)) as u16;
+        self.tag >>= count;
+        self.bits -= count;
+        Ok(value)
+    }
+    fn exhausted(&self) -> bool {
+        self.index >= self.bytes.len()
+            && (self.index - self.bytes.len()).saturating_mul(8) >= usize::from(self.bits)
+    }
     fn stored(&mut self) -> Result<(), FontError> {
-        if self.bit != 0 {
-            self.index = self.index.checked_add(1).ok_or(FontError::Bounds)?;
-            self.bit = 0;
+        // Preserve the actual source rewind, not canonical byte alignment.
+        // In particular, an exact8-bit remainder stays prefetched and skipped.
+        while self.bits > 8 {
+            self.index = self.index.checked_sub(1).ok_or(FontError::Bounds)?;
+            self.bits -= 8;
         }
         let start = self.index;
         let word = |offset: usize| {
@@ -49,11 +81,11 @@ impl Bits<'_> {
         if length != Some(!inverse) {
             return Err(FontError::Compression);
         }
-        // Equality above establishes an actual two-byte length. Missing payload
-        // is stored as zero by the source's typed array, with no further reads
-        // affecting construction, so skip it rather than materializing it.
+        // Equality establishes an actual two-byte length. Missing payload is
+        // stored as zero by the source typed array, with no later read effect.
         let length = usize::from(length.ok_or(FontError::Compression)?);
         self.index = start.checked_add(4 + length).ok_or(FontError::Bounds)?;
+        self.bits = 0;
         Ok(())
     }
 }
@@ -91,9 +123,10 @@ impl Tree {
         }
     }
     fn decode(&self, input: &mut Bits<'_>) -> Result<Option<u16>, FontError> {
+        input.fill()?;
         let (mut sum, mut current) = (0, 0);
         for length in 1..=MAX_CODE_LENGTH {
-            current = 2 * current + i32::from(input.read(1)?);
+            current = 2 * current + i32::from(input.buffered_bit());
             let count = i32::from(self.counts[length]);
             sum += count;
             current -= count;
@@ -106,7 +139,7 @@ impl Tree {
         }
         // Source reads table[16] as undefined, leaving NaN and an undefined
         // symbol after consuming this last bit. Do not loop on a missing code.
-        input.read(1)?;
+        input.buffered_bit();
         Ok(None)
     }
 }
@@ -150,7 +183,7 @@ fn dynamic(
 }
 fn data(input: &mut Bits<'_>, literals: &Tree, distances: &Tree) -> Result<(), FontError> {
     loop {
-        let exhausted = input.index >= input.bytes.len();
+        let exhausted = input.exhausted();
         match literals.decode(input)? {
             Some(END_BLOCK) => return Ok(()),
             Some(value) if value < END_BLOCK => {}
@@ -186,7 +219,8 @@ pub(super) fn validate(bytes: &[u8]) -> Result<(), FontError> {
     let mut input = Bits {
         bytes,
         index: 0,
-        bit: 0,
+        tag: 0,
+        bits: 0,
     };
     let mut fixed_literals = Tree::new();
     let mut fixed_distances = Tree::new();
@@ -197,7 +231,7 @@ pub(super) fn validate(bytes: &[u8]) -> Result<(), FontError> {
     fixed_distances.build(&[5; 32]);
     let (mut literals, mut distances, mut codes) = (Tree::new(), Tree::new(), Tree::new());
     loop {
-        let final_block = input.read(1)? != 0;
+        let final_block = input.bit()? != 0;
         match input.read(2)? {
             0 => input.stored()?,
             1 => data(&mut input, &fixed_literals, &fixed_distances)?,

@@ -68,6 +68,12 @@ for (const tag of ['cvt ','fpgm','prep']) for (const woff of [false,true]) {
     for (const storedLength of [0,4,65535]) for (const inverseLow of [0,1,255]) for (const length of [64,65]) {
       add(tag,true,'partial inverse '+storedLength+'/'+inverseLow+' length'+length,[{data:[120,156,1,storedLength&255,storedLength>>>8,inverseLow],length}]);
     }
+    for (let literals=0;literals<8;literals++) for (const padding of [false,true]) for(const length of [64,65]) {
+      const bits=[0,1,0,...Array.from({length:literals},()=>[1,1,0,0,1,0,0,0,0]).flat(),...Array(7).fill(0),1,0,0];
+      const prefix=Array.from({length:Math.ceil(bits.length/8)},(_,i)=>bits.slice(i*8,i*8+8).reduce((n,b,j)=>n+(b<<j),0));
+      if(literals===3)assert.deepEqual(prefix,[154,48,97,2,32],'Retain exact review buffered-boundary prefix');
+      add(tag,true,'buffered stored literal'+literals+' padding'+padding+' length'+length,[{data:[120,156,...prefix,...(padding?[0]:[]),4,0,251,255],length}]);
+    }
     for (const length of [64,65]) {
       add(tag,true,'stored prefix partial inverse length'+length,[{data:[120,156,0,0,0,255,255,1,255,255,1],length}]);
       add(tag,true,'fixed prefix partial inverse length'+length,[{data:[120,156,2,4,255,255,1],length}]);
