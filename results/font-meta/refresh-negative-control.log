@@ -1,0 +1,24 @@
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\A\crates\xterm-core)
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\A\crates\xterm-addons)
+    Finished `test` profile [unoptimized] target(s) in 6.52s
+     Running tests\font_metadata_constructor.rs (target\debug\deps\font_metadata_constructor-2de54daf484d09ee.exe)
+
+running 1 test
+test unchanged_source_metadata_constructor_outcomes ... FAILED
+
+failures:
+
+---- unchanged_source_metadata_constructor_outcomes stdout ----
+
+thread 'unchanged_source_metadata_constructor_outcomes' panicked at crates\xterm-addons\tests\font_metadata_constructor.rs:48:5:
+"meta warning changes version 1 to 2": expected Some(Invalid("Unsupported META table version.")), got None
+"meta warning changes version 2 to 1": expected None, got Some(Invalid("Unsupported META table version."))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    unchanged_source_metadata_constructor_outcomes
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 13.14s
+
+error: test failed, to rerun pass `-p xterm-addons --test font_metadata_constructor`

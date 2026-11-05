@@ -44,7 +44,7 @@ pub fn assert_corpus() {
             .unwrap();
         assert_eq!(
             Font::load_buffer(&corpus::construct(case), FontOptions::default()).err(),
-            corpus::kern_error(case)
+            corpus::constructor_error(case)
         );
     }
 }
