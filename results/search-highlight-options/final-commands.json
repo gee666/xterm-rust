@@ -1,0 +1,83 @@
+[
+  {
+    "name": "final-native",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-web",
+      "--test",
+      "search_addon"
+    ],
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 192.7336,
+    "status": "passed"
+  },
+  {
+    "name": "final-wasm-clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-web",
+      "--target",
+      "wasm32-unknown-unknown",
+      "--lib",
+      "--test",
+      "wasm_search_addon",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 10621.9524,
+    "status": "passed"
+  },
+  {
+    "name": "final-native-clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-addons",
+      "-p",
+      "xterm-web",
+      "--lib",
+      "--test",
+      "search_addon",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 3728.3455000000013,
+    "status": "passed"
+  }
+]

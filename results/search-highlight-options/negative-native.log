@@ -1,0 +1,55 @@
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\L458\crates\xterm-addons)
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\L458\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 4.90s
+     Running tests\search_addon.rs (target\debug\deps\search_addon-4de7d175adac3b45.exe)
+
+running 5 tests
+test highlight_options::highlight_getter_failures_cut_off_selection_and_preserve_reentry ... FAILED
+test highlight_options::highlight_eligibility_and_argument_follow_results_and_remain_live ... FAILED
+test highlight_options::absent_second_highlight_argument_only_fails_when_a_result_reads_colors ... FAILED
+test highlight_options::highlight_matching_errors_skip_both_late_decoration_reads ... FAILED
+test highlight_options::highlight_manager_is_captured_between_eligibility_and_argument_getters ... FAILED
+
+failures:
+
+---- highlight_options::highlight_getter_failures_cut_off_selection_and_preserve_reentry stdout ----
+
+thread 'highlight_options::highlight_getter_failures_cut_off_selection_and_preserve_reentry' panicked at crates\xterm-web\tests\search_cases\highlight_options.rs:144:29:
+assertion failed: ended.get()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- highlight_options::highlight_eligibility_and_argument_follow_results_and_remain_live stdout ----
+
+thread 'highlight_options::highlight_eligibility_and_argument_follow_results_and_remain_live' panicked at crates\xterm-web\tests\search_cases\highlight_options.rs:91:33:
+results must be sliced first
+
+---- highlight_options::absent_second_highlight_argument_only_fails_when_a_result_reads_colors stdout ----
+
+thread 'highlight_options::absent_second_highlight_argument_only_fails_when_a_result_reads_colors' panicked at crates\xterm-web\tests\search_cases\highlight_options.rs:195:17:
+assertion failed: matches!(result, Err(SearchAddonError::Dispatch(_)))
+
+---- highlight_options::highlight_matching_errors_skip_both_late_decoration_reads stdout ----
+
+thread 'highlight_options::highlight_matching_errors_skip_both_late_decoration_reads' panicked at crates\xterm-web\tests\search_cases\highlight_options.rs:266:9:
+assertion `left == right` failed
+  left: 2
+ right: 1
+
+---- highlight_options::highlight_manager_is_captured_between_eligibility_and_argument_getters stdout ----
+
+thread 'highlight_options::highlight_manager_is_captured_between_eligibility_and_argument_getters' panicked at crates\xterm-web\tests\search_cases\highlight_options.rs:238:13:
+assertion `left == right` failed
+  left: 3
+ right: 2
+
+
+failures:
+    highlight_options::absent_second_highlight_argument_only_fails_when_a_result_reads_colors
+    highlight_options::highlight_eligibility_and_argument_follow_results_and_remain_live
+    highlight_options::highlight_getter_failures_cut_off_selection_and_preserve_reentry
+    highlight_options::highlight_manager_is_captured_between_eligibility_and_argument_getters
+    highlight_options::highlight_matching_errors_skip_both_late_decoration_reads
+
+test result: FAILED. 0 passed; 5 failed; 0 ignored; 0 measured; 48 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-web --test search_addon`
