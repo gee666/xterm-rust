@@ -51,6 +51,12 @@ WASM_TEST=image_lifecycle_browser CARGO_BUILD_JOBS=2 node scripts/image-canvas-c
 
 After acceptance, the producer rebased onto main `2f1be3b980494d9618a9049fd1a7440534ff6444`. All owned source/test/runner bytes match the reviewed commit. The union15-test matrix again passed in all three engines. Workspace all-target/all-feature tests passed2040 tests across398 summaries with zero failures or ignored tests, and workspace Clippy/full formatting passed. Exact union reports are retained as `results/image-sixel-terminal/union-*`. The batch also includes the confirmed documentation-only task367 integration receipt `4a8ef32`, without replaying its already integrated source.
 
+## Canonical integration
+
+The canonical helper integrated the accepted producer into main `331f0eead64246aa67d951bbd3c9ff3ae65cc4f7`. Changed core/web all-target builds and tests, affected all-target/native workspace checks and applicable WASM library checks passed1875 tests across357 summaries. The helper removed the private target. It includes the separately accepted alternate-cleanup fixture correction371.
+
+An earlier gate completed its tests but safely refused to move main because a documentation-only371 receipt advanced main during the build. Its log is retained as `canonical-first-refusal.log`. The helper then rebased and reran every gate without bypassing the stale-ref check. This did not change the reviewed SIXEL source. No extra browser pass is claimed for the documentation-only main advance.
+
 ## Independent review
 
 Task370 was accepted at `4520a1f`. The isolated reviewer inspected the implementation, the diagnostic-only WASM helper, original-source comparator and fixture extraction. It independently reran15 SIXEL and12 IIP tests per browser, two native streaming tests, all2036 workspace tests across396 summaries, native workspace/scoped WASM warning-denied Clippy, full formatting and JS syntax checks. No findings remained. Its browser reports and focused native log are retained as `results/image-sixel-terminal/reviewer-*`.
