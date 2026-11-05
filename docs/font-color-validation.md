@@ -22,7 +22,7 @@ On base main3aa04692, the676-case native test passes. The retained GDEF1329, ava
 
 Two negative controls demonstrate sensitivity. Skipping color-table parsing yields569 mismatched rows. Restoring the old zlib-wrapper decoder yields exactly four mismatches. Production code was restored and the676-case test passed again. Complete logs are in `results/font-color/`.
 
-The source addon probe has twelve records. It exercises CPAL/COLR rejection caching, successful warning continuation, warning reentry, payload and descriptor mutation, object/number/null/undefined throw retention and good-family recovery. Its expected fixture comes from copied upstream addon production code with dependency resolution adapted, not from Rust output. The browser test creates the actual Rust LigaturesAddon. Browser execution is pending at this checkpoint.
+The source addon probe has twelve records. It exercises CPAL/COLR rejection caching, successful warning continuation, warning reentry, payload and descriptor mutation, object/number/null/undefined throw retention and good-family recovery. Its expected fixture comes from copied upstream addon production code with dependency resolution adapted, not from Rust output. The browser test creates the actual Rust LigaturesAddon. Both test functions pass in Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4 with no failed, ignored or filtered tests. Each engine compares all676 constructor inputs and twelve addon records. The original60-second watchdog is unchanged. `browser.json` records exact test, compiler, WASM, binding and CSS hashes; generated executables are temporary test artifacts, not a claimed release distribution.
 
 Exact `cargo fmt --all -- --check` fails on this physical Windows path with OS206. Separate checks pass for all five workspace members. That is not an aggregate formatting pass. Full workspace gates, native Linux/macOS, original font suites, Terminal rendering and addon distribution acceptance remain open.
 
@@ -42,7 +42,7 @@ WASM_PACKAGE=xterm-font-addons WASM_TEST=font_color_browser node scripts/browser
 cargo fmt --all -- --check
 ```
 
-PowerShell users set environment variables through `$env:`. Node24.15.0, Rust/Cargo1.85.1 and wasm-bindgen0.2.100 are the local tools. Browser versions and exact artifacts will accompany the final matrix receipt.
+PowerShell users set environment variables through `$env:`. Node24.15.0, Rust/Cargo1.85.1 and wasm-bindgen0.2.100 are the local tools. Browser versions and exact artifact hashes are retained with the final matrix receipt.
 
 ## Ownership
 
