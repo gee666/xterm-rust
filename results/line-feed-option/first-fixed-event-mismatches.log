@@ -1,0 +1,66 @@
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\QiangLf\crates\xterm-core)
+warning: variable does not need to be mutable
+  --> crates\xterm-core\src\terminal\controls.rs:23:13
+   |
+23 |         let mut state = shared
+   |             ----^^^^^
+   |             |
+   |             help: remove this `mut`
+   |
+   = note: `#[warn(unused_mut)]` on by default
+
+warning: `xterm-core` (lib) generated 1 warning (run `cargo fix --lib -p xterm-core` to apply 1 suggestion)
+    Finished `test` profile [unoptimized] target(s) in 5.30s
+     Running tests\line_feed_option.rs (tmp/target\debug\deps\line_feed_option-a020d4076412607c.exe)
+
+running 1 test
+
+thread 'line_feed_convert_eol_getter_matches_source_reentry_and_error_phases' panicked at crates\xterm-core\tests\line_feed_option.rs:153:5:
+36 mismatching cases:
+case 1 a alt=0 convert=0 reset: ordered events
+case 2 a alt=0 convert=0 alt: ordered events
+case 6 a alt=0 convert=0 nested: ordered events
+case 10 a alt=0 convert=1 reset: ordered events
+case 11 a alt=0 convert=1 alt: ordered events
+case 15 a alt=0 convert=1 nested: ordered events
+case 19 a alt=1 convert=0 reset: ordered events
+case 21 a alt=1 convert=0 normal: ordered events
+case 24 a alt=1 convert=0 nested: ordered events
+case 28 a alt=1 convert=1 reset: ordered events
+case 30 a alt=1 convert=1 normal: ordered events
+case 33 a alt=1 convert=1 nested: ordered events
+case 37 b alt=0 convert=0 reset: ordered events
+case 38 b alt=0 convert=0 alt: ordered events
+case 42 b alt=0 convert=0 nested: ordered events
+case 46 b alt=0 convert=1 reset: ordered events
+case 47 b alt=0 convert=1 alt: ordered events
+case 51 b alt=0 convert=1 nested: ordered events
+case 55 b alt=1 convert=0 reset: ordered events
+case 57 b alt=1 convert=0 normal: ordered events
+case 60 b alt=1 convert=0 nested: ordered events
+case 64 b alt=1 convert=1 reset: ordered events
+case 66 b alt=1 convert=1 normal: ordered events
+case 69 b alt=1 convert=1 nested: ordered events
+case 73 c alt=0 convert=0 reset: ordered events
+case 74 c alt=0 convert=0 alt: ordered events
+case 78 c alt=0 convert=0 nested: ordered events
+case 82 c alt=0 convert=1 reset: ordered events
+case 83 c alt=0 convert=1 alt: ordered events
+case 87 c alt=0 convert=1 nested: ordered events
+case 91 c alt=1 convert=0 reset: ordered events
+case 93 c alt=1 convert=0 normal: ordered events
+case 96 c alt=1 convert=0 nested: ordered events
+case 100 c alt=1 convert=1 reset: ordered events
+case 102 c alt=1 convert=1 normal: ordered events
+case 105 c alt=1 convert=1 nested: ordered events
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test line_feed_convert_eol_getter_matches_source_reentry_and_error_phases ... FAILED
+
+failures:
+
+failures:
+    line_feed_convert_eol_getter_matches_source_reentry_and_error_phases
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+error: test failed, to rerun pass `-p xterm-core --test line_feed_option`

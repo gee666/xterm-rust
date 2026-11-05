@@ -150,23 +150,10 @@ fn switch_buffer(shared: &Shared, mode: i32, enabled: bool) -> Result<(), Termin
         let state = shared.try_borrow().map_err(|_| TerminalError::Borrowed)?;
         (Rc::clone(&state.buffer_service), state.erase_attributes())
     };
-    let previous = service.buffers.active();
     if enabled {
         service.buffers.activate_alt_buffer(Some(&attributes))?;
     } else {
         service.buffers.activate_normal_buffer()?;
-    }
-    let active = service.buffers.active();
-    if !Rc::ptr_eq(&previous, &active) {
-        let (top, bottom) = {
-            let buffer = active.try_borrow().map_err(|_| TerminalError::Borrowed)?;
-            (buffer.scroll_top, buffer.scroll_bottom)
-        };
-        let mut state = shared
-            .try_borrow_mut()
-            .map_err(|_| TerminalError::Borrowed)?;
-        state.dirty_row(top);
-        state.dirty_row(bottom);
     }
     // Scroll and buffer-activation observers may reset or modify terminal state.
     super::super::dispatch_events(shared)?;

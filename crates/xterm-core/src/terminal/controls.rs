@@ -4,16 +4,28 @@ use std::{cell::RefCell, rc::Rc};
 
 /// Direct InputHandler line feed for parser handlers and addon hosts. No parser reentry.
 pub fn line_feed_state(shared: &Rc<RefCell<TerminalState>>) -> Result<(), TerminalError> {
-    let should_scroll = {
+    let options = {
         let mut state = shared
             .try_borrow_mut()
             .map_err(|_| TerminalError::Borrowed)?;
+        let row = state
+            .active_buffer()
+            .try_borrow()
+            .map_err(|_| TerminalError::Borrowed)?
+            .y;
+        state.dirty_row(row);
+        Rc::clone(&state.options)
+    };
+    // A raw option getter can reset, resize or replace the active buffer. Mark
+    // the old row first, but resolve the buffer only after the getter returns.
+    let convert_eol = options.get("convertEol")?.is_truthy();
+    let should_scroll = {
+        let state = shared.try_borrow().map_err(|_| TerminalError::Borrowed)?;
         let active = state.active_buffer();
         let mut b = active
             .try_borrow_mut()
             .map_err(|_| TerminalError::Borrowed)?;
-        state.dirty_row(b.y);
-        if state.option_bool("convertEol")? {
+        if convert_eol {
             b.x = 0;
         }
         b.y += 1;
@@ -63,15 +75,7 @@ pub(super) fn scroll_state(
         (Rc::clone(&state.buffer_service), state.erase_attributes())
     };
     service.scroll(&attrs, wrapped)?;
-    super::dispatch_events(shared)?;
-    let mut state = shared
-        .try_borrow_mut()
-        .map_err(|_| TerminalError::Borrowed)?;
-    let active = state.active_buffer();
-    let b = active.try_borrow().map_err(|_| TerminalError::Borrowed)?;
-    state.dirty_row(b.scroll_top);
-    state.dirty_row(b.scroll_bottom);
-    Ok(())
+    super::dispatch_events(shared)
 }
 
 /// IND and NEL reload the active buffer after synchronous scroll observers.

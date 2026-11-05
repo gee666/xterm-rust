@@ -1,0 +1,163 @@
+
+running 1 test
+test line_feed_convert_eol_getter_matches_source_reentry_and_error_phases ... FAILED
+
+failures:
+
+failures:
+    line_feed_convert_eol_getter_matches_source_reentry_and_error_phases
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\QiangLf\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 8.60s
+     Running tests\line_feed_option.rs (tmp/target\debug\deps\line_feed_option-a020d4076412607c.exe)
+
+thread 'line_feed_convert_eol_getter_matches_source_reentry_and_error_phases' panicked at crates\xterm-core\tests\line_feed_option.rs:230:5:
+144 mismatching cases:
+case 0 a alt=0 convert=0 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 1 a alt=0 convert=0 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 2 a alt=0 convert=0 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 3 a alt=0 convert=0 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 4 a alt=0 convert=0 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/L/C/R2:3"
+case 5 a alt=0 convert=0 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R1:2"
+case 6 a alt=0 convert=0 nested: result=Err(Option(Dispatch(Callback(Borrowed)))), getter count, callback states, final state, ordered events actual="" expected="L/S1/L/C/R0:3"
+case 7 a alt=0 convert=0 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 8 a alt=0 convert=0 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 9 a alt=0 convert=0 scroll-cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R1:2"
+case 10 a alt=0 convert=0 scroll-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0"
+case 11 a alt=0 convert=0 scroll-later: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 12 a alt=0 convert=1 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 13 a alt=0 convert=1 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 14 a alt=0 convert=1 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 15 a alt=0 convert=1 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 16 a alt=0 convert=1 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/L/C/R2:3"
+case 17 a alt=0 convert=1 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R1:2"
+case 18 a alt=0 convert=1 nested: result=Err(Option(Dispatch(Callback(Borrowed)))), getter count, callback states, final state, ordered events actual="" expected="L/S1/L/C/R0:3"
+case 19 a alt=0 convert=1 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 20 a alt=0 convert=1 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 21 a alt=0 convert=1 scroll-cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R1:2"
+case 22 a alt=0 convert=1 scroll-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0"
+case 23 a alt=0 convert=1 scroll-later: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 24 a alt=1 convert=0 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 25 a alt=1 convert=0 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 26 a alt=1 convert=0 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 27 a alt=1 convert=0 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 28 a alt=1 convert=0 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/L/C/R2:3"
+case 29 a alt=1 convert=0 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R1:2"
+case 30 a alt=1 convert=0 nested: result=Err(Option(Dispatch(Callback(Borrowed)))), getter count, callback states, final state, ordered events actual="" expected="L/S0/L/C/R0:3"
+case 31 a alt=1 convert=0 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 32 a alt=1 convert=0 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 33 a alt=1 convert=0 scroll-cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R1:2"
+case 34 a alt=1 convert=0 scroll-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0"
+case 35 a alt=1 convert=0 scroll-later: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 36 a alt=1 convert=1 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 37 a alt=1 convert=1 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 38 a alt=1 convert=1 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 39 a alt=1 convert=1 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 40 a alt=1 convert=1 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/L/C/R2:3"
+case 41 a alt=1 convert=1 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R1:2"
+case 42 a alt=1 convert=1 nested: result=Err(Option(Dispatch(Callback(Borrowed)))), getter count, callback states, final state, ordered events actual="" expected="L/S0/L/C/R0:3"
+case 43 a alt=1 convert=1 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 44 a alt=1 convert=1 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 45 a alt=1 convert=1 scroll-cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R1:2"
+case 46 a alt=1 convert=1 scroll-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0"
+case 47 a alt=1 convert=1 scroll-later: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 48 b alt=0 convert=0 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 49 b alt=0 convert=0 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 50 b alt=0 convert=0 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 51 b alt=0 convert=0 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 52 b alt=0 convert=0 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/L/C/R2:3"
+case 53 b alt=0 convert=0 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R1:2"
+case 54 b alt=0 convert=0 nested: result=Err(Option(Dispatch(Callback(Borrowed)))), getter count, callback states, final state, ordered events actual="" expected="L/S1/L/C/R0:3"
+case 55 b alt=0 convert=0 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 56 b alt=0 convert=0 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 57 b alt=0 convert=0 scroll-cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R1:2"
+case 58 b alt=0 convert=0 scroll-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0"
+case 59 b alt=0 convert=0 scroll-later: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 60 b alt=0 convert=1 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 61 b alt=0 convert=1 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 62 b alt=0 convert=1 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 63 b alt=0 convert=1 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 64 b alt=0 convert=1 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/L/C/R2:3"
+case 65 b alt=0 convert=1 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R1:2"
+case 66 b alt=0 convert=1 nested: result=Err(Option(Dispatch(Callback(Borrowed)))), getter count, callback states, final state, ordered events actual="" expected="L/S1/L/C/R0:3"
+case 67 b alt=0 convert=1 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 68 b alt=0 convert=1 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 69 b alt=0 convert=1 scroll-cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R1:2"
+case 70 b alt=0 convert=1 scroll-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0"
+case 71 b alt=0 convert=1 scroll-later: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 72 b alt=1 convert=0 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 73 b alt=1 convert=0 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 74 b alt=1 convert=0 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 75 b alt=1 convert=0 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 76 b alt=1 convert=0 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/L/C/R2:3"
+case 77 b alt=1 convert=0 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R1:2"
+case 78 b alt=1 convert=0 nested: result=Err(Option(Dispatch(Callback(Borrowed)))), getter count, callback states, final state, ordered events actual="" expected="L/S0/L/C/R0:3"
+case 79 b alt=1 convert=0 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 80 b alt=1 convert=0 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 81 b alt=1 convert=0 scroll-cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R1:2"
+case 82 b alt=1 convert=0 scroll-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0"
+case 83 b alt=1 convert=0 scroll-later: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 84 b alt=1 convert=1 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 85 b alt=1 convert=1 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 86 b alt=1 convert=1 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 87 b alt=1 convert=1 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 88 b alt=1 convert=1 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/L/C/R2:3"
+case 89 b alt=1 convert=1 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R1:2"
+case 90 b alt=1 convert=1 nested: result=Err(Option(Dispatch(Callback(Borrowed)))), getter count, callback states, final state, ordered events actual="" expected="L/S0/L/C/R0:3"
+case 91 b alt=1 convert=1 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 92 b alt=1 convert=1 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 93 b alt=1 convert=1 scroll-cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R1:2"
+case 94 b alt=1 convert=1 scroll-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0"
+case 95 b alt=1 convert=1 scroll-later: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 96 c alt=0 convert=0 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 97 c alt=0 convert=0 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 98 c alt=0 convert=0 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 99 c alt=0 convert=0 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 100 c alt=0 convert=0 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/L/C/R2:3"
+case 101 c alt=0 convert=0 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R1:2"
+case 102 c alt=0 convert=0 nested: result=Err(Option(Dispatch(Callback(Borrowed)))), getter count, callback states, final state, ordered events actual="" expected="L/S1/L/C/R0:3"
+case 103 c alt=0 convert=0 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 104 c alt=0 convert=0 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 105 c alt=0 convert=0 scroll-cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R1:2"
+case 106 c alt=0 convert=0 scroll-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0"
+case 107 c alt=0 convert=0 scroll-later: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 108 c alt=0 convert=1 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 109 c alt=0 convert=1 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 110 c alt=0 convert=1 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 111 c alt=0 convert=1 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 112 c alt=0 convert=1 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/L/C/R2:3"
+case 113 c alt=0 convert=1 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R1:2"
+case 114 c alt=0 convert=1 nested: result=Err(Option(Dispatch(Callback(Borrowed)))), getter count, callback states, final state, ordered events actual="" expected="L/S1/L/C/R0:3"
+case 115 c alt=0 convert=1 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 116 c alt=0 convert=1 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 117 c alt=0 convert=1 scroll-cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R1:2"
+case 118 c alt=0 convert=1 scroll-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0"
+case 119 c alt=0 convert=1 scroll-later: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 120 c alt=1 convert=0 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 121 c alt=1 convert=0 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 122 c alt=1 convert=0 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 123 c alt=1 convert=0 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 124 c alt=1 convert=0 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/L/C/R2:3"
+case 125 c alt=1 convert=0 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R1:2"
+case 126 c alt=1 convert=0 nested: result=Err(Option(Dispatch(Callback(Borrowed)))), getter count, callback states, final state, ordered events actual="" expected="L/S0/L/C/R0:3"
+case 127 c alt=1 convert=0 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 128 c alt=1 convert=0 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 129 c alt=1 convert=0 scroll-cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R1:2"
+case 130 c alt=1 convert=0 scroll-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0"
+case 131 c alt=1 convert=0 scroll-later: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 132 c alt=1 convert=1 inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 133 c alt=1 convert=1 reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 134 c alt=1 convert=1 alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R2:3"
+case 135 c alt=1 convert=1 normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+case 136 c alt=1 convert=1 resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="Z7:5/L/C/R2:3"
+case 137 c alt=1 convert=1 cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="L/C/R1:2"
+case 138 c alt=1 convert=1 nested: result=Err(Option(Dispatch(Callback(Borrowed)))), getter count, callback states, final state, ordered events actual="" expected="L/S0/L/C/R0:3"
+case 139 c alt=1 convert=1 error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 140 c alt=1 convert=1 mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 141 c alt=1 convert=1 scroll-cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R1:2"
+case 142 c alt=1 convert=1 scroll-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0"
+case 143 c alt=1 convert=1 scroll-later: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="" expected="S0/L/C/R0:3"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+error: test failed, to rerun pass `-p xterm-core --test line_feed_option`

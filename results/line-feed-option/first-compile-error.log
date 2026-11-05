@@ -1,0 +1,43 @@
+   Compiling foldhash v0.1.5
+   Compiling equivalent v1.0.3
+   Compiling allocator-api2 v0.2.21
+   Compiling memchr v2.8.3
+   Compiling hashbrown v0.15.5
+   Compiling ryu-js v1.0.3
+   Compiling regress v0.10.4
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\QiangLf\crates\xterm-core)
+error[E0308]: mismatched types
+   --> crates\xterm-core\tests\line_feed_option.rs:129:44
+    |
+129 |                 event => projection::event(event),
+    |                          ----------------- ^^^^^ expected `&TerminalEvent`, found `TerminalEvent`
+    |                          |
+    |                          arguments to this function are incorrect
+    |
+note: function defined here
+   --> crates\xterm-core\tests\support\terminal_snapshot.rs:93:8
+    |
+93  | pub fn event(e: &TerminalEvent) -> Option<String> {
+    |        ^^^^^ -----------------
+help: consider borrowing here
+    |
+129 |                 event => projection::event(&event),
+    |                                            +
+
+error[E0521]: borrowed data escapes outside of function
+  --> crates\xterm-core\tests\line_feed_option.rs:50:12
+   |
+47 | fn has_original(error: &dyn Error, original: &EmitError) -> bool {
+   |                 -----  - let's call the lifetime of this reference `'1`
+   |                 |
+   |                 `error` is a reference that is only valid in the function body
+...
+50 |         if current.downcast_ref::<EmitError>() == Some(original) {
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |            |
+   |            `error` escapes the function body here
+   |            argument requires that `'1` must outlive `'static`
+
+Some errors have detailed explanations: E0308, E0521.
+For more information about an error, try `rustc --explain E0308`.
+error: could not compile `xterm-core` (test "line_feed_option") due to 2 previous errors

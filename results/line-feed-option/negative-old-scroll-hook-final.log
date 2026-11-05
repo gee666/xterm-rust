@@ -1,0 +1,55 @@
+
+running 1 test
+test line_feed_convert_eol_getter_matches_source_reentry_and_error_phases ... FAILED
+
+failures:
+
+failures:
+    line_feed_convert_eol_getter_matches_source_reentry_and_error_phases
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\QiangLf\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 7.06s
+     Running tests\line_feed_option.rs (tmp/target\debug\deps\line_feed_option-a020d4076412607c.exe)
+
+thread 'line_feed_convert_eol_getter_matches_source_reentry_and_error_phases' panicked at crates\xterm-core\tests\line_feed_option.rs:230:5:
+36 mismatching cases:
+case 2 a alt=0 convert=0 alt: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 6 a alt=0 convert=0 nested: ordered events actual="L/S1/L/C/R2:3" expected="L/S1/L/C/R0:3"
+case 11 a alt=0 convert=0 scroll-later: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 14 a alt=0 convert=1 alt: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 18 a alt=0 convert=1 nested: ordered events actual="L/S1/L/C/R2:3" expected="L/S1/L/C/R0:3"
+case 23 a alt=0 convert=1 scroll-later: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 27 a alt=1 convert=0 normal: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 30 a alt=1 convert=0 nested: ordered events actual="L/S0/L/C/R2:3" expected="L/S0/L/C/R0:3"
+case 35 a alt=1 convert=0 scroll-later: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 39 a alt=1 convert=1 normal: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 42 a alt=1 convert=1 nested: ordered events actual="L/S0/L/C/R2:3" expected="L/S0/L/C/R0:3"
+case 47 a alt=1 convert=1 scroll-later: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 50 b alt=0 convert=0 alt: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 54 b alt=0 convert=0 nested: ordered events actual="L/S1/L/C/R2:3" expected="L/S1/L/C/R0:3"
+case 59 b alt=0 convert=0 scroll-later: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 62 b alt=0 convert=1 alt: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 66 b alt=0 convert=1 nested: ordered events actual="L/S1/L/C/R2:3" expected="L/S1/L/C/R0:3"
+case 71 b alt=0 convert=1 scroll-later: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 75 b alt=1 convert=0 normal: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 78 b alt=1 convert=0 nested: ordered events actual="L/S0/L/C/R2:3" expected="L/S0/L/C/R0:3"
+case 83 b alt=1 convert=0 scroll-later: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 87 b alt=1 convert=1 normal: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 90 b alt=1 convert=1 nested: ordered events actual="L/S0/L/C/R2:3" expected="L/S0/L/C/R0:3"
+case 95 b alt=1 convert=1 scroll-later: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 98 c alt=0 convert=0 alt: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 102 c alt=0 convert=0 nested: ordered events actual="L/S1/L/C/R2:3" expected="L/S1/L/C/R0:3"
+case 107 c alt=0 convert=0 scroll-later: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 110 c alt=0 convert=1 alt: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 114 c alt=0 convert=1 nested: ordered events actual="L/S1/L/C/R2:3" expected="L/S1/L/C/R0:3"
+case 119 c alt=0 convert=1 scroll-later: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 123 c alt=1 convert=0 normal: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 126 c alt=1 convert=0 nested: ordered events actual="L/S0/L/C/R2:3" expected="L/S0/L/C/R0:3"
+case 131 c alt=1 convert=0 scroll-later: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 135 c alt=1 convert=1 normal: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+case 138 c alt=1 convert=1 nested: ordered events actual="L/S0/L/C/R2:3" expected="L/S0/L/C/R0:3"
+case 143 c alt=1 convert=1 scroll-later: ordered events actual="S0/L/C/R2:3" expected="S0/L/C/R0:3"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+error: test failed, to rerun pass `-p xterm-core --test line_feed_option`

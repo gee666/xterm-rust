@@ -40,20 +40,8 @@ impl CoreTerminal {
                 .map_err(|_| TerminalError::Borrowed)?
                 .buffer_service,
         );
-        let old = service.buffer().borrow().ydisp;
         service.scroll_lines(lines, false)?;
-        super::dispatch_events(&self.state)?;
-        if service.buffer().borrow().ydisp != old {
-            let mut state = self
-                .state
-                .try_borrow_mut()
-                .map_err(|_| TerminalError::Borrowed)?;
-            let active = state.active_buffer();
-            let b = active.try_borrow().map_err(|_| TerminalError::Borrowed)?;
-            state.dirty_row(b.scroll_top);
-            state.dirty_row(b.scroll_bottom);
-        }
-        Ok(())
+        super::dispatch_events(&self.state)
     }
     pub fn scroll_pages(&mut self, pages: i64) -> Result<(), TerminalError> {
         let lines = pages.saturating_mul((self.rows() - 1) as i64);

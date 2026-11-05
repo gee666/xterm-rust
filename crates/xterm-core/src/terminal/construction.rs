@@ -5,6 +5,7 @@ use crate::{
     buffer::BufferService,
     charset::CharsetService,
     core_service::{BufferPosition, CoreService},
+    event::EmitError,
     input::text_decoder::{StringToUtf32, Utf8ToUtf32},
     log_service::{LogError, LogRecord, LogService, LogSink},
     mouse_state::MouseStateService,
@@ -86,11 +87,6 @@ impl CoreTerminal {
         }));
         let queue = Rc::clone(&events);
         let handler = Rc::clone(&event_handler);
-        listeners.push(service.on_scroll().try_subscribe(move |position| {
-            super::forward::forward_event(&queue, &handler, TerminalEvent::Scroll(*position))
-        }));
-        let queue = Rc::clone(&events);
-        let handler = Rc::clone(&event_handler);
         listeners.push(service.on_resize().try_subscribe(move |event| {
             super::forward::forward_event(
                 &queue,
@@ -156,6 +152,29 @@ impl CoreTerminal {
             pending_replies: Default::default(),
             shared_parse_depth: Rc::default(),
             defer_bell: Rc::default(),
+        }));
+        let scrolling = Rc::downgrade(&state);
+        let (service, queue, handler) = {
+            let state = state.borrow();
+            (
+                Rc::clone(&state.buffer_service),
+                Rc::clone(&state.events),
+                Rc::clone(&state.event_handler),
+            )
+        };
+        listeners.push(service.on_scroll().try_subscribe(move |position| {
+            super::forward::forward_event(&queue, &handler, TerminalEvent::Scroll(*position))?;
+            // Source marks the live margins after public scroll observers, not
+            // after every later service listener or only parser-driven scrolls.
+            let Some(shared) = scrolling.upgrade() else {
+                return Ok(());
+            };
+            let mut state = shared.try_borrow_mut().map_err(EmitError::callback)?;
+            let active = state.active_buffer();
+            let buffer = active.try_borrow().map_err(EmitError::callback)?;
+            state.dirty_row(buffer.scroll_top);
+            state.dirty_row(buffer.scroll_bottom);
+            Ok(())
         }));
         state.borrow_mut().preceding_join_state = Rc::clone(&parser.preceding_join_state);
         register::register(&mut parser, &state)?;
