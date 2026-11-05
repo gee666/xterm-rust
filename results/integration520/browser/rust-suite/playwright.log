@@ -1,0 +1,53 @@
+
+Running 120 tests using 2 workers
+················································································
+T°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
+
+  1) [FirefoxStable] › addons\addon-serialize\test\SerializeAddon.test.ts:74:7 › SerializeAddon › produce different output when we call test util with different text 
+
+    [31m"beforeAll" hook timeout of 10000ms exceeded.[39m
+
+      31 |
+      32 | let ctx: ITestContext;
+    > 33 | test.beforeAll(async ({ browser }) => {
+         |      ^
+      34 |   ctx = await createTestContext(browser);
+      35 |   await openTerminal(ctx, { rows: 10, cols: 10 });
+      36 | });
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-serialize\test\SerializeAddon.test.ts:33:6
+
+    Error: page.exposeFunction: Target page, context or browser has been closed
+
+       at ..\..\..\test\playwright\TestUtils.ts:144
+
+      142 |   public async initPage(): Promise<void> {
+      143 |     await this._page.exposeFunction('onBell', () => this._onBell.fire());
+    > 144 |     await this._page.exposeFunction('onBinary', (e: string) => this._onBinary.fire(e));
+          |                      ^
+      145 |     await this._page.exposeFunction('onCursorMove', () => this._onCursorMove.fire());
+      146 |     await this._page.exposeFunction('onData', (e: string) => this._onData.fire(e));
+      147 |     await this._page.exposeFunction('onKey', (e: { key: string, domEvent: KeyboardEvent }) => this._onKey.fire(e));
+        at TerminalProxy.initPage (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:144:22)
+
+    Error: page.evaluate: Target page, context or browser has been closed
+
+       at ..\..\..\test\playwright\TestUtils.ts:504
+
+      502 |   `;
+      503 |
+    > 504 |   await ctx.page.evaluate(script);
+          |                  ^
+      505 |
+      506 |   // HACK: This is a soft layer breaker that's temporarily included until unicode graphemes have
+      507 |   // more complete integration tests. See https://github.com/xtermjs/xterm.js/pull/4519#discussion_r1285234453
+        at openTerminal (P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\test\playwright\TestUtils.ts:504:18)
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-serialize\test\SerializeAddon.test.ts:35:3
+
+    Error Context: O:\xterm-rust-swarm-16\tmp\worktrees\GordonNext\tmp\serialize-browser\rust-artifacts\SerializeAddon-SerializeAd-86654-st-util-with-different-text-FirefoxStable\error-context.md
+
+    Error Context: O:\xterm-rust-swarm-16\tmp\worktrees\GordonNext\tmp\serialize-browser\rust-artifacts\SerializeAddon-SerializeAd-86654-st-util-with-different-text-FirefoxStable\error-context.md
+
+  1 failed
+    [FirefoxStable] › addons\addon-serialize\test\SerializeAddon.test.ts:74:7 › SerializeAddon › produce different output when we call test util with different text 
+  39 did not run
+  80 passed (25.1s)

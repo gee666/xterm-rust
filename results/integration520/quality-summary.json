@@ -1,0 +1,143 @@
+{
+  "platform": "win32",
+  "node": "v24.15.0",
+  "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+  "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+  "commands": [
+    {
+      "name": "native-clippy",
+      "before": {
+        "ramGiB": 28.28994369506836,
+        "diskGiB": 2500.148483276367
+      },
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "-j2",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 30944.269800000002,
+      "status": "passed"
+    },
+    {
+      "name": "wasm-clippy",
+      "before": {
+        "ramGiB": 28.445327758789062,
+        "diskGiB": 2500.119281768799
+      },
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "-j2",
+        "--workspace",
+        "--lib",
+        "--all-features",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 35025.77470000001,
+      "status": "passed"
+    },
+    {
+      "name": "native-all-features",
+      "before": {
+        "ramGiB": 28.081558227539062,
+        "diskGiB": 2499.848602294922
+      },
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-j2",
+        "--workspace",
+        "--all-targets",
+        "--all-features"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 443078.5422,
+      "status": "passed"
+    },
+    {
+      "name": "native-doctests",
+      "before": {
+        "ramGiB": 28.396625518798828,
+        "diskGiB": 2496.13045501709
+      },
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-j2",
+        "--workspace",
+        "--doc",
+        "--all-features"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1138.9697999999626,
+      "status": "passed"
+    }
+  ],
+  "nativeReviewBinaries": 20,
+  "native-all-features": {
+    "summaries": 504,
+    "totals": [
+      2197,
+      0,
+      0,
+      0,
+      0
+    ],
+    "warnings": 0
+  },
+  "native-doctests": {
+    "summaries": 5,
+    "totals": [
+      2,
+      0,
+      0,
+      0,
+      0
+    ],
+    "warnings": 0
+  }
+}
