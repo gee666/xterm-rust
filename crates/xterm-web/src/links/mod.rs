@@ -78,6 +78,12 @@ pub struct UnderlineEvent {
     pub cols: usize,
 }
 
+impl AsRef<Link> for Link {
+    fn as_ref(&self) -> &Link {
+        self
+    }
+}
+
 impl Link {
     /// Convert buffer coordinates to zero-based viewport drawing coordinates.
     pub fn underline_event(&self, cols: usize, scroll_offset: usize) -> UnderlineEvent {

@@ -1,6 +1,6 @@
 // Copyright (c) 2019-2026 The xterm.js authors. All rights reserved. MIT license.
 use super::State;
-use crate::links::{HoverEffect, Link, Position, ProviderRequest};
+use crate::links::{HoverEffect, Position, ProviderRequest};
 use std::rc::Rc;
 use wasm_bindgen::{JsCast, JsValue};
 use web_sys::{Element, MouseEvent};
@@ -48,17 +48,26 @@ impl State {
     }
     pub(super) fn ask(self: &Rc<Self>, position: Position, use_cache: bool) -> Result<(), JsValue> {
         if !use_cache || self.active_line.get().is_none() {
-            let old = self.replies.borrow().cached_links();
-            let handlers: Vec<_> = old
-                .iter()
-                .filter_map(|data| self.handlers.borrow().get(&Rc::as_ptr(data)).cloned())
-                .collect();
-            for handler in handlers {
-                if let Some(dispose) = &handler.dispose {
-                    dispose()?;
+            // Map.forEach observes later replies inserted/replaced by a disposal
+            // callback. Retain this map and each current array if nested pointer
+            // handling replaces the active cache, just as the source call does.
+            let replies = self.replies.borrow().clone();
+            let mut ordinal = 0;
+            while let Some(group) = replies.disposal_group(ordinal) {
+                if let Some(group) = group {
+                    let length = group.borrow().len();
+                    for index in 0..length {
+                        let handler = group.borrow().get(index).cloned();
+                        if let Some(dispose) =
+                            handler.as_ref().and_then(|link| link.dispose.as_ref())
+                        {
+                            dispose()?;
+                        }
+                    }
                 }
+                ordinal += 1;
             }
-            self.replies.borrow_mut().clear();
+            *self.replies.borrow_mut() = Rc::new(Default::default());
             let handlers = std::mem::take(&mut *self.handlers.borrow_mut());
             drop(handlers);
             self.active_line.set(Some(position.y));
@@ -92,16 +101,16 @@ impl State {
                             links
                                 .into_iter()
                                 .map(|link| {
-                                    let data = link.data.clone();
+                                    let link = Rc::new(link);
                                     state
                                         .handlers
                                         .borrow_mut()
-                                        .insert(Rc::as_ptr(&data), Rc::new(link));
-                                    data
+                                        .insert(Rc::as_ptr(&link.data), link.clone());
+                                    link
                                 })
                                 .collect()
                         });
-                        let selected = state.replies.borrow_mut().receive_unfiltered(
+                        let selected = state.replies.borrow().receive_unfiltered(
                             index,
                             data,
                             &request,
@@ -111,7 +120,7 @@ impl State {
                         if let Some(selected) = selected {
                             state.select(selected)?;
                         }
-                        state.replies.borrow_mut().filter_complete(
+                        state.replies.borrow().filter_complete(
                             request.position.y,
                             state.providers.len(),
                             state.cols.get(),
@@ -124,7 +133,8 @@ impl State {
         }
         Ok(())
     }
-    fn select(&self, data: Rc<Link>) -> Result<(), JsValue> {
+    fn select(&self, link: Rc<super::BrowserLink>) -> Result<(), JsValue> {
+        let data = link.data.clone();
         let event = self.last_event.borrow().clone();
         let position = match event.as_ref() {
             Some(event) => (self.coordinates)(event)?,
@@ -134,12 +144,7 @@ impl State {
             return Ok(());
         };
         if data.range.contains(position, self.cols.get()) {
-            let decorations = self
-                .handlers
-                .borrow()
-                .get(&Rc::as_ptr(&data))
-                .and_then(|link| link.decorations);
-            let effects = self.hover.borrow_mut().enter(data, decorations);
+            let effects = self.hover.borrow_mut().enter(data, link.decorations);
             self.apply(effects, None)?;
         }
         Ok(())

@@ -31,6 +31,12 @@ pub struct BrowserLink {
     pub leave: Option<LinkCallback>,
     pub dispose: Option<LinkDisposal>,
 }
+impl AsRef<Link> for BrowserLink {
+    fn as_ref(&self) -> &Link {
+        &self.data
+    }
+}
+
 pub trait BrowserLinkProvider {
     fn provide_links(&self, y: usize, callback: LinkReply) -> Result<(), JsValue>;
 }
@@ -39,7 +45,7 @@ pub type BrowserProviders = Rc<LinkProviderService<dyn BrowserLinkProvider>>;
 pub(super) struct State {
     element: HtmlElement,
     providers: BrowserProviders,
-    replies: RefCell<ProviderReplies>,
+    replies: RefCell<Rc<ProviderReplies<BrowserLink>>>,
     handlers: RefCell<HashMap<*const Link, Rc<BrowserLink>>>,
     hover: RefCell<HoverState>,
     coordinates: FallibleMouseCoordinates,
@@ -108,7 +114,7 @@ impl BrowserLinkifier {
         let state = Rc::new(State {
             element: element.clone(),
             providers,
-            replies: RefCell::new(ProviderReplies::default()),
+            replies: RefCell::new(Rc::new(ProviderReplies::default())),
             handlers: RefCell::new(HashMap::new()),
             hover: RefCell::new(HoverState::new(cols, scroll_offset)),
             coordinates,
