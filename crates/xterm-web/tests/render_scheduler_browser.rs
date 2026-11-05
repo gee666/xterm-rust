@@ -9,6 +9,8 @@ wasm_bindgen_test_configure!(run_in_browser);
 extern "C" {
     #[wasm_bindgen(catch, js_name = runRenderSchedulerCases)]
     fn cases(run: &Function) -> Result<u32, JsValue>;
+    #[wasm_bindgen(catch, js_name = runRenderWindowFailureCases)]
+    fn window_failures(run: &Function) -> Result<u32, JsValue>;
 }
 fn invoke(host: &JsValue, name: &str, args: &Array) -> Result<JsValue, JsValue> {
     let function: Function = js_sys::Reflect::get(host, &name.into())?.dyn_into()?;
@@ -18,14 +20,8 @@ fn run(host: JsValue, program: Function) -> Result<JsValue, JsValue> {
     let events: Array = js_sys::Reflect::get(&host, &"events".into())?.dyn_into()?;
     let source = host.clone();
     let render = events.clone();
-    let model = Rc::new(BrowserRenderDebouncer::try_new_with_window_source(
-        Rc::new(move || {
-            // Source hooks in this corpus cannot throw. WebIDL getter/call
-            // errors below remain the original JsValue and are compared.
-            invoke(&source, "owner", &Array::new())
-                .expect("infallible test window source")
-                .unchecked_into()
-        }),
+    let model = Rc::new(BrowserRenderDebouncer::try_new_with_fallible_window_source(
+        Rc::new(move || invoke(&source, "owner", &Array::new()).map(JsCast::unchecked_into)),
         move |range| {
             render.push(
                 &[
@@ -79,7 +75,15 @@ fn run(host: JsValue, program: Function) -> Result<JsValue, JsValue> {
 fn real_render_scheduler_matches_source_reentry_and_error_identity() -> Result<(), JsValue> {
     let run =
         Closure::wrap(Box::new(run) as Box<dyn Fn(JsValue, Function) -> Result<JsValue, JsValue>>);
-    assert_eq!(cases(run.as_ref().unchecked_ref())?, 66);
+    assert_eq!(cases(run.as_ref().unchecked_ref())?, 72);
+    Ok(())
+}
+
+#[wasm_bindgen_test]
+fn current_window_preserves_every_javascript_thrown_value() -> Result<(), JsValue> {
+    let run =
+        Closure::wrap(Box::new(run) as Box<dyn Fn(JsValue, Function) -> Result<JsValue, JsValue>>);
+    assert_eq!(window_failures(run.as_ref().unchecked_ref())?, 42);
     Ok(())
 }
 

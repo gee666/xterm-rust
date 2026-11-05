@@ -18,4 +18,5 @@ if(args[0]==='--write')await writeFile(output,fixture);
 else if(await readFile(output,'utf8')!==fixture)throw new Error('RenderDebouncer oracle differs from unchanged source');
 const oracle=await import('data:text/javascript;base64,'+Buffer.from(fixture).toString('base64'));
 const programs=oracle.runRenderSchedulerCases(oracle.sourceRun);
-console.log(JSON.stringify({source:path,sha256:hash,programs,scope:'source-only corpus check, not Rust/browser evidence'}));
+const rawFailures=oracle.runRenderWindowFailureCases(oracle.sourceRun);
+console.log(JSON.stringify({source:path,sha256:hash,programs,rawFailures,scope:'source-only corpus check, not Rust/browser evidence'}));

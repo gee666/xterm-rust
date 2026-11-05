@@ -12,9 +12,11 @@ type CallbackSlot = Rc<RefCell<Option<Function>>>;
 type FrameCallback = Closure<dyn FnMut(f64) -> Result<(), JsValue>>;
 type TimerCallback = Closure<dyn FnMut() -> Result<(), JsValue>>;
 pub type WindowSource = Rc<dyn Fn() -> Window>;
+/// Resolves the current owner without erasing a host getter's thrown value.
+pub type FallibleWindowSource = Rc<dyn Fn() -> Result<Window, JsValue>>;
 
 struct BrowserFrameScheduler {
-    window: Rc<RefCell<WindowSource>>,
+    window: Rc<RefCell<FallibleWindowSource>>,
     callback: CallbackSlot,
 }
 impl FrameScheduler for BrowserFrameScheduler {
@@ -25,7 +27,7 @@ impl FrameScheduler for BrowserFrameScheduler {
     }
     fn cancel_frame(&mut self, handle: i32) -> Result<(), JsValue> {
         let source = self.window.borrow().clone();
-        source().cancel_animation_frame(handle)
+        source()?.cancel_animation_frame(handle)
     }
     fn request_frame_shared(scheduler: &RefCell<Self>) -> Result<i32, JsValue> {
         let (source, callback) = {
@@ -41,7 +43,7 @@ impl FrameScheduler for BrowserFrameScheduler {
         resolve: impl FnOnce() -> Option<i32>,
     ) -> Result<(), JsValue> {
         let source = scheduler.borrow().window.borrow().clone();
-        let window = source();
+        let window = source()?;
         let cancel: Function =
             js_sys::Reflect::get(window.as_ref(), &"cancelAnimationFrame".into())?.unchecked_into();
         let handle = resolve().map_or(JsValue::UNDEFINED, JsValue::from);
@@ -53,12 +55,12 @@ impl FrameScheduler for BrowserFrameScheduler {
     }
 }
 impl BrowserFrameScheduler {
-    fn request(source: WindowSource, callback: Option<Function>) -> Result<i32, JsValue> {
+    fn request(source: FallibleWindowSource, callback: Option<Function>) -> Result<i32, JsValue> {
         let callback =
             callback.ok_or_else(|| JsValue::from_str("animation callback not initialized"))?;
         // Both window resolution and RAF can reenter this debouncer. Only
         // independent handles may survive either host call.
-        source().request_animation_frame(&callback)
+        source()?.request_animation_frame(&callback)
     }
 }
 
@@ -66,7 +68,7 @@ impl BrowserFrameScheduler {
 /// releasing it. The closure captures weak core state, never a strong owner.
 pub struct BrowserRenderDebouncer {
     inner: RenderDebouncer<BrowserFrameScheduler>,
-    window: Rc<RefCell<WindowSource>>,
+    window: Rc<RefCell<FallibleWindowSource>>,
     callback: Option<FrameCallback>,
 }
 impl BrowserRenderDebouncer {
@@ -86,6 +88,15 @@ impl BrowserRenderDebouncer {
     /// change/DPR events before a later window-change listener could run.
     pub fn try_new_with_window_source(
         source: WindowSource,
+        render: impl Fn(RenderRange) -> Result<(), JsValue> + 'static,
+    ) -> Self {
+        Self::try_new_with_fallible_window_source(Rc::new(move || Ok(source())), render)
+    }
+    /// Resolves the owner on every request and cancellation. Lookup failures are
+    /// returned unchanged, after row/callback updates but before frame assignment
+    /// or cancellation. The resolver may reenter without a scheduler borrow.
+    pub fn try_new_with_fallible_window_source(
+        source: FallibleWindowSource,
         render: impl Fn(RenderRange) -> Result<(), JsValue> + 'static,
     ) -> Self {
         let slot: CallbackSlot = Rc::new(RefCell::new(None));
@@ -111,7 +122,7 @@ impl BrowserRenderDebouncer {
     /// Request and cancellation use the current CoreBrowserService owner window,
     /// including cancellation of an id originally issued by a previous window.
     pub fn set_window(&self, window: Window) {
-        *self.window.borrow_mut() = Rc::new(move || window.clone());
+        *self.window.borrow_mut() = Rc::new(move || Ok(window.clone()));
     }
     pub fn refresh(&self, start: Option<f64>, end: Option<f64>, count: f64) -> Result<(), JsValue> {
         self.inner.refresh(start, end, count)

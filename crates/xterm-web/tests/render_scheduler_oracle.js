@@ -58,8 +58,8 @@ export {
  */
 
 // Deterministic synchronous host calls. No real animation is delivered or timed.
-function harness() {
-  const events=[], frames=new Map(), token={}, windows=[];
+function harness(token) {
+  const events=[], frames=new Map(), windows=[];
   let current=0, next=0, hook;
   const normalize=value=>value===token?'original-token':value;
   const trigger=site=>{if(hook?.site===site){const saved=hook;hook=undefined;saved.action();}};
@@ -108,15 +108,14 @@ export function sourceRun(host,program) {
   };
   try{return program(dispatch);}finally{model.dispose();}
 }
-export function runRenderSchedulerCases(run) {
+export function runRenderSchedulerCases(run,{sourceOnly=false,tokens=[{}]}={}) {
   let count=0;
+  for(const token of tokens)
   for(const operation of ['refresh','callback','dispose']) {
     const sites=operation==='dispose'?['source','cancelGet','cancel']:['source','requestGet','request'];
     for(const site of sites)
       for(const reaction of ['refresh','callback','dispose','frame','frameRefresh','window','throw','refreshThrow']) {
-        // WindowSource is a typed infallible native contract. Throw identity is
-        // tested at both actual WebIDL method lookups/calls, not hidden there.
-        if(site==='source'&&(reaction==='throw'||reaction==='refreshThrow'))continue;
+        if(sourceOnly&&(site!=='source'||!['throw','refreshThrow'].includes(reaction)))continue;
         const program=host=>dispatch=>{
           const act=(...args)=>{
             const [ok,value]=dispatch(args);
@@ -144,7 +143,7 @@ export function runRenderSchedulerCases(run) {
           act('dispose');
           return host.result();
         };
-        const source=harness(),actual=harness();
+        const source=harness(token),actual=harness(token);
         try {
           const expected=sourceRun(source,program(source));
           const result=run(actual,program(actual));
@@ -155,4 +154,7 @@ export function runRenderSchedulerCases(run) {
       }
   }
   return count;
+}
+export function runRenderWindowFailureCases(run) {
+  return runRenderSchedulerCases(run,{sourceOnly:true,tokens:[undefined,null,false,0,'failure',Symbol('failure'),1n]});
 }
