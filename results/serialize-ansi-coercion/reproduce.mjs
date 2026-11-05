@@ -13,10 +13,10 @@ assert(['build', 'proof', 'quality', 'audit'].includes(mode));
 const selectedPhase = process.argv[3] ?? 'both';
 assert(['baseline', 'fixed', 'both'].includes(selectedPhase));
 const prefix = 'ansi-scrollback-coercion-', total = 90, inheritedTotal = 85;
-const unresolved = 'ansi-scrollback-captured-missing-line';
+const missingLine = 'ansi-scrollback-captured-missing-line';
 const failingCases = ['values', 'default-hint', 'reentry'].map(name => prefix + name);
 const expectedFailures = (phase, engine) => phase === 'baseline' ? [
-  ...failingCases, ...(engine === 'chromium' ? [] : [unresolved])
+  ...failingCases, ...(engine === 'chromium' ? [] : [missingLine])
 ] : [];
 const sources = ['crates/xterm-web/src/serialize_addon/mod.rs', 'crates/xterm-web/src/serialize_addon/options.rs',
   'crates/xterm-web/src/serialize_addon/view.rs'];
@@ -156,7 +156,7 @@ if (mode === 'audit') {
       catch { mismatches.push(afterSource[index].name); }
     }
     assert.deepEqual(mismatches, expectedFailures('fixed', browser));
-    const inherited = entries => entries.filter(entry => !entry.name.startsWith(prefix) && entry.name !== unresolved);
+    const inherited = entries => entries.filter(entry => !entry.name.startsWith(prefix) && entry.name !== missingLine);
     assert.equal(inherited(beforeRust).length, inheritedTotal); assert.deepEqual(inherited(beforeRust), inherited(afterRust));
     traceAudit.push({ browser, sourceStable: true, fixedExact: total - mismatches.length, fixedTotal: total,
       retainedFailures: mismatches, allocationCasesExact: 4, missingLineCaseExact: true, inheritedUnchanged: inheritedTotal,
@@ -183,4 +183,4 @@ if (mode === 'audit') {
     sources: await artifactIdentity(root, [...sources, 'scripts/serialize-browser-check.mjs', 'scripts/serialize-browser-cases.mjs']),
     artifacts: await artifactIdentity(root, files.sort()) });
 }
-console.log(`serialize-ansi-coercion ${mode} checks passed`);
+console.log(`serialize-ansi-coercion ${mode} completed; inspect retained results for scope and failures`);
