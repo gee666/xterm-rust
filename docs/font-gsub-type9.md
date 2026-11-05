@@ -18,7 +18,7 @@ cargo clippy --locked -j2 -p xterm-addons --all-targets --all-features -- -D war
 cargo clippy --locked -j2 -p xterm-font-addons --target wasm32-unknown-unknown --test font_gsub_type9_browser -- -D warnings
 cargo check --locked -j2 --target wasm32-unknown-unknown --lib -p xterm-web -p xterm-font-addons
 GSUB_CORPUS=type9 node scripts/font-gsub-header-browser-source.mjs
-WASM_PACKAGE=xterm-font-addons WASM_TEST=font_gsub_type9_browser WASM_TEST_TIMEOUT_MS=180000 node scripts/browser-host-check.mjs
+WASM_PACKAGE=xterm-font-addons WASM_TEST=font_gsub_type9_browser WASM_TEST_TIMEOUT_MS=360000 node scripts/browser-host-check.mjs
 ```
 
 The default oracle remains lookup and the default source-browser runner remains header. Use --generate only after inspecting intentional recipe changes. The independent Node Buffer writer checks exact bytes against the existing browser builder. Native/WASM builders verify each input fingerprint. Tests retain the unchanged1384-case473 corpus as a regression check.
@@ -27,7 +27,9 @@ The new corpus has1038SFNT/WOFF recipes. OpenType accepts72 and rejects966. Font
 
 Native old product fails with358mismatches. The retained negative-control.mjs program uses private473baseline86996eb4 and requires an isolated worktree with a compiler grant. Its finally block restored all four exact product-file hashes before the passing corpus rerun. The all-target/all-feature native addon run passed188 tests across42 summaries, with zero failed or ignored. Native strict Clippy, focused WASM strict Clippy and affected WASM libraries passed. Aggregate formatting still fails WindowsOS206, all five package formatting checks pass. Exact logs and source/artifact pins are under results/font-gsub-type9.
 
-Browser evidence is pending and must be read from fresh reports, not inferred from the native pass. Native errors deliberately represent DataView bounds with FontError::Bounds and source TypeErrors with FontError::Type. Browser comparisons retain exact raw engine diagnostics and assert explicit engine-specific messages before normalization.
+Unchanged source passed all1038 parser,1038 FontImpl and1038 actual-addon records in each of Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4. Actual Rust/WASM passed both new test functions in each engine, with zero failed, ignored or filtered tests. The retained lookup suite also passed both functions in every engine after the shared helper extraction. Final strict WASM Clippy covers both browser targets and that helper. Reports retain compiler/WASM/bindings/CSS hashes and exact raw engine diagnostics.
+
+The bounded360s browser deadline accounts for the retained473 Firefox measurement of112.09s and the additional1038 constructor cases. The final new suite took144.43s in Firefox. It changes no assertions or workload. Initial review found that the diagnostic normalizer incorrectly checked engine-specific messages on canonical Node expectations too. Actual and expected messages are now checked separately before canonical comparison; all three engines passed those exact checks. Native errors deliberately represent DataView bounds with FontError::Bounds and source TypeErrors with FontError::Type. Browser comparisons retain exact raw engine diagnostics and assert explicit engine-specific messages before normalization.
 
 ## Remaining work
 
