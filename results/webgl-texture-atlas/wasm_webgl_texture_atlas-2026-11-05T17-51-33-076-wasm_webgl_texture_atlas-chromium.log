@@ -1,0 +1,36 @@
+running 12 tests
+test warmup_is_idle_cached_and_only_scheduled_once ... ok
+test transparent_styles ... ok
+test text_styles_and_custom_glyphs ... ok
+test page_added_listener_can_clear_live_atlas ... ok
+test oversized_ligatures_use_overflow_page ... ok
+test merge_updates_cached_aliases ... ok
+test host_cases::host_errors_keep_identity_order_and_partial_canvas_state ... FAIL
+test high_dpi_and_line_height ... ok
+test disabled_custom_glyphs ... ok
+test contrast_and_dim ... ok
+test clear_retains_metadata_and_invalidates_layout ... ok
+test capacity_eviction_and_page_events ... ok
+
+failures:
+
+---- host_cases::host_errors_keep_identity_order_and_partial_canvas_state output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.__rust_start_panic (http://127.0.0.1:58789/suite_bg.wasm:wasm-function[48395]:0xb51c38)
+            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.rust_panic (http://127.0.0.1:58789/suite_bg.wasm:wasm-function[43324]:0xb45c75)
+            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:58789/suite_bg.wasm:wasm-function[13505]:0x8feb57)
+            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:58789/suite_bg.wasm:wasm-function[17073]:0x994455)
+            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:58789/suite_bg.wasm:wasm-function[47833]:0xb50e22)
+            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.rust_begin_unwind (http://127.0.0.1:58789/suite_bg.wasm:wasm-function[32690]:0xb051be)
+            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:58789/suite_bg.wasm:wasm-function[32691]:0xb051eb)
+            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:58789/suite_bg.wasm:wasm-function[6122]:0x710a15)
+            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.core::panicking::assert_failed::h3724a8e24fbe79fd (http://127.0.0.1:58789/suite_bg.wasm:wasm-function[24547]:0xa78426)
+            at wasm_webgl_texture_atlas-57e9454baab9ec86.wasm.wasm_webgl_texture_atlas::assert_same::h899dd306c3d96438 (http://127.0.0.1:58789/suite_bg.wasm:wasm-function[821]:0x210db8)
+
+failures:
+
+    host_cases::host_errors_keep_identity_order_and_partial_canvas_state
+
+test result: FAILED. 11 passed; 1 failed; 0 ignored; 0 filtered out; finished in 1.31s
+
