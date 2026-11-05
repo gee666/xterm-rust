@@ -48,6 +48,8 @@ pub mod logger;
 #[cfg(target_arch = "wasm32")]
 pub mod search_addon;
 #[cfg(target_arch = "wasm32")]
+pub mod serialize_addon;
+#[cfg(target_arch = "wasm32")]
 pub mod status_addons;
 #[cfg(target_arch = "wasm32")]
 pub mod task_queue;

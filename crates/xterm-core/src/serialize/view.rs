@@ -9,14 +9,14 @@ use std::rc::Rc;
 /// Capture metrics after header callbacks, but read cells through the actual
 /// public view. Reset may reinitialize that same view to a new Buffer, while an
 /// alternate-screen activation leaves the captured normal view unchanged.
-pub(super) struct View {
+pub struct PublicBufferView {
     view: Rc<BufferApiView>,
     length: usize,
     x: usize,
     y: usize,
     base: usize,
 }
-impl View {
+impl PublicBufferView {
     pub fn new(view: Rc<BufferApiView>) -> Result<Self, SerializeError> {
         Ok(Self {
             length: view.len()?,
@@ -30,7 +30,7 @@ impl View {
         self.view.get_line(row).map_err(Into::into)
     }
 }
-impl BufferAccess for View {
+impl BufferAccess for PublicBufferView {
     fn len(&self) -> usize {
         self.length
     }

@@ -6,8 +6,11 @@ mod ansi;
 pub use addon::{serialize_live_html, serialize_live_state, AddonSerializeError, SerializeAddon};
 mod buffer;
 mod html;
+mod live_modes;
+pub use live_modes::serialize_live_modes;
 mod view;
 pub use html::serialize_html;
+pub use view::PublicBufferView;
 mod style;
 mod terminal;
 pub use terminal::{serialize_terminal, MouseTracking, SerializeModes, SerializeState};
@@ -27,6 +30,10 @@ pub trait BufferAccess {
     fn cursor_x(&self) -> usize;
     fn cursor_y(&self) -> usize;
     fn base_y(&self) -> usize;
+    /// Browser hosts preserve the source diagnostic for a missing traversed cell.
+    fn missing_cell(&self, _row: usize, _col: usize) -> Result<(), SerializeError> {
+        Ok(())
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

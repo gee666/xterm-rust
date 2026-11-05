@@ -48,6 +48,8 @@ pub(super) fn serialize(
             for col in start..end {
                 if let Some(cell) = buffer.cell(row, col)? {
                     h.next(&cell, row, col);
+                } else {
+                    buffer.missing_cell(row, col)?;
                 }
             }
         }

@@ -127,7 +127,7 @@ fn by_scrollback(
     )
 }
 
-fn append_modes(out: &mut Vec<u16>, m: &SerializeModes) {
+pub(super) fn append_modes(out: &mut Vec<u16>, m: &SerializeModes) {
     for (enabled, seq) in [
         (m.application_cursor_keys, "\x1b[?1h"),
         (m.application_keypad, "\x1b[?66h"),

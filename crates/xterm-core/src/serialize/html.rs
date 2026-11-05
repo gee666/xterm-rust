@@ -74,6 +74,8 @@ pub fn serialize_html(
                         emit_cell(&mut output, &cell, &previous, palette);
                         // BaseSerializeHandler advances oldCell even for placeholders.
                         previous = cell;
+                    } else {
+                        buffer.missing_cell(row, col)?;
                     }
                 }
             }

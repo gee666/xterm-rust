@@ -1,11 +1,11 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved. MIT license.
 use super::{
-    scrollback_start, serialize_html, serialize_terminal, CellRange, HtmlConfig, HtmlFontSize,
-    HtmlOptions, HtmlRange, MouseTracking, SerializeError, SerializeModes, SerializeOptions,
+    live_modes::live_modes, scrollback_start, serialize_html, serialize_terminal, CellRange,
+    HtmlConfig, HtmlFontSize, HtmlOptions, HtmlRange, SerializeError, SerializeOptions,
     SerializeState,
 };
 use crate::{
-    headless::{HeadlessError, ModesSnapshot, MouseTrackingMode, Terminal},
+    headless::{HeadlessError, Terminal},
     options::{OptionError, OptionValue},
     public_api::{addon_manager::TerminalAddon, buffer::BufferNamespaceApi},
     terminal::{CoreTerminal, TerminalState},
@@ -169,7 +169,7 @@ impl SerializeAddon {
             font_size: HtmlFontSize::Text(terminal_options.get("fontSize")?.concat_utf16()?),
             ansi_colors: None,
         };
-        let buffer = super::view::View::new(active)?;
+        let buffer = super::PublicBufferView::new(active)?;
         Ok(serialize_html(
             &buffer, cols, rows, None, &config, &effective,
         )?)
@@ -292,27 +292,8 @@ pub fn serialize_live_state(
     let active = active
         .try_borrow()
         .map_err(|_| AddonSerializeError::Borrowed)?;
-    let modes = ModesSnapshot::from_services(&state.core, &state.mouse)
-        .map_err(|_| AddonSerializeError::Borrowed)?;
+    let modes = live_modes(state)?;
     let active_alternate = Rc::ptr_eq(&state.buffers.active(), &state.buffers.alt());
-    let modes = SerializeModes {
-        application_cursor_keys: modes.application_cursor_keys_mode,
-        application_keypad: modes.application_keypad_mode,
-        bracketed_paste: modes.bracketed_paste_mode,
-        insert: modes.insert_mode,
-        origin: modes.origin_mode,
-        reverse_wraparound: modes.reverse_wraparound_mode,
-        send_focus: modes.send_focus_mode,
-        wraparound: modes.wraparound_mode,
-        show_cursor: modes.show_cursor,
-        mouse_tracking: match modes.mouse_tracking_mode {
-            MouseTrackingMode::None => MouseTracking::None,
-            MouseTrackingMode::X10 => MouseTracking::X10,
-            MouseTrackingMode::Vt200 => MouseTracking::Vt200,
-            MouseTrackingMode::Drag => MouseTracking::Drag,
-            MouseTrackingMode::Any => MouseTracking::Any,
-        },
-    };
     Ok(serialize_terminal(
         &SerializeState {
             normal: &*normal,
