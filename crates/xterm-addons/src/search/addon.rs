@@ -1,7 +1,7 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
 use super::{
     DecorationManager, NumericHighlightLimit, SearchAddonError, SearchDecorationOptionsHandle,
-    SearchHighlightLimit, SearchHost, SearchOptions, SearchResultTracker,
+    SearchHighlightLimit, SearchHost, SearchOptions, SearchResultTracker, SearchTermHandle,
 };
 use std::{
     cell::{Cell, RefCell},
@@ -10,11 +10,11 @@ use std::{
 use xterm_core::{
     event::{EmitError, Emitter, Event},
     lifecycle::{Disposable, DisposableHandle},
-    search::{SearchLineCache, SearchState},
+    search::SearchLineCache,
     terminal::TerminalEvent,
 };
-#[path = "empty.rs"]
-mod empty;
+#[path = "completion.rs"]
+mod completion;
 #[path = "find.rs"]
 mod find;
 
@@ -48,7 +48,7 @@ const REFRESH_DELAY_MS: u64 = 200;
 pub(super) struct Inner {
     host: RefCell<Option<Rc<dyn SearchHost>>>,
     manager: RefCell<Option<Rc<DecorationManager>>>,
-    state: RefCell<SearchState>,
+    cached_term: RefCell<Option<SearchTermHandle>>,
     last_options: RefCell<Option<SearchOptionsHandle>>,
     cache: RefCell<SearchLineCache>,
     tracker: SearchResultTracker,
@@ -97,7 +97,7 @@ impl SearchAddon {
             inner: Rc::new(Inner {
                 host: RefCell::new(None),
                 manager: RefCell::new(None),
-                state: RefCell::new(SearchState::default()),
+                cached_term: RefCell::new(None),
                 last_options: RefCell::new(None),
                 cache: RefCell::new(SearchLineCache::default()),
                 tracker: SearchResultTracker::default(),
@@ -158,7 +158,7 @@ impl SearchAddon {
         }
         self.inner.tracker.clear_results();
         if !retain_cached_term {
-            self.inner.state.borrow_mut().clear_cached_term();
+            self.inner.cached_term.borrow_mut().take();
         }
         Ok(())
     }
@@ -251,9 +251,9 @@ impl SearchAddon {
     }
     fn update_matches(&self) -> Result<(), SearchAddonError> {
         Self::cancel(&self.inner.highlight_timeout);
-        let term = self.inner.state.borrow().cached_search_term.clone();
+        let term = self.inner.cached_term.borrow().clone();
         let options = self.inner.last_options.borrow().clone();
-        if term.as_ref().is_some_and(|term| !term.is_empty())
+        if term.as_ref().is_some_and(|term| term.is_truthy())
             && options
                 .map(|options| options.decorations())
                 .transpose()?
@@ -268,11 +268,10 @@ impl SearchAddon {
                         let addon = SearchAddon { inner };
                         let term = addon
                             .inner
-                            .state
+                            .cached_term
                             .borrow()
-                            .cached_search_term
                             .clone()
-                            .unwrap_or_default();
+                            .unwrap_or_else(|| Rc::new(super::term::Utf16Term(Vec::new())));
                         let previous = addon.inner.last_options.borrow().clone();
                         let options = previous
                             .map(|previous| {
@@ -283,8 +282,8 @@ impl SearchAddon {
                                 )))
                             })
                             .transpose()?;
-                        addon.inner.state.borrow_mut().clear_cached_term();
-                        addon.find_previous_internal(&term, options, true)?;
+                        addon.inner.cached_term.borrow_mut().take();
+                        addon.find_term_with_scroll(term, options, true, || Ok(true))?;
                     }
                     Ok(())
                 }),

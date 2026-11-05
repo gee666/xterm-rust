@@ -20,6 +20,8 @@ mod clocks;
 mod decorations;
 #[path = "search_cases/empty.rs"]
 mod empty;
+#[path = "search_cases/invalid.rs"]
+mod invalid;
 #[path = "search_cases/ranges.rs"]
 mod ranges;
 #[path = "search_cases/raw_marker.rs"]

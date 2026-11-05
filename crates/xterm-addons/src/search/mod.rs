@@ -3,9 +3,11 @@
 //! terminal cells, marker lifetimes and decorations remain Rust implementations.
 mod addon;
 mod decorations;
+mod term;
 mod tracker;
 pub use addon::{SearchAddon, SearchOptionsHandle, SearchOptionsSource, WeakSearchAddon};
 pub use decorations::{DecorationManager, MultiHighlight};
+pub use term::{SearchTermHandle, SearchTermSource};
 pub use tracker::{SearchResultChange, SearchResultTracker};
 
 use std::{any::Any, cell::RefCell, error::Error, fmt, rc::Rc};

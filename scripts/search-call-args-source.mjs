@@ -16,8 +16,9 @@ const require = createRequire(resolve(dependencies, '../package.json'));
 let esbuild;
 const temporary = resolve(root, 'tmp/search-call-args-source');
 const caseName = process.env.SEARCH_CASES ?? 'search-call-args';
-if (!['search-call-args', 'search-empty-options'].includes(caseName)) throw Error('Unknown search fixture');
-const expectedCases = caseName === 'search-empty-options' ? 54 : 81;
+const caseCounts = {'search-call-args': 81, 'search-empty-options': 54, 'search-invalid-terms': 240};
+const expectedCases = caseCounts[caseName];
+if (expectedCases === undefined) throw Error('Unknown search fixture');
 const output = resolve(root, 'results', caseName);
 const fixture = `crates/xterm-web/tests/fixtures/${caseName}.js`;
 const report = {status: 'failed', platform: process.platform, node: process.version,

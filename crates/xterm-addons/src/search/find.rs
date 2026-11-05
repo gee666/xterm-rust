@@ -26,7 +26,12 @@ impl SearchAddon {
         options: Option<SearchOptionsHandle>,
         no_scroll: impl FnOnce() -> Result<bool, SearchAddonError>,
     ) -> Result<bool, SearchAddonError> {
-        self.find_and_select(term, options, false, no_scroll)
+        self.find_term_with_scroll(
+            Rc::new(super::super::term::Utf16Term(term.to_vec())),
+            options,
+            false,
+            no_scroll,
+        )
     }
     pub fn find_previous(
         &self,
@@ -42,19 +47,18 @@ impl SearchAddon {
         options: Option<SearchOptionsHandle>,
         no_scroll: impl FnOnce() -> Result<bool, SearchAddonError>,
     ) -> Result<bool, SearchAddonError> {
-        self.find_and_select(term, options, true, no_scroll)
+        self.find_term_with_scroll(
+            Rc::new(super::super::term::Utf16Term(term.to_vec())),
+            options,
+            true,
+            no_scroll,
+        )
     }
-    pub(super) fn find_previous_internal(
+    /// Search a retained host term. Validation follows the source highlight and
+    /// selection phases, rather than coercing the argument at the API boundary.
+    pub fn find_term_with_scroll(
         &self,
-        term: &[u16],
-        options: Option<SearchOptionsHandle>,
-        no_scroll: bool,
-    ) -> Result<bool, SearchAddonError> {
-        self.find_previous_with_scroll(term, options, || Ok(no_scroll))
-    }
-    fn find_and_select(
-        &self,
-        term: &[u16],
+        term: super::super::SearchTermHandle,
         options: Option<SearchOptionsHandle>,
         reverse: bool,
         no_scroll: impl FnOnce() -> Result<bool, SearchAddonError>,
@@ -62,27 +66,36 @@ impl SearchAddon {
         let host = self.host()?;
         self.inner.before.fire(&())?;
         *self.inner.last_options.borrow_mut() = options.clone();
-        if term.is_empty() {
-            return self.find_empty(options.as_ref());
-        }
-        // The source stores the new options before asking whether they changed.
-        // Preserve that order, including its unchanged-term highlight behavior.
-        let flags = options
+        let decorations = options
             .as_ref()
-            .map(|o| o.read().map(|options| matching(&options)))
-            .transpose()?;
-        self.inner.state.borrow_mut().last_search_options = flags.clone();
-        let update = self
-            .inner
-            .state
-            .borrow()
-            .should_update_highlighting(term, flags.as_ref());
-        if update {
-            if let Some(options) = &options {
-                let request = options.read()?;
-                self.highlight_all(term, &request)?;
+            .map(|options| options.decorations())
+            .transpose()?
+            .flatten();
+        if decorations.is_some() {
+            let cached = self.inner.cached_term.borrow().clone();
+            let update = cached
+                .as_ref()
+                .is_none_or(|cached| !term.equals(cached.as_ref()))
+                || options
+                    .as_ref()
+                    .map(|options| options.flags_changed())
+                    .transpose()?
+                    .unwrap_or(false);
+            if update {
+                if !term.is_valid()? {
+                    self.clear_decorations(false)?;
+                } else if let Some(options) = &options {
+                    self.highlight_all(&term.text()?, &options.read()?)?;
+                }
             }
         }
+        if !term.is_valid()? {
+            host.clear_selection()?;
+            self.clear_decorations(false)?;
+            self.finish_search(term, options.as_ref())?;
+            return Ok(false);
+        }
+        let text = term.text()?;
         let request = options
             .as_ref()
             .map(|o| o.read())
@@ -90,9 +103,12 @@ impl SearchAddon {
             .unwrap_or_default();
         let selection = host.selection()?;
         host.clear_selection()?;
-        let cached = self.inner.state.borrow().cached_search_term.clone();
+        let cached = self.inner.cached_term.borrow().clone();
+        let same = cached
+            .as_ref()
+            .is_some_and(|cached| term.equals(cached.as_ref()));
         let result = self.run_engine(
-            term,
+            &text,
             &matching(&request),
             if reverse {
                 Operation::Previous
@@ -100,14 +116,11 @@ impl SearchAddon {
                 Operation::Next
             },
             selection,
-            cached.as_deref(),
+            same.then_some(text.as_ref()),
         )?;
         let found = self.select_result(result, request.decorations.as_ref(), no_scroll()?)?;
-        self.inner
-            .tracker
-            .fire_results_changed(request.decorations.is_some())?;
-        self.inner.state.borrow_mut().cached_search_term = Some(term.to_vec());
-        self.inner.after.fire(&())?;
+        drop(text);
+        self.finish_search(term, options.as_ref())?;
         Ok(found)
     }
     fn highlight_all(&self, term: &[u16], options: &SearchOptions) -> Result<(), SearchAddonError> {

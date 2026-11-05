@@ -2,6 +2,7 @@
 //! Callable search bindings over the Rust engine and shared browser services.
 mod host;
 mod options;
+mod term;
 mod timer;
 use host::BrowserSearchHost;
 use js_sys::{Function, Object, Reflect};
@@ -108,7 +109,7 @@ impl SearchAddon {
             .map(JsValue::from)
             .unwrap_or(JsValue::UNDEFINED);
         self.addon
-            .find_next_with_scroll(&options::term(term)?, request(options), || {
+            .find_term_with_scroll(Rc::new(term::JsTerm(term)), request(options), false, || {
                 options::no_scroll(&internal_options)
             })
             .map_err(|cause| error(&cause))
@@ -124,7 +125,7 @@ impl SearchAddon {
             .map(JsValue::from)
             .unwrap_or(JsValue::UNDEFINED);
         self.addon
-            .find_previous_with_scroll(&options::term(term)?, request(options), || {
+            .find_term_with_scroll(Rc::new(term::JsTerm(term)), request(options), true, || {
                 options::no_scroll(&internal_options)
             })
             .map_err(|cause| error(&cause))

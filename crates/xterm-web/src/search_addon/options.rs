@@ -1,5 +1,4 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
-use js_sys::JsString;
 use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 use xterm_addons::search::{
@@ -21,7 +20,7 @@ extern "C" {
     #[wasm_bindgen(catch, js_name = searchAddonLimitEnd)]
     fn end(value: &JsValue, length: f64) -> Result<f64, JsValue>;
 }
-fn host_error(value: JsValue) -> SearchAddonError {
+pub(super) fn host_error(value: JsValue) -> SearchAddonError {
     SearchAddonError::Host(Rc::new(crate::js_error::JsCallbackError(value)))
 }
 pub fn no_scroll(value: &JsValue) -> Result<bool, SearchAddonError> {
@@ -97,13 +96,4 @@ impl SearchOptionsSource for JsOptions {
             decorations,
         })
     }
-}
-pub fn term(value: JsValue) -> Result<Vec<u16>, JsValue> {
-    if value.is_falsy() {
-        return Ok(Vec::new());
-    }
-    let text = value
-        .dyn_ref::<JsString>()
-        .ok_or_else(|| js_sys::TypeError::new("Search term must be a string"))?;
-    Ok(crate::utf16::from_js_string(text))
 }
