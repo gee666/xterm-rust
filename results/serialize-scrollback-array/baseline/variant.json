@@ -1,0 +1,154 @@
+{
+  "name": "baseline",
+  "status": "passed",
+  "sourceBytes": 6739,
+  "sourceHash": "f3d8c43608acf35b7f3697d7ebc02fe1fec22dacdd218cb57b9f7c6614e7e4e8",
+  "commands": [
+    {
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/build-demo.mjs",
+        "--debug"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 34302.2361,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/serialize-browser-check.mjs",
+        "--suite"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 64215.2269,
+      "status": "failed"
+    }
+  ],
+  "input": {
+    "revision": "2a78ef13449e1b7b22454dd968af23bb82074a3c",
+    "sha256": "54cae3a63b1e87581ad596173227b00b879ad50290baa44f0718e9563bda3318",
+    "files": 1773
+  },
+  "build": {
+    "report": "results/demos/build/2026-11-05T22-00-00-039Z/report.json",
+    "source": {
+      "revision": "2a78ef13449e1b7b22454dd968af23bb82074a3c",
+      "sha256": "54cae3a63b1e87581ad596173227b00b879ad50290baa44f0718e9563bda3318",
+      "files": 1773
+    },
+    "artifacts": [
+      {
+        "path": "browser/pkg/xterm_web.js",
+        "bytes": 238033,
+        "sha256": "531e774465a9d75135a7d05e94db97f14b69c438a8bdc3a74283cdac6e264203"
+      },
+      {
+        "path": "browser/pkg/xterm_web_bg.wasm",
+        "bytes": 15919098,
+        "sha256": "144a977cfd63516d4386c4d9c33055c44124ec608c2ce19309f216a5ebe5df4b"
+      }
+    ]
+  },
+  "webFresh": [
+    false
+  ],
+  "browser": {
+    "status": "failed",
+    "engines": [
+      {
+        "name": "chromium",
+        "passed": 75,
+        "failed": 2,
+        "mismatches": [
+          {
+            "name": "ansi-scrollback-primitive-array-errors",
+            "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    name: 'ansi-scrollback-primitive-array-errors',\n    result: {\n      state: {\n        active: 'normal',\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'Invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'Invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'Invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'Invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n"
+          },
+          {
+            "name": "ansi-scrollback-getter-reentry-errors",
+            "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    name: 'ansi-scrollback-getter-reentry-errors',\n    result: [\n      {\n        error: {\n+         message: 'Serialization coordinate is outside the native integral range',\n-         message: 'Invalid array length',\n          name: 'RangeError'\n        },\n        log: [\n          'range',\n          'scrollback'\n"
+          }
+        ]
+      },
+      {
+        "name": "firefox",
+        "passed": 74,
+        "failed": 3,
+        "mismatches": [
+          {
+            "name": "ansi-scrollback-primitive-array-errors",
+            "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    name: 'ansi-scrollback-primitive-array-errors',\n    result: {\n      state: {\n        active: 'normal',\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'invalid array length'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n"
+          },
+          {
+            "name": "ansi-scrollback-getter-reentry-errors",
+            "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    name: 'ansi-scrollback-getter-reentry-errors',\n    result: [\n      {\n        error: {\n+         message: 'Serialization coordinate is outside the native integral range',\n-         message: 'invalid array length',\n          name: 'RangeError'\n        },\n        log: [\n          'range',\n          'scrollback'\n"
+          },
+          {
+            "name": "ansi-scrollback-nested-serialization-errors",
+            "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    name: 'ansi-scrollback-nested-serialization-errors',\n    result: {\n      ansi: {\n        error: 'RangeError',\n+       message: 'Invalid array length'\n-       message: 'invalid array length'\n      },\n      log: [\n        'scrollback'\n      ],\n      nested: '\\x1B[34mNORMAL\\x1B[?1049h\\x1B[H\\x1B[6C\\x1B[34mALT',\n"
+          }
+        ]
+      },
+      {
+        "name": "webkit",
+        "passed": 74,
+        "failed": 3,
+        "mismatches": [
+          {
+            "name": "ansi-scrollback-primitive-array-errors",
+            "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    name: 'ansi-scrollback-primitive-array-errors',\n    result: {\n      state: {\n        active: 'normal',\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n...\n            error: 'RangeError',\n+           message: 'Serialization coordinate is outside the native integral range'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n...\n            error: 'RangeError',\n+           message: 'Invalid array length'\n-           message: 'Array length must be a positive integer of safe magnitude.'\n          },\n          log: [\n            'range',\n            'scrollback'\n          ],\n"
+          },
+          {
+            "name": "ansi-scrollback-getter-reentry-errors",
+            "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    name: 'ansi-scrollback-getter-reentry-errors',\n    result: [\n      {\n        error: {\n+         message: 'Serialization coordinate is outside the native integral range',\n-         message: 'Array length must be a positive integer of safe magnitude.',\n          name: 'RangeError'\n        },\n        log: [\n          'range',\n          'scrollback'\n"
+          },
+          {
+            "name": "ansi-scrollback-nested-serialization-errors",
+            "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    name: 'ansi-scrollback-nested-serialization-errors',\n    result: {\n      ansi: {\n        error: 'RangeError',\n+       message: 'Invalid array length'\n-       message: 'Array length must be a positive integer of safe magnitude.'\n      },\n      log: [\n        'scrollback'\n      ],\n      nested: '\\x1B[34mNORMAL\\x1B[?1049h\\x1B[H\\x1B[6C\\x1B[34mALT',\n"
+          }
+        ]
+      }
+    ],
+    "suites": [
+      {
+        "engine": "source",
+        "counts": {
+          "discovered": 120,
+          "executed": 120,
+          "passed": 120,
+          "failed": 0,
+          "skipped": 0,
+          "unrun": 0
+        }
+      },
+      {
+        "engine": "rust",
+        "counts": {
+          "discovered": 120,
+          "executed": 120,
+          "passed": 120,
+          "failed": 0,
+          "skipped": 0,
+          "unrun": 0
+        }
+      }
+    ]
+  },
+  "restoredSourceHash": "e4392b803fb6875f582fb4e9c244c4b3ee1a0a7eb7279b046c8ab179b4bebcd8",
+  "entryRestored": true
+}
