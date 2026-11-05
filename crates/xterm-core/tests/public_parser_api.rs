@@ -1,8 +1,7 @@
 use std::{
     cell::RefCell,
     rc::Rc,
-    sync::Arc,
-    task::{Context, Poll, Wake, Waker},
+    task::{Context, Poll, Waker},
 };
 use xterm_core::{
     parser::{
@@ -109,11 +108,6 @@ fn all_five_public_handler_families_bubble_newest_first_and_stop_on_true() {
     }
 }
 
-struct NoWake;
-impl Wake for NoWake {
-    fn wake(self: Arc<Self>) {}
-}
-
 #[test]
 fn pending_public_handlers_pause_then_resume_before_following_print() {
     for family in 0..5 {
@@ -175,9 +169,9 @@ fn pending_public_handlers_pause_then_resume_before_following_print() {
         };
         assert_eq!(*calls.borrow(), ["c", "b"]);
         assert!(printed.borrow().is_empty());
-        let waker = Waker::from(Arc::new(NoWake));
+        let waker = Waker::noop();
         assert_eq!(
-            pending.as_mut().poll(&mut Context::from_waker(&waker)),
+            pending.as_mut().poll(&mut Context::from_waker(waker)),
             Poll::Ready(false)
         );
         assert!(parser.parse(&data, Some(false)).unwrap().is_none());

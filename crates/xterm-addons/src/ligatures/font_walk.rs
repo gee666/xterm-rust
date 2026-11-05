@@ -57,10 +57,7 @@ fn walk_reverse(
 ) -> Option<LookupId> {
     let mut position = start.checked_sub(1)?;
     let mut best = None;
-    loop {
-        let Some(glyph) = sequence.get(position).and_then(|value| value.number()) else {
-            break;
-        };
+    while let Some(glyph) = sequence.get(position).and_then(|value| value.number()) {
         let Some(entry) = arena.individual(tree, glyph) else {
             break;
         };

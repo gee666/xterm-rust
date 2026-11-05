@@ -5,8 +5,7 @@ use std::{
     future::Future,
     pin::Pin,
     rc::Rc,
-    sync::Arc,
-    task::{Context, Poll, Wake, Waker},
+    task::{Context, Poll, Waker},
 };
 use xterm_addons::clipboard::*;
 use xterm_core::lifecycle::{DisposableHandle, NoopDisposable};
@@ -47,15 +46,11 @@ impl ClipboardTerminal for Terminal {
         Ok(())
     }
 }
-struct NoWake;
-impl Wake for NoWake {
-    fn wake(self: Arc<Self>) {}
-}
 fn settle(
     mut future: Pin<Box<dyn Future<Output = Result<bool, ClipboardError>>>>,
 ) -> Result<bool, ClipboardError> {
-    let waker = Waker::from(Arc::new(NoWake));
-    match future.as_mut().poll(&mut Context::from_waker(&waker)) {
+    let waker = Waker::noop();
+    match future.as_mut().poll(&mut Context::from_waker(waker)) {
         Poll::Ready(value) => value,
         Poll::Pending => panic!("fixture future must resolve on first poll"),
     }

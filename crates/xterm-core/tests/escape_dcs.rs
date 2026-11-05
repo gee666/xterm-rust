@@ -4,8 +4,7 @@ use std::cell::RefCell;
 use std::fmt::LowerHex;
 use std::future::Future;
 use std::rc::Rc;
-use std::sync::Arc;
-use std::task::{Context, Poll, Wake, Waker};
+use std::task::{Context, Poll, Waker};
 use xterm_core::lifecycle::DisposableHandle;
 use xterm_core::parser::dcs::{DcsAction, DcsHandler, DcsHandlerTrait, HandlerHandle};
 use xterm_core::parser::escape::{EscapeSequenceParser, FunctionIdentifier, ParseError};
@@ -124,14 +123,10 @@ fn parser(config: u8) -> (EscapeSequenceParser, Log) {
     }
     (parser, log)
 }
-struct NoWake;
-impl Wake for NoWake {
-    fn wake(self: Arc<Self>) {}
-}
 fn resolve(result: HandlerResult) -> Result<bool, DispatchError> {
     let mut future = Box::pin(result.resolve());
-    let waker = Waker::from(Arc::new(NoWake));
-    match future.as_mut().poll(&mut Context::from_waker(&waker)) {
+    let waker = Waker::noop();
+    match future.as_mut().poll(&mut Context::from_waker(waker)) {
         Poll::Ready(value) => value,
         Poll::Pending => panic!("fixture future requires no external scheduling"),
     }

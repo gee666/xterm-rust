@@ -5,8 +5,7 @@ use std::{
     future::Future,
     pin::Pin,
     rc::Rc,
-    sync::Arc,
-    task::{Context, Poll, Wake, Waker},
+    task::{Context, Poll, Waker},
 };
 use xterm_core::parser::{
     escape::{
@@ -33,10 +32,6 @@ impl Future for Gate {
         }
     }
 }
-struct Noop;
-impl Wake for Noop {
-    fn wake(self: Arc<Self>) {}
-}
 #[test]
 fn unresolved_future_stops_suffix_without_sleep_or_executor() {
     let mut parser = EscapeSequenceParser::new();
@@ -59,14 +54,14 @@ fn unresolved_future_stops_suffix_without_sleep_or_executor() {
     let Some(HandlerResult::Pending(mut pending)) = parser.parse(&chunk, None).unwrap() else {
         panic!("expected pending")
     };
-    let waker = Waker::from(Arc::new(Noop));
+    let waker = Waker::noop();
     assert!(pending
         .as_mut()
-        .poll(&mut Context::from_waker(&waker))
+        .poll(&mut Context::from_waker(waker))
         .is_pending());
     assert!(log.borrow().is_empty());
     ready.set(true);
-    let Poll::Ready(previous) = pending.as_mut().poll(&mut Context::from_waker(&waker)) else {
+    let Poll::Ready(previous) = pending.as_mut().poll(&mut Context::from_waker(waker)) else {
         panic!("gate ready")
     };
     assert!(parser.parse(&chunk, Some(previous)).unwrap().is_none());
@@ -95,8 +90,8 @@ fn checked_callbacks_abort_before_suffix_and_leave_join_state_unchanged() {
 
 fn ready(result: HandlerResult) -> Result<bool, DispatchError> {
     let mut future = Box::pin(result.resolve());
-    let waker = Waker::from(Arc::new(Noop));
-    match future.as_mut().poll(&mut Context::from_waker(&waker)) {
+    let waker = Waker::noop();
+    match future.as_mut().poll(&mut Context::from_waker(waker)) {
         Poll::Ready(value) => value,
         Poll::Pending => panic!("test future should resolve immediately"),
     }

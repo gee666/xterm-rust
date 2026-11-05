@@ -4,8 +4,7 @@
 use std::cell::RefCell;
 use std::future::Future;
 use std::rc::Rc;
-use std::sync::Arc;
-use std::task::{Context, Poll, Wake, Waker};
+use std::task::{Context, Poll, Waker};
 use xterm_core::parser::dcs::{DcsAction, DcsHandlerTrait, DcsParser, HandlerHandle};
 use xterm_core::parser::handler::{DispatchError, HandlerResult};
 use xterm_core::parser::params::{ParamValue, Params};
@@ -107,19 +106,14 @@ pub fn handler(reports: &Reports, label: &str, handled: bool, asynchronous: bool
     }))
 }
 
-struct NoopWake;
-impl Wake for NoopWake {
-    fn wake(self: Arc<Self>) {}
-}
-
 pub fn resolve(result: HandlerResult) -> bool {
     resolve_result(result).unwrap()
 }
 
 pub fn resolve_result(result: HandlerResult) -> Result<bool, DispatchError> {
     let mut future = Box::pin(result.resolve());
-    let waker = Waker::from(Arc::new(NoopWake));
-    let mut context = Context::from_waker(&waker);
+    let waker = Waker::noop();
+    let mut context = Context::from_waker(waker);
     // Test futures are ready on their first poll, with no external IO.
     match Future::poll(future.as_mut(), &mut context) {
         Poll::Ready(value) => value,

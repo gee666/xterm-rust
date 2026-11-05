@@ -133,7 +133,7 @@ fn reset_clones_extended_drops_payload_and_preserves_url_and_variant() {
     assert_eq!(raw_extended(&attr), 0xe0000000);
     assert!(attr.extended.payload().is_none());
     assert!(!attr.extended.same_identity(&previous));
-    assert_eq!(previous.ext(), u32::MAX & !0x1c000000 | (5 << 26));
+    assert_eq!(previous.ext(), !0x1c000000 | (5 << 26));
 }
 
 #[test]

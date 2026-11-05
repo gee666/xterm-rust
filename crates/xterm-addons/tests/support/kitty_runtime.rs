@@ -9,8 +9,7 @@ use std::fmt;
 use std::future::Future;
 use std::pin::Pin;
 use std::rc::Rc;
-use std::sync::Arc;
-use std::task::{Context, Poll, Wake, Waker};
+use std::task::{Context, Poll, Waker};
 use xterm_addons::image::encoded::MemorySourceFactory;
 use xterm_addons::image::kitty::handler::*;
 use xterm_addons::image::kitty::storage::*;
@@ -104,10 +103,6 @@ impl KittyGraphicsHost for Host {
         })
     }
 }
-struct NoWake;
-impl Wake for NoWake {
-    fn wake(self: Arc<Self>) {}
-}
 
 pub struct Runtime {
     handler: KittyGraphicsHandler,
@@ -192,8 +187,8 @@ impl Runtime {
                 if let Some(job) = job {
                     job.ready.set(Some(operation[1].as_bool().unwrap()));
                     let mut future = Box::pin(result.unwrap().resolve());
-                    let waker = Waker::from(Arc::new(NoWake));
-                    let resolved = match future.as_mut().poll(&mut Context::from_waker(&waker)) {
+                    let waker = Waker::noop();
+                    let resolved = match future.as_mut().poll(&mut Context::from_waker(waker)) {
                         Poll::Ready(result) => result.map_err(StorageError::host)?,
                         Poll::Pending => panic!("controlled display did not resolve"),
                     };

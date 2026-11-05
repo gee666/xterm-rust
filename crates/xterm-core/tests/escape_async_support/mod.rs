@@ -3,8 +3,7 @@
 use std::{
     cell::RefCell,
     rc::Rc,
-    sync::Arc,
-    task::{Context, Poll, Wake, Waker},
+    task::{Context, Poll, Waker},
 };
 use xterm_core::{
     lifecycle::DisposableHandle,
@@ -66,14 +65,10 @@ pub fn result(asynchronous: bool, value: bool) -> HandlerResult {
         HandlerResult::Ready(value)
     }
 }
-struct Noop;
-impl Wake for Noop {
-    fn wake(self: Arc<Self>) {}
-}
 pub fn resolve(result: HandlerResult) -> bool {
     let mut future = Box::pin(result.resolve());
-    let waker = Waker::from(Arc::new(Noop));
-    match std::future::Future::poll(future.as_mut(), &mut Context::from_waker(&waker)) {
+    let waker = Waker::noop();
+    match std::future::Future::poll(future.as_mut(), &mut Context::from_waker(waker)) {
         Poll::Ready(value) => value.expect("unexpected callback failure"),
         Poll::Pending => panic!("test future unexpectedly pending"),
     }
@@ -131,7 +126,7 @@ pub fn setup(asynchronous: bool) -> (EscapeSequenceParser, Log) {
             )
             .unwrap();
     }
-    for code in [b'\r', b'\n'] {
+    for code in *b"\r\n" {
         let target = Rc::clone(&log);
         parser.set_execute_handler(u32::from(code), move |_| {
             target

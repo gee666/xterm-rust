@@ -6,8 +6,7 @@ use std::{
     ops::Range,
     pin::pin,
     rc::Rc,
-    sync::Arc,
-    task::{Context, Poll, Wake, Waker},
+    task::{Context, Poll, Waker},
 };
 use xterm_core::{
     input::parse_source::{ParseChunk, ParseInputSource, ParseSourceError},
@@ -91,12 +90,8 @@ impl ParseInputSource for LiveBytes {
     }
 }
 fn resolve_now(result: HandlerResult) -> bool {
-    struct NoWake;
-    impl Wake for NoWake {
-        fn wake(self: Arc<Self>) {}
-    }
-    let waker = Waker::from(Arc::new(NoWake));
-    let mut context = Context::from_waker(&waker);
+    let waker = Waker::noop();
+    let mut context = Context::from_waker(waker);
     let mut future = pin!(result.resolve());
     match future.as_mut().poll(&mut context) {
         Poll::Ready(result) => result.unwrap(),

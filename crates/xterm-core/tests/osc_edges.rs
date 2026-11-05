@@ -4,20 +4,16 @@ use std::cell::RefCell;
 use std::future::Future;
 use std::pin::Pin;
 use std::rc::Rc;
-use std::task::{Context, Poll, Wake, Waker};
+use std::task::{Context, Poll, Waker};
 #[path = "parser_support/removal.rs"]
 mod removal;
 use removal::RemoveAll;
 use xterm_core::parser::handler::{DispatchError, HandlerResult};
 use xterm_core::parser::osc::{OscAction, OscError, OscHandler, OscHandlerTrait, OscParser};
 
-struct NoWake;
-impl Wake for NoWake {
-    fn wake(self: std::sync::Arc<Self>) {}
-}
 fn poll(mut future: Pin<Box<dyn Future<Output = bool>>>) -> bool {
-    let waker = Waker::from(std::sync::Arc::new(NoWake));
-    match future.as_mut().poll(&mut Context::from_waker(&waker)) {
+    let waker = Waker::noop();
+    match future.as_mut().poll(&mut Context::from_waker(waker)) {
         Poll::Ready(value) => value,
         Poll::Pending => panic!("fixture must be ready"),
     }

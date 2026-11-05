@@ -5,8 +5,7 @@ use std::{
     future::Future,
     pin::Pin,
     rc::Rc,
-    sync::Arc,
-    task::{Context, Poll, Wake, Waker},
+    task::{Context, Poll, Waker},
 };
 use xterm_core::input::write_buffer::{
     WeakWriteBuffer, WriteBuffer, WriteCallback, WriteData, WriteError, WriteScheduler,
@@ -91,12 +90,8 @@ impl Host {
         panic!("test host exceeded bounded task count");
     }
     pub fn microtasks(&self) {
-        struct NoWake;
-        impl Wake for NoWake {
-            fn wake(self: Arc<Self>) {}
-        }
-        let waker = Waker::from(Arc::new(NoWake));
-        let mut context = Context::from_waker(&waker);
+        let waker = Waker::noop();
+        let mut context = Context::from_waker(waker);
         let count = self.0.futures.borrow().len();
         for _ in 0..count {
             let next = self.0.futures.borrow_mut().pop_front();

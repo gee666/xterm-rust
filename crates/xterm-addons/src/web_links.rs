@@ -232,10 +232,7 @@ pub fn windowed_lines(index: usize, buffer: &dyn LinkBuffer) -> (Vec<Vec<u16>>, 
         }
         lines.push(content);
         let mut length = 0;
-        loop {
-            let Some(next) = bottom.checked_add(1) else {
-                break;
-            };
+        while let Some(next) = bottom.checked_add(1) {
             bottom = next;
             let Some(line) = buffer.line(bottom) else {
                 break;

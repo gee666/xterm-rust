@@ -6,7 +6,7 @@ use std::cell::RefCell;
 use std::future::Future;
 use std::pin::Pin;
 use std::rc::Rc;
-use std::task::{Context, Poll, Wake, Waker};
+use std::task::{Context, Poll, Waker};
 use xterm_core::parser::escape::{EscapeSequenceParser, ParseError};
 use xterm_core::parser::handler::{DispatchError, HandlerResult};
 #[path = "parser_support/removal.rs"]
@@ -19,13 +19,9 @@ use xterm_core::parser::osc::OscHandlerTrait;
 use xterm_core::parser::params::Params;
 use xterm_core::text_decoder::utf32_to_string;
 
-struct NoWake;
-impl Wake for NoWake {
-    fn wake(self: std::sync::Arc<Self>) {}
-}
 fn resolve(mut future: Pin<Box<dyn Future<Output = bool>>>) -> bool {
-    let waker = Waker::from(std::sync::Arc::new(NoWake));
-    match future.as_mut().poll(&mut Context::from_waker(&waker)) {
+    let waker = Waker::noop();
+    match future.as_mut().poll(&mut Context::from_waker(waker)) {
         Poll::Ready(result) => result,
         Poll::Pending => panic!("fixture future must resolve immediately when polled"),
     }

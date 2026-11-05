@@ -21,7 +21,7 @@ fn setter_masks_preserve_all_other_fields() {
                 a.set_underline_style(style);
                 assert_eq!(
                     a.ext() & !ext_flags::UNDERLINE_STYLE,
-                    u32::MAX & !ext_flags::UNDERLINE_STYLE
+                    !ext_flags::UNDERLINE_STYLE
                 );
                 assert_eq!(a.underline_style(), style & 7);
                 a.set_underline_variant_offset(offset);
@@ -46,7 +46,7 @@ fn emptiness_update_and_clone_preserve_unrelated_data() {
     a.extended.set_underline_variant_offset(7);
     assert!(a.extended.is_empty());
     a.update_extended();
-    assert_eq!(a.bg, u32::MAX & !bg_flags::HAS_EXTENDED);
+    assert_eq!(a.bg, !bg_flags::HAS_EXTENDED);
     a.extended.set_underline_style(1);
     a.update_extended();
     assert_eq!(a.bg, u32::MAX);

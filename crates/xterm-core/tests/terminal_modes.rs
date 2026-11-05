@@ -11,18 +11,14 @@ fn terminal() -> CoreTerminal {
 }
 fn reply(terminal: &mut CoreTerminal, input: &str) -> String {
     terminal.write(input).unwrap();
-    terminal
-        .drain_events()
-        .into_iter()
-        .filter_map(|event| {
-            if let TerminalEvent::Data(units) = event {
-                Some(String::from_utf16(&units).unwrap())
-            } else {
-                None
-            }
-        })
-        .last()
-        .expect("source query emits a data event")
+    let mut reply = None;
+    for event in terminal.drain_events() {
+        if let TerminalEvent::Data(units) = event {
+            // Validate every reply, including those preceding the returned one.
+            reply = Some(String::from_utf16(&units).unwrap());
+        }
+    }
+    reply.expect("source query emits a data event")
 }
 fn options(terminal: &CoreTerminal, key: &str, entries: &[(&str, bool)]) {
     terminal

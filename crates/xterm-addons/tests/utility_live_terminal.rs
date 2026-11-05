@@ -2,8 +2,7 @@
 use std::{
     cell::RefCell,
     rc::Rc,
-    sync::Arc,
-    task::{Context, Poll, Wake, Waker},
+    task::{Context, Poll, Waker},
 };
 use xterm_addons::{
     attach::{AttachTerminal, SocketMessage},
@@ -134,17 +133,13 @@ fn socket_view_reads_later_mutations_after_a_parser_pause() {
     let output = line.borrow().translate_to_string(true, None, None, None);
     assert_eq!(output.last(), Some(&u16::from(b'B')));
 }
-struct NoWake;
-impl Wake for NoWake {
-    fn wake(self: Arc<Self>) {}
-}
 fn settle(engine: &Rc<RefCell<CoreTerminal>>) {
     let pending = engine.borrow_mut().take_pending().unwrap();
     let HandlerResult::PendingFallible(mut future) = pending else {
         panic!("expected fallible clipboard future");
     };
-    let waker = Waker::from(Arc::new(NoWake));
-    let Poll::Ready(result) = future.as_mut().poll(&mut Context::from_waker(&waker)) else {
+    let waker = Waker::noop();
+    let Poll::Ready(result) = future.as_mut().poll(&mut Context::from_waker(waker)) else {
         panic!("provider fixture resolves first poll");
     };
     engine.borrow_mut().resume(result.unwrap()).unwrap();
