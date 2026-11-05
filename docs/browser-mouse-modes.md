@@ -8,11 +8,13 @@ This is a bounded internal binding, not completion of task305. JavaScript protoc
 
 ## Evidence on Windows
 
-Base main `ff0bec8`, Rust/Cargo1.85.1, Node24.15.0. Engines were Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4.
+Rust/Cargo1.85.1, Node24.15.0. Engines were Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4. Initial runs used `b95b2eb` plus the mouse binding. The worktree creator reused a preexisting `swarm/L16` branch instead of starting at the observed main `ff0bec8`. Integration preparation caught this provenance error. Task375 was reopened, rebased onto actual main `1729d89` and required fresh union verification before integration. The initial runs are scoped historical evidence, not tests of main `ff0bec8`.
 
 Five shared JavaScript cases run against original source Terminal and actual Rust Terminal. Source captures agree in all three engines. The Rust WASM integration target passes all five tests in each engine, with no ignored or filtered tests. Cases cover initial service identity before open, built-in setters and errors, repeated protocol events, subscription disposal, nested mode changes, thrown-value identity, parsed DEC mouse modes, retained reset identity and reads after terminal disposal. The live DOM case activates VT200/SGR through the service setters, dispatches mouse press/release and receives exactly `ESC[<0;1;1M` and `ESC[<0;1;1m` on `onData`, with no binary output. Reset suppresses further reports.
 
-The unchanged upstream Playwright selection `DECSET|DECRST` discovers462 cases across the original three projects. It executes and passes437, with25 original skips, zero failures and zero unrun cases. No original assertion or source file was modified. This targeted selection repairs the access failures reported by the broader task327 checkpoint. It is not a full core/addon/demo pass.
+The fresh union of main `1729d89`, task375 and accepted tasks376/377 passes the source five-case equality check and all five Rust WASM tests in each browser. `union-*` raw files identify the exact compiled inputs and artifacts. The binding source matches the initially reviewed implementation; main's newer `input_data` construction and listeners remain intact.
+
+The unchanged upstream Playwright selection `DECSET|DECRST` on that same union discovers462 cases across the original three projects. It executes and passes437, with25 original skips, zero failures and zero unrun cases. No original assertion or source file was modified. This targeted selection repairs the access failures reported by the broader task327 checkpoint. It is not a full core/addon/demo pass.
 
 The source oracle bundles read-only `source_repo/src/browser/public/Terminal.ts` and its source imports into temporary test artifacts. Normal invocation compares captures against the retained fixture; only `--generate` updates expected captures. The shared cases and key source files have SHA256 receipts. Rust tests compare complete captured JSON objects against those source captures. The original-suite runner retains its own source/build/runtime identities.
 
@@ -22,9 +24,9 @@ Raw source captures, browser results/logs, original Playwright JSON and summary,
 
 ## Independent review
 
-The isolated task375 reviewer accepted source commit `884e080` with no findings or file edits. It reran workspace formatting, warning-denied focused WASM Clippy and regression-target compilation. It verified the three retained source captures agree, the freshly compiled WASM hash matches the recorded five-test browser artifact, and the raw original Playwright report has462 discovered,437 passed,25 skipped and no failures or unrun cases. It did not independently rerun browsers because the resource grant was pending.
+The initial isolated task375 reviewer accepted source commit `884e080` with no findings or file edits. It reran workspace formatting, warning-denied focused WASM Clippy and regression-target compilation. It verified the three retained source captures agree, the freshly compiled WASM hash matches the recorded five-test browser artifact, and the raw original Playwright report has462 discovered,437 passed,25 skipped and no failures or unrun cases. It did not independently rerun browsers because the resource grant was pending.
 
-After the review grant arrived, the owner reran the tightened source script in default equality-check mode and all five Rust WASM tests in all three browsers. Both passed. The retained `source-report.json` now includes public Terminal, MouseStateService, InputHandler and shared-case hashes. The `final-*` reports/logs preserve this rerun. This post-review execution did not change production source.
+After the review grant arrived, the owner reran the tightened source script in default equality-check mode and all five Rust WASM tests in all three browsers. Both passed. The retained `source-report.json` now includes public Terminal, MouseStateService, InputHandler and shared-case hashes. The `final-*` reports/logs preserve this rerun. This post-review execution did not change production source. The later integration provenance audit identified the reused old branch, so the task was reopened rather than treating this initial acceptance as verification of current main. The fresh `1729d89` union described above was rerun before resuming independent review.
 
 ## Reproduction
 
