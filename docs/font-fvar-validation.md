@@ -30,7 +30,7 @@ SOURCE_PACKAGE_JSON=PATH_TO_REFERENCE/package.json node scripts/ligature-addon-o
 cargo test --locked -j2 -p xterm-addons --test font_fvar_constructor
 cargo test --locked -j2 -p xterm-addons --test font_metadata_constructor --test font_buffer_mutations
 cargo test --locked -j2 -p xterm-addons --lib ligatures
-cargo clippy --locked -j2 -p xterm-addons --all-targets --all-features -- -D warnings
+cargo clippy --locked -j2 --workspace --all-targets --all-features -- -D warnings
 cargo clippy --locked -j2 -p xterm-font-addons --target wasm32-unknown-unknown --test font_fvar_browser -- -D warnings
 WASM_PACKAGE=xterm-font-addons WASM_TEST=font_fvar_browser node scripts/browser-host-check.mjs
 cargo fmt --all -- --check
@@ -42,7 +42,7 @@ The initial Windows native279-case comparisons pass. The retained four metadata 
 
 At the initial279-case checkpoint, both Rust test functions pass in Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4. Each engine executes the typed constructor comparison and the actual-addon test's five result records. `browser.json` retains the command outcomes and artifact/source hashes. The first browser attempt executed zero Rust tests because wasm-bindgen had not packaged the scenario's transitive helper import. An explicit WASM import now supplies the existing helper through a callback. `browser-packaging-failure.json` preserves that initial failure. No source assertion changed.
 
-The final287-case union uses accepted407 source690c9677, including accepted406 mutable-buffer and408 SVG changes. Its shared read phase parses GSUB, validates fvar, then validates META using the same refreshed bytes. Original descriptor selection and constructor-before-ligature-tree ordering remain intact. Final union execution is pending.
+The final287-case union uses accepted407 source690c9677, including accepted406 mutable-buffer and408 SVG changes. Its shared read phase parses GSUB, validates fvar, then validates META using the same refreshed bytes. Original descriptor selection and constructor-before-ligature-tree ordering remain intact. All287 typed constructor comparisons pass natively and in the constructor test on each of the same three browser engines. Both browser test functions pass per engine. `browser-union.json` is the final receipt. The retained1830 metadata cases,183 SVG cases,39 warning-mutation cases and192 warning cases pass in seven native test functions, followed by seven ligature unit tests. Bypassing only fvar validation on this union produces218 mismatches in `negative-control-union.log`; the restored source passes. Warning-denied all-target/all-feature workspace Clippy and the focused WASM test Clippy pass. These are scoped execution facts, not a complete workspace test or final platform matrix pass.
 
 Full unchanged suites, real Terminal font/render interactions, native Linux/macOS execution and the final stable workspace matrix remain separate requirements. No performance or full-equivalence claim follows from these constructor cases.
 
