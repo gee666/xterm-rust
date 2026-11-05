@@ -39,6 +39,10 @@ The baseline uses unchanged producer files from main4a38b522 with only the new W
 
 `results/search-empty-options/` retains source, baseline, final browser reports, native/lint logs and a hash-pinned summary. Browser/compiler binaries referenced by reports are temporary build outputs, not committed distribution artifacts. The bounded runners close their own browsers and servers. Native Windows results are not native Linux/macOS runtime evidence.
 
+## Independent review
+
+Task357 accepted commit05ae2d3. The isolated reviewer independently reran native30/30, scoped warning-denied Clippy and full workspace formatting. It verified all nine implementation/test hashes, all776 reference-manifest entries and retained baseline/fixed compiler, WASM and binding hashes. It inspected browser evidence without starting a new matrix. No tracked files changed during review.
+
 ## Scope still open
 
 This does not close raw-search347 or full-family322. Truthy non-string and boxed/overridden terms, term validity/error precedence, identity-cached object terms, per-line repeated matching getters, null matching options and refresh object spread still need source-phased matching. Matching-flag getters that replace the stored request through nested search remain part of347; this change verifies nested decoration getters, not that larger flag-replacement contract. The unchanged original81-case browser suite was not rerun for357. Its earlier344 receipt is separate; the fresh eight-function suite is not a substitute. Overall equivalence remains NOT PROVEN.
