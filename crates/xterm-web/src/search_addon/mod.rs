@@ -10,6 +10,15 @@ use wasm_bindgen::{prelude::*, JsCast};
 use xterm_addons::search::{SearchAddon as NativeAddon, SearchOptionsHandle};
 use xterm_core::{event::Event, lifecycle::DisposableHandle};
 
+// The locked wasm-bindgen cannot use Option<JsValue>. An opaque `any`
+// preserves raw values while emitting optional TypeScript arguments. Null and
+// undefined both skip optional chaining, so their shared None is intentional.
+#[wasm_bindgen]
+extern "C" {
+    #[wasm_bindgen(typescript_type = "any")]
+    pub type SearchArgument;
+}
+
 #[wasm_bindgen]
 pub struct SearchSubscription {
     handle: DisposableHandle,
@@ -93,8 +102,11 @@ impl SearchAddon {
         &self,
         term: JsValue,
         options: JsValue,
-        internal_options: JsValue,
+        internal_options: Option<SearchArgument>,
     ) -> Result<bool, JsValue> {
+        let internal_options = internal_options
+            .map(JsValue::from)
+            .unwrap_or(JsValue::UNDEFINED);
         self.addon
             .find_next_with_scroll(&options::term(term)?, request(options), || {
                 options::no_scroll(&internal_options)
@@ -106,8 +118,11 @@ impl SearchAddon {
         &self,
         term: JsValue,
         options: JsValue,
-        internal_options: JsValue,
+        internal_options: Option<SearchArgument>,
     ) -> Result<bool, JsValue> {
+        let internal_options = internal_options
+            .map(JsValue::from)
+            .unwrap_or(JsValue::UNDEFINED);
         self.addon
             .find_previous_with_scroll(&options::term(term)?, request(options), || {
                 options::no_scroll(&internal_options)
@@ -115,9 +130,14 @@ impl SearchAddon {
             .map_err(|cause| error(&cause))
     }
     #[wasm_bindgen(js_name = clearDecorations)]
-    pub fn clear_decorations(&self, retain_cached_term: JsValue) -> Result<(), JsValue> {
+    pub fn clear_decorations(
+        &self,
+        retain_cached_term: Option<SearchArgument>,
+    ) -> Result<(), JsValue> {
         self.addon
-            .clear_decorations(retain_cached_term.is_truthy())
+            .clear_decorations(
+                retain_cached_term.is_some_and(|value| JsValue::from(value).is_truthy()),
+            )
             .map_err(|cause| error(&cause))
     }
     #[wasm_bindgen(js_name = clearActiveDecoration)]

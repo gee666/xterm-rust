@@ -7,6 +7,7 @@ import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { withArtifactServer } from './browser-artifact-server.mjs';
+import { referenceIntegrity } from './upstream-baseline-utils.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const reference = resolve(process.env.SOURCE_ROOT ?? resolve(root, 'source_repo'));
@@ -23,6 +24,9 @@ const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 await mkdir(temporary, {recursive: true});
 await mkdir(output, {recursive: true});
 try {
+  const manifest = JSON.parse(await readFile(resolve(root, 'docs/baseline/reference-manifest.json'), 'utf8'));
+  report.integrityBefore = referenceIntegrity(reference, manifest);
+  assert.equal(report.integrityBefore.mismatches.length, 0, 'Original source changed');
   const sourcePaths = ['addons/addon-search/src/SearchAddon.ts', 'addons/addon-search/src/SearchState.ts',
     'addons/addon-search/src/SearchEngine.ts', 'addons/addon-search/src/DecorationManager.ts',
     'addons/addon-search/src/SearchLineCache.ts', 'addons/addon-search/src/SearchResultTracker.ts'];
@@ -80,6 +84,8 @@ try {
     }
   });
   report.referenceAfter = await hashes();
+  report.integrityAfter = referenceIntegrity(reference, manifest);
+  assert.equal(report.integrityAfter.mismatches.length, 0, 'Original source changed during run');
   assert.deepEqual(report.referenceAfter, report.referenceBefore, 'Search reference changed');
   assert.ok(report.browsers.every(entry => entry.status === 'passed'), 'Source search argument assertions failed');
   report.status = 'passed';
