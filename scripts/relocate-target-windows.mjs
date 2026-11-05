@@ -45,7 +45,7 @@ async function main() {
   const destFree = await statfs(existing, { bigint: true });
   const directory = join(root, 'results', 'quality', `target-relocation-${Date.now()}-${process.pid}-${randomUUID().slice(0, 8)}`);
   const toolHashes = {};
-  for (const name of ['relocate-target-windows.mjs', 'target-relocation.mjs', 'quality-idle.mjs', 'build-slot-core.mjs']) {
+  for (const name of ['relocate-target-windows.mjs', 'target-relocation.mjs', 'quality-idle.mjs']) {
     toolHashes[`scripts/${name}`] = createHash('sha256').update(await readFile(join(root, 'scripts', name))).digest('hex');
   }
   await mkdir(directory, { recursive: true });
