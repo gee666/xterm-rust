@@ -23,6 +23,10 @@ Run source replay, formatting, debug/release Rust suites and warning-denying Cli
 node scripts/check-mouse-state.mjs
 ```
 
-This includes `mouse_state`, `mouse_callbacks` and independently written `mouse_differential` tests. It writes `results/mouse-state/verification.json` and per-command logs, enforces a 512 MiB free-space preflight, preserves shared build profiles, and fails honestly on any shared-module build or lint error.
+This includes `mouse_state`, `mouse_callbacks`, `mouse_custom`, independently written `mouse_differential`, and `mouse_registry_names` tests. It writes `results/mouse-state/verification.json` and per-command logs, enforces a 1 GiB free-space preflight, preserves shared build profiles, and fails honestly on any shared-module build or lint error.
 
-A separate `scripts/mouse-raw-button-oracle.mjs` checks 4,200 signed-button rows against unchanged source, including DOM button -1 and int32 extremes. The full checker invokes both source oracles and 26 Rust tests per profile, including custom mutable encoders, shared protocol edits and retained callback errors. The corpora are behavioral evidence for the mouse service, not for DOM event routing or the full terminal.
+A separate `scripts/mouse-raw-button-oracle.mjs` checks 4,200 signed-button rows against unchanged source, including DOM button -1 and int32 extremes. The full checker invokes both source oracles and 29 Rust integration tests per profile, including custom mutable encoders, shared protocol edits, retained callback errors and registry name order. Coordinate heavy jobs through the current resource owner, with Cargo `-j2` and owned O: target/TEMP/TMP. Do not use the retired build-slot queue.
+
+The name-order fixture records three unchanged-source sequences, 178 registrations and 187 snapshots for each registry at seed `0x51a7e501`. It covers array-index boundaries, noncanonical numeric-looking keys, replacements, reset and disposal. `protocol_names` and `encoding_names` represent source `Object.keys` on own string registrations. Raw inherited lookup and `__proto__` mutation remain separate. Run helper tests with `cargo test -p xterm-core --lib object_keys`.
+
+The corpora are behavioral evidence for the mouse service, not for DOM event routing or the full terminal.

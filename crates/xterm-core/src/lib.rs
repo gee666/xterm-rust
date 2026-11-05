@@ -17,6 +17,7 @@ pub mod log_service;
 pub mod mouse_fields;
 pub mod mouse_state;
 pub mod multi_key_map;
+mod object_keys;
 pub mod options;
 pub mod osc_link_service;
 pub mod platform;

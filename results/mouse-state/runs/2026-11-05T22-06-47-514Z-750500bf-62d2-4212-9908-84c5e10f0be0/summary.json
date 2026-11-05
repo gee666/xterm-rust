@@ -1,0 +1,338 @@
+{
+  "status": "passed",
+  "terminalEquivalence": "NOT PROVEN",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "commands": [
+    {
+      "command": [
+        "rustc",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 35.291799999999995,
+      "status": "passed",
+      "name": "rust-version",
+      "log": "results/mouse-state/runs/2026-11-05T22-06-47-514Z-750500bf-62d2-4212-9908-84c5e10f0be0/rust-version.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 34.74010000000001,
+      "status": "passed",
+      "name": "cargo-version",
+      "log": "results/mouse-state/runs/2026-11-05T22-06-47-514Z-750500bf-62d2-4212-9908-84c5e10f0be0/cargo-version.log"
+    },
+    {
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/mouse-state-oracle.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 308.0639,
+      "status": "passed",
+      "name": "oracle-replay",
+      "log": "results/mouse-state/runs/2026-11-05T22-06-47-514Z-750500bf-62d2-4212-9908-84c5e10f0be0/oracle-replay.log"
+    },
+    {
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/mouse-raw-button-oracle.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 210.66349999999994,
+      "status": "passed",
+      "name": "raw-button-oracle",
+      "log": "results/mouse-state/runs/2026-11-05T22-06-47-514Z-750500bf-62d2-4212-9908-84c5e10f0be0/raw-button-oracle.log"
+    },
+    {
+      "command": [
+        "rustfmt",
+        "--check",
+        "--edition",
+        "2021",
+        "crates/xterm-core/src/mouse_state.rs",
+        "crates/xterm-core/src/mouse_protocol.rs",
+        "crates/xterm-core/src/object_keys.rs",
+        "crates/xterm-core/src/unicode_service.rs",
+        "crates/xterm-core/tests/mouse_state.rs",
+        "crates/xterm-core/tests/mouse_callbacks.rs",
+        "crates/xterm-core/tests/mouse_differential.rs",
+        "crates/xterm-core/tests/mouse_custom.rs",
+        "crates/xterm-core/tests/mouse_registry_names.rs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 66.57180000000005,
+      "status": "passed",
+      "name": "rustfmt",
+      "log": "results/mouse-state/runs/2026-11-05T22-06-47-514Z-750500bf-62d2-4212-9908-84c5e10f0be0/rustfmt.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "xterm-core",
+        "--test",
+        "mouse_state",
+        "--test",
+        "mouse_callbacks",
+        "--test",
+        "mouse_differential",
+        "--test",
+        "mouse_custom",
+        "--test",
+        "mouse_registry_names"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 345.9983,
+      "status": "passed",
+      "name": "debug-tests",
+      "log": "results/mouse-state/runs/2026-11-05T22-06-47-514Z-750500bf-62d2-4212-9908-84c5e10f0be0/debug-tests.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "-p",
+        "xterm-core",
+        "--test",
+        "mouse_state",
+        "--test",
+        "mouse_callbacks",
+        "--test",
+        "mouse_differential",
+        "--test",
+        "mouse_custom",
+        "--test",
+        "mouse_registry_names"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 38780.9446,
+      "status": "passed",
+      "name": "release-tests",
+      "log": "results/mouse-state/runs/2026-11-05T22-06-47-514Z-750500bf-62d2-4212-9908-84c5e10f0be0/release-tests.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "-p",
+        "xterm-core",
+        "--test",
+        "mouse_state",
+        "--test",
+        "mouse_callbacks",
+        "--test",
+        "mouse_differential",
+        "--test",
+        "mouse_custom",
+        "--test",
+        "mouse_registry_names",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 7214.2595,
+      "status": "passed",
+      "name": "clippy",
+      "log": "results/mouse-state/runs/2026-11-05T22-06-47-514Z-750500bf-62d2-4212-9908-84c5e10f0be0/clippy.log"
+    }
+  ],
+  "scope": "Typed MouseStateService only. Dynamic prototype registry task171, DOM routing and whole-terminal/native Linux/macOS equivalence are not established.",
+  "implementationHashes": {
+    "crates/xterm-core/src/mouse_state.rs": "9fa6657a9b425be16581e61a204208ab61b309ed91fc4031bcf69a3625240e81",
+    "crates/xterm-core/src/mouse_protocol.rs": "5580ef554f69776e3eb04927e1c2a0dae78897b05c262d1ceeb2f0a670ef2236",
+    "crates/xterm-core/src/object_keys.rs": "b63532ea79b2abed816eb4c3a8f6f581f6f6f010604995ac380d942bda8e0f8d",
+    "crates/xterm-core/src/unicode_service.rs": "c9246f4966af1e2dbb6bbf91cf0663c6cc171b8afc2ec552fd0b475787ec9f20",
+    "crates/xterm-core/tests/mouse_state.rs": "36e5c3bc58f61437851d3c1085290aebe01ef98ca6c25a329d91710b38b636a7",
+    "crates/xterm-core/tests/mouse_callbacks.rs": "4b01291812603db1b10af4e573b5cda838ae85279a962f420f1cc81e5c9927e3",
+    "crates/xterm-core/tests/mouse_differential.rs": "bf85eb263f9d3e03a42eb3b514ddb28afef47cc43b2d9dbcc987a6c51b42a472",
+    "crates/xterm-core/tests/mouse_custom.rs": "86376b169ac221f268c2665068c3e12f0290401b4b4fca09cf321d7ad0cf1bb9",
+    "crates/xterm-core/tests/mouse_registry_names.rs": "1c8d422ac022dab13d4cd7fd24f5b1cb2df17cb6c0afa88489ca8ee9179f045b"
+  },
+  "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+  "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+  "rust": {
+    "debug": {
+      "passed": 29,
+      "failed": 0,
+      "ignored": 0,
+      "suites": 5
+    },
+    "release": {
+      "passed": 29,
+      "failed": 0,
+      "ignored": 0,
+      "suites": 5
+    },
+    "upstreamMapped": 8,
+    "targetedAdditional": 19,
+    "differentialTests": 2
+  },
+  "sourceHashes": {
+    "source_repo/src/common/services/MouseStateService.test.ts": "041ecc7a5482d76209e6858f5bb594babce8674e3e161f2f2e1085100e559635",
+    "source_repo/src/common/services/MouseStateService.ts": "1b562be54a3ea3d91c565ac8d94239f8e219cb82ff735388a3650170a993d5ee",
+    "source_repo/src/common/Types.ts": "55f33764a24eae132a8c0bbabd6770355ef1fc3d6110eb6645e41cae15b80cb8",
+    "source_repo/src/common/Lifecycle.ts": "e00016aae991e24137ab066778912414f4af959f2b26baecf47ec542ad313a83",
+    "source_repo/src/common/Event.ts": "aa374272c5ec5c0d6992d6072687211a94676b086a2505b0414ddd20cf57d641"
+  },
+  "upstream": {
+    "discovered": 8,
+    "executed": 8,
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0
+  },
+  "customAssertions": {
+    "executed": 4,
+    "passed": 4,
+    "outcomes": [
+      {
+        "name": "custom encoding mutates the original event",
+        "status": "passed"
+      },
+      {
+        "name": "protocol object identity remains live across services",
+        "status": "passed"
+      },
+      {
+        "name": "protocol replacement finishes the captured current callback",
+        "status": "passed"
+      },
+      {
+        "name": "activation callback preserves thrown error identity and state",
+        "status": "passed"
+      }
+    ]
+  },
+  "registryNames": {
+    "seed": 1369957633,
+    "cases": [
+      {
+        "name": "canonical-boundaries",
+        "registrations": 34,
+        "snapshots": 37
+      },
+      {
+        "name": "replacement-order",
+        "registrations": 14,
+        "snapshots": 17
+      },
+      {
+        "name": "seeded-mixed-and-replaced",
+        "registrations": 130,
+        "snapshots": 133
+      }
+    ],
+    "corpusSha256": "a8d41afe7b2ad27fe4f4be5c5d8bf949d1daddcec593f2a8ef36e6f48e29780a"
+  },
+  "differential": {
+    "seed": 7146078,
+    "traces": 12226,
+    "corpusSha256": "9243dcf4f617764939affafafdefc5e52f5d78bf6cefbefe429533de9d496561"
+  },
+  "rawButtons": {
+    "node": "v24.15.0",
+    "platform": "win32",
+    "esbuild": "0.28.1",
+    "sourceHashes": {
+      "source_repo/src/common/Types.ts": "55f33764a24eae132a8c0bbabd6770355ef1fc3d6110eb6645e41cae15b80cb8",
+      "source_repo/src/common/Lifecycle.ts": "e00016aae991e24137ab066778912414f4af959f2b26baecf47ec542ad313a83",
+      "source_repo/src/common/Event.ts": "aa374272c5ec5c0d6992d6072687211a94676b086a2505b0414ddd20cf57d641",
+      "source_repo/src/common/services/MouseStateService.ts": "1b562be54a3ea3d91c565ac8d94239f8e219cb82ff735388a3650170a993d5ee"
+    },
+    "buttons": [
+      -1,
+      -2,
+      -32768,
+      32767,
+      -2147483648,
+      2147483647,
+      4
+    ],
+    "rows": 4200,
+    "fixture": "crates/xterm-core/tests/fixtures/mouse-raw-buttons.tsv",
+    "fixtureSha256": "a46fcf33492b2b64dd51680061362c71f2242ae00ab1a64412d23ed8ef7bb178",
+    "canonicalSha256": "a46fcf33492b2b64dd51680061362c71f2242ae00ab1a64412d23ed8ef7bb178",
+    "scope": "Raw signed/bitwise mouse button compatibility only; not browser routing or terminal equivalence."
+  },
+  "implementationHashesAfter": {
+    "crates/xterm-core/src/mouse_state.rs": "9fa6657a9b425be16581e61a204208ab61b309ed91fc4031bcf69a3625240e81",
+    "crates/xterm-core/src/mouse_protocol.rs": "5580ef554f69776e3eb04927e1c2a0dae78897b05c262d1ceeb2f0a670ef2236",
+    "crates/xterm-core/src/object_keys.rs": "b63532ea79b2abed816eb4c3a8f6f581f6f6f010604995ac380d942bda8e0f8d",
+    "crates/xterm-core/src/unicode_service.rs": "c9246f4966af1e2dbb6bbf91cf0663c6cc171b8afc2ec552fd0b475787ec9f20",
+    "crates/xterm-core/tests/mouse_state.rs": "36e5c3bc58f61437851d3c1085290aebe01ef98ca6c25a329d91710b38b636a7",
+    "crates/xterm-core/tests/mouse_callbacks.rs": "4b01291812603db1b10af4e573b5cda838ae85279a962f420f1cc81e5c9927e3",
+    "crates/xterm-core/tests/mouse_differential.rs": "bf85eb263f9d3e03a42eb3b514ddb28afef47cc43b2d9dbcc987a6c51b42a472",
+    "crates/xterm-core/tests/mouse_custom.rs": "86376b169ac221f268c2665068c3e12f0290401b4b4fca09cf321d7ad0cf1bb9",
+    "crates/xterm-core/tests/mouse_registry_names.rs": "1c8d422ac022dab13d4cd7fd24f5b1cb2df17cb6c0afa88489ca8ee9179f045b"
+  },
+  "runId": "2026-11-05T22-06-47-514Z-750500bf-62d2-4212-9908-84c5e10f0be0"
+}

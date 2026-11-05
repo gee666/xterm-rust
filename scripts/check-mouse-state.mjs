@@ -16,8 +16,10 @@ const attempt = createEvidenceRun(resultRoot, { kind: 'scoped-mouse-state' });
 const portable = file => path.relative(root, file).split(path.sep).join('/');
 const files = [
   'crates/xterm-core/src/mouse_state.rs', 'crates/xterm-core/src/mouse_protocol.rs',
+  'crates/xterm-core/src/object_keys.rs', 'crates/xterm-core/src/unicode_service.rs',
   'crates/xterm-core/tests/mouse_state.rs', 'crates/xterm-core/tests/mouse_callbacks.rs',
-  'crates/xterm-core/tests/mouse_differential.rs', 'crates/xterm-core/tests/mouse_custom.rs'
+  'crates/xterm-core/tests/mouse_differential.rs', 'crates/xterm-core/tests/mouse_custom.rs',
+  'crates/xterm-core/tests/mouse_registry_names.rs'
 ];
 const report = { status: 'incomplete', terminalEquivalence: 'NOT PROVEN', platform: process.platform,
   node: process.version, commands: [],
@@ -58,25 +60,26 @@ try {
   await run('raw-button-oracle', process.execPath, ['scripts/mouse-raw-button-oracle.mjs']);
   await run('rustfmt', process.env.RUSTFMT || 'rustfmt', ['--check', '--edition', '2021', ...files]);
   const targets = ['-p', 'xterm-core', '--test', 'mouse_state', '--test', 'mouse_callbacks',
-    '--test', 'mouse_differential', '--test', 'mouse_custom'];
+    '--test', 'mouse_differential', '--test', 'mouse_custom', '--test', 'mouse_registry_names'];
   const debug = await run('debug-tests', cargo, ['test', '--locked', ...targets]);
   const release = await run('release-tests', cargo, ['test', '--locked', '--release', ...targets]);
   await run('clippy', cargo, ['clippy', '--locked', ...targets, '--all-features', '--', '-D', 'warnings']);
   report.rust = { debug: counts(debug), release: counts(release), upstreamMapped: 8,
-    targetedAdditional: 16, differentialTests: 2 };
+    targetedAdditional: 19, differentialTests: 2 };
   if (report.commands.find(command => command.name === 'oracle-replay')?.status === 'passed') {
     const oracle = JSON.parse(readFileSync(path.join(resultRoot, 'oracle.json'), 'utf8'));
     report.sourceHashes = oracle.sourceHashes;
     report.upstream = oracle.upstream;
     report.customAssertions = oracle.customAssertions;
+    report.registryNames = oracle.registryNames;
     report.differential = { seed: oracle.seed, traces: oracle.traces, corpusSha256: oracle.corpusSha256 };
   }
   if (report.commands.find(command => command.name === 'raw-button-oracle')?.status === 'passed') {
     report.rawButtons = JSON.parse(readFileSync(path.join(resultRoot, 'raw-buttons-oracle.json'), 'utf8'));
   }
   assert(report.commands.every(command => command.status === 'passed'), 'scoped command failed; inspect immutable attempt logs');
-  assert.equal(report.rust.debug.passed, 26);
-  assert.equal(report.rust.release.passed, 26);
+  assert.equal(report.rust.debug.passed, 29);
+  assert.equal(report.rust.release.passed, 29);
   report.implementationHashesAfter = hashes();
   assert.deepEqual(report.implementationHashesAfter, report.implementationHashes, 'mouse implementation changed during execution');
   report.status = 'passed';

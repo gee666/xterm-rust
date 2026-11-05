@@ -1,0 +1,94 @@
+{
+  "task": 501,
+  "base": "5088f8fdd475e55b2408e9f2e7bfaf92e83ca656",
+  "status": "passed",
+  "equivalence": "NOT PROVEN",
+  "platform": "native Windows",
+  "rustc": "1.85.1",
+  "cargo": "1.85.1",
+  "node": "v24.15.0",
+  "commands": [
+    {
+      "command": "cargo test --locked -j2 -p xterm-core --all-targets --all-features",
+      "log": "native-core.log",
+      "status": "passed",
+      "passed": 1571,
+      "sha256": "0e720ceaafa9835e305bb538671f36f920680c6b1f60af0be81e4b7a06695126"
+    },
+    {
+      "command": "node scripts/check-mouse-state.mjs",
+      "log": "scoped-check.log",
+      "status": "passed",
+      "passed": 58,
+      "sha256": "a00f110f51ae04405edfc225b07175809bdc4ecbecaf51d9a2a834ea9143f967"
+    },
+    {
+      "command": "node tmp/old-registry-order.mjs",
+      "log": "negative-driver.log",
+      "status": "passed",
+      "passed": 3,
+      "sha256": "1ddc3693c6e529134cfa25ceacc31321980d65854eaa7ccf5c2bd971bbef0199"
+    },
+    {
+      "command": "cargo test --locked -j2 --release -p xterm-core --test unicode_service --test unicode_service_differential",
+      "log": "release-unicode.log",
+      "status": "passed",
+      "passed": 20,
+      "sha256": "0bc84a2cd65372587d6f547de5de1edd8aa8352dd963343c3679ee28d00a453c"
+    },
+    {
+      "command": "cargo clippy --locked -j2 -p xterm-core --all-targets --all-features -- -D warnings",
+      "log": "clippy-core.log",
+      "status": "passed",
+      "sha256": "c7846526adf7669fb211fce5175cac0d7ac3a584a3abc8afcbff6c9fa5bf50dc"
+    },
+    {
+      "command": "cargo clippy --locked -j2 --workspace --all-targets --all-features -- -D warnings",
+      "log": "clippy-native-workspace.log",
+      "status": "passed",
+      "sha256": "cce0031c20094d3ce6ea15e2b035196121904af0b8596374f3a5d1d5bb541217"
+    },
+    {
+      "command": "cargo clippy --locked -j2 --target wasm32-unknown-unknown --workspace --all-features --lib -- -D warnings",
+      "log": "clippy-wasm.log",
+      "status": "passed",
+      "sha256": "77307eb58a2b819f72ebc5ae0227d839b84743f2d96f3b63e93addd05ac647fc"
+    }
+  ],
+  "source": {
+    "unchangedTests": 8,
+    "existingTraces": 12226,
+    "registrySequences": 3,
+    "registrationOperations": 178,
+    "snapshotsPerRegistry": 187,
+    "registrySeed": 1369957633
+  },
+  "negative": {
+    "baseRuntimePassed": 0,
+    "baseRuntimeFailed": 3,
+    "finalPassed": 3,
+    "byteRestoration": true
+  },
+  "formatting": {
+    "exactWorkspace": "failed: Windows OS206 argument length",
+    "members": {
+      "xterm-core": "passed",
+      "xterm-addons": "passed",
+      "xterm-wasm-support": "passed",
+      "xterm-font-addons": "passed",
+      "xterm-web": "passed"
+    }
+  },
+  "unrun": [
+    "full workspace runtime matrix",
+    "native Linux/macOS",
+    "full original source/browser/demo suites",
+    "matched performance/size/LoC comparison"
+  ],
+  "remaining": [
+    "raw ordinary-object/prototype mouse registries",
+    "browser wheel method facade",
+    "non-string keys and callbacks",
+    "whole port equivalence"
+  ]
+}

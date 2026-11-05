@@ -92,22 +92,16 @@ impl<W> MouseStateService<W> {
         self.on_protocol_change.event()
     }
 
+    /// Own registration names in source `Object.keys` order, not lookup order.
     pub fn protocol_names(&self) -> Vec<String> {
-        self.state
-            .borrow()
-            .protocols
-            .iter()
-            .map(|entry| entry.0.clone())
-            .collect()
+        let state = self.state.borrow();
+        crate::object_keys::ordered_names(state.protocols.iter().map(|entry| entry.0.as_str()))
     }
 
+    /// Own encoding names use the same numeric-index ordering as protocols.
     pub fn encoding_names(&self) -> Vec<String> {
-        self.state
-            .borrow()
-            .encodings
-            .iter()
-            .map(|entry| entry.0.clone())
-            .collect()
+        let state = self.state.borrow();
+        crate::object_keys::ordered_names(state.encodings.iter().map(|entry| entry.0.as_str()))
     }
 
     pub fn add_protocol(&self, name: impl Into<String>, protocol: MouseProtocol) {

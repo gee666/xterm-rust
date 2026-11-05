@@ -135,6 +135,56 @@ customCase('activation callback preserves thrown error identity and state', () =
   assert.throws(() => { service.activeProtocol = 'ANY'; }, error => error === failure);
   assert.equal(service.activeProtocol, 'ANY');
 });
+// Native name-list methods represent Object.keys on the source's private
+// registries. Prototype mutation and non-string keys are separate contracts.
+const registryRows = [];
+const registryCases = [];
+function registryCase(name, names) {
+  const service = new MouseStateService();
+  registryRows.push(['case', name].join('\t'));
+  const snapshot = () => {
+    registryRows.push(['protocols', ...Object.keys(service._protocols)].join('\t'));
+    registryRows.push(['encodings', ...Object.keys(service._encodings)].join('\t'));
+  };
+  const add = name => {
+    service.addProtocol(name, { events: 1, restrict: () => true });
+    service.addEncoding(name, () => 'custom');
+    registryRows.push(['add', name].join('\t'));
+    snapshot();
+  };
+  snapshot();
+  names.forEach(add);
+  service.reset(); registryRows.push('reset'); snapshot();
+  service.dispose(); registryRows.push('dispose'); snapshot();
+  add('2'); add('after-dispose');
+  registryCases.push({ name, registrations: names.length + 2, snapshots: names.length + 5 });
+}
+registryCase('canonical-boundaries', [
+  'text', '10', '2', '0', '', '4294967294', '4294967295', '4294967296',
+  '2147483648', '2147483647', '99', '100', '1', '01', '00', '+0', '+1', '-0',
+  '-1', '1.0', '1e0', '0x10', ' 1', '1 ', '١', '１', '😀', 'constructor',
+  'toString', 'hasOwnProperty', '__proto__ ', '18446744073709551616'
+]);
+registryCase('replacement-order', [
+  '3', 'text', '1', '3', 'text', 'DEFAULT', 'NONE', '01', '1', 'DEFAULT', 'X10', 'SGR'
+]);
+const registrySeed = 0x51a7e501;
+let registryState = registrySeed;
+const seededNames = [];
+for (let index = 0; index < 128; index++) {
+  registryState ^= registryState << 13;
+  registryState ^= registryState >>> 17;
+  registryState ^= registryState << 5;
+  const number = String(registryState >>> 0);
+  const choices = [number, '0' + number, '+' + number, number + '.0', 'name-' + number];
+  seededNames.push(index % 7 === 0 && index > 0 ? seededNames[index - 1] : choices[index % choices.length]);
+}
+registryCase('seeded-mixed-and-replaced', seededNames);
+const registryFixture = 'crates/xterm-core/tests/fixtures/mouse-registry-names.tsv';
+const registryCorpus = registryRows.join('\n') + '\n';
+if (process.argv.includes('--generate')) await writeFile(registryFixture, registryCorpus);
+else assert.equal((await readFile(registryFixture, 'utf8')).replace(/\r\n/g, '\n'), registryCorpus,
+  'Mouse registry names differ from unchanged source');
 const fixture = 'crates/xterm-core/tests/fixtures/mouse-state.tsv';
 const corpus = `${rows.join('\n')}\n`;
 await mkdir(path.dirname(fixture), { recursive: true });
@@ -143,6 +193,8 @@ else assert.equal((await readFile(fixture, 'utf8')).replace(/\r\n/g, '\n'), corp
 const report = {
   node: process.version, platform: process.platform, sourceHashes: hashes, seed, traces: rows.length,
   corpusSha256: createHash('sha256').update(corpus).digest('hex'),
+  registryNames: { seed: registrySeed, cases: registryCases,
+    corpusSha256: createHash('sha256').update(registryCorpus).digest('hex') },
   customAssertions: { executed: customOutcomes.length, passed: customOutcomes.length, outcomes: customOutcomes },
   schema: ['protocol', 'encoding', 'col', 'row', 'x', 'y', 'button', 'action', 'ctrl', 'alt', 'shift',
     'accepted', 'resultCtrl', 'resultAlt', 'resultShift', 'utf16HexUnits'],

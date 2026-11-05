@@ -73,21 +73,7 @@ impl UnicodeService {
     /// Numeric array-index version names sort first, matching `Object.keys`.
     pub fn versions(&self) -> Vec<String> {
         let state = self.state.borrow();
-        let mut indexed = Vec::new();
-        let mut named = Vec::new();
-        for (version, _) in &state.providers {
-            if let Some(index) = array_index(version) {
-                indexed.push((index, version.clone()));
-            } else {
-                named.push(version.clone());
-            }
-        }
-        indexed.sort_unstable_by_key(|entry| entry.0);
-        indexed
-            .into_iter()
-            .map(|entry| entry.1)
-            .chain(named)
-            .collect()
+        crate::object_keys::ordered_names(state.providers.iter().map(|entry| entry.0.as_str()))
     }
 
     pub fn active_version(&self) -> String {
@@ -265,11 +251,6 @@ mod tests {
             Err(UnicodeServiceError::WidthOverflow)
         );
     }
-}
-
-fn array_index(value: &str) -> Option<u32> {
-    let index: u32 = value.parse().ok()?;
-    (index != u32::MAX && index.to_string() == value).then_some(index)
 }
 
 /// Public Unicode API view. Proposed-API access gating belongs to the terminal.

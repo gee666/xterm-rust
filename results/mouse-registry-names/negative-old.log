@@ -1,0 +1,42 @@
+
+running 3 tests
+test seeded_mixed_names_match_source_before_and_after_reset_disposal ... FAILED
+test canonical_numeric_boundaries_match_source_object_keys ... FAILED
+test replacements_preserve_named_insertion_order_and_numeric_order ... FAILED
+
+failures:
+
+---- seeded_mixed_names_match_source_before_and_after_reset_disposal stdout ----
+
+thread 'seeded_mixed_names_match_source_before_and_after_reset_disposal' panicked at crates\xterm-core\tests\mouse_registry_names.rs:40:21:
+assertion `left == right` failed: seeded-mixed-and-replaced: protocols
+  left: ["NONE", "X10", "VT200", "DRAG", "ANY", "234218434"]
+ right: ["234218434", "NONE", "X10", "VT200", "DRAG", "ANY"]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- canonical_numeric_boundaries_match_source_object_keys stdout ----
+
+thread 'canonical_numeric_boundaries_match_source_object_keys' panicked at crates\xterm-core\tests\mouse_registry_names.rs:40:21:
+assertion `left == right` failed: canonical-boundaries: protocols
+  left: ["NONE", "X10", "VT200", "DRAG", "ANY", "text", "10"]
+ right: ["10", "NONE", "X10", "VT200", "DRAG", "ANY", "text"]
+
+---- replacements_preserve_named_insertion_order_and_numeric_order stdout ----
+
+thread 'replacements_preserve_named_insertion_order_and_numeric_order' panicked at crates\xterm-core\tests\mouse_registry_names.rs:40:21:
+assertion `left == right` failed: replacement-order: protocols
+  left: ["NONE", "X10", "VT200", "DRAG", "ANY", "3"]
+ right: ["3", "NONE", "X10", "VT200", "DRAG", "ANY"]
+
+
+failures:
+    canonical_numeric_boundaries_match_source_object_keys
+    replacements_preserve_named_insertion_order_and_numeric_order
+    seeded_mixed_names_match_source_before_and_after_reset_disposal
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\RalphMouseNames\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 11.25s
+     Running tests\mouse_registry_names.rs (target\debug\deps\mouse_registry_names-610eed23aeb1e002.exe)
+error: test failed, to rerun pass `-p xterm-core --test mouse_registry_names`

@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import {readFileSync, writeFileSync} from 'node:fs';
+import {spawnSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+const file = 'crates/xterm-core/src/mouse_state.rs';
+const fixed = readFileSync(file);
+const hash = bytes => createHash('sha256').update(bytes).digest('hex');
+const original = spawnSync('git', ['show', '5088f8fd:' + file], {encoding:'buffer', timeout:30000});
+assert.equal(original.status, 0);
+const args = ['test', '--locked', '-j2', '-p', 'xterm-core', '--test', 'mouse_registry_names'];
+const report = {source:'5088f8fd', beforeSha256:hash(fixed), oldSha256:hash(original.stdout)};
+try {
+  writeFileSync(file, original.stdout);
+  const old = spawnSync('cargo', args, {encoding:'utf8', timeout:180000, maxBuffer:16*1024**2});
+  writeFileSync('results/mouse-registry-names/negative-old.log', (old.stdout ?? '') + (old.stderr ?? ''));
+  report.oldStatus = old.status;
+  assert.equal(old.error, undefined);
+  assert.equal(old.status, 101);
+  assert.match(old.stdout, /test result: FAILED\. 0 passed; 3 failed; 0 ignored;/);
+} finally {
+  writeFileSync(file, fixed);
+  report.afterSha256 = hash(readFileSync(file));
+  report.restored = report.afterSha256 === report.beforeSha256;
+  writeFileSync('results/mouse-registry-names/restoration.json', JSON.stringify(report,null,2)+'\n');
+}
+assert(report.restored);
+const final = spawnSync('cargo', args, {encoding:'utf8', timeout:180000, maxBuffer:16*1024**2});
+writeFileSync('results/mouse-registry-names/final-registry.log', (final.stdout ?? '') + (final.stderr ?? ''));
+assert.equal(final.error, undefined);
+assert.equal(final.status, 0);
+assert.match(final.stdout, /test result: ok\. 3 passed; 0 failed; 0 ignored;/);
+console.log(JSON.stringify({...report, finalStatus:final.status},null,2));
