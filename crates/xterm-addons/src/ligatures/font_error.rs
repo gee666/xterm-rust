@@ -13,6 +13,7 @@ pub enum FontError {
     GposLookupType(u16),
     GposFormat { offset: usize, kind: u16 },
     CffVersion { major: u8, minor: u8 },
+    CffOperand(u8),
     CoverageFormat { offset: usize },
     Invalid(&'static str),
     Type(&'static str),
@@ -37,6 +38,7 @@ impl fmt::Display for FontError {
             Self::CffVersion { major, minor } => {
                 write!(f, "Unsupported CFF table version {major}.{minor}")
             }
+            Self::CffOperand(byte) => write!(f, "Invalid b0 {byte}"),
             Self::GposVersion { major, minor } => write!(
                 f,
                 "Unsupported GPOS table version {}",

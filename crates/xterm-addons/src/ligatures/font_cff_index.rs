@@ -5,6 +5,9 @@ use super::super::{
 };
 use std::borrow::Cow;
 
+#[path = "font_cff2_dict.rs"]
+mod dict;
+
 struct Data<'a> {
     reader: Reader<'a>,
     compressed: Option<(&'a [u8], usize)>,
@@ -78,6 +81,16 @@ fn validate_data(data: Data<'_>, start: usize) -> Result<(), FontError> {
         )?;
     }
     index(&data, position, major > 1)?;
+    if major > 1 {
+        // CFF2 copies its bounded topDictLength bytes only after validating the
+        // global INDEX. The dictionary is a separate DataView, so operands may
+        // not consume following subroutine or whole-font bytes.
+        let start = i64::try_from(start).map_err(|_| FontError::Bounds)?;
+        let offset = start + i64::from(data.bytes(start + 2, 1)?[0]);
+        let length =
+            usize::try_from(data.count(start + 3, false)?).map_err(|_| FontError::Bounds)?;
+        dict::validate(&data.bytes(offset, length)?)?;
+    }
     Ok(())
 }
 fn offset(bytes: &[u8]) -> i64 {
