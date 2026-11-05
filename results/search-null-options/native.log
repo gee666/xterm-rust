@@ -1,0 +1,46 @@
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\G\crates\xterm-addons)
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\G\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 4.90s
+     Running tests\search_addon.rs (target\debug\deps\search_addon-4f9f2ab256eb5ac6.exe)
+
+running 37 tests
+test refresh::native_refresh_copy_is_incremental_and_independent_of_original_mutation ... ok
+test original_only_one_overview_marker_per_buffer_line ... ok
+test clearing_and_result_events_are_reentrant_without_internal_borrows ... ok
+test clocks::disposal_cancels_debounce_and_cache_and_removes_actual_decorations ... ok
+test clocks::cache_ttl_refreshes_last_access_without_replacing_every_timer ... ok
+test active_styles_preserve_source_false_argument_and_border_once ... ok
+test ranges::expanding_lowercase_at_last_column_preserves_zero_width_first_range ... ok
+test original_wrapped_match_decoration_ranges_and_overview_rows ... ok
+test clocks::disposal_from_result_callback_does_not_retain_a_mutable_borrow ... ok
+test decorations::borders_are_read_live_at_each_render_even_after_first_outline_assignment ... ok
+test decorations::a_throwing_live_border_getter_retains_error_identity_and_existing_style ... ok
+test ranges::negative_decoration_width_reaches_public_guard_not_a_successful_noop ... ok
+test on_before_search_can_mutate_the_same_options_object ... ok
+test refresh::refresh_copy_failure_keeps_cache_cleared_and_does_not_start_search ... ok
+test invalid::invalid_cache_preserves_identity_and_raw_truthiness_on_write ... ok
+test empty::empty_decoration_getter_can_start_nested_search_without_state_borrow ... ok
+test clocks::parsed_writes_refresh_at_200ms_and_replace_pending_refresh ... ok
+test clearing_decorations_does_not_clear_selection_despite_typing_comment ... ok
+test scroll_options::empty_and_unloaded_searches_skip_internal_getters_but_no_match_reads_them ... ok
+test invalid::invalid_length_access_can_reenter_without_state_or_buffer_borrows ... ok
+test tracker::result_event_can_reenter_tracker_reset_without_a_live_results_borrow ... ok
+test scroll_options::internal_getter_errors_skip_selection_and_after_event ... ok
+test matching_errors::invalid_term_does_not_read_failing_matching_options_or_initialize_cache ... ok
+test scroll_options::no_scroll_is_read_after_matching_and_can_reenter_without_state_borrows ... ok
+test tracker::tracker_preserves_slice_order_and_ignores_term_in_identity ... ok
+test raw_marker::overview_dedup_distinguishes_string_numbers_and_coalesces_nan ... ok
+test use_before_activation_errors_without_search_events ... ok
+test matching_errors::matching_failure_follows_selection_clear_and_cache_init_without_live_borrows ... ok
+test refresh::refresh_copy_runs_before_events_with_cleared_cache_and_no_live_state_borrow ... ok
+test selections_decorations_result_indices_and_event_order_share_real_services ... ok
+test clocks::linefeed_cursor_and_resize_each_cancel_the_live_cache_timer ... ok
+test tracker::selected_decoration_disposes_its_marker_and_subscription_once ... ok
+test tracker::selected_replacement_inside_disposal_is_cleared_like_source_assignment ... ok
+test tracker::selected_failure_retains_original_error_and_tracker_until_retry ... ok
+test unchanged_term_option_change_preserves_source_highlight_order_bug ... ok
+test empty::empty_search_and_subsequent_writes_do_not_snapshot_matching_flags ... ok
+test fractional_and_nonfinite_limits_retain_slice_and_highlight_distinction ... ok
+
+test result: ok. 37 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+

@@ -22,6 +22,8 @@ mod decorations;
 mod empty;
 #[path = "search_cases/invalid.rs"]
 mod invalid;
+#[path = "search_cases/matching_errors.rs"]
+mod matching_errors;
 #[path = "search_cases/ranges.rs"]
 mod ranges;
 #[path = "search_cases/raw_marker.rs"]

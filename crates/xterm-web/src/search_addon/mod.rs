@@ -186,6 +186,5 @@ pub(super) fn error(error: &xterm_addons::search::SearchAddonError) -> JsValue {
     crate::js_error::to_js_error(error)
 }
 fn request(options: JsValue) -> Option<SearchOptionsHandle> {
-    (!options.is_undefined() && !options.is_null())
-        .then(|| Rc::new(options::JsOptions(options)) as SearchOptionsHandle)
+    (!options.is_undefined()).then(|| Rc::new(options::JsOptions(options)) as SearchOptionsHandle)
 }

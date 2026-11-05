@@ -96,13 +96,16 @@ impl SearchAddon {
             return Ok(false);
         }
         let text = term.text()?;
+        let selection = host.selection()?;
+        host.clear_selection()?;
+        // Matching option access can throw or reenter. The source has already
+        // captured and cleared selection and initialized its line cache here.
+        self.init_cache()?;
         let request = options
             .as_ref()
             .map(|o| o.read())
             .transpose()?
             .unwrap_or_default();
-        let selection = host.selection()?;
-        host.clear_selection()?;
         let cached = self.inner.cached_term.borrow().clone();
         let same = cached
             .as_ref()
@@ -131,6 +134,7 @@ impl SearchAddon {
         let flags = matching(options);
         let mut results = Vec::new();
         let mut previous: Option<SearchResult> = None;
+        self.init_cache()?;
         let mut result = self.run_engine(term, &flags, Operation::At(0, 0), None, None)?;
         while let Some(found) = result {
             if previous
@@ -155,6 +159,7 @@ impl SearchAddon {
             }
             previous = Some(found.clone());
             results.push(found);
+            self.init_cache()?;
             result =
                 self.run_engine(term, &flags, Operation::At(next_row, next_col), None, None)?;
         }
@@ -220,7 +225,6 @@ impl SearchAddon {
         selection: Option<SearchSelection>,
         cached: Option<&[u16]>,
     ) -> Result<Option<SearchResult>, SearchAddonError> {
-        self.init_cache()?;
         let host = self.host()?;
         let terminal = host.terminal();
         let active = terminal.with_state(|state| state.active_buffer())?;

@@ -10,11 +10,15 @@ use xterm_addons::search::{
 // Symbol semantics. All matching, traversal, result state and decoration layout
 // remain Rust. Static module imports also work under a no-eval CSP.
 #[wasm_bindgen(
-    inline_js = "export function searchAddonGet(v,k){return v?.[k];}\nexport function searchAddonRefresh(v){return {...v,incremental:true};}\nexport function searchAddonLimitReached(v,n){return n>=v;}\nexport function searchAddonLimitEnd(v,n){let x=+v;if(Number.isNaN(x))x=0;x=Math.trunc(x);return x<0?Math.max(n+x,0):Math.min(x,n);}"
+    inline_js = "export function searchAddonGet(v,k){return v?.[k];}\nexport function searchAddonFlag(v,k){return v[k];}\nexport function searchAddonRegex(v){return v.regex;}\nexport function searchAddonRefresh(v){return {...v,incremental:true};}\nexport function searchAddonLimitReached(v,n){return n>=v;}\nexport function searchAddonLimitEnd(v,n){let x=+v;if(Number.isNaN(x))x=0;x=Math.trunc(x);return x<0?Math.max(n+x,0):Math.min(x,n);}"
 )]
 extern "C" {
     #[wasm_bindgen(catch, js_name = searchAddonGet)]
     pub fn property(value: &JsValue, key: &str) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch, js_name = searchAddonFlag)]
+    fn flag(value: &JsValue, key: &str) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch, js_name = searchAddonRegex)]
+    fn regex(value: &JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch, js_name = searchAddonRefresh)]
     fn refresh(value: &JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch, js_name = searchAddonLimitReached)]
@@ -81,8 +85,8 @@ impl SearchOptionsSource for JsOptions {
         Ok(false)
     }
     fn read(&self) -> Result<SearchOptions, SearchAddonError> {
-        let optional_bool = |key| {
-            property(&self.0, key)
+        let optional_bool = |value: Result<JsValue, JsValue>| {
+            value
                 .map(|value| (!value.is_undefined()).then(|| value.is_truthy()))
                 .map_err(host_error)
         };
@@ -92,9 +96,13 @@ impl SearchOptionsSource for JsOptions {
             .then(|| Rc::new(JsDecorations(decorations)) as SearchDecorationOptionsHandle);
         Ok(SearchOptions {
             matching: xterm_core::search::SearchOptions {
-                case_sensitive: optional_bool("caseSensitive")?,
-                regex: optional_bool("regex")?,
-                whole_word: optional_bool("wholeWord")?,
+                // Unlike addon-level optional reads, engine matching requires
+                // a non-null request and first accesses the regex property.
+                // Keep a named property access so engine TypeErrors identify
+                // regex in WebKit too, rather than an opaque computed key.
+                regex: optional_bool(regex(&self.0))?,
+                case_sensitive: optional_bool(flag(&self.0, "caseSensitive"))?,
+                whole_word: optional_bool(flag(&self.0, "wholeWord"))?,
                 // The upstream engine does not read incremental during a
                 // normal search. In particular, do not invoke its JS getter.
                 incremental: None,
