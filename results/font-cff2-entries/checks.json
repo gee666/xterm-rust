@@ -1,0 +1,94 @@
+{
+  "task": 505,
+  "testedSource": "8cf497cc",
+  "branch": "swarm/IanCffEntries",
+  "ownSourceCommits": [
+    "1d271191",
+    "8cf497cc"
+  ],
+  "privatePrerequisitesExcluded": [
+    "a1d93b93",
+    "2d423179",
+    "b51eede2"
+  ],
+  "scope": "CFF2 duplicate-entry interpretation only. Full342/equivalence NOT PROVEN",
+  "source": {
+    "constructors": 898,
+    "controls": 6,
+    "seed": "0x505cff02",
+    "directoryTags": [
+      "CFF ",
+      "CFF2"
+    ],
+    "containers": [
+      "SFNT",
+      "WOFF"
+    ],
+    "referenceFiles": 776
+  },
+  "native": {
+    "platform": "Windows",
+    "workspaceAllTargetsAllFeatures": {
+      "harnesses": 487,
+      "passed": 2170,
+      "failed": 0,
+      "ignored": 0,
+      "log": "workspace-native-final.log"
+    },
+    "addonsAllTargetsAllFeatures": {
+      "harnesses": 46,
+      "passed": 204,
+      "failed": 0,
+      "ignored": 0,
+      "log": "native-final.log"
+    }
+  },
+  "quality": {
+    "nativeWorkspaceAllTargetsAllFeaturesStrictClippy": "passed",
+    "wasmFontAddonAllTargetsAllFeaturesStrictClippy": "passed",
+    "nativeWorkspaceAllFeatureLibraryCheck": "passed",
+    "wasmWorkspaceAllFeatureLibraryStrictClippy": "passed",
+    "fiveMemberFormatChecks": "passed",
+    "fullWorkspaceFormat": "failed Windows OS206, retained fmt-workspace.log"
+  },
+  "negative": {
+    "executedDuplicateMismatches": 16,
+    "exactSourceRestored": true,
+    "restoredPositive": "passed",
+    "receipt": "negative.json"
+  },
+  "browsers": {
+    "sourceConstructorsEach": 898,
+    "sourceActualAddonLoadsEach": 4,
+    "actualRustWasmTestFunctionsEach": 2,
+    "engines": {
+      "chromium": "148.0.7778.96",
+      "firefox": "150.0.2",
+      "webkit": "26.4"
+    },
+    "sourceReceipt": "source-browser.json",
+    "rustReceipt": "rust-browser.json",
+    "compilerSha256": "f34c5b0f775bcce0040866e64ebd4e9064c71b51c710d5b7047b81381590b0fa"
+  },
+  "retainedFailures": [
+    "source-browser-initial: missing clean duplicate lifecycle recipe; four cases added without weakening assertions",
+    "source-browser-initial2: one overlong BadCff2 input selector; corrected, fixture setup now rejects missing inputs",
+    "rust-browser-initial: Firefox failed module load before tests; same-artifact bounded diagnostic passed; final three-engine run passed",
+    "workspace-native.log: initial fresh full workspace run exceeded240s; no surviving processes; justified warm900s final passed"
+  ],
+  "divergence": "Source negative blend count hangs. Rust rejects boundedly. No source hang executed. No equivalence or user approval claimed.",
+  "remaining": [
+    "CFF1 dictionary interpretation",
+    "FDArray/FDSelect/private dictionaries/charstrings",
+    "Existing Bounds/Type browser wording",
+    "Complete reference suites and native Linux/macOS",
+    "Full workspace formatting Windows OS206"
+  ],
+  "jobs": {
+    "compiler": 0,
+    "browser": 0,
+    "server": 0,
+    "allGrantsReleased": true
+  },
+  "cleanup": "Owned O:worktree remains until independent review and explicit cleanup receipt"
+}
