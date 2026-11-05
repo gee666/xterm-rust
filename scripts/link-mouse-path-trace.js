@@ -15,17 +15,21 @@ return (async () => {
     });
     const screen = terminal.element.querySelector('.xterm-screen');
     const cell = terminal.dimensions.css.cell;
-    let index = 0;
+    let index = 0, lastProvidedRow = 0, row;
     return cases((event, marker) => {
       provided = false; caught = [];
       screen.dispatchEvent(event);
+      if (provided) lastProvidedRow = row;
       if (caught.length > 1) throw new Error(`Multiple DOM errors: ${caught}`);
       return { provided, error: caught.length === 0 ? 'none' : caught[0] === marker ? 'marker' : caught[0].name };
     }, () => {
       const rect = screen.getBoundingClientRect();
-      const x = index % 16 + 1, y = index++ % 2 + 1;
+      // Blocked/error cases do not change the link cache's active row. Only
+      // alternate after a real request, so every allowed case requests anew.
+      const x = index++ % 16 + 1;
+      row = lastProvidedRow === 1 ? 2 : 1;
       return new MouseEvent('mousemove', { bubbles: true,
-        clientX: rect.left + (x - 0.5) * cell.width, clientY: rect.top + (y - 0.5) * cell.height });
+        clientX: rect.left + (x - 0.5) * cell.width, clientY: rect.top + (row - 0.5) * cell.height });
     });
   } finally {
     token.dispose(); terminal.dispose(); parent.remove();
