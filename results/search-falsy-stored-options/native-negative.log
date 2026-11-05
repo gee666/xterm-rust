@@ -1,0 +1,38 @@
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\M430\crates\xterm-addons)
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\M430\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 6.22s
+     Running tests\search_addon.rs (target\debug\deps\search_addon-4de7d175adac3b45.exe)
+
+running 4 tests
+test falsy_stored_options::nested_decoration_search_replaces_stored_request_before_comparison ... FAILED
+test falsy_stored_options::falsy_incoming_request_skips_comparison_after_truthy_nested_replacement ... FAILED
+test falsy_stored_options::falsy_stored_request_updates_highlights_without_comparing_flags ... FAILED
+test falsy_stored_options::truthy_nested_request_keeps_comparison_failure_and_nested_selection ... ok
+
+failures:
+
+---- falsy_stored_options::nested_decoration_search_replaces_stored_request_before_comparison stdout ----
+
+thread 'falsy_stored_options::nested_decoration_search_replaces_stored_request_before_comparison' panicked at crates\xterm-web\tests\search_cases\falsy_stored_options.rs:87:54:
+called `Result::unwrap()` on an `Err` value: InvalidCoordinates
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- falsy_stored_options::falsy_incoming_request_skips_comparison_after_truthy_nested_replacement stdout ----
+
+thread 'falsy_stored_options::falsy_incoming_request_skips_comparison_after_truthy_nested_replacement' panicked at crates\xterm-web\tests\search_cases\falsy_stored_options.rs:104:50:
+called `Result::unwrap()` on an `Err` value: InvalidCoordinates
+
+---- falsy_stored_options::falsy_stored_request_updates_highlights_without_comparing_flags stdout ----
+
+thread 'falsy_stored_options::falsy_stored_request_updates_highlights_without_comparing_flags' panicked at crates\xterm-web\tests\search_cases\falsy_stored_options.rs:67:52:
+called `Result::unwrap()` on an `Err` value: InvalidCoordinates
+
+
+failures:
+    falsy_stored_options::falsy_incoming_request_skips_comparison_after_truthy_nested_replacement
+    falsy_stored_options::falsy_stored_request_updates_highlights_without_comparing_flags
+    falsy_stored_options::nested_decoration_search_replaces_stored_request_before_comparison
+
+test result: FAILED. 1 passed; 3 failed; 0 ignored; 0 measured; 40 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-web --test search_addon`

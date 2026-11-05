@@ -1,0 +1,111 @@
+{
+  "sourceRevision": "f6cc79de",
+  "base": "785a7781",
+  "status": "Scoped checks passed. Full equivalence NOT PROVEN.",
+  "platform": "Windows",
+  "rust": "1.85.1",
+  "cargo": "1.85.1",
+  "node": "24.15.0",
+  "wasmBindgen": "0.2.100",
+  "counts": {
+    "source": {
+      "engines": 3,
+      "casesPerEngine": 84,
+      "executed": 252,
+      "passed": 252,
+      "failed": 0,
+      "skipped": 0
+    },
+    "native": {
+      "executed": 44,
+      "passed": 44,
+      "failed": 0,
+      "ignored": 0
+    },
+    "wasm": {
+      "engines": 3,
+      "functionsPerEngine": 13,
+      "executed": 39,
+      "passed": 39,
+      "failed": 0,
+      "ignored": 0,
+      "directedCasesWithinFunctions": 252
+    },
+    "originalSearch": {
+      "discovered": 81,
+      "executed": 81,
+      "passed": 81,
+      "failed": 0,
+      "skipped": 0,
+      "unrun": 0
+    },
+    "oldNative": {
+      "executed": 4,
+      "passed": 1,
+      "failed": 3,
+      "filtered": 40
+    },
+    "oldWasm": {
+      "engine": "chromium",
+      "discovered": 13,
+      "finalSummary": false,
+      "assertionRegressionObserved": true,
+      "runtimeAborted": true
+    }
+  },
+  "negativeControl": "Only find.rs restored to exact785a7781. Fixed producer restored and hash-checked in finally before final native/WASM reruns.",
+  "logNormalization": "Text logs CRLF normalized to LF and one final newline. Raw JSON/browser payloads unchanged.",
+  "limitations": [
+    "Full347/322 remain open. Truthy per-field replacement and matching snapshots are not repaired.",
+    "Full cargo fmt --all -- --check fails WindowsOS206; affected-file formatting and scoped native/WASM warning-denied Clippy pass.",
+    "No new random corpus, native Linux/macOS runtime or full workspace quality/demo proof."
+  ],
+  "pins": {
+    "Cargo.lock": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "crates/xterm-addons/src/search/addon.rs": "0615b3dd32dedca388a027d6af70dc5d19fdb56210081c9e1166e14e23e8af68",
+    "crates/xterm-addons/src/search/find.rs": "41670cd505ff69f93723eb52cb8fa6a8e86d89c894684957328ab25322d512b2",
+    "crates/xterm-web/src/search_addon/options.rs": "7d574aa68c035039ae62fa67d55c3da19e941874e63c8723a0b7444b607d27c8",
+    "crates/xterm-web/tests/search_addon.rs": "d8e53591a8b40f5b27b194cf69c294232ec0260fce934fa41c4dd0b0d45a4ecf",
+    "crates/xterm-web/tests/search_cases/falsy_stored_options.rs": "958fb01bfd1b320af6f49725c75062458a14558917a50405ca8d74ccdee5047d",
+    "crates/xterm-web/tests/wasm_search_addon.rs": "eb6713904c40c1ccfa203b0a863ce093496390d73dfcfc715d121ded7e03cdb0",
+    "crates/xterm-web/tests/fixtures/search-falsy-stored-options.js": "5bc5f781b088e26152b586448fc85795ba1d17617220123507fff735e8b1e891",
+    "scripts/search-call-args-source.mjs": "63c23d6b5f869b9fd8718b6cf3cd1c8aac5e74493cbcf3334743292cbf6dd58a",
+    "scripts/browser-host-check.mjs": "63dc6978c20d94958c046cfd721f50f785fef16cd7db69332918fc712ba96536",
+    "scripts/e2e-upstream.mjs": "12d881e3127c7865f00d7a55251bad4de8b611c24403fe3e14867798e6e16977",
+    "results/search-falsy-stored-options/fixed-commands.json": "668b326db98e0dd171142abdb6fd8043b80e43f4d321aa6f7001adb338cf6a11",
+    "results/search-falsy-stored-options/fixed-wasm_search_addon-bindgen-version.log": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7",
+    "results/search-falsy-stored-options/fixed-wasm_search_addon-bindgen.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/search-falsy-stored-options/fixed-wasm_search_addon-build.log": "d85d348db256e78600f6c51947f2009b0e00a27dac0038d09ec67c39e763055d",
+    "results/search-falsy-stored-options/fixed-wasm_search_addon-chromium.log": "cc42e3527d88885810802742f90aef93802888b11c60ea8213e972bc04d46469",
+    "results/search-falsy-stored-options/fixed-wasm_search_addon-firefox.log": "653179175a54a88ac19ffadf18bb826c356cea8eb5679d5286c195fa87e23407",
+    "results/search-falsy-stored-options/fixed-wasm_search_addon-webkit.log": "125f636d2bf5da723cefdeda1def866cf01dd36afbd512e767317ed997b75ea6",
+    "results/search-falsy-stored-options/full-fmt.log": "a3aa819acd4a800a025151dd14103033e5af56ff3a5ed6a7dfb163d8c484bcc2",
+    "results/search-falsy-stored-options/native-clippy.log": "0d98f1f51e197f58447105fab5a6d600a94d179c233ed837701143ab5d139426",
+    "results/search-falsy-stored-options/native-final.log": "09a230ec3876e9733451cd5c5a46fc24f00384d8c15a0aa5c6a66cb3ae85d0e9",
+    "results/search-falsy-stored-options/native-negative.json": "2873f0ee5d1619f6319e2e91f6c9abcd1fc5ad8e9df36ee437f329cde13b0d7f",
+    "results/search-falsy-stored-options/native-negative.log": "6270fb1c5f6cd6d9d89a528da33f38e4d1b7b5b17d3cd3aabcbb8283c244c1f3",
+    "results/search-falsy-stored-options/native.log": "a854b93ea7b4afdf1fa9c6419bab073667ddafb4250c635b7298c9f00ebf9ab7",
+    "results/search-falsy-stored-options/old-commands.json": "b5d4e6a9130a083346eb9da71632ec6145d4f17358a647825f20628b12fbbb66",
+    "results/search-falsy-stored-options/old-wasm_search_addon-bindgen-version.log": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7",
+    "results/search-falsy-stored-options/old-wasm_search_addon-bindgen.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/search-falsy-stored-options/old-wasm_search_addon-build.log": "37126c82a35d1316c580d48c33b85d6650364a5c6faf231bbb408565ac1551ac",
+    "results/search-falsy-stored-options/old-wasm_search_addon-chromium.log": "c9bb6fc769094db2ec2e617b738c5cd21b2cf44071ee22a311267f4b00da6283",
+    "results/search-falsy-stored-options/original-build-report.json": "fb745c2a34fc9c607bb5606999a1d688c9e737c507e840f326f46236cd2548bd",
+    "results/search-falsy-stored-options/original-build.log": "fb745c2a34fc9c607bb5606999a1d688c9e737c507e840f326f46236cd2548bd",
+    "results/search-falsy-stored-options/original-command.json": "63fe7208028d61fbd52a2d5a56fc7e90520fabf4130cc8b85a4b3c8c16bf7dcc",
+    "results/search-falsy-stored-options/original-playwright.log": "9c312bd96bb7485298103aee8086d478fc00c3308a55474552e3c52170e299cc",
+    "results/search-falsy-stored-options/original-search-playwright.json": "8141aba392faf8c43e8b9973a386c2603b453631dd51faa81a4f733b8fffe4a1",
+    "results/search-falsy-stored-options/original-search-report.json": "a4fc3668bc4ce79a87860c5fae639414123a4ef4ce2c76e42631ef2d13c3835e",
+    "results/search-falsy-stored-options/original-search.log": "799cb4bc82b98a921d079fcc4cec40434561f58fbddcd90815f499fc05700e41",
+    "results/search-falsy-stored-options/quality-commands.json": "72fe2bacf071e13d7b4ec589ddf18a87fe37057e0883c6bfb4a434876b634451",
+    "results/search-falsy-stored-options/scoped-fmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/search-falsy-stored-options/source.json": "a1e3d7c225b014153eedc4158d9f6ffbfdb66b58dbbfc28879db1ded2bedcc8d",
+    "results/search-falsy-stored-options/source.log": "026b012a3707e204d8442af78047a71ddca0c73904110ff33b6135547d20567e",
+    "results/search-falsy-stored-options/wasm-browser.json": "aa4710649630f85d3088cc11f73b00886ac99234712133072066ceba6224401a",
+    "results/search-falsy-stored-options/wasm-clippy.log": "aaf5d0ad6e4384c36775bc7a6b4520b9067480f783ddc59fdf5df689858fb9bb",
+    "results/search-falsy-stored-options/wasm-negative-browser.json": "23487b5f765a360dfc7cd11d4cffdc9f04e19a91f38c441dba6b5fe46b95f8d3",
+    "results/search-falsy-stored-options/wasm-negative.json": "595d58e79c9c04b51166f3c4ee7052dea6592b128fb8df0cfe71a3d6e6f71276",
+    "results/search-falsy-stored-options/wasm-negative.log": "edad00cdcb7c3f3a6912879f2999f43718fc52a7b571a0174d8018772eddd628",
+    "results/search-falsy-stored-options/wasm.log": "6c8f059633834292e47aec37b92d6afb8acc55f53a059e7f609bb49511fe3f3c"
+  }
+}
