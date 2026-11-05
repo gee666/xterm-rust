@@ -20,6 +20,8 @@ Observed on Windows with Rust/Cargo 1.85.1 and Node 24.15.0, atop integrated mai
 - All 22 canvas test functions pass in each of Chromium 148.0.7778.96, Firefox 150.0.2 and WebKit 26.4, with zero failed, ignored or filtered tests. This is 66 Rust test-function executions, including the eight new source/Rust boundary cases per engine, not 66 original upstream tests.
 - Native addon all-target/all-feature and scoped WASM library/canvas Clippy pass with warnings denied. Full `cargo fmt --all -- --check` passes. `full-fmt.log` retains the earlier failure on the inherited marker module order; `full-fmt-current.log` records the pass after rebasing onto the integrated fix.
 
+Independent task352 review accepted commits `ba4454e` and `94fc7a5`. The reviewer reran all 18 focused native tests, full workspace formatting and scoped native/WASM Clippy with warnings denied. It verified 32 Rust/build-input hashes, 15 unchanged source-input hashes, and retained compiler/WASM/bindings/CSS artifacts for the 22-per-browser reports. Browser execution was not repeated under the compiler-only review allocation. No findings remained.
+
 Run from a checkout with the reference dependencies available. `scripts/image-iip-oracle.mjs` now accepts `REFERENCE_NODE_MODULES` without requiring a dependency junction in the source copy. The browser runner also accepts `SOURCE_REPO`, `PLAYWRIGHT_MODULE` and the pinned 0.2.100 `WASM_BINDGEN` CLI as described in `docs/image-canvas.md`.
 
 ```sh
