@@ -26,6 +26,8 @@ extern "C" {
     pub fn refresh(terminal: &JsValue) -> Result<(), JsValue>;
     #[wasm_bindgen(catch, js_name = fontWarning)]
     pub fn warning(message: &str) -> Result<(), JsValue>;
+    #[wasm_bindgen(catch, js_name = fontBytes)]
+    pub fn font_bytes(buffer: &js_sys::ArrayBuffer) -> Result<js_sys::Uint8Array, JsValue>;
     #[wasm_bindgen(catch, js_name = fontFailure)]
     pub fn failure(previous: &JsValue) -> Result<(), JsValue>;
     #[wasm_bindgen(catch, js_name = finishFontLoad)]

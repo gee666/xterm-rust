@@ -12,6 +12,7 @@ export function fontFamily(terminal) { return terminal.options.fontFamily; }
 export function debugEnabled(terminal) { return terminal.options.logLevel === 'debug'; }
 export function refreshFont(terminal) { terminal.refresh(0, terminal.rows - 1); }
 export function fontWarning(message) { console.warn(message); }
+export function fontBytes(buffer) { return new Uint8Array(buffer); }
 export function fontFailure(previous) { console.debug(previous, new Error('Failure while loading font')); }
 export function finishFontLoad(promise, loaded, failed) { promise.then(loaded).catch(failed); }
 export function fallbackInBounds(patterns, index) { return index < patterns.length; }

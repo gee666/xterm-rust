@@ -1,0 +1,24 @@
+
+running 1 test
+test source_callback_mutations_preserve_constructor_phases ... FAILED
+
+failures:
+
+---- source_callback_mutations_preserve_constructor_phases stdout ----
+
+thread 'source_callback_mutations_preserve_constructor_phases' panicked at crates\xterm-addons\tests\support\font_buffer_data.rs:164:17:
+assertion `left == right` failed: "SFNT IgnoreBadPairs": Bounds
+  left: String("ok")
+ right: "error"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    source_callback_mutations_preserve_constructor_phases
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\C406\crates\xterm-addons)
+    Finished `test` profile [unoptimized] target(s) in 2.80s
+     Running tests\font_buffer_mutations.rs (target\debug\deps\font_buffer_mutations-22e9652900e3fc0f.exe)
+error: test failed, to rerun pass `-p xterm-addons --test font_buffer_mutations`

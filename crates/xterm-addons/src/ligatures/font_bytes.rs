@@ -99,10 +99,14 @@ pub struct DeferredTable<'a> {
     woff: bool,
 }
 impl<'a> DeferredTable<'a> {
-    pub fn load(self) -> Result<Cow<'a, [u8]>, FontError> {
-        // Deferred parsers retain the original DataView after an uncompressed
-        // offset. The directory's nominal length is not a read boundary.
-        table_data(self.reader, self.record, self.woff, true)
+    pub fn load(&self) -> Result<Cow<'a, [u8]>, FontError> {
+        self.load_from(self.reader.bytes)
+    }
+
+    pub fn load_from<'b>(&self, bytes: &'b [u8]) -> Result<Cow<'b, [u8]>, FontError> {
+        // The source copies directory descriptors before callbacks, but retains
+        // the live DataView for payload reads. Never reread a mutated directory.
+        table_data(Reader::new(bytes), self.record, self.woff, true)
     }
 }
 

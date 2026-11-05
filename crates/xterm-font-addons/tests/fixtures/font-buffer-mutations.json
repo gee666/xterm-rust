@@ -1,0 +1,1888 @@
+{
+  "constructors": [
+    {
+      "name": "SFNT Unchanged",
+      "mode": "Unchanged",
+      "format": "SFNT",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "SFNT IgnoreBadPairs",
+      "mode": "IgnoreBadPairs",
+      "format": "SFNT",
+      "coverage": 0,
+      "pairs": 65535,
+      "writes": [
+        [
+          "kern",
+          12,
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "SFNT ReadBadPairs",
+      "mode": "ReadBadPairs",
+      "format": "SFNT",
+      "coverage": 1,
+      "pairs": 65535,
+      "writes": [
+        [
+          "kern",
+          12,
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "error",
+        "name": "RangeError",
+        "message": "Offset is outside the bounds of the DataView"
+      }
+    },
+    {
+      "name": "SFNT AddPair",
+      "mode": "AddPair",
+      "format": "SFNT",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "kern",
+          16,
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "error",
+        "name": "RangeError",
+        "message": "Offset is outside the bounds of the DataView"
+      }
+    },
+    {
+      "name": "SFNT RemovePairs",
+      "mode": "RemovePairs",
+      "format": "SFNT",
+      "coverage": 0,
+      "pairs": 65535,
+      "writes": [
+        [
+          "kern",
+          16,
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "SFNT HeaderAlreadyRead",
+      "mode": "HeaderAlreadyRead",
+      "format": "SFNT",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "kern",
+          0,
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "kern",
+          4,
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "SFNT KernDescriptorAlreadyRead",
+      "mode": "KernDescriptorAlreadyRead",
+      "format": "SFNT",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "directory:kern",
+          8,
+          [
+            255,
+            255,
+            255,
+            240
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "SFNT GsubDescriptorAlreadyRead",
+      "mode": "GsubDescriptorAlreadyRead",
+      "format": "SFNT",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "directory:GSUB",
+          8,
+          [
+            255,
+            255,
+            255,
+            240
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "SFNT CmapAlreadyRead",
+      "mode": "CmapAlreadyRead",
+      "format": "SFNT",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "cmap",
+          2,
+          [
+            255,
+            255
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "SFNT HeadAlreadyRead",
+      "mode": "HeadAlreadyRead",
+      "format": "SFNT",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "head",
+          12,
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "SFNT BreakDeferredGsub",
+      "mode": "BreakDeferredGsub",
+      "format": "SFNT",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "GSUB",
+          8,
+          [
+            255,
+            255
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "error",
+        "name": "RangeError",
+        "message": "Offset is outside the bounds of the DataView"
+      }
+    },
+    {
+      "name": "SFNT DiscardCalt",
+      "mode": "DiscardCalt",
+      "format": "SFNT",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "calt",
+          0,
+          [
+            120,
+            120,
+            120,
+            120
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": []
+      }
+    },
+    {
+      "name": "SFNT ThrowAfterMutation",
+      "mode": "ThrowAfterMutation",
+      "format": "SFNT",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "kern",
+          16,
+          [
+            255,
+            255
+          ]
+        ]
+      ],
+      "throws": true,
+      "warnings": 1,
+      "outcome": {
+        "status": "warning"
+      }
+    },
+    {
+      "name": "WOFF-raw Unchanged",
+      "mode": "Unchanged",
+      "format": "WOFF-raw",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "WOFF-raw IgnoreBadPairs",
+      "mode": "IgnoreBadPairs",
+      "format": "WOFF-raw",
+      "coverage": 0,
+      "pairs": 65535,
+      "writes": [
+        [
+          "kern",
+          12,
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "WOFF-raw ReadBadPairs",
+      "mode": "ReadBadPairs",
+      "format": "WOFF-raw",
+      "coverage": 1,
+      "pairs": 65535,
+      "writes": [
+        [
+          "kern",
+          12,
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "error",
+        "name": "RangeError",
+        "message": "Offset is outside the bounds of the DataView"
+      }
+    },
+    {
+      "name": "WOFF-raw AddPair",
+      "mode": "AddPair",
+      "format": "WOFF-raw",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "kern",
+          16,
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "WOFF-raw RemovePairs",
+      "mode": "RemovePairs",
+      "format": "WOFF-raw",
+      "coverage": 0,
+      "pairs": 65535,
+      "writes": [
+        [
+          "kern",
+          16,
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "WOFF-raw HeaderAlreadyRead",
+      "mode": "HeaderAlreadyRead",
+      "format": "WOFF-raw",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "kern",
+          0,
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "kern",
+          4,
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "WOFF-raw KernDescriptorAlreadyRead",
+      "mode": "KernDescriptorAlreadyRead",
+      "format": "WOFF-raw",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "directory:kern",
+          8,
+          [
+            255,
+            255,
+            255,
+            240
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "WOFF-raw GsubDescriptorAlreadyRead",
+      "mode": "GsubDescriptorAlreadyRead",
+      "format": "WOFF-raw",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "directory:GSUB",
+          8,
+          [
+            255,
+            255,
+            255,
+            240
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "WOFF-raw CmapAlreadyRead",
+      "mode": "CmapAlreadyRead",
+      "format": "WOFF-raw",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "cmap",
+          2,
+          [
+            255,
+            255
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "WOFF-raw HeadAlreadyRead",
+      "mode": "HeadAlreadyRead",
+      "format": "WOFF-raw",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "head",
+          12,
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "WOFF-raw BreakDeferredGsub",
+      "mode": "BreakDeferredGsub",
+      "format": "WOFF-raw",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "GSUB",
+          8,
+          [
+            255,
+            255
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "error",
+        "name": "RangeError",
+        "message": "Offset is outside the bounds of the DataView"
+      }
+    },
+    {
+      "name": "WOFF-raw DiscardCalt",
+      "mode": "DiscardCalt",
+      "format": "WOFF-raw",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "calt",
+          0,
+          [
+            120,
+            120,
+            120,
+            120
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": []
+      }
+    },
+    {
+      "name": "WOFF-raw ThrowAfterMutation",
+      "mode": "ThrowAfterMutation",
+      "format": "WOFF-raw",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "kern",
+          16,
+          [
+            255,
+            255
+          ]
+        ]
+      ],
+      "throws": true,
+      "warnings": 1,
+      "outcome": {
+        "status": "warning"
+      }
+    },
+    {
+      "name": "WOFF-kern Unchanged",
+      "mode": "Unchanged",
+      "format": "WOFF-kern",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "WOFF-kern IgnoreBadPairs",
+      "mode": "IgnoreBadPairs",
+      "format": "WOFF-kern",
+      "coverage": 0,
+      "pairs": 65535,
+      "writes": [
+        [
+          "kern",
+          12,
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "error",
+        "name": "RangeError",
+        "message": "Offset is outside the bounds of the DataView"
+      }
+    },
+    {
+      "name": "WOFF-kern ReadBadPairs",
+      "mode": "ReadBadPairs",
+      "format": "WOFF-kern",
+      "coverage": 1,
+      "pairs": 65535,
+      "writes": [
+        [
+          "kern",
+          12,
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "WOFF-kern AddPair",
+      "mode": "AddPair",
+      "format": "WOFF-kern",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "kern",
+          16,
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "WOFF-kern RemovePairs",
+      "mode": "RemovePairs",
+      "format": "WOFF-kern",
+      "coverage": 0,
+      "pairs": 65535,
+      "writes": [
+        [
+          "kern",
+          16,
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "error",
+        "name": "RangeError",
+        "message": "Offset is outside the bounds of the DataView"
+      }
+    },
+    {
+      "name": "WOFF-kern HeaderAlreadyRead",
+      "mode": "HeaderAlreadyRead",
+      "format": "WOFF-kern",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "kern",
+          0,
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "kern",
+          4,
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "WOFF-kern KernDescriptorAlreadyRead",
+      "mode": "KernDescriptorAlreadyRead",
+      "format": "WOFF-kern",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "directory:kern",
+          8,
+          [
+            255,
+            255,
+            255,
+            240
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "WOFF-kern GsubDescriptorAlreadyRead",
+      "mode": "GsubDescriptorAlreadyRead",
+      "format": "WOFF-kern",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "directory:GSUB",
+          8,
+          [
+            255,
+            255,
+            255,
+            240
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "WOFF-kern CmapAlreadyRead",
+      "mode": "CmapAlreadyRead",
+      "format": "WOFF-kern",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "cmap",
+          2,
+          [
+            255,
+            255
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "WOFF-kern HeadAlreadyRead",
+      "mode": "HeadAlreadyRead",
+      "format": "WOFF-kern",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "head",
+          12,
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "WOFF-kern BreakDeferredGsub",
+      "mode": "BreakDeferredGsub",
+      "format": "WOFF-kern",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "GSUB",
+          8,
+          [
+            255,
+            255
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "error",
+        "name": "RangeError",
+        "message": "Offset is outside the bounds of the DataView"
+      }
+    },
+    {
+      "name": "WOFF-kern DiscardCalt",
+      "mode": "DiscardCalt",
+      "format": "WOFF-kern",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "calt",
+          0,
+          [
+            120,
+            120,
+            120,
+            120
+          ]
+        ]
+      ],
+      "throws": false,
+      "warnings": 1,
+      "outcome": {
+        "status": "ok",
+        "ranges": []
+      }
+    },
+    {
+      "name": "WOFF-kern ThrowAfterMutation",
+      "mode": "ThrowAfterMutation",
+      "format": "WOFF-kern",
+      "coverage": 0,
+      "pairs": 0,
+      "writes": [
+        [
+          "kern",
+          16,
+          [
+            255,
+            255
+          ]
+        ]
+      ],
+      "throws": true,
+      "warnings": 1,
+      "outcome": {
+        "status": "warning"
+      }
+    }
+  ],
+  "addon": {
+    "SFNT Unchanged": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "SFNT IgnoreBadPairs": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "SFNT ReadBadPairs": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 0,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "SFNT AddPair": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 0,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "SFNT RemovePairs": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "SFNT HeaderAlreadyRead": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "SFNT KernDescriptorAlreadyRead": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "SFNT GsubDescriptorAlreadyRead": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "SFNT CmapAlreadyRead": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "SFNT HeadAlreadyRead": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "SFNT BreakDeferredGsub": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 0,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "SFNT DiscardCalt": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": []
+    },
+    "SFNT ThrowAfterMutation": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 0,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-raw Unchanged": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-raw IgnoreBadPairs": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-raw ReadBadPairs": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 0,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-raw AddPair": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-raw RemovePairs": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-raw HeaderAlreadyRead": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-raw KernDescriptorAlreadyRead": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-raw GsubDescriptorAlreadyRead": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-raw CmapAlreadyRead": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-raw HeadAlreadyRead": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-raw BreakDeferredGsub": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 0,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-raw DiscardCalt": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": []
+    },
+    "WOFF-raw ThrowAfterMutation": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 0,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-kern Unchanged": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-kern IgnoreBadPairs": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 0,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-kern ReadBadPairs": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-kern AddPair": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-kern RemovePairs": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 0,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-kern HeaderAlreadyRead": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-kern KernDescriptorAlreadyRead": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-kern GsubDescriptorAlreadyRead": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-kern CmapAlreadyRead": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-kern HeadAlreadyRead": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-kern BreakDeferredGsub": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 0,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    "WOFF-kern DiscardCalt": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [],
+      "warnings": 1,
+      "refreshes": 1,
+      "cached": []
+    },
+    "WOFF-kern ThrowAfterMutation": {
+      "initial": [
+        [
+          1,
+          4
+        ]
+      ],
+      "ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "warnings": 1,
+      "refreshes": 0,
+      "cached": [
+        [
+          1,
+          4
+        ]
+      ]
+    }
+  }
+}

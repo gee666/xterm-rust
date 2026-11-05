@@ -68,8 +68,9 @@ pub struct Font {
     cache: Option<Cache>,
 }
 impl Font {
-    /// Loads a snapshot without a diagnostic sink. Browser hosts should use
-    /// `load_buffer_with_warnings` to preserve observable console callbacks.
+    /// Loads a snapshot without a diagnostic sink. Hosts with observable console
+    /// callbacks use `load_buffer_with_warnings`; hosts with mutable external
+    /// buffer aliases use `load_buffer_with_refresh`.
     pub fn load_buffer(bytes: &[u8], options: FontOptions) -> Result<Self, FontError> {
         match Self::load_buffer_with_warnings(bytes, options, |_| {
             Ok::<(), std::convert::Infallible>(())
@@ -89,6 +90,22 @@ impl Font {
         options: FontOptions,
         mut warning: impl FnMut(FontWarning) -> Result<(), E>,
     ) -> Result<Self, FontLoadError<E>> {
+        Self::load_buffer_with_refresh(bytes, options, |diagnostic| {
+            warning(diagnostic).map(|()| None)
+        })
+    }
+
+    /// Loads bytes while preserving writes made through an external buffer alias
+    /// during a warning callback. Return `Some` with the current whole buffer to
+    /// refresh subsequent payload reads, or `None` to retain the prior snapshot.
+    /// Already parsed metadata and directory descriptors are not reparsed.
+    /// An already inflated kern table is independent of external buffer writes.
+    /// Callback errors abort construction without inspecting refreshed bytes.
+    pub fn load_buffer_with_refresh<E>(
+        bytes: &[u8],
+        options: FontOptions,
+        mut warning: impl FnMut(FontWarning) -> Result<Option<Vec<u8>>, E>,
+    ) -> Result<Self, FontLoadError<E>> {
         let tables = FontTables::parse(bytes)?;
         let cmap = Cmap::parse(&tables.cmap)?;
         if tables
@@ -102,15 +119,27 @@ impl Font {
         }
         // opentype assigns cmap glyph names before it reads deferred kern/GSUB
         // data, so those later errors must not replace an invalid-glyph error.
+        let mut refreshed = None;
         if let Some(table) = tables.kern {
-            font_kern::validate(&table.load()?, &mut warning)?;
+            let loaded = table.load()?;
+            let header = font_kern::Header::read(&loaded)?;
+            if let Some(diagnostic) = header.warning() {
+                refreshed = warning(diagnostic).map_err(FontLoadError::Warning)?;
+            }
+            if let (std::borrow::Cow::Borrowed(_), Some(bytes)) = (&loaded, &refreshed) {
+                header.finish(&table.load_from(bytes)?)?;
+            } else {
+                header.finish(&loaded)?;
+            }
         }
         let gsub = tables
             .gsub
-            .map(|table| font_gsub::parse(&table.load()?))
+            .map(|table| {
+                font_gsub::parse(&table.load_from(refreshed.as_deref().unwrap_or(bytes))?)
+            })
             .transpose()?;
         if let Some(table) = tables.meta {
-            font_metadata::meta(&table.load()?)?;
+            font_metadata::meta(&table.load_from(refreshed.as_deref().unwrap_or(bytes))?)?;
         }
         // FontImpl builds lookup trees only after opentype finishes all
         // constructor tables. A tree error must not hide a later meta error.

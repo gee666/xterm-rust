@@ -19,6 +19,8 @@ pub struct LocalFonts {
 pub struct LocalFont {
     pub family: Vec<u16>,
     pub bytes: Vec<u8>,
+    /// Original browser storage remains live across constructor diagnostics.
+    pub buffer: ArrayBuffer,
 }
 
 fn get(object: &JsValue, key: &str) -> Result<JsValue, JsValue> {
@@ -202,6 +204,7 @@ impl LocalFonts {
                     return Ok(Some(LocalFont {
                         family,
                         bytes: Uint8Array::new(&buffer).to_vec(),
+                        buffer,
                     }));
                 }
                 return Ok(None);

@@ -110,12 +110,15 @@ fn load(
             .load_value(&request)
             .await?
             .map(|font| {
-                Font::load_buffer_with_warnings(
+                Font::load_buffer_with_refresh(
                     &font.bytes,
                     FontOptions {
                         cache_size: SOURCE_FONT_CACHE_SIZE,
                     },
-                    |warning| host::warning(warning.message()),
+                    |warning| {
+                        host::warning(warning.message())?;
+                        host::font_bytes(&font.buffer).map(|bytes| Some(bytes.to_vec()))
+                    },
                 )
                 .map_err(|error| match error {
                     FontLoadError::Font(error) => font_error(error),
