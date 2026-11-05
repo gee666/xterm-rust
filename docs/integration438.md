@@ -24,6 +24,10 @@ The unmodified canonical helper fast-forwarded main to frozen `3aa04692a409bc147
 
 This is not a fresh complete all-feature, release, native OS or browser matrix. Prior scoped browser/native evidence remains bound to producer inputs, not relabeled as a fresh full integrated matrix. Native Linux/macOS, complete original/browser/demo matrices, final quality and comparison proof remain separate open work. Main-ref and compiler ownership were explicitly released after the gate; any later receipt commit changes documentation/evidence only.
 
+## Independent review
+
+Task438 was accepted at `f775f0b7`. The isolated reviewer reran the read-only audit on both the producer branch and main, verified all source/receipt/reference hashes and helper identity, inspected the composed phases, and independently totaled the retained canonical results. It launched no heavy builds and found no problem. A fresh scan found no links or redirected directories in the owned worktree. Final removal follows this last source-review use; the coordinator receives the observed absence separately.
+
 ## Ownership
 
 New scratch, build targets and generated browser outputs are owned only under `O:/xterm-rust-swarm-16/tmp/M427`. Installed dependencies and references on P: and other owners' paths are not cleanup targets. Preserve source and concise receipts before cleanup. Stop owned jobs and inspect every directory for links/redirection before removing the private tree; never traverse a reference junction. No AGENTS, source assertion, credential or user-owned file is changed.
