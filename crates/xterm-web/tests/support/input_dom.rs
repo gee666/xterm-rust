@@ -126,6 +126,11 @@ pub struct Setup {
     pub host: Rc<Host>,
     pub input: InputBindings,
 }
+impl Default for Setup {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 impl Setup {
     pub fn new() -> Self {
         let document = web_sys::window().unwrap().document().unwrap();

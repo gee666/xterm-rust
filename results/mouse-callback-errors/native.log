@@ -1,0 +1,96 @@
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\O\crates\xterm-core)
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\O\crates\xterm-addons)
+   Compiling xterm-wasm-support v0.1.0 (O:\xterm-rust-swarm-16\tmp\O\crates\xterm-wasm-support)
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\O\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 9.64s
+     Running tests\mouse_callbacks.rs (target\debug\deps\mouse_callbacks-9c1b450e0905592e.exe)
+
+running 5 tests
+test advertised_masks_match_all_five_protocols ... ok
+test interrupted_reset_propagates_error_without_resetting_encoding ... ok
+test protocol_listener_observes_committed_state_and_can_reenter ... ok
+test custom_restriction_and_encoder_can_replace_themselves_without_borrow_conflicts ... ok
+test wheel_handler_can_clear_itself_and_its_current_result_is_retained ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\mouse_custom.rs (target\debug\deps\mouse_custom-a8c88673084ac3ea.exe)
+
+running 5 tests
+test custom_encoder_mutates_the_original_event ... ok
+test protocol_replacement_during_callback_finishes_the_original_call ... ok
+test shared_protocol_external_edits_are_visible_in_multiple_services ... ok
+test replacing_callback_captures_releases_them_outside_service_borrows ... ok
+test activation_retains_the_original_callback_error_chain ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\mouse_differential.rs (target\debug\deps\mouse_differential-69b422072130db17.exe)
+
+running 2 tests
+test raw_signed_buttons_match_source_bitwise_and_wheel_comparisons ... ok
+test matches_every_source_protocol_encoding_and_mutation_trace ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests\mouse_state.rs (target\debug\deps\mouse_state-41ec60162692ac4f.exe)
+
+running 14 tests
+test upstream_default_encodings ... ok
+test optional_modifiers_are_observable_and_x10_only_mutates_accepted_events ... ok
+test active_overwrites_take_effect_without_notification_and_reset_retains_registry ... ok
+test disposal_is_idempotent_stops_notifications_but_not_service_operations ... ok
+test upstream_default_protocols ... ok
+test upstream_add_protocol ... ok
+test upstream_init ... ok
+test custom_callbacks_invoked_once_and_mutations_are_not_hidden ... ok
+test upstream_protocol_change_event ... ok
+test upstream_restrict_and_encode_mouse_event ... ok
+test wheel_handler_identity_replace_clear_reset_and_dispose ... ok
+test upstream_add_encoding ... ok
+test flags_and_unknown_setters_preserve_active_state_and_events ... ok
+test upstream_setters_reset_and_errors ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\public_api_differential.rs (target\debug\deps\public_api_differential-51096b702f3277ac.exe)
+
+running 2 tests
+test pa01_pa02_source_generated_number_and_error_contracts ... ok
+test pa05_source_generated_complete_modes_snapshots ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests\mouse_failures.rs (target\debug\deps\mouse_failures-965f797046d8e70d.exe)
+
+running 2 tests
+test callback_can_replace_itself_reenter_and_then_fail_without_rolling_back_inner_cache ... ok
+test restriction_and_encoding_failures_keep_error_identity_and_do_not_commit_cache ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\mouse_policy.rs (target\debug\deps\mouse_policy-8501d973f63045cd.exe)
+
+running 6 tests
+test upstream_viewport_bounds ... ok
+test upstream_clicked_cell ... ok
+test every_source_touch_operation_preserves_accumulator_and_cursor_output ... ok
+test every_source_wheel_operation_preserves_partial_accumulator ... ok
+test every_source_coordinate_snapshot_matches_ieee_and_padding_semantics ... ok
+test every_original_trigger_invocation_matches_report_and_mutation ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\mouse_routing.rs (target\debug\deps\mouse_routing-2e3adde577e1ae5f.exe)
+
+running 7 tests
+test empty_encoding_still_commits_last_event_and_reset_clears_it ... ok
+test source_mutable_encoder_updates_event_before_cache_commit ... ok
+test wheel_veto_zero_shift_and_missing_coordinates_do_not_consume_state ... ok
+test upstream_alt_required_report_strips_only_nonwheel_alt ... ok
+test touch_assignment_commits_captured_accumulator_after_reentrant_reset ... ok
+test move_buttons_priority_fallback_override_and_invalid_button_pairs ... ok
+test output_failure_does_not_commit_cache_and_nested_output_sees_old_cache ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

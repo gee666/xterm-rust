@@ -47,6 +47,11 @@ pub struct Host {
     pub slow_value: RefCell<Option<JsValue>>,
     pub fast_value: RefCell<Option<JsValue>>,
 }
+impl Default for Host {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 impl Host {
     pub fn new() -> Self {
         Self {

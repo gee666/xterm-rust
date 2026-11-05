@@ -1,0 +1,21 @@
+{
+  "task": 345,
+  "scope": "Fallible native mouse restrictions and encoders through actual Terminal DOM reporting. Raw JS registry/receiver task305 remains open.",
+  "platform": "Windows",
+  "rustc": "1.85.1 (4eb161250 2025-03-15)",
+  "cargo": "1.85.1 (d73d2caf9 2024-12-31)",
+  "node": "v24.15.0",
+  "wasmBindgen": "0.2.100",
+  "native": {"targets": 8, "passed": 43, "failed": 0, "ignored": 0, "differentialRows": 16426, "log": "native.log"},
+  "browsers": {
+    "engines": ["Chromium 148.0.7778.96", "Firefox 150.0.2", "WebKit 26.4"],
+    "perEngine": {"terminalErrors": 2, "wheel": 5, "mouseDom": 24, "total": 31},
+    "expandedCases": 93,
+    "reports": ["terminal-errors.json", "wheel.json", "mouse-dom.json"],
+    "retainedFailure": "mouse-dom-before-fixture-fix.json",
+    "failureCause": "Iframe fixture used parent-realm instanceof Document for a child HTMLDocument, failing before mouse assertions. Fixed typed content_document getter; all assertions unchanged."
+  },
+  "sourceOnly": {"groups": 11, "originalSuitesExecuted": 0, "rustCasesExecuted": 0, "report": "source.json"},
+  "quality": {"nativeCoreWebAllTargetAllFeatureClippy": "passed", "scopedWasmClippy": "passed", "fullWorkspaceFmt": "passed"},
+  "notClaimed": ["raw registry/prototype semantics", "raw callback receiver or event identity", "arbitrary non-string encoder returns", "complete original upstream suites", "full workspace all-feature/release runtime gates", "native Linux/macOS runtime evidence", "full equivalence"]
+}

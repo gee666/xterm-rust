@@ -106,13 +106,16 @@ async fn global_release_uses_elements_current_owner_document() {
     let bindings = MouseBindings::new(&dom, host.clone()).unwrap();
     host.input.mouse.set_active_protocol("ANY").unwrap();
     host.input.mouse.set_active_encoding("SGR").unwrap();
-    let frame = document.create_element("iframe").unwrap();
+    let frame = document
+        .create_element("iframe")
+        .unwrap()
+        .dyn_into::<web_sys::HtmlIFrameElement>()
+        .unwrap();
     document.body().unwrap().append_child(&frame).unwrap();
     support::input::next_turn().await;
-    let next_document = js_sys::Reflect::get(&frame, &"contentDocument".into())
-        .unwrap()
-        .dyn_into::<web_sys::Document>()
-        .unwrap();
+    // A child document belongs to another realm, so instanceof Document in
+    // this window rejects it. The typed DOM getter preserves that valid object.
+    let next_document = frame.content_document().unwrap();
     next_document
         .body()
         .unwrap()

@@ -8,7 +8,7 @@ original suites and zero Rust cases executed.
 Run with source_repo's existing locked esbuild dependency:
 
 ```sh
-node scripts/build-slot.mjs --owner mouse-interop-source --lane native -- node scripts/mouse-interop-oracle.mjs
+node scripts/mouse-interop-oracle.mjs
 ```
 
 The shared loader `scripts/mouse-reference-module.mjs` bundles unchanged
@@ -52,6 +52,10 @@ recorded as code units so lone surrogates survive JSON transport.
 9. Registering __proto__ changes the registry prototype and does not create an
    own enumerable key. Protocol and encoder behavior remains live through that
    prototype, including the encoder's actual registry receiver.
+
+## Additional callback failure checks
+
+Task345 adds two groups without removing the original nine. Sixteen restriction/encoder cases preserve eight arbitrary thrown-value identities and mutations before failure. Two recursive replacement cases verify completed nested results and active selections survive an outer exception. These remain unchanged-source observations, not raw Rust registry parity. `results/mouse-callback-errors/source.json` records all11 groups and input/module hashes. The retired build-slot wrapper is not required; coordinate this short esbuild probe with the current bounded-resource owner.
 
 ## Receiver shape
 

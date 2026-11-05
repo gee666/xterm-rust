@@ -173,6 +173,51 @@ try {
     assert.equal(receiver, instance._encodings);
     report.observations.protoRegistration = { ownProtocol: false, ownEncoding: false, liveProtocol: true, liveEncoding: true };
   });
+  check('restriction and encoder throws preserve all value identities and prior mutations', () => {
+    const values = [undefined, null, false, 0, NaN, Symbol('throw'), 0n, {}];
+    let cases = 0;
+    for (const restriction of [true, false]) for (const sentinel of values) {
+      const instance = new MouseStateService();
+      const input = event();
+      const callback = actual => { actual.ctrl = true; throw sentinel; };
+      if (restriction) {
+        instance.addProtocol('ERROR', { events: 8, restrict: callback });
+        instance.activeProtocol = 'ERROR';
+      } else {
+        instance.addEncoding('ERROR', callback);
+        instance.activeEncoding = 'ERROR';
+      }
+      let caught = false;
+      try {
+        if (restriction) instance.restrictMouseEvent(input); else instance.encodeMouseEvent(input);
+      } catch (error) { caught = true; assert.ok(Object.is(error, sentinel)); }
+      assert.equal(caught, true); assert.equal(input.ctrl, true); cases++;
+    }
+    report.observations.callbackThrows = { cases, originalIdentity: true, priorMutationRetained: true };
+  });
+
+  check('failed callback retains replacement and completed recursive work', () => {
+    const observed = [];
+    for (const restriction of [true, false]) {
+      const instance = new MouseStateService();
+      const sentinel = {};
+      const callback = () => {
+        instance.activeProtocol = 'ANY'; instance.activeEncoding = 'SGR';
+        observed.push(instance.restrictMouseEvent(event()), instance.encodeMouseEvent(event()));
+        throw sentinel;
+      };
+      if (restriction) {
+        instance.addProtocol('ERROR', { events: 8, restrict: callback });
+        instance.activeProtocol = 'ERROR';
+      } else {
+        instance.addEncoding('ERROR', callback); instance.activeEncoding = 'ERROR';
+      }
+      assert.throws(() => restriction ? instance.restrictMouseEvent(event()) : instance.encodeMouseEvent(event()), error => error === sentinel);
+      assert.equal(instance.activeProtocol, 'ANY'); assert.equal(instance.activeEncoding, 'SGR');
+    }
+    assert.deepEqual(observed, [true, '\x1b[<0;1;2M', true, '\x1b[<0;1;2M']);
+    report.observations.callbackReentry = { cases: 2, nestedResults: observed, replacementRetained: true };
+  });
   report.status = 'passed-source-only';
 } catch (error) {
   report.status = 'failed'; report.error = String(error.stack || error); process.exitCode = 1;

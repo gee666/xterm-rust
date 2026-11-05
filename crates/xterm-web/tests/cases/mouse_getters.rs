@@ -1,11 +1,10 @@
-use super::{support::input::event, Setup};
+use super::Setup;
 use std::{
     cell::{Cell, RefCell},
     rc::Rc,
 };
 use wasm_bindgen::{closure::Closure, JsCast, JsValue};
 use wasm_bindgen_test::*;
-use web_sys::Event;
 use xterm_web::dom_listener::DomListener;
 
 pub(super) type Getter = Closure<dyn Fn() -> Result<JsValue, JsValue>>;

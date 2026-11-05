@@ -13,13 +13,15 @@ The platform-independent port is `xterm_core::mouse_state::MouseStateService<W>`
 | areMouseEventsActive | `are_mouse_events_active` |
 | isDefaultEncoding/isPixelEncoding | `is_default_encoding`, `is_pixel_encoding` |
 | onProtocolChange | `on_protocol_change().subscribe(...)` |
-| restrictMouseEvent | `restrict_mouse_event(&mut MouseEvent)` |
-| encodeMouseEvent | `encode_mouse_event(&mut MouseEvent) -> Vec<u16>` |
+| restrictMouseEvent | `restrict_mouse_event(&mut MouseEvent) -> Result<bool, EmitError>` |
+| encodeMouseEvent | `encode_mouse_event(&mut MouseEvent) -> Result<Vec<u16>, EmitError>` |
 | setCustomWheelEventHandler | `set_custom_wheel_event_handler` |
 | allowCustomWheelEvent | `allow_custom_wheel_event(&W)` |
 | reset/dispose | `reset`, `Disposable::dispose` |
 
 Unknown selection errors use `MouseStateError` with the original messages. Dispatch errors from the shared event emitter propagate. Coordinates are `f64` because the source accepts fractions, NaN, infinities and negative values. Typed button and action enums retain source numeric values. `MouseButton::Raw(i32)` also represents signed DOM button values such as -1; equality uses numeric value so Raw(4) has the same wheel semantics as the named variant. Actions reject out-of-enum values using `TryFrom<u8>`. Modifier fields are `Option<bool>` so custom protocols can observe JavaScript `undefined`. `MouseEventTypes` holds advertised event bits. Custom callbacks use `Rc` and run outside service borrows; callers should capture weak service references when reentering. `add_shared_protocol` retains an `Rc<SharedMouseProtocol>` whose events and restriction can be changed through setters and observed by multiple services. The owned `add_protocol` adapter transfers one protocol object into the service. Encoders receive mutable events because the source custom encoder can mutate its argument.
+
+`MouseRestriction` and `MouseEncoding` callbacks return `Result`. Rejection is `Ok(false)`, empty encoding is `Ok(Vec::new())`, and callback failure is `Err(EmitError)`. A browser callback failure retains its original thrown value through `JsCallbackError`. The live DOM report path stops before output/cache commit and propagates that value. Completed recursive calls retain their own cache updates. See [mouse-callback-errors.md](mouse-callback-errors.md) for scoped tests and remaining raw facade gaps.
 
 Encoder output uses UTF-16 units, not Rust `String`. DEFAULT can produce lone surrogates from negative coordinates. Its behavior follows `String.fromCharCode`, not UTF-8 byte encoding or replacement-character conversion. SGR number formatting uses the workspace's existing `ryu-js` dependency. Restriction and encoding remain separate calls, even for rejected events.
 
