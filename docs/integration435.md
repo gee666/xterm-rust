@@ -21,6 +21,12 @@ Native jobs use Cargo-j2 and one warm O: target. Browser suites are not repeated
 
 Exact workspace formatting is still a known Windows OS206 failure. Individual member format checks do not replace that command. Full source equivalence, final native Windows/Linux/macOS evidence, raw link/scroll/option family closure, demos and comparison deliverables remain unfinished.
 
+## Observed canonical outcome
+
+The unchanged helper fast-forwarded actual main from `785a7781` to frozen `dcde3e9c` and removed the regular private target. Its changed-crate default-feature gate passed534 tests across179 result summaries, with zero ignored tests. All affected/workspace/native/WASM checks passed. Separate union workspace all-target/all-feature tests passed2,086 tests across438 summaries, with zero failures or ignored tests. Strict native workspace and WASM xterm-web all-target/all-feature Clippy passed. All five package format checks passed; exact full formatting failed Windows OS206 and remains a failure.
+
+The helper transcript, quality logs and exact counters are retained in the producer's receipt-only continuation under `results/integration435/`. They are not a new source change or another main update. Browser evidence remains the accepted scoped producer evidence; no union browser matrix was run. Task425's receipt-only cleanup commit `400f5a1e` arrived after the source freeze and is carried only in this post-gate receipt continuation, without restarting or relabeling the frozen gate.
+
 ## Cleanup
 
 The owned worktree is `O:/xterm-rust-swarm-16/tmp/E415`, including its regular `target`, `tmp` and untracked generated browser outputs. Its copied reference is regular except the explicitly owned `source_repo/node_modules` junction to the pre-existing P: dependencies. That junction must be unlinked explicitly before any recursive cleanup. Reference sources, original dependencies, other worktrees and untracked integration `swarm/` content are outside the deletion set. Source and concise raw evidence are committed before cleanup.
