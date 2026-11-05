@@ -1,0 +1,5 @@
+# Independent review
+
+Task512 was accepted at dff8f22e with no findings. The reviewer checked all38 original/applied identities, all seven source unions and unchanged canonical helper/library/tests. It reran the immutable audit without writes,69 source,565 receipt and351 preserved-base pins with no mismatch or unexpected source. All23 changed JavaScript syntax checks and all776 hashes in both reference copies passed. The reviewer independently recounted2188 passing tests across491 summaries with zero failures, ignored, measured, filtered or warning lines.
+
+The reviewer reproduced full workspace formatting OS206 and all five complete package-format passes, confirmed fixture data unchanged, the private target absent and the owned root free of links/redirects. No files, refs, compiler/browser gate, cleanup or CI actions were modified or replayed. Current-union browser/full-feature/release/native-OS proof remains open. Actual owned-root removal follows acceptance and is not claimed by this receipt.
