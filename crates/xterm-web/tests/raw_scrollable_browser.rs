@@ -24,6 +24,8 @@ extern "C" {
     fn clock_cases(run: &Function) -> Result<u32, JsValue>;
     #[wasm_bindgen(catch, js_name = runGetterCases)]
     fn getter_cases(run: &Function) -> Result<u32, JsValue>;
+    #[wasm_bindgen(catch, js_name = runSchedulerCases)]
+    fn scheduler_cases(run: &Function) -> Result<u32, JsValue>;
 }
 #[derive(Default)]
 struct Frames {
@@ -32,12 +34,19 @@ struct Frames {
     trace: RefCell<Vec<JsValue>>,
     fail_request: RefCell<Option<JsValue>>,
     fail_cancel: RefCell<Option<JsValue>>,
+    request_hook: RefCell<Option<Function>>,
+    cancel_hook: RefCell<Option<Function>>,
 }
+#[derive(Clone)]
 struct Scheduler(Rc<Frames>);
 impl FrameScheduler for Scheduler {
     type Handle = u32;
     type Error = JsValue;
     fn request_frame(&mut self) -> Result<u32, JsValue> {
+        let hook = self.0.request_hook.borrow().clone();
+        if let Some(hook) = hook {
+            hook.call0(&JsValue::UNDEFINED)?;
+        }
         if let Some(error) = self.0.fail_request.borrow().clone() {
             return Err(error);
         }
@@ -51,6 +60,10 @@ impl FrameScheduler for Scheduler {
         Ok(id)
     }
     fn cancel_frame(&mut self, id: u32) -> Result<(), JsValue> {
+        let hook = self.0.cancel_hook.borrow().clone();
+        if let Some(hook) = hook {
+            hook.call0(&JsValue::UNDEFINED)?;
+        }
         if let Some(error) = self.0.fail_cancel.borrow().clone() {
             return Err(error);
         }
@@ -63,6 +76,14 @@ impl FrameScheduler for Scheduler {
     }
     fn cleanup_error(&mut self, error: JsValue) {
         web_sys::console::error_1(&error);
+    }
+    fn request_frame_shared(scheduler: &RefCell<Self>) -> Result<u32, JsValue> {
+        let mut scheduler = scheduler.borrow().clone();
+        scheduler.request_frame()
+    }
+    fn cancel_frame_shared(scheduler: &RefCell<Self>, id: u32) -> Result<(), JsValue> {
+        let mut scheduler = scheduler.borrow().clone();
+        scheduler.cancel_frame(id)
     }
 }
 fn row(values: &[JsValue]) -> JsValue {
@@ -195,6 +216,17 @@ fn run(duration: JsValue, setup: Function) -> Result<JsValue, JsValue> {
                     Ok(JsValue::UNDEFINED)
                 }
             }
+            Some("requestFn") | Some("cancelFn") => {
+                let hook = optional(args.get(1))
+                    .map(JsCast::dyn_into::<Function>)
+                    .transpose()?;
+                if args.get(0).as_string().as_deref() == Some("requestFn") {
+                    *frames.request_hook.borrow_mut() = hook;
+                } else {
+                    *frames.cancel_hook.borrow_mut() = hook;
+                }
+                Ok(JsValue::UNDEFINED)
+            }
             Some("failRequest") => {
                 *frames.fail_request.borrow_mut() = optional(args.get(1));
                 Ok(JsValue::UNDEFINED)
@@ -247,6 +279,13 @@ fn live_clock_values_errors_and_reentry() -> Result<(), JsValue> {
     let run =
         Closure::wrap(Box::new(run) as Box<dyn Fn(JsValue, Function) -> Result<JsValue, JsValue>>);
     assert_eq!(clock_cases(run.as_ref().unchecked_ref())?, 126);
+    Ok(())
+}
+#[wasm_bindgen_test]
+fn live_scheduler_reentry_and_error_identity() -> Result<(), JsValue> {
+    let run =
+        Closure::wrap(Box::new(run) as Box<dyn Fn(JsValue, Function) -> Result<JsValue, JsValue>>);
+    assert_eq!(scheduler_cases(run.as_ref().unchecked_ref())?, 84);
     Ok(())
 }
 #[wasm_bindgen_test]

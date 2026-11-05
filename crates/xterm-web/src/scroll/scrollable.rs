@@ -99,8 +99,8 @@ impl<S: FrameScheduler, V: ScrollValue> Clone for Scrollable<S, V> {
     }
 }
 impl<S: FrameScheduler, V: ScrollValue + 'static> Scrollable<S, V> {
-    /// The clock shares the frame timeline. Schedulers deliver asynchronously
-    /// and must not reenter their own request/cancel methods while borrowed.
+    /// The clock shares the frame timeline. Schedulers deliver asynchronously.
+    /// Reentrant hosts implement the shared dispatch hooks on `FrameScheduler`.
     pub fn try_new(
         scheduler: S,
         integer_values: bool,
@@ -239,22 +239,15 @@ impl<S: FrameScheduler, V: ScrollValue + 'static> Scrollable<S, V> {
     fn request_frame(&self) -> Result<(), ScrollError<S::Error, V::Error>> {
         // Evaluate the assignment receiver before calling the scheduler.
         let animation = self.required_animation()?;
-        let handle = self
-            .state
-            .scheduler
-            .borrow_mut()
-            .request_frame()
-            .map_err(ScrollError::Scheduler)?;
+        let handle =
+            S::request_frame_shared(&self.state.scheduler).map_err(ScrollError::Scheduler)?;
         *animation.pending.borrow_mut() = Some(handle);
         Ok(())
     }
     fn cancel(&self, animation: &Animation<S, V>) -> Result<(), ScrollError<S::Error, V::Error>> {
         let handle = animation.pending.borrow().clone();
         if let Some(handle) = handle {
-            self.state
-                .scheduler
-                .borrow_mut()
-                .cancel_frame(handle)
+            S::cancel_frame_shared(&self.state.scheduler, handle)
                 .map_err(ScrollError::Scheduler)?;
             animation.pending.borrow_mut().take();
         }

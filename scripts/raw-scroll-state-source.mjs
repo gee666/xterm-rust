@@ -14,16 +14,17 @@ const end=source.indexOf('export interface IScrollDimensions ',start);
 if(start<0||end<0)throw new Error('Reference ScrollState class boundaries changed');
 const args=process.argv.slice(2);
 const animation=args.includes('--animation');
-const live=args.includes('--live');
-const options=args.filter(arg=>arg!=='--animation'&&arg!=='--live');
-if((animation&&live)||options.some(arg=>arg!=='--write')||options.length>1)throw new Error('Usage: node scripts/raw-scroll-state-source.mjs [--animation|--live] [--write]');
+const scheduler=args.includes('--scheduler');
+const live=args.includes('--live')||scheduler;
+const options=args.filter(arg=>!['--animation','--live','--scheduler'].includes(arg));
+if((animation&&live)||(scheduler&&args.includes('--live'))||options.some(arg=>arg!=='--write')||options.length>1)throw new Error('Usage: node scripts/raw-scroll-state-source.mjs [--animation|--live|--scheduler] [--write]');
 const animationStart=source.indexOf('class SmoothScrollingUpdate ');
 if(animation&&animationStart<0)throw new Error('Reference animation class boundary changed');
 const input=source.slice(start,end)+(animation?'\n'+source.slice(animationStart).replace('class SmoothScrollingOperation ', 'export class SmoothScrollingOperation '):'');
 const compiled=live?esbuild.buildSync({entryPoints:[resolve(root,'source_repo/src/browser/scrollable/scrollable.ts')],
   bundle:true,write:false,format:'esm',target:'es2022'}).outputFiles[0].text:
   esbuild.transformSync(input,{loader:'ts',format:'esm',target:'es2022'}).code;
-const name=live?'raw_scrollable':animation?'raw_scroll_animation':'raw_scroll_state';
+const name=scheduler?'browser_scroll_scheduler':live?'raw_scrollable':animation?'raw_scroll_animation':'raw_scroll_state';
 const label=live?'Scrollable with original Event/Lifecycle':animation?'ScrollState and SmoothScrollingOperation':'ScrollState';
 const hash=createHash('sha256').update(source).digest('hex');
 const cases=await readFile(resolve(root,`crates/xterm-web/tests/${name}_cases.js`),'utf8');

@@ -1,14 +1,15 @@
 // Source and Rust receive independent inputs and the same action program.
 function sourceRun(duration, setup) {
-  let now=1000, clockFn, next=0, failRequest, failCancel;
+  let now=1000, clockFn, next=0, failRequest, failCancel, requestFn, cancelFn;
   const active=new Map(), trace=[], events=[];
   const oldNow=Date.now;
   Date.now=()=>clockFn?clockFn():now;
   const model=new Scrollable({forceIntegerValues:false, smoothScrollDuration:duration,
     scheduleAtNextAnimationFrame(callback) {
+      if(requestFn)requestFn();
       if(failRequest!==undefined)throw failRequest;
       const id=++next;active.set(id,callback);trace.push(['request',id]);
-      return {dispose() {if(failCancel!==undefined)throw failCancel;active.delete(id);trace.push(['cancel',id]);}};
+      return {dispose() {if(cancelFn)cancelFn();if(failCancel!==undefined)throw failCancel;active.delete(id);trace.push(['cancel',id]);}};
     }});
   const fields=s=>[s.rawScrollLeft,s.rawScrollTop,s.width,s.scrollWidth,s.scrollLeft,s.height,s.scrollHeight,s.scrollTop];
   const listener=model.onScroll(e=>events.push([e.inSmoothScrolling,
@@ -30,6 +31,8 @@ function sourceRun(duration, setup) {
         case 'clock': now=a[1];clockFn=undefined;break;
         case 'clockFn': clockFn=a[1];break;
         case 'frame': {const item=active.entries().next().value;if(item){active.delete(item[0]);item[1]();}break;}
+        case 'requestFn': requestFn=a[1];break;
+        case 'cancelFn': cancelFn=a[1];break;
         case 'failRequest': failRequest=a[1];break;
         case 'failCancel': failCancel=a[1];break;
         case 'validate': {const p=model.validateScrollPosition({scrollLeft:a[1],scrollTop:a[2]});result=[p.scrollLeft,p.scrollTop];break;}
@@ -40,7 +43,7 @@ function sourceRun(duration, setup) {
       return [true,result];
     } catch(error) {return [false,error];}
   }
-  try{return setup(dispatch);}finally {failCancel=undefined;listener.dispose();model.dispose();Date.now=oldNow;}
+  try{return setup(dispatch);}finally {requestFn=cancelFn=failCancel=undefined;listener.dispose();model.dispose();Date.now=oldNow;}
 }
 function normalize(value, objects) {
   if(Array.isArray(value))return value.map(v=>normalize(v,objects));
@@ -89,6 +92,7 @@ function scenario(program) {
     const snapshot=act('snapshot');
     if(snapshot[0])for(const event of snapshot[1][3])for(const state of [event[1],event[2]]){state[0]=undefined;state[1]=undefined;}
     const result=normalize([output,coercions],objects);
+    dispatch(['requestFn',undefined]);dispatch(['cancelFn',undefined]);
     dispatch(['failRequest',undefined]);dispatch(['failCancel',undefined]);dispatch(['dispose']);
     return result;
   };
@@ -276,4 +280,36 @@ export function runGetterCases(run) {
     if(JSON.stringify(actual)!==JSON.stringify(expected))throw new Error(`${label}\nexpected ${JSON.stringify(expected)}\nactual ${JSON.stringify(actual)}`);
   }
   return tests.length;
+}
+
+export function runSchedulerCases(run) {
+  let count=0;
+  for(const hook of ['requestFn','cancelFn'])
+    for(const reaction of ['now','smooth','dimensions','dispose','frame','throw','smoothThrow'])
+      for(const phase of ['initial','replace','reuse','tick','dimensions','now']) {
+        const program=scenario(({act,token,log})=>{
+          if(phase!=='initial')act('smooth',100,200,false);
+          act(hook,()=>{
+            act(hook,undefined);log.push(['hook',hook,reaction]);
+            if(reaction==='throw')throw token;
+            if(reaction==='now')act('now',5,7);
+            if(reaction==='smooth'||reaction==='smoothThrow')act('smooth',300,350,false);
+            if(reaction==='dimensions')act('dimensions',120,1400,80,1300,true);
+            if(reaction==='dispose')act('dispose');
+            if(reaction==='frame')act('frame');
+            if(reaction==='smoothThrow')throw token;
+          });
+          if(phase==='initial'||phase==='replace'||phase==='reuse')act('smooth',200,250,phase==='reuse');
+          if(phase==='tick'){act('clock',1040);act('frame');}
+          if(phase==='dimensions')act('dimensions',120,1400,80,1300,true);
+          if(phase==='now')act('now',20,30);
+          act('snapshot');act('clock',1060);act('frame');
+          act('snapshot');act('clock',1300);act('frame');act('now',8,9);
+        });
+        const expected=sourceRun(90,program),actual=run(90,program);
+        if(JSON.stringify(expected)!==JSON.stringify(actual))
+          throw new Error('scheduler/'+hook+'/'+reaction+'/'+phase+' expected '+JSON.stringify(expected)+' actual '+JSON.stringify(actual));
+        count++;
+      }
+  return count;
 }

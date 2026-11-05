@@ -13,6 +13,7 @@ use xterm_core::lifecycle::Disposable;
 
 type Target = Rc<RefCell<Option<WeakScrollable<BrowserScrollScheduler>>>>;
 pub type QueueSource = Rc<dyn Fn() -> Result<WindowAnimationQueue, JsValue>>;
+#[derive(Clone)]
 pub struct BrowserScrollScheduler {
     queue: QueueSource,
     target: Target,
@@ -31,6 +32,12 @@ impl FrameScheduler for BrowserScrollScheduler {
             }
             Ok(())
         })
+    }
+    fn request_frame_shared(scheduler: &RefCell<Self>) -> Result<AnimationItem, JsValue> {
+        // Resolving the current browser window can invoke user getters. Keep
+        // only independent handles alive, never the scheduler's RefCell borrow.
+        let mut scheduler = scheduler.borrow().clone();
+        scheduler.request_frame()
     }
     fn cancel_frame(&mut self, handle: AnimationItem) -> Result<(), JsValue> {
         handle.dispose();

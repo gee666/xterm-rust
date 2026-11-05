@@ -9,6 +9,27 @@ pub trait FrameScheduler {
     fn cancel_frame(&mut self, handle: Self::Handle) -> Result<(), Self::Error>;
     /// Drop cannot return errors. The host must report failed cleanup, not ignore it.
     fn cleanup_error(&mut self, error: Self::Error);
+    /// Dispatch through shared ownership. Hosts that call back into their owner
+    /// during scheduling must override this method, copy their callback handles,
+    /// and release the scheduler borrow before invoking host code. The default
+    /// preserves the exclusive, non-reentrant contract of existing schedulers.
+    fn request_frame_shared(scheduler: &RefCell<Self>) -> Result<Self::Handle, Self::Error>
+    where
+        Self: Sized,
+    {
+        scheduler.borrow_mut().request_frame()
+    }
+    /// Like `request_frame_shared`, but for cancellation. Frame delivery itself
+    /// remains asynchronous; a host may reenter while requesting or canceling.
+    fn cancel_frame_shared(
+        scheduler: &RefCell<Self>,
+        handle: Self::Handle,
+    ) -> Result<(), Self::Error>
+    where
+        Self: Sized,
+    {
+        scheduler.borrow_mut().cancel_frame(handle)
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
