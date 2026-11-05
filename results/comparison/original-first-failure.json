@@ -1,0 +1,25 @@
+{
+  "status": "failed",
+  "attempt": "Initial manual original production esbuild invocation with a temporary node_modules junction to Integration/source_repo/node_modules",
+  "commands": [
+    [
+      "node",
+      "bin/esbuild.mjs",
+      "--prod"
+    ],
+    [
+      "node",
+      "bin/esbuild.mjs",
+      "--prod",
+      "--headless"
+    ]
+  ],
+  "exitCodes": [
+    1,
+    1
+  ],
+  "errorCode": "ERR_MODULE_NOT_FOUND",
+  "message": "Cannot find package 'esbuild' imported from the isolated reference bin/esbuild.mjs",
+  "cleanup": "Temporary dependency junction removed in finally; no size measurement produced.",
+  "resolution": "Reused the existing installed P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/node_modules directory. Both unchanged production commands subsequently exited0."
+}

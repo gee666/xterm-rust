@@ -50,14 +50,14 @@ test('inventory includes generated sources and configuration but excludes output
   put('crates/core/tests/fixture.tsv', '1\t2\n');
   put('crates/core/Cargo.toml', '[package]\n');
   put('Cargo.lock', 'ignored lock\n');
-  for (const path of ['target/generated.rs', 'source_repo/src/a.ts', '.pi/private.rs', 'node_modules/a.js', 'tmp/a.rs', 'docs/data.json', 'results/a.json', 'out-esbuild-test/generated.js']) put(path, 'ignored\n');
+  for (const path of ['target/generated.rs', 'source_repo/src/a.ts', '.pi/private.rs', 'node_modules/a.js', 'tmp/a.rs', 'docs/data.json', 'results/a.json', 'out-esbuild-test/generated.js', 'headless/lib-headless/xterm-headless.mjs']) put(path, 'ignored\n');
   const result = inventory(dir, 'port', rules);
   assert.deepEqual(result.totals, { files: 4, physical: 6, nonblank: 6, bytes: 73 });
   assert.equal(result.byCategory['generated-code-data'].files, 1);
   assert.equal(result.byCategory['test-data'].files, 1);
   assert.equal(result.byCategory.configuration.files, 1);
   assert.equal(result.files.find(row => row.path === 'Cargo.lock').counted, false);
-  assert.equal(result.excluded.length, 8);
+  assert.equal(result.excluded.length, 9);
   assert.deepEqual(result, inventory(dir, 'port', rules));
   for (const groups of [result.byCategory, result.byPurpose, result.byExtension]) {
     const sum = Object.values(groups).reduce((sum, row) => {

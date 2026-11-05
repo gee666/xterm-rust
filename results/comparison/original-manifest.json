@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "distributions": [
+    {
+      "id": "original-web-core-esm",
+      "directory": "web",
+      "kind": "web",
+      "profile": "release",
+      "scope": "Core-only original ESM distribution, all fourteen optional addons excluded",
+      "addons": [],
+      "files": [
+        {
+          "path": "xterm.mjs",
+          "role": "production ESM bundle"
+        },
+        {
+          "path": "LICENSE",
+          "role": "license"
+        },
+        {
+          "path": "xterm.css",
+          "role": "required CSS"
+        }
+      ],
+      "build": {
+        "commands": [
+          "node bin/esbuild.mjs --prod",
+          "node bin/esbuild.mjs --prod --headless"
+        ],
+        "sourceSha256": "319645846cc7e05738b9283d15a6497ec88bd2c9cb723e25c6986122ca533ece",
+        "toolchain": "Node v24.15.0; esbuild 0.28.1; lock SHA256 1d4fe6fb8f91e404df5608b4421008116ac9d5d37b038c9b16d261246d5d5e0e",
+        "flags": "Unchanged bin/esbuild.mjs --prod: minify=true, treeShaking=true, target=es2021, legalComments=none; emitted sourcemaps excluded from download totals; no native LTO/strip flags apply"
+      }
+    },
+    {
+      "id": "original-headless-core-esm",
+      "directory": "headless",
+      "kind": "headless-js",
+      "profile": "release",
+      "scope": "Core-only original ESM distribution, all fourteen optional addons excluded",
+      "addons": [],
+      "files": [
+        {
+          "path": "xterm-headless.mjs",
+          "role": "production ESM bundle"
+        },
+        {
+          "path": "LICENSE",
+          "role": "license"
+        }
+      ],
+      "build": {
+        "commands": [
+          "node bin/esbuild.mjs --prod",
+          "node bin/esbuild.mjs --prod --headless"
+        ],
+        "sourceSha256": "319645846cc7e05738b9283d15a6497ec88bd2c9cb723e25c6986122ca533ece",
+        "toolchain": "Node v24.15.0; esbuild 0.28.1; lock SHA256 1d4fe6fb8f91e404df5608b4421008116ac9d5d37b038c9b16d261246d5d5e0e",
+        "flags": "Unchanged bin/esbuild.mjs --prod: minify=true, treeShaking=true, target=es2021, legalComments=none; emitted sourcemaps excluded from download totals; no native LTO/strip flags apply"
+      }
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "tool": "distribution-size.mjs v1",
+  "node": "v24.15.0",
+  "codecs": {
+    "zlib": "1.3.1-e00f703",
+    "brotli": "1.2.0"
+  },
+  "compression": {
+    "gzip": {
+      "level": 9
+    },
+    "brotli": {
+      "quality": 11,
+      "mode": "generic",
+      "lgwin": 22
+    }
+  },
+  "method": "Unique normalized file paths per distribution; sum independently compressed files, not archive bytes. Native raw bytes are not JS download bytes.",
+  "status": "Measured declared artifacts only. Manifest provenance is caller-supplied; neither equivalent functionality nor matched-feature coverage is established by sizes.",
+  "distributions": [
+    {
+      "id": "original-headless-core-esm",
+      "directory": "headless",
+      "kind": "headless-js",
+      "profile": "release",
+      "scope": "Core-only original ESM distribution, all fourteen optional addons excluded",
+      "addons": [],
+      "files": [
+        {
+          "path": "LICENSE",
+          "role": "license",
+          "sha256": "883674266227c392ea9abeaa8f69148fa7516d106caf1e34bfc2bcd5cb1e803b",
+          "raw": 1282,
+          "gzip": 770,
+          "brotli": 545
+        },
+        {
+          "path": "xterm-headless.mjs",
+          "role": "production ESM bundle",
+          "sha256": "7b814befec422dd3696df2a0d039fbfa96c0d0bb3ed0506ad4bcc164f4815b5c",
+          "raw": 139103,
+          "gzip": 33827,
+          "brotli": 28853
+        }
+      ],
+      "build": {
+        "commands": [
+          "node bin/esbuild.mjs --prod",
+          "node bin/esbuild.mjs --prod --headless"
+        ],
+        "sourceSha256": "319645846cc7e05738b9283d15a6497ec88bd2c9cb723e25c6986122ca533ece",
+        "toolchain": "Node v24.15.0; esbuild 0.28.1; lock SHA256 1d4fe6fb8f91e404df5608b4421008116ac9d5d37b038c9b16d261246d5d5e0e",
+        "flags": "Unchanged bin/esbuild.mjs --prod: minify=true, treeShaking=true, target=es2021, legalComments=none; emitted sourcemaps excluded from download totals; no native LTO/strip flags apply"
+      },
+      "excluded": [],
+      "totals": {
+        "raw": 140385,
+        "gzip": 34597,
+        "brotli": 29398
+      }
+    },
+    {
+      "id": "original-web-core-esm",
+      "directory": "web",
+      "kind": "web",
+      "profile": "release",
+      "scope": "Core-only original ESM distribution, all fourteen optional addons excluded",
+      "addons": [],
+      "files": [
+        {
+          "path": "LICENSE",
+          "role": "license",
+          "sha256": "883674266227c392ea9abeaa8f69148fa7516d106caf1e34bfc2bcd5cb1e803b",
+          "raw": 1282,
+          "gzip": 770,
+          "brotli": 545
+        },
+        {
+          "path": "xterm.css",
+          "role": "required CSS",
+          "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d",
+          "raw": 8154,
+          "gzip": 2725,
+          "brotli": 2124
+        },
+        {
+          "path": "xterm.mjs",
+          "role": "production ESM bundle",
+          "sha256": "581ce4bb989b7981b9640097eb4ebf091ada2b2f9d1e084b813245e5ac90aad0",
+          "raw": 344533,
+          "gzip": 83989,
+          "brotli": 70579
+        }
+      ],
+      "build": {
+        "commands": [
+          "node bin/esbuild.mjs --prod",
+          "node bin/esbuild.mjs --prod --headless"
+        ],
+        "sourceSha256": "319645846cc7e05738b9283d15a6497ec88bd2c9cb723e25c6986122ca533ece",
+        "toolchain": "Node v24.15.0; esbuild 0.28.1; lock SHA256 1d4fe6fb8f91e404df5608b4421008116ac9d5d37b038c9b16d261246d5d5e0e",
+        "flags": "Unchanged bin/esbuild.mjs --prod: minify=true, treeShaking=true, target=es2021, legalComments=none; emitted sourcemaps excluded from download totals; no native LTO/strip flags apply"
+      },
+      "excluded": [],
+      "totals": {
+        "raw": 353969,
+        "gzip": 87484,
+        "brotli": 73248
+      }
+    }
+  ]
+}

@@ -27,24 +27,24 @@ Tool: xterm-rust count-loc.mjs v1, Node v24.15.0.
 
 | Category | Files | Physical | Nonblank | Bytes |
 | --- | ---: | ---: | ---: | ---: |
-| production-library | 328 | 46116 | 44239 | 1651967 |
-| addons | 78 | 10493 | 10087 | 374291 |
-| bindings-glue | 3 | 186 | 170 | 6649 |
-| generated-code-data | 15 | 8909 | 8852 | 235323 |
+| production-library | 385 | 53579 | 51654 | 1879555 |
+| addons | 87 | 12601 | 12150 | 437478 |
+| bindings-glue | 22 | 2540 | 2445 | 95245 |
+| generated-code-data | 17 | 9144 | 9081 | 243621 |
 | mixed-code-data | 0 | 0 | 0 | 0 |
-| mixed-code-tests | 34 | 5507 | 5225 | 194043 |
-| tests | 374 | 58119 | 56533 | 2051047 |
-| test-data | 122 | 413073 | 412979 | 131234836 |
+| mixed-code-tests | 45 | 7657 | 7340 | 265485 |
+| tests | 505 | 77292 | 75420 | 2740369 |
+| test-data | 151 | 458430 | 458333 | 142161593 |
 | demos | 11 | 983 | 959 | 42283 |
-| tooling | 211 | 21026 | 20750 | 1253893 |
-| configuration | 10 | 795 | 773 | 49146 |
-| total | 1186 | 565207 | 560567 | 137093478 |
+| tooling | 268 | 25944 | 25617 | 1577643 |
+| configuration | 11 | 822 | 796 | 50925 |
+| total | 1502 | 648992 | 643795 | 149494197 |
 
 Original inventory SHA-256: 319645846cc7e05738b9283d15a6497ec88bd2c9cb723e25c6986122ca533ece
 
-Port inventory SHA-256: ac7cd47c1af1a42e4d43400ea6d0127c44d7cc194c607e971584ee30b6ab927c
+Port inventory SHA-256: a1ba77810ba1417af638a3d7fe0788ab1c3d70431e336f618f39e7eaf046739c
 
-Rules SHA-256: 21bb893f4aabbc51a1caae0d671190bd8ba0e63bcfc84a6dde475164aca78c4c
+Rules SHA-256: cfc12c1eaa6ea3870e050009e8c7dbe59087ec4933671298f6377e1def624b20
 
 Legacy pre-launch subtotal matches: true.
 

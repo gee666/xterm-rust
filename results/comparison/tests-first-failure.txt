@@ -1,0 +1,142 @@
+✔ physical lines count final unterminated lines and avoid phantom trailing lines (1.21ms)
+✔ roles separate tests, bindings, addons, native demos and oracle tools (0.6823ms)
+✔ inventory includes generated sources and configuration but excludes output and dependencies (17.1143ms)
+✔ structured fixture data takes precedence over configuration and lockfile names (6.7356ms)
+✔ mandatory browser generated glue is counted separately from demo and binary assets (10.7475ms)
+✔ inline Rust test annotations separate mixed files rather than claiming pure demo logic (7.582ms)
+✔ generated CSS copies count canonical source once and cannot hide changed code (11.0473ms)
+✔ UTF-8 BOM bytes do not erase a physical source line (1.4857ms)
+✔ unknown production extensions cannot silently pass classification review (5.9151ms)
+✔ invalid UTF-8 source fails but binary fixtures are listed as assets (2.231ms)
+✔ mixed source/data files are reported without pretending all lines are generated data (9.0672ms)
+✔ symlinks require review instead of following outside the tree (1.2672ms)
+✔ production text data is counted and generator strings are not generated-file markers (9.4669ms)
+✔ CLI custom roots exclude their own output and reject baseline mismatches (167.8855ms)
+✔ selected root junction and ordinary file are refused before traversal (1.4702ms)
+✔ reserved port target junction is excluded but ordinary and reference links stay forbidden (2.4827ms)
+✔ named protocol string data is separated in both trees without calling authored source generated (13.12ms)
+✔ CLI rejects unknown or missing arguments (0.5734ms)
+{
+  "schemaVersion": 1,
+  "tool": "distribution-size.mjs v1",
+  "node": "v24.15.0",
+  "codecs": {
+    "zlib": "1.3.1-e00f703",
+    "brotli": "1.2.0"
+  },
+  "compression": {
+    "gzip": {
+      "level": 9
+    },
+    "brotli": {
+      "quality": 11,
+      "mode": "generic",
+      "lgwin": 22
+    }
+  },
+  "method": "Unique normalized file paths per distribution; sum independently compressed files, not archive bytes. Native raw bytes are not JS download bytes.",
+  "status": "Measured declared artifacts only. Manifest provenance is caller-supplied; neither equivalent functionality nor matched-feature coverage is established by sizes.",
+  "distributions": [
+    {
+      "id": "rust-web",
+      "directory": ".",
+      "kind": "web",
+      "scope": "fixture only",
+      "profile": "release",
+      "addons": [],
+      "build": {
+        "commands": [
+          "cargo build --release"
+        ],
+        "toolchain": "fixture rustc",
+        "flags": "fixture flags",
+        "sourceSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "files": [
+        {
+          "path": "core.js",
+          "role": "binding",
+          "sha256": "97f58841deaeb69002930dba902ad6ff0149aed32f5a43afb5024081a2818ac9",
+          "raw": 31,
+          "gzip": 51,
+          "brotli": 35
+        },
+        {
+          "path": "core.wasm",
+          "role": "wasm",
+          "sha256": "93a44bbb96c751218e4c00d479e4c14358122a389acca16205b1e4d0dc5f9476",
+          "raw": 8,
+          "gzip": 28,
+          "brotli": 12
+        },
+        {
+          "path": "empty.css",
+          "role": "css",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "raw": 0,
+          "gzip": 20,
+          "brotli": 1
+        }
+      ],
+      "excluded": [],
+      "totals": {
+        "raw": 39,
+        "gzip": 99,
+        "brotli": 48
+      }
+    }
+  ],
+  "manifestSha256": "e724aa9811bd28becac1e8308a9d15f49e242f586c3d2c111bdc664120b30c4d",
+  "invocation": {
+    "manifest": "O:/xterm-rust-swarm-16/tmp/worktrees/Genevieve16/tmp/distribution-size-KtoqoJ/manifest.json",
+    "root": "O:/xterm-rust-swarm-16/tmp/worktrees/Genevieve16/tmp/distribution-size-KtoqoJ/ship"
+  }
+}
+✔ counts each path once, includes empty files and reconciles all compression totals (12.661ms)
+✔ gzip and Brotli round trips admit WASM, Unicode, CRLF and empty bytes (1.1346ms)
+✔ recount is byte/hash stable and independent of manifest file order (6.3651ms)
+✔ native files have raw sizes only, not download comparisons (2.3636ms)
+✔ rejects missing files and undeclared mandatory supporting assets (3.1131ms)
+✔ excluded nonruntime files need reasons and must exist (3.5129ms)
+✔ rejects traversal, absolute, Windows drive and nonnormalized paths (1.5785ms)
+✔ rejects junction roots and nested junction entries without following them (5.1887ms)
+✔ rejects directory file entries and conflicting declarations (2.351ms)
+✔ rejects absent release provenance, addons and duplicate ids (3.3645ms)
+✔ CLI writes a machine-readable receipt and rejects outputs inside inputs (17.2637ms)
+✔ CLI exits nonzero for missing assets, malformed JSON and unknown flags (158.8423ms)
+✔ unchanged-source fixture builds produce sizes, preserve sources and clean owned links/staging (389.4083ms)
+✔ failed build propagates, cleans its link and invalidates old sizes (259.6701ms)
+✔ reference mutation fails instead of yielding a size comparison (181.4113ms)
+✖ existing staging content and dependencies are not replaced or deleted (143.3184ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 33
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1061.0661
+
+✖ failing tests:
+
+test at scripts\measure-original-size.test.mjs:58:1
+✖ existing staging content and dependencies are not replaced or deleted (143.3184ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at fixture (file:///O:/xterm-rust-swarm-16/tmp/worktrees/Genevieve16/scripts/measure-original-size.test.mjs:24:12)
+      at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/worktrees/Genevieve16/scripts/measure-original-size.test.mjs:58:85)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
