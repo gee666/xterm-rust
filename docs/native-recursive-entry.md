@@ -38,6 +38,10 @@ Native Windows MSVC with Rust 1.85.1 and Node 24.15.0 passed 16 source cases and
 
 The isolated review accepted `dbb46b2` after independently running 32 tests across nine focused native targets, the 16-case source oracle, scoped warning-denied Clippy and changed-file rustfmt. It found no code problems. It did not run workspace/browser or Linux/macOS gates. Its counts and scope are retained in `review.json`.
 
+## Canonical integration
+
+The canonical merge helper integrated this repair with accepted selection task #341, ProgramStatus task #340 and assertion-encoding task #350 at main `8ab2dd323239a74c95d9b0484d8610785d401f6a`. It passed 1983 native test functions in 359 summaries across changed core/addons/web crates, affected all-target checks, default workspace checks and applicable WASM library checks. No tests failed or were ignored. The helper removed its private target after fast-forwarding main. `canonical-merge.json` and `canonical-merge.log` retain the exact batch and scope. This gate did not run browser runtimes or the workspace all-feature matrix.
+
 ## Remaining scope
 
 This repair establishes the concrete native Bell/resize recursive-entry contract. Callbacks invoked inside arbitrary custom parser handlers or other synchronous producer callbacks still need separate recursive-entry assertions and ownership work under parser closure task #313. The 16-case fixture is not the complete original InputHandler suite or full-state corpus. The existing 9306-state corpus remains unchanged and passed in the full core run. Browser queue behavior, all-feature workspace quality, native Linux/macOS and full equivalence remain separately tracked and NOT PROVEN.
