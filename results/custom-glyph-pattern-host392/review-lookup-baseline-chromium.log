@@ -1,0 +1,29 @@
+running 5 tests
+test pattern_zero_variant_does_not_call_matrix_translate ... ok
+test pattern_transform_getter_precedes_matrix_construction ... FAIL
+test pattern_factory_availability_is_captured_like_source_module ... ok
+test pattern_factory_arguments_and_live_data_reads_match_source ... ok
+test pattern_constructor_data_and_callback_errors_keep_source_phase_and_identity ... ok
+
+failures:
+
+---- pattern_transform_getter_precedes_matrix_construction output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.__rust_start_panic (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[46183]:0xaeaec1)
+            at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.rust_panic (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[41364]:0xadf888)
+            at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[13072]:0x8b534d)
+            at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[16506]:0x945404)
+            at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[45648]:0xaea15b)
+            at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.rust_begin_unwind (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[31334]:0xaa27ee)
+            at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[31335]:0xaa281b)
+            at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.wasm_custom_glyph_pattern_host::assert_all::h80897f6aa77eafea (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[4502]:0x63eebd)
+            at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.wasm_custom_glyph_pattern_host::pattern_transform_getter_precedes_matrix_construction::h7355a22c5de3674e (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[1143]:0x329429)
+            at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.core::ops::function::FnOnce::call_once::h184da1c42c098a2b (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[30768]:0xa9c2b7)
+
+failures:
+
+    pattern_transform_getter_precedes_matrix_construction
+
+test result: FAILED. 4 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.05s
+

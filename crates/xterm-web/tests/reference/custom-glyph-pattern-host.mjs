@@ -10,6 +10,7 @@ export function sourcePatternHost(ctx, variant) {
 export function installPatternHostProbe(ctx, kind, color, token) {
   const trace = [];
   const undo = [];
+  const matrixToken = Symbol('matrix constructor failure');
   const number = value => Object.is(value, -0) ? '-0' : String(value);
   const replace = (object, key, descriptor) => {
     const previous = Object.getOwnPropertyDescriptor(object, key);
@@ -94,11 +95,18 @@ export function installPatternHostProbe(ctx, kind, color, token) {
     if (kind === 'pattern-throw') throw token;
     const pattern = Reflect.apply(createPattern, this, [canvas, repetition]);
     if (pattern) {
-      const setTransform = pattern.setTransform;
-      method(pattern, 'setTransform', function(matrix) {
-        trace.push(['setTransform']);
-        return Reflect.apply(setTransform, this, [matrix]);
-      });
+      if (kind === 'transform-getter-throw') {
+        replace(pattern, 'setTransform', { get() {
+          trace.push(['get setTransform']);
+          throw token;
+        } });
+      } else {
+        const setTransform = pattern.setTransform;
+        method(pattern, 'setTransform', function(matrix) {
+          trace.push(['setTransform']);
+          return Reflect.apply(setTransform, this, [matrix]);
+        });
+      }
     }
     return pattern;
   });
@@ -107,6 +115,7 @@ export function installPatternHostProbe(ctx, kind, color, token) {
   method(globalThis, 'DOMMatrix', new Proxy(matrix, {
     construct(target, args, newTarget) {
       trace.push(['matrix', args.length]);
+      if (kind === 'transform-getter-throw') throw matrixToken;
       const value = Reflect.construct(target, args, newTarget);
       const translate = value.translateSelf;
       method(value, 'translateSelf', function(x, y) {
@@ -118,7 +127,7 @@ export function installPatternHostProbe(ctx, kind, color, token) {
     }
   }));
 
-  return { trace, undo, token, factoryWasAvailable };
+  return { trace, undo, token, matrixToken, factoryWasAvailable };
 }
 
 export function finishPatternHostProbe(probe, ok, result, error) {
@@ -126,6 +135,7 @@ export function finishPatternHostProbe(probe, ok, result, error) {
   while (probe.undo.length) probe.undo.pop()();
   const outcome = ok ? ['ok', result]
     : error === probe.token ? ['error', 'token']
+    : error === probe.matrixToken ? ['error', 'matrix-token']
     : ['error', error?.name, error?.message];
   return JSON.stringify({ outcome, trace: probe.trace, factoryWasAvailable: probe.factoryWasAvailable });
 }

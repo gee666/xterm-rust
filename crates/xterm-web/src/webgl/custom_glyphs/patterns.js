@@ -15,6 +15,10 @@ export function customGlyphPatternByte(image, index, value) { image.data[index] 
 export function customGlyphPatternPut(context, image) { context.putImageData(image, 0, 0); }
 export function customGlyphPatternCreate(context, canvas) { return context.createPattern(canvas, null); }
 export function customGlyphPatternTransform(pattern, x, y) {
-  const matrix = new DOMMatrix();
-  pattern.setTransform(x !== 0 || y !== 0 ? matrix.translateSelf(x, y) : matrix);
+  // Method lookup precedes argument construction, including their distinct throws.
+  if (x !== 0 || y !== 0) {
+    pattern.setTransform(new DOMMatrix().translateSelf(x, y));
+  } else {
+    pattern.setTransform(new DOMMatrix());
+  }
 }

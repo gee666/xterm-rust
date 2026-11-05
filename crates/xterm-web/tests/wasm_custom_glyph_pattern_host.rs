@@ -126,6 +126,17 @@ fn pattern_factory_availability_is_captured_like_source_module() {
 }
 
 #[wasm_bindgen_test]
+fn pattern_transform_getter_precedes_matrix_construction() {
+    let mut failures = Vec::new();
+    for (variant, color) in [(0, "#197a71"), (3, "#197a72")] {
+        let (expected, actual) = pair("transform-getter-throw", color, variant);
+        assert_eq!(expected["outcome"], serde_json::json!(["error", "token"]));
+        retain_mismatch(color, expected, actual, &mut failures);
+    }
+    assert_all(failures);
+}
+
+#[wasm_bindgen_test]
 fn pattern_zero_variant_does_not_call_matrix_translate() {
     let mut failures = Vec::new();
     for (variant, color) in [

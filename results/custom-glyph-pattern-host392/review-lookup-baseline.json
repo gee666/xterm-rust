@@ -1,0 +1,136 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_custom_glyph_pattern_host",
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T16:43:06.210Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_custom_glyph_pattern_host",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1332.8303,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 8.398099999999886,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\I\\results\\acceptance-artifacts\\544a000230c99e3342f4a73f00746df3f0f7b8e951ee8932684c58dfa803833e\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\I\\results\\browser-host\\wasm_custom_glyph_pattern_host\\2026-11-05T16-43-06-209Z-bdf1719f-13a6-49dd-97b0-e68c40b73a0d\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1010.5279999999998,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_custom_glyph_pattern_host::pattern_constructor_data_and_callback_errors_keep_source_phase_and_identity",
+        "__wbgt__wasm_custom_glyph_pattern_host::pattern_factory_arguments_and_live_data_reads_match_source",
+        "__wbgt__wasm_custom_glyph_pattern_host::pattern_factory_availability_is_captured_like_source_module",
+        "__wbgt__wasm_custom_glyph_pattern_host::pattern_transform_getter_precedes_matrix_construction",
+        "__wbgt__wasm_custom_glyph_pattern_host::pattern_zero_variant_does_not_call_matrix_translate"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "log",
+          "text": "#197a71: expected {\"factoryWasAvailable\":true,\"outcome\":[\"error\",\"token\"],\"pixelsMatchSource\":true,\"trace\":[[\"canvas\",\"offscreen\",2,2],[\"context\",\"2d\"],[\"image\",2,2,2],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"pattern\",true,null],[\"get setTransform\"]]}, actual {\"factoryWasAvailable\":true,\"outcome\":[\"error\",\"matrix-token\"],\"pixelsMatchSource\":true,\"trace\":[[\"canvas\",\"offscreen\",2,2],[\"context\",\"2d\"],[\"image\",2,2,2],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"pattern\",true,null],[\"matrix\",0]]}"
+        },
+        {
+          "type": "log",
+          "text": "#197a72: expected {\"factoryWasAvailable\":true,\"outcome\":[\"error\",\"token\"],\"pixelsMatchSource\":true,\"trace\":[[\"canvas\",\"offscreen\",2,2],[\"context\",\"2d\"],[\"image\",2,2,2],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"pattern\",true,null],[\"get setTransform\"]]}, actual {\"factoryWasAvailable\":true,\"outcome\":[\"error\",\"matrix-token\"],\"pixelsMatchSource\":true,\"trace\":[[\"canvas\",\"offscreen\",2,2],[\"context\",\"2d\"],[\"image\",2,2,2],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"data\"],[\"pattern\",true,null],[\"matrix\",0]]}"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_custom_glyph_pattern_host.rs:70:5:\n2 host phase mismatches\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:54942/suite.js:4998:21)\n    at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[37900]:0xad2526)\n    at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[25083]:0xa3d6aa)\n    at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[8509]:0x7a8b46)\n    at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[25084]:0xa3d72e)\n    at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[13072]:0x8b531f)\n    at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[16506]:0x945404)\n    at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[45648]:0xaea15b)\n    at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.rust_begin_unwind (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[31334]:0xaa27ee)\n    at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[31335]:0xaa281b)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 5 tests\ntest pattern_zero_variant_does_not_call_matrix_translate ... ok\ntest pattern_transform_getter_precedes_matrix_construction ... FAIL\ntest pattern_factory_availability_is_captured_like_source_module ... ok\ntest pattern_factory_arguments_and_live_data_reads_match_source ... ok\ntest pattern_constructor_data_and_callback_errors_keep_source_phase_and_identity ... ok\n\nfailures:\n\n---- pattern_transform_getter_precedes_matrix_construction output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.__rust_start_panic (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[46183]:0xaeaec1)\n            at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.rust_panic (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[41364]:0xadf888)\n            at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[13072]:0x8b534d)\n            at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[16506]:0x945404)\n            at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[45648]:0xaea15b)\n            at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.rust_begin_unwind (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[31334]:0xaa27ee)\n            at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[31335]:0xaa281b)\n            at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.wasm_custom_glyph_pattern_host::assert_all::h80897f6aa77eafea (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[4502]:0x63eebd)\n            at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.wasm_custom_glyph_pattern_host::pattern_transform_getter_precedes_matrix_construction::h7355a22c5de3674e (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[1143]:0x329429)\n            at wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm.core::ops::function::FnOnce::call_once::h184da1c42c098a2b (http://127.0.0.1:54942/suite_bg.wasm:wasm-function[30768]:0xa9c2b7)\n\nfailures:\n\n    pattern_transform_getter_precedes_matrix_construction\n\ntest result: FAILED. 4 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.05s\n\n",
+      "counts": {
+        "passed": 4,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/544a000230c99e3342f4a73f00746df3f0f7b8e951ee8932684c58dfa803833e/artifact.wasm",
+      "sha256": "544a000230c99e3342f4a73f00746df3f0f7b8e951ee8932684c58dfa803833e",
+      "bytes": 19826576,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\I\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_custom_glyph_pattern_host-f0ff7e69967dbe99.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\I\\results\\browser-host\\wasm_custom_glyph_pattern_host\\2026-11-05T16-43-06-209Z-bdf1719f-13a6-49dd-97b0-e68c40b73a0d\\artifacts\\suite_bg.wasm",
+      "bytes": 16717559,
+      "sha256": "434e107633b425d4584633d9d7cbedba44a169b34b1edcfdd33247120465b0d3"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\I\\results\\browser-host\\wasm_custom_glyph_pattern_host\\2026-11-05T16-43-06-209Z-bdf1719f-13a6-49dd-97b0-e68c40b73a0d\\artifacts\\suite.js",
+      "bytes": 218226,
+      "sha256": "6241cc7916bd358f8a9c4a4792a18a5f903a8e9b7d71bfd054d306b4e7a1c3f9"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "8ad337494fee69da5fada48591206bf2e83bfd02e42472cc945a0a3188868f41"
+  },
+  "finishedAt": "2026-11-05T16:43:09.814Z"
+}
