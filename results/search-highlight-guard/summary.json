@@ -1,0 +1,262 @@
+{
+  "task": 493,
+  "status": "scoped pass; full equivalence NOT PROVEN",
+  "base": "a1fc492b96eb14d2b708b714b50998a79a86a4f3",
+  "sourceCommits": [
+    "b02a9224",
+    "ebf8da54"
+  ],
+  "privateHelper": {
+    "original": "f08773fa",
+    "copy": "1c1fbbce",
+    "excludeFrom493Pickup": true
+  },
+  "nativeFunctions": 62,
+  "newNativeFunctions": 3,
+  "newNativeScenarios": 18,
+  "sourceCasesPerEngine": 84,
+  "sourceEngines": 3,
+  "wasmFunctionsPerEngine": 19,
+  "wasmEngines": 3,
+  "sharedCasesInsideOneWasmFunctionPerEngine": 84,
+  "negativeNative": {
+    "passed": 0,
+    "failed": 3,
+    "ignored": 0,
+    "filtered": 59
+  },
+  "negativeWasmChromium": {
+    "passed": 18,
+    "failed": 1,
+    "ignored": 0,
+    "filtered": 0
+  },
+  "quality": {
+    "scopedNativeClippy": "passed",
+    "scopedWasmClippy": "passed",
+    "changedRustfmt": "passed",
+    "workspaceFmt": "failed Windows OS206",
+    "fullWorkspaceClippyTests": "unrun"
+  },
+  "versions": {
+    "node": "v24.15.0",
+    "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+    "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)"
+  },
+  "unchangedOriginalSearchE2E": "not rerun",
+  "repeatedRawMatchingBrowserCases": "unrun, successful raw matching remains347; repeated guards covered natively",
+  "files": [
+    {
+      "path": "crates/xterm-addons/src/search/find.rs",
+      "sha256": "e2bc201a544866b7c7b7a06deffdad1f92a75ba27d80f870ca38c90ef0a8b11a"
+    },
+    {
+      "path": "crates/xterm-addons/src/search/term.rs",
+      "sha256": "b892a515303f3310625a5be992960971906f539fad147851cd338917cdbfa89d"
+    },
+    {
+      "path": "crates/xterm-web/src/search_addon/term.rs",
+      "sha256": "81e4b46eb46134323fa187ea418b742daa75244e665b847c20197a26f23b7a51"
+    },
+    {
+      "path": "crates/xterm-web/tests/search_addon.rs",
+      "sha256": "edab9812846348355408b6b72c940c1b5889db458d9c88111cef6180ddb83b44"
+    },
+    {
+      "path": "crates/xterm-web/tests/wasm_search_addon.rs",
+      "sha256": "a4fbe33d77f51f63e2ad4d9a49b7d0fb5fb428622a313039f4c035dcf2f2bad9"
+    },
+    {
+      "path": "crates/xterm-web/tests/search_cases/highlight_guard.rs",
+      "sha256": "78fc5605be851685f802a1170b1fb673ffcbe7f694755ff348e025c507d2f0b2"
+    },
+    {
+      "path": "crates/xterm-web/tests/fixtures/search-highlight-guard.js",
+      "sha256": "5a1778e62d3c1f913842175baeef83415f28c0bdc97ed9519bd795b3f6f2d08c"
+    },
+    {
+      "path": "scripts/search-call-args-source.mjs",
+      "sha256": "452485ffbfe7678f2baf059665a22e9b6d0958595effa155393253fe456ee90a"
+    },
+    {
+      "path": "scripts/browser-artifact-server.mjs",
+      "sha256": "1d199cba66fa6bc8c153ea368a91fe19877fee8f4e42a283e6d42bb515087ff1"
+    },
+    {
+      "path": "docs/search-highlight-guard.md",
+      "sha256": "a6c157a32b00e94ce68d5dd0672de577732840b46371d708205b678d581469c1"
+    },
+    {
+      "path": "results/search-highlight-guard/browser-commands.json",
+      "sha256": "9bdd96da319dd6719c0750a995d5547dad597075b38e612ce4db3b5108072356"
+    },
+    {
+      "path": "results/search-highlight-guard/browser-fixed-wasm_search_addon-bindgen-version.log",
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/search-highlight-guard/browser-fixed-wasm_search_addon-bindgen.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-highlight-guard/browser-fixed-wasm_search_addon-build.log",
+      "sha256": "5778f24cc82314e647f90523e788dfbafff2969bff3d557c437b1fc4332d5592"
+    },
+    {
+      "path": "results/search-highlight-guard/browser-fixed-wasm_search_addon-chromium.log",
+      "sha256": "d113a7abd62a1bc6cca64ee5a6e5b8f555d41b983aa15e62c828ac1da61a3ece"
+    },
+    {
+      "path": "results/search-highlight-guard/browser-fixed-wasm_search_addon-firefox.log",
+      "sha256": "c90a294ee4c4ffc936b41742d46cfa0c948d535b8557b568d08c240c0381b4f4"
+    },
+    {
+      "path": "results/search-highlight-guard/browser-fixed-wasm_search_addon-webkit.log",
+      "sha256": "f9e591b089a3a10d656099f8a5d29ca28a422aea082c6a658bdc9fa939f93f52"
+    },
+    {
+      "path": "results/search-highlight-guard/browser-fixed.json",
+      "sha256": "d2ef0dd05b753c5d19b83a92cb5e31a79b24ff1272d756be44f89107b7624601"
+    },
+    {
+      "path": "results/search-highlight-guard/browser-fixed.log",
+      "sha256": "89b084538390ab112d405e4a456e22f925d2e1d14590144477a4e469c88bafc1"
+    },
+    {
+      "path": "results/search-highlight-guard/browser-negative-wasm_search_addon-bindgen-version.log",
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/search-highlight-guard/browser-negative-wasm_search_addon-bindgen.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-highlight-guard/browser-negative-wasm_search_addon-build.log",
+      "sha256": "b2aaed3c94c4b756764e5d86c35cb28ae67d93910137287afac324098ed020a6"
+    },
+    {
+      "path": "results/search-highlight-guard/browser-negative-wasm_search_addon-chromium.log",
+      "sha256": "53df69900ca93dbde29bf60000236f9554074f9d24378cf2cc690113e86a626b"
+    },
+    {
+      "path": "results/search-highlight-guard/browser-negative.json",
+      "sha256": "5f1af7521b681b719df599f85dc11bdf4bf07f9c3eec7060480887b3b3227c97"
+    },
+    {
+      "path": "results/search-highlight-guard/browser-negative.log",
+      "sha256": "87040b7786fca5bd31641bdac422f9f070152195493fa514030234b26ca801f2"
+    },
+    {
+      "path": "results/search-highlight-guard/browser-restore.json",
+      "sha256": "664d96d0f1bee16a0404a1cf79c30c571eb489b8d76aa0721d2c787670f596bc"
+    },
+    {
+      "path": "results/search-highlight-guard/cargo-version.log",
+      "sha256": "c8cd2e547fb0745a8738926a5c1318d17af1507f07b382d13dc704cc38684566"
+    },
+    {
+      "path": "results/search-highlight-guard/changed-fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-highlight-guard/cleanup-preflight.json",
+      "sha256": "c5edb09280048422fcd6f593d2f5c27652b0d51284327cd738d684790466f4e3"
+    },
+    {
+      "path": "results/search-highlight-guard/control-programs.json",
+      "sha256": "7312d9f124a747652041464425ba77ebf41c1d7d26fad08067e4104ad2d542cb"
+    },
+    {
+      "path": "results/search-highlight-guard/headroom-browser.json",
+      "sha256": "b94fad133a283bd8c02b0ac672ec0e8f094a3704459e7f4611f3bcac7f2fcf3e"
+    },
+    {
+      "path": "results/search-highlight-guard/headroom-compiler.json",
+      "sha256": "a76d7a4bcd5c1c3b7f15621bbd78e64cbea602cd92fda85c9d84652db9106910"
+    },
+    {
+      "path": "results/search-highlight-guard/headroom.json",
+      "sha256": "6f4c5e8e77d7ec7a086a9822187771023d2b5a01a9c411889f154e44ae322dcf"
+    },
+    {
+      "path": "results/search-highlight-guard/inheritance.json",
+      "sha256": "d9b05034897ee66f9952391cd54f8b1c8c5f4ff448f0715f4fe1719064160b67"
+    },
+    {
+      "path": "results/search-highlight-guard/native-artifact.json",
+      "sha256": "1cbf74c14835c9e387fe8928b03be061ad5298d12d65dc2bdd927f91b6fce39b"
+    },
+    {
+      "path": "results/search-highlight-guard/native-clippy.log",
+      "sha256": "04c8a18fc1bc2a606e5e83351310d7ddac1d88618867415c3fc6cd3decd8c73d"
+    },
+    {
+      "path": "results/search-highlight-guard/native-commands.json",
+      "sha256": "85ed7e99062560ca371a5a3216ce64a10e0ef91079d3d827fa6495637eace43f"
+    },
+    {
+      "path": "results/search-highlight-guard/native-initial-type-error.json",
+      "sha256": "b8a5a93d89a13fde376dfe47d8a69642668b9d2234cda75e6b1de94349f2c05e"
+    },
+    {
+      "path": "results/search-highlight-guard/native-initial-type-error.log",
+      "sha256": "1d01b9180b94ed68addb2cd8b301040b75e7b8e10656ebe85253af6d7a50f1c8"
+    },
+    {
+      "path": "results/search-highlight-guard/native-initial.log",
+      "sha256": "f77e58f9aae81bb80cb55107548ed5487edb26660764f425673f2785e56deb79"
+    },
+    {
+      "path": "results/search-highlight-guard/native-negative.log",
+      "sha256": "73cb829b0007b64f64c50a534d154e229d8570d6dee836118d0d60f44813f2e4"
+    },
+    {
+      "path": "results/search-highlight-guard/native-restore.json",
+      "sha256": "664d96d0f1bee16a0404a1cf79c30c571eb489b8d76aa0721d2c787670f596bc"
+    },
+    {
+      "path": "results/search-highlight-guard/native.log",
+      "sha256": "4a2d6fe0ac3c93ae0625466780237797d76d6f4bd4b199ecb818b34d54a48016"
+    },
+    {
+      "path": "results/search-highlight-guard/node-version.log",
+      "sha256": "0696fc75ebdd632c8c328370653d4dddc37504bf96b32317a50d7189cc1a775f"
+    },
+    {
+      "path": "results/search-highlight-guard/private-helper-tests.log",
+      "sha256": "bd7d5c9fcba61199edc4236adba2bc14ec0783880fb0d916864358b334deaf88"
+    },
+    {
+      "path": "results/search-highlight-guard/quality-commands.json",
+      "sha256": "adda0fd188740cace2c4ce88bcd4a72e584b36984c77c40f5f3137dfc1155e0f"
+    },
+    {
+      "path": "results/search-highlight-guard/rustc-version.log",
+      "sha256": "21fccbced6f95f2ece3212fd048d958d33fa3f254b10f700e2ca3b3de290e5c8"
+    },
+    {
+      "path": "results/search-highlight-guard/source-command.json",
+      "sha256": "c9a4f398f70c6dd20284c73f0ccbb143f039d38a82e50ed6ea0765bcbe2ae1ff"
+    },
+    {
+      "path": "results/search-highlight-guard/source.json",
+      "sha256": "c8e040dbb7f26b7b9756c56a85d33fb62c6832c59639be5109eb0f2d22160376"
+    },
+    {
+      "path": "results/search-highlight-guard/source.log",
+      "sha256": "026b012a3707e204d8442af78047a71ddca0c73904110ff33b6135547d20567e"
+    },
+    {
+      "path": "results/search-highlight-guard/wasm-clippy.log",
+      "sha256": "ec1366dcfa2defaa72daf46a219781bfbac37068f8f241af4cdff8bb84690c8f"
+    },
+    {
+      "path": "results/search-highlight-guard/workspace-fmt.json",
+      "sha256": "12501b9154a04b52f09a557215e64eb580691f1e0420d34abb77d88bde5d39e1"
+    },
+    {
+      "path": "results/search-highlight-guard/workspace-fmt.log",
+      "sha256": "a3c64adc493a218a5a8332dfc60b9e9fd0cf455d8215931a5888f9bc84a29c70"
+    }
+  ]
+}

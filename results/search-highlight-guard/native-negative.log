@@ -1,0 +1,39 @@
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\NathanielHighlight\crates\xterm-addons)
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\NathanielHighlight\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 5.63s
+     Running tests\search_addon.rs (target\debug\deps\search_addon-4de7d175adac3b45.exe)
+
+running 3 tests
+test highlight_guard::highlight_nonempty_guard_initializes_cache_before_option_error ... FAILED
+test highlight_guard::highlight_guard_repeats_after_each_found_match_and_preserves_throw_cutoff ... FAILED
+test highlight_guard::highlight_guard_runs_after_decoration_clear_before_cache_flags_and_text ... FAILED
+
+failures:
+
+---- highlight_guard::highlight_nonempty_guard_initializes_cache_before_option_error stdout ----
+
+thread 'highlight_guard::highlight_nonempty_guard_initializes_cache_before_option_error' panicked at crates\xterm-web\tests\search_cases\highlight_guard.rs:65:16:
+highlight guard cutoff must skip matching text
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- highlight_guard::highlight_guard_repeats_after_each_found_match_and_preserves_throw_cutoff stdout ----
+
+thread 'highlight_guard::highlight_guard_repeats_after_each_found_match_and_preserves_throw_cutoff' panicked at crates\xterm-web\tests\search_cases\highlight_guard.rs:176:17:
+assertion `left == right` failed
+  left: 0
+ right: 2
+
+---- highlight_guard::highlight_guard_runs_after_decoration_clear_before_cache_flags_and_text stdout ----
+
+thread 'highlight_guard::highlight_guard_runs_after_decoration_clear_before_cache_flags_and_text' panicked at crates\xterm-web\tests\search_cases\highlight_guard.rs:65:16:
+highlight guard cutoff must skip matching text
+
+
+failures:
+    highlight_guard::highlight_guard_repeats_after_each_found_match_and_preserves_throw_cutoff
+    highlight_guard::highlight_guard_runs_after_decoration_clear_before_cache_flags_and_text
+    highlight_guard::highlight_nonempty_guard_initializes_cache_before_option_error
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 59 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-web --test search_addon`
