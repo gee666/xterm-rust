@@ -23,6 +23,6 @@ Run from the producer worktree with Cargo target and TEMP/TMP in its owned O: di
 
 The producer and independent reviewer each passed 63 native tests, five source-body integrity tests, scoped rustfmt and native/WASM warning-denied Clippy. Callback tests passed seven functions per engine on each run. The producer also passed input seven per engine and 252,412 policy comparisons with seed1229800758, including 11 unchanged cases with 16 assertions.
 
-Task399 was independently accepted. The reviewer found no concrete scoped defects and changed no source.
+Task399 was independently accepted. The reviewer found no concrete scoped defects and changed no source. The accepted399+396 union and evidence388 were canonically integrated as82930112 atop0a034733. Reviewed source hashes stayed exact. Refreshed union browser assertions passed, then native default-feature canonical checks passed344 functions across131 summaries with no failures/ignored, affected native all-target, workspace and applicable WASM library checks. Source-gate receipt/log are in results/union396399. This canonical gate is not the full all-feature/platform matrix.
 
 Results are in `results/composition399/`. The before-fix mismatch is retained. Browser run reports contain tool versions, source/artifact hashes, expanded test names and exact counts. Component assertions are not original full-Terminal E2E coverage. Overall equivalence NOT PROVEN.
