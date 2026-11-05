@@ -152,14 +152,21 @@ impl BrowserLinkifier {
                             state.hover.borrow_mut().mouse_down();
                             Ok(())
                         }
-                        "mouseup" => event
-                            .dyn_into::<MouseEvent>()
-                            .map_err(|_| JsValue::from_str("mouseup was not a MouseEvent"))
-                            .and_then(|e| {
-                                let position = (state.coordinates)(&e)?;
-                                let effect = state.hover.borrow().mouse_up(position);
-                                state.apply(effect.into_iter().collect(), Some(&e))
-                            }),
+                        "mouseup" => {
+                            // Unlinked mouseup must not observe geometry getters or
+                            // renderer errors. Source checks currentLink first.
+                            if state.hover.borrow().current().is_none() {
+                                return Ok(());
+                            }
+                            event
+                                .dyn_into::<MouseEvent>()
+                                .map_err(|_| JsValue::from_str("mouseup was not a MouseEvent"))
+                                .and_then(|e| {
+                                    let position = (state.coordinates)(&e)?;
+                                    let effect = state.hover.borrow().mouse_up(position);
+                                    state.apply(effect.into_iter().collect(), Some(&e))
+                                })
+                        }
                         _ => unreachable!("fixed event type list"),
                     }
                 },

@@ -12,6 +12,8 @@ use xterm_web::links::{
     Link, Position, Range, RangePosition,
 };
 wasm_bindgen_test_configure!(run_in_browser);
+#[path = "linkifier/mouseup.rs"]
+mod mouseup;
 #[derive(Default)]
 struct Provider {
     callbacks: RefCell<Vec<LinkReply>>,

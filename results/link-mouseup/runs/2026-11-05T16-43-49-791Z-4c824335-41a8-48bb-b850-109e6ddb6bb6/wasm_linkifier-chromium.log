@@ -1,0 +1,31 @@
+running 7 tests
+test underline_callback_changes_pointer_before_hover_pointer_step ... ok
+test throwing_leave_preserves_current_until_successful_callback_completion ... ok
+test rendered_rows_clear_requery_and_dispose_old_cached_links ... ok
+test real_rust_osc8_cells_resolve_wrap_activate_and_expire_on_trim ... ok
+test mouseup::mouseup_skips_geometry_without_current_link_but_preserves_active_errors ... FAIL
+test dom_hover_activation_decorations_and_cached_leave ... ok
+test async_priority_mouseout_and_disposal_ignore_late_replies ... ok
+
+failures:
+
+---- mouseup::mouseup_skips_geometry_without_current_link_but_preserves_active_errors output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at wasm_linkifier-a668193bb9345587.wasm.__rust_start_panic (http://127.0.0.1:57537/suite_bg.wasm:wasm-function[45740]:0xaa0d1c)
+            at wasm_linkifier-a668193bb9345587.wasm.rust_panic (http://127.0.0.1:57537/suite_bg.wasm:wasm-function[40937]:0xa957f4)
+            at wasm_linkifier-a668193bb9345587.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:57537/suite_bg.wasm:wasm-function[12758]:0x86dc7c)
+            at wasm_linkifier-a668193bb9345587.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:57537/suite_bg.wasm:wasm-function[16173]:0x8fcec8)
+            at wasm_linkifier-a668193bb9345587.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:57537/suite_bg.wasm:wasm-function[45226]:0xaa0052)
+            at wasm_linkifier-a668193bb9345587.wasm.rust_begin_unwind (http://127.0.0.1:57537/suite_bg.wasm:wasm-function[30900]:0xa5846b)
+            at wasm_linkifier-a668193bb9345587.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:57537/suite_bg.wasm:wasm-function[30901]:0xa58498)
+            at wasm_linkifier-a668193bb9345587.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:57537/suite_bg.wasm:wasm-function[5707]:0x69697c)
+            at wasm_linkifier-a668193bb9345587.wasm.core::panicking::assert_failed::h38b45c13b211bce2 (http://127.0.0.1:57537/suite_bg.wasm:wasm-function[23169]:0x9d2a14)
+            at wasm_linkifier-a668193bb9345587.wasm.wasm_linkifier::mouseup::mouseup_skips_geometry_without_current_link_but_preserves_active_errors::{{closure}}::h729037a5b6e6e4b1 (http://127.0.0.1:57537/suite_bg.wasm:wasm-function[1225]:0x354c5c)
+
+failures:
+
+    mouseup::mouseup_skips_geometry_without_current_link_but_preserves_active_errors
+
+test result: FAILED. 6 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.05s
+
