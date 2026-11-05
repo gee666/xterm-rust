@@ -21,6 +21,7 @@ export function sourceLoader(root = process.cwd()) {
       const candidate = id.startsWith('.') ? path.resolve(path.dirname(filename), id)
         : /^(common|browser|headless)\//.test(id) ? path.join(source, 'src', id) : undefined;
       if (candidate && fs.existsSync(candidate + '.ts')) return load(candidate + '.ts');
+      if (candidate && fs.existsSync(path.join(candidate, 'index.ts'))) return load(path.join(candidate, 'index.ts'));
       return require(id);
     };
     new Function('require', 'module', 'exports', code)(localRequire, module, module.exports);

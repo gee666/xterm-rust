@@ -1,10 +1,13 @@
 // Copyright (c) 2018 The xterm.js authors. All rights reserved. MIT license.
 // Container/cmap behavior also follows opentype.js, see licenses/opentype-js-MIT.txt.
 use std::{borrow::Cow, fmt};
+#[path = "font_hint_bytes.rs"]
+mod hints;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum FontError {
     Bounds,
+    ArrayLength,
     MissingTable(&'static str),
     Signature([u8; 4]),
     UnsupportedFormat(&'static str, u16),
@@ -21,6 +24,7 @@ impl fmt::Display for FontError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Bounds => f.write_str("Font table offset is outside the input"),
+            Self::ArrayLength => f.write_str("Invalid array length"),
             Self::MissingTable(table) => write!(f, "Font is missing required {table} table"),
             Self::Signature(signature) => write!(f, "Unsupported font signature {signature:?}"),
             Self::UnsupportedFormat(table, value) => {
@@ -171,6 +175,10 @@ impl<'a> FontTables<'a> {
             let record = reader.at(start + index * width)?;
             let tag = record.bytes(0, 4)?;
             match tag {
+                b"cvt " | b"fpgm" | b"prep" => {
+                    hints::validate(reader, record, woff, tag == b"cvt ")?;
+                    continue;
+                }
                 b"glyf" => glyf = true,
                 b"loca" => loca = true,
                 b"CFF " | b"CFF2" => cff = true,
