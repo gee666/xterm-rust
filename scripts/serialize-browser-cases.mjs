@@ -393,6 +393,42 @@ export async function serializationCases() {
     }
     return results;
   });
+  await run('ansi-equal-numeric-row-ring-aliases', async (term, addon) => {
+    term.resize(12, 2); term.options.scrollback = 0;
+    await write(term, '\x1b[31mABC\r\n\x1b[32mDEF\r\n\x1b[34mGHI');
+    const bounds = [-2, -1, -0, -0.5, 0.5, Number.MIN_VALUE, 2 ** 32, 2 ** 32 + 1,
+      Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER];
+    return bounds.map(row => {
+      const log = [];
+      const range = { get start() { log.push('start'); return row; }, get end() { log.push('end'); return row; } };
+      const options = { get range() { log.push('range'); return range; },
+        get excludeAltBuffer() { log.push('alt'); return true; }, get excludeModes() { log.push('modes'); return true; } };
+      return { row: String(row), result: capture(() => addon.serialize(options)), log, state: snapshot(term) };
+    });
+  });
+  await run('ansi-equal-numeric-warning-reentry', async (term, addon) => {
+    const results = [];
+    for (const throws of [false, true]) {
+      term.reset(); term.resize(12, 2); term.options.scrollback = 0;
+      await write(term, '\x1b[31mABCDEFGHIJKL\r\n\x1b[32mMNOPQRSTUVWX\r\n\x1b[34mYZ');
+      const log = [], sentinel = {}, previous = console.warn; let count = 0, same = false, nested;
+      console.warn = (...args) => {
+        previous(...args); log.push('warn');
+        if (++count === 1) {
+          nested = addon.serialize({ range: { start: -1, end: -1 }, excludeAltBuffer: true, excludeModes: true });
+          term.reset(); term.resize(8, 3);
+          if (throws) throw sentinel;
+        }
+      };
+      const range = { get start() { log.push('start'); return -1; }, get end() { log.push('end'); term.resize(6, 2); return -1; } };
+      try {
+        const result = capture(() => { try { return addon.serialize({ range }); }
+          catch (error) { same = error === sentinel; throw error; } });
+        results.push({ throws, result, same, count, nested, log, state: snapshot(term) });
+      } finally { console.warn = previous; }
+    }
+    return results;
+  });
   // Retain known unsupported numeric results. The comparison report separates
   // these from the supported binding regressions instead of hiding differences.
   await run('raw-numeric-boundaries', async (term, addon) => {
