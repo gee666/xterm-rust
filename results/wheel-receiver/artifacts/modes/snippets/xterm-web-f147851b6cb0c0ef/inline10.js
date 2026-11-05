@@ -1,0 +1,1 @@
+export function arrowClass(node, value) { 'use strict'; node.className=value; }

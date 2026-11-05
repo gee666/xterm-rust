@@ -1,0 +1,1 @@
+export function accessibility_string_add(left,right){return left+right;}

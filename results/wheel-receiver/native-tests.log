@@ -1,0 +1,51 @@
+   Compiling equivalent v1.0.3
+   Compiling memchr v2.8.3
+   Compiling foldhash v0.1.5
+   Compiling allocator-api2 v0.2.21
+   Compiling hashbrown v0.15.5
+   Compiling ryu-js v1.0.3
+   Compiling adler2 v2.0.1
+   Compiling regress v0.10.4
+   Compiling miniz_oxide v0.8.9
+   Compiling zmij v1.0.23
+   Compiling serde_core v1.0.229
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\LillyWheel\crates\xterm-core)
+   Compiling itoa v1.0.18
+   Compiling serde_json v1.0.154
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\LillyWheel\crates\xterm-addons)
+   Compiling xterm-wasm-support v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\LillyWheel\crates\xterm-wasm-support)
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\LillyWheel\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 12.44s
+     Running tests\mouse_failures.rs (target\debug\deps\mouse_failures-4229a8202626b9e1.exe)
+
+running 2 tests
+test callback_can_replace_itself_reenter_and_then_fail_without_rolling_back_inner_cache ... ok
+test restriction_and_encoding_failures_keep_error_identity_and_do_not_commit_cache ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\mouse_policy.rs (target\debug\deps\mouse_policy-eeed83f37a3b0cc6.exe)
+
+running 6 tests
+test upstream_viewport_bounds ... ok
+test upstream_clicked_cell ... ok
+test every_source_touch_operation_preserves_accumulator_and_cursor_output ... ok
+test every_source_wheel_operation_preserves_partial_accumulator ... ok
+test every_source_coordinate_snapshot_matches_ieee_and_padding_semantics ... ok
+test every_original_trigger_invocation_matches_report_and_mutation ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\mouse_routing.rs (target\debug\deps\mouse_routing-95070b5327665de6.exe)
+
+running 7 tests
+test touch_assignment_commits_captured_accumulator_after_reentrant_reset ... ok
+test source_mutable_encoder_updates_event_before_cache_commit ... ok
+test empty_encoding_still_commits_last_event_and_reset_clears_it ... ok
+test upstream_alt_required_report_strips_only_nonwheel_alt ... ok
+test output_failure_does_not_commit_cache_and_nested_output_sees_old_cache ... ok
+test move_buttons_priority_fallback_override_and_invalid_button_pairs ... ok
+test wheel_veto_zero_shift_and_missing_coordinates_do_not_consume_state ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

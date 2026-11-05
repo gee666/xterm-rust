@@ -152,11 +152,11 @@ impl BrowserInputServices for WeakBrowserServices {
         let services = self.upgrade()?;
         let handler = services.custom_wheel.borrow().clone();
         match handler {
-            // Source invokes the stored function directly, so an own `call`
-            // property is irrelevant. Event listeners intentionally use call1.
+            // Source calls a MouseStateService property, preserving its receiver
+            // without reading an own `call` property. Clone before reentrant input.
             Some(handler) => Ok(js_sys::Reflect::apply(
                 &handler,
-                &JsValue::UNDEFINED,
+                &services.mouse_receiver,
                 &js_sys::Array::of1(event.as_ref()),
             )?
             .as_bool()

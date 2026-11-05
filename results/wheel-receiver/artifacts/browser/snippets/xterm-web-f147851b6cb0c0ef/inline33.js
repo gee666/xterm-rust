@@ -1,0 +1,1 @@
+export function searchAddonValidTerm(v){return !!(v && v.length > 0);}

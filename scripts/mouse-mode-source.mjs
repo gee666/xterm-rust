@@ -1,4 +1,4 @@
-// Capture shared live-mode cases from the read-only original browser Terminal.
+// Capture shared mouse cases from the read-only original browser Terminal.
 import {mkdir, readFile, writeFile, rm} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {createRequire} from 'node:module';
@@ -12,13 +12,16 @@ const reference = resolve(process.env.XT_REFERENCE_ROOT ?? resolve(root, 'source
 const dependencies = createRequire(resolve(reference, 'package.json'));
 const {build} = dependencies('esbuild');
 const playwright = await import(pathToFileURL(resolve(reference, 'node_modules/playwright/index.mjs')));
-const temporary = resolve(root, 'tmp/mouse-mode-source');
-const output = resolve(root, 'results/mouse-modes');
+const family = process.env.MOUSE_CASE_FAMILY ?? 'modes';
+if (!['modes', 'wheel-receiver'].includes(family)) throw new Error('Invalid MOUSE_CASE_FAMILY');
+const temporary = resolve(root, `tmp/mouse-${family}-source`);
+const output = resolve(root, family === 'modes' ? 'results/mouse-modes' : 'results/wheel-receiver');
 await mkdir(temporary, {recursive:true});
 await mkdir(output, {recursive:true});
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const source = resolve(reference, 'src/browser/public/Terminal.ts');
-const cases = resolve(root, 'crates/xterm-web/tests/browser_mouse_mode_cases.js');
+const cases = resolve(root, family === 'modes' ? 'crates/xterm-web/tests/browser_mouse_mode_cases.js'
+  : 'crates/xterm-web/tests/browser_wheel_receiver_cases.js');
 const mouseSource = resolve(reference, 'src/common/services/MouseStateService.ts');
 const inputSource = resolve(reference, 'src/common/InputHandler.ts');
 const report = {status:'failed', node:process.version, platform:process.platform,

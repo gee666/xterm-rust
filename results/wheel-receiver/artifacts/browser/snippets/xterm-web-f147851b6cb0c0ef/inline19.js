@@ -1,0 +1,1 @@
+export function xtermOffscreenCanvasAvailable() { return typeof OffscreenCanvas !== 'undefined'; }

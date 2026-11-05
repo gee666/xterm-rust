@@ -65,6 +65,7 @@ pub(crate) struct Shared {
     pub buffer: JsValue,
     pub parser: JsValue,
     pub internal: JsValue,
+    pub mouse_receiver: JsValue,
     pub internal_render: Rc<RefCell<JsValue>>,
     pub selection: Rc<crate::selection::service::SelectionService>,
     pub decorations: Rc<xterm_core::decoration::DecorationService>,
@@ -177,8 +178,9 @@ impl Terminal {
             &native,
             Rc::clone(&core_disposed),
             Rc::clone(&internal_render),
-        )?
-        .into();
+        )?;
+        let mouse_receiver = internal.mouse_state_service();
+        let internal = internal.into();
         let link_providers = link_services::create_registry(Rc::clone(&native), &window)?;
         let selection = Rc::new(crate::selection::service::SelectionService::new(
             crate::selection::service::SelectionPlatform {
@@ -206,6 +208,7 @@ impl Terminal {
                 buffer,
                 parser,
                 internal,
+                mouse_receiver,
                 internal_render,
                 platform,
                 selection,

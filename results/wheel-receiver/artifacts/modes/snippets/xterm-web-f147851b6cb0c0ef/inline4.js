@@ -1,0 +1,1 @@
+export function xtermMeasureNumber(value) { return Number(value); }
