@@ -5,6 +5,11 @@ import assert from 'node:assert/strict';
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const pins=JSON.parse(await fs.readFile('results/font-cff2-fdarray/producer-hashes.json'));
 for(const [file,expected]of Object.entries(pins.files))assert.equal(hash(await fs.readFile(file)),expected,file);
+const rawLogs=JSON.parse(await fs.readFile('results/font-cff2-fdarray/raw-log-bytes.json'));
+for(const [file,pin]of Object.entries(rawLogs.files)){
+ const bytes=Buffer.from(pin.base64,'base64');assert.equal(bytes.length,pin.bytes);assert.equal(hash(bytes),pin.sha256);
+ assert.equal(hash(await fs.readFile(`results/font-cff2-fdarray/${file}`)),pin.normalizedSha256,file);
+}
 const fixtureBytes=await fs.readFile('crates/xterm-addons/tests/fixtures/font-cff2-fdarray.json'),fixture=JSON.parse(fixtureBytes);
 assert.equal(fixture.cases.length,860);
 assert.equal(fixture.cases.filter(c=>!c.presenceOnly).length,852);

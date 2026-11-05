@@ -43,7 +43,7 @@ Native Windows addon all-target/all-feature tests passed 208 functions across 48
 
 The negative guard bypass executed all 188 required mismatches, consisting of 128 accepted inputs and 60 later hmtx errors. Exact source SHA restoration and the positive replay passed. An initial helper module-inception lint failure was fixed by renaming the owned test module, with no suppression. The initial negative counter wrongly expected all mismatches to be successes rather than including those later hmtx errors. It was corrected to require the exact 188/128/60 split, without changing the corpus or any assertion. Both initial failures and successful reruns are retained.
 
-Three-browser execution is pending. Raw results are under `results/font-cff2-fdarray/`. These are focused gates, not a new full workspace test pass. No Linux/macOS runtime result, full original-suite result or overall equivalence is claimed.
+Three-browser execution is pending. Raw results are under `results/font-cff2-fdarray/`. For command logs with CRLF or extra terminal blank lines, `raw-log-bytes.json` retains the exact original bytes as base64 and SHA-256. The readable `.log` views normalize only those line endings and terminal blank lines so Git whitespace checks pass. These are focused gates, not a new full workspace test pass. No Linux/macOS runtime result, full original-suite result or overall equivalence is claimed.
 
 ## Integration boundary
 
