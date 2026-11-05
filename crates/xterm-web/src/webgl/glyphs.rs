@@ -31,6 +31,22 @@ pub struct GlyphCell<'a> {
     pub last_bg: u32,
 }
 
+/// Exact JavaScript color arguments alongside GlyphCell's packed words. Signed
+/// and unsigned numbers with identical bits still differ for overlap clipping.
+#[derive(Clone, Copy, Debug, Default)]
+pub struct GlyphColorNumbers {
+    pub current: [i64; 3],
+    pub previous_background: i64,
+}
+impl From<GlyphCell<'_>> for GlyphColorNumbers {
+    fn from(cell: GlyphCell<'_>) -> Self {
+        Self {
+            current: [i64::from(cell.bg), i64::from(cell.fg), i64::from(cell.ext)],
+            previous_background: i64::from(cell.last_bg),
+        }
+    }
+}
+
 #[derive(Debug)]
 pub enum GlyphError {
     Model(ModelError),
@@ -131,6 +147,18 @@ impl GlyphGeometry {
         page_width: f64,
         rescale_overlapping: bool,
     ) -> Result<(), GlyphError> {
+        self.update_cell_with_colors(cell, cell.into(), glyph, page_width, rescale_overlapping)
+    }
+    /// Preserve the renderer's numeric colors before comparing backgrounds.
+    /// Atlas lookup and packed model words still use GlyphCell's u32 colors.
+    pub fn update_cell_with_colors(
+        &mut self,
+        cell: GlyphCell<'_>,
+        numbers: GlyphColorNumbers,
+        glyph: Option<&RasterizedGlyph>,
+        page_width: f64,
+        rescale_overlapping: bool,
+    ) -> Result<(), GlyphError> {
         if cell.x >= self.cols || cell.y >= self.rows {
             return Err(GlyphError::CellOutsideGrid);
         }
@@ -156,7 +184,7 @@ impl GlyphGeometry {
             glyph.texture_size[0],
             glyph.texture_size[1],
         ];
-        if let Some(clipped) = self.clipped_pixels(cell, glyph) {
+        if let Some(clipped) = self.clipped_pixels(numbers, glyph) {
             values[0] = -(glyph.offset[0] - clipped) + d.character.left;
             values[2] = (glyph.size[0] - clipped) / d.canvas.width;
             values[5] = glyph.texture_position[0] + clipped / page_width;
@@ -174,12 +202,13 @@ impl GlyphGeometry {
     }
     pub(super) fn clipped_pixels(
         &self,
-        cell: GlyphCell<'_>,
+        numbers: GlyphColorNumbers,
         glyph: &RasterizedGlyph,
     ) -> Option<f64> {
         let d = self.dimensions.device;
         let padding = ((d.cell.width - d.character.width) / 2.0).floor();
-        (cell.bg != cell.last_bg && glyph.offset[0] > padding).then_some(glyph.offset[0] - padding)
+        (numbers.current[0] != numbers.previous_background && glyph.offset[0] > padding)
+            .then_some(glyph.offset[0] - padding)
     }
     /// Return only live line prefixes, alternating backing storage each frame.
     pub fn compact(&mut self, line_lengths: &[u32]) -> Result<&[f32], GlyphError> {

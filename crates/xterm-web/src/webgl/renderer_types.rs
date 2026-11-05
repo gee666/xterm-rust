@@ -47,14 +47,7 @@ impl ModelCell {
     }
 }
 
-/// Exact JavaScript color arguments alongside GlyphCell's packed words. A GPU
-/// adapter must compare these numbers before clipping overlapping backgrounds;
-/// comparing just the u32 bits loses signed-versus-unsigned inequality.
-#[derive(Clone, Copy, Debug, Default)]
-pub struct GlyphColorNumbers {
-    pub current: [i64; 3],
-    pub previous_background: i64,
-}
+pub use super::glyphs::GlyphColorNumbers;
 
 /// Each operation runs at its source call site. Errors stop immediately and
 /// preserve already-written model/glyph state. The engine holds no RefCell

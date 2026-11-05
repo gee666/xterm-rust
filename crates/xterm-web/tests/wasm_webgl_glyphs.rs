@@ -197,6 +197,54 @@ fn gpu_clips_left_overlap_rescales_and_handles_resize() {
 }
 
 #[wasm_bindgen_test]
+fn signed_backgrounds_clip_equal_packed_colors_on_the_real_gpu() {
+    use xterm_web::webgl::glyphs::GlyphColorNumbers;
+    let (_canvas, gl) = context();
+    let atlas = TestAtlas::new();
+    atlas.glyph.borrow_mut().offset = [4.0, 0.0];
+    atlas.glyph.borrow_mut().size = [12.0, 10.0];
+    atlas.glyph.borrow_mut().texture_size = [1.0, 1.0];
+    let mut r = GlyphRenderer::new(gl.clone(), 3, 2, dimensions(), None).unwrap();
+    r.set_atlas(atlas);
+    for (current, previous) in [
+        (0x80000000_i64, -0x80000000_i64),
+        (-0x80000000, 0x80000000),
+        (0xffffffff, -1),
+        (-1, 0xffffffff),
+        (-0x80000000, -0x80000000),
+        (0x80000000, 0x80000000),
+        (-1, -1),
+        (0xffffffff, 0xffffffff),
+    ] {
+        let mut c = cell(1, 65, 0);
+        c.bg = current as u32;
+        c.last_bg = previous as u32;
+        assert_eq!(c.bg, c.last_bg);
+        r.update_cell_with_colors(
+            c,
+            GlyphColorNumbers {
+                current: [current, 17, 0],
+                previous_background: previous,
+            },
+            false,
+        )
+        .unwrap();
+        clear(&gl);
+        r.render(&model(&[2])).unwrap();
+        assert_eq!(
+            pixel(&gl, 5, 2),
+            if current == previous {
+                [255, 0, 0, 255]
+            } else {
+                [0, 0, 0, 0]
+            },
+            "numeric backgrounds {current}/{previous}",
+        );
+        assert_eq!(pixel(&gl, 10, 2), [255, 0, 0, 255]);
+    }
+}
+
+#[wasm_bindgen_test]
 fn owned_resources_are_deleted_on_disposal_drop_and_partial_failure() {
     for failure in ["shader", "uniform", "buffer", "texture"] {
         let (_canvas, gl) = context();

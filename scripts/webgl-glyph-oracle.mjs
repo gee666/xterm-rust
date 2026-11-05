@@ -97,3 +97,16 @@ for(let i=0;i<128;i++){
 const output=path.resolve('crates/xterm-web/tests/fixtures/webgl-glyphs.json');
 await writeFile(output,JSON.stringify({seed:'0x61ab9423',inputs,cases})+'\n');
 console.log(cases.length+' source GlyphRenderer cases -> '+output);
+// Keep the original fixture byte-identical. These additional cases exercise
+// numeric inequality separately from the existing packed-color atlas contract.
+cases.length=0;
+for (const [bg,lastBg] of [
+  [0x80000000,-0x80000000],[-0x80000000,0x80000000],
+  [0xffffffff,-1],[-1,0xffffffff],
+  [-0x80000000,-0x80000000],[0x80000000,0x80000000],[-1,-1],[0xffffffff,0xffffffff]
+]) {
+  run('numeric-background-'+bg+'-'+lastBg,2,1,[cell(65,{bg,lastBg})],false);
+}
+const numericOutput=path.resolve('crates/xterm-web/tests/fixtures/webgl-glyph-backgrounds.json');
+await writeFile(numericOutput,JSON.stringify({inputs,cases})+'\n');
+console.log(cases.length+' numeric background cases -> '+numericOutput);

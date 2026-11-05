@@ -1,0 +1,148 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_webgl_glyphs",
+  "testTimeoutMs": 60000,
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T20:02:01.689Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_webgl_glyphs",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 11573.154999999999,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 12.217500000000655,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\Orompoto306\\results\\acceptance-artifacts\\bb1332771ef8a2ea11579d5faa35cfa7cfc086bc7b3cff30950bc4b745c1c09b\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\Orompoto306\\results\\browser-host\\wasm_webgl_glyphs\\2026-11-05T20-02-01-687Z-03b9b130-bdd1-4820-b4ec-b5e2240c6fda\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1268.1526999999987,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_webgl_glyphs::frame_epochs_utf16_routing_null_cells_and_rasterizer_errors",
+        "__wbgt__wasm_webgl_glyphs::gpu_clips_left_overlap_rescales_and_handles_resize",
+        "__wbgt__wasm_webgl_glyphs::overflow_warns_once_and_context_loss_is_an_error",
+        "__wbgt__wasm_webgl_glyphs::owned_resources_are_deleted_on_disposal_drop_and_partial_failure",
+        "__wbgt__wasm_webgl_glyphs::page_versions_replacement_and_explicit_invalidation_upload_live_canvas",
+        "__wbgt__wasm_webgl_glyphs::real_gpu_draws_multiple_pages_and_compacts_line_prefixes",
+        "__wbgt__wasm_webgl_glyphs::signed_backgrounds_clip_equal_packed_colors_on_the_real_gpu",
+        "__wbgt__wasm_webgl_glyphs::source::unchanged_source_gpu_upload_bits_frames_and_atlas_calls"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_webgl_glyphs.rs:234:9:\nassertion `left == right` failed: numeric backgrounds 2147483648/-2147483648\n  left: [255, 0, 0, 255]\n right: [0, 0, 0, 0]\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:58351/suite.js:6068:21)\n    at wasm_webgl_glyphs-c8b77de46be36bcc.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:58351/suite_bg.wasm:wasm-function[39165]:0xb03631)\n    at wasm_webgl_glyphs-c8b77de46be36bcc.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:58351/suite_bg.wasm:wasm-function[25220]:0xa5c69e)\n    at wasm_webgl_glyphs-c8b77de46be36bcc.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:58351/suite_bg.wasm:wasm-function[8467]:0x7b1c0f)\n    at wasm_webgl_glyphs-c8b77de46be36bcc.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:58351/suite_bg.wasm:wasm-function[25221]:0xa5c722)\n    at wasm_webgl_glyphs-c8b77de46be36bcc.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:58351/suite_bg.wasm:wasm-function[13314]:0x8d0bea)\n    at wasm_webgl_glyphs-c8b77de46be36bcc.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:58351/suite_bg.wasm:wasm-function[16849]:0x964fdc)\n    at wasm_webgl_glyphs-c8b77de46be36bcc.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:58351/suite_bg.wasm:wasm-function[47273]:0xb1c585)\n    at wasm_webgl_glyphs-c8b77de46be36bcc.wasm.rust_begin_unwind (http://127.0.0.1:58351/suite_bg.wasm:wasm-function[32258]:0xad0f43)\n    at wasm_webgl_glyphs-c8b77de46be36bcc.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:58351/suite_bg.wasm:wasm-function[32259]:0xad0f70)\n\n"
+        },
+        {
+          "type": "warning",
+          "text": "[.WebGL-0x1dd4001a8200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+        },
+        {
+          "type": "warning",
+          "text": "[.WebGL-0x1dd4001aee00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+        },
+        {
+          "type": "warning",
+          "text": "[.WebGL-0x1dd4001aee00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+        },
+        {
+          "type": "warning",
+          "text": "[.WebGL-0x1dd4001aee00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 8 tests\ntest source::unchanged_source_gpu_upload_bits_frames_and_atlas_calls ... ok\ntest signed_backgrounds_clip_equal_packed_colors_on_the_real_gpu ... FAIL\ntest real_gpu_draws_multiple_pages_and_compacts_line_prefixes ... ok\ntest page_versions_replacement_and_explicit_invalidation_upload_live_canvas ... ok\ntest owned_resources_are_deleted_on_disposal_drop_and_partial_failure ... ok\ntest overflow_warns_once_and_context_loss_is_an_error ... ok\ntest gpu_clips_left_overlap_rescales_and_handles_resize ... ok\ntest frame_epochs_utf16_routing_null_cells_and_rasterizer_errors ... ok\n\nfailures:\n\n---- signed_backgrounds_clip_equal_packed_colors_on_the_real_gpu output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_webgl_glyphs-c8b77de46be36bcc.wasm.__rust_start_panic (http://127.0.0.1:58351/suite_bg.wasm:wasm-function[47832]:0xb1d38e)\n            at wasm_webgl_glyphs-c8b77de46be36bcc.wasm.rust_panic (http://127.0.0.1:58351/suite_bg.wasm:wasm-function[42827]:0xb1163f)\n            at wasm_webgl_glyphs-c8b77de46be36bcc.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:58351/suite_bg.wasm:wasm-function[13314]:0x8d0c18)\n            at wasm_webgl_glyphs-c8b77de46be36bcc.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:58351/suite_bg.wasm:wasm-function[16849]:0x964fdc)\n            at wasm_webgl_glyphs-c8b77de46be36bcc.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:58351/suite_bg.wasm:wasm-function[47273]:0xb1c585)\n            at wasm_webgl_glyphs-c8b77de46be36bcc.wasm.rust_begin_unwind (http://127.0.0.1:58351/suite_bg.wasm:wasm-function[32258]:0xad0f43)\n            at wasm_webgl_glyphs-c8b77de46be36bcc.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:58351/suite_bg.wasm:wasm-function[32259]:0xad0f70)\n            at wasm_webgl_glyphs-c8b77de46be36bcc.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:58351/suite_bg.wasm:wasm-function[6035]:0x6ea445)\n            at wasm_webgl_glyphs-c8b77de46be36bcc.wasm.core::panicking::assert_failed::h47adde569565d25d (http://127.0.0.1:58351/suite_bg.wasm:wasm-function[24190]:0xa45796)\n            at wasm_webgl_glyphs-c8b77de46be36bcc.wasm.wasm_webgl_glyphs::signed_backgrounds_clip_equal_packed_colors_on_the_real_gpu::h53a6182da26b5293 (http://127.0.0.1:58351/suite_bg.wasm:wasm-function[957]:0x261a02)\n\nfailures:\n\n    signed_backgrounds_clip_equal_packed_colors_on_the_real_gpu\n\ntest result: FAILED. 7 passed; 1 failed; 0 ignored; 0 filtered out; finished in 3.25s\n\n",
+      "counts": {
+        "passed": 7,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/bb1332771ef8a2ea11579d5faa35cfa7cfc086bc7b3cff30950bc4b745c1c09b/artifact.wasm",
+      "sha256": "bb1332771ef8a2ea11579d5faa35cfa7cfc086bc7b3cff30950bc4b745c1c09b",
+      "bytes": 22589608,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\Orompoto306\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_webgl_glyphs-c8b77de46be36bcc.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\Orompoto306\\results\\browser-host\\wasm_webgl_glyphs\\2026-11-05T20-02-01-687Z-03b9b130-bdd1-4820-b4ec-b5e2240c6fda\\artifacts\\suite_bg.wasm",
+      "bytes": 19399463,
+      "sha256": "b2f2325cafbf1d85b3a59aa0ffc22377c4b5986390611270f48bb5e90f86cdc5"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\Orompoto306\\results\\browser-host\\wasm_webgl_glyphs\\2026-11-05T20-02-01-687Z-03b9b130-bdd1-4820-b4ec-b5e2240c6fda\\artifacts\\suite.js",
+      "bytes": 254792,
+      "sha256": "b8983f46b7ea4e5c03b9f120092ce5808a2d21d68aa54aff22e30730dd4f971e"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "438472364174f8de154eb5d8aa9edf05bfc08f5bd1381db552cfd212736de69a"
+  },
+  "finishedAt": "2026-11-05T20:02:18.468Z"
+}

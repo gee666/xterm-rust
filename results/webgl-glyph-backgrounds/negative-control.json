@@ -1,0 +1,88 @@
+{
+  "before": "69028fbb315bcfde04c35bca140ccc1e8244fee41df3fc210f0b28ab16bdfe08",
+  "mutant": "45f51682b14a280e68aea7a49aa64b6b67b0dbe87d53703a7961f351c0154f65",
+  "from": "numbers.current[0] != numbers.previous_background",
+  "to": "(numbers.current[0] as u32) != (numbers.previous_background as u32)",
+  "commands": [
+    {
+      "name": "negative-native",
+      "command": [
+        "cargo",
+        "test",
+        "-j2",
+        "-p",
+        "xterm-web",
+        "--test",
+        "webgl_glyph_backgrounds"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 3035.3190999999997,
+      "status": "failed"
+    },
+    {
+      "name": "negative-browser",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/browser-host-check.mjs"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 16897.3152,
+      "status": "failed"
+    },
+    {
+      "name": "restored-native",
+      "command": [
+        "cargo",
+        "test",
+        "-j2",
+        "-p",
+        "xterm-web",
+        "--test",
+        "webgl_glyph_backgrounds"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 3733.393400000001,
+      "status": "passed"
+    },
+    {
+      "name": "final-browser",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/browser-host-check.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 30076.3388,
+      "status": "passed"
+    }
+  ],
+  "restored": "69028fbb315bcfde04c35bca140ccc1e8244fee41df3fc210f0b28ab16bdfe08",
+  "finalSource": "69028fbb315bcfde04c35bca140ccc1e8244fee41df3fc210f0b28ab16bdfe08"
+}

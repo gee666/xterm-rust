@@ -3,7 +3,7 @@
 use super::{
     glyph_atlas::GlyphAtlas,
     glyph_shaders,
-    glyphs::{GlyphCell, GlyphGeometry, GLYPH_STRIDE},
+    glyphs::{GlyphCell, GlyphColorNumbers, GlyphGeometry, GLYPH_STRIDE},
     gpu_resources::{error, Buffer, Program, UnitQuad, VertexArray},
     math::PROJECTION_MATRIX,
     model::RenderModel,
@@ -251,6 +251,16 @@ impl GlyphRenderer {
         cell: GlyphCell<'_>,
         rescale_overlapping: bool,
     ) -> Result<(), JsValue> {
+        self.update_cell_with_colors(cell, cell.into(), rescale_overlapping)
+    }
+    /// Use the incremental renderer's original numeric backgrounds for clipping,
+    /// including signed/unsigned values with the same packed color bits.
+    pub fn update_cell_with_colors(
+        &mut self,
+        cell: GlyphCell<'_>,
+        numbers: GlyphColorNumbers,
+        rescale_overlapping: bool,
+    ) -> Result<(), JsValue> {
         if self.gpu.is_none() {
             return Err(error("WebGL glyph renderer is disposed"));
         }
@@ -263,7 +273,7 @@ impl GlyphRenderer {
             None
         };
         let page_width = if let (Some(atlas), Some(glyph)) = (&self.atlas, &glyph) {
-            if self.geometry.clipped_pixels(cell, glyph).is_some() {
+            if self.geometry.clipped_pixels(numbers, glyph).is_some() {
                 atlas
                     .page(glyph.texture_page)
                     .ok_or_else(|| error("Glyph references a missing atlas page"))?
@@ -276,7 +286,13 @@ impl GlyphRenderer {
             0.0
         };
         self.geometry
-            .update_cell(cell, glyph.as_ref(), page_width, rescale_overlapping)
+            .update_cell_with_colors(
+                cell,
+                numbers,
+                glyph.as_ref(),
+                page_width,
+                rescale_overlapping,
+            )
             .map_err(|e| error(&e.to_string()))
     }
     pub fn set_dimensions(&mut self, dimensions: RenderDimensions) {
