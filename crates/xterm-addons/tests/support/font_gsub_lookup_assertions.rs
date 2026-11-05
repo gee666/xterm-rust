@@ -29,15 +29,23 @@ fn expected_error(case: &Value) -> Option<FontError> {
     let outcome = case.get("loadOutcome").unwrap_or(&case["outcome"]);
     let message = outcome["message"].as_str().unwrap();
     if outcome["name"] == "TypeError" {
-        assert!(matches!(
-            message,
-            "Cannot convert undefined or null to object"
-                | "Cannot read properties of undefined (reading 'coverage')"
-        ));
-        return Some(FontError::Type(if message.contains("coverage") {
-            "Cannot read properties of undefined (reading 'coverage')"
-        } else {
-            "Cannot convert undefined or null to object"
+        return Some(FontError::Type(match message {
+            "Cannot convert undefined or null to object" => {
+                "Cannot convert undefined or null to object"
+            }
+            "Cannot read properties of undefined (reading 'coverage')" => {
+                "Cannot read properties of undefined (reading 'coverage')"
+            }
+            "Cannot read properties of undefined (reading 'lookupListIndexes')" => {
+                "Cannot read properties of undefined (reading 'lookupListIndexes')"
+            }
+            "Cannot read properties of undefined (reading 'lookupType')" => {
+                "Cannot read properties of undefined (reading 'lookupType')"
+            }
+            "Cannot read properties of undefined (reading 'subtables')" => {
+                "Cannot read properties of undefined (reading 'subtables')"
+            }
+            _ => panic!("Unmapped source TypeError {message}"),
         }));
     }
     if outcome["name"] == "RangeError" {

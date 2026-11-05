@@ -263,8 +263,11 @@ pub struct GenericTable {
     pub coverage: Option<Coverage>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct Gsub {
-    pub selected: Vec<usize>,
-    pub lookups: Vec<Lookup>,
+    /// None retains an undefined calt feature until FontImpl selection, after
+    /// OpenType has finished all deferred constructor tables.
+    pub selected: Option<Vec<usize>>,
+    /// Null lookup pointers occupy a slot even when no feature selects them.
+    pub lookups: Vec<Option<Lookup>>,
 }

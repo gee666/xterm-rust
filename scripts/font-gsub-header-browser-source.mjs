@@ -7,7 +7,7 @@ import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import {withArtifactServer} from './browser-artifact-server.mjs';
 const corpus=process.env.GSUB_CORPUS??'header';
-if(!['header','lookup','type9'].includes(corpus))throw new Error('GSUB_CORPUS must be header, lookup or type9');
+if(!['header','lookup','type9','null'].includes(corpus))throw new Error('GSUB_CORPUS must be header, lookup, type9 or null');
 const prefix=`font-gsub-${corpus}`;
 const root=process.cwd(),work=path.join(root,`tmp/gsub-${corpus}-source`);
 const require=createRequire(path.resolve(process.env.SOURCE_PACKAGE_JSON??'source_repo/package.json'));
@@ -44,9 +44,15 @@ try{
     const normalize=(result,field='outcome',browserMessages=true)=>result.map((o,i)=>{
      if(o.status==='error'&&o.name==='RangeError')return{status:'error',name:'RangeError'};
      if(o.status==='error'&&o.name==='TypeError'){
-      if(corpus==='type9'){
+      if(corpus==='type9'||corpus==='null'){
        const expected=fixture.cases[i][field].message;
-       const messages=expected.includes('coverage')?{
+       const property=expected.match(/reading '([^']+)'/)?.[1];
+       const receiver={lookupListIndexes:'val.feature',lookupType:'lookup',subtables:'lookups[substitution.lookupListIndex]'}[property];
+       const messages=receiver?{
+        chromium:expected,
+        firefox:`can't access property "${property}", ${receiver} is undefined`,
+        webkit:`undefined is not an object (evaluating '${receiver}.${property}')`
+       }:expected.includes('coverage')?{
         chromium:"Cannot read properties of undefined (reading 'coverage')",
         firefox:'can\'t access property "coverage", table is undefined',
         webkit:"undefined is not an object (evaluating 'table.coverage')"
@@ -64,9 +70,9 @@ try{
      return o;
     });
     assert.deepEqual(normalize(actual.result.constructors),normalize(fixture.cases.map(c=>c.outcome),'outcome',false));
-    if(corpus==='type9')assert.deepEqual(normalize(actual.result.loads,'loadOutcome'),normalize(fixture.cases.map(c=>c.loadOutcome),'loadOutcome',false));
+    if(corpus==='type9'||corpus==='null')assert.deepEqual(normalize(actual.result.loads,'loadOutcome'),normalize(fixture.cases.map(c=>c.loadOutcome),'loadOutcome',false));
     assert.deepEqual(actual.result.addon,addon);
-    Object.assign(record,{status:'passed',constructors:fixture.cases.length,...(corpus==='type9'?{loads:fixture.cases.length,loadErrors:[...new Set(actual.result.loads.filter(o=>o.status==='error').map(o=>o.name+': '+o.message))]}:{}),addonCases:addon.length,errorMessages:[...new Set(actual.result.constructors.filter(o=>o.status==='error').map(o=>o.name+': '+o.message))]});
+    Object.assign(record,{status:'passed',constructors:fixture.cases.length,...((corpus==='type9'||corpus==='null')?{loads:fixture.cases.length,loadErrors:[...new Set(actual.result.loads.filter(o=>o.status==='error').map(o=>o.name+': '+o.message))]}:{}),addonCases:addon.length,errorMessages:[...new Set(actual.result.constructors.filter(o=>o.status==='error').map(o=>o.name+': '+o.message))]});
    }catch(error){record.status='failed';record.error=String(error.stack??error);throw error;}
    finally{if(browser)await browser.close();}
   }

@@ -1,0 +1,94 @@
+[
+  {
+    "command": "GSUB_CORPUS=null node scripts/font-gsub-lookup-oracle.mjs --generate",
+    "result": "first intentional new corpus creation;570cases"
+  },
+  {
+    "command": "GSUB_CORPUS=null node scripts/font-gsub-header-browser-source.mjs",
+    "result": "passed570parser+570FontImpl+570actual-addon in each engine",
+    "log": "source-browser-initial.log",
+    "report": "source-browser.json"
+  },
+  {
+    "command": "cargo test --locked -j2 -p xterm-addons --test font_gsub_null before product fix",
+    "result": "FAILED272mismatches",
+    "log": "native-before.log"
+  },
+  {
+    "command": "cargo test --locked -j2 -p xterm-addons --test font_gsub_null after product fix",
+    "result": "passed",
+    "log": "native-after.log"
+  },
+  {
+    "command": "cargo test --locked -j2 -p xterm-addons --all-targets --all-features",
+    "result": "passed192tests/44summaries",
+    "log": "native-addons.log"
+  },
+  {
+    "command": "cargo clippy --locked -j2 -p xterm-addons --all-targets --all-features -- -D warnings",
+    "result": "passed",
+    "log": "native-clippy.log"
+  },
+  {
+    "command": "cargo clippy --locked -j2 --target wasm32-unknown-unknown -p xterm-font-addons --test font_gsub_null_browser --test font_gsub_type9_browser --test font_gsub_lookup_browser -- -D warnings",
+    "result": "passed",
+    "log": "wasm-clippy.log"
+  },
+  {
+    "command": "cargo check --locked -j2 --target wasm32-unknown-unknown --lib -p xterm-web -p xterm-font-addons",
+    "result": "passed",
+    "log": "wasm-dependents.log"
+  },
+  {
+    "command": "WASM_PACKAGE=xterm-font-addons WASM_TEST=font_gsub_null_browser WASM_TEST_TIMEOUT_MS=360000 node scripts/browser-host-check.mjs",
+    "result": "passed2functions in each3engines",
+    "report": "null-browser-results.json",
+    "log": "rust-browser.log"
+  },
+  {
+    "command": "WASM_PACKAGE=xterm-font-addons WASM_TEST=font_gsub_type9_browser WASM_TEST_TIMEOUT_MS=360000 node scripts/browser-host-check.mjs",
+    "result": "passed2functions in each3engines",
+    "report": "type9-browser-results.json",
+    "log": "retained-type9-browser.log"
+  },
+  {
+    "command": "WASM_PACKAGE=xterm-font-addons WASM_TEST=font_gsub_lookup_browser WASM_TEST_TIMEOUT_MS=360000 node scripts/browser-host-check.mjs",
+    "result": "passed2functions in each3engines",
+    "report": "lookup-browser-results.json",
+    "log": "retained-lookup-browser.log"
+  },
+  {
+    "command": "node results/font-gsub-null/negative-control.mjs",
+    "result": "old272mismatches then finally5exactSHArestore then fixedPASS",
+    "logs": [
+      "negative-old.log",
+      "negative-restored.log"
+    ],
+    "report": "negative-control.json"
+  },
+  {
+    "command": "GSUB_CORPUS=CORPUS node scripts/font-gsub-lookup-oracle.mjs for null/lookup/type9",
+    "result": "all3 immutable source fixture replays passed",
+    "logs": [
+      "source-node-null.log",
+      "source-node-lookup.log",
+      "source-node-type9.log"
+    ]
+  },
+  {
+    "command": "cargo fmt --all -- --check",
+    "result": "FAILED Windows OS206",
+    "log": "fmt-all.log"
+  },
+  {
+    "command": "cargo fmt -p PACKAGE -- --check for all5members",
+    "result": "passed",
+    "logs": [
+      "fmt-xterm-core.log",
+      "fmt-xterm-addons.log",
+      "fmt-xterm-web.log",
+      "fmt-xterm-wasm-support.log",
+      "fmt-xterm-font-addons.log"
+    ]
+  }
+]

@@ -110,7 +110,7 @@ fn view(lookup: &Lookup, index: usize) -> SubView<'_> {
 }
 fn substitution(
     records: &[LookupRecord],
-    lookups: &[Lookup],
+    lookups: &[Option<Lookup>],
     position: usize,
     glyph: Glyph,
 ) -> Result<Option<GlyphValue>, FontError> {
@@ -120,7 +120,11 @@ fn substitution(
     {
         let lookup = lookups
             .get(record.lookup_index)
-            .ok_or(FontError::Invalid("Missing GSUB substitution lookup"))?;
+            .ok_or(FontError::Invalid("Missing GSUB substitution lookup"))?
+            .as_ref()
+            .ok_or(FontError::Type(
+                "Cannot read properties of undefined (reading 'subtables')",
+            ))?;
         for index in 0..subtable_count(lookup) {
             if let Some(value) = view(lookup, index).glyph(glyph)? {
                 return Ok(Some(value));
@@ -131,7 +135,7 @@ fn substitution(
 }
 fn range_substitutions(
     records: &[LookupRecord],
-    lookups: &[Lookup],
+    lookups: &[Option<Lookup>],
     position: usize,
     start: Glyph,
     end: Glyph,
@@ -142,7 +146,11 @@ fn range_substitutions(
     {
         let lookup = lookups
             .get(record.lookup_index)
-            .ok_or(FontError::Invalid("Missing GSUB substitution lookup"))?;
+            .ok_or(FontError::Invalid("Missing GSUB substitution lookup"))?
+            .as_ref()
+            .ok_or(FontError::Type(
+                "Cannot read properties of undefined (reading 'subtables')",
+            ))?;
         for index in 0..subtable_count(lookup) {
             let table = view(lookup, index);
             let replacements = table.range(start, end)?;
@@ -159,7 +167,7 @@ pub fn input_tree(
     arena: &mut Arena,
     tree: TreeId,
     records: &[LookupRecord],
-    lookups: &[Lookup],
+    lookups: &[Option<Lookup>],
     position: usize,
     glyphs: GlyphSet,
 ) -> Result<Vec<EntryMeta>, FontError> {
@@ -202,7 +210,7 @@ pub fn input_position(
     position: usize,
     entries: Vec<EntryMeta>,
     records: &[LookupRecord],
-    lookups: &[Lookup],
+    lookups: &[Option<Lookup>],
 ) -> Result<Vec<EntryMeta>, FontError> {
     let mut next = Vec::new();
     for current in entries {

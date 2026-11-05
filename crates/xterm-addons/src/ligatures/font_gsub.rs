@@ -22,18 +22,21 @@ pub fn parse(bytes: &[u8]) -> Result<Gsub, FontError> {
         validate_scripts(scripts)?;
     }
     let selected = selected_features(root)?;
-    let offsets = if let Some(list) = pointer(root, 8)? {
-        let count = usize::from(list.u16(0)?);
-        list.words(2, count)?
-    } else {
-        Vec::new()
-    };
-    let list = root.child16(8)?;
-    let count = offsets.len();
+    let list = pointer(root, 8)?;
+    let count = list.map(|list| list.u16(0)).transpose()?.unwrap_or(0);
     let mut lookups = Vec::new();
-    lookups.try_reserve_exact(count)?;
-    for offset in offsets {
-        let table = list.at(usize::from(offset))?;
+    lookups.try_reserve_exact(usize::from(count))?;
+    for index in 0..usize::from(count) {
+        // Source follows each pointer before reading the next list element.
+        // Null pointers survive at their original indices for FontImpl.
+        let table = list
+            .map(|list| pointer(list, 2 + index * 2))
+            .transpose()?
+            .flatten();
+        let Some(table) = table else {
+            lookups.push(None);
+            continue;
+        };
         let kind = table.u16(0)?;
         if !(1..=9).contains(&kind) {
             // The shared GPOS/GSUB parser rejects the type before flags/count.
@@ -52,7 +55,7 @@ pub fn parse(bytes: &[u8]) -> Result<Gsub, FontError> {
                     ));
                 }
             }
-            lookups.push(Lookup::NullSubtables(count));
+            lookups.push(Some(Lookup::NullSubtables(count)));
         } else {
             let offsets = table.words(6, count)?;
             match kind {
@@ -62,7 +65,7 @@ pub fn parse(bytes: &[u8]) -> Result<Gsub, FontError> {
                     for offset in offsets {
                         subtables.push(other::single(table.at(usize::from(offset))?)?);
                     }
-                    lookups.push(Lookup::Single(subtables));
+                    lookups.push(Some(Lookup::Single(subtables)));
                 }
                 6 => {
                     let mut subtables = Vec::new();
@@ -70,7 +73,7 @@ pub fn parse(bytes: &[u8]) -> Result<Gsub, FontError> {
                     for offset in offsets {
                         subtables.push(chain::parse(table.at(usize::from(offset))?)?);
                     }
-                    lookups.push(Lookup::Chain(subtables));
+                    lookups.push(Some(Lookup::Chain(subtables)));
                 }
                 8 => {
                     let mut subtables = Vec::new();
@@ -78,7 +81,7 @@ pub fn parse(bytes: &[u8]) -> Result<Gsub, FontError> {
                     for offset in offsets {
                         subtables.push(other::reverse(table.at(usize::from(offset))?)?);
                     }
-                    lookups.push(Lookup::Reverse(subtables));
+                    lookups.push(Some(Lookup::Reverse(subtables)));
                 }
                 2..=5 | 7 => {
                     let mut subtables = Vec::new();
@@ -86,7 +89,7 @@ pub fn parse(bytes: &[u8]) -> Result<Gsub, FontError> {
                     for offset in offsets {
                         subtables.push(other::generic(kind, table.at(usize::from(offset))?)?);
                     }
-                    lookups.push(Lookup::Other(subtables));
+                    lookups.push(Some(Lookup::Other(subtables)));
                 }
                 _ => return Err(FontError::UnsupportedFormat("GSUB lookup type", kind)),
             }
@@ -192,20 +195,27 @@ fn pointer(table: Reader<'_>, field: usize) -> Result<Option<Reader<'_>>, FontEr
         .transpose()
 }
 
-fn selected_features(root: Reader<'_>) -> Result<Vec<usize>, FontError> {
-    let mut selected = Vec::new();
+fn selected_features(root: Reader<'_>) -> Result<Option<Vec<usize>>, FontError> {
+    let mut selected = Some(Vec::new());
     if let Some(features) = pointer(root, 6)? {
         let count = usize::from(features.u16(0)?);
         for index in 0..count {
             let entry = 2 + index * 6;
             let tag = features.bytes(entry, 4)?;
-            let table = features.child16(entry + 4)?;
-            table.u16(0)?;
-            let count = usize::from(table.u16(2)?);
-            let indices = table.words(4, count)?;
-            if tag == b"calt" {
-                selected.try_reserve(indices.len())?;
-                selected.extend(indices.into_iter().map(usize::from));
+            if let Some(table) = pointer(features, entry + 4)? {
+                table.u16(0)?;
+                let count = usize::from(table.u16(2)?);
+                let indices = table.words(4, count)?;
+                if tag == b"calt" {
+                    if let Some(selected) = &mut selected {
+                        selected.try_reserve(indices.len())?;
+                        selected.extend(indices.into_iter().map(usize::from));
+                    }
+                }
+            } else if tag == b"calt" {
+                // Do not fail yet. The source parser accepts an absent feature;
+                // FontImpl dereferences it only after every constructor table.
+                selected = None;
             }
         }
     }

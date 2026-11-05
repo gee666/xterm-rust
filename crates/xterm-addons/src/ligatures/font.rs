@@ -214,10 +214,16 @@ impl Font {
         let mut arena = Arena::default();
         let mut groups = Vec::new();
         if let Some(gsub) = gsub {
+            let selected = gsub.selected.ok_or(FontError::Type(
+                "Cannot read properties of undefined (reading 'lookupListIndexes')",
+            ))?;
             for (lookup_index, lookup) in gsub.lookups.iter().enumerate() {
-                if !gsub.selected.contains(&lookup_index) {
+                if !selected.contains(&lookup_index) {
                     continue;
                 }
+                let lookup = lookup.as_ref().ok_or(FontError::Type(
+                    "Cannot read properties of undefined (reading 'lookupType')",
+                ))?;
                 let mut trees = Vec::new();
                 match lookup {
                     Lookup::Chain(tables) => {

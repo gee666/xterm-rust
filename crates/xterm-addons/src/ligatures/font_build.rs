@@ -22,7 +22,7 @@ struct ResultSpec {
 }
 struct RuleContext<'a> {
     records: &'a [LookupRecord],
-    lookups: &'a [Lookup],
+    lookups: &'a [Option<Lookup>],
     index: usize,
     sub_index: usize,
 }
@@ -120,7 +120,7 @@ fn finish(arena: &mut Arena, entries: Vec<EntryMeta>, spec: ResultSpec) -> Resul
 pub fn chain(
     arena: &mut Arena,
     table: &ChainTable,
-    lookups: &[Lookup],
+    lookups: &[Option<Lookup>],
     index: usize,
 ) -> Result<TreeId, FontError> {
     match table {
