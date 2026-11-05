@@ -10,6 +10,8 @@ The controlling continuation uses exactly16 agents and actual integration branch
 
 [The current-stable repair](current-stable-quality.md) records the equivalent source/test-helper corrections, independent review and canonical integrationaf047454. [The postrepair native checkpoint](native-ci-repair.md) separately records run42017720988 on that exact integrated revision, with explicit observed outcomes and remaining limits. Neither checkpoint substitutes for complete source/API/assertion mapping, original/browser/demo suites or final task304 after application producers settle.
 
+[The later ff0bec8 matrix](native-quality-ff0bec8.md) records matching local Windows MSRV and observed six-job Windows/Linux/macOS MSRV/stable execution, plus focused Miri and WASM library compilation, at exact integrated revision `ff0bec8b5f9d82c0a3df64a541a9dbc2ae407524`. All required native gates pass. This source-bound checkpoint still leaves final304 open, and [the clean WASM test-target repair](wasm-quality-repair.md) separately fixes failures that library-only compilation could not detect.
+
 ## Resume after disk exhaustion
 
 Main reported that the P: drive reached about 7 MB free, interrupting the swarm with SQLite `cannot rollback - no transaction is active`. Main's database quick check passed. The original 45-worker run resumed; no second swarm was launched. Main removed only generated Cargo artifacts, recovering about 3 GiB, and committed `.cargo/config.toml` as `705104c`. See `docs/resume-run2.md` for the preserved scope and resource policy.
