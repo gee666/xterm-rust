@@ -11,6 +11,7 @@ mod lifecycle;
 mod placeholder;
 pub mod primitives;
 mod resource;
+mod sixel_protocol;
 mod storage;
 mod terminal_host;
 
@@ -19,6 +20,7 @@ pub use iip_protocol::BrowserIipProtocol;
 use js::{get, set};
 pub use lifecycle::ImageRendererLifecycle;
 pub use resource::BrowserImageSurface;
+pub use sixel_protocol::BrowserSixelProtocol;
 use std::rc::Rc;
 use wasm_bindgen::JsValue;
 use xterm_addons::image::storage::{CellSize, ImageLayer};

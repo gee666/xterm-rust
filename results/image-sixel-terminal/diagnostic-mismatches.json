@@ -1,0 +1,19 @@
+{
+  "status": "fixed-directed-browser-mismatches",
+  "remainder": {
+    "portableRust": "RuntimeError: remainder by zero",
+    "chromiumSource": "RuntimeError: remainder by zero",
+    "firefoxSource": "RuntimeError: integer divide by zero",
+    "webkitSource": "RuntimeError: Division by zero (evaluating 'this._wasm.decode(0, length)')"
+  },
+  "invalidColorMinusOne": {
+    "initialProbe": "table index is out of bounds",
+    "source": "function signature mismatch",
+    "fix": "Reify indirect-call signature trap, not table bounds trap"
+  },
+  "webkitProbe": {
+    "initial": "RuntimeError: Division by zero (evaluating 'probe.decode(0)')",
+    "fix": "Catch inside the method at this._wasm.decode(0, length)"
+  },
+  "sourceAssertionsModified": false
+}

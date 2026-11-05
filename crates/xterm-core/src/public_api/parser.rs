@@ -154,6 +154,18 @@ impl<'a> ParserApi<'a> {
             )
             .ok_or(RegistrarError::ParserDropped)
     }
+    /// Register a streaming addon without the whole-sequence adapter's buffer
+    /// limit. The handler owns hook/put/unhook state and runs on the real parser.
+    pub fn register_streaming_dcs_handler(
+        &mut self,
+        id: FunctionIdentifier<'_>,
+        handler: crate::parser::dcs::HandlerHandle,
+    ) -> Result<DisposableHandle, RegistrarError> {
+        self.registrations
+            .dcs
+            .register_handler(id.packed(false)? as i32, handler)
+            .ok_or(RegistrarError::ParserDropped)
+    }
     pub fn add_dcs_handler(
         &mut self,
         id: FunctionIdentifier<'_>,

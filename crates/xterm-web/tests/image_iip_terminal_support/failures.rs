@@ -5,37 +5,6 @@ use wasm_bindgen_test::*;
 use xterm_addons::image::storage::StorageError;
 use xterm_web::js_error::{callback_error, to_js_error};
 
-struct Patch {
-    object: JsValue,
-    key: &'static str,
-    previous: JsValue,
-}
-impl Patch {
-    fn new(object: JsValue, key: &'static str, value: JsValue) -> Self {
-        let previous = get(&object, key);
-        js_sys::Reflect::set(&object, &key.into(), &value).unwrap();
-        Self {
-            object,
-            key,
-            previous,
-        }
-    }
-}
-impl Drop for Patch {
-    fn drop(&mut self) {
-        js_sys::Reflect::set(&self.object, &self.key.into(), &self.previous).unwrap();
-    }
-}
-fn try_call(value: &JsValue, key: &str, args: &[JsValue]) -> Result<JsValue, JsValue> {
-    get(value, key)
-        .unchecked_into::<js_sys::Function>()
-        .apply(value, &args.iter().cloned().collect::<js_sys::Array>())
-}
-fn thrower(token: &JsValue) -> JsValue {
-    js_sys::Function::new_with_args("token", "return function(){throw token}")
-        .call1(&JsValue::UNDEFINED, token)
-        .unwrap()
-}
 fn warnings() -> (JsValue, Patch) {
     let values = js_sys::Array::new();
     let capture =
