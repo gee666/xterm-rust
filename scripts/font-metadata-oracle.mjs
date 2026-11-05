@@ -25,6 +25,10 @@ function duplicate(change) {
 function construct(change) {
  const records=original.filter(record=>record.tag!==change.tag&&!change.remove?.includes(record.tag));
  if(change.data)records.push({tag:change.tag,data:Buffer.from(change.data)});
+ if(change.metrics!==undefined) {
+  const hhea=records.find(record=>record.tag==='hhea');
+  hhea.data=Buffer.from(hhea.data);hhea.data.writeUInt16BE(change.metrics,34);
+ }
  const extra=duplicate(change);
  if(extra)records[extra.position==='first'?'unshift':'push']({tag:extra.tag,data:extra.invalidCompression?Buffer.from(Array.from({length:16},(_,i)=>i+1)):Buffer.alloc(0)});
  const header=Buffer.alloc(12+records.length*16);base.copy(header,0,0,12);header.writeUInt16BE(records.length,4);
@@ -96,6 +100,13 @@ for(const compressed of [false,true]) {
  for(const position of ['first','last'])changes.push({name:`invalid ${position} GSUB descriptor ${compressed?'WOFF':'SFNT'}`,tag:'GSUB',data:emptyGsub,woff:compressed,duplicateTable:{tag:'GSUB',position}});
 }
 changes.push({name:'ignored first GSUB invalid compressed data',tag:'GSUB',data:emptyGsub,woff:true,duplicateTable:{tag:'GSUB',position:'first',invalidCompression:true}});
+for(const compressed of [false,true]) {
+ for(const metrics of [0,1,2,65535])for(const length of [0,1,3,4,7,8,5184])changes.push({name:`hmtx metrics ${metrics} bytes ${length} ${compressed?'WOFF':'SFNT'}`,tag:'hmtx',data:Array(length).fill(0),metrics,woff:compressed});
+ for(const position of ['first','last'])changes.push({name:`invalid ${position} hmtx descriptor ${compressed?'WOFF':'SFNT'}`,tag:'hmtx',data:[0,0,0,0],metrics:1,woff:compressed,duplicateTable:{tag:'hmtx',position}});
+ changes.push({name:`zero-read hmtx invalid offset ${compressed?'WOFF':'SFNT'}`,tag:'hmtx',data:[],metrics:0,woff:compressed,invalidHmtxOffset:true});
+ changes.push({name:`hmtx ignored directory length ${compressed?'WOFF':'SFNT'}`,tag:'hmtx',data:[0,0,0,0],metrics:1,woff:compressed,hmtxDirectoryLength:0});
+}
+changes.push({name:'zero-read hmtx compressed invalid offset',tag:'hmtx',data:[],metrics:0,woff:true,invalidHmtxOffset:true,compressedHmtx:true});
 const cases=[];
 for(const change of changes) {
  let bytes=construct(change);
@@ -106,6 +117,15 @@ for(const change of changes) {
   if(!extra.invalidCompression)bytes.writeUInt32BE(0xfffffff0,at+(change.woff?4:8));
   bytes.writeUInt32BE(128,at+12);
   if(change.woff)bytes.writeUInt32BE(16,at+8);
+ }
+ if(change.hmtxDirectoryLength!==undefined) {
+  const at=(change.woff?44:12)+(bytes.readUInt16BE(change.woff?12:4)-1)*(change.woff?20:16);
+  bytes.writeUInt32BE(change.hmtxDirectoryLength,at+12);
+ }
+ if(change.invalidHmtxOffset) {
+  const at=(change.woff?44:12)+(bytes.readUInt16BE(change.woff?12:4)-1)*(change.woff?20:16);
+  bytes.writeUInt32BE(0xfffffff0,at+(change.woff?4:8));
+  if(change.compressedHmtx){bytes.writeUInt32BE(16,at+8);bytes.writeUInt32BE(128,at+12);}
  }
  if(change.directoryLength!==undefined)bytes.writeUInt32BE(change.directoryLength,12+(bytes.readUInt16BE(4)-1)*16+12);
  let outcome;

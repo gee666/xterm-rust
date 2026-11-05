@@ -123,7 +123,11 @@ impl<'a> FontTables<'a> {
         let mut name = None;
         let mut tags = None;
         let mut glyph_count = None;
-        let (mut glyf, mut loca, mut cff, mut hmtx) = (false, false, false, false);
+        let (mut glyf, mut loca, mut cff) = (false, false, false);
+        let mut hmtx = None;
+        // Missing hhea leaves the source metric count undefined. Its numeric
+        // comparison then reads no metrics, the same boundary as zero here.
+        let mut metric_count = 0;
         for index in 0..count {
             let record = reader.at(start + index * width)?;
             let tag = record.bytes(0, 4)?;
@@ -131,15 +135,14 @@ impl<'a> FontTables<'a> {
                 b"glyf" => glyf = true,
                 b"loca" => loca = true,
                 b"CFF " | b"CFF2" => cff = true,
-                b"hmtx" => hmtx = true,
-                b"name" | b"GSUB" => {
-                    // Both tables are deferred by the source constructor. Select
+                b"name" | b"GSUB" | b"hmtx" => {
+                    // These tables are deferred by the source constructor. Select
                     // the final descriptor without touching earlier data, even
                     // when its offset or compressed payload is invalid.
-                    if tag == b"name" {
-                        name = Some(record);
-                    } else {
-                        gsub = Some(record);
+                    match tag {
+                        b"name" => name = Some(record),
+                        b"GSUB" => gsub = Some(record),
+                        _ => hmtx = Some(record),
                     }
                     continue;
                 }
@@ -156,6 +159,10 @@ impl<'a> FontTables<'a> {
             let table = table_data(reader, record, woff, metadata)?;
             match tag {
                 b"cmap" => cmap = Some(table),
+                b"hhea" => {
+                    super::font_metadata::immediate(tag, &table)?;
+                    metric_count = Reader::new(&table).u16(34)?;
+                }
                 b"maxp" => {
                     super::font_metadata::immediate(tag, &table)?;
                     glyph_count = Some(Reader::new(&table).u16(4)?);
@@ -181,8 +188,9 @@ impl<'a> FontTables<'a> {
                 "Font doesn\'t contain TrueType, CFF or CFF2 outlines.",
             ));
         }
-        if !hmtx {
-            return Err(FontError::MissingTable("hmtx"));
+        let hmtx = hmtx.ok_or(FontError::MissingTable("hmtx"))?;
+        if glyf && loca {
+            validate_hmtx(reader, hmtx, woff, glyph_count.unwrap_or(0), metric_count)?;
         }
         Ok(Self {
             cmap: cmap.ok_or(FontError::MissingTable("cmap"))?,
@@ -196,6 +204,28 @@ impl<'a> FontTables<'a> {
             },
         })
     }
+}
+
+const HORIZONTAL_METRIC_SIZE: usize = 4;
+fn validate_hmtx(
+    reader: Reader<'_>,
+    record: Reader<'_>,
+    woff: bool,
+    glyph_count: u16,
+    metric_count: u16,
+) -> Result<(), FontError> {
+    let required = usize::from(glyph_count.min(metric_count)) * HORIZONTAL_METRIC_SIZE;
+    if woff && record.offset32(8)? < record.offset32(12)? {
+        // Source decompression precedes the glyph loop, including a loop that
+        // reads no metric bytes. Do not turn those failures into success.
+        let bytes = table_data(reader, record, woff, true)?;
+        Reader::new(&bytes).bytes(0, required)?;
+    } else if required != 0 {
+        // Uncompressed offsets are never dereferenced by a zero-read loop.
+        // Directory lengths do not constrain the source's original DataView.
+        reader.bytes(record.offset32(if woff { 4 } else { 8 })?, required)?;
+    }
+    Ok(())
 }
 
 fn table_data<'a>(

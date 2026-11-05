@@ -39,6 +39,12 @@ fn native_metadata_errors_identify_failed_contract() {
         ("missing name", FontError::MissingTable("name")),
         ("missing hmtx", FontError::MissingTable("hmtx")),
         ("hhea EOF 35", FontError::Bounds),
+        ("hmtx metrics 1 bytes 3 SFNT", FontError::Bounds),
+        ("invalid last hmtx descriptor WOFF", FontError::Bounds),
+        (
+            "zero-read hmtx compressed invalid offset",
+            FontError::Bounds,
+        ),
         (
             "post version 151552 size 35",
             FontError::Type("Cannot read properties of undefined (reading '0')"),

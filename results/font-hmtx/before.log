@@ -1,0 +1,53 @@
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\L374\crates\xterm-addons)
+    Finished `test` profile [unoptimized] target(s) in 0.55s
+     Running tests\font_metadata_constructor.rs (target\debug\deps\font_metadata_constructor-2de54daf484d09ee.exe)
+
+running 2 tests
+test native_metadata_errors_identify_failed_contract ... ok
+test unchanged_source_metadata_constructor_outcomes ... FAILED
+
+failures:
+
+---- unchanged_source_metadata_constructor_outcomes stdout ----
+
+thread 'unchanged_source_metadata_constructor_outcomes' panicked at crates\xterm-addons\tests\font_metadata_constructor.rs:24:5:
+"hmtx metrics 1 bytes 0 SFNT": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 1 bytes 1 SFNT": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 1 bytes 3 SFNT": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 2 bytes 0 SFNT": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 2 bytes 1 SFNT": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 2 bytes 3 SFNT": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 2 bytes 4 SFNT": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 2 bytes 7 SFNT": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 65535 bytes 0 SFNT": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 65535 bytes 1 SFNT": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 65535 bytes 3 SFNT": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 65535 bytes 4 SFNT": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 65535 bytes 7 SFNT": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 65535 bytes 8 SFNT": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"invalid last hmtx descriptor SFNT": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 1 bytes 0 WOFF": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 1 bytes 1 WOFF": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 1 bytes 3 WOFF": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 2 bytes 0 WOFF": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 2 bytes 1 WOFF": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 2 bytes 3 WOFF": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 2 bytes 4 WOFF": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 2 bytes 7 WOFF": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 65535 bytes 0 WOFF": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 65535 bytes 1 WOFF": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 65535 bytes 3 WOFF": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 65535 bytes 4 WOFF": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 65535 bytes 7 WOFF": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"hmtx metrics 65535 bytes 8 WOFF": expected {"message":"Offset is outside the bounds of the DataView","name":"RangeError","status":"error"}, got None
+"invalid last hmtx descriptor WOFF": expected {"message":"Invalid typed array length: 14","name":"RangeError","status":"error"}, got None
+"zero-read hmtx compressed invalid offset": expected {"message":"Invalid typed array length: 14","name":"RangeError","status":"error"}, got None
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    unchanged_source_metadata_constructor_outcomes
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.67s
+
+error: test failed, to rerun pass `-p xterm-addons --test font_metadata_constructor`

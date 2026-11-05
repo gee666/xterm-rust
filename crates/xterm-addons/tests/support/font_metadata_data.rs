@@ -32,10 +32,13 @@ pub fn construct(change: &Value) -> Vec<u8> {
             continue;
         }
         let start = offset(base, at + 8);
-        records.push((
-            base[at..at + 4].try_into().unwrap(),
-            base[start..start + offset(base, at + 12)].to_vec(),
-        ));
+        let mut data = base[start..start + offset(base, at + 12)].to_vec();
+        if tag == "hhea" {
+            if let Some(metrics) = change["metrics"].as_u64() {
+                data[34..36].copy_from_slice(&u16::try_from(metrics).unwrap().to_be_bytes());
+            }
+        }
+        records.push((base[at..at + 4].try_into().unwrap(), data));
     }
     if let Some(data) = change["data"].as_array() {
         records.push((
@@ -104,6 +107,27 @@ pub fn construct(change: &Value) -> Vec<u8> {
         output[at + 12..at + 16].copy_from_slice(&128_u32.to_be_bytes());
         if compressed {
             output[at + 8..at + 12].copy_from_slice(&16_u32.to_be_bytes());
+        }
+    }
+    if let Some(length) = change["hmtxDirectoryLength"].as_u64() {
+        let at = if compressed {
+            44 + (records.len() - 1) * 20
+        } else {
+            12 + (records.len() - 1) * 16
+        };
+        output[at + 12..at + 16].copy_from_slice(&u32::try_from(length).unwrap().to_be_bytes());
+    }
+    if change["invalidHmtxOffset"] == true {
+        let at = if compressed {
+            44 + (records.len() - 1) * 20
+        } else {
+            12 + (records.len() - 1) * 16
+        };
+        let offset = at + if compressed { 4 } else { 8 };
+        output[offset..offset + 4].copy_from_slice(&0xfffffff0_u32.to_be_bytes());
+        if change["compressedHmtx"] == true {
+            output[at + 8..at + 12].copy_from_slice(&16_u32.to_be_bytes());
+            output[at + 12..at + 16].copy_from_slice(&128_u32.to_be_bytes());
         }
     }
     output
