@@ -1,0 +1,62 @@
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\U\crates\xterm-core\tests\task_queue_edges.rs:73:
+     fail.set(false);
+     queue.enqueue(|_| true).unwrap();
+     fail.set(true);
+[31m-    assert_eq!(queue.process(|| 0.0), Err(TaskQueueError::Callback("host request failed")));
+[0m[32m+    assert_eq!(
+[0m[32m+        queue.process(|| 0.0),
+[0m[32m+        Err(TaskQueueError::Callback("host request failed"))
+[0m[32m+    );
+[0m     assert_eq!(queue.remaining_tasks(), 1);
+     assert!(!queue.has_pending_callback());
+     queue.clear();
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\U\crates\xterm-core\tests\task_queue_edges.rs:164:
+         })
+         .unwrap();
+     queue.enqueue(|_| false).unwrap();
+[31m-    assert_eq!(queue.process(|| 1.0), Err(TaskQueueError::Callback("log callback failed")));
+[0m[32m+    assert_eq!(
+[0m[32m+        queue.process(|| 1.0),
+[0m[32m+        Err(TaskQueueError::Callback("log callback failed"))
+[0m[32m+    );
+[0m     assert_eq!(queue.remaining_tasks(), 1);
+     assert!(!queue.has_pending_callback());
+     queue.flush().unwrap();
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\U\crates\xterm-core\tests\task_queue_edges.rs:247:
+         } else {
+             queue.flush().map_err(TaskQueueError::Callback)
+         };
+[31m-        assert_eq!(result, Err(TaskQueueError::Callback("replacement retained")));
+[0m[32m+        assert_eq!(
+[0m[32m+            result,
+[0m[32m+            Err(TaskQueueError::Callback("replacement retained"))
+[0m[32m+        );
+[0m         assert_eq!(queue.remaining_tasks(), 1);
+         assert!(queue.has_pending_callback());
+         queue.flush().unwrap();
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\U\crates\xterm-web\tests\wasm_task_queue_clock.rs:86:
+             &JsValue::from_f64(case["trigger"].as_f64().unwrap()),
+         )
+         .unwrap();
+[31m-        Reflect::set(window.performance().unwrap().as_ref(), &"now".into(), &clock).unwrap();
+[0m[32m+        Reflect::set(
+[0m[32m+            window.performance().unwrap().as_ref(),
+[0m[32m+            &"now".into(),
+[0m[32m+            &clock,
+[0m[32m+        )
+[0m[32m+        .unwrap();
+[0m         let queue = if case["mode"] == "idle" {
+             BrowserTaskQueue::idle(&window).unwrap()
+         } else {
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\U\crates\xterm-web\tests\wasm_task_queue_clock.rs:121:
+                 "missing-task"
+             }
+         });
+[31m-        let actual_trace: Vec<String> = trace.iter().map(|event| event.as_string().unwrap()).collect();
+[0m[32m+        let actual_trace: Vec<String> = trace
+[0m[32m+            .iter()
+[0m[32m+            .map(|event| event.as_string().unwrap())
+[0m[32m+            .collect();
+[0m         let actual = serde_json::json!({
+             "trace": actual_trace,
+             "error": error,

@@ -1,0 +1,94 @@
+{
+  "task": 367,
+  "status": "scoped repair verified; full equivalence NOT PROVEN",
+  "base": "6b8f80c2",
+  "environment": {
+    "platform": "win32",
+    "node": "v24.15.0",
+    "rust": "1.85.1",
+    "cargo": "1.85.1"
+  },
+  "hashes": {
+    "crates/xterm-core/src/task_queue.rs": "7eddcbb0ba01de4eb23f6d5e2d42710fb02ca6d3ad0aaea7342e39c1d18fc3e8",
+    "crates/xterm-core/src/buffer/cleanup.rs": "553c0cb05176cd3d3965e42bc539f162b516d614f578417d294b0adbfbee1ff6",
+    "crates/xterm-core/src/buffer/cleanup_driver.rs": "d8edb389d8e222a0d99dbae20abb09755e0477edef27ae497edeca55391a5d60",
+    "crates/xterm-web/src/task_queue.rs": "42e4592f96d05fa028dac31e457f26107a929c8bd974f5790d25643e0e995426",
+    "crates/xterm-core/tests/task_queue_clock.rs": "af67ffb914dbaa440a39ba6056df951d192b8d40d4a3b41271a23838289d0dc7",
+    "crates/xterm-web/tests/wasm_task_queue_clock.rs": "84f1458c87aea3cee7692d05c64d0788828c2b10ebac5d85a4dbbee4f589821b",
+    "crates/xterm-core/tests/support/task_queue_clock.rs": "529d532729bdac8a80a527f1eb54c48aefa7e05c7fd9decd4c97be7e0e692d9b",
+    "crates/xterm-core/tests/fixtures/task-queue-clock.tsv": "ac40bc5483cff3e7053017821d728120209a7728a4e258228f7c2064248f82c2",
+    "scripts/task-queue-clock-oracle.mjs": "2182570cddaddfd3147921a6d2434c2ac288be1ba01982242db22769d5308476"
+  },
+  "sourceOracle": {
+    "status": "passed",
+    "node": "v24.15.0",
+    "cases": 32,
+    "browsers": [
+      {
+        "name": "chromium",
+        "version": "148.0.7778.96",
+        "passed": 32,
+        "failed": 0
+      },
+      {
+        "name": "firefox",
+        "version": "150.0.2",
+        "passed": 32,
+        "failed": 0
+      },
+      {
+        "name": "webkit",
+        "version": "26.4",
+        "passed": 32,
+        "failed": 0
+      }
+    ],
+    "sourceSha256": "3a3c33a8d50aa767a7eaf355980ad6d53c1e9fc5acc287b14eabe0a72720142a"
+  },
+  "native": {
+    "focusedTests": 38,
+    "clockCases": 32,
+    "coreAllTargetAllFeaturePassed": 1539,
+    "resultSummaries": 236,
+    "coreDoctestsPassed": 2
+  },
+  "browser": {
+    "newClockTestFunctionsPerEngine": 1,
+    "newClockCasesPerEngine": 32,
+    "existingQueueErrorTestsPerEngine": 5,
+    "existingHostTestsPerEngine": 10,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ]
+  },
+  "existingFailure": {
+    "task": 371,
+    "suite": "wasm_buffer_cleanup",
+    "failedTest": "inactive_normal_and_active_alternate_are_both_scheduled",
+    "assertion": "alt.has_pending_cleanup() at line139",
+    "baselineAndRepairPerEngine": {
+      "passed": 3,
+      "failed": 1
+    },
+    "baselineProduction": "main6b8f80c2",
+    "assertionsChanged": false
+  },
+  "gates": {
+    "nativeClippy": "native-clippy.log",
+    "wasmClippy": "wasm-clippy.log",
+    "format": "fmt.log",
+    "nativeTests": "native-tests.log",
+    "coreAllTests": "core-all-tests.log",
+    "coreDoctests": "core-doc.log",
+    "preRepairFailure": "baseline-native.log",
+    "existingDifferential": "task-platform/oracle.json"
+  },
+  "generatedBinariesRetained": false,
+  "scopeLimits": [
+    "Controlled reentrant clocks, not all source callbacks",
+    "Native Linux/macOS not run for this repair",
+    "Full common/lifecycle and full upstream/demo suites remain open"
+  ]
+}

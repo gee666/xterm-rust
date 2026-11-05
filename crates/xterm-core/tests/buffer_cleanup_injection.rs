@@ -103,7 +103,10 @@ fn injected_callback_failure_retains_task_and_stops_deadline_queries() {
             1000.0
         })
         .unwrap_err();
-    assert!(matches!(error.0, BufferError::BorrowedLine));
+    assert!(matches!(
+        error,
+        xterm_core::task_queue::TaskQueueError::Callback(HostError(BufferError::BorrowedLine))
+    ));
     assert_eq!(queries.get(), 1);
     assert_eq!(queue.remaining_tasks(), 1);
     assert!(!queue.has_pending_callback());
@@ -218,6 +221,9 @@ fn opaque_non_error_host_values_preserve_identity_without_late_rethrow() {
             1000.0
         })
         .unwrap_err();
+    let xterm_core::task_queue::TaskQueueError::Callback(error) = error else {
+        panic!("expected original callback failure");
+    };
     assert_eq!(error.0, 2);
     assert_eq!(queries.get(), 1);
     assert_eq!(queue.remaining_tasks(), 1);

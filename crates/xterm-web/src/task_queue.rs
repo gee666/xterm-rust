@@ -3,7 +3,7 @@
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::{closure::Closure, prelude::*, JsCast};
 use web_sys::{IdleDeadline, Performance, Window};
-use xterm_core::task_queue::{CallbackKind, Scheduler, TaskQueue, WeakTaskQueue};
+use xterm_core::task_queue::{CallbackKind, Scheduler, TaskQueue, TaskQueueError, WeakTaskQueue};
 use xterm_wasm_support::js_error::{to_js_error, JsCallbackError};
 
 type Dispatch = Rc<RefCell<Option<WeakTaskQueue<BrowserScheduler>>>>;
@@ -51,7 +51,12 @@ impl Scheduler for BrowserScheduler {
                     queue.process(|| deadline.time_remaining())
                 }
             };
-            result.map_err(|error| error.0)
+            result.map_err(|error| match error {
+                TaskQueueError::Callback(error) => error.0,
+                TaskQueueError::MissingTask => {
+                    js_sys::TypeError::new("queued task is not a function").into()
+                }
+            })
         }) as Box<dyn Fn(JsValue) -> Result<(), JsValue>>)
         .into_js_value();
         // Transfer ownership before the host call. A timer shim can retain the

@@ -1,0 +1,28 @@
+running 4 tests
+test scheduler_throw_preserves_the_original_js_object ... ok
+test reset_and_host_detach_cancel_real_pending_tokens ... ok
+test real_idle_or_priority_callback_cleans_parser_populated_buffers ... ok
+test inactive_normal_and_active_alternate_are_both_scheduled ... FAIL
+
+failures:
+
+---- inactive_normal_and_active_alternate_are_both_scheduled output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at wasm_buffer_cleanup-3da994c47f97f2f4.wasm.__rust_start_panic (http://127.0.0.1:50527/suite_bg.wasm:wasm-function[40687]:0x948392)
+            at wasm_buffer_cleanup-3da994c47f97f2f4.wasm.rust_panic (http://127.0.0.1:50527/suite_bg.wasm:wasm-function[36325]:0x93df11)
+            at wasm_buffer_cleanup-3da994c47f97f2f4.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:50527/suite_bg.wasm:wasm-function[11248]:0x754305)
+            at wasm_buffer_cleanup-3da994c47f97f2f4.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:50527/suite_bg.wasm:wasm-function[14259]:0x7d272e)
+            at wasm_buffer_cleanup-3da994c47f97f2f4.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:50527/suite_bg.wasm:wasm-function[40209]:0x94778d)
+            at wasm_buffer_cleanup-3da994c47f97f2f4.wasm.rust_begin_unwind (http://127.0.0.1:50527/suite_bg.wasm:wasm-function[27392]:0x907ce6)
+            at wasm_buffer_cleanup-3da994c47f97f2f4.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:50527/suite_bg.wasm:wasm-function[27393]:0x907d13)
+            at wasm_buffer_cleanup-3da994c47f97f2f4.wasm.core::panicking::panic::h220e5a67f5e3e06f (http://127.0.0.1:50527/suite_bg.wasm:wasm-function[25256]:0x8ec71f)
+            at wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_buffer_cleanup::inactive_normal_and_active_alternate_are_both_scheduled::{{closure}}::h2720dbbaa136bff2 (http://127.0.0.1:50527/suite_bg.wasm:wasm-function[865]:0x24efde)
+            at wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h253f3c849dbaa82e (http://127.0.0.1:50527/suite_bg.wasm:wasm-function[2518]:0x47a0a2)
+
+failures:
+
+    inactive_normal_and_active_alternate_are_both_scheduled
+
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.07s
+

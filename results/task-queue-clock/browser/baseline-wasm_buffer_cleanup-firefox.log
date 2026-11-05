@@ -1,0 +1,99 @@
+running 4 tests
+test scheduler_throw_preserves_the_original_js_object ... ok
+test reset_and_host_detach_cancel_real_pending_tokens ... ok
+test real_idle_or_priority_callback_cleans_parser_populated_buffers ... ok
+test inactive_normal_and_active_alternate_are_both_scheduled ... FAIL
+
+failures:
+
+---- inactive_normal_and_active_alternate_are_both_scheduled output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable executed
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.__rust_start_panic@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[40687]:0x948392
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.rust_panic@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[36325]:0x93df11
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[11248]:0x754305
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[14259]:0x7d272e
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[40209]:0x94778d
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.rust_begin_unwind@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[27392]:0x907ce6
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[27393]:0x907d13
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.core::panicking::panic::h220e5a67f5e3e06f@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[25256]:0x8ec71f
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_buffer_cleanup::inactive_normal_and_active_alternate_are_both_scheduled::{{closure}}::h2720dbbaa136bff2@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[865]:0x24efde
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h253f3c849dbaa82e@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[2518]:0x47a0a2
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h9e5350b4e95233f2@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[14261]:0x7d281b
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[23003]:0x8c58af
+        __wbg_adapter_1101@http://127.0.0.1:50527/suite.js:609:10
+        cb0@http://127.0.0.1:50527/suite.js:4987:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:50527/suite.js:4992:30
+        handleError@http://127.0.0.1:50527/suite.js:160:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:50527/suite.js:4980:76
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[6790]:0x647888
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::h68b20e2578775078@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[13090]:0x7a4dd2
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::hea995159d6a194c8@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[16192]:0x81719d
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::h9ee6503ac45047f5@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[1823]:0x3e54c3
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[834]:0x234e94
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[3672]:0x5245e7
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[1748]:0x3d1dbe
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[3637]:0x5202bf
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[3274]:0x4f158b
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[20669]:0x894aa0
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[16918]:0x82f897
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.closure2632 externref shim@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[32623]:0x92f465
+        __wbg_adapter_129@http://127.0.0.1:50527/suite.js:605:10
+        real@http://127.0.0.1:50527/suite.js:226:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:50527/suite.js:4490:23
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[40316]:0x947ba6
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[32166]:0x92c9f3
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[5618]:0x5ea840
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_futures::queue::Queue::push_task::hed54b62c8a63136f@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[36754]:0x93f373
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::{{closure}}::h1bc235cd2ffabe9f@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[36756]:0x93f389
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_futures::queue::Queue::with::hdbd18b987237042a@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[32168]:0x92ca2d
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::h9f138db513920fdf@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[40186]:0x9476a9
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_futures::task::singlethread::Task::wake::ha0a8116bd20324a1@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[13440]:0x7b2a1e
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_futures::task::singlethread::Task::into_raw_waker::raw_wake::h7cd0464b561f844e@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[33914]:0x935113
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.core::task::wake::Waker::wake::h14e3bd6775d5e60c@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[24541]:0x8e0654
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::finish::h3ec7387b4cde006e@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[2598]:0x48875a
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::{{closure}}::hcef9282b9bac11dc@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[20082]:0x886da6
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.core::ops::function::FnOnce::call_once::h7c8524434abbe90b@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[19083]:0x86de01
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.<T as wasm_bindgen::closure::WasmClosureFnOnce<A,R>>::into_fn_mut::{{closure}}::h64b0b01977ad41e4@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[27378]:0x907a67
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[16918]:0x82f897
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.closure2632 externref shim@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[32623]:0x92f465
+        __wbg_adapter_129@http://127.0.0.1:50527/suite.js:605:10
+        real@http://127.0.0.1:50527/suite.js:226:20
+        promise callback*__wbg_get_imports/imports.wbg.__wbg_then_48b406749878a531@http://127.0.0.1:50527/suite.js:4897:26
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.__wbg_then_48b406749878a531 externref shim@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[29188]:0x919087
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.js_sys::Promise::then2::h7b08f2f14140ca21@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[16810]:0x82c0f7
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::ha4dc543ce1f01629@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[1732]:0x3cd987
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_buffer_cleanup::Observation::completed::{{closure}}::h6e1583eca1e06dac@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[2055]:0x41c847
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_buffer_cleanup::real_idle_or_priority_callback_cleans_parser_populated_buffers::{{closure}}::h6b5d53ede426973d@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[939]:0x28694e
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h0365a35eefb5ac22@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[2517]:0x479dbd
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h826ca5eefda28a67@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[14260]:0x7d2777
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[23003]:0x8c58af
+        __wbg_adapter_1101@http://127.0.0.1:50527/suite.js:609:10
+        cb0@http://127.0.0.1:50527/suite.js:4987:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:50527/suite.js:4992:30
+        handleError@http://127.0.0.1:50527/suite.js:160:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:50527/suite.js:4980:76
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[6790]:0x647888
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::hbed64a9eaae66f92@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[13088]:0x7a4c84
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::hc5f48a9d32828c26@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[16190]:0x81707d
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::hd36578d6e3471d18@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[1824]:0x3e58b1
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[834]:0x234e94
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[3672]:0x5245e7
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[1748]:0x3d1dbe
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[3637]:0x5202bf
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[3274]:0x4f158b
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[20669]:0x894aa0
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[16918]:0x82f897
+        wasm_buffer_cleanup-3da994c47f97f2f4.wasm.closure2632 externref shim@http://127.0.0.1:50527/suite_bg.wasm:wasm-function[32623]:0x92f465
+        __wbg_adapter_129@http://127.0.0.1:50527/suite.js:605:10
+        real@http://127.0.0.1:50527/suite.js:226:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:50527/suite.js:4490:23
+
+failures:
+
+    inactive_normal_and_active_alternate_are_both_scheduled
+
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.04s
+

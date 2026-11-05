@@ -1,0 +1,49 @@
+running 4 tests
+test scheduler_throw_preserves_the_original_js_object ... ok
+test reset_and_host_detach_cancel_real_pending_tokens ... ok
+test real_idle_or_priority_callback_cleans_parser_populated_buffers ... ok
+test inactive_normal_and_active_alternate_are_both_scheduled ... FAIL
+
+failures:
+
+---- inactive_normal_and_active_alternate_are_both_scheduled output ----
+    JS exception that was thrown:
+        RuntimeError: Unreachable code should not be executed (evaluating 'wasm.wasm_bindgen__convert__closures__invoke0_mut__h6ccbabcefd85a5b8(arg0, arg1)')
+        40696@wasm-function[40696]
+        36335@wasm-function[36335]
+        11250@wasm-function[11250]
+        14265@wasm-function[14265]
+        40219@wasm-function[40219]
+        27401@wasm-function[27401]
+        27402@wasm-function[27402]
+        25265@wasm-function[25265]
+        865@wasm-function[865]
+        2518@wasm-function[2518]
+        14267@wasm-function[14267]
+        23011@wasm-function[23011]
+        __wbg_adapter_1101@http://127.0.0.1:55754/suite.js:609:73
+        cb0@http://127.0.0.1:55754/suite.js:4987:46
+        @
+        @http://127.0.0.1:55754/suite.js:4992:30
+        handleError@http://127.0.0.1:55754/suite.js:160:23
+        6790@wasm-function[6790]
+        13094@wasm-function[13094]
+        16197@wasm-function[16197]
+        1823@wasm-function[1823]
+        834@wasm-function[834]
+        3672@wasm-function[3672]
+        1748@wasm-function[1748]
+        3637@wasm-function[3637]
+        3274@wasm-function[3274]
+        20675@wasm-function[20675]
+        16925@wasm-function[16925]
+        32633@wasm-function[32633]
+        __wbg_adapter_129@http://127.0.0.1:55754/suite.js:605:36
+        real@http://127.0.0.1:55754/suite.js:226:21
+
+failures:
+
+    inactive_normal_and_active_alternate_are_both_scheduled
+
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.07s
+

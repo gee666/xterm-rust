@@ -4,7 +4,7 @@ use super::{Buffer, BufferError};
 use crate::{
     event::EmitError,
     lifecycle::DisposableHandle,
-    task_queue::{Scheduler, TaskQueue},
+    task_queue::{Scheduler, TaskQueue, TaskQueueError},
 };
 use std::{
     cell::{Cell, RefCell},
@@ -154,10 +154,10 @@ where
     pub fn process_idle(
         &self,
         remaining: impl FnMut() -> f64,
-    ) -> Result<(), CleanupError<S::Error>> {
+    ) -> Result<(), TaskQueueError<CleanupError<S::Error>>> {
         self.driver.process(remaining)
     }
-    pub fn process_priority(&self) -> Result<(), CleanupError<S::Error>> {
+    pub fn process_priority(&self) -> Result<(), TaskQueueError<CleanupError<S::Error>>> {
         self.driver.priority()
     }
     pub fn retry_pending(&self) -> Result<(), CleanupError<S::Error>> {

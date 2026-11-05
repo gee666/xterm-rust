@@ -34,6 +34,30 @@ pub trait Scheduler {
     fn deadline_exceeded(&self, milliseconds: f64) -> Result<(), Self::Error>;
 }
 
+/// Scheduled dispatch can lose its current task when a clock callback reenters
+/// the queue. This corresponds to invoking an absent function in JavaScript.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum TaskQueueError<E> {
+    Callback(E),
+    MissingTask,
+}
+impl<E: std::fmt::Display> std::fmt::Display for TaskQueueError<E> {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Callback(error) => error.fmt(formatter),
+            Self::MissingTask => formatter.write_str("queued task is not a function"),
+        }
+    }
+}
+impl<E: std::error::Error + 'static> std::error::Error for TaskQueueError<E> {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Callback(error) => Some(error),
+            Self::MissingTask => None,
+        }
+    }
+}
+
 type Task<S> = Rc<dyn Fn(&TaskQueue<S>) -> Result<bool, <S as Scheduler>::Error>>;
 struct State<S: Scheduler> {
     tasks: RefCell<Vec<Task<S>>>,
@@ -159,16 +183,22 @@ impl<S: Scheduler> TaskQueue<S> {
     }
     /// Dispatch a fired host callback exactly once. A deadline is deliberately
     /// queried after every task, even after the last task, as upstream does.
-    pub fn process(&self, mut time_remaining: impl FnMut() -> f64) -> Result<(), S::Error> {
+    pub fn process(
+        &self,
+        mut time_remaining: impl FnMut() -> f64,
+    ) -> Result<(), TaskQueueError<S::Error>> {
         let handle = self.state.pending.borrow_mut().take();
         if let Some(handle) = handle {
             self.state.scheduler.callback_fired(handle);
         }
         let mut longest = 0.0_f64;
         let mut previous_remaining = time_remaining();
-        while let Some(task) = self.current_task() {
+        while self.state.index.get() < self.state.tasks.borrow().len() {
             let start = self.now();
-            if !task(self)? {
+            // Source checks the index before now(), but reads the task after
+            // it. A reentrant clock can replace or remove that exact task.
+            let task = self.current_task().ok_or(TaskQueueError::MissingTask)?;
+            if !task(self).map_err(TaskQueueError::Callback)? {
                 self.state.index.set(self.state.index.get() + 1);
             }
             let duration = js_max(1.0, self.now() - start);
@@ -182,16 +212,19 @@ impl<S: Scheduler> TaskQueue<S> {
                     let magnitude = overrun.abs();
                     let rounded =
                         magnitude.floor() + if magnitude.fract() > 0.5 { 1.0 } else { 0.0 };
-                    self.state.scheduler.deadline_exceeded(rounded)?;
+                    self.state
+                        .scheduler
+                        .deadline_exceeded(rounded)
+                        .map_err(TaskQueueError::Callback)?;
                 }
-                return self.start();
+                return self.start().map_err(TaskQueueError::Callback);
             }
             previous_remaining = remaining;
         }
         self.clear();
         Ok(())
     }
-    pub fn process_priority(&self) -> Result<(), S::Error> {
+    pub fn process_priority(&self) -> Result<(), TaskQueueError<S::Error>> {
         let end = self.now() + PRIORITY_BUDGET_MS;
         self.process(|| js_max(0.0, end - self.now()))
     }
@@ -250,10 +283,13 @@ impl<S: Scheduler> DebouncedIdleTask<S> {
     pub fn dispose(&self) {
         self.queue.clear();
     }
-    pub fn process(&self, time_remaining: impl FnMut() -> f64) -> Result<(), S::Error> {
+    pub fn process(
+        &self,
+        time_remaining: impl FnMut() -> f64,
+    ) -> Result<(), TaskQueueError<S::Error>> {
         self.queue.process(time_remaining)
     }
-    pub fn process_priority(&self) -> Result<(), S::Error> {
+    pub fn process_priority(&self) -> Result<(), TaskQueueError<S::Error>> {
         self.queue.process_priority()
     }
 }

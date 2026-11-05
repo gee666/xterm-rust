@@ -1,8 +1,14 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
 use super::{BufferError, CleanupError};
-use crate::task_queue::{CallbackKind, Scheduler, TaskQueue};
+use crate::task_queue::{CallbackKind, Scheduler, TaskQueue, TaskQueueError};
 use std::rc::Rc;
 
+fn schedule_error<E>(error: TaskQueueError<E>) -> TaskQueueError<CleanupError<E>> {
+    match error {
+        TaskQueueError::Callback(error) => TaskQueueError::Callback(CleanupError::Schedule(error)),
+        TaskQueueError::MissingTask => TaskQueueError::MissingTask,
+    }
+}
 type Work = Rc<dyn Fn() -> Result<bool, BufferError>>;
 /// A standalone scheduler can expose native Buffer errors without forcing its
 /// host error type to invent a representation for them. Injected queues instead
@@ -58,20 +64,16 @@ impl<S: Scheduler> Driver<S> {
     pub(super) fn process(
         &self,
         remaining: impl FnMut() -> f64,
-    ) -> Result<(), CleanupError<S::Error>> {
+    ) -> Result<(), TaskQueueError<CleanupError<S::Error>>> {
         match self {
             Self::Owned(q) => q.process(remaining),
-            Self::Injected { queue, .. } => {
-                queue.process(remaining).map_err(CleanupError::Schedule)
-            }
+            Self::Injected { queue, .. } => queue.process(remaining).map_err(schedule_error),
         }
     }
-    pub(super) fn priority(&self) -> Result<(), CleanupError<S::Error>> {
+    pub(super) fn priority(&self) -> Result<(), TaskQueueError<CleanupError<S::Error>>> {
         match self {
             Self::Owned(q) => q.process_priority(),
-            Self::Injected { queue, .. } => {
-                queue.process_priority().map_err(CleanupError::Schedule)
-            }
+            Self::Injected { queue, .. } => queue.process_priority().map_err(schedule_error),
         }
     }
 }

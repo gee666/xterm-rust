@@ -1,0 +1,24 @@
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\U\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 4.65s
+     Running tests\task_queue_clock.rs (target\debug\deps\task_queue_clock-199bee0e07ce7402.exe)
+
+running 1 test
+test clock_reentry_matches_unchanged_source_traces ... FAILED
+
+failures:
+
+---- clock_reentry_matches_unchanged_source_traces stdout ----
+
+thread 'clock_reentry_matches_unchanged_source_traces' panicked at crates\xterm-core\tests\task_queue_clock.rs:110:9:
+assertion `left == right` failed: idle replace clock1 ["old"]
+  left: Expected { trace: ["request:1", "deadline", "now:1", "request:2", "task:old", "now:2", "deadline", "cancel:2"], error: None, remaining: 0, pending: false }
+ right: Expected { trace: ["request:1", "deadline", "now:1", "request:2", "task:new", "now:2", "deadline", "cancel:2"], error: None, remaining: 0, pending: false }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    clock_reentry_matches_unchanged_source_traces
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-core --test task_queue_clock`

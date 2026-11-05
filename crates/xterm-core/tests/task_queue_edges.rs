@@ -3,7 +3,7 @@ use std::{
     panic::{catch_unwind, AssertUnwindSafe},
     rc::Rc,
 };
-use xterm_core::task_queue::{CallbackKind, Scheduler, TaskQueue};
+use xterm_core::task_queue::{CallbackKind, Scheduler, TaskQueue, TaskQueueError};
 
 #[derive(Clone, Default)]
 struct Host {
@@ -73,7 +73,10 @@ fn request_failure_releases_borrows_and_preserves_queue_state() {
     fail.set(false);
     queue.enqueue(|_| true).unwrap();
     fail.set(true);
-    assert_eq!(queue.process(|| 0.0), Err("host request failed"));
+    assert_eq!(
+        queue.process(|| 0.0),
+        Err(TaskQueueError::Callback("host request failed"))
+    );
     assert_eq!(queue.remaining_tasks(), 1);
     assert!(!queue.has_pending_callback());
     queue.clear();
@@ -164,7 +167,10 @@ fn warning_failure_preserves_partial_index_and_allows_retry() {
         })
         .unwrap();
     queue.enqueue(|_| false).unwrap();
-    assert_eq!(queue.process(|| 1.0), Err("log callback failed"));
+    assert_eq!(
+        queue.process(|| 1.0),
+        Err(TaskQueueError::Callback("log callback failed"))
+    );
     assert_eq!(queue.remaining_tasks(), 1);
     assert!(!queue.has_pending_callback());
     queue.flush().unwrap();
@@ -207,9 +213,9 @@ fn fallible_tasks_retain_the_current_index_on_flush_and_dispatch_errors() {
                 100.0
             })
         } else {
-            queue.flush()
+            queue.flush().map_err(TaskQueueError::Callback)
         };
-        assert_eq!(result, Err("task failed"));
+        assert_eq!(result, Err(TaskQueueError::Callback("task failed")));
         assert_eq!(queue.remaining_tasks(), 2);
         assert_eq!(queue.has_pending_callback(), !scheduled);
         assert_eq!(count.get(), 0);
@@ -245,9 +251,12 @@ fn fallible_task_clear_then_enqueue_keeps_replacement_after_error() {
         let result = if scheduled {
             queue.process(|| 100.0)
         } else {
-            queue.flush()
+            queue.flush().map_err(TaskQueueError::Callback)
         };
-        assert_eq!(result, Err("replacement retained"));
+        assert_eq!(
+            result,
+            Err(TaskQueueError::Callback("replacement retained"))
+        );
         assert_eq!(queue.remaining_tasks(), 1);
         assert!(queue.has_pending_callback());
         queue.flush().unwrap();

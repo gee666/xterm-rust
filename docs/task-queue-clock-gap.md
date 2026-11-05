@@ -1,21 +1,55 @@
-# Open task queue clock reentry mismatch
+# Task queue clock reentry
 
-Task367 is confirmed but not repaired. The retained minimal probes are in `results/task-queue-clock/` on `swarm/A16`. They are counterexamples, not new passing parity tests or a complete browser run.
+Task367 repairs the confirmed clock callback ordering mismatch in `TaskQueue::process`. The original counterexample from `swarm/A16` is retained unchanged in `results/task-queue-clock/source-probe.mjs`, `source.json`, `native-repro.rs`, `native.txt` and `verification.json`. Those files describe the earlier failure, not the repair's test results. Current evidence is `repair-verification.json` and the adjacent logs.
 
-The source `TaskQueue._process` tests `_i < _tasks.length`, calls `performance.now()`, then looks up and invokes `_tasks[_i]`. Native `TaskQueue::process` clones `current_task()` in the loop condition before calling `Scheduler::now()`. A reentrant clock can therefore replace the task between these statements, with different callbacks executed.
+## Behavior and error representation
 
-The probe enqueues `old`, then clears and enqueues `new` in the first clock call during idle processing. It uses finite times and an ordinary completing task. The unchanged source executes only `new`. The current native core executes only `old` and then clears the replacement. Native Windows x64/Rust1.85.1 and Node24.15.0/TypeScript5.9.3 produced these retained outputs. Source and implementation hashes are recorded. No source assertion was altered.
+The unchanged source `src/common/TaskQueue.ts` checks `_i < _tasks.length`, calls `performance.now()`, then reads and invokes `_tasks[_i]`. Rust previously cloned the task before reading the clock. A reentrant clock that cleared the queue and enqueued a replacement caused source to execute `new` but Rust to execute `old` and discard `new`.
+
+Rust now checks the loop bound, reads the clock, and only then clones the current task. It holds no task-list borrow across the clock. The current index is also read after the callback, so clearing at a nonzero index dispatches the replacement's current task. Clearing without replacement, or synchronously flushing the queue during that clock, returns an explicit missing-task error. It does not run a stale task, panic, or silently succeed.
+
+Scheduled `TaskQueue::process`, `process_priority` and the corresponding `DebouncedIdleTask` methods now return `Result<(), TaskQueueError<S::Error>>`. `TaskQueueError::Callback(E)` retains the existing task, request or warning failure unchanged. `MissingTask` represents invoking an absent source function, even when `S::Error` is `Infallible`. Synchronous enqueue and flush results remain `S::Error`; their lookup phases did not change. `BufferCleanup`'s two process methods propagate the queue error around their existing cleanup error domain. Injected scheduler failures retain the same inner value. Tests now unwrap that additional typed layer without changing their original error, retry, deadline or identity assertions.
+
+The production browser dispatcher maps `MissingTask` to a JavaScript `TypeError`. Callback failures return their original `JsValue` unchanged. Error class and object identity are tested; engine-specific source exception messages are not promised to match. No dependency, unsafe code, fallback queue or JavaScript engine delegation was added.
+
+## Shared source traces
+
+`scripts/task-queue-clock-oracle.mjs` erases TypeScript syntax and type-only imports from the unchanged source in memory. It executes the actual queue with controlled timer and clock hosts in Node and in Chromium, Firefox and WebKit. It does not alter the source or its original assertions. `--write` explicitly generates the checked-in TSV corpus; ordinary execution checks it instead of refreshing expectations.
+
+The 32 traces cover idle and priority queues at task-start clocks, task-end clocks and the second task's start clock. Actions clear, flush, replace, or replace with a throwing task. Priority deadline construction and the initial deadline read are also covered, where clearing precedes the loop guard and must succeed normally. Each trace asserts exact clock/task/request/cancellation order, error kind, remaining work and pending callback state. Native Rust and the real browser/WASM adapter consume the same TSV through one shared test helper. TSV avoids a new test dependency in the portable core.
+
+The new native and WASM suites each contain one Rust test function replaying all32 cases. They are not32 original upstream tests. The browser test also checks thrown callback object identity and retries queue use after every outcome. Its controlled host calls the retained callback through the real browser/WASM function boundary. The existing `wasm_host` suite separately exercises ordinary host timing.
+
+## Observed verification
+
+Windows x64, Rust/Cargo1.85.1 and Node24.15.0, initially based on main6b8f80c:
+
+- Restoring only the old early lookup in an otherwise repaired build makes the new native test fail with `task:old` versus expected `task:new`. `baseline-native.log` retains the failure.
+- The source oracle matches all32 cases in Node and each of Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4.
+- The repaired native replay passes32/32 cases. Existing queue and buffer-consumer suites also pass,38 Rust test functions in the focused command.
+- Full xterm-core all-target/all-feature tests pass1539 tests across236 result summaries; its two compile-fail doctests pass.
+- Warning-denied core/web native all-target/all-feature Clippy and scoped web WASM library/new-test/existing-error-test Clippy pass. Full workspace formatting passes.
+- Existing `wasm_task_queue_errors` passes5 tests per browser and `wasm_host` passes10 per browser. The new WASM replay passes its32 cases per browser.
+- Existing source/Rust task-platform differential checks match4519 results with seed `0x715cad`, including1500 random queue iterations. The unchanged original WindowsMode Mocha suite passes3/3. This is not4519 original tests.
+
+An additional unchanged browser regression suite remains red. `wasm_buffer_cleanup::inactive_normal_and_active_alternate_are_both_scheduled` fails line139 because the alternate buffer has no pending cleanup. Both unmodified main6b8f80c production and the repair pass3/4 tests per browser and fail this same assertion in all three engines. The baseline was rebuilt after temporarily restoring only the four owned production files, then the repair was reapplied byte-for-byte. Raw reports and logs are retained under `browser/` and `baseline-buffer-browser.json`. No test assertion was changed. Follow-up task371 covers source diagnosis and repair under full-family314. This failure is not a scheduler parity pass.
+
+## Reproduction
+
+Run in an isolated worktree with an installed WASM target, matching wasm-bindgen0.2.100 CLI and existing Playwright installation. Set `XT_SOURCE_ROOT`, `PLAYWRIGHT_MODULE` and `WASM_BINDGEN` when using an external read-only reference or tool installation. Set `CARGO_BUILD_JOBS=2` and keep temporary output on the run-owned volume.
 
 ```sh
-XT_SOURCE_ROOT=/path/to/unchanged/source_repo node results/task-queue-clock/source-probe.mjs
-cargo build --locked -j2 -p xterm-core
-# Use the rlib Cargo just built and the matching target/debug/deps directory.
-rustc --edition 2021 results/task-queue-clock/native-repro.rs --extern xterm_core=target/debug/deps/libxterm_core-HASH.rlib -L dependency=target/debug/deps -o tmp/clock-reentry.exe
-./tmp/clock-reentry.exe
+node scripts/task-queue-clock-oracle.mjs --browsers
+cargo test --locked -j2 -p xterm-core --test task_queue --test task_queue_edges --test task_queue_drop --test task_queue_clock --test buffer_contracts --test buffer_cleanup_injection
+cargo test --locked -j2 -p xterm-core --all-targets --all-features
+cargo test --locked -j2 -p xterm-core --doc
+cargo clippy --locked -j2 -p xterm-core -p xterm-web --all-targets --all-features -- -D warnings
+cargo clippy --locked -j2 -p xterm-web --target wasm32-unknown-unknown --lib --test wasm_task_queue_clock --test wasm_task_queue_errors -- -D warnings
+WASM_TEST=wasm_task_queue_clock node scripts/browser-host-check.mjs
+WASM_TEST=wasm_task_queue_errors node scripts/browser-host-check.mjs
+WASM_TEST=wasm_host node scripts/browser-host-check.mjs
+CARGO_BUILD_JOBS=2 node scripts/task-platform-oracle.mjs
+cargo fmt --all -- --check
 ```
 
-The source probe transpiles the unchanged file in memory and provides only controlled timer/clock/log hosts. The native probe links the normal Cargo-built library. This is not a fake terminal implementation. The probes do not establish real browser clock mutation behavior, missing-task error handling or cross-platform results.
-
-The repair must look up the task after the clock callback. It must also handle clear-without-replacement with a typed error corresponding to the source's TypeError, not a panic, an old callback or successful no-op. The current `Scheduler::Error` can be `Infallible`, so choosing a sound generic queue-error representation is part of the work. Inspect existing queue consumers before changing public Rust results. Preserve all existing scheduler/capture-cleanup assertions and original differential traces. Broader throwing clock/cancellation behavior remains subject to full source-family audit312.
-
-Task366 does not change any queue behavior. Its two reviewed commits are independent of this later counterexample-only commit. Do not claim task367 complete or merge it as an implementation repair.
+Generated WASM/binding binaries are disposable and are not committed. Their exact hashes, source hashes and command reports are retained. This task does not establish full common/lifecycle parity, native Linux/macOS runtime equivalence, or completion of the original browser/demo suites. Overall equivalence remains NOT PROVEN.

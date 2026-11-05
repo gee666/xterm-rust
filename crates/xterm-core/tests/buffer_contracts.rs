@@ -118,7 +118,9 @@ fn cleanup_borrow_failure_is_not_hidden_or_retried_implicitly() {
     let held = shared.borrow_mut();
     assert!(matches!(
         adapter.process_idle(|| 1000.0),
-        Err(CleanupError::Buffer(BufferError::BorrowedLine))
+        Err(xterm_core::task_queue::TaskQueueError::Callback(
+            CleanupError::Buffer(BufferError::BorrowedLine)
+        ))
     ));
     drop(held);
     assert!(shared.borrow().has_pending_cleanup());
