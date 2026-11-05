@@ -297,6 +297,38 @@ export async function serializationCases() {
       return { startCol: String(startCol), same, log: [...log] };
     });
   });
+  await run('html-oversized-start-column-reentry', async (term, addon) => {
+    await write(term, '\x1b[31mABCDEFGHIJKL\r\n\x1b[32mSECOND');
+    const values = [];
+    for (const phase of ['grow', 'shrink']) {
+      for (const startCol of [2 ** 32 - 2, 2 ** 32 - 1, 2 ** 32 - 0.5, 2 ** 32,
+        Number.MAX_SAFE_INTEGER, Number.MAX_VALUE]) {
+        term.resize(12, 4);
+        const log = [];
+        const range = { get startCol() { log.push('startCol'); return startCol; },
+          get startLine() { log.push('startLine'); return 0; },
+          get endLine() { log.push('endLine'); return 1; } };
+        Object.defineProperty(term.options, 'fontFamily', { configurable: true, get() {
+          log.push('fontFamily'); term.resize(phase === 'grow' ? 18 : 6, 4); return 'raw\ud800';
+        } });
+        const html = capture(() => addon.serializeAsHTML({ range }));
+        values.push({ phase, startCol: String(startCol), html, log, state: snapshot(term) });
+      }
+    }
+    return values;
+  });
+  await run('html-oversized-start-column-header-throw', async (term, addon) => {
+    const sentinel = {}, log = [];
+    Object.defineProperty(term.options, 'fontFamily', { configurable: true,
+      get() { log.push('fontFamily'); throw sentinel; } });
+    return [2 ** 32 - 2, 2 ** 32 - 1, 2 ** 32 - 0.5, 2 ** 32,
+      Number.MAX_SAFE_INTEGER, Number.MAX_VALUE].map(startCol => {
+      log.length = 0; let same = false;
+      try { addon.serializeAsHTML({ range: { startCol, startLine: 0, endLine: 1 } }); }
+      catch (error) { same = error === sentinel; }
+      return { startCol: String(startCol), same, log: [...log] };
+    });
+  });
   await run('html-header-coercion-order', async (term, addon) => {
     await write(term, 'abc'); const log = [];
     const raw = key => ({ [Symbol.toPrimitive](hint) { log.push(`${key}:${hint}`); return key + '\ud800'; } });
