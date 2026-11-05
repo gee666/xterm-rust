@@ -1,0 +1,197 @@
+{
+  "status": "passed",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "scope": "Unchanged AttachAddon methods with shared socket traces and a recording terminal, not a full original suite.",
+  "before": {
+    "files": 776,
+    "mismatches": []
+  },
+  "cases": [
+    {
+      "name": "plain",
+      "log": [
+        "get:0",
+        "return:0"
+      ],
+      "error": null,
+      "text": "A",
+      "listeners": [
+        "message",
+        "close",
+        "error"
+      ]
+    },
+    {
+      "name": "nested-once",
+      "log": [
+        "get:0",
+        "get:1",
+        "return:1",
+        "return:0"
+      ],
+      "error": null,
+      "text": "BA",
+      "listeners": [
+        "message",
+        "close",
+        "error"
+      ]
+    },
+    {
+      "name": "nested-twice",
+      "log": [
+        "get:0",
+        "get:1",
+        "get:2",
+        "return:2",
+        "return:1",
+        "return:0"
+      ],
+      "error": null,
+      "text": "CBA",
+      "listeners": [
+        "message",
+        "close",
+        "error"
+      ]
+    },
+    {
+      "name": "nested-five",
+      "log": [
+        "get:0",
+        "get:1",
+        "get:2",
+        "get:3",
+        "get:4",
+        "get:5",
+        "return:5",
+        "return:4",
+        "return:3",
+        "return:2",
+        "return:1",
+        "return:0"
+      ],
+      "error": null,
+      "text": "FEDCBA",
+      "listeners": [
+        "message",
+        "close",
+        "error"
+      ]
+    },
+    {
+      "name": "binary-nested",
+      "log": [
+        "get:0",
+        "get:1",
+        "get:2",
+        "return:2",
+        "return:1",
+        "return:0"
+      ],
+      "error": null,
+      "text": "CBA",
+      "listeners": [
+        "message",
+        "close",
+        "error"
+      ]
+    },
+    {
+      "name": "empty-nested",
+      "log": [
+        "get:0",
+        "get:1",
+        "return:1",
+        "return:0"
+      ],
+      "error": null,
+      "text": "A",
+      "listeners": [
+        "message",
+        "close",
+        "error"
+      ]
+    },
+    {
+      "name": "throw-inner",
+      "log": [
+        "get:0",
+        "get:1",
+        "nested:original"
+      ],
+      "error": "original",
+      "text": "",
+      "listeners": [
+        "message",
+        "close",
+        "error"
+      ]
+    },
+    {
+      "name": "catch-inner",
+      "log": [
+        "get:0",
+        "get:1",
+        "nested:original",
+        "return:0"
+      ],
+      "error": null,
+      "text": "A",
+      "listeners": [
+        "message",
+        "close",
+        "error"
+      ]
+    },
+    {
+      "name": "dispose-in-getter",
+      "log": [
+        "get:0",
+        "return:0"
+      ],
+      "error": null,
+      "text": "A",
+      "listeners": []
+    },
+    {
+      "name": "close-in-getter",
+      "log": [
+        "get:0",
+        "return:0"
+      ],
+      "error": null,
+      "text": "A",
+      "listeners": []
+    },
+    {
+      "name": "error-in-getter",
+      "log": [
+        "get:0",
+        "return:0"
+      ],
+      "error": null,
+      "text": "A",
+      "listeners": []
+    }
+  ],
+  "counts": {
+    "discovered": 11,
+    "executed": 11,
+    "passed": 11,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0
+  },
+  "fixtureSha256": "4a2955c2979c3add3965f6cb6f5c5f188946b835efa265f65827821f5fb86f68",
+  "traceSha256": "5c18e64fa687b5c29faa989c35c4d1e0b54213fbb1188a717651dac642b5259c",
+  "source": {
+    "path": "addons/addon-attach/src/AttachAddon.ts",
+    "sha256": "769d814016e438a111e6a15d2ec404826297795630f1f14c9e3234cf71d96383"
+  },
+  "after": {
+    "files": 776,
+    "mismatches": []
+  }
+}

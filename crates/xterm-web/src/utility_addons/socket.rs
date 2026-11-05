@@ -72,6 +72,8 @@ impl AttachSocket for BrowserSocket {
             SocketEvent::Close => "close",
             SocketEvent::Error => "error",
         };
+        // Shared callbacks allow synchronous nested socket dispatch. FnMut's
+        // exclusive WASM borrow would trap before the inner source callback.
         // Return Result so the JS exception is raised only after Rust cleanup.
         let listener = Closure::wrap(Box::new(move |value: Event| -> Result<(), JsValue> {
             let payload = if event == SocketEvent::Message {
@@ -88,7 +90,7 @@ impl AttachSocket for BrowserSocket {
                 None
             };
             callback(payload).map_err(js_error)
-        }) as Box<dyn FnMut(Event) -> Result<(), JsValue>>);
+        }) as Box<dyn Fn(Event) -> Result<(), JsValue>>);
         self.0
             .add_event_listener_with_callback(kind, listener.as_ref().unchecked_ref())
             .map_err(error)?;
