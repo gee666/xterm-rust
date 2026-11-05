@@ -1,6 +1,8 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
 // Appended to unchanged CharAtlasCache.ts. Real TextureAtlas and canvas work,
 // with source exports and private cache state used only for test observation.
+import { UnicodeService as CacheUnicodeService } from 'common/services/UnicodeService';
+import { UnicodeV6 as CacheUnicodeV6 } from 'common/input/UnicodeV6';
 globalThis.sourceCacheScenario = name => {
   const trace = [], atlases = [], canvases = [];
   const originalCreate = document.createElement;
@@ -29,7 +31,8 @@ globalThis.sourceCacheScenario = name => {
   const options = { letterSpacing:0, lineHeight:1, fontFamily:'monospace', fontSize:15,
     fontWeight:'normal', fontWeightBold:'bold', allowTransparency:false,
     drawBoldTextInBrightColors:true, minimumContrastRatio:1 };
-  const unicode = { getStringCellWidth:s=>s.length };
+  const unicode = new CacheUnicodeService();
+  unicode.register(new CacheUnicodeV6());
   const log = { trace(){},debug(){},info(){},warn(){},error(){} };
   let failServices = false;
   const owner = label => Object.defineProperty({}, '_core', { get() {

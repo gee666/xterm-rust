@@ -1,0 +1,8 @@
+Source-only fake-DOM cache trace sanity, NOT browser or Rust evidence
+move {"ids":[0,0,1,1],"versions":[0,0,1,1],"trace":["services:a","services:a","remove","remove","remove","remove"],"states":[],"pixels":[],"removals":4}
+failure {"ids":[0,0,1],"versions":[0,0,1],"trace":["services:a","remove","caught","remove","remove","services:a","remove","remove"],"states":[],"pixels":[],"removals":5}
+creation_failure {"ids":[0,1],"versions":[0,2],"trace":["services:a","remove","remove","services:a","create-failure","caught","services:a","remove","remove"],"states":[],"pixels":[],"removals":4}
+services_failure {"ids":[0,1],"versions":[0,1],"trace":["services:a","remove","remove","services:a","caught","services:a","remove","remove"],"states":[],"pixels":[],"removals":4}
+reentry {"ids":[0,1,2],"versions":[0,1,2],"trace":["services:a","services:b","remove","remove","remove","remove","services:b","remove","remove"],"states":[],"pixels":[],"removals":6}
+create_reentry {"ids":[0,1,0],"versions":[0,1,0],"trace":["services:d","services:b","remove","remove","remove","remove"],"states":[],"pixels":[],"removals":4}
+canvas_reentry {"ids":[0,1,0],"versions":[0,-1,0],"trace":["services:a","services:b","remove","remove","remove","remove"],"states":[],"pixels":[],"removals":4}

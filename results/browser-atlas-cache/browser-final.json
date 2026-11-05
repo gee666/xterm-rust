@@ -1,0 +1,381 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_webgl_browser_cache",
+  "testTimeoutMs": 60000,
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T23:22:44.644Z",
+  "componentOnly": true,
+  "status": "passed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_webgl_browser_cache",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 10772.0527,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 11.389100000000326,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\GeraldAtlasCache\\results\\acceptance-artifacts\\24d6a331361ffc0fe2ddba30f96912c694be9a5aa922ee4d9675e9560c3dcce4\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\GeraldAtlasCache\\results\\browser-host\\wasm_webgl_browser_cache\\2026-11-05T23-22-44-642Z-816f61b4-bf28-4078-9421-2ca52e85ac24\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1158.8385999999991,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "passed",
+      "tests": [
+        "__wbgt__wasm_webgl_browser_cache::actual_canvas_creation_reentry_preserves_out_of_order_page_versions",
+        "__wbgt__wasm_webgl_browser_cache::actual_disposal_reentry_keeps_source_live_splice_behavior",
+        "__wbgt__wasm_webgl_browser_cache::actual_shared_canvas_owners_pixels_and_upload_clock",
+        "__wbgt__wasm_webgl_browser_cache::configuration_change_moves_only_one_owner",
+        "__wbgt__wasm_webgl_browser_cache::failed_actual_canvas_creation_does_not_publish_an_entry",
+        "__wbgt__wasm_webgl_browser_cache::failed_actual_disposal_preserves_owner_and_error_identity",
+        "__wbgt__wasm_webgl_browser_cache::failed_lazy_services_happen_after_release",
+        "__wbgt__wasm_webgl_browser_cache::lazy_service_reentry_inserts_nested_atlas_before_outer",
+        "__wbgt__wasm_webgl_browser_cache::real_runtime_keeps_one_pool_and_global_document_across_iframes"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "info",
+          "text": "cache-source create_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:d\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,1,0]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust create_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:d\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,1,0]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source services_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust services_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source failure {\"ids\":[0,0,1],\"pixels\":[],\"removals\":5,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"caught\",\"remove\",\"remove\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust failure {\"ids\":[0,0,1],\"pixels\":[],\"removals\":5,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"caught\",\"remove\",\"remove\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source creation_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"create-failure\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust creation_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"create-failure\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source move {\"ids\":[0,0,1,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:a\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,0,1,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust move {\"ids\":[0,0,1,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:a\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,0,1,1]}"
+        },
+        {
+          "type": "warning",
+          "text": "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently"
+        },
+        {
+          "type": "warning",
+          "text": "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently"
+        },
+        {
+          "type": "info",
+          "text": "cache-source sharing {\"ids\":[0,0,0,1],\"pixels\":[1980327496,1415355845,1415355845],\"removals\":2,\"states\":[[1,0],[1,1],[1,1]],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:c\"],\"versions\":[0,0,0,3]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust sharing {\"ids\":[0,0,0,1],\"pixels\":[1980327496,1415355845,1415355845],\"removals\":2,\"states\":[[1,0],[1,1],[1,1]],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:c\"],\"versions\":[0,0,0,3]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source reentry {\"ids\":[0,1,2],\"pixels\":[],\"removals\":6,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\",\"services:b\",\"remove\",\"remove\"],\"versions\":[0,1,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust reentry {\"ids\":[0,1,2],\"pixels\":[],\"removals\":6,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\",\"services:b\",\"remove\",\"remove\"],\"versions\":[0,1,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source canvas_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,-1,0]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust canvas_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,-1,0]}"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 9 tests\ntest real_runtime_keeps_one_pool_and_global_document_across_iframes ... ok\ntest lazy_service_reentry_inserts_nested_atlas_before_outer ... ok\ntest failed_lazy_services_happen_after_release ... ok\ntest failed_actual_disposal_preserves_owner_and_error_identity ... ok\ntest failed_actual_canvas_creation_does_not_publish_an_entry ... ok\ntest configuration_change_moves_only_one_owner ... ok\ntest actual_shared_canvas_owners_pixels_and_upload_clock ... ok\ntest actual_disposal_reentry_keeps_source_live_splice_behavior ... ok\ntest actual_canvas_creation_reentry_preserves_out_of_order_page_versions ... ok\n\ntest result: ok. 9 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.18s\n\n",
+      "counts": {
+        "passed": 9,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "firefox",
+      "status": "passed",
+      "tests": [
+        "__wbgt__wasm_webgl_browser_cache::actual_canvas_creation_reentry_preserves_out_of_order_page_versions",
+        "__wbgt__wasm_webgl_browser_cache::actual_disposal_reentry_keeps_source_live_splice_behavior",
+        "__wbgt__wasm_webgl_browser_cache::actual_shared_canvas_owners_pixels_and_upload_clock",
+        "__wbgt__wasm_webgl_browser_cache::configuration_change_moves_only_one_owner",
+        "__wbgt__wasm_webgl_browser_cache::failed_actual_canvas_creation_does_not_publish_an_entry",
+        "__wbgt__wasm_webgl_browser_cache::failed_actual_disposal_preserves_owner_and_error_identity",
+        "__wbgt__wasm_webgl_browser_cache::failed_lazy_services_happen_after_release",
+        "__wbgt__wasm_webgl_browser_cache::lazy_service_reentry_inserts_nested_atlas_before_outer",
+        "__wbgt__wasm_webgl_browser_cache::real_runtime_keeps_one_pool_and_global_document_across_iframes"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "info",
+          "text": "cache-source create_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:d\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,1,0]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust create_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:d\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,1,0]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source services_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust services_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source failure {\"ids\":[0,0,1],\"pixels\":[],\"removals\":5,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"caught\",\"remove\",\"remove\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust failure {\"ids\":[0,0,1],\"pixels\":[],\"removals\":5,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"caught\",\"remove\",\"remove\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source creation_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"create-failure\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust creation_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"create-failure\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source move {\"ids\":[0,0,1,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:a\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,0,1,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust move {\"ids\":[0,0,1,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:a\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,0,1,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source sharing {\"ids\":[0,0,0,1],\"pixels\":[1980327496,1415355845,1415355845],\"removals\":2,\"states\":[[1,0],[1,1],[1,1]],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:c\"],\"versions\":[0,0,0,3]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust sharing {\"ids\":[0,0,0,1],\"pixels\":[1980327496,1415355845,1415355845],\"removals\":2,\"states\":[[1,0],[1,1],[1,1]],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:c\"],\"versions\":[0,0,0,3]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source reentry {\"ids\":[0,1,2],\"pixels\":[],\"removals\":6,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\",\"services:b\",\"remove\",\"remove\"],\"versions\":[0,1,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust reentry {\"ids\":[0,1,2],\"pixels\":[],\"removals\":6,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\",\"services:b\",\"remove\",\"remove\"],\"versions\":[0,1,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source canvas_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,-1,0]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust canvas_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,-1,0]}"
+        }
+      ],
+      "version": "150.0.2",
+      "output": "running 9 tests\ntest real_runtime_keeps_one_pool_and_global_document_across_iframes ... ok\ntest lazy_service_reentry_inserts_nested_atlas_before_outer ... ok\ntest failed_lazy_services_happen_after_release ... ok\ntest failed_actual_disposal_preserves_owner_and_error_identity ... ok\ntest failed_actual_canvas_creation_does_not_publish_an_entry ... ok\ntest configuration_change_moves_only_one_owner ... ok\ntest actual_shared_canvas_owners_pixels_and_upload_clock ... ok\ntest actual_disposal_reentry_keeps_source_live_splice_behavior ... ok\ntest actual_canvas_creation_reentry_preserves_out_of_order_page_versions ... ok\n\ntest result: ok. 9 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.27s\n\n",
+      "counts": {
+        "passed": 9,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "webkit",
+      "status": "passed",
+      "tests": [
+        "__wbgt__wasm_webgl_browser_cache::actual_canvas_creation_reentry_preserves_out_of_order_page_versions",
+        "__wbgt__wasm_webgl_browser_cache::actual_disposal_reentry_keeps_source_live_splice_behavior",
+        "__wbgt__wasm_webgl_browser_cache::actual_shared_canvas_owners_pixels_and_upload_clock",
+        "__wbgt__wasm_webgl_browser_cache::configuration_change_moves_only_one_owner",
+        "__wbgt__wasm_webgl_browser_cache::failed_actual_canvas_creation_does_not_publish_an_entry",
+        "__wbgt__wasm_webgl_browser_cache::failed_actual_disposal_preserves_owner_and_error_identity",
+        "__wbgt__wasm_webgl_browser_cache::failed_lazy_services_happen_after_release",
+        "__wbgt__wasm_webgl_browser_cache::lazy_service_reentry_inserts_nested_atlas_before_outer",
+        "__wbgt__wasm_webgl_browser_cache::real_runtime_keeps_one_pool_and_global_document_across_iframes"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "info",
+          "text": "cache-source create_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:d\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,1,0]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust create_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:d\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,1,0]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source services_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust services_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source failure {\"ids\":[0,0,1],\"pixels\":[],\"removals\":5,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"caught\",\"remove\",\"remove\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust failure {\"ids\":[0,0,1],\"pixels\":[],\"removals\":5,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"caught\",\"remove\",\"remove\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source creation_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"create-failure\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust creation_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"create-failure\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source move {\"ids\":[0,0,1,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:a\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,0,1,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust move {\"ids\":[0,0,1,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:a\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,0,1,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source sharing {\"ids\":[0,0,0,1],\"pixels\":[1830812829,1415355845,1415355845],\"removals\":2,\"states\":[[1,0],[1,1],[1,1]],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:c\"],\"versions\":[0,0,0,3]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust sharing {\"ids\":[0,0,0,1],\"pixels\":[1830812829,1415355845,1415355845],\"removals\":2,\"states\":[[1,0],[1,1],[1,1]],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:c\"],\"versions\":[0,0,0,3]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source reentry {\"ids\":[0,1,2],\"pixels\":[],\"removals\":6,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\",\"services:b\",\"remove\",\"remove\"],\"versions\":[0,1,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust reentry {\"ids\":[0,1,2],\"pixels\":[],\"removals\":6,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\",\"services:b\",\"remove\",\"remove\"],\"versions\":[0,1,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source canvas_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,-1,0]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust canvas_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,-1,0]}"
+        }
+      ],
+      "version": "26.4",
+      "output": "running 9 tests\ntest real_runtime_keeps_one_pool_and_global_document_across_iframes ... ok\ntest lazy_service_reentry_inserts_nested_atlas_before_outer ... ok\ntest failed_lazy_services_happen_after_release ... ok\ntest failed_actual_disposal_preserves_owner_and_error_identity ... ok\ntest failed_actual_canvas_creation_does_not_publish_an_entry ... ok\ntest configuration_change_moves_only_one_owner ... ok\ntest actual_shared_canvas_owners_pixels_and_upload_clock ... ok\ntest actual_disposal_reentry_keeps_source_live_splice_behavior ... ok\ntest actual_canvas_creation_reentry_preserves_out_of_order_page_versions ... ok\n\ntest result: ok. 9 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.40s\n\n",
+      "counts": {
+        "passed": 9,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/24d6a331361ffc0fe2ddba30f96912c694be9a5aa922ee4d9675e9560c3dcce4/artifact.wasm",
+      "sha256": "24d6a331361ffc0fe2ddba30f96912c694be9a5aa922ee4d9675e9560c3dcce4",
+      "bytes": 21132504,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\GeraldAtlasCache/target\\wasm32-unknown-unknown\\debug\\deps\\wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\GeraldAtlasCache\\results\\browser-host\\wasm_webgl_browser_cache\\2026-11-05T23-22-44-642Z-816f61b4-bf28-4078-9421-2ca52e85ac24\\artifacts\\suite_bg.wasm",
+      "bytes": 17864286,
+      "sha256": "3ea0710eee1c66a96530afe9adf6c66bf2d9edd106ea6e635f7c8cd79d0a19fe"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\GeraldAtlasCache\\results\\browser-host\\wasm_webgl_browser_cache\\2026-11-05T23-22-44-642Z-816f61b4-bf28-4078-9421-2ca52e85ac24\\artifacts\\suite.js",
+      "bytes": 255838,
+      "sha256": "50b4434d755b4fbd69c0b63814cce6ea72b86a25b76a2a28130cd208c575ba90"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "71cb385e602c221814be027197f5a6e6627d4eb9b239b9ee878bcafcfda1327b"
+  },
+  "finishedAt": "2026-11-05T23:23:04.638Z"
+}

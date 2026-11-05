@@ -1,0 +1,349 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_webgl_browser_cache",
+  "testTimeoutMs": 60000,
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T23:20:21.819Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_webgl_browser_cache",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 12698.6186,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 16.625699999998687,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\GeraldAtlasCache\\results\\acceptance-artifacts\\24d6a331361ffc0fe2ddba30f96912c694be9a5aa922ee4d9675e9560c3dcce4\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\GeraldAtlasCache\\results\\browser-host\\wasm_webgl_browser_cache\\2026-11-05T23-20-21-818Z-3c51815f-c9e1-4717-afc9-dd48c37677e4\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1155.1635999999999,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_webgl_browser_cache::actual_canvas_creation_reentry_preserves_out_of_order_page_versions",
+        "__wbgt__wasm_webgl_browser_cache::actual_disposal_reentry_keeps_source_live_splice_behavior",
+        "__wbgt__wasm_webgl_browser_cache::actual_shared_canvas_owners_pixels_and_upload_clock",
+        "__wbgt__wasm_webgl_browser_cache::configuration_change_moves_only_one_owner",
+        "__wbgt__wasm_webgl_browser_cache::failed_actual_canvas_creation_does_not_publish_an_entry",
+        "__wbgt__wasm_webgl_browser_cache::failed_actual_disposal_preserves_owner_and_error_identity",
+        "__wbgt__wasm_webgl_browser_cache::failed_lazy_services_happen_after_release",
+        "__wbgt__wasm_webgl_browser_cache::lazy_service_reentry_inserts_nested_atlas_before_outer",
+        "__wbgt__wasm_webgl_browser_cache::real_runtime_keeps_one_pool_and_global_document_across_iframes"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "info",
+          "text": "cache-source create_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:d\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,1,0]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust create_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:d\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,1,0]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source services_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust services_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source failure {\"ids\":[0,0,1],\"pixels\":[],\"removals\":5,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"caught\",\"remove\",\"remove\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust failure {\"ids\":[0,0,1],\"pixels\":[],\"removals\":5,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"caught\",\"remove\",\"remove\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source creation_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"create-failure\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust creation_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"create-failure\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source move {\"ids\":[0,0,1,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:a\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,0,1,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust move {\"ids\":[0,0,1,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:a\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,0,1,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source reentry {\"ids\":[0,1,2],\"pixels\":[],\"removals\":6,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\",\"services:b\",\"remove\",\"remove\"],\"versions\":[0,1,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust reentry {\"ids\":[0,1,2],\"pixels\":[],\"removals\":6,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\",\"services:b\",\"remove\",\"remove\"],\"versions\":[0,1,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source canvas_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,-1,0]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust canvas_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,-1,0]}"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 9 tests\ntest real_runtime_keeps_one_pool_and_global_document_across_iframes ... ok\ntest lazy_service_reentry_inserts_nested_atlas_before_outer ... ok\ntest failed_lazy_services_happen_after_release ... ok\ntest failed_actual_disposal_preserves_owner_and_error_identity ... ok\ntest failed_actual_canvas_creation_does_not_publish_an_entry ... ok\ntest configuration_change_moves_only_one_owner ... ok\ntest actual_shared_canvas_owners_pixels_and_upload_clock ... FAIL\ntest actual_disposal_reentry_keeps_source_live_splice_behavior ... ok\ntest actual_canvas_creation_reentry_preserves_out_of_order_page_versions ... ok\n\nfailures:\n\n---- actual_shared_canvas_owners_pixels_and_upload_clock output ----\n    JS exception that was thrown:\n        TypeError: this._unicodeService.wcwidth is not a function\n            at _TextureAtlas._drawToCache (<anonymous>:2898:40)\n            at _TextureAtlas._getFromCacheMap (<anonymous>:2699:23)\n            at _TextureAtlas.getRasterizedGlyph (<anonymous>:2691:19)\n            at globalThis.sourceCacheScenario (<anonymous>:3597:15)\n            at sourceCache (http://127.0.0.1:56521/snippets/xterm-web-f147851b6cb0c0ef/tests/browser_atlas_cache_probe.js:43:55)\n            at imports.wbg.__wbg_sourceCache_91d26cf47282ee60 (http://127.0.0.1:56521/suite.js:6667:21)\n            at wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_webgl_browser_cache::support::source::hec74eda81a509b85 (http://127.0.0.1:56521/suite_bg.wasm:wasm-function[15346]:0x9959ea)\n            at wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_webgl_browser_cache::run::he0f6cc5f7fa9cb28 (http://127.0.0.1:56521/suite_bg.wasm:wasm-function[662]:0xc1b31)\n            at wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_webgl_browser_cache::actual_shared_canvas_owners_pixels_and_upload_clock::h6e74f788f6fb59fc (http://127.0.0.1:56521/suite_bg.wasm:wasm-function[39418]:0xb93aa4)\n            at wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.core::ops::function::FnOnce::call_once::h861bf08077e7f374 (http://127.0.0.1:56521/suite_bg.wasm:wasm-function[32865]:0xb5ef8a)\n\nfailures:\n\n    actual_shared_canvas_owners_pixels_and_upload_clock\n\ntest result: FAILED. 8 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.08s\n\n",
+      "counts": {
+        "passed": 8,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "firefox",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_webgl_browser_cache::actual_canvas_creation_reentry_preserves_out_of_order_page_versions",
+        "__wbgt__wasm_webgl_browser_cache::actual_disposal_reentry_keeps_source_live_splice_behavior",
+        "__wbgt__wasm_webgl_browser_cache::actual_shared_canvas_owners_pixels_and_upload_clock",
+        "__wbgt__wasm_webgl_browser_cache::configuration_change_moves_only_one_owner",
+        "__wbgt__wasm_webgl_browser_cache::failed_actual_canvas_creation_does_not_publish_an_entry",
+        "__wbgt__wasm_webgl_browser_cache::failed_actual_disposal_preserves_owner_and_error_identity",
+        "__wbgt__wasm_webgl_browser_cache::failed_lazy_services_happen_after_release",
+        "__wbgt__wasm_webgl_browser_cache::lazy_service_reentry_inserts_nested_atlas_before_outer",
+        "__wbgt__wasm_webgl_browser_cache::real_runtime_keeps_one_pool_and_global_document_across_iframes"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "info",
+          "text": "cache-source create_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:d\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,1,0]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust create_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:d\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,1,0]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source services_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust services_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source failure {\"ids\":[0,0,1],\"pixels\":[],\"removals\":5,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"caught\",\"remove\",\"remove\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust failure {\"ids\":[0,0,1],\"pixels\":[],\"removals\":5,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"caught\",\"remove\",\"remove\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source creation_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"create-failure\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust creation_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"create-failure\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source move {\"ids\":[0,0,1,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:a\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,0,1,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust move {\"ids\":[0,0,1,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:a\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,0,1,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source reentry {\"ids\":[0,1,2],\"pixels\":[],\"removals\":6,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\",\"services:b\",\"remove\",\"remove\"],\"versions\":[0,1,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust reentry {\"ids\":[0,1,2],\"pixels\":[],\"removals\":6,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\",\"services:b\",\"remove\",\"remove\"],\"versions\":[0,1,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source canvas_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,-1,0]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust canvas_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,-1,0]}"
+        }
+      ],
+      "version": "150.0.2",
+      "output": "running 9 tests\ntest real_runtime_keeps_one_pool_and_global_document_across_iframes ... ok\ntest lazy_service_reentry_inserts_nested_atlas_before_outer ... ok\ntest failed_lazy_services_happen_after_release ... ok\ntest failed_actual_disposal_preserves_owner_and_error_identity ... ok\ntest failed_actual_canvas_creation_does_not_publish_an_entry ... ok\ntest configuration_change_moves_only_one_owner ... ok\ntest actual_shared_canvas_owners_pixels_and_upload_clock ... FAIL\ntest actual_disposal_reentry_keeps_source_live_splice_behavior ... ok\ntest actual_canvas_creation_reentry_preserves_out_of_order_page_versions ... ok\n\nfailures:\n\n---- actual_shared_canvas_owners_pixels_and_upload_clock output ----\n    JS exception that was thrown:\n        TypeError: this._unicodeService.wcwidth is not a function\n        _drawToCache@http://127.0.0.1:56521/ line 7 > injectedScript:2898:40\n        _getFromCacheMap@http://127.0.0.1:56521/ line 7 > injectedScript:2699:23\n        getRasterizedGlyph@http://127.0.0.1:56521/ line 7 > injectedScript:2691:19\n        globalThis.sourceCacheScenario@http://127.0.0.1:56521/ line 7 > injectedScript:3597:15\n        sourceCache@http://127.0.0.1:56521/snippets/xterm-web-f147851b6cb0c0ef/tests/browser_atlas_cache_probe.js:43:55\n        __wbg_get_imports/imports.wbg.__wbg_sourceCache_91d26cf47282ee60@http://127.0.0.1:56521/suite.js:6667:32\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_webgl_browser_cache::support::source::hec74eda81a509b85@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[15346]:0x9959ea\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_webgl_browser_cache::run::he0f6cc5f7fa9cb28@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[662]:0xc1b31\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_webgl_browser_cache::actual_shared_canvas_owners_pixels_and_upload_clock::h6e74f788f6fb59fc@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[39418]:0xb93aa4\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.core::ops::function::FnOnce::call_once::h861bf08077e7f374@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[32865]:0xb5ef8a\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h599930c51eef9f25@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[13390]:0x93c3e5\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::hd8c33b097dd9b31f@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[17554]:0x9ee195\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[27939]:0xb113cf\n        __wbg_adapter_168@http://127.0.0.1:56521/suite.js:622:10\n        cb0@http://127.0.0.1:56521/suite.js:6865:28\n        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52\n        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:56521/suite.js:6870:30\n        handleError@http://127.0.0.1:56521/suite.js:181:18\n        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:56521/suite.js:6858:76\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[8452]:0x80d206\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::hf61f695d008b1a0a@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[16114]:0x9b5f86\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::h23242edfc97ed29f@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[19845]:0xa3fc65\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::hb5ec21b9fb7ee785@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[2357]:0x51d237\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[1076]:0x2e7c20\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[4663]:0x6a9b6f\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[2258]:0x5037fb\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[4625]:0x6a5256\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[4156]:0x66874f\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[25334]:0xad9ffb\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[20698]:0xa5c9fa\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.closure2442 externref shim@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[39890]:0xb964d5\n        __wbg_adapter_126@http://127.0.0.1:56521/suite.js:618:10\n        real@http://127.0.0.1:56521/suite.js:247:20\n        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:56521/suite.js:6289:23\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[48940]:0xbb35cb\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[38775]:0xb8fe04\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[7059]:0x79e18b\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::{{closure}}::h95b28db559806c13@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[44708]:0xba924d\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_bindgen_futures::queue::Queue::with::h9bd5fdd801f7dec4@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[38776]:0xb8fe17\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::h42fed9c117de84b9@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[3608]:0x617442\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_bindgen_futures::spawn_local::h3dc491f304d42e44@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[14694]:0x9790d2\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::h15c44db32e5b7614@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[11472]:0x8d5cf4\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_bindgen::convert::closures::invoke2_mut::hba2fa4cbb261e43e@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[23374]:0xaa9edc\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.closure2465 externref shim@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[35707]:0xb7b395\n        __wbg_adapter_1564@http://127.0.0.1:56521/suite.js:630:10\n        cb0@http://127.0.0.1:56521/suite.js:6023:28\n        __wbg_get_imports/imports.wbg.__wbg_new_23a2665fac83c611@http://127.0.0.1:56521/suite.js:6028:25\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.__wbg_new_23a2665fac83c611 externref shim@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[39384]:0xb93754\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.js_sys::Promise::new::hf39a358a769dc6ed@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[16669]:0x9cbc66\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_bindgen_futures::future_to_promise::h65257425de8480bc@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[13129]:0x92f24c\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasm_bindgen_test::__rt::Context::run::he8da95eeed777e80@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[1878]:0x492362\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasmbindgentestcontext_run@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[12145]:0x8fba1d\n        wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm.wasmbindgentestcontext_run externref shim@http://127.0.0.1:56521/suite_bg.wasm:wasm-function[39857]:0xb961b1\n        run@http://127.0.0.1:56521/suite.js:4565:26\n        globalThis.testRun<@debugger eval code line 302 > eval:11:42\n        async*@debugger eval code line 302 > eval:14:11\n        evaluate@debugger eval code:304:16\n        @debugger eval code:1:44\n        @debugger eval code:1:62\n\nfailures:\n\n    actual_shared_canvas_owners_pixels_and_upload_clock\n\ntest result: FAILED. 8 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.16s\n\n",
+      "counts": {
+        "passed": 8,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "webkit",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_webgl_browser_cache::actual_canvas_creation_reentry_preserves_out_of_order_page_versions",
+        "__wbgt__wasm_webgl_browser_cache::actual_disposal_reentry_keeps_source_live_splice_behavior",
+        "__wbgt__wasm_webgl_browser_cache::actual_shared_canvas_owners_pixels_and_upload_clock",
+        "__wbgt__wasm_webgl_browser_cache::configuration_change_moves_only_one_owner",
+        "__wbgt__wasm_webgl_browser_cache::failed_actual_canvas_creation_does_not_publish_an_entry",
+        "__wbgt__wasm_webgl_browser_cache::failed_actual_disposal_preserves_owner_and_error_identity",
+        "__wbgt__wasm_webgl_browser_cache::failed_lazy_services_happen_after_release",
+        "__wbgt__wasm_webgl_browser_cache::lazy_service_reentry_inserts_nested_atlas_before_outer",
+        "__wbgt__wasm_webgl_browser_cache::real_runtime_keeps_one_pool_and_global_document_across_iframes"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "info",
+          "text": "cache-source create_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:d\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,1,0]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust create_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:d\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,1,0]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source services_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust services_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source failure {\"ids\":[0,0,1],\"pixels\":[],\"removals\":5,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"caught\",\"remove\",\"remove\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust failure {\"ids\":[0,0,1],\"pixels\":[],\"removals\":5,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"caught\",\"remove\",\"remove\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,0,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source creation_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"create-failure\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust creation_failure {\"ids\":[0,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"remove\",\"remove\",\"services:a\",\"create-failure\",\"caught\",\"services:a\",\"remove\",\"remove\"],\"versions\":[0,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source move {\"ids\":[0,0,1,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:a\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,0,1,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust move {\"ids\":[0,0,1,1],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:a\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,0,1,1]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source reentry {\"ids\":[0,1,2],\"pixels\":[],\"removals\":6,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\",\"services:b\",\"remove\",\"remove\"],\"versions\":[0,1,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust reentry {\"ids\":[0,1,2],\"pixels\":[],\"removals\":6,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\",\"services:b\",\"remove\",\"remove\"],\"versions\":[0,1,2]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-source canvas_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,-1,0]}"
+        },
+        {
+          "type": "info",
+          "text": "cache-rust canvas_reentry {\"ids\":[0,1,0],\"pixels\":[],\"removals\":4,\"states\":[],\"trace\":[\"services:a\",\"services:b\",\"remove\",\"remove\",\"remove\",\"remove\"],\"versions\":[0,-1,0]}"
+        }
+      ],
+      "version": "26.4",
+      "output": "running 9 tests\ntest real_runtime_keeps_one_pool_and_global_document_across_iframes ... ok\ntest lazy_service_reentry_inserts_nested_atlas_before_outer ... ok\ntest failed_lazy_services_happen_after_release ... ok\ntest failed_actual_disposal_preserves_owner_and_error_identity ... ok\ntest failed_actual_canvas_creation_does_not_publish_an_entry ... ok\ntest configuration_change_moves_only_one_owner ... ok\ntest actual_shared_canvas_owners_pixels_and_upload_clock ... FAIL\ntest actual_disposal_reentry_keeps_source_live_splice_behavior ... ok\ntest actual_canvas_creation_reentry_preserves_out_of_order_page_versions ... ok\n\nfailures:\n\n---- actual_shared_canvas_owners_pixels_and_upload_clock output ----\n    JS exception that was thrown:\n        TypeError: this._unicodeService.wcwidth is not a function. (In 'this._unicodeService.wcwidth(codeOrChars)', 'this._unicodeService.wcwidth' is undefined)\n        _drawToCache@http://127.0.0.1:56521/:2898:47\n        _getFromCacheMap@http://127.0.0.1:56521/:2699:35\n        @http://127.0.0.1:56521/:3597:33\n        @http://127.0.0.1:56521/suite.js:6667:32\n        15346@wasm-function[15346]\n        662@wasm-function[662]\n        39418@wasm-function[39418]\n        32865@wasm-function[32865]\n        13390@wasm-function[13390]\n        17554@wasm-function[17554]\n        27939@wasm-function[27939]\n        __wbg_adapter_168@http://127.0.0.1:56521/suite.js:622:73\n        cb0@http://127.0.0.1:56521/suite.js:6865:45\n        @\n        @http://127.0.0.1:56521/suite.js:6870:30\n        handleError@http://127.0.0.1:56521/suite.js:181:23\n        8452@wasm-function[8452]\n        16114@wasm-function[16114]\n        19845@wasm-function[19845]\n        2357@wasm-function[2357]\n        1076@wasm-function[1076]\n        4663@wasm-function[4663]\n        2258@wasm-function[2258]\n        4625@wasm-function[4625]\n        4156@wasm-function[4156]\n        25334@wasm-function[25334]\n        20698@wasm-function[20698]\n        39890@wasm-function[39890]\n        __wbg_adapter_126@http://127.0.0.1:56521/suite.js:618:36\n        real@http://127.0.0.1:56521/suite.js:247:21\n\nfailures:\n\n    actual_shared_canvas_owners_pixels_and_upload_clock\n\ntest result: FAILED. 8 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.21s\n\n",
+      "counts": {
+        "passed": 8,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/24d6a331361ffc0fe2ddba30f96912c694be9a5aa922ee4d9675e9560c3dcce4/artifact.wasm",
+      "sha256": "24d6a331361ffc0fe2ddba30f96912c694be9a5aa922ee4d9675e9560c3dcce4",
+      "bytes": 21132504,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\GeraldAtlasCache/target\\wasm32-unknown-unknown\\debug\\deps\\wasm_webgl_browser_cache-01e497a8c5e1ce5e.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\GeraldAtlasCache\\results\\browser-host\\wasm_webgl_browser_cache\\2026-11-05T23-20-21-818Z-3c51815f-c9e1-4717-afc9-dd48c37677e4\\artifacts\\suite_bg.wasm",
+      "bytes": 17864286,
+      "sha256": "3ea0710eee1c66a96530afe9adf6c66bf2d9edd106ea6e635f7c8cd79d0a19fe"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\GeraldAtlasCache\\results\\browser-host\\wasm_webgl_browser_cache\\2026-11-05T23-20-21-818Z-3c51815f-c9e1-4717-afc9-dd48c37677e4\\artifacts\\suite.js",
+      "bytes": 255838,
+      "sha256": "50b4434d755b4fbd69c0b63814cce6ea72b86a25b76a2a28130cd208c575ba90"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "71cb385e602c221814be027197f5a6e6627d4eb9b239b9ee878bcafcfda1327b"
+  },
+  "finishedAt": "2026-11-05T23:20:43.569Z"
+}
