@@ -11,6 +11,8 @@ const output = resolve('results/osc-handler');
 const fixture = resolve('crates/xterm-web/tests/fixtures/osc-handler.json');
 const generate = process.argv.includes('--generate');
 const program = await readFile('scripts/osc-handler-trace.js', 'utf8');
+const terminalProgram = await readFile('scripts/osc-handler-terminal-trace.js', 'utf8');
+const terminalFixture = resolve('crates/xterm-web/tests/fixtures/osc-handler-terminal.json');
 await mkdir(output, { recursive: true });
 const playwright = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE ?? resolve(reference, 'node_modules/playwright/index.mjs')));
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -27,12 +29,13 @@ for (const file of ['lib/xterm.mjs', 'lib/xterm.mjs.map', 'src/browser/OscLinkPr
   }
 }
 let expected = generate ? undefined : JSON.parse(await readFile(fixture, 'utf8'));
+let expectedTerminal = generate ? undefined : JSON.parse(await readFile(terminalFixture, 'utf8'));
 const report = { platform: process.platform, node: process.version, hashes,
-  traceSha256: hash(program), scope: 'Directed primitive OSC handler callbacks, not full links parity.', browsers: [] };
+  traceSha256: hash(program), terminalTraceSha256: hash(terminalProgram), scope: 'Directed primitive OSC handler callbacks, not full links parity.', browsers: [] };
 try {
   await withArtifactServer({ directory: resolve(reference, 'lib'),
     css: await readFile(resolve(reference, 'css/xterm.css')),
-    html: '<!doctype html><div id="terminal"></div>' }, async url => {
+    html: '<!doctype html><link rel="stylesheet" href="/xterm.css"><div id="terminal"></div>' }, async url => {
     for (const name of (process.env.BROWSERS ?? 'chromium,firefox,webkit').split(',')) {
       assert(['chromium', 'firefox', 'webkit'].includes(name));
       const browser = await playwright[name].launch({ headless: true, timeout: 30_000 });
@@ -66,6 +69,55 @@ try {
         if (expected === undefined) expected = entry.trace;
         assert.deepEqual(entry.trace, expected);
         assert.equal(entry.trace.length, 31);
+        // The older Rust policy test used a full circular list but expected a
+        // missing row. Confirm the capacity alias before repairing its setup.
+        entry.missingRowCapacity = await page.evaluate(async () => {
+          const { Terminal } = await import('/xterm.mjs');
+          return [0, 10].map(scrollback => {
+            const terminal = new Terminal({ cols: 5, rows: 3, scrollback });
+            try {
+              let result;
+              terminal._core._linkProviderService.linkProviders[0].provideLinks(99, links => {
+                result = links === undefined ? 'undefined' : links.length;
+              });
+              return { scrollback, result };
+            } finally { terminal.dispose(); }
+          });
+        });
+        assert.deepEqual(entry.missingRowCapacity, [{ scrollback: 0, result: 0 },
+          { scrollback: 10, result: 'undefined' }]);
+        try {
+          entry.liveTerminal = await Promise.race([page.evaluate(async program => {
+          const { Terminal } = await import('/xterm.mjs');
+          const terminal = new Terminal({ cols: 20, rows: 4, linkHandler: false });
+          const parent = document.querySelector('#terminal');
+          terminal.open(parent);
+          try {
+            await new Promise(resolve => terminal.write('\x1b]8;;custom:resource\x1b\\linked\x1b]8;;\x1b\\!', resolve));
+            const rendered = new Promise((resolve, reject) => {
+              const timeout = setTimeout(() => {
+                subscription.dispose(); reject(new Error('Terminal render exceeded 10 seconds'));
+              }, 10_000);
+              const subscription = terminal.onRender(() => {
+                clearTimeout(timeout); subscription.dispose(); resolve();
+              });
+            });
+            terminal.refresh(0, 3);
+            await rendered;
+            const root = terminal.element;
+            const rect = root.getBoundingClientRect();
+            const cell = terminal._core._renderService.dimensions.css.cell;
+            return Function('root,x,y', program)(root, rect.left + 2.5 * cell.width,
+              rect.top + 0.5 * cell.height);
+          } finally { terminal.dispose(); }
+          }, terminalProgram), new Promise((_, reject) => {
+            deadline = setTimeout(() => reject(new Error('Live OSC handler trace exceeded 30 seconds')), 30_000);
+          })]);
+        } finally { clearTimeout(deadline); }
+        if (expectedTerminal === undefined) expectedTerminal = entry.liveTerminal;
+        assert.deepEqual(entry.liveTerminal, expectedTerminal);
+        assert.equal(entry.liveTerminal.pointerOn, true);
+        assert.equal(entry.liveTerminal.pointerOff, true);
         assert.deepEqual(entry.errors, []);
         entry.status = 'passed';
         console.log(`${name}: ${entry.trace.length} OSC handler scenarios passed`);
@@ -79,6 +131,7 @@ try {
   if (generate) {
     assert(expected, 'No source trace generated');
     await writeFile(fixture, JSON.stringify(expected, null, 2) + '\n');
+    await writeFile(terminalFixture, JSON.stringify(expectedTerminal, null, 2) + '\n');
   }
 } finally {
   await writeFile(resolve(output, 'source.json'), JSON.stringify(report, null, 2) + '\n');

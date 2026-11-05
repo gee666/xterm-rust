@@ -19,7 +19,9 @@ fn reply(count: Rc<Cell<usize>>, last: Rc<RefCell<Option<usize>>>) -> LinkReply 
 }
 #[wasm_bindgen_test]
 fn missing_empty_rows_and_per_run_protocol_getter_failure_order() {
-    let native = Rc::new(xterm_core::headless::Terminal::new(5, 3, 0).unwrap());
+    // Leave unused backing slots: source CircularList.get wraps by capacity,
+    // so a full zero-scrollback list aliases row99 to an existing physical row.
+    let native = Rc::new(xterm_core::headless::Terminal::new(5, 3, 10).unwrap());
     let settings_calls = Rc::new(Cell::new(0));
     let settings = settings_calls.clone();
     let policy_calls = Rc::new(Cell::new(0));

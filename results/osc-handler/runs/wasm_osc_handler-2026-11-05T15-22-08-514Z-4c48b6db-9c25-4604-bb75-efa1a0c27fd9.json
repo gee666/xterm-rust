@@ -1,0 +1,124 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_osc_handler",
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T15:22:08.515Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_osc_handler",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 35706.2166,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 11.309900000000198,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\S\\results\\acceptance-artifacts\\235484a3b4f9768517dec81db8e3bb1a37c5d045dd8cd311dd596809c731ea7c\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\S\\results\\browser-host\\wasm_osc_handler\\2026-11-05T15-22-08-514Z-4c48b6db-9c25-4604-bb75-efa1a0c27fd9\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1052.7652999999991,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_osc_handler::primitive_handlers_preserve_nullish_lookup_receiver_and_exceptions"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_osc_handler.rs:74:5:\nassertion `left == right` failed\n  left: Array [Object {\"count\": Number(0), \"log\": Array [], \"name\": String(\"primitive:boolean:false\")}, Object {\"count\": Number(0), \"log\": Array [], \"name\": String(\"throw-policy:boolean:false\")}, Object {\"count\": Number(0), \"log\": Array [], \"name\": String(\"primitive:boolean:true\")}, Object {\"count\": Number(0), \"log\": Array [], \"name\": String(\"throw-policy:boolean:true\")}, Object {\"count\": Number(0), \"log\": Array [], \"name\": String(\"primitive:number:0\")}, Object {\"count\": Number(0), \"log\": Array [], \"name\": String(\"throw-policy:number:0\")}, Object {\"count\": Number(0), \"log\": Array [], \"name\": String(\"primitive:number:-0\")}, Object {\"count\": Number(0), \"log\": Array [], \"name\": String(\"throw-policy:number:-0\")}, Object {\"count\": Number(0), \"log\": Array [], \"name\": String(\"primitive:number:NaN\")}, Object {\"count\": Number(0), \"log\": Array [], \"name\": String(\"throw-policy:number:NaN\")}, Object {\"count\": Number(0), \"log\": Array [], \"name\": String(\"primitive:number:2\")}, Object {\"count\": Number(0), \"log\": Array [], \"name\": String(\"throw-policy:number:2\")}, Object {\"count\": Number(0), \"log\": Array [], \"name\": String(\"primitive:string:\")}, Object {\"count\": Number(0), \"log\": Array [], \"name\": String(\"throw-policy:string:\")}, Object {\"count\": Number(0), \"log\": Array [], \"name\": String(\"primitive:string:text\")}, Object {\"count\": Number(0), \"log\": Array [], \"name\": String(\"throw-policy:string:text\")}, Object {\"count\": Number(0), \"log\": Array [], \"name\": String(\"primitive:bigint:0\")}, Object {\"count\": Number(0), \"log\": Array [], \"name\": String(\"throw-policy:bigint:0\")}, Object {\"count\": Number(1), \"log\": Array [Array [String(\"policy\"), String(\"object\"), Bool(false)], Array [String(\"get\"), String(\"hover\"), String(\"object\"), Bool(false)], Array [String(\"call\"), String(\"hover\"), String(\"bigint\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(1)], Array [String(\"get\"), String(\"activate\"), String(\"object\"), Bool(false)], Array [String(\"call\"), String(\"activate\"), String(\"bigint\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(7)], Array [String(\"get\"), String(\"leave\"), String(\"object\"), Bool(false)], Array [String(\"call\"), String(\"leave\"), String(\"bigint\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(7)]], \"name\": String(\"primitive:bigint:2\")}, Object {\"error\": String(\"marker\"), \"log\": Array [], \"name\": String(\"throw-policy:bigint:2\")}, Object {\"count\": Number(1), \"log\": Array [Array [String(\"policy\"), String(\"object\"), Bool(false)], Array [String(\"get\"), String(\"hover\"), String(\"object\"), Bool(false)], Array [String(\"call\"), String(\"hover\"), String(\"symbol\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(1)], Array [String(\"get\"), String(\"activate\"), String(\"object\"), Bool(false)], Array [String(\"call\"), String(\"activate\"), String(\"symbol\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(7)], Array [String(\"get\"), String(\"leave\"), String(\"object\"), Bool(false)], Array [String(\"call\"), String(\"leave\"), String(\"symbol\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(7)]], \"name\": String(\"primitive:symbol:Symbol(handler)\")}, Object {\"error\": String(\"marker\"), \"log\": Array [], \"name\": String(\"throw-policy:symbol:Symbol(handler)\")}, Object {\"count\": Number(1), \"log\": Array [Array [String(\"confirm\"), String(\"Do you want to navigate to https://example.com/?\\n\\nWARNING: This link could potentially be dangerous\")]], \"name\": String(\"null\")}, Object {\"count\": Number(1), \"log\": Array [Array [String(\"confirm\"), String(\"Do you want to navigate to https://example.com/?\\n\\nWARNING: This link could potentially be dangerous\")]], \"name\": String(\"undefined\")}, Object {\"error\": String(\"marker\"), \"log\": Array [], \"name\": String(\"throw-member:activate\")}, Object {\"error\": String(\"marker\"), \"log\": Array [], \"name\": String(\"throw-member:hover\")}, Object {\"error\": String(\"marker\"), \"log\": Array [], \"name\": String(\"throw-member:leave\")}, Object {\"count\": Number(1), \"log\": Array [], \"name\": String(\"nullish-method:null\")}, Object {\"count\": Number(1), \"log\": Array [], \"name\": String(\"nullish-method:undefined\")}, Object {\"error\": String(\"TypeError\"), \"log\": Array [], \"name\": String(\"noncallable-hover\")}, Object {\"count\": Number(1), \"log\": Array [Array [String(\"object\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Number(6)]], \"name\": String(\"object-hover\")}]\n right: Array [Object {\"count\": Number(1), \"log\": Array [Array [String(\"policy\"), String(\"boolean\"), Bool(true)], Array [String(\"get\"), String(\"hover\"), String(\"boolean\"), Bool(true)], Array [String(\"call\"), String(\"hover\"), String(\"boolean\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(1)], Array [String(\"confirm\"), String(\"Do you want to navigate to custom:resource?\\n\\nWARNING: This link could potentially be dangerous\")], Array [String(\"get\"), String(\"leave\"), String(\"boolean\"), Bool(true)], Array [String(\"call\"), String(\"leave\"), String(\"boolean\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(7)]], \"name\": String(\"primitive:boolean:false\")}, Object {\"error\": String(\"marker\"), \"log\": Array [], \"name\": String(\"throw-policy:boolean:false\")}, Object {\"count\": Number(1), \"log\": Array [Array [String(\"policy\"), String(\"boolean\"), Bool(true)], Array [String(\"get\"), String(\"hover\"), String(\"boolean\"), Bool(true)], Array [String(\"call\"), String(\"hover\"), String(\"boolean\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(1)], Array [String(\"get\"), String(\"activate\"), String(\"boolean\"), Bool(true)], Array [String(\"call\"), String(\"activate\"), String(\"boolean\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(7)], Array [String(\"get\"), String(\"leave\"), String(\"boolean\"), Bool(true)], Array [String(\"call\"), String(\"leave\"), String(\"boolean\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(7)]], \"name\": String(\"primitive:boolean:true\")}, Object {\"error\": String(\"marker\"), \"log\": Array [], \"name\": String(\"throw-policy:boolean:true\")}, Object {\"count\": Number(1), \"log\": Array [Array [String(\"policy\"), String(\"number\"), Bool(true)], Array [String(\"get\"), String(\"hover\"), String(\"number\"), Bool(true)], Array [String(\"call\"), String(\"hover\"), String(\"number\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(1)], Array [String(\"confirm\"), String(\"Do you want to navigate to custom:resource?\\n\\nWARNING: This link could potentially be dangerous\")], Array [String(\"get\"), String(\"leave\"), String(\"number\"), Bool(true)], Array [String(\"call\"), String(\"leave\"), String(\"number\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(7)]], \"name\": String(\"primitive:number:0\")}, Object {\"error\": String(\"marker\"), \"log\": Array [], \"name\": String(\"throw-policy:number:0\")}, Object {\"count\": Number(1), \"log\": Array [Array [String(\"policy\"), String(\"number\"), Bool(true)], Array [String(\"get\"), String(\"hover\"), String(\"number\"), Bool(true)], Array [String(\"call\"), String(\"hover\"), String(\"number\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(1)], Array [String(\"confirm\"), String(\"Do you want to navigate to custom:resource?\\n\\nWARNING: This link could potentially be dangerous\")], Array [String(\"get\"), String(\"leave\"), String(\"number\"), Bool(true)], Array [String(\"call\"), String(\"leave\"), String(\"number\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(7)]], \"name\": String(\"primitive:number:-0\")}, Object {\"error\": String(\"marker\"), \"log\": Array [], \"name\": String(\"throw-policy:number:-0\")}, Object {\"count\": Number(1), \"log\": Array [Array [String(\"policy\"), String(\"number\"), Bool(true)], Array [String(\"get\"), String(\"hover\"), String(\"number\"), Bool(true)], Array [String(\"call\"), String(\"hover\"), String(\"number\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(1)], Array [String(\"confirm\"), String(\"Do you want to navigate to custom:resource?\\n\\nWARNING: This link could potentially be dangerous\")], Array [String(\"get\"), String(\"leave\"), String(\"number\"), Bool(true)], Array [String(\"call\"), String(\"leave\"), String(\"number\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(7)]], \"name\": String(\"primitive:number:NaN\")}, Object {\"error\": String(\"marker\"), \"log\": Array [], \"name\": String(\"throw-policy:number:NaN\")}, Object {\"count\": Number(1), \"log\": Array [Array [String(\"policy\"), String(\"number\"), Bool(true)], Array [String(\"get\"), String(\"hover\"), String(\"number\"), Bool(true)], Array [String(\"call\"), String(\"hover\"), String(\"number\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(1)], Array [String(\"get\"), String(\"activate\"), String(\"number\"), Bool(true)], Array [String(\"call\"), String(\"activate\"), String(\"number\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(7)], Array [String(\"get\"), String(\"leave\"), String(\"number\"), Bool(true)], Array [String(\"call\"), String(\"leave\"), String(\"number\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(7)]], \"name\": String(\"primitive:number:2\")}, Object {\"error\": String(\"marker\"), \"log\": Array [], \"name\": String(\"throw-policy:number:2\")}, Object {\"count\": Number(1), \"log\": Array [Array [String(\"policy\"), String(\"string\"), Bool(true)], Array [String(\"get\"), String(\"hover\"), String(\"string\"), Bool(true)], Array [String(\"call\"), String(\"hover\"), String(\"string\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(1)], Array [String(\"confirm\"), String(\"Do you want to navigate to custom:resource?\\n\\nWARNING: This link could potentially be dangerous\")], Array [String(\"get\"), String(\"leave\"), String(\"string\"), Bool(true)], Array [String(\"call\"), String(\"leave\"), String(\"string\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(7)]], \"name\": String(\"primitive:string:\")}, Object {\"error\": String(\"marker\"), \"log\": Array [], \"name\": String(\"throw-policy:string:\")}, Object {\"count\": Number(1), \"log\": Array [Array [String(\"policy\"), String(\"string\"), Bool(true)], Array [String(\"get\"), String(\"hover\"), String(\"string\"), Bool(true)], Array [String(\"call\"), String(\"hover\"), String(\"string\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(1)], Array [String(\"get\"), String(\"activate\"), String(\"string\"), Bool(true)], Array [String(\"call\"), String(\"activate\"), String(\"string\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(7)], Array [String(\"get\"), String(\"leave\"), String(\"string\"), Bool(true)], Array [String(\"call\"), String(\"leave\"), String(\"string\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(7)]], \"name\": String(\"primitive:string:text\")}, Object {\"error\": String(\"marker\"), \"log\": Array [], \"name\": String(\"throw-policy:string:text\")}, Object {\"count\": Number(1), \"log\": Array [Array [String(\"policy\"), String(\"bigint\"), Bool(true)], Array [String(\"get\"), String(\"hover\"), String(\"bigint\"), Bool(true)], Array [String(\"call\"), String(\"hover\"), String(\"bigint\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(1)], Array [String(\"confirm\"), String(\"Do you want to navigate to custom:resource?\\n\\nWARNING: This link could potentially be dangerous\")], Array [String(\"get\"), String(\"leave\"), String(\"bigint\"), Bool(true)], Array [String(\"call\"), String(\"leave\"), String(\"bigint\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(7)]], \"name\": String(\"primitive:bigint:0\")}, Object {\"error\": String(\"marker\"), \"log\": Array [], \"name\": String(\"throw-policy:bigint:0\")}, Object {\"count\": Number(1), \"log\": Array [Array [String(\"policy\"), String(\"bigint\"), Bool(true)], Array [String(\"get\"), String(\"hover\"), String(\"bigint\"), Bool(true)], Array [String(\"call\"), String(\"hover\"), String(\"bigint\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(1)], Array [String(\"get\"), String(\"activate\"), String(\"bigint\"), Bool(true)], Array [String(\"call\"), String(\"activate\"), String(\"bigint\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(7)], Array [String(\"get\"), String(\"leave\"), String(\"bigint\"), Bool(true)], Array [String(\"call\"), String(\"leave\"), String(\"bigint\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(7)]], \"name\": String(\"primitive:bigint:2\")}, Object {\"error\": String(\"marker\"), \"log\": Array [], \"name\": String(\"throw-policy:bigint:2\")}, Object {\"count\": Number(1), \"log\": Array [Array [String(\"policy\"), String(\"symbol\"), Bool(true)], Array [String(\"get\"), String(\"hover\"), String(\"symbol\"), Bool(true)], Array [String(\"call\"), String(\"hover\"), String(\"symbol\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(1)], Array [String(\"get\"), String(\"activate\"), String(\"symbol\"), Bool(true)], Array [String(\"call\"), String(\"activate\"), String(\"symbol\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(7)], Array [String(\"get\"), String(\"leave\"), String(\"symbol\"), Bool(true)], Array [String(\"call\"), String(\"leave\"), String(\"symbol\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Bool(true), Number(7)]], \"name\": String(\"primitive:symbol:Symbol(handler)\")}, Object {\"error\": String(\"marker\"), \"log\": Array [], \"name\": String(\"throw-policy:symbol:Symbol(handler)\")}, Object {\"count\": Number(1), \"log\": Array [Array [String(\"confirm\"), String(\"Do you want to navigate to https://example.com/?\\n\\nWARNING: This link could potentially be dangerous\")]], \"name\": String(\"null\")}, Object {\"count\": Number(1), \"log\": Array [Array [String(\"confirm\"), String(\"Do you want to navigate to https://example.com/?\\n\\nWARNING: This link could potentially be dangerous\")]], \"name\": String(\"undefined\")}, Object {\"error\": String(\"marker\"), \"log\": Array [], \"name\": String(\"throw-member:activate\")}, Object {\"error\": String(\"marker\"), \"log\": Array [], \"name\": String(\"throw-member:hover\")}, Object {\"error\": String(\"marker\"), \"log\": Array [], \"name\": String(\"throw-member:leave\")}, Object {\"count\": Number(1), \"log\": Array [], \"name\": String(\"nullish-method:null\")}, Object {\"count\": Number(1), \"log\": Array [], \"name\": String(\"nullish-method:undefined\")}, Object {\"error\": String(\"TypeError\"), \"log\": Array [], \"name\": String(\"noncallable-hover\")}, Object {\"count\": Number(1), \"log\": Array [Array [String(\"object\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Number(6)]], \"name\": String(\"object-hover\")}]\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:55092/suite.js:4908:21)\n    at wasm_osc_handler-f2338b8a7cd309d3.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:55092/suite_bg.wasm:wasm-function[36947]:0xa823df)\n    at wasm_osc_handler-f2338b8a7cd309d3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:55092/suite_bg.wasm:wasm-function[24446]:0x9f0f5f)\n    at wasm_osc_handler-f2338b8a7cd309d3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:55092/suite_bg.wasm:wasm-function[8214]:0x768ae1)\n    at wasm_osc_handler-f2338b8a7cd309d3.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:55092/suite_bg.wasm:wasm-function[24447]:0x9f0fe3)\n    at wasm_osc_handler-f2338b8a7cd309d3.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:55092/suite_bg.wasm:wasm-function[12696]:0x870997)\n    at wasm_osc_handler-f2338b8a7cd309d3.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:55092/suite_bg.wasm:wasm-function[16090]:0x8fef3a)\n    at wasm_osc_handler-f2338b8a7cd309d3.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:55092/suite_bg.wasm:wasm-function[44548]:0xa99803)\n    at wasm_osc_handler-f2338b8a7cd309d3.wasm.rust_begin_unwind (http://127.0.0.1:55092/suite_bg.wasm:wasm-function[30537]:0xa53765)\n    at wasm_osc_handler-f2338b8a7cd309d3.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:55092/suite_bg.wasm:wasm-function[30538]:0xa53792)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 1 test\ntest primitive_handlers_preserve_nullish_lookup_receiver_and_exceptions ... FAIL\n\nfailures:\n\n---- primitive_handlers_preserve_nullish_lookup_receiver_and_exceptions output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_osc_handler-f2338b8a7cd309d3.wasm.__rust_start_panic (http://127.0.0.1:55092/suite_bg.wasm:wasm-function[45050]:0xa9a47a)\n            at wasm_osc_handler-f2338b8a7cd309d3.wasm.rust_panic (http://127.0.0.1:55092/suite_bg.wasm:wasm-function[40331]:0xa8f23b)\n            at wasm_osc_handler-f2338b8a7cd309d3.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:55092/suite_bg.wasm:wasm-function[12696]:0x8709c2)\n            at wasm_osc_handler-f2338b8a7cd309d3.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:55092/suite_bg.wasm:wasm-function[16090]:0x8fef3a)\n            at wasm_osc_handler-f2338b8a7cd309d3.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:55092/suite_bg.wasm:wasm-function[44548]:0xa99803)\n            at wasm_osc_handler-f2338b8a7cd309d3.wasm.rust_begin_unwind (http://127.0.0.1:55092/suite_bg.wasm:wasm-function[30537]:0xa53765)\n            at wasm_osc_handler-f2338b8a7cd309d3.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:55092/suite_bg.wasm:wasm-function[30538]:0xa53792)\n            at wasm_osc_handler-f2338b8a7cd309d3.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:55092/suite_bg.wasm:wasm-function[5734]:0x69f006)\n            at wasm_osc_handler-f2338b8a7cd309d3.wasm.core::panicking::assert_failed::h7bdd07861a070c44 (http://127.0.0.1:55092/suite_bg.wasm:wasm-function[22928]:0x9cfada)\n            at wasm_osc_handler-f2338b8a7cd309d3.wasm.wasm_osc_handler::primitive_handlers_preserve_nullish_lookup_receiver_and_exceptions::{{closure}}::h79f7ae04a1bc984d (http://127.0.0.1:55092/suite_bg.wasm:wasm-function[1125]:0x321140)\n\nfailures:\n\n    primitive_handlers_preserve_nullish_lookup_receiver_and_exceptions\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.08s\n\n",
+      "counts": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/235484a3b4f9768517dec81db8e3bb1a37c5d045dd8cd311dd596809c731ea7c/artifact.wasm",
+      "sha256": "235484a3b4f9768517dec81db8e3bb1a37c5d045dd8cd311dd596809c731ea7c",
+      "bytes": 19128897,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\S\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_osc_handler-f2338b8a7cd309d3.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\S\\results\\browser-host\\wasm_osc_handler\\2026-11-05T15-22-08-514Z-4c48b6db-9c25-4604-bb75-efa1a0c27fd9\\artifacts\\suite_bg.wasm",
+      "bytes": 16070863,
+      "sha256": "15f3b2789910d21639f1abe32569713dc6cfebfffc32951e5585ba3ba0bbf0d5"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\S\\results\\browser-host\\wasm_osc_handler\\2026-11-05T15-22-08-514Z-4c48b6db-9c25-4604-bb75-efa1a0c27fd9\\artifacts\\suite.js",
+      "bytes": 212335,
+      "sha256": "a3f55a7ed9b0b79f91c94456dd224ba3d2205c2974d2134bdc0ec43ae4cb529e"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "b0952fa52eb894e095b37611ad241c3bd10c0eba9f9f800fd4179e903461b012"
+  },
+  "finishedAt": "2026-11-05T15:22:46.386Z"
+}

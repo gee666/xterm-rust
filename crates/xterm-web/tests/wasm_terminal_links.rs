@@ -237,3 +237,54 @@ async fn viewport_render_requeries_the_link_under_a_stationary_mouse() {
     assert!(!root.is_connected());
     parent.remove();
 }
+
+#[wasm_bindgen_test(async)]
+async fn falsey_primitive_handler_uses_prototypes_through_live_terminal_events() {
+    let document = web_sys::window().unwrap().document().unwrap();
+    let style = document.create_element("style").unwrap();
+    style.set_text_content(Some(include_str!("../assets/xterm.css")));
+    document.body().unwrap().append_child(&style).unwrap();
+    let parent: HtmlElement = document.create_element("div").unwrap().dyn_into().unwrap();
+    document.body().unwrap().append_child(&parent).unwrap();
+    let options = Object::new();
+    for (key, value) in [
+        ("cols", JsValue::from_f64(20.0)),
+        ("rows", 4.0.into()),
+        ("linkHandler", false.into()),
+    ] {
+        Reflect::set(&options, &key.into(), &value).unwrap();
+    }
+    let terminal = Terminal::new(options.into()).unwrap();
+    terminal.open(parent.clone().into()).unwrap();
+    write_and_render(
+        &terminal,
+        "\x1b]8;;custom:resource\x1b\\linked\x1b]8;;\x1b\\!",
+    )
+    .await;
+    let root = terminal.element().unwrap();
+    let dimensions = terminal.render_dimensions().unwrap();
+    let rect = root.get_bounding_client_rect();
+    let run = Function::new_with_args(
+        "root,x,y",
+        include_str!("../../../scripts/osc-handler-terminal-trace.js"),
+    );
+    let result = run.call3(
+        &JsValue::UNDEFINED,
+        root.as_ref(),
+        &(rect.left() + 2.5 * dimensions.css.cell.width).into(),
+        &(rect.top() + 0.5 * dimensions.css.cell.height).into(),
+    );
+    terminal.dispose().unwrap();
+    parent.remove();
+    style.remove();
+    let actual: serde_json::Value = serde_json::from_str(
+        &js_sys::JSON::stringify(&result.unwrap())
+            .unwrap()
+            .as_string()
+            .unwrap(),
+    )
+    .unwrap();
+    let expected: serde_json::Value =
+        serde_json::from_str(include_str!("fixtures/osc-handler-terminal.json")).unwrap();
+    assert_eq!(actual, expected);
+}

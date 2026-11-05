@@ -1,0 +1,126 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_terminal_links",
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T15:35:43.162Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_terminal_links",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 9014.2371,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 10.99200000000019,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\S\\results\\acceptance-artifacts\\28b7e99ddc44c8cd3014e4b69b1fbfd264ac13a75c404a66751a1e9e92921e63\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\S\\results\\browser-host\\wasm_terminal_links\\2026-11-05T15-35-43-161Z-9e835e90-116d-42bd-abc3-3fca240460c9\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1014.9305999999997,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_terminal_links::exported_terminal_writes_rust_osc8_renders_hovers_clicks_and_disposes",
+        "__wbgt__wasm_terminal_links::falsey_primitive_handler_uses_prototypes_through_live_terminal_events",
+        "__wbgt__wasm_terminal_links::viewport_render_requeries_the_link_under_a_stationary_mouse"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_terminal_links.rs:289:5:\nassertion `left == right` failed\n  left: Object {\"log\": Array [], \"pointerOff\": Bool(true), \"pointerOn\": Bool(false)}\n right: Object {\"log\": Array [Array [String(\"policy\"), String(\"boolean\"), Bool(true)], Array [String(\"hover\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Number(1), Number(6)], Array [String(\"confirm\"), String(\"Do you want to navigate to custom:resource?\\n\\nWARNING: This link could potentially be dangerous\")], Array [String(\"leave\"), Bool(true), String(\"mousemove\"), String(\"custom:resource\"), Number(1), Number(6)]], \"pointerOff\": Bool(true), \"pointerOn\": Bool(true)}\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:58700/suite.js:4917:21)\n    at wasm_terminal_links-e00190547f3c5af1.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:58700/suite_bg.wasm:wasm-function[37016]:0xa89762)\n    at wasm_terminal_links-e00190547f3c5af1.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:58700/suite_bg.wasm:wasm-function[24485]:0x9f7e83)\n    at wasm_terminal_links-e00190547f3c5af1.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:58700/suite_bg.wasm:wasm-function[8226]:0x76ec6c)\n    at wasm_terminal_links-e00190547f3c5af1.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:58700/suite_bg.wasm:wasm-function[24486]:0x9f7f07)\n    at wasm_terminal_links-e00190547f3c5af1.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:58700/suite_bg.wasm:wasm-function[12709]:0x876c00)\n    at wasm_terminal_links-e00190547f3c5af1.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:58700/suite_bg.wasm:wasm-function[16105]:0x9052f7)\n    at wasm_terminal_links-e00190547f3c5af1.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:58700/suite_bg.wasm:wasm-function[44632]:0xaa0c7b)\n    at wasm_terminal_links-e00190547f3c5af1.wasm.rust_begin_unwind (http://127.0.0.1:58700/suite_bg.wasm:wasm-function[30589]:0xa5a894)\n    at wasm_terminal_links-e00190547f3c5af1.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:58700/suite_bg.wasm:wasm-function[30590]:0xa5a8c1)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 3 tests\ntest viewport_render_requeries_the_link_under_a_stationary_mouse ... ok\ntest falsey_primitive_handler_uses_prototypes_through_live_terminal_events ... FAIL\ntest exported_terminal_writes_rust_osc8_renders_hovers_clicks_and_disposes ... ok\n\nfailures:\n\n---- falsey_primitive_handler_uses_prototypes_through_live_terminal_events output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_terminal_links-e00190547f3c5af1.wasm.__rust_start_panic (http://127.0.0.1:58700/suite_bg.wasm:wasm-function[45149]:0xaa1958)\n            at wasm_terminal_links-e00190547f3c5af1.wasm.rust_panic (http://127.0.0.1:58700/suite_bg.wasm:wasm-function[40414]:0xa966a1)\n            at wasm_terminal_links-e00190547f3c5af1.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:58700/suite_bg.wasm:wasm-function[12709]:0x876c2b)\n            at wasm_terminal_links-e00190547f3c5af1.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:58700/suite_bg.wasm:wasm-function[16105]:0x9052f7)\n            at wasm_terminal_links-e00190547f3c5af1.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:58700/suite_bg.wasm:wasm-function[44632]:0xaa0c7b)\n            at wasm_terminal_links-e00190547f3c5af1.wasm.rust_begin_unwind (http://127.0.0.1:58700/suite_bg.wasm:wasm-function[30589]:0xa5a894)\n            at wasm_terminal_links-e00190547f3c5af1.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:58700/suite_bg.wasm:wasm-function[30590]:0xa5a8c1)\n            at wasm_terminal_links-e00190547f3c5af1.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:58700/suite_bg.wasm:wasm-function[5747]:0x6a5379)\n            at wasm_terminal_links-e00190547f3c5af1.wasm.core::panicking::assert_failed::hdcb4e5c58fb534c9 (http://127.0.0.1:58700/suite_bg.wasm:wasm-function[22968]:0x9d6a4a)\n            at wasm_terminal_links-e00190547f3c5af1.wasm.wasm_terminal_links::falsey_primitive_handler_uses_prototypes_through_live_terminal_events::{{closure}}::ha7e6047ea0841686 (http://127.0.0.1:58700/suite_bg.wasm:wasm-function[631]:0x13e3d3)\n\nfailures:\n\n    falsey_primitive_handler_uses_prototypes_through_live_terminal_events\n\ntest result: FAILED. 2 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.18s\n\n",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/28b7e99ddc44c8cd3014e4b69b1fbfd264ac13a75c404a66751a1e9e92921e63/artifact.wasm",
+      "sha256": "28b7e99ddc44c8cd3014e4b69b1fbfd264ac13a75c404a66751a1e9e92921e63",
+      "bytes": 19170755,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\S\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_terminal_links-e00190547f3c5af1.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\S\\results\\browser-host\\wasm_terminal_links\\2026-11-05T15-35-43-161Z-9e835e90-116d-42bd-abc3-3fca240460c9\\artifacts\\suite_bg.wasm",
+      "bytes": 16109769,
+      "sha256": "8573760605a69d0b3008e815454dbce745e070939ceda00497fc3e9a67da4e19"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\S\\results\\browser-host\\wasm_terminal_links\\2026-11-05T15-35-43-161Z-9e835e90-116d-42bd-abc3-3fca240460c9\\artifacts\\suite.js",
+      "bytes": 213432,
+      "sha256": "c89213064ac1d594a5190d2cb0e52cd584df805665f0cdf3678da05d27a28f98"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "b70840bd92b39d58859c5848ed1020af5b23c4a7b424deea569971f7f49e887b"
+  },
+  "finishedAt": "2026-11-05T15:35:54.041Z"
+}

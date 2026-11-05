@@ -4,6 +4,7 @@ use crate::{
     input::mouse_coords::{parse_css_padding, MouseGeometry},
     js_error::to_js_error,
     links::{
+        browser::default_activate,
         browser_linkifier::{BrowserLinkifier, BrowserProviders, LinkCallback},
         native_osc::{NativeOscLinkProvider, OscLinkHandler},
         Link, LinkProviderService, Position, Range, RangePosition,
@@ -12,9 +13,17 @@ use crate::{
 };
 use js_sys::{Array, Function, Object};
 use std::{cell::RefCell, collections::HashMap, rc::Rc};
-use wasm_bindgen::{JsCast, JsValue};
+use wasm_bindgen::{prelude::wasm_bindgen, JsCast, JsValue};
 use web_sys::{MouseEvent, Window};
-use xterm_core::{headless, options::OptionValue};
+use xterm_core::headless;
+
+// Property access must preserve primitive getter receivers. Reflect.get on a
+// boxed Object(value) would pass the box, unlike the source's value[key].
+#[wasm_bindgen(inline_js = "export function oscHandlerProperty(value, key) { return value[key]; }")]
+extern "C" {
+    #[wasm_bindgen(catch)]
+    fn oscHandlerProperty(value: &JsValue, key: &str) -> Result<JsValue, JsValue>;
+}
 
 type RangeCache = Rc<RefCell<HashMap<*const Link, JsValue>>>;
 
@@ -25,6 +34,7 @@ pub fn create_registry(
     let providers: BrowserProviders = Rc::new(LinkProviderService::default());
     let weak = Rc::downgrade(&native);
     let settings = weak.clone();
+    let activation_window = window.clone();
     let provider = NativeOscLinkProvider::new(weak, window.clone(), move || {
         let native = settings
             .upgrade()
@@ -33,20 +43,29 @@ pub fn create_registry(
             .options()
             .get("linkHandler")
             .map_err(|error| to_js_error(&error))?;
-        if !value.is_truthy() {
+        let value = super::options::into_js(&value)?;
+        // Source policy/hover/leave use optional chaining, not a truthy test.
+        // False, zero and empty strings can inherit handlers from prototypes.
+        if value.is_null() || value.is_undefined() {
             return Ok(None);
         }
         let protocol_handler = value.clone();
         let allow = Rc::new(move || {
-            protocol_handler
-                .get_property("allowNonHttpProtocols")
+            oscHandlerProperty(&protocol_handler, "allowNonHttpProtocols")
                 .map(|value| value.is_truthy())
-                .map_err(|error| to_js_error(&error))
         });
         let cache: RangeCache = Rc::new(RefCell::new(HashMap::new()));
+        // Activation alone uses the source's truthy conditional, so falsey
+        // primitives still use confirmation even when their policy allows URLs.
+        let activate: LinkCallback = if value.is_truthy() {
+            handler_callback(value.clone(), "activate", false, cache.clone())
+        } else {
+            let window = activation_window.clone();
+            Rc::new(move |_, link| default_activate(&window, &link.text))
+        };
         Ok(Some(OscLinkHandler {
             allow_non_http_protocols: allow,
-            activate: handler_callback(value.clone(), "activate", false, cache.clone()),
+            activate,
             hover: Some(handler_callback(
                 value.clone(),
                 "hover",
@@ -63,16 +82,13 @@ pub fn create_registry(
 }
 
 fn handler_callback(
-    handler: OptionValue,
+    handler: JsValue,
     name: &'static str,
     optional: bool,
     cache: RangeCache,
 ) -> LinkCallback {
     Rc::new(move |event, link| {
-        let member = handler
-            .get_property(name)
-            .map_err(|error| to_js_error(&error))?;
-        let member = super::options::into_js(&member)?;
+        let member = oscHandlerProperty(&handler, name)?;
         if optional && (member.is_null() || member.is_undefined()) {
             return Ok(());
         }
@@ -89,12 +105,7 @@ fn handler_callback(
                 range
             }
         };
-        function.call3(
-            &super::options::into_js(&handler)?,
-            event.as_ref(),
-            &to_js_string(&link.text),
-            &range,
-        )?;
+        function.call3(&handler, event.as_ref(), &to_js_string(&link.text), &range)?;
         Ok(())
     })
 }
