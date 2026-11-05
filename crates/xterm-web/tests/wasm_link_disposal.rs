@@ -1,5 +1,8 @@
 #![cfg(target_arch = "wasm32")]
-use std::{cell::RefCell, rc::Rc};
+use std::{
+    cell::{Cell, RefCell},
+    rc::Rc,
+};
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_test::*;
 use web_sys::{HtmlElement, MouseEvent};
@@ -105,4 +108,58 @@ fn disposal_visits_a_provider_reply_completed_by_an_earlier_dispose_callback() {
 #[wasm_bindgen_test]
 fn disposal_visits_the_replacement_not_the_previous_later_provider_reply() {
     run(true);
+}
+
+#[wasm_bindgen_test]
+fn nested_mousemove_does_not_redirect_an_outer_disposal_to_the_new_cache() {
+    let document = web_sys::window().unwrap().document().unwrap();
+    let root: HtmlElement = document.create_element("div").unwrap().dyn_into().unwrap();
+    root.set_class_name("xterm");
+    document.body().unwrap().append_child(&root).unwrap();
+    let controller = BrowserLinkifier::new(
+        root.clone(),
+        80,
+        0,
+        Rc::new(|event| {
+            Some(Position {
+                x: 3,
+                y: event.client_y() as usize,
+            })
+        }),
+        Rc::new(|_, _| Ok(())),
+    )
+    .unwrap();
+    let provider = Rc::new(Provider::default());
+    let _registration = controller.register_provider(provider.clone());
+    move_to(&root, 3, 1);
+    let reply = provider.0.borrow_mut().remove(0);
+    let log = Rc::new(RefCell::new(Vec::new()));
+    let first_log = log.clone();
+    let tail_log = log.clone();
+    let nested = Cell::new(false);
+    let nested_root = root.clone();
+    reply(Some(vec![
+        link(3, move || {
+            first_log.borrow_mut().push("first");
+            if !nested.replace(true) {
+                move_to(&nested_root, 3, 3);
+                let log = first_log.clone();
+                let reply = provider.0.borrow_mut().remove(0);
+                reply(Some(vec![link(20, move || {
+                    log.borrow_mut().push("new-cache");
+                    Ok(())
+                })]))?;
+            }
+            Ok(())
+        }),
+        link(10, move || {
+            tail_log.borrow_mut().push("tail");
+            Ok(())
+        }),
+    ]))
+    .unwrap();
+    move_to(&root, 3, 2);
+    assert_eq!(*log.borrow(), ["first", "first", "tail", "tail"]);
+    controller.dispose().unwrap();
+    root.remove();
 }

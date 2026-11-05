@@ -20,7 +20,7 @@ const index = map.sources.findIndex(name => name.endsWith('/browser/Linkifier.ts
 assert(index >= 0, 'Original bundle must identify its Linkifier source');
 assert.equal(map.sourcesContent[index], await readFile(resolve(reference, 'src/browser/Linkifier.ts'), 'utf8'));
 const report = { node: process.version, platform: process.platform, hashes, browsers: [],
-  scope: 'Two new public-provider disposal reentry traces, not complete unchanged upstream suites.' };
+  scope: 'Three new public-provider disposal reentry traces, not complete unchanged upstream suites.' };
 try {
   await withArtifactServer({ directory: resolve(reference, 'lib'),
     css: await readFile(resolve(reference, 'css/xterm.css')),
@@ -72,6 +72,39 @@ try {
               traces.push({ replace, log });
             } finally { terminal.dispose(); }
           }
+          const terminal = new Terminal({ cols: 80, rows: 4 });
+          terminal.open(document.querySelector('#terminal'));
+          try {
+            await new Promise(resolve => terminal.write('ready', resolve));
+            await new Promise(resolve => requestAnimationFrame(resolve));
+            const replies = [];
+            terminal.registerLinkProvider({ provideLinks(y, callback) { replies.push(callback); } });
+            const dimensions = terminal._core._renderService.dimensions;
+            const root = terminal.element;
+            const bounds = root.getBoundingClientRect();
+            const move = row => root.dispatchEvent(new MouseEvent('mousemove', {
+              clientX: bounds.left + 2.5 * dimensions.css.cell.width,
+              clientY: bounds.top + (row - 0.5) * dimensions.css.cell.height, bubbles: true
+            }));
+            const log = [];
+            const link = (x, dispose) => ({ text: `link${x}`, range: {
+              start: { x, y: 1 }, end: { x: x + 2, y: 1 }
+            }, activate() {}, dispose });
+            move(1);
+            let nested = false;
+            replies.shift()([
+              link(3, () => {
+                log.push('first');
+                if (!nested) {
+                  nested = true;
+                  move(3);
+                  replies.shift()([link(20, () => log.push('new-cache'))]);
+                }
+              }), link(10, () => log.push('tail'))
+            ]);
+            move(2);
+            traces.push({ nested: true, log });
+          } finally { terminal.dispose(); }
           return traces;
         });
         let deadline;
@@ -81,7 +114,8 @@ try {
           })]);
         } finally { clearTimeout(deadline); }
         assert.deepEqual(entry.traces, [
-          { replace: false, log: ['first', 'new'] }, { replace: true, log: ['first', 'new'] }
+          { replace: false, log: ['first', 'new'] }, { replace: true, log: ['first', 'new'] },
+          { nested: true, log: ['first', 'first', 'tail', 'tail'] }
         ]);
         assert.deepEqual(entry.errors, []);
         entry.status = 'passed';
