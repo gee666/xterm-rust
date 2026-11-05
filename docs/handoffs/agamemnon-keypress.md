@@ -1,0 +1,13 @@
+# Agamemnon keypress continuation
+
+User466 asked idle retired sessions to help. Retirement104 never dispatched, so I resumed concrete378 without submitting a second request. Task378 is independently accepted at eddbf882 and integrated through canonical main aa3f79211e48175f317261592ff57bd20e4dc79c. Earlier356 is also integrated and its O:A tree was removed.
+
+Read docs/keypress-raw-values.md and results/raw-keypress378. The DOM adapter now retains raw charCode/which and keypress-only keyCode fallback values through source truthiness/nullish/strict-zero guards. ToNumber runs only after modifier admission. Errors and nested input preserve source state/effect ordering. Typed keydown/up encoder validation is unchanged. EventNumber<E> uses fallible raw conversion; language representation changes are documented.
+
+New native6 plus existing20 pass26 functions. Source integrity5 pass unchanged method bodies and platform selectors. Real Terminal2 WASM functions expand344 source/Rust comparisons per engine, including UTF16, raw primitive/object conversion, getter prefixes, callback errors/reentry and duplicate-InputEvent suppression. Old ff0bec8 production restored temporarily fails both functions Chromium; patched source restored in finally and passes. Keyboard15/InputEvent4/rawInput2/full library26 also passed each3 engines. Reviewer independently reran source5/native26/fmt/native+WASM Clippy and verified9 hashes; no reviewer browser rerun.
+
+Canonical union contains accepted378/379/380/383/384/385 and Liam599be44 docs receipt. Owner-confirmed exact picks were recorded in post409. Own9/core-view10 hashes stayed unchanged. The unchanged helper passed1894 native core/web tests across367 summaries, zero failed/ignored, plus changed builds, affected native all-target, default workspace and applicable WASM library checks. It removed private target. Original successful CI384 remains explicitly ff0bec8-scoped, not latest-source proof.
+
+Remaining319 still covers the complete input/accessibility family, other decorated fields and full original suites. Full renderer/atlas/addon work, final suite327/audit328 and final quality304 remain separate open obligations. Overall equivalence NOT PROVEN.
+
+Only owned temporary tree is O:/xterm-rust-swarm-16/tmp/KP, with a physical reference copy, never a junction. Browsers/servers close in runner finally blocks; TEMP/TMP/TMPDIR use explicit O: paths. Complete the final zero-link/process/tracked-status/untracked-whitelist preflight before whole-tree removal, preserving this receipt-only commit. Do not clean anyone else's reused letter paths or historical trees. No second retirement request is authorized or needed; request104 and the original saved handoff remain recorded.

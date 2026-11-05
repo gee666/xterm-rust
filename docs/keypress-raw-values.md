@@ -25,7 +25,13 @@ Results are retained under results/raw-keypress378. Commands use installed Rust1
 - Patched Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4 pass keypress2, keyboard15, InputEvent4, raw InputEvent2 and full library26 functions per engine. This is49 functions per engine, not49 upstream suites. Existing raw InputEvent90 and InputEvent guard288 case expansions are preserved.
 - Native all-target and focused WASM library/new-test warning-denied Clippy pass. Exact workspace rustfmt check passes. These are scoped checks, not the final all-feature/release/native-platform matrix.
 
-After the test-only platform selectors were pinned to the exact upstream constants, the complete344-case three-browser matrix passed again with Rust source unchanged. The original negative-control and earlier full-suite receipts are preserved separately. Canonical main integration is pending. Overall equivalence remains NOT PROVEN.
+After the test-only platform selectors were pinned to the exact upstream constants, the complete344-case three-browser matrix passed again with Rust source unchanged. The original negative-control and earlier full-suite receipts are preserved separately. Canonical main integration succeeded at aa3f79211e48175f317261592ff57bd20e4dc79c. Overall equivalence remains NOT PROVEN.
+
+## Canonical integration
+
+The accepted378/379/380/383/384/385 union was frozen on d0f8a34 and merged through the unchanged canonical helper. It passed1894 native core/web tests across367 summaries with zero failures or ignored tests, changed-crate builds, affected all-target checks, the default workspace check and applicable WASM library checks. Fullfmt and source checks passed before freeze; all9 own and10 core-view implementation hashes stayed unchanged.
+
+This default-feature gate does not rerun every addon test or prove the final platform/feature/release matrix. Task384's successful six-native-job CI/Miri/WASM evidence remains explicitly tied to its older ff0bec8 snapshot. No historical receipt was relabeled as latest-source proof. Raw archived CI log whitespace was retained verbatim; the source-only diff check passed.
 
 ## Owned temporary work
 
