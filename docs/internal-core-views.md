@@ -46,4 +46,6 @@ cargo clippy --locked -j2 -p xterm-web --target wasm32-unknown-unknown --lib --t
 cargo fmt --all -- --check
 ```
 
+The isolated reviewer accepted787541d after rerunning all four native capture tests, full rustfmt, scoped WASM Clippy and script syntax checks on the rebased source. They checked all10 retained implementation/test/script hashes, source-map/reference integrity, the identical baseline test/fixture/trace, all source snapshot values and all recorded browser counts. They did not rerun browsers, and made no source changes.
+
 Reports, exact commands, source/binary hashes, the failed baseline and concise logs are retained in `results/core-views/`. Disposable build/browser binaries are removed after integration or handoff. These scoped passes do not establish full xterm.js equivalence.
