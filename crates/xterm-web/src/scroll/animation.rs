@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. MIT license.
 //! Shared SmoothScrollingOperation for numbers and raw browser values.
 use super::{
-    state::{Position, PositionUpdate, ScrollState},
+    state::{Position, ScrollState},
     value::{infallible, ScrollValue},
 };
 
@@ -11,7 +11,7 @@ const EDGE_DISTANCE: f64 = 0.75;
 const COMPOSITION_CUT: f64 = 0.33;
 
 #[derive(Clone, Copy, Debug)]
-struct Cubic<V> {
+pub(super) struct Cubic<V> {
     from: V,
     delta: V,
 }
@@ -29,12 +29,12 @@ impl<V: ScrollValue> Cubic<V> {
 }
 
 #[derive(Clone, Copy, Debug)]
-enum Curve<V> {
+pub(super) enum Curve<V> {
     Cubic(Cubic<V>),
     Composed { first: Cubic<V>, second: Cubic<V> },
 }
 impl<V: ScrollValue> Curve<V> {
-    fn new(from: V, to: &V, viewport: &V) -> Result<Self, V::Error> {
+    pub(super) fn new(from: V, to: &V, viewport: &V) -> Result<Self, V::Error> {
         let distance = from.subtract(to)?.absolute()?;
         if distance.greater(&V::number(LONG_DISTANCE_THRESHOLD).multiply(viewport)?)? {
             // Addition and subtraction are distinct: raw strings concatenate.
@@ -58,7 +58,7 @@ impl<V: ScrollValue> Curve<V> {
             Ok(Self::Cubic(Cubic::new(from, to)?))
         }
     }
-    fn value(&self, completion: &V) -> Result<V, V::Error> {
+    pub(super) fn value(&self, completion: &V) -> Result<V, V::Error> {
         match self {
             Self::Cubic(curve) => curve.value(completion),
             Self::Composed { first, second } => {
@@ -88,8 +88,8 @@ pub struct SmoothOperation<V = f64> {
     pub to: ScrollState<V>,
     pub start_time: V,
     pub duration: V,
-    horizontal: Curve<V>,
-    vertical: Curve<V>,
+    pub(super) horizontal: Curve<V>,
+    pub(super) vertical: Curve<V>,
 }
 impl<V: ScrollValue> SmoothOperation<V> {
     pub fn try_new(
@@ -121,34 +121,10 @@ impl<V: ScrollValue> SmoothOperation<V> {
         Self::try_new(from, to, V::number(now() - ADVANCE_MS), duration)
     }
     pub fn try_accept_dimensions(&mut self, state: ScrollState<V>) -> Result<(), V::Error> {
-        self.to = state.try_with_position(PositionUpdate {
-            left: (!self.to.left.is_undefined()).then(|| self.to.left.clone()),
-            top: (!self.to.top.is_undefined()).then(|| self.to.top.clone()),
-        })?;
-        // Source publishes to, then horizontal, then vertical. A later throwing
-        // coercion must not roll back those earlier assignments.
-        self.horizontal = Curve::new(self.from.left.clone(), &self.to.left, &self.to.width)?;
-        self.vertical = Curve::new(self.from.top.clone(), &self.to.top, &self.to.height)?;
-        Ok(())
+        super::animation_live::accept_dimensions(&std::cell::RefCell::new(self), state)
     }
     pub fn try_tick(&self, now: f64) -> Result<AnimationUpdate<V>, V::Error> {
-        let completion = V::number(now)
-            .subtract(&self.start_time)?
-            .divide(&self.duration)?;
-        if completion.less(&V::number(1.0))? {
-            Ok(AnimationUpdate {
-                position: Position {
-                    left: self.horizontal.value(&completion)?,
-                    top: self.vertical.value(&completion)?,
-                },
-                done: false,
-            })
-        } else {
-            Ok(AnimationUpdate {
-                position: self.to.position(),
-                done: true,
-            })
-        }
+        super::animation_live::tick(&std::cell::RefCell::new(self), || now)
     }
 }
 impl SmoothOperation {

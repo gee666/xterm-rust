@@ -73,5 +73,9 @@ pub fn scroll_error(error: ScrollError<JsValue>) -> JsValue {
     match error {
         ScrollError::Scheduler(error) => error,
         ScrollError::Dispatch(error) => to_js_error(&error),
+        ScrollError::Value(never) => match never {},
+        ScrollError::MissingAnimation => {
+            js_sys::TypeError::new("scroll animation removed during operation").into()
+        }
     }
 }

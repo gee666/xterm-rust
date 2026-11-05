@@ -1,13 +1,15 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. MIT license.
-//! Host-driven Scrollable. FrameScheduler requests asynchronous frames; the
-//! adapter invokes frame() at delivery. Clone handles share state and events.
+//! One host-driven Scrollable for numeric and callback-capable raw values.
 use super::{
     animation::SmoothOperation,
+    animation_live,
     state::{DimensionUpdate, Position, PositionUpdate, ScrollEvent, ScrollState},
+    value::ScrollValue,
 };
 use crate::links::debounce::FrameScheduler;
 use std::{
-    cell::{Cell, RefCell},
+    cell::RefCell,
+    convert::Infallible,
     error::Error,
     fmt,
     rc::{Rc, Weak},
@@ -18,214 +20,248 @@ use xterm_core::{
 };
 
 #[derive(Debug)]
-pub enum ScrollError<E> {
+pub enum ScrollError<E, V = Infallible> {
     Scheduler(E),
     Dispatch(EmitError),
+    Value(V),
+    /// A coercion removed the operation before a source-required dereference.
+    MissingAnimation,
 }
-impl<E: fmt::Display> fmt::Display for ScrollError<E> {
+impl<E: fmt::Display, V: fmt::Display> fmt::Display for ScrollError<E, V> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Scheduler(error) => error.fmt(f),
             Self::Dispatch(error) => error.fmt(f),
+            Self::Value(error) => error.fmt(f),
+            Self::MissingAnimation => f.write_str("scroll animation removed during operation"),
         }
     }
 }
-impl<E: Error + 'static> Error for ScrollError<E> {
+impl<E: Error + 'static, V: Error + 'static> Error for ScrollError<E, V> {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
-        Some(match self {
-            Self::Scheduler(error) => error,
-            Self::Dispatch(error) => error,
-        })
+        match self {
+            Self::Scheduler(error) => Some(error),
+            Self::Dispatch(error) => Some(error),
+            Self::Value(error) => Some(error),
+            Self::MissingAnimation => None,
+        }
     }
 }
-struct State<S: FrameScheduler> {
+struct Animation<S: FrameScheduler, V> {
+    operation: RefCell<SmoothOperation<V>>,
+    pending: RefCell<Option<S::Handle>>,
+}
+type SharedAnimation<S, V> = Rc<Animation<S, V>>;
+struct State<S: FrameScheduler, V> {
     scheduler: RefCell<S>,
     now: Rc<dyn Fn() -> f64>,
-    scroll: Cell<ScrollState>,
-    smooth: Cell<Option<SmoothOperation>>,
-    duration: Cell<f64>,
-    pending: RefCell<Option<S::Handle>>,
-    event: Emitter<ScrollEvent>,
+    scroll: RefCell<ScrollState<V>>,
+    smooth: RefCell<Option<SharedAnimation<S, V>>>,
+    duration: RefCell<V>,
+    event: Emitter<ScrollEvent<V>>,
 }
-impl<S: FrameScheduler> Drop for State<S> {
+impl<S: FrameScheduler, V> Drop for State<S, V> {
     fn drop(&mut self) {
-        if let Some(handle) = self.pending.get_mut().take() {
-            let scheduler = self.scheduler.get_mut();
-            if let Err(error) = scheduler.cancel_frame(handle) {
-                scheduler.cleanup_error(error);
+        if let Some(animation) = self.smooth.get_mut().take() {
+            if let Some(handle) = animation.pending.borrow_mut().take() {
+                let scheduler = self.scheduler.get_mut();
+                if let Err(error) = scheduler.cancel_frame(handle) {
+                    scheduler.cleanup_error(error);
+                }
             }
         }
     }
 }
-pub struct Scrollable<S: FrameScheduler> {
-    state: Rc<State<S>>,
+pub struct Scrollable<S: FrameScheduler, V = f64> {
+    state: Rc<State<S, V>>,
 }
-pub struct WeakScrollable<S: FrameScheduler> {
-    state: Weak<State<S>>,
+pub struct WeakScrollable<S: FrameScheduler, V = f64> {
+    state: Weak<State<S, V>>,
 }
-impl<S: FrameScheduler> Clone for WeakScrollable<S> {
+impl<S: FrameScheduler, V> Clone for WeakScrollable<S, V> {
     fn clone(&self) -> Self {
         Self {
             state: self.state.clone(),
         }
     }
 }
-impl<S: FrameScheduler> WeakScrollable<S> {
-    pub fn upgrade(&self) -> Option<Scrollable<S>> {
+impl<S: FrameScheduler, V> WeakScrollable<S, V> {
+    pub fn upgrade(&self) -> Option<Scrollable<S, V>> {
         self.state.upgrade().map(|state| Scrollable { state })
     }
 }
-impl<S: FrameScheduler> Clone for Scrollable<S> {
+impl<S: FrameScheduler, V> Clone for Scrollable<S, V> {
     fn clone(&self) -> Self {
         Self {
             state: self.state.clone(),
         }
     }
 }
-impl<S: FrameScheduler> Scrollable<S> {
-    /// The clock must use the same millisecond timeline as future frame calls.
-    /// Scheduler callbacks must be asynchronous and must not hold a scheduler
-    /// borrow while dispatching frame(), matching requestAnimationFrame.
-    pub fn new(
+impl<S: FrameScheduler, V: ScrollValue + 'static> Scrollable<S, V> {
+    /// The clock shares the frame timeline. Schedulers deliver asynchronously
+    /// and must not reenter their own request/cancel methods while borrowed.
+    pub fn try_new(
         scheduler: S,
         integer_values: bool,
-        duration: f64,
+        duration: V,
         now: impl Fn() -> f64 + 'static,
-    ) -> Self {
-        Self {
+    ) -> Result<Self, V::Error> {
+        Ok(Self {
             state: Rc::new(State {
                 scheduler: RefCell::new(scheduler),
                 now: Rc::new(now),
-                scroll: Cell::new(ScrollState::new(
+                scroll: RefCell::new(ScrollState::try_new(
                     integer_values,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                )),
-                smooth: Cell::new(None),
-                duration: Cell::new(duration),
-                pending: RefCell::new(None),
+                    V::number(0.0),
+                    V::number(0.0),
+                    V::number(0.0),
+                    V::number(0.0),
+                    V::number(0.0),
+                    V::number(0.0),
+                )?),
+                smooth: RefCell::new(None),
+                duration: RefCell::new(duration),
                 event: Emitter::new(),
             }),
-        }
+        })
     }
-    pub fn downgrade(&self) -> WeakScrollable<S> {
+    pub fn downgrade(&self) -> WeakScrollable<S, V> {
         WeakScrollable {
             state: Rc::downgrade(&self.state),
         }
     }
-    pub fn on_scroll(&self) -> Event<ScrollEvent> {
+    pub fn on_scroll(&self) -> Event<ScrollEvent<V>> {
         self.state.event.event()
     }
-    pub fn set_smooth_scroll_duration(&self, duration: f64) {
-        self.state.duration.set(duration);
+    pub fn set_smooth_scroll_duration(&self, duration: V) {
+        *self.state.duration.borrow_mut() = duration;
     }
-    pub fn scroll_state(&self) -> ScrollState {
-        self.state.scroll.get()
+    pub fn scroll_state(&self) -> ScrollState<V> {
+        self.state.scroll.borrow().clone()
     }
-    pub fn validate_scroll_position(&self, position: PositionUpdate) -> Position {
-        self.state.scroll.get().with_position(position).position()
+    pub fn try_validate_scroll_position(
+        &self,
+        position: PositionUpdate<V>,
+    ) -> Result<Position<V>, V::Error> {
+        self.scroll_state()
+            .try_with_position(position)
+            .map(|state| state.position())
     }
-    pub fn future_scroll_position(&self) -> Position {
-        self.state.smooth.get().map_or_else(
-            || self.state.scroll.get().position(),
-            |operation| operation.to.position(),
+    pub fn future_scroll_position(&self) -> Position<V> {
+        self.animation().map_or_else(
+            || self.current_scroll_position(),
+            |animation| {
+                animation_live::read(&animation.operation, |operation| operation.to.position())
+            },
         )
     }
-    pub fn current_scroll_position(&self) -> Position {
-        self.state.scroll.get().position()
+    pub fn current_scroll_position(&self) -> Position<V> {
+        self.scroll_state().position()
     }
     pub fn has_pending_scroll_animation(&self) -> bool {
-        self.state.smooth.get().is_some()
+        self.animation().is_some()
     }
     pub fn set_scroll_dimensions(
         &self,
-        update: DimensionUpdate,
+        update: DimensionUpdate<V>,
         raw_positions: bool,
-    ) -> Result<(), ScrollError<S::Error>> {
+    ) -> Result<(), ScrollError<S::Error, V::Error>> {
         let next = self
-            .state
-            .scroll
-            .get()
-            .with_dimensions(update, raw_positions);
-        self.set_state(next, self.state.smooth.get().is_some())?;
-        // Event callbacks may replace the operation; source updates whichever
-        // operation is current after those callbacks return.
-        if let Some(mut operation) = self.state.smooth.get() {
-            operation.accept_dimensions(self.state.scroll.get());
-            self.state.smooth.set(Some(operation));
+            .scroll_state()
+            .try_with_dimensions(update, raw_positions)
+            .map_err(ScrollError::Value)?;
+        self.set_state(next, self.has_pending_scroll_animation())?;
+        // Select after events, but retain that selected operation's identity
+        // throughout coercion, even if a callback cancels/replaces it.
+        if let Some(animation) = self.animation() {
+            animation_live::accept_dimensions(&animation.operation, self.scroll_state())
+                .map_err(ScrollError::Value)?;
         }
         Ok(())
     }
     pub fn set_scroll_position_now(
         &self,
-        update: PositionUpdate,
-    ) -> Result<(), ScrollError<S::Error>> {
-        let next = self.state.scroll.get().with_position(update);
+        update: PositionUpdate<V>,
+    ) -> Result<(), ScrollError<S::Error, V::Error>> {
+        let next = self
+            .scroll_state()
+            .try_with_position(update)
+            .map_err(ScrollError::Value)?;
         self.stop_animation()?;
         self.set_state(next, false)
     }
     pub fn set_scroll_position_smooth(
         &self,
-        mut update: PositionUpdate,
+        mut update: PositionUpdate<V>,
         reuse: bool,
-    ) -> Result<(), ScrollError<S::Error>> {
-        if self.state.duration.get() == 0.0 {
+    ) -> Result<(), ScrollError<S::Error, V::Error>> {
+        if self.state.duration.borrow().strict_eq(&V::number(0.0)) {
             return self.set_scroll_position_now(update);
         }
-        let current = self.state.scroll.get();
-        let operation = if let Some(previous) = self.state.smooth.get() {
-            update.left = Some(update.left.unwrap_or(previous.to.left));
-            update.top = Some(update.top.unwrap_or(previous.to.top));
-            let target = current.with_position(update);
-            if previous.to.left == target.left && previous.to.top == target.top {
+        let replace = self.animation().is_some();
+        if let Some(previous) = self.animation() {
+            let to = animation_live::read(&previous.operation, |operation| operation.to.position());
+            update.left = Some(update.left.unwrap_or(to.left));
+            update.top = Some(update.top.unwrap_or(to.top));
+        }
+        let target = self
+            .scroll_state()
+            .try_with_position(update)
+            .map_err(ScrollError::Value)?;
+        let operation = if replace {
+            let previous = self.required_animation()?;
+            let previous = animation_live::read(&previous.operation, Clone::clone);
+            if previous.to.left.strict_eq(&target.left) && previous.to.top.strict_eq(&target.top) {
                 return Ok(());
             }
             let next = if reuse {
-                SmoothOperation::new(
+                SmoothOperation::try_new(
                     previous.from,
                     target,
                     previous.start_time,
                     previous.duration,
                 )
             } else {
-                SmoothOperation::start(
-                    current,
-                    target,
-                    self.state.duration.get(),
-                    (self.state.now)(),
-                )
-            };
-            self.cancel_pending()?;
+                self.start(target)
+            }
+            .map_err(ScrollError::Value)?;
+            // Construction can change which operation is current. Source
+            // disposes that current operation, not the pre-coercion snapshot.
+            let current = self.required_animation()?;
+            self.cancel(&current)?;
             next
         } else {
-            SmoothOperation::start(
-                current,
-                current.with_position(update),
-                self.state.duration.get(),
-                (self.state.now)(),
-            )
+            self.start(target).map_err(ScrollError::Value)?
         };
-        self.state.smooth.set(Some(operation));
+        *self.state.smooth.borrow_mut() = Some(Rc::new(Animation {
+            operation: RefCell::new(operation),
+            pending: RefCell::new(None),
+        }));
         self.request_frame()
     }
-    /// Called once by the host for each scheduled animation frame. The source
-    /// samples Date.now inside tick, rather than trusting the RAF timestamp.
-    pub fn frame(&self) -> Result<(), ScrollError<S::Error>> {
-        self.state.pending.borrow_mut().take();
-        let Some(operation) = self.state.smooth.get() else {
+    fn start(&self, target: ScrollState<V>) -> Result<SmoothOperation<V>, V::Error> {
+        let from = self.scroll_state();
+        let duration = self.state.duration.borrow().clone();
+        SmoothOperation::try_start(from, target, duration, || (self.state.now)())
+    }
+    /// Delivery clears the current operation's handle, as in the source RAF
+    /// callback. A tick retains its receiver across clock/coercion reentry.
+    pub fn frame(&self) -> Result<(), ScrollError<S::Error, V::Error>> {
+        let Some(animation) = self.animation() else {
             return Ok(());
         };
-        let update = operation.tick((self.state.now)());
-        let next = self.state.scroll.get().with_position(PositionUpdate {
-            left: Some(update.position.left),
-            top: Some(update.position.top),
-        });
+        animation.pending.borrow_mut().take();
+        let update = animation_live::tick(&animation.operation, || (self.state.now)())
+            .map_err(ScrollError::Value)?;
+        let next = self
+            .scroll_state()
+            .try_with_position(PositionUpdate {
+                left: Some(update.position.left),
+                top: Some(update.position.top),
+            })
+            .map_err(ScrollError::Value)?;
         self.set_state(next, true)?;
-        if self.state.smooth.get().is_none() {
+        if self.animation().is_none() {
             return Ok(());
         }
         if update.done {
@@ -234,49 +270,74 @@ impl<S: FrameScheduler> Scrollable<S> {
             self.request_frame()
         }
     }
-    pub fn dispose(&self) -> Result<(), ScrollError<S::Error>> {
+    pub fn dispose(&self) -> Result<(), ScrollError<S::Error, V::Error>> {
         self.stop_animation()?;
         self.state.event.dispose();
         Ok(())
     }
-    fn set_state(&self, next: ScrollState, smooth: bool) -> Result<(), ScrollError<S::Error>> {
-        let previous = self.state.scroll.get();
+    fn animation(&self) -> Option<SharedAnimation<S, V>> {
+        self.state.smooth.borrow().clone()
+    }
+    fn required_animation(&self) -> Result<SharedAnimation<S, V>, ScrollError<S::Error, V::Error>> {
+        self.animation().ok_or(ScrollError::MissingAnimation)
+    }
+    fn set_state(
+        &self,
+        next: ScrollState<V>,
+        smooth: bool,
+    ) -> Result<(), ScrollError<S::Error, V::Error>> {
+        let previous = self.scroll_state();
         if previous.equals(&next) {
             return Ok(());
         }
-        self.state.scroll.set(next);
+        *self.state.scroll.borrow_mut() = next.clone();
         self.state
             .event
             .fire(&next.event(previous, smooth))
             .map_err(ScrollError::Dispatch)
     }
-    fn request_frame(&self) -> Result<(), ScrollError<S::Error>> {
+    fn request_frame(&self) -> Result<(), ScrollError<S::Error, V::Error>> {
+        // Evaluate the assignment receiver before calling the scheduler.
+        let animation = self.required_animation()?;
         let handle = self
             .state
             .scheduler
             .borrow_mut()
             .request_frame()
             .map_err(ScrollError::Scheduler)?;
-        *self.state.pending.borrow_mut() = Some(handle);
+        *animation.pending.borrow_mut() = Some(handle);
         Ok(())
     }
-    fn cancel_pending(&self) -> Result<(), ScrollError<S::Error>> {
-        let handle = self.state.pending.borrow().clone();
+    fn cancel(&self, animation: &Animation<S, V>) -> Result<(), ScrollError<S::Error, V::Error>> {
+        let handle = animation.pending.borrow().clone();
         if let Some(handle) = handle {
             self.state
                 .scheduler
                 .borrow_mut()
                 .cancel_frame(handle)
                 .map_err(ScrollError::Scheduler)?;
-            self.state.pending.borrow_mut().take();
+            animation.pending.borrow_mut().take();
         }
         Ok(())
     }
-    fn stop_animation(&self) -> Result<(), ScrollError<S::Error>> {
-        if self.state.smooth.get().is_some() {
-            self.cancel_pending()?;
-            self.state.smooth.set(None);
+    fn stop_animation(&self) -> Result<(), ScrollError<S::Error, V::Error>> {
+        if let Some(animation) = self.animation() {
+            self.cancel(&animation)?;
+            self.state.smooth.borrow_mut().take();
         }
         Ok(())
+    }
+}
+impl<S: FrameScheduler> Scrollable<S> {
+    pub fn new(
+        scheduler: S,
+        integer_values: bool,
+        duration: f64,
+        now: impl Fn() -> f64 + 'static,
+    ) -> Self {
+        super::value::infallible(Self::try_new(scheduler, integer_values, duration, now))
+    }
+    pub fn validate_scroll_position(&self, position: PositionUpdate) -> Position {
+        super::value::infallible(self.try_validate_scroll_position(position))
     }
 }

@@ -54,6 +54,7 @@ impl From<ScrollbarVisibility> for xterm_core::options::OptionValue {
 #[cfg(target_arch = "wasm32")]
 pub mod abstract_scrollbar;
 pub mod animation;
+mod animation_live;
 #[cfg(target_arch = "wasm32")]
 pub mod arrow;
 #[cfg(target_arch = "wasm32")]
