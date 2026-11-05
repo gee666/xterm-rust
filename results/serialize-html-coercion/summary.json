@@ -1,0 +1,200 @@
+{
+  "status": "scoped-pass",
+  "fullRunnerStatus": "failed",
+  "reports": [
+    {
+      "phase": "baseline",
+      "fullRunnerStatus": "failed",
+      "browsers": [
+        {
+          "name": "chromium",
+          "passed": 77,
+          "failed": 5,
+          "mismatches": [
+            "html-fractional-scrollback-clamps",
+            "html-scrollback-coercion-values",
+            "html-scrollback-coercion-phases",
+            "html-scrollback-coercion-throws",
+            "html-scrollback-coercion-warning-reentry"
+          ]
+        },
+        {
+          "name": "firefox",
+          "passed": 77,
+          "failed": 5,
+          "mismatches": [
+            "html-fractional-scrollback-clamps",
+            "html-scrollback-coercion-values",
+            "html-scrollback-coercion-phases",
+            "html-scrollback-coercion-throws",
+            "html-scrollback-coercion-warning-reentry"
+          ]
+        },
+        {
+          "name": "webkit",
+          "passed": 77,
+          "failed": 5,
+          "mismatches": [
+            "html-fractional-scrollback-clamps",
+            "html-scrollback-coercion-values",
+            "html-scrollback-coercion-phases",
+            "html-scrollback-coercion-throws",
+            "html-scrollback-coercion-warning-reentry"
+          ]
+        }
+      ],
+      "suites": [
+        {
+          "engine": "source",
+          "counts": {
+            "discovered": 120,
+            "executed": 120,
+            "passed": 120,
+            "failed": 0,
+            "skipped": 0,
+            "unrun": 0
+          }
+        },
+        {
+          "engine": "rust",
+          "counts": {
+            "discovered": 120,
+            "executed": 120,
+            "passed": 120,
+            "failed": 0,
+            "skipped": 0,
+            "unrun": 0
+          }
+        }
+      ]
+    },
+    {
+      "phase": "fixed",
+      "fullRunnerStatus": "failed",
+      "browsers": [
+        {
+          "name": "chromium",
+          "passed": 81,
+          "failed": 1,
+          "mismatches": [
+            "html-fractional-scrollback-clamps"
+          ]
+        },
+        {
+          "name": "firefox",
+          "passed": 81,
+          "failed": 1,
+          "mismatches": [
+            "html-fractional-scrollback-clamps"
+          ]
+        },
+        {
+          "name": "webkit",
+          "passed": 81,
+          "failed": 1,
+          "mismatches": [
+            "html-fractional-scrollback-clamps"
+          ]
+        }
+      ],
+      "suites": [
+        {
+          "engine": "source",
+          "counts": {
+            "discovered": 120,
+            "executed": 120,
+            "passed": 120,
+            "failed": 0,
+            "skipped": 0,
+            "unrun": 0
+          }
+        },
+        {
+          "engine": "rust",
+          "counts": {
+            "discovered": 120,
+            "executed": 120,
+            "passed": 120,
+            "failed": 0,
+            "skipped": 0,
+            "unrun": 0
+          }
+        }
+      ]
+    }
+  ],
+  "traceAudit": [
+    {
+      "browser": "chromium",
+      "sourceStable": true,
+      "fixedExact": 81,
+      "fixedTotal": 82,
+      "retainedFailures": [
+        "html-fractional-scrollback-clamps"
+      ],
+      "newCasesExact": 4,
+      "inheritedUnchanged": 78,
+      "repaired": [
+        "html-scrollback-coercion-values",
+        "html-scrollback-coercion-phases",
+        "html-scrollback-coercion-throws",
+        "html-scrollback-coercion-warning-reentry"
+      ]
+    },
+    {
+      "browser": "firefox",
+      "sourceStable": true,
+      "fixedExact": 81,
+      "fixedTotal": 82,
+      "retainedFailures": [
+        "html-fractional-scrollback-clamps"
+      ],
+      "newCasesExact": 4,
+      "inheritedUnchanged": 78,
+      "repaired": [
+        "html-scrollback-coercion-values",
+        "html-scrollback-coercion-phases",
+        "html-scrollback-coercion-throws",
+        "html-scrollback-coercion-warning-reentry"
+      ]
+    },
+    {
+      "browser": "webkit",
+      "sourceStable": true,
+      "fixedExact": 81,
+      "fixedTotal": 82,
+      "retainedFailures": [
+        "html-fractional-scrollback-clamps"
+      ],
+      "newCasesExact": 4,
+      "inheritedUnchanged": 78,
+      "repaired": [
+        "html-scrollback-coercion-values",
+        "html-scrollback-coercion-phases",
+        "html-scrollback-coercion-throws",
+        "html-scrollback-coercion-warning-reentry"
+      ]
+    }
+  ],
+  "baselineInput": {
+    "revision": "53f6a0c7aa2b0dd8b783017cb830bcd556b911dd",
+    "sha256": "f452a2099594f5be90dc3ca46a711b59becb0795afd3b9ea6e6616ea39fd32f7",
+    "files": 1791
+  },
+  "fixedInput": {
+    "revision": "53f6a0c7aa2b0dd8b783017cb830bcd556b911dd",
+    "sha256": "a79ddda6830efed836f41ec54bac4b4a630f746629be8722cb664822db36f515",
+    "files": 1791
+  },
+  "baselineWasm": {
+    "path": "browser/pkg/xterm_web_bg.wasm",
+    "bytes": 15959668,
+    "sha256": "d2c6f0636d952a281f063fa5cb5cb87ce4f2201ac18300503c1dcb9ff8c1cda2"
+  },
+  "fixedWasm": {
+    "path": "browser/pkg/xterm_web_bg.wasm",
+    "bytes": 15958988,
+    "sha256": "1e395446469dadb68254d5a15a7d5ec01e49f0bce46d6130c0ab488d72f64ae1"
+  },
+  "scope": "Four nonnumeric HTML scrollback cases repaired. Complete runner remains failed81/82 due inherited ANSI error messages needing498; no filtering or498 replay. Full346/322 and overall equivalence NOT PROVEN."
+}

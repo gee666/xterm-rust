@@ -1,0 +1,9 @@
+Initial command: node results/serialize-html-coercion/reproduce.mjs proof
+Outer helper exit: 1
+Actual assertion from the first helper version at line84:
+assert(engine.mismatches.every(entry => entry.name.startsWith('html-scrollback-coercion-')))
+ERR_ASSERTION actual false, expected true.
+
+The baseline runner had completed all82 probes in each engine and both unchanged120-case suites. Raw browser/verification.json retains77passed/5failed per engine, including four new coercion failures and inherited html-fractional-scrollback-clamps ANSI error messages. Complete runner status remains failed, not normalized. No fixed run occurred during this initial command. The helper finally restored fixed source and entry package/pointer. Source/input identity was subsequently verified before the fixed phase. No separate injected failure-restoration test is claimed.
+
+Continuation: corrected only helper expectations for the inherited failure, then ran proof fixed once using the already-staged fixed package and identical82-case runner. No production source/build input or upstream assertion changed. The full fixed runner remains failed81/82 in each engine, solely inherited ANSI error text. All78 inherited Rust traces are identical between phases, and all four new cases match source exactly. Both phases source120/Rust120 unchanged suite executions passed with no failures/skips/unrun. See raw receipts and summary.json.

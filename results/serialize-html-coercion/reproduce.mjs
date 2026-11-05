@@ -10,6 +10,9 @@ import { referenceIntegrity } from '../../scripts/upstream-baseline-utils.mjs';
 const root = process.cwd(), output = join(root, 'results/serialize-html-coercion');
 const scratch = join(root, 'tmp/html-coercion'), mode = process.argv[2];
 assert(['build', 'proof', 'quality', 'audit'].includes(mode));
+const selectedPhase = process.argv[3] ?? 'both';
+assert(['baseline', 'fixed', 'both'].includes(selectedPhase));
+const inheritedFailure = 'html-fractional-scrollback-clamps';
 await mkdir(scratch, { recursive: true });
 const sources = ['crates/xterm-web/src/serialize_addon/html.rs', 'crates/xterm-web/src/serialize_addon/options.rs'];
 const pointer = join(root, 'results/demos/build/latest.json'), pkg = join(root, 'browser/pkg');
@@ -42,6 +45,7 @@ if (mode === 'build' || mode === 'proof') {
   let complete = false;
   try {
     for (const [phase, bytes] of [['baseline', baseline], ['fixed', fixed]]) {
+      if (mode === 'proof' && selectedPhase !== 'both' && selectedPhase !== phase) continue;
       const directory = join(output, phase), retained = join(scratch, phase);
       await mkdir(directory, { recursive: true }); await mkdir(retained, { recursive: true });
       // writeFile updates mtimes so Cargo cannot reuse an old source-swap artifact.
@@ -79,17 +83,21 @@ if (mode === 'build' || mode === 'proof') {
         assert.equal(report.browsers.length, 3);
         for (const engine of report.browsers) {
           assert.equal(engine.error, undefined); assert.equal(engine.discovered, 82); assert.equal(engine.executed, 82);
+          // The inherited487 probe also checks ANSI error messages. This base
+          // lacks accepted498; retain that exact failure in both full reports.
+          const names = engine.mismatches.map(entry => entry.name);
+          assert(names.includes(inheritedFailure));
           if (phase === 'baseline') {
-            assert(engine.failed > 0);
-            assert(engine.mismatches.every(entry => entry.name.startsWith('html-scrollback-coercion-')));
-          } else assert.equal(engine.failed, 0);
+            assert.equal(engine.failed, 5);
+            assert(names.every(name => name === inheritedFailure || name.startsWith('html-scrollback-coercion-')));
+          } else { assert.equal(engine.failed, 1); assert.deepEqual(names, [inheritedFailure]); }
         }
         assert.equal(report.suites.length, 2);
         for (const suite of report.suites) {
           assert.equal(suite.result.status, 'passed'); assert.equal(suite.counts.passed, 120);
           for (const field of ['failed', 'skipped', 'unrun']) assert.equal(suite.counts[field], 0);
         }
-        assert.equal(result.exitCode, phase === 'baseline' ? 1 : 0);
+        assert.equal(result.exitCode, 1, 'The complete runner must retain the inherited ANSI failure');
         await save(join(directory, 'proof.json'), { status: 'passed', result, engines: report.browsers, suites: report.suites });
       }
     }
@@ -124,6 +132,25 @@ if (mode === 'quality') {
   await save(join(output, 'native-binaries.json'), await artifactIdentity(root, binaries));
 }
 if (mode === 'audit') {
+  const reports = [];
+  for (const phase of ['baseline', 'fixed']) {
+    const report = await json(join(output, phase, 'browser/verification.json'));
+    assert.equal(report.status, 'failed'); assert.equal(report.error, undefined); assert.deepEqual(report.cleanupErrors, []);
+    assert.equal(report.browsers.length, 3); assert.equal(report.suites.length, 2);
+    for (const engine of report.browsers) {
+      assert.equal(engine.error, undefined); assert.equal(engine.executed, 82); assert.equal(engine.discovered, 82);
+      assert.equal(engine.failed, phase === 'baseline' ? 5 : 1);
+      const names = engine.mismatches.map(entry => entry.name);
+      assert(names.includes(inheritedFailure));
+      assert(names.every(name => name === inheritedFailure || phase === 'baseline' && name.startsWith('html-scrollback-coercion-')));
+    }
+    for (const suite of report.suites) {
+      assert.equal(suite.result.status, 'passed'); assert.equal(suite.counts.passed, 120);
+      for (const field of ['failed', 'skipped', 'unrun']) assert.equal(suite.counts[field], 0);
+    }
+    reports.push({ phase, fullRunnerStatus: report.status, browsers: report.browsers.map(({ name, passed, failed, mismatches }) =>
+      ({ name, passed, failed, mismatches: mismatches.map(entry => entry.name) })), suites: report.suites.map(({ engine, counts }) => ({ engine, counts })) });
+  }
   const manifest = await json(join(root, 'docs/baseline/reference-manifest.json'));
   const reference = referenceIntegrity(process.env.SOURCE_ROOT, manifest), copy = referenceIntegrity(join(root, 'source_repo'), manifest);
   assert.equal(reference.mismatches.length, 0); assert.equal(copy.mismatches.length, 0);
@@ -132,10 +159,16 @@ if (mode === 'audit') {
     const load = (phase, engine) => json(join(output, phase, 'browser', `${browser}-${engine}.json`));
     const [beforeSource, afterSource, beforeRust, afterRust] = await Promise.all([
       load('baseline', 'source'), load('fixed', 'source'), load('baseline', 'rust'), load('fixed', 'rust')]);
-    assert.deepEqual(beforeSource, afterSource); assert.deepEqual(afterRust, afterSource);
+    assert.deepEqual(beforeSource, afterSource);
+    const mismatches = [];
+    for (let index = 0; index < afterSource.length; index++) {
+      try { assert.deepEqual(afterRust[index], afterSource[index]); }
+      catch { mismatches.push(afterSource[index].name); }
+    }
+    assert.deepEqual(mismatches, [inheritedFailure]);
     const inherited = entries => entries.filter(entry => !entry.name.startsWith('html-scrollback-coercion-'));
     assert.equal(inherited(beforeRust).length, 78); assert.deepEqual(inherited(beforeRust), inherited(afterRust));
-    traceAudit.push({ browser, sourceStable: true, fixedExact: 82, inheritedUnchanged: 78,
+    traceAudit.push({ browser, sourceStable: true, fixedExact: 81, fixedTotal: 82, retainedFailures: mismatches, newCasesExact: 4, inheritedUnchanged: 78,
       repaired: beforeRust.filter((entry, index) => JSON.stringify(entry) !== JSON.stringify(afterRust[index])).map(entry => entry.name) });
   }
   const before = await json(join(output, 'baseline/build-identity.json')), after = await json(join(output, 'fixed/build-identity.json'));
@@ -145,9 +178,9 @@ if (mode === 'audit') {
   } finally { await writeSources(fixed); }
   assert.equal((await sourceIdentity(root)).sha256, after.input.sha256);
   assert.notEqual(before.build.artifacts[1].sha256, after.build.artifacts[1].sha256);
-  await save(join(output, 'summary.json'), { status: 'passed', traceAudit, baselineInput: before.input, fixedInput: after.input,
+  await save(join(output, 'summary.json'), { status: 'scoped-pass', fullRunnerStatus: 'failed', reports, traceAudit, baselineInput: before.input, fixedInput: after.input,
     baselineWasm: before.build.artifacts[1], fixedWasm: after.build.artifacts[1],
-    scope: 'Nonnumeric HTML scrollback coercion only. Full346/322 and overall equivalence NOT PROVEN.' });
+    scope: 'Four nonnumeric HTML scrollback cases repaired. Complete runner remains failed81/82 due inherited ANSI error messages needing498; no filtering or498 replay. Full346/322 and overall equivalence NOT PROVEN.' });
   const files = [];
   async function walk(relative) {
     for (const entry of await readdir(join(root, relative), { withFileTypes: true })) {
@@ -161,4 +194,4 @@ if (mode === 'audit') {
     sources: await artifactIdentity(root, [...sources, 'scripts/serialize-browser-check.mjs', 'scripts/serialize-browser-cases.mjs']),
     artifacts: await artifactIdentity(root, files.sort()) });
 }
-console.log(`serialize-html-coercion ${mode} passed`);
+console.log(`serialize-html-coercion ${mode} scoped checks passed; see raw reports for retained failures`);
