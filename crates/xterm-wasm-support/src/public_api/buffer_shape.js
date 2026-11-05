@@ -12,7 +12,7 @@ function expose(value, fields) {
   return value;
 }
 export function shapeBufferLine(value) {
-  return expose(value, ['_line']);
+  return expose(value, ['_combined', '_extendedAttrs', '_data', 'length', '_isWrapped']);
 }
 export function shapeBufferCell(value) {
   return expose(value, ['fg', 'bg', 'extended', 'content', 'combinedData']);

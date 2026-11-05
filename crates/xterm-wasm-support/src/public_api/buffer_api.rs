@@ -200,10 +200,22 @@ pub struct WebBufferLine {
 }
 #[wasm_bindgen(js_class = BufferLine)]
 impl WebBufferLine {
-    /// Read-only capture of packed row data, strings and extended attributes.
-    #[wasm_bindgen(getter, js_name = _line)]
-    pub fn snapshot(&self) -> Result<JsValue, JsValue> {
-        line_snapshot::snapshot(&self.native)
+    /// Copies packed row storage without exporting a mutable WASM memory view.
+    #[wasm_bindgen(getter, js_name = _data)]
+    pub fn packed_data(&self) -> Result<js_sys::Uint32Array, JsValue> {
+        line_snapshot::data(&self.native)
+    }
+    #[wasm_bindgen(getter, js_name = _combined)]
+    pub fn combined_strings(&self) -> Result<js_sys::Object, JsValue> {
+        line_snapshot::combined(&self.native)
+    }
+    #[wasm_bindgen(getter, js_name = _extendedAttrs)]
+    pub fn extended_attributes(&self) -> Result<js_sys::Object, JsValue> {
+        line_snapshot::extended(&self.native)
+    }
+    #[wasm_bindgen(getter, js_name = _isWrapped)]
+    pub fn raw_wrapped(&self) -> Result<bool, JsValue> {
+        self.is_wrapped()
     }
     #[wasm_bindgen(getter, js_name = isWrapped)]
     pub fn is_wrapped(&self) -> Result<bool, JsValue> {

@@ -11,12 +11,13 @@ function snapshot(fields, values) {
   return new Snapshot();
 }
 test('line enumeration exposes actual packed state instead of an address or empty object', () => {
-  const packed = { _data: new Uint32Array([1, 2, 3]), length: 1 };
-  const line = shapeBufferLine(snapshot(['_line'], { _line: packed }));
-  assert.deepEqual(Object.keys(line), ['_line']);
-  assert.deepEqual(JSON.parse(JSON.stringify(line)), { _line: { _data: { 0: 1, 1: 2, 2: 3 }, length: 1 } });
-  line._line = { _data: new Uint32Array([4, 5, 6]), length: 1 };
-  assert.equal(line._line._data[0], 4);
+  const fields = ['_combined', '_extendedAttrs', '_data', 'length', '_isWrapped'];
+  const packed = { _combined: {}, _extendedAttrs: {}, _data: new Uint32Array([1, 2, 3]), length: 1, _isWrapped: false };
+  const line = shapeBufferLine(snapshot(fields, packed));
+  assert.deepEqual(Object.keys(line), fields);
+  assert.deepEqual(JSON.parse(JSON.stringify(line)), { ...packed, _data: { 0: 1, 1: 2, 2: 3 } });
+  line._data = new Uint32Array([4, 5, 6]);
+  assert.equal(line._data[0], 4);
 });
 test('cell enumeration reads live fields in source order, never the internal pointer', () => {
   const fields = ['fg', 'bg', 'extended', 'content', 'combinedData'];
