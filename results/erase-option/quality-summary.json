@@ -1,0 +1,212 @@
+{
+  "sourceRevision": "e0093295",
+  "rustupToolchain": "1.85.1-x86_64-pc-windows-msvc",
+  "commands": [
+    {
+      "name": "workspace-fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "status": 1,
+      "error": null,
+      "milliseconds": 154,
+      "summaries": 0,
+      "testCounts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "core-fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "-p",
+        "xterm-core",
+        "--",
+        "--check"
+      ],
+      "status": 0,
+      "error": null,
+      "milliseconds": 4043,
+      "summaries": 0,
+      "testCounts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "native-workspace-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "-j2",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "status": 0,
+      "error": null,
+      "milliseconds": 50397,
+      "summaries": 0,
+      "testCounts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "native-workspace-tests",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "-j2"
+      ],
+      "status": 0,
+      "error": null,
+      "milliseconds": 331490,
+      "summaries": 498,
+      "testCounts": [
+        2189,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "workspace-doctests",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--workspace",
+        "--doc",
+        "--all-features",
+        "-j2"
+      ],
+      "status": 0,
+      "error": null,
+      "milliseconds": 1970,
+      "summaries": 5,
+      "testCounts": [
+        2,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "wasm-workspace-check",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "--workspace",
+        "--lib",
+        "--all-features",
+        "--target",
+        "wasm32-unknown-unknown",
+        "-j2"
+      ],
+      "status": 0,
+      "error": null,
+      "milliseconds": 45226,
+      "summaries": 0,
+      "testCounts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "wasm-workspace-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--workspace",
+        "--lib",
+        "--all-features",
+        "--target",
+        "wasm32-unknown-unknown",
+        "-j2",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "status": 0
+    },
+    {
+      "name": "fmt-xterm-addons",
+      "command": [
+        "cargo",
+        "fmt",
+        "-p",
+        "xterm-addons",
+        "--",
+        "--check"
+      ],
+      "status": 0
+    },
+    {
+      "name": "fmt-xterm-font-addons",
+      "command": [
+        "cargo",
+        "fmt",
+        "-p",
+        "xterm-font-addons",
+        "--",
+        "--check"
+      ],
+      "status": 0
+    },
+    {
+      "name": "fmt-xterm-web",
+      "command": [
+        "cargo",
+        "fmt",
+        "-p",
+        "xterm-web",
+        "--",
+        "--check"
+      ],
+      "status": 0
+    },
+    {
+      "name": "fmt-xterm-wasm-support",
+      "command": [
+        "cargo",
+        "fmt",
+        "-p",
+        "xterm-wasm-support",
+        "--",
+        "--check"
+      ],
+      "status": 0
+    }
+  ]
+}

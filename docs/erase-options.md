@@ -23,8 +23,16 @@ The comparison includes both buffers and every cell's text, width and attributes
 
 ## Verification status
 
-Base main is `e64f4870`. Raw logs and receipts are under `results/erase-option/`.
+Initial inspection used main `e64f4870`. Before compilation, the owned branch rebased cleanly onto integrated main `1106d480`. That integration did not change `csi_erase.rs`. The tested source revision is `e0093295`, with the production change in `3f84b373`. Later commits retain documentation, evidence and review only. Raw logs and receipts are under `results/erase-option/`.
 
-Source generation and non-generating replay each pass all 396 cases and preserve all 776 original hashes before and after. Native execution, negative controls and quality checks are pending while waiting for the team's compiler allocation. No native pass is claimed yet.
+- Source generation, non-generating replay and final replay pass all 396 cases and preserve all 776 original hashes before and after each run.
+- Native execution passes all 396 cases in one test function. The pinned live executable also passes a direct rerun. `source-pins.json` records ten exact source/build inputs and the live binary hash before cleanup.
+- Restoring the old production file from `e64f4870` fails 108 runtime cases. A borrow-free control that captures the row count before the getter fails 24. Both controls restore the exact fixed file in `finally`, check its hash, then pass the full 396-case fixed rerun. `negative-summary.json` records variant, exit status, mismatch count and restored hashes. Neither negative is a compile failure.
+- Native Windows MSVC Rust 1.85.1 workspace all-target/all-feature tests pass 2,189 tests across 498 result summaries, with zero failed, ignored or filtered tests. Workspace all-feature doctests pass two tests across five summaries.
+- Strict native workspace all-target/all-feature Clippy passes. WASM workspace all-feature library check and strict Clippy pass. WASM compilation is not browser execution.
+- Exact `cargo fmt --all -- --check` fails with Windows OS error 206. All five packages pass individually through `cargo fmt -p PACKAGE -- --check`, covering the same workspace members without the oversized aggregate invocation. The exact aggregate command remains a recorded failure, not a green gate.
+- Workspace tests regenerate three old result reports. Their changes were inspected, summarized in `generated-effects.json` and restored to their exact baseline hashes. The separately retained buffer summary reports 73 passing traces and 862 snapshots. No unrelated source or reference was changed.
+
+The only pre-test adjustment changed empty-event TSV encoding to `-`, retaining the same empty event assertion. It avoids trailing tabs flagged by `git diff --check`. No assertion was dropped or weakened. The compiler allocation was released after the checks. Independent review may use the already built, pinned binary and source replay without starting another compiler job.
 
 These cases are finite, deterministic, source-derived regressions. They are not randomized coverage, a complete original InputHandler suite, or browser binding evidence. No Linux/macOS runtime, CI, release/performance/size comparison or full browser/original-suite matrix has run for this task. Full equivalence remains NOT PROVEN.
