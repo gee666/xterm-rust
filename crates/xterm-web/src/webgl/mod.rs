@@ -29,6 +29,9 @@ pub mod glyphs;
 pub mod math;
 pub mod model;
 pub mod rectangles;
+pub mod renderer_frame;
+pub mod renderer_types;
+pub mod renderer_update;
 #[cfg(target_arch = "wasm32")]
 pub mod texture_atlas;
 pub mod typed_array;

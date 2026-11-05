@@ -40,7 +40,7 @@ function run(name,overrides={}) {
   const cell=new AttributeData();cell.bg=c.bg;cell.fg=c.fg;cell.extended.ext=c.ext;cell.extended.urlId=c.url;cell.getCode=()=>c.code;
   let error=null;
   try{resolver.resolve(cell,numeric(c.x),numeric(c.y),numeric(c.cw),numeric(c.ch));}catch(e){error=e.name;}
-  cases.push({...c,expected:{bg:resolver.result.bg>>>0,fg:resolver.result.fg>>>0,ext:resolver.result.ext>>>0},error});
+  cases.push({...c,expected:{bg:resolver.result.bg>>>0,fg:resolver.result.fg>>>0,ext:resolver.result.ext>>>0},numbers:[resolver.result.bg,resolver.result.fg,resolver.result.ext],error});
 }
 const deco=(bg,fg,top=false)=>({bg,fg,top});
 const layers=[[],[deco(0x12345680,null)],[deco(null,0xabcdef80)],[deco(0x123456ff,0xabcdef01)],

@@ -1,0 +1,212 @@
+{
+  "task": 449,
+  "base": "3aa04692a409bc147670d7c61a9e2ac37b5ea9f8",
+  "inherited441": [
+    "6424f42c",
+    "9e4761b3",
+    "a07db266"
+  ],
+  "scope": "Typed incremental model/frame engine. Public browser addon, live raw host phases and full suites remain306. Full equivalence NOT PROVEN.",
+  "tools": {
+    "os": "win32",
+    "arch": "x64",
+    "node": "v24.15.0",
+    "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+    "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)"
+  },
+  "referenceIntegrity": {
+    "checked": 776,
+    "changed": 0
+  },
+  "sourceImports": {
+    "webgl-renderer": 35,
+    "webgl-cell-colors": 7
+  },
+  "renderer": {
+    "cases": 162,
+    "steps": 455,
+    "seed": "0x54b7d329",
+    "seededCases": 128,
+    "injectedErrors": 4,
+    "nativeTests": 2
+  },
+  "colors": {
+    "cases": 2956,
+    "repetitions": 2,
+    "nativeTests": 2
+  },
+  "gates": {
+    "nativeDefault": {
+      "binaries": 7,
+      "passed": 62,
+      "failed": 0,
+      "ignored": 0,
+      "filtered": 0
+    },
+    "nativeAllFeatures": {
+      "binaries": 7,
+      "passed": 62,
+      "failed": 0,
+      "ignored": 0,
+      "filtered": 0
+    },
+    "release": {
+      "binaries": 2,
+      "passed": 4,
+      "failed": 0
+    },
+    "clippyNative": "PASS lib+renderer/color tests, all features, -D warnings",
+    "clippyWasm": "PASS lib+renderer/color tests, all features, -D warnings; not browser execution",
+    "negative": "Real unsigned-cache mutant:1PASS1FAIL, finally restored and hash-verified; fresh default/release PASS",
+    "workspaceFmt": "FAIL Windows OS206; exact receipt retained",
+    "memberWebFmt": "PASS; does not replace full-workspace gate",
+    "browser": "UNRUN",
+    "fullWorkspaceTests": "UNRUN",
+    "fullWorkspaceClippy": "UNRUN",
+    "linuxNative": "UNRUN",
+    "macosNative": "UNRUN",
+    "originalFullWebGLSuites": "UNRUN"
+  },
+  "commands": [
+    "SOURCE_ROOT=<unchanged-reference> node scripts/webgl-renderer-oracle.mjs",
+    "SOURCE_ROOT=<unchanged-reference> node scripts/webgl-cell-color-oracle.mjs",
+    "cargo test -j2 -p xterm-web --test webgl_renderer --test webgl_cell_colors --test webgl_glyphs --test webgl_rectangles --test webgl --test webgl_atlas_colors --test webgl_atlas_pixels [--all-features]",
+    "cargo test -j2 -p xterm-web --test webgl_renderer --test webgl_cell_colors --release",
+    "cargo clippy -j2 -p xterm-web --lib --test webgl_renderer --test webgl_cell_colors --all-features -- -D warnings",
+    "cargo clippy -j2 -p xterm-web --target wasm32-unknown-unknown --lib --test webgl_renderer --test webgl_cell_colors --all-features -- -D warnings",
+    "cargo fmt --all -- --check",
+    "cargo fmt -p xterm-web -- --check"
+  ],
+  "pins": [
+    {
+      "path": "crates/xterm-web/src/webgl/cell_colors.rs",
+      "bytes": 8861,
+      "sha256": "3eb09c970f7daa9b767f3f6c93c841e7d02396163a6c7fc14a92365ebd5b58cf"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/mod.rs",
+      "bytes": 1276,
+      "sha256": "e2c931e7f4ecba35ab195ce063aa08e55f9ea366770eab5e574af6865789ab11"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/renderer_types.rs",
+      "bytes": 4125,
+      "sha256": "648eb2b0004b03aa1fbac8defd36a57d32c52c7f436468cc9cbd5260dc52a3f2"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/renderer_update.rs",
+      "bytes": 12445,
+      "sha256": "617b7a8dcf33c80ae6b56bf1665cdf4cce1c800a815c405382229aa7e189a8dd"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/renderer_frame.rs",
+      "bytes": 3243,
+      "sha256": "fb3855714eee6a741b2e5257c2c371d82c77aede34152f85739be297c487af0a"
+    },
+    {
+      "path": "crates/xterm-web/tests/webgl_renderer.rs",
+      "bytes": 6879,
+      "sha256": "a1977297e720ffa6b94bde4e51b772bf40082ae6278cfdfbdd926c032bd54b8b"
+    },
+    {
+      "path": "crates/xterm-web/tests/webgl_renderer_support/mod.rs",
+      "bytes": 8756,
+      "sha256": "363505a374ad8ed441246c7b4e335eddda13ff5bdb221ae85cce94b9c19a2abd"
+    },
+    {
+      "path": "crates/xterm-web/tests/webgl_cell_colors.rs",
+      "bytes": 5649,
+      "sha256": "e15437c845180455675e21e3bc04357ba9cfc9717cd1c86edc09dde0678fcc3e"
+    },
+    {
+      "path": "crates/xterm-web/tests/fixtures/webgl-renderer.json",
+      "bytes": 1704095,
+      "sha256": "d403e099d07b6ad0062f9690523c6519848e8e1e4936778b0d2962ca1c13e324"
+    },
+    {
+      "path": "crates/xterm-web/tests/fixtures/webgl-cell-colors.json",
+      "bytes": 1144885,
+      "sha256": "971327411d4ccd720d572cf1c5e3da0721c00357a105da8bddbef8caae26d2e9"
+    },
+    {
+      "path": "scripts/webgl-renderer-oracle.mjs",
+      "bytes": 11616,
+      "sha256": "2b3296ce0dc37452c17284491f65599b0751568048aa5dbd9db32e8d960ba9c1"
+    },
+    {
+      "path": "scripts/webgl-cell-color-oracle.mjs",
+      "bytes": 6162,
+      "sha256": "dc6f1c3d01c3782fd7db4a880e9032f49c93806a8441b70a8556b8ca620c7899"
+    },
+    {
+      "path": "docs/webgl-renderer-update.md",
+      "bytes": 6378,
+      "sha256": "e813401865b6d14077b3a2434422e4ae8818e8fdeecddad16b7943c2e479b618"
+    },
+    {
+      "path": ".pi/swarm/skills/webgl-renderer-check/SKILL.md",
+      "bytes": 2206,
+      "sha256": "875f51a92914808a6c989a6cd8c37b096fec23b516eb549e1f2e95bc5b5ad1c1"
+    },
+    {
+      "path": "results/webgl-renderer/clippy-native.log",
+      "bytes": 144,
+      "sha256": "272ab70336379dba3f478a4fbb115ae3e5ed40ad434a635b486de73b0b95a5a0"
+    },
+    {
+      "path": "results/webgl-renderer/clippy-wasm.log",
+      "bytes": 144,
+      "sha256": "79763a964708cb962a18d5d2dc1217edf9279c3ce1eb280c8358a47a9537f8fc"
+    },
+    {
+      "path": "results/webgl-renderer/color-oracle.log",
+      "bytes": 132,
+      "sha256": "8745356c849d6d5c94457e864798201788b189afd2919e5092fe846dc66f56e4"
+    },
+    {
+      "path": "results/webgl-renderer/exact-fmt.log",
+      "bytes": 817,
+      "sha256": "a3c64adc493a218a5a8332dfc60b9e9fd0cf455d8215931a5888f9bc84a29c70"
+    },
+    {
+      "path": "results/webgl-renderer/member-fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/webgl-renderer/native-all-features.log",
+      "bytes": 5663,
+      "sha256": "24bf72ff41c7b3220d66456f58323e6f63ce652278bc7652f6a9c38b77f50f81"
+    },
+    {
+      "path": "results/webgl-renderer/native-default.log",
+      "bytes": 5663,
+      "sha256": "9276c7dc8145d7d510715827a4599500c96102fd220ee36e695c492399dbf213"
+    },
+    {
+      "path": "results/webgl-renderer/oracle.log",
+      "bytes": 111,
+      "sha256": "9315399f9ceed9c18a11ec2baee2dc5fc0c789c8ccc86730ff2de9bd7010661b"
+    },
+    {
+      "path": "results/webgl-renderer/release.log",
+      "bytes": 1484,
+      "sha256": "a8afbe27752ec47acca4156e716c55e00d0dde45fd3afae4c4cd90d217edc80b"
+    },
+    {
+      "path": "results/webgl-renderer/unsigned-cache-negative.json",
+      "bytes": 345,
+      "sha256": "2d2043bc390eaffee950bf2b6fdc107bdbf24213a4c60f6cc58a89714d0c6cd8"
+    },
+    {
+      "path": "results/webgl-renderer/unsigned-cache-negative.log",
+      "bytes": 6618,
+      "sha256": "e2176c30121c391210814af053937fc1cf977298849ae90c6b11368e80603c71"
+    },
+    {
+      "path": "results/webgl-renderer/unsigned-cache-negative.rs.txt",
+      "bytes": 12476,
+      "sha256": "eadb5dc1458aa1b7d95b429263fd373c2febe35b7e4c7aa9fce55e71210a7eff"
+    }
+  ]
+}

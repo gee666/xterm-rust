@@ -98,6 +98,11 @@ fn unchanged_source_cell_colors_and_variants() {
                 errors += 1;
             }
             assert_eq!(
+                json!(resolver.result_numbers()),
+                case["numbers"],
+                "{name} numeric representation"
+            );
+            assert_eq!(
                 json!({"bg":resolver.result.bg,"fg":resolver.result.fg,"ext":resolver.result.ext}),
                 case["expected"],
                 "{name}"

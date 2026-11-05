@@ -37,8 +37,32 @@ pub struct CellColorContext {
 #[derive(Default)]
 pub struct CellColorResolver {
     pub result: CellColors,
+    signed: [bool; 3],
 }
 impl CellColorResolver {
+    /// JavaScript keeps unsigned BufferLine words until a bitwise expression
+    /// produces a signed number. Identical bits can therefore miss a Uint32Array
+    /// cache comparison or compare unequal to the previous background.
+    pub fn result_numbers(&self) -> [i64; 3] {
+        let words = [self.result.bg, self.result.fg, self.result.ext];
+        std::array::from_fn(|i| {
+            if self.signed[i] {
+                i64::from(words[i] as i32)
+            } else {
+                i64::from(words[i])
+            }
+        })
+    }
+    pub fn override_cursor(&mut self, accent: u32, background: u32) {
+        self.result.fg = a::CM_RGB | ((accent >> 8) & a::RGB_MASK);
+        self.result.bg = a::CM_RGB | ((background >> 8) & a::RGB_MASK);
+        self.signed[0] = true;
+        self.signed[1] = true;
+    }
+    pub fn hide_foreground(&mut self) {
+        self.result.fg |= fg::INVISIBLE;
+        self.signed[1] = true;
+    }
     pub fn resolve(
         &mut self,
         cell: &AttributeData,
@@ -47,6 +71,11 @@ impl CellColorResolver {
         colors: &ColorSet,
         decorations: &[RowDecoration],
     ) -> Result<(), AtlasColorError> {
+        self.signed = [
+            false,
+            false,
+            cell.bg & bg::HAS_EXTENDED != 0 && cell.extended.url_id() != 0,
+        ];
         self.result = CellColors {
             bg: cell.bg,
             fg: cell.fg,
@@ -63,7 +92,7 @@ impl CellColorResolver {
             overrides.selection(cell, code, context.focused, colors)?;
         }
         overrides.decorations(decorations, true);
-        self.result = overrides.finish(cell, context.selected, colors, self.result);
+        (self.result, self.signed) = overrides.finish(cell, context.selected, colors, self.result);
         self.result.ext = (self.result.ext & !ext_flags::VARIANT_OFFSET)
             | ((to_uint32(variant) << 29) & ext_flags::VARIANT_OFFSET);
         Ok(())
@@ -134,7 +163,7 @@ impl Overrides {
         selected: bool,
         colors: &ColorSet,
         mut result: CellColors,
-    ) -> CellColors {
+    ) -> (CellColors, [bool; 3]) {
         let mut background = self.bg.map(|value| {
             let flags = cell.bg & !a::RGB_MASK;
             (if selected { flags & !bg::DIM } else { flags }) | value | a::CM_RGB
@@ -160,9 +189,10 @@ impl Overrides {
                 background = Some((cell.bg & !(a::RGB_MASK | a::CM_MASK)) | color);
             }
         }
+        let signed = [background.is_some(), foreground.is_some(), true];
         result.bg = background.unwrap_or(result.bg);
         result.fg = foreground.unwrap_or(result.fg);
-        result
+        (result, signed)
     }
 }
 
