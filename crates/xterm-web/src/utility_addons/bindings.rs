@@ -2,8 +2,7 @@
 //! Callable attach and base64 exports over the Rust-backed browser Terminal.
 pub use super::clipboard_bindings::ClipboardAddon;
 use super::{attach_terminal::BrowserAttachTerminal, socket::BrowserSocket};
-use crate::{terminal::Terminal, utf16::to_js_string};
-use js_sys::JsString;
+use crate::terminal::Terminal;
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::prelude::*;
 use xterm_addons::{attach, native_utility::NativeUtilityTerminal};
@@ -62,8 +61,8 @@ impl Base64 {
         super::clipboard_bindings::encode_default(&value)
     }
     #[wasm_bindgen(js_name=decodeText)]
-    pub fn decode_text(&self, value: JsValue) -> Result<JsString, JsValue> {
-        super::clipboard_bindings::decode_default(&value).map(|units| to_js_string(&units))
+    pub fn decode_text(&self, value: JsValue) -> Result<JsValue, JsValue> {
+        super::clipboard_bindings::decode_default(&value)
     }
 }
 impl Default for Base64 {

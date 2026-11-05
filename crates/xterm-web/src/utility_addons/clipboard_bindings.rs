@@ -1,6 +1,8 @@
 // Copyright (c) 2023 The xterm.js authors. All rights reserved. MIT license.
 //! Raw JS values stay at the clipboard provider/codec FFI boundary. Rust owns
-//! OSC parsing, base64, reply formatting and asynchronous parser continuation.
+//! OSC parsing, reply formatting and asynchronous parser continuation. Browser
+//! codec calls use standard host UTF-8/base64 operations to retain BufferSource
+//! acceptance, mutable intrinsic hooks and source exception boundaries.
 use crate::{
     terminal::Terminal,
     utf16::{from_js_string, to_js_string},
@@ -24,7 +26,8 @@ export function clipboardEncode(codec, value) { return codec.encodeText(value); 
 export function clipboardDecode(codec, value) { return codec.decodeText(value); }
 export function clipboardString(value) { return `${value}`; }
 export function clipboardEncoderInput(value) { return value === undefined ? '' : `${value}`; }
-export function clipboardFromBase64(value) { return Uint8Array.fromBase64(value); }
+export function clipboardDecodeModern(value) { return new TextDecoder().decode(Uint8Array.fromBase64(value)); }
+export function clipboardDecodeBytes(bytes) { return new TextDecoder().decode(bytes); }
 export function clipboardAtob(value) { return atob(value); }
 export function clipboardBtoa(value) { return btoa(value); }
 export function clipboardPromise(value) { return value instanceof Promise; }
@@ -44,8 +47,10 @@ extern "C" {
     fn abstract_string(value: &JsValue) -> Result<JsString, JsValue>;
     #[wasm_bindgen(catch,js_name=clipboardEncoderInput)]
     pub fn encoder_input(value: &JsValue) -> Result<JsString, JsValue>;
-    #[wasm_bindgen(catch,js_name=clipboardFromBase64)]
-    fn from_base64(value: &JsValue) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch,js_name=clipboardDecodeModern)]
+    fn decode_modern(value: &JsValue) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch,js_name=clipboardDecodeBytes)]
+    fn decode_bytes(value: &Uint8Array) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch,js_name=clipboardAtob)]
     fn atob(value: &JsValue) -> Result<JsString, JsValue>;
     #[wasm_bindgen(catch,js_name=clipboardBtoa)]
@@ -76,31 +81,26 @@ pub fn encode_default(value: &JsValue) -> Result<JsValue, JsValue> {
     btoa(&to_js_string(&binary))
 }
 
-pub fn decode_default(value: &JsValue) -> Result<Vec<u16>, JsValue> {
-    // The source checks this property outside its inner try/catch, then reads it
-    // again for invocation. Keep host capability/getter errors at those points.
+pub fn decode_default(value: &JsValue) -> Result<JsValue, JsValue> {
+    // Only this initial capability lookup is outside the source try/catch.
     let constructor = Reflect::get(&js_sys::global(), &"Uint8Array".into())?;
-    let modern = Reflect::get(&constructor, &"fromBase64".into())?;
-    let bytes = if modern.is_undefined() {
-        match atob(value) {
-            Ok(text) => from_js_string(&text)
+    let modern = super::js_property::get(&constructor, "fromBase64")?;
+    let decoded = if modern.is_undefined() {
+        atob(value).and_then(|text| {
+            let bytes: Vec<u8> = from_js_string(&text)
                 .into_iter()
                 .map(|unit| unit as u8)
-                .collect(),
-            Err(_) => return Ok(Vec::new()),
-        }
+                .collect();
+            decode_bytes(&Uint8Array::from(bytes.as_slice()))
+        })
     } else {
-        match from_base64(value).and_then(|value| value.dyn_into::<Uint8Array>()) {
-            Ok(bytes) => bytes.to_vec(),
-            Err(_) => return Ok(Vec::new()),
-        }
+        // The host expression constructs the decoder and reads decode before
+        // evaluating fromBase64. Do not downcast its raw BufferSource result:
+        // TextDecoder accepts ArrayBuffer, DataView and other typed views too.
+        decode_modern(value)
     };
-    let text = String::from_utf8_lossy(&bytes);
-    Ok(text
-        .strip_prefix('\u{feff}')
-        .unwrap_or(&text)
-        .encode_utf16()
-        .collect())
+    // The source catches decoder/conversion failures, but not raw return values.
+    Ok(decoded.unwrap_or_else(|_| JsValue::from_str("")))
 }
 #[wasm_bindgen(js_name=BrowserClipboardProvider)]
 #[derive(Default)]

@@ -1,0 +1,248 @@
+[
+  {
+    "name": "modern BufferSource Uint8Array",
+    "log": [],
+    "result": {
+      "type": "string",
+      "value": "A€�"
+    }
+  },
+  {
+    "name": "modern BufferSource ArrayBuffer",
+    "log": [],
+    "result": {
+      "type": "string",
+      "value": "A€"
+    }
+  },
+  {
+    "name": "modern BufferSource DataView offset",
+    "log": [],
+    "result": {
+      "type": "string",
+      "value": "A€"
+    }
+  },
+  {
+    "name": "modern BufferSource Uint16Array bytes",
+    "log": [],
+    "result": {
+      "type": "string",
+      "value": "ABCD"
+    }
+  },
+  {
+    "name": "modern BufferSource empty undefined",
+    "log": [],
+    "result": {
+      "type": "string",
+      "value": ""
+    }
+  },
+  {
+    "name": "modern BufferSource invalid array-like",
+    "log": [],
+    "result": {
+      "type": "string",
+      "value": ""
+    }
+  },
+  {
+    "name": "modern BufferSource invalid null",
+    "log": [],
+    "result": {
+      "type": "string",
+      "value": ""
+    }
+  },
+  {
+    "name": "modern host order and receiver",
+    "log": [
+      "fromBase64 get",
+      {
+        "construct": true,
+        "args": 0
+      },
+      "decode get",
+      "fromBase64 get",
+      {
+        "fromReceiver": true,
+        "args": [
+          "QQ=="
+        ]
+      },
+      {
+        "decodeReceiver": true,
+        "args": 1,
+        "bytes": [
+          65
+        ]
+      }
+    ],
+    "result": {
+      "type": "string",
+      "value": "host"
+    }
+  },
+  {
+    "name": "modern raw decoder object",
+    "log": [],
+    "result": {
+      "marker": true
+    }
+  },
+  {
+    "name": "modern raw decoder undefined",
+    "log": [],
+    "result": {
+      "type": "undefined",
+      "value": null
+    }
+  },
+  {
+    "name": "modern raw decoder null",
+    "log": [],
+    "result": {
+      "type": "object",
+      "value": null
+    }
+  },
+  {
+    "name": "modern raw decoder number",
+    "log": [],
+    "result": {
+      "type": "number",
+      "value": 42
+    }
+  },
+  {
+    "name": "outer capability getter propagates",
+    "log": [],
+    "result": {
+      "thrownMarker": true,
+      "type": "marker"
+    }
+  },
+  {
+    "name": "inner capability getter caught after decoder getter",
+    "log": [
+      1,
+      "construct",
+      "decode",
+      2
+    ],
+    "result": {
+      "type": "string",
+      "value": ""
+    }
+  },
+  {
+    "name": "constructor exception caught before modern invocation",
+    "log": [
+      "construct"
+    ],
+    "result": {
+      "type": "string",
+      "value": ""
+    }
+  },
+  {
+    "name": "decode getter exception prevents modern invocation",
+    "log": [
+      "decode"
+    ],
+    "result": {
+      "type": "string",
+      "value": ""
+    }
+  },
+  {
+    "name": "noncallable decoder still evaluates argument",
+    "log": [
+      "argument"
+    ],
+    "result": {
+      "type": "string",
+      "value": ""
+    }
+  },
+  {
+    "name": "modern exception caught",
+    "log": [],
+    "result": {
+      "type": "string",
+      "value": ""
+    }
+  },
+  {
+    "name": "modern decoder exception caught",
+    "log": [],
+    "result": {
+      "type": "string",
+      "value": ""
+    }
+  },
+  {
+    "name": "modern input remains raw",
+    "log": [
+      "symbol"
+    ],
+    "result": {
+      "type": "string",
+      "value": "A"
+    }
+  },
+  {
+    "name": "fallback native replacement and BOM",
+    "log": [],
+    "result": {
+      "type": "string",
+      "value": "A�"
+    }
+  },
+  {
+    "name": "fallback decode receiver raw return and order",
+    "log": [
+      "capability",
+      [
+        "atob",
+        "QQ=="
+      ],
+      "construct",
+      "get",
+      {
+        "receiver": true,
+        "bytes": [
+          65
+        ]
+      }
+    ],
+    "result": {
+      "marker": true
+    }
+  },
+  {
+    "name": "fallback constructor exception caught",
+    "log": [],
+    "result": {
+      "type": "string",
+      "value": ""
+    }
+  },
+  {
+    "name": "fallback decoder exception caught",
+    "log": [],
+    "result": {
+      "type": "string",
+      "value": ""
+    }
+  },
+  {
+    "name": "fallback standard ASCII",
+    "log": [],
+    "result": {
+      "type": "string",
+      "value": "A"
+    }
+  }
+]
