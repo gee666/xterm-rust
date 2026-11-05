@@ -82,6 +82,21 @@ A `2^53` dimension case prevents replacing source Math.round arithmetic with a
 similar-looking expression that changes large-number behavior. These fixes did
 not change source assertions or the pixel equality requirement.
 
+## Independent review and cleanup
+
+Task387 was independently accepted at `e9adcb9`. The reviewer reran the focused
+native tests, exact full formatting and warning-denied native/WASM Clippy,
+verified 28 source/prelude/artifact hashes and all 776 reference files, and checked
+the retained thirty browser executions without launching a duplicate matrix.
+No reviewed source changed afterward.
+
+`results/custom-glyphs/cleanup-preflight.json` records 17,392 files and 3,506
+directories under the sole owned G worktree, zero links and no root-matched build
+or browser process. Source and evidence are committed before cleanup. Only the
+listed generated browser paths and owned worktree are disposable; shared
+reference dependencies were never linked or modified. Actual removal is reported
+separately in swarm post484 after it succeeds.
+
 ## Reproduction
 
 Use the existing reference Node dependencies, wasm-bindgen CLI0.2.100 and the
