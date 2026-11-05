@@ -1,0 +1,13 @@
+# Willow499 handoff
+
+Task499 ACCEPTED. Own integration picks are607e4542 then60c1a186 then the final review/cleanup receipt commit containing this file, on swarm/WillowRender. Base5088f8fd. Privatef8e22171 is accepted495f087 HTTP helper and MUST NOT be picked again. Integration belongs to309, currently Sergio. No main ref, CI, push or canonical gate action was performed by Willow.
+
+Only RenderDebouncer callback-list identity and BrowserRenderDebouncer FrameCallback Fn changed. Keep source for-of's retained old list through nested completion, live appends and error recovery. Future union with486 must preserve BOTH FrameCallback Fn499 and TimerCallback Fn486, along with477's fallible window resolver. Do not replace browser_debounce.rs wholesale. Tests/oracle/adapters/docs/skill and exact receipts are in the owned commits.
+
+Actual source178 programs and native80 tests across six executables pass. Initial/final Rust browser four scheduler tests each in Chromium/Firefox/WebKit pass, including64new+72+42 programs and real Window delivery. Retained RenderService one browser test per engine passes both phases. Old-array native3P3F, old-array browser3P1F and mutable-browser-callback3P1F controls all restore exact SHA before full final native/strict native+WASM lint/build/browser checks. Initial/final compiler-WASM/served-WASM/bindings hashes match. All five member formatting checks pass; exactaggregate cargo fmt --all remains WindowsOS206 failure.
+
+The isolated reviewer accepted without findings, independently ran178 source programs and80 pinned native tests, and verified420 generated files, six compiler-stage pins, six native executable copies, ten source pins and776 hashes in BOTH physical reference copies. Browser reports and directed negative failures were independently inspected, not relaunched after grants ended. See docs/reviews/willow499.md and results/render-callbacks.
+
+Cleanup after acceptance verified all pins and durable44rawbrowser copies, scanned14565files/2837dirs with0links/redirects/workers, then unlinked470 exact owned untracked runtime files only. Source/evidence/nativecopies/target/tmp/reference copy remain in the private worktree until the final source receipt is committed and normal git worktree remove runs. No force/blanket cleanup or original reference traversal is permitted. The final409 notification and private continuation note record confirmed normal removal and original776 post-removal hashes. No owned jobs/grants remain.
+
+Full317/318/301, all unchanged suites, full browser/demo/OS matrices, stable workspace gates, complete mapping and matched comparisons remain OPEN. Full-port equivalence is NOT PROVEN. Continue actual functionality repairs rather than replaying499 or old accepted work.
