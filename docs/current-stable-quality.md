@@ -27,3 +27,13 @@ All seven bounded checks pass against identical before/after input hash `ff2090a
 - Rust1.85.1 all-feature WASM library Clippy for core/addons, warnings denied. This is compilation only.
 
 The two full test commands include unchanged ligature graph/source fixtures, wrapped/sparse link cases, parser suspension/cancellation/error paths and all tests using the replaced polling helpers. Counts overlap and must not be added as distinct coverage. The repaired source has not yet established a passing new native three-OS CI matrix. The prior failing1.99.1 CI receipts are preserved, not overwritten or upgraded by local success.
+
+## Independent review and integration
+
+The isolated reviewer inspected all18 changed source/test files and independently reran full1.99.1 all/no-default-feature Clippy, full1.85.1 all-feature Clippy, formatting on both compilers, scoped MSRV WASM library Clippy and217 relevant native tests. All passed, with no concrete findings. Original reviewed source/evidence is preserved at `archive/Vesna16-quality-reviewed`; `independent-review.json` records the scope.
+
+Rebase onto maind88c4b9 was clean. All18 reviewed implementation/test files remained byte-equivalent. Exact full formatting and union full1.99.1 all-target/all-feature warning-denied Clippy passed before freeze.
+
+The unmodified canonical helper then integrated candidate `af047454ac338ac11c1b84784c2a84b92791894e`. Changed addons/core builds and all-target tests pass1,702 functions in263 summaries, zero failed or ignored; affected native all-target, workspace and applicable WASM library checks pass. The helper removed the private regular target. This is a default-feature merge gate, not the final all-feature/release/native-platform/browser matrix. `canonical.json` and `canonical.log` retain the exact receipt.
+
+Task368 separately observes postrepair CI run42017720988 at exact integratedaf047454. Its results must not be confused with original failing run42012763111 or the local pre-integration snapshot.
