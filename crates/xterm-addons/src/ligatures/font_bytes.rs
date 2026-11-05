@@ -110,6 +110,7 @@ pub struct FontTables<'a> {
     pub cmap: Cow<'a, [u8]>,
     pub gsub: Option<DeferredTable<'a>>,
     pub kern: Option<DeferredTable<'a>>,
+    pub meta: Option<DeferredTable<'a>>,
     pub glyph_count: Option<u16>,
 }
 impl<'a> FontTables<'a> {
@@ -139,6 +140,7 @@ impl<'a> FontTables<'a> {
         let mut cmap = None;
         let mut gsub = None;
         let mut kern = None;
+        let mut meta = None;
         let mut name = None;
         let mut tags = None;
         let mut glyph_count = None;
@@ -154,7 +156,7 @@ impl<'a> FontTables<'a> {
                 b"glyf" => glyf = true,
                 b"loca" => loca = true,
                 b"CFF " | b"CFF2" => cff = true,
-                b"name" | b"GSUB" | b"hmtx" | b"kern" => {
+                b"name" | b"GSUB" | b"hmtx" | b"kern" | b"meta" => {
                     // These tables are deferred by the source constructor. Select
                     // the final descriptor without touching earlier data, even
                     // when its offset or compressed payload is invalid.
@@ -162,6 +164,7 @@ impl<'a> FontTables<'a> {
                         b"name" => name = Some(record),
                         b"GSUB" => gsub = Some(record),
                         b"kern" => kern = Some(record),
+                        b"meta" => meta = Some(record),
                         _ => hmtx = Some(record),
                     }
                     continue;
@@ -220,6 +223,11 @@ impl<'a> FontTables<'a> {
                 woff,
             }),
             kern: kern.map(|record| DeferredTable {
+                reader,
+                record,
+                woff,
+            }),
+            meta: meta.map(|record| DeferredTable {
                 reader,
                 record,
                 woff,

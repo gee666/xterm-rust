@@ -24,13 +24,16 @@ fn unchanged_source_metadata_constructor_outcomes() {
         let bytes = construct(case);
         let actual = Font::load_buffer(&bytes, FontOptions::default());
         let expected = case["outcome"]["status"] == "ok";
-        if case["tag"] == "kern" {
-            assert_eq!(
-                actual.as_ref().err(),
-                corpus::kern_error(case).as_ref(),
-                "{}",
-                case["name"]
-            );
+        if case["tag"] == "kern" || case["tag"] == "meta" {
+            let expected_error = corpus::constructor_error(case);
+            if actual.as_ref().err() != expected_error.as_ref() {
+                failures.push(format!(
+                    "{}: expected {expected_error:?}, got {:?}",
+                    case["name"],
+                    actual.err()
+                ));
+                continue;
+            }
         }
         if actual.is_ok() != expected {
             failures.push(format!(

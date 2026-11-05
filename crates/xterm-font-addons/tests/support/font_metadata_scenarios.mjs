@@ -1,5 +1,8 @@
 // Shared source/Rust addon boundary input. This host records callbacks only.
 export function withKern(bytes, payload) {
+  return withTable(bytes, 0x6b65726e, payload);
+}
+function withTable(bytes, tag, payload) {
   // Insert a directory entry without changing any original table payload.
   const original = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
   const count = original.getUint16(4), directoryEnd = 12 + count * 16;
@@ -9,7 +12,7 @@ export function withKern(bytes, payload) {
   const view = new DataView(bad.buffer);
   view.setUint16(4, count + 1);
   for (let i = 0; i < count; i++)view.setUint32(12 + i * 16 + 8, original.getUint32(12 + i * 16 + 8) + 16);
-  view.setUint32(directoryEnd, 0x6b65726e);
+  view.setUint32(directoryEnd, tag);
   view.setUint32(directoryEnd + 8, bytes.length + 16);
   view.setUint32(directoryEnd + 12, payload.length);
   bad.set(payload, bytes.length + 16);
@@ -22,6 +25,7 @@ export async function metadataRejectionScenarios(create, bytes) {
     if (view.getUint32(record) === 0x68656164) { bad[view.getUint32(record + 8) + 12] ^= 1; break; }
   }
   const badKern = withKern(bytes, new Uint8Array([0, 2]));
+  const badMeta = withTable(bytes, 0x6d657461, new Uint8Array([0, 0, 0, 2]));
   const nav = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
   const windowDescriptor = Object.getOwnPropertyDescriptor(globalThis, 'window');
   const owner = globalThis.window ?? {};
@@ -36,7 +40,7 @@ export async function metadataRejectionScenarios(create, bytes) {
   // The source catalog is cached for the whole module. Both cases must share
   // one catalog, while different family keys isolate their load-result caches.
   Object.defineProperty(owner, 'queryLocalFonts', { configurable: true, value: async () =>
-    [['BadMetadata', bad], ['GoodMetadata', bytes], ['BadKern', badKern], ['GoodKern', bytes]].map(([family, data]) => ({ family, async blob() {
+    [['BadMetadata', bad], ['GoodMetadata', bytes], ['BadKern', badKern], ['GoodKern', bytes], ['BadMeta', badMeta], ['GoodMeta', bytes]].map(([family, data]) => ({ family, async blob() {
       reads++;
       return { async arrayBuffer() { return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength); } };
     } })) });
@@ -58,7 +62,7 @@ export async function metadataRejectionScenarios(create, bytes) {
   try {
     family = 'BadMetadata';
     addon.activate(term);
-    return { metadata: await scenario('BadMetadata', 'GoodMetadata'), kern: await scenario('BadKern', 'GoodKern') };
+    return { metadata: await scenario('BadMetadata', 'GoodMetadata'), kern: await scenario('BadKern', 'GoodKern'), meta: await scenario('BadMeta', 'GoodMeta') };
   } finally {
     addon.dispose();
     if (nav) Object.defineProperty(globalThis, 'navigator', nav); else delete globalThis.navigator;

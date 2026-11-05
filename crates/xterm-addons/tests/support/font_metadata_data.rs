@@ -171,14 +171,21 @@ fn woff(bytes: &[u8]) -> Vec<u8> {
 
 // Native error types deliberately represent source DataView and missing-table
 // errors. Compare the actual failure cause, not merely accepted versus rejected.
-pub fn kern_error(case: &Value) -> Option<xterm_addons::ligatures::font::FontError> {
+pub fn constructor_error(case: &Value) -> Option<xterm_addons::ligatures::font::FontError> {
     use xterm_addons::ligatures::font::FontError;
     if case["outcome"]["status"] == "ok" {
         return None;
     }
+    // The native WOFF boundary uses checked zlib decompression. The source's
+    // permissive inflater turns this corrupt selected payload into a bad META
+    // version instead. Both reject loading, but the typed failure differs.
+    if case["name"] == "selected meta invalid compressed data" {
+        return Some(FontError::Compression);
+    }
     let message = case["outcome"]["message"].as_str().unwrap();
     Some(match message {
         "Offset is outside the bounds of the DataView" => FontError::Bounds,
+        "Unsupported META table version." => FontError::Invalid("Unsupported META table version."),
         "Unsupported kern sub-table version." => {
             FontError::Invalid("Unsupported kern sub-table version.")
         }
@@ -202,6 +209,6 @@ pub fn kern_error(case: &Value) -> Option<xterm_addons::ligatures::font::FontErr
                 .parse()
                 .unwrap(),
         ),
-        value => panic!("Unmapped source kern error: {value}"),
+        value => panic!("Unmapped source constructor error: {value}"),
     })
 }

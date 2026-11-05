@@ -26,7 +26,12 @@ pub fn assert_corpus() {
             Ok(_) => assert_eq!(expected, "ok", "{}", case["name"]),
             Err(FontLoadError::Font(error)) => {
                 assert_eq!(expected, "error", "{}", case["name"]);
-                assert_eq!(Some(error), corpus::kern_error(case), "{}", case["name"]);
+                assert_eq!(
+                    Some(error),
+                    corpus::constructor_error(case),
+                    "{}",
+                    case["name"]
+                );
             }
             Err(FontLoadError::Warning(error)) => {
                 assert_eq!(expected, "warning", "{}", case["name"]);

@@ -136,6 +136,30 @@ for(const compressed of [false,true]) {
 changes.push({name:'ignored first kern invalid compressed data',tag:'kern',data:Array(18).fill(0),woff:true,duplicateTable:{tag:'kern',position:'first',invalidCompression:true}});
 changes.push({name:'kern ignored directory length',tag:'kern',data:Array(18).fill(0),directoryLength:0});
 changes.push({name:'deferred GSUB ignored directory length',tag:'GSUB',data:emptyGsub,directoryLength:0});
+// META is the last deferred constructor table. Its strings are byte reads,
+// not UTF8 validation, and appl/bild payloads are deliberately never decoded.
+const emptyMeta=Buffer.alloc(16);emptyMeta.writeUInt32BE(1);
+for(const compressed of [false,true]) {
+ for(const version of [0,1,2,0xffffffff])for(let size=0;size<=17;size++) {
+  const data=Buffer.alloc(17);data.writeUInt32BE(version);
+  changes.push({name:`meta version ${version} bytes ${size} ${compressed?'WOFF':'SFNT'}`,tag:'meta',data:[...data.subarray(0,size)],woff:compressed});
+ }
+ for(const tag of ['dlng','slng','appl','bild','____'])for(const offset of [0,28,29,0xfffffff0])for(const length of [0,1,2,3]) {
+  const data=Buffer.alloc(30,0xff);emptyMeta.copy(data);data.writeUInt32BE(1,12);data.write(tag,16,4,'latin1');data.writeUInt32BE(offset,20);data.writeUInt32BE(length,24);
+  changes.push({name:`meta map ${tag} offset ${offset} length ${length} ${compressed?'WOFF':'SFNT'}`,tag:'meta',data:[...data],woff:compressed});
+ }
+ for(const count of [1,2,0xffffffff])for(const length of [16,17,27,28,39,40]) {
+  const data=Buffer.alloc(40);emptyMeta.copy(data);data.writeUInt32BE(count,12);
+  changes.push({name:`meta maps ${count} bytes ${length} ${compressed?'WOFF':'SFNT'}`,tag:'meta',data:[...data.subarray(0,length)],woff:compressed});
+ }
+ for(const position of ['first','last'])changes.push({name:`invalid ${position} meta descriptor ${compressed?'WOFF':'SFNT'}`,tag:'meta',data:[...emptyMeta],woff:compressed,duplicateTable:{tag:'meta',position}});
+ for(const tag of ['name','hmtx'])changes.push({name:`meta ${tag} missing precedes invalid version ${compressed?'WOFF':'SFNT'}`,tag:'meta',data:[0,0,0,2],remove:[tag],woff:compressed});
+ changes.push({name:`meta cmap rejection precedes invalid version ${compressed?'WOFF':'SFNT'}`,tag:'meta',data:[0,0,0,2],glyphCount:0,woff:compressed});
+ for(const tag of ['kern','GSUB'])changes.push({name:`meta ${tag} invalid descriptor precedes invalid version ${compressed?'WOFF':'SFNT'}`,tag:'meta',data:[0,0,0,2],woff:compressed,duplicateTable:{tag,position:'last'}});
+}
+changes.push({name:'ignored first meta invalid compressed data',tag:'meta',data:[...emptyMeta],woff:true,duplicateTable:{tag:'meta',position:'first',invalidCompression:true}});
+changes.push({name:'selected meta invalid compressed data',tag:'meta',data:[...emptyMeta],woff:true,duplicateTable:{tag:'meta',position:'last',invalidCompression:true}});
+changes.push({name:'meta ignored directory length',tag:'meta',data:[...emptyMeta],directoryLength:0});
 const cases=[];
 for(const change of changes) {
  let bytes=construct(change);

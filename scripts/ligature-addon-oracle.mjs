@@ -55,6 +55,7 @@ if (kernWarnings) {
   assert.deepEqual(result.metadata.rejected, {ranges:[[0,3]],reads:1,refreshes:0});
   assert.deepEqual(result.metadata.accepted, {ranges:[],reads:2,refreshes:1});
   assert.deepEqual(result.kern, result.metadata);
+  assert.deepEqual(result.meta, result.metadata);
 } else {
   assert.deepEqual(result.loading.nativeRanges, [[1, 3]]);
   assert.deepEqual(result.loading.foundTrace, [['register', 0], ['refresh', 0, 4]]);

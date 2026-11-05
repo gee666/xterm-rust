@@ -46,8 +46,8 @@ use font_bytes::FontTables;
 use font_cache::{Cache, Cached};
 pub use font_cache::{GlyphArray, LigatureData, LigatureResult, RangeArray};
 use font_cmap::Cmap;
-use font_tables::Lookup;
 pub use font_tables::{Glyph, GlyphValue};
+use font_tables::{Gsub, Lookup};
 use font_tree::{Arena, TreeId};
 pub use font_warning::{FontLoadError, FontWarning};
 use std::{cell::RefCell, collections::HashMap, rc::Rc};
@@ -105,18 +105,22 @@ impl Font {
         if let Some(table) = tables.kern {
             font_kern::validate(&table.load()?, &mut warning)?;
         }
-        Self::from_gsub(tables.gsub, cmap, options).map_err(FontLoadError::Font)
+        let gsub = tables
+            .gsub
+            .map(|table| font_gsub::parse(&table.load()?))
+            .transpose()?;
+        if let Some(table) = tables.meta {
+            font_metadata::meta(&table.load()?)?;
+        }
+        // FontImpl builds lookup trees only after opentype finishes all
+        // constructor tables. A tree error must not hide a later meta error.
+        Self::from_gsub(gsub, cmap, options).map_err(FontLoadError::Font)
     }
 
-    fn from_gsub(
-        table: Option<font_bytes::DeferredTable<'_>>,
-        cmap: Cmap,
-        options: FontOptions,
-    ) -> Result<Self, FontError> {
+    fn from_gsub(gsub: Option<Gsub>, cmap: Cmap, options: FontOptions) -> Result<Self, FontError> {
         let mut arena = Arena::default();
         let mut groups = Vec::new();
-        if let Some(table) = table {
-            let gsub = font_gsub::parse(&table.load()?)?;
+        if let Some(gsub) = gsub {
             for (lookup_index, lookup) in gsub.lookups.iter().enumerate() {
                 if !gsub.selected.contains(&lookup_index) {
                     continue;

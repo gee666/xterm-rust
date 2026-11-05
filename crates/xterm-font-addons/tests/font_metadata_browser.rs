@@ -16,13 +16,16 @@ fn source_constructor_corpus_matches_in_wasm() {
     let mut failures = Vec::new();
     for case in fixture["cases"].as_array().unwrap() {
         let actual = Font::load_buffer(&corpus::construct(case), FontOptions::default());
-        if case["tag"] == "kern" {
-            assert_eq!(
-                actual.as_ref().err(),
-                corpus::kern_error(case).as_ref(),
-                "{}",
-                case["name"]
-            );
+        if case["tag"] == "kern" || case["tag"] == "meta" {
+            let expected_error = corpus::constructor_error(case);
+            if actual.as_ref().err() != expected_error.as_ref() {
+                failures.push(format!(
+                    "{}: expected {expected_error:?}, got {:?}",
+                    case["name"],
+                    actual.err()
+                ));
+                continue;
+            }
         }
         if actual.is_ok() != (case["outcome"]["status"] == "ok") {
             failures.push(format!(

@@ -5,6 +5,9 @@ use super::font_bytes::{FontError, Reader};
 mod languages;
 const HEAD_MAGIC: u32 = 0x5f0f_3cf5;
 const STANDARD_POST_NAMES: u16 = 258;
+const META_VERSION: u32 = 1;
+const META_HEADER_SIZE: usize = 16;
+const META_MAP_SIZE: usize = 12;
 
 pub fn immediate(tag: &[u8], bytes: &[u8]) -> Result<(), FontError> {
     let table = Reader::new(bytes);
@@ -98,6 +101,32 @@ pub fn ltag(table: Reader<'_>) -> Result<usize, FontError> {
         }
     }
     Ok(count)
+}
+
+pub fn meta(bytes: &[u8]) -> Result<(), FontError> {
+    let table = Reader::new(bytes);
+    if table.u32(0)? != META_VERSION {
+        return Err(FontError::Invalid("Unsupported META table version."));
+    }
+    // Flags and the string-pool offset are read but not interpreted upstream.
+    table.u32(4)?;
+    table.u32(8)?;
+    let count = table.offset32(12)?;
+    for index in 0..count {
+        let record = META_HEADER_SIZE
+            .checked_add(index.checked_mul(META_MAP_SIZE).ok_or(FontError::Bounds)?)
+            .ok_or(FontError::Bounds)?;
+        let tag = table.bytes(record, 4)?;
+        let offset = table.offset32(record + 4)?;
+        let length = table.offset32(record + 8)?;
+        // Source META UTF8 decoding reads individual bytes without validating
+        // UTF8. Ligatures do not consume its strings, so retain only reads and
+        // errors, including skipped binary tags and zero-read offsets.
+        if !matches!(tag, b"appl" | b"bild") && length != 0 {
+            table.bytes(offset, length)?;
+        }
+    }
+    Ok(())
 }
 
 pub fn name(bytes: &[u8], tags: Option<usize>) -> Result<(), FontError> {

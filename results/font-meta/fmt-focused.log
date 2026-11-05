@@ -1,0 +1,84 @@
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\A\crates\xterm-addons\src\ligatures\font.rs:46:
+ use font_cache::{Cache, Cached};
+ pub use font_cache::{GlyphArray, LigatureData, LigatureResult, RangeArray};
+ use font_cmap::Cmap;
+[31m-use font_tables::{Gsub, Lookup};
+[0m pub use font_tables::{Glyph, GlyphValue};
+[32m+use font_tables::{Gsub, Lookup};
+[0m use font_tree::{Arena, TreeId};
+ pub use font_warning::{FontLoadError, FontWarning};
+ use std::{cell::RefCell, collections::HashMap, rc::Rc};
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\A\crates\xterm-addons\src\ligatures\font.rs:117:
+         Self::from_gsub(gsub, cmap, options).map_err(FontLoadError::Font)
+     }
+ 
+[31m-    fn from_gsub(
+[0m[31m-        gsub: Option<Gsub>,
+[0m[31m-        cmap: Cmap,
+[0m[31m-        options: FontOptions,
+[0m[31m-    ) -> Result<Self, FontError> {
+[0m[32m+    fn from_gsub(gsub: Option<Gsub>, cmap: Cmap, options: FontOptions) -> Result<Self, FontError> {
+[0m         let mut arena = Arena::default();
+         let mut groups = Vec::new();
+         if let Some(gsub) = gsub {
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\A\crates\xterm-addons\tests\support\font_kern_warning_assertions.rs:26:
+             Ok(_) => assert_eq!(expected, "ok", "{}", case["name"]),
+             Err(FontLoadError::Font(error)) => {
+                 assert_eq!(expected, "error", "{}", case["name"]);
+[31m-                assert_eq!(Some(error), corpus::constructor_error(case), "{}", case["name"]);
+[0m[32m+                assert_eq!(
+[0m[32m+                    Some(error),
+[0m[32m+                    corpus::constructor_error(case),
+[0m[32m+                    "{}",
+[0m[32m+                    case["name"]
+[0m[32m+                );
+[0m             }
+             Err(FontLoadError::Warning(error)) => {
+                 assert_eq!(expected, "warning", "{}", case["name"]);
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\A\crates\xterm-addons\tests\support\font_metadata_data.rs:179:
+     let message = case["outcome"]["message"].as_str().unwrap();
+     Some(match message {
+         "Offset is outside the bounds of the DataView" => FontError::Bounds,
+[31m-        "Unsupported META table version." => {
+[0m[31m-            FontError::Invalid("Unsupported META table version.")
+[0m[31m-        }
+[0m[32m+        "Unsupported META table version." => FontError::Invalid("Unsupported META table version."),
+[0m         "Unsupported kern sub-table version." => {
+             FontError::Invalid("Unsupported kern sub-table version.")
+         }
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\A\crates\xterm-addons\tests\support\font_kern_warning_assertions.rs:26:
+             Ok(_) => assert_eq!(expected, "ok", "{}", case["name"]),
+             Err(FontLoadError::Font(error)) => {
+                 assert_eq!(expected, "error", "{}", case["name"]);
+[31m-                assert_eq!(Some(error), corpus::constructor_error(case), "{}", case["name"]);
+[0m[32m+                assert_eq!(
+[0m[32m+                    Some(error),
+[0m[32m+                    corpus::constructor_error(case),
+[0m[32m+                    "{}",
+[0m[32m+                    case["name"]
+[0m[32m+                );
+[0m             }
+             Err(FontLoadError::Warning(error)) => {
+                 assert_eq!(expected, "warning", "{}", case["name"]);
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\A\crates\xterm-addons\tests\support\font_metadata_data.rs:179:
+     let message = case["outcome"]["message"].as_str().unwrap();
+     Some(match message {
+         "Offset is outside the bounds of the DataView" => FontError::Bounds,
+[31m-        "Unsupported META table version." => {
+[0m[31m-            FontError::Invalid("Unsupported META table version.")
+[0m[31m-        }
+[0m[32m+        "Unsupported META table version." => FontError::Invalid("Unsupported META table version."),
+[0m         "Unsupported kern sub-table version." => {
+             FontError::Invalid("Unsupported kern sub-table version.")
+         }
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\A\crates\xterm-addons\tests\support\font_metadata_data.rs:179:
+     let message = case["outcome"]["message"].as_str().unwrap();
+     Some(match message {
+         "Offset is outside the bounds of the DataView" => FontError::Bounds,
+[31m-        "Unsupported META table version." => {
+[0m[31m-            FontError::Invalid("Unsupported META table version.")
+[0m[31m-        }
+[0m[32m+        "Unsupported META table version." => FontError::Invalid("Unsupported META table version."),
+[0m         "Unsupported kern sub-table version." => {
+             FontError::Invalid("Unsupported kern sub-table version.")
+         }
