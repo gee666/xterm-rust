@@ -1,0 +1,126 @@
+{
+  "overallEquivalence": "NOT PROVEN",
+  "observedAt": "2026-11-05T08:40:09.999Z",
+  "platform": "win32",
+  "release": "10.0.26300",
+  "cpu": "AMD Ryzen 9 7900X 12-Core Processor            ",
+  "node": "v24.15.0",
+  "rust": "rustc 1.85.1 (4eb161250 2025-03-15)\nbinary: rustc\ncommit-hash: 4eb161250e340c8f48f66e2b929ef4a5bed7c181\ncommit-date: 2025-03-15\nhost: x86_64-pc-windows-msvc\nrelease: 1.85.1\nLLVM version: 19.1.7\n",
+  "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)\n",
+  "commands": [
+    {
+      "log": "fmt.log",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "source": "e916e91",
+      "exitCode": 0,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "log": "clippy-first.log",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "-j2",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "source": "9738b4a",
+      "exitCode": 0,
+      "bytes": 846,
+      "sha256": "f47f4388ac1361d1ae3c8e2c9d286f99a707a241c8253d4ec953cd6cd41a137d"
+    },
+    {
+      "log": "test-first.log",
+      "argv": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "-j2"
+      ],
+      "source": "9738b4a",
+      "exitCode": 0,
+      "passed": 1962,
+      "failed": 0,
+      "ignored": 0,
+      "bytes": 200083,
+      "sha256": "3d7041fec37faaa6f8c4eb989bd7680f876e91bc7108e5ca51d669c72ceb6ed0"
+    },
+    {
+      "log": "doctest.log",
+      "argv": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--locked",
+        "--doc",
+        "--all-features",
+        "-j2"
+      ],
+      "source": "e916e91",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "bytes": 725,
+      "sha256": "2d72652ebafef854919a7a1fb52406cfcb512e598b624517688c3ab1294c5fb5"
+    },
+    {
+      "log": "wasm-first.log",
+      "argv": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--target",
+        "wasm32-unknown-unknown",
+        "-j2"
+      ],
+      "source": "9738b4a",
+      "exitCode": 101,
+      "bytes": 2539,
+      "sha256": "f54bb5aa61d798ebb45448f583eaadbd7dae35dad2d078f2243136306fdbce1c"
+    },
+    {
+      "log": "wasm-second.log",
+      "argv": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--locked",
+        "--all-targets",
+        "--all-features",
+        "--target",
+        "wasm32-unknown-unknown",
+        "-j2"
+      ],
+      "source": "9738b4a plus uncommitted Symbol fixture fix",
+      "exitCode": 101,
+      "bytes": 4438,
+      "sha256": "3c9dbeca5e6a2ac4992837563e81dd7212ecdcb4db50652e0db2be01c2065ef6"
+    }
+  ],
+  "gaps": [
+    "Final stable integrated revision gates task304",
+    "Native Linux/macOS and stable toolchain runtime task304",
+    "Release/default/no-default feature checks task304",
+    "WASM input host repair Diponegoro task292",
+    "Windows full fmt argument limit when font crate joins"
+  ]
+}

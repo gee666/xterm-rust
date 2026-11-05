@@ -1,0 +1,89 @@
+    Checking xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\Zhao16\crates\xterm-web)
+error[E0432]: unresolved import `xterm_web::input::dom::mouse::MouseSnapshot`
+ --> crates\xterm-web\tests\support\input_mouse_host.rs:5:29
+  |
+5 |     dom::mouse::{MouseHost, MouseSnapshot},
+  |                             ^^^^^^^^^^^^^ no `MouseSnapshot` in `input::dom::mouse`
+
+error[E0407]: method `mouse_snapshot` is not a member of trait `MouseHost`
+  --> crates\xterm-web\tests\support\input_mouse_host.rs:20:5
+   |
+20 | /     fn mouse_snapshot(&self) -> Result<MouseSnapshot, JsValue> {
+21 | |         Ok(MouseSnapshot {
+22 | |             routing: MouseRouting {
+23 | |                 cols: 80.0,
+...  |
+37 | |         })
+38 | |     }
+   | |_____^ not a member of trait `MouseHost`
+
+error[E0407]: method `options` is not a member of trait `InputHost`
+  --> crates\xterm-web\tests\support\input_dom.rs:45:5
+   |
+45 | /     fn options(&self) -> Result<InputOptions, JsValue> {
+46 | |         Ok(self.options.get())
+47 | |     }
+   | |_____^ not a member of trait `InputHost`
+
+warning: variable does not need to be mutable
+   --> crates\xterm-web\tests\wasm_input.rs:194:9
+    |
+194 |     let mut setup = Setup::new();
+    |         ----^^^^^
+    |         |
+    |         help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` on by default
+
+error[E0277]: the trait bound `support::Host: MouseReadHost` is not satisfied
+  --> crates\xterm-web\tests\support\input_dom.rs:44:20
+   |
+44 | impl InputHost for Host {
+   |                    ^^^^ the trait `MouseReadHost` is not implemented for `support::Host`
+   |
+   = help: the trait `MouseReadHost` is implemented for `EngineInputHost`
+   = note: required for `support::Host` to implement `MouseHost`
+note: required by a bound in `xterm_web::input::dom::InputHost`
+  --> O:\xterm-rust-swarm-16\tmp\worktrees\Zhao16\crates\xterm-web\src\input\dom\mod.rs:43:22
+   |
+43 | pub trait InputHost: mouse::MouseHost + KeyboardReadHost<Error = JsValue> {
+   |                      ^^^^^^^^^^^^^^^^ required by this bound in `InputHost`
+
+error[E0046]: not all trait items implemented, missing: `bracketed_paste`, `ignore_bracketed_paste`, `right_click_selects_word`, `is_firefox`, `is_linux`
+  --> crates\xterm-web\tests\support\input_dom.rs:44:1
+   |
+44 | impl InputHost for Host {
+   | ^^^^^^^^^^^^^^^^^^^^^^^ missing `bracketed_paste`, `ignore_bracketed_paste`, `right_click_selects_word`, `is_firefox`, `is_linux` in implementation
+   |
+   = help: implement the missing item: `fn bracketed_paste(&self) -> Result<bool, wasm_bindgen::JsValue> { todo!() }`
+   = help: implement the missing item: `fn ignore_bracketed_paste(&self) -> Result<bool, wasm_bindgen::JsValue> { todo!() }`
+   = help: implement the missing item: `fn right_click_selects_word(&self) -> Result<bool, wasm_bindgen::JsValue> { todo!() }`
+   = help: implement the missing item: `fn is_firefox(&self) -> Result<bool, wasm_bindgen::JsValue> { todo!() }`
+   = help: implement the missing item: `fn is_linux(&self) -> Result<bool, wasm_bindgen::JsValue> { todo!() }`
+
+error[E0277]: the trait bound `support::Host: MouseReadHost` is not satisfied
+  --> crates\xterm-web\tests\support\input_mouse_host.rs:10:20
+   |
+10 | impl MouseHost for Host {
+   |                    ^^^^ the trait `MouseReadHost` is not implemented for `support::Host`
+   |
+   = help: the trait `MouseReadHost` is implemented for `EngineInputHost`
+note: required by a bound in `MouseHost`
+  --> O:\xterm-rust-swarm-16\tmp\worktrees\Zhao16\crates\xterm-web\src\input\dom\mouse.rs:40:22
+   |
+40 | pub trait MouseHost: MouseReadHost {
+   |                      ^^^^^^^^^^^^^ required by this bound in `MouseHost`
+
+error[E0046]: not all trait items implemented, missing: `mouse_option_changes`
+  --> crates\xterm-web\tests\support\input_mouse_host.rs:10:1
+   |
+10 | impl MouseHost for Host {
+   | ^^^^^^^^^^^^^^^^^^^^^^^ missing `mouse_option_changes` in implementation
+   |
+   = help: implement the missing item: `fn mouse_option_changes(&self) -> xterm_core::event::Event<&'static str> { todo!() }`
+
+Some errors have detailed explanations: E0046, E0277, E0407, E0432.
+For more information about an error, try `rustc --explain E0046`.
+warning: `xterm-web` (test "wasm_input") generated 1 warning
+error: could not compile `xterm-web` (test "wasm_input") due to 7 previous errors; 1 warning emitted
+warning: build failed, waiting for other jobs to finish...
