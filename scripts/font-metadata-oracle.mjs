@@ -22,6 +22,7 @@ const original=entries(base);
 function construct(change) {
  const records=original.filter(record=>record.tag!==change.tag&&!change.remove?.includes(record.tag));
  if(change.data)records.push({tag:change.tag,data:Buffer.from(change.data)});
+ if(change.duplicateName)records[change.duplicateName==='first'?'unshift':'push']({tag:'name',data:Buffer.alloc(0)});
  const header=Buffer.alloc(12+records.length*16);base.copy(header,0,0,12);header.writeUInt16BE(records.length,4);
  let cursor=header.length;const pieces=[header];
  records.forEach(({tag,data},index)=>{
@@ -83,10 +84,17 @@ function woff(bytes) {
  });
  header.writeUInt32BE(cursor,8);return Buffer.concat(pieces);
 }
+for(const position of ['first','last'])for(const compressed of [false,true])changes.push({name:`invalid ${position} name descriptor ${compressed?'WOFF':'SFNT'}`,duplicateName:position,woff:compressed});
 const cases=[];
 for(const change of changes) {
  let bytes=construct(change);
  if(change.woff)bytes=woff(bytes);
+ if(change.duplicateName) {
+  const index=change.duplicateName==='first'?0:bytes.readUInt16BE(change.woff?12:4)-1,at=(change.woff?44:12)+index*(change.woff?20:16);
+  bytes.writeUInt32BE(0xfffffff0,at+(change.woff?4:8));
+  bytes.writeUInt32BE(128,at+12);
+  if(change.woff)bytes.writeUInt32BE(16,at+8);
+ }
  if(change.directoryLength!==undefined)bytes.writeUInt32BE(change.directoryLength,12+(bytes.readUInt16BE(4)-1)*16+12);
  let outcome;
  try {parse(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.length));outcome={status:'ok'};}

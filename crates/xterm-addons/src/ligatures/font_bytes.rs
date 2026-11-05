@@ -132,55 +132,26 @@ impl<'a> FontTables<'a> {
                 b"loca" => loca = true,
                 b"CFF " | b"CFF2" => cff = true,
                 b"hmtx" => hmtx = true,
+                b"name" => {
+                    // The constructor selects the last directory entry without
+                    // touching earlier data, including invalid/compressed data.
+                    name = Some(record);
+                    continue;
+                }
                 _ => {}
             }
             let metadata = matches!(
                 tag,
-                b"head" | b"hhea" | b"maxp" | b"OS/2" | b"post" | b"ltag" | b"name"
+                b"head" | b"hhea" | b"maxp" | b"OS/2" | b"post" | b"ltag"
             );
             if tag != b"cmap" && tag != b"GSUB" && !metadata {
                 continue;
             }
             let offset = record.offset32(if woff { 4 } else { 8 })?;
-            let length = record.offset32(12)?;
-            let table = if woff {
-                let compressed = record.offset32(8)?;
-                if compressed < length {
-                    let input = reader.bytes(offset, compressed)?;
-                    let inflated =
-                        miniz_oxide::inflate::decompress_to_vec_zlib_with_limit(input, length)
-                            .map_err(|_| FontError::Compression)?;
-                    if inflated.len() != length {
-                        return Err(FontError::Compression);
-                    }
-                    Cow::Owned(inflated)
-                } else {
-                    Cow::Borrowed(reader.bytes(
-                        offset,
-                        if metadata {
-                            bytes.len().saturating_sub(offset)
-                        } else {
-                            length
-                        },
-                    )?)
-                }
-            } else {
-                // Uncompressed metadata readers in opentype.js use the original
-                // DataView, not the table directory length. Following records
-                // may therefore satisfy an otherwise truncated table.
-                Cow::Borrowed(reader.bytes(
-                    offset,
-                    if metadata {
-                        bytes.len().saturating_sub(offset)
-                    } else {
-                        length
-                    },
-                )?)
-            };
+            let table = table_data(reader, record, woff, metadata)?;
             match tag {
                 b"cmap" => cmap = Some(table),
                 b"GSUB" => gsub = Some(table),
-                b"name" => name = Some(table),
                 b"maxp" => {
                     super::font_metadata::immediate(tag, &table)?;
                     glyph_count = Some(Reader::new(&table).u16(4)?);
@@ -194,7 +165,13 @@ impl<'a> FontTables<'a> {
                 _ => super::font_metadata::immediate(tag, &table)?,
             }
         }
-        super::font_metadata::name(&name.ok_or(FontError::MissingTable("name"))?, tags)?;
+        let name = table_data(
+            reader,
+            name.ok_or(FontError::MissingTable("name"))?,
+            woff,
+            true,
+        )?;
+        super::font_metadata::name(&name, tags)?;
         if !(glyf && loca || cff) {
             return Err(FontError::Invalid(
                 "Font doesn\'t contain TrueType, CFF or CFF2 outlines.",
@@ -213,4 +190,36 @@ impl<'a> FontTables<'a> {
             },
         })
     }
+}
+
+fn table_data<'a>(
+    reader: Reader<'a>,
+    record: Reader<'_>,
+    woff: bool,
+    metadata: bool,
+) -> Result<Cow<'a, [u8]>, FontError> {
+    let offset = record.offset32(if woff { 4 } else { 8 })?;
+    let length = record.offset32(12)?;
+    if woff {
+        let compressed = record.offset32(8)?;
+        if compressed < length {
+            let input = reader.bytes(offset, compressed)?;
+            let inflated = miniz_oxide::inflate::decompress_to_vec_zlib_with_limit(input, length)
+                .map_err(|_| FontError::Compression)?;
+            if inflated.len() != length {
+                return Err(FontError::Compression);
+            }
+            return Ok(Cow::Owned(inflated));
+        }
+    }
+    // Uncompressed metadata uses the original DataView, not directory lengths.
+    // Later records may satisfy reads beyond the nominal end of a table.
+    Ok(Cow::Borrowed(reader.bytes(
+        offset,
+        if metadata {
+            reader.bytes.len().saturating_sub(offset)
+        } else {
+            length
+        },
+    )?))
 }

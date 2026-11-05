@@ -39,6 +39,13 @@ fn construct(change: &Value) -> Vec<u8> {
                 .collect(),
         ));
     }
+    if let Some(position) = change["duplicateName"].as_str() {
+        if position == "first" {
+            records.insert(0, (*b"name", Vec::new()));
+        } else {
+            records.push((*b"name", Vec::new()));
+        }
+    }
     let mut output = vec![0; 12 + records.len() * 16];
     output[..12].copy_from_slice(&base[..12]);
     output[4..6].copy_from_slice(&u16::try_from(records.len()).unwrap().to_be_bytes());
@@ -58,11 +65,29 @@ fn construct(change: &Value) -> Vec<u8> {
         output[at + 12..at + 16].copy_from_slice(&length.to_be_bytes());
         output.extend_from_slice(data);
     }
-    if change["woff"] == true {
-        woff(&output)
-    } else {
-        output
+    let compressed = change["woff"] == true;
+    if compressed {
+        output = woff(&output);
     }
+    if let Some(position) = change["duplicateName"].as_str() {
+        let index = if position == "first" {
+            0
+        } else {
+            records.len() - 1
+        };
+        let at = if compressed {
+            44 + index * 20
+        } else {
+            12 + index * 16
+        };
+        let offset = at + if compressed { 4 } else { 8 };
+        output[offset..offset + 4].copy_from_slice(&0xfffffff0_u32.to_be_bytes());
+        output[at + 12..at + 16].copy_from_slice(&128_u32.to_be_bytes());
+        if compressed {
+            output[at + 8..at + 12].copy_from_slice(&16_u32.to_be_bytes());
+        }
+    }
+    output
 }
 
 fn woff(bytes: &[u8]) -> Vec<u8> {
