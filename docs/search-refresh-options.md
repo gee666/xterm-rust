@@ -38,6 +38,10 @@ The42 shared cases are inside three of the30 WASM functions, not42 extra Rust fu
 
 The negative control restored the two old producers from baseaf04745 while keeping new tests. Chromium catches the missing own getters: actual `[before,after]` versus expected `[1,2,extra,incremental,Symbol(extra),before,after]`. The WASM test panic aborted without final counts. Its ten discovered functions are not reported as ten executed functions or nine passes. Producer bytes were restored in finally, then the final three-engine matrix passed. The baseline hashes/report and final source/WASM/native/original-suite reports/logs are in `results/search-refresh-options/`. `summary.json` pins producer and retained evidence hashes. Compiler/WASM/binding paths in raw receipts are temporary verification outputs, not delivered distribution artifacts.
 
+## Independent review
+
+Task369 accepted d69d5ac against baseaf04745. The isolated reviewer inspected source copy/cache ordering, callback borrow boundaries and both adapters. It independently checked both JavaScript syntax checks, all24 summary hashes, retained WASM artifact hashes, both negative-control producer hashes and all776 reference-manifest entries. It inspected the native/source/WASM/original-suite receipts without rerunning Cargo or browsers because the local grant had been released. No changes were requested. Clean rebase onto main5051454 preserves the source/evidence hashes as1affb84 plus intent receiptbd2accf.
+
 ## Remaining work
 
 This closes only delayed refresh copying within347. Valid boxed/overridden string matching, null matching options, repeated per-line flag reads, flag-getter reentry replacing stored options, and raw length/method mutation between matching phases remain347/322. Refresh after an intervening cache clear still needs the source undefined-term representation audited. Complete source-module mapping, full raw-option randomized coverage, native Linux/macOS and full workspace/end-to-end evidence are not supplied by this task. Overall equivalence is NOT PROVEN.
