@@ -5,6 +5,9 @@
 //! without a browser; actual GPU integration has separate browser assertions.
 //! This module is a partial port and does not yet export a working WebGL addon.
 
+#[cfg(target_arch = "wasm32")]
+pub mod atlas_canvas;
+pub mod atlas_pixels;
 pub mod cache;
 pub mod config;
 pub mod glyphs;

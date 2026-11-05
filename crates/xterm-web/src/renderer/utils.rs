@@ -90,7 +90,7 @@ pub fn compute_next_variant_offset(
     (cell_width - (step - current_offset.unwrap_or(0.0))) % step
 }
 
-fn js_round(value: f64) -> f64 {
+pub(crate) fn js_round(value: f64) -> f64 {
     if !value.is_finite() || value == 0.0 {
         return value;
     }
