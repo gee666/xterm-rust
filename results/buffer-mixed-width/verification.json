@@ -1,0 +1,65 @@
+{
+  "status": "passed",
+  "base": "331f0eead64246aa67d951bbd3c9ff3ae65cc4f7",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "rust": "rustc 1.85.1 (4eb161250 2025-03-15)",
+  "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+  "sourceSuite": {
+    "discovered": 61,
+    "executed": 61,
+    "passed": 61,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0
+  },
+  "originalCasesPreserved": {
+    "count": 1111,
+    "comparison": "Byte-identical case blocks; only final directed case id shifts1110 to1622"
+  },
+  "widthOneSeed": "0xb0ff67",
+  "mixedWidthSeed": "0x372b0ff",
+  "mixedWidthTraces": 64,
+  "mixedWidthTransitions": 512,
+  "totalTransitions": 1623,
+  "ownershipPaths": [
+    "owned",
+    "shared"
+  ],
+  "transitionsPerProfile": 3246,
+  "coverage": {
+    "normal": 368,
+    "alternate": 144,
+    "narrower": 237,
+    "wider": 237,
+    "equal": 38,
+    "wideHeads": 4593,
+    "placeholders": 4593,
+    "combined": 5119,
+    "extended": 11144
+  },
+  "native": {
+    "passed": 52,
+    "failed": 0,
+    "ignored": 0
+  },
+  "release": {
+    "passed": 1,
+    "failed": 0,
+    "ignored": 0
+  },
+  "hashes": {
+    "scripts/buffer-resize-oracle.mjs": "2ab2ecdb3f26b405051fe6d01ce3e7965cfc3588083933f5ea7e64e3786616a0",
+    "scripts/check-buffer.mjs": "dae5d69e8a5b206e45aafe2f02e5bf96495f85c63e7c65542e9eacffb7121c73",
+    "crates/xterm-core/tests/buffer_resize_differential.rs": "34d17b68efbedde82cc0db5cc443df4971499b7c20acc4a602288a1f92293645",
+    "crates/xterm-core/tests/support/buffer_snapshot.rs": "06cc64e6546bed04783f99cc5fb1c9a2d0e9b114c0859aa3737701dca39d9701",
+    "crates/xterm-core/tests/fixtures/buffer-resize.tsv": "4f3e03a2e6a45c557ba998da594f632363aa9677249da65f147917ecd15b2d91"
+  },
+  "overallEquivalence": "NOT PROVEN",
+  "limitations": [
+    "No production mismatch found in this corpus.",
+    "Each transition is hydrated, not a native replay of preceding parser operations.",
+    "No browser or native Linux/macOS claim.",
+    "Scoped Clippy/release checks are not the full workspace final quality matrix."
+  ]
+}

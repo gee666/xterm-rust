@@ -7,7 +7,7 @@ import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const root = resolve(import.meta.dirname, '..');
-const dependencies = resolve(root, 'source_repo/node_modules');
+const dependencies = resolve(process.env.XT_NODE_MODULES ?? resolve(root, 'source_repo/node_modules'));
 const { build } = await import(pathToFileURL(resolve(dependencies, 'esbuild/lib/main.js')));
 const { default: Mocha } = await import(pathToFileURL(resolve(dependencies, 'mocha/index.js')));
 const temporary = resolve(root, 'tmp/buffer-resize-oracle');
@@ -75,7 +75,7 @@ const built = await build({
   absWorkingDir: root, entryPoints: ['source_repo/src/common/buffer/Buffer.test.ts'],
   outfile: bundle, bundle: true, platform: 'node', format: 'cjs', metafile: true,
   tsconfig: 'source_repo/src/common/tsconfig.json',
-  plugins: [observerPlugin],
+  plugins: [observerPlugin], nodePaths: [dependencies],
 });
 const mocha = new Mocha({ reporter: 'dot' });
 mocha.addFile(bundle);
@@ -101,12 +101,13 @@ await build({
     contents: `export { Buffer } from './buffer/Buffer';
       export { MockOptionsService, MockBufferService, MockLogService } from './TestUtils.test';
       export { CellData } from './buffer/CellData';
-      export { ExtendedAttrs } from './buffer/AttributeData';`,
+      export { ExtendedAttrs } from './buffer/AttributeData';
+      export { BgFlags } from './buffer/Constants';`,
     resolveDir: resolve(root, 'source_repo/src/common'), loader: 'ts',
   }, outfile: traceBundle, bundle: true, platform: 'node', format: 'cjs',
-  tsconfig: 'source_repo/src/common/tsconfig.json', plugins: [observerPlugin],
+  tsconfig: 'source_repo/src/common/tsconfig.json', plugins: [observerPlugin], nodePaths: [dependencies],
 });
-const { Buffer, MockOptionsService, MockBufferService, MockLogService, CellData, ExtendedAttrs } =
+const { Buffer, MockOptionsService, MockBufferService, MockLogService, CellData, ExtendedAttrs, BgFlags } =
   (await import(pathToFileURL(traceBundle))).default;
 const strings = ['a', '中', '😁', 'e\u0301', '\ud800', '\udc00', ' ', '', '👩‍👧'];
 sourceTestOrdinal = -1;
@@ -148,6 +149,57 @@ for (let trace = 0; trace < 128; trace++) {
   }
   buffer.dispose();
 }
+// Preserve the original width-one seed stream; this independent corpus covers
+// valid wide heads/placeholders and combined UTF-16 cells at reflow boundaries.
+const mixedWidthSeed = 0x372b0ff;
+randomState = mixedWidthSeed;
+const mixedCells = [['a', 1], ['中', 2], ['🙂', 2], ['e\u0301', 1], ['𓂀\u0301', 1], [' ', 1], ['\ud800', 1]];
+for (let trace = 0; trace < 64; trace++) {
+  const cols = 2 + random() % 16;
+  const height = 1 + random() % 6;
+  const options = new MockOptionsService({ scrollback: random() % 6,
+    reflowCursorLine: random() % 2 === 1,
+    windowsPty: { backend: ['conpty', 'winpty', undefined][random() % 3],
+      buildNumber: [0, 21375, 21376, undefined][random() % 4] } });
+  const host = new MockBufferService(cols, height);
+  const buffer = new Buffer(random() % 4 !== 0, options, host, new MockLogService());
+  buffer.fillViewportRows();
+  for (let step = 0; step < 8; step++) {
+    title = `mixed seed 0x${mixedWidthSeed.toString(16)} trace ${trace} step ${step}`;
+    for (let y = 0; y < buffer.lines.length; y++) {
+      const line = buffer.lines.get(y);
+      line.fill(CellData.fromCharData([0, '', 1, 0]));
+      for (let x = 0; x < line.length;) {
+        let [chars, width] = mixedCells[random() % mixedCells.length];
+        if (x + width > line.length) { chars = ''; width = 1; }
+        const cell = CellData.fromCharData([random(), chars, width, 0]);
+        cell.bg = random() & 0x07ffffff;
+        if (random() % 2) cell.bg |= BgFlags.HAS_EXTENDED;
+        cell.extended = new ExtendedAttrs(random(), random() % 5);
+        line.setCell(x, cell);
+        if (width === 2) {
+          const placeholder = CellData.fromCharData([cell.fg, '', 0, 0]);
+          placeholder.bg = cell.bg; placeholder.extended = cell.extended;
+          line.setCell(x + 1, placeholder);
+        }
+        x += width;
+      }
+      buffer.setWrapped(y, y > 0 && random() % 2 === 0);
+    }
+    buffer.ybase = Math.max(0, buffer.lines.length - buffer._rows);
+    buffer.ydisp = random() % (buffer.ybase + 1);
+    buffer.y = random() % Math.min(buffer._rows, buffer.lines.length - buffer.ybase);
+    buffer.x = random() % buffer._cols;
+    buffer.savedX = random() % 20;
+    buffer.savedY = random() % (buffer.lines.length + 1);
+    buffer.addMarker(random() % buffer.lines.length);
+    const nextCols = 2 + random() % 16;
+    const nextRows = 1 + random() % 6;
+    if (random() % 2) { host.cols = nextCols; host.rows = nextRows; }
+    buffer.resize(nextCols, nextRows);
+  }
+  buffer.dispose();
+}
 title = 'directed empty first wrapped row with savedY zero';
 const emptyWrapped = new Buffer(true, new MockOptionsService({ scrollback: 1, reflowCursorLine: true }),
   new MockBufferService(7, 5), new MockLogService());
@@ -169,12 +221,14 @@ reentrant.dispose();
 delete globalThis.__captureBufferResize;
 const fixture = 'crates/xterm-core/tests/fixtures/buffer-resize.tsv';
 mkdirSync(resolve(root, 'crates/xterm-core/tests/fixtures'), { recursive: true });
-writeFileSync(resolve(root, fixture), rows.join('\n') + '\n');
+const fixtureContent = rows.join('\n') + '\n';
+if (process.argv.includes('--generate')) writeFileSync(resolve(root, fixture), fixtureContent);
+else assert.equal(readFileSync(resolve(root, fixture), 'utf8'), fixtureContent, 'buffer resize fixture drift');
 const sourceHashes = {};
 for (const file of Object.keys(built.metafile.inputs).filter(p => p.startsWith('source_repo/src/'))) {
   sourceHashes[file] = createHash('sha256').update(readFileSync(resolve(root, file))).digest('hex');
 }
-const report = { command: 'node scripts/buffer-resize-oracle.mjs', node: process.version,
+const report = { command: `node scripts/buffer-resize-oracle.mjs${process.argv.includes('--generate') ? ' --generate' : ''}`, node: process.version,
   platform: process.platform, overallEquivalence: 'NOT PROVEN', sourceHashes,
   fixture, fixtureSha256: createHash('sha256').update(readFileSync(resolve(root, fixture))).digest('hex'),
   supplemental: { reentrantClearMarkers: 'passed; disposed second marker remains because its line becomes -1 before the loop reaches it',
@@ -183,10 +237,12 @@ const report = { command: 'node scripts/buffer-resize-oracle.mjs', node: process
     skipped: runner.stats.pending, executed: runner.stats.tests - runner.stats.pending,
     unrun: runner.total - runner.stats.tests, outcomes },
   resizeCalls: cases.length, originalResizeCalls, seed: '0xb0ff67',
-  randomizedTraces: 128, randomizedResizeCalls: 1024, directedResizeCalls: 1, cases,
+  randomizedTraces: 128, randomizedResizeCalls: 1024,
+  mixedWidthSeed: `0x${mixedWidthSeed.toString(16)}`, mixedWidthTraces: 64, mixedWidthResizeCalls: 512,
+  directedResizeCalls: 1, cases,
   limitations: ['Resize snapshots do not port non-resize assertions; see Rust upstream tests.',
     'Cleanup backing-memory assertions require separate Rust observation.',
-    'Snapshot input hydration does not prove preceding operation ordering.',
+    'Snapshot input hydration does not prove preceding operation ordering; mixed-width rows are valid cells but not parser-generated.',
     'Native Linux/macOS and whole-terminal integration are separate unrun evidence.'],
 };
 mkdirSync(resolve(root, 'results/buffer'), { recursive: true });
