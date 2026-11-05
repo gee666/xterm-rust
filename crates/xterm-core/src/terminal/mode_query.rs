@@ -22,17 +22,17 @@ impl TerminalState {
         &mut self,
         params: &Params,
         ansi: bool,
-        gate: Option<bool>,
+        option: bool,
         captured_cols: usize,
         captured_modes: Option<crate::core_service::DecPrivateModes>,
     ) -> Result<(), TerminalError> {
         let mode = params.values().first().copied().unwrap_or(0);
         let value = if ansi {
-            self.ansi_mode_status(mode)?
+            self.ansi_mode_status(mode, option)
         } else {
             let modes =
                 captured_modes.unwrap_or_else(|| self.core.dec_private_modes.borrow().clone());
-            self.private_mode_status(mode, gate, captured_cols, &modes)?
+            self.private_mode_status(mode, option, captured_cols, &modes)
         };
         self.reply(&format!(
             "\x1b[{}{mode};{value}$y",
@@ -40,26 +40,26 @@ impl TerminalState {
         ))
     }
 
-    fn ansi_mode_status(&self, mode: i32) -> Result<u8, TerminalError> {
-        Ok(match mode {
+    fn ansi_mode_status(&self, mode: i32, option: bool) -> u8 {
+        match mode {
             2 => PERMANENTLY_RESET,
             4 => status(self.core.modes.borrow().insert_mode),
             12 => PERMANENTLY_SET,
-            20 => status(self.option_bool("convertEol")?),
+            20 => status(option),
             _ => NOT_RECOGNIZED,
-        })
+        }
     }
 
     fn private_mode_status(
         &self,
         mode: i32,
-        gate: Option<bool>,
+        option: bool,
         captured_cols: usize,
         modes: &crate::core_service::DecPrivateModes,
-    ) -> Result<u8, TerminalError> {
-        Ok(match mode {
+    ) -> u8 {
+        match mode {
             1 => status(modes.application_cursor_keys),
-            3 if gate == Some(true) => match captured_cols {
+            3 if option => match captured_cols {
                 80 => RESET,
                 132 => SET,
                 _ => NOT_RECOGNIZED,
@@ -68,7 +68,7 @@ impl TerminalState {
             7 => status(modes.wraparound),
             8 => PERMANENTLY_SET,
             9 => status(self.mouse.active_protocol() == "X10"),
-            12 => status(self.option_bool("cursorBlink")?),
+            12 => status(option),
             25 => status(!self.core.is_cursor_hidden.get()),
             45 => status(modes.reverse_wraparound),
             66 => status(modes.application_keypad),
@@ -85,8 +85,8 @@ impl TerminalState {
             47 | 1047 | 1049 => status(Rc::ptr_eq(&self.buffers.active(), &self.buffers.alt())),
             2004 => status(modes.bracketed_paste_mode),
             2026 => status(modes.synchronized_output),
-            9001 if gate == Some(true) => status(modes.win32_input_mode),
+            9001 if option => status(modes.win32_input_mode),
             _ => NOT_RECOGNIZED,
-        })
+        }
     }
 }

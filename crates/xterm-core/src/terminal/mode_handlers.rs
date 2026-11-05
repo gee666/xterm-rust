@@ -103,27 +103,25 @@ pub(super) fn query(prefix: Option<&'static str>, shared: Shared) -> CommandHand
     Rc::new(RefCell::new(move |params: &Params| {
         let result = (|| {
             let mode = params.values().first().copied().unwrap_or(0);
-            let (core, columns) = {
+            let (core, options, columns) = {
                 let state = shared.try_borrow().map_err(|_| TerminalError::Borrowed)?;
-                (Rc::clone(&state.core), state.cols())
+                (
+                    Rc::clone(&state.core),
+                    Rc::clone(&state.options),
+                    state.cols(),
+                )
             };
             // Source retains dm object identity and the numeric cols before
             // reading nested options. Getters can reset modes or resize.
             let captured = (prefix.is_some() && mode == 9001).then(|| core.capture_private_modes());
-            let gate = if prefix.is_some() && matches!(mode, 3 | 9001) {
-                let options = Rc::clone(
-                    &shared
-                        .try_borrow()
-                        .map_err(|_| TerminalError::Borrowed)?
-                        .options,
-                );
-                Some(if mode == 3 {
-                    option_flag(&options, "windowOptions", "setWinLines", false)?
-                } else {
-                    option_flag(&options, "vtExtensions", "win32InputMode", false)?
-                })
-            } else {
-                None
+            // Direct raw getters are callback boundaries too. Resolve their
+            // truthiness before borrowing state to calculate and enqueue a reply.
+            let option = match (prefix.is_some(), mode) {
+                (false, 20) => options.get("convertEol")?.is_truthy(),
+                (true, 12) => options.get("cursorBlink")?.is_truthy(),
+                (true, 3) => option_flag(&options, "windowOptions", "setWinLines", false)?,
+                (true, 9001) => option_flag(&options, "vtExtensions", "win32InputMode", false)?,
+                _ => false,
             };
             shared
                 .try_borrow_mut()
@@ -131,7 +129,7 @@ pub(super) fn query(prefix: Option<&'static str>, shared: Shared) -> CommandHand
                 .request_mode(
                     params,
                     prefix.is_none(),
-                    gate,
+                    option,
                     columns,
                     captured.as_ref().map(|modes| modes.read()),
                 )?;
