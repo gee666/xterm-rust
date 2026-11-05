@@ -107,11 +107,11 @@ fn explicit_range(host: &Shared, range: &JsValue) -> Result<Range, JsValue> {
     let end_col = columns(host)?;
     get(range, "endLine")?;
     let end = get(range, "endLine")?;
-    if matches!((start.as_f64(), end.as_f64()), (Some(start), Some(end)) if start.is_nan() || end.is_nan())
+    if matches!((start.as_f64(), end.as_f64()), (Some(start), Some(end)) if start.is_nan() || end.is_nan() || start > end)
     {
-        // Numeric NaN makes the source row comparison false. A reversed native
-        // range keeps header/footer generation without reading or coercing cells.
-        // Objects still need their source-specific late coercion under task346.
+        // A false numeric row comparison skips the cell loop entirely, even for
+        // reversed infinite bounds. Preserve the header/footer and do not coerce
+        // an unused column. Objects still need late source coercion under task346.
         return Ok(Range::Integral(CellRange {
             start: Position { x: 0, y: 1 },
             end: Position { x: end_col, y: 0 },
