@@ -38,6 +38,11 @@ pub fn construct(change: &Value) -> Vec<u8> {
                 data[34..36].copy_from_slice(&u16::try_from(metrics).unwrap().to_be_bytes());
             }
         }
+        if tag == "maxp" {
+            if let Some(count) = change["glyphCount"].as_u64() {
+                data[4..6].copy_from_slice(&u16::try_from(count).unwrap().to_be_bytes());
+            }
+        }
         records.push((base[at..at + 4].try_into().unwrap(), data));
     }
     if let Some(data) = change["data"].as_array() {
@@ -162,4 +167,41 @@ fn woff(bytes: &[u8]) -> Vec<u8> {
     let size = u32::try_from(output.len()).unwrap();
     output[8..12].copy_from_slice(&size.to_be_bytes());
     output
+}
+
+// Native error types deliberately represent source DataView and missing-table
+// errors. Compare the actual failure cause, not merely accepted versus rejected.
+pub fn kern_error(case: &Value) -> Option<xterm_addons::ligatures::font::FontError> {
+    use xterm_addons::ligatures::font::FontError;
+    if case["outcome"]["status"] == "ok" {
+        return None;
+    }
+    let message = case["outcome"]["message"].as_str().unwrap();
+    Some(match message {
+        "Offset is outside the bounds of the DataView" => FontError::Bounds,
+        "Unsupported kern sub-table version." => {
+            FontError::Invalid("Unsupported kern sub-table version.")
+        }
+        "Cannot read properties of undefined (reading 'addUnicode')" => {
+            FontError::Type("Cannot read properties of undefined (reading 'addUnicode')")
+        }
+        "Cannot read properties of undefined (reading 'compression')" => {
+            FontError::MissingTable(if case["remove"][0] == "name" {
+                "name"
+            } else {
+                "hmtx"
+            })
+        }
+        value if value.starts_with("Invalid typed array length:") => FontError::Bounds,
+        value if value.starts_with("Unsupported kern table version (") => FontError::KernVersion(
+            value
+                .strip_prefix("Unsupported kern table version (")
+                .unwrap()
+                .strip_suffix(").")
+                .unwrap()
+                .parse()
+                .unwrap(),
+        ),
+        value => panic!("Unmapped source kern error: {value}"),
+    })
 }

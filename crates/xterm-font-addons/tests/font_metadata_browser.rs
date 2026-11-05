@@ -1,5 +1,5 @@
 #![cfg(target_arch = "wasm32")]
-use js_sys::{Function, Reflect, Uint8Array};
+use js_sys::{Function, Uint8Array};
 use wasm_bindgen::{closure::Closure, prelude::*};
 use wasm_bindgen_test::*;
 use xterm_font_addons::LigaturesAddon;
@@ -16,6 +16,14 @@ fn source_constructor_corpus_matches_in_wasm() {
     let mut failures = Vec::new();
     for case in fixture["cases"].as_array().unwrap() {
         let actual = Font::load_buffer(&corpus::construct(case), FontOptions::default());
+        if case["tag"] == "kern" {
+            assert_eq!(
+                actual.as_ref().err(),
+                corpus::kern_error(case).as_ref(),
+                "{}",
+                case["name"]
+            );
+        }
         if actual.is_ok() != (case["outcome"]["status"] == "ok") {
             failures.push(format!(
                 "{}: expected {}, got {:?}",
@@ -51,7 +59,7 @@ async fn bad_metadata_rejects_loading_without_refresh_and_other_family_can_load(
         .await
         .unwrap();
     let fixture = js_sys::JSON::parse(include_str!("fixtures/font-metadata-addon.json")).unwrap();
-    let expected = Reflect::get(&fixture, &"metadata".into()).unwrap();
+    let expected = fixture;
     assert_eq!(
         js_sys::JSON::stringify(&actual).unwrap(),
         js_sys::JSON::stringify(&expected).unwrap()

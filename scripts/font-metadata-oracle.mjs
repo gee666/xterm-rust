@@ -23,11 +23,17 @@ function duplicate(change) {
  return change.duplicateTable??(change.duplicateName?{tag:'name',position:change.duplicateName}:undefined);
 }
 function construct(change) {
- const records=original.filter(record=>record.tag!==change.tag&&!change.remove?.includes(record.tag));
+ // Every case starts from the same original descriptors. Mutating a selected
+ // hhea/maxp descriptor must not contaminate the next independent source case.
+ const records=original.filter(record=>record.tag!==change.tag&&!change.remove?.includes(record.tag)).map(record=>({...record}));
  if(change.data)records.push({tag:change.tag,data:Buffer.from(change.data)});
  if(change.metrics!==undefined) {
   const hhea=records.find(record=>record.tag==='hhea');
   hhea.data=Buffer.from(hhea.data);hhea.data.writeUInt16BE(change.metrics,34);
+ }
+ if(change.glyphCount!==undefined) {
+  const maxp=records.find(record=>record.tag==='maxp');
+  maxp.data=Buffer.from(maxp.data);maxp.data.writeUInt16BE(change.glyphCount,4);
  }
  const extra=duplicate(change);
  if(extra)records[extra.position==='first'?'unshift':'push']({tag:extra.tag,data:extra.invalidCompression?Buffer.from(Array.from({length:16},(_,i)=>i+1)):Buffer.alloc(0)});
@@ -107,6 +113,29 @@ for(const compressed of [false,true]) {
  changes.push({name:`hmtx ignored directory length ${compressed?'WOFF':'SFNT'}`,tag:'hmtx',data:[0,0,0,0],metrics:1,woff:compressed,hmtxDirectoryLength:0});
 }
 changes.push({name:'zero-read hmtx compressed invalid offset',tag:'hmtx',data:[],metrics:0,woff:true,invalidHmtxOffset:true,compressedHmtx:true});
+// Kern is deferred until after outlines, metrics and cmap glyph-name assignment.
+for(const compressed of [false,true]) {
+ for(const version of [0,1,2,65535]) {
+  const data=Buffer.alloc(26);data.writeUInt16BE(version);
+  for(let size=0;size<=26;size++)changes.push({name:`kern version ${version} bytes ${size} ${compressed?'WOFF':'SFNT'}`,tag:'kern',data:[...data.subarray(0,size)],woff:compressed});
+ }
+ for(const mac of [false,true])for(const format of [0,1,255,256])for(const pairs of [0,1,2])for(const available of [0,1,5,6,11,12]) {
+  const header=mac?24:18,data=Buffer.alloc(header+available);
+  data.writeUInt16BE(mac?1:0);
+  if(mac){data.writeUInt32BE(1,4);data.writeUInt16BE(format,12);data.writeUInt16BE(pairs,16);}
+  else {data.writeUInt16BE(1,2);data.writeUInt16BE(format,4);data.writeUInt16BE(pairs,10);}
+  changes.push({name:`kern ${mac?'Mac':'Windows'} format ${format} pairs ${pairs} payload ${available} ${compressed?'WOFF':'SFNT'}`,tag:'kern',data:[...data],woff:compressed});
+ }
+ const validKern=Array(18).fill(0);
+ for(const position of ['first','last'])changes.push({name:`invalid ${position} kern descriptor ${compressed?'WOFF':'SFNT'}`,tag:'kern',data:validKern,woff:compressed,duplicateTable:{tag:'kern',position}});
+ changes.push({name:`kern cmap rejection precedes invalid version ${compressed?'WOFF':'SFNT'}`,tag:'kern',data:[255,255],glyphCount:0,woff:compressed});
+ changes.push({name:`kern cmap rejection precedes invalid descriptor ${compressed?'WOFF':'SFNT'}`,tag:'kern',data:validKern,glyphCount:0,woff:compressed,duplicateTable:{tag:'kern',position:'last'}});
+ changes.push({name:`kern version rejection precedes invalid GSUB descriptor ${compressed?'WOFF':'SFNT'}`,tag:'kern',data:[0,2],woff:compressed,duplicateTable:{tag:'GSUB',position:'last'}});
+ for(const tag of ['name','hmtx'])changes.push({name:`kern ${tag} missing precedes invalid version ${compressed?'WOFF':'SFNT'}`,tag:'kern',data:[255,255],remove:[tag],woff:compressed});
+}
+changes.push({name:'ignored first kern invalid compressed data',tag:'kern',data:Array(18).fill(0),woff:true,duplicateTable:{tag:'kern',position:'first',invalidCompression:true}});
+changes.push({name:'kern ignored directory length',tag:'kern',data:Array(18).fill(0),directoryLength:0});
+changes.push({name:'deferred GSUB ignored directory length',tag:'GSUB',data:emptyGsub,directoryLength:0});
 const cases=[];
 for(const change of changes) {
  let bytes=construct(change);

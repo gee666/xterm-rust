@@ -13,6 +13,8 @@ mod font_cache;
 mod font_cmap;
 #[path = "font_gsub.rs"]
 mod font_gsub;
+#[path = "font_kern.rs"]
+mod font_kern;
 #[path = "font_merge.rs"]
 mod font_merge;
 #[path = "font_merge_range.rs"]
@@ -74,10 +76,15 @@ impl Font {
                 "Cannot read properties of undefined (reading 'addUnicode')",
             ));
         }
+        // opentype assigns cmap glyph names before it reads deferred kern/GSUB
+        // data, so those later errors must not replace an invalid-glyph error.
+        if let Some(table) = tables.kern {
+            font_kern::validate(&table.load()?)?;
+        }
         let mut arena = Arena::default();
         let mut groups = Vec::new();
-        if let Some(bytes) = tables.gsub {
-            let gsub = font_gsub::parse(&bytes)?;
+        if let Some(table) = tables.gsub {
+            let gsub = font_gsub::parse(&table.load()?)?;
             for (lookup_index, lookup) in gsub.lookups.iter().enumerate() {
                 if !gsub.selected.contains(&lookup_index) {
                     continue;

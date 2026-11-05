@@ -12,6 +12,14 @@ fn unchanged_source_metadata_constructor_outcomes() {
         let bytes = construct(case);
         let actual = Font::load_buffer(&bytes, FontOptions::default());
         let expected = case["outcome"]["status"] == "ok";
+        if case["tag"] == "kern" {
+            assert_eq!(
+                actual.as_ref().err(),
+                corpus::kern_error(case).as_ref(),
+                "{}",
+                case["name"]
+            );
+        }
         if actual.is_ok() != expected {
             failures.push(format!(
                 "{}: expected {}, got {:?}",

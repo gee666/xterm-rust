@@ -12,6 +12,10 @@ const packageName = process.env.WASM_PACKAGE ?? 'xterm-web';
 if (!['xterm-web', 'xterm-wasm-support', 'xterm-font-addons'].includes(packageName)) throw new Error('Invalid WASM_PACKAGE');
 const testName = process.env.WASM_TEST ?? 'wasm_host';
 if (!/^[a-z0-9_]+$/.test(testName)) throw new Error('Invalid WASM_TEST');
+const testTimeoutMs = Number(process.env.WASM_TEST_TIMEOUT_MS ?? 60_000);
+if (!Number.isSafeInteger(testTimeoutMs) || testTimeoutMs < 1 || testTimeoutMs > 2_147_483_647) {
+  throw new Error('WASM_TEST_TIMEOUT_MS must be an integer from 1 to 2147483647');
+}
 const features = process.env.CARGO_FEATURES ?? '';
 if (features && !/^[a-zA-Z0-9_-]+(?:,[a-zA-Z0-9_-]+)*$/.test(features)) throw new Error('Invalid CARGO_FEATURES');
 const key = packageName === 'xterm-web' ? testName : `${packageName}__${testName}`;
@@ -21,7 +25,7 @@ const results = resolve(resultRoot, key, runId);
 const work = resolve(results, 'artifacts');
 await mkdir(work, { recursive: true });
 const commands = [];
-const report = { package: packageName, testName, features: features.split(',').filter(Boolean),
+const report = { package: packageName, testName, testTimeoutMs, features: features.split(',').filter(Boolean),
   platform: process.platform, node: process.version, date: new Date().toISOString(),
   componentOnly: true, status: 'preparing', commands, browsers: [] };
 async function persist() {
@@ -106,7 +110,7 @@ try {
       browser = await playwright[name].launch({ headless: true, timeout: 30_000 });
       entry.version = browser.version();
       const page = await browser.newPage();
-      page.setDefaultTimeout(60_000);
+      page.setDefaultTimeout(testTimeoutMs);
       page.on('pageerror', error => entry.errors.push(error.stack ?? error.message));
       page.on('console', event => entry.console.push({ type: event.type(), text: event.text() }));
       await page.goto(baseUrl);

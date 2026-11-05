@@ -38,12 +38,13 @@ const { LigaturesAddon } = await import(pathToFileURL(path.join(temporary, 'Liga
 const metadata = process.argv.includes('--metadata');
 const bytes = new Uint8Array(await fs.readFile(path.join(root, 'crates/xterm-addons/tests/fixtures/ligature-fonts', metadata ? 'UbuntuMono-Regular.ttf' : 'FiraCode-Regular.otf')));
 const create = options => new LigaturesAddon(options);
-const result = metadata ? {metadata: await metadataRejectionScenarios(create, bytes)} : { lifecycle: lifecycleScenarios(create), loading: await loadingScenarios(create, bytes) };
+const result = metadata ? await metadataRejectionScenarios(create, bytes) : { lifecycle: lifecycleScenarios(create), loading: await loadingScenarios(create, bytes) };
 // Guard the dependency adapter: a broken OpenType import must not silently
 // turn every expected native result into an error/fallback trace.
 if (metadata) {
   assert.deepEqual(result.metadata.rejected, {ranges:[[0,3]],reads:1,refreshes:0});
   assert.deepEqual(result.metadata.accepted, {ranges:[],reads:2,refreshes:1});
+  assert.deepEqual(result.kern, result.metadata);
 } else {
   assert.deepEqual(result.loading.nativeRanges, [[1, 3]]);
   assert.deepEqual(result.loading.foundTrace, [['register', 0], ['refresh', 0, 4]]);
@@ -53,6 +54,6 @@ const fixture = path.join(root, `crates/xterm-font-addons/tests/fixtures/${metad
 if (process.argv.includes('--generate')) await fs.writeFile(fixture, content);
 else assert.equal(await fs.readFile(fixture, 'utf8'), content, 'Ligature addon source fixture drift');
 const directory = path.join(root, 'results/font-addons'); await fs.mkdir(directory, { recursive: true });
-const report = { node: process.version, scope: 'Source addon lifecycle/load boundary, not real Terminal renderer evidence', sourceHashes: hashes, fixtureSha256: hash(content), fontSha256: hash(bytes), comparedOperationFields: metadata ? Object.keys(result.metadata).length : Object.keys(result.lifecycle).length + Object.keys(result.loading).length };
+const report = { node: process.version, scope: 'Source addon lifecycle/load boundary, not real Terminal renderer evidence', sourceHashes: hashes, fixtureSha256: hash(content), fontSha256: hash(bytes), comparedOperationFields: metadata ? Object.values(result).reduce((sum, item) => sum + Object.keys(item).length, 0) : Object.keys(result.lifecycle).length + Object.keys(result.loading).length };
 await fs.writeFile(path.join(directory, metadata ? 'font-metadata-addon-oracle.json' : 'ligature-addon-oracle.json'), JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify(report));
