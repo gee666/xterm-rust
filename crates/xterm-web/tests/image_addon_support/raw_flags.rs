@@ -129,7 +129,7 @@ async fn raw_scrolling_controls_and_resets_preserve_real_sixel_state_and_pixels(
         let retained = get(&view, "sixelScrolling");
         for ignored in [
             "\u{1b}[?81h",
-            "\u{1b}[?80:1h",
+            "\u{1b}[?81:80h",
             "\u{1b}[?1;4S",
             "\u{1b}[?1;2S",
         ] {
@@ -140,7 +140,15 @@ async fn raw_scrolling_controls_and_resets_preserve_real_sixel_state_and_pixels(
                 &original,
             );
         }
-        for control in ["", "\x1b[?80h", "\x1b[?80l", "\x1b[!p", "\x1bc"] {
+        for control in [
+            "",
+            "\x1b[?80:1h",
+            "\x1b[?80h",
+            "\x1b[?80:1l",
+            "\x1b[?80l",
+            "\x1b[!p",
+            "\x1bc",
+        ] {
             pair.write(control).await;
             let source = get(&pair.source, "addon");
             // Objects/symbols are independently constructed on each side.
