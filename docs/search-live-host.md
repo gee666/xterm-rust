@@ -25,7 +25,8 @@ Observed on native Windows with Node24.15.0 and Rust/Cargo1.85.1:
 - Native negative control replaced only `find.rs` with accepted458 bytes. All three new functions failed because the entry terminal's selection was cleared. Zero passed,53 filtered. A `finally` restored the exact fixed bytes and recorded hashes.
 - Restored native suite passed56 functions, none failed, ignored or filtered.
 - Scoped native and WASM Clippy with `-D warnings` passed. Fixed WASM17-function executable built. Changed Rust formatting passed. Exact workspace formatting failed with Windows OS206, not a successful workspace gate.
-- Browser old/fixed comparison and independent review are pending at this source checkpoint. See `results/search-live-host/` for raw reports; no completion claim from prepared artifacts.
+- Actual Rust/WASM negative control replaced only `find.rs` with accepted458 bytes. Chromium passed16 functions and failed the new reactivation function. A `finally` restored the exact fixed bytes. The final suite passed17 functions in each of Chromium, Firefox and WebKit,51 functions total with no failures, ignored or filtered tests. The40 shared cases are inside one function per engine, not40 extra functions. Compiler artifacts contain the exact shared fixture bytes.
+- Raw reports, command records, restore hashes and artifact provenance are in `results/search-live-host/`. Independent review is pending at this evidence checkpoint.
 
 Reproduction from a prepared checkout:
 

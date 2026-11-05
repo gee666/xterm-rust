@@ -1,0 +1,52 @@
+   Compiling allocator-api2 v0.2.21
+   Compiling foldhash v0.1.5
+   Compiling memchr v2.8.3
+   Compiling equivalent v1.0.3
+   Compiling hashbrown v0.15.5
+   Compiling ryu-js v1.0.3
+   Compiling regress v0.10.4
+   Compiling serde_core v1.0.229
+   Compiling adler2 v2.0.1
+   Compiling zmij v1.0.23
+   Compiling miniz_oxide v0.8.9
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\G469\crates\xterm-core)
+   Compiling serde_json v1.0.154
+   Compiling itoa v1.0.18
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\G469\crates\xterm-addons)
+   Compiling xterm-wasm-support v0.1.0 (O:\xterm-rust-swarm-16\tmp\G469\crates\xterm-wasm-support)
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\G469\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 14.80s
+     Running tests\search_addon.rs (target\debug\deps\search_addon-4de7d175adac3b45.exe)
+
+running 3 tests
+test live_host::before_search_reactivation_uses_current_selection_and_clear_target ... FAILED
+test live_host::decoration_reactivation_resolves_host_only_before_engine_selection_capture ... FAILED
+test live_host::invalid_term_validation_reactivation_clears_current_host ... FAILED
+
+failures:
+
+---- live_host::before_search_reactivation_uses_current_selection_and_clear_target stdout ----
+
+thread 'live_host::before_search_reactivation_uses_current_selection_and_clear_target' panicked at crates\xterm-web\tests\search_cases\live_host.rs:36:25:
+called `Option::unwrap()` on a `None` value
+
+---- live_host::decoration_reactivation_resolves_host_only_before_engine_selection_capture stdout ----
+
+thread 'live_host::decoration_reactivation_resolves_host_only_before_engine_selection_capture' panicked at crates\xterm-web\tests\search_cases\live_host.rs:36:25:
+called `Option::unwrap()` on a `None` value
+
+---- live_host::invalid_term_validation_reactivation_clears_current_host stdout ----
+
+thread 'live_host::invalid_term_validation_reactivation_clears_current_host' panicked at crates\xterm-web\tests\search_cases\live_host.rs:36:25:
+called `Option::unwrap()` on a `None` value
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    live_host::before_search_reactivation_uses_current_selection_and_clear_target
+    live_host::decoration_reactivation_resolves_host_only_before_engine_selection_capture
+    live_host::invalid_term_validation_reactivation_clears_current_host
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 53 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-web --test search_addon`
