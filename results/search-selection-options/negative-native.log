@@ -1,0 +1,32 @@
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\O445\crates\xterm-addons)
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\O445\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 4.91s
+     Running tests\search_addon.rs (target\debug\deps\search_addon-4de7d175adac3b45.exe)
+
+running 2 tests
+test selection_options::matching_failure_skips_selection_decoration_and_internal_scroll_reads ... FAILED
+test selection_options::selection_decoration_getter_can_reenter_after_matching_before_no_scroll ... FAILED
+
+failures:
+
+---- selection_options::matching_failure_skips_selection_decoration_and_internal_scroll_reads stdout ----
+
+thread 'selection_options::matching_failure_skips_selection_decoration_and_internal_scroll_reads' panicked at crates\xterm-web\tests\search_cases\selection_options.rs:41:17:
+assertion `left == right` failed: only initial eligibility before failure
+  left: 2
+ right: 1
+
+---- selection_options::selection_decoration_getter_can_reenter_after_matching_before_no_scroll stdout ----
+
+thread 'selection_options::selection_decoration_getter_can_reenter_after_matching_before_no_scroll' panicked at crates\xterm-web\tests\search_cases\selection_options.rs:108:25:
+matching precedes selection decorations
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    selection_options::matching_failure_skips_selection_decoration_and_internal_scroll_reads
+    selection_options::selection_decoration_getter_can_reenter_after_matching_before_no_scroll
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 46 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-web --test search_addon`
