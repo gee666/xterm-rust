@@ -1,0 +1,31 @@
+{
+  "scope": "Default-feature canonical integration, not final workspace/all-feature/platform equivalence",
+  "command": "CARGO_BUILD_JOBS=2 node scripts/worktree-merge.mjs",
+  "base": "4e21849c04be2ce0e542671dd335744f0c6944c1",
+  "integratedCommit": "40f1798432ae133af7426d33a9247e2bc76db095",
+  "reviewedSource": "archive/Herodotus16-keyboard-reviewed at eea9b3679574fcb7ffc71ab5eaf0a6ce0002c519",
+  "task": 343,
+  "changedCrates": [
+    "xterm-core",
+    "xterm-web"
+  ],
+  "phases": [
+    "cargo build --locked -p xterm-core -p xterm-web",
+    "cargo test --locked --all-targets -p xterm-core -p xterm-web",
+    "cargo check --locked --all-targets for changed crates and affected workspace dependents",
+    "cargo check --locked --workspace",
+    "cargo check --locked --target wasm32-unknown-unknown --lib for applicable affected web/WASM packages",
+    "fast-forward main only after tested source/base checks; remove regular private target"
+  ],
+  "status": "passed",
+  "testSummaries": 339,
+  "nativeTestsPassed": 1839,
+  "nativeTestsFailed": 0,
+  "nativeTestsIgnored": 0,
+  "bundledReceiptOnly": "Arjuna338 canonical receipt 1cf6be3, four docs/results files; source already integrated",
+  "excluded": "Milica344 was still in review at freeze; not picked",
+  "log": "results/keyboard-recovery343/canonical-merge.log",
+  "quality": "Exact full cargo fmt passed on rebased source. Scoped core/WASM Clippy was green. This helper did not run a final all-feature/release/native OS matrix.",
+  "browser": "Raw10224Kitty+592Win32 cases pass in Node and3engines; DOM15x3 and InputEvent4x3. Historical complete library24/25 fails getter trace, routed317/354, retained separately.",
+  "cleanup": "Helper removed regular O:H/target; final worktree/temp cleanup is recorded in docs/handoffs/herodotus16.md."
+}
