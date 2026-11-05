@@ -1,5 +1,6 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved. MIT license.
 // Host operations only. Provider ordering and link state stay in Rust.
+export function linkProviderToken(provider, dispose) { return { dispose: () => dispose(provider) }; }
 export function linkProperty(value, key) { return value[key]; }
 export function linkSet(value, key, entry) { value[key] = entry; }
 export function linkCall(value, receiver, args) { return Reflect.apply(value, receiver, args); }

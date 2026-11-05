@@ -7,7 +7,12 @@ use crate::links::{
 use js_sys::Array;
 use std::rc::Rc;
 use wasm_bindgen::{closure::Closure, prelude::*, JsCast};
-use xterm_core::lifecycle::Disposable;
+
+#[wasm_bindgen(module = "/src/links/raw_link_bridge.js")]
+extern "C" {
+    #[wasm_bindgen(js_name = linkProviderToken)]
+    fn provider_token(provider: &JsValue, callback: &JsValue) -> JsValue;
+}
 
 struct JavaScriptProvider(JsValue);
 impl BrowserLinkProvider for JavaScriptProvider {
@@ -43,19 +48,27 @@ impl BrowserLinkProvider for JavaScriptProvider {
 impl Terminal {
     #[wasm_bindgen(js_name = registerLinkProvider)]
     pub fn register_link_provider(&self, provider: JsValue) -> JsValue {
-        // Source indexOf removes the first registration of the same JS object,
-        // including repeated disposal of a token for duplicate registrations.
-        let existing = self
-            .shared
+        self.shared
             .link_providers
-            .snapshot()
-            .into_iter()
-            .find(|entry| entry.javascript_identity() == Some(&provider));
-        let provider = existing.unwrap_or_else(|| Rc::new(JavaScriptProvider(provider)));
-        let registration = self.shared.link_providers.register(provider);
-        xterm_wasm_support::events::from_callback(move || {
-            registration.dispose();
-            Ok(JsValue::UNDEFINED)
+            .register(Rc::new(JavaScriptProvider(provider.clone())));
+        let weak = Rc::downgrade(&self.shared.link_providers);
+        let dispose = Closure::<dyn Fn(JsValue)>::new(move |provider| {
+            let Some(providers) = weak.upgrade() else {
+                return;
+            };
+            // Resolve identity at disposal, including registrations made after
+            // this token removed every previous registration of the JS object.
+            let first = providers
+                .snapshot()
+                .into_iter()
+                .find(|entry| entry.javascript_identity() == Some(&provider));
+            if let Some(first) = first {
+                providers.unregister(&first);
+            }
         })
+        .into_js_value();
+        // Keep the provider edge on the JS side. provider -> token cycles must
+        // not retain a Rust closure that in turn strongly owns the JS provider.
+        provider_token(&provider, &dispose)
     }
 }

@@ -124,6 +124,13 @@ return (async () => {
     first.dispose(); first.dispose();
     mouse('mousemove', 3, 2);
     record('duplicate disposal', { duplicates });
+    const oldToken = terminal.registerLinkProvider(duplicate);
+    oldToken.dispose();
+    terminal.registerLinkProvider(duplicate);
+    const detachedDispose = oldToken.dispose;
+    detachedDispose();
+    mouse('mousemove', 4, 3);
+    record('old token removes re-registration', { duplicates });
     // Priority waits for higher-priority async providers, without eager reads.
     let highReply;
     let lowReply;
@@ -178,7 +185,7 @@ return (async () => {
     let disposedError;
     try { pending({ get map() { disposedMaps++; throw disposedMarker; } }); } catch (error) { disposedError = error; }
     record('disposed reply', { disposedMaps, identity: disposedError === disposedMarker });
-    assert(trace.length === 20, `trace phase count ${trace.length}`);
+    assert(trace.length === 21, `trace phase count ${trace.length}`);
     return trace;
   } finally {
     window.removeEventListener('error', capture);

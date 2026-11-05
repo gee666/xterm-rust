@@ -30,6 +30,10 @@ impl<T: ?Sized> LinkProviderService<T> {
         }
     }
 
+    pub fn unregister(&self, provider: &Rc<T>) {
+        remove_first(&self.providers, provider);
+    }
+
     pub fn snapshot(&self) -> Vec<Rc<T>> {
         self.providers.borrow().clone()
     }
@@ -67,18 +71,22 @@ pub struct ProviderRegistration<T: ?Sized> {
     provider: Rc<T>,
 }
 
+fn remove_first<T: ?Sized>(providers: &RefCell<Vec<Rc<T>>>, provider: &Rc<T>) {
+    let removed = {
+        let mut entries = providers.borrow_mut();
+        entries
+            .iter()
+            .position(|entry| Rc::ptr_eq(entry, provider))
+            .map(|index| entries.remove(index))
+    };
+    drop(removed);
+}
+
 impl<T: ?Sized> Disposable for ProviderRegistration<T> {
     fn dispose(&self) {
         let Some(providers) = self.providers.upgrade() else {
             return;
         };
-        let removed = {
-            let mut entries = providers.borrow_mut();
-            entries
-                .iter()
-                .position(|entry| Rc::ptr_eq(entry, &self.provider))
-                .map(|index| entries.remove(index))
-        };
-        drop(removed);
+        remove_first(&providers, &self.provider);
     }
 }

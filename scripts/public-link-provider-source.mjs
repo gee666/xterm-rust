@@ -51,7 +51,7 @@ try {
         }, program);
         if (expected === undefined) expected = entry.trace;
         assert.deepEqual(entry.trace, expected);
-        assert.equal(entry.trace.length, 20);
+        assert.equal(entry.trace.length, 21);
         assert.deepEqual(entry.errors, []);
         entry.status = 'passed';
         console.log(`${name}: ${entry.trace.length} source provider phases passed`);
