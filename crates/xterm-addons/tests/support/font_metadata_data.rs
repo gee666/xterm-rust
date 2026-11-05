@@ -45,6 +45,12 @@ pub fn construct(change: &Value) -> Vec<u8> {
         }
         records.push((base[at..at + 4].try_into().unwrap(), data));
     }
+    if change["metaMutation"].as_u64().is_some() {
+        let mut data = vec![0; 18];
+        data[..2].copy_from_slice(&1_u16.to_be_bytes());
+        data[4..8].copy_from_slice(&2_u32.to_be_bytes());
+        records.push((*b"kern", data));
+    }
     if let Some(data) = change["data"].as_array() {
         records.push((
             change["tag"]

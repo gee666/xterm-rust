@@ -136,9 +136,7 @@ impl Font {
         }
         let gsub = tables
             .gsub
-            .map(|table| {
-                font_gsub::parse(&table.load_from(refreshed.as_deref().unwrap_or(bytes))?)
-            })
+            .map(|table| font_gsub::parse(&table.load_from(refreshed.as_deref().unwrap_or(bytes))?))
             .transpose()?;
         if let Some(table) = tables.meta {
             font_metadata::meta(&table.load_from(refreshed.as_deref().unwrap_or(bytes))?)?;

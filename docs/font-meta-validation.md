@@ -12,20 +12,20 @@ Uncompressed tables retain the original remaining DataView bytes, not a nominal 
 
 The existing native WOFF boundary uses checked zlib decompression. One new corrupt selected compressed META input produces native `FontError::Compression`, while the source's permissive inflater returns bytes that then fail its META version check. Both reject loading, but their failure classifications differ. This distinction is explicitly asserted in the shared test helper, not hidden by a general fallback. Native bounds/missing-table errors also use typed Rust representations rather than JavaScript error objects.
 
-Very large metadata strings can hit engine-specific `String.fromCharCode.apply` argument limits in the source. Rust does not construct those unused strings. This patch does not claim matching engine resource-limit failures. CFF/CFF2, GDEF/GPOS, variation/color constructors, complete outline validation and remaining error-message/order contracts remain342. Warning-driven mutation of deferred bytes is separate task406 and needs a combined integration test with META after that fix lands.
+Very large metadata strings can hit engine-specific `String.fromCharCode.apply` argument limits in the source. Rust does not construct those unused strings. This patch does not claim matching engine resource-limit failures. CFF/CFF2, GDEF/GPOS, variation/color constructors, complete outline validation and remaining error-message/order contracts remain342. Accepted task406 supplies warning-driven byte refresh. This branch retains its reviewed source and408 SVG validation. META uses the same refreshed original bytes after GSUB parsing. Two new constructor cases change META version1 to2 and2 to1 during the kern warning, asserting rejection and acceptance respectively. The asynchronous addon scenario also retains the exact parser-buffer alias and changes a valid META header to invalid during the warning.
 
 ## Evidence
 
 `results/font-meta/` retains scoped Windows receipts. The installed unchanged opentype.js parser SHA-256 is `737212d8aae53d1996ef10b315e4369a1542ebb9b94c13c5f99793914745d484`.
 
-- The source oracle has1828 cases,662 accepted and1166 rejected. The original1471 case descriptors/outcomes are unchanged. There are357 new META cases covering versions, truncations, map counts/offsets/lengths, ignored binary tags, malformed UTF8 bytes, duplicate descriptors, compression, nominal lengths and earlier-error precedence. All776 reference-manifest files matched their recorded hashes.
-- `baseline-corrected.log` records206 actual pre-fix mismatches against the initial1827-case corpus. The selected corrupt compressed payload was added afterward, bringing the final count to1828. `baseline.log` is an earlier test-helper compile failure, not a behavior result.
-- `native-final.log` records four passing metadata/warning test functions, including all1828 constructor outcomes and exact typed META/kern failure comparisons. `ligatures.log` records seven passing existing ligature test functions.
+- The source oracle has1830 cases,663 accepted and1167 rejected. The original1471 case descriptors/outcomes are unchanged. The pre-union1828 cases are also unchanged. There are359 new META cases covering versions, truncations, map counts/offsets/lengths, ignored binary tags, malformed UTF8 bytes, duplicate descriptors, compression, nominal lengths and earlier-error precedence. All776 reference-manifest files matched their recorded hashes.
+- `baseline-corrected.log` records206 actual pre-fix mismatches against the initial1827-case corpus. The selected corrupt compressed payload and two warning-mutation cases were added afterward, bringing the final count to1830. `baseline.log` is an earlier test-helper compile failure, not a behavior result.
+- `native-final.log` records four passing metadata/warning test functions, including the pre-union1828 constructor outcomes and exact typed META/kern failure comparisons. `ligatures.log` records seven passing existing ligature test functions.
 - Native xterm-addons all-target/all-feature Clippy and focused xterm-font-addons WASM Clippy pass with warnings denied.
 - The exact `cargo fmt --all -- --check` command encounters Windows OS206, even after shortening the owned worktree and trying a temporary drive alias. All five complete per-package checks pass in `fmt-partitions.json`. The Q: alias was removed in `finally`; it is not a retained build dependency.
-- `browser-first.json` records Chromium148.0.7778.96 and WebKit26.4 passing two Rust/WASM test functions each. Firefox exceeded its180-second deadline. That failure is retained, not relabeled as a pass.
+- `browser-first.json` records Chromium148.0.7778.96 and WebKit26.4 passing two Rust/WASM test functions each on the pre-union1828-case artifact. Firefox exceeded its180-second deadline. That failure is retained, not relabeled as a pass. A separately granted300-second diagnostic checked the same WASM/binding hashes and passed both tests in191.62 seconds on Firefox150.0.2. The diagnostic's first launch had an ESM path error before creating a browser; the corrected launch and actual result are retained separately. Final union verification is reported below when executed.
 
-The asynchronous addon test runs the real Rust font reader and actual addon through a boundary host. It compares shared unchanged-source scenarios for bad head/kern/META input, fallback ranges, cached failure, no refresh, successful loading of another family and one refresh. This is component evidence, not a full Terminal renderer or original/demo suite pass.
+The asynchronous addon test runs the real Rust font reader and actual addon through a boundary host. It compares shared unchanged-source scenarios for bad head/kern/META input and warning-mutated META, fallback ranges, cached failure, no refresh, successful loading of another family and one refresh. This is component evidence, not a full Terminal renderer or original/demo suite pass.
 
 ## Reproduction
 
@@ -38,7 +38,7 @@ cargo test --locked -j2 -p xterm-addons --test font_metadata_constructor
 cargo test --locked -j2 -p xterm-addons --lib ligatures
 cargo clippy --locked -j2 -p xterm-addons --all-targets --all-features -- -D warnings
 cargo clippy --locked -j2 -p xterm-font-addons --target wasm32-unknown-unknown --test font_metadata_browser -- -D warnings
-WASM_PACKAGE=xterm-font-addons WASM_TEST=font_metadata_browser WASM_TEST_TIMEOUT_MS=180000 node scripts/browser-host-check.mjs
+WASM_PACKAGE=xterm-font-addons WASM_TEST=font_metadata_browser WASM_TEST_TIMEOUT_MS=300000 node scripts/browser-host-check.mjs
 cargo fmt --all -- --check
 ```
 

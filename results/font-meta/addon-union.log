@@ -1,0 +1,66 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+... Skipped lines
+
+  {
+    accepted: {
+      ranges: [],
+      reads: 2,
++     refreshes: 2
+-     refreshes: 1
+    },
+    cachedFailure: {
+      reads: 1,
++     refreshes: 1
+-     refreshes: 0
+    },
+    loading: [
+      [
+        0,
+        3
+...
+    rejected: {
++     ranges: [],
+-     ranges: [
+-       [
+-         0,
+-         3
+-       ]
+-     ],
+      reads: 1,
++     refreshes: 1
+-     refreshes: 0
+    },
+    retry: [
+      [
+        0,
+        3
+
+    at file:///O:/xterm-rust-swarm-16/tmp/A/scripts/ligature-addon-oracle.mjs:90:10 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: {
+    loading: [ [ 0, 3 ] ],
+    rejected: { ranges: [], reads: 1, refreshes: 1 },
+    cachedFailure: { reads: 1, refreshes: 1 },
+    retry: [ [ 0, 3 ] ],
+    accepted: { ranges: [], reads: 2, refreshes: 2 },
+    warnings: 1
+  },
+  expected: {
+    loading: [ [ 0, 3 ] ],
+    rejected: { ranges: [ [ 0, 3 ] ], reads: 1, refreshes: 0 },
+    cachedFailure: { reads: 1, refreshes: 0 },
+    retry: [ [ 0, 3 ] ],
+    accepted: { ranges: [], reads: 2, refreshes: 1 },
+    warnings: 1
+  },
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.15.0

@@ -26,6 +26,10 @@ function construct(change) {
  // Every case starts from the same original descriptors. Mutating a selected
  // hhea/maxp descriptor must not contaminate the next independent source case.
  const records=original.filter(record=>record.tag!==change.tag&&!change.remove?.includes(record.tag)).map(record=>({...record}));
+ if(change.metaMutation) {
+  const data=Buffer.alloc(18);data.writeUInt16BE(1);data.writeUInt32BE(2,4);
+  records.push({tag:'kern',data});
+ }
  if(change.data)records.push({tag:change.tag,data:Buffer.from(change.data)});
  if(change.metrics!==undefined) {
   const hhea=records.find(record=>record.tag==='hhea');
@@ -160,6 +164,10 @@ for(const compressed of [false,true]) {
 changes.push({name:'ignored first meta invalid compressed data',tag:'meta',data:[...emptyMeta],woff:true,duplicateTable:{tag:'meta',position:'first',invalidCompression:true}});
 changes.push({name:'selected meta invalid compressed data',tag:'meta',data:[...emptyMeta],woff:true,duplicateTable:{tag:'meta',position:'last',invalidCompression:true}});
 changes.push({name:'meta ignored directory length',tag:'meta',data:[...emptyMeta],directoryLength:0});
+for(const [initial,final]of [[1,2],[2,1]]) {
+ const data=Buffer.from(emptyMeta);data.writeUInt32BE(initial);
+ changes.push({name:`meta warning changes version ${initial} to ${final}`,tag:'meta',data:[...data],metaMutation:final});
+}
 const cases=[];
 for(const change of changes) {
  let bytes=construct(change);
@@ -182,8 +190,15 @@ for(const change of changes) {
  }
  if(change.directoryLength!==undefined)bytes.writeUInt32BE(change.directoryLength,12+(bytes.readUInt16BE(4)-1)*16+12);
  let outcome;
- try {parse(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.length));outcome={status:'ok'};}
+ const input=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.length);
+ const warn=Object.getOwnPropertyDescriptor(console,'warn');
+ if(change.metaMutation)Object.defineProperty(console,'warn',{configurable:true,value(){
+  const view=new DataView(input);
+  for(let i=0;i<view.getUint16(4);i++)if(view.getUint32(12+i*16)===0x6d657461)view.setUint32(view.getUint32(20+i*16),change.metaMutation);
+ }});
+ try {parse(input);outcome={status:'ok'};}
  catch(error){outcome={status:'error',name:error.name,message:error.message};}
+ finally {if(change.metaMutation){if(warn)Object.defineProperty(console,'warn',warn);else delete console.warn;}}
  cases.push({...change,outcome});
 }
 const fixture={source:dependency.replaceAll('\\','/').split('/node_modules/').at(-1),sourceSha256:digest(await fs.readFile(dependency)),fontSha256:digest(base),cases};

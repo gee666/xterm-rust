@@ -26,6 +26,10 @@ export async function metadataRejectionScenarios(create, bytes) {
   }
   const badKern = withKern(bytes, new Uint8Array([0, 2]));
   const badMeta = withTable(bytes, 0x6d657461, new Uint8Array([0, 0, 0, 2]));
+  const warningKern = new Uint8Array(18), kernView = new DataView(warningKern.buffer);
+  kernView.setUint16(0, 1); kernView.setUint32(4, 2);
+  const validMeta = new Uint8Array(16); new DataView(validMeta.buffer).setUint32(0, 1);
+  const changedMeta = withTable(withKern(bytes, warningKern), 0x6d657461, validMeta);
   const nav = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
   const windowDescriptor = Object.getOwnPropertyDescriptor(globalThis, 'window');
   const owner = globalThis.window ?? {};
@@ -40,9 +44,13 @@ export async function metadataRejectionScenarios(create, bytes) {
   // The source catalog is cached for the whole module. Both cases must share
   // one catalog, while different family keys isolate their load-result caches.
   Object.defineProperty(owner, 'queryLocalFonts', { configurable: true, value: async () =>
-    [['BadMetadata', bad], ['GoodMetadata', bytes], ['BadKern', badKern], ['GoodKern', bytes], ['BadMeta', badMeta], ['GoodMeta', bytes]].map(([family, data]) => ({ family, async blob() {
+    [['BadMetadata', bad], ['GoodMetadata', bytes], ['BadKern', badKern], ['GoodKern', bytes], ['BadMeta', badMeta], ['GoodMeta', bytes], ['ChangedMeta', changedMeta], ['GoodChangedMeta', bytes]].map(([family, data]) => ({ family, async blob() {
       reads++;
-      return { async arrayBuffer() { return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength); } };
+      return { async arrayBuffer() {
+        // Keep the alias for the mutation case. Copying here would make the
+        // warning write target a different buffer from the parser's DataView.
+        return data === changedMeta ? data.buffer : data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
+      } };
     } })) });
   const addon = create({ fallbackLigatures: ['==='] });
   async function scenario(badFamily, goodFamily) {
@@ -59,10 +67,20 @@ export async function metadataRejectionScenarios(create, bytes) {
     await new Promise(resolve => { complete = resolve; });
     return { loading, rejected, cachedFailure, retry, accepted: { ranges: join('==='), ...counters() } };
   }
+  async function mutatedMetaScenario() {
+    const warn = Object.getOwnPropertyDescriptor(console, 'warn'); let warnings = 0;
+    Object.defineProperty(console, 'warn', {configurable:true,value() {
+      warnings++;
+      const view = new DataView(changedMeta.buffer);
+      for (let i = 0; i < view.getUint16(4); i++) if (view.getUint32(12+i*16) === 0x6d657461) view.setUint32(view.getUint32(20+i*16), 2);
+    }});
+    try { return {...await scenario('ChangedMeta', 'GoodChangedMeta'), warnings}; }
+    finally { if (warn) Object.defineProperty(console, 'warn', warn); else delete console.warn; }
+  }
   try {
     family = 'BadMetadata';
     addon.activate(term);
-    return { metadata: await scenario('BadMetadata', 'GoodMetadata'), kern: await scenario('BadKern', 'GoodKern'), meta: await scenario('BadMeta', 'GoodMeta') };
+    return { metadata: await scenario('BadMetadata', 'GoodMetadata'), kern: await scenario('BadKern', 'GoodKern'), meta: await scenario('BadMeta', 'GoodMeta'), changedMeta: await mutatedMetaScenario() };
   } finally {
     addon.dispose();
     if (nav) Object.defineProperty(globalThis, 'navigator', nav); else delete globalThis.navigator;

@@ -5,17 +5,18 @@ use wasm_bindgen_test::*;
 use xterm_font_addons::LigaturesAddon;
 #[path = "../../xterm-addons/tests/support/font_metadata_data.rs"]
 mod corpus;
+#[path = "../../xterm-addons/tests/support/font_meta_loading.rs"]
+mod meta;
 
 #[wasm_bindgen_test]
 fn source_constructor_corpus_matches_in_wasm() {
-    use xterm_addons::ligatures::font::{Font, FontOptions};
     let fixture: serde_json::Value = serde_json::from_str(include_str!(
         "../../xterm-addons/tests/fixtures/font-metadata.json"
     ))
     .unwrap();
     let mut failures = Vec::new();
     for case in fixture["cases"].as_array().unwrap() {
-        let actual = Font::load_buffer(&corpus::construct(case), FontOptions::default());
+        let actual = meta::load(case);
         if case["tag"] == "kern" || case["tag"] == "meta" {
             let expected_error = corpus::constructor_error(case);
             if actual.as_ref().err() != expected_error.as_ref() {

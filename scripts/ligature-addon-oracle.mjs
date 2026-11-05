@@ -87,6 +87,7 @@ if (bufferMutations) {
   assert.deepEqual(result.metadata.accepted, {ranges:[],reads:2,refreshes:1});
   assert.deepEqual(result.kern, result.metadata);
   assert.deepEqual(result.meta, result.metadata);
+  assert.deepEqual(result.changedMeta, {...result.metadata, warnings:1});
 } else {
   assert.deepEqual(result.loading.nativeRanges, [[1, 3]]);
   assert.deepEqual(result.loading.foundTrace, [['register', 0], ['refresh', 0, 4]]);

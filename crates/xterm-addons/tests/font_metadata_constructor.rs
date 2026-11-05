@@ -2,6 +2,8 @@ use serde_json::Value;
 use xterm_addons::ligatures::font::{Font, FontError, FontOptions};
 #[path = "support/font_metadata_data.rs"]
 mod corpus;
+#[path = "support/font_meta_loading.rs"]
+mod meta;
 use corpus::construct;
 #[path = "support/font_kern_warning_assertions.rs"]
 mod warnings;
@@ -21,8 +23,7 @@ fn unchanged_source_metadata_constructor_outcomes() {
     let fixture: Value = serde_json::from_str(include_str!("fixtures/font-metadata.json")).unwrap();
     let mut failures = Vec::new();
     for case in fixture["cases"].as_array().unwrap() {
-        let bytes = construct(case);
-        let actual = Font::load_buffer(&bytes, FontOptions::default());
+        let actual = meta::load(case);
         let expected = case["outcome"]["status"] == "ok";
         if case["tag"] == "kern" || case["tag"] == "meta" {
             let expected_error = corpus::constructor_error(case);
