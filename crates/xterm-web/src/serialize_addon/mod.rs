@@ -54,12 +54,19 @@ impl SerializeAddon {
             let start = options::marker(&range, "start")?;
             let cols = columns(&host)?;
             let end = options::marker(&range, "end")?;
+            let range = options::line_range(start, end)?;
             buffer(
                 &host,
                 normal,
                 CellRange {
-                    start: Position { x: 0, y: start },
-                    end: Position { x: cols, y: end },
+                    start: Position {
+                        x: 0,
+                        y: range.start,
+                    },
+                    end: Position {
+                        x: cols,
+                        y: range.end,
+                    },
                 },
                 true,
             )?

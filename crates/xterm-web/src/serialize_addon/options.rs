@@ -1,7 +1,15 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved. MIT license.
 use crate::{js_error::to_js_error, terminal::options::from_js, utility_addons::js_property::get};
 use wasm_bindgen::prelude::*;
-use xterm_core::options::OptionValue;
+use xterm_core::{options::OptionValue, serialize::LineRange};
+
+#[wasm_bindgen(
+    inline_js = "export function checkSerializeArrayLength(length) { new Array(length); }"
+)]
+extern "C" {
+    #[wasm_bindgen(catch, js_name = checkSerializeArrayLength)]
+    fn check_array_length(length: f64) -> Result<(), JsValue>;
+}
 
 pub(super) fn property(value: &JsValue, key: &str) -> Result<JsValue, JsValue> {
     if value.is_undefined() || value.is_null() {
@@ -25,13 +33,28 @@ pub(super) fn index(value: JsValue) -> Result<usize, JsValue> {
     }
     Ok(number as usize)
 }
-pub(super) fn marker(range: &JsValue, key: &str) -> Result<usize, JsValue> {
+pub(super) fn marker(range: &JsValue, key: &str) -> Result<JsValue, JsValue> {
     let first = get(range, key)?;
     let second = get(range, key)?;
-    index(if first.as_f64().is_some() {
-        second
+    if first.as_f64().is_some() {
+        Ok(second)
     } else {
-        get(&second, "line")?
+        get(&second, "line")
+    }
+}
+pub(super) fn line_range(start: JsValue, end: JsValue) -> Result<LineRange, JsValue> {
+    if let (Some(start), Some(end)) = (start.as_f64(), end.as_f64()) {
+        let count = end - start;
+        if !count.is_finite() || count < 0.0 || count.fract() != 0.0 || count > u32::MAX as f64 {
+            // Source allocates its row array only after reading both markers.
+            // Let the browser create its own RangeError, including engine-specific
+            // text. The invalid count cannot allocate a large valid array here.
+            check_array_length(count)?;
+        }
+    }
+    Ok(LineRange {
+        start: index(start)?,
+        end: index(end)?,
     })
 }
 pub(super) fn scrollback_start(max: usize, rows: usize, value: JsValue) -> Result<usize, JsValue> {

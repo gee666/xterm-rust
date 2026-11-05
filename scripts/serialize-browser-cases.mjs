@@ -247,6 +247,34 @@ export async function serializationCases() {
     try { addon.activate(second); await write(second, 'second'); const after = addon.serialize(); second.dispose(); return [before, after, addon.serialize()]; }
     finally { second.dispose(); }
   });
+  await run('ansi-invalid-row-count-phases', async (term, addon) => {
+    await write(term, '\x1b[31mABC');
+    const bounds = [[NaN, NaN], [NaN, 0], [0, NaN], [Infinity, 0], [-Infinity, 0],
+      [0, Infinity], [0, -Infinity], [1, 0], [0.5, 1], [0, 0.5], [0, 2 ** 32]];
+    return bounds.map(([start, end]) => {
+      const log = [];
+      const range = { get start() { log.push('start'); return start; }, get end() { log.push('end'); return end; } };
+      const options = { get range() { log.push('range'); return range; },
+        get excludeAltBuffer() { log.push('alt'); return true; }, get excludeModes() { log.push('modes'); return true; } };
+      return { bounds: [String(start), String(end)], result: capture(() => addon.serialize(options)), log };
+    });
+  });
+  await run('ansi-invalid-start-end-getter-reentry', async (term, addon) => {
+    await write(term, 'ABC');
+    const results = [];
+    for (const failAt of [1, 2, 0]) {
+      const sentinel = {}, log = []; let calls = 0, same = false, result;
+      const range = { get start() { log.push('start'); return NaN; }, get end() {
+        log.push('end'); term.reset(); term.resize(9, 3);
+        if (++calls === failAt) throw sentinel;
+        return 0;
+      } };
+      try { result = capture(() => {
+        try { return addon.serialize({ range }); } catch (error) { same = error === sentinel; throw error; }
+      }); } finally { results.push({ failAt, same, result, log, state: snapshot(term) }); }
+    }
+    return results;
+  });
   // Retain known unsupported numeric results. The comparison report separates
   // these from the supported binding regressions instead of hiding differences.
   await run('raw-numeric-boundaries', async (term, addon) => {

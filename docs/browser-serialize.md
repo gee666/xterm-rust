@@ -16,7 +16,7 @@ The core `BufferAccess::missing_cell` hook lets the browser emit the original co
 
 Full serialization equivalence is NOT PROVEN. Task346 and family322 retain SB01-SB08 in `docs/serialize-browser-acceptance.md`.
 
-- Native row/column ranges are unsigned integers. Task410 supports numeric-NaN HTML row bounds as zero row iterations, retaining headers and thrown values. Task416 also supports numeric NaN/+Infinity HTML start columns as empty first-row cell traversal. Other negative/fractional/NaN/infinite/large JS coordinates are not equivalent. The browser returns an explicit representation error rather than truncating them. This is a compatibility gap, not a source-approved divergence.
+- Native row/column ranges are unsigned integers. Task410 supports numeric-NaN HTML row bounds as zero row iterations, retaining headers and thrown values. Task416 supports numeric NaN/+Infinity HTML start columns as empty first-row cell traversal. Task421 preserves source ANSI failures for numeric bounds whose difference is not a valid JavaScript array length, after both marker reads. Other negative/fractional/infinite/large traversal coordinates are not equivalent. The browser returns an explicit representation error rather than truncating them. This is a compatibility gap, not a source-approved divergence.
 - Marker getters and custom coordinate coercions need their exact late source evaluation points. Numeric coercion currently happens earlier than source traversal.
 - Public Terminal/buffer method or descriptor replacement is not fully honored. The serializer uses the actual native public namespace rather than calling arbitrary replaced methods.
 - Theme palette array replacement and element mutation during header reentry need array-identity modeling. Normal live theme/OSC changes between calls are covered; a copied list of color handles does not prove arbitrary reentrant palette mutation.
@@ -61,6 +61,12 @@ Task410 preserves the source empty traversal when numeric primitive row bounds c
 ## Numeric nonfinite HTML start columns
 
 Task416 preserves empty first-row cell traversal for numeric primitive NaN and positive Infinity start columns, without skipping header effects or later rows. The corpus now matches56/57 in each engine with the raw-coordinate mismatch retained. A bounded unchanged-suite repeat passed120/120 source and120/120 Rust cases after one Firefox setup timeout in the first attempt. Both attempts and the54/57 negative control are retained. See `docs/serialize-nonfinite-column.md` for scope and exact receipts. Full346/322 remain open.
+
+## ANSI invalid numeric row counts
+
+Task421 defers native coordinate conversion until both ANSI range markers have been read. When both resulting values are numeric primitives, it validates the source row-array length difference before native conversion. A minimal browser bridge invokes the actual Array constructor only for an invalid count, retaining each engine's RangeError message without allocating a valid large array. End getters can still throw their original value or reset/resize the terminal before that failure.
+
+Both new probes match across all three engines. The baseline matches56/59 cases per engine; fixed matches58/59, still exiting nonzero for raw-coordinate traversal gaps. Unchanged suites pass120/120 source and120/120 Rust with no skipped/unrun cases. See `docs/serialize-array-count.md` and `results/serialize-array-count/` for scope, negative controls and quality receipts. Full346/322 remain open.
 
 ## Public cell enumeration repair
 

@@ -1,0 +1,28 @@
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\HadleyRows\crates\xterm-web\src\serialize_addon\mod.rs:59:
+                 &host,
+                 normal,
+                 CellRange {
+[31m-                    start: Position { x: 0, y: range.start },
+[0m[31m-                    end: Position { x: cols, y: range.end },
+[0m[32m+                    start: Position {
+[0m[32m+                        x: 0,
+[0m[32m+                        y: range.start,
+[0m[32m+                    },
+[0m[32m+                    end: Position {
+[0m[32m+                        x: cols,
+[0m[32m+                        y: range.end,
+[0m[32m+                    },
+[0m                 },
+                 true,
+             )?
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\HadleyRows\crates\xterm-web\src\serialize_addon\options.rs:3:
+ use wasm_bindgen::prelude::*;
+ use xterm_core::{options::OptionValue, serialize::LineRange};
+ 
+[31m-#[wasm_bindgen(inline_js = "export function checkSerializeArrayLength(length) { new Array(length); }")]
+[0m[32m+#[wasm_bindgen(
+[0m[32m+    inline_js = "export function checkSerializeArrayLength(length) { new Array(length); }"
+[0m[32m+)]
+[0m extern "C" {
+     #[wasm_bindgen(catch, js_name = checkSerializeArrayLength)]
+     fn check_array_length(length: f64) -> Result<(), JsValue>;
