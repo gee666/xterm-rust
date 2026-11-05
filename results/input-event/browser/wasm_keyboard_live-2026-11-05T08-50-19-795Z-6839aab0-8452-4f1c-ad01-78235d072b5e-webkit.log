@@ -1,0 +1,58 @@
+running 12 tests
+test win32_reads_code_at_each_virtual_scan_modifier_and_enhanced_stage ... ok
+test unused_legacy_code_getter_does_not_throw ... ok
+test thrown_getter_retains_original_js_value_and_stops_before_cursor_effect ... ok
+test third_level_checks_type_even_when_no_platform_modifier_matches ... ok
+test onkey_mutates_final_screen_reader_cancellation_without_changing_encoded_key ... ok
+test kitty_does_not_eagerly_reread_keycode_for_encoding ... ok
+test keypress_repeats_which_reads_and_distinguishes_undefined_from_null ... ok
+test custom_veto_does_not_read_any_event_field ... ok
+test custom_handler_replaces_fields_before_composition_and_encoding ... ok
+test custom_handler_reenters_then_mutates_outer_event_without_held_borrows ... ok
+test adopted_textarea_accepts_keyboard_events_from_its_foreign_document ... ok
+test active_ime_reads_keycode_again_and_retains_composition_until_end ... FAIL
+
+failures:
+
+---- active_ime_reads_keycode_again_and_retains_composition_until_end output ----
+    JS exception that was thrown:
+        RuntimeError: Unreachable code should not be executed (evaluating 'wasm.wasm_bindgen__convert__closures__invoke0_mut__h6ccbabcefd85a5b8(arg0, arg1)')
+        36080@wasm-function[36080]
+        32191@wasm-function[32191]
+        9784@wasm-function[9784]
+        12409@wasm-function[12409]
+        35651@wasm-function[35651]
+        24090@wasm-function[24090]
+        24091@wasm-function[24091]
+        4399@wasm-function[4399]
+        17961@wasm-function[17961]
+        701@wasm-function[701]
+        3407@wasm-function[3407]
+        12411@wasm-function[12411]
+        wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@wasm_keyboard_live-b119ca385b6eac4d.wasm:wasm-function[19990]
+        __wbg_adapter_131@http://127.0.0.1:51384/suite.js:529:73
+        cb0@http://127.0.0.1:51384/suite.js:4343:45
+        @
+        @http://127.0.0.1:51384/suite.js:4348:30
+        handleError@http://127.0.0.1:51384/suite.js:143:23
+        wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@wasm_keyboard_live-b119ca385b6eac4d.wasm:wasm-function[5895]
+        11370@wasm-function[11370]
+        14180@wasm-function[14180]
+        1564@wasm-function[1564]
+        675@wasm-function[675]
+        3200@wasm-function[3200]
+        1485@wasm-function[1485]
+        3178@wasm-function[3178]
+        2863@wasm-function[2863]
+        18073@wasm-function[18073]
+        14790@wasm-function[14790]
+        28835@wasm-function[28835]
+        __wbg_adapter_109@http://127.0.0.1:51384/suite.js:525:36
+        real@http://127.0.0.1:51384/suite.js:209:21
+
+failures:
+
+    active_ime_reads_keycode_again_and_retains_composition_until_end
+
+test result: FAILED. 11 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.08s
+

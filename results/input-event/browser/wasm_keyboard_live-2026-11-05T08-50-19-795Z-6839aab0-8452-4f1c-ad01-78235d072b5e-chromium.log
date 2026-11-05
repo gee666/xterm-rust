@@ -1,0 +1,36 @@
+running 12 tests
+test win32_reads_code_at_each_virtual_scan_modifier_and_enhanced_stage ... ok
+test unused_legacy_code_getter_does_not_throw ... ok
+test thrown_getter_retains_original_js_value_and_stops_before_cursor_effect ... ok
+test third_level_checks_type_even_when_no_platform_modifier_matches ... ok
+test onkey_mutates_final_screen_reader_cancellation_without_changing_encoded_key ... ok
+test kitty_does_not_eagerly_reread_keycode_for_encoding ... ok
+test keypress_repeats_which_reads_and_distinguishes_undefined_from_null ... ok
+test custom_veto_does_not_read_any_event_field ... ok
+test custom_handler_replaces_fields_before_composition_and_encoding ... ok
+test custom_handler_reenters_then_mutates_outer_event_without_held_borrows ... ok
+test adopted_textarea_accepts_keyboard_events_from_its_foreign_document ... ok
+test active_ime_reads_keycode_again_and_retains_composition_until_end ... FAIL
+
+failures:
+
+---- active_ime_reads_keycode_again_and_retains_composition_until_end output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at wasm_keyboard_live-b119ca385b6eac4d.wasm.__rust_start_panic (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[36080]:0x7f71c4)
+            at wasm_keyboard_live-b119ca385b6eac4d.wasm.rust_panic (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[32191]:0x7edff2)
+            at wasm_keyboard_live-b119ca385b6eac4d.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[9784]:0x63b196)
+            at wasm_keyboard_live-b119ca385b6eac4d.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[12409]:0x6a9272)
+            at wasm_keyboard_live-b119ca385b6eac4d.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[35651]:0x7f6701)
+            at wasm_keyboard_live-b119ca385b6eac4d.wasm.rust_begin_unwind (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[24090]:0x7bce11)
+            at wasm_keyboard_live-b119ca385b6eac4d.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[24091]:0x7bce3e)
+            at wasm_keyboard_live-b119ca385b6eac4d.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[4399]:0x4d3451)
+            at wasm_keyboard_live-b119ca385b6eac4d.wasm.core::panicking::assert_failed::h9e18d918a61a1cc5 (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[17961]:0x753103)
+            at wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_keyboard_live::active_ime_reads_keycode_again_and_retains_composition_until_end::{{closure}}::he2b73f1a6ab65572 (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[701]:0x1cf1e0)
+
+failures:
+
+    active_ime_reads_keycode_again_and_retains_composition_until_end
+
+test result: FAILED. 11 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.04s
+

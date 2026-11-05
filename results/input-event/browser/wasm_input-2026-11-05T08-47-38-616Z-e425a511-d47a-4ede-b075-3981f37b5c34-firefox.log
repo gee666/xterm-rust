@@ -1,0 +1,133 @@
+running 7 tests
+test paste_normalizes_brackets_sanitizes_and_clears_actual_textarea ... ok
+test keyboard_uses_lossless_utf16_and_win32_priority ... ok
+test keyboard_data_onkey_order_cancellation_veto_and_input_suppression ... ok
+test dispose_cancels_pending_composition_and_removes_all_input_listeners ... ok
+test context_menu_positions_focuses_and_selects_actual_textarea ... ok
+test composition_overlay_deferred_suffix_and_real_event_order ... ok
+test actual_clipboard_events_copy_selection_paste_once_and_stop_bubbling ... FAIL
+
+failures:
+
+---- actual_clipboard_events_copy_selection_paste_once_and_stop_bubbling output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable executed
+        wasm_input-c8aa3872a8089b8b.wasm.__rust_start_panic@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[35815]:0x7ecc2d
+        wasm_input-c8aa3872a8089b8b.wasm.rust_panic@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[31949]:0x7e3b17
+        wasm_input-c8aa3872a8089b8b.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[9734]:0x634413
+        wasm_input-c8aa3872a8089b8b.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[12345]:0x6a1bd4
+        wasm_input-c8aa3872a8089b8b.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[35391]:0x7ec17e
+        wasm_input-c8aa3872a8089b8b.wasm.rust_begin_unwind@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[23917]:0x7b2f5e
+        wasm_input-c8aa3872a8089b8b.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[23918]:0x7b2f8b
+        wasm_input-c8aa3872a8089b8b.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[4375]:0x4cdfd5
+        wasm_input-c8aa3872a8089b8b.wasm.core::panicking::assert_failed::h868715aab48d6dad@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[17844]:0x749ff5
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_input::actual_clipboard_events_copy_selection_paste_once_and_stop_bubbling::h83e67e4ff61ce2af@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[667]:0x1af8d4
+        wasm_input-c8aa3872a8089b8b.wasm.core::ops::function::FnOnce::call_once::h816b6cad0b49c82b@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[23452]:0x7adc23
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_test::__rt::Context::execute_sync::{{closure}}::h95b3ef3d0f0aedcd@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[9386]:0x6234d1
+        wasm_input-c8aa3872a8089b8b.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::ha7f5cea5eab328c6@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[12351]:0x6a1f7f
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[19861]:0x774ee0
+        __wbg_adapter_128@http://127.0.0.1:56473/suite.js:525:10
+        cb0@http://127.0.0.1:56473/suite.js:4380:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:56473/suite.js:4385:30
+        handleError@http://127.0.0.1:56473/suite.js:143:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:56473/suite.js:4373:76
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[5869]:0x54b035
+        wasm_input-c8aa3872a8089b8b.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::ha39e8ad14b60741c@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[11312]:0x679796
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::h239956f8c220d89b@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[14102]:0x6e01c7
+        wasm_input-c8aa3872a8089b8b.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::h9635737982b944a4@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[1556]:0x3361c2
+        wasm_input-c8aa3872a8089b8b.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[685]:0x1beb96
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[3180]:0x44ed83
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[1480]:0x322762
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[3158]:0x44c354
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[2843]:0x423a1d
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[17956]:0x74c965
+        wasm_input-c8aa3872a8089b8b.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[14698]:0x6f4371
+        wasm_input-c8aa3872a8089b8b.wasm.closure1722 externref shim@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[28619]:0x7d6807
+        __wbg_adapter_106@http://127.0.0.1:56473/suite.js:521:10
+        real@http://127.0.0.1:56473/suite.js:209:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:56473/suite.js:3970:23
+        wasm_input-c8aa3872a8089b8b.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[35426]:0x7ec2c7
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[27695]:0x7d136d
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[4889]:0x4fd2b3
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::queue::Queue::push_task::hed54b62c8a63136f@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[32156]:0x7e452b
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::{{closure}}::h1bc235cd2ffabe9f@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[32158]:0x7e4541
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::queue::Queue::with::hdbd18b987237042a@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[27697]:0x7d13a7
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::h9f138db513920fdf@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[34005]:0x7e8d3a
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::task::singlethread::Task::wake::ha0a8116bd20324a1@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[11486]:0x68065b
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::task::singlethread::Task::into_raw_waker::raw_wake::h7cd0464b561f844e@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[29319]:0x7d9c85
+        wasm_input-c8aa3872a8089b8b.wasm.core::task::wake::Waker::wake::h14e3bd6775d5e60c@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[21003]:0x78956e
+        wasm_input-c8aa3872a8089b8b.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::finish::h3ec7387b4cde006e@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[2217]:0x3c1ce9
+        wasm_input-c8aa3872a8089b8b.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::{{closure}}::hcef9282b9bac11dc@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[17255]:0x73be55
+        wasm_input-c8aa3872a8089b8b.wasm.core::ops::function::FnOnce::call_once::h7c8524434abbe90b@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[16564]:0x72a5bd
+        wasm_input-c8aa3872a8089b8b.wasm.<T as wasm_bindgen::closure::WasmClosureFnOnce<A,R>>::into_fn_mut::{{closure}}::h64b0b01977ad41e4@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[23802]:0x7b1b4f
+        wasm_input-c8aa3872a8089b8b.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[14698]:0x6f4371
+        wasm_input-c8aa3872a8089b8b.wasm.closure1722 externref shim@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[28619]:0x7d6807
+        __wbg_adapter_106@http://127.0.0.1:56473/suite.js:521:10
+        real@http://127.0.0.1:56473/suite.js:209:20
+        promise callback*__wbg_get_imports/imports.wbg.__wbg_then_48b406749878a531@http://127.0.0.1:56473/suite.js:4291:26
+        wasm_input-c8aa3872a8089b8b.wasm.__wbg_then_48b406749878a531 externref shim@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[25563]:0x7c2b88
+        wasm_input-c8aa3872a8089b8b.wasm.js_sys::Promise::then2::h7b08f2f14140ca21@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[14642]:0x6f265d
+        wasm_input-c8aa3872a8089b8b.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::ha4dc543ce1f01629@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[1463]:0x31dfa9
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_input::support::next_turn::{{closure}}::h7e70e5ad60ae46f7@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[1807]:0x37114c
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_input::composition_overlay_deferred_suffix_and_real_event_order::{{closure}}::hddb5976ee223dd5c@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[510]:0xfecd4
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h9f5091a95c9d894f@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[3388]:0x4674e9
+        wasm_input-c8aa3872a8089b8b.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h566e8a1b61f00845@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[12347]:0x6a1cef
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[19861]:0x774ee0
+        __wbg_adapter_128@http://127.0.0.1:56473/suite.js:525:10
+        cb0@http://127.0.0.1:56473/suite.js:4380:28
+        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:56473/suite.js:4385:30
+        handleError@http://127.0.0.1:56473/suite.js:143:18
+        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:56473/suite.js:4373:76
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[5869]:0x54b035
+        wasm_input-c8aa3872a8089b8b.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::hdef19e53d3df214a@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[11314]:0x6798e4
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::h22b4fb84c4534ce4@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[14101]:0x6e0137
+        wasm_input-c8aa3872a8089b8b.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::h21a6adf05e038a52@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[1550]:0x334a2e
+        wasm_input-c8aa3872a8089b8b.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[685]:0x1bf2e9
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[3180]:0x44ed83
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[1480]:0x322762
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[3158]:0x44c354
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[2843]:0x423a1d
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[17956]:0x74c965
+        wasm_input-c8aa3872a8089b8b.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[14698]:0x6f4371
+        wasm_input-c8aa3872a8089b8b.wasm.closure1722 externref shim@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[28619]:0x7d6807
+        __wbg_adapter_106@http://127.0.0.1:56473/suite.js:521:10
+        real@http://127.0.0.1:56473/suite.js:209:20
+        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:56473/suite.js:3970:23
+        wasm_input-c8aa3872a8089b8b.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[35426]:0x7ec2c7
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[27695]:0x7d136d
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[4889]:0x4fd2b3
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::queue::Queue::push_task::hed54b62c8a63136f@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[32156]:0x7e452b
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::{{closure}}::h1bc235cd2ffabe9f@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[32158]:0x7e4541
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::queue::Queue::with::hdbd18b987237042a@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[27697]:0x7d13a7
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::task::singlethread::Task::force_wake::h9f138db513920fdf@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[34005]:0x7e8d3a
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::task::singlethread::Task::wake::ha0a8116bd20324a1@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[11486]:0x68065b
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_futures::task::singlethread::Task::into_raw_waker::raw_wake::h7cd0464b561f844e@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[29319]:0x7d9c85
+        wasm_input-c8aa3872a8089b8b.wasm.core::task::wake::Waker::wake::h14e3bd6775d5e60c@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[21003]:0x78956e
+        wasm_input-c8aa3872a8089b8b.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::finish::h3ec7387b4cde006e@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[2217]:0x3c1ce9
+        wasm_input-c8aa3872a8089b8b.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::{{closure}}::hcef9282b9bac11dc@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[17255]:0x73be55
+        wasm_input-c8aa3872a8089b8b.wasm.core::ops::function::FnOnce::call_once::h7c8524434abbe90b@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[16564]:0x72a5bd
+        wasm_input-c8aa3872a8089b8b.wasm.<T as wasm_bindgen::closure::WasmClosureFnOnce<A,R>>::into_fn_mut::{{closure}}::h64b0b01977ad41e4@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[23802]:0x7b1b4f
+        wasm_input-c8aa3872a8089b8b.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[14698]:0x6f4371
+        wasm_input-c8aa3872a8089b8b.wasm.closure1722 externref shim@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[28619]:0x7d6807
+        __wbg_adapter_106@http://127.0.0.1:56473/suite.js:521:10
+        real@http://127.0.0.1:56473/suite.js:209:20
+        promise callback*__wbg_get_imports/imports.wbg.__wbg_then_48b406749878a531@http://127.0.0.1:56473/suite.js:4291:26
+        wasm_input-c8aa3872a8089b8b.wasm.__wbg_then_48b406749878a531 externref shim@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[25563]:0x7c2b88
+        wasm_input-c8aa3872a8089b8b.wasm.js_sys::Promise::then2::h7b08f2f14140ca21@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[14642]:0x6f265d
+        wasm_input-c8aa3872a8089b8b.wasm.<wasm_bindgen_futures::JsFuture as core::convert::From<js_sys::Promise>>::from::ha4dc543ce1f01629@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[1463]:0x31dfa9
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_input::support::next_turn::{{closure}}::h7e70e5ad60ae46f7@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[1807]:0x37114c
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_input::composition_overlay_deferred_suffix_and_real_event_order::{{closure}}::hddb5976ee223dd5c@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[510]:0xfdbda
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h9f5091a95c9d894f@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[3388]:0x4674e9
+        wasm_input-c8aa3872a8089b8b.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h566e8a1b61f00845@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[12347]:0x6a1cef
+        wasm_input-c8aa3872a8089b8b.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:56473/suite_bg.wasm:wasm-function[19861]:0x774ee0
+        __wbg_adapter_128@http://127.0.0.1:56473/suite.js:525:10
+        cb0@http://127.0.0.1:56473/suite.js:4380:28
+
+failures:
+
+    actual_clipboard_events_copy_selection_paste_once_and_stop_bubbling
+
+test result: FAILED. 6 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.07s
+

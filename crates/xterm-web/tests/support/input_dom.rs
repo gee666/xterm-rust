@@ -167,10 +167,26 @@ pub fn event(class: &str, name: &str, fields: &[(&str, JsValue)]) -> Event {
     let args = js_sys::Array::new();
     args.push(&name.into());
     args.push(&init);
-    js_sys::Reflect::construct(&constructor, &args)
+    let event: Event = js_sys::Reflect::construct(&constructor, &args)
         .unwrap()
         .dyn_into()
-        .unwrap()
+        .unwrap();
+    // Firefox's synthetic ClipboardEvent constructor does not retain the
+    // DataTransfer initializer's contents. Supply the browser-owned clipboard
+    // object explicitly so these tests exercise the listener, not that constructor.
+    if class == "ClipboardEvent" {
+        if let Some((_, clipboard)) = fields.iter().find(|(name, _)| *name == "clipboardData") {
+            let descriptor = js_sys::Object::new();
+            js_sys::Reflect::set(&descriptor, &"value".into(), clipboard).unwrap();
+            assert!(js_sys::Reflect::define_property(
+                event.unchecked_ref(),
+                &"clipboardData".into(),
+                &descriptor,
+            )
+            .unwrap());
+        }
+    }
+    event
 }
 
 pub async fn next_turn() {

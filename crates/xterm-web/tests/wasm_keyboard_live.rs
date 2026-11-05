@@ -247,7 +247,17 @@ async fn active_ime_reads_keycode_again_and_retains_composition_until_end() {
     });
     define(&key, "key", "get", forbidden.as_ref());
     setup.dom.textarea.dispatch_event(&key).unwrap();
-    assert_eq!(count.get(), 2);
+    let actual_reads = count.get();
+    count.set(0);
+    let reference_host = js_sys::Object::new();
+    js_sys::Reflect::set(&reference_host, &"_isComposing".into(), &true.into()).unwrap();
+    let reference =
+        js_sys::Function::new_with_args("ev", include_str!("fixtures/composition-keydown-body.js"));
+    assert_eq!(reference.call1(&reference_host, &key).unwrap(), false);
+    // 230 misses both CapsLock/229 checks; the third read observes Shift.
+    // The old literal expected only two reads despite the source's third check.
+    assert_eq!(count.get(), 3);
+    assert_eq!(actual_reads, count.get());
     assert!(setup.host.data.borrow().is_empty());
     setup.dom.textarea.set_value("中");
     setup

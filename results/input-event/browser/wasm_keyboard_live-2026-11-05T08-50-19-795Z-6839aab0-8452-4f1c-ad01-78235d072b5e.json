@@ -1,0 +1,201 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_keyboard_live",
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T08:50:19.796Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_keyboard_live",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1373.9678000000001,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 12.643000000000029,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Diponegoro16\\results\\acceptance-artifacts\\00ee3c7fe8e81a2cf98c8c2f1847675d00a33921c4bea1fc6c5fc1b10db34e26\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Diponegoro16\\results\\browser-host\\wasm_keyboard_live\\2026-11-05T08-50-19-795Z-6839aab0-8452-4f1c-ad01-78235d072b5e\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 852.0641,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_keyboard_live::active_ime_reads_keycode_again_and_retains_composition_until_end",
+        "__wbgt__wasm_keyboard_live::adopted_textarea_accepts_keyboard_events_from_its_foreign_document",
+        "__wbgt__wasm_keyboard_live::custom_handler_reenters_then_mutates_outer_event_without_held_borrows",
+        "__wbgt__wasm_keyboard_live::custom_handler_replaces_fields_before_composition_and_encoding",
+        "__wbgt__wasm_keyboard_live::custom_veto_does_not_read_any_event_field",
+        "__wbgt__wasm_keyboard_live::keypress_repeats_which_reads_and_distinguishes_undefined_from_null",
+        "__wbgt__wasm_keyboard_live::kitty_does_not_eagerly_reread_keycode_for_encoding",
+        "__wbgt__wasm_keyboard_live::onkey_mutates_final_screen_reader_cancellation_without_changing_encoded_key",
+        "__wbgt__wasm_keyboard_live::third_level_checks_type_even_when_no_platform_modifier_matches",
+        "__wbgt__wasm_keyboard_live::thrown_getter_retains_original_js_value_and_stops_before_cursor_effect",
+        "__wbgt__wasm_keyboard_live::unused_legacy_code_getter_does_not_throw",
+        "__wbgt__wasm_keyboard_live::win32_reads_code_at_each_virtual_scan_modifier_and_enhanced_stage"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_keyboard_live.rs:250:5:\nassertion `left == right` failed\n  left: 3\n right: 2\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:51384/suite.js:3777:21)\n    at wasm_keyboard_live-b119ca385b6eac4d.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[29319]:0x7e308c)\n    at wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[18745]:0x764883)\n    at wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[6183]:0x5655a2)\n    at wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[18746]:0x764907)\n    at wasm_keyboard_live-b119ca385b6eac4d.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[9784]:0x63b16b)\n    at wasm_keyboard_live-b119ca385b6eac4d.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[12409]:0x6a9272)\n    at wasm_keyboard_live-b119ca385b6eac4d.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[35651]:0x7f6701)\n    at wasm_keyboard_live-b119ca385b6eac4d.wasm.rust_begin_unwind (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[24090]:0x7bce11)\n    at wasm_keyboard_live-b119ca385b6eac4d.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[24091]:0x7bce3e)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 12 tests\ntest win32_reads_code_at_each_virtual_scan_modifier_and_enhanced_stage ... ok\ntest unused_legacy_code_getter_does_not_throw ... ok\ntest thrown_getter_retains_original_js_value_and_stops_before_cursor_effect ... ok\ntest third_level_checks_type_even_when_no_platform_modifier_matches ... ok\ntest onkey_mutates_final_screen_reader_cancellation_without_changing_encoded_key ... ok\ntest kitty_does_not_eagerly_reread_keycode_for_encoding ... ok\ntest keypress_repeats_which_reads_and_distinguishes_undefined_from_null ... ok\ntest custom_veto_does_not_read_any_event_field ... ok\ntest custom_handler_replaces_fields_before_composition_and_encoding ... ok\ntest custom_handler_reenters_then_mutates_outer_event_without_held_borrows ... ok\ntest adopted_textarea_accepts_keyboard_events_from_its_foreign_document ... ok\ntest active_ime_reads_keycode_again_and_retains_composition_until_end ... FAIL\n\nfailures:\n\n---- active_ime_reads_keycode_again_and_retains_composition_until_end output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_keyboard_live-b119ca385b6eac4d.wasm.__rust_start_panic (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[36080]:0x7f71c4)\n            at wasm_keyboard_live-b119ca385b6eac4d.wasm.rust_panic (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[32191]:0x7edff2)\n            at wasm_keyboard_live-b119ca385b6eac4d.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[9784]:0x63b196)\n            at wasm_keyboard_live-b119ca385b6eac4d.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[12409]:0x6a9272)\n            at wasm_keyboard_live-b119ca385b6eac4d.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[35651]:0x7f6701)\n            at wasm_keyboard_live-b119ca385b6eac4d.wasm.rust_begin_unwind (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[24090]:0x7bce11)\n            at wasm_keyboard_live-b119ca385b6eac4d.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[24091]:0x7bce3e)\n            at wasm_keyboard_live-b119ca385b6eac4d.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[4399]:0x4d3451)\n            at wasm_keyboard_live-b119ca385b6eac4d.wasm.core::panicking::assert_failed::h9e18d918a61a1cc5 (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[17961]:0x753103)\n            at wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_keyboard_live::active_ime_reads_keycode_again_and_retains_composition_until_end::{{closure}}::he2b73f1a6ab65572 (http://127.0.0.1:51384/suite_bg.wasm:wasm-function[701]:0x1cf1e0)\n\nfailures:\n\n    active_ime_reads_keycode_again_and_retains_composition_until_end\n\ntest result: FAILED. 11 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.04s\n\n",
+      "counts": {
+        "passed": 11,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "firefox",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_keyboard_live::active_ime_reads_keycode_again_and_retains_composition_until_end",
+        "__wbgt__wasm_keyboard_live::adopted_textarea_accepts_keyboard_events_from_its_foreign_document",
+        "__wbgt__wasm_keyboard_live::custom_handler_reenters_then_mutates_outer_event_without_held_borrows",
+        "__wbgt__wasm_keyboard_live::custom_handler_replaces_fields_before_composition_and_encoding",
+        "__wbgt__wasm_keyboard_live::custom_veto_does_not_read_any_event_field",
+        "__wbgt__wasm_keyboard_live::keypress_repeats_which_reads_and_distinguishes_undefined_from_null",
+        "__wbgt__wasm_keyboard_live::kitty_does_not_eagerly_reread_keycode_for_encoding",
+        "__wbgt__wasm_keyboard_live::onkey_mutates_final_screen_reader_cancellation_without_changing_encoded_key",
+        "__wbgt__wasm_keyboard_live::third_level_checks_type_even_when_no_platform_modifier_matches",
+        "__wbgt__wasm_keyboard_live::thrown_getter_retains_original_js_value_and_stops_before_cursor_effect",
+        "__wbgt__wasm_keyboard_live::unused_legacy_code_getter_does_not_throw",
+        "__wbgt__wasm_keyboard_live::win32_reads_code_at_each_virtual_scan_modifier_and_enhanced_stage"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_keyboard_live.rs:250:5:\nassertion `left == right` failed\n  left: 3\n right: 2\n\nStack:\n\n__wbg_get_imports/imports.wbg.__wbg_new_78093c5bd701d017@http://127.0.0.1:51384/suite.js:3777:21\nwasm_keyboard_live-b119ca385b6eac4d.wasm.__wbg_new_78093c5bd701d017 externref shim@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[29319]:0x7e308c\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[18745]:0x764883\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[6183]:0x5655a2\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[18746]:0x764907\nwasm_keyboard_live-b119ca385b6eac4d.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[9784]:0x63b16b\nwasm_keyboard_live-b119ca385b6eac4d.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[12409]:0x6a9272\nwasm_keyboard_live-b119ca385b6eac4d.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[35651]:0x7f6701\nwasm_keyboard_live-b119ca385b6eac4d.wasm.rust_begin_unwind@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[24090]:0x7bce11\nwasm_keyboard_live-b119ca385b6eac4d.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[24091]:0x7bce3e\nwasm_keyboard_live-b119ca385b6eac4d.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[4399]:0x4d3451\nwasm_keyboard_live-b119ca385b6eac4d.wasm.core::panicking::assert_failed::h9e18d918a61a1cc5@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[17961]:0x753103\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_keyboard_live::active_ime_reads_keycode_again_and_retains_composition_until_end::{{closure}}::he2b73f1a6ab65572@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[701]:0x1cf1e0\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h4ce5b12c68c855a7@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[3407]:0x46c0eb\nwasm_keyboard_live-b119ca385b6eac4d.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h30984e9caacbdf79@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[12411]:0x6a938d\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[19990]:0x77e3fd\n__wbg_adapter_131@http://127.0.0.1:51384/suite.js:529:10\ncb0@http://127.0.0.1:51384/suite.js:4343:28\nglobalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52\n__wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:51384/suite.js:4348:30\nhandleError@http://127.0.0.1:51384/suite.js:143:18\n__wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:51384/suite.js:4336:76\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[5895]:0x550785\nwasm_keyboard_live-b119ca385b6eac4d.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::h8bea0a5997647945@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[11370]:0x680a63\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::h1e1ba4e786e1c7e5@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[14180]:0x6e80b8\nwasm_keyboard_live-b119ca385b6eac4d.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::hf45d3f8860191201@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[1564]:0x3389e0\nwasm_keyboard_live-b119ca385b6eac4d.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[675]:0x1b9765\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[3200]:0x453b62\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[1485]:0x3243b3\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[3178]:0x451132\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[2863]:0x4287ec\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[18073]:0x755a78\nwasm_keyboard_live-b119ca385b6eac4d.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[14790]:0x6fca1f\nwasm_keyboard_live-b119ca385b6eac4d.wasm.closure1784 externref shim@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[28835]:0x7e0b53\n__wbg_adapter_109@http://127.0.0.1:51384/suite.js:525:10\nreal@http://127.0.0.1:51384/suite.js:209:20\nVoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:51384/suite.js:3953:23\nwasm_keyboard_live-b119ca385b6eac4d.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[35686]:0x7f684a\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[27902]:0x7db606\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[4914]:0x502897\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::{{closure}}::h95b28db559806c13@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[32398]:0x7eea03\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::queue::Queue::with::h9bd5fdd801f7dec4@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[27903]:0x7db619\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::h42fed9c117de84b9@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[2478]:0x3ef975\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::spawn_local::h3dc491f304d42e44@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[10393]:0x656ba5\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::h15c44db32e5b7614@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[8144]:0x5e548d\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen::convert::closures::invoke2_mut::hba2fa4cbb261e43e@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[16738]:0x734f4b\nwasm_keyboard_live-b119ca385b6eac4d.wasm.closure2539 externref shim@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[25760]:0x7ccdb3\n__wbg_adapter_1030@http://127.0.0.1:51384/suite.js:537:10\ncb0@http://127.0.0.1:51384/suite.js:3753:28\n__wbg_get_imports/imports.wbg.__wbg_new_23a2665fac83c611@http://127.0.0.1:51384/suite.js:3758:25\nwasm_keyboard_live-b119ca385b6eac4d.wasm.__wbg_new_23a2665fac83c611 externref shim@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[28498]:0x7ded42\nwasm_keyboard_live-b119ca385b6eac4d.wasm.js_sys::Promise::new::hf39a358a769dc6ed@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[11812]:0x691ff7\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::future_to_promise::h65257425de8480bc@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[9250]:0x620d34\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_test::__rt::Context::run::he8da95eeed777e80@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[1217]:0x2d48ce\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasmbindgentestcontext_run@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[8577]:0x5fd961\nwasm_keyboard_live-b119ca385b6eac4d.wasm.wasmbindgentestcontext_run externref shim@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[28818]:0x7e09b2\nrun@http://127.0.0.1:51384/suite.js:2762:26\nglobalThis.testRun<@debugger eval code line 302 > eval:11:42\nasync*@debugger eval code line 302 > eval:14:11\nevaluate@debugger eval code:304:16\n@debugger eval code:1:44\n@debugger eval code:1:62\n\n\n"
+        }
+      ],
+      "version": "150.0.2",
+      "output": "running 12 tests\ntest win32_reads_code_at_each_virtual_scan_modifier_and_enhanced_stage ... ok\ntest unused_legacy_code_getter_does_not_throw ... ok\ntest thrown_getter_retains_original_js_value_and_stops_before_cursor_effect ... ok\ntest third_level_checks_type_even_when_no_platform_modifier_matches ... ok\ntest onkey_mutates_final_screen_reader_cancellation_without_changing_encoded_key ... ok\ntest kitty_does_not_eagerly_reread_keycode_for_encoding ... ok\ntest keypress_repeats_which_reads_and_distinguishes_undefined_from_null ... ok\ntest custom_veto_does_not_read_any_event_field ... ok\ntest custom_handler_replaces_fields_before_composition_and_encoding ... ok\ntest custom_handler_reenters_then_mutates_outer_event_without_held_borrows ... ok\ntest adopted_textarea_accepts_keyboard_events_from_its_foreign_document ... ok\ntest active_ime_reads_keycode_again_and_retains_composition_until_end ... FAIL\n\nfailures:\n\n---- active_ime_reads_keycode_again_and_retains_composition_until_end output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable executed\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.__rust_start_panic@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[36080]:0x7f71c4\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.rust_panic@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[32191]:0x7edff2\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[9784]:0x63b196\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[12409]:0x6a9272\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[35651]:0x7f6701\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.rust_begin_unwind@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[24090]:0x7bce11\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.core::panicking::panic_fmt::hb91badace6ee8287@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[24091]:0x7bce3e\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[4399]:0x4d3451\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.core::panicking::assert_failed::h9e18d918a61a1cc5@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[17961]:0x753103\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_keyboard_live::active_ime_reads_keycode_again_and_retains_composition_until_end::{{closure}}::he2b73f1a6ab65572@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[701]:0x1cf1e0\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h4ce5b12c68c855a7@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[3407]:0x46c0eb\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h30984e9caacbdf79@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[12411]:0x6a938d\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[19990]:0x77e3fd\n        __wbg_adapter_131@http://127.0.0.1:51384/suite.js:529:10\n        cb0@http://127.0.0.1:51384/suite.js:4343:28\n        globalThis.__wbg_test_invoke@debugger eval code line 302 > eval:2:52\n        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7/<@http://127.0.0.1:51384/suite.js:4348:30\n        handleError@http://127.0.0.1:51384/suite.js:143:18\n        __wbg_get_imports/imports.wbg.__wbg_wbgtestinvoke_d8e1edfc10304da7@http://127.0.0.1:51384/suite.js:4336:76\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[5895]:0x550785\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::h8bea0a5997647945@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[11370]:0x680a63\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_test::__rt::scoped_tls::ScopedKey<T>::set::h1e1ba4e786e1c7e5@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[14180]:0x6e80b8\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::hf45d3f8860191201@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[1564]:0x3389e0\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.<wasm_bindgen_test::__rt::ExecuteTests as core::future::future::Future>::poll::hce767e2cef033d90@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[675]:0x1b9765\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_test::__rt::Context::run::{{closure}}::hb772b89324770fdd@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[3200]:0x453b62\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::{{closure}}::hee706ec805aa894d@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[1485]:0x3243b3\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::task::singlethread::Task::run::he49d74870981cd18@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[3178]:0x451132\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::queue::QueueState::run_all::hcf05b5bac32624a8@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[2863]:0x4287ec\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::queue::Queue::new::{{closure}}::h4df7528d23c79b80@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[18073]:0x755a78\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.<dyn core::ops::function::FnMut<(A,)>+Output = R as wasm_bindgen::closure::WasmClosure>::describe::invoke::h76a2b3722d66b036@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[14790]:0x6fca1f\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.closure1784 externref shim@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[28835]:0x7e0b53\n        __wbg_adapter_109@http://127.0.0.1:51384/suite.js:525:10\n        real@http://127.0.0.1:51384/suite.js:209:20\n        VoidFunction*__wbg_get_imports/imports.wbg.__wbg_queueMicrotask_97d92b4fcc8a61c5@http://127.0.0.1:51384/suite.js:3953:23\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.__wbg_queueMicrotask_97d92b4fcc8a61c5 externref shim@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[35686]:0x7f684a\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::queue::queueMicrotask::he7aea38159c7eeab@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[27902]:0x7db606\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::queue::Queue::schedule_task::h1238d1b80f114221@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[4914]:0x502897\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::{{closure}}::h95b28db559806c13@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[32398]:0x7eea03\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::queue::Queue::with::h9bd5fdd801f7dec4@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[27903]:0x7db619\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::task::singlethread::Task::spawn::h42fed9c117de84b9@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[2478]:0x3ef975\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::spawn_local::h3dc491f304d42e44@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[10393]:0x656ba5\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::future_to_promise::{{closure}}::h15c44db32e5b7614@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[8144]:0x5e548d\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen::convert::closures::invoke2_mut::hba2fa4cbb261e43e@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[16738]:0x734f4b\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.closure2539 externref shim@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[25760]:0x7ccdb3\n        __wbg_adapter_1030@http://127.0.0.1:51384/suite.js:537:10\n        cb0@http://127.0.0.1:51384/suite.js:3753:28\n        __wbg_get_imports/imports.wbg.__wbg_new_23a2665fac83c611@http://127.0.0.1:51384/suite.js:3758:25\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.__wbg_new_23a2665fac83c611 externref shim@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[28498]:0x7ded42\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.js_sys::Promise::new::hf39a358a769dc6ed@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[11812]:0x691ff7\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_futures::future_to_promise::h65257425de8480bc@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[9250]:0x620d34\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasm_bindgen_test::__rt::Context::run::he8da95eeed777e80@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[1217]:0x2d48ce\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasmbindgentestcontext_run@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[8577]:0x5fd961\n        wasm_keyboard_live-b119ca385b6eac4d.wasm.wasmbindgentestcontext_run externref shim@http://127.0.0.1:51384/suite_bg.wasm:wasm-function[28818]:0x7e09b2\n        run@http://127.0.0.1:51384/suite.js:2762:26\n        globalThis.testRun<@debugger eval code line 302 > eval:11:42\n        async*@debugger eval code line 302 > eval:14:11\n        evaluate@debugger eval code:304:16\n        @debugger eval code:1:44\n        @debugger eval code:1:62\n\nfailures:\n\n    active_ime_reads_keycode_again_and_retains_composition_until_end\n\ntest result: FAILED. 11 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.03s\n\n",
+      "counts": {
+        "passed": 11,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "webkit",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_keyboard_live::active_ime_reads_keycode_again_and_retains_composition_until_end",
+        "__wbgt__wasm_keyboard_live::adopted_textarea_accepts_keyboard_events_from_its_foreign_document",
+        "__wbgt__wasm_keyboard_live::custom_handler_reenters_then_mutates_outer_event_without_held_borrows",
+        "__wbgt__wasm_keyboard_live::custom_handler_replaces_fields_before_composition_and_encoding",
+        "__wbgt__wasm_keyboard_live::custom_veto_does_not_read_any_event_field",
+        "__wbgt__wasm_keyboard_live::keypress_repeats_which_reads_and_distinguishes_undefined_from_null",
+        "__wbgt__wasm_keyboard_live::kitty_does_not_eagerly_reread_keycode_for_encoding",
+        "__wbgt__wasm_keyboard_live::onkey_mutates_final_screen_reader_cancellation_without_changing_encoded_key",
+        "__wbgt__wasm_keyboard_live::third_level_checks_type_even_when_no_platform_modifier_matches",
+        "__wbgt__wasm_keyboard_live::thrown_getter_retains_original_js_value_and_stops_before_cursor_effect",
+        "__wbgt__wasm_keyboard_live::unused_legacy_code_getter_does_not_throw",
+        "__wbgt__wasm_keyboard_live::win32_reads_code_at_each_virtual_scan_modifier_and_enhanced_stage"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_keyboard_live.rs:250:5:\nassertion `left == right` failed\n  left: 3\n right: 2\n\nStack:\n\n@http://127.0.0.1:51384/suite.js:3777:30\n29319@wasm-function[29319]\n18745@wasm-function[18745]\n6183@wasm-function[6183]\n18746@wasm-function[18746]\n9784@wasm-function[9784]\n12409@wasm-function[12409]\n35651@wasm-function[35651]\n24090@wasm-function[24090]\n24091@wasm-function[24091]\n4399@wasm-function[4399]\n17961@wasm-function[17961]\n701@wasm-function[701]\n3407@wasm-function[3407]\n12411@wasm-function[12411]\nwasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@wasm_keyboard_live-b119ca385b6eac4d.wasm:wasm-function[19990]\n__wbg_adapter_131@http://127.0.0.1:51384/suite.js:529:73\ncb0@http://127.0.0.1:51384/suite.js:4343:45\n@\n@http://127.0.0.1:51384/suite.js:4348:30\nhandleError@http://127.0.0.1:51384/suite.js:143:23\nwasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@wasm_keyboard_live-b119ca385b6eac4d.wasm:wasm-function[5895]\n11370@wasm-function[11370]\n14180@wasm-function[14180]\n1564@wasm-function[1564]\n675@wasm-function[675]\n3200@wasm-function[3200]\n1485@wasm-function[1485]\n3178@wasm-function[3178]\n2863@wasm-function[2863]\n18073@wasm-function[18073]\n14790@wasm-function[14790]\n28835@wasm-function[28835]\n__wbg_adapter_109@http://127.0.0.1:51384/suite.js:525:36\nreal@http://127.0.0.1:51384/suite.js:209:21\n\n"
+        }
+      ],
+      "version": "26.4",
+      "output": "running 12 tests\ntest win32_reads_code_at_each_virtual_scan_modifier_and_enhanced_stage ... ok\ntest unused_legacy_code_getter_does_not_throw ... ok\ntest thrown_getter_retains_original_js_value_and_stops_before_cursor_effect ... ok\ntest third_level_checks_type_even_when_no_platform_modifier_matches ... ok\ntest onkey_mutates_final_screen_reader_cancellation_without_changing_encoded_key ... ok\ntest kitty_does_not_eagerly_reread_keycode_for_encoding ... ok\ntest keypress_repeats_which_reads_and_distinguishes_undefined_from_null ... ok\ntest custom_veto_does_not_read_any_event_field ... ok\ntest custom_handler_replaces_fields_before_composition_and_encoding ... ok\ntest custom_handler_reenters_then_mutates_outer_event_without_held_borrows ... ok\ntest adopted_textarea_accepts_keyboard_events_from_its_foreign_document ... ok\ntest active_ime_reads_keycode_again_and_retains_composition_until_end ... FAIL\n\nfailures:\n\n---- active_ime_reads_keycode_again_and_retains_composition_until_end output ----\n    JS exception that was thrown:\n        RuntimeError: Unreachable code should not be executed (evaluating 'wasm.wasm_bindgen__convert__closures__invoke0_mut__h6ccbabcefd85a5b8(arg0, arg1)')\n        36080@wasm-function[36080]\n        32191@wasm-function[32191]\n        9784@wasm-function[9784]\n        12409@wasm-function[12409]\n        35651@wasm-function[35651]\n        24090@wasm-function[24090]\n        24091@wasm-function[24091]\n        4399@wasm-function[4399]\n        17961@wasm-function[17961]\n        701@wasm-function[701]\n        3407@wasm-function[3407]\n        12411@wasm-function[12411]\n        wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8@wasm_keyboard_live-b119ca385b6eac4d.wasm:wasm-function[19990]\n        __wbg_adapter_131@http://127.0.0.1:51384/suite.js:529:73\n        cb0@http://127.0.0.1:51384/suite.js:4343:45\n        @\n        @http://127.0.0.1:51384/suite.js:4348:30\n        handleError@http://127.0.0.1:51384/suite.js:143:23\n        wasm_bindgen_test::__rt::__wbg_test_invoke::h1d9e279a4537202c@wasm_keyboard_live-b119ca385b6eac4d.wasm:wasm-function[5895]\n        11370@wasm-function[11370]\n        14180@wasm-function[14180]\n        1564@wasm-function[1564]\n        675@wasm-function[675]\n        3200@wasm-function[3200]\n        1485@wasm-function[1485]\n        3178@wasm-function[3178]\n        2863@wasm-function[2863]\n        18073@wasm-function[18073]\n        14790@wasm-function[14790]\n        28835@wasm-function[28835]\n        __wbg_adapter_109@http://127.0.0.1:51384/suite.js:525:36\n        real@http://127.0.0.1:51384/suite.js:209:21\n\nfailures:\n\n    active_ime_reads_keycode_again_and_retains_composition_until_end\n\ntest result: FAILED. 11 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.08s\n\n",
+      "counts": {
+        "passed": 11,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/00ee3c7fe8e81a2cf98c8c2f1847675d00a33921c4bea1fc6c5fc1b10db34e26/artifact.wasm",
+      "sha256": "00ee3c7fe8e81a2cf98c8c2f1847675d00a33921c4bea1fc6c5fc1b10db34e26",
+      "bytes": 14976567,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Diponegoro16\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_keyboard_live-b119ca385b6eac4d.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Diponegoro16\\results\\browser-host\\wasm_keyboard_live\\2026-11-05T08-50-19-795Z-6839aab0-8452-4f1c-ad01-78235d072b5e\\artifacts\\suite_bg.wasm",
+      "bytes": 12312949,
+      "sha256": "d95f88dad9120a0bbe63ae8c536b1d872c70577346a01495cf8762909ddfbf74"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Diponegoro16\\results\\browser-host\\wasm_keyboard_live\\2026-11-05T08-50-19-795Z-6839aab0-8452-4f1c-ad01-78235d072b5e\\artifacts\\suite.js",
+      "bytes": 165364,
+      "sha256": "eb6086fcf93df6f868c7d3261d6eeed4160ea56bb7a745615c1cd96889663131"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "7e3d1071cfce3891a16fc4d6494e162566f5607a2c7680dbb686ee6cd4dec099",
+    "testSourceSha256": "e314e754b98d95b4111aa3d6a739b17d1a18905d7cf03aa37ff16ccd53d5b96e"
+  },
+  "finishedAt": "2026-11-05T08:50:34.984Z"
+}

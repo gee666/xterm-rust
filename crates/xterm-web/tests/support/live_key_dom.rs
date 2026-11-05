@@ -2,7 +2,7 @@ use super::support::event;
 #[path = "event_dom.rs"]
 mod event_dom;
 pub use event_dom::{define, Errors};
-use wasm_bindgen::{JsCast, JsValue};
+use wasm_bindgen::JsCast;
 use web_sys::{Element, Event, HtmlElement, Node};
 pub struct ForeignDocument {
     frame: Element,
