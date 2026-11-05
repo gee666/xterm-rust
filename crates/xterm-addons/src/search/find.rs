@@ -123,6 +123,9 @@ impl SearchAddon {
         options: Option<&SearchOptionsHandle>,
         reverse: bool,
     ) -> Result<Option<SearchResult>, SearchAddonError> {
+        // cachedSearchTerm is an engine argument, evaluated before its raw
+        // guard, cache setup and matching callbacks can replace addon state.
+        let cached = self.inner.cached_term.borrow().clone();
         // Source captures the engine receiver before its raw length getter.
         // An empty engine term clears that host, but is not the addon's invalid
         // term path: selection arguments and result reporting must still run.
@@ -139,7 +142,6 @@ impl SearchAddon {
             .transpose()?
             .unwrap_or_default();
         let text = term.text()?;
-        let cached = self.inner.cached_term.borrow().clone();
         let same = cached
             .as_ref()
             .is_some_and(|cached| term.equals(cached.as_ref()));
