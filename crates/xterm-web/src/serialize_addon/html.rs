@@ -110,6 +110,14 @@ fn explicit_range(host: &Shared, range: &JsValue) -> Result<CellRange, JsValue> 
         start: Position {
             x: if col.is_undefined() {
                 end_col
+            } else if col
+                .as_f64()
+                .is_some_and(|col| col.is_nan() || col == f64::INFINITY)
+            {
+                // These numeric primitives make col < end false. The maximum
+                // index skips only the first row's cells, not header/row output
+                // or later rows. Object late-coercion remains a separate gap.
+                usize::MAX
             } else {
                 options::index(col)?
             },

@@ -1,0 +1,26 @@
+
+Running 120 tests using 2 workers
+················································································
+T°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
+
+  1) [FirefoxStable] › addons\addon-serialize\test\SerializeAddon.test.ts:74:7 › SerializeAddon › produce different output when we call test util with different text
+
+    [31m"beforeAll" hook timeout of 10000ms exceeded.[39m
+
+      31 |
+      32 | let ctx: ITestContext;
+    > 33 | test.beforeAll(async ({ browser }) => {
+         |      ^
+      34 |   ctx = await createTestContext(browser);
+      35 |   await openTerminal(ctx, { rows: 10, cols: 10 });
+      36 | });
+        at P:\workshop\Windows_Worshop\oira666\xterm-rust\source_repo\addons\addon-serialize\test\SerializeAddon.test.ts:33:6
+
+    Error Context: O:\xterm-rust-swarm-16\tmp\Lys416\tmp\serialize-browser\rust-artifacts\SerializeAddon-SerializeAd-86654-st-util-with-different-text-FirefoxStable\error-context.md
+
+    Error Context: O:\xterm-rust-swarm-16\tmp\Lys416\tmp\serialize-browser\rust-artifacts\SerializeAddon-SerializeAd-86654-st-util-with-different-text-FirefoxStable\error-context.md
+
+  1 failed
+    [FirefoxStable] › addons\addon-serialize\test\SerializeAddon.test.ts:74:7 › SerializeAddon › produce different output when we call test util with different text
+  39 did not run
+  80 passed (23.0s)

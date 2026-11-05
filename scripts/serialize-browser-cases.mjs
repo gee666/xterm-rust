@@ -173,6 +173,32 @@ export async function serializationCases() {
       get scrollback() { log.push('scrollback'); return undefined; }, get includeGlobalBackground() { log.push('background'); return true; } };
     return { html: addon.serializeAsHTML(options), log };
   });
+  await run('html-nonfinite-start-column', async (term, addon) => {
+    await write(term, '\x1b[31mABC\r\n\x1b[32mDEF\r\nGHI');
+    const log = [];
+    Object.defineProperty(term.options, 'fontFamily', { configurable: true,
+      get() { log.push('fontFamily'); return 'monospace'; } });
+    return [NaN, Infinity].flatMap(startCol => [0, 1, 2].map(endLine => {
+      log.length = 0;
+      const range = { get startCol() { log.push('startCol'); return startCol; },
+        get startLine() { log.push('startLine'); return 0; },
+        get endLine() { log.push('endLine'); return endLine; } };
+      return { startCol: String(startCol), endLine,
+        html: addon.serializeAsHTML({ range }), log: [...log] };
+    }));
+  });
+  await run('html-nonfinite-column-header-throw', async (term, addon) => {
+    await write(term, 'content');
+    const sentinel = {}, log = [];
+    Object.defineProperty(term.options, 'fontFamily', { configurable: true,
+      get() { log.push('fontFamily'); throw sentinel; } });
+    return [NaN, Infinity].map(startCol => {
+      log.length = 0; let same = false;
+      try { addon.serializeAsHTML({ range: { startCol, startLine: 0, endLine: 1 } }); }
+      catch (error) { same = error === sentinel; }
+      return { startCol: String(startCol), same, log: [...log] };
+    });
+  });
   await run('html-header-coercion-order', async (term, addon) => {
     await write(term, 'abc'); const log = [];
     const raw = key => ({ [Symbol.toPrimitive](hint) { log.push(`${key}:${hint}`); return key + '\ud800'; } });

@@ -16,7 +16,7 @@ The core `BufferAccess::missing_cell` hook lets the browser emit the original co
 
 Full serialization equivalence is NOT PROVEN. Task346 and family322 retain SB01-SB08 in `docs/serialize-browser-acceptance.md`.
 
-- Native row/column ranges are unsigned integers. Task410 supports numeric-NaN HTML row bounds as zero row iterations, retaining headers and thrown values. Other negative/fractional/NaN/infinite/large JS coordinates are not equivalent. The browser returns an explicit representation error rather than truncating them. This is a compatibility gap, not a source-approved divergence.
+- Native row/column ranges are unsigned integers. Task410 supports numeric-NaN HTML row bounds as zero row iterations, retaining headers and thrown values. Task416 also supports numeric NaN/+Infinity HTML start columns as empty first-row cell traversal. Other negative/fractional/NaN/infinite/large JS coordinates are not equivalent. The browser returns an explicit representation error rather than truncating them. This is a compatibility gap, not a source-approved divergence.
 - Marker getters and custom coordinate coercions need their exact late source evaluation points. Numeric coercion currently happens earlier than source traversal.
 - Public Terminal/buffer method or descriptor replacement is not fully honored. The serializer uses the actual native public namespace rather than calling arbitrary replaced methods.
 - Theme palette array replacement and element mutation during header reentry need array-identity modeling. Normal live theme/OSC changes between calls are covered; a copied list of color handles does not prove arbitrary reentrant palette mutation.
@@ -57,6 +57,10 @@ Task377 retains the source row object through missing-cell warnings in both ANSI
 ## Numeric NaN HTML rows
 
 Task410 preserves the source empty traversal when numeric primitive row bounds contain NaN. Header getters still run, their exceptions retain identity, and unused column values are not coerced. The two new probes match in all three browsers; the negative control fails both. The current corpus matches54/55 cases per browser, still exiting nonzero for the remaining raw-coordinate mismatch. The unchanged original suite passes120/120 source and120/120 Rust cases. See `docs/serialize-nan.md` for exact scope, hashes and the Windows OS206 formatting limitation.
+
+## Numeric nonfinite HTML start columns
+
+Task416 preserves empty first-row cell traversal for numeric primitive NaN and positive Infinity start columns, without skipping header effects or later rows. The corpus now matches56/57 in each engine with the raw-coordinate mismatch retained. A bounded unchanged-suite repeat passed120/120 source and120/120 Rust cases after one Firefox setup timeout in the first attempt. Both attempts and the54/57 negative control are retained. See `docs/serialize-nonfinite-column.md` for scope and exact receipts. Full346/322 remain open.
 
 ## Public cell enumeration repair
 
