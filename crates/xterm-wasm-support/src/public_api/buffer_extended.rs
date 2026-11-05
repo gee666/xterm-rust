@@ -1,7 +1,14 @@
 // Copyright (c) 2018 The xterm.js authors. All rights reserved. MIT license.
 //! Shared extended cell attributes for raw reusable-cell destinations.
 use std::{cell::RefCell, rc::Rc};
-use wasm_bindgen::prelude::*;
+use wasm_bindgen::{prelude::*, JsCast};
+
+#[wasm_bindgen]
+extern "C" {
+    /// The shaped clone is still an ExtendedCellAttributes instance.
+    #[wasm_bindgen(typescript_type = "ExtendedCellAttributes")]
+    pub type ExtendedSnapshot;
+}
 use xterm_core::buffer::ExtendedAttrs;
 
 const MAX_SAFE_INTEGER: f64 = 9_007_199_254_740_991.0;
@@ -117,8 +124,8 @@ impl WebExtendedAttrs {
         self.value.borrow().is_empty()
     }
     #[wasm_bindgen(js_name = clone)]
-    pub fn clone_value(&self) -> Result<JsValue, JsValue> {
+    pub fn clone_value(&self) -> Result<ExtendedSnapshot, JsValue> {
         let value = self.value.borrow().clone();
-        Self::new(value).into_js()
+        Self::new(value).into_js().map(JsCast::unchecked_into)
     }
 }
