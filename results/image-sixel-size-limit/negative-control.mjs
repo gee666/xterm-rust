@@ -18,7 +18,7 @@ try{
     await writeFile(file,result.stdout);
     if(hash(await readFile(file))!==audit.files.find(entry=>entry.file===file).baselineSha256)throw Error(`baseline differs ${file}`);
   }
-  const result=spawnSync(process.execPath,['scripts/image-canvas-check.mjs'],{env:{...process.env,WASM_TEST:'image_addon_browser',BROWSERS:'chromium'},timeout:240000,encoding:'utf8',maxBuffer:8*1024*1024});
+  const result=spawnSync(process.execPath,['scripts/image-canvas-check.mjs'],{env:{...process.env,WASM_TEST:'image_addon_browser',BROWSERS:'chromium'},timeout:150000,encoding:'utf8',maxBuffer:8*1024*1024});
   audit.command=['node','scripts/image-canvas-check.mjs'];audit.exit=result.status;audit.error=result.error?.message??null;
   await writeFile(`${out}/negative.log`,(result.stdout??'')+(result.stderr??''));
   for(const [from,to] of [['results/browser-host/image_addon_browser-results.json','negative-browser.json'],['results/image-addon/verification.json','negative-verification.json']])await copyFile(from,`${out}/${to}`);
@@ -30,7 +30,9 @@ try{
   audit.failedTests = failed;
   const newFailures = failed.filter(name=>name.startsWith('raw_sixel_limit::'));
   if(newFailures.length!==5)throw Error('Expected all five new test failures');
-  if(failed.some(name=>!name.startsWith('raw_sixel_limit::') && name!=='alternate_resize_public_reset_and_disposal_match_source'))throw Error('Unexpected failure outside known baseline visibility mismatch');
+  if(failed.length!==5 || report.browsers[0].counts.failed!==5)throw Error('Unexpected failure outside five new tests');
+  if(report.browsers[0].counts.passed!==report.browsers[0].tests.length-5)throw Error('Control did not complete every other test');
+  audit.status='passed-negative-control';
 }finally{
   for(const [file,bytes]of saved)await writeFile(file,bytes);
   for(const entry of audit.files){entry.restoredSha256=hash(await readFile(entry.file));if(entry.restoredSha256!==entry.fixedSha256)throw Error(`restore failed ${entry.file}`);}

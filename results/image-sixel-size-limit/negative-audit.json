@@ -1,0 +1,74 @@
+{
+  "base": "fe9dcd9e",
+  "files": [
+    {
+      "file": "crates/xterm-addons/src/image/sixel/handler.rs",
+      "baselineSha256": "5a3aa54368ef4c7b9fc277ca9a274ad5f2f3c5e3953503b872cd85a00bbe565b",
+      "fixedSha256": "69194e79fb8192c8b45a0ca3fd716a95cce906b73be31a8c9085f8df1d1dee9e",
+      "restoredSha256": "69194e79fb8192c8b45a0ca3fd716a95cce906b73be31a8c9085f8df1d1dee9e"
+    },
+    {
+      "file": "crates/xterm-web/src/image/addon.rs",
+      "baselineSha256": "31e2749b7271210bb057e4bcda77030427df3263c6c50acb0be01262371d8f22",
+      "fixedSha256": "42eaed286031981732fd981cd35de35c67938a76aafc6f6913555632bfabeeff",
+      "restoredSha256": "42eaed286031981732fd981cd35de35c67938a76aafc6f6913555632bfabeeff"
+    },
+    {
+      "file": "crates/xterm-web/src/image/addon/bindings.rs",
+      "baselineSha256": "707190d6bdf61adaaa77f40ecf2dec1ea424ace95d098163c458317bf9263ae9",
+      "fixedSha256": "e3286b152c7b7731a93b370e163fea624a7dc6ab5cf46e8f8ad2544f90810f51",
+      "restoredSha256": "e3286b152c7b7731a93b370e163fea624a7dc6ab5cf46e8f8ad2544f90810f51"
+    },
+    {
+      "file": "crates/xterm-web/src/image/addon/option_inspection.rs",
+      "baselineSha256": "eee11cc550916e1f752c116077dcfb202e317b592ef68d2eb4ffafcace015c47",
+      "fixedSha256": "8941b66884d86d9643733d9e0158f1b14b81c1488a37017d0456665d29ea26ee",
+      "restoredSha256": "8941b66884d86d9643733d9e0158f1b14b81c1488a37017d0456665d29ea26ee"
+    },
+    {
+      "file": "crates/xterm-web/src/image/addon/options.rs",
+      "baselineSha256": "8f88aaed9b94864fe303084a017c3c58bcce4a82c396cde54e03319c83b93d88",
+      "fixedSha256": "39d000fbc1f9e341ef40a07fc5d16ba66e9dab09768bdd1d5b54a2420d5fdbeb",
+      "restoredSha256": "39d000fbc1f9e341ef40a07fc5d16ba66e9dab09768bdd1d5b54a2420d5fdbeb"
+    },
+    {
+      "file": "crates/xterm-web/src/image/addon/protocols.rs",
+      "baselineSha256": "dae789438348d6f0ea561735e4491ef048437d669039e45c19c4832991c9985e",
+      "fixedSha256": "eb5c197dad00b152e03782cbc0a304b1ca3a24b8e27bb3b49936a20403f3cbcf",
+      "restoredSha256": "eb5c197dad00b152e03782cbc0a304b1ca3a24b8e27bb3b49936a20403f3cbcf"
+    },
+    {
+      "file": "crates/xterm-web/src/image/sixel_protocol.rs",
+      "baselineSha256": "aab783e64fcc57ffb8d006a372e175568e84121900be82620d1ded71b5467048",
+      "fixedSha256": "859569728282d9411bcb2a042e4ae042208df47f5684b06bdf20def78dd557e2",
+      "restoredSha256": "859569728282d9411bcb2a042e4ae042208df47f5684b06bdf20def78dd557e2"
+    }
+  ],
+  "restored": true,
+  "command": [
+    "node",
+    "scripts/image-canvas-check.mjs"
+  ],
+  "exit": 1,
+  "error": null,
+  "browsers": [
+    {
+      "name": "chromium",
+      "counts": {
+        "passed": 37,
+        "failed": 5,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "status": "failed"
+    }
+  ],
+  "failedTests": [
+    "raw_sixel_limit::raw_sixel_limit_throw_keeps_committed_size_and_exact_value",
+    "raw_sixel_limit::raw_sixel_limit_skips_disabled_pending_and_aborted_packets",
+    "raw_sixel_limit::raw_sixel_limit_relational_primitives_match_real_image_pixels",
+    "raw_sixel_limit::raw_sixel_limit_constructor_keeps_first_copy_without_coercion",
+    "raw_sixel_limit::raw_sixel_limit_coercion_reset_and_warning_failures_use_live_state"
+  ],
+  "status": "passed-negative-control"
+}
