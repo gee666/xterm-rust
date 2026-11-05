@@ -1,0 +1,14 @@
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\worktrees\DanielleSearchEngine\crates\xterm-web\tests\wasm_search_addon.rs:54:
+         "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),118);",
+         include_str!("fixtures/search-engine-receiver.js")
+     );
+[31m-    run(
+[0m[31m-        &body,
+[0m[31m-        true,
+[0m[31m-        r#"{"cols":20,"rows":3,"scrollback":1000}"#,
+[0m[31m-    )
+[0m[31m-    .await;
+[0m[32m+    run(&body, true, r#"{"cols":20,"rows":3,"scrollback":1000}"#).await;
+[0m }
+ 
+ #[wasm_bindgen_test]

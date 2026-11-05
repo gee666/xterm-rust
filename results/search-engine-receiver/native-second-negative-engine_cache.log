@@ -1,0 +1,31 @@
+
+running 3 tests
+test engine_cache::cache_timer_cancellation_can_reactivate_without_an_addon_state_borrow ... ok
+test engine_cache::activation_during_timer_install_cancels_retired_timer_before_matching ... FAILED
+test engine_cache::reentrant_activation_disposal_keeps_addon_host_distinct_from_outer_engine ... FAILED
+
+failures:
+
+---- engine_cache::activation_during_timer_install_cancels_retired_timer_before_matching stdout ----
+
+thread 'engine_cache::activation_during_timer_install_cancels_retired_timer_before_matching' panicked at crates\xterm-web\tests\search_cases\engine_cache.rs:99:13:
+assertion `left == right` failed: disposed cache immediately cancels new timer
+  left: 1
+ right: 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- engine_cache::reentrant_activation_disposal_keeps_addon_host_distinct_from_outer_engine stdout ----
+
+thread 'engine_cache::reentrant_activation_disposal_keeps_addon_host_distinct_from_outer_engine' panicked at crates\xterm-web\tests\search_cases\engine_cache.rs:167:5:
+engine selection is cleared, not selected
+
+
+failures:
+    engine_cache::activation_during_timer_install_cancels_retired_timer_before_matching
+    engine_cache::reentrant_activation_disposal_keeps_addon_host_distinct_from_outer_engine
+
+test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 67 filtered out; finished in 0.00s
+
+    Finished `test` profile [unoptimized] target(s) in 0.06s
+     Running tests\search_addon.rs (target\debug\deps\search_addon-a9ec83e89c96f449.exe)
+error: test failed, to rerun pass `-p xterm-web --test search_addon`

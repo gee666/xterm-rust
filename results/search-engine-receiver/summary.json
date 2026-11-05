@@ -1,0 +1,621 @@
+{
+  "task": 518,
+  "status": "scoped pass; full equivalence NOT PROVEN",
+  "base": "1106d4806217af25e3ebc5831093447002bd8596",
+  "integrationReadonly": "11ad71a816f3d004148a168348f7442e795f8a88",
+  "ownSourceCommits": [
+    "9afc453b",
+    "05f59d87",
+    "3b6eb6a5",
+    "8cf831f1"
+  ],
+  "private508": {
+    "copies": [
+      "c968ad6b",
+      "43109076",
+      "84ba7a19",
+      "416ddf96"
+    ],
+    "excludeFrom518Pickup": true,
+    "immutablePinsVerified": 56
+  },
+  "nativeFunctions": 70,
+  "newNativeFunctions": 6,
+  "newNativeScenarios": 45,
+  "sourceCasesPerEngine": 118,
+  "sourceEngines": 3,
+  "wasmFunctionsPerEngine": 21,
+  "wasmEngines": 3,
+  "sharedCasesInsideOneWasmFunctionPerEngine": 118,
+  "nativeOldControls": [
+    {
+      "filter": "engine_receiver::",
+      "passed": 1,
+      "failed": 2,
+      "filtered": 67
+    },
+    {
+      "filter": "engine_cache::",
+      "passed": 1,
+      "failed": 2,
+      "filtered": 67
+    }
+  ],
+  "currentFormattedWasmOldControl": {
+    "passed": 20,
+    "failed": 1,
+    "ignored": 0,
+    "filtered": 0
+  },
+  "formattedArtifactMatchesActualFinal": true,
+  "finalCompilerSha256": "c3b83786b7e0f80355e754bd247b66b2986caa6393d44d0904e84409fa4da984",
+  "quality": {
+    "finalScopedNativeClippy": "passed",
+    "finalScopedWasmClippy": "passed",
+    "fiveWholeMemberFmt": "passed",
+    "exactWorkspaceFmt": "failed Windows OS206",
+    "fullWorkspaceClippyTestsRelease": "unrun"
+  },
+  "versions": {
+    "node": "v24.15.0",
+    "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+    "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+    "wasmBindgen": "0.2.100"
+  },
+  "inputManifestFiles": 1817,
+  "runtimePins": 21,
+  "referenceFilesPerRoot": 776,
+  "sourcePostDisposalRegistrationParity": "OPEN task527; native timer ownership controls assert Rust RAII safety, not source leak equivalence",
+  "initialFailures": {
+    "native": "new expected warm nested B col4 was incorrect; corrected to source col6, initial66P1F retained",
+    "wasm": "new rawJSON initializer invalid; 20P1F each3 before any sharedcase. Literal corrected without assertion changes",
+    "formatting": "corrected initializer fits1line; memberfmt corrected; rebuilt different artifact, directed control and all3browser rerun on current formatted bytes"
+  },
+  "unrun": [
+    "complete original SearchAddon suites",
+    "seeded search corpus",
+    "full workspace quality/release",
+    "native Linux/macOS",
+    "demo/GC",
+    "successful raw-object browser matching",
+    "per-line getter/mutation phases",
+    "post-disposal source registration and error equivalence527"
+  ],
+  "files": [
+    {
+      "path": "crates/xterm-addons/src/search/addon.rs",
+      "bytes": 11200,
+      "sha256": "c5a9e4df4c3e67ba0c457004263535743bd1a7dd636eb334b3c5a664a129f3d2"
+    },
+    {
+      "path": "crates/xterm-addons/src/search/engine.rs",
+      "bytes": 3463,
+      "sha256": "4378fc2fe9e2d5b4259d94e57dc5c33d0f50d0979aac12e9659bb7050f55e84b"
+    },
+    {
+      "path": "crates/xterm-addons/src/search/find.rs",
+      "bytes": 11653,
+      "sha256": "043619e60ae094ae14bbb6c8cc5c34740b06f550f695b140cc3702fd28452823"
+    },
+    {
+      "path": "crates/xterm-web/tests/fixtures/search-engine-receiver.js",
+      "bytes": 5468,
+      "sha256": "744b0f8e46af60000f00e2dc5f3ce9d0d89e33be2093191e42377ed2362483a4"
+    },
+    {
+      "path": "crates/xterm-web/tests/search_addon.rs",
+      "bytes": 11027,
+      "sha256": "7f2fdec554d9cd7d4444b3ace82e84d2454c701ced09efccdcb5c3d4d334695b"
+    },
+    {
+      "path": "crates/xterm-web/tests/search_cases/engine_cache.rs",
+      "bytes": 6247,
+      "sha256": "89a4df9481d9bb9c549063b3e1c12ea5d78b304f738728cd35148d553ba8a874"
+    },
+    {
+      "path": "crates/xterm-web/tests/search_cases/engine_receiver.rs",
+      "bytes": 10340,
+      "sha256": "8b6c1d408b6ec8ad77b683914ac01bdd4e288513378bad1a7eba823a8b522b0a"
+    },
+    {
+      "path": "crates/xterm-web/tests/wasm_search_addon.rs",
+      "bytes": 12747,
+      "sha256": "87f547990c46306dfe75ad98adb27f9d5d5a688c5b6eb176b87e17f09f3e7014"
+    },
+    {
+      "path": "docs/search-engine-receiver.md",
+      "bytes": 9082,
+      "sha256": "7cc914f0335d19d149c4a7f674fcf1b7f7264d290d84e133de383b2720b41bb0"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-commands.json",
+      "bytes": 209,
+      "sha256": "6563c3dc6933d4d68b09a21697a74026bfbd578a561c351eef643d2352dcf9e0"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-final-wasm_search_addon-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-final-wasm_search_addon-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-final-wasm_search_addon-build.log",
+      "bytes": 47873,
+      "sha256": "1b2374dd31d722f91de58704f2541136cd1d12e692f0bfe000f41a6f0b530bfd"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-final-wasm_search_addon-chromium.log",
+      "bytes": 1723,
+      "sha256": "5cd0297608b6c1925d003530a9b1173e5f5248096512d0faad04e0dfc152e18f"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-final-wasm_search_addon-firefox.log",
+      "bytes": 1724,
+      "sha256": "88d88300e613a95f0540bb10b2808fbfa4d4e9feae9e6700dba1af01d853d63a"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-final-wasm_search_addon-webkit.log",
+      "bytes": 1724,
+      "sha256": "23d6fee1722e2e41bd4b8a55fa77bfb6af8851f76c2317b4e0970d0cd74f533d"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-final.json",
+      "bytes": 16337,
+      "sha256": "b61136da2007fa455524a84b83d51ee30017e4199721b5a2902b53adc42f2445"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-final.log",
+      "bytes": 135,
+      "sha256": "94e0df1f5af280e114904cf9833e720d48be86ca20038474dc8db3b69d6a51e4"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-first-commands.json",
+      "bytes": 308,
+      "sha256": "543cec7440c4d90ee4f03b5c061fa13396b4122e8f600afc2da8f40c4c48e2e9"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-initial-failed-chromium.log",
+      "bytes": 3707,
+      "sha256": "6f8faea54887f052900177b0650b6a15ed73ad2d2a57753457e8bdf6ef73dd9d"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-initial-failed-firefox.log",
+      "bytes": 15189,
+      "sha256": "c0c259b60c828f5d1e31026ee87bc1e04748666d4afb605d41ae64647967c640"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-initial-failed-wasm_search_addon-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-initial-failed-wasm_search_addon-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-initial-failed-wasm_search_addon-build.log",
+      "bytes": 48747,
+      "sha256": "d1296b3fe7b1ae10a6e7544af36205d3b16f0728d640551a8f11ad696fe10958"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-initial-failed-webkit.log",
+      "bytes": 4477,
+      "sha256": "44ec30d58e36c78394ab34fff616be5c3b1eaefa95d67a4977bd5ada20dfb0cb"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-initial-failed.json",
+      "bytes": 68434,
+      "sha256": "e2037db6cee3e223f0b5a849b7e2c07bdc183d04b65f59adadd1ceb697e849f7"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-initial-wasm_search_addon-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-initial-wasm_search_addon-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-initial-wasm_search_addon-build.log",
+      "bytes": 47873,
+      "sha256": "633d4746ecfb4801c703f78bc8a7fbe7f3e70e081016e5998c98d01705f7b582"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-initial-wasm_search_addon-chromium.log",
+      "bytes": 1723,
+      "sha256": "50964f2d723f8a0495321d0660a7eb564f3c0a2b181ff81cad00a2ef20e7417d"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-initial-wasm_search_addon-firefox.log",
+      "bytes": 1724,
+      "sha256": "409d0162ee9c73ba2165a7c4b70cb16d1f23fa05da6448d2851cdd7d4f8c99e5"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-initial-wasm_search_addon-webkit.log",
+      "bytes": 1724,
+      "sha256": "cdcad44be51b2299736a36ed7ce3fecf08b6df338a76c9d5b55550380da9b726"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-initial.json",
+      "bytes": 16338,
+      "sha256": "da1cc7ad5bb7b57dc685bb177fa36927271878dcd2ac7541d27fad409b821c1f"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-initial.log",
+      "bytes": 135,
+      "sha256": "94e0df1f5af280e114904cf9833e720d48be86ca20038474dc8db3b69d6a51e4"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-negative-wasm_search_addon-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-negative-wasm_search_addon-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-negative-wasm_search_addon-build.log",
+      "bytes": 47873,
+      "sha256": "a5f91dd7da8d446148507853cc2f9a52413672cebe979686992e19e4ce28f8b7"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-negative-wasm_search_addon-chromium.log",
+      "bytes": 3707,
+      "sha256": "92420ca90038825744e8f9f896aa29d4ba7bcae7d8cc3bc09a9c8a32e0def0d7"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-negative.json",
+      "bytes": 12862,
+      "sha256": "2f2c3ae4ede563f49ff7aa0d17215150d326655d2a2d197d15d5e7a7217a52b3"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-negative.log",
+      "bytes": 51,
+      "sha256": "fbe274acd5c4fead04c559183140695ee9244b1bcaec6952516c60a26c7a254b"
+    },
+    {
+      "path": "results/search-engine-receiver/browser-restore.json",
+      "bytes": 335,
+      "sha256": "41a0967e46e3b89dee50b7a5f94bada0402521f7d02d205c1ecc3daaacda1bb3"
+    },
+    {
+      "path": "results/search-engine-receiver/cargo-version.log",
+      "bytes": 36,
+      "sha256": "c8cd2e547fb0745a8738926a5c1318d17af1507f07b382d13dc704cc38684566"
+    },
+    {
+      "path": "results/search-engine-receiver/compiler-controls.json",
+      "bytes": 1478,
+      "sha256": "ef7a48b80bf7523972305a623c46239bc58e2e5662f0a3a3602e23f3552b7c18"
+    },
+    {
+      "path": "results/search-engine-receiver/fmt-final-xterm-addons.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-engine-receiver/fmt-final-xterm-core.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-engine-receiver/fmt-final-xterm-font-addons.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-engine-receiver/fmt-final-xterm-wasm-support.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-engine-receiver/fmt-final-xterm-web.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-engine-receiver/fmt-initial-corrected-literal.log",
+      "bytes": 543,
+      "sha256": "ca4bcc0942e083a8ec8f252d642328f9160f2942337fdb33078adb04f4956d5d"
+    },
+    {
+      "path": "results/search-engine-receiver/fmt-xterm-addons.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-engine-receiver/fmt-xterm-core.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-engine-receiver/fmt-xterm-font-addons.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-engine-receiver/fmt-xterm-wasm-support.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-engine-receiver/fmt-xterm-web.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-engine-receiver/formatted-artifact-identity.json",
+      "bytes": 904,
+      "sha256": "a889f560955b26672737a3c3c13b61ff06f2de94a5469fed088dc582e17f1595"
+    },
+    {
+      "path": "results/search-engine-receiver/formatted-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-engine-receiver/formatted-wasm-build.log",
+      "bytes": 47633,
+      "sha256": "b50936be6a4e4bfcaaa5135bccfbfc9ad83721c303ddfc7f6bcb7358b826a88e"
+    },
+    {
+      "path": "results/search-engine-receiver/formatting-final.json",
+      "bytes": 716,
+      "sha256": "093b38376500827812fdd2047bcf84d60122ca76d19625948be406fd5c4fdf52"
+    },
+    {
+      "path": "results/search-engine-receiver/headroom-browser.json",
+      "bytes": 49,
+      "sha256": "d13181861127f1a3357511db86d16908d0b6eeaebbd78216e208fd6201620180"
+    },
+    {
+      "path": "results/search-engine-receiver/headroom-native.json",
+      "bytes": 49,
+      "sha256": "a913ca116bae002894cec460ca47d5d230abb431b1e900fda4bff0be57e6cf40"
+    },
+    {
+      "path": "results/search-engine-receiver/headroom-refresh.json",
+      "bytes": 49,
+      "sha256": "9c5e85617d41bd17a2da734e83f76b91e5e16d9b6b1b96799dec0bb9991a011d"
+    },
+    {
+      "path": "results/search-engine-receiver/inheritance.json",
+      "bytes": 248,
+      "sha256": "04d144608385bbaa3bd121d27b6f48936e4e19ee8cfe23bb1033df19e2db22c7"
+    },
+    {
+      "path": "results/search-engine-receiver/inherited-after.json",
+      "bytes": 49,
+      "sha256": "5495e476233bb5d02b6e353c73ab618a894776ca6cf625df4663c47e433423dc"
+    },
+    {
+      "path": "results/search-engine-receiver/input-manifest.json",
+      "bytes": 314106,
+      "sha256": "75e7ad0342a5e16658f4f2df7f02e9fb14b6a449c5f3204793b01426eaff5a26"
+    },
+    {
+      "path": "results/search-engine-receiver/native-artifact.json",
+      "bytes": 248,
+      "sha256": "0f5bec8c8d2019212780dcc973e97043a67163525a36bcce41674a2b6766e4a2"
+    },
+    {
+      "path": "results/search-engine-receiver/native-clippy.log",
+      "bytes": 901,
+      "sha256": "cf9ec218eaa9ddc05c5b229f04c98a0f6f6f34963d5988920aaf10e6f6d8c692"
+    },
+    {
+      "path": "results/search-engine-receiver/native-commands.json",
+      "bytes": 2662,
+      "sha256": "93e6fd7208a1c7ce05ca01d65d2ce5e75e988f47b75399fae875540b20130473"
+    },
+    {
+      "path": "results/search-engine-receiver/native-final-clippy.log",
+      "bytes": 280,
+      "sha256": "d9f114f55a3bca3063ab681019d4b75cce0e74504d0195631bbd202dee97f576"
+    },
+    {
+      "path": "results/search-engine-receiver/native-final-recheck.log",
+      "bytes": 27655,
+      "sha256": "7a71ff1e94bba92c1ed037c8014f3f81206e5745278d78f1d941d64450b847f3"
+    },
+    {
+      "path": "results/search-engine-receiver/native-final.log",
+      "bytes": 26679,
+      "sha256": "bab6b5044aaf976a341394803a242a1a382121bfdd2673f13211b76755144289"
+    },
+    {
+      "path": "results/search-engine-receiver/native-fixed.log",
+      "bytes": 6498,
+      "sha256": "00248c6ee91f22e06a77841248dabd6af0c0a106efa2bd32b59d9286bf709114"
+    },
+    {
+      "path": "results/search-engine-receiver/native-initial-commands.json",
+      "bytes": 462,
+      "sha256": "388cf923ffbfec82d8b48d499ba9326168ae9d07afd8923d87bf2ace88e371de"
+    },
+    {
+      "path": "results/search-engine-receiver/native-initial.log",
+      "bytes": 7813,
+      "sha256": "ff7b68122dc1aa4ac2bf9c28d4ee43a92a4e6be245000bb2e21ea4e5485e667f"
+    },
+    {
+      "path": "results/search-engine-receiver/native-negative.log",
+      "bytes": 1848,
+      "sha256": "cf6362f60005aaf16ff70bfa62cf246a24a329d93169490d8ceb6d23ba860ca5"
+    },
+    {
+      "path": "results/search-engine-receiver/native-restore.json",
+      "bytes": 335,
+      "sha256": "0f5259eeea83078ff4d2adfdcd1af8efe38504ce6223dfddd56be666e5092abf"
+    },
+    {
+      "path": "results/search-engine-receiver/native-second-negative-engine_cache.log",
+      "bytes": 1601,
+      "sha256": "373183ead9392048552127ed6cad5438261d876d90411188b132c4b7a60d70e0"
+    },
+    {
+      "path": "results/search-engine-receiver/native-second-negative-engine_receiver.log",
+      "bytes": 1848,
+      "sha256": "85faf60f2ff6ca12966605bb82d74ccd6e903c11f6071a4ce9876b86744d27d0"
+    },
+    {
+      "path": "results/search-engine-receiver/native-second-restore.json",
+      "bytes": 335,
+      "sha256": "41a0967e46e3b89dee50b7a5f94bada0402521f7d02d205c1ecc3daaacda1bb3"
+    },
+    {
+      "path": "results/search-engine-receiver/preformat-browser-commands.json",
+      "bytes": 313,
+      "sha256": "6dce9494b24adbe2758570973e9115da99fe5596daa16ffde69a155a1f1bdaf8"
+    },
+    {
+      "path": "results/search-engine-receiver/preformat-browser-final-wasm_search_addon-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/search-engine-receiver/preformat-browser-final-wasm_search_addon-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-engine-receiver/preformat-browser-final-wasm_search_addon-build.log",
+      "bytes": 47873,
+      "sha256": "788797cf79f3efecf8579b4f33fba5ace09093a4c5ce9a1dc88ac443aabb393d"
+    },
+    {
+      "path": "results/search-engine-receiver/preformat-browser-final-wasm_search_addon-chromium.log",
+      "bytes": 1723,
+      "sha256": "30fadcf0ef4d5af09f4b51442bd49bc33165aabc0006362591422987864afed5"
+    },
+    {
+      "path": "results/search-engine-receiver/preformat-browser-final-wasm_search_addon-firefox.log",
+      "bytes": 1724,
+      "sha256": "ef69aea022d33b3b86c06242e60e4aaec61ba350cc8da070ae5b66923a2c6020"
+    },
+    {
+      "path": "results/search-engine-receiver/preformat-browser-final-wasm_search_addon-webkit.log",
+      "bytes": 1724,
+      "sha256": "27d48354c2d841e8fd68bbb759c03a34c0b1a4adc10e6357e5bed227018bdfa4"
+    },
+    {
+      "path": "results/search-engine-receiver/preformat-browser-final.json",
+      "bytes": 16337,
+      "sha256": "81ff0af96d2d68f5155339d5676cf9123eafbf332a075c4245f4e4ece27eea7b"
+    },
+    {
+      "path": "results/search-engine-receiver/preformat-browser-final.log",
+      "bytes": 135,
+      "sha256": "94e0df1f5af280e114904cf9833e720d48be86ca20038474dc8db3b69d6a51e4"
+    },
+    {
+      "path": "results/search-engine-receiver/preformat-browser-negative-wasm_search_addon-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/search-engine-receiver/preformat-browser-negative-wasm_search_addon-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-engine-receiver/preformat-browser-negative-wasm_search_addon-build.log",
+      "bytes": 47873,
+      "sha256": "d2a6b51eb7d855151721d22d8289bb01ef7a8d703a6d85bcbb5b294bf1d73986"
+    },
+    {
+      "path": "results/search-engine-receiver/preformat-browser-negative-wasm_search_addon-chromium.log",
+      "bytes": 3707,
+      "sha256": "9f60eebd8c4b19ddcb69ef084dc4e4adf48f6ff47fba4743918f621763a4c4d8"
+    },
+    {
+      "path": "results/search-engine-receiver/preformat-browser-negative.json",
+      "bytes": 12872,
+      "sha256": "58395711c5451fec3f014da64136ee3550d6abbc01ab01a530abe29c62e1c39d"
+    },
+    {
+      "path": "results/search-engine-receiver/preformat-browser-negative.log",
+      "bytes": 51,
+      "sha256": "fbe274acd5c4fead04c559183140695ee9244b1bcaec6952516c60a26c7a254b"
+    },
+    {
+      "path": "results/search-engine-receiver/preformat-browser-restore.json",
+      "bytes": 335,
+      "sha256": "41a0967e46e3b89dee50b7a5f94bada0402521f7d02d205c1ecc3daaacda1bb3"
+    },
+    {
+      "path": "results/search-engine-receiver/preformat-compiler-controls.json",
+      "bytes": 1421,
+      "sha256": "975b9266f44981d4d158a10c26ebbdc908ff3f711fe0ff92cb632c5a1db5bbc7"
+    },
+    {
+      "path": "results/search-engine-receiver/reference-after.json",
+      "bytes": 162,
+      "sha256": "f8e517e8ae26fa576f3545339a2bf089802af8ecbc952e464f9a26400a86c452"
+    },
+    {
+      "path": "results/search-engine-receiver/refresh-commands.json",
+      "bytes": 1493,
+      "sha256": "96327ec82d69d6bb0678df0c8f2642b4ff45ae74165a650dc427d025139b4666"
+    },
+    {
+      "path": "results/search-engine-receiver/runtime-manifest.json",
+      "bytes": 6106,
+      "sha256": "386398e4e54f4ca93c05f6fb6b7bee0075196070fdab273cdbf6c522161088fa"
+    },
+    {
+      "path": "results/search-engine-receiver/rustc-version.log",
+      "bytes": 36,
+      "sha256": "21fccbced6f95f2ece3212fd048d958d33fa3f254b10f700e2ca3b3de290e5c8"
+    },
+    {
+      "path": "results/search-engine-receiver/source.json",
+      "bytes": 2414,
+      "sha256": "869d83740134fc3a64fcf44432d6bccbea956f991a38767dbb25b896e99b216f"
+    },
+    {
+      "path": "results/search-engine-receiver/source.log",
+      "bytes": 82,
+      "sha256": "d13581705c0ca8ae5f4de875c3461695ce3f2c4348213d63c4893c8be8216db7"
+    },
+    {
+      "path": "results/search-engine-receiver/wasm-clippy.log",
+      "bytes": 1685,
+      "sha256": "74e3cd54bddfe405757fef37e53c5cf5dda7134abca6bb15feb992389c5d133d"
+    },
+    {
+      "path": "results/search-engine-receiver/wasm-final-clippy.log",
+      "bytes": 404,
+      "sha256": "4da948fc91f1db4943685eced7ed49602c2c9d340a60b606baea0a20c9c0b264"
+    },
+    {
+      "path": "results/search-engine-receiver/workspace-fmt-final.log",
+      "bytes": 817,
+      "sha256": "a3c64adc493a218a5a8332dfc60b9e9fd0cf455d8215931a5888f9bc84a29c70"
+    },
+    {
+      "path": "results/search-engine-receiver/workspace-fmt.log",
+      "bytes": 817,
+      "sha256": "a3c64adc493a218a5a8332dfc60b9e9fd0cf455d8215931a5888f9bc84a29c70"
+    },
+    {
+      "path": "scripts/browser-host-check.mjs",
+      "bytes": 9815,
+      "sha256": "63dc6978c20d94958c046cfd721f50f785fef16cd7db69332918fc712ba96536"
+    },
+    {
+      "path": "scripts/search-call-args-source.mjs",
+      "bytes": 6666,
+      "sha256": "6818a902ff501814b6abbdb7deed7ea9e063960f31cff26af5525db94d1e22de"
+    }
+  ]
+}

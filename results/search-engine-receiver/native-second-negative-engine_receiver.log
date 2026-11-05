@@ -1,0 +1,35 @@
+
+running 3 tests
+test engine_receiver::engine_receiver_keeps_old_host_and_cache_after_guard_flags_or_text_activation ... FAILED
+test engine_receiver::highlight_calls_capture_separate_engines_and_dispose_old_cache_timers ... FAILED
+test engine_receiver::throwing_engine_reactivation_keeps_live_host_without_reinstalling_old_cache_jobs ... ok
+
+failures:
+
+---- engine_receiver::engine_receiver_keeps_old_host_and_cache_after_guard_flags_or_text_activation stdout ----
+
+thread 'engine_receiver::engine_receiver_keeps_old_host_and_cache_after_guard_flags_or_text_activation' panicked at crates\xterm-web\tests\search_cases\engine_receiver.rs:132:21:
+assertion `left == right` failed
+  left: 4
+ right: 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- engine_receiver::highlight_calls_capture_separate_engines_and_dispose_old_cache_timers stdout ----
+
+thread 'engine_receiver::highlight_calls_capture_separate_engines_and_dispose_old_cache_timers' panicked at crates\xterm-web\tests\search_cases\engine_receiver.rs:270:13:
+assertion `left == right` failed
+  left: 2
+ right: 3
+
+
+failures:
+    engine_receiver::engine_receiver_keeps_old_host_and_cache_after_guard_flags_or_text_activation
+    engine_receiver::highlight_calls_capture_separate_engines_and_dispose_old_cache_timers
+
+test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 67 filtered out; finished in 0.01s
+
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\DanielleSearchEngine\crates\xterm-addons)
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\DanielleSearchEngine\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 9.92s
+     Running tests\search_addon.rs (target\debug\deps\search_addon-a9ec83e89c96f449.exe)
+error: test failed, to rerun pass `-p xterm-web --test search_addon`

@@ -54,12 +54,7 @@ async fn engine_receiver_retains_terminal_and_cache_across_reactivation() {
         "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),118);",
         include_str!("fixtures/search-engine-receiver.js")
     );
-    run(
-        &body,
-        true,
-        r#"{\"cols\":20,\"rows\":3,\"scrollback\":1000}"#,
-    )
-    .await;
+    run(&body, true, r#"{"cols":20,"rows":3,"scrollback":1000}"#).await;
 }
 
 #[wasm_bindgen_test]
