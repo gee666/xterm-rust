@@ -32,6 +32,12 @@ Evidence is retained in `results/base64-decode/`:
 
 Report paths from Ib are historical after the owned worktree move to J. Artifact digests remain valid. Temporary browser/compiler output is retained only until review and integration, then removed. These files are not distribution downloads. Full workspace all-feature/native-OS quality and complete unchanged suites remain separate work.
 
+## Independent review and integration
+
+Task397's isolated reviewer accepted commits57dbceed and fca4b80c with no findings. The reviewer independently executed25 decode and16 encode source traces, all36 browser test executions, ten native tests, full fmt, focused warning-denied WASM Clippy and diff whitespace checks. This independently confirms the scoped tests, not overall addon equivalence.
+
+The canonical `scripts/worktree-merge.mjs` integrated fca4b80c into actual main. `results/base64-decode/merge.log` records changed-crate build/all-target tests, affected-dependent checks, workspace check and applicable WASM library checks. The helper removed the owned private Cargo target. This merge gate is not the full all-feature/native-OS workspace matrix.
+
 ## Reproduce
 
 Use Node24, locked Rust1.85.1, wasm32-unknown-unknown, wasm-bindgen0.2.100 and installed Playwright engines. Select existing tool installations through SOURCE_ROOT, WASM_BINDGEN and PLAYWRIGHT_MODULE. Keep new temporary files/builds on O: under current team resource limits.
