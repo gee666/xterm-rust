@@ -1,0 +1,232 @@
+    Checking foldhash v0.1.5
+    Checking equivalent v1.0.3
+    Checking allocator-api2 v0.2.21
+    Checking memchr v2.8.3
+    Checking hashbrown v0.15.5
+    Checking ryu-js v1.0.3
+    Checking adler2 v2.0.1
+    Checking miniz_oxide v0.8.9
+    Checking regress v0.10.4
+   Compiling serde_core v1.0.229
+    Checking xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\V\crates\xterm-core)
+   Compiling zmij v1.0.23
+   Compiling serde_json v1.0.154
+    Checking xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\V\crates\xterm-addons)
+    Checking itoa v1.0.18
+error: this loop could be written as a `while let` loop
+  --> crates\xterm-addons\src\ligatures\font_walk.rs:60:5
+   |
+60 | /     loop {
+61 | |         let Some(glyph) = sequence.get(position).and_then(|value| value.number()) else {
+62 | |             break;
+63 | |         };
+...  |
+83 | |         tree = reverse;
+84 | |     }
+   | |_____^ help: try: `while let Some(glyph) = sequence.get(position).and_then(|value| value.number()) { .. }`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#while_let_loop
+   = note: `-D clippy::while-let-loop` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::while_let_loop)]`
+
+error: this loop could be written as a `while let` loop
+   --> crates\xterm-addons\src\web_links.rs:235:9
+    |
+235 | /         loop {
+236 | |             let Some(next) = bottom.checked_add(1) else {
+237 | |                 break;
+238 | |             };
+...   |
+253 | |         }
+    | |_________^ help: try: `while let Some(next) = bottom.checked_add(1) { .. }`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#while_let_loop
+
+error: could not compile `xterm-addons` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+    Checking xterm-wasm-support v0.1.0 (O:\xterm-rust-swarm-16\tmp\V\crates\xterm-wasm-support)
+error: this operation has no effect
+  --> crates\xterm-core\tests\cell_extended.rs:24:21
+   |
+24 |                     u32::MAX & !ext_flags::UNDERLINE_STYLE
+   |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: consider reducing it to: `!ext_flags::UNDERLINE_STYLE`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#identity_op
+   = note: `-D clippy::identity-op` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::identity_op)]`
+
+error: this operation has no effect
+  --> crates\xterm-core\tests\cell_extended.rs:49:22
+   |
+49 |     assert_eq!(a.bg, u32::MAX & !bg_flags::HAS_EXTENDED);
+   |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: consider reducing it to: `!bg_flags::HAS_EXTENDED`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#identity_op
+
+error: could not compile `xterm-core` (test "cell_extended") due to 2 previous errors
+error: this operation has no effect
+   --> crates\xterm-core\tests\sgr.rs:136:32
+    |
+136 |     assert_eq!(previous.ext(), u32::MAX & !0x1c000000 | (5 << 26));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^ help: consider reducing it to: `!0x1c000000`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#identity_op
+    = note: `-D clippy::identity-op` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::identity_op)]`
+
+error: could not compile `xterm-core` (test "sgr") due to 1 previous error
+error: could not compile `xterm-addons` (lib test) due to 2 previous errors
+error: manual implementation of a no-op waker
+   --> crates\xterm-core\tests\public_parser_api.rs:113:6
+    |
+113 | impl Wake for NoWake {
+    |      ^^^^
+    |
+    = help: use `std::task::Waker::noop()` instead
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_noop_waker
+    = note: `-D clippy::manual-noop-waker` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::manual_noop_waker)]`
+
+error: could not compile `xterm-core` (test "public_parser_api") due to 1 previous error
+error: manual implementation of a no-op waker
+  --> crates\xterm-core\tests\escape_async_support\mod.rs:70:6
+   |
+70 | impl Wake for Noop {
+   |      ^^^^
+   |
+   = help: use `std::task::Waker::noop()` instead
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_noop_waker
+   = note: `-D clippy::manual-noop-waker` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::manual_noop_waker)]`
+
+error: can be more succinctly written as a byte str
+   --> crates\xterm-core\tests\escape_async_support\mod.rs:134:17
+    |
+134 |     for code in [b'\r', b'\n'] {
+    |                 ^^^^^^^^^^^^^^ help: try: `*b"\r\n"`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#byte_char_slices
+    = note: `-D clippy::byte-char-slices` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::byte_char_slices)]`
+
+error: could not compile `xterm-core` (test "escape_async") due to 2 previous errors
+error: manual implementation of a no-op waker
+  --> crates\xterm-core\tests\parser_support\future.rs:10:6
+   |
+10 | impl Wake for NoWake {
+   |      ^^^^
+   |
+   = help: use `std::task::Waker::noop()` instead
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_noop_waker
+   = note: `-D clippy::manual-noop-waker` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::manual_noop_waker)]`
+
+error: could not compile `xterm-core` (test "osc") due to 1 previous error
+error: could not compile `xterm-core` (test "apc_escape") due to 1 previous error
+error: could not compile `xterm-core` (test "apc") due to 1 previous error
+error: manual implementation of a no-op waker
+  --> crates\xterm-core\tests\escape_edges.rs:37:6
+   |
+37 | impl Wake for Noop {
+   |      ^^^^
+   |
+   = help: use `std::task::Waker::noop()` instead
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_noop_waker
+   = note: `-D clippy::manual-noop-waker` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::manual_noop_waker)]`
+
+error: could not compile `xterm-core` (test "escape_edges") due to 1 previous error
+error: called `Iterator::last` on a `DoubleEndedIterator`; this will needlessly iterate the entire iterator
+  --> crates\xterm-core\tests\terminal_modes.rs:14:5
+   |
+14 | /     terminal
+15 | |         .drain_events()
+16 | |         .into_iter()
+17 | |         .filter_map(|event| {
+...  |
+23 | |         })
+24 | |         .last()
+   | |_______________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#double_ended_iterator_last
+   = note: `-D clippy::double-ended-iterator-last` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::double_ended_iterator_last)]`
+help: try
+   |
+24 -         .last()
+24 +         .next_back()
+   |
+
+error: could not compile `xterm-core` (test "terminal_modes") due to 1 previous error
+error: could not compile `xterm-core` (test "apc_edges") due to 1 previous error
+error: could not compile `xterm-core` (test "osc_failures") due to 1 previous error
+error: manual implementation of a no-op waker
+   --> crates\xterm-core\tests\escape_dcs.rs:128:6
+    |
+128 | impl Wake for NoWake {
+    |      ^^^^
+    |
+    = help: use `std::task::Waker::noop()` instead
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_noop_waker
+    = note: `-D clippy::manual-noop-waker` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::manual_noop_waker)]`
+
+error: manual implementation of a no-op waker
+  --> crates\xterm-core\tests\input_handler_bounded.rs:95:10
+   |
+95 |     impl Wake for NoWake {
+   |          ^^^^
+   |
+   = help: use `std::task::Waker::noop()` instead
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_noop_waker
+   = note: `-D clippy::manual-noop-waker` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::manual_noop_waker)]`
+
+error: could not compile `xterm-core` (test "input_handler_bounded") due to 1 previous error
+error: could not compile `xterm-core` (test "escape_dcs") due to 1 previous error
+error: manual implementation of a no-op waker
+   --> crates\xterm-core\tests\dcs_support\mod.rs:111:6
+    |
+111 | impl Wake for NoopWake {
+    |      ^^^^
+    |
+    = help: use `std::task::Waker::noop()` instead
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_noop_waker
+    = note: `-D clippy::manual-noop-waker` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::manual_noop_waker)]`
+
+error: could not compile `xterm-core` (test "dcs") due to 1 previous error
+error: manual implementation of a no-op waker
+  --> crates\xterm-core\tests\write_buffer_support\mod.rs:95:14
+   |
+95 |         impl Wake for NoWake {
+   |              ^^^^
+   |
+   = help: use `std::task::Waker::noop()` instead
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_noop_waker
+   = note: `-D clippy::manual-noop-waker` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::manual_noop_waker)]`
+
+error: could not compile `xterm-core` (test "write_buffer") due to 1 previous error
+error: manual implementation of a no-op waker
+  --> crates\xterm-core\tests\osc_edges.rs:15:6
+   |
+15 | impl Wake for NoWake {
+   |      ^^^^
+   |
+   = help: use `std::task::Waker::noop()` instead
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_noop_waker
+   = note: `-D clippy::manual-noop-waker` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::manual_noop_waker)]`
+
+error: could not compile `xterm-core` (test "osc_edges") due to 1 previous error
+error: manual implementation of a no-op waker
+  --> crates\xterm-core\tests\escape_osc.rs:23:6
+   |
+23 | impl Wake for NoWake {
+   |      ^^^^
+   |
+   = help: use `std::task::Waker::noop()` instead
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_noop_waker
+
+error: could not compile `xterm-core` (test "escape_osc") due to 2 previous errors
