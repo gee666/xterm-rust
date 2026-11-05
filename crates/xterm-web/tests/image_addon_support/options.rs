@@ -61,7 +61,7 @@ async fn retained_option_view_tracks_controls_setters_and_reset() {
         pair.compare();
     }
     for value in [true, false] {
-        pair.addon.set_show_placeholder(value).unwrap();
+        pair.addon.set_show_placeholder(value.into()).unwrap();
         js_sys::Reflect::set(&source, &"showPlaceholder".into(), &value.into()).unwrap();
         compare_options(&actual, &source);
     }
@@ -97,7 +97,7 @@ fn option_diagnostic_rejects_writes_and_survives_owner_release() {
         !js_sys::Reflect::delete_property(&view.clone().into(), &"sixelScrolling".into()).unwrap()
     );
     assert_eq!(get(&view, "pixelLimit"), JsValue::from(16777216));
-    rust.set_show_placeholder(false).unwrap();
+    rust.set_show_placeholder(JsValue::FALSE).unwrap();
     rust.dispose().unwrap();
     drop(rust);
     assert_eq!(get(&view, "showPlaceholder"), JsValue::FALSE);

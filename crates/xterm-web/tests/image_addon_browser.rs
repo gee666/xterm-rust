@@ -9,6 +9,8 @@ mod inspection;
 mod inspection_activation;
 #[path = "image_addon_support/options.rs"]
 mod options;
+#[path = "image_addon_support/raw_placeholder.rs"]
+mod raw_placeholder;
 #[path = "image_addon_support/render_dimensions.rs"]
 mod render_dimensions;
 #[path = "image_addon_support/mod.rs"]
@@ -32,18 +34,15 @@ fn inactive_properties_and_constructor_copy_match_source() {
         rust.storage_usage().unwrap(),
         get(&source, "storageUsage").as_f64().unwrap()
     );
-    assert_eq!(
-        rust.show_placeholder(),
-        get(&source, "showPlaceholder").as_bool().unwrap()
-    );
+    assert_eq!(rust.show_placeholder(), get(&source, "showPlaceholder"));
     assert!(rust
         .get_image_at_buffer_cell(0.0, 0.0)
         .unwrap()
         .is_undefined());
     rust.set_storage_limit(64.0).unwrap();
-    rust.set_show_placeholder(false).unwrap();
+    rust.set_show_placeholder(JsValue::FALSE).unwrap();
     assert_eq!(rust.storage_limit(), -1.0);
-    assert!(!rust.show_placeholder());
+    assert_eq!(rust.show_placeholder(), JsValue::FALSE);
     assert!(!rust.reset().unwrap());
     assert_eq!(rust.on_image_added(), rust.on_image_added());
     rust.dispose().unwrap();
@@ -100,7 +99,7 @@ async fn graphics_queries_scrolling_limits_and_reset_match_source() {
         assert_eq!(rust.is_ok(), source.is_ok());
         pair.compare();
     }
-    pair.addon.set_show_placeholder(true).unwrap();
+    pair.addon.set_show_placeholder(JsValue::TRUE).unwrap();
     js_sys::Reflect::set(
         &get(&pair.source, "addon"),
         &"showPlaceholder".into(),

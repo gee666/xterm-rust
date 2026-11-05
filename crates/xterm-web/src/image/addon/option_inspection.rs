@@ -1,6 +1,10 @@
 // Copyright (c) 2020 The xterm.js authors. All rights reserved. MIT license.
-//! Read-only diagnostics of typed native options, not a writable JS option bag.
-use std::{cell::Cell, rc::Rc};
+//! Read-only diagnostics, not a writable JS option bag. Placeholder inspection
+//! reads the same raw value as the public property; other options remain typed.
+use std::{
+    cell::{Cell, RefCell},
+    rc::Rc,
+};
 use wasm_bindgen::prelude::*;
 use xterm_addons::image::options::ImageOptions;
 
@@ -13,10 +17,14 @@ extern "C" {
 #[wasm_bindgen]
 pub struct ImageOptionsReader {
     options: Rc<Cell<ImageOptions>>,
+    placeholder: Rc<RefCell<JsValue>>,
 }
 impl ImageOptionsReader {
-    pub(super) fn new(options: Rc<Cell<ImageOptions>>) -> Self {
-        Self { options }
+    pub(super) fn new(options: Rc<Cell<ImageOptions>>, placeholder: Rc<RefCell<JsValue>>) -> Self {
+        Self {
+            options,
+            placeholder,
+        }
     }
 }
 #[wasm_bindgen]
@@ -31,7 +39,7 @@ impl ImageOptionsReader {
             "sixelPaletteLimit" => options.sixel_palette_limit.into(),
             "sixelSizeLimit" => options.sixel_size_limit.into(),
             "storageLimit" => options.storage_limit.into(),
-            "showPlaceholder" => options.show_placeholder.into(),
+            "showPlaceholder" => self.placeholder.borrow().clone(),
             "iipSupport" => options.iip_support.into(),
             "iipSizeLimit" => options.iip_size_limit.into(),
             "kittySupport" => options.kitty_support.into(),

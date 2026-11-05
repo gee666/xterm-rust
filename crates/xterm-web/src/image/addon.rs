@@ -52,6 +52,8 @@ struct State {
     options: Rc<Cell<ImageOptions>>,
     defaults: ImageOptions,
     placeholder: Rc<Cell<bool>>,
+    // Raw public value is authoritative; the bool above is its storage policy.
+    placeholder_value: Rc<RefCell<JsValue>>,
     terminal: RefCell<Weak<Shared>>,
     renderer: RefCell<Option<Rc<ImageRendererLifecycle>>>,
     storage: RefCell<Option<ImageStorage>>,

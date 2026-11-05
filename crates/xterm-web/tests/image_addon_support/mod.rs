@@ -167,7 +167,7 @@ impl Pair {
         );
         assert_eq!(
             self.addon.show_placeholder(),
-            get(&source, "showPlaceholder").as_bool().unwrap()
+            get(&source, "showPlaceholder")
         );
     }
     pub fn compare_image(&self, x: f64, y: f64) {

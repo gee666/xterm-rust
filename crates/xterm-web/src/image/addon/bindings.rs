@@ -32,9 +32,17 @@ pub struct ImageAddon {
 impl ImageAddon {
     #[wasm_bindgen(constructor)]
     pub fn new(options: JsValue) -> Result<Self, JsValue> {
-        let (current, defaults) = options::read(&options)?;
+        let options::ConstructorOptions {
+            current,
+            defaults,
+            placeholder,
+        } = options::read(&options)?;
         let options = Rc::new(Cell::new(current));
-        let option_view = option_inspection::inspection(ImageOptionsReader::new(options.clone()))?;
+        let placeholder_value = Rc::new(RefCell::new(placeholder));
+        let option_view = option_inspection::inspection(ImageOptionsReader::new(
+            options.clone(),
+            placeholder_value.clone(),
+        ))?;
         let added = Emitter::new();
         let event = callable(added.event(), empty);
         let handlers = Rc::new(RefCell::new(Handlers::default()));
@@ -44,6 +52,7 @@ impl ImageAddon {
                 options,
                 defaults,
                 placeholder: Rc::new(Cell::new(current.show_placeholder)),
+                placeholder_value,
                 terminal: RefCell::new(Weak::new()),
                 renderer: RefCell::new(None),
                 storage: RefCell::new(None),
@@ -77,8 +86,8 @@ impl ImageAddon {
     pub fn handler_inspection(&self) -> JsValue {
         self.handlers.clone()
     }
-    /// Live read-only typed options. Raw writable JS option records are not
-    /// exposed by this diagnostic adapter.
+    /// Live read-only options. Placeholder values retain their JavaScript
+    /// identity; other fields remain typed projections, not a writable record.
     #[wasm_bindgen(getter, js_name = _opts)]
     pub fn option_inspection(&self) -> JsValue {
         self.options.clone()
@@ -119,18 +128,24 @@ impl ImageAddon {
             .storage()
             .map_or(Ok(-1.0), |s| s.get_usage().map_err(|e| to_js_error(&e)))
     }
+    /// Return the original JavaScript value, not its rendering truthiness.
     #[wasm_bindgen(getter, js_name = showPlaceholder)]
-    pub fn show_placeholder(&self) -> bool {
-        self.state.options.get().show_placeholder
+    pub fn show_placeholder(&self) -> JsValue {
+        self.state.placeholder_value.borrow().clone()
     }
+    /// Store before rendering; host failures do not roll back this value.
     #[wasm_bindgen(setter, js_name = showPlaceholder)]
-    pub fn set_show_placeholder(&self, value: bool) -> Result<(), JsValue> {
+    pub fn set_show_placeholder(&self, value: JsValue) -> Result<(), JsValue> {
+        // Source stores the original value before invoking the renderer. Keep
+        // that identity even if rendering throws or a host callback reenters.
+        let enabled = value.is_truthy();
+        *self.state.placeholder_value.borrow_mut() = value;
         let mut options = self.state.options.get();
-        options.show_placeholder = value;
+        options.show_placeholder = enabled;
         self.state.options.set(options);
-        self.state.placeholder.set(value);
+        self.state.placeholder.set(enabled);
         if let Some(renderer) = self.state.renderer() {
-            renderer.show_placeholder(value)?;
+            renderer.show_placeholder(enabled)?;
         }
         Ok(())
     }
