@@ -40,6 +40,12 @@ Browser runtime, native Linux/macOS, complete common-family closure312, full wor
 
 The isolated task358 reviewer accepted HEADb141da9 against mainbb6eada. It independently reran all53 focused tests, exact full-workspace formatting and both warning-denied Clippy commands. It inspected success, recoverable failure and unwind ownership, checked27 retained source/implementation hash entries, and found no concrete problem. The reviewer did not rerun the report-writing oracle, browser suites or other native platforms. No source files changed during review.
 
+## Canonical integration
+
+The unchanged merge helper integrated tasks358,359 and360 into main `a2a125247d5ebeb4105fff27518fa3ef56b792e8`. Task359's owner confirmed `c479f37` and `95974a8`; task360's owner confirmed `e7cf1d5` and `1f606d8`. Those reviewed changes were picked without conflict onto main `e4945e8f`. Production/test/script diffs matched the owners' reviewed commits, and task358's three recorded input hashes were unchanged.
+
+`CARGO_BUILD_JOBS=2 node scripts/worktree-merge.mjs` passed changed core/addons/web builds and default-feature all-target tests, affected-crate native/all-target checks, the workspace check and applicable WASM library checks. The log contains2030 passed tests across377 summaries, zero failed or ignored. The helper fast-forwarded main and removed the regular private target. Exact full-workspace formatting passed again on the integrated source. Raw log and machine-readable counts are retained as `canonical-merge.log`, `canonical-summary.json` and `integrated-fmt.log` in this task's results directory. No browser suite was rerun by this integration gate, and these results are not a final all-feature/platform equivalence claim.
+
 ## Temporary ownership
 
 Owned root: `O:/xterm-rust-swarm-16/tmp/Y16`, with regular private `target/` and `tmp/` directories. `tmp/baseline/` holds copied utility modules and two standalone negative-control binaries. No server or browser was started. These disposable paths must be removed after review/integration while preserving the source branch and tracked evidence. No other worktree or original reference is a cleanup target.
