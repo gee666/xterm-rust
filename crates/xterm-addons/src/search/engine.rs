@@ -32,8 +32,9 @@ impl EngineContext {
     pub fn init(self: &Rc<Self>) -> Result<(), SearchAddonError> {
         let now = self.host.now_ms();
         self.cache.borrow_mut().init(now);
-        // Disposed source caches can still be used by a captured engine, but
-        // their MutableDisposables immediately cancel any new listener/timer.
+        // A captured call may continue after replacement. Retired contexts
+        // must not install jobs whose handles would have no live owner. Source
+        // post-disposal registration behavior remains a documented parity gap.
         if self.disposed.get() {
             return Ok(());
         }

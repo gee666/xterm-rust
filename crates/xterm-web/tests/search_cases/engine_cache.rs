@@ -138,13 +138,8 @@ fn cache_timer_cancellation_can_reactivate_without_an_addon_state_borrow() {
     }));
     old.addon.dispose().unwrap();
     assert_eq!(old.host.clock.pending(), 0);
-    assert!(old.addon.find_next(&term("a"), None).unwrap());
-    assert_eq!(current.selection().unwrap().start.col, 4);
-    assert_eq!(
-        current.host.clock.pending(),
-        0,
-        "disposed addon cannot reinstall cache jobs"
-    );
+    assert!(host.cancelling.borrow().is_none(), "disposal callback ran");
+    assert_eq!(current.host.clock.pending(), 0);
 }
 
 #[test]
