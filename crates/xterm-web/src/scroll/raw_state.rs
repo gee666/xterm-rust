@@ -15,6 +15,8 @@ export function scrollRawInt32(value) { return value | 0; }
 export function scrollRawAdd(a, b) { return a + b; }
 export function scrollRawLess(a, b) { return a < b; }
 export function scrollRawGreater(a, b) { return a > b; }
+export function scrollRawAbs(value) { return Math.abs(value); }
+export function scrollRawPower(value, exponent) { return Math.pow(value, exponent); }
 ")]
 extern "C" {
     #[wasm_bindgen(catch, js_name = scrollRawInt32)]
@@ -25,6 +27,10 @@ extern "C" {
     fn less(a: &JsValue, b: &JsValue) -> Result<bool, JsValue>;
     #[wasm_bindgen(catch, js_name = scrollRawGreater)]
     fn greater(a: &JsValue, b: &JsValue) -> Result<bool, JsValue>;
+    #[wasm_bindgen(catch, js_name = scrollRawAbs)]
+    fn absolute(value: &JsValue) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch, js_name = scrollRawPower)]
+    fn power(value: &JsValue, exponent: &JsValue) -> Result<JsValue, JsValue>;
 }
 impl ScrollValue for JsValue {
     type Error = JsValue;
@@ -45,6 +51,18 @@ impl ScrollValue for JsValue {
     }
     fn greater(&self, other: &Self) -> Result<bool, JsValue> {
         greater(self, other)
+    }
+    fn multiply(&self, other: &Self) -> Result<Self, JsValue> {
+        interop::multiply(self, other)
+    }
+    fn divide(&self, other: &Self) -> Result<Self, JsValue> {
+        interop::divide(self, other)
+    }
+    fn absolute(&self) -> Result<Self, JsValue> {
+        absolute(self)
+    }
+    fn power(&self, exponent: &Self) -> Result<Self, JsValue> {
+        power(self, exponent)
     }
     fn strict_eq(&self, other: &Self) -> bool {
         self == other

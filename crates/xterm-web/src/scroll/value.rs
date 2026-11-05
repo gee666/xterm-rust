@@ -13,6 +13,10 @@ pub trait ScrollValue: Clone {
     fn subtract(&self, other: &Self) -> Result<Self, Self::Error>;
     fn less(&self, other: &Self) -> Result<bool, Self::Error>;
     fn greater(&self, other: &Self) -> Result<bool, Self::Error>;
+    fn multiply(&self, other: &Self) -> Result<Self, Self::Error>;
+    fn divide(&self, other: &Self) -> Result<Self, Self::Error>;
+    fn absolute(&self) -> Result<Self, Self::Error>;
+    fn power(&self, exponent: &Self) -> Result<Self, Self::Error>;
     fn strict_eq(&self, other: &Self) -> bool;
 }
 
@@ -47,6 +51,18 @@ impl ScrollValue for f64 {
     }
     fn greater(&self, other: &Self) -> Result<bool, Infallible> {
         Ok(self > other)
+    }
+    fn multiply(&self, other: &Self) -> Result<Self, Infallible> {
+        Ok(self * other)
+    }
+    fn divide(&self, other: &Self) -> Result<Self, Infallible> {
+        Ok(self / other)
+    }
+    fn absolute(&self) -> Result<Self, Infallible> {
+        Ok(self.abs())
+    }
+    fn power(&self, exponent: &Self) -> Result<Self, Infallible> {
+        Ok(self.powf(*exponent))
     }
     fn strict_eq(&self, other: &Self) -> bool {
         self == other
