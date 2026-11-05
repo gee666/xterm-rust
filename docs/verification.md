@@ -1,6 +1,14 @@
 # Verification status
 
-Overall equivalence is **NOT PROVEN**. This is an in-progress evidence report, not a completion certificate. Common utilities have focused passing results, but the initial full-workspace gates failed. Terminal integration, complete API/addon coverage, native Linux/macOS execution and Rust-backed browser end-to-end results are not established here.
+Overall equivalence is **NOT PROVEN**. This is an in-progress evidence report, not a completion certificate. It retains initial failed gates alongside later source-bound checkpoints. Complete terminal/API/addon coverage, the final release-revision quality matrix and full Rust-backed browser end-to-end proof remain unfinished.
+
+## Current 16-agent native checkpoints
+
+The controlling continuation uses exactly16 agents and actual integration branch `main`. The original45-worker resource history below is preserved history, not the current temporary-work or concurrency policy. Current owned temporary work belongs on O:, with bounded jobs and safe per-owner cleanup.
+
+[The native checkpoint](quality-vesna16.md) preserves full local Windows matrices at5ca9f593 and observed eight-job CI run42012763111 atbb6eada9. All three native Rust1.85.1 jobs pass; all three current-stable1.99.1 jobs fail Clippy while their tests and release builds pass. These are actual Linux/macOS/Windows runtime observations, not workflow configuration or cross-compilation. The original failed logs and artifacts remain intact.
+
+[The current-stable repair](current-stable-quality.md) records the equivalent source/test-helper corrections, independent review and canonical integrationaf047454. [The postrepair native checkpoint](native-ci-repair.md) separately records run42017720988 on that exact integrated revision, with explicit observed outcomes and remaining limits. Neither checkpoint substitutes for complete source/API/assertion mapping, original/browser/demo suites or final task304 after application producers settle.
 
 ## Resume after disk exhaustion
 
@@ -126,7 +134,7 @@ Required work not established by this report:
 - Complete parser/buffer/engine/public API integration and faithful remaining upstream suites.
 - Full-state terminal differential tests for cells, attributes, cursor, modes, scrollback, events, replies and APIs across streaming boundaries, malformed input, resize/reflow and alternate screen.
 - All fourteen addon implementations and actual terminal/browser integration, including Unicode/grapheme, image, search/serialize, WebGL, font and interaction paths.
-- Observed native Linux and macOS runtime verification. A CI workflow or cross-build is not evidence that either ran.
+- Final release-revision native Windows/Linux/macOS verification beyond the explicitly recorded checkpoints above. A workflow or cross-build is not runtime evidence, and an older passing checkpoint is not a later revision's result.
 - WASM bindings and actual Rust-backed Chromium, Firefox and WebKit end-to-end assertions for rendering, input, mouse, selection, clipboard, IME, sizing, links, accessibility, disposal and addons.
 - Working user-run native and Rust-backed browser demos from a clean checkout.
 - Matched validated release speed/artifact-size comparisons with warmup, at least ten repetitions, median/p95 and JS/WASM/native distribution distinctions. LoC must use the same classification/counting method for both trees.
