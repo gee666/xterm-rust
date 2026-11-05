@@ -5,6 +5,9 @@ mod bindings;
 #[path = "viewport_options.rs"]
 mod options;
 #[cfg(test)]
+#[path = "viewport_public_browser_tests.rs"]
+mod public_tests;
+#[cfg(test)]
 #[path = "viewport_state_browser_tests.rs"]
 mod state_tests;
 #[path = "viewport_styles.rs"]
