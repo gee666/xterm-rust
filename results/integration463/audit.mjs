@@ -3,8 +3,13 @@
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import {execFileSync} from 'node:child_process';
-const git = (...args) => execFileSync(process.env.GIT ?? 'git', args,
-  {timeout: 30000, maxBuffer: 32 * 1024 * 1024});
+const cache = new Map();
+function git(...args) {
+  const key = JSON.stringify(args);
+  if (!cache.has(key)) cache.set(key, execFileSync(process.env.GIT ?? 'git', args,
+    {timeout: 30000, maxBuffer: 32 * 1024 * 1024}));
+  return cache.get(key);
+}
 const text = (...args) => git(...args).toString().trim();
 const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
 const plan = JSON.parse(fs.readFileSync('results/integration463/plan.json'));
@@ -21,9 +26,7 @@ function segment(value, start, end) {
 }
 const font = 'crates/xterm-addons/src/ligatures/';
 const gpos = blob('5dd73902', font + 'font_bytes.rs');
-let bytes = blob('ba7f1e3a', font + 'font_bytes.rs');
-bytes = replace(bytes, 'use std::{borrow::Cow, fmt};',
-  'use std::{borrow::Cow, fmt};\n#[path = "font_hint_bytes.rs"]\nmod hints;');
+let bytes = blob('f9a29280', font + 'font_bytes.rs');
 bytes = replace(bytes, '    KernVersion(u16),', '    KernVersion(u16),\n' +
   segment(gpos, '    GposVersion {', '    CoverageFormat {').trimEnd());
 bytes = replace(bytes, '            Self::CoverageFormat {',
@@ -33,10 +36,7 @@ bytes = replace(bytes, '    pub gdef: Option<DeferredTable<\'a>>,',
   '    pub gdef: Option<DeferredTable<\'a>>,\n    pub gpos: Option<DeferredTable<\'a>>,');
 bytes = replace(bytes, '        let mut gdef = None;',
   '        let mut gdef = None;\n        let mut gpos = None;');
-bytes = replace(bytes, '            match tag {\n                b"glyf"',
-  '            match tag {\n' + segment(blob(plan.base, font + 'font_bytes.rs'),
-    '                b"cvt " | b"fpgm" | b"prep" => {', '                b"glyf"') +
-  '                b"glyf"');
+// Task457 already contains420's hint hook using442's refreshed payload.
 bytes = replace(bytes,
   '                b"name" | b"GSUB" | b"GDEF" | b"hmtx" | b"kern" | b"meta" | b"fvar" | b"avar" => {',
   '                b"name" | b"GSUB" | b"GDEF" | b"GPOS" | b"hmtx" | b"kern" | b"meta" | b"fvar"\n                | b"avar" => {');
@@ -47,8 +47,15 @@ bytes = replace(bytes, '        Ok((\n            Self {',
 bytes = bytes.replaceAll('.map(|record| DeferredTable { record, woff })', '.map(deferred)');
 bytes = replace(bytes, '                gdef: gdef.map(deferred),',
   '                gdef: gdef.map(deferred),\n                gpos: gpos.map(deferred),');
+const error = segment(bytes, '#[derive(Clone, Debug, Eq, PartialEq)]', '#[derive(Clone, Copy)]');
+combined.set(font + 'font_error.rs', Buffer.from(
+  '// Copyright (c) 2018 The xterm.js authors. All rights reserved. MIT license.\nuse std::fmt;\n\n' + error.trimEnd() + '\n'));
+bytes = replace(bytes, error, '');
+bytes = replace(bytes, 'use super::{font_cmap::Cmap, font_warning::FontLoadError, FontWarning};\nuse std::{borrow::Cow, fmt};',
+  'pub use super::font_error::FontError;\nuse super::{font_cmap::Cmap, font_warning::FontLoadError, FontWarning};\nuse std::borrow::Cow;');
 combined.set(font + 'font_bytes.rs', Buffer.from(bytes));
-let loader = blob('ba7f1e3a', font + 'font.rs');
+let loader = blob('f9a29280', font + 'font.rs');
+loader = replace(loader, '#[path = "font_fvar.rs"]', '#[path = "font_error.rs"]\nmod font_error;\n#[path = "font_fvar.rs"]');
 loader = replace(loader, '#[path = "font_gsub.rs"]',
   '#[path = "font_gpos.rs"]\nmod font_gpos;\n#[path = "font_gsub.rs"]');
 loader = replace(loader, '        let current = refreshed.as_deref().unwrap_or(bytes);\n        let gsub = tables',
@@ -85,6 +92,7 @@ for (const batch of plan.batches) {
     if (source(file)) owners.set(file, [...new Set([...(owners.get(file) ?? []), batch.task])]);
   }
 }
+expected.set(font + 'font_error.rs', {task: 463, ref: null, present: true});
 for (const [file, entry] of expected) {
   if (!source(file) && !file.startsWith('results/')) continue;
   const actualPresent = text('ls-tree', 'HEAD', '--', file) !== '';
@@ -92,7 +100,8 @@ for (const [file, entry] of expected) {
     report.receiptPins.push({path: file, deleted: true, matches: !actualPresent});
     continue;
   }
-  const producer = git('show', `${entry.ref}:${file}`), wanted = combined.get(file) ?? producer;
+  const producer = entry.ref ? git('show', `${entry.ref}:${file}`) : combined.get(file);
+  const wanted = combined.get(file) ?? producer;
   const actual = git('show', `HEAD:${file}`);
   const pin = {task: entry.task, path: file, producerSha256: sha(producer), expectedSha256: sha(wanted),
     headSha256: sha(actual), composed: combined.has(file), matches: wanted.equals(actual)};
