@@ -1,5 +1,7 @@
 //! Rust-backed browser Terminal. The public bindings share the native engine,
 //! options and emitters; browser components own only DOM state and host jobs.
+//! This cohesive ownership/constructor module exceeds350 lines to keep the
+//! initialization order and shared lifetime authorities together.
 
 #[cfg(all(test, target_arch = "wasm32"))]
 mod a11y_event_tests;
@@ -23,6 +25,7 @@ mod input_services;
 mod internal_api;
 mod internal_buffer;
 mod internal_modes;
+mod internal_render;
 mod joiner_api;
 pub mod link_services;
 mod marker_api;
@@ -61,6 +64,7 @@ pub(crate) struct Shared {
     pub buffer: JsValue,
     pub parser: JsValue,
     pub internal: JsValue,
+    pub internal_render: Rc<RefCell<JsValue>>,
     pub selection: Rc<crate::selection::service::SelectionService>,
     pub decorations: Rc<xterm_core::decoration::DecorationService>,
     pub marker_handles: Rc<marker_api::MarkerHandles>,
@@ -167,7 +171,13 @@ impl Terminal {
         let parser = parser_api::WebParserApi::new(Rc::clone(&native)).into();
         // Internal services are not proposed-API gated, unlike public views.
         let core_disposed = Rc::new(Cell::new(false));
-        let internal = internal_api::CoreServices::new(&native, Rc::clone(&core_disposed))?.into();
+        let internal_render = Rc::new(RefCell::new(JsValue::UNDEFINED));
+        let internal = internal_api::CoreServices::new(
+            &native,
+            Rc::clone(&core_disposed),
+            Rc::clone(&internal_render),
+        )?
+        .into();
         let link_providers = link_services::create_registry(Rc::clone(&native), &window)?;
         let selection = Rc::new(crate::selection::service::SelectionService::new(
             crate::selection::service::SelectionPlatform {
@@ -195,6 +205,7 @@ impl Terminal {
                 buffer,
                 parser,
                 internal,
+                internal_render,
                 platform,
                 selection,
                 decorations,

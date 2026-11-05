@@ -49,6 +49,11 @@ impl Terminal {
         *self.shared.dom.borrow_mut() = Some(Rc::clone(&dom));
         let services = BrowserServices::new(&self.shared, dom)?;
         *self.shared.services.borrow_mut() = Some(Rc::clone(&services));
+        *self.shared.internal_render.borrow_mut() =
+            super::internal_render::InternalRenderServiceView::new(Rc::clone(
+                &services.render_service,
+            ))
+            .into();
         services.install(&self.shared)?;
         services.metrics.measure()?;
         let rows = self

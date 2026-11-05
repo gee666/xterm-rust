@@ -5,7 +5,10 @@ use super::{
     internal_buffer::InternalBufferServiceView, internal_modes::CoreModeServiceView,
     mouse_api::BrowserMouseState, Terminal,
 };
-use std::{cell::Cell, rc::Rc};
+use std::{
+    cell::{Cell, RefCell},
+    rc::Rc,
+};
 use wasm_bindgen::prelude::*;
 use xterm_core::headless;
 use xterm_wasm_support::public_api::unicode_service::WebUnicodeService;
@@ -17,6 +20,7 @@ pub struct CoreServices {
     core: JsValue,
     buffers: JsValue,
     store: JsValue,
+    render: Rc<RefCell<JsValue>>,
 }
 
 /// Read-only inspection of the real core's disposal flag, not a second store.
@@ -42,6 +46,7 @@ impl CoreServices {
     pub(super) fn new(
         native: &headless::Terminal,
         disposed: Rc<Cell<bool>>,
+        render: Rc<RefCell<JsValue>>,
     ) -> Result<Self, JsValue> {
         let (unicode, mouse, core, buffers) = native
             .with_state(|state| {
@@ -59,6 +64,7 @@ impl CoreServices {
             core: CoreModeServiceView::new(core).into(),
             buffers: InternalBufferServiceView::new(buffers).into(),
             store: CoreDisposalStore { disposed }.into(),
+            render,
         })
     }
 }
@@ -68,6 +74,11 @@ impl CoreServices {
     #[wasm_bindgen(getter, js_name = _store)]
     pub fn store(&self) -> JsValue {
         self.store.clone()
+    }
+
+    #[wasm_bindgen(getter, js_name = _renderService)]
+    pub fn render_service(&self) -> JsValue {
+        self.render.borrow().clone()
     }
 
     #[wasm_bindgen(getter, js_name = unicodeService)]
