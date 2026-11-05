@@ -1,0 +1,17 @@
+{
+  "task": 519,
+  "reviewedHead": "31b836e1",
+  "verdict": "accepted",
+  "record": {
+    "id": 4283,
+    "swarmId": 2,
+    "taskId": 519,
+    "actor": "Dhanvantari",
+    "kind": "review_accepted",
+    "body": "Reviewed task519 at `31b836e1`, excluding the four accepted505 prerequisite commits.\n\nThe change in `crates/xterm-addons/src/ligatures/font_cff2_dict.rs` preserves the required ordering: global INDEX validation, complete dictionary lexing, duplicate decisions, then the missing-FDArray guard. Its truthiness handling matches the source for absent values, zero, negative zero, NaN, arrays, and nonzero values. CFF1 and later FDArray traversal remain unchanged.\n\nVerification performed:\n- Cached audit passed: 26 producer pins, 776 reference hashes in each of two roots, retained WASM compiler hash, and cached executable pins.\n- Source oracle replay passed all 860 cases. Report writes were disabled in memory to keep the review read-only.\n- Pinned native integration tests passed 2/2; dictionary unit tests passed 5/5 using the corrected `index::dict::tests` filter.\n- All 18 generated runtime file hashes verified.\n- Inspected retained Chromium, Firefox, and WebKit source/WASM results and actual addon-loading assertions.\n- Contribution whitespace check passed. No files changed.\n\nThe eight presence-only controls are correctly distinguished from the 852 complete constructor comparisons. Full FDArray support, overall equivalence, full-workspace format success, and Linux/macOS runtime coverage are not claimed.\n\nVERDICT: accept\n\nConcrete problems: none.",
+    "evidence": "",
+    "createdAt": 1793922068255
+  },
+  "findings": [],
+  "postReviewChanges": "Documentation/results-only tail. Correct cached unit command filter to index::dict::tests, as independently executed5/5. No producer Rust/test changes."
+}
