@@ -20,17 +20,44 @@ impl PrivateModesCapture<'_> {
         }
     }
 }
+/// Owned observer for a host object that can outlive its initiating call. It
+/// retains the service, not a borrow, and shares the same reset boundary as a
+/// short-lived capture. There is no cycle: the service retains only weak states.
+pub struct OwnedPrivateModesCapture {
+    core: Rc<CoreService>,
+    frozen: Rc<FrozenModes>,
+}
+impl OwnedPrivateModesCapture {
+    pub fn read(&self) -> DecPrivateModes {
+        match self.frozen.borrow().as_ref() {
+            Some(value) => value.clone(),
+            None => self.core.dec_private_modes.borrow().clone(),
+        }
+    }
+    pub fn is_current(&self) -> bool {
+        self.frozen.borrow().is_none()
+    }
+}
 impl CoreService {
-    /// Use across an observable option getter, not a long-lived RefCell borrow.
-    /// The lifetime keeps the core allocation alive; it does not block reset.
-    pub fn capture_private_modes(&self) -> PrivateModesCapture<'_> {
+    fn register_private_modes_capture(&self) -> Rc<FrozenModes> {
         let frozen = Rc::new(RefCell::new(None));
         let mut captures = self.private_modes_captures.borrow_mut();
         captures.retain(|capture| capture.strong_count() > 0);
         captures.push(Rc::downgrade(&frozen));
+        frozen
+    }
+    /// Use across an observable option getter, not a long-lived RefCell borrow.
+    /// The lifetime keeps the core allocation alive; it does not block reset.
+    pub fn capture_private_modes(&self) -> PrivateModesCapture<'_> {
         PrivateModesCapture {
             current: &self.dec_private_modes,
-            frozen,
+            frozen: self.register_private_modes_capture(),
+        }
+    }
+    pub fn capture_private_modes_owned(self: &Rc<Self>) -> OwnedPrivateModesCapture {
+        OwnedPrivateModesCapture {
+            core: Rc::clone(self),
+            frozen: self.register_private_modes_capture(),
         }
     }
 
@@ -106,6 +133,25 @@ mod tests {
         assert_eq!(third.read(), DecPrivateModes::default());
         assert!(first.read().win32_input_mode);
         assert!(second.read().origin);
+    }
+
+    #[test]
+    fn owned_observer_tracks_in_place_changes_and_freezes_at_reset() {
+        let core = Rc::new(core());
+        let capture = core.capture_private_modes_owned();
+        assert!(capture.is_current());
+        core.dec_private_modes.borrow_mut().cursor_style = Some(CursorStyle::Bar);
+        assert_eq!(capture.read().cursor_style, Some(CursorStyle::Bar));
+        core.reset();
+        assert!(!capture.is_current());
+        assert_eq!(capture.read().cursor_style, Some(CursorStyle::Bar));
+        assert_eq!(core.dec_private_modes.borrow().cursor_style, None);
+        let current = core.capture_private_modes_owned();
+        core.dec_private_modes.borrow_mut().origin = true;
+        assert!(current.read().origin);
+        assert!(!capture.read().origin);
+        drop(core);
+        assert!(current.read().origin);
     }
 
     #[test]

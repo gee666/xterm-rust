@@ -14,7 +14,7 @@ use std::fmt;
 use std::rc::Rc;
 
 mod mode_capture;
-pub use mode_capture::PrivateModesCapture;
+pub use mode_capture::{OwnedPrivateModesCapture, PrivateModesCapture};
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct Modes {

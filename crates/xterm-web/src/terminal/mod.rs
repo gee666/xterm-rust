@@ -21,6 +21,8 @@ mod input_data;
 pub mod input_host;
 mod input_services;
 mod internal_api;
+mod internal_buffer;
+mod internal_modes;
 mod joiner_api;
 pub mod link_services;
 mod marker_api;
@@ -164,10 +166,7 @@ impl Terminal {
         let buffer = buffer_api::WebBufferNamespace::new(Rc::clone(&native))?.into();
         let parser = parser_api::WebParserApi::new(Rc::clone(&native)).into();
         // Internal services are not proposed-API gated, unlike public views.
-        let (unicode, mouse) = native
-            .with_state(|state| (Rc::clone(&state.unicode), Rc::clone(&state.mouse)))
-            .map_err(|error| to_js_error(&error))?;
-        let internal = internal_api::CoreServices::new(unicode, mouse).into();
+        let internal = internal_api::CoreServices::new(&native)?.into();
         let link_providers = link_services::create_registry(Rc::clone(&native), &window)?;
         let selection = Rc::new(crate::selection::service::SelectionService::new(
             crate::selection::service::SelectionPlatform {
