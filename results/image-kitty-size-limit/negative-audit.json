@@ -1,0 +1,74 @@
+{
+  "base": "a618ff27",
+  "files": [
+    {
+      "file": "crates/xterm-addons/src/image/kitty/handler.rs",
+      "baselineSha256": "1ee6afc9bdbd9025f2115dba6452bea017372795540f2a61c88dbb8177eae821",
+      "fixedSha256": "ceca54d00aca3999cd7098f9a88882e0837d516a194ae700b9e4769501e64830",
+      "restoredSha256": "ceca54d00aca3999cd7098f9a88882e0837d516a194ae700b9e4769501e64830"
+    },
+    {
+      "file": "crates/xterm-web/src/image/kitty_protocol.rs",
+      "baselineSha256": "5f906a71ec1b08a2f51ceb0bae016ace8deafbf2249172b05c8ab6f61c8b0319",
+      "fixedSha256": "aeadc41e4108dcde902e010556a141a790339619b624e8cfac7c69ec97547b6f",
+      "restoredSha256": "aeadc41e4108dcde902e010556a141a790339619b624e8cfac7c69ec97547b6f"
+    },
+    {
+      "file": "crates/xterm-web/src/image/addon.rs",
+      "baselineSha256": "42eaed286031981732fd981cd35de35c67938a76aafc6f6913555632bfabeeff",
+      "fixedSha256": "d121089c64acd3d8bda65a7030384e38832049900fdff548021a7a7aeee4dcec",
+      "restoredSha256": "d121089c64acd3d8bda65a7030384e38832049900fdff548021a7a7aeee4dcec"
+    },
+    {
+      "file": "crates/xterm-web/src/image/addon/bindings.rs",
+      "baselineSha256": "e3286b152c7b7731a93b370e163fea624a7dc6ab5cf46e8f8ad2544f90810f51",
+      "fixedSha256": "91ee16514d0885e763f9cf28e0bae57b22bb782bb5e91ec561a96d875952f51f",
+      "restoredSha256": "91ee16514d0885e763f9cf28e0bae57b22bb782bb5e91ec561a96d875952f51f"
+    },
+    {
+      "file": "crates/xterm-web/src/image/addon/option_inspection.rs",
+      "baselineSha256": "8941b66884d86d9643733d9e0158f1b14b81c1488a37017d0456665d29ea26ee",
+      "fixedSha256": "6b476fa6005808316ee44153e29a8b1db511181cd59273fdfa0a10da6bc1459e",
+      "restoredSha256": "6b476fa6005808316ee44153e29a8b1db511181cd59273fdfa0a10da6bc1459e"
+    },
+    {
+      "file": "crates/xterm-web/src/image/addon/options.rs",
+      "baselineSha256": "39d000fbc1f9e341ef40a07fc5d16ba66e9dab09768bdd1d5b54a2420d5fdbeb",
+      "fixedSha256": "51fdfc2215e8a187a488c28900f4f50bd9edcc2821ea4d67656d92f3ecc54791",
+      "restoredSha256": "51fdfc2215e8a187a488c28900f4f50bd9edcc2821ea4d67656d92f3ecc54791"
+    },
+    {
+      "file": "crates/xterm-web/src/image/addon/protocols.rs",
+      "baselineSha256": "eb5c197dad00b152e03782cbc0a304b1ca3a24b8e27bb3b49936a20403f3cbcf",
+      "fixedSha256": "a31cd81e80f7f3e5e490491e3bfc71490d14a4305c715269ada9728c78b0eda6",
+      "restoredSha256": "a31cd81e80f7f3e5e490491e3bfc71490d14a4305c715269ada9728c78b0eda6"
+    }
+  ],
+  "restored": true,
+  "command": [
+    "node",
+    "scripts/image-canvas-check.mjs"
+  ],
+  "exit": 1,
+  "error": null,
+  "browsers": [
+    {
+      "name": "chromium",
+      "counts": {
+        "passed": 43,
+        "failed": 5,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "status": "failed"
+    }
+  ],
+  "failedTests": [
+    "raw_kitty_limit::raw_kitty_limit_disabled_never_converts",
+    "raw_kitty_limit::raw_kitty_limit_constructor_retains_values_and_first_copy",
+    "raw_kitty_limit::raw_kitty_limit_activation_preserves_errors_and_prior_registrations",
+    "raw_kitty_limit::raw_kitty_limit_activation_converts_first_copy_once_per_activation",
+    "raw_kitty_limit::raw_kitty_limit_activation_callbacks_can_reset_or_dispose"
+  ],
+  "status": "passed-negative-control"
+}
