@@ -13,6 +13,7 @@ pub mod atlas_page;
 pub mod atlas_pixels;
 pub mod cache;
 pub mod config;
+pub mod custom_glyphs;
 pub mod glyphs;
 pub mod math;
 pub mod model;

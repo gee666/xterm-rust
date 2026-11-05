@@ -33,7 +33,7 @@ web-sys = { version = "=0.3.77", features = [
   "CssStyleDeclaration", "HtmlCanvasElement", "CanvasRenderingContext2d",
   "TextMetrics", "DomRect", "Performance", "Navigator", "Url",
   "FontFace", "FontFaceSet", "FontFaceLoadStatus", "FocusOptions",
-  "CanvasGradient", "ImageData", "OffscreenCanvas", "OffscreenCanvasRenderingContext2d",
+  "CanvasGradient", "CanvasPattern", "ImageData", "OffscreenCanvas", "OffscreenCanvasRenderingContext2d",
   "WebSocket", "BinaryType", "MessageEvent", "Clipboard", "ClipboardEvent", "DataTransfer",
   "IdleDeadline", "console", "AddEventListenerOptions", "HtmlCollection", "Location", "UiEvent", "HtmlIFrameElement", "PointerEvent", "PointerEventInit", "DomRectList", "IntersectionObserver", "IntersectionObserverEntry", "MediaQueryList", "MediaQueryListEvent",
   "WebGl2RenderingContext", "WebGlShader", "WebGlProgram", "WebGlBuffer", "WebGlTexture",
@@ -42,7 +42,8 @@ web-sys = { version = "=0.3.77", features = [
 ] }
 
 [dev-dependencies]
-serde_json = "1"
+# Source geometry snapshots must round-trip every captured f64 exactly.
+serde_json = { version = "1", features = ["float_roundtrip"] }
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
 wasm-bindgen-test = "=0.3.50"

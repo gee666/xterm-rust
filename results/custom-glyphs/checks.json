@@ -1,0 +1,185 @@
+{
+  "task": 387,
+  "status": "passed",
+  "overallEquivalence": "NOT PROVEN",
+  "base": "aa3f79211e48175f317261592ff57bd20e4dc79c",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+  "environment": {
+    "TEMP": "O:\\xterm-rust-swarm-16\\tmp\\G\\tmp",
+    "TMP": "O:\\xterm-rust-swarm-16\\tmp\\G\\tmp",
+    "CARGO_BUILD_JOBS": "2"
+  },
+  "sources": [
+    {
+      "path": "crates/xterm-web/Cargo.toml",
+      "sha256": "d04a67934d47c0c8c38f8a5e80dd98a8f099d1301d774a794d2ae1f65a723bce"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/mod.rs",
+      "sha256": "eebe73718546423d1ca0f9d488c0c4c7e03f32e32b1be52e90d0ef7678bc138a"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/custom_glyphs/arc.rs",
+      "sha256": "6d9864cb57cacc63fd6498c57ed45c4e63bd4c2dc9ff18c0570265125bfd8759"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/custom_glyphs/browser.rs",
+      "sha256": "4ee89f5db632e27023db177531462a1fbb085da82ed448cf13ae50218f30178c"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/custom_glyphs/definitions.rs",
+      "sha256": "29c31c0a054e394054141563602aedb3643c909c39cb156692355085386489f6"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/custom_glyphs/mod.rs",
+      "sha256": "e6fe1e3a630bb43680250beb99e266264b808053888e7e70deb3cb2117ec0f53"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/custom_glyphs/path.rs",
+      "sha256": "92cc3668fd3513c266483b27465a4b550a11ced8a6518045bc94fee4ae99dae5"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/custom_glyphs/patterns.rs",
+      "sha256": "9f3703cde3f405eeae85b4dbcb33effb26a0de51bb2048be1411af6bd94c79a9"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/custom_glyphs/types.rs",
+      "sha256": "7ef2053b717fa5f581c9356188484a26c82968c2b0248da36f879545abf7d168"
+    },
+    {
+      "path": "scripts/custom-glyph-definitions.mjs",
+      "sha256": "4781be26bf45689eade4d86120747c2c2dea4fe53ec466580b66692628e6b4d3"
+    },
+    {
+      "path": "scripts/custom-glyph-oracle.mjs",
+      "sha256": "a701e8b194ad82b8964428f88cb298ef7ad355213de81f64882af5a3075ea683"
+    },
+    {
+      "path": "crates/xterm-web/tests/custom_glyphs.rs",
+      "sha256": "a1695c30c72209d09d5f3cfa2d961f291d749a2bf341960fb8b1dec210bab6e8"
+    },
+    {
+      "path": "crates/xterm-web/tests/wasm_custom_glyphs.rs",
+      "sha256": "84c36b3d0ac4500f99d9e147fc802d33a6f6a5b7489cc1fc5e8d66bf97f6443d"
+    },
+    {
+      "path": "crates/xterm-web/tests/fixtures/custom-glyphs.json",
+      "sha256": "b3079b63ba4f27661364291c60d0b95472ce6f262a668858fb1dc7e53959ae88"
+    }
+  ],
+  "sourceInputs": [
+    {
+      "path": "addons/addon-webgl/src/customGlyphs/CustomGlyphDefinitions.ts",
+      "sha256": "20886522bb30c56cb57c78c245a15e5cf4f7676541f8d3261a3a32d5b0ae1b01"
+    },
+    {
+      "path": "addons/addon-webgl/src/customGlyphs/CustomGlyphRasterizer.ts",
+      "sha256": "6f36f5b4509bb214d3c202ad2ebe4885da240db5037c017399a48f0d94a16e1e"
+    },
+    {
+      "path": "addons/addon-webgl/src/customGlyphs/Types.ts",
+      "sha256": "2c1cba0968cce086e7b4bfdffafc51660b410b188f6d8e072fd3c2301ef1a2eb"
+    },
+    {
+      "path": "src/browser/renderer/shared/RendererUtils.ts",
+      "sha256": "9401f9bd11bf524ded84ff0a5bdb81445430cd33bdb5f01976038efffa78a0ff"
+    }
+  ],
+  "referenceIntegrity": {
+    "files": 776,
+    "mismatches": []
+  },
+  "preludes": [
+    {
+      "path": "tmp/custom-glyphs/source.js",
+      "sha256": "e1a96f5786a92fc075a89eb208260fd67b44f305709e6adcaf1c37d4f6d31e06"
+    },
+    {
+      "path": "tmp/custom-glyphs/source-dom.js",
+      "sha256": "6d6e4a3c49582edd480746d6614a5fa512b62826d5a192bc102a2c56bedb5d95"
+    }
+  ],
+  "counts": {
+    "glyphDefinitions": 778,
+    "sourceTraceCases": 2355,
+    "patternGlyphs": 15,
+    "native": {
+      "passed": 2062,
+      "failed": 0,
+      "ignored": 0,
+      "summaries": 411
+    },
+    "browserFunctions": 30
+  },
+  "commands": [
+    {
+      "command": "node scripts/custom-glyph-oracle.mjs",
+      "report": "original.json",
+      "traces": "crates/xterm-web/tests/fixtures/custom-glyphs.json"
+    },
+    {
+      "command": "cargo fmt --all -- --check",
+      "log": "fmt.log"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --all-features -j2 -- -D warnings",
+      "log": "clippy-native.log"
+    },
+    {
+      "command": "cargo test --workspace --all-targets --all-features -j2",
+      "log": "test-native.log"
+    },
+    {
+      "command": "cargo clippy -p xterm-web --target wasm32-unknown-unknown --lib --test wasm_custom_glyphs -j2 -- -D warnings",
+      "log": "clippy-wasm.log"
+    },
+    {
+      "command": "WASM_TEST=wasm_custom_glyphs WASM_PRELUDE=tmp/custom-glyphs/source.js node scripts/browser-host-check.mjs",
+      "report": "offscreen.json"
+    },
+    {
+      "command": "WASM_TEST=wasm_custom_glyphs WASM_PRELUDE=tmp/custom-glyphs/source-dom.js node scripts/browser-host-check.mjs",
+      "report": "dom.json"
+    }
+  ],
+  "knownLimits": [
+    "No complete TextureAtlas/WebglRenderer/WebglAddon or terminal-level WebGL original E2E acceptance",
+    "No native Linux/macOS evidence",
+    "Arbitrary runtime Object.prototype/Function.prototype mutation not established"
+  ],
+  "retainedCounterexamples": [
+    {
+      "chars": [
+        55358,
+        57266
+      ],
+      "case": 1347,
+      "input": "Source path includes glued numeric token .27Z; whole-string Rust float parsing produced NaN. Corrected prefix parser retained in source/Rust fixture."
+    },
+    {
+      "chars": [
+        57504
+      ],
+      "case": 480,
+      "input": "serde_json default decoder rounded source 9.879999999999999 to9.88. Test-only float_roundtrip enabled; all non-arc numbers now compare exactly."
+    },
+    {
+      "cases": [
+        2352,
+        2353,
+        2354
+      ],
+      "input": "2^53 cell width guards source Math.round step ordering; uses shared renderer utils js_round."
+    }
+  ],
+  "cleanup": {
+    "ownedWorktree": "O:/xterm-rust-swarm-16/tmp/G",
+    "previousOwnedPaths": [
+      "O:/xterm-rust-swarm-16/tmp/VincentGlyph",
+      "O:/xterm-rust-swarm-16/tmp/VG"
+    ],
+    "state": "Target/tmp/browser artifacts retained for independent review; no owned background process. Remove only after source/evidence preserved and reparse-point preflight."
+  }
+}
