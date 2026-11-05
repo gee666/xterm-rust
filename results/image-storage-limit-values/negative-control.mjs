@@ -26,6 +26,7 @@ try{
   audit.browsers=report.browsers.map(({name,counts,status})=>({name,counts,status}));
   if(result.status===0||result.error)throw Error('Expected a completed failing browser control');
   if(report.browsers.length!==1||report.browsers[0].name!=='chromium')throw Error('Unexpected negative browsers');
+  if(report.browsers[0].counts.passed!==28||report.browsers[0].counts.failed!==5)throw Error('Expected exactly the five new test failures');
 }finally{
   for(const [file,bytes]of saved)await writeFile(file,bytes);
   for(const entry of audit.files){entry.restoredSha256=hash(await readFile(entry.file));if(entry.restoredSha256!==entry.fixedSha256)throw Error(`restore failed ${entry.file}`);}

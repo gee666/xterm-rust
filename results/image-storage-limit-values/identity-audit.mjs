@@ -27,7 +27,8 @@ for(const pin of negative.files){
   audit.control.push({...pin,actualSha256:actual});
 }
 const report=JSON.parse(await readFile(`${out}/negative-browser.json`,'utf8'));
-audit.negative=report.browsers.map(({name,counts,tests})=>({name,counts,failedTests:tests.filter(t=>t.status==='failed')}));
+audit.negative=report.browsers.map(({name,counts,output})=>({name,counts,failedTests:output.replaceAll('\r\n','\n').split('failures:\n').at(-1).split('test result:')[0].trim().split('\n').map(line=>line.trim()).filter(Boolean)}));
+if(audit.negative[0].counts.passed!==28||audit.negative[0].counts.failed!==5||audit.negative[0].failedTests.length!==5||audit.negative[0].failedTests.some(name=>!name.startsWith('raw_storage_limit::')))throw Error('Unexpected negative control failures');
 audit.counts={rust:audit.rust.length,original:audit.original.length,control:audit.control.length};
 await writeFile(`${out}/identity-audit.json`,JSON.stringify(audit,null,2)+'\n');
 console.log(audit.counts);
