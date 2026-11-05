@@ -32,6 +32,12 @@ Retained evidence is under `results/base64-encode/`:
 
 Reports identify disposable compiler/browser artifacts by digest. Paths from before the worktree move are historical. Generated WASM/JS bundles are removed during owned cleanup and are not distribution downloads. Full workspace all-feature/platform quality and original suites are separate gates, not implied by these scoped receipts.
 
+## Review and integration
+
+Task394's independent reviewer accepted the change with no findings. The reviewer executed all16 traces directly against unchanged source, checked all776 manifest entries, reran both retained WASM test functions in all three engines, verified artifact/test-source hashes, and ran full fmt plus `git diff --check`. This independent run used retained final artifacts rather than rebuilding them.
+
+Commit `fd16b12` was integrated into actual main through `scripts/worktree-merge.mjs`. `results/base64-encode/merge.log` retains the canonical changed-crate build/all-target tests, affected-dependent check, workspace check and applicable WASM library check. This is not the full workspace test/all-feature/OS gate. The helper removed the private Cargo target after integration.
+
 ## Reproduce
 
 Use Node24, locked Rust1.85.1, wasm32-unknown-unknown, wasm-bindgen0.2.100 and installed Playwright engines. Existing tool installations can be selected through SOURCE_ROOT, WASM_BINDGEN and PLAYWRIGHT_MODULE. Keep temporary work and builds on O: under current team resource limits.
