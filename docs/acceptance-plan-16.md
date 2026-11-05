@@ -44,7 +44,7 @@ All fourteen addons are explicitly assigned. Search and serialize have criterion
 | Unchanged original assertions and full-state differentials | 449 | Scoped producer tests,327 full suites,328 accounting |
 | Real native and Rust browser demonstrations/E2E | 450 | 327 and330 |
 | Observed native Windows/Linux/macOS MSRV and stable runtime evidence | 451 | 302 historical diagnosis;304 actual final matrix |
-| Matched speed, distribution size and classified LoC | 452 | 303 size/LoC;329 validated release timing |
+| Matched speed, distribution size and classified LoC | 452 | 303 size/LoC;326 runner validation;329 final release measurements |
 | O: resource limits and complete owned temporary cleanup | 453 | 309 and every owner's cleanup record |
 | Copyable README and final compatibility/verification/comparison truth | 454 | 328 and330 |
 
@@ -72,7 +72,7 @@ Review must inspect actual code and independently execute relevant checks. Safe 
 | Margaret | Scroll/viewport recovery,289 then301 raw model |
 | Diponegoro | Input/focus/IME/accessibility,292 |
 | Wyatt | Mouse raw policies/registry,291 then305 |
-| Nolan | Image protocol/browser decode,295 then326 coordinator |
+| Nolan | Image protocol/browser decode,295 then full ImageAddon coordinator followup |
 | Lane | WebGL,299 then306 |
 | Clifford | Ligatures/web-fonts/joiners,293 then307 |
 | Clarence | Search/serialize investigation,290 |
