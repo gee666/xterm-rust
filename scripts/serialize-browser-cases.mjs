@@ -348,8 +348,13 @@ export async function serializationCases() {
       new Number(NaN), new Number(0.5), new Number(-2.5), new Number(Infinity),
       [], [0.5], {}, { valueOf() { return NaN; } }, { valueOf() { return 0.5; } },
       { [Symbol.toPrimitive]() { return -1.5; } }, Symbol('scrollback'), 1n];
-    return { state: snapshot(term), values: inputs.map((scrollback, index) => ({ index,
-      html: capture(() => addon.serializeAsHTML({ scrollback })) })) };
+    const values = [];
+    for (const alternate of [false, true]) {
+      if (alternate) await write(term, '\x1b[?1049h\x1b[34mALT\r\nVIEW');
+      values.push({ alternate, state: snapshot(term), inputs: inputs.map((scrollback, index) => ({ index,
+        html: capture(() => addon.serializeAsHTML({ scrollback })) })) });
+    }
+    return values;
   });
   await run('html-scrollback-coercion-phases', async (term, addon) => {
     const values = [];

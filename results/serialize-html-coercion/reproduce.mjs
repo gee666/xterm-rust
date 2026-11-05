@@ -139,6 +139,11 @@ if (mode === 'audit') {
       repaired: beforeRust.filter((entry, index) => JSON.stringify(entry) !== JSON.stringify(afterRust[index])).map(entry => entry.name) });
   }
   const before = await json(join(output, 'baseline/build-identity.json')), after = await json(join(output, 'fixed/build-identity.json'));
+  try {
+    await writeSources(baseline);
+    assert.equal((await sourceIdentity(root)).sha256, before.input.sha256);
+  } finally { await writeSources(fixed); }
+  assert.equal((await sourceIdentity(root)).sha256, after.input.sha256);
   assert.notEqual(before.build.artifacts[1].sha256, after.build.artifacts[1].sha256);
   await save(join(output, 'summary.json'), { status: 'passed', traceAudit, baselineInput: before.input, fixedInput: after.input,
     baselineWasm: before.build.artifacts[1], fixedWasm: after.build.artifacts[1],
