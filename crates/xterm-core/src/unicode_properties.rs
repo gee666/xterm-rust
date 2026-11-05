@@ -39,6 +39,14 @@ pub fn get_info(codepoint: u32) -> u32 {
     tables::INFO[index - 1].1
 }
 
+/// Signed lookup uses the same trie error value below zero as above Unicode.
+pub fn get_info_i32(codepoint: i32) -> u32 {
+    match u32::try_from(codepoint) {
+        Ok(codepoint) => get_info(codepoint),
+        Err(_) => tables::ERROR_VALUE,
+    }
+}
+
 pub fn info_to_width_info(info: u32) -> u32 {
     (info & CHARWIDTH_MASK) >> CHARWIDTH_SHIFT
 }

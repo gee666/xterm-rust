@@ -30,6 +30,20 @@ impl UnicodeGraphemeProvider {
     pub fn handle_graphemes(&self) -> bool {
         self.handle_graphemes
     }
+
+    fn standalone_width(&self, info: u32) -> UnicodeCharWidth {
+        let width = uc::info_to_width_info(info);
+        let kind = info & uc::GRAPHEME_BREAK_MASK;
+        if matches!(kind, uc::EXTEND | uc::PREPEND) {
+            UnicodeCharWidth::Zero
+        } else if width >= uc::WIDTH_AMBIGUOUS
+            && (width == uc::WIDTH_WIDE || self.ambiguous_chars_are_wide.get())
+        {
+            UnicodeCharWidth::Wide
+        } else {
+            UnicodeCharWidth::Narrow
+        }
+    }
 }
 
 impl UnicodeVersionProvider for UnicodeGraphemeProvider {
@@ -42,18 +56,11 @@ impl UnicodeVersionProvider for UnicodeGraphemeProvider {
     }
 
     fn wcwidth(&self, codepoint: u32) -> UnicodeCharWidth {
-        let info = uc::get_info(codepoint);
-        let width = uc::info_to_width_info(info);
-        let kind = info & uc::GRAPHEME_BREAK_MASK;
-        if matches!(kind, uc::EXTEND | uc::PREPEND) {
-            UnicodeCharWidth::Zero
-        } else if width >= uc::WIDTH_AMBIGUOUS
-            && (width == uc::WIDTH_WIDE || self.ambiguous_chars_are_wide.get())
-        {
-            UnicodeCharWidth::Wide
-        } else {
-            UnicodeCharWidth::Narrow
-        }
+        self.standalone_width(uc::get_info(codepoint))
+    }
+
+    fn wcwidth_i32(&self, codepoint: i32) -> UnicodeCharWidth {
+        self.standalone_width(uc::get_info_i32(codepoint))
     }
 
     fn char_properties(

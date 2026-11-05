@@ -29,7 +29,7 @@ extern "C" {
     #[wasm_bindgen(catch, js_name = unicodeVersion)]
     fn version(provider: &JsValue) -> Result<JsString, JsValue>;
     #[wasm_bindgen(catch, js_name = unicodeWidth)]
-    fn width(provider: &JsValue, codepoint: u32) -> Result<JsValue, JsValue>;
+    fn width(provider: &JsValue, codepoint: f64) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch, js_name = unicodeProperties)]
     fn properties(provider: &JsValue, codepoint: u32, preceding: u32) -> Result<u32, JsValue>;
     #[wasm_bindgen(js_name = unknownUnicodeVersion)]
@@ -79,14 +79,8 @@ fn decode(value: &str) -> JsString {
 
 struct HostProvider(JsValue);
 
-impl UnicodeProviderCallbacks for HostProvider {
-    fn version(&self) -> Result<String, EmitError> {
-        version(&self.0)
-            .map(|value| encode(&value))
-            .map_err(callback_error)
-    }
-
-    fn wcwidth(&self, codepoint: u32) -> Result<UnicodeCharWidth, EmitError> {
+impl HostProvider {
+    fn call_width(&self, codepoint: f64) -> Result<UnicodeCharWidth, EmitError> {
         let value = width(&self.0, codepoint).map_err(callback_error)?;
         match value.as_f64() {
             Some(0.0) => Ok(UnicodeCharWidth::Zero),
@@ -96,6 +90,22 @@ impl UnicodeProviderCallbacks for HostProvider {
                 js_sys::TypeError::new("Unicode wcwidth must return 0, 1 or 2").into(),
             )),
         }
+    }
+}
+
+impl UnicodeProviderCallbacks for HostProvider {
+    fn version(&self) -> Result<String, EmitError> {
+        version(&self.0)
+            .map(|value| encode(&value))
+            .map_err(callback_error)
+    }
+
+    fn wcwidth(&self, codepoint: u32) -> Result<UnicodeCharWidth, EmitError> {
+        self.call_width(f64::from(codepoint))
+    }
+
+    fn wcwidth_i32(&self, codepoint: i32) -> Result<UnicodeCharWidth, EmitError> {
+        self.call_width(f64::from(codepoint))
     }
 
     fn char_properties(

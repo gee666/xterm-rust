@@ -1,0 +1,164 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_webgl_atlas_page",
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T15:49:41.518Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_webgl_atlas_page",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 706.0494,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 10.545499999999947,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\R\\results\\acceptance-artifacts\\8e65908cbf23366af43c03abb5ec033e77fc1e3b6010dfeed1465a6fb36adaf1\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\R\\results\\browser-host\\wasm_webgl_atlas_page\\2026-11-05T15-49-41-516Z-dddb0830-6e86-4a56-b8f2-ac959978dd96\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 924.7203,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_webgl_atlas_page::adopts_the_supplied_document_realm",
+        "__wbgt__wasm_webgl_atlas_page::merge_constructor_shares_glyphs_and_clock_but_does_not_copy_pixels",
+        "__wbgt__wasm_webgl_atlas_page::page_clear_preserves_historical_glyph_aliases_and_used_pixels"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_webgl_atlas_page.rs:70:5:\nassertion `left == right` failed\n  left: [0, 0, 0, 0]\n right: [255, 0, 0, 255]\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:51565/suite.js:4722:21)\n    at wasm_webgl_atlas_page-d5a0bcdffc603e16.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:51565/suite_bg.wasm:wasm-function[33357]:0x9317cb)\n    at wasm_webgl_atlas_page-d5a0bcdffc603e16.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:51565/suite_bg.wasm:wasm-function[21890]:0x8ac515)\n    at wasm_webgl_atlas_page-d5a0bcdffc603e16.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:51565/suite_bg.wasm:wasm-function[7207]:0x662bfe)\n    at wasm_webgl_atlas_page-d5a0bcdffc603e16.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:51565/suite_bg.wasm:wasm-function[21891]:0x8ac599)\n    at wasm_webgl_atlas_page-d5a0bcdffc603e16.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:51565/suite_bg.wasm:wasm-function[11225]:0x74fd01)\n    at wasm_webgl_atlas_page-d5a0bcdffc603e16.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:51565/suite_bg.wasm:wasm-function[14247]:0x7ce82f)\n    at wasm_webgl_atlas_page-d5a0bcdffc603e16.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:51565/suite_bg.wasm:wasm-function[40409]:0x947130)\n    at wasm_webgl_atlas_page-d5a0bcdffc603e16.wasm.rust_begin_unwind (http://127.0.0.1:51565/suite_bg.wasm:wasm-function[27477]:0x906b0a)\n    at wasm_webgl_atlas_page-d5a0bcdffc603e16.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:51565/suite_bg.wasm:wasm-function[27478]:0x906b37)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 3 tests\ntest page_clear_preserves_historical_glyph_aliases_and_used_pixels ... ok\ntest merge_constructor_shares_glyphs_and_clock_but_does_not_copy_pixels ... ok\ntest adopts_the_supplied_document_realm ... FAIL\n\nfailures:\n\n---- adopts_the_supplied_document_realm output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_webgl_atlas_page-d5a0bcdffc603e16.wasm.__rust_start_panic (http://127.0.0.1:51565/suite_bg.wasm:wasm-function[40882]:0x947d19)\n            at wasm_webgl_atlas_page-d5a0bcdffc603e16.wasm.rust_panic (http://127.0.0.1:51565/suite_bg.wasm:wasm-function[36512]:0x93d825)\n            at wasm_webgl_atlas_page-d5a0bcdffc603e16.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:51565/suite_bg.wasm:wasm-function[11225]:0x74fd2c)\n            at wasm_webgl_atlas_page-d5a0bcdffc603e16.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:51565/suite_bg.wasm:wasm-function[14247]:0x7ce82f)\n            at wasm_webgl_atlas_page-d5a0bcdffc603e16.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:51565/suite_bg.wasm:wasm-function[40409]:0x947130)\n            at wasm_webgl_atlas_page-d5a0bcdffc603e16.wasm.rust_begin_unwind (http://127.0.0.1:51565/suite_bg.wasm:wasm-function[27477]:0x906b0a)\n            at wasm_webgl_atlas_page-d5a0bcdffc603e16.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:51565/suite_bg.wasm:wasm-function[27478]:0x906b37)\n            at wasm_webgl_atlas_page-d5a0bcdffc603e16.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:51565/suite_bg.wasm:wasm-function[4984]:0x5ae084)\n            at wasm_webgl_atlas_page-d5a0bcdffc603e16.wasm.core::panicking::assert_failed::ha89710366bf981d6 (http://127.0.0.1:51565/suite_bg.wasm:wasm-function[20148]:0x88570b)\n            at wasm_webgl_atlas_page-d5a0bcdffc603e16.wasm.wasm_webgl_atlas_page::adopts_the_supplied_document_realm::h3e08dacd5d1993d7 (http://127.0.0.1:51565/suite_bg.wasm:wasm-function[1036]:0x2c48fb)\n\nfailures:\n\n    adopts_the_supplied_document_realm\n\ntest result: FAILED. 2 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.02s\n\n",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "firefox",
+      "status": "passed",
+      "tests": [
+        "__wbgt__wasm_webgl_atlas_page::adopts_the_supplied_document_realm",
+        "__wbgt__wasm_webgl_atlas_page::merge_constructor_shares_glyphs_and_clock_but_does_not_copy_pixels",
+        "__wbgt__wasm_webgl_atlas_page::page_clear_preserves_historical_glyph_aliases_and_used_pixels"
+      ],
+      "errors": [],
+      "console": [],
+      "version": "150.0.2",
+      "output": "running 3 tests\ntest page_clear_preserves_historical_glyph_aliases_and_used_pixels ... ok\ntest merge_constructor_shares_glyphs_and_clock_but_does_not_copy_pixels ... ok\ntest adopts_the_supplied_document_realm ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.01s\n\n",
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "webkit",
+      "status": "passed",
+      "tests": [
+        "__wbgt__wasm_webgl_atlas_page::adopts_the_supplied_document_realm",
+        "__wbgt__wasm_webgl_atlas_page::merge_constructor_shares_glyphs_and_clock_but_does_not_copy_pixels",
+        "__wbgt__wasm_webgl_atlas_page::page_clear_preserves_historical_glyph_aliases_and_used_pixels"
+      ],
+      "errors": [],
+      "console": [],
+      "version": "26.4",
+      "output": "running 3 tests\ntest page_clear_preserves_historical_glyph_aliases_and_used_pixels ... ok\ntest merge_constructor_shares_glyphs_and_clock_but_does_not_copy_pixels ... ok\ntest adopts_the_supplied_document_realm ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.01s\n\n",
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/8e65908cbf23366af43c03abb5ec033e77fc1e3b6010dfeed1465a6fb36adaf1/artifact.wasm",
+      "sha256": "8e65908cbf23366af43c03abb5ec033e77fc1e3b6010dfeed1465a6fb36adaf1",
+      "bytes": 17086471,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\R\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_webgl_atlas_page-d5a0bcdffc603e16.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\R\\results\\browser-host\\wasm_webgl_atlas_page\\2026-11-05T15-49-41-516Z-dddb0830-6e86-4a56-b8f2-ac959978dd96\\artifacts\\suite_bg.wasm",
+      "bytes": 14194105,
+      "sha256": "6e119c780e43f90ea65016758bec518af5b2162279077fc2ef39fd1a9ff1abd4"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\R\\results\\browser-host\\wasm_webgl_atlas_page\\2026-11-05T15-49-41-516Z-dddb0830-6e86-4a56-b8f2-ac959978dd96\\artifacts\\suite.js",
+      "bytes": 204545,
+      "sha256": "e542e404887de2dc7e0ddff6a832a4758f0b3ea124a13c7cd295b7e9301c81bc"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "08b3a3cd98bc252004fc27ea4cfad1e5463b59a8d8af45a7c1774de3cac29012"
+  },
+  "finishedAt": "2026-11-05T15:49:58.452Z"
+}

@@ -7,6 +7,9 @@
 
 #[cfg(target_arch = "wasm32")]
 pub mod atlas_canvas;
+pub mod atlas_colors;
+#[cfg(target_arch = "wasm32")]
+pub mod atlas_page;
 pub mod atlas_pixels;
 pub mod cache;
 pub mod config;

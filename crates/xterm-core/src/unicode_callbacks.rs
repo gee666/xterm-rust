@@ -12,6 +12,15 @@ use std::rc::Rc;
 pub trait UnicodeProviderCallbacks {
     fn version(&self) -> Result<String, EmitError>;
     fn wcwidth(&self, codepoint: u32) -> Result<UnicodeCharWidth, EmitError>;
+    /// Atlas numeric glyphs can carry the signed combined-cell marker. Native
+    /// providers treat negative values as controls; JS hosts override this to
+    /// deliver the actual Number to their callback.
+    fn wcwidth_i32(&self, codepoint: i32) -> Result<UnicodeCharWidth, EmitError> {
+        match u32::try_from(codepoint) {
+            Ok(codepoint) => self.wcwidth(codepoint),
+            Err(_) => Ok(UnicodeCharWidth::Zero),
+        }
+    }
     fn char_properties(
         &self,
         codepoint: u32,
@@ -29,6 +38,13 @@ impl Provider {
         match self {
             Self::Native(provider) => Ok(provider.wcwidth(codepoint)),
             Self::Host(provider) => provider.wcwidth(codepoint),
+        }
+    }
+
+    pub fn wcwidth_i32(&self, codepoint: i32) -> Result<UnicodeCharWidth, EmitError> {
+        match self {
+            Self::Native(provider) => Ok(provider.wcwidth_i32(codepoint)),
+            Self::Host(provider) => provider.wcwidth_i32(codepoint),
         }
     }
 

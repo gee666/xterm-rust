@@ -62,6 +62,10 @@ impl ConfigFactory {
         Self::default()
     }
 
+    pub(crate) fn null_color(&self) -> ColorRef {
+        self.null_color.clone()
+    }
+
     pub fn generate(
         &self,
         dimensions: AtlasDimensions,

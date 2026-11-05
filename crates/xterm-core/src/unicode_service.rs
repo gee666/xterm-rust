@@ -158,6 +158,14 @@ impl UnicodeService {
             .map_err(UnicodeServiceError::Event)
     }
 
+    /// The atlas preserves signed numeric glyph codes without reinterpreting a
+    /// negative combined-cell marker as a huge unsigned Unicode codepoint.
+    pub fn wcwidth_i32(&self, codepoint: i32) -> Result<UnicodeCharWidth, UnicodeServiceError> {
+        self.active_provider()?
+            .wcwidth_i32(codepoint)
+            .map_err(UnicodeServiceError::Event)
+    }
+
     pub fn char_properties(
         &self,
         codepoint: u32,

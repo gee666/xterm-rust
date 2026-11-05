@@ -90,6 +90,14 @@ pub(crate) fn in_sorted_ranges(ranges: &[(u32, u32)], codepoint: u32) -> bool {
 pub trait UnicodeVersionProvider {
     fn version(&self) -> &str;
     fn wcwidth(&self, codepoint: u32) -> UnicodeCharWidth;
+    /// Numeric atlas lookup preserves signed combined-cell codes. Legacy
+    /// providers treat negatives as controls; other providers may override it.
+    fn wcwidth_i32(&self, codepoint: i32) -> UnicodeCharWidth {
+        match u32::try_from(codepoint) {
+            Ok(codepoint) => self.wcwidth(codepoint),
+            Err(_) => UnicodeCharWidth::Zero,
+        }
+    }
     fn char_properties(
         &self,
         codepoint: u32,
