@@ -1,0 +1,35 @@
+{
+  "task": 495,
+  "platform": "win32",
+  "node": "v24.15.0",
+  "baseCommit": "c5a93363",
+  "command": "node --test scripts/browser-artifact-server.test.mjs",
+  "baseline": {
+    "exitCode": 1,
+    "passed": 3,
+    "cancelledTimeout": 4,
+    "failed": 0,
+    "skipped": 0,
+    "log": "negative.log",
+    "note": "New bounded regressions expose hang; AbortSignal destroys test clients at cancellation so old helper and tests still cleanly terminate."
+  },
+  "fixed": {
+    "exitCode": 0,
+    "passed": 7,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "log": "final.log"
+  },
+  "source": [
+    {
+      "path": "scripts/browser-artifact-server.mjs",
+      "sha256": "1d199cba66fa6bc8c153ea368a91fe19877fee8f4e42a283e6d42bb515087ff1"
+    },
+    {
+      "path": "scripts/browser-artifact-server.test.mjs",
+      "sha256": "b336bdc1c52ac6187e081a5b49a3b9c8383219448e98a22c100a81896095ba8b"
+    }
+  ],
+  "contract": "Close only this HTTP server connections after use completes or throws, preserving exact body error identity; stop accepts before force-closing connections. Browser ownership remains with caller."
+}

@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { get } from 'node:http';
+import { connect } from 'node:net';
+import { once } from 'node:events';
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { withArtifactServer } from './browser-artifact-server.mjs';
@@ -46,6 +48,36 @@ test('closes the owned socket when setup inside the bound server throws', { time
   }), error => error === original);
   await assert.rejects(request(address), /ECONNREFUSED/);
 }));
+
+// Preconnects and unfinished requests must not keep a finished test server alive.
+// Test cancellation closes clients too, so the old-product negative exits cleanly.
+for (const partial of [false, true]) for (const throws of [false, true]) {
+  test(`closes ${partial ? 'incomplete-request' : 'preconnected'} client after ${throws ? 'error' : 'success'}`, { timeout: 1500 }, async t => fixture(async directory => {
+    let client;
+    const original = new Error('body failure with open client');
+    try {
+      const run = withArtifactServer({ directory, css: '', html: 'ready' }, async url => {
+        const address = new URL(url);
+        client = connect({ host: address.hostname, port: Number(address.port) });
+        t.signal.addEventListener('abort', () => client.destroy(), { once: true });
+        await once(client, 'connect');
+        if (partial) {
+          const response = once(client, 'data');
+          client.write('POST / HTTP/1.1\r\nHost: localhost\r\nContent-Length: 100\r\n\r\nx');
+          assert.match(String((await response)[0]), /^HTTP\/1\.1 200/);
+        } else {
+          // A second round trip lets the server accept the preconnected client.
+          assert.equal((await request(url)).status, 200);
+        }
+        if (throws) throw original;
+        return 'finished';
+      });
+      if (throws) await assert.rejects(run, error => error === original);
+      else assert.equal(await run, 'finished');
+      if (!client.destroyed) await once(client, 'close');
+    } finally { client?.destroy(); }
+  }));
+}
 
 test('invalid listen configuration never enters the body', { timeout: 5000 }, async () => fixture(async directory => {
   let entered = false;

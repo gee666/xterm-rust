@@ -31,7 +31,14 @@ export async function withArtifactServer({ directory, css, html, port = 0 }, use
     throw error;
   } finally {
     if (server.listening) {
-      try { await new Promise((done, reject) => server.close(error => error ? reject(error) : done())); }
+      try {
+        const closed = new Promise((done, reject) => server.close(error => error ? reject(error) : done()));
+        // The body is finished. Browser preconnects and incomplete HTTP requests
+        // may still hold sockets; close only this server's owned connections.
+        // Stop accepting first so no connection can race the forced cleanup.
+        server.closeAllConnections();
+        await closed;
+      }
       catch (cleanup) { throw failure ? new AggregateError([failure, cleanup], 'Browser server execution and cleanup failed') : cleanup; }
     }
   }
