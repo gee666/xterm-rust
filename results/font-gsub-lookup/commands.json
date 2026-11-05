@@ -1,0 +1,234 @@
+[
+  {
+    "exe": "cargo",
+    "args": [
+      "test",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-addons",
+      "--test",
+      "font_gsub_lookup"
+    ],
+    "expected": 101,
+    "exit": 101,
+    "elapsedMs": 15996,
+    "log": "results/font-gsub-lookup/native-before.log"
+  },
+  {
+    "exe": "cargo",
+    "args": [
+      "test",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-addons",
+      "--test",
+      "font_gsub_lookup"
+    ],
+    "expected": 0,
+    "exit": 0,
+    "elapsedMs": 7157,
+    "log": "results/font-gsub-lookup/native-after.log"
+  },
+  {
+    "exe": "cargo",
+    "args": [
+      "test",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-addons",
+      "--all-targets",
+      "--all-features"
+    ],
+    "expected": 0,
+    "exit": 0,
+    "elapsedMs": 77750,
+    "log": "results/font-gsub-lookup/native-addons.log"
+  },
+  {
+    "exe": "cargo",
+    "args": [
+      "clippy",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-addons",
+      "--all-targets",
+      "--all-features",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "expected": 0,
+    "exit": 101,
+    "elapsedMs": 7551,
+    "log": "results/font-gsub-lookup/native-clippy.log"
+  },
+  {
+    "exe": "cargo",
+    "args": [
+      "test",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-addons",
+      "--all-targets",
+      "--all-features"
+    ],
+    "expected": 0,
+    "exit": 0,
+    "elapsedMs": 57487,
+    "log": "results/font-gsub-lookup/native-addons-final.log"
+  },
+  {
+    "exe": "cargo",
+    "args": [
+      "clippy",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-addons",
+      "--all-targets",
+      "--all-features",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "expected": 0,
+    "exit": 0,
+    "elapsedMs": 2379,
+    "log": "results/font-gsub-lookup/native-clippy-final.log"
+  },
+  {
+    "exe": "cargo",
+    "args": [
+      "test",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-font-addons",
+      "--target",
+      "wasm32-unknown-unknown",
+      "--test",
+      "font_gsub_lookup_browser",
+      "--no-run"
+    ],
+    "expected": 0,
+    "exit": 0,
+    "elapsedMs": 22530,
+    "log": "results/font-gsub-lookup/wasm-build.log"
+  },
+  {
+    "exe": "cargo",
+    "args": [
+      "clippy",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-font-addons",
+      "--target",
+      "wasm32-unknown-unknown",
+      "--test",
+      "font_gsub_lookup_browser",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "expected": 0,
+    "exit": 0,
+    "elapsedMs": 10127,
+    "log": "results/font-gsub-lookup/wasm-clippy.log"
+  },
+  {
+    "exe": "cargo",
+    "args": [
+      "check",
+      "--locked",
+      "-j2",
+      "--target",
+      "wasm32-unknown-unknown",
+      "--lib",
+      "-p",
+      "xterm-web",
+      "-p",
+      "xterm-font-addons"
+    ],
+    "expected": 0,
+    "exit": 0,
+    "elapsedMs": 22080,
+    "log": "results/font-gsub-lookup/wasm-dependents.log"
+  },
+  {
+    "exe": "cargo",
+    "args": [
+      "fmt",
+      "--all",
+      "--",
+      "--check"
+    ],
+    "exit": 1,
+    "log": "results/font-gsub-lookup/fmt-all.log"
+  },
+  {
+    "exe": "cargo",
+    "args": [
+      "fmt",
+      "-p",
+      "xterm-core",
+      "--",
+      "--check"
+    ],
+    "exit": 0,
+    "log": "results/font-gsub-lookup/fmt-xterm-core.log"
+  },
+  {
+    "exe": "cargo",
+    "args": [
+      "fmt",
+      "-p",
+      "xterm-addons",
+      "--",
+      "--check"
+    ],
+    "exit": 0,
+    "log": "results/font-gsub-lookup/fmt-xterm-addons.log"
+  },
+  {
+    "exe": "cargo",
+    "args": [
+      "fmt",
+      "-p",
+      "xterm-web",
+      "--",
+      "--check"
+    ],
+    "exit": 0,
+    "log": "results/font-gsub-lookup/fmt-xterm-web.log"
+  },
+  {
+    "exe": "cargo",
+    "args": [
+      "fmt",
+      "-p",
+      "xterm-font-addons",
+      "--",
+      "--check"
+    ],
+    "exit": 0,
+    "log": "results/font-gsub-lookup/fmt-xterm-font-addons.log"
+  },
+  {
+    "exe": "cargo",
+    "args": [
+      "fmt",
+      "-p",
+      "xterm-wasm-support",
+      "--",
+      "--check"
+    ],
+    "exit": 0,
+    "log": "results/font-gsub-lookup/fmt-xterm-wasm-support.log"
+  }
+]

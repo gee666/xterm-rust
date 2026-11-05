@@ -6,14 +6,17 @@ import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import {withArtifactServer} from './browser-artifact-server.mjs';
-const root=process.cwd(),work=path.join(root,'tmp/gsub-header-source');
+const corpus=process.env.GSUB_CORPUS??'header';
+if(!['header','lookup'].includes(corpus))throw new Error('GSUB_CORPUS must be header or lookup');
+const prefix=`font-gsub-${corpus}`;
+const root=process.cwd(),work=path.join(root,`tmp/gsub-${corpus}-source`);
 const require=createRequire(path.resolve(process.env.SOURCE_PACKAGE_JSON??'source_repo/package.json'));
 const source=path.dirname(require.resolve('./package.json')),esbuild=require('esbuild'),parse=require.resolve('opentype.js');
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
-const fixtureBytes=await fs.readFile('crates/xterm-addons/tests/fixtures/font-gsub-header.json'),fixture=JSON.parse(fixtureBytes);
-const addon=JSON.parse(await fs.readFile('crates/xterm-font-addons/tests/fixtures/font-gsub-header-addon.json','utf8'));
+const fixtureBytes=await fs.readFile(`crates/xterm-addons/tests/fixtures/${prefix}.json`),fixture=JSON.parse(fixtureBytes);
+const addon=JSON.parse(await fs.readFile(`crates/xterm-font-addons/tests/fixtures/${prefix}-addon.json`,'utf8'));
 const base=[...await fs.readFile('crates/xterm-addons/tests/fixtures/ligature-fonts/UbuntuMono-Regular.ttf')];
-const report={node:process.version,status:'running',scope:'Unchanged-source GSUB header constructor/addon baseline, not Rust',fixtureSha256:hash(fixtureBytes),sourceSha256:hash(await fs.readFile(parse)),browsers:[]};
+const report={node:process.version,status:'running',scope:`Unchanged-source GSUB ${corpus} constructor/addon baseline, not Rust`,fixtureSha256:hash(fixtureBytes),sourceSha256:hash(await fs.readFile(parse)),browsers:[]};
 await fs.mkdir(work,{recursive:true});
 try{
  await esbuild.build({stdin:{contents:`import {LigaturesAddon} from ${JSON.stringify(path.join(source,'addons/addon-ligatures/src/LigaturesAddon.ts'))};import {parse} from ${JSON.stringify(parse)};import {buildHeaderFont,headerAddonCases} from ${JSON.stringify(path.join(root,'crates/xterm-font-addons/tests/support/font_gsub_header_scenarios.mjs'))};
@@ -53,5 +56,5 @@ try{
   }
  });report.status='passed';
 }catch(error){report.status='failed';report.error=String(error.stack??error);throw error;}
-finally{esbuild.stop();await fs.writeFile('results/font-gsub-header/source-browser.json',JSON.stringify(report,null,2)+'\n');await fs.rm(work,{recursive:true,force:true});}
+finally{esbuild.stop();await fs.writeFile(`results/${prefix}/source-browser.json`,JSON.stringify(report,null,2)+'\n');await fs.rm(work,{recursive:true,force:true});}
 console.log(JSON.stringify(report));

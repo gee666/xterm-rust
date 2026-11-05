@@ -35,12 +35,13 @@ pub fn parse(bytes: &[u8]) -> Result<Gsub, FontError> {
     for offset in offsets {
         let table = list.at(usize::from(offset))?;
         let kind = table.u16(0)?;
+        if !(1..=9).contains(&kind) {
+            // The shared GPOS/GSUB parser rejects the type before flags/count.
+            return Err(FontError::GposLookupType(kind));
+        }
         let flags = table.u16(2)?;
         let count = usize::from(table.u16(4)?);
         let offsets = table.words(6, count)?;
-        if flags & 0x0010 != 0 {
-            table.u16(6 + count * 2)?;
-        }
         match kind {
             1 => {
                 let mut subtables = Vec::new();
@@ -75,6 +76,10 @@ pub fn parse(bytes: &[u8]) -> Result<Gsub, FontError> {
                 lookups.push(Lookup::Other(subtables));
             }
             _ => return Err(FontError::UnsupportedFormat("GSUB lookup type", kind)),
+        }
+        // Subtable errors precede the optional trailing mark-filter word.
+        if flags & 0x0010 != 0 {
+            table.u16(6 + count * 2)?;
         }
     }
     if version == 11 {
