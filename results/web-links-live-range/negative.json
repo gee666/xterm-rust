@@ -1,0 +1,125 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_web_links_live_range",
+  "testTimeoutMs": 60000,
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T19:32:52.139Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_web_links_live_range",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 12181.685800000001,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 11.613199999999779,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\HasanLinks\\results\\acceptance-artifacts\\a39640a7fd269da9fefaeed5943ebbc8d12dc59453edff0fade6d22635077dab\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\HasanLinks\\results\\browser-host\\wasm_web_links_live_range\\2026-11-05T19-32-52-076Z-5d7ba9be-481c-4544-836f-e630ba9c582a\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1097.5527000000002,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_web_links_live_range::utility_callback_ranges_drive_live_pointer_equality_and_selection"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_web_links_live_range.rs:48:5:\nassertion `left == right` failed\n  left: Array [Object {\"calls\": Array [Array [String(\"hover\"), Bool(false), String(\"http://x.cohijklmno\"), Bool(true)]], \"errors\": Array [], \"name\": String(\"hover mutates callback range\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"same cell ignores mutation\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"next cell leaves mutated range\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"cached mutated range reenters\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [Array [String(\"activate\"), Bool(false), String(\"http://x.cohijklmno\")]], \"errors\": Array [], \"name\": String(\"mousedown equality reads live range and handler receiver\"), \"pointer\": Bool(true)}, Object {\"name\": String(\"double click selects mutated range\"), \"selection\": String(\"http://x.cohijklmno\")}, Object {\"calls\": Array [Array [String(\"activate\"), Bool(false), String(\"http://x.cohijklmno\")]], \"errors\": Array [], \"name\": String(\"double click mouseup\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"replacement endpoints stay live\"), \"pointer\": Bool(true)}, Object {\"name\": String(\"same cell avoids proxy getters\"), \"reads\": Array []}, Object {\"name\": String(\"hit test reads proxy coordinates\"), \"reads\": Array []}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"range getter preserves thrown identity\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"cached leave remains original option value\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"replaced hover remains live with options receiver\"), \"pointer\": Bool(true)}, Object {\"name\": String(\"hover getter read twice\"), \"reads\": Array []}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"replacement link range feeds hover\"), \"pointer\": Bool(true)}, Object {\"name\": String(\"selection reads replacement link range\"), \"selection\": String(\"http://x.cohijklmno\")}, Object {\"calls\": Array [Array [String(\"activate\"), Bool(false), String(\"http://x.cohijklmno\")]], \"errors\": Array [], \"name\": String(\"replacement selection mouseup\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [Array [String(\"leave\"), Bool(true), String(\"http://x.cohijklmno\")]], \"errors\": Array [], \"name\": String(\"disposed addon no longer provides links\"), \"pointer\": Bool(false)}, Object {\"calls\": Array [Array [String(\"window.open\")], Array [String(\"navigation\"), Null, String(\"http://x.co\")]], \"errors\": Array [], \"name\": String(\"default successful navigation\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [Array [String(\"window.open\")], Array [String(\"warning\"), String(\"Opening link blocked as opener could not be cleared\")]], \"errors\": Array [], \"name\": String(\"default blocked window\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [Array [String(\"window.open\")], Array [String(\"navigation\"), String(\"initial\"), String(\"http://x.co\")]], \"errors\": Array [], \"name\": String(\"default tolerates opener exception\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [Array [String(\"window.open\")]], \"errors\": Array [String(\"marker\")], \"name\": String(\"default location exception identity\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [String(\"TypeError\")], \"name\": String(\"null activation\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [String(\"TypeError\")], \"name\": String(\"false activation\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [String(\"TypeError\")], \"name\": String(\"zero activation\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [String(\"TypeError\")], \"name\": String(\"empty string activation\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [String(\"TypeError\")], \"name\": String(\"object activation\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [String(\"marker\")], \"name\": String(\"handler exception identity\"), \"pointer\": Bool(true)}]\n right: Array [Object {\"calls\": Array [Array [String(\"hover\"), Bool(true), String(\"http://x.cohijklmno\"), Bool(true)]], \"errors\": Array [], \"name\": String(\"hover mutates callback range\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"same cell ignores mutation\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [Array [String(\"leave\"), Bool(false), String(\"http://x.cohijklmno\")]], \"errors\": Array [], \"name\": String(\"next cell leaves mutated range\"), \"pointer\": Bool(false)}, Object {\"calls\": Array [Array [String(\"hover\"), Bool(true), String(\"http://x.cohijklmno\"), Bool(true)]], \"errors\": Array [], \"name\": String(\"cached mutated range reenters\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [Array [String(\"activate\"), Bool(true), String(\"http://x.cohijklmno\")]], \"errors\": Array [], \"name\": String(\"mousedown equality reads live range and handler receiver\"), \"pointer\": Bool(true)}, Object {\"name\": String(\"double click selects mutated range\"), \"selection\": String(\"hij\")}, Object {\"calls\": Array [Array [String(\"activate\"), Bool(true), String(\"http://x.cohijklmno\")]], \"errors\": Array [], \"name\": String(\"double click mouseup\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"replacement endpoints stay live\"), \"pointer\": Bool(true)}, Object {\"name\": String(\"same cell avoids proxy getters\"), \"reads\": Array []}, Object {\"name\": String(\"hit test reads proxy coordinates\"), \"reads\": Array [String(\"start.y\"), String(\"start.x\"), String(\"end.y\"), String(\"end.x\")]}, Object {\"calls\": Array [], \"errors\": Array [String(\"marker\")], \"name\": String(\"range getter preserves thrown identity\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [Array [String(\"leave\"), Bool(true), String(\"http://x.cohijklmno\")]], \"errors\": Array [], \"name\": String(\"cached leave remains original option value\"), \"pointer\": Bool(false)}, Object {\"calls\": Array [Array [String(\"new hover\"), Bool(true), Bool(true)]], \"errors\": Array [], \"name\": String(\"replaced hover remains live with options receiver\"), \"pointer\": Bool(true)}, Object {\"name\": String(\"hover getter read twice\"), \"reads\": Array [String(\"hover\"), String(\"hover\")]}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"replacement link range feeds hover\"), \"pointer\": Bool(true)}, Object {\"name\": String(\"selection reads replacement link range\"), \"selection\": String(\"://\")}, Object {\"calls\": Array [Array [String(\"activate\"), Bool(false), String(\"http://x.cohijklmno\")]], \"errors\": Array [], \"name\": String(\"replacement selection mouseup\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [Array [String(\"leave\"), Bool(true), String(\"http://x.cohijklmno\")]], \"errors\": Array [], \"name\": String(\"disposed addon no longer provides links\"), \"pointer\": Bool(false)}, Object {\"calls\": Array [Array [String(\"window.open\")], Array [String(\"navigation\"), Null, String(\"http://x.co\")]], \"errors\": Array [], \"name\": String(\"default successful navigation\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [Array [String(\"window.open\")], Array [String(\"warning\"), String(\"Opening link blocked as opener could not be cleared\")]], \"errors\": Array [], \"name\": String(\"default blocked window\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [Array [String(\"window.open\")], Array [String(\"navigation\"), String(\"initial\"), String(\"http://x.co\")]], \"errors\": Array [], \"name\": String(\"default tolerates opener exception\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [Array [String(\"window.open\")]], \"errors\": Array [String(\"marker\")], \"name\": String(\"default location exception identity\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [String(\"TypeError\")], \"name\": String(\"null activation\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [String(\"TypeError\")], \"name\": String(\"false activation\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [String(\"TypeError\")], \"name\": String(\"zero activation\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [String(\"TypeError\")], \"name\": String(\"empty string activation\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [String(\"TypeError\")], \"name\": String(\"object activation\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [String(\"marker\")], \"name\": String(\"handler exception identity\"), \"pointer\": Bool(true)}]\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:50822/suite.js:5883:21)\n    at wasm_web_links_live_range-f31ec807f568b190.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:50822/suite_bg.wasm:wasm-function[38195]:0xac28f5)\n    at wasm_web_links_live_range-f31ec807f568b190.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:50822/suite_bg.wasm:wasm-function[25169]:0xa2bb9b)\n    at wasm_web_links_live_range-f31ec807f568b190.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:50822/suite_bg.wasm:wasm-function[8393]:0x78dff7)\n    at wasm_web_links_live_range-f31ec807f568b190.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:50822/suite_bg.wasm:wasm-function[25170]:0xa2bc1f)\n    at wasm_web_links_live_range-f31ec807f568b190.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:50822/suite_bg.wasm:wasm-function[13015]:0x89e6d7)\n    at wasm_web_links_live_range-f31ec807f568b190.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:50822/suite_bg.wasm:wasm-function[16478]:0x92f9f0)\n    at wasm_web_links_live_range-f31ec807f568b190.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:50822/suite_bg.wasm:wasm-function[46059]:0xadaa92)\n    at wasm_web_links_live_range-f31ec807f568b190.wasm.rust_begin_unwind (http://127.0.0.1:50822/suite_bg.wasm:wasm-function[31465]:0xa917bf)\n    at wasm_web_links_live_range-f31ec807f568b190.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:50822/suite_bg.wasm:wasm-function[31466]:0xa917ec)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 1 test\ntest utility_callback_ranges_drive_live_pointer_equality_and_selection ... FAIL\n\nfailures:\n\n---- utility_callback_ranges_drive_live_pointer_equality_and_selection output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_web_links_live_range-f31ec807f568b190.wasm.__rust_start_panic (http://127.0.0.1:50822/suite_bg.wasm:wasm-function[46584]:0xadb793)\n            at wasm_web_links_live_range-f31ec807f568b190.wasm.rust_panic (http://127.0.0.1:50822/suite_bg.wasm:wasm-function[41704]:0xacff44)\n            at wasm_web_links_live_range-f31ec807f568b190.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:50822/suite_bg.wasm:wasm-function[13015]:0x89e702)\n            at wasm_web_links_live_range-f31ec807f568b190.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:50822/suite_bg.wasm:wasm-function[16478]:0x92f9f0)\n            at wasm_web_links_live_range-f31ec807f568b190.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:50822/suite_bg.wasm:wasm-function[46059]:0xadaa92)\n            at wasm_web_links_live_range-f31ec807f568b190.wasm.rust_begin_unwind (http://127.0.0.1:50822/suite_bg.wasm:wasm-function[31465]:0xa917bf)\n            at wasm_web_links_live_range-f31ec807f568b190.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:50822/suite_bg.wasm:wasm-function[31466]:0xa917ec)\n            at wasm_web_links_live_range-f31ec807f568b190.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:50822/suite_bg.wasm:wasm-function[5862]:0x6c0310)\n            at wasm_web_links_live_range-f31ec807f568b190.wasm.core::panicking::assert_failed::h7cf304273d548bbe (http://127.0.0.1:50822/suite_bg.wasm:wasm-function[23626]:0xa09e39)\n            at wasm_web_links_live_range-f31ec807f568b190.wasm.wasm_web_links_live_range::utility_callback_ranges_drive_live_pointer_equality_and_selection::{{closure}}::h9277ea77d32f2e69 (http://127.0.0.1:50822/suite_bg.wasm:wasm-function[932]:0x27ccaa)\n\nfailures:\n\n    utility_callback_ranges_drive_live_pointer_equality_and_selection\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.28s\n\n",
+      "counts": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/a39640a7fd269da9fefaeed5943ebbc8d12dc59453edff0fade6d22635077dab/artifact.wasm",
+      "sha256": "a39640a7fd269da9fefaeed5943ebbc8d12dc59453edff0fade6d22635077dab",
+      "bytes": 19627812,
+      "originalPath": "O:/xterm-rust-swarm-16/tmp/HasanLinks/target\\wasm32-unknown-unknown\\debug\\deps\\wasm_web_links_live_range-f31ec807f568b190.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\HasanLinks\\results\\browser-host\\wasm_web_links_live_range\\2026-11-05T19-32-52-076Z-5d7ba9be-481c-4544-836f-e630ba9c582a\\artifacts\\suite_bg.wasm",
+      "bytes": 16477406,
+      "sha256": "5317d2b0dd2d19fc86c6b002d415d8819e40aec0ebf93b67a774156d8f487a94"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\HasanLinks\\results\\browser-host\\wasm_web_links_live_range\\2026-11-05T19-32-52-076Z-5d7ba9be-481c-4544-836f-e630ba9c582a\\artifacts\\suite.js",
+      "bytes": 243779,
+      "sha256": "da5b8046eca37e266f9051e8a9da6709bf53f32c915e58d62130feeb9c204f9a"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "03015fcda110b1a33f81d814fd8b18ab70ffb3d964969e15af902cbddf6f676f"
+  },
+  "finishedAt": "2026-11-05T19:33:06.436Z"
+}

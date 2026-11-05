@@ -1,0 +1,80 @@
+{
+  "note": "Development only. First harness assumed raw Terminal had distribution loadAddon wrapper. Trace switched to explicit addon.activate, same on original and Rust. Earlier16phase trace later tightened to28phases; not final evidence.",
+  "runs": [
+    {
+      "date": "2026-11-05T19:11:58.169Z",
+      "status": "failed",
+      "counts": [
+        {
+          "name": "chromium",
+          "status": "failed",
+          "counts": {
+            "passed": 0,
+            "failed": 1,
+            "ignored": 0,
+            "filtered": 0
+          },
+          "reason": "panicked at crates\\xterm-web\\tests\\wasm_web_links_live_range.rs:27:48:\ncalled `Result::unwrap()` on an `Err` value: JsValue(TypeError: terminal.loadAddon is not a function\nTypeError: terminal.loadAddon is not a function"
+        },
+        {
+          "name": "firefox",
+          "status": "failed",
+          "counts": {
+            "passed": 0,
+            "failed": 1,
+            "ignored": 0,
+            "filtered": 0
+          },
+          "reason": "panicked at crates\\xterm-web\\tests\\wasm_web_links_live_range.rs:27:48:\ncalled `Result::unwrap()` on an `Err` value: JsValue(TypeError: terminal.loadAddon is not a function\nanonymous/<@http://127.0.0.1:57123/suite.js line 5931 > Function:42:14"
+        },
+        {
+          "name": "webkit",
+          "status": "failed",
+          "counts": {
+            "passed": 0,
+            "failed": 1,
+            "ignored": 0,
+            "filtered": 0
+          },
+          "reason": "panicked at crates\\xterm-web\\tests\\wasm_web_links_live_range.rs:27:48:\ncalled `Result::unwrap()` on an `Err` value: JsValue(TypeError: terminal.loadAddon is not a function. (In 'terminal.loadAddon(addon)', 'terminal.loadAddon' is undefined)\n@"
+        }
+      ]
+    },
+    {
+      "date": "2026-11-05T19:13:33.207Z",
+      "status": "passed",
+      "counts": [
+        {
+          "name": "chromium",
+          "status": "passed",
+          "counts": {
+            "passed": 1,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        },
+        {
+          "name": "firefox",
+          "status": "passed",
+          "counts": {
+            "passed": 1,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        },
+        {
+          "name": "webkit",
+          "status": "passed",
+          "counts": {
+            "passed": 1,
+            "failed": 0,
+            "ignored": 0,
+            "filtered": 0
+          }
+        }
+      ]
+    }
+  ]
+}

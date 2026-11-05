@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import { readFile, writeFile, copyFile } from 'node:fs/promises';
+import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { runCommand } from '../scripts/quality-process.mjs';
+const files = ['crates/xterm-web/src/utility_addons.rs', 'crates/xterm-web/src/utility_addons/link_bindings.rs'];
+const hash = bytes => createHash('sha256').update(bytes).digest('hex');
+const before = await Promise.all(files.map(file => readFile(file)));
+const report = { baseline: '3aa04692', before: Object.fromEntries(files.map((file, i) => [file, hash(before[i])])) };
+try {
+  for (const file of files) {
+    const result = spawnSync('git', ['show', `3aa04692:${file}`], { timeout: 30000 });
+    assert.equal(result.status, 0);
+    await writeFile(file, result.stdout);
+  }
+  const result = await runCommand(process.execPath, ['scripts/browser-host-check.mjs'], {
+    cwd: process.cwd(), env: { ...process.env, BROWSERS: 'chromium', WASM_TEST: 'wasm_web_links_live_range' },
+    log: 'results/web-links-live-range/negative-command.log', timeoutMs: 180000
+  });
+  report.command = result;
+  await copyFile('results/browser-host/wasm_web_links_live_range-results.json', 'results/web-links-live-range/negative.json');
+  assert.equal(result.status, 'failed');
+  const failed = JSON.parse(await readFile('results/web-links-live-range/negative.json', 'utf8'));
+  assert.equal(failed.commands[0].status, 'passed', 'negative must compile');
+  assert.equal(failed.browsers[0].counts.failed, 1, 'negative must reach actual assertion');
+  assert(failed.browsers[0].console.some(entry => entry.text.includes('assertion `left == right` failed')), 'negative must fail comparison');
+} finally {
+  for (const [i, file] of files.entries()) await writeFile(file, before[i]);
+  report.restored = Object.fromEntries(await Promise.all(files.map(async file => [file, hash(await readFile(file))])));
+  assert.deepEqual(report.restored, report.before);
+  await writeFile('results/web-links-live-range/negative-command.json', JSON.stringify(report, null, 2) + '\n');
+}

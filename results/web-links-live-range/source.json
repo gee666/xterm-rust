@@ -1,0 +1,847 @@
+{
+  "platform": "win32",
+  "node": "v24.15.0",
+  "hashes": {
+    "lib/xterm.mjs": "f183e161977e03ff2323bb083be91808a99746e9830f32b3124486b19b77b0f4",
+    "lib/xterm.mjs.map": "b26357be48e74340106d9b217f5fb68e0f0c07eb90a981fc5b2f4f4c47761070",
+    "src/browser/Linkifier.ts": "7acc535eafc218032d0c480158e6f97dd5d7c8e8bae102b035b96622e4bbd2a6",
+    "src/browser/services/SelectionService.ts": "a989bc70f29c187a626b2eba0a20a1fa272d2bdb19c01f2c6040eeaf704acfc4",
+    "src/browser/public/Terminal.ts": "f5c1c0d79c1c3484d305b8ec3ab201066958f056adb9878d27f5a1a0dd264011",
+    "addons/addon-web-links/lib/addon-web-links.mjs": "b7a124b584d3187d150bc0467a8ff7305d22aba7fa4f26f5bd5ae1f8ad36d6d4",
+    "addons/addon-web-links/lib/addon-web-links.mjs.map": "a961d1ac684aefbc89a9584609b1ca55c5e1a72dd93297830e5ab140ad11a521",
+    "addons/addon-web-links/src/WebLinksAddon.ts": "4668bce4e37c75b6a69565083645f39406619c91ea7ba59e6d1012b5b9d228f2",
+    "addons/addon-web-links/src/WebLinkProvider.ts": "76f913828952934f6f6b7f3e9f8327db26164423211ac1553e3d14c372b5ea92"
+  },
+  "traceSha256": "bdbae7a88e93633c82d7bf7b3b1930783cc62ff1f617129aebd2293be18df5fc",
+  "scope": "Directed utility live-range/callback trace, not full link equivalence.",
+  "browsers": [
+    {
+      "name": "chromium",
+      "version": "148.0.7778.96",
+      "status": "passed",
+      "errors": [],
+      "trace": [
+        {
+          "name": "hover mutates callback range",
+          "pointer": true,
+          "calls": [
+            [
+              "hover",
+              true,
+              "http://x.cohijklmno",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "same cell ignores mutation",
+          "pointer": true,
+          "calls": [],
+          "errors": []
+        },
+        {
+          "name": "next cell leaves mutated range",
+          "pointer": false,
+          "calls": [
+            [
+              "leave",
+              false,
+              "http://x.cohijklmno"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "cached mutated range reenters",
+          "pointer": true,
+          "calls": [
+            [
+              "hover",
+              true,
+              "http://x.cohijklmno",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "mousedown equality reads live range and handler receiver",
+          "pointer": true,
+          "calls": [
+            [
+              "activate",
+              true,
+              "http://x.cohijklmno"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "double click selects mutated range",
+          "selection": "hij"
+        },
+        {
+          "name": "double click mouseup",
+          "pointer": true,
+          "calls": [
+            [
+              "activate",
+              true,
+              "http://x.cohijklmno"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "replacement endpoints stay live",
+          "pointer": true,
+          "calls": [],
+          "errors": []
+        },
+        {
+          "name": "same cell avoids proxy getters",
+          "reads": []
+        },
+        {
+          "name": "hit test reads proxy coordinates",
+          "reads": [
+            "start.y",
+            "start.x",
+            "end.y",
+            "end.x"
+          ]
+        },
+        {
+          "name": "range getter preserves thrown identity",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "marker"
+          ]
+        },
+        {
+          "name": "cached leave remains original option value",
+          "pointer": false,
+          "calls": [
+            [
+              "leave",
+              true,
+              "http://x.cohijklmno"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "replaced hover remains live with options receiver",
+          "pointer": true,
+          "calls": [
+            [
+              "new hover",
+              true,
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "hover getter read twice",
+          "reads": [
+            "hover",
+            "hover"
+          ]
+        },
+        {
+          "name": "replacement link range feeds hover",
+          "pointer": true,
+          "calls": [],
+          "errors": []
+        },
+        {
+          "name": "selection reads replacement link range",
+          "selection": "://"
+        },
+        {
+          "name": "replacement selection mouseup",
+          "pointer": true,
+          "calls": [
+            [
+              "activate",
+              false,
+              "http://x.cohijklmno"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "disposed addon no longer provides links",
+          "pointer": false,
+          "calls": [
+            [
+              "leave",
+              true,
+              "http://x.cohijklmno"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "default successful navigation",
+          "pointer": true,
+          "calls": [
+            [
+              "window.open"
+            ],
+            [
+              "navigation",
+              null,
+              "http://x.co"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "default blocked window",
+          "pointer": true,
+          "calls": [
+            [
+              "window.open"
+            ],
+            [
+              "warning",
+              "Opening link blocked as opener could not be cleared"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "default tolerates opener exception",
+          "pointer": true,
+          "calls": [
+            [
+              "window.open"
+            ],
+            [
+              "navigation",
+              "initial",
+              "http://x.co"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "default location exception identity",
+          "pointer": true,
+          "calls": [
+            [
+              "window.open"
+            ]
+          ],
+          "errors": [
+            "marker"
+          ]
+        },
+        {
+          "name": "null activation",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "TypeError"
+          ]
+        },
+        {
+          "name": "false activation",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "TypeError"
+          ]
+        },
+        {
+          "name": "zero activation",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "TypeError"
+          ]
+        },
+        {
+          "name": "empty string activation",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "TypeError"
+          ]
+        },
+        {
+          "name": "object activation",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "TypeError"
+          ]
+        },
+        {
+          "name": "handler exception identity",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "marker"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "firefox",
+      "version": "150.0.2",
+      "status": "passed",
+      "errors": [],
+      "trace": [
+        {
+          "name": "hover mutates callback range",
+          "pointer": true,
+          "calls": [
+            [
+              "hover",
+              true,
+              "http://x.cohijklmno",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "same cell ignores mutation",
+          "pointer": true,
+          "calls": [],
+          "errors": []
+        },
+        {
+          "name": "next cell leaves mutated range",
+          "pointer": false,
+          "calls": [
+            [
+              "leave",
+              false,
+              "http://x.cohijklmno"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "cached mutated range reenters",
+          "pointer": true,
+          "calls": [
+            [
+              "hover",
+              true,
+              "http://x.cohijklmno",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "mousedown equality reads live range and handler receiver",
+          "pointer": true,
+          "calls": [
+            [
+              "activate",
+              true,
+              "http://x.cohijklmno"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "double click selects mutated range",
+          "selection": "hij"
+        },
+        {
+          "name": "double click mouseup",
+          "pointer": true,
+          "calls": [
+            [
+              "activate",
+              true,
+              "http://x.cohijklmno"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "replacement endpoints stay live",
+          "pointer": true,
+          "calls": [],
+          "errors": []
+        },
+        {
+          "name": "same cell avoids proxy getters",
+          "reads": []
+        },
+        {
+          "name": "hit test reads proxy coordinates",
+          "reads": [
+            "start.y",
+            "start.x",
+            "end.y",
+            "end.x"
+          ]
+        },
+        {
+          "name": "range getter preserves thrown identity",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "marker"
+          ]
+        },
+        {
+          "name": "cached leave remains original option value",
+          "pointer": false,
+          "calls": [
+            [
+              "leave",
+              true,
+              "http://x.cohijklmno"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "replaced hover remains live with options receiver",
+          "pointer": true,
+          "calls": [
+            [
+              "new hover",
+              true,
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "hover getter read twice",
+          "reads": [
+            "hover",
+            "hover"
+          ]
+        },
+        {
+          "name": "replacement link range feeds hover",
+          "pointer": true,
+          "calls": [],
+          "errors": []
+        },
+        {
+          "name": "selection reads replacement link range",
+          "selection": "://"
+        },
+        {
+          "name": "replacement selection mouseup",
+          "pointer": true,
+          "calls": [
+            [
+              "activate",
+              false,
+              "http://x.cohijklmno"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "disposed addon no longer provides links",
+          "pointer": false,
+          "calls": [
+            [
+              "leave",
+              true,
+              "http://x.cohijklmno"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "default successful navigation",
+          "pointer": true,
+          "calls": [
+            [
+              "window.open"
+            ],
+            [
+              "navigation",
+              null,
+              "http://x.co"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "default blocked window",
+          "pointer": true,
+          "calls": [
+            [
+              "window.open"
+            ],
+            [
+              "warning",
+              "Opening link blocked as opener could not be cleared"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "default tolerates opener exception",
+          "pointer": true,
+          "calls": [
+            [
+              "window.open"
+            ],
+            [
+              "navigation",
+              "initial",
+              "http://x.co"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "default location exception identity",
+          "pointer": true,
+          "calls": [
+            [
+              "window.open"
+            ]
+          ],
+          "errors": [
+            "marker"
+          ]
+        },
+        {
+          "name": "null activation",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "TypeError"
+          ]
+        },
+        {
+          "name": "false activation",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "TypeError"
+          ]
+        },
+        {
+          "name": "zero activation",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "TypeError"
+          ]
+        },
+        {
+          "name": "empty string activation",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "TypeError"
+          ]
+        },
+        {
+          "name": "object activation",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "TypeError"
+          ]
+        },
+        {
+          "name": "handler exception identity",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "marker"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "webkit",
+      "version": "26.4",
+      "status": "passed",
+      "errors": [],
+      "trace": [
+        {
+          "name": "hover mutates callback range",
+          "pointer": true,
+          "calls": [
+            [
+              "hover",
+              true,
+              "http://x.cohijklmno",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "same cell ignores mutation",
+          "pointer": true,
+          "calls": [],
+          "errors": []
+        },
+        {
+          "name": "next cell leaves mutated range",
+          "pointer": false,
+          "calls": [
+            [
+              "leave",
+              false,
+              "http://x.cohijklmno"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "cached mutated range reenters",
+          "pointer": true,
+          "calls": [
+            [
+              "hover",
+              true,
+              "http://x.cohijklmno",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "mousedown equality reads live range and handler receiver",
+          "pointer": true,
+          "calls": [
+            [
+              "activate",
+              true,
+              "http://x.cohijklmno"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "double click selects mutated range",
+          "selection": "hij"
+        },
+        {
+          "name": "double click mouseup",
+          "pointer": true,
+          "calls": [
+            [
+              "activate",
+              true,
+              "http://x.cohijklmno"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "replacement endpoints stay live",
+          "pointer": true,
+          "calls": [],
+          "errors": []
+        },
+        {
+          "name": "same cell avoids proxy getters",
+          "reads": []
+        },
+        {
+          "name": "hit test reads proxy coordinates",
+          "reads": [
+            "start.y",
+            "start.x",
+            "end.y",
+            "end.x"
+          ]
+        },
+        {
+          "name": "range getter preserves thrown identity",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "marker"
+          ]
+        },
+        {
+          "name": "cached leave remains original option value",
+          "pointer": false,
+          "calls": [
+            [
+              "leave",
+              true,
+              "http://x.cohijklmno"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "replaced hover remains live with options receiver",
+          "pointer": true,
+          "calls": [
+            [
+              "new hover",
+              true,
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "hover getter read twice",
+          "reads": [
+            "hover",
+            "hover"
+          ]
+        },
+        {
+          "name": "replacement link range feeds hover",
+          "pointer": true,
+          "calls": [],
+          "errors": []
+        },
+        {
+          "name": "selection reads replacement link range",
+          "selection": "://"
+        },
+        {
+          "name": "replacement selection mouseup",
+          "pointer": true,
+          "calls": [
+            [
+              "activate",
+              false,
+              "http://x.cohijklmno"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "disposed addon no longer provides links",
+          "pointer": false,
+          "calls": [
+            [
+              "leave",
+              true,
+              "http://x.cohijklmno"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "default successful navigation",
+          "pointer": true,
+          "calls": [
+            [
+              "window.open"
+            ],
+            [
+              "navigation",
+              null,
+              "http://x.co"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "default blocked window",
+          "pointer": true,
+          "calls": [
+            [
+              "window.open"
+            ],
+            [
+              "warning",
+              "Opening link blocked as opener could not be cleared"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "default tolerates opener exception",
+          "pointer": true,
+          "calls": [
+            [
+              "window.open"
+            ],
+            [
+              "navigation",
+              "initial",
+              "http://x.co"
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "default location exception identity",
+          "pointer": true,
+          "calls": [
+            [
+              "window.open"
+            ]
+          ],
+          "errors": [
+            "marker"
+          ]
+        },
+        {
+          "name": "null activation",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "TypeError"
+          ]
+        },
+        {
+          "name": "false activation",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "TypeError"
+          ]
+        },
+        {
+          "name": "zero activation",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "TypeError"
+          ]
+        },
+        {
+          "name": "empty string activation",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "TypeError"
+          ]
+        },
+        {
+          "name": "object activation",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "TypeError"
+          ]
+        },
+        {
+          "name": "handler exception identity",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "marker"
+          ]
+        }
+      ]
+    }
+  ]
+}
