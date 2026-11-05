@@ -479,7 +479,7 @@
     "results/link-provider-reentry/builds/wasm_terminal_links-bindgen.log",
     "results/link-provider-reentry/builds/wasm_terminal_links-bindgen-version.log"
   ],
-  "artifactLifecycle": "Temporary compiler/browser binaries verified before independent review; remove only owned O: worktree after preserving commits and review receipts.",
+  "artifactLifecycle": "Twenty-four temporary artifact pins independently checked before cleanup. Only owned O: worktree binaries may be removed after preserving reviewed commits. Post-cleanup path absence is reported in the swarm post and handoff, not retroactively claimed by this preflight.",
   "counts": {
     "originalMethods": 4,
     "originalBrowserCasesPerEngine": 6,
@@ -575,5 +575,10 @@
       "bytes": 5535
     }
   ],
-  "sourceBytePolicy": "sourcePins are independently checked working bytes at freeze89f3dc67. committedSourcePins preserve Git blob bytes separately. Existing AGENTS.md and live-link-acceptance.md have text newline normalization; this is not a production code difference."
+  "sourceBytePolicy": "sourcePins are independently checked working bytes at freeze89f3dc67. committedSourcePins preserve Git blob bytes separately. Existing AGENTS.md and live-link-acceptance.md have text newline normalization; this is not a production code difference.",
+  "cleanup": {
+    "path": "results/link-provider-reentry/cleanup.json",
+    "sha256": "be26e1c75ac838ad0b5576ba3a8dc789d7374841f51b179c0741d4987acb6627",
+    "state": "preflight-passed-removal-not-yet-executed"
+  }
 }
