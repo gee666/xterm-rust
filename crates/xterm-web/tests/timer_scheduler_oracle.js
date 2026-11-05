@@ -88,6 +88,31 @@ export function runTimerSchedulerCases(run) {
       count++;
     }
   }
+  for(const site of ['clockGet','clock']) for(const throws of [false,true]) {
+    const program=host=>dispatch=>{
+      const act=(...args)=>{
+        const [ok,value]=dispatch(args);
+        host.events.push(['result',args[0],ok,value===host.token?'original-token':value]);
+      };
+      // Nested disposal during request lets two host timers coexist. Delivering
+      // the second from the first timer's clock hook enters the SAME callback.
+      host.setHook('request',()=>{act('dispose');act('refresh',4,6,10);});
+      act('refresh',1,3,10);
+      host.events.push(['pending',host.snapshot()]);
+      host.setHook(site,()=>{host.fire();if(throws)throw host.token;});
+      try{host.fire();}catch(error){host.events.push(['fire-error',error===host.token?'original-token':error]);}
+      host.clear();host.time(250);act('refresh',0,2,8);
+      host.events.push(['pending',host.snapshot()]);act('dispose');
+      return host.result();
+    };
+    const source=harness(),actual=harness();
+    try {
+      const expected=sourceRun(source,program(source)),result=run(actual,program(actual));
+      if(JSON.stringify(result)!==JSON.stringify(expected))
+        throw new Error('timer nested delivery/'+site+'/'+throws+' expected '+JSON.stringify(expected)+' actual '+JSON.stringify(result));
+    }finally{source.cleanup();actual.cleanup();}
+    count++;
+  }
   return count;
 }
 export function runRawTimerSchedulerCases(run) {

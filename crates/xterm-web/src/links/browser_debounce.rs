@@ -10,7 +10,7 @@ use web_sys::{Performance, Window};
 
 type CallbackSlot = Rc<RefCell<Option<Function>>>;
 type FrameCallback = Closure<dyn FnMut(f64) -> Result<(), JsValue>>;
-type TimerCallback = Closure<dyn FnMut() -> Result<(), JsValue>>;
+type TimerCallback = Closure<dyn Fn() -> Result<(), JsValue>>;
 pub type WindowSource = Rc<dyn Fn() -> Window>;
 /// Resolves the current owner without erasing a host getter's thrown value.
 pub type FallibleWindowSource = Rc<dyn Fn() -> Result<Window, JsValue>>;
@@ -269,7 +269,7 @@ impl BrowserTimeDebouncer {
             move |_, rows| render(rows),
         );
         let dispatch = inner.weak_dispatcher();
-        let callback = Closure::wrap(Box::new(dispatch) as Box<dyn FnMut() -> Result<(), JsValue>>);
+        let callback = Closure::wrap(Box::new(dispatch) as Box<dyn Fn() -> Result<(), JsValue>>);
         *slot.borrow_mut() = Some(callback.as_ref().unchecked_ref::<Function>().clone());
         Ok(Self {
             inner,

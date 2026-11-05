@@ -58,7 +58,7 @@ fn run(host: JsValue, program: Function) -> Result<JsValue, JsValue> {
 fn real_timer_scheduler_matches_source_reentry_and_errors() -> Result<(), JsValue> {
     let run =
         Closure::wrap(Box::new(run) as Box<dyn Fn(JsValue, Function) -> Result<JsValue, JsValue>>);
-    assert_eq!(cases(run.as_ref().unchecked_ref())?, 72);
+    assert_eq!(cases(run.as_ref().unchecked_ref())?, 76);
     Ok(())
 }
 #[wasm_bindgen_test]
