@@ -58,6 +58,47 @@ export async function serializationCases() {
     values.push(addon.serialize(), addon.serialize({ excludeModes: true }), addon.serialize({ excludeAltBuffer: true }));
     return values;
   });
+  await run('ansi-scrollback-primitive-array-errors', async (term, addon) => {
+    await write(term, '\x1b[31mfirst\r\nsecond\r\nthird\r\nfourth\r\nfifth\r\nsixth');
+    const values = [];
+    for (const scrollback of [undefined, 0, -0, 1, -1, -3, -4, -4.5, -1.5, 0.5,
+      Number.EPSILON, 2 ** -49, -4 + 2 ** -49, NaN, Infinity, -Infinity, Number.MAX_VALUE, -Number.MAX_VALUE]) {
+      const log = [];
+      const options = { get range() { log.push('range'); return undefined; },
+        get scrollback() { log.push('scrollback'); return scrollback; },
+        get excludeAltBuffer() { log.push('alt'); return false; },
+        get excludeModes() { log.push('modes'); return false; } };
+      values.push({ scrollback: String(scrollback), ansi: capture(() => addon.serialize(options)), log });
+    }
+    return { values, state: snapshot(term) };
+  });
+  await run('ansi-scrollback-getter-reentry-errors', async (term, addon) => {
+    await write(term, 'original\r\nsecond\r\nthird\r\nfourth\r\nfifth');
+    const log = [], sentinel = {}, values = [];
+    for (const phase of ['return', 'throw']) {
+      const options = { get range() { log.push('range'); return undefined; },
+        get scrollback() {
+          log.push('scrollback'); term.reset(); term.resize(6, 2);
+          if (phase === 'throw') throw sentinel;
+          return -0.5;
+        },
+        get excludeAltBuffer() { log.push('alt'); throw sentinel; },
+        get excludeModes() { log.push('modes'); throw sentinel; } };
+      log.length = 0; let same = false, error;
+      try { addon.serialize(options); } catch (thrown) { same = thrown === sentinel; error = { name: thrown.name, message: thrown.message }; }
+      values.push({ phase, same, error, log: [...log], state: snapshot(term) });
+    }
+    return values;
+  });
+  await run('ansi-scrollback-nested-serialization-errors', async (term, addon) => {
+    await write(term, '\x1b[34mNORMAL\x1b[?1049hALT');
+    const log = []; let nested;
+    const options = { get scrollback() {
+      log.push('scrollback'); nested = addon.serialize({ scrollback: 0 }); return NaN;
+    }, get excludeAltBuffer() { log.push('alt'); return false; },
+    get excludeModes() { log.push('modes'); return false; } };
+    return { ansi: capture(() => addon.serialize(options)), nested, log, state: snapshot(term) };
+  });
   await run('ansi-getter-phases', async (term, addon) => {
     await write(term, 'content'); const log = [];
     const range = { get start() { log.push('start'); return 0; }, get end() { log.push('end'); return 0; } };
