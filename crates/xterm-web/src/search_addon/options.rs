@@ -63,6 +63,9 @@ impl SearchDecorationSource for JsDecorations {
 }
 pub struct JsOptions(pub JsValue);
 impl SearchOptionsSource for JsOptions {
+    fn is_truthy(&self) -> bool {
+        self.0.is_truthy()
+    }
     fn for_refresh(&self) -> Result<SearchOptionsHandle, SearchAddonError> {
         refresh(&self.0)
             .map(|value| Rc::new(Self(value)) as SearchOptionsHandle)

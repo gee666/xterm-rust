@@ -20,6 +20,8 @@ mod clocks;
 mod decorations;
 #[path = "search_cases/empty.rs"]
 mod empty;
+#[path = "search_cases/falsy_stored_options.rs"]
+mod falsy_stored_options;
 #[path = "search_cases/invalid.rs"]
 mod invalid;
 #[path = "search_cases/matching_errors.rs"]

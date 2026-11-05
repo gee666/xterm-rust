@@ -76,8 +76,15 @@ impl SearchAddon {
             let update = cached
                 .as_ref()
                 .is_none_or(|cached| !term.equals(cached.as_ref()))
+                || {
+                    // A decoration getter can replace the stored request via
+                    // a nested search before the source compares any flags.
+                    let last = self.inner.last_options.borrow().clone();
+                    last.is_none_or(|options| !options.is_truthy())
+                }
                 || options
                     .as_ref()
+                    .filter(|options| options.is_truthy())
                     .map(|options| options.flags_changed())
                     .transpose()?
                     .unwrap_or(false);

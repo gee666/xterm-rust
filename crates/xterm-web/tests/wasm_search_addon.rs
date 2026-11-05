@@ -85,6 +85,15 @@ async fn delayed_refresh_retains_undefined_after_cache_clear_and_copy_reentry() 
 }
 
 #[wasm_bindgen_test]
+async fn falsy_stored_options_skip_cached_term_flag_comparison() {
+    let body = format!(
+        "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),84);",
+        include_str!("fixtures/search-falsy-stored-options.js")
+    );
+    run(&body, true, DEFAULTS).await;
+}
+
+#[wasm_bindgen_test]
 async fn empty_search_skips_matching_getters_and_retains_source_phases() {
     let body = format!(
         "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),54);",

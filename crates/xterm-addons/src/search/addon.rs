@@ -20,6 +20,11 @@ mod find;
 
 pub trait SearchOptionsSource {
     fn read(&self) -> Result<SearchOptions, SearchAddonError>;
+    /// Raw request truthiness, without invoking getters or coercion callbacks.
+    /// Typed Rust option records are always truthy.
+    fn is_truthy(&self) -> bool {
+        true
+    }
     /// Copy the live request for delayed refresh and force incremental matching.
     /// Browser adapters preserve own enumerable properties and accessor order.
     fn for_refresh(&self) -> Result<SearchOptionsHandle, SearchAddonError> {
