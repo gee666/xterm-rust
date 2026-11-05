@@ -5,7 +5,7 @@ description: Use when changing the actual WebGL TextureAtlas rasterizer, page co
 
 # TextureAtlas checks
 
-Use a private regular O: worktree/target and owned tmp. Coordinate current four-heavy, Cargo-j2, two-browser limits in post409. Reuse the existing browser-host-check runner, wasm-bindgen CLI0.2.100 and installed Playwright rather than installing dependencies or restoring the retired queue.
+Use a private regular O: worktree/target and owned tmp. Coordinate current team resource grants, Cargo-j2 and the two-browser limit in post409. Reuse the existing browser-host-check runner, wasm-bindgen CLI0.2.100 and installed Playwright rather than installing dependencies or restoring the retired queue.
 
 Set SOURCE_ROOT to the unchanged original source_repo. Run `node scripts/webgl-texture-atlas-oracle.mjs`. It creates an in-memory source bundle plus input hashes at tmp/webgl-texture-atlas/source.js and source.js.json, without writing into the reference. Set WASM_PRELUDE to that absolute source.js path, WASM_TEST=wasm_webgl_texture_atlas, WASM_BINDGEN and PLAYWRIGHT_MODULE to the reused tools, and run `node scripts/browser-host-check.mjs`. Compare all Chromium/Firefox/WebKit results. Real source/Rust canvases, cache aliases, coordinates, page pixels/versions/events, warmup and host-error phases are asserted. The GPU test installs the actual atlas into the existing Rust GlyphRenderer.
 
