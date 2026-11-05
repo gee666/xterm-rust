@@ -1,0 +1,1 @@
+export function sixelSizeExceeded(size, limit) { return size > limit; }

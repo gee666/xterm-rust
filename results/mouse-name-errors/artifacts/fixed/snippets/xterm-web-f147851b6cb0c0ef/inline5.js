@@ -1,0 +1,1 @@
+export function prepareLinkRegExp(regex) { const flags = regex.flags.includes('g') ? regex.flags : `${regex.flags}g`; return new RegExp(regex.source, flags); }

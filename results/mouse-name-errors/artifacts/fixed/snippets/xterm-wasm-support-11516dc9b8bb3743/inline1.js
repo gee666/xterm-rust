@@ -1,0 +1,1 @@
+export function cellUint32(value) { return value >>> 0; }

@@ -3,15 +3,36 @@
 //! a separate, unfinished adapter.
 use super::events;
 use crate::js_error::to_js_error;
-use js_sys::Function;
+use js_sys::{Function, JsString};
 use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 use xterm_core::{
     lifecycle::Disposable,
     mouse_fields::{Encoding, Protocol},
-    mouse_state::MouseStateService,
+    mouse_state::{MouseStateError, MouseStateService},
 };
 use xterm_wasm_support::{mouse_fields::RawMouseEvent, utf16::to_js_string};
+
+#[wasm_bindgen(module = "/src/terminal/mouse_name_error.js")]
+extern "C" {
+    #[wasm_bindgen(js_name = mouseNameError)]
+    fn mouse_name_error(kind: &str, name: &JsString) -> JsValue;
+}
+
+// Native mode keys are ASCII builtins. Keep the original JS string separately:
+// Rust's scalar-string conversion would replace lone surrogates in an error.
+fn mode_key(name: &JsString) -> Result<String, JsValue> {
+    name.as_string()
+        .ok_or_else(|| js_sys::TypeError::new("mouse mode name must be a string").into())
+}
+
+fn mode_error(error: MouseStateError, name: &JsString) -> JsValue {
+    match error {
+        MouseStateError::UnknownProtocol(_) => mouse_name_error("protocol", name),
+        MouseStateError::UnknownEncoding(_) => mouse_name_error("encoding", name),
+        error => to_js_error(&error),
+    }
+}
 
 #[wasm_bindgen]
 pub struct BrowserMouseState {
@@ -40,10 +61,10 @@ impl BrowserMouseState {
 
     /// Built-in string keys share native validation and protocol-change events.
     #[wasm_bindgen(setter, js_name = activeProtocol)]
-    pub fn set_active_protocol(&self, name: &str) -> Result<(), JsValue> {
+    pub fn set_active_protocol(&self, name: JsString) -> Result<(), JsValue> {
         self.service
-            .set_active_protocol(name)
-            .map_err(|error| to_js_error(&error))
+            .set_active_protocol(&mode_key(&name)?)
+            .map_err(|error| mode_error(error, &name))
     }
 
     #[wasm_bindgen(getter, js_name = activeEncoding)]
@@ -52,10 +73,10 @@ impl BrowserMouseState {
     }
 
     #[wasm_bindgen(setter, js_name = activeEncoding)]
-    pub fn set_active_encoding(&self, name: &str) -> Result<(), JsValue> {
+    pub fn set_active_encoding(&self, name: JsString) -> Result<(), JsValue> {
         self.service
-            .set_active_encoding(name)
-            .map_err(|error| to_js_error(&error))
+            .set_active_encoding(&mode_key(&name)?)
+            .map_err(|error| mode_error(error, &name))
     }
 
     #[wasm_bindgen(getter, js_name = areMouseEventsActive)]

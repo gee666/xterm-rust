@@ -1,0 +1,1 @@
+export function addonProperty(value, key) { return value[key]; } export function addonSet(value,key,next) { value[key]=next; } export function addonCall(value,key,args) { return value[key](...args); } export function addonBytes(value) { return new Uint8Array(value); }

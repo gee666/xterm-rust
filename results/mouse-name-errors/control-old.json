@@ -1,0 +1,155 @@
+{
+  "expected": "old",
+  "directAbiOnly": true,
+  "rustTestFunctions": 0,
+  "browsers": [
+    {
+      "name": "chromium",
+      "version": "148.0.7778.96",
+      "counterexamples": [
+        {
+          "key": "activeProtocol",
+          "errorClass": "Error",
+          "actual": [
+            117,
+            110,
+            107,
+            110,
+            111,
+            119,
+            110,
+            32,
+            112,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            32,
+            34,
+            65533,
+            34
+          ],
+          "expected": [
+            117,
+            110,
+            107,
+            110,
+            111,
+            119,
+            110,
+            32,
+            112,
+            114,
+            111,
+            116,
+            111,
+            99,
+            111,
+            108,
+            32,
+            34,
+            55296,
+            34
+          ],
+          "state": [
+            "NONE",
+            "DEFAULT"
+          ]
+        },
+        {
+          "key": "activeEncoding",
+          "errorClass": "Error",
+          "actual": [
+            117,
+            110,
+            107,
+            110,
+            111,
+            119,
+            110,
+            32,
+            101,
+            110,
+            99,
+            111,
+            100,
+            105,
+            110,
+            103,
+            32,
+            34,
+            65533,
+            34
+          ],
+          "expected": [
+            117,
+            110,
+            107,
+            110,
+            111,
+            119,
+            110,
+            32,
+            101,
+            110,
+            99,
+            111,
+            100,
+            105,
+            110,
+            103,
+            32,
+            34,
+            55296,
+            34
+          ],
+          "state": [
+            "NONE",
+            "DEFAULT"
+          ]
+        }
+      ],
+      "results": [
+        {
+          "name": "everyLoneMouseNameSurrogate",
+          "error": "Error: activeProtocol error changed UTF16 units for [55296]\n    at reject (http://127.0.0.1:53361/control-cases.js:12:11)\n    at Module.everyLoneMouseNameSurrogate (http://127.0.0.1:53361/control-cases.js:49:9)\n    at eval (eval at evaluate (:302:30), <anonymous>:22:63)\n    at async <anonymous>:328:30",
+          "matched": false
+        },
+        {
+          "name": "parsedModesSurviveMouseNameErrors",
+          "error": "Error: activeProtocol error changed UTF16 units for [109,105,115,115,105,110,103,56320]\n    at reject (http://127.0.0.1:53361/control-cases.js:12:11)\n    at Module.parsedModesSurviveMouseNameErrors (http://127.0.0.1:53361/control-cases.js:113:39)\n    at async eval (eval at evaluate (:302:30), <anonymous>:22:46)\n    at async <anonymous>:328:30",
+          "matched": false
+        },
+        {
+          "name": "reentrantMouseNameFailure",
+          "error": "Error: activeProtocol error changed UTF16 units for [55296,78,79,78,69]\n    at reject (http://127.0.0.1:53361/control-cases.js:12:11)\n    at Module.reentrantMouseNameFailure (http://127.0.0.1:53361/control-cases.js:98:19)\n    at eval (eval at evaluate (:302:30), <anonymous>:22:63)\n    at async <anonymous>:328:30",
+          "matched": false
+        },
+        {
+          "name": "seededAndLongMouseNames",
+          "error": "Error: activeProtocol error changed UTF16 units for [117,110,107,110,111,119,110,58,10597,19328,51423,178,59497,38580,21123,22022,46509,6952,17511,30362,21809,52444,651,30318,51957,57296,12527,43394,23289,51204,45971,41942,35133,14712,44663,14698,6593,10284,34203,32318,4229,51232,56575,50770,45449,36180,39075,42406,32973,11208,56455,61498,16977,38780,3243]\n    at reject (http://127.0.0.1:53361/control-cases.js:12:11)\n    at Module.seededAndLongMouseNames (http://127.0.0.1:53361/control-cases.js:70:41)\n    at eval (eval at evaluate (:302:30), <anonymous>:22:63)\n    at async <anonymous>:328:30",
+          "matched": false
+        },
+        {
+          "name": "unknownMouseStringNames",
+          "error": "Error: activeProtocol error changed UTF16 units for [55296]\n    at reject (http://127.0.0.1:53361/control-cases.js:12:11)\n    at http://127.0.0.1:53361/control-cases.js:29:21\n    at Array.map (<anonymous>)\n    at http://127.0.0.1:53361/control-cases.js:28:52\n    at Array.map (<anonymous>)\n    at Module.unknownMouseStringNames (http://127.0.0.1:53361/control-cases.js:28:25)\n    at eval (eval at evaluate (:302:30), <anonymous>:22:63)\n    at async <anonymous>:328:30",
+          "matched": false
+        }
+      ],
+      "counts": {
+        "attempted": 5,
+        "matched": 0,
+        "mismatched": 5,
+        "rustTestFunctions": 0
+      }
+    }
+  ],
+  "casesSha256": "8a7b2fbfc50b711e41fa853866e1fd6e28eb2b056cab8d17caa74a9c457facc4",
+  "fixtureSha256": "13cdd236af85c019a19c8dec40d06eed25ed1ad7b0497743516f6deaa0dd6799",
+  "wasmSha256": "26615c3341e0027e86d47333572cd7659f4bd3717d71a0858c067f048bafe3e5",
+  "bindingsSha256": "154497c1e5917b8e819f0a5ba93825cf7618a824c751f9a99cfbe77266ff97ec",
+  "status": "passed"
+}

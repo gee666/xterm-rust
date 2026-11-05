@@ -1,0 +1,1 @@
+export function accessibility_attribute(element,name){return element.getAttribute(name);} export function accessibility_position(value){return parseInt(value,10)-1;} export function accessibility_text_length(element){return element.textContent?.length??0;} export function accessibility_less(left,right){return left<right;}
