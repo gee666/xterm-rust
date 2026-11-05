@@ -115,3 +115,63 @@ async fn pre_open_cache_sync_and_live_overlay_survive_terminal_transitions() {
     assert_eq!(parent.child_element_count(), 0);
     parent.remove();
 }
+
+#[wasm_bindgen_test(async)]
+async fn pre_open_reset_and_disposal_clear_queued_cache_mutations() {
+    let terminal = Terminal::new(js_sys::Object::new().into()).unwrap();
+    let buffers = terminal
+        .shared_native()
+        .with_state(|state| Rc::clone(&state.buffers))
+        .unwrap();
+    let service = terminal.decoration_service();
+    let register = || {
+        let marker = buffers.normal().borrow_mut().add_marker(0);
+        service
+            .register_decoration(Rc::new(RefCell::new(DecorationOptions::new(marker))))
+            .unwrap()
+            .unwrap()
+    };
+    let insert = || {
+        buffers
+            .normal()
+            .borrow()
+            .lines
+            .on_insert_emitter
+            .fire(&ListChange {
+                index: 0,
+                amount: 1,
+            })
+            .unwrap();
+    };
+    let original = register();
+    insert();
+    assert!(service.line_cache().has_pending_sync());
+    terminal.reset().unwrap();
+    assert!(original.is_disposed());
+    let fresh = register();
+    JsFuture::from(js_sys::Promise::resolve(&JsValue::UNDEFINED))
+        .await
+        .unwrap();
+    assert!(!service.line_cache().has_pending_sync());
+    assert!(
+        service
+            .get_decorations_at_cell(0.0, 0, None)
+            .next()
+            .unwrap()
+            .ptr_eq(&fresh),
+        "old insert must not shift a post-reset decoration"
+    );
+    assert!(service
+        .get_decorations_at_cell(0.0, 1, None)
+        .next()
+        .is_none());
+    insert();
+    assert!(service.line_cache().has_pending_sync());
+    terminal.dispose().unwrap();
+    assert!(!service.line_cache().has_pending_sync());
+    assert!(fresh.is_disposed());
+    JsFuture::from(js_sys::Promise::resolve(&JsValue::UNDEFINED))
+        .await
+        .unwrap();
+    assert!(service.decorations().unwrap().next().is_none());
+}

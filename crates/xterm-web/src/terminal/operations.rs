@@ -93,6 +93,11 @@ impl Terminal {
         let services = self.shared.services.borrow().clone();
         if let Some(services) = services {
             services.reset_browser_state()?;
+        } else {
+            self.shared
+                .decorations
+                .reset()
+                .map_err(|error| to_js_error(&error))?;
         }
         Ok(())
     }
@@ -196,6 +201,11 @@ impl Terminal {
             .map_err(|error| to_js_error(&error))?;
         if let Some(services) = self.shared.services.borrow().clone() {
             services.dispose()?;
+        } else {
+            self.shared
+                .decorations
+                .dispose()
+                .map_err(|error| to_js_error(&error))?;
         }
         if let Some(dom) = self.shared.dom.borrow().as_ref() {
             dom.element.remove();
