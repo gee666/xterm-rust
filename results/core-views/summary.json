@@ -1,0 +1,35 @@
+{
+  "scope": "Task380 read-only core/buffer views only. Full parity NOT PROVEN.",
+  "base": "ff0bec8",
+  "prerequisite": "375 producer884e080 cherry-picked asb6df63d; later provenance correction/reacceptance02aa11f has unchanged producer hunks.",
+  "executedAfterRevision": "c6159706793aa4a3ad81523b31f577f5a0337e98",
+  "baselineRevision": "921d02f",
+  "baselineBranch": "archive/Jeffrey17-core-views-before",
+  "baseline": {
+    "chromium": {
+      "passed": 0,
+      "failed": 1
+    },
+    "firefox": "unrun",
+    "webkit": "unrun"
+  },
+  "source": {
+    "engines": 3,
+    "snapshotsPerEngine": 16,
+    "passedSnapshots": 48
+  },
+  "rust": {
+    "engines": 3,
+    "newFunctionsPerEngine": 1,
+    "passedSnapshots": 48,
+    "unchangedExpandedCases": 6,
+    "mouseRegressionFunctions": 15,
+    "nativeCoreAndWebAllTargetAllFeaturePassed": 1876,
+    "nativeSummaries": 359
+  },
+  "format": "full workspace check passed",
+  "clippy": "native core/web all-target/all-feature + scoped WASM lib/two suites passed, warnings denied",
+  "initialCombinedCommand": "180s shell deadline during native Clippy; no child remained; separately bounded reruns passed",
+  "postExecutionSourceDelta": "Rustdoc comments only in owned mode-capture API; no behavior change",
+  "rawWritesAndGc": "outside380, retained in315"
+}

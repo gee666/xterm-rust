@@ -34,6 +34,8 @@ impl OwnedPrivateModesCapture {
             None => self.core.dec_private_modes.borrow().clone(),
         }
     }
+    /// False after reset replaces the source object, even if its values happen
+    /// to equal the new defaults. Host caches use this to preserve JS identity.
     pub fn is_current(&self) -> bool {
         self.frozen.borrow().is_none()
     }
@@ -54,6 +56,8 @@ impl CoreService {
             frozen: self.register_private_modes_capture(),
         }
     }
+    /// Retain this source mode object for a host view. Writes remain live until
+    /// reset; later reads preserve its last pre-reset values rather than defaults.
     pub fn capture_private_modes_owned(self: &Rc<Self>) -> OwnedPrivateModesCapture {
         OwnedPrivateModesCapture {
             core: Rc::clone(self),

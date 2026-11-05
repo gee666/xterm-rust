@@ -1,0 +1,126 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_core_views",
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T13:16:19.612Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_core_views",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 38789.635500000004,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 16.134799999999814,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\J\\results\\acceptance-artifacts\\e94ba8e921264c6a5129ae996a5338bf7e27d806e6fe8698e817f619fa665983\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\J\\results\\browser-host\\wasm_core_views\\2026-11-05T13-16-19-610Z-4b15d037-d6b7-4506-b8cf-f5af5584d7b5\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1162.5448000000033,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_core_views::real_core_and_buffer_views_follow_parser_switch_resize_and_reset"
+      ],
+      "errors": [
+        "RuntimeError: memory access out of bounds\n    at wasm_core_views-e3c6b57022f37b16.wasm.dlmalloc::dlmalloc::Dlmalloc<A>::free::hb97d28a1ae11e5f5 (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[2630]:0x494dde)\n    at wasm_core_views-e3c6b57022f37b16.wasm.__rdl_dealloc (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[20522]:0x89dfc5)\n    at wasm_core_views-e3c6b57022f37b16.wasm.__rust_dealloc (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[34096]:0x943fe0)\n    at wasm_core_views-e3c6b57022f37b16.wasm.<alloc::alloc::Global as core::alloc::Allocator>::deallocate::ha928cf07309d68aa (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[17547]:0x84f596)\n    at wasm_core_views-e3c6b57022f37b16.wasm.alloc::raw_vec::RawVecInner<A>::deallocate::h9e38dc9c7af94511 (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[12776]:0x7a3c5a)\n    at wasm_core_views-e3c6b57022f37b16.wasm.<alloc::raw_vec::RawVec<T,A> as core::ops::drop::Drop>::drop::h7874525e37cdb6ca (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[33202]:0x94022b)\n    at wasm_core_views-e3c6b57022f37b16.wasm.core::ptr::drop_in_place<alloc::raw_vec::RawVec<u8>>::hc4ecb71b008778fd (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[40162]:0x955a39)\n    at wasm_core_views-e3c6b57022f37b16.wasm.core::ptr::drop_in_place<alloc::vec::Vec<u8>>::h15245f79abf2221c (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[36227]:0x94bbc2)\n    at wasm_core_views-e3c6b57022f37b16.wasm.core::ptr::drop_in_place<alloc::string::String>::h4a8932720f5b5342 (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[40160]:0x955a25)\n    at wasm_core_views-e3c6b57022f37b16.wasm.core::ptr::drop_in_place<xterm_core::color::Color>::h7f42d0f28f7718d1 (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[39843]:0x954e0f)"
+      ],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_core_views.rs:38:42:\ncalled `Result::unwrap()` on an `Err` value: JsValue(TypeError: Cannot read properties of undefined (reading 'decPrivateModes')\nTypeError: Cannot read properties of undefined (reading 'decPrivateModes')\n    at eval (eval at imports.wbg.__wbg_newwithargs_ab6ffe8cd6c19c04 (http://127.0.0.1:56761/suite.js:4429:21), <anonymous>:9:32)\n    at eval (eval at imports.wbg.__wbg_newwithargs_ab6ffe8cd6c19c04 (http://127.0.0.1:56761/suite.js:4429:21), <anonymous>:64:3)\n    at http://127.0.0.1:56761/suite.js:3594:26\n    at handleError (http://127.0.0.1:56761/suite.js:159:18)\n    at imports.wbg.__wbg_call_7cccdd69e0791ae2 (http://127.0.0.1:56761/suite.js:3593:67)\n    at wasm_core_views-e3c6b57022f37b16.wasm.__wbg_call_7cccdd69e0791ae2 externref shim (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[29268]:0x927751)\n    at wasm_core_views-e3c6b57022f37b16.wasm.js_sys::Function::call1::hed7af4ee62ca61cd (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[6631]:0x645a19)\n    at wasm_core_views-e3c6b57022f37b16.wasm.wasm_core_views::real_core_and_buffer_views_follow_parser_switch_resize_and_reset::{{closure}}::hdd0c1063e61f5dc0 (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[632]:0x15f32f)\n    at wasm_core_views-e3c6b57022f37b16.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h99439b00bbe920ed (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[3187]:0x4ed241)\n    at wasm_core_views-e3c6b57022f37b16.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::hd6dab5a213b86a9d (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[14297]:0x7dfee5))\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:56761/suite.js:4393:21)\n    at wasm_core_views-e3c6b57022f37b16.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[33285]:0x940865)\n    at wasm_core_views-e3c6b57022f37b16.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[21895]:0x8bc1c3)\n    at wasm_core_views-e3c6b57022f37b16.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[7284]:0x675968)\n    at wasm_core_views-e3c6b57022f37b16.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[21896]:0x8bc247)\n    at wasm_core_views-e3c6b57022f37b16.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[11293]:0x761fa6)\n    at wasm_core_views-e3c6b57022f37b16.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[14296]:0x7dfe6e)\n    at wasm_core_views-e3c6b57022f37b16.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[40273]:0x955e81)\n    at wasm_core_views-e3c6b57022f37b16.wasm.rust_begin_unwind (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[27455]:0x916104)\n    at wasm_core_views-e3c6b57022f37b16.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[27456]:0x916131)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 1 test\ntest real_core_and_buffer_views_follow_parser_switch_resize_and_reset ... FAIL\n\nfailures:\n\n---- real_core_and_buffer_views_follow_parser_switch_resize_and_reset output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_core_views-e3c6b57022f37b16.wasm.__rust_start_panic (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[40744]:0x956a55)\n            at wasm_core_views-e3c6b57022f37b16.wasm.rust_panic (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[36399]:0x94c634)\n            at wasm_core_views-e3c6b57022f37b16.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[11293]:0x761fd1)\n            at wasm_core_views-e3c6b57022f37b16.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[14296]:0x7dfe6e)\n            at wasm_core_views-e3c6b57022f37b16.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[40273]:0x955e81)\n            at wasm_core_views-e3c6b57022f37b16.wasm.rust_begin_unwind (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[27455]:0x916104)\n            at wasm_core_views-e3c6b57022f37b16.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[27456]:0x916131)\n            at wasm_core_views-e3c6b57022f37b16.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[17045]:0x83fde5)\n            at wasm_core_views-e3c6b57022f37b16.wasm.wasm_core_views::real_core_and_buffer_views_follow_parser_switch_resize_and_reset::{{closure}}::hdd0c1063e61f5dc0 (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[632]:0x15f934)\n            at wasm_core_views-e3c6b57022f37b16.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::h99439b00bbe920ed (http://127.0.0.1:56761/suite_bg.wasm:wasm-function[3187]:0x4ed241)\n\nfailures:\n\n    real_core_and_buffer_views_follow_parser_switch_resize_and_reset\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.13s\n\n",
+      "counts": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/e94ba8e921264c6a5129ae996a5338bf7e27d806e6fe8698e817f619fa665983/artifact.wasm",
+      "sha256": "e94ba8e921264c6a5129ae996a5338bf7e27d806e6fe8698e817f619fa665983",
+      "bytes": 17179278,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\J\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_core_views-e3c6b57022f37b16.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\J\\results\\browser-host\\wasm_core_views\\2026-11-05T13-16-19-610Z-4b15d037-d6b7-4506-b8cf-f5af5584d7b5\\artifacts\\suite_bg.wasm",
+      "bytes": 14296712,
+      "sha256": "7eba77bafd8ee9892fa7c5594d758e0d6b9791da6eaf9ae7d08e52b24beabdd3"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\J\\results\\browser-host\\wasm_core_views\\2026-11-05T13-16-19-610Z-4b15d037-d6b7-4506-b8cf-f5af5584d7b5\\artifacts\\suite.js",
+      "bytes": 195708,
+      "sha256": "a8c40b4e55000ec870038a9cbed156c6df22df4100427afad399916390ee1041"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "881fc404e6547d9e18179d08b588751922c4d668c023248cb4da9af9f86d59a9",
+    "testSourceSha256": "3fedf8541a2084974c29a8f1e04dd0ccaf48e5fb3802558a3efb340b3004b26c"
+  },
+  "finishedAt": "2026-11-05T13:17:01.351Z"
+}
