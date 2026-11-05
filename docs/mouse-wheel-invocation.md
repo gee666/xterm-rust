@@ -26,6 +26,8 @@ The new tests construct the real Rust Terminal, open its DOM, select the shared 
 - Existing unchanged-source oracle passes all9 groups. This is source-only evidence, not raw Rust registry parity. Its exact source hashes and receiver observations are retained in `source-results.json`.
 - Focused WASM Clippy with warnings denied and two-file rustfmt checks pass. No original source assertion changed. An initial test compile failed because ErrorEvent was not an enabled web-sys feature. The test now reads its error property through Reflect, using existing Event support without a new dependency/feature.
 
+Independent task334 review accepted HEAD28423f3 after rebasing on main eb5d871. It reran all5 browser tests per engine, source9 groups, scoped WASM Clippy and two-file formatting successfully. `review-results.json` retains the independent browser artifact hashes and execution counts.
+
 `results/mouse-wheel/` retains command logs, source observations and full before/after reports. The baseline contains four tests because the onData guard was added after that run. No baseline assertion was weakened. Final full workspace, native three-OS, all-feature/release and original browser suites remain separate required gates.
 
 ## Continuing task305
