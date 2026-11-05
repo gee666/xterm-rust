@@ -44,6 +44,12 @@ Task345 accepted HEAD2449524 against a656b8f. The isolated reviewer reran all43 
 
 The reviewer reproduced an inherited full-format failure at `terminal/mod.rs`: `mod marker_api;` must follow `pub mod link_services;`. Task337 introduced that module ordering in the integrated base. This is recorded in `post-rebase-fmt.log` and routed to the integration/quality owner. It does not change task345's reviewed callback behavior. The concise review receipt distinguishes this from the earlier c0dd42b full-format pass.
 
+## Canonical integration
+
+The canonical helper integrated the reviewed mouse changes and accepted font metadata339 into main3baa698790c47fd21f9b5e89c9cfd55d2ca5d036. It also retained the previous recursive-parser gate receipt and independently inspected Milica's formatting-only559daa9 fix. Full formatting now passes. The unchanged failed post-rebase check above remains historical evidence, not the current result.
+
+The standard helper passed builds/all-target tests for changed xterm-core, xterm-addons, xterm-web and xterm-font-addons, affected dependent all-target checks, native workspace check and applicable WASM library checks. The raw log contains1,987 passed tests across369 test summaries, zero failures and zero ignored tests. These are default-feature canonical gates, not the final all-feature/release/platform matrix. `canonical-merge.json` and `.log` retain the command and exact scope; `integrated-fmt.log` retains the restored full-format result. The helper removed this worktree's private target after the successful fast-forward.
+
 ## Remaining work
 
 The browser registration in these tests uses the public native Rust callback API. This does not expose JavaScript addProtocol/addEncoding, preserve raw callback event-object identity or allow non-string encoding results. Task305 still needs ordinary-object registries, UTF16/inherited/prototype names and ordering, shared builtin object identities, the stable actual service receiver, fallible raw getter handling, and one authoritative native/browser mode state. No fake receiver or second protocol service was added.
