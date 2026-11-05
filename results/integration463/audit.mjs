@@ -25,7 +25,7 @@ let bytes = blob('ba7f1e3a', font + 'font_bytes.rs');
 bytes = replace(bytes, 'use std::{borrow::Cow, fmt};',
   'use std::{borrow::Cow, fmt};\n#[path = "font_hint_bytes.rs"]\nmod hints;');
 bytes = replace(bytes, '    KernVersion(u16),', '    KernVersion(u16),\n' +
-  segment(gpos, '    GposVersion {', '    CoverageFormat {'));
+  segment(gpos, '    GposVersion {', '    CoverageFormat {').trimEnd());
 bytes = replace(bytes, '            Self::CoverageFormat {',
   segment(gpos, '            Self::GposVersion {', '            Self::CoverageFormat {') +
   '            Self::CoverageFormat {');
