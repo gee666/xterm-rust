@@ -118,10 +118,11 @@ fn substitution(
         .iter()
         .filter(|record| record.sequence_index == position)
     {
+        // An absent array index and an explicit undefined slot have the same
+        // source error, but only when this record's position is reached.
         let lookup = lookups
             .get(record.lookup_index)
-            .ok_or(FontError::Invalid("Missing GSUB substitution lookup"))?
-            .as_ref()
+            .and_then(Option::as_ref)
             .ok_or(FontError::Type(
                 "Cannot read properties of undefined (reading 'subtables')",
             ))?;
@@ -146,8 +147,7 @@ fn range_substitutions(
     {
         let lookup = lookups
             .get(record.lookup_index)
-            .ok_or(FontError::Invalid("Missing GSUB substitution lookup"))?
-            .as_ref()
+            .and_then(Option::as_ref)
             .ok_or(FontError::Type(
                 "Cannot read properties of undefined (reading 'subtables')",
             ))?;

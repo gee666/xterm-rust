@@ -1,0 +1,64 @@
+   Compiling memchr v2.8.3
+   Compiling allocator-api2 v0.2.21
+   Compiling equivalent v1.0.3
+   Compiling foldhash v0.1.5
+   Compiling hashbrown v0.15.5
+   Compiling zmij v1.0.23
+   Compiling serde_core v1.0.229
+   Compiling regress v0.10.4
+   Compiling ryu-js v1.0.3
+   Compiling adler2 v2.0.1
+   Compiling serde_json v1.0.154
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\AntigoneGsubRefs\crates\xterm-core)
+   Compiling miniz_oxide v0.8.9
+   Compiling itoa v1.0.18
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\AntigoneGsubRefs\crates\xterm-addons)
+    Finished `test` profile [unoptimized] target(s) in 10.98s
+     Running tests\font_gsub_refs.rs (target\debug\deps\font_gsub_refs-81786534d2f7728b.exe)
+
+running 1 test
+test source_out_of_range_gsub_references ... FAILED
+
+failures:
+
+---- source_out_of_range_gsub_references stdout ----
+
+thread 'source_out_of_range_gsub_references' panicked at crates\xterm-addons\tests\support\font_gsub_lookup_assertions.rs:105:5:
+28 mismatches:
+"scalar position0 reference2 selectedtrue metafalse SFNT" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"scalar position0 reference65535 selectedtrue metafalse SFNT" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"scalar position1 reference2 selectedtrue metafalse SFNT" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"scalar position1 reference65535 selectedtrue metafalse SFNT" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"scalar emptyfalse ordered[[0,2],[0,1]] SFNT" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"scalar emptyfalse ordered[[1,65535],[1,1]] SFNT" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"range position0 reference2 selectedtrue metafalse SFNT" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"range position0 reference65535 selectedtrue metafalse SFNT" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"range position1 reference2 selectedtrue metafalse SFNT" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"range position1 reference65535 selectedtrue metafalse SFNT" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"range emptyfalse ordered[[0,1],[0,2]] SFNT" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"range emptyfalse ordered[[0,2],[0,1]] SFNT" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"range emptyfalse ordered[[1,1],[1,65535]] SFNT" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"range emptyfalse ordered[[1,65535],[1,1]] SFNT" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"scalar position0 reference2 selectedtrue metafalse WOFF" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"scalar position0 reference65535 selectedtrue metafalse WOFF" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"scalar position1 reference2 selectedtrue metafalse WOFF" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"scalar position1 reference65535 selectedtrue metafalse WOFF" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"scalar emptyfalse ordered[[0,2],[0,1]] WOFF" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"scalar emptyfalse ordered[[1,65535],[1,1]] WOFF" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"range position0 reference2 selectedtrue metafalse WOFF" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"range position0 reference65535 selectedtrue metafalse WOFF" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"range position1 reference2 selectedtrue metafalse WOFF" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"range position1 reference65535 selectedtrue metafalse WOFF" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"range emptyfalse ordered[[0,1],[0,2]] WOFF" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"range emptyfalse ordered[[0,2],[0,1]] WOFF" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"range emptyfalse ordered[[1,1],[1,65535]] WOFF" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+"range emptyfalse ordered[[1,65535],[1,1]] WOFF" expected Some(Type("Cannot read properties of undefined (reading 'subtables')")), got Some(Invalid("Missing GSUB substitution lookup"))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    source_out_of_range_gsub_references
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 11.34s
+
+error: test failed, to rerun pass `-p xterm-addons --test font_gsub_refs`

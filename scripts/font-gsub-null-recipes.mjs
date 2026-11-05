@@ -1,6 +1,6 @@
 // Null records retain their list positions. This writer is independent of Rust.
 const words=values=>values.flatMap(v=>[v>>>8,v&255]);
-function gsub(features,lookups){
+export function gsub(features,lookups){
  const records=words([features.length]),payload=[];
  for(const {tag,indices} of features){
   records.push(...[...tag].map(c=>c.charCodeAt(0)),...words([indices===null?0:2+features.length*6+payload.length]));

@@ -1,0 +1,97 @@
+[
+  {
+    "command": "GSUB_CORPUS=refs node scripts/font-gsub-lookup-oracle.mjs --generate",
+    "result": "first intentional fixture creation only",
+    "log": "source-generate.log"
+  },
+  {
+    "command": "GSUB_CORPUS=refs node scripts/font-gsub-lookup-oracle.mjs",
+    "result": "passed immutable expected replay240parser/FontImpl/addon",
+    "log": "source-replay.log"
+  },
+  {
+    "command": "cargo test --locked -j2 -p xterm-addons --test font_gsub_refs",
+    "source": "461a19f5 pre509 product",
+    "exit": 101,
+    "result": "actual28 wrong-error mismatches",
+    "log": "native-before.log"
+  },
+  {
+    "command": "cargo test --locked -j2 -p xterm-addons --all-targets --all-features",
+    "exit": 0,
+    "result": "201passed/47summaries0failed/ignored/measured/filtered",
+    "log": "native-addons.log"
+  },
+  {
+    "command": "cargo clippy --locked -j2 -p xterm-addons --all-targets --all-features -- -D warnings",
+    "exit": 0,
+    "log": "native-clippy.log"
+  },
+  {
+    "command": "cargo clippy --locked -j2 --target wasm32-unknown-unknown -p xterm-font-addons --test font_gsub_refs_browser --test font_gsub_null_browser -- -D warnings",
+    "exit": 0,
+    "log": "wasm-clippy.log"
+  },
+  {
+    "command": "cargo check --locked -j2 --target wasm32-unknown-unknown --lib -p xterm-web -p xterm-font-addons",
+    "exit": 0,
+    "log": "wasm-dependents.log"
+  },
+  {
+    "command": "cargo fmt --all -- --check",
+    "exit": 1,
+    "result": "WindowsOS206 FAILED, not waived",
+    "log": "fmt-all.log"
+  },
+  {
+    "command": "cargo fmt -p xterm-core -- --check",
+    "exit": 0,
+    "log": "fmt-xterm-core.log"
+  },
+  {
+    "command": "cargo fmt -p xterm-addons -- --check",
+    "exit": 0,
+    "log": "fmt-xterm-addons.log"
+  },
+  {
+    "command": "cargo fmt -p xterm-web -- --check",
+    "exit": 0,
+    "log": "fmt-xterm-web.log"
+  },
+  {
+    "command": "cargo fmt -p xterm-font-addons -- --check",
+    "exit": 0,
+    "log": "fmt-xterm-font-addons.log"
+  },
+  {
+    "command": "cargo fmt -p xterm-wasm-support -- --check",
+    "exit": 0,
+    "log": "fmt-xterm-wasm-support.log"
+  },
+  {
+    "command": "GSUB_CORPUS=refs node scripts/font-gsub-header-browser-source.mjs",
+    "exit": 0,
+    "result": "240parser+240FontImpl+240actualaddon EACH3PASS",
+    "log": "source-browser.log",
+    "report": "source-browser.json"
+  },
+  {
+    "command": "WASM_PACKAGE=xterm-font-addons WASM_TEST=font_gsub_refs_browser WASM_TEST_TIMEOUT_MS=360000 node scripts/browser-host-check.mjs",
+    "exit": 0,
+    "result": "2functions EACH3PASS0failed/ignored/filtered",
+    "log": "rust-browser.log",
+    "report": "rust-browser.json"
+  },
+  {
+    "command": "SOURCE_PACKAGE_JSON=original-source-package.json node results/font-gsub-refs/verify.mjs",
+    "exit": 0,
+    "result": "25producerpins/nativeEXE/4browserpins/776original-reference PASS",
+    "log": "reference-original-final.log"
+  },
+  {
+    "command": "node results/font-gsub-refs/verify.mjs",
+    "exit": 0,
+    "result": "25producerpins/nativeEXE/4browserpins/776physical-copy PASS",
+    "log": "reference-copy-final.log"
+  }
+]
