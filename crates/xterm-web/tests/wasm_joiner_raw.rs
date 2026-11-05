@@ -5,10 +5,12 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen_test::*;
 use xterm_core::buffer::{AttributeData, BufferLine};
 use xterm_web::character_joiner::{
-    raw::{report_error, BrowserJoinerService},
+    raw::{report_error, BrowserJoinerService, RawRanges},
     LineRef,
 };
 wasm_bindgen_test_configure!(run_in_browser);
+#[path = "support/cells.rs"]
+mod cells;
 
 #[wasm_bindgen(module = "/tests/support/joiner_raw.mjs")]
 extern "C" {
@@ -63,6 +65,58 @@ fn raw_ranges_match_unchanged_source_identity_errors_and_operator_order() {
     let expected: serde_json::Value =
         serde_json::from_str(include_str!("fixtures/joiner-raw.json")).unwrap();
     assert_eq!(actual, expected);
+}
+#[wasm_bindgen_test]
+fn raw_service_replays_all_original_captured_calls() {
+    use std::collections::VecDeque;
+    let fixture: serde_json::Value =
+        serde_json::from_str(include_str!("fixtures/character-joiner.json")).unwrap();
+    let cases = fixture["calls"].as_array().unwrap();
+    assert_eq!(cases.len(), 27);
+    for (index, case) in cases.iter().enumerate() {
+        let service = BrowserJoinerService::new(|error| panic!("{error:?}"));
+        let mut queues = Vec::new();
+        for id in case["handlers"].as_array().unwrap() {
+            let queue: VecDeque<_> = case["handlerCalls"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .filter(|call| call["id"] == *id)
+                .cloned()
+                .collect();
+            let queue = Rc::new(RefCell::new(queue));
+            queues.push(Rc::clone(&queue));
+            service.register(Rc::new(move |text| {
+                let call = queue
+                    .borrow_mut()
+                    .pop_front()
+                    .expect("source callback exists");
+                let expected: Vec<_> = call["text"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|unit| cells::number(unit) as u16)
+                    .collect();
+                assert_eq!(text, expected);
+                Ok(RawRanges(
+                    js_sys::JSON::parse(&call["ranges"].to_string()).unwrap(),
+                ))
+            }));
+        }
+        let line = case["cells"]
+            .as_array()
+            .map(|raw| Rc::new(RefCell::new(cells::line(raw))));
+        let raw = service.try_get_joined_characters(line).unwrap();
+        let actual: serde_json::Value = serde_json::from_str(
+            &js_sys::JSON::stringify(&raw.0)
+                .unwrap()
+                .as_string()
+                .unwrap(),
+        )
+        .unwrap();
+        assert_eq!(actual, case["expected"], "original call {index}");
+        assert!(queues.iter().all(|queue| queue.borrow().is_empty()));
+    }
 }
 fn field(value: &JsValue, key: &str) -> JsValue {
     Reflect::get(value, &key.into()).unwrap()
