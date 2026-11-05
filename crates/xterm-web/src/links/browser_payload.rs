@@ -124,7 +124,7 @@ impl BrowserLink {
             }
         }
     }
-    pub(super) fn invoke(&self, name: &str, event: &MouseEvent) -> Result<(), JsValue> {
+    pub(super) fn invoke(&self, name: &str, event: &JsValue) -> Result<(), JsValue> {
         match self {
             Self::Native(link) => {
                 let callback = match name {
@@ -134,6 +134,11 @@ impl BrowserLink {
                     _ => unreachable!("fixed link callback names"),
                 };
                 if let Some(callback) = callback {
+                    // Native decorations have no getters, so they cannot clear
+                    // the event between sampling and this typed callback.
+                    let event = event.dyn_ref::<MouseEvent>().ok_or_else(|| {
+                        js_sys::TypeError::new("Native link callback requires a MouseEvent")
+                    })?;
                     callback(event, &link.data)?;
                 }
             }

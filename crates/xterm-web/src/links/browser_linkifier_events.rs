@@ -203,6 +203,15 @@ impl State {
             let underline = values.0.is_truthy();
             *link.decoration_values.borrow_mut() = Some(values);
             link.hovered.set(true);
+            // Source samples _lastMouseEvent on entry to _linkHover, after
+            // decorations getters but before underline callbacks. Reentry can
+            // replace it, and disposal can clear it to undefined.
+            let event = self
+                .last_event
+                .borrow()
+                .clone()
+                .map(JsValue::from)
+                .unwrap_or(JsValue::UNDEFINED);
             if underline {
                 self.fire_underline(&link, true)?;
             }
