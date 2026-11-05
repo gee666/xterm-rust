@@ -1,0 +1,169 @@
+{
+  "status": "passed",
+  "scope": "Five controlled queue scenarios, including actual opened Rust browser renderer; not full vt34, suite or platform equivalence",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T08:43:59.312Z",
+  "features": [],
+  "sourceFiles": [
+    {
+      "path": "crates/xterm-web/tests/wasm_terminal_writer.rs",
+      "sha256": "5ab6e843fb2bccb949e51071c8342fd81f94560f844238fde8793bde52ffabc2"
+    },
+    {
+      "path": "crates/xterm-web/tests/browser_writer_cases.js",
+      "sha256": "7e642f26c69324fa781a4cd9d82a9e68174625d5abd40e2256f58c08cb67d72e"
+    },
+    {
+      "path": "scripts/terminal-writer-oracle.mjs",
+      "sha256": "f8901aa0d2627ffd0482e603c11b4e74d33786e6c83ddbe93385ed829834ee00"
+    }
+  ],
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_terminal_writer",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 784.4288,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 11.416500000000042,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Njoya16\\results\\acceptance-artifacts\\f824d66d0eb60512ca2ed7173bce31462758695ae70988367a44ba204080e206\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Njoya16\\results\\browser-host\\wasm_terminal_writer\\2026-11-05T08-43-59-310Z-d8cf8c36-8160-4c63-a674-88f33305aa28\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 867.7467999999999,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "version": "148.0.7778.96",
+      "status": "passed",
+      "tests": [
+        "__wbgt__wasm_terminal_writer::completion_callback_can_enqueue_another_write",
+        "__wbgt__wasm_terminal_writer::data_reentry_drains_before_parsed_when_within_source_budget",
+        "__wbgt__wasm_terminal_writer::data_reentry_yields_at_source_budget_then_drains_next_batch",
+        "__wbgt__wasm_terminal_writer::dispose_cancels_queued_write_and_completion",
+        "__wbgt__wasm_terminal_writer::rendered_terminal_drains_reentry_before_first_frame_within_budget"
+      ],
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "errors": []
+    },
+    {
+      "name": "firefox",
+      "version": "150.0.2",
+      "status": "passed",
+      "tests": [
+        "__wbgt__wasm_terminal_writer::completion_callback_can_enqueue_another_write",
+        "__wbgt__wasm_terminal_writer::data_reentry_drains_before_parsed_when_within_source_budget",
+        "__wbgt__wasm_terminal_writer::data_reentry_yields_at_source_budget_then_drains_next_batch",
+        "__wbgt__wasm_terminal_writer::dispose_cancels_queued_write_and_completion",
+        "__wbgt__wasm_terminal_writer::rendered_terminal_drains_reentry_before_first_frame_within_budget"
+      ],
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "errors": []
+    },
+    {
+      "name": "webkit",
+      "version": "26.4",
+      "status": "passed",
+      "tests": [
+        "__wbgt__wasm_terminal_writer::completion_callback_can_enqueue_another_write",
+        "__wbgt__wasm_terminal_writer::data_reentry_drains_before_parsed_when_within_source_budget",
+        "__wbgt__wasm_terminal_writer::data_reentry_yields_at_source_budget_then_drains_next_batch",
+        "__wbgt__wasm_terminal_writer::dispose_cancels_queued_write_and_completion",
+        "__wbgt__wasm_terminal_writer::rendered_terminal_drains_reentry_before_first_frame_within_budget"
+      ],
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "errors": []
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "sha256": "f824d66d0eb60512ca2ed7173bce31462758695ae70988367a44ba204080e206",
+      "bytes": 15040840,
+      "retained": false
+    },
+    "wasm": {
+      "sha256": "da2437b3f294ae9453d6d3fda102ee02ead17bf4e058a2974894e96e5566098e",
+      "bytes": 12377008,
+      "retained": false
+    },
+    "bindings": {
+      "sha256": "c0cf235fcd1dc79db8f689df4580a467dccf62318344b39518b1f0016910c68e",
+      "bytes": 165819,
+      "retained": false
+    },
+    "css": {
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d",
+      "bytes": 8154,
+      "retained": true
+    },
+    "cargoLockSha256": "7e3d1071cfce3891a16fc4d6494e162566f5607a2c7680dbb686ee6cd4dec099"
+  },
+  "cleanup": "Generated browser packages and pinned WASM removed after retaining logs and hashes. Private target remains until canonical integration."
+}
