@@ -36,6 +36,8 @@ The 16 directed cases cover async string and byte delivery, synchronous flush, i
 
 Native Windows MSVC with Rust 1.85.1 and Node 24.15.0 passed 16 source cases and their 16 Rust comparisons. Core all-target/all-feature execution passed 1504 test functions in 227 summaries, plus 1 doctest. Warning-denied all-target/all-feature core Clippy passed. Raw commands and outputs, fixture hash and imported source hashes are retained under `results/headless-async-reentry/`. Changed-file formatting passed separately. None of these counts is a workspace or cross-platform pass.
 
+The isolated review accepted `dbb46b2` after independently running 32 tests across nine focused native targets, the 16-case source oracle, scoped warning-denied Clippy and changed-file rustfmt. It found no code problems. It did not run workspace/browser or Linux/macOS gates. Its counts and scope are retained in `review.json`.
+
 ## Remaining scope
 
 This repair establishes the concrete native Bell/resize recursive-entry contract. Callbacks invoked inside arbitrary custom parser handlers or other synchronous producer callbacks still need separate recursive-entry assertions and ownership work under parser closure task #313. The 16-case fixture is not the complete original InputHandler suite or full-state corpus. The existing 9306-state corpus remains unchanged and passed in the full core run. Browser queue behavior, all-feature workspace quality, native Linux/macOS and full equivalence remain separately tracked and NOT PROVEN.
