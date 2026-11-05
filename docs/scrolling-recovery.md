@@ -35,6 +35,10 @@ Set `WASM_BINDGEN` to the matching installed CLI and `PLAYWRIGHT_MODULE` to the 
 
 Raw generated WASM/bindings are disposable build outputs. Their hashes remain in the browser reports; the binaries are not committed and will be removed during owned cleanup. Paths inside those reports describe the execution location, not permanent downloads.
 
+## Independent review
+
+Task289 review accepted the recovery at `6eb6766`. The reviewer confirmed the three recovered production files matched `ae23b05`, compared routing with unchanged upstream source, and independently reran all16 native cases,10 source cases,23 WASM tests in each engine, warning-denied WASM library Clippy and focused formatting. `independent-browser.json` and its engine logs retain that independent browser run. No tracked source changed during review. Canonical integration is a separate final step.
+
 ## Remaining scope
 
 The numeric scroll model still does not preserve arbitrary raw JS values when `forceIntegerValues=false`. That affects ScrollState, smooth animation from/to values, Scrollable and Element consumers. Task301 and criterion458 track this separately. See retained `tmp/margaret-raw-scroll-findings.md` in the original launch checkout. Do not treat passing public numeric scroll tests as proof of this raw contract, complete scrolling equivalence, full browser-suite equivalence or another native platform passing.
