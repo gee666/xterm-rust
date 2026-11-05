@@ -20,10 +20,16 @@ extern "C" {
     #[wasm_bindgen(catch, js_name = imageOptionNumber)]
     fn number(value: &JsValue) -> Result<f64, JsValue>;
 }
-pub(super) fn read(options: &JsValue) -> Result<ImageOptions, JsValue> {
-    let options = clone_options(options)?;
-    let boolean = |key| js::get(&options, key).map(|v| v.is_truthy());
-    let numeric = |key| number(&js::get(&options, key)?);
+pub(super) fn read(options: &JsValue) -> Result<(ImageOptions, ImageOptions), JsValue> {
+    // Keep source's two Object.assign passes contiguous. A failure in the
+    // second pass must win over coercion errors in the typed projection.
+    let current = clone_options(options)?;
+    let defaults = clone_options(options)?;
+    Ok((typed(&current)?, typed(&defaults)?))
+}
+fn typed(options: &JsValue) -> Result<ImageOptions, JsValue> {
+    let boolean = |key| js::get(options, key).map(|v| v.is_truthy());
+    let numeric = |key| number(&js::get(options, key)?);
     Ok(ImageOptions {
         enable_size_reports: boolean("enableSizeReports")?,
         pixel_limit: numeric("pixelLimit")?,

@@ -32,8 +32,7 @@ pub struct ImageAddon {
 impl ImageAddon {
     #[wasm_bindgen(constructor)]
     pub fn new(options: JsValue) -> Result<Self, JsValue> {
-        let current = options::read(&options)?;
-        let defaults = options::read(&options)?;
+        let (current, defaults) = options::read(&options)?;
         let options = Rc::new(Cell::new(current));
         let option_view = option_inspection::inspection(ImageOptionsReader::new(options.clone()))?;
         let added = Emitter::new();

@@ -1,4 +1,6 @@
 #![cfg(target_arch = "wasm32")]
+#[path = "image_addon_support/constructor_order.rs"]
+mod constructor_order;
 #[path = "image_addon_support/handlers.rs"]
 mod handlers;
 #[path = "image_addon_support/inspection.rs"]
