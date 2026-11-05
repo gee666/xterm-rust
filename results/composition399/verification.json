@@ -1,0 +1,42 @@
+{
+  "task": 399,
+  "base": "cbe72b557d19480627e0932b59c1bbb18ec2aaec",
+  "platform": "Windows x86_64",
+  "rustc": "1.85.1",
+  "node": "v24.15.0",
+  "hashes": {
+    "crates/xterm-web/src/input/composition.rs": "d72daa5ba50a09aab1b5d10e489d0d4fd105f6e16654c7d2faa75ba2fdf7e2d7",
+    "crates/xterm-web/src/input/composition_tests.rs": "39eddf166058a0cad12e9ebfd2c950d4ee5e9e25edbccaa39d94f5119fe048c6",
+    "crates/xterm-web/src/input/dom/composition.rs": "ec1cf52df905e295132498fa61ce6b92881d384fb9bee9d40d03013a8e100d19",
+    "crates/xterm-web/tests/input_cases/composition_start.rs": "f840a3ea108ab1cc73b4f3a5557e1c1a69a1459a2f754ccd379dd267cdeac8e3",
+    "crates/xterm-web/tests/fixtures/composition-start-cases.js": "2de6bb2e434a16b5cecc89fbb241aabcf27e43cd5a2fa1256796c83e70eb1231",
+    "crates/xterm-web/tests/fixtures/composition-textarea-body.js": "796cc1b4218fdd33b39061ab24f2f3e7d562bf933c79335748214a56f1292d55",
+    "crates/xterm-web/tests/wasm_input_callbacks.rs": "bc82daf810572c6fdaa2d2af28b16445023adfaac27a100d58bc625b2686544f",
+    "scripts/composition-source-fixture.test.mjs": "9a9dee8a89a9b51def88f40bac7540228af33677a45c58029a3ac929af973c9a"
+  },
+  "beforeFix": {
+    "browser": "chromium",
+    "mismatches": 2,
+    "source": "Z",
+    "rust": "YZ",
+    "runnerException": "table index is out of bounds after assertion failures"
+  },
+  "afterFix": {
+    "nativeFunctions": 63,
+    "sourceIntegrityFunctions": 5,
+    "newBrowserScenarios": 4,
+    "newBrowserFunctions": 2,
+    "callbacksFunctionsPerEngine": 7,
+    "inputFunctionsPerEngine": 7,
+    "browsers": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "inputOracleComparisons": 252412,
+    "upstreamCases": 11,
+    "upstreamAssertions": 16,
+    "seed": 1229800758
+  },
+  "scope": "Compositionstart text setter ordering only; not complete family or original full-Terminal E2E/platform proof. Overall equivalence NOT PROVEN."
+}

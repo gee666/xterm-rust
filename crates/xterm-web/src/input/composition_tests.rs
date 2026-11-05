@@ -146,6 +146,26 @@ fn standalone_229_diff_coalesces_and_handles_replace_and_delete() {
 }
 
 #[test]
+fn start_keeps_sent_offset_until_overlay_text_clear_commits() {
+    for clear_succeeds in [false, true] {
+        let mut state = Composition::default();
+        let pending = state.keydown(229, &textarea("ab")).deferred.unwrap();
+        assert_eq!(output(state.run_deferred(pending, &textarea("abX"))), "X");
+        state.begin_composition();
+        state.set_start_range(0, 0);
+        state.set_start_suffix(&"abX".encode_utf16().collect::<Vec<_>>());
+        if clear_succeeds {
+            state.clear_composition_text();
+        }
+        let send = state.end();
+        assert_eq!(
+            output(state.run_deferred(send, &textarea("YZabX"))),
+            if clear_succeeds { "YZ" } else { "Z" }
+        );
+    }
+}
+
+#[test]
 fn new_composition_cancels_pending_textarea_diff() {
     let mut state = Composition::default();
     let deferred = state.keydown(229, &textarea("a")).deferred.unwrap();

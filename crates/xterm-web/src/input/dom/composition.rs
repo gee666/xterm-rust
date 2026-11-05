@@ -31,11 +31,9 @@ pub(super) fn bind(bindings: &mut InputBindings) -> Result<(), JsValue> {
                 .map_or(start, |end| end as usize);
             state.composition.borrow_mut().set_start_range(start, end);
             let value = read_value(&state.textarea)?;
-            state
-                .composition
-                .borrow_mut()
-                .finish_composition_start(&value);
-            state.overlay.set_text_content(Some(""));
+            state.composition.borrow_mut().set_start_suffix(&value);
+            set_overlay_text(state, &[])?;
+            state.composition.borrow_mut().clear_composition_text();
             state.overlay.class_list().add_1("active")?;
             update_elements(state, true)
         },
@@ -52,13 +50,7 @@ pub(super) fn bind(bindings: &mut InputBindings) -> Result<(), JsValue> {
                 .map_err(|error| crate::terminal::options::error_to_js(&error))?;
             let action = state.composition.borrow_mut().update(&data);
             let overlay = state.composition.borrow().overlay_text.clone();
-            if !js_sys::Reflect::set(
-                state.overlay.as_ref(),
-                &JsValue::from_str("textContent"),
-                &to_js_string(&overlay),
-            )? {
-                return Err(js_sys::TypeError::new("Cannot set composition text").into());
-            }
+            set_overlay_text(state, &overlay)?;
             update_elements(state, true)?;
             schedule(state, action)
         },
@@ -76,6 +68,17 @@ pub(super) fn bind(bindings: &mut InputBindings) -> Result<(), JsValue> {
             schedule(state, action)
         },
     )?;
+    Ok(())
+}
+
+fn set_overlay_text(state: &State, text: &[u16]) -> Result<(), JsValue> {
+    if !js_sys::Reflect::set(
+        state.overlay.as_ref(),
+        &JsValue::from_str("textContent"),
+        &to_js_string(text),
+    )? {
+        return Err(js_sys::TypeError::new("Cannot set composition text").into());
+    }
     Ok(())
 }
 

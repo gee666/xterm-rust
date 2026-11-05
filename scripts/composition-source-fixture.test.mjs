@@ -6,6 +6,8 @@ import test from 'node:test';
 const root = new URL('../', import.meta.url);
 for (const [name, signature] of [
   ['start', 'public compositionstart(): void {'],
+  ['keydown', 'public keydown(ev: KeyboardEvent): boolean {'],
+  ['textarea', 'private _handleAnyTextareaChanges(): void {'],
   ['end', 'public compositionend(): void {'],
   ['finalize', 'private _finalizeComposition(waitForPropagation: boolean): void {'],
 ]) {

@@ -19,4 +19,6 @@ The criterion numbers above are historical. Active criterion471 and full-family 
 - Task343 supplies the raw Kitty/Win32 lookup policies and realm adapters. See docs/keyboard-recovery343.md.
 - CompositionHelper.compositionend and _finalizeComposition map to input/composition.rs and input/dom/composition.rs. Task395 preserves DOM removal before flag/range capture, including thrown removal and synchronous nested composition. See docs/composition-end-order.md and results/composition395.
 
+- Task399 preserves CompositionHelper.compositionstart overlay text setter ordering and prior sent-data state across failure/reentry. See docs/composition-start-order.md and results/composition399.
+
 These scoped contributions do not close the full original input/accessibility suites, every decorated event field, native-platform proof or overall parity.

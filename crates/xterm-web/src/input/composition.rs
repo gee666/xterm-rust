@@ -43,7 +43,8 @@ impl Composition {
         let start = textarea.selection_start.unwrap_or(textarea.value.len());
         let end = textarea.selection_end.unwrap_or(start);
         self.set_start_range(start, end);
-        self.finish_composition_start(&textarea.value);
+        self.set_start_suffix(&textarea.value);
+        self.clear_composition_text();
     }
     pub fn begin_composition(&mut self) {
         self.is_composing = true;
@@ -52,8 +53,12 @@ impl Composition {
         self.start = start.min(end);
         self.end = start.max(end);
     }
-    pub fn finish_composition_start(&mut self, value: &[u16]) {
+    pub fn set_start_suffix(&mut self, value: &[u16]) {
         self.suffix = value[self.end.min(value.len())..].to_vec();
+    }
+    /// Commit only after the DOM overlay text setter succeeds. Its callback can
+    /// end composition or throw while the previous sent-data offset is live.
+    pub fn clear_composition_text(&mut self) {
         self.overlay_text.clear();
         self.data_already_sent.clear();
     }
