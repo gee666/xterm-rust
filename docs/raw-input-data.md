@@ -27,6 +27,12 @@ Durable receipts are in results/raw-input356. Run with the installed Rust1.85.1 
 
 After rebasing onto main5ca9f593 containing accepted354, the complete WASM library passes26 functions in each of the three engines, and the raw2-function90-case suite passes again. Both source and Rust full-composition assertions remain intact. Scoped native/WASM Clippy and fullfmt pass on the refreshed branch. Final integrated results belong in a separate canonical receipt. Standalone text logs omit trailing empty lines only; JSON receipts retain the complete browser output.
 
+## Canonical integration
+
+Task356 was independently accepted at5283e75 and canonically integrated into main e4945e8f24e41ef647dcb39e83964bfa6d35ed35. All14 reviewed implementation/test hashes remained unchanged after the rebase. The batch also retained owner-confirmed docs-only357 daed4d1 and Galen d2e5bdc receipts.
+
+The unchanged canonical helper passed1854 native core/web tests across346 summaries, with zero failures or ignored tests, plus changed-crate builds, affected native all-target checks, the default workspace check and applicable WASM library checks. Exact fullfmt and source7 checks passed before freeze. The helper removed the private target. See canonical-merge.json/log. This is default-feature integration evidence, not the final full-platform/feature/release or equivalence matrix.
+
 ## Owned temporary work
 
 Only O:/xterm-rust-swarm-16/tmp/A is owned. It was created as Agamemnon16 with the existing worktree helper, then safely moved from outside that directory for Windows rustfmt command-length limits. source_repo is the helper's physical reference copy, not a junction. Browser runners own and close their servers/browsers. Do not remove historical worktrees, original dependencies or another agent's artifacts. Preserve commits, regression fixtures and concise raw evidence before whole-worktree cleanup.
