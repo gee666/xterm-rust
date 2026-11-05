@@ -34,7 +34,8 @@ fn raw_flag_values_retain_identity_without_primitive_conversion() {
     for expression in [
         "undefined", "null", "false", "true", "0", "-0", "NaN",
         "Infinity", "-1", "''", "'false'", "[]", "[0]", "({})",
-        "0n", "1n", "Symbol('flag')",
+        "0n", "1n", "Symbol('flag')", "document.all", "(()=>{})",
+        "(()=>{const {proxy,revoke}=Proxy.revocable({},{});revoke();return proxy})()",
         "({[Symbol.toPrimitive](){throw Error('unexpected conversion')}})",
         "({valueOf(){throw Error('unexpected valueOf')},toString(){throw Error('unexpected toString')}})",
     ] {
@@ -115,6 +116,7 @@ async fn raw_scrolling_controls_and_resets_preserve_real_sixel_state_and_pixels(
         "'false'",
         "[]",
         "Symbol('scroll')",
+        "document.all",
         "({[Symbol.toPrimitive](){throw Error('must not convert')}})",
     ] {
         let pair = Pair::new(
@@ -185,6 +187,9 @@ async fn raw_support_flags_activate_by_truthiness_without_conversion() {
         "0n",
         "1n",
         "Symbol('flag')",
+        "document.all",
+        "(()=>{})",
+        "(()=>{const {proxy,revoke}=Proxy.revocable({},{});revoke();return proxy})()",
         "({valueOf(){throw Error('unexpected')},toString(){throw Error('unexpected')}})",
     ] {
         let pair = Pair::new(
