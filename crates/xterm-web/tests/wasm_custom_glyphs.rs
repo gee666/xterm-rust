@@ -1,15 +1,14 @@
 // Copyright (c) 2021 The xterm.js authors. All rights reserved. MIT license.
 #![cfg(target_arch = "wasm32")]
 use serde_json::Value;
-use std::rc::Rc;
-use wasm_bindgen::{prelude::*, JsCast};
+use wasm_bindgen::prelude::*;
 use wasm_bindgen_test::*;
-use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
-use xterm_core::{
-    log_service::{LogError, LogRecord, LogService, LogSink},
-    options::OptionsService,
-};
-use xterm_web::webgl::custom_glyphs::{try_draw_custom_glyph, CustomGlyphDrawParams};
+use web_sys::CanvasRenderingContext2d;
+use xterm_core::log_service::LogService;
+use xterm_web::webgl::custom_glyphs::try_draw_custom_glyph;
+#[path = "support/custom_glyph_canvas.rs"]
+mod canvas;
+use canvas::{context, params};
 wasm_bindgen_test_configure!(run_in_browser);
 
 #[wasm_bindgen(inline_js = "
@@ -40,44 +39,6 @@ extern "C" {
     ) -> Result<web_sys::HtmlElement, JsValue>;
     #[wasm_bindgen(js_name = customGlyphState)]
     fn state(ctx: &CanvasRenderingContext2d) -> String;
-}
-struct StrictLog;
-impl LogSink for StrictLog {
-    fn log(&self, record: LogRecord) -> Result<(), LogError> {
-        Err(LogError::Sink(String::from_utf16_lossy(&record.message)))
-    }
-}
-fn context() -> CanvasRenderingContext2d {
-    let canvas: HtmlCanvasElement = web_sys::window()
-        .unwrap()
-        .document()
-        .unwrap()
-        .create_element("canvas")
-        .unwrap()
-        .dyn_into()
-        .unwrap();
-    canvas.set_width(48);
-    canvas.set_height(48);
-    canvas
-        .get_context("2d")
-        .unwrap()
-        .unwrap()
-        .dyn_into()
-        .unwrap()
-}
-fn params(p: &[f64; 8], variant: i32) -> CustomGlyphDrawParams<'static> {
-    CustomGlyphDrawParams {
-        x_offset: p[0],
-        y_offset: p[1],
-        device_cell_width: p[2],
-        device_cell_height: p[3],
-        device_char_width: p[4],
-        device_char_height: p[5],
-        font_size: p[6],
-        device_pixel_ratio: p[7],
-        background_color: Some("#112233"),
-        variant_offset: variant,
-    }
 }
 fn compare(chars: &[u16], p: &[f64; 8], variant: i32, color: &str, log: &LogService) {
     let original = context();
@@ -116,7 +77,7 @@ fn compare(chars: &[u16], p: &[f64; 8], variant: i32, color: &str, log: &LogServ
 #[wasm_bindgen_test]
 fn all_glyphs_match_source_pixels_and_context_state() {
     let fixture: Value = serde_json::from_str(include_str!("fixtures/custom-glyphs.json")).unwrap();
-    let log = LogService::new(Rc::new(OptionsService::default()), Rc::new(StrictLog)).unwrap();
+    let log = canvas::log();
     let cases = fixture["cases"].as_array().unwrap();
     assert_eq!(cases.len(), 2355);
     for case in cases {
@@ -136,7 +97,7 @@ fn all_glyphs_match_source_pixels_and_context_state() {
 #[wasm_bindgen_test]
 fn patterns_match_all_variants_and_alpha() {
     let fixture: Value = serde_json::from_str(include_str!("fixtures/custom-glyphs.json")).unwrap();
-    let log = LogService::new(Rc::new(OptionsService::default()), Rc::new(StrictLog)).unwrap();
+    let log = canvas::log();
     for cp in fixture["patternCodepoints"].as_array().unwrap() {
         let c = char::from_u32(cp.as_u64().unwrap() as u32).unwrap();
         let chars: Vec<_> = c.to_string().encode_utf16().collect();
@@ -156,7 +117,7 @@ fn patterns_match_all_variants_and_alpha() {
 #[wasm_bindgen_test]
 fn pattern_cache_preserves_definition_and_color_identity() {
     let fixture: Value = serde_json::from_str(include_str!("fixtures/custom-glyphs.json")).unwrap();
-    let log = LogService::new(Rc::new(OptionsService::default()), Rc::new(StrictLog)).unwrap();
+    let log = canvas::log();
     let a = context();
     let b = context();
     let p = [0.0, 0.0, 9.0, 17.0, 7.0, 13.0, 15.0, 1.25];
@@ -194,7 +155,7 @@ fn pattern_cache_preserves_definition_and_color_identity() {
 
 #[wasm_bindgen_test]
 fn uncached_pattern_uses_main_realm_after_canvas_adoption() {
-    let log = LogService::new(Rc::new(OptionsService::default()), Rc::new(StrictLog)).unwrap();
+    let log = canvas::log();
     let a = context();
     let b = context();
     let frame = adopt(&a, &b).unwrap();
@@ -217,7 +178,7 @@ fn uncached_pattern_uses_main_realm_after_canvas_adoption() {
 
 #[wasm_bindgen_test]
 fn nonstring_pattern_fill_throws_like_source() {
-    let log = LogService::new(Rc::new(OptionsService::default()), Rc::new(StrictLog)).unwrap();
+    let log = canvas::log();
     let a = context();
     let b = context();
     for ctx in [&a, &b] {

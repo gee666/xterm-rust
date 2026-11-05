@@ -1,19 +1,30 @@
 // Copyright (c) 2021 The xterm.js authors. All rights reserved. MIT license.
 //! Pattern identity is cached by immutable definition identity and current color.
-use js_sys::{Reflect, Uint8ClampedArray};
 use std::{cell::RefCell, collections::HashMap};
 use wasm_bindgen::{prelude::*, JsCast};
-use web_sys::{
-    CanvasPattern, CanvasRenderingContext2d, HtmlCanvasElement, ImageData, OffscreenCanvas,
-    OffscreenCanvasRenderingContext2d,
-};
+use web_sys::{CanvasPattern, CanvasRenderingContext2d};
 
-// web-sys 0.3.77 types this API as the obsolete SVGMatrix. Use a narrow Web API
-// binding rather than fabricating that type or moving rendering to JavaScript.
-#[wasm_bindgen(
-    inline_js = "export function customGlyphPatternTransform(pattern, x, y) { pattern.setTransform(new DOMMatrix().translateSelf(x,y)); }"
-)]
+// The typed web-sys overloads cannot preserve null repetition, ImageData argument
+// shape, dynamic data access or modern DOMMatrix calls. Keep only those Web API
+// operations in narrow catching bindings; pixel generation remains Rust.
+#[wasm_bindgen(module = "/src/webgl/custom_glyphs/patterns.js")]
 extern "C" {
+    #[wasm_bindgen(js_name = customGlyphHasOffscreenFactory)]
+    fn has_offscreen_factory() -> bool;
+    #[wasm_bindgen(catch, js_name = customGlyphOffscreenCanvas)]
+    fn offscreen_canvas(width: u32, height: u32) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch, js_name = customGlyphDomCanvas)]
+    fn dom_canvas(width: u32, height: u32) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch, js_name = customGlyphPatternContext)]
+    fn context(canvas: &JsValue) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch, js_name = customGlyphPatternImage)]
+    fn image(width: u32, height: u32) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch, js_name = customGlyphPatternByte)]
+    fn set_byte(image: &JsValue, index: u32, value: f64) -> Result<(), JsValue>;
+    #[wasm_bindgen(catch, js_name = customGlyphPatternPut)]
+    fn put(context: &JsValue, image: &JsValue) -> Result<(), JsValue>;
+    #[wasm_bindgen(catch, js_name = customGlyphPatternCreate)]
+    fn create(ctx: &CanvasRenderingContext2d, canvas: &JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch, js_name = customGlyphPatternTransform)]
     fn transform(pattern: &CanvasPattern, x: f64, y: f64) -> Result<(), JsValue>;
 }
@@ -65,51 +76,45 @@ fn create_pattern(
     rows: &[&[u8]],
     style: &str,
 ) -> Result<CanvasPattern, JsValue> {
-    // All patterns are validated, tiny generated definition data.
-    let width = rows[0].len() as u32;
-    let height = rows.len() as u32;
+    // These dimensions come only from immutable generated pattern definitions.
+    let width = u32::try_from(rows[0].len()).map_err(|_| error("Pattern width exceeds u32"))?;
+    let height = u32::try_from(rows.len()).map_err(|_| error("Pattern height exceeds u32"))?;
+    let canvas = if has_offscreen_factory() {
+        offscreen_canvas(width, height)?
+    } else {
+        dom_canvas(width, height)?
+    };
+    let context = context(&canvas)?;
+    if !context.is_truthy() {
+        return Err(error("Value must not be falsy"));
+    }
+    // Source creates both host resources before inspecting the color format.
+    let image = image(width, height)?;
     let rgba = color(style)?;
-    let mut pixels = Vec::with_capacity(width as usize * height as usize * 4);
+    let mut index = 0u32;
     for row in rows {
         for &value in *row {
-            pixels.extend_from_slice(&[
+            for component in [
                 rgba[0],
                 rgba[1],
                 rgba[2],
                 f64::from(value) * (rgba[3] * 255.0),
-            ]);
+            ] {
+                // Each source assignment rereads image.data. It may throw or
+                // return another view, and Uint8ClampedArray performs rounding.
+                set_byte(&image, index, component)?;
+                index = index
+                    .checked_add(1)
+                    .ok_or_else(|| error("Pattern offset exceeds u32"))?;
+            }
         }
     }
-    // Conversion must use ECMAScript Uint8ClampedArray's ties-to-even semantics.
-    let array = Uint8ClampedArray::new_with_length(pixels.len() as u32);
-    for (index, value) in pixels.into_iter().enumerate() {
-        Reflect::set(array.as_ref(), &(index as u32).into(), &value.into())?;
+    put(&context, &image)?;
+    let pattern = create(ctx, &canvas)?;
+    if !pattern.is_truthy() {
+        return Err(error("Value must not be falsy"));
     }
-    let image = ImageData::new_with_js_u8_clamped_array_and_sh(&array, width, height)?;
-    let pattern = if Reflect::get(&js_sys::global(), &"OffscreenCanvas".into())?.is_undefined() {
-        // Use the main realm document, not the atlas canvas's mutable ownerDocument.
-        let document = web_sys::window()
-            .and_then(|w| w.document())
-            .ok_or_else(|| error("Pattern canvas document unavailable"))?;
-        let canvas: HtmlCanvasElement = document.create_element("canvas")?.dyn_into()?;
-        canvas.set_width(width);
-        canvas.set_height(height);
-        let context: CanvasRenderingContext2d = canvas
-            .get_context("2d")?
-            .ok_or_else(|| error("Value must not be falsy"))?
-            .dyn_into()?;
-        context.put_image_data(&image, 0.0, 0.0)?;
-        ctx.create_pattern_with_html_canvas_element(&canvas, "repeat")?
-    } else {
-        let canvas = OffscreenCanvas::new(width, height)?;
-        let context: OffscreenCanvasRenderingContext2d = canvas
-            .get_context("2d")?
-            .ok_or_else(|| error("Value must not be falsy"))?
-            .dyn_into()?;
-        context.put_image_data(&image, 0.0, 0.0)?;
-        ctx.create_pattern_with_offscreen_canvas(&canvas, "repeat")?
-    };
-    pattern.ok_or_else(|| error("Value must not be falsy"))
+    Ok(pattern.unchecked_into())
 }
 
 pub(super) fn set_pattern(

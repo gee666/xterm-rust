@@ -25,6 +25,12 @@ identity and adoption into a document that rejects createElement. Pin exact
 reference/fixture/source/WASM/binding/prelude hashes in durable evidence. The
 JavaScript renderer is an oracle only, never a Rust implementation dependency.
 
+For pattern DOM/constructor boundaries, also run WASM_TEST=wasm_custom_glyph_pattern_host
+with both preludes. Its real-context probes compare exact null repetition, two-argument
+ImageData construction and repeated data reads, factory/color/throw order, captured
+availability and zero-variant transforms. Preserve the old-pattern negative-control
+receipts; equal pixels alone do not prove host-call parity.
+
 Keep the shared compiler/browser limits and Cargo-j2. Set TEMP and TMP separately
 to owned O: scratch. Run full native workspace fmt/Clippy/tests after changes;
 feature unification from dev dependencies can affect other fixture decoders.
