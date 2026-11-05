@@ -29,7 +29,7 @@ The negative experiment restores the historical pre-engine decoration snapshot i
 
 Two experiment-driver assertions were corrected or diagnosed. The first expected exit1 rather than Cargo's101 despite a valid2-test failure. The second assumed browser totals existed after the actual phase assertion and panic-hook abort. Neither changed production behavior. Each finally block restored find.rs and verified its SHA-256. After restoration the complete native48 and three-browser45 suites pass again. Original81 passes after the final restore.
 
-Durable results and source/fixture/evidence hashes are in `results/search-selection-options/summary.json`. Temporary paths in reports identify verification artifacts, not distributed deliverables. Independent review and owned cleanup are recorded separately after acceptance.
+Durable results and source/fixture/evidence hashes are in `results/search-selection-options/summary.json`. Temporary paths in reports identify verification artifacts, not distributed deliverables. Independent review accepted445 atc0596614 after correcting one normalized Markdown checksum. The reviewer independently ran the pinned retained native executable with48passed, checked52pins, all776reference entries, changed Rust formatting, JavaScript syntax and final WASM/compiler/bindings/CSS hashes. It found no behavioral defect. No independent rebuild, Clippy or browser rerun was authorized or performed. Review transcription is retained in review.txt; owned cleanup follows acceptance.
 
 ## Reproduction
 
