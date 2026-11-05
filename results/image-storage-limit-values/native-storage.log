@@ -1,0 +1,58 @@
+   Compiling allocator-api2 v0.2.21
+   Compiling foldhash v0.1.5
+   Compiling equivalent v1.0.3
+   Compiling memchr v2.8.3
+   Compiling hashbrown v0.15.5
+   Compiling zmij v1.0.23
+   Compiling serde_core v1.0.229
+   Compiling regress v0.10.4
+   Compiling ryu-js v1.0.3
+   Compiling adler2 v2.0.1
+   Compiling serde_json v1.0.154
+   Compiling miniz_oxide v0.8.9
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\Ila\crates\xterm-core)
+   Compiling itoa v1.0.18
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\Ila\crates\xterm-addons)
+    Finished `test` profile [unoptimized] target(s) in 10.00s
+     Running tests\image_storage.rs (target\debug\deps\image_storage-4b22362863741fa5.exe)
+
+running 23 tests
+test placement::overwrites_reuse_isolated_payload_and_delete_zero_tile_images ... ok
+test render::extraction_delegates_exact_tile_and_missing_indices_return_absence ... ok
+test reentry::replacing_callback_drops_old_capture_without_a_slot_borrow ... ok
+test placement::width_growth_preserves_the_source_empty_content_check_quirk ... ok
+test lifecycle::added_callback_failure_leaves_inserted_tiles_and_entry_committed ... ok
+test placement::non_scrolling_clips_right_and_restores_origin_after_bottom_break ... ok
+test budget::preconverted_pixels_accept_full_range_and_commit_before_failed_eviction ... FAILED
+test placement::linefeed_resize_uses_captured_width_without_rejecting_out_of_view_stores ... ok
+test lifecycle::alternate_wipe_preserves_normal_images_and_leaves_orphan_tiles_for_placeholders ... ok
+test placement::actual_terminal_tiles_preserve_text_attributes_and_iip_cursor ... ok
+test reentry::reset_observes_images_appended_by_deleted_callbacks_and_keeps_id_counter ... ok
+test reentry::linefeed_nested_placement_uses_map_insertion_order_not_numeric_ids ... ok
+test lifecycle::bitmap_conversion_and_deletion_preserve_identity_close_order_and_single_callback ... ok
+test lifecycle::close_failure_removes_mapping_before_error_and_preserves_cause_identity ... ok
+test budget::invalid_limits_leave_budget_unchanged_and_nan_remains_source_accepted ... ok
+test reentry::reset_order_follows_nested_insertion_order_two_then_one ... ok
+test entries::advancing_entries_does_not_borrow_the_store_during_consumer_callbacks ... ok
+test render::z_order_is_stable_and_top_insertion_failure_aborts_before_rescale ... ok
+test render::render_merges_consecutive_tiles_and_places_missing_image_placeholder_first ... ok
+test entries::live_entries_follow_resets_appends_identity_and_permanent_exhaustion ... ok
+test budget::preconverted_constructor_does_not_revalidate_or_log_pixel_budgets ... ok
+test budget::fifo_limit_counts_original_and_distinct_resized_surfaces ... ok
+test placement::fallback_cell_size_and_empty_images_keep_source_metadata ... ok
+
+failures:
+
+---- budget::preconverted_pixels_accept_full_range_and_commit_before_failed_eviction stdout ----
+
+thread 'budget::preconverted_pixels_accept_full_range_and_commit_before_failed_eviction' panicked at crates\xterm-addons\tests\image_storage_cases\budget.rs:64:5:
+assertion failed: matches!(f.storage.set_pixel_limit(0), Err(StorageError::InvalidLimit))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    budget::preconverted_pixels_accept_full_range_and_commit_before_failed_eviction
+
+test result: FAILED. 22 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p xterm-addons --test image_storage`
