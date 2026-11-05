@@ -1,0 +1,29 @@
+# GSUB single-substitution format read order
+
+Task 530 fixes the type 1 parser's validation order. The source reads substFormat and rejects values other than 1 or 2 before touching coverage. Rust previously dereferenced coverage first. A missing, truncated or invalid coverage pointer could therefore replace the earlier format error. Type 7 extension lookups call the same single parser and had the same defect.
+
+The shared oracle adds 608 deterministic SFNT/WOFF cases. These vary direct/type 7 lookups, selected/unselected calt, mark-filter flags, later invalid META, formats 0/3/65535, absent/half/out-of-bounds coverage pointers, invalid/valid coverage and valid/absent/half-format controls. Source parser and FontImpl each accept 32 and reject 576. The actual source addon checks loading fallback, one buffer read, cache reuse and refresh count for every case.
+
+The fixtures pin opentype.js SHA256737212d8aae53d1996ef10b315e4369a1542ebb9b94c13c5f99793914745d484 and UbuntuMono font SHA256b35dd9d2131d5d83a9b87fe9ad22c6288fa3d17688d43302c14da29812417d63. Independent Node and reused browser/Rust container writers compare exact input bytes and hashes. Initial fixture generation and subsequent read-only replay are separate retained commands. Existing expected values and assertions are not changed to pass.
+
+Native errors retain the established `FontError::UnsupportedFormat("GSUB single substitution", value)` representation. Source errors include the absolute byte offset in prose. This task fixes parser read/error order and addon rejection behavior, not that existing diagnostic representation difference. General nested null coverage/class handling, shaping, full original suites and full 342/325/OS/comparison proof remain open. Full equivalence is NOT PROVEN.
+
+## Commands
+
+Run from an owned O: worktree, with Node 24.15.0, Rust 1.85.1, installed source dependencies via SOURCE_PACKAGE_JSON, matching wasm-bindgen 0.2.100 and Playwright. Set TMP/TEMP to the owned tmp directory, CARGO_BUILD_JOBS=2, and obtain a resource allocation before heavy jobs.
+
+- `GSUB_CORPUS=single node scripts/font-gsub-lookup-oracle.mjs`
+- `cargo test --locked -j2 -p xterm-addons --test font_gsub_single`
+- `cargo test --locked -j2 -p xterm-addons --all-targets --all-features`
+- `cargo clippy --locked -j2 -p xterm-addons --all-targets --all-features -- -D warnings`
+- `cargo clippy --locked -j2 -p xterm-font-addons --target wasm32-unknown-unknown --test font_gsub_single_browser -- -D warnings`
+- `GSUB_CORPUS=single node scripts/font-gsub-header-browser-source.mjs`
+- `WASM_PACKAGE=xterm-font-addons WASM_TEST=font_gsub_single_browser WASM_TEST_TIMEOUT_MS=360000 node scripts/browser-host-check.mjs`
+
+## Evidence status
+
+Source Node generation and immutable replay passed 608 parser, 608 FontImpl and 608 actual-addon cases. Before applying the production fix, the unchanged native test failed with 384 mismatches. After the fix, the same test passed, including 1,384 retained lookup cases. All-target/all-feature addon tests passed 207 functions across 49 summaries, with no failures, ignored, measured or filtered tests and no warnings. Strict native addon lint, strict lint of the actual new WASM browser target, and dependent font/web WASM library checks passed.
+
+The exact aggregate `cargo fmt --all -- --check` failed with Windows error 206. All five whole-package formatting checks passed. These package checks do not replace the failed aggregate gate. Both 776-file original and physical-copy reference manifests matched.
+
+Logs and machine-readable counts are in results/font-gsub-single. Browser proof and review are pending. Scoped passing tests are not full equivalence.

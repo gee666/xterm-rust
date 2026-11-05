@@ -7,7 +7,7 @@ import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import {withArtifactServer} from './browser-artifact-server.mjs';
 const corpus=process.env.GSUB_CORPUS??'header';
-if(!['header','lookup','type9','null','refs','subtables'].includes(corpus))throw new Error('Unknown GSUB_CORPUS');
+if(!['header','lookup','type9','null','refs','subtables','single'].includes(corpus))throw new Error('Unknown GSUB_CORPUS');
 const prefix=`font-gsub-${corpus}`;
 const root=process.cwd(),work=path.join(root,`tmp/gsub-${corpus}-source`);
 const require=createRequire(path.resolve(process.env.SOURCE_PACKAGE_JSON??'source_repo/package.json'));
@@ -70,9 +70,9 @@ try{
      return o;
     });
     assert.deepEqual(normalize(actual.result.constructors),normalize(fixture.cases.map(c=>c.outcome),'outcome',false));
-    if(['type9','null','refs','subtables'].includes(corpus))assert.deepEqual(normalize(actual.result.loads,'loadOutcome'),normalize(fixture.cases.map(c=>c.loadOutcome),'loadOutcome',false));
+    if(['type9','null','refs','subtables','single'].includes(corpus))assert.deepEqual(normalize(actual.result.loads,'loadOutcome'),normalize(fixture.cases.map(c=>c.loadOutcome),'loadOutcome',false));
     assert.deepEqual(actual.result.addon,addon);
-    Object.assign(record,{status:'passed',constructors:fixture.cases.length,...(['type9','null','refs','subtables'].includes(corpus)?{loads:fixture.cases.length,loadErrors:[...new Set(actual.result.loads.filter(o=>o.status==='error').map(o=>o.name+': '+o.message))]}:{}),addonCases:addon.length,errorMessages:[...new Set(actual.result.constructors.filter(o=>o.status==='error').map(o=>o.name+': '+o.message))]});
+    Object.assign(record,{status:'passed',constructors:fixture.cases.length,...(['type9','null','refs','subtables','single'].includes(corpus)?{loads:fixture.cases.length,loadErrors:[...new Set(actual.result.loads.filter(o=>o.status==='error').map(o=>o.name+': '+o.message))]}:{}),addonCases:addon.length,errorMessages:[...new Set(actual.result.constructors.filter(o=>o.status==='error').map(o=>o.name+': '+o.message))]});
    }catch(error){record.status='failed';record.error=String(error.stack??error);throw error;}
    finally{if(browser)await browser.close();}
   }

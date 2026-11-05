@@ -62,6 +62,15 @@ fn expected_error(case: &Value) -> Option<FontError> {
     {
         return Some(FontError::GposLookupType(kind.parse().unwrap()));
     }
+    if let Some(rest) = message.strip_prefix("0x") {
+        if let Some((offset, "lookup type 1 format must be 1 or 2.")) = rest.split_once(": ") {
+            usize::from_str_radix(offset, 16).unwrap();
+            return Some(FontError::UnsupportedFormat(
+                "GSUB single substitution",
+                u16::try_from(case["format"].as_u64().unwrap()).unwrap(),
+            ));
+        }
+    }
     let error = match message {
         "GSUB Multiple Substitution Subtable identifier-format must be 1"
         | "GSUB Alternate Substitution Subtable identifier-format must be 1"

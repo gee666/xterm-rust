@@ -2,20 +2,25 @@
 use super::*;
 
 pub(super) fn single(table: Reader<'_>) -> Result<SingleSubstitution, FontError> {
-    let coverage = coverage(table.child16(2)?)?;
-    match table.u16(0)? {
-        1 => Ok(SingleSubstitution::Delta {
-            coverage,
-            delta: table.i16(4)?,
-        }),
-        2 => Ok(SingleSubstitution::Substitute {
-            coverage,
-            glyphs: glyphs(table, 6, usize::from(table.u16(4)?))?,
-        }),
-        format => Err(FontError::UnsupportedFormat(
+    let format = table.u16(0)?;
+    // Source rejects the format before even reading the coverage pointer.
+    if !matches!(format, 1 | 2) {
+        return Err(FontError::UnsupportedFormat(
             "GSUB single substitution",
             format,
-        )),
+        ));
+    }
+    let coverage = coverage(table.child16(2)?)?;
+    if format == 1 {
+        Ok(SingleSubstitution::Delta {
+            coverage,
+            delta: table.i16(4)?,
+        })
+    } else {
+        Ok(SingleSubstitution::Substitute {
+            coverage,
+            glyphs: glyphs(table, 6, usize::from(table.u16(4)?))?,
+        })
     }
 }
 

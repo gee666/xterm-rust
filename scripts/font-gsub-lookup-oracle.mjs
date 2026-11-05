@@ -9,7 +9,7 @@ import {spawnSync} from 'node:child_process';
 import {pathToFileURL} from 'node:url';
 import {buildHeaderFont,headerAddonCases} from '../crates/xterm-font-addons/tests/support/font_gsub_header_scenarios.mjs';
 const corpus=process.env.GSUB_CORPUS??'lookup';
-if(!['lookup','type9','null','refs','subtables'].includes(corpus))throw new Error('Unknown GSUB_CORPUS');
+if(!['lookup','type9','null','refs','subtables','single'].includes(corpus))throw new Error('Unknown GSUB_CORPUS');
 const prefix=`font-gsub-${corpus}`;
 const generate=process.argv.includes('--generate');
 if(process.argv.slice(2).some(arg=>arg!=='--generate'))throw new Error('Use --generate only');
@@ -35,6 +35,7 @@ function construct(change){
 const words=values=>{const d=Buffer.alloc(2*values.length);values.forEach((v,i)=>d.writeUInt16BE(v,i*2));return [...d];};
 const cases=[];
 if(corpus==='subtables')cases.push(...(await import('./font-gsub-subtables-recipes.mjs')).subtablesCases());
+else if(corpus==='single')cases.push(...(await import('./font-gsub-single-recipes.mjs')).singleCases());
 else if(corpus==='refs')cases.push(...(await import('./font-gsub-refs-recipes.mjs')).refsCases());
 else if(corpus==='null')cases.push(...(await import('./font-gsub-null-recipes.mjs')).nullCases());
 else if(corpus==='type9')cases.push(...(await import('./font-gsub-type9-recipes.mjs')).type9Cases());
