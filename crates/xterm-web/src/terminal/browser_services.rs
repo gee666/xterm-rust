@@ -7,7 +7,7 @@ use crate::{
     api::RenderDimensions,
     canvas_css::CanvasColorParser,
     char_size_browser::CharSizeService,
-    character_joiner::CharacterJoinerService,
+    character_joiner::raw::BrowserJoinerService,
     core_browser::CoreBrowserService,
     dom::BrowserDom,
     input::dom::InputBindings,
@@ -57,7 +57,7 @@ pub struct BrowserServices {
     pub decoration_renderer:
         RefCell<Option<Rc<crate::renderer::buffer_decoration::BufferDecorationRenderer>>>,
     pub theme: Rc<ThemeService>,
-    pub joiners: Rc<CharacterJoinerService>,
+    pub joiners: Rc<BrowserJoinerService>,
     pub events: Rc<BrowserEvents>,
     pub platform: Platform,
     pub custom_key: Rc<RefCell<Option<Function>>>,
@@ -108,9 +108,9 @@ impl BrowserServices {
             &theme_value,
             parser.utf16_theme_parser(),
         ));
-        let joiners = Rc::new(CharacterJoinerService::new(|error| {
-            web_sys::console::error_1(&error.to_string().into())
-        }));
+        let joiners = Rc::new(BrowserJoinerService::with_error_reporter(
+            crate::character_joiner::raw::report_error,
+        ));
         let browser: Rc<dyn BrowserService> = core_browser.clone();
         let render_service = RenderService::new(
             browser,

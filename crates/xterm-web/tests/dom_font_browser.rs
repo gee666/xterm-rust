@@ -12,7 +12,7 @@ use xterm_core::{
 };
 use xterm_web::{
     char_size_browser::CharSizeService,
-    character_joiner::CharacterJoinerService,
+    character_joiner::raw::BrowserJoinerService,
     dom::{BrowserDom, DomOptions},
     renderer::{dom::DomRenderer, width_cache::Font},
     theme::ThemeService,
@@ -124,8 +124,8 @@ fn fixture() -> Fixture {
         terminal,
         &dom,
         Rc::new(ThemeService::default()),
-        Rc::new(CharacterJoinerService::new(|error| {
-            panic!("unexpected joiner error: {error}")
+        Rc::new(BrowserJoinerService::new(|error| {
+            panic!("unexpected joiner error: {error:?}")
         })),
         decorations,
         metrics,

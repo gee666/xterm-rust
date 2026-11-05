@@ -115,7 +115,10 @@ impl DomRenderer {
                 continue;
             };
             // User joiners run before borrowing theme, width caches or row data.
-            let joins = self.joiners.get_joined_characters(Some(Rc::clone(&line)));
+            let joins = self
+                .joiners
+                .try_get_joined_characters(Some(Rc::clone(&line)))?
+                .render_ranges()?;
             let row_options = RowOptions {
                 row: absolute,
                 cursor_row: absolute == cursor_y && link.as_ref().is_none_or(|link| link.cols > 0),

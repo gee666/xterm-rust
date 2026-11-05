@@ -4,7 +4,7 @@ impl DomRenderer {
         terminal: Rc<Terminal>,
         dom: &BrowserDom,
         theme: Rc<ThemeService>,
-        joiners: Rc<CharacterJoinerService>,
+        joiners: Rc<BrowserJoinerService>,
     ) -> Result<Rc<Self>, JsValue> {
         let buffers = terminal
             .with_state(|state| Rc::clone(&state.buffers))
@@ -17,7 +17,7 @@ impl DomRenderer {
         terminal: Rc<Terminal>,
         dom: &BrowserDom,
         theme: Rc<ThemeService>,
-        joiners: Rc<CharacterJoinerService>,
+        joiners: Rc<BrowserJoinerService>,
         decoration: DecorationService,
     ) -> Result<Rc<Self>, JsValue> {
         Self::create(terminal, dom, theme, joiners, decoration, None, None)
@@ -26,7 +26,7 @@ impl DomRenderer {
         terminal: Rc<Terminal>,
         dom: &BrowserDom,
         theme: Rc<ThemeService>,
-        joiners: Rc<CharacterJoinerService>,
+        joiners: Rc<BrowserJoinerService>,
         decoration: DecorationService,
         metrics: Rc<CharSizeService>,
     ) -> Result<Rc<Self>, JsValue> {
@@ -44,7 +44,7 @@ impl DomRenderer {
         terminal: Rc<Terminal>,
         dom: &BrowserDom,
         theme: Rc<ThemeService>,
-        joiners: Rc<CharacterJoinerService>,
+        joiners: Rc<BrowserJoinerService>,
         decoration: DecorationService,
         metrics: Rc<CharSizeService>,
         browser: Rc<dyn BrowserService>,
@@ -63,7 +63,7 @@ impl DomRenderer {
         terminal: Rc<Terminal>,
         dom: &BrowserDom,
         theme: Rc<ThemeService>,
-        joiners: Rc<CharacterJoinerService>,
+        joiners: Rc<BrowserJoinerService>,
         decoration: DecorationService,
         metrics: Option<Rc<CharSizeService>>,
         browser: Option<Rc<dyn BrowserService>>,

@@ -17,7 +17,7 @@ use super::{
 };
 use crate::{
     api::RenderDimensions, char_size_browser::CharSizeService,
-    character_joiner::CharacterJoinerService, dom::BrowserDom, theme::ThemeService,
+    character_joiner::raw::BrowserJoinerService, dom::BrowserDom, theme::ThemeService,
 };
 use std::{
     cell::{Cell, OnceCell, RefCell},
@@ -59,7 +59,7 @@ pub struct DomRenderer {
     last_selection: Cell<Selection>,
     selection_model: Cell<super::selection_model::SelectionRenderModel>,
     theme: Rc<ThemeService>,
-    joiners: Rc<CharacterJoinerService>,
+    joiners: Rc<BrowserJoinerService>,
     decoration: DecorationService,
     metrics: Rc<CharSizeService>,
     widths: OnceCell<SourceCanvasCache>,
@@ -128,7 +128,7 @@ impl DomRenderer {
     pub fn char_size_service(&self) -> Rc<CharSizeService> {
         Rc::clone(&self.metrics)
     }
-    pub fn character_joiners(&self) -> Rc<CharacterJoinerService> {
+    pub fn character_joiners(&self) -> Rc<BrowserJoinerService> {
         Rc::clone(&self.joiners)
     }
     fn owner_class(&self) -> String {
