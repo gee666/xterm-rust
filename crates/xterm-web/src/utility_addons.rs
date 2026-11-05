@@ -6,6 +6,7 @@ pub mod clipboard;
 pub mod clipboard_bindings;
 pub mod fit;
 pub mod fit_bindings;
+mod javascript_provider;
 pub mod js_property;
 pub mod link_bindings;
 pub mod matcher;

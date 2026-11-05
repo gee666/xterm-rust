@@ -1,0 +1,270 @@
+[
+  {
+    "name": "hover mutates callback range",
+    "pointer": true,
+    "calls": [
+      [
+        "hover",
+        true,
+        "http://x.cohijklmno",
+        true
+      ]
+    ],
+    "errors": []
+  },
+  {
+    "name": "same cell ignores mutation",
+    "pointer": true,
+    "calls": [],
+    "errors": []
+  },
+  {
+    "name": "next cell leaves mutated range",
+    "pointer": false,
+    "calls": [
+      [
+        "leave",
+        false,
+        "http://x.cohijklmno"
+      ]
+    ],
+    "errors": []
+  },
+  {
+    "name": "cached mutated range reenters",
+    "pointer": true,
+    "calls": [
+      [
+        "hover",
+        true,
+        "http://x.cohijklmno",
+        true
+      ]
+    ],
+    "errors": []
+  },
+  {
+    "name": "mousedown equality reads live range and handler receiver",
+    "pointer": true,
+    "calls": [
+      [
+        "activate",
+        true,
+        "http://x.cohijklmno"
+      ]
+    ],
+    "errors": []
+  },
+  {
+    "name": "double click selects mutated range",
+    "selection": "hij"
+  },
+  {
+    "name": "double click mouseup",
+    "pointer": true,
+    "calls": [
+      [
+        "activate",
+        true,
+        "http://x.cohijklmno"
+      ]
+    ],
+    "errors": []
+  },
+  {
+    "name": "replacement endpoints stay live",
+    "pointer": true,
+    "calls": [],
+    "errors": []
+  },
+  {
+    "name": "same cell avoids proxy getters",
+    "reads": []
+  },
+  {
+    "name": "hit test reads proxy coordinates",
+    "reads": [
+      "start.y",
+      "start.x",
+      "end.y",
+      "end.x"
+    ]
+  },
+  {
+    "name": "range getter preserves thrown identity",
+    "pointer": true,
+    "calls": [],
+    "errors": [
+      "marker"
+    ]
+  },
+  {
+    "name": "cached leave remains original option value",
+    "pointer": false,
+    "calls": [
+      [
+        "leave",
+        true,
+        "http://x.cohijklmno"
+      ]
+    ],
+    "errors": []
+  },
+  {
+    "name": "replaced hover remains live with options receiver",
+    "pointer": true,
+    "calls": [
+      [
+        "new hover",
+        true,
+        true
+      ]
+    ],
+    "errors": []
+  },
+  {
+    "name": "hover getter read twice",
+    "reads": [
+      "hover",
+      "hover"
+    ]
+  },
+  {
+    "name": "replacement link range feeds hover",
+    "pointer": true,
+    "calls": [],
+    "errors": []
+  },
+  {
+    "name": "selection reads replacement link range",
+    "selection": "://"
+  },
+  {
+    "name": "replacement selection mouseup",
+    "pointer": true,
+    "calls": [
+      [
+        "activate",
+        false,
+        "http://x.cohijklmno"
+      ]
+    ],
+    "errors": []
+  },
+  {
+    "name": "disposed addon no longer provides links",
+    "pointer": false,
+    "calls": [
+      [
+        "leave",
+        true,
+        "http://x.cohijklmno"
+      ]
+    ],
+    "errors": []
+  },
+  {
+    "name": "default successful navigation",
+    "pointer": true,
+    "calls": [
+      [
+        "window.open"
+      ],
+      [
+        "navigation",
+        null,
+        "http://x.co"
+      ]
+    ],
+    "errors": []
+  },
+  {
+    "name": "default blocked window",
+    "pointer": true,
+    "calls": [
+      [
+        "window.open"
+      ],
+      [
+        "warning",
+        "Opening link blocked as opener could not be cleared"
+      ]
+    ],
+    "errors": []
+  },
+  {
+    "name": "default tolerates opener exception",
+    "pointer": true,
+    "calls": [
+      [
+        "window.open"
+      ],
+      [
+        "navigation",
+        "initial",
+        "http://x.co"
+      ]
+    ],
+    "errors": []
+  },
+  {
+    "name": "default location exception identity",
+    "pointer": true,
+    "calls": [
+      [
+        "window.open"
+      ]
+    ],
+    "errors": [
+      "marker"
+    ]
+  },
+  {
+    "name": "null activation",
+    "pointer": true,
+    "calls": [],
+    "errors": [
+      "TypeError"
+    ]
+  },
+  {
+    "name": "false activation",
+    "pointer": true,
+    "calls": [],
+    "errors": [
+      "TypeError"
+    ]
+  },
+  {
+    "name": "zero activation",
+    "pointer": true,
+    "calls": [],
+    "errors": [
+      "TypeError"
+    ]
+  },
+  {
+    "name": "empty string activation",
+    "pointer": true,
+    "calls": [],
+    "errors": [
+      "TypeError"
+    ]
+  },
+  {
+    "name": "object activation",
+    "pointer": true,
+    "calls": [],
+    "errors": [
+      "TypeError"
+    ]
+  },
+  {
+    "name": "handler exception identity",
+    "pointer": true,
+    "calls": [],
+    "errors": [
+      "marker"
+    ]
+  }
+]
