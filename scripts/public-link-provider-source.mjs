@@ -12,10 +12,12 @@ const reentry = process.argv.includes('--provider-reentry');
 const hoverEvent = process.argv.includes('--hover-event');
 const liveCols = process.argv.includes('--live-cols');
 const underlineGeometry = process.argv.includes('--underline-geometry');
-assert([osc, reentry, hoverEvent, liveCols, underlineGeometry].filter(Boolean).length <= 1, 'Choose one link trace');
-const name = underlineGeometry ? 'link-underline-geometry' : liveCols ? 'link-live-cols' : hoverEvent ? 'link-hover-event' : reentry ? 'link-provider-reentry' : osc ? 'osc-live-range' : 'public-link-provider';
+const mousePath = process.argv.includes('--mouse-path');
+assert([osc, reentry, hoverEvent, liveCols, underlineGeometry, mousePath].filter(Boolean).length <= 1, 'Choose one link trace');
+const name = mousePath ? 'link-mouse-path' : underlineGeometry ? 'link-underline-geometry' : liveCols ? 'link-live-cols' : hoverEvent ? 'link-hover-event' : reentry ? 'link-provider-reentry' : osc ? 'osc-live-range' : 'public-link-provider';
 const output = resolve(`results/${name}`);
 const fixture = resolve(`crates/xterm-web/tests/fixtures/${name}.json`);
+const caseProgram = mousePath ? await readFile('scripts/link-mouse-path-cases.js', 'utf8') : '';
 const program = await readFile(`scripts/${name}-trace.js`, 'utf8');
 const generate = process.argv.includes('--generate');
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -33,7 +35,7 @@ for (const file of ['lib/xterm.mjs', 'lib/xterm.mjs.map', 'src/browser/Linkifier
   }
 }
 await mkdir(output, { recursive: true });
-const report = { platform: process.platform, node: process.version, hashes, traceSha256: hash(program),
+const report = { platform: process.platform, node: process.version, hashes, traceSha256: hash(program), ...(mousePath ? { casesSha256: hash(caseProgram) } : {}),
   scope: `Directed ${name} trace, not full link equivalence.`, browsers: [] };
 const playwright = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE ?? resolve(reference, 'node_modules/playwright/index.mjs')));
 let expected = generate ? undefined : JSON.parse(await readFile(fixture, 'utf8'));
@@ -49,17 +51,17 @@ try {
         const page = await browser.newPage();
         page.on('pageerror', error => entry.errors.push(error.message));
         await page.goto(url);
-        entry.trace = await page.evaluate(async program => {
+        entry.trace = await page.evaluate(async ({ program, caseProgram }) => {
           const { Terminal } = await import('/xterm.mjs');
           const terminal = new Terminal({ cols: 20, rows: 4 });
           const deadline = AbortSignal.timeout(30000);
-          return await Promise.race([Function('terminal', program)(terminal), new Promise((_, reject) => {
+          return await Promise.race([Function('terminal', 'cases', program)(terminal, caseProgram ? Function(caseProgram)() : undefined), new Promise((_, reject) => {
             deadline.addEventListener('abort', () => reject(new Error('Public provider trace deadline')), { once: true });
           })]);
-        }, program);
+        }, { program, caseProgram });
         if (expected === undefined) expected = entry.trace;
         assert.deepEqual(entry.trace, expected);
-        assert.equal(entry.trace.length, underlineGeometry ? 24 : liveCols ? 10 : hoverEvent ? 7 : reentry ? 6 : osc ? 17 : 21);
+        assert.equal(entry.trace.length, mousePath ? 26 : underlineGeometry ? 24 : liveCols ? 10 : hoverEvent ? 7 : reentry ? 6 : osc ? 17 : 21);
         if (osc) {
           const phase = label => entry.trace.find(entry => entry.name === label);
           assert.equal(phase('same cell ignores mutation').pointer, true);

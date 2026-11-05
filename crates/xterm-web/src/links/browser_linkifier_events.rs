@@ -1,10 +1,37 @@
 // Copyright (c) 2019-2026 The xterm.js authors. All rights reserved. MIT license.
 use super::{BrowserLink, CachedBrowserLink, State};
-use crate::links::{Position, ProviderRequest};
-use js_sys::Set;
+use crate::links::{
+    browser_payload::{call, index_property, less, property},
+    Position, ProviderRequest,
+};
+use js_sys::{Array, Set};
 use std::rc::Rc;
 use wasm_bindgen::{JsCast, JsValue};
-use web_sys::{Element, Event, MouseEvent};
+use web_sys::{Event, MouseEvent};
+
+// A host may override composedPath, its returned slots, or classList. Keep
+// source property reads fallible and live rather than narrowing targets to DOM
+// Elements or snapshotting the path before callbacks can mutate it.
+fn is_hover_path(event: &MouseEvent) -> Result<bool, JsValue> {
+    let path = call(&property(event, "composedPath")?, event, &Array::new())?;
+    let mut index = 0.0;
+    while less(&index.into(), &property(&path, "length")?)? {
+        let target = index_property(&path, index)?;
+        let contains = |name: &str| -> Result<bool, JsValue> {
+            let list = property(&target, "classList")?;
+            let method = property(&list, "contains")?;
+            Ok(call(&method, &list, &Array::of1(&name.into()))?.is_truthy())
+        };
+        if contains("xterm")? {
+            break;
+        }
+        if contains("xterm-hover")? {
+            return Ok(true);
+        }
+        index += 1.0;
+    }
+    Ok(false)
+}
 
 impl State {
     pub(super) fn mouse_move(self: &Rc<Self>, event: MouseEvent) -> Result<(), JsValue> {
@@ -13,16 +40,8 @@ impl State {
             return Ok(());
         };
         self.mouse_out.set(false);
-        for target in event.composed_path().iter() {
-            let Some(element) = target.dyn_ref::<Element>() else {
-                continue;
-            };
-            if element.class_list().contains("xterm") {
-                break;
-            }
-            if element.class_list().contains("xterm-hover") {
-                return Ok(());
-            }
+        if is_hover_path(&event)? {
+            return Ok(());
         }
         if self.last_cell.get() == Some(position) {
             return Ok(());

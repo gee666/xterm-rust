@@ -13,6 +13,8 @@ use web_sys::MouseEvent;
 extern "C" {
     #[wasm_bindgen(catch, js_name = linkProperty)]
     pub(crate) fn property(value: &JsValue, key: &str) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch, js_name = linkProperty)]
+    pub(super) fn index_property(value: &JsValue, index: f64) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch, js_name = linkSet)]
     pub(super) fn set(value: &JsValue, key: &str, entry: &JsValue) -> Result<(), JsValue>;
     #[wasm_bindgen(catch, js_name = linkCall)]
@@ -32,7 +34,7 @@ extern "C" {
     #[wasm_bindgen(catch, js_name = linkLessEqual)]
     pub(super) fn less_equal(a: &JsValue, b: &JsValue) -> Result<bool, JsValue>;
     #[wasm_bindgen(catch, js_name = linkLess)]
-    fn less(a: &JsValue, b: &JsValue) -> Result<bool, JsValue>;
+    pub(super) fn less(a: &JsValue, b: &JsValue) -> Result<bool, JsValue>;
     #[wasm_bindgen(catch, js_name = linkIncrement)]
     fn increment(value: &JsValue) -> Result<JsValue, JsValue>;
 }
