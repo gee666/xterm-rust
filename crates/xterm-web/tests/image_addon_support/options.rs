@@ -65,10 +65,10 @@ async fn retained_option_view_tracks_controls_setters_and_reset() {
         js_sys::Reflect::set(&source, &"showPlaceholder".into(), &value.into()).unwrap();
         compare_options(&actual, &source);
     }
-    pair.addon.set_storage_limit(64.0).unwrap();
+    pair.addon.set_storage_limit(64.0.into()).unwrap();
     js_sys::Reflect::set(&source, &"storageLimit".into(), &64.into()).unwrap();
     compare_options(&actual, &source);
-    assert!(pair.addon.set_storage_limit(-1.0).is_err());
+    assert!(pair.addon.set_storage_limit((-1.0).into()).is_err());
     let failed = js_sys::Function::new_with_args(
         "addon",
         "try { addon.storageLimit=-1; return false; } catch(e) { return true; }",

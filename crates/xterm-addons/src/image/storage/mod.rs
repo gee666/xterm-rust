@@ -64,23 +64,12 @@ impl ImageStorage {
         renderer: Rc<dyn StorageRenderer>,
         options: ImageStorageOptions,
     ) -> Result<Self, StorageError> {
-        let service = terminal.buffer_service();
-        let storage = Self {
-            inner: Rc::new(Inner {
-                terminal,
-                renderer,
-                images: RefCell::new(Default::default()),
-                last_id: Cell::new(0),
-                lowest_id: Cell::new(0),
-                fully_cleared: Cell::new(false),
-                needs_full_clear: Cell::new(false),
-                pixel_limit: Cell::new(FALLBACK_PIXEL_LIMIT),
-                viewport_metrics: Cell::new((service.cols(), service.rows())),
-                show_placeholder: options.show_placeholder,
-                added: RefCell::new(None),
-                deleted: RefCell::new(None),
-            }),
-        };
+        let storage = Self::new_with_pixel_limit(
+            terminal,
+            renderer,
+            options.show_placeholder,
+            FALLBACK_PIXEL_LIMIT,
+        );
         match storage.set_limit(options.storage_limit) {
             Ok(()) => {}
             Err(StorageError::InvalidLimit) => {
@@ -96,6 +85,33 @@ impl ImageStorage {
             Err(error) => return Err(error),
         }
         Ok(storage)
+    }
+    /// Construct with an already converted pixel budget. Browser adapters use
+    /// this after JavaScript's repeated coercion and constructor diagnostics.
+    /// Unlike `new`, this accepts the complete unsigned pixel-budget range.
+    pub fn new_with_pixel_limit(
+        terminal: Rc<dyn StorageTerminal>,
+        renderer: Rc<dyn StorageRenderer>,
+        show_placeholder: Rc<Cell<bool>>,
+        pixel_limit: u32,
+    ) -> Self {
+        let service = terminal.buffer_service();
+        Self {
+            inner: Rc::new(Inner {
+                terminal,
+                renderer,
+                images: RefCell::new(Default::default()),
+                last_id: Cell::new(0),
+                lowest_id: Cell::new(0),
+                fully_cleared: Cell::new(false),
+                needs_full_clear: Cell::new(false),
+                pixel_limit: Cell::new(pixel_limit),
+                viewport_metrics: Cell::new((service.cols(), service.rows())),
+                show_placeholder,
+                added: RefCell::new(None),
+                deleted: RefCell::new(None),
+            }),
+        }
     }
     pub fn downgrade(&self) -> WeakImageStorage {
         WeakImageStorage {

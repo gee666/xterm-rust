@@ -11,7 +11,12 @@ impl ImageStorage {
         if !megabytes.is_nan() && !(0.5..=1000.0).contains(&megabytes) {
             return Err(StorageError::InvalidLimit);
         }
-        let pixels = to_u32(megabytes / 4.0 * 1_000_000.0);
+        self.set_pixel_limit(to_u32(megabytes / 4.0 * 1_000_000.0))
+    }
+    /// Commit an already converted budget before evicting images. JavaScript
+    /// adapters must validate and perform each raw coercion before calling this.
+    /// Eviction errors leave the new pixel budget committed, matching `set_limit`.
+    pub fn set_pixel_limit(&self, pixels: u32) -> Result<(), StorageError> {
         self.inner.pixel_limit.set(pixels);
         self.evict_oldest(0.0)?;
         Ok(())

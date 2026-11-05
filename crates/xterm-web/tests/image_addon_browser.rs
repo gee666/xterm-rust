@@ -11,6 +11,8 @@ mod inspection_activation;
 mod options;
 #[path = "image_addon_support/raw_placeholder.rs"]
 mod raw_placeholder;
+#[path = "image_addon_support/raw_storage_limit.rs"]
+mod raw_storage_limit;
 #[path = "image_addon_support/render_dimensions.rs"]
 mod render_dimensions;
 #[path = "image_addon_support/mod.rs"]
@@ -39,7 +41,7 @@ fn inactive_properties_and_constructor_copy_match_source() {
         .get_image_at_buffer_cell(0.0, 0.0)
         .unwrap()
         .is_undefined());
-    rust.set_storage_limit(64.0).unwrap();
+    rust.set_storage_limit(64.0.into()).unwrap();
     rust.set_show_placeholder(JsValue::FALSE).unwrap();
     assert_eq!(rust.storage_limit(), -1.0);
     assert_eq!(rust.show_placeholder(), JsValue::FALSE);
@@ -90,7 +92,7 @@ async fn graphics_queries_scrolling_limits_and_reset_match_source() {
     }
     assert_eq!(pair.addon.storage_usage().unwrap(), 0.0);
     for limit in [64.0, 0.0, 16.0] {
-        let rust = pair.addon.set_storage_limit(limit);
+        let rust = pair.addon.set_storage_limit(limit.into());
         let source = js_sys::Reflect::set(
             &get(&pair.source, "addon"),
             &"storageLimit".into(),

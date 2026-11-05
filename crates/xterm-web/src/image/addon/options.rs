@@ -24,6 +24,7 @@ pub(super) struct ConstructorOptions {
     pub current: ImageOptions,
     pub defaults: ImageOptions,
     pub placeholder: JsValue,
+    pub storage_limit: JsValue,
 }
 pub(super) fn read(options: &JsValue) -> Result<ConstructorOptions, JsValue> {
     // Keep source's two Object.assign passes contiguous. A failure in the
@@ -34,6 +35,7 @@ pub(super) fn read(options: &JsValue) -> Result<ConstructorOptions, JsValue> {
         placeholder: js::get(&current, "showPlaceholder")?,
         current: typed(&current)?,
         defaults: typed(&defaults)?,
+        storage_limit: js::get(&current, "storageLimit")?,
     })
 }
 fn typed(options: &JsValue) -> Result<ImageOptions, JsValue> {
@@ -46,7 +48,8 @@ fn typed(options: &JsValue) -> Result<ImageOptions, JsValue> {
         sixel_scrolling: boolean("sixelScrolling")?,
         sixel_palette_limit: numeric("sixelPaletteLimit")?,
         sixel_size_limit: numeric("sixelSizeLimit")?,
-        storage_limit: numeric("storageLimit")?,
+        // Storage owns delayed raw-value conversion, not this typed projection.
+        storage_limit: ImageOptions::default().storage_limit,
         show_placeholder: boolean("showPlaceholder")?,
         iip_support: boolean("iipSupport")?,
         iip_size_limit: numeric("iipSizeLimit")?,

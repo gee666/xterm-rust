@@ -11,6 +11,7 @@ mod kitty_inspection;
 mod option_inspection;
 mod options;
 mod protocols;
+mod storage_limit;
 use super::{
     BrowserIipProtocol, BrowserKittyProtocol, BrowserSixelProtocol, ImageRendererLifecycle,
 };
@@ -51,6 +52,7 @@ impl Protocol {
 struct State {
     options: Rc<Cell<ImageOptions>>,
     defaults: ImageOptions,
+    storage_limit: Rc<RefCell<JsValue>>,
     placeholder: Rc<Cell<bool>>,
     // Raw public value is authoritative; the bool above is its storage policy.
     placeholder_value: Rc<RefCell<JsValue>>,

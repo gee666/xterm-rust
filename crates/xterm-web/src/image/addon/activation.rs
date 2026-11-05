@@ -7,9 +7,7 @@ use crate::{
 };
 use std::rc::Rc;
 use wasm_bindgen::JsValue;
-use xterm_addons::image::storage::{
-    ImageStorage, ImageStorageOptions, StorageDiagnostic, TerminalStorageHost,
-};
+use xterm_addons::image::storage::{ImageStorage, StorageDiagnostic, TerminalStorageHost};
 impl State {
     pub(super) fn activate(self: &Rc<Self>, terminal: &Terminal) -> Result<(), JsValue> {
         *self.terminal.borrow_mut() = Rc::downgrade(&terminal.shared);
@@ -32,15 +30,14 @@ impl State {
             }),
         )
         .map_err(|e| to_js_error(&e))?;
-        let storage = ImageStorage::new(
+        let limit = self.storage_limit.borrow().clone();
+        let pixels = super::storage_limit::initial_pixels(&limit)?;
+        let storage = ImageStorage::new_with_pixel_limit(
             Rc::new(host),
             renderer.renderer(),
-            ImageStorageOptions {
-                storage_limit: self.options.get().storage_limit,
-                show_placeholder: Rc::clone(&self.placeholder),
-            },
-        )
-        .map_err(|e| to_js_error(&e))?;
+            Rc::clone(&self.placeholder),
+            pixels,
+        );
         *self.storage.borrow_mut() = Some(storage.clone());
         self.inspect_storage(storage.clone())?;
         let weak = Rc::downgrade(self);

@@ -36,12 +36,15 @@ impl ImageAddon {
             current,
             defaults,
             placeholder,
+            storage_limit,
         } = options::read(&options)?;
         let options = Rc::new(Cell::new(current));
         let placeholder_value = Rc::new(RefCell::new(placeholder));
+        let storage_limit = Rc::new(RefCell::new(storage_limit));
         let option_view = option_inspection::inspection(ImageOptionsReader::new(
             options.clone(),
             placeholder_value.clone(),
+            storage_limit.clone(),
         ))?;
         let added = Emitter::new();
         let event = callable(added.event(), empty);
@@ -51,6 +54,7 @@ impl ImageAddon {
             state: Rc::new(State {
                 options,
                 defaults,
+                storage_limit,
                 placeholder: Rc::new(Cell::new(current.show_placeholder)),
                 placeholder_value,
                 terminal: RefCell::new(Weak::new()),
@@ -86,8 +90,8 @@ impl ImageAddon {
     pub fn handler_inspection(&self) -> JsValue {
         self.handlers.clone()
     }
-    /// Live read-only options. Placeholder values retain their JavaScript
-    /// identity; other fields remain typed projections, not a writable record.
+    /// Live read-only options. Placeholder and storage-limit values retain their
+    /// JavaScript identity; other fields remain typed projections.
     #[wasm_bindgen(getter, js_name = _opts)]
     pub fn option_inspection(&self) -> JsValue {
         self.options.clone()
@@ -108,18 +112,16 @@ impl ImageAddon {
         })
     }
     #[wasm_bindgen(setter, js_name = storageLimit)]
-    pub fn set_storage_limit(&self, limit: f64) -> Result<(), JsValue> {
+    pub fn set_storage_limit(&self, limit: JsValue) -> Result<(), JsValue> {
         if let Some(storage) = self.state.storage() {
-            storage.set_limit(limit).map_err(|error| match error {
-                xterm_addons::image::storage::StorageError::InvalidLimit => {
-                    js_sys::RangeError::new(&error.to_string()).into()
-                }
-                _ => to_js_error(&error),
-            })?;
+            let pixels = super::storage_limit::pixels(&limit)?;
+            storage
+                .set_pixel_limit(pixels)
+                .map_err(|error| to_js_error(&error))?;
         }
-        let mut options = self.state.options.get();
-        options.storage_limit = limit;
-        self.state.options.set(options);
+        // Source commits the raw argument only after conversion and eviction.
+        // Do not retain a borrow across valueOf, disposal or marker callbacks.
+        *self.state.storage_limit.borrow_mut() = limit;
         Ok(())
     }
     #[wasm_bindgen(getter, js_name = storageUsage)]

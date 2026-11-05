@@ -1,6 +1,6 @@
 // Copyright (c) 2020 The xterm.js authors. All rights reserved. MIT license.
-//! Read-only diagnostics, not a writable JS option bag. Placeholder inspection
-//! reads the same raw value as the public property; other options remain typed.
+//! Read-only diagnostics, not a writable JS option bag. Placeholder and storage
+//! limit inspection retain their raw public values; other options remain typed.
 use std::{
     cell::{Cell, RefCell},
     rc::Rc,
@@ -18,12 +18,18 @@ extern "C" {
 pub struct ImageOptionsReader {
     options: Rc<Cell<ImageOptions>>,
     placeholder: Rc<RefCell<JsValue>>,
+    storage_limit: Rc<RefCell<JsValue>>,
 }
 impl ImageOptionsReader {
-    pub(super) fn new(options: Rc<Cell<ImageOptions>>, placeholder: Rc<RefCell<JsValue>>) -> Self {
+    pub(super) fn new(
+        options: Rc<Cell<ImageOptions>>,
+        placeholder: Rc<RefCell<JsValue>>,
+        storage_limit: Rc<RefCell<JsValue>>,
+    ) -> Self {
         Self {
             options,
             placeholder,
+            storage_limit,
         }
     }
 }
@@ -38,7 +44,7 @@ impl ImageOptionsReader {
             "sixelScrolling" => options.sixel_scrolling.into(),
             "sixelPaletteLimit" => options.sixel_palette_limit.into(),
             "sixelSizeLimit" => options.sixel_size_limit.into(),
-            "storageLimit" => options.storage_limit.into(),
+            "storageLimit" => self.storage_limit.borrow().clone(),
             "showPlaceholder" => self.placeholder.borrow().clone(),
             "iipSupport" => options.iip_support.into(),
             "iipSizeLimit" => options.iip_size_limit.into(),
