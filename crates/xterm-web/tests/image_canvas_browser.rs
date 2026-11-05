@@ -4,6 +4,8 @@ mod image_canvas_failures;
 mod image_canvas_support;
 #[path = "image_canvas_support/iip.rs"]
 mod image_iip;
+#[path = "image_canvas_support/iip_release.rs"]
+mod image_iip_release;
 use image_canvas_support::*;
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_test::*;

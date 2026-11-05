@@ -1,0 +1,33 @@
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\Galen16\crates\xterm-addons)
+    Finished `test` profile [unoptimized] target(s) in 2.50s
+     Running tests\iip_payload.rs (target\debug\deps\iip_payload-f9bbefda8e9f8383.exe)
+
+running 2 tests
+test display_request_retains_payload_until_successful_host_preparation ... FAILED
+test outer_host_completion_releases_live_nested_payload_not_an_old_snapshot ... FAILED
+
+failures:
+
+---- display_request_retains_payload_until_successful_host_preparation stdout ----
+
+thread 'display_request_retains_payload_until_successful_host_preparation' panicked at crates\xterm-addons\tests\iip_payload.rs:34:5:
+assertion `left == right` failed
+  left: 0
+ right: 44
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- outer_host_completion_releases_live_nested_payload_not_an_old_snapshot stdout ----
+
+thread 'outer_host_completion_releases_live_nested_payload_not_an_old_snapshot' panicked at crates\xterm-addons\tests\iip_payload.rs:47:5:
+assertion `left == right` failed
+  left: 0
+ right: 44
+
+
+failures:
+    display_request_retains_payload_until_successful_host_preparation
+    outer_host_completion_releases_live_nested_payload_not_an_old_snapshot
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-addons --test iip_payload`

@@ -158,6 +158,14 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
             _ => return Err("unknown IIP replay operation".into()),
         }
+        // This recording host models successful Blob construction, not pixels.
+        // Release only after the display request reaches that host boundary.
+        if effects
+            .iter()
+            .any(|effect| matches!(effect, IipEffect::Display(_)))
+        {
+            handler.release_payload();
+        }
         let parser = handler.header_parser();
         println!(
             "{}",

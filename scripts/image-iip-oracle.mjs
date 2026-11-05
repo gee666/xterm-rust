@@ -6,8 +6,10 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {createRequire} from 'node:module';
 import {spawnSync} from 'node:child_process';
-const require=createRequire(import.meta.url),ts=require('../source_repo/node_modules/typescript');
-const root=path.resolve(import.meta.dirname,'..'),sourceRoot=path.join(root,'source_repo/addons/addon-image/src'),output=path.join(root,'results/image-iip');
+const root=path.resolve(import.meta.dirname,'..');
+const dependencies=path.resolve(process.env.REFERENCE_NODE_MODULES??path.join(root,'source_repo/node_modules'));
+const require=createRequire(path.join(dependencies,'../package.json')),ts=require('typescript');
+const sourceRoot=path.join(root,'source_repo/addons/addon-image/src'),output=path.join(root,'results/image-iip');
 fs.mkdirSync(output,{recursive:true});
 const sourceHashes={};const digest=value=>createHash('sha256').update(value).digest('hex');
 let effects=[],lastMetrics,error=null;
@@ -27,8 +29,8 @@ const trackedMetrics={...metrics,imageType(data){lastMetrics=metrics.imageType(d
 const storeSource=fs.readFileSync(path.join(sourceRoot,'ImageStorage.ts'),'utf8');sourceHashes['ImageStorage.ts']=digest(storeSource);
 const literal=storeSource.match(/export const CELL_SIZE_DEFAULT[^=]*=\s*(\{[^}]*\})/)[1];
 const cellSize=vm.runInNewContext(`(${literal})`);
-const decoderModule=require('../source_repo/node_modules/xterm-wasm-parts/lib/base64/Base64Decoder.wasm.js');
-const qoiModule=require('../source_repo/node_modules/xterm-wasm-parts/lib/qoi/QoiDecoder.wasm.js');
+const decoderModule=require('xterm-wasm-parts/lib/base64/Base64Decoder.wasm.js');
+const qoiModule=require('xterm-wasm-parts/lib/qoi/QoiDecoder.wasm.js');
 const {IIPHandler}=load('IIPHandler.ts',{'./ImageRenderer':{ImageRenderer:{createCanvas(){throw Error('QOI canvas is outside this recording protocol harness');}}},'./ImageStorage':{CELL_SIZE_DEFAULT:cellSize},'./IIPHeaderParser':headers,'./IIPMetrics':trackedMetrics,'xterm-wasm-parts/lib/base64/Base64Decoder.wasm':decoderModule,'xterm-wasm-parts/lib/qoi/QoiDecoder.wasm':qoiModule});
 const units=text=>Array.from({length:text.length},(_,i)=>text.charCodeAt(i));
 const bits=value=>{if(Number.isNaN(value))return'NaN';const data=Buffer.alloc(8);data.writeDoubleBE(value);return data.toString('hex');};
@@ -102,7 +104,7 @@ for(let i=0;i<3000;i++){const buffer=Buffer.alloc(8);buffer.writeUInt32LE(random
 const replay=operations.map(op=>JSON.stringify(op)).join('\n')+'\n';fs.writeFileSync(path.join(output,'operations.ndjson'),replay);
 const implementationPaths=['crates/xterm-addons/src/image/iip/handler.rs','crates/xterm-addons/src/image/iip/geometry.rs','crates/xterm-addons/src/image/iip/reports.rs','crates/xterm-addons/src/image/numeric.rs','crates/xterm-addons/src/image/iip/types.rs','crates/xterm-addons/src/image/base64.rs','crates/xterm-addons/examples/image_iip_trace.rs','scripts/image-iip-oracle.mjs'];
 const implementation=implementationPaths.map(file=>({path:file,sha256:digest(fs.readFileSync(path.join(root,file)))}));
-const dependencyHashes=['base64/Base64Decoder.wasm.js','qoi/QoiDecoder.wasm.js'].map(file=>({path:`source_repo/node_modules/xterm-wasm-parts/lib/${file}`,sha256:digest(fs.readFileSync(path.join(root,'source_repo/node_modules/xterm-wasm-parts/lib',file)))}));
+const dependencyHashes=['base64/Base64Decoder.wasm.js','qoi/QoiDecoder.wasm.js'].map(file=>({path:`source_repo/node_modules/xterm-wasm-parts/lib/${file}`,sha256:digest(fs.readFileSync(path.join(dependencies,'xterm-wasm-parts/lib',file)))}));
 if(process.argv.includes('--reference-only')){
  const summary={status:'reference-only; Rust NOT RUN',scope:'Recording host policy probes, not pixels or integration',seed,referenceOperations:expected.length,sourceHashes,dependencyHashes,operationsSha256:digest(replay)};
  fs.writeFileSync(path.join(output,'reference-only.json'),JSON.stringify(summary,null,2)+'\n');console.log(JSON.stringify(summary,null,2));process.exit(0);

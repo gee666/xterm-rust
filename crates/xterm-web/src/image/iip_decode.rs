@@ -11,7 +11,10 @@ use std::cell::RefCell;
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_futures::JsFuture;
 use xterm_addons::image::{
-    iip::types::{DisplayRequest, DECODER_KEEP_BYTES},
+    iip::{
+        handler::IipHandler,
+        types::{DisplayRequest, DECODER_KEEP_BYTES},
+    },
     metrics::ImageType,
     qoi::{QoiDecoder, QoiError},
     storage::ImageResource,
@@ -96,7 +99,28 @@ impl IipImageDecoder {
     /// Prepare synchronously so QOI/ImageData/Blob and createImageBitmap call
     /// failures are not mistaken for rejected bitmap promises. The protocol
     /// handler already validates metrics and target dimensions before this call.
+    /// This standalone operation owns no protocol state. A live IIP coordinator
+    /// must use `prepare_transfer` to preserve BASE64 release and failure timing.
     pub fn prepare(&self, request: &DisplayRequest) -> Result<IipDecodedImage, JsValue> {
+        self.prepare_image(request, None)
+    }
+
+    /// Prepare a real protocol transfer. No handler borrow crosses a browser
+    /// call. Source releases the live BASE64 decoder only after ImageData/QOI
+    /// preparation or Blob construction succeeds, including on nested transfer.
+    pub fn prepare_transfer(
+        &self,
+        request: &DisplayRequest,
+        handler: &RefCell<IipHandler>,
+    ) -> Result<IipDecodedImage, JsValue> {
+        self.prepare_image(request, Some(handler))
+    }
+
+    fn prepare_image(
+        &self,
+        request: &DisplayRequest,
+        handler: Option<&RefCell<IipHandler>>,
+    ) -> Result<IipDecodedImage, JsValue> {
         let image = if request.source.mime == ImageType::Qoi {
             let previous = self.memory.snapshot()?;
             let snapshot = self
@@ -118,6 +142,7 @@ impl IipImageDecoder {
             if request.target.width == f64::from(width)
                 && request.target.height == f64::from(height)
             {
+                release_payload(handler);
                 let canvas = create_canvas(&JsValue::UNDEFINED, width.into(), height.into())?;
                 if let Some(context) = context(&canvas, None)? {
                     call(&context, "putImageData", &[image, 0.into(), 0.into()])?;
@@ -134,6 +159,7 @@ impl IipImageDecoder {
             set(&options, "type", &request.source.mime.mime().into())?;
             construct("Blob", &[parts.into(), options.into()])?
         };
+        release_payload(handler);
         let options = js_sys::Object::new();
         set(&options, "resizeWidth", &request.target.width.into())?;
         set(&options, "resizeHeight", &request.target.height.into())?;
@@ -145,6 +171,12 @@ impl IipImageDecoder {
         .dyn_into::<Promise>()
         .map_err(|_| js_sys::TypeError::new("createImageBitmap did not return a Promise"))?;
         Ok(IipDecodedImage::Pending(PendingImageBitmap(promise)))
+    }
+}
+
+fn release_payload(handler: Option<&RefCell<IipHandler>>) {
+    if let Some(handler) = handler {
+        handler.borrow_mut().release_payload();
     }
 }
 

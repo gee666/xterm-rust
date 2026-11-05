@@ -46,6 +46,8 @@ fn file_metadata_request_defers_real_decode_and_size_metadata_is_informative() {
         assert_eq!((request.source.width, request.source.height), (2, 1));
         assert_eq!((request.target.width, request.target.height), (7.0, 3.0));
         assert_eq!(request.bytes.len(), 32);
+        assert_eq!(handler.loaded_bytes(), PNG.len());
+        handler.release_payload();
         assert_eq!(handler.loaded_bytes(), 0);
     }
 }

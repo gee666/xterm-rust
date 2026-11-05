@@ -24,7 +24,9 @@ impl Default for IipOptions {
 }
 
 /// The host must actually decode and insert the image before completing this
-/// request. Owned bytes survive decoder release and any later terminal writes.
+/// request. Owned bytes survive later terminal writes. The handler retains its
+/// payload until the host explicitly calls `IipHandler::release_payload` after
+/// successful ImageData/QOI preparation or Blob construction.
 #[derive(Clone, Debug, PartialEq)]
 pub struct DisplayRequest {
     pub bytes: Vec<u8>,

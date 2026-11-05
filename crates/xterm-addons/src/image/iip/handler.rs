@@ -74,6 +74,13 @@ impl IipHandler {
     pub fn loaded_bytes(&self) -> usize {
         self.decoder.loaded_bytes()
     }
+    /// Call after successful ImageData/QOI preparation or Blob construction,
+    /// before creating the canvas or calling createImageBitmap. Synchronous
+    /// failures before that boundary retain payload state, as upstream does.
+    /// Release the live decoder even if a host callback started another transfer.
+    pub fn release_payload(&mut self) {
+        self.decoder.release();
+    }
 
     pub fn put(&mut self, data: &[u32], start: usize, end: usize) -> Result<(), IipError> {
         if start > end || end > data.len() {
@@ -235,7 +242,6 @@ impl IipHandler {
         let mut bytes = Vec::new();
         bytes.try_reserve_exact(self.decoder.data().len())?;
         bytes.extend_from_slice(self.decoder.data());
-        self.decoder.release();
         Ok(vec![IipEffect::Display(DisplayRequest {
             bytes,
             source: metrics,
