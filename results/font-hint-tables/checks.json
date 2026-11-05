@@ -1,5 +1,5 @@
 {
-  "status": "buffered native passed, final browser matrix pending",
+  "status": "scoped native and three-engine source/Rust passed; independent final review pending",
   "finiteCases": 792,
   "accepted": 377,
   "rejected": 415,
@@ -23,5 +23,100 @@
   ],
   "sourceSafetyCase": "Separate nontermination observation and Rust Compression guard, not equivalence",
   "previousWorkspace": "2078 tests cover earlier decoder revision, not current buffered syntax walker",
-  "equivalence": "NOT PROVEN"
+  "equivalence": "NOT PROVEN",
+  "source": "26277170",
+  "sourceBrowsers": {
+    "node": "v24.15.0",
+    "status": "passed",
+    "fixtureSha256": "48c7244e605c2d3ddb72d911c2bb1e538948c765d555d4e051a0422f7cd68567",
+    "sourceSha256": "737212d8aae53d1996ef10b315e4369a1542ebb9b94c13c5f99793914745d484",
+    "scope": "Unchanged source browser baseline only, not Rust execution",
+    "browsers": [
+      {
+        "name": "chromium",
+        "status": "passed",
+        "version": "148.0.7778.96",
+        "constructors": 792,
+        "addonCases": 792
+      },
+      {
+        "name": "firefox",
+        "status": "passed",
+        "version": "150.0.2",
+        "constructors": 792,
+        "addonCases": 792
+      },
+      {
+        "name": "webkit",
+        "status": "passed",
+        "version": "26.4",
+        "constructors": 792,
+        "addonCases": 792
+      }
+    ],
+    "bundleSha256": "8abe084d29ef384e746ca7b954990b4c6baa3542a39c6894ec84fec687456b56"
+  },
+  "rustBrowsers": [
+    {
+      "name": "chromium",
+      "version": "148.0.7778.96",
+      "status": "passed",
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "errors": []
+    },
+    {
+      "name": "firefox",
+      "version": "150.0.2",
+      "status": "passed",
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "errors": []
+    },
+    {
+      "name": "webkit",
+      "version": "26.4",
+      "status": "passed",
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "errors": []
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/5c3cf332923ba33ed97dbcd2d771fabe850f7124e56905b4e7ce2292f41071e3/artifact.wasm",
+      "sha256": "5c3cf332923ba33ed97dbcd2d771fabe850f7124e56905b4e7ce2292f41071e3",
+      "bytes": 6855761,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\G420\\target\\wasm32-unknown-unknown\\debug\\deps\\font_hint_tables_browser-94d134e050d99d6b.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\G420\\results\\browser-host\\xterm-font-addons__font_hint_tables_browser\\2026-11-05T18-43-21-843Z-90bbfd89-79aa-4e83-bffb-6c452ed795b8\\artifacts\\suite_bg.wasm",
+      "bytes": 5852707,
+      "sha256": "18eda3e8cb18251792a24bcf3d00f3be0c6cb4ed94bb0ea910d8b320df1d85d7"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\G420\\results\\browser-host\\xterm-font-addons__font_hint_tables_browser\\2026-11-05T18-43-21-843Z-90bbfd89-79aa-4e83-bffb-6c452ed795b8\\artifacts\\suite.js",
+      "bytes": 74866,
+      "sha256": "e177cbff048074211d387201a73f1625af01c9e5b8528bcf8bb45faa1c73f805"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "a8a0a17754769a53c52b4239108d5ebf481b3d1bebe67f93635c8e304c4e20b0"
+  }
 }

@@ -20,11 +20,13 @@ This is separate from the existing strict loader for tables whose data is used. 
 
 ## Inputs and checks
 
-`crates/xterm-addons/tests/fixtures/font-hint-tables.json` is an intentionally single-line generated fixture. It retains 792 finite constructor outcomes, input hashes and 792 asynchronous addon records, with377 accepted and415 rejected. Cases cover SFNT/raw WOFF bounds, odd lengths, empty lists, invalid offsets, duplicates, eager head-error precedence, later-byte reads, malformed compressed input, ignored wrapper bytes, short output, overflow, stored-header truncation, NaN inverse headers, mixed stored/fixed prefixes, invalid history, reserved symbols and loading-cache behavior. Dynamic Huffman inputs use seed `0x420d3f1a`. A separate multi-stored-block input tests block transitions.
+`crates/xterm-addons/tests/fixtures/font-hint-tables.json` is an intentionally single-line generated fixture. It retains 792 finite constructor outcomes, input hashes and 792 asynchronous addon records, with 377 accepted and 415 rejected. Cases cover SFNT/raw WOFF bounds, odd lengths, empty lists, invalid offsets, duplicates, eager head-error precedence, later-byte reads, malformed compressed input, ignored wrapper bytes, short output, overflow, stored-header truncation, NaN inverse headers, mixed stored/fixed prefixes, invalid history, reserved symbols and loading-cache behavior. Dynamic Huffman inputs use seed `0x420d3f1a`. A separate multi-stored-block input tests block transitions.
 
 JavaScript and Rust reconstruct inputs independently, and the WASM test compares every reconstructed byte. The Node oracle uses the existing in-memory TypeScript loader, with directory-index resolution for the unchanged addon's `import '.'`. Production source and original assertions are not rewritten. Browser baseline bundling also uses unchanged source. The Rust browser binary invokes the actual LigaturesAddon with a recorded terminal boundary, not a full interactive Terminal rendering test.
 
-The final source Node corpus passes. Native792 plus the separate safety guard pass; all-target/all-feature addon tests pass174 tests across32 summaries, and scoped native/WASM warning-denied Clippy and both web/font dependent WASM library checks pass. Final792-case browser matrices are pending. Earlier528/594-case matrices and2078-test workspace receipts belong to earlier decoder revisions, not the final buffered syntax helper.
+The final Node source corpus and unchanged source browser baseline pass all 792 constructors and 792 addon records in Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4. The actual Rust binary passes two test functions per engine, replaying all 792 constructors and addon records, comparing independent input builders byte-for-byte and checking the separate safety guard. No retries or skipped tests were used.
+
+Native792 plus the separate guard pass. All-target/all-feature addon tests pass 174 tests across32 summaries. Scoped native/WASM warning-denied Clippy and both web/font dependent WASM library checks pass. Earlier528/594-case browser matrices and2078-test workspace receipts belong to earlier decoder revisions, not the final buffered syntax helper. The final broader workspace and native OS matrices remain open.
 
 Raw evidence is under `results/font-hint-tables/`. Initial receipts cover the528-case corpus and2072-test checkpoint. `union-` receipts and `pre-review/` cover the first rebased528-case version. `repair-` receipts cover the594-case padding version. `syntax-` receipts cover the696-case canonical reader, while `buffered-` receipts cover the current792-case source-buffered walker. Browser reports retain compiled artifact hashes; disposable local binaries are not distribution artifacts and are removed during owned cleanup. Compilation is not counted as a browser pass.
 
@@ -50,7 +52,7 @@ cargo test --locked -j2 -p xterm-addons --all-targets --all-features
 cargo fmt --all -- --check
 ```
 
-The aggregate fmt command has failed with Windows OS206, while individual checks for all five workspace packages pass. These are scoped Windows results, not final stable-union or native Linux/macOS evidence. Both original and copied reference manifests matched all776 hashes before the syntax repair and are rechecked before cleanup.
+The aggregate fmt command fails with Windows OS206, while individual checks for all five workspace packages pass. These are scoped Windows results, not final stable-union or native Linux/macOS evidence. Both original and copied reference manifests match all 776 hashes after the final matrices and are rechecked after cleanup.
 
 `--generate` deliberately regenerates the Node source fixture. It is not used to conceal a Rust failure. Browser baseline execution closes its browser/server and removes the owned source bundle in finally blocks. Temporary artifacts remain owned under `O:/xterm-rust-swarm-16/tmp/G420` until review/integration pickup and verified cleanup.
 
