@@ -25,11 +25,15 @@ pub struct Row {
 #[derive(Clone, Debug)]
 pub enum AccessibilityEvent {
     Resize(usize),
-    Render { start: f64, end: f64 },
+    Render {
+        start: f64,
+        end: f64,
+    },
     Scroll,
     Character(Vec<u16>),
     LineFeed,
-    Tab(usize),
+    /// Signed HT distance. Nonpositive values announce no spaces, as in source.
+    Tab(i64),
     Key(Vec<u16>),
     Blur,
     Dimensions,

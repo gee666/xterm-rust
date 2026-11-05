@@ -119,13 +119,42 @@ pub(super) fn index_state(
     state.restrict_csi_cursor(max_col)
 }
 
+// The raw option getter runs after advancing the cursor. It can replace the
+// buffer or move the cursor, so the a11y payload uses the live column afterward.
+pub(super) fn tab_state(shared: &Rc<RefCell<TerminalState>>) -> Result<(), TerminalError> {
+    let (options, original) = {
+        let state = shared.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+        let active = state.active_buffer();
+        let mut buffer = active
+            .try_borrow_mut()
+            .map_err(|_| TerminalError::Borrowed)?;
+        if buffer.x >= state.cols() {
+            return Ok(());
+        }
+        let original = buffer.x;
+        buffer.x = buffer.next_stop(None);
+        (Rc::clone(&state.options), original)
+    };
+    if options.get("screenReaderMode")?.is_truthy() {
+        let state = shared.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+        let active = state.active_buffer();
+        let current = active.try_borrow().map_err(|_| TerminalError::Borrowed)?.x;
+        let distance = i64::try_from(current).map_err(|_| TerminalError::InvalidDimensions)?
+            - i64::try_from(original).map_err(|_| TerminalError::InvalidDimensions)?;
+        state
+            .events
+            .borrow_mut()
+            .push(TerminalEvent::AccessibilityTab(distance));
+    }
+    super::dispatch_events(shared)
+}
+
 impl TerminalState {
     pub(crate) fn execute(&mut self, code: u32) -> Result<(), TerminalError> {
         match code {
             0x07 => self.events.borrow_mut().push(TerminalEvent::Bell),
             0x0d => self.active_buffer().borrow_mut().x = 0,
             0x08 => self.backspace()?,
-            0x09 => self.tab()?,
             0x0e => self.charset.set_g_level(1),
             0x0f => self.charset.set_g_level(0),
             0x88 => {
@@ -135,24 +164,6 @@ impl TerminalState {
                 b.tabs.insert(x);
             }
             _ => {}
-        }
-        Ok(())
-    }
-    fn tab(&mut self) -> Result<(), TerminalError> {
-        let active = self.active_buffer();
-        let distance = {
-            let mut b = active.borrow_mut();
-            if b.x >= self.cols() {
-                return Ok(());
-            }
-            let original = b.x;
-            b.x = b.next_stop(None);
-            b.x - original
-        };
-        if self.option_bool("screenReaderMode")? {
-            self.events
-                .borrow_mut()
-                .push(TerminalEvent::AccessibilityTab(distance));
         }
         Ok(())
     }

@@ -12,6 +12,10 @@ fn echo_tab_linefeed_and_blur_preserve_pending_output() {
     f.host.emit(Event::Character(units("out"))).unwrap();
     f.host.emit(Event::Key(units("x"))).unwrap();
     f.host.emit(Event::Character(units("x"))).unwrap();
+    // Getter reentry can produce a signed HT distance. Source's loop emits
+    // no spaces for nonpositive counts and must leave pending output intact.
+    f.host.emit(Event::Tab(-2)).unwrap();
+    f.host.emit(Event::Tab(0)).unwrap();
     f.host.emit(Event::Tab(2)).unwrap();
     f.host.emit(Event::LineFeed).unwrap();
     assert!(text(&f.live()).is_empty());

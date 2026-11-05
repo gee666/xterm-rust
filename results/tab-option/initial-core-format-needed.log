@@ -1,0 +1,75 @@
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\worktrees\MauiHt\crates\xterm-core\src\terminal\controls.rs:125:
+     let (options, original) = {
+         let state = shared.try_borrow().map_err(|_| TerminalError::Borrowed)?;
+         let active = state.active_buffer();
+[31m-        let mut buffer = active.try_borrow_mut().map_err(|_| TerminalError::Borrowed)?;
+[0m[32m+        let mut buffer = active
+[0m[32m+            .try_borrow_mut()
+[0m[32m+            .map_err(|_| TerminalError::Borrowed)?;
+[0m         if buffer.x >= state.cols() {
+             return Ok(());
+         }
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\worktrees\MauiHt\crates\xterm-core\src\terminal\controls.rs:139:
+         let current = active.try_borrow().map_err(|_| TerminalError::Borrowed)?.x;
+         let distance = i64::try_from(current).map_err(|_| TerminalError::InvalidDimensions)?
+             - i64::try_from(original).map_err(|_| TerminalError::InvalidDimensions)?;
+[31m-        state.events.borrow_mut().push(TerminalEvent::AccessibilityTab(distance));
+[0m[32m+        state
+[0m[32m+            .events
+[0m[32m+            .borrow_mut()
+[0m[32m+            .push(TerminalEvent::AccessibilityTab(distance));
+[0m     }
+     super::dispatch_events(shared)
+ }
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\worktrees\MauiHt\crates\xterm-core\tests\tab_option.rs:157:
+             }
+             if matches!(event, TerminalEvent::AccessibilityTab(_)) {
+                 let shared = event_state.upgrade().unwrap();
+[31m-                callback_records.borrow_mut().push(projection::snapshot_state(&shared.borrow()));
+[0m[32m+                callback_records
+[0m[32m+                    .borrow_mut()
+[0m[32m+                    .push(projection::snapshot_state(&shared.borrow()));
+[0m                 if action == "event-cursor" {
+                     let active = shared.borrow().active_buffer();
+                     let mut buffer = active.borrow_mut();
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\worktrees\MauiHt\crates\xterm-core\tests\tab_option.rs:174:
+         assert_eq!(projection::hex(&units), "9");
+         let result = terminal.write(&String::from_utf16(&units).unwrap());
+         let throws = column < 12
+[31m-            && (fields[3] == "error" || fields[3] == "mutate-error"
+[0m[32m+            && (fields[3] == "error"
+[0m[32m+                || fields[3] == "mutate-error"
+[0m                 || (enabled && fields[3] == "event-error"));
+         let valid_result = match &result {
+             Ok(_) => !throws,
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\worktrees\MauiHt\crates\xterm-core\tests\tab_option.rs:194:
+             mismatches.push("final state".into());
+         }
+         if events.borrow().join("/") != fields[7] {
+[31m-            mismatches.push(format!("events actual={:?} expected={:?}", events.borrow().join("/"), fields[7]));
+[0m[32m+            mismatches.push(format!(
+[0m[32m+                "events actual={:?} expected={:?}",
+[0m[32m+                events.borrow().join("/"),
+[0m[32m+                fields[7]
+[0m[32m+            ));
+[0m         }
+         if !mismatches.is_empty() {
+[31m-            failures.push(format!("case {index} {}: {}", fields[..4].join(" "), mismatches.join(", ")));
+[0m[32m+            failures.push(format!(
+[0m[32m+                "case {index} {}: {}",
+[0m[32m+                fields[..4].join(" "),
+[0m[32m+                mismatches.join(", ")
+[0m[32m+            ));
+[0m         }
+         terminal.dispose().unwrap();
+     }
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\worktrees\MauiHt\crates\xterm-core\tests\tab_option.rs:204:
+[31m-    assert!(failures.is_empty(), "{} mismatching cases:\n{}", failures.len(), failures.join("\n"));
+[0m[32m+    assert!(
+[0m[32m+        failures.is_empty(),
+[0m[32m+        "{} mismatching cases:\n{}",
+[0m[32m+        failures.len(),
+[0m[32m+        failures.join("\n")
+[0m[32m+    );
+[0m }
+ 

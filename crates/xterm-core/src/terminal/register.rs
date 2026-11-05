@@ -41,8 +41,10 @@ pub(super) fn register(
     ] {
         let shared = Rc::clone(state);
         parser.set_execute_handler_checked(code, move |_| {
-            if matches!(code, 0x0a..=0x0c | 0x84 | 0x85) {
-                let result = if matches!(code, 0x84 | 0x85) {
+            if matches!(code, 0x09..=0x0c | 0x84 | 0x85) {
+                let result = if code == 0x09 {
+                    super::controls::tab_state(&shared)
+                } else if matches!(code, 0x84 | 0x85) {
                     super::controls::index_state(&shared, code == 0x85)
                 } else {
                     super::line_feed_state(&shared)

@@ -34,5 +34,7 @@ pub enum TerminalEvent {
     Binary(Vec<u16>),
     TitleChange(Vec<u16>),
     AccessibilityChar(Vec<u16>),
-    AccessibilityTab(usize),
+    /// Live post-option-getter column minus the original column. Reentrant
+    /// getters may move backward or switch buffers, producing a negative value.
+    AccessibilityTab(i64),
 }
