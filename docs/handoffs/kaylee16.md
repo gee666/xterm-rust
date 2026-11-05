@@ -1,0 +1,11 @@
+# Kaylee16 font verification handoff
+
+Task307 accepted independent review of commit16aadcb on `swarm/Kaylee16`. No production edits. New legacy runner executes all8 unchanged original Node ligature test bodies against source and real Rust/WASM Node bindings. Both pass, zero failed/skipped/unrun. The source test hash and actual WASM/binding identities are in `results/font-legacy/legacy-results.json`.
+
+New `wasm_font_shaping` test loads real Fira Code bytes into FontFace and Rust font discovery, disables fallback patterns and checks actual terminal DOM joining after the addon-triggered refresh, computed font settings and disposal. One test passes per Chromium, Firefox and WebKit. Focused formatting and warning-denied WASM Clippy pass. Reviewer independently reran all these checks; concise receipt `results/font-legacy/independent-review.json`. The legacy suite's old font-finder mock does not drive the current source loader, and no installed-font discovery/pixel equivalence claim is made.
+
+`docs/font-legacy-and-shaping.md` has commands, boundaries and exact evidence. Raw character-joiner arrays/coercion/errors remain task335. Unused font metadata constructor validation is task339, now Liam's lane, with complex parsing additionally task342. Full font/terminal/cross-platform equivalence remains NOT PROVEN.
+
+Integration309 is Rodrigo's lane. Diponegoro's accepted multi-producer canonical batch was already starting when307 finished. Rodrigo was asked to pick reviewed16aadcb and the following receipt-only commit into a later canonical gate. Do not apply it twice or report main integration before checking history. Accepted source and evidence are preserved on `swarm/Kaylee16` and an archive ref before cleanup.
+
+Only temporary owned root is `O:/xterm-rust-swarm-16/tmp/worktrees/Kaylee16`. No dependency junction was created. All commands after initial inspection set TEMP and TMP separately to its `tmp/environment`. Browser runner owns/closes servers and browsers. No background process remains. Cleanup will scan reparse points, inspect dirty/untracked outputs, confirm source preservation and remove only this owned worktree. Final cleanup outcome is posted to coordination409 rather than presumed here.
