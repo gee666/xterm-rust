@@ -10,7 +10,7 @@ The portable `SixelHandler` splits packet handling into `begin_put` and `decode_
 
 Coercion may synchronously reset or hook the live handler. Continuation does not repeat the earlier abort guard or size increment. Limit warnings still run before marking aborted and releasing the decoder. A throwing warning leaves those later operations unexecuted.
 
-The addon still exposes a read-only private diagnostic record, not source's complete writable `_opts` or `_core._inputHandler` ABI. This repair does not close full original639 image-family suites, img01..48, other raw options, native OS matrices or workspace equivalence.
+The addon still exposes a read-only private diagnostic record, not source's complete writable `_opts` or `_core._inputHandler` ABI. Raw-option/terminal garbage-collection cycles are not verified by this suite and remain part of324's complete lifecycle closure. This repair does not close full original639 image-family suites, img01..48, other raw options, native OS matrices or workspace equivalence.
 
 ## Verification
 
