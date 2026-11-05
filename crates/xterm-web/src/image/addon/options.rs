@@ -32,7 +32,7 @@ extern "C" {
     #[wasm_bindgen(catch, js_name = imageAddonOptions)]
     fn clone_options(options: &JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch, js_name = imageOptionNumber)]
-    fn number(value: &JsValue) -> Result<f64, JsValue>;
+    pub(super) fn number(value: &JsValue) -> Result<f64, JsValue>;
     #[wasm_bindgen(catch, js_name = imageKittyEncodedLimit)]
     pub(super) fn kitty_encoded_limit(value: &JsValue) -> Result<f64, JsValue>;
     #[wasm_bindgen(catch, js_name = imageIipEncodedLimit)]

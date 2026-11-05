@@ -4,7 +4,7 @@ mod pending;
 pub use pending::{failed_disposal, late_completion};
 #[path = "../image_terminal_support/snapshot.rs"]
 mod snapshot;
-pub use bootstrap::public_bootstrap;
+pub use bootstrap::{public_api, public_bootstrap};
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_futures::JsFuture;

@@ -3,7 +3,7 @@ use super::{eval, promise};
 use wasm_bindgen::JsValue;
 use wasm_bindgen_futures::JsFuture;
 
-pub async fn public_bootstrap() {
+pub async fn public_api() -> JsValue {
     let module = JsFuture::from(js_sys::Promise::resolve(&eval("import('/suite.js')")))
         .await
         .unwrap();
@@ -17,10 +17,13 @@ pub async fn public_bootstrap() {
         .replace("export * from './pkg/xterm_web.js';", "")
         .replace("export { initialize };", "")
         .replace("export class ", "class ");
-    let exports =
-        js_sys::Function::new_with_args("wasm", &(source + "\nreturn {Terminal,ImageAddon};"))
-            .call1(&JsValue::UNDEFINED, &module)
-            .unwrap();
+    js_sys::Function::new_with_args("wasm", &(source + "\nreturn {Terminal,ImageAddon};"))
+        .call1(&JsValue::UNDEFINED, &module)
+        .unwrap()
+}
+
+pub async fn public_bootstrap() {
+    let exports = public_api().await;
     let run = js_sys::Function::new_with_args(
         "api",
         r#"

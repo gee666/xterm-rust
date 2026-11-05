@@ -3,6 +3,8 @@
 mod constructor_order;
 #[path = "image_addon_support/handlers.rs"]
 mod handlers;
+#[path = "image_addon_support/inactive_coordinates.rs"]
+mod inactive_coordinates;
 #[path = "image_addon_support/inspection.rs"]
 mod inspection;
 #[path = "image_addon_support/inspection_activation.rs"]
