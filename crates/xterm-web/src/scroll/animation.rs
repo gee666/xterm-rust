@@ -122,8 +122,8 @@ impl<V: ScrollValue> SmoothOperation<V> {
     }
     pub fn try_accept_dimensions(&mut self, state: ScrollState<V>) -> Result<(), V::Error> {
         self.to = state.try_with_position(PositionUpdate {
-            left: Some(self.to.left.clone()),
-            top: Some(self.to.top.clone()),
+            left: (!self.to.left.is_undefined()).then(|| self.to.left.clone()),
+            top: (!self.to.top.is_undefined()).then(|| self.to.top.clone()),
         })?;
         // Source publishes to, then horizontal, then vertical. A later throwing
         // coercion must not roll back those earlier assignments.

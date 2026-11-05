@@ -121,5 +121,5 @@ fn source_cached_deltas_identity_coercions_and_errors() -> Result<(), JsValue> {
 }
 #[wasm_bindgen_test]
 fn source_dimension_acceptance_and_partial_failure_assignments() -> Result<(), JsValue> {
-    check(dimensions, 122)
+    check(dimensions, 125)
 }

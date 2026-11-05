@@ -8,6 +8,8 @@ use std::convert::Infallible;
 pub trait ScrollValue: Clone {
     type Error;
     fn number(value: f64) -> Self;
+    /// Source optional coordinate reads treat undefined as absence.
+    fn is_undefined(&self) -> bool;
     fn int32(&self) -> Result<Self, Self::Error>;
     fn add(&self, other: &Self) -> Result<Self, Self::Error>;
     fn subtract(&self, other: &Self) -> Result<Self, Self::Error>;
@@ -24,6 +26,9 @@ impl ScrollValue for f64 {
     type Error = Infallible;
     fn number(value: f64) -> Self {
         value
+    }
+    fn is_undefined(&self) -> bool {
+        false
     }
     fn int32(&self) -> Result<Self, Infallible> {
         const MODULUS: f64 = 4_294_967_296.0;

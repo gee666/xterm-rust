@@ -128,5 +128,12 @@ export function runAnimationDimensions(run) {
       return f;
     },'accept '+direction+'/'+throwsAt);count++;
   }
+  for(const [left,top] of [[undefined,70],[80,undefined],[undefined,undefined]]){
+    compare(run,()=>{
+      const f=fixture([0,0,100,100],[left,top,100,100]);
+      f.args[3]=[['accept',[100,1000,25,100,1000,35]],['tick',50],['tick',100]];
+      return f;
+    },'undefined target acceptance '+String(left)+'/'+String(top));count++;
+  }
   return count;
 }

@@ -37,6 +37,9 @@ impl ScrollValue for JsValue {
     fn number(value: f64) -> Self {
         value.into()
     }
+    fn is_undefined(&self) -> bool {
+        JsValue::is_undefined(self)
+    }
     fn int32(&self) -> Result<Self, JsValue> {
         int32(self)
     }

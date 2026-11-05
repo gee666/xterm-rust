@@ -28,6 +28,6 @@ const fixture=`// Copyright (c) Microsoft Corporation. All rights reserved. MIT 
 const output=resolve(root,`crates/xterm-web/tests/${name}_oracle.js`);
 if(options[0]==='--write')await writeFile(output,fixture);
 else {
-  if(await readFile(output,'utf8')!==fixture)throw new Error('Raw ScrollState oracle differs from source; inspect before regenerating');
+  if(await readFile(output,'utf8')!==fixture)throw new Error(`${label} oracle differs from source; inspect before regenerating`);
 }
 console.log(`${label} oracle matches unchanged source ${hash}`);
