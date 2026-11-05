@@ -1,0 +1,135 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_cursor_blink",
+  "testTimeoutMs": 60000,
+  "features": [
+    "acceptance-hooks"
+  ],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T22:27:52.371Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_cursor_blink",
+        "--features",
+        "acceptance-hooks",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 12383.921199999999,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 11.329799999999523,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\KarenBlink\\results\\acceptance-artifacts\\182d3f254b59a1b8ff9f28595419a389f75404686e7b6d6903da758bfb2f2d27\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\KarenBlink\\results\\browser-host\\wasm_cursor_blink\\2026-11-05T22-27-52-370Z-4a65f1ca-5548-49f6-bd96-f80ce5fabda1\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1114.7848000000013,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_cursor_blink::actual_iframe_timers_and_animation_frames_match_source",
+        "__wbgt__wasm_cursor_blink::last_rust_owner_cancels_handles_and_expires_callbacks",
+        "__wbgt__wasm_cursor_blink::timer_lifecycle_getters_errors_and_reentry_match_source"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_cursor_blink.rs:72:59:\ncalled `Result::unwrap()` on an `Err` value: JsValue(Error: restart-defers-positive missing start 1\nError: restart-defers-positive missing start 1\n    at e.fire (http://127.0.0.1:52482/snippets/xterm-web-f147851b6cb0c0ef/tests/cursor_blink_cases.js:59:25)\n    at http://127.0.0.1:52482/snippets/xterm-web-f147851b6cb0c0ef/tests/cursor_blink_cases.js:9:141\n    at runCases (http://127.0.0.1:52482/snippets/xterm-web-f147851b6cb0c0ef/tests/cursor_blink_cases.js:91:9)\n    at http://127.0.0.1:52482/suite.js:6347:21\n    at handleError (http://127.0.0.1:52482/suite.js:179:18)\n    at imports.wbg.__wbg_runCases_3bcd46e5060b67fa (http://127.0.0.1:52482/suite.js:6346:71)\n    at wasm_cursor_blink-0bb68c96da2204e3.wasm.__wbg_runCases_3bcd46e5060b67fa externref shim (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[37431]:0xaffbd5)\n    at wasm_cursor_blink-0bb68c96da2204e3.wasm.wasm_cursor_blink::run_cases::h30f68cf81316354e (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[9105]:0x7effdc)\n    at wasm_cursor_blink-0bb68c96da2204e3.wasm.wasm_cursor_blink::timer_lifecycle_getters_errors_and_reentry_match_source::hf1883862ab73b6b2 (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[1700]:0x43b0e5)\n    at wasm_cursor_blink-0bb68c96da2204e3.wasm.core::ops::function::FnOnce::call_once::h4a3c0300b11cb762 (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[31296]:0xace450))\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:52482/suite.js:6005:21)\n    at wasm_cursor_blink-0bb68c96da2204e3.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[38667]:0xb06404)\n    at wasm_cursor_blink-0bb68c96da2204e3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[25470]:0xa6d27a)\n    at wasm_cursor_blink-0bb68c96da2204e3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[8533]:0x7c7e9b)\n    at wasm_cursor_blink-0bb68c96da2204e3.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[25471]:0xa6d2fe)\n    at wasm_cursor_blink-0bb68c96da2204e3.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[13232]:0x8dcf19)\n    at wasm_cursor_blink-0bb68c96da2204e3.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[16728]:0x96f8ed)\n    at wasm_cursor_blink-0bb68c96da2204e3.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[46572]:0xb1e879)\n    at wasm_cursor_blink-0bb68c96da2204e3.wasm.rust_begin_unwind (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[31881]:0xad4cf0)\n    at wasm_cursor_blink-0bb68c96da2204e3.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[31882]:0xad4d1d)\n\n"
+        },
+        {
+          "type": "log",
+          "text": "CURSOR_BLINK_NATIVE:[[false,false],[true,false]]"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 3 tests\ntest timer_lifecycle_getters_errors_and_reentry_match_source ... FAIL\ntest last_rust_owner_cancels_handles_and_expires_callbacks ... ok\ntest actual_iframe_timers_and_animation_frames_match_source ... ok\n\nfailures:\n\n---- timer_lifecycle_getters_errors_and_reentry_match_source output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_cursor_blink-0bb68c96da2204e3.wasm.__rust_start_panic (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[47105]:0xb1f5c7)\n            at wasm_cursor_blink-0bb68c96da2204e3.wasm.rust_panic (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[42225]:0xb13d93)\n            at wasm_cursor_blink-0bb68c96da2204e3.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[13232]:0x8dcf44)\n            at wasm_cursor_blink-0bb68c96da2204e3.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[16728]:0x96f8ed)\n            at wasm_cursor_blink-0bb68c96da2204e3.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[46572]:0xb1e879)\n            at wasm_cursor_blink-0bb68c96da2204e3.wasm.rust_begin_unwind (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[31881]:0xad4cf0)\n            at wasm_cursor_blink-0bb68c96da2204e3.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[31882]:0xad4d1d)\n            at wasm_cursor_blink-0bb68c96da2204e3.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[19873]:0x9dd9de)\n            at wasm_cursor_blink-0bb68c96da2204e3.wasm.wasm_cursor_blink::timer_lifecycle_getters_errors_and_reentry_match_source::hf1883862ab73b6b2 (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[1700]:0x43b158)\n            at wasm_cursor_blink-0bb68c96da2204e3.wasm.core::ops::function::FnOnce::call_once::h4a3c0300b11cb762 (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[31296]:0xace450)\n\nfailures:\n\n    timer_lifecycle_getters_errors_and_reentry_match_source\n\ntest result: FAILED. 2 passed; 1 failed; 0 ignored; 0 filtered out; finished in 1.29s\n\n",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/182d3f254b59a1b8ff9f28595419a389f75404686e7b6d6903da758bfb2f2d27/artifact.wasm",
+      "sha256": "182d3f254b59a1b8ff9f28595419a389f75404686e7b6d6903da758bfb2f2d27",
+      "bytes": 19991025,
+      "originalPath": "O:/xterm-rust-swarm-16/tmp/worktrees/KarenBlink/target\\wasm32-unknown-unknown\\debug\\deps\\wasm_cursor_blink-0bb68c96da2204e3.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\KarenBlink\\results\\browser-host\\wasm_cursor_blink\\2026-11-05T22-27-52-370Z-4a65f1ca-5548-49f6-bd96-f80ce5fabda1\\artifacts\\suite_bg.wasm",
+      "bytes": 16796710,
+      "sha256": "4dbd103c9c88c09a0303dba0ad94553ed4df6951f24d2da0b20a1a5e6128fd87"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\KarenBlink\\results\\browser-host\\wasm_cursor_blink\\2026-11-05T22-27-52-370Z-4a65f1ca-5548-49f6-bd96-f80ce5fabda1\\artifacts\\suite.js",
+      "bytes": 250820,
+      "sha256": "26b604a0b6443280adfca8d2281f1ae818d849b4c4f6033eaf35c3dbf78eec81"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "7e4b2210677baae0f5257fa4b28e541d94d0674247d437fd084480ba514913a4"
+  },
+  "finishedAt": "2026-11-05T22:28:07.765Z"
+}

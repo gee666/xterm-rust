@@ -1,0 +1,34 @@
+{
+  "task": 506,
+  "scope": "Actual Rust WebGL cursor-blink browser component. Not full renderer, addon, Root or upstream suite closure.",
+  "overallEquivalence": "NOT PROVEN",
+  "base": "5088f8fd",
+  "environment": {
+    "host": "x86_64-pc-windows-msvc",
+    "rustc": "1.85.1 (4eb161250 2025-03-15)",
+    "cargo": "1.85.1 (d73d2caf9 2024-12-31)",
+    "node": "v24.15.0",
+    "wasmBindgen": "0.2.100",
+    "chromium": "148.0.7778.96",
+    "firefox": "150.0.2",
+    "webkit": "26.4"
+  },
+  "reference": {
+    "path": "P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo",
+    "baselineHashesVerified": 776,
+    "unchangedSourceScenarios": 38,
+    "inputsAndTraces": "results/cursor-blink/oracle.json"
+  },
+  "checks": [
+    {"command": "cargo test -p xterm-web --target wasm32-unknown-unknown --test wasm_cursor_blink --all-features --no-run -j2", "status": "passed", "initialFailure": "wasm-build.log", "log": "wasm-build-fixed.log"},
+    {"command": "cargo test -p xterm-web --test webgl --all-features -j2", "status": "passed", "passed": 46, "failed": 0, "ignored": 0, "filtered": 0, "log": "native-webgl.log"},
+    {"command": "cargo clippy -p xterm-web --lib --test webgl --all-features -j2 -- -D warnings", "status": "passed", "log": "native-clippy.log"},
+    {"command": "cargo clippy -p xterm-web --target wasm32-unknown-unknown --lib --test wasm_cursor_blink --all-features -j2 -- -D warnings", "status": "passed after exact production restoration", "log": "wasm-clippy-final.log"},
+    {"command": "cargo fmt --all -- --check", "status": "failed", "error": "Windows OS206 filename or extension too long", "log": "workspace-fmt.log"},
+    {"command": "rustfmt --edition 2021 --check crates/xterm-web/src/webgl/cursor_blink.rs crates/xterm-web/src/webgl/cursor_blink_timers.rs crates/xterm-web/tests/wasm_cursor_blink.rs", "status": "passed", "log": "changed-fmt.log"},
+    {"command": "WASM_TEST=wasm_cursor_blink CARGO_FEATURES=acceptance-hooks WASM_PRELUDE=tmp/cursor-blink/prelude.js node scripts/browser-host-check.mjs", "status": "passed initial and final", "engines": 3, "perEngine": {"passed": 3, "failed": 0, "ignored": 0, "filtered": 0}, "log": "browser-final.log"},
+    {"command": "node scripts/cursor-blink-negative.mjs", "status": "expected production mutant failure verified", "chromium": {"passed": 2, "failed": 1, "ignored": 0, "filtered": 0}, "sourceRestoration": "Exact SHA-256 before/after in negative.json", "log": "negative.json"}
+  ],
+  "runtimeArtifactPolicy": "Retain each delivered WASM/binding/snippet module until independent hash inspection. Cargo raw compiler path is reused; only final raw compiler file remains, matched to final report. Runtime files are intentionally disposable after review.",
+  "remaining": ["306 actual renderer/Addon/Root and shared atlas wiring", "full unchanged upstream WebGL/custom-glyph/demo suites", "stable full workspace quality gates", "native Linux/macOS and complete platform/browser matrix", "complete equivalence mappings and comparisons"]
+}

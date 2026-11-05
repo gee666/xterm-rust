@@ -24,6 +24,8 @@ mod atlas_styles;
 pub mod cache;
 pub mod cell_colors;
 pub mod config;
+#[cfg(target_arch = "wasm32")]
+pub mod cursor_blink;
 pub mod custom_glyphs;
 #[cfg(target_arch = "wasm32")]
 pub mod device_pixel_observer;

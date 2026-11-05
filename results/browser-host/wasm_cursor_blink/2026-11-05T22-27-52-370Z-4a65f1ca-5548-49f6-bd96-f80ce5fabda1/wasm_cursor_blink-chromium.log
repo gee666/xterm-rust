@@ -1,0 +1,27 @@
+running 3 tests
+test timer_lifecycle_getters_errors_and_reentry_match_source ... FAIL
+test last_rust_owner_cancels_handles_and_expires_callbacks ... ok
+test actual_iframe_timers_and_animation_frames_match_source ... ok
+
+failures:
+
+---- timer_lifecycle_getters_errors_and_reentry_match_source output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at wasm_cursor_blink-0bb68c96da2204e3.wasm.__rust_start_panic (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[47105]:0xb1f5c7)
+            at wasm_cursor_blink-0bb68c96da2204e3.wasm.rust_panic (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[42225]:0xb13d93)
+            at wasm_cursor_blink-0bb68c96da2204e3.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[13232]:0x8dcf44)
+            at wasm_cursor_blink-0bb68c96da2204e3.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[16728]:0x96f8ed)
+            at wasm_cursor_blink-0bb68c96da2204e3.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[46572]:0xb1e879)
+            at wasm_cursor_blink-0bb68c96da2204e3.wasm.rust_begin_unwind (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[31881]:0xad4cf0)
+            at wasm_cursor_blink-0bb68c96da2204e3.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[31882]:0xad4d1d)
+            at wasm_cursor_blink-0bb68c96da2204e3.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[19873]:0x9dd9de)
+            at wasm_cursor_blink-0bb68c96da2204e3.wasm.wasm_cursor_blink::timer_lifecycle_getters_errors_and_reentry_match_source::hf1883862ab73b6b2 (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[1700]:0x43b158)
+            at wasm_cursor_blink-0bb68c96da2204e3.wasm.core::ops::function::FnOnce::call_once::h4a3c0300b11cb762 (http://127.0.0.1:52482/suite_bg.wasm:wasm-function[31296]:0xace450)
+
+failures:
+
+    timer_lifecycle_getters_errors_and_reentry_match_source
+
+test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 filtered out; finished in 1.29s
+
