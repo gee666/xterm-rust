@@ -1,0 +1,30 @@
+import { mkdir, writeFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { runCommand } from '../scripts/quality-process.mjs';
+const root = resolve(import.meta.dirname, '..');
+const out = resolve(root, 'results/render-sync-cancel');
+await mkdir(out, { recursive: true });
+const env = { ...process.env, TEMP: resolve(root, 'tmp'), TMP: resolve(root, 'tmp'),
+  CARGO_TARGET_DIR: resolve(root, 'target'), CARGO_BUILD_JOBS: '2' };
+const probe = spawnSync('C:/Program Files/PowerShell/7/pwsh.exe', ['-NoProfile', '-Command',
+  '$os=Get-CimInstance Win32_OperatingSystem; $free=(Get-PSDrive O).Free; $r=$os.FreePhysicalMemory/1MB; $o=$free/1GB; [pscustomobject]@{availableRamGiB=$r;freeOGiB=$o}|ConvertTo-Json -Compress; if($r -lt 8 -or $o -lt 10){exit 2}'],
+  { encoding: 'utf8', timeout: 30000, env });
+await writeFile(resolve(out, 'compiler-headroom.json'), probe.stdout);
+if (probe.error || probe.status !== 0) throw new Error('headroom probe failed ' + probe.stderr);
+const commands = [
+  ['native-tests', ['test', '--locked', '-p', 'xterm-web', '--all-targets', '--all-features']],
+  ['native-clippy', ['clippy', '--locked', '-p', 'xterm-web', '--all-targets', '--all-features', '--', '-D', 'warnings']],
+  ['wasm-clippy', ['clippy', '--locked', '-p', 'xterm-web', '--target', 'wasm32-unknown-unknown', '--lib', '--test', 'render_service_browser', '--all-features', '--', '-D', 'warnings']],
+  ['wasm-test-build', ['test', '--locked', '-p', 'xterm-web', '--target', 'wasm32-unknown-unknown', '--test', 'render_service_browser', '--all-features', '--no-run']]
+];
+const records = [];
+for (const [name, args] of commands) {
+  console.log('START ' + name);
+  const record = await runCommand('C:/Users/user/.cargo/bin/cargo.exe', args,
+    { cwd: root, env, log: resolve(out, name + '.log'), timeoutMs: 600000 });
+  records.push({ name, ...record });
+  await writeFile(resolve(out, 'compiler-commands.json'), JSON.stringify(records, null, 2) + '\n');
+  console.log(name + ' ' + record.status);
+  if (record.status !== 'passed') throw new Error('failed ' + name);
+}

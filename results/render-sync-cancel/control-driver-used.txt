@@ -1,0 +1,70 @@
+import { readFile, writeFile, mkdir, copyFile, readdir } from 'node:fs/promises';
+import { resolve, join } from 'node:path';
+import { createHash } from 'node:crypto';
+import { spawnSync } from 'node:child_process';
+import { runCommand } from '../scripts/quality-process.mjs';
+const root=resolve(import.meta.dirname,'..'), out=resolve(root,'results/render-sync-cancel');
+const file=resolve(root,'crates/xterm-web/src/renderer/service_sync.rs');
+const original=await readFile(file); const hash=b=>createHash('sha256').update(b).digest('hex');
+const env={...process.env,TEMP:resolve(root,'tmp'),TMP:resolve(root,'tmp'),CARGO_TARGET_DIR:resolve(root,'target'),CARGO_BUILD_JOBS:'2',
+  CARGO:'C:/Users/user/.cargo/bin/cargo.exe',CARGO_FEATURES:'acceptance-hooks',WASM_TEST:'render_service_browser',
+  WASM_BINDGEN:'P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe',
+  PLAYWRIGHT_MODULE:'P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/node_modules/playwright/index.mjs'};
+const probe=spawnSync('C:/Program Files/PowerShell/7/pwsh.exe',['-NoProfile','-Command',
+  '$os=Get-CimInstance Win32_OperatingSystem; $free=(Get-PSDrive O).Free; $r=$os.FreePhysicalMemory/1MB; $o=$free/1GB; [pscustomobject]@{availableRamGiB=$r;freeOGiB=$o}|ConvertTo-Json -Compress; if($r -lt 8 -or $o -lt 10){exit 2}'],{encoding:'utf8',timeout:30000,env});
+await writeFile(resolve(out,'browser-headroom.json'),probe.stdout);
+if(probe.error||probe.status!==0)throw Error('headroom probe failed '+probe.stderr);
+const records=[];
+async function stage(name,browsers,expected){
+  console.log('START '+name);
+  const record=await runCommand(process.execPath,['scripts/browser-host-check.mjs'],{cwd:root,env:{...env,BROWSERS:browsers},log:resolve(out,name+'.log'),timeoutMs:600000});
+  const latest=JSON.parse(await readFile(resolve(root,'results/browser-host/render_service_browser-results.json'),'utf8'));
+  const folder=resolve(out,name);await mkdir(folder,{recursive:true});
+  if (!latest.artifacts) throw Error('browser build has no artifacts: ' + latest.error);
+  const run=resolve(latest.artifacts.wasm.path,'..','..');
+  // Only raw reports/logs are permanent. Generated artifacts stay available in
+  // the owned worktree through review and are pinned, then removed on cleanup.
+  for(const entry of await readdir(run,{withFileTypes:true}))if(entry.isFile())await copyFile(join(run,entry.name),join(folder,entry.name));
+  const pins=[];
+  async function pinTree(dir){for(const entry of await readdir(dir,{withFileTypes:true})){const p=join(dir,entry.name);if(entry.isDirectory())await pinTree(p);else if(entry.isFile())pins.push({path:p,sha256:hash(await readFile(p))});else throw Error('unexpected generated link '+p);}}
+  if(latest.artifacts){await pinTree(resolve(run,'artifacts'));pins.push({path:latest.artifacts.compiler.originalPath,sha256:latest.artifacts.compiler.sha256});}
+  const result={name,productionSha256:hash(await readFile(file)),record,report:latest,pins};records.push(result);
+  await writeFile(resolve(out,'browser-stages.json'),JSON.stringify(records,null,2)+'\n');
+  console.log(name+' '+record.status+' '+JSON.stringify(latest.browsers.map(b=>({name:b.name,status:b.status,counts:b.counts}))));
+  if(latest.status!==expected)throw Error('unexpected status '+name);
+  if(expected==='passed'&&record.status!=='passed')throw Error('runner failure '+name);
+  if(expected==='failed'&&!latest.browsers.some(b=>b.counts?.failed>0))throw Error('negative control lacked assertion failure '+name);
+}
+function replace(text,from,to){if(!text.includes(from)||text.indexOf(from)!==text.lastIndexOf(from))throw Error('nonunique control replacement');return text.replace(from,to);}
+try{
+  await stage('initial','chromium,firefox,webkit','passed');
+  let control=replace(original.toString(),`        if self.timeout.get().is_some() {
+            let window = (self.window)();
+            let cancel = js_sys::Reflect::get(window.as_ref(), &"clearTimeout".into())?
+                .unchecked_into::<js_sys::Function>();
+            // The method getter can flush or replace the pending timer. Source
+            // reads its argument after that getter and clears only on success.
+            let handle = self.timeout.get().map_or(JsValue::UNDEFINED, JsValue::from);
+            js_sys::Reflect::apply(&cancel, window.as_ref(), &[handle].into_iter().collect())?;
+            self.timeout.set(None);
+        }`,`        if let Some(handle) = self.timeout.take() {
+            (self.window)().clear_timeout_with_handle(handle);
+        }`);
+  await writeFile(file,control);
+  try{await stage('old-cancel','chromium','failed');}finally{await writeFile(file,original);}
+  control=original.toString();
+  control=replace(control,'use std::{cell::Cell, rc::Rc};','use std::{cell::{Cell, RefCell}, rc::Rc};');
+  control=replace(control,'    timeout: Cell<Option<i32>>,','    timeout: Cell<Option<i32>>,\n    callback: RefCell<Option<Callback>>,');
+  control=replace(control,'            timeout: Cell::new(None),','            timeout: Cell::new(None),\n            callback: RefCell::new(None),');
+  control=replace(control,'            self.timeout.set(None);','            self.timeout.set(None);\n            self.callback.borrow_mut().take();');
+  control=replace(control,'            let callback = callback.into_js_value();','');
+  control=replace(control,'                callback.unchecked_ref(),','                callback.as_ref().unchecked_ref(),');
+  control=replace(control,'            self.0.timeout.set(Some(handle));','            *self.0.callback.borrow_mut() = Some(callback);\n            self.0.timeout.set(Some(handle));');
+  await writeFile(file,control);
+  try{await stage('old-callback','chromium','failed');}finally{await writeFile(file,original);}
+}finally{
+  await writeFile(file,original);
+  const after=hash(await readFile(file));if(after!==hash(original))throw Error('source restoration mismatch');
+  await writeFile(resolve(out,'restoration.json'),JSON.stringify({before:hash(original),after,identical:true},null,2)+'\n');
+}
+await stage('final','chromium,firefox,webkit','passed');

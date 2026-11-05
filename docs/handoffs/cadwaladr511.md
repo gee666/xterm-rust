@@ -1,0 +1,15 @@
+# Cadwaladr511 handoff
+
+Task511 is ACCEPTED without findings. Own commits are dd3689a1 then497b963f then d2d9bbc8 then the review/cleanup receipt commit containing this file, on swarm/CadwaladrSync. Base1106d480. Earlier pre-rebase hashes79125bed/13a635cb are obsolete. There are no private prerequisite copies to exclude and no reason to replay499,486 or477. Task309 owns integration; Cadwaladr did not touch main refs, run CI, push or invoke the canonical merge helper.
+
+The repair changes only synchronized-output timeout cancellation in real RenderService plus its fallible flush/disposal callers. Source resolves clearTimeout before reading its argument, preserves state through the host call, and clears only after success. Getter/call exceptions retain identity. Reflect.apply ignores own .call properties and rejects noncallables. JS owns each timer callback as in the existing TaskQueue, so retained or reentrantly orphaned callbacks remain callable. Weak state prevents a strong callback cycle.
+
+Tests reuse the actual RenderService fixture. Three new functions expand54 programs, comparing Rust and an unchanged source bundle in each browser plus committed source traces. The retained original function remains intact. Native xterm-web all-target/all-feature415tests/171harnesses pass. Initial/final strict native and actual WASM lib/test Clippy and the WASM test build pass. Initial/final actual4functions each Chromium/Firefox/WebKit pass. Old-cancellation Chromium1P3F and old-callback3P1F controls are retained, with exact finally restoration. Initial/final compiler, served WASM and binding hashes are identical.
+
+The isolated reviewer independently reran54source programs/eight source pins and verified296 generated-stage pins,14 input pins and28 durable raw-file copies. It inspected retained browser/negative-control/native/lint receipts. All776 reference hashes passed in the original and private copies before/final audit. See docs/render-sync-cancel.md, docs/reviews/cadwaladr511.md and results/render-sync-cancel.
+
+All compiler/browser/server grants were released in post409 comment3941. No new jobs may be launched under those released grants. Initial compiler grant3890/start3893/release3907; browser+j2 grant3915/start3925/allrelease3941. Original references, credentials, AGENTS.md and unrelated work remain unchanged.
+
+Cleanup is performed only after acceptance and pin verification. Its preflight/untracked-runtime removal receipt is committed in results/render-sync-cancel/cleanup.json. The final normal git worktree removal happens after this receipt commit, so its observed result is recorded in post409 and the private cadwaladr511-continuation.md. Do not replay uncertain removal actions.
+
+Full317/318/301, raw timeout IDs, throwing window resolution, remaining setTimeout phases, original complete browser/demo suites, full rendering/pixel coverage, stable full-workspace gates, native Linux/macOS evidence, mapping and comparisons remain OPEN. All five package fmt checks pass, but exactaggregate fmt still fails WindowsOS206. Full-port equivalence is NOT PROVEN.
