@@ -21,19 +21,36 @@ impl FrameScheduler for BrowserFrameScheduler {
     type Handle = i32;
     type Error = JsValue;
     fn request_frame(&mut self) -> Result<i32, JsValue> {
-        let callback = self.callback.borrow();
-        let callback = callback
-            .as_ref()
-            .ok_or_else(|| JsValue::from_str("animation callback not initialized"))?;
-        let source = self.window.borrow().clone();
-        source().request_animation_frame(callback)
+        Self::request(self.window.borrow().clone(), self.callback.borrow().clone())
     }
     fn cancel_frame(&mut self, handle: i32) -> Result<(), JsValue> {
         let source = self.window.borrow().clone();
         source().cancel_animation_frame(handle)
     }
+    fn request_frame_shared(scheduler: &RefCell<Self>) -> Result<i32, JsValue> {
+        let (source, callback) = {
+            let scheduler = scheduler.borrow();
+            let source = scheduler.window.borrow().clone();
+            let callback = scheduler.callback.borrow().clone();
+            (source, callback)
+        };
+        Self::request(source, callback)
+    }
+    fn cancel_frame_shared(scheduler: &RefCell<Self>, handle: i32) -> Result<(), JsValue> {
+        let source = scheduler.borrow().window.borrow().clone();
+        source().cancel_animation_frame(handle)
+    }
     fn cleanup_error(&mut self, error: JsValue) {
         web_sys::console::error_1(&error);
+    }
+}
+impl BrowserFrameScheduler {
+    fn request(source: WindowSource, callback: Option<Function>) -> Result<i32, JsValue> {
+        let callback =
+            callback.ok_or_else(|| JsValue::from_str("animation callback not initialized"))?;
+        // Both window resolution and RAF can reenter this debouncer. Only
+        // independent handles may survive either host call.
+        source().request_animation_frame(&callback)
     }
 }
 

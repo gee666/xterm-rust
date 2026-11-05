@@ -169,7 +169,7 @@ impl<S: FrameScheduler> RenderDebouncer<S> {
         // Source retains row bounds and callbacks after cancellation.
         let pending = self.state.pending.borrow().clone();
         if let Some(handle) = pending {
-            self.state.scheduler.borrow_mut().cancel_frame(handle)?;
+            S::cancel_frame_shared(&self.state.scheduler, handle)?;
             self.state.pending.borrow_mut().take();
         }
         Ok(())
@@ -213,7 +213,7 @@ impl<S: FrameScheduler> RenderDebouncer<S> {
         if let Some(handle) = self.state.pending.borrow().as_ref() {
             return Ok(handle.clone());
         }
-        let handle = self.state.scheduler.borrow_mut().request_frame()?;
+        let handle = S::request_frame_shared(&self.state.scheduler)?;
         *self.state.pending.borrow_mut() = Some(handle.clone());
         Ok(handle)
     }
