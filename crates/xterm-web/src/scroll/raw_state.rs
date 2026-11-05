@@ -1,11 +1,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. MIT license.
-//! Raw browser ScrollState values. This is the same state algorithm used by the
-//! native numeric model, not an additional cache of a model's numeric fields.
+//! Raw browser state values and live update-object entry points. Numeric and
+//! raw callers share state and animation algorithms, not synchronized caches.
 use super::{
     interop,
-    state::{DimensionUpdate, PositionUpdate, ScrollState},
+    scrollable::{ScrollError, Scrollable},
+    state::{DimensionUpdate, Position, PositionUpdate, ScrollState},
     value::ScrollValue,
 };
+use crate::links::debounce::FrameScheduler;
 use wasm_bindgen::prelude::*;
 
 // Only language operators cross this boundary. Clamping, updates and events
@@ -82,21 +84,57 @@ fn defined(update: &JsValue, key: &str) -> Result<Option<JsValue>, JsValue> {
     }
 }
 
+fn dimensions(update: &JsValue) -> Result<DimensionUpdate<JsValue>, JsValue> {
+    Ok(DimensionUpdate {
+        width: defined(update, "width")?,
+        scroll_width: defined(update, "scrollWidth")?,
+        height: defined(update, "height")?,
+        scroll_height: defined(update, "scrollHeight")?,
+    })
+}
+fn position(update: &JsValue) -> Result<PositionUpdate<JsValue>, JsValue> {
+    Ok(PositionUpdate {
+        left: defined(update, "scrollLeft")?,
+        top: defined(update, "scrollTop")?,
+    })
+}
 impl ScrollState<JsValue> {
     pub fn try_with_raw_dimensions(&self, update: &JsValue, raw: bool) -> Result<Self, JsValue> {
-        let update = DimensionUpdate {
-            width: defined(update, "width")?,
-            scroll_width: defined(update, "scrollWidth")?,
-            height: defined(update, "height")?,
-            scroll_height: defined(update, "scrollHeight")?,
-        };
-        self.try_with_dimensions(update, raw)
+        self.try_with_dimensions(dimensions(update)?, raw)
     }
     pub fn try_with_raw_position(&self, update: &JsValue) -> Result<Self, JsValue> {
-        let update = PositionUpdate {
-            left: defined(update, "scrollLeft")?,
-            top: defined(update, "scrollTop")?,
-        };
-        self.try_with_position(update)
+        self.try_with_position(position(update)?)
+    }
+}
+impl<S: FrameScheduler> Scrollable<S, JsValue> {
+    pub fn try_validate_raw_scroll_position(
+        &self,
+        update: &JsValue,
+    ) -> Result<Position<JsValue>, JsValue> {
+        self.try_validate_scroll_position_resolving(|| position(update))
+    }
+    pub fn set_raw_scroll_dimensions(
+        &self,
+        update: &JsValue,
+        raw: bool,
+    ) -> Result<(), ScrollError<S::Error, JsValue>> {
+        self.set_scroll_dimensions_resolving(|| dimensions(update), raw)
+    }
+    pub fn set_raw_scroll_position_now(
+        &self,
+        update: &JsValue,
+    ) -> Result<(), ScrollError<S::Error, JsValue>> {
+        self.set_scroll_position_now_resolving(|| position(update))
+    }
+    pub fn set_raw_scroll_position_smooth(
+        &self,
+        update: &JsValue,
+        reuse: bool,
+    ) -> Result<(), ScrollError<S::Error, JsValue>> {
+        self.set_scroll_position_smooth_resolving(
+            || defined(update, "scrollLeft"),
+            || defined(update, "scrollTop"),
+            reuse,
+        )
     }
 }

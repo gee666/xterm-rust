@@ -1,5 +1,5 @@
 #![cfg(target_arch = "wasm32")]
-//! Live shared engine tests. Raw Element/getter/scheduler bindings remain301.
+//! Shared live engine and raw update-object entry points. Element/scheduler remain301.
 use js_sys::{Array, Function};
 use std::{
     cell::{Cell, RefCell},
@@ -20,6 +20,8 @@ wasm_bindgen_test_configure!(run_in_browser);
 extern "C" {
     #[wasm_bindgen(catch, js_name = runLiveCases)]
     fn cases(run: &Function) -> Result<u32, JsValue>;
+    #[wasm_bindgen(catch, js_name = runGetterCases)]
+    fn getter_cases(run: &Function) -> Result<u32, JsValue>;
 }
 #[derive(Default)]
 struct Frames {
@@ -138,6 +140,21 @@ fn run(duration: JsValue, setup: Function) -> Result<JsValue, JsValue> {
                 .set_scroll_position_smooth(position(&args), args.get(3).is_truthy())
                 .map(|()| JsValue::UNDEFINED)
                 .map_err(error),
+            Some("rawDimensions") => model
+                .set_raw_scroll_dimensions(&args.get(1), args.get(2).is_truthy())
+                .map(|()| JsValue::UNDEFINED)
+                .map_err(error),
+            Some("rawNow") => model
+                .set_raw_scroll_position_now(&args.get(1))
+                .map(|()| JsValue::UNDEFINED)
+                .map_err(error),
+            Some("rawSmooth") => model
+                .set_raw_scroll_position_smooth(&args.get(1), args.get(2).is_truthy())
+                .map(|()| JsValue::UNDEFINED)
+                .map_err(error),
+            Some("rawValidate") => model
+                .try_validate_raw_scroll_position(&args.get(1))
+                .map(|value| row(&[value.left, value.top])),
             Some("duration") => {
                 model.set_smooth_scroll_duration(args.get(1));
                 Ok(JsValue::UNDEFINED)
@@ -207,5 +224,12 @@ fn live_source_values_errors_and_coercion_reentry() -> Result<(), JsValue> {
     let run =
         Closure::wrap(Box::new(run) as Box<dyn Fn(JsValue, Function) -> Result<JsValue, JsValue>>);
     assert_eq!(cases(run.as_ref().unchecked_ref())?, 605);
+    Ok(())
+}
+#[wasm_bindgen_test]
+fn live_update_getters_reentry_and_error_identity() -> Result<(), JsValue> {
+    let run =
+        Closure::wrap(Box::new(run) as Box<dyn Fn(JsValue, Function) -> Result<JsValue, JsValue>>);
+    assert_eq!(getter_cases(run.as_ref().unchecked_ref())?, 5804);
     Ok(())
 }

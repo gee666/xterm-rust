@@ -1,5 +1,7 @@
 # Shared live Scrollable engine
 
+Task432 adds the update-getter phases documented in [raw-scrollable-getters.md](raw-scrollable-getters.md). The426 receipts below remain historical and do not verify those later changes.
+
 Task426 extends409/417 into the live `Scrollable<S, V = f64>` engine. Numeric production consumers use this same implementation. `try_new` accepts a fallible `ScrollValue`; `new` and numeric validation retain their existing infallible signatures. Raw browser values can use `Scrollable<S, JsValue>` without a numeric shadow state. `ScrollError<E, V = Infallible>` distinguishes scheduler, event dispatch and value errors. `MissingAnimation` represents a source null-operation dereference after coercion removes the operation. A raw browser binding maps it to TypeError.
 
 Each live animation has stable Rc identity and its own pending frame handle. Dimension acceptance selects the current animation after event dispatch, then retains that receiver across coercions. It publishes target, horizontal curve and vertical curve separately. Recursive acceptance on the same operation cannot trigger a RefCell borrow panic or restore an animation a callback removed. Tick selects its receiver before reading the clock, reads duration after subtraction, and selects the vertical curve after horizontal evaluation. Reentrant acceptance therefore changes the vertical curve visible to that tick. Construction disposes whichever operation is current after coercion, matching the source's repeated `_smoothScrolling` reads.

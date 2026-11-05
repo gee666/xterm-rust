@@ -1,9 +1,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. MIT license.
 //! One host-driven Scrollable for numeric and callback-capable raw values.
+mod updates;
 use super::{
     animation::SmoothOperation,
     animation_live,
-    state::{DimensionUpdate, Position, PositionUpdate, ScrollEvent, ScrollState},
+    state::{Position, PositionUpdate, ScrollEvent, ScrollState},
     value::ScrollValue,
 };
 use crate::links::debounce::FrameScheduler;
@@ -143,8 +144,16 @@ impl<S: FrameScheduler, V: ScrollValue + 'static> Scrollable<S, V> {
         &self,
         position: PositionUpdate<V>,
     ) -> Result<Position<V>, V::Error> {
-        self.scroll_state()
-            .try_with_position(position)
+        self.try_validate_scroll_position_resolving(|| Ok(position))
+    }
+    /// Validation retains the state selected before reading update properties.
+    pub fn try_validate_scroll_position_resolving(
+        &self,
+        resolve: impl FnOnce() -> Result<PositionUpdate<V>, V::Error>,
+    ) -> Result<Position<V>, V::Error> {
+        let state = self.scroll_state();
+        state
+            .try_with_position(resolve()?)
             .map(|state| state.position())
     }
     pub fn future_scroll_position(&self) -> Position<V> {
@@ -160,89 +169,6 @@ impl<S: FrameScheduler, V: ScrollValue + 'static> Scrollable<S, V> {
     }
     pub fn has_pending_scroll_animation(&self) -> bool {
         self.animation().is_some()
-    }
-    pub fn set_scroll_dimensions(
-        &self,
-        update: DimensionUpdate<V>,
-        raw_positions: bool,
-    ) -> Result<(), ScrollError<S::Error, V::Error>> {
-        let next = self
-            .scroll_state()
-            .try_with_dimensions(update, raw_positions)
-            .map_err(ScrollError::Value)?;
-        self.set_state(next, self.has_pending_scroll_animation())?;
-        // Select after events, but retain that selected operation's identity
-        // throughout coercion, even if a callback cancels/replaces it.
-        if let Some(animation) = self.animation() {
-            animation_live::accept_dimensions(&animation.operation, self.scroll_state())
-                .map_err(ScrollError::Value)?;
-        }
-        Ok(())
-    }
-    pub fn set_scroll_position_now(
-        &self,
-        update: PositionUpdate<V>,
-    ) -> Result<(), ScrollError<S::Error, V::Error>> {
-        let next = self
-            .scroll_state()
-            .try_with_position(update)
-            .map_err(ScrollError::Value)?;
-        self.stop_animation()?;
-        self.set_state(next, false)
-    }
-    pub fn set_scroll_position_smooth(
-        &self,
-        mut update: PositionUpdate<V>,
-        reuse: bool,
-    ) -> Result<(), ScrollError<S::Error, V::Error>> {
-        if self.state.duration.borrow().strict_eq(&V::number(0.0)) {
-            return self.set_scroll_position_now(update);
-        }
-        let replace = self.animation().is_some();
-        if let Some(previous) = self.animation() {
-            let to = animation_live::read(&previous.operation, |operation| operation.to.position());
-            update.left = Some(update.left.unwrap_or(to.left));
-            update.top = Some(update.top.unwrap_or(to.top));
-        }
-        let target = self
-            .scroll_state()
-            .try_with_position(update)
-            .map_err(ScrollError::Value)?;
-        let operation = if replace {
-            let previous = self.required_animation()?;
-            let previous = animation_live::read(&previous.operation, Clone::clone);
-            if previous.to.left.strict_eq(&target.left) && previous.to.top.strict_eq(&target.top) {
-                return Ok(());
-            }
-            let next = if reuse {
-                SmoothOperation::try_new(
-                    previous.from,
-                    target,
-                    previous.start_time,
-                    previous.duration,
-                )
-            } else {
-                self.start(target)
-            }
-            .map_err(ScrollError::Value)?;
-            // Construction can change which operation is current. Source
-            // disposes that current operation, not the pre-coercion snapshot.
-            let current = self.required_animation()?;
-            self.cancel(&current)?;
-            next
-        } else {
-            self.start(target).map_err(ScrollError::Value)?
-        };
-        *self.state.smooth.borrow_mut() = Some(Rc::new(Animation {
-            operation: RefCell::new(operation),
-            pending: RefCell::new(None),
-        }));
-        self.request_frame()
-    }
-    fn start(&self, target: ScrollState<V>) -> Result<SmoothOperation<V>, V::Error> {
-        let from = self.scroll_state();
-        let duration = self.state.duration.borrow().clone();
-        SmoothOperation::try_start(from, target, duration, || (self.state.now)())
     }
     /// Delivery clears the current operation's handle, as in the source RAF
     /// callback. A tick retains its receiver across clock/coercion reentry.

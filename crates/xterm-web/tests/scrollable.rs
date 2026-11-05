@@ -162,3 +162,122 @@ fn scheduler_failures_retain_source_partial_state_and_cleanup_is_observable() {
     drop(model);
     assert_eq!(*frames.cleanup_errors.borrow(), vec!["cancel"]);
 }
+#[test]
+fn dimensions_resolve_against_state_selected_before_getters() {
+    let (model, _, _) = model(90.0);
+    model.set_scroll_position_now(top(40.0)).unwrap();
+    model
+        .set_scroll_dimensions_resolving(
+            || {
+                model.set_scroll_position_now(top(75.0)).unwrap();
+                Ok(DimensionUpdate {
+                    width: Some(120.0),
+                    ..Default::default()
+                })
+            },
+            true,
+        )
+        .unwrap();
+    assert_eq!(model.scroll_state().width, 120.0);
+    assert_eq!(model.scroll_state().top, 40.0);
+}
+#[test]
+fn immediate_and_validation_resolve_before_reentrant_state_replacement() {
+    let (model, _, _) = model(90.0);
+    let change_dimensions = || {
+        model
+            .set_scroll_dimensions(
+                DimensionUpdate {
+                    width: Some(200.0),
+                    ..Default::default()
+                },
+                false,
+            )
+            .unwrap();
+        Ok(PositionUpdate {
+            left: Some(950.0),
+            top: Some(50.0),
+        })
+    };
+    let position = model
+        .try_validate_scroll_position_resolving(change_dimensions)
+        .unwrap();
+    assert_eq!(position.top, 50.0);
+    assert_eq!(position.left, 900.0);
+    assert_eq!(model.scroll_state().width, 200.0);
+    model
+        .set_scroll_position_now_resolving(|| {
+            model
+                .set_scroll_dimensions(
+                    DimensionUpdate {
+                        width: Some(300.0),
+                        ..Default::default()
+                    },
+                    false,
+                )
+                .unwrap();
+            Ok(top(75.0))
+        })
+        .unwrap();
+    assert_eq!(model.scroll_state().width, 200.0);
+    assert_eq!(model.scroll_state().top, 75.0);
+}
+#[test]
+fn smooth_missing_axes_read_each_current_operation_after_getters() {
+    let (model, _, _) = model(90.0);
+    model.set_scroll_position_smooth(top(100.0), false).unwrap();
+    model
+        .set_scroll_position_smooth_resolving(
+            || {
+                model
+                    .set_scroll_position_smooth(
+                        PositionUpdate {
+                            left: Some(150.0),
+                            top: Some(200.0),
+                        },
+                        false,
+                    )
+                    .unwrap();
+                Ok(None)
+            },
+            || {
+                model
+                    .set_scroll_position_smooth(
+                        PositionUpdate {
+                            left: Some(250.0),
+                            top: Some(300.0),
+                        },
+                        false,
+                    )
+                    .unwrap();
+                Ok(None)
+            },
+            false,
+        )
+        .unwrap();
+    assert_eq!(model.future_scroll_position().left, 150.0);
+    assert_eq!(model.future_scroll_position().top, 300.0);
+}
+#[test]
+fn cancelled_smooth_fallback_fails_before_later_getter() {
+    let (model, _, _) = model(90.0);
+    model.set_scroll_position_smooth(top(100.0), false).unwrap();
+    let read_top = Cell::new(false);
+    let result = model.set_scroll_position_smooth_resolving(
+        || {
+            model.set_scroll_position_now(top(7.0)).unwrap();
+            Ok(None)
+        },
+        || {
+            read_top.set(true);
+            Ok(Some(25.0))
+        },
+        false,
+    );
+    assert!(matches!(
+        result,
+        Err(xterm_web::scroll::scrollable::ScrollError::MissingAnimation)
+    ));
+    assert!(!read_top.get());
+    assert_eq!(model.current_scroll_position().top, 7.0);
+}

@@ -22,6 +22,10 @@ function sourceRun(duration, setup) {
         case 'dimensions': result=model.setScrollDimensions({width:a[1],scrollWidth:a[2],height:a[3],scrollHeight:a[4]},a[5]);break;
         case 'now': result=model.setScrollPositionNow({scrollLeft:a[1],scrollTop:a[2]});break;
         case 'smooth': result=model.setScrollPositionSmooth({scrollLeft:a[1],scrollTop:a[2]},a[3]);break;
+        case 'rawDimensions': result=model.setScrollDimensions(a[1],a[2]);break;
+        case 'rawNow': result=model.setScrollPositionNow(a[1]);break;
+        case 'rawSmooth': result=model.setScrollPositionSmooth(a[1],a[2]);break;
+        case 'rawValidate': {const p=model.validateScrollPosition(a[1]);result=[p.scrollLeft,p.scrollTop];break;}
         case 'duration': result=model.setSmoothScrollDuration(a[1]);break;
         case 'clock': now=a[1];break;
         case 'frame': {const item=active.entries().next().value;if(item){active.delete(item[0]);item[1]();}break;}
@@ -58,7 +62,27 @@ function scenario(program) {
     };
     const token={};objects.set(token,'thrown-token');
     act('dimensions',100,1000,100,1000,false);
-    program({act,object,token});
+    const update=(values,onRead,inherited=false,proxy=false)=>{
+      const counts={};
+      let value;
+      const properties={};
+      for(const key of ['width','scrollWidth','height','scrollHeight','scrollLeft','scrollTop']) {
+        properties[key]={configurable:true,get() {
+          const count=counts[key]=(counts[key]||0)+1;
+          coercions.push(['get',key,count,this===value]);
+          if(onRead)onRead(key,count);
+          const sequence=values[key]||[undefined];
+          return sequence[Math.min(count-1,sequence.length-1)];
+        }};
+      }
+      const base=Object.defineProperties({},properties);
+      value=inherited?Object.create(base):base;
+      if(proxy)value=new Proxy(value,{get(target,key,receiver) {
+        coercions.push(['proxy',key]);return Reflect.get(target,key,receiver);
+      }});
+      return value;
+    };
+    program({act,object,token,update});
     // Events expose dimensions/positions, not private raw requests. Strip the
     // latter from both event snapshots without altering public assertions.
     const snapshot=act('snapshot');
@@ -141,6 +165,59 @@ export function runLiveCases(run) {
       }
     }]);
   }
+  for(const [label,program] of tests) {
+    const expected=sourceRun(90,scenario(program)), actual=run(90,scenario(program));
+    if(JSON.stringify(actual)!==JSON.stringify(expected))throw new Error(`${label}\nexpected ${JSON.stringify(expected)}\nactual ${JSON.stringify(actual)}`);
+  }
+  return tests.length;
+}
+export function runGetterCases(run) {
+  const tests=[];
+  const methods=['rawDimensions','rawNow','rawValidate','rawSmooth'];
+  for(const method of methods)for(const existing of [false,true])for(const duration of [0,90])
+    for(const shape of ['own','inherited','proxy'])for(const pattern of ['defined','firstUndefined','secondUndefined','changed'])
+      for(const reaction of ['none','now','smooth','dimensions','dispose','throw'])for(const read of [1,2])
+        for(const key of method==='rawDimensions'?['width','scrollWidth','height','scrollHeight']:['scrollLeft','scrollTop']) {
+        tests.push([`${method}/${existing}/${duration}/${shape}/${pattern}/${reaction}/${read}/${key}`,({act,token,update})=>{
+          act('duration',duration);
+          if(existing)act('smooth',100,200,false);
+          let armed=true;
+          const values={};
+          for(const key of ['width','scrollWidth','height','scrollHeight','scrollLeft','scrollTop']) {
+            const value=key.startsWith('scroll')&&!['scrollLeft','scrollTop'].includes(key)?1400:40;
+            values[key]=pattern==='firstUndefined'?[undefined,value]
+              :pattern==='secondUndefined'?[value,undefined]:pattern==='changed'?[value,value+10]:[value];
+          }
+          const value=update(values,(field,count)=>{
+            if(!armed||field!==key||count!==read)return;
+            armed=false;
+            if(reaction==='throw')throw token;
+            if(reaction==='now')act('now',5,7);
+            if(reaction==='smooth')act('smooth',300,350,false);
+            if(reaction==='dimensions')act('dimensions',120,1600,80,1300,true);
+            if(reaction==='dispose')act('dispose');
+          },shape==='inherited',shape==='proxy');
+          act(method,value,false);
+          act('clock',1040);act('frame');act('clock',1300);act('frame');
+        }]);
+      }
+  for(const method of methods)for(const reaction of ['none','now','dimensions','throw'])
+    tests.push([`identity/${method}/${reaction}`,({act,object,token,update})=>{
+      act('now',50,60);act('smooth',100,200,false);
+      let armed=true;
+      const value=object('getter-value',40,()=>{
+        if(!armed)return;
+        armed=false;
+        if(reaction==='now')act('now',5,7);
+        if(reaction==='dimensions')act('dimensions',120,1600,80,1300,true);
+        if(reaction==='throw')throw token;
+      });
+      const values=Object.fromEntries(['width','scrollWidth','height','scrollHeight','scrollLeft','scrollTop'].map(key=>[key,[value]]));
+      act(method,update(values,undefined,true,true),true);
+      act('clock',1040);act('frame');act('clock',1300);act('frame');
+    }]);
+  for(const method of methods)for(const value of [undefined,null,0,true,'abc',2n,Symbol('update')])
+    tests.push([`primitive/${method}/${String(value)}`,({act})=>act(method,value,false)]);
   for(const [label,program] of tests) {
     const expected=sourceRun(90,scenario(program)), actual=run(90,scenario(program));
     if(JSON.stringify(actual)!==JSON.stringify(expected))throw new Error(`${label}\nexpected ${JSON.stringify(expected)}\nactual ${JSON.stringify(actual)}`);
