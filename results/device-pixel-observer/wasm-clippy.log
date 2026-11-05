@@ -1,0 +1,56 @@
+    Checking once_cell v1.21.4
+    Checking cfg-if v1.0.5
+    Checking allocator-api2 v0.2.21
+    Checking wasm-bindgen v0.2.100
+    Checking equivalent v1.0.3
+    Checking foldhash v0.1.5
+    Checking memchr v2.8.3
+    Checking js-sys v0.3.77
+    Checking hashbrown v0.15.5
+    Checking regress v0.10.4
+    Checking ryu-js v1.0.3
+    Checking xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\JessicaDevicePixel\crates\xterm-core)
+    Checking wasm-bindgen-futures v0.4.50
+    Checking adler2 v2.0.1
+    Checking miniz_oxide v0.8.9
+    Checking zmij v1.0.23
+    Checking serde_core v1.0.229
+    Checking web-sys v0.3.77
+    Checking xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\JessicaDevicePixel\crates\xterm-addons)
+    Checking xterm-wasm-support v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\JessicaDevicePixel\crates\xterm-wasm-support)
+    Checking itoa v1.0.18
+    Checking serde_json v1.0.154
+    Checking wasm-bindgen-test v0.3.50
+    Checking xterm-font-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\JessicaDevicePixel\crates\xterm-font-addons)
+    Checking xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\JessicaDevicePixel\crates\xterm-web)
+error: unneeded `return` statement
+  --> crates\xterm-web\src\webgl\device_pixel_observer.rs:36:17
+   |
+36 | /                 return Err(js_sys::ReferenceError::new(
+37 | |                     "Cannot access 'observer' before initialization",
+38 | |                 )
+39 | |                 .into());
+   | |________________________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_return
+   = note: `-D clippy::needless-return` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::needless_return)]`
+help: remove `return`
+   |
+36 ~                 Err(js_sys::ReferenceError::new(
+37 +                     "Cannot access 'observer' before initialization",
+38 +                 )
+39 ~                 .into())
+   |
+
+error: useless conversion to the same type: `wasm_bindgen::JsValue`
+   --> crates\xterm-web\src\webgl\device_pixel_observer.rs:133:29
+    |
+133 |     let observer: JsValue = Reflect::construct(&constructor, &arguments)?.into();
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: consider removing `.into()`: `Reflect::construct(&constructor, &arguments)?`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#useless_conversion
+    = note: `-D clippy::useless-conversion` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::useless_conversion)]`
+
+error: could not compile `xterm-web` (lib) due to 2 previous errors

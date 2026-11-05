@@ -1,0 +1,139 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_device_pixel_observer",
+  "testTimeoutMs": 60000,
+  "features": [
+    "acceptance-hooks"
+  ],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T21:57:39.143Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_device_pixel_observer",
+        "--features",
+        "acceptance-hooks",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 14727.2375,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 16.107900000000882,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\JessicaDevicePixel\\results\\acceptance-artifacts\\c7cc60154c6ab311935be68f80ce93ee0cae36ef14fdc5bf6af4c4519590d55e\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\JessicaDevicePixel\\results\\browser-host\\wasm_device_pixel_observer\\2026-11-05T21-57-39-048Z-5703df6b-29b0-4745-83af-beee1a59ef94\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1237.9429,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_device_pixel_observer::actual_parent_window_observation_matches_unchanged_source",
+        "__wbgt__wasm_device_pixel_observer::observer_lifecycle_and_live_getters_match_unchanged_source",
+        "__wbgt__wasm_device_pixel_observer::rust_drop_disconnects_once_and_releases_callback_state"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_device_pixel_observer.rs:51:5:\nassertion `left == right` failed\n  left: \"[{\\\"name\\\":\\\"normal\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],[\\\"callback\\\",true,12.5,27.25],[\\\"callback\\\",true,12.5,27.25],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"unsupported\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25],[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"observe-throw\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25],[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"observe-getter-throw\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25],[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"construct-throw\\\",\\\"trace\\\":[\\\"construct\\\",\\\"sentinel\\\"]},{\\\"name\\\":\\\"callback-throw\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],[\\\"callback\\\",true,12.5,27.25],\\\"sentinel\\\",\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25],\\\"sentinel\\\"]},{\\\"name\\\":\\\"disconnect-throw\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],[\\\"callback\\\",true,12.5,27.25],\\\"disconnect\\\",\\\"sentinel\\\",\\\"disconnect\\\",\\\"sentinel\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"box-getter-throw\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"sentinel\\\",\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"getters\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"target\\\",\\\"box1\\\",\\\"width\\\",\\\"box2\\\",\\\"height\\\",[\\\"callback\\\",true,7.25,10.5],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"zero\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"inherited\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],[\\\"callback\\\",true,12.5,27.25],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"find\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"find\\\",[\\\"callback\\\",true,12.5,27.25],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"dispose-reentry\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],[\\\"callback\\\",true,12.5,27.25],\\\"disconnect\\\",\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"sync-unsupported\\\",\\\"trace\\\":[\\\"construct\\\",\\\"ReferenceError\\\"]},{\\\"name\\\":\\\"sync-supported\\\",\\\"trace\\\":[\\\"construct\\\",[\\\"callback\\\",true,3,4],\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],[\\\"callback\\\",true,12.5,27.25],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"coercion\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"coerce-width\\\",[\\\"callback\\\",true,\\\"raw-width\\\",\\\"4.25\\\"],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"width-throw\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"read-height-before-coerce-width\\\",\\\"sentinel\\\",\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"retained-predicate\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],[\\\"callback\\\",true,12.5,27.25],[\\\"retained\\\",true,false],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"empty-box\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"TypeError\\\",\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"primitive-box\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"null-box\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"TypeError\\\",\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"has-proxy\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"has-devicePixelContentBoxSize\\\",[\\\"callback\\\",true,12.5,27.25],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"short-circuit\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"bigint\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],[\\\"callback\\\",true,\\\"3n\\\",\\\"4n\\\"],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"observe-sync-unsupported-throw\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25],[\\\"callback\\\",true,12.5,27.25]]}]\"\n right: \"[{\\\"name\\\":\\\"normal\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],[\\\"callback\\\",true,12.5,27.25],[\\\"callback\\\",true,12.5,27.25],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"unsupported\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25],[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"observe-throw\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25],[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"observe-getter-throw\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25],[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"construct-throw\\\",\\\"trace\\\":[\\\"construct\\\",\\\"sentinel\\\"]},{\\\"name\\\":\\\"callback-throw\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],[\\\"callback\\\",true,12.5,27.25],\\\"sentinel\\\",\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25],\\\"sentinel\\\"]},{\\\"name\\\":\\\"disconnect-throw\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],[\\\"callback\\\",true,12.5,27.25],\\\"disconnect\\\",\\\"sentinel\\\",\\\"disconnect\\\",\\\"sentinel\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"box-getter-throw\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"sentinel\\\",\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"getters\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"target\\\",\\\"box1\\\",\\\"width\\\",\\\"box2\\\",\\\"height\\\",[\\\"callback\\\",true,7.25,10.5],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"zero\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"inherited\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],[\\\"callback\\\",true,12.5,27.25],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"find\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"find\\\",[\\\"callback\\\",true,12.5,27.25],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"dispose-reentry\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],[\\\"callback\\\",true,12.5,27.25],\\\"disconnect\\\",\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"sync-unsupported\\\",\\\"trace\\\":[\\\"construct\\\",\\\"ReferenceError\\\"]},{\\\"name\\\":\\\"sync-supported\\\",\\\"trace\\\":[\\\"construct\\\",[\\\"callback\\\",true,3,4],\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],[\\\"callback\\\",true,12.5,27.25],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"coercion\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"coerce-width\\\",[\\\"callback\\\",true,\\\"raw-width\\\",\\\"4.25\\\"],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"width-throw\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"read-height-before-coerce-width\\\",\\\"sentinel\\\",\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"retained-predicate\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],[\\\"callback\\\",true,12.5,27.25],[\\\"retained\\\",true,false],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"empty-box\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"TypeError\\\",\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"primitive-box\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"null-box\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"TypeError\\\",\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"has-proxy\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"has-devicePixelContentBoxSize\\\",[\\\"callback\\\",true,12.5,27.25],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"short-circuit\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"bigint\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],[\\\"callback\\\",true,\\\"3n\\\",\\\"4n\\\"],\\\"disconnect\\\",\\\"disconnect\\\",[\\\"callback\\\",true,12.5,27.25]]},{\\\"name\\\":\\\"observe-sync-unsupported-throw\\\",\\\"trace\\\":[\\\"construct\\\",\\\"get-observe\\\",[\\\"observe\\\",true,[\\\"device-pixel-content-box\\\"],true],\\\"disconnect\\\",\\\"TypeError\\\"]}]\"\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:50500/suite.js:5984:21)\n    at wasm_device_pixel_observer-a35882a3d6513b61.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:50500/suite_bg.wasm:wasm-function[39076]:0xb1a077)\n    at wasm_device_pixel_observer-a35882a3d6513b61.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:50500/suite_bg.wasm:wasm-function[25743]:0xa7f90f)\n    at wasm_device_pixel_observer-a35882a3d6513b61.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:50500/suite_bg.wasm:wasm-function[8628]:0x7d4322)\n    at wasm_device_pixel_observer-a35882a3d6513b61.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:50500/suite_bg.wasm:wasm-function[25744]:0xa7f993)\n    at wasm_device_pixel_observer-a35882a3d6513b61.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:50500/suite_bg.wasm:wasm-function[13367]:0x8eb5d0)\n    at wasm_device_pixel_observer-a35882a3d6513b61.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:50500/suite_bg.wasm:wasm-function[16878]:0x97e974)\n    at wasm_device_pixel_observer-a35882a3d6513b61.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:50500/suite_bg.wasm:wasm-function[47056]:0xb3288f)\n    at wasm_device_pixel_observer-a35882a3d6513b61.wasm.rust_begin_unwind (http://127.0.0.1:50500/suite_bg.wasm:wasm-function[32210]:0xae80f1)\n    at wasm_device_pixel_observer-a35882a3d6513b61.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:50500/suite_bg.wasm:wasm-function[32211]:0xae811e)\n\n"
+        },
+        {
+          "type": "info",
+          "text": "native-device-pixel {\"implementation\":\"source\",\"result\":{\"constructors\":1,\"disconnects\":2,\"callbacks\":[[123,38],[142,38]],\"sizes\":[[123,38],[142,38]],\"observeError\":null,\"contentControl\":[141.75,37.5]}}"
+        },
+        {
+          "type": "info",
+          "text": "native-device-pixel {\"implementation\":\"rust\",\"result\":{\"constructors\":1,\"disconnects\":2,\"callbacks\":[[123,38],[142,38]],\"sizes\":[[123,38],[142,38]],\"observeError\":null,\"contentControl\":[141.75,37.5]}}"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 3 tests\ntest rust_drop_disconnects_once_and_releases_callback_state ... ok\ntest observer_lifecycle_and_live_getters_match_unchanged_source ... FAIL\ntest actual_parent_window_observation_matches_unchanged_source ... ok\n\nfailures:\n\n---- observer_lifecycle_and_live_getters_match_unchanged_source output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_device_pixel_observer-a35882a3d6513b61.wasm.__rust_start_panic (http://127.0.0.1:50500/suite_bg.wasm:wasm-function[47599]:0xb3360d)\n            at wasm_device_pixel_observer-a35882a3d6513b61.wasm.rust_panic (http://127.0.0.1:50500/suite_bg.wasm:wasm-function[42663]:0xb27ba4)\n            at wasm_device_pixel_observer-a35882a3d6513b61.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:50500/suite_bg.wasm:wasm-function[13367]:0x8eb5fb)\n            at wasm_device_pixel_observer-a35882a3d6513b61.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:50500/suite_bg.wasm:wasm-function[16878]:0x97e974)\n            at wasm_device_pixel_observer-a35882a3d6513b61.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:50500/suite_bg.wasm:wasm-function[47056]:0xb3288f)\n            at wasm_device_pixel_observer-a35882a3d6513b61.wasm.rust_begin_unwind (http://127.0.0.1:50500/suite_bg.wasm:wasm-function[32210]:0xae80f1)\n            at wasm_device_pixel_observer-a35882a3d6513b61.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:50500/suite_bg.wasm:wasm-function[32211]:0xae811e)\n            at wasm_device_pixel_observer-a35882a3d6513b61.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:50500/suite_bg.wasm:wasm-function[6028]:0x700afd)\n            at wasm_device_pixel_observer-a35882a3d6513b61.wasm.core::panicking::assert_failed::hb33e80e49defcfc9 (http://127.0.0.1:50500/suite_bg.wasm:wasm-function[24152]:0xa5caad)\n            at wasm_device_pixel_observer-a35882a3d6513b61.wasm.wasm_device_pixel_observer::observer_lifecycle_and_live_getters_match_unchanged_source::h2ade12b5d45bdd5a (http://127.0.0.1:50500/suite_bg.wasm:wasm-function[1794]:0x45be07)\n\nfailures:\n\n    observer_lifecycle_and_live_getters_match_unchanged_source\n\ntest result: FAILED. 2 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.07s\n\n",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/c7cc60154c6ab311935be68f80ce93ee0cae36ef14fdc5bf6af4c4519590d55e/artifact.wasm",
+      "sha256": "c7cc60154c6ab311935be68f80ce93ee0cae36ef14fdc5bf6af4c4519590d55e",
+      "bytes": 20140234,
+      "originalPath": "O:/xterm-rust-swarm-16/tmp/worktrees/JessicaDevicePixel/target\\wasm32-unknown-unknown\\debug\\deps\\wasm_device_pixel_observer-a35882a3d6513b61.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\JessicaDevicePixel\\results\\browser-host\\wasm_device_pixel_observer\\2026-11-05T21-57-39-048Z-5703df6b-29b0-4745-83af-beee1a59ef94\\artifacts\\suite_bg.wasm",
+      "bytes": 16933272,
+      "sha256": "6d881af8ab7034dc9c154e783a80731fe89333e56589eac89ee0846dc0e4b877"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\JessicaDevicePixel\\results\\browser-host\\wasm_device_pixel_observer\\2026-11-05T21-57-39-048Z-5703df6b-29b0-4745-83af-beee1a59ef94\\artifacts\\suite.js",
+      "bytes": 250250,
+      "sha256": "cf82941dbe7cb192ab7c1e932623ea303bc0a6ab8b1ec343c3f9536cd9b8393a"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "daecf064116c6042f16cfc4f7839d2a031eb7803dd270c8cdb077d89586fd7e8"
+  },
+  "finishedAt": "2026-11-05T21:57:58.610Z"
+}

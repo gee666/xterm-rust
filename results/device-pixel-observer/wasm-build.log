@@ -1,0 +1,81 @@
+   Compiling unicode-ident v1.0.27
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling wasm-bindgen-shared v0.2.100
+   Compiling syn v2.0.119
+   Compiling bumpalo v3.20.3
+   Compiling log v0.4.34
+   Compiling rustversion v1.0.23
+   Compiling wasm-bindgen v0.2.100
+   Compiling wasm-bindgen-backend v0.2.100
+   Compiling wasm-bindgen-macro-support v0.2.100
+   Compiling once_cell v1.21.4
+   Compiling cfg-if v1.0.5
+   Compiling memchr v2.8.3
+   Compiling allocator-api2 v0.2.21
+   Compiling equivalent v1.0.3
+   Compiling foldhash v0.1.5
+   Compiling hashbrown v0.15.5
+   Compiling wasm-bindgen-macro v0.2.100
+   Compiling regress v0.10.4
+   Compiling js-sys v0.3.77
+   Compiling ryu-js v1.0.3
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\JessicaDevicePixel\crates\xterm-core)
+   Compiling wasm-bindgen-futures v0.4.50
+   Compiling adler2 v2.0.1
+   Compiling zmij v1.0.23
+   Compiling miniz_oxide v0.8.9
+   Compiling serde_core v1.0.229
+   Compiling serde_json v1.0.154
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\JessicaDevicePixel\crates\xterm-addons)
+   Compiling xterm-wasm-support v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\JessicaDevicePixel\crates\xterm-wasm-support)
+   Compiling web-sys v0.3.77
+   Compiling itoa v1.0.18
+   Compiling wasm-bindgen-test-macro v0.3.50
+   Compiling wasm-bindgen-test v0.3.50
+   Compiling xterm-font-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\JessicaDevicePixel\crates\xterm-font-addons)
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\JessicaDevicePixel\crates\xterm-web)
+error[E0283]: type annotations needed
+   --> crates\xterm-web\src\webgl\device_pixel_observer.rs:107:52
+    |
+107 |             Ok(field(&entry, "target")? == *target.as_ref())
+    |                                         --         ^^^^^^
+    |                                         |
+    |                                         type must be known at this point
+    |
+    = note: cannot satisfy `wasm_bindgen::JsValue: PartialEq<_>`
+    = help: the following types implement trait `PartialEq<Rhs>`:
+              `wasm_bindgen::JsValue` implements `PartialEq<&std::string::String>`
+              `wasm_bindgen::JsValue` implements `PartialEq<&str>`
+              `wasm_bindgen::JsValue` implements `PartialEq<bool>`
+              `wasm_bindgen::JsValue` implements `PartialEq<f32>`
+              `wasm_bindgen::JsValue` implements `PartialEq<f64>`
+              `wasm_bindgen::JsValue` implements `PartialEq<i128>`
+              `wasm_bindgen::JsValue` implements `PartialEq<i16>`
+              `wasm_bindgen::JsValue` implements `PartialEq<i32>`
+            and 12 others
+help: try using a fully qualified path to specify the expected types
+    |
+107 |             Ok(field(&entry, "target")? == *<web_sys::HtmlElement as AsRef<T>>::as_ref(&target))
+    |                                             ++++++++++++++++++++++++++++++++++++++++++++      ~
+
+error[E0283]: type annotations needed
+   --> crates\xterm-web\src\webgl\device_pixel_observer.rs:107:52
+    |
+107 |             Ok(field(&entry, "target")? == *target.as_ref())
+    |                                                    ^^^^^^
+    |
+    = note: multiple `impl`s satisfying `web_sys::HtmlElement: AsRef<_>` found in the `web_sys` crate:
+            - impl AsRef<Element> for web_sys::HtmlElement;
+            - impl AsRef<EventTarget> for web_sys::HtmlElement;
+            - impl AsRef<Node> for web_sys::HtmlElement;
+            - impl AsRef<js_sys::Object> for web_sys::HtmlElement;
+            - impl AsRef<wasm_bindgen::JsValue> for web_sys::HtmlElement;
+            - impl AsRef<web_sys::HtmlElement> for web_sys::HtmlElement;
+help: try using a fully qualified path to specify the expected types
+    |
+107 |             Ok(field(&entry, "target")? == *<web_sys::HtmlElement as AsRef<T>>::as_ref(&target))
+    |                                             ++++++++++++++++++++++++++++++++++++++++++++      ~
+
+For more information about this error, try `rustc --explain E0283`.
+error: could not compile `xterm-web` (lib) due to 2 previous errors
