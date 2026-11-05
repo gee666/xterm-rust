@@ -1,6 +1,5 @@
 //! Shared RenderService fixture, with cancellation programs also run on intact TS.
 use super::*;
-use xterm_core::core_service::CoreService;
 
 #[wasm_bindgen(module = "/tests/support/render_sync_oracle.mjs")]
 extern "C" {
@@ -11,13 +10,12 @@ extern "C" {
 }
 struct Fixture {
     service: Rc<RenderService>,
-    core: Rc<CoreService>,
+    terminal: Rc<Terminal>,
     log: Log,
 }
 impl Fixture {
     fn new(host: &JsValue) -> Result<Rc<Self>, JsValue> {
         let (service, terminal) = create_service(host)?;
-        let core = terminal.with_state(|s| s.core.clone()).unwrap();
         let log: Log = Rc::default();
         for (name, event) in [
             ("viewport", service.on_rendered_viewport_change()),
@@ -35,13 +33,21 @@ impl Fixture {
         service.set_renderer(Backend::new("A", &log))?;
         invoke(host, "frame", &[])?;
         log.borrow_mut().clear();
-        Ok(Rc::new(Self { service, core, log }))
+        Ok(Rc::new(Self {
+            service,
+            terminal,
+            log,
+        }))
     }
     fn command(&self, command: &JsValue) -> Result<JsValue, JsValue> {
         let get = |key: &str| js_sys::Reflect::get(command, &key.into());
+        let core = self
+            .terminal
+            .with_state(|state| state.core.clone())
+            .unwrap();
         match get("op")?.as_string().unwrap().as_str() {
             "mode" => {
-                self.core.dec_private_modes.borrow_mut().synchronized_output =
+                core.dec_private_modes.borrow_mut().synchronized_output =
                     get("value")?.as_bool().unwrap();
             }
             "refresh" => self.service.refresh_rows(
@@ -52,12 +58,7 @@ impl Fixture {
             )?,
             "dispose" => self.service.dispose()?,
             "state" => {
-                return Ok(self
-                    .core
-                    .dec_private_modes
-                    .borrow()
-                    .synchronized_output
-                    .into());
+                return Ok(core.dec_private_modes.borrow().synchronized_output.into());
             }
             "drain" => {
                 let result = js_sys::Array::new();
