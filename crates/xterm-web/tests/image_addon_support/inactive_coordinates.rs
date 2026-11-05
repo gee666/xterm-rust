@@ -19,6 +19,11 @@ fn compare(constructors: &JsValue, program: &str) {
     let run = js_sys::Function::new_with_args("constructors", program);
     let observations = run.call1(&JsValue::UNDEFINED, constructors).unwrap();
     let observations = js_sys::Array::from(&observations);
+    assert_eq!(
+        js_sys::Array::from(&get(&observations.get(0), "trace")).length(),
+        0,
+        "unchanged source must not invoke coordinate hooks"
+    );
     let expected = js_sys::JSON::stringify(&observations.get(0)).unwrap();
     assert_eq!(
         js_sys::JSON::stringify(&observations.get(1)).unwrap(),
