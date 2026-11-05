@@ -1,0 +1,720 @@
+﻿2026-11-05T13:54:41.0084309Z Current runner version: '2.338.2'
+2026-11-05T13:54:41.0122002Z ##[group]Runner Image Provisioner
+2026-11-05T13:54:41.0123442Z Hosted Compute Agent
+2026-11-05T13:54:41.0124424Z Version: 20261021.618
+2026-11-05T13:54:41.0125393Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-11-05T13:54:41.0126597Z Build Date: 2026-10-21T00:45:21Z
+2026-11-05T13:54:41.0127790Z Worker ID: {343ac20e-5c78-4a17-b021-daae55aaa50d}
+2026-11-05T13:54:41.0129123Z Region: centralus
+2026-11-05T13:54:41.0130308Z Cloud: Azure
+2026-11-05T13:54:41.0131198Z ##[endgroup]
+2026-11-05T13:54:41.0134204Z ##[group]Operating System
+2026-11-05T13:54:41.0135241Z Microsoft Windows Server 2025
+2026-11-05T13:54:41.0136296Z 10.0.26100
+2026-11-05T13:54:41.0137111Z Datacenter
+2026-11-05T13:54:41.0137991Z ##[endgroup]
+2026-11-05T13:54:41.0138885Z ##[group]Runner Image
+2026-11-05T13:54:41.0139810Z Image: windows-2025-vs2026
+2026-11-05T13:54:41.0140720Z Version: 20261030.294.1
+2026-11-05T13:54:41.0143373Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261030.294/images/windows/Windows2025-VS2026-Readme.md
+2026-11-05T13:54:41.0146489Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261030.294
+2026-11-05T13:54:41.0148040Z ##[endgroup]
+2026-11-05T13:54:41.0149709Z ##[group]GITHUB_TOKEN Permissions
+2026-11-05T13:54:41.0151920Z Contents: read
+2026-11-05T13:54:41.0152495Z Metadata: read
+2026-11-05T13:54:41.0153118Z ##[endgroup]
+2026-11-05T13:54:41.0156027Z Secret source: Actions
+2026-11-05T13:54:41.0157138Z Cache mode: write
+2026-11-05T13:54:41.0157966Z Prepare workflow directory
+2026-11-05T13:54:41.0507380Z Prepare all required actions
+2026-11-05T13:54:41.0556157Z Getting action download info
+2026-11-05T13:54:41.3082702Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-05T13:54:41.4502669Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-11-05T13:54:41.6271686Z Download action repository 'dtolnay/rust-toolchain@master' (SHA:683b588c487a69d01f6c6ddf40f036ff682cc2c8)
+2026-11-05T13:54:41.8026721Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-05T13:54:42.1868631Z Complete job name: Native windows-latest Rust 1.85.1
+2026-11-05T13:54:42.3946449Z ##[group]Run actions/checkout@v4
+2026-11-05T13:54:42.3948200Z with:
+2026-11-05T13:54:42.3948736Z   repository: gee666/xterm-rust
+2026-11-05T13:54:42.3954523Z   token: ***
+2026-11-05T13:54:42.3955023Z   ssh-strict: true
+2026-11-05T13:54:42.3955521Z   ssh-user: git
+2026-11-05T13:54:42.3956028Z   persist-credentials: true
+2026-11-05T13:54:42.3956592Z   clean: true
+2026-11-05T13:54:42.3957097Z   sparse-checkout-cone-mode: true
+2026-11-05T13:54:42.3957704Z   fetch-depth: 1
+2026-11-05T13:54:42.3958188Z   fetch-tags: false
+2026-11-05T13:54:42.3958682Z   show-progress: true
+2026-11-05T13:54:42.3959182Z   lfs: false
+2026-11-05T13:54:42.3959605Z   submodules: false
+2026-11-05T13:54:42.3960105Z   set-safe-directory: true
+2026-11-05T13:54:42.3960606Z   allow-unsafe-pr-checkout: false
+2026-11-05T13:54:42.3961402Z ##[endgroup]
+2026-11-05T13:54:42.5497086Z Syncing repository: gee666/xterm-rust
+2026-11-05T13:54:42.5499009Z ##[group]Getting Git version info
+2026-11-05T13:54:42.5499798Z Working directory is 'D:\a\xterm-rust\xterm-rust'
+2026-11-05T13:54:42.6422802Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-05T13:54:43.0086063Z git version 2.56.0.windows.4
+2026-11-05T13:54:43.0140313Z ##[endgroup]
+2026-11-05T13:54:43.0159667Z Temporarily overriding HOME='D:\a\_temp\cac4a33e-d124-4691-ba9f-3a8288901495' before making global git config changes
+2026-11-05T13:54:43.0161881Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-05T13:54:43.0169918Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\xterm-rust\xterm-rust
+2026-11-05T13:54:43.0873642Z Deleting the contents of 'D:\a\xterm-rust\xterm-rust'
+2026-11-05T13:54:43.0880828Z ##[group]Initializing the repository
+2026-11-05T13:54:43.0890044Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\xterm-rust\xterm-rust
+2026-11-05T13:54:43.2117375Z Initialized empty Git repository in D:/a/xterm-rust/xterm-rust/.git/
+2026-11-05T13:54:43.2163003Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/gee666/xterm-rust
+2026-11-05T13:54:43.2821701Z ##[endgroup]
+2026-11-05T13:54:43.2823567Z ##[group]Disabling automatic garbage collection
+2026-11-05T13:54:43.2830152Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-05T13:54:43.3203551Z ##[endgroup]
+2026-11-05T13:54:43.3205353Z ##[group]Setting up auth
+2026-11-05T13:54:43.3215987Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-05T13:54:43.3601024Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-05T13:54:44.8522733Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-05T13:54:44.8899557Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-05T13:54:45.4406029Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-05T13:54:45.4780840Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-05T13:54:46.0322360Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-05T13:54:46.0707761Z ##[endgroup]
+2026-11-05T13:54:46.0708287Z ##[group]Fetching the repository
+2026-11-05T13:54:46.0729640Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +aa3f79211e48175f317261592ff57bd20e4dc79c:refs/remotes/origin/ci/bohemond383-aa3f7921
+2026-11-05T13:54:48.9855173Z From https://github.com/gee666/xterm-rust
+2026-11-05T13:54:48.9857068Z  * [new ref]         aa3f79211e48175f317261592ff57bd20e4dc79c -> origin/ci/bohemond383-aa3f7921
+2026-11-05T13:54:48.9903504Z ##[endgroup]
+2026-11-05T13:54:48.9904096Z ##[group]Determining the checkout info
+2026-11-05T13:54:48.9906926Z ##[endgroup]
+2026-11-05T13:54:48.9921725Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-05T13:54:49.0489587Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-05T13:54:49.0879575Z ##[group]Checking out the ref
+2026-11-05T13:54:49.0888317Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B ci/bohemond383-aa3f7921 refs/remotes/origin/ci/bohemond383-aa3f7921
+2026-11-05T13:54:50.1657526Z Updating files:  28% (2268/7913)
+2026-11-05T13:54:50.1876423Z Updating files:  29% (2295/7913)
+2026-11-05T13:54:50.2092464Z Updating files:  30% (2374/7913)
+2026-11-05T13:54:50.2307893Z Updating files:  31% (2454/7913)
+2026-11-05T13:54:50.2523238Z Updating files:  32% (2533/7913)
+2026-11-05T13:54:50.2726693Z Updating files:  33% (2612/7913)
+2026-11-05T13:54:50.2965722Z Updating files:  34% (2691/7913)
+2026-11-05T13:54:50.3194704Z Updating files:  35% (2770/7913)
+2026-11-05T13:54:50.3441709Z Updating files:  36% (2849/7913)
+2026-11-05T13:54:50.3714376Z Updating files:  37% (2928/7913)
+2026-11-05T13:54:50.3969791Z Updating files:  38% (3007/7913)
+2026-11-05T13:54:50.4187416Z Updating files:  39% (3087/7913)
+2026-11-05T13:54:50.4364953Z Updating files:  40% (3166/7913)
+2026-11-05T13:54:50.4618491Z Updating files:  41% (3245/7913)
+2026-11-05T13:54:50.5022970Z Updating files:  42% (3324/7913)
+2026-11-05T13:54:50.5294127Z Updating files:  43% (3403/7913)
+2026-11-05T13:54:50.5490639Z Updating files:  44% (3482/7913)
+2026-11-05T13:54:50.5769755Z Updating files:  45% (3561/7913)
+2026-11-05T13:54:50.6069007Z Updating files:  46% (3640/7913)
+2026-11-05T13:54:50.6388956Z Updating files:  47% (3720/7913)
+2026-11-05T13:54:50.6674472Z Updating files:  48% (3799/7913)
+2026-11-05T13:54:50.6955984Z Updating files:  49% (3878/7913)
+2026-11-05T13:54:50.7256891Z Updating files:  50% (3957/7913)
+2026-11-05T13:54:50.7595699Z Updating files:  51% (4036/7913)
+2026-11-05T13:54:50.7877491Z Updating files:  52% (4115/7913)
+2026-11-05T13:54:50.8156328Z Updating files:  53% (4194/7913)
+2026-11-05T13:54:50.8453121Z Updating files:  54% (4274/7913)
+2026-11-05T13:54:50.8888579Z Updating files:  55% (4353/7913)
+2026-11-05T13:54:50.9166945Z Updating files:  56% (4432/7913)
+2026-11-05T13:54:50.9871241Z Updating files:  57% (4511/7913)
+2026-11-05T13:54:51.0166622Z Updating files:  58% (4590/7913)
+2026-11-05T13:54:51.0407739Z Updating files:  59% (4669/7913)
+2026-11-05T13:54:51.0627764Z Updating files:  60% (4748/7913)
+2026-11-05T13:54:51.0846842Z Updating files:  61% (4827/7913)
+2026-11-05T13:54:51.1078048Z Updating files:  62% (4907/7913)
+2026-11-05T13:54:51.1400227Z Updating files:  63% (4986/7913)
+2026-11-05T13:54:51.1599414Z Updating files:  64% (5065/7913)
+2026-11-05T13:54:51.1630021Z Updating files:  64% (5136/7913)
+2026-11-05T13:54:51.1878189Z Updating files:  65% (5144/7913)
+2026-11-05T13:54:51.2079903Z Updating files:  66% (5223/7913)
+2026-11-05T13:54:51.2286286Z Updating files:  67% (5302/7913)
+2026-11-05T13:54:51.2563047Z Updating files:  68% (5381/7913)
+2026-11-05T13:54:51.2774395Z Updating files:  69% (5460/7913)
+2026-11-05T13:54:51.2982493Z Updating files:  70% (5540/7913)
+2026-11-05T13:54:51.3172178Z Updating files:  71% (5619/7913)
+2026-11-05T13:54:51.3367965Z Updating files:  72% (5698/7913)
+2026-11-05T13:54:51.3621656Z Updating files:  73% (5777/7913)
+2026-11-05T13:54:51.3827788Z Updating files:  74% (5856/7913)
+2026-11-05T13:54:51.4159745Z Updating files:  75% (5935/7913)
+2026-11-05T13:54:51.4763174Z Updating files:  76% (6014/7913)
+2026-11-05T13:54:51.5000985Z Updating files:  77% (6094/7913)
+2026-11-05T13:54:51.5223546Z Updating files:  78% (6173/7913)
+2026-11-05T13:54:51.5410415Z Updating files:  79% (6252/7913)
+2026-11-05T13:54:51.5592755Z Updating files:  80% (6331/7913)
+2026-11-05T13:54:51.5782350Z Updating files:  81% (6410/7913)
+2026-11-05T13:54:51.5980380Z Updating files:  82% (6489/7913)
+2026-11-05T13:54:51.6188591Z Updating files:  83% (6568/7913)
+2026-11-05T13:54:51.6391128Z Updating files:  84% (6647/7913)
+2026-11-05T13:54:51.6623813Z Updating files:  85% (6727/7913)
+2026-11-05T13:54:51.7289929Z Updating files:  86% (6806/7913)
+2026-11-05T13:54:51.7487034Z Updating files:  87% (6885/7913)
+2026-11-05T13:54:51.7687918Z Updating files:  88% (6964/7913)
+2026-11-05T13:54:51.7881013Z Updating files:  89% (7043/7913)
+2026-11-05T13:54:51.8097553Z Updating files:  90% (7122/7913)
+2026-11-05T13:54:51.8505413Z Updating files:  91% (7201/7913)
+2026-11-05T13:54:51.8828276Z Updating files:  92% (7280/7913)
+2026-11-05T13:54:51.9201018Z Updating files:  93% (7360/7913)
+2026-11-05T13:54:51.9403416Z Updating files:  94% (7439/7913)
+2026-11-05T13:54:51.9595592Z Updating files:  95% (7518/7913)
+2026-11-05T13:54:51.9802098Z Updating files:  96% (7597/7913)
+2026-11-05T13:54:52.0004862Z Updating files:  97% (7676/7913)
+2026-11-05T13:54:52.0200791Z Updating files:  98% (7755/7913)
+2026-11-05T13:54:52.0401852Z Updating files:  99% (7834/7913)
+2026-11-05T13:54:52.0405113Z Updating files: 100% (7913/7913)
+2026-11-05T13:54:52.0406008Z Updating files: 100% (7913/7913), done.
+2026-11-05T13:54:52.0661515Z Switched to a new branch 'ci/bohemond383-aa3f7921'
+2026-11-05T13:54:52.0679157Z branch 'ci/bohemond383-aa3f7921' set up to track 'origin/ci/bohemond383-aa3f7921'.
+2026-11-05T13:54:52.0805128Z ##[endgroup]
+2026-11-05T13:54:52.1212051Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-05T13:54:52.1561096Z aa3f79211e48175f317261592ff57bd20e4dc79c
+2026-11-05T13:54:52.2055649Z ##[group]Run actions/setup-node@v4
+2026-11-05T13:54:52.2055978Z with:
+2026-11-05T13:54:52.2056169Z   node-version: 24
+2026-11-05T13:54:52.2056371Z   always-auth: false
+2026-11-05T13:54:52.2056574Z   check-latest: false
+2026-11-05T13:54:52.2059339Z   token: ***
+2026-11-05T13:54:52.2059527Z ##[endgroup]
+2026-11-05T13:54:52.3894726Z Found in cache @ C:\hostedtoolcache\windows\node\24.22.2\x64
+2026-11-05T13:54:52.3903692Z (node:4140) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-05T13:54:52.3906946Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-05T13:54:52.3908381Z ##[group]Environment details
+2026-11-05T13:54:57.8078399Z node: v24.22.2
+2026-11-05T13:54:57.8078758Z npm: 11.19.1
+2026-11-05T13:54:57.8079298Z yarn: 1.22.22
+2026-11-05T13:54:57.8080736Z ##[endgroup]
+2026-11-05T13:54:57.8516252Z ##[group]Run dtolnay/rust-toolchain@master
+2026-11-05T13:54:57.8516592Z with:
+2026-11-05T13:54:57.8516773Z   toolchain: 1.85.1
+2026-11-05T13:54:57.8517002Z   components: rustfmt, clippy
+2026-11-05T13:54:57.8517228Z ##[endgroup]
+2026-11-05T13:54:57.8581103Z ##[start-action display=Parse toolchain version;id=__dtolnay_rust-toolchain.parse]
+2026-11-05T13:54:57.8757289Z ##[group]Run if [[ -z $toolchain ]]; then
+2026-11-05T13:54:57.8757658Z [36;1mif [[ -z $toolchain ]]; then[0m
+2026-11-05T13:54:57.8758185Z [36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070[0m
+2026-11-05T13:54:57.8758733Z [36;1m  echo "'toolchain' is a required input" >&2[0m
+2026-11-05T13:54:57.8759010Z [36;1m  exit 1[0m
+2026-11-05T13:54:57.8759330Z [36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then[0m
+2026-11-05T13:54:57.8759731Z [36;1m  if [[ Windows == macOS ]]; then[0m
+2026-11-05T13:54:57.8760296Z [36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2026-11-05T13:54:57.8760794Z [36;1m  else[0m
+2026-11-05T13:54:57.8761196Z [36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2026-11-05T13:54:57.8761644Z [36;1m  fi[0m
+2026-11-05T13:54:57.8761918Z [36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then[0m
+2026-11-05T13:54:57.8762432Z [36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT[0m
+2026-11-05T13:54:57.8762878Z [36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then[0m
+2026-11-05T13:54:57.8763380Z [36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT[0m
+2026-11-05T13:54:57.8763861Z [36;1melse[0m
+2026-11-05T13:54:57.8764037Z [36;1m  delimiter=EOF[0m
+2026-11-05T13:54:57.8764336Z [36;1m  while [[ $toolchain == *$delimiter* ]]; do delimiter+=_; done[0m
+2026-11-05T13:54:57.8764843Z [36;1m  printf 'toolchain<<%s\n%s\n%s\n' "$delimiter" "$toolchain" "$delimiter" >> $GITHUB_OUTPUT[0m
+2026-11-05T13:54:57.8765244Z [36;1mfi[0m
+2026-11-05T13:54:57.8791084Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-05T13:54:57.8791481Z env:
+2026-11-05T13:54:57.8791648Z   toolchain: 1.85.1
+2026-11-05T13:54:57.8791892Z ##[endgroup]
+2026-11-05T13:54:58.0818597Z ##[end-action id=__dtolnay_rust-toolchain.parse;outcome=success;conclusion=success;duration_ms=223]
+2026-11-05T13:54:58.0847664Z ##[start-action display=Set $CARGO_HOME;id=__dtolnay_rust-toolchain.__run]
+2026-11-05T13:54:58.0987062Z ##[group]Run echo CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV
+2026-11-05T13:54:58.0988000Z [36;1mecho CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV[0m
+2026-11-05T13:54:58.1004148Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-05T13:54:58.1004707Z ##[endgroup]
+2026-11-05T13:54:58.1425988Z ##[end-action id=__dtolnay_rust-toolchain.__run;outcome=success;conclusion=success;duration_ms=57]
+2026-11-05T13:54:58.1428366Z ##[start-action display=Install rustup if needed;id=__dtolnay_rust-toolchain.__run_2]
+2026-11-05T13:54:58.1437087Z ##[end-action id=__dtolnay_rust-toolchain.__run_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-05T13:54:58.1439176Z ##[start-action display=Install rustup if needed on windows;id=__dtolnay_rust-toolchain.__run_3]
+2026-11-05T13:54:58.1571216Z ##[group]Run if ! command -v rustup &>/dev/null; then
+2026-11-05T13:54:58.1571574Z [36;1mif ! command -v rustup &>/dev/null; then[0m
+2026-11-05T13:54:58.1572344Z [36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://win.rustup.rs/x86_64 --output 'D:\a\_temp\rustup-init.exe'[0m
+2026-11-05T13:54:58.1575011Z [36;1m  'D:\a\_temp\rustup-init.exe' --default-toolchain none --no-modify-path -y[0m
+2026-11-05T13:54:58.1575532Z [36;1m  echo "$CARGO_HOME\bin" >> $GITHUB_PATH[0m
+2026-11-05T13:54:58.1575801Z [36;1mfi[0m
+2026-11-05T13:54:58.1592625Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-05T13:54:58.1593004Z env:
+2026-11-05T13:54:58.1593191Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-05T13:54:58.1593436Z ##[endgroup]
+2026-11-05T13:54:58.2176789Z ##[end-action id=__dtolnay_rust-toolchain.__run_3;outcome=success;conclusion=success;duration_ms=73]
+2026-11-05T13:54:58.2191665Z ##[start-action display=rustup toolchain install 1.85.1;id=__dtolnay_rust-toolchain.__run_4]
+2026-11-05T13:54:58.2331942Z ##[group]Run set -f  # split targets and components on commas and whitespace, without glob expansion
+2026-11-05T13:54:58.2332669Z [36;1mset -f  # split targets and components on commas and whitespace, without glob expansion[0m
+2026-11-05T13:54:58.2333322Z [36;1mflags=()[0m
+2026-11-05T13:54:58.2333604Z [36;1mfor t in ${targets//,/ }; do flags+=(--target "$t"); done[0m
+2026-11-05T13:54:58.2333994Z [36;1mfor c in ${components//,/ }; do flags+=(--component "$c"); done[0m
+2026-11-05T13:54:58.2334759Z [36;1mif [[ $toolchain == nightly && -n $components ]]; then flags+=(--allow-downgrade); fi[0m
+2026-11-05T13:54:58.2335354Z [36;1mlog=$(mktemp)[0m
+2026-11-05T13:54:58.2335580Z [36;1mtrap 'rm -f "$log"' EXIT[0m
+2026-11-05T13:54:58.2335817Z [36;1mfor attempt in 1 2 3 4 5; do[0m
+2026-11-05T13:54:58.2336363Z [36;1m  if rustup toolchain install "$toolchain" "${flags[@]}" --profile minimal --no-self-update --force-non-host 2>&1 | tee "$log"; then[0m
+2026-11-05T13:54:58.2336908Z [36;1m    break[0m
+2026-11-05T13:54:58.2337084Z [36;1m  else[0m
+2026-11-05T13:54:58.2337255Z [36;1m    status=$?[0m
+2026-11-05T13:54:58.2337652Z [36;1m  fi[0m
+2026-11-05T13:54:58.2337993Z [36;1m  if [[ $attempt == 5 ]] || ! grep -Fq 'checksum failed for ' "$log" \[0m
+2026-11-05T13:54:58.2338729Z [36;1m      || ! grep -Fq 'this is likely due to an ongoing update of the official release server' "$log"; then[0m
+2026-11-05T13:54:58.2339178Z [36;1m    exit "$status"[0m
+2026-11-05T13:54:58.2339378Z [36;1m  fi[0m
+2026-11-05T13:54:58.2339707Z [36;1m  echo "Retrying rustup toolchain install in 30 seconds (retry $attempt of 4)" >&2[0m
+2026-11-05T13:54:58.2340108Z [36;1m  sleep 30[0m
+2026-11-05T13:54:58.2340287Z [36;1mdone[0m
+2026-11-05T13:54:58.2356383Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-05T13:54:58.2356773Z env:
+2026-11-05T13:54:58.2356963Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-05T13:54:58.2357216Z   toolchain: 1.85.1
+2026-11-05T13:54:58.2357394Z   targets: 
+2026-11-05T13:54:58.2357868Z   components: rustfmt, clippy
+2026-11-05T13:54:58.2358223Z   RUSTUP_PERMIT_COPY_RENAME: 1
+2026-11-05T13:54:58.2358549Z ##[endgroup]
+2026-11-05T13:54:59.0433909Z info: syncing channel updates for 1.85.1-x86_64-pc-windows-msvc
+2026-11-05T13:54:59.6923351Z info: latest update on 2025-03-18 for version 1.85.1 (4eb161250 2025-03-15)
+2026-11-05T13:54:59.7083457Z info: downloading 5 components
+2026-11-05T13:55:07.4671364Z 
+2026-11-05T13:55:07.4989830Z   1.85.1-x86_64-pc-windows-msvc installed - rustc 1.85.1 (4eb161250 2025-03-15)
+2026-11-05T13:55:07.4990431Z 
+2026-11-05T13:55:07.5325904Z ##[end-action id=__dtolnay_rust-toolchain.__run_4;outcome=success;conclusion=success;duration_ms=9313]
+2026-11-05T13:55:07.5333210Z ##[start-action display=rustup default 1.85.1;id=__dtolnay_rust-toolchain.__run_5]
+2026-11-05T13:55:07.5471271Z ##[group]Run rustup default "$toolchain" --force-non-host
+2026-11-05T13:55:07.5471663Z [36;1mrustup default "$toolchain" --force-non-host[0m
+2026-11-05T13:55:07.5488466Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-05T13:55:07.5488858Z env:
+2026-11-05T13:55:07.5489047Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-05T13:55:07.5489304Z   toolchain: 1.85.1
+2026-11-05T13:55:07.5490304Z ##[endgroup]
+2026-11-05T13:55:07.6265788Z info: using existing install for 1.85.1-x86_64-pc-windows-msvc
+2026-11-05T13:55:07.6356591Z info: default toolchain set to 1.85.1-x86_64-pc-windows-msvc
+2026-11-05T13:55:07.6356914Z 
+2026-11-05T13:55:07.6557207Z   1.85.1-x86_64-pc-windows-msvc unchanged - rustc 1.85.1 (4eb161250 2025-03-15)
+2026-11-05T13:55:07.6557588Z 
+2026-11-05T13:55:07.6634295Z ##[end-action id=__dtolnay_rust-toolchain.__run_5;outcome=success;conclusion=success;duration_ms=130]
+2026-11-05T13:55:07.6638308Z ##[start-action display=Create cachekey;id=__dtolnay_rust-toolchain.rustc-version]
+2026-11-05T13:55:07.6768293Z ##[group]Run DATE=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+2026-11-05T13:55:07.6769142Z [36;1mDATE=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')[0m
+2026-11-05T13:55:07.6769847Z [36;1mHASH=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-hash: //p')[0m
+2026-11-05T13:55:07.6770352Z [36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT[0m
+2026-11-05T13:55:07.6787116Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-05T13:55:07.6787509Z env:
+2026-11-05T13:55:07.6787697Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-05T13:55:07.6787963Z   toolchain: 1.85.1
+2026-11-05T13:55:07.6788143Z ##[endgroup]
+2026-11-05T13:55:08.5842270Z ##[end-action id=__dtolnay_rust-toolchain.rustc-version;outcome=success;conclusion=success;duration_ms=920]
+2026-11-05T13:55:08.5845082Z ##[start-action display=Disable incremental compilation;id=__dtolnay_rust-toolchain.__run_6]
+2026-11-05T13:55:08.5983774Z ##[group]Run if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+2026-11-05T13:55:08.5984147Z [36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then[0m
+2026-11-05T13:55:08.5984462Z [36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV[0m
+2026-11-05T13:55:08.5984754Z [36;1mfi[0m
+2026-11-05T13:55:08.6001010Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-05T13:55:08.6001622Z env:
+2026-11-05T13:55:08.6001818Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-05T13:55:08.6002076Z ##[endgroup]
+2026-11-05T13:55:08.6416706Z ##[end-action id=__dtolnay_rust-toolchain.__run_6;outcome=success;conclusion=success;duration_ms=57]
+2026-11-05T13:55:08.6435153Z ##[start-action display=Enable colors in Cargo output;id=__dtolnay_rust-toolchain.__run_7]
+2026-11-05T13:55:08.6570640Z ##[group]Run if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+2026-11-05T13:55:08.6570996Z [36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then[0m
+2026-11-05T13:55:08.6571313Z [36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV[0m
+2026-11-05T13:55:08.6571585Z [36;1mfi[0m
+2026-11-05T13:55:08.6588055Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-05T13:55:08.6588433Z env:
+2026-11-05T13:55:08.6588803Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-05T13:55:08.6589059Z   CARGO_INCREMENTAL: 0
+2026-11-05T13:55:08.6589250Z ##[endgroup]
+2026-11-05T13:55:08.7033307Z ##[end-action id=__dtolnay_rust-toolchain.__run_7;outcome=success;conclusion=success;duration_ms=59]
+2026-11-05T13:55:08.7039563Z ##[start-action display=Enable Cargo sparse registry;id=__dtolnay_rust-toolchain.__run_8]
+2026-11-05T13:55:08.7222341Z ##[group]Run # implemented in 1.66, stabilized in 1.68, made default in 1.70
+2026-11-05T13:55:08.7222862Z [36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70[0m
+2026-11-05T13:55:08.7223506Z [36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol ]; then[0m
+2026-11-05T13:55:08.7224182Z [36;1m  if rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.6[89]\.'; then[0m
+2026-11-05T13:55:08.7224713Z [36;1m    touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2026-11-05T13:55:08.7225374Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV[0m
+2026-11-05T13:55:08.7225898Z [36;1m  elif rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.6[67]\.'; then[0m
+2026-11-05T13:55:08.7226421Z [36;1m    touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2026-11-05T13:55:08.7226884Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV[0m
+2026-11-05T13:55:08.7227209Z [36;1m  fi[0m
+2026-11-05T13:55:08.7227380Z [36;1mfi[0m
+2026-11-05T13:55:08.7244905Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-05T13:55:08.7245298Z env:
+2026-11-05T13:55:08.7245491Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-05T13:55:08.7245758Z   CARGO_INCREMENTAL: 0
+2026-11-05T13:55:08.7245957Z   CARGO_TERM_COLOR: always
+2026-11-05T13:55:08.7246160Z   toolchain: 1.85.1
+2026-11-05T13:55:08.7246336Z ##[endgroup]
+2026-11-05T13:55:08.9170395Z ##[end-action id=__dtolnay_rust-toolchain.__run_8;outcome=success;conclusion=success;duration_ms=212]
+2026-11-05T13:55:08.9174136Z ##[start-action display=Work around spurious network errors in curl 8.0;id=__dtolnay_rust-toolchain.__run_9]
+2026-11-05T13:55:08.9320008Z ##[group]Run # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+2026-11-05T13:55:08.9320756Z [36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation[0m
+2026-11-05T13:55:08.9321383Z [36;1mif rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.7[01]\.'; then[0m
+2026-11-05T13:55:08.9321844Z [36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV[0m
+2026-11-05T13:55:08.9322133Z [36;1mfi[0m
+2026-11-05T13:55:08.9337775Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-05T13:55:08.9338159Z env:
+2026-11-05T13:55:08.9338345Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-05T13:55:08.9338990Z   CARGO_INCREMENTAL: 0
+2026-11-05T13:55:08.9339302Z   CARGO_TERM_COLOR: always
+2026-11-05T13:55:08.9339514Z   toolchain: 1.85.1
+2026-11-05T13:55:08.9339695Z ##[endgroup]
+2026-11-05T13:55:09.0595781Z ##[end-action id=__dtolnay_rust-toolchain.__run_9;outcome=success;conclusion=success;duration_ms=142]
+2026-11-05T13:55:09.0600791Z ##[start-action display=rustc +1.85.1 --version --verbose;id=__dtolnay_rust-toolchain.__run_10]
+2026-11-05T13:55:09.0737161Z ##[group]Run rustc +"$toolchain" --version --verbose
+2026-11-05T13:55:09.0737507Z [36;1mrustc +"$toolchain" --version --verbose[0m
+2026-11-05T13:55:09.0753724Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-05T13:55:09.0754101Z env:
+2026-11-05T13:55:09.0754288Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-05T13:55:09.0754553Z   CARGO_INCREMENTAL: 0
+2026-11-05T13:55:09.0754754Z   CARGO_TERM_COLOR: always
+2026-11-05T13:55:09.0754957Z   toolchain: 1.85.1
+2026-11-05T13:55:09.0755133Z ##[endgroup]
+2026-11-05T13:55:09.1607985Z rustc 1.85.1 (4eb161250 2025-03-15)
+2026-11-05T13:55:09.1609022Z binary: rustc
+2026-11-05T13:55:09.1609575Z commit-hash: 4eb161250e340c8f48f66e2b929ef4a5bed7c181
+2026-11-05T13:55:09.1610110Z commit-date: 2025-03-15
+2026-11-05T13:55:09.1610578Z host: x86_64-pc-windows-msvc
+2026-11-05T13:55:09.1610984Z release: 1.85.1
+2026-11-05T13:55:09.1612410Z LLVM version: 19.1.7
+2026-11-05T13:55:09.1717844Z ##[end-action id=__dtolnay_rust-toolchain.__run_10;outcome=success;conclusion=success;duration_ms=111]
+2026-11-05T13:55:09.1892813Z ##[group]Run node --test scripts/quality-process.test.mjs scripts/quality-policy.test.mjs scripts/quality-snapshot.test.mjs scripts/quality-managed.test.mjs scripts/build-queue-retired.test.mjs scripts/target-relocation.test.mjs
+2026-11-05T13:55:09.1894574Z [36;1mnode --test scripts/quality-process.test.mjs scripts/quality-policy.test.mjs scripts/quality-snapshot.test.mjs scripts/quality-managed.test.mjs scripts/build-queue-retired.test.mjs scripts/target-relocation.test.mjs[0m
+2026-11-05T13:55:09.3081674Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-05T13:55:09.3082110Z env:
+2026-11-05T13:55:09.3082344Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-05T13:55:09.3082659Z   CARGO_INCREMENTAL: 0
+2026-11-05T13:55:09.3082913Z   CARGO_TERM_COLOR: always
+2026-11-05T13:55:09.3083160Z ##[endgroup]
+2026-11-05T13:55:10.0041639Z ✔ retired queue refuses commands without starting work or creating lease data (89.1964ms)
+2026-11-05T13:55:10.2587078Z ✔ managed readiness and explicit stop retain output and are idempotent (298.8219ms)
+2026-11-05T13:55:10.3587328Z ✔ early exit is failed even with a zero exit code (100.1863ms)
+2026-11-05T13:55:10.6231543Z ✔ readiness deadline terminates the owned server (264.2435ms)
+2026-11-05T13:55:10.8371792Z ✔ readiness callback rejection is retained instead of retried (210.8696ms)
+2026-11-05T13:55:11.0273464Z ✔ disk failure kills the server and retains the exact resource error (193.5777ms)
+2026-11-05T13:55:11.1868673Z ✔ log write failure stops its server rather than throwing out of the data callback (159.5677ms)
+2026-11-05T13:55:11.4785662Z ✔ expected false readiness responses can become ready within the startup deadline (291.3153ms)
+2026-11-05T13:55:12.0732263Z ✔ lifetime remains bounded after readiness (594.7276ms)
+2026-11-05T13:55:12.1535674Z ✔ a ready server that exits unexpectedly is not a stopped success (79.7984ms)
+2026-11-05T13:55:12.1582469Z ✔ managed spawn errors reject readiness and retain a failed receipt (4.9663ms)
+2026-11-05T13:55:12.3491222Z ✔ readiness thrown failure remains failed (191.0109ms)
+2026-11-05T13:55:12.5477358Z ✔ readiness thrown Error remains failed (198.4057ms)
+2026-11-05T13:55:12.7255254Z ✔ readiness thrown null remains failed (177.8653ms)
+2026-11-05T13:55:12.9040973Z ✔ readiness thrown undefined remains failed (178.173ms)
+2026-11-05T13:55:12.9042285Z ✔ tree stop refuses arbitrary PIDs (0.4264ms)
+2026-11-05T13:55:12.9149481Z ✔ options preserve explicit WASM intent, destination and finite deadlines (9.2569ms)
+2026-11-05T13:55:12.9150867Z ✔ output destinations cannot overwrite the root or escape results (0.5609ms)
+2026-11-05T13:55:12.9151901Z ✔ attempt reservation preserves existing evidence and rejects output junctions (21.4569ms)
+2026-11-05T13:55:12.9152704Z ✔ native evidence rejects missing, foreign and ambient cross-compilation hosts (0.8076ms)
+2026-11-05T13:55:12.9153622Z ✔ inherited build policy cannot redirect disk or override shared profiles (0.9127ms)
+2026-11-05T13:55:12.9154807Z ✔ resolved Cargo cfg catches configuration-file targets, not only environment overrides (0.6146ms)
+2026-11-05T13:55:12.9155617Z ✔ test counts preserve failures, ignored and filtered cases per suite (0.8215ms)
+2026-11-05T13:55:13.2941351Z ✔ successful command retains stdout and stderr without a shell (91.5038ms)
+2026-11-05T13:55:13.2942575Z ✔ failed command preserves exit status and output (86.0337ms)
+2026-11-05T13:55:13.2943743Z ✔ missing executable is a recorded failure, not an uncaught spawn error (5.273ms)
+2026-11-05T13:55:13.2944830Z ✔ timeout terminates a blocked command and records the failure (318.2931ms)
+2026-11-05T13:55:13.2945486Z ✔ disk monitor terminates a command and records its resource failure (217.7966ms)
+2026-11-05T13:55:13.2946097Z ✔ an already-aborted signal does not start an executable (2.9281ms)
+2026-11-05T13:55:13.2946683Z ✔ abort stops a running owned tree without reporting a timeout (297.5621ms)
+2026-11-05T13:55:13.2949844Z ✔ timeout terminates descendants with detached=false (1097.8432ms)
+2026-11-05T13:55:13.2950864Z ✔ timeout terminates descendants with detached=true (1077.3313ms)
+2026-11-05T13:55:13.3051589Z ✔ snapshot changes for Rust, fixture, JS, workflow and profile edits (107.7134ms)
+2026-11-05T13:55:13.3052726Z ✔ unsafe scan retains exact file and line but does not claim semantic safety (27.7296ms)
+2026-11-05T13:55:13.3054049Z ✔ disk preflight records byte counts and rejects insufficient headroom without cleanup (2.4703ms)
+2026-11-05T13:55:13.3055278Z ✔ dry run reads exact cache metadata without creating a destination or link (48.0701ms)
+2026-11-05T13:55:13.3056589Z ✔ promotion keeps one canonical link and preserves bytes and nanosecond times (86.4334ms)
+2026-11-05T13:55:13.3058027Z ✔ existing destinations and active processes are refused without source loss (43.3867ms)
+2026-11-05T13:55:13.3058964Z ✔ a corrupt copied byte prevents source removal (69.8021ms)
+2026-11-05T13:55:13.3059648Z ✔ junction creation failure restores the original real cache and keeps failure visible (62.6023ms)
+2026-11-05T13:55:13.3060434Z ✔ partial backup cleanup leaves the verified canonical cache intact and fails honestly (91.085ms)
+2026-11-05T13:55:13.3061153Z ✔ an unknown canonical entry is preserved and maintenance remains paused (69.3519ms)
+2026-11-05T13:55:13.3061885Z ✔ post-promotion probe failure rolls back by rename, not a second cross-volume copy (69.3762ms)
+2026-11-05T13:55:13.3064482Z ✔ changed control files are not overwritten and force a safe rollback (70.4075ms)
+2026-11-05T13:55:13.3066303Z ✔ a live foreign lane lease is never overwritten or removed (24.4833ms)
+2026-11-05T13:55:13.3067096Z ℹ tests 45
+2026-11-05T13:55:13.3067468Z ℹ suites 0
+2026-11-05T13:55:13.3067820Z ℹ pass 45
+2026-11-05T13:55:13.3068130Z ℹ fail 0
+2026-11-05T13:55:13.3068462Z ℹ cancelled 0
+2026-11-05T13:55:13.3069086Z ℹ skipped 0
+2026-11-05T13:55:13.3069603Z ℹ todo 0
+2026-11-05T13:55:13.3070007Z ℹ duration_ms 3520.2782
+2026-11-05T13:55:13.4712535Z ##[group]Run node scripts/target-relocation-windows-probe.mjs
+2026-11-05T13:55:13.4713787Z [36;1mnode scripts/target-relocation-windows-probe.mjs[0m
+2026-11-05T13:55:13.4795275Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-05T13:55:13.4795616Z env:
+2026-11-05T13:55:13.4796289Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-05T13:55:13.4796558Z   CARGO_INCREMENTAL: 0
+2026-11-05T13:55:13.4796757Z   CARGO_TERM_COLOR: always
+2026-11-05T13:55:13.4796959Z ##[endgroup]
+2026-11-05T13:55:19.9480110Z {
+2026-11-05T13:55:19.9480918Z   "startedAt": "2026-11-05T13:55:13.864Z",
+2026-11-05T13:55:19.9481926Z   "target": "D:\\a\\xterm-rust\\xterm-rust\\tmp\\relocation-native-probe-nAwZYK\\project\\target",
+2026-11-05T13:55:19.9483199Z   "destination": "D:\\a\\xterm-rust\\xterm-rust\\tmp\\relocation-native-probe-nAwZYK\\cache",
+2026-11-05T13:55:19.9484022Z   "apply": true,
+2026-11-05T13:55:19.9484882Z   "approvedBy": "tiny-native-boundary-probe",
+2026-11-05T13:55:19.9485548Z   "status": "completed",
+2026-11-05T13:55:19.9486056Z   "phase": "promoted-single-canonical-cache",
+2026-11-05T13:55:19.9486518Z   "commands": [
+2026-11-05T13:55:19.9486789Z     {
+2026-11-05T13:55:19.9487043Z       "command": [
+2026-11-05T13:55:19.9487411Z         "C:\\Windows\\System32\\robocopy.exe",
+2026-11-05T13:55:19.9488802Z         "D:\\a\\xterm-rust\\xterm-rust\\tmp\\relocation-native-probe-nAwZYK\\project\\target",
+2026-11-05T13:55:19.9489911Z         "D:\\a\\xterm-rust\\xterm-rust\\tmp\\relocation-native-probe-nAwZYK\\cache",
+2026-11-05T13:55:19.9491588Z         "/E",
+2026-11-05T13:55:19.9492356Z         "/COPY:DAT",
+2026-11-05T13:55:19.9492603Z         "/DCOPY:DAT",
+2026-11-05T13:55:19.9493361Z         "/R:0",
+2026-11-05T13:55:19.9496159Z         "/W:0",
+2026-11-05T13:55:19.9498018Z         "/XJ",
+2026-11-05T13:55:19.9498374Z         "/NFL",
+2026-11-05T13:55:19.9500390Z         "/NDL",
+2026-11-05T13:55:19.9500961Z         "/NP"
+2026-11-05T13:55:19.9501303Z       ],
+2026-11-05T13:55:19.9501652Z       "exitCode": 1,
+2026-11-05T13:55:19.9503306Z       "log": "D:\\a\\xterm-rust\\xterm-rust\\results\\quality\\target-relocation-native-probe-1793886913858-5952\\copy.log"
+2026-11-05T13:55:19.9504067Z     }
+2026-11-05T13:55:19.9504320Z   ],
+2026-11-05T13:55:19.9504770Z   "token": "856e7bd3-fb40-495c-8ccf-ac3489334dbc",
+2026-11-05T13:55:19.9506663Z   "backup": "D:\\a\\xterm-rust\\xterm-rust\\tmp\\relocation-native-probe-nAwZYK\\project\\tmp\\target-backup-856e7bd3-fb40-495c-8ccf-ac3489334dbc",
+2026-11-05T13:55:19.9507687Z   "controls": {
+2026-11-05T13:55:19.9508354Z     ".cargo/config.toml": {
+2026-11-05T13:55:19.9509239Z       "bytes": 324,
+2026-11-05T13:55:19.9510157Z       "sha256": "096a7c635c6976ce9add7f36059c0551935fd1655b208dee9691a352be3f0c5c"
+2026-11-05T13:55:19.9511310Z     },
+2026-11-05T13:55:19.9511662Z     ".gitattributes": {
+2026-11-05T13:55:19.9512055Z       "absent": true
+2026-11-05T13:55:19.9512342Z     },
+2026-11-05T13:55:19.9512614Z     "AGENTS.md": {
+2026-11-05T13:55:19.9512966Z       "absent": true
+2026-11-05T13:55:19.9513304Z     },
+2026-11-05T13:55:19.9513607Z     "Cargo.lock": {
+2026-11-05T13:55:19.9513952Z       "bytes": 81,
+2026-11-05T13:55:19.9514596Z       "sha256": "4db4bd9b623ca72d1c44bcb86cf74338d8ba17746f739de24bdc2b5ddbc2d445"
+2026-11-05T13:55:19.9514995Z     },
+2026-11-05T13:55:19.9515165Z     "Cargo.toml": {
+2026-11-05T13:55:19.9515359Z       "bytes": 110,
+2026-11-05T13:55:19.9515736Z       "sha256": "72f0b90de29a19b4ff8dff7bad70e8615a6b24e480ab0c887c4d37251acafede"
+2026-11-05T13:55:19.9516127Z     }
+2026-11-05T13:55:19.9516293Z   },
+2026-11-05T13:55:19.9516474Z   "processObservations": [
+2026-11-05T13:55:19.9516687Z     {
+2026-11-05T13:55:19.9516890Z       "at": "2026-11-05T13:55:18.663Z",
+2026-11-05T13:55:19.9517133Z       "active": []
+2026-11-05T13:55:19.9517319Z     },
+2026-11-05T13:55:19.9517476Z     {
+2026-11-05T13:55:19.9517663Z       "at": "2026-11-05T13:55:19.876Z",
+2026-11-05T13:55:19.9520577Z       "active": []
+2026-11-05T13:55:19.9520850Z     }
+2026-11-05T13:55:19.9521019Z   ],
+2026-11-05T13:55:19.9521193Z   "preProbe": {
+2026-11-05T13:55:19.9521397Z     "command": [
+2026-11-05T13:55:19.9521580Z       "cargo",
+2026-11-05T13:55:19.9521764Z       "metadata",
+2026-11-05T13:55:19.9521952Z       "--no-deps",
+2026-11-05T13:55:19.9522196Z       "--format-version",
+2026-11-05T13:55:19.9522421Z       "1",
+2026-11-05T13:55:19.9522590Z       "--locked",
+2026-11-05T13:55:19.9522761Z       "--offline"
+2026-11-05T13:55:19.9522927Z     ],
+2026-11-05T13:55:19.9523086Z     "exitCode": 0,
+2026-11-05T13:55:19.9523583Z     "targetDirectory": "D:\\a\\xterm-rust\\xterm-rust\\tmp\\relocation-native-probe-nAwZYK\\project\\target",
+2026-11-05T13:55:19.9524345Z     "resolvedTarget": "D:\\a\\xterm-rust\\xterm-rust\\tmp\\relocation-native-probe-nAwZYK\\project\\target"
+2026-11-05T13:55:19.9524802Z   },
+2026-11-05T13:55:19.9524984Z   "controlsAfterPreflight": {
+2026-11-05T13:55:19.9525225Z     ".cargo/config.toml": {
+2026-11-05T13:55:19.9525437Z       "bytes": 324,
+2026-11-05T13:55:19.9525801Z       "sha256": "096a7c635c6976ce9add7f36059c0551935fd1655b208dee9691a352be3f0c5c"
+2026-11-05T13:55:19.9526176Z     },
+2026-11-05T13:55:19.9526686Z     ".gitattributes": {
+2026-11-05T13:55:19.9527040Z       "absent": true
+2026-11-05T13:55:19.9527357Z     },
+2026-11-05T13:55:19.9527642Z     "AGENTS.md": {
+2026-11-05T13:55:19.9527967Z       "absent": true
+2026-11-05T13:55:19.9528280Z     },
+2026-11-05T13:55:19.9528562Z     "Cargo.lock": {
+2026-11-05T13:55:19.9528914Z       "bytes": 81,
+2026-11-05T13:55:19.9529513Z       "sha256": "4db4bd9b623ca72d1c44bcb86cf74338d8ba17746f739de24bdc2b5ddbc2d445"
+2026-11-05T13:55:19.9529894Z     },
+2026-11-05T13:55:19.9530060Z     "Cargo.toml": {
+2026-11-05T13:55:19.9530250Z       "bytes": 110,
+2026-11-05T13:55:19.9530596Z       "sha256": "72f0b90de29a19b4ff8dff7bad70e8615a6b24e480ab0c887c4d37251acafede"
+2026-11-05T13:55:19.9530963Z     }
+2026-11-05T13:55:19.9531113Z   },
+2026-11-05T13:55:19.9531277Z   "fileCount": 3,
+2026-11-05T13:55:19.9531472Z   "logicalBytes": "48",
+2026-11-05T13:55:19.9531871Z   "manifestSha256": "41729520746c60fc848a440ba4f1b0c6254e909f4a66216c3815344bc5a6a430",
+2026-11-05T13:55:19.9532272Z   "verifications": [
+2026-11-05T13:55:19.9532459Z     {
+2026-11-05T13:55:19.9532673Z       "label": "Copied cache verification",
+2026-11-05T13:55:19.9532935Z       "matches": true,
+2026-11-05T13:55:19.9533173Z       "at": "2026-11-05T13:55:19.431Z",
+2026-11-05T13:55:19.9533621Z       "manifestSha256": "41729520746c60fc848a440ba4f1b0c6254e909f4a66216c3815344bc5a6a430"
+2026-11-05T13:55:19.9534478Z     },
+2026-11-05T13:55:19.9534788Z     {
+2026-11-05T13:55:19.9535176Z       "label": "Source changed during copy",
+2026-11-05T13:55:19.9536510Z       "matches": true,
+2026-11-05T13:55:19.9537146Z       "at": "2026-11-05T13:55:19.434Z",
+2026-11-05T13:55:19.9538720Z       "manifestSha256": "41729520746c60fc848a440ba4f1b0c6254e909f4a66216c3815344bc5a6a430"
+2026-11-05T13:55:19.9539216Z     },
+2026-11-05T13:55:19.9539388Z     {
+2026-11-05T13:55:19.9539631Z       "label": "Rollback backup verification",
+2026-11-05T13:55:19.9539919Z       "matches": true,
+2026-11-05T13:55:19.9540158Z       "at": "2026-11-05T13:55:19.883Z",
+2026-11-05T13:55:19.9540608Z       "manifestSha256": "41729520746c60fc848a440ba4f1b0c6254e909f4a66216c3815344bc5a6a430"
+2026-11-05T13:55:19.9541352Z     },
+2026-11-05T13:55:19.9541526Z     {
+2026-11-05T13:55:19.9541764Z       "label": "Promoted cache verification",
+2026-11-05T13:55:19.9542051Z       "matches": true,
+2026-11-05T13:55:19.9542292Z       "at": "2026-11-05T13:55:19.887Z",
+2026-11-05T13:55:19.9542737Z       "manifestSha256": "41729520746c60fc848a440ba4f1b0c6254e909f4a66216c3815344bc5a6a430"
+2026-11-05T13:55:19.9543139Z     },
+2026-11-05T13:55:19.9543294Z     {
+2026-11-05T13:55:19.9543529Z       "label": "Probe modified preserved cache data",
+2026-11-05T13:55:19.9543817Z       "matches": true,
+2026-11-05T13:55:19.9544766Z       "at": "2026-11-05T13:55:19.936Z",
+2026-11-05T13:55:19.9545259Z       "manifestSha256": "41729520746c60fc848a440ba4f1b0c6254e909f4a66216c3815344bc5a6a430"
+2026-11-05T13:55:19.9545666Z     },
+2026-11-05T13:55:19.9545824Z     {
+2026-11-05T13:55:19.9546065Z       "label": "Rollback backup changed before cleanup",
+2026-11-05T13:55:19.9546363Z       "matches": true,
+2026-11-05T13:55:19.9546586Z       "at": "2026-11-05T13:55:19.938Z",
+2026-11-05T13:55:19.9547017Z       "manifestSha256": "41729520746c60fc848a440ba4f1b0c6254e909f4a66216c3815344bc5a6a430"
+2026-11-05T13:55:19.9547412Z     }
+2026-11-05T13:55:19.9547574Z   ],
+2026-11-05T13:55:19.9547749Z   "controlsAfterCopy": {
+2026-11-05T13:55:19.9547973Z     ".cargo/config.toml": {
+2026-11-05T13:55:19.9548184Z       "bytes": 324,
+2026-11-05T13:55:19.9548534Z       "sha256": "096a7c635c6976ce9add7f36059c0551935fd1655b208dee9691a352be3f0c5c"
+2026-11-05T13:55:19.9548901Z     },
+2026-11-05T13:55:19.9549070Z     ".gitattributes": {
+2026-11-05T13:55:19.9549270Z       "absent": true
+2026-11-05T13:55:19.9549454Z     },
+2026-11-05T13:55:19.9549612Z     "AGENTS.md": {
+2026-11-05T13:55:19.9550156Z       "absent": true
+2026-11-05T13:55:19.9550518Z     },
+2026-11-05T13:55:19.9551253Z     "Cargo.lock": {
+2026-11-05T13:55:19.9551542Z       "bytes": 81,
+2026-11-05T13:55:19.9552173Z       "sha256": "4db4bd9b623ca72d1c44bcb86cf74338d8ba17746f739de24bdc2b5ddbc2d445"
+2026-11-05T13:55:19.9552744Z     },
+2026-11-05T13:55:19.9552919Z     "Cargo.toml": {
+2026-11-05T13:55:19.9553114Z       "bytes": 110,
+2026-11-05T13:55:19.9553469Z       "sha256": "72f0b90de29a19b4ff8dff7bad70e8615a6b24e480ab0c887c4d37251acafede"
+2026-11-05T13:55:19.9554044Z     }
+2026-11-05T13:55:19.9554209Z   },
+2026-11-05T13:55:19.9554376Z   "postProbe": {
+2026-11-05T13:55:19.9554569Z     "command": [
+2026-11-05T13:55:19.9554743Z       "cargo",
+2026-11-05T13:55:19.9554916Z       "metadata",
+2026-11-05T13:55:19.9555096Z       "--no-deps",
+2026-11-05T13:55:19.9555283Z       "--format-version",
+2026-11-05T13:55:19.9555498Z       "1",
+2026-11-05T13:55:19.9555667Z       "--locked",
+2026-11-05T13:55:19.9555844Z       "--offline"
+2026-11-05T13:55:19.9556008Z     ],
+2026-11-05T13:55:19.9556165Z     "exitCode": 0,
+2026-11-05T13:55:19.9556635Z     "targetDirectory": "D:\\a\\xterm-rust\\xterm-rust\\tmp\\relocation-native-probe-nAwZYK\\project\\target",
+2026-11-05T13:55:19.9557332Z     "resolvedTarget": "D:\\a\\xterm-rust\\xterm-rust\\tmp\\relocation-native-probe-nAwZYK\\cache"
+2026-11-05T13:55:19.9557746Z   },
+2026-11-05T13:55:19.9557927Z   "controlsAfterPromotion": {
+2026-11-05T13:55:19.9558166Z     ".cargo/config.toml": {
+2026-11-05T13:55:19.9558391Z       "bytes": 324,
+2026-11-05T13:55:19.9558749Z       "sha256": "096a7c635c6976ce9add7f36059c0551935fd1655b208dee9691a352be3f0c5c"
+2026-11-05T13:55:19.9559116Z     },
+2026-11-05T13:55:19.9559280Z     ".gitattributes": {
+2026-11-05T13:55:19.9559476Z       "absent": true
+2026-11-05T13:55:19.9559653Z     },
+2026-11-05T13:55:19.9559816Z     "AGENTS.md": {
+2026-11-05T13:55:19.9560002Z       "absent": true
+2026-11-05T13:55:19.9560186Z     },
+2026-11-05T13:55:19.9560347Z     "Cargo.lock": {
+2026-11-05T13:55:19.9560527Z       "bytes": 81,
+2026-11-05T13:55:19.9560881Z       "sha256": "4db4bd9b623ca72d1c44bcb86cf74338d8ba17746f739de24bdc2b5ddbc2d445"
+2026-11-05T13:55:19.9561645Z     },
+2026-11-05T13:55:19.9561917Z     "Cargo.toml": {
+2026-11-05T13:55:19.9562160Z       "bytes": 110,
+2026-11-05T13:55:19.9562522Z       "sha256": "72f0b90de29a19b4ff8dff7bad70e8615a6b24e480ab0c887c4d37251acafede"
+2026-11-05T13:55:19.9563149Z     }
+2026-11-05T13:55:19.9563375Z   },
+2026-11-05T13:55:19.9563585Z   "finishedAt": "2026-11-05T13:55:19.945Z"
+2026-11-05T13:55:19.9563842Z }
+2026-11-05T13:55:20.0822502Z ##[group]Run node scripts/quality-gates.mjs --out results/quality/windows-latest-1.85.1
+2026-11-05T13:55:20.0823218Z [36;1mnode scripts/quality-gates.mjs --out results/quality/windows-latest-1.85.1[0m
+2026-11-05T13:55:20.0895107Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-05T13:55:20.0895454Z env:
+2026-11-05T13:55:20.0895647Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-05T13:55:20.0895904Z   CARGO_INCREMENTAL: 0
+2026-11-05T13:55:20.0896104Z   CARGO_TERM_COLOR: always
+2026-11-05T13:55:20.0896306Z ##[endgroup]
+2026-11-05T13:55:21.1796854Z Running git-revision: git rev-parse HEAD
+2026-11-05T13:55:21.2230441Z git-revision: passed
+2026-11-05T13:55:21.2236418Z Running git-status: git status --short
+2026-11-05T13:55:21.3426408Z git-status: passed
+2026-11-05T13:55:21.3433308Z Running rustc-version: rustc -vV
+2026-11-05T13:55:21.4152503Z rustc-version: passed
+2026-11-05T13:55:21.4159011Z Running cargo-version: cargo --version
+2026-11-05T13:55:21.4536198Z cargo-version: passed
+2026-11-05T13:55:21.4541840Z Running installed-targets: rustup target list --installed
+2026-11-05T13:55:21.4957698Z installed-targets: passed
+2026-11-05T13:55:21.4963979Z Running installed-components: rustup component list --installed
+2026-11-05T13:55:21.5372633Z installed-components: passed
+2026-11-05T13:55:21.5385240Z Running metadata: cargo metadata --no-deps --format-version 1 --locked
+2026-11-05T13:55:21.5998830Z metadata: passed
+2026-11-05T13:55:21.6019925Z Running resolved-native-target: cargo rustc -p xterm-core --lib --locked -- --print cfg
+2026-11-05T13:55:27.4536917Z resolved-native-target: passed
+2026-11-05T13:55:27.4547326Z Running fmt: cargo fmt --all -- --check
+2026-11-05T13:55:31.0522988Z fmt: passed
+2026-11-05T13:55:31.0529255Z Running clippy-all-features: cargo clippy --workspace --locked --all-targets --all-features -- -D warnings
+2026-11-05T13:56:01.3421455Z clippy-all-features: passed
+2026-11-05T13:56:01.3426947Z Running test-all-features: cargo test --workspace --locked --no-fail-fast --all-targets --all-features
+2026-11-05T13:58:07.4699095Z test-all-features: passed
+2026-11-05T13:58:07.4706312Z Running doctest-all-features: cargo test --workspace --locked --no-fail-fast --doc --all-features
+2026-11-05T13:58:08.6993576Z doctest-all-features: passed
+2026-11-05T13:58:08.6999247Z Running build-release: cargo build --workspace --locked --release --all-targets --all-features
+2026-11-05T14:03:08.9338205Z build-release: failed
+2026-11-05T14:03:08.9349727Z Running test-default: cargo test --workspace --locked --no-fail-fast --all-targets
+2026-11-05T14:04:10.9800429Z test-default: passed
+2026-11-05T14:04:10.9805677Z Running test-no-default-features: cargo test --workspace --locked --no-fail-fast --all-targets --no-default-features
+2026-11-05T14:05:11.4679489Z test-no-default-features: passed
+2026-11-05T14:05:11.4685353Z Running clippy-no-default-features: cargo clippy --workspace --locked --all-targets --no-default-features -- -D warnings
+2026-11-05T14:05:17.8143418Z clippy-no-default-features: passed
+2026-11-05T14:05:17.8151362Z Running feature-xterm-web-acceptance-hooks: cargo test --locked -p xterm-web --no-fail-fast --all-targets --no-default-features --features acceptance-hooks
+2026-11-05T14:05:39.9239375Z feature-xterm-web-acceptance-hooks: passed
+2026-11-05T14:05:39.9244248Z Running miri-availability: cargo miri --version
+2026-11-05T14:05:40.9759484Z miri-availability: failed
+2026-11-05T14:05:41.7053610Z Native quality gates: failed. Overall equivalence: NOT PROVEN. Results: results\quality\windows-latest-1.85.1
+2026-11-05T14:05:41.8208692Z ##[error]Process completed with exit code 1.
+2026-11-05T14:05:41.8466702Z ##[group]Run actions/upload-artifact@v4
+2026-11-05T14:05:41.8467159Z with:
+2026-11-05T14:05:41.8467438Z   name: quality-windows-latest-1.85.1
+2026-11-05T14:05:41.8467802Z   path: results/quality/windows-latest-1.85.1/
+2026-11-05T14:05:41.8468193Z   if-no-files-found: error
+2026-11-05T14:05:41.8468689Z   compression-level: 6
+2026-11-05T14:05:41.8468982Z   overwrite: false
+2026-11-05T14:05:41.8469248Z   include-hidden-files: false
+2026-11-05T14:05:41.8469517Z env:
+2026-11-05T14:05:41.8469768Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-11-05T14:05:41.8470084Z   CARGO_INCREMENTAL: 0
+2026-11-05T14:05:41.8470345Z   CARGO_TERM_COLOR: always
+2026-11-05T14:05:41.8470611Z ##[endgroup]
+2026-11-05T14:05:42.0483779Z (node:6528) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-05T14:05:42.0484665Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-05T14:05:42.0604713Z With the provided path, there will be 19 files uploaded
+2026-11-05T14:05:42.0610012Z Artifact name is valid!
+2026-11-05T14:05:42.0612003Z Root directory input is valid!
+2026-11-05T14:05:42.3906834Z Beginning upload of artifact content to blob storage
+2026-11-05T14:05:42.4686385Z (node:6528) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-05T14:05:42.7540115Z Uploaded bytes 219913
+2026-11-05T14:05:42.8015825Z Finished uploading artifact content to blob storage!
+2026-11-05T14:05:42.8017879Z SHA256 digest of uploaded artifact zip is b1aa86fecfbcbafc303969ae069c957e1695defd8e1819c32f16e36c4420918c
+2026-11-05T14:05:42.8020128Z Finalizing artifact upload
+2026-11-05T14:05:43.2415579Z Artifact quality-windows-latest-1.85.1.zip successfully finalized. Artifact ID 13422340219
+2026-11-05T14:05:43.2417109Z Artifact quality-windows-latest-1.85.1 has been successfully uploaded! Final size is 219913 bytes. Artifact ID is 13422340219
+2026-11-05T14:05:43.2427822Z Artifact download URL: https://github.com/gee666/xterm-rust/actions/runs/42039966380/artifacts/13422340219
+2026-11-05T14:05:43.2813819Z Post job cleanup.
+2026-11-05T14:05:43.4715879Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-05T14:05:43.5167464Z git version 2.56.0.windows.4
+2026-11-05T14:05:43.5231848Z Temporarily overriding HOME='D:\a\_temp\99916892-8f33-4132-b524-52aed0b93d41' before making global git config changes
+2026-11-05T14:05:43.5233473Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-05T14:05:43.5242849Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\xterm-rust\xterm-rust
+2026-11-05T14:05:43.5633833Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-05T14:05:43.6092629Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-05T14:05:44.1721725Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-05T14:05:44.2055398Z http.https://github.com/.extraheader
+2026-11-05T14:05:44.2100285Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-05T14:05:44.2475079Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-05T14:05:44.7926294Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-05T14:05:44.8295221Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-05T14:05:45.3925543Z Cleaning up orphan processes
+2026-11-05T14:05:45.4181416Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

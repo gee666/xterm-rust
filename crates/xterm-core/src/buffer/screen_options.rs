@@ -40,9 +40,10 @@ pub(super) fn correct_buffer_length(
     if !scrollback {
         return Ok(rows);
     }
-    Ok(rows
-        .saturating_add(positive_option(options, "scrollback", true)?)
-        .min(MAX_BUFFER_SIZE))
+    let length = rows.saturating_add(positive_option(options, "scrollback", true)?);
+    // The source caps capacity at u32::MAX on both pointer widths. Expressing
+    // the cap as a checked conversion also avoids a redundant min on wasm32.
+    Ok(u32::try_from(length).map_or(MAX_BUFFER_SIZE, |length| length as usize))
 }
 pub(super) fn is_reflow_enabled(
     scrollback: bool,

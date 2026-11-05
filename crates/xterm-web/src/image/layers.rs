@@ -54,7 +54,7 @@ impl BrowserImageRenderer {
                 &[canvas.clone(), get(&screen, "firstChild")?],
             )?;
         } else {
-            call(&screen, "appendChild", &[canvas.clone()])?;
+            call(&screen, "appendChild", std::slice::from_ref(&canvas))?;
         }
         let Some(context) = context(&canvas, Some(true))? else {
             call(&canvas, "remove", &[])?;

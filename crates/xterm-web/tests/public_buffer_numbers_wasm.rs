@@ -169,12 +169,16 @@ fn numeric_cell_public_getters_match_2071_original_snapshots_in_javascript() {
             );
         }
         assert_eq!(
-            scalar(call(&cell, "attributesEquals", &[cell.clone()])),
+            scalar(call(&cell, "attributesEquals", std::slice::from_ref(&cell))),
             fields[33],
             "equals {bits}"
         );
         assert_eq!(
-            scalar(call(&cell, "attributesEquals", &[default_cell.clone()])),
+            scalar(call(
+                &cell,
+                "attributesEquals",
+                std::slice::from_ref(&default_cell)
+            )),
             fields[34],
             "default equals {bits}"
         );

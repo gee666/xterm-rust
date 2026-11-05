@@ -1,0 +1,21 @@
+    Checking xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\Q\crates\xterm-web)
+error: unnecessary use of `clone` to create a slice from a reference
+   --> crates\xterm-web\tests\public_buffer_numbers_wasm.rs:172:52
+    |
+172 |             scalar(call(&cell, "attributesEquals", &[cell.clone()])),
+    |                                                    ^^^^^^^^^^^^^^^ help: try: `std::slice::from_ref(&cell)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#cloned_ref_to_slice_refs
+    = note: `-D clippy::cloned-ref-to-slice-refs` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::cloned_ref_to_slice_refs)]`
+
+error: unnecessary use of `clone` to create a slice from a reference
+   --> crates\xterm-web\tests\public_buffer_numbers_wasm.rs:177:52
+    |
+177 |             scalar(call(&cell, "attributesEquals", &[default_cell.clone()])),
+    |                                                    ^^^^^^^^^^^^^^^^^^^^^^^ help: try: `std::slice::from_ref(&default_cell)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#cloned_ref_to_slice_refs
+
+error: could not compile `xterm-web` (test "public_buffer_numbers_wasm") due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...

@@ -1,0 +1,58 @@
+    Checking equivalent v1.0.3
+    Checking foldhash v0.1.5
+    Checking memchr v2.8.3
+    Checking allocator-api2 v0.2.21
+    Checking hashbrown v0.15.5
+    Checking ryu-js v1.0.3
+   Compiling serde_core v1.0.229
+    Checking regress v0.10.4
+   Compiling zmij v1.0.23
+    Checking adler2 v2.0.1
+    Checking miniz_oxide v0.8.9
+    Checking xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\Q\crates\xterm-core)
+   Compiling serde_json v1.0.154
+    Checking itoa v1.0.18
+    Checking xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\Q\crates\xterm-addons)
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.27
+   Compiling quote v1.0.47
+   Compiling wasm-bindgen-shared v0.2.100
+   Compiling syn v2.0.119
+   Compiling log v0.4.34
+   Compiling bumpalo v3.20.3
+   Compiling rustversion v1.0.23
+   Compiling wasm-bindgen v0.2.100
+   Compiling wasm-bindgen-backend v0.2.100
+   Compiling wasm-bindgen-macro-support v0.2.100
+    Checking once_cell v1.21.4
+    Checking cfg-if v1.0.5
+   Compiling wasm-bindgen-test-macro v0.3.50
+   Compiling wasm-bindgen-macro v0.2.100
+    Checking js-sys v0.3.77
+    Checking wasm-bindgen-futures v0.4.50
+    Checking web-sys v0.3.77
+    Checking xterm-wasm-support v0.1.0 (O:\xterm-rust-swarm-16\tmp\Q\crates\xterm-wasm-support)
+    Checking wasm-bindgen-test v0.3.50
+    Checking xterm-font-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\Q\crates\xterm-font-addons)
+    Checking xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\Q\crates\xterm-web)
+error: unnecessary use of `clone` to create a slice from a reference
+   --> crates\xterm-web\src\image\kitty_placement.rs:147:51
+    |
+147 |         let replacement = await_value(bitmap_call(&[canvas.clone()])?).await?;
+    |                                                   ^^^^^^^^^^^^^^^^^ help: try: `std::slice::from_ref(&canvas)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#cloned_ref_to_slice_refs
+    = note: `-D clippy::cloned-ref-to-slice-refs` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::cloned_ref_to_slice_refs)]`
+
+error: unnecessary use of `clone` to create a slice from a reference
+  --> crates\xterm-web\src\image\layers.rs:57:42
+   |
+57 |             call(&screen, "appendChild", &[canvas.clone()])?;
+   |                                          ^^^^^^^^^^^^^^^^^ help: try: `std::slice::from_ref(&canvas)`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#cloned_ref_to_slice_refs
+
+error: could not compile `xterm-web` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `xterm-web` (lib test) due to 2 previous errors

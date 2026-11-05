@@ -144,7 +144,7 @@ async fn place(
             "drawImage",
             &[current.clone(), offset.x.into(), offset.y.into()],
         )?;
-        let replacement = await_value(bitmap_call(&[canvas.clone()])?).await?;
+        let replacement = await_value(bitmap_call(std::slice::from_ref(&canvas))?).await?;
         // Chained source assignment sets height before width.
         js::set(&canvas, "height", &0.into())?;
         js::set(&canvas, "width", &0.into())?;
