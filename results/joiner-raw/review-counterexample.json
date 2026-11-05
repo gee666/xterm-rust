@@ -1,0 +1,18 @@
+{
+  "task": 335,
+  "reviewedCommit": "9d3c350",
+  "observedBy": "isolated swarm_review reviewer",
+  "verdict": "changes",
+  "counterexample": "pushLookupOrder in tests/support/joiner_raw.mjs",
+  "sourceResult": [
+    [
+      0,
+      1
+    ]
+  ],
+  "rustBefore": "throws original marker when second index-zero getter replaces Array.prototype.push",
+  "cause": "Rust read joinedRanges[i] before resolving ranges.push. Source resolves method first.",
+  "fix": "Rust loop calls catch-capable primitive host boundary target.push(source[index]).",
+  "retainedCase": "crates/xterm-web/tests/fixtures/joiner-raw.json#pushLookupOrder",
+  "afterProducerRerun": "293 shared cases matched through raw3/3 tests in Chromium, Firefox, WebKit. Full raw DOM row behavior remains348."
+}
