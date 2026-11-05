@@ -1,0 +1,3449 @@
+{
+  "task": 489,
+  "base": "735e114a51444dd2f0542225a1bb1fadee0393ea",
+  "sourceCommit": "b7e772da207b56550ec3b0136adc1a27efa9bc5c",
+  "scope": "Live columns during link hit-testing, not full selection/link parity.",
+  "environment": {
+    "platform": "win32",
+    "node": "v24.15.0",
+    "rust": "1.85.1",
+    "cargo": "1.85.1",
+    "wasmBindgen": "0.2.100"
+  },
+  "sourcePins": [
+    {
+      "path": "crates/xterm-web/src/links/browser_linkifier_events.rs",
+      "bytes": 10346,
+      "sha256": "fd1e4c8e92eb31d5b197cdc2350e66c181daa76aafcbb42a2aace41396faddcd"
+    },
+    {
+      "path": "crates/xterm-web/src/links/browser_payload.rs",
+      "bytes": 11082,
+      "sha256": "b5dbb1f0d14ce0dc79c28538c8bcbbb345d9704a0d6e8195af9653ca849ab3e2"
+    },
+    {
+      "path": "crates/xterm-web/tests/fixtures/link-live-cols.json",
+      "bytes": 2459,
+      "sha256": "3318a63db36d87f4c2c533f3969024b338469f6f8b9fab84e1eb07163e8a0ec7"
+    },
+    {
+      "path": "crates/xterm-web/tests/wasm_link_live_cols.rs",
+      "bytes": 1276,
+      "sha256": "c63feb60262278f0a37cc77eaa89aced474a001bde14a0561c910eefadf36fe5"
+    },
+    {
+      "path": "docs/link-live-cols.md",
+      "bytes": 6643,
+      "sha256": "bea15f96f2d7510e76d61584037d907735970da675a1ce732d530c6edee1933f"
+    },
+    {
+      "path": "scripts/link-live-cols-methods.mjs",
+      "bytes": 2622,
+      "sha256": "f34aa7a8a63d7cabc4b291c0eeeb0d8927dae7d3d7c678d69b27e6cd3cc8ef1a"
+    },
+    {
+      "path": "scripts/link-live-cols-trace.js",
+      "bytes": 3922,
+      "sha256": "39ec5b762cb2ab0c21573ed7cea9674414840cee0a1056cd1b35751aef6ad3a8"
+    },
+    {
+      "path": "scripts/public-link-provider-source.mjs",
+      "bytes": 5210,
+      "sha256": "ac94b65ae4f6a5c6b31565440d077ecdbb3143f873fcba75ded0fc2ed82efa2b"
+    },
+    {
+      "path": "Cargo.lock",
+      "bytes": 11108,
+      "sha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 6208,
+      "sha256": "2b7f2c68f0e0f20982832072dd108fd366a514f4665443bc5bd62958b3335bc2"
+    },
+    {
+      "path": "scripts/browser-host-check.mjs",
+      "bytes": 9815,
+      "sha256": "63dc6978c20d94958c046cfd721f50f785fef16cd7db69332918fc712ba96536"
+    },
+    {
+      "path": "scripts/source-ts-loader.mjs",
+      "bytes": 1741,
+      "sha256": "621a8fd49390ae84c0e3507c8dfc9472d5c89b4ee040925bd1b415a540a13bb7"
+    },
+    {
+      "path": "crates/xterm-web/src/links/raw_link_bridge.js",
+      "bytes": 1146,
+      "sha256": "e58ba4566734cfcab5b0b5dad658bb4b82c4e61009fab5d41110d179e18a42c6"
+    }
+  ],
+  "committedSourcePins": [
+    {
+      "path": "crates/xterm-web/src/links/browser_linkifier_events.rs",
+      "bytes": 10346,
+      "sha256": "fd1e4c8e92eb31d5b197cdc2350e66c181daa76aafcbb42a2aace41396faddcd"
+    },
+    {
+      "path": "crates/xterm-web/src/links/browser_payload.rs",
+      "bytes": 11082,
+      "sha256": "b5dbb1f0d14ce0dc79c28538c8bcbbb345d9704a0d6e8195af9653ca849ab3e2"
+    },
+    {
+      "path": "crates/xterm-web/tests/fixtures/link-live-cols.json",
+      "bytes": 2459,
+      "sha256": "3318a63db36d87f4c2c533f3969024b338469f6f8b9fab84e1eb07163e8a0ec7"
+    },
+    {
+      "path": "crates/xterm-web/tests/wasm_link_live_cols.rs",
+      "bytes": 1276,
+      "sha256": "c63feb60262278f0a37cc77eaa89aced474a001bde14a0561c910eefadf36fe5"
+    },
+    {
+      "path": "docs/link-live-cols.md",
+      "bytes": 6643,
+      "sha256": "bea15f96f2d7510e76d61584037d907735970da675a1ce732d530c6edee1933f"
+    },
+    {
+      "path": "scripts/link-live-cols-methods.mjs",
+      "bytes": 2622,
+      "sha256": "f34aa7a8a63d7cabc4b291c0eeeb0d8927dae7d3d7c678d69b27e6cd3cc8ef1a"
+    },
+    {
+      "path": "scripts/link-live-cols-trace.js",
+      "bytes": 3922,
+      "sha256": "39ec5b762cb2ab0c21573ed7cea9674414840cee0a1056cd1b35751aef6ad3a8"
+    },
+    {
+      "path": "scripts/public-link-provider-source.mjs",
+      "bytes": 5210,
+      "sha256": "ac94b65ae4f6a5c6b31565440d077ecdbb3143f873fcba75ded0fc2ed82efa2b"
+    },
+    {
+      "path": "Cargo.lock",
+      "bytes": 11108,
+      "sha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 6176,
+      "sha256": "4391b014a11c1c1f3691b43f639b6de5b7ab5459ec372080e2b2e3efe7aa6532"
+    },
+    {
+      "path": "scripts/browser-host-check.mjs",
+      "bytes": 9815,
+      "sha256": "63dc6978c20d94958c046cfd721f50f785fef16cd7db69332918fc712ba96536"
+    },
+    {
+      "path": "scripts/source-ts-loader.mjs",
+      "bytes": 1741,
+      "sha256": "621a8fd49390ae84c0e3507c8dfc9472d5c89b4ee040925bd1b415a540a13bb7"
+    },
+    {
+      "path": "crates/xterm-web/src/links/raw_link_bridge.js",
+      "bytes": 1146,
+      "sha256": "e58ba4566734cfcab5b0b5dad658bb4b82c4e61009fab5d41110d179e18a42c6"
+    }
+  ],
+  "receiptPins": [
+    {
+      "path": "results/browser-host/wasm_link_disposal-results.json",
+      "bytes": 6538,
+      "sha256": "63860ba2d6053616bbe3c153796bb47552db782ccf15d89f67ed96e54154d2e6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/commands.json",
+      "bytes": 1733,
+      "sha256": "613233d59ca4437532995c8d720ca0680412955864a3b6af3c516125ebf429d9"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/wasm_link_disposal-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/wasm_link_disposal-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/wasm_link_disposal-build.log",
+      "bytes": 45250,
+      "sha256": "ad4e98eab5c3edfaebedd349be04946d8967b821398441f76d46cd89ed4478c0"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/wasm_link_disposal-chromium.log",
+      "bytes": 350,
+      "sha256": "fe19553b9c106d96013a2c62b0a6931d8fbaca89cfb4006e38d5aeebf19368f3"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/wasm_link_disposal-firefox.log",
+      "bytes": 350,
+      "sha256": "fe19553b9c106d96013a2c62b0a6931d8fbaca89cfb4006e38d5aeebf19368f3"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/wasm_link_disposal-results.json",
+      "bytes": 6538,
+      "sha256": "63860ba2d6053616bbe3c153796bb47552db782ccf15d89f67ed96e54154d2e6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/wasm_link_disposal-webkit.log",
+      "bytes": 350,
+      "sha256": "6fd8404b17124ef8c1b1bc797fa97802898c93eff4d354501d0d81c303e0c5dd"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event-results.json",
+      "bytes": 5285,
+      "sha256": "7a7b7ffbc41ddf2b3e282eb50966498196c74f95a03e026a5f8ee9c5a26f5841"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/commands.json",
+      "bytes": 1710,
+      "sha256": "94c42fa8a0716d5477b7bb5303d6512c9d928a26f33a4732bf03fd0587791a3a"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/wasm_link_hover_event-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/wasm_link_hover_event-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/wasm_link_hover_event-build.log",
+      "bytes": 45262,
+      "sha256": "07c328691a583af88a8f3ab3579845000d551445a202fc1aa0b4ebb8b2f87308"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/wasm_link_hover_event-chromium.log",
+      "bytes": 169,
+      "sha256": "1e75206a963551b2cec17b5d38aac64b8fdac14332502ff6f34e810c28d68b2c"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/wasm_link_hover_event-firefox.log",
+      "bytes": 169,
+      "sha256": "571ca1ec03baaff61488893b9fcd38ada828821ba3c039660536cf3142f55355"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/wasm_link_hover_event-results.json",
+      "bytes": 5285,
+      "sha256": "7a7b7ffbc41ddf2b3e282eb50966498196c74f95a03e026a5f8ee9c5a26f5841"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/wasm_link_hover_event-webkit.log",
+      "bytes": 169,
+      "sha256": "6351c9dfac19f0291c6486b3d4d7fb2b99be6dec0eb676e5852ff5c443f81880"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols-results.json",
+      "bytes": 5257,
+      "sha256": "a27fd33d516c5027c734e33d2d60a469a0efe346514457229535f79558adcd98"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/commands.json",
+      "bytes": 1727,
+      "sha256": "53b86152917c17c3af2a93e5db97ef6f1eec7d8b8ac3fd4c6aa0a9e29cc54ad0"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/wasm_link_live_cols-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/wasm_link_live_cols-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/wasm_link_live_cols-build.log",
+      "bytes": 46338,
+      "sha256": "70117ea5b1e75d5d845646728fa85a2a1773e2ffad5974daa331bfc9b79a6b8a"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/wasm_link_live_cols-chromium.log",
+      "bytes": 2164,
+      "sha256": "98e48fa8ce2e4e41c6190ad7815eae4b4d1b61288fd1beffe530cd21ec46306e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/wasm_link_live_cols-results.json",
+      "bytes": 8435,
+      "sha256": "f5cbda25e0366d53039ff5f2ccf369fba8dcadac0773a61904db306cd84b4bcb"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/commands.json",
+      "bytes": 1726,
+      "sha256": "1f9c190e5a4d268f17e4d2cf9ba92883aeeec360fbed97c5fa168571d6cd33e8"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/wasm_link_live_cols-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/wasm_link_live_cols-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/wasm_link_live_cols-build.log",
+      "bytes": 45256,
+      "sha256": "3c2e9011835c16ec8d56553848ef8f6953316bb75e9183147498c4ec7d2cca19"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/wasm_link_live_cols-chromium.log",
+      "bytes": 164,
+      "sha256": "98bdb06c6fc3df964a7474b7d2790671524fb557ae5013b1230d02ec065c7a09"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/wasm_link_live_cols-firefox.log",
+      "bytes": 164,
+      "sha256": "5df80634142aba1280ab62512868fee808037242b1ffc50c5838a5bcfa1243d4"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/wasm_link_live_cols-results.json",
+      "bytes": 5257,
+      "sha256": "a27fd33d516c5027c734e33d2d60a469a0efe346514457229535f79558adcd98"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/wasm_link_live_cols-webkit.log",
+      "bytes": 164,
+      "sha256": "b131be454c9385b992edc44c3b258bb3942ae4ebfaebfd39cfd60454fec3afb8"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry-results.json",
+      "bytes": 5356,
+      "sha256": "a7f9229cc6cb3216d1e79f90a9b0863e6db7acf481729054c129ba393c1d695b"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/commands.json",
+      "bytes": 1740,
+      "sha256": "702874c5e99a30acbda3b9b19e4a0c3ab467a2a18544236710658c1cc240edf0"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/wasm_link_provider_reentry-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/wasm_link_provider_reentry-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/wasm_link_provider_reentry-build.log",
+      "bytes": 45282,
+      "sha256": "56fba277a5f9d61f04da0fb88b87355e3e60714dccf03c210f5e848228795271"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/wasm_link_provider_reentry-chromium.log",
+      "bytes": 170,
+      "sha256": "c215e00018fa62d70a233fbb2a70f5b5c6e287c185de65b64f29c935c4b618b4"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/wasm_link_provider_reentry-firefox.log",
+      "bytes": 170,
+      "sha256": "06add14eb24a9e9b1181f79d091046e7d57b3797684c1c1a44d38a9033695ca6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/wasm_link_provider_reentry-results.json",
+      "bytes": 5356,
+      "sha256": "a7f9229cc6cb3216d1e79f90a9b0863e6db7acf481729054c129ba393c1d695b"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/wasm_link_provider_reentry-webkit.log",
+      "bytes": 170,
+      "sha256": "1d9b481df2311caafd721dcefe7fcfab393967096959a1ced26bf0cc7d3a9817"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier-results.json",
+      "bytes": 8387,
+      "sha256": "ebfca479fb8daac036e7fd9db5c3bb0c6cd16e829b864763d70a098b454de93a"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/commands.json",
+      "bytes": 1714,
+      "sha256": "65723947327e3ef22ffcfdc12d0db2be64277f03963d630663a03d9208e04227"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/wasm_linkifier-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/wasm_linkifier-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/wasm_linkifier-build.log",
+      "bytes": 45234,
+      "sha256": "1ce5614be6c18026a745c6858f39f96321fd67ded4bb77c5ddafbcf7e54bd8ba"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/wasm_linkifier-chromium.log",
+      "bytes": 622,
+      "sha256": "7db65e9ca8bebcb4ed885aca015a6390ab2d4b2bd35a52d9a156ceb02996c820"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/wasm_linkifier-firefox.log",
+      "bytes": 622,
+      "sha256": "9195cc6839824dd106e370e80ed5a7f119fcf1d69cdea5844b3ffb4ad8039bd4"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/wasm_linkifier-results.json",
+      "bytes": 8387,
+      "sha256": "ebfca479fb8daac036e7fd9db5c3bb0c6cd16e829b864763d70a098b454de93a"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/wasm_linkifier-webkit.log",
+      "bytes": 622,
+      "sha256": "f5d79aa1278e1c6ecee49285e71773d9f4c2374e2ccae06debdfe3df53bdcff8"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider-results.json",
+      "bytes": 5344,
+      "sha256": "99cf06d78cafa815df406bc87d6ad61a5862c97d5da4f9ba686e0e70ec208c62"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/commands.json",
+      "bytes": 1729,
+      "sha256": "f2ea569a57e876055bd64dd4f27323fb067c5da409f92dda680751eecc5c9ded"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/wasm_public_link_provider-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/wasm_public_link_provider-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/wasm_public_link_provider-build.log",
+      "bytes": 45278,
+      "sha256": "d38601cb0aea1882797257331ddfb646054f5cd306db18edba9beb6f0a6c6cd3"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/wasm_public_link_provider-chromium.log",
+      "bytes": 171,
+      "sha256": "4ef194f64640336ac978838d967a0f67c839dd58daa6c0d0575e5846147980a0"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/wasm_public_link_provider-firefox.log",
+      "bytes": 171,
+      "sha256": "3f847b0dd7ea98208d14f3902a0646234435e2c21b1609d8cab2154d3eff0cd0"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/wasm_public_link_provider-results.json",
+      "bytes": 5344,
+      "sha256": "99cf06d78cafa815df406bc87d6ad61a5862c97d5da4f9ba686e0e70ec208c62"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/wasm_public_link_provider-webkit.log",
+      "bytes": 171,
+      "sha256": "6c750ed0bb88af05d6d4c57a9f986b56248c81082496a1a4e881dc0995c88963"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links-results.json",
+      "bytes": 7058,
+      "sha256": "90dcc039285c628413de0ecd0c5f6afec2d22b11affbad92b5189dac052727e4"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/commands.json",
+      "bytes": 1715,
+      "sha256": "d4ec76232a44e62798a36f8d27d4356b587dd3e964b4e67d187e25a61290a4c1"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/wasm_terminal_links-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/wasm_terminal_links-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/wasm_terminal_links-build.log",
+      "bytes": 45254,
+      "sha256": "f186e80f251cb6dc788a4717926c0cc2d7a328f4e70f082092d72f8f4ed4ff12"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/wasm_terminal_links-chromium.log",
+      "bytes": 423,
+      "sha256": "3d10bff989c47191d5397b11aa6f5bf77d9bc776f7e413b14bea9b36daaf3aee"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/wasm_terminal_links-firefox.log",
+      "bytes": 423,
+      "sha256": "b5fb6df5fec15ba4a88d6f19e3107d50c23c597123b33d66385f923a84333759"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/wasm_terminal_links-results.json",
+      "bytes": 7058,
+      "sha256": "90dcc039285c628413de0ecd0c5f6afec2d22b11affbad92b5189dac052727e4"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/wasm_terminal_links-webkit.log",
+      "bytes": 423,
+      "sha256": "b57544ddff78611bb08f01da26df19138d21567c5f3cd5cfc893ded34eeee94e"
+    },
+    {
+      "path": "results/link-live-cols/environment-notes.json",
+      "bytes": 834,
+      "sha256": "b2b9b238ae0f22b85eee2f746300e39fdeed426db189df068d96c585498349fa"
+    },
+    {
+      "path": "results/link-live-cols/final-browser-command.log",
+      "bytes": 132,
+      "sha256": "20a197141b480f3511fb3c4cf980067d1fc0931f302cf440331b2c47adaceb05"
+    },
+    {
+      "path": "results/link-live-cols/member-fmt.log",
+      "bytes": 106,
+      "sha256": "5d4a319dda05846514cb5dbba1b43a05880fac0ec27e1bafb7515db4e97ae61e"
+    },
+    {
+      "path": "results/link-live-cols/methods.json",
+      "bytes": 3234,
+      "sha256": "b6bc74ebcc54b959229189d144fc030cc4c9e529d61468369971352a4617a2e2"
+    },
+    {
+      "path": "results/link-live-cols/native-all.log",
+      "bytes": 64130,
+      "sha256": "e71338e5ffb2302329b2184602e5af5594d44fdc447bcea014710bb29cdd5651"
+    },
+    {
+      "path": "results/link-live-cols/native-clippy-initial-env.log",
+      "bytes": 826,
+      "sha256": "0f6f4eed021f68b5eee765bdba33db80bf8da5892fb3fe1d09b734f5f1b41bce"
+    },
+    {
+      "path": "results/link-live-cols/native-clippy.log",
+      "bytes": 60,
+      "sha256": "6a981e4e2a0c9af6dead9afee0224555ade213f42082f62ec9b38c4d1fc0dd36"
+    },
+    {
+      "path": "results/link-live-cols/native-initial-env.log",
+      "bytes": 64896,
+      "sha256": "13961d15b9b1e0e928c7b8aa500c9167008246602223a8efc0e49d731511e81e"
+    },
+    {
+      "path": "results/link-live-cols/negative-command.log",
+      "bytes": 50,
+      "sha256": "f97441ef0f903c16143647b5f45d4b3ba50b7ca5b1d77b4518403f4881651c0f"
+    },
+    {
+      "path": "results/link-live-cols/negative-driver.log",
+      "bytes": 25,
+      "sha256": "e3382e7a0394a70f3780b7311b1549d8462aff6af9dcb194c72d729bf8331c65"
+    },
+    {
+      "path": "results/link-live-cols/negative.json",
+      "bytes": 9437,
+      "sha256": "8a4dbb849171e548aad2f0d8c9d7326aa5e7f2849b799a00370e1aeed4cac21f"
+    },
+    {
+      "path": "results/link-live-cols/reference-preflight.json",
+      "bytes": 28,
+      "sha256": "3c701e2c76953e152050cff5283932f0a1e1a9eef87c4b7baaf57280353e1d00"
+    },
+    {
+      "path": "results/link-live-cols/source-command.log",
+      "bytes": 114,
+      "sha256": "75815d3f3c7a4bef652ea6ee1586691ea5ef17c996045fe300eb8aef42943e8f"
+    },
+    {
+      "path": "results/link-live-cols/source-request-cache-diagnostic.json",
+      "bytes": 1531,
+      "sha256": "ee2439b06e3a1ea2207fe4bf8a50600c512f8579e2f7e1dc583adba0e59f1fb5"
+    },
+    {
+      "path": "results/link-live-cols/source-request-cache-diagnostic.log",
+      "bytes": 732,
+      "sha256": "0c37d17bbb5fbeb303d6784b5601b16511ea7ba8b48712383e7aaf1c59d3d116"
+    },
+    {
+      "path": "results/link-live-cols/source.json",
+      "bytes": 11445,
+      "sha256": "1939028ef45a861ed619edd8d8545266b38b197fd3398ceb01d638db64c70b7c"
+    },
+    {
+      "path": "results/link-live-cols/wasm-all-clippy.log",
+      "bytes": 221,
+      "sha256": "0e0d239888788eae90b3d2445bd615341209e8b913eb2300f7474b0269daff27"
+    },
+    {
+      "path": "results/link-live-cols/wasm-lib-clippy.log",
+      "bytes": 1506,
+      "sha256": "134d701d80081fd10b38c97468255f67bb527c8712f42c2ad6256cee2c26f335"
+    },
+    {
+      "path": "results/link-live-cols/wasm_link_disposal-command.log",
+      "bytes": 132,
+      "sha256": "939344411f6628f007f4e665f10742984bf26a25bc4218ac429fff143dfddff9"
+    },
+    {
+      "path": "results/link-live-cols/wasm_link_hover_event-command.log",
+      "bytes": 132,
+      "sha256": "20a197141b480f3511fb3c4cf980067d1fc0931f302cf440331b2c47adaceb05"
+    },
+    {
+      "path": "results/link-live-cols/wasm_link_provider_reentry-command.log",
+      "bytes": 132,
+      "sha256": "20a197141b480f3511fb3c4cf980067d1fc0931f302cf440331b2c47adaceb05"
+    },
+    {
+      "path": "results/link-live-cols/wasm_linkifier-command.log",
+      "bytes": 132,
+      "sha256": "3932465dce0b03b7ae06e1c2268cab1eb8633599b832999e8010c719f92e65a1"
+    },
+    {
+      "path": "results/link-live-cols/wasm_public_link_provider-command.log",
+      "bytes": 132,
+      "sha256": "20a197141b480f3511fb3c4cf980067d1fc0931f302cf440331b2c47adaceb05"
+    },
+    {
+      "path": "results/link-live-cols/wasm_terminal_links-command.log",
+      "bytes": 132,
+      "sha256": "973cb09afefbe6dc6a6aad99c5a08cb5ec075db9bea8795a4e9eb41d52dc82d1"
+    },
+    {
+      "path": "results/link-live-cols/workspace-fmt.log",
+      "bytes": 817,
+      "sha256": "a3c64adc493a218a5a8332dfc60b9e9fd0cf455d8215931a5888f9bc84a29c70"
+    }
+  ],
+  "temporaryArtifacts": [
+    {
+      "path": "results/acceptance-artifacts/035b9e78e912b3f2b6902b76e6b8445c667258811579d06556955c366ec9b641/artifact.wasm",
+      "bytes": 19655083,
+      "sha256": "035b9e78e912b3f2b6902b76e6b8445c667258811579d06556955c366ec9b641"
+    },
+    {
+      "path": "results/acceptance-artifacts/0988034c872cf5f6f48a45e5391ee4fb68ed6ca8c460e85c1a7e938e5094c2cc/artifact.wasm",
+      "bytes": 19976060,
+      "sha256": "0988034c872cf5f6f48a45e5391ee4fb68ed6ca8c460e85c1a7e938e5094c2cc"
+    },
+    {
+      "path": "results/acceptance-artifacts/14f4854da09981687ba78fd0205c63223bbddc13261ab9a2bd66be594e50e1cd/artifact.wasm",
+      "bytes": 19845205,
+      "sha256": "14f4854da09981687ba78fd0205c63223bbddc13261ab9a2bd66be594e50e1cd"
+    },
+    {
+      "path": "results/acceptance-artifacts/79ac9f0407763398e92345e6ef5b7919fbc6d77c0b5f15f21380fa0f1a67dc71/artifact.wasm",
+      "bytes": 19845336,
+      "sha256": "79ac9f0407763398e92345e6ef5b7919fbc6d77c0b5f15f21380fa0f1a67dc71"
+    },
+    {
+      "path": "results/acceptance-artifacts/874b15517065c40b1356e8ef8a35f6e366ffab94b309249aa414e46382051c87/artifact.wasm",
+      "bytes": 19851991,
+      "sha256": "874b15517065c40b1356e8ef8a35f6e366ffab94b309249aa414e46382051c87"
+    },
+    {
+      "path": "results/acceptance-artifacts/9338796b0a888983355860f6cd5c4a36d3172237a3027add8a21ea4b07723a38/artifact.wasm",
+      "bytes": 19834203,
+      "sha256": "9338796b0a888983355860f6cd5c4a36d3172237a3027add8a21ea4b07723a38"
+    },
+    {
+      "path": "results/acceptance-artifacts/a308054f98cd52470aefbe0b2a022993f8ed0288a7578fd8ca422880d8ceb2ed/artifact.wasm",
+      "bytes": 19844760,
+      "sha256": "a308054f98cd52470aefbe0b2a022993f8ed0288a7578fd8ca422880d8ceb2ed"
+    },
+    {
+      "path": "results/acceptance-artifacts/f8e0399f09d0e2957472c97198e205cac150c1abbcd40553d170a5394884d052/artifact.wasm",
+      "bytes": 19536403,
+      "sha256": "f8e0399f09d0e2957472c97198e205cac150c1abbcd40553d170a5394884d052"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-font-addons-91879fe097c75eac/src/ligature_host.js",
+      "bytes": 1906,
+      "sha256": "d8a30e72fe77d954821e9e7f2c61761e4ea8ea3e7d2c481e7d99af1ff0a60b73"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline0.js",
+      "bytes": 1216,
+      "sha256": "de4e485e930f7cda8a9ce550cfe26c807e3dd1d1e80c434413532b2a5b420e9d"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline1.js",
+      "bytes": 57,
+      "sha256": "292f2511fdb63c2b7487433bbba6acaa69019ed839f7039b21697a1bc1e74de1"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline2.js",
+      "bytes": 82,
+      "sha256": "a851e7d53c20c29b062e7a256c7f6325913b746516250a2045843e15fdb4836e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline3.js",
+      "bytes": 399,
+      "sha256": "7321456f6ef5529bca9fbe7a91f83ddf66ffbbbca23931c63fd9cb619f01b09c"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline4.js",
+      "bytes": 499,
+      "sha256": "fe784870f96bd48e28e139b6f89b699553b8ae68f875b2a55ebe2ba98375dd8a"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline5.js",
+      "bytes": 828,
+      "sha256": "1e6f58ef7f27ae6d54ae9140abf399bf7462854321b8ad056cd525cfdbd1f48b"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline6.js",
+      "bytes": 394,
+      "sha256": "783fe571663c89ee3df67788d86e602ab4761de28d4d2c3418be3c8825543c8e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline7.js",
+      "bytes": 417,
+      "sha256": "c1cac729b3fbfc98a3c821c904322ac04b0bd794f98fb67204978bb7b30955ad"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/addon_bridge.js",
+      "bytes": 1149,
+      "sha256": "79f1ac60404844cd2f78eb16f423626d5fd2661fa9b46025becf1ab96c2c72f7"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/buffer_shape.js",
+      "bytes": 1063,
+      "sha256": "ac1672867d2a205dd4abc8b8658f662f87c11a22a799977ec9826a36d1600cd2"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/parser_identifier_bridge.js",
+      "bytes": 510,
+      "sha256": "5f56e4b5db6defea5127807a4b082e3e872a10bfb3d6d572013800e8f8e949e1"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline0.js",
+      "bytes": 71,
+      "sha256": "0ba7d921b939d5a18bc449a0cec939e2590ca6a9dd163adf542e8e04fe4c5562"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline1.js",
+      "bytes": 521,
+      "sha256": "94c67eee5a651c25dca0cf974988909e66da2e98d506cdb2231dc296c98e899a"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline10.js",
+      "bytes": 94,
+      "sha256": "35c279b9bff235e2ed3ba1f2d394742e9dbdf0d43555e47f9b109a7a39bc57a6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline11.js",
+      "bytes": 998,
+      "sha256": "6efca513626782a77cc0c389058532dba8fd46060c7cfa9bbb71f91e886f86c2"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline12.js",
+      "bytes": 1306,
+      "sha256": "8e67f4883a133bb0ad73aff16827e047e1b680c4b382b6a3d019515c024ff4ea"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline13.js",
+      "bytes": 831,
+      "sha256": "1ae28c409e9fbd1efcec43107f9e9c035eb5c8596864bae5210d1091ddbb8969"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline14.js",
+      "bytes": 532,
+      "sha256": "be9dce800be895a21a694375dd02be83bad94925262f13682c556a70fdcdaa94"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline15.js",
+      "bytes": 168,
+      "sha256": "327d7ca797597761a7d523a26885b19246f32f8c50e0ad34f04fa15278d13ae6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline16.js",
+      "bytes": 72,
+      "sha256": "fe635785ec693cd38a0381847742c8729d33422c5cf697e35ec288d7ae53460f"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline17.js",
+      "bytes": 67,
+      "sha256": "ae0cfd92121cf0c213940294f05902a331cfaeb9d9f4059dd1b17cd118696475"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline18.js",
+      "bytes": 107,
+      "sha256": "33f7531024d02d43aaac103ec354c83fca79bb2cb719f9b013afc8364b981a1a"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline19.js",
+      "bytes": 1577,
+      "sha256": "9b0cfaa56c08f3fe2ab57fa088057464cdf0ce8cce21c8eeaf71c4bf78e016c2"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline2.js",
+      "bytes": 187,
+      "sha256": "1799e450fa81c463910c6b8b7a6b7e00d844b7469c734739136efc8666dc37c3"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline20.js",
+      "bytes": 152,
+      "sha256": "d2e79943768fa04ec055ed1eef1c0afeb034cf42b0d8ef86a6b7f2f2c9e7e76b"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline21.js",
+      "bytes": 346,
+      "sha256": "7208a28a755c8609b1b2f9294937f2418f9f3c0dee9b11fa1c0d4feabb4a7783"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline22.js",
+      "bytes": 567,
+      "sha256": "d21c66fcc0b26a3ef78feefeb4f859cf4d4f7fb2566eb356975937c0f84f8c66"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline23.js",
+      "bytes": 268,
+      "sha256": "fec399e64c20a5c1e46f28365149e4b1eb42ea9864deda03dae6c8e4e9c422b5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline24.js",
+      "bytes": 375,
+      "sha256": "3052e1ade55765d0445e8710812f59948f6501f701ebea675dfd9d74286a9af5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline25.js",
+      "bytes": 323,
+      "sha256": "88429dc7ddaae7677a9961758af357b9926c79e4dc14cf654f3e267e6b1bc098"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline26.js",
+      "bytes": 598,
+      "sha256": "4e0dc49d3f5e4be4ed3fb22bdd2b7151d5eec123914fb420dbbfe8763e7e1420"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline27.js",
+      "bytes": 79,
+      "sha256": "67320b545da1470a62b712601387375f05accf3b425b2f6098a93a05a8728fdb"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline28.js",
+      "bytes": 619,
+      "sha256": "35e8802a3bd6a9cdd8c3c6b60faa1e5c76d4add8bed3a0376de597fe0eb8bd27"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline29.js",
+      "bytes": 461,
+      "sha256": "6687384caa57150cf1218a599da0e21e55b3d994ecbb13cf3a800a20bd9ad9ff"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline3.js",
+      "bytes": 241,
+      "sha256": "99cc3e102135da2cfd62aca8a21991f1f4846ac8724f25c5bb178ed008bf10e4"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline30.js",
+      "bytes": 66,
+      "sha256": "dabcdb0445c8e13da9d4283bea4e0722a26a38c9e3b2598813fdf1696d0e8389"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline31.js",
+      "bytes": 509,
+      "sha256": "ebaf5bda1a55fb73f6defad9cc1d02ef7826fe97f388a6bfc364795061f01453"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline32.js",
+      "bytes": 894,
+      "sha256": "ac254d40273711a7fcec0fa07079497d683e3ec8da051b4bd2cae49e94de5d0e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline33.js",
+      "bytes": 490,
+      "sha256": "9b28981ca17185a29b7f528e383826e3a2445b65a209bdff44a37a7f6aa18861"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline34.js",
+      "bytes": 455,
+      "sha256": "9b8c8fe8feba2f025d4db4ca7c0ac0b6f6f6317481a4e5faf1c0c41e0e37d1d6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline4.js",
+      "bytes": 301,
+      "sha256": "77805109d24d2fc4e296b8cc30efa71d05cd583a7bdd7597defa3c5ed9f5c7e5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline5.js",
+      "bytes": 98,
+      "sha256": "449f50af26e6eec23a2c5e5f8224d47c313f685bc4125f81228658949a9aa9ca"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline6.js",
+      "bytes": 70,
+      "sha256": "2c5c80b866a8d79713943c15d29cd1cdf6261348167b99f1207b2e9fe77bb462"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline7.js",
+      "bytes": 159,
+      "sha256": "0977c94f33af4592a2a2df5a4f38c6faddac5690439f12c3490c0069589b2bec"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline8.js",
+      "bytes": 72,
+      "sha256": "5b81a8324247fffc6281813a7cb4ebc708b474d0f1c1d51bbf2fbe79e05829a8"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline9.js",
+      "bytes": 58,
+      "sha256": "d14f9f4659878d63aa506a3406eb9f18425e175ff507f674db10b1072f170eb4"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/core_browser_microtask.js",
+      "bytes": 609,
+      "sha256": "0e48b1666f9e7e4c2255ed049870c41689986eebf8b81d1b3564fef3e008eef0"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/handlers.js",
+      "bytes": 2701,
+      "sha256": "5a4451b4152871b90e65ae627ecac5cd31594f677641bd5da14796dc8bfcfb99"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/inspection.js",
+      "bytes": 1526,
+      "sha256": "fdd0e49565d38ab62c3fb3a2974001cc5741460a7d83801260947a3a5dbbc5cf"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/option_inspection.js",
+      "bytes": 701,
+      "sha256": "41899ae76de4d356a95e7b08aba42c766fde86c3f359cc7f61b56ac6162af585"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/kitty_host.js",
+      "bytes": 900,
+      "sha256": "00006bee1ae83a53203da0518eb10491f71a21c6dfaca73c5e27a2309a336768"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/placeholder.js",
+      "bytes": 420,
+      "sha256": "770aecedfcce7344771dd73bc9b3335f1978125eb3b81a2daa6c1b764ccf6586"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/sixel_errors.js",
+      "bytes": 1842,
+      "sha256": "ecb97f6854ce8c36b0762b7e0b7294c51df369500ecb580f60d87b334c7b56d5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/kitty_tables.js",
+      "bytes": 2187,
+      "sha256": "00cbbbf0e3a4378cc9c3b2f73d5bf1190427bc9dcddf1ded2cfe1f973469f07e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/win32_tables.js",
+      "bytes": 5038,
+      "sha256": "91e6c09c1e5255223495f79e3aa3852bd169736f4083aa687bbeca9f9b485caf"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_link_bridge.js",
+      "bytes": 1146,
+      "sha256": "e58ba4566734cfcab5b0b5dad658bb4b82c4e61009fab5d41110d179e18a42c6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_osc_bridge.js",
+      "bytes": 633,
+      "sha256": "884bdde884899ad68fe08e893387482414ada15dda474a23422d8fc2f6e89114"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/renderer/decoration_microtask.js",
+      "bytes": 511,
+      "sha256": "2bdd2dc09d8b2934dcf603f97571148a998c0286ae00966a3039ab733bb04fb5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/task_queue_bridge.js",
+      "bytes": 773,
+      "sha256": "cda54ac02301bf8034ac688ae102e47e198123f29c025cabb35344c999aa8b1f"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/terminal/internal_render.js",
+      "bytes": 690,
+      "sha256": "a76cee2c9eae4ddc1998e5b4783d2e52b8b358288c1f0babd74834aa82b68ee1"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/utility_addons/raw_link_bridge.js",
+      "bytes": 588,
+      "sha256": "8917d70ef9ab11951ee7d41935e5bfcbe6d40366394e91b7bb68fa32156a075b"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/atlas_baseline.js",
+      "bytes": 533,
+      "sha256": "bbefd924bb5e709999c0b04c70cb8c14f9893d7191f4cd12392590bc181eba6f"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/custom_glyphs/patterns.js",
+      "bytes": 1372,
+      "sha256": "cb26ee8116b931ce37a9ae320058065efbaa67044dba71b4d15efa309483d36f"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/write_scheduler_bridge.js",
+      "bytes": 386,
+      "sha256": "bb75408c713f7a671c5e02be5afe7b313e040a037a879f7f23d0af5f258bf7f7"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/suite.d.ts",
+      "bytes": 51829,
+      "sha256": "39e17887914a57c77827a03bb10e8c38b584ccea813fd12ec0251bef1c437dda"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/suite.js",
+      "bytes": 247663,
+      "sha256": "598b7bea9faef8f8a03bc5a061c2c59cb1c42fc456e4d002dcb8495c881e95c9"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/suite_bg.wasm",
+      "bytes": 16389081,
+      "sha256": "d8b0d6bb1ab9ae4784d58d10dd2d441a3c01872ab4890aef22ed5686ea01c4d7"
+    },
+    {
+      "path": "results/browser-host/wasm_link_disposal/2026-11-05T21-34-31-713Z-05172653-e2ef-438a-95a7-a9b300801e7a/artifacts/suite_bg.wasm.d.ts",
+      "bytes": 33835,
+      "sha256": "67e04a2a1d8871170808d3911a4a361a0fe9aa6e82a86ada29e5b9e58bd40ce9"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-font-addons-91879fe097c75eac/src/ligature_host.js",
+      "bytes": 1906,
+      "sha256": "d8a30e72fe77d954821e9e7f2c61761e4ea8ea3e7d2c481e7d99af1ff0a60b73"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline0.js",
+      "bytes": 1216,
+      "sha256": "de4e485e930f7cda8a9ce550cfe26c807e3dd1d1e80c434413532b2a5b420e9d"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline1.js",
+      "bytes": 57,
+      "sha256": "292f2511fdb63c2b7487433bbba6acaa69019ed839f7039b21697a1bc1e74de1"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline2.js",
+      "bytes": 82,
+      "sha256": "a851e7d53c20c29b062e7a256c7f6325913b746516250a2045843e15fdb4836e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline3.js",
+      "bytes": 399,
+      "sha256": "7321456f6ef5529bca9fbe7a91f83ddf66ffbbbca23931c63fd9cb619f01b09c"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline4.js",
+      "bytes": 499,
+      "sha256": "fe784870f96bd48e28e139b6f89b699553b8ae68f875b2a55ebe2ba98375dd8a"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline5.js",
+      "bytes": 828,
+      "sha256": "1e6f58ef7f27ae6d54ae9140abf399bf7462854321b8ad056cd525cfdbd1f48b"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline6.js",
+      "bytes": 394,
+      "sha256": "783fe571663c89ee3df67788d86e602ab4761de28d4d2c3418be3c8825543c8e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline7.js",
+      "bytes": 417,
+      "sha256": "c1cac729b3fbfc98a3c821c904322ac04b0bd794f98fb67204978bb7b30955ad"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/addon_bridge.js",
+      "bytes": 1149,
+      "sha256": "79f1ac60404844cd2f78eb16f423626d5fd2661fa9b46025becf1ab96c2c72f7"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/buffer_shape.js",
+      "bytes": 1063,
+      "sha256": "ac1672867d2a205dd4abc8b8658f662f87c11a22a799977ec9826a36d1600cd2"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/parser_identifier_bridge.js",
+      "bytes": 510,
+      "sha256": "5f56e4b5db6defea5127807a4b082e3e872a10bfb3d6d572013800e8f8e949e1"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline0.js",
+      "bytes": 71,
+      "sha256": "0ba7d921b939d5a18bc449a0cec939e2590ca6a9dd163adf542e8e04fe4c5562"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline1.js",
+      "bytes": 521,
+      "sha256": "94c67eee5a651c25dca0cf974988909e66da2e98d506cdb2231dc296c98e899a"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline10.js",
+      "bytes": 94,
+      "sha256": "35c279b9bff235e2ed3ba1f2d394742e9dbdf0d43555e47f9b109a7a39bc57a6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline11.js",
+      "bytes": 998,
+      "sha256": "6efca513626782a77cc0c389058532dba8fd46060c7cfa9bbb71f91e886f86c2"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline12.js",
+      "bytes": 1306,
+      "sha256": "8e67f4883a133bb0ad73aff16827e047e1b680c4b382b6a3d019515c024ff4ea"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline13.js",
+      "bytes": 831,
+      "sha256": "1ae28c409e9fbd1efcec43107f9e9c035eb5c8596864bae5210d1091ddbb8969"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline14.js",
+      "bytes": 532,
+      "sha256": "be9dce800be895a21a694375dd02be83bad94925262f13682c556a70fdcdaa94"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline15.js",
+      "bytes": 168,
+      "sha256": "327d7ca797597761a7d523a26885b19246f32f8c50e0ad34f04fa15278d13ae6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline16.js",
+      "bytes": 72,
+      "sha256": "fe635785ec693cd38a0381847742c8729d33422c5cf697e35ec288d7ae53460f"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline17.js",
+      "bytes": 67,
+      "sha256": "ae0cfd92121cf0c213940294f05902a331cfaeb9d9f4059dd1b17cd118696475"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline18.js",
+      "bytes": 107,
+      "sha256": "33f7531024d02d43aaac103ec354c83fca79bb2cb719f9b013afc8364b981a1a"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline19.js",
+      "bytes": 1577,
+      "sha256": "9b0cfaa56c08f3fe2ab57fa088057464cdf0ce8cce21c8eeaf71c4bf78e016c2"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline2.js",
+      "bytes": 187,
+      "sha256": "1799e450fa81c463910c6b8b7a6b7e00d844b7469c734739136efc8666dc37c3"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline20.js",
+      "bytes": 152,
+      "sha256": "d2e79943768fa04ec055ed1eef1c0afeb034cf42b0d8ef86a6b7f2f2c9e7e76b"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline21.js",
+      "bytes": 346,
+      "sha256": "7208a28a755c8609b1b2f9294937f2418f9f3c0dee9b11fa1c0d4feabb4a7783"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline22.js",
+      "bytes": 567,
+      "sha256": "d21c66fcc0b26a3ef78feefeb4f859cf4d4f7fb2566eb356975937c0f84f8c66"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline23.js",
+      "bytes": 268,
+      "sha256": "fec399e64c20a5c1e46f28365149e4b1eb42ea9864deda03dae6c8e4e9c422b5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline24.js",
+      "bytes": 375,
+      "sha256": "3052e1ade55765d0445e8710812f59948f6501f701ebea675dfd9d74286a9af5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline25.js",
+      "bytes": 323,
+      "sha256": "88429dc7ddaae7677a9961758af357b9926c79e4dc14cf654f3e267e6b1bc098"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline26.js",
+      "bytes": 598,
+      "sha256": "4e0dc49d3f5e4be4ed3fb22bdd2b7151d5eec123914fb420dbbfe8763e7e1420"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline27.js",
+      "bytes": 79,
+      "sha256": "67320b545da1470a62b712601387375f05accf3b425b2f6098a93a05a8728fdb"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline28.js",
+      "bytes": 619,
+      "sha256": "35e8802a3bd6a9cdd8c3c6b60faa1e5c76d4add8bed3a0376de597fe0eb8bd27"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline29.js",
+      "bytes": 461,
+      "sha256": "6687384caa57150cf1218a599da0e21e55b3d994ecbb13cf3a800a20bd9ad9ff"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline3.js",
+      "bytes": 241,
+      "sha256": "99cc3e102135da2cfd62aca8a21991f1f4846ac8724f25c5bb178ed008bf10e4"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline30.js",
+      "bytes": 66,
+      "sha256": "dabcdb0445c8e13da9d4283bea4e0722a26a38c9e3b2598813fdf1696d0e8389"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline31.js",
+      "bytes": 509,
+      "sha256": "ebaf5bda1a55fb73f6defad9cc1d02ef7826fe97f388a6bfc364795061f01453"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline32.js",
+      "bytes": 894,
+      "sha256": "ac254d40273711a7fcec0fa07079497d683e3ec8da051b4bd2cae49e94de5d0e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline33.js",
+      "bytes": 490,
+      "sha256": "9b28981ca17185a29b7f528e383826e3a2445b65a209bdff44a37a7f6aa18861"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline34.js",
+      "bytes": 455,
+      "sha256": "9b8c8fe8feba2f025d4db4ca7c0ac0b6f6f6317481a4e5faf1c0c41e0e37d1d6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline4.js",
+      "bytes": 301,
+      "sha256": "77805109d24d2fc4e296b8cc30efa71d05cd583a7bdd7597defa3c5ed9f5c7e5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline5.js",
+      "bytes": 98,
+      "sha256": "449f50af26e6eec23a2c5e5f8224d47c313f685bc4125f81228658949a9aa9ca"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline6.js",
+      "bytes": 70,
+      "sha256": "2c5c80b866a8d79713943c15d29cd1cdf6261348167b99f1207b2e9fe77bb462"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline7.js",
+      "bytes": 159,
+      "sha256": "0977c94f33af4592a2a2df5a4f38c6faddac5690439f12c3490c0069589b2bec"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline8.js",
+      "bytes": 72,
+      "sha256": "5b81a8324247fffc6281813a7cb4ebc708b474d0f1c1d51bbf2fbe79e05829a8"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline9.js",
+      "bytes": 58,
+      "sha256": "d14f9f4659878d63aa506a3406eb9f18425e175ff507f674db10b1072f170eb4"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/core_browser_microtask.js",
+      "bytes": 609,
+      "sha256": "0e48b1666f9e7e4c2255ed049870c41689986eebf8b81d1b3564fef3e008eef0"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/handlers.js",
+      "bytes": 2701,
+      "sha256": "5a4451b4152871b90e65ae627ecac5cd31594f677641bd5da14796dc8bfcfb99"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/inspection.js",
+      "bytes": 1526,
+      "sha256": "fdd0e49565d38ab62c3fb3a2974001cc5741460a7d83801260947a3a5dbbc5cf"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/option_inspection.js",
+      "bytes": 701,
+      "sha256": "41899ae76de4d356a95e7b08aba42c766fde86c3f359cc7f61b56ac6162af585"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/kitty_host.js",
+      "bytes": 900,
+      "sha256": "00006bee1ae83a53203da0518eb10491f71a21c6dfaca73c5e27a2309a336768"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/placeholder.js",
+      "bytes": 420,
+      "sha256": "770aecedfcce7344771dd73bc9b3335f1978125eb3b81a2daa6c1b764ccf6586"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/sixel_errors.js",
+      "bytes": 1842,
+      "sha256": "ecb97f6854ce8c36b0762b7e0b7294c51df369500ecb580f60d87b334c7b56d5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/kitty_tables.js",
+      "bytes": 2187,
+      "sha256": "00cbbbf0e3a4378cc9c3b2f73d5bf1190427bc9dcddf1ded2cfe1f973469f07e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/win32_tables.js",
+      "bytes": 5038,
+      "sha256": "91e6c09c1e5255223495f79e3aa3852bd169736f4083aa687bbeca9f9b485caf"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_link_bridge.js",
+      "bytes": 1146,
+      "sha256": "e58ba4566734cfcab5b0b5dad658bb4b82c4e61009fab5d41110d179e18a42c6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_osc_bridge.js",
+      "bytes": 633,
+      "sha256": "884bdde884899ad68fe08e893387482414ada15dda474a23422d8fc2f6e89114"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/renderer/decoration_microtask.js",
+      "bytes": 511,
+      "sha256": "2bdd2dc09d8b2934dcf603f97571148a998c0286ae00966a3039ab733bb04fb5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/task_queue_bridge.js",
+      "bytes": 773,
+      "sha256": "cda54ac02301bf8034ac688ae102e47e198123f29c025cabb35344c999aa8b1f"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/terminal/internal_render.js",
+      "bytes": 690,
+      "sha256": "a76cee2c9eae4ddc1998e5b4783d2e52b8b358288c1f0babd74834aa82b68ee1"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/utility_addons/raw_link_bridge.js",
+      "bytes": 588,
+      "sha256": "8917d70ef9ab11951ee7d41935e5bfcbe6d40366394e91b7bb68fa32156a075b"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/atlas_baseline.js",
+      "bytes": 533,
+      "sha256": "bbefd924bb5e709999c0b04c70cb8c14f9893d7191f4cd12392590bc181eba6f"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/custom_glyphs/patterns.js",
+      "bytes": 1372,
+      "sha256": "cb26ee8116b931ce37a9ae320058065efbaa67044dba71b4d15efa309483d36f"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/write_scheduler_bridge.js",
+      "bytes": 386,
+      "sha256": "bb75408c713f7a671c5e02be5afe7b313e040a037a879f7f23d0af5f258bf7f7"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/suite.d.ts",
+      "bytes": 51554,
+      "sha256": "7159eee5036dcdfd26feadfa0f53a18db686cbb501038d96875c09742555382a"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/suite.js",
+      "bytes": 248031,
+      "sha256": "b77636215de00468c5fa9479e9795a7165b748b0fe66a0120388fa0b8245c5d9"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/suite_bg.wasm",
+      "bytes": 16675942,
+      "sha256": "4e01fd80f2f6291f360cd9d6724aebf387da6fd25b26a0d3ff75d157a9ef5758"
+    },
+    {
+      "path": "results/browser-host/wasm_link_hover_event/2026-11-05T21-33-59-633Z-7b9bc9fe-1155-41d9-a84f-0d8b79f6c2b5/artifacts/suite_bg.wasm.d.ts",
+      "bytes": 33556,
+      "sha256": "0b947a4e54f8b085c5d4fba953c3c22d28d0b0313853d3a34d3dfaa9d00ba27e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-font-addons-91879fe097c75eac/src/ligature_host.js",
+      "bytes": 1906,
+      "sha256": "d8a30e72fe77d954821e9e7f2c61761e4ea8ea3e7d2c481e7d99af1ff0a60b73"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline0.js",
+      "bytes": 1216,
+      "sha256": "de4e485e930f7cda8a9ce550cfe26c807e3dd1d1e80c434413532b2a5b420e9d"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline1.js",
+      "bytes": 57,
+      "sha256": "292f2511fdb63c2b7487433bbba6acaa69019ed839f7039b21697a1bc1e74de1"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline2.js",
+      "bytes": 82,
+      "sha256": "a851e7d53c20c29b062e7a256c7f6325913b746516250a2045843e15fdb4836e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline3.js",
+      "bytes": 399,
+      "sha256": "7321456f6ef5529bca9fbe7a91f83ddf66ffbbbca23931c63fd9cb619f01b09c"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline4.js",
+      "bytes": 499,
+      "sha256": "fe784870f96bd48e28e139b6f89b699553b8ae68f875b2a55ebe2ba98375dd8a"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline5.js",
+      "bytes": 828,
+      "sha256": "1e6f58ef7f27ae6d54ae9140abf399bf7462854321b8ad056cd525cfdbd1f48b"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline6.js",
+      "bytes": 394,
+      "sha256": "783fe571663c89ee3df67788d86e602ab4761de28d4d2c3418be3c8825543c8e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline7.js",
+      "bytes": 417,
+      "sha256": "c1cac729b3fbfc98a3c821c904322ac04b0bd794f98fb67204978bb7b30955ad"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/addon_bridge.js",
+      "bytes": 1149,
+      "sha256": "79f1ac60404844cd2f78eb16f423626d5fd2661fa9b46025becf1ab96c2c72f7"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/buffer_shape.js",
+      "bytes": 1063,
+      "sha256": "ac1672867d2a205dd4abc8b8658f662f87c11a22a799977ec9826a36d1600cd2"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/parser_identifier_bridge.js",
+      "bytes": 510,
+      "sha256": "5f56e4b5db6defea5127807a4b082e3e872a10bfb3d6d572013800e8f8e949e1"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline0.js",
+      "bytes": 521,
+      "sha256": "94c67eee5a651c25dca0cf974988909e66da2e98d506cdb2231dc296c98e899a"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline1.js",
+      "bytes": 532,
+      "sha256": "be9dce800be895a21a694375dd02be83bad94925262f13682c556a70fdcdaa94"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline10.js",
+      "bytes": 71,
+      "sha256": "0ba7d921b939d5a18bc449a0cec939e2590ca6a9dd163adf542e8e04fe4c5562"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline11.js",
+      "bytes": 490,
+      "sha256": "9b28981ca17185a29b7f528e383826e3a2445b65a209bdff44a37a7f6aa18861"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline12.js",
+      "bytes": 241,
+      "sha256": "99cc3e102135da2cfd62aca8a21991f1f4846ac8724f25c5bb178ed008bf10e4"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline13.js",
+      "bytes": 301,
+      "sha256": "77805109d24d2fc4e296b8cc30efa71d05cd583a7bdd7597defa3c5ed9f5c7e5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline14.js",
+      "bytes": 79,
+      "sha256": "67320b545da1470a62b712601387375f05accf3b425b2f6098a93a05a8728fdb"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline15.js",
+      "bytes": 187,
+      "sha256": "1799e450fa81c463910c6b8b7a6b7e00d844b7469c734739136efc8666dc37c3"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline16.js",
+      "bytes": 66,
+      "sha256": "dabcdb0445c8e13da9d4283bea4e0722a26a38c9e3b2598813fdf1696d0e8389"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline17.js",
+      "bytes": 831,
+      "sha256": "1ae28c409e9fbd1efcec43107f9e9c035eb5c8596864bae5210d1091ddbb8969"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline18.js",
+      "bytes": 598,
+      "sha256": "4e0dc49d3f5e4be4ed3fb22bdd2b7151d5eec123914fb420dbbfe8763e7e1420"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline19.js",
+      "bytes": 268,
+      "sha256": "fec399e64c20a5c1e46f28365149e4b1eb42ea9864deda03dae6c8e4e9c422b5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline2.js",
+      "bytes": 619,
+      "sha256": "35e8802a3bd6a9cdd8c3c6b60faa1e5c76d4add8bed3a0376de597fe0eb8bd27"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline20.js",
+      "bytes": 1306,
+      "sha256": "8e67f4883a133bb0ad73aff16827e047e1b680c4b382b6a3d019515c024ff4ea"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline21.js",
+      "bytes": 72,
+      "sha256": "fe635785ec693cd38a0381847742c8729d33422c5cf697e35ec288d7ae53460f"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline22.js",
+      "bytes": 67,
+      "sha256": "ae0cfd92121cf0c213940294f05902a331cfaeb9d9f4059dd1b17cd118696475"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline23.js",
+      "bytes": 567,
+      "sha256": "d21c66fcc0b26a3ef78feefeb4f859cf4d4f7fb2566eb356975937c0f84f8c66"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline24.js",
+      "bytes": 107,
+      "sha256": "33f7531024d02d43aaac103ec354c83fca79bb2cb719f9b013afc8364b981a1a"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline25.js",
+      "bytes": 455,
+      "sha256": "9b8c8fe8feba2f025d4db4ca7c0ac0b6f6f6317481a4e5faf1c0c41e0e37d1d6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline26.js",
+      "bytes": 1577,
+      "sha256": "9b0cfaa56c08f3fe2ab57fa088057464cdf0ce8cce21c8eeaf71c4bf78e016c2"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline27.js",
+      "bytes": 509,
+      "sha256": "ebaf5bda1a55fb73f6defad9cc1d02ef7826fe97f388a6bfc364795061f01453"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline28.js",
+      "bytes": 98,
+      "sha256": "449f50af26e6eec23a2c5e5f8224d47c313f685bc4125f81228658949a9aa9ca"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline29.js",
+      "bytes": 894,
+      "sha256": "ac254d40273711a7fcec0fa07079497d683e3ec8da051b4bd2cae49e94de5d0e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline3.js",
+      "bytes": 323,
+      "sha256": "88429dc7ddaae7677a9961758af357b9926c79e4dc14cf654f3e267e6b1bc098"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline30.js",
+      "bytes": 168,
+      "sha256": "327d7ca797597761a7d523a26885b19246f32f8c50e0ad34f04fa15278d13ae6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline31.js",
+      "bytes": 375,
+      "sha256": "3052e1ade55765d0445e8710812f59948f6501f701ebea675dfd9d74286a9af5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline32.js",
+      "bytes": 72,
+      "sha256": "5b81a8324247fffc6281813a7cb4ebc708b474d0f1c1d51bbf2fbe79e05829a8"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline33.js",
+      "bytes": 94,
+      "sha256": "35c279b9bff235e2ed3ba1f2d394742e9dbdf0d43555e47f9b109a7a39bc57a6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline34.js",
+      "bytes": 159,
+      "sha256": "0977c94f33af4592a2a2df5a4f38c6faddac5690439f12c3490c0069589b2bec"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline4.js",
+      "bytes": 998,
+      "sha256": "6efca513626782a77cc0c389058532dba8fd46060c7cfa9bbb71f91e886f86c2"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline5.js",
+      "bytes": 152,
+      "sha256": "d2e79943768fa04ec055ed1eef1c0afeb034cf42b0d8ef86a6b7f2f2c9e7e76b"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline6.js",
+      "bytes": 346,
+      "sha256": "7208a28a755c8609b1b2f9294937f2418f9f3c0dee9b11fa1c0d4feabb4a7783"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline7.js",
+      "bytes": 58,
+      "sha256": "d14f9f4659878d63aa506a3406eb9f18425e175ff507f674db10b1072f170eb4"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline8.js",
+      "bytes": 461,
+      "sha256": "6687384caa57150cf1218a599da0e21e55b3d994ecbb13cf3a800a20bd9ad9ff"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline9.js",
+      "bytes": 70,
+      "sha256": "2c5c80b866a8d79713943c15d29cd1cdf6261348167b99f1207b2e9fe77bb462"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/core_browser_microtask.js",
+      "bytes": 609,
+      "sha256": "0e48b1666f9e7e4c2255ed049870c41689986eebf8b81d1b3564fef3e008eef0"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/handlers.js",
+      "bytes": 2701,
+      "sha256": "5a4451b4152871b90e65ae627ecac5cd31594f677641bd5da14796dc8bfcfb99"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/inspection.js",
+      "bytes": 1526,
+      "sha256": "fdd0e49565d38ab62c3fb3a2974001cc5741460a7d83801260947a3a5dbbc5cf"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/option_inspection.js",
+      "bytes": 701,
+      "sha256": "41899ae76de4d356a95e7b08aba42c766fde86c3f359cc7f61b56ac6162af585"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/kitty_host.js",
+      "bytes": 900,
+      "sha256": "00006bee1ae83a53203da0518eb10491f71a21c6dfaca73c5e27a2309a336768"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/placeholder.js",
+      "bytes": 420,
+      "sha256": "770aecedfcce7344771dd73bc9b3335f1978125eb3b81a2daa6c1b764ccf6586"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/sixel_errors.js",
+      "bytes": 1842,
+      "sha256": "ecb97f6854ce8c36b0762b7e0b7294c51df369500ecb580f60d87b334c7b56d5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/kitty_tables.js",
+      "bytes": 2187,
+      "sha256": "00cbbbf0e3a4378cc9c3b2f73d5bf1190427bc9dcddf1ded2cfe1f973469f07e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/win32_tables.js",
+      "bytes": 5038,
+      "sha256": "91e6c09c1e5255223495f79e3aa3852bd169736f4083aa687bbeca9f9b485caf"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_link_bridge.js",
+      "bytes": 1146,
+      "sha256": "e58ba4566734cfcab5b0b5dad658bb4b82c4e61009fab5d41110d179e18a42c6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_osc_bridge.js",
+      "bytes": 633,
+      "sha256": "884bdde884899ad68fe08e893387482414ada15dda474a23422d8fc2f6e89114"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/renderer/decoration_microtask.js",
+      "bytes": 511,
+      "sha256": "2bdd2dc09d8b2934dcf603f97571148a998c0286ae00966a3039ab733bb04fb5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/task_queue_bridge.js",
+      "bytes": 773,
+      "sha256": "cda54ac02301bf8034ac688ae102e47e198123f29c025cabb35344c999aa8b1f"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/terminal/internal_render.js",
+      "bytes": 690,
+      "sha256": "a76cee2c9eae4ddc1998e5b4783d2e52b8b358288c1f0babd74834aa82b68ee1"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/utility_addons/raw_link_bridge.js",
+      "bytes": 588,
+      "sha256": "8917d70ef9ab11951ee7d41935e5bfcbe6d40366394e91b7bb68fa32156a075b"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/atlas_baseline.js",
+      "bytes": 533,
+      "sha256": "bbefd924bb5e709999c0b04c70cb8c14f9893d7191f4cd12392590bc181eba6f"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/custom_glyphs/patterns.js",
+      "bytes": 1372,
+      "sha256": "cb26ee8116b931ce37a9ae320058065efbaa67044dba71b4d15efa309483d36f"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/write_scheduler_bridge.js",
+      "bytes": 386,
+      "sha256": "bb75408c713f7a671c5e02be5afe7b313e040a037a879f7f23d0af5f258bf7f7"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/suite.d.ts",
+      "bytes": 51547,
+      "sha256": "9aa4068b2f4858fb6b903d457a6c4ff6b07572f3bdb640f182ea44bd423e0c4b"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/suite.js",
+      "bytes": 248032,
+      "sha256": "36ea5c181c8cf4b6a76f7342a65321fb870025e7e4d6179d59a354757bdc5748"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/suite_bg.wasm",
+      "bytes": 16665905,
+      "sha256": "13640a3c3add55c0e218a6c2e34346be7371e5bb718061f2f305f555ddd42ba6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-31-38-141Z-cb7841a3-66a9-4fd6-a47c-23b1b46ae1db/artifacts/suite_bg.wasm.d.ts",
+      "bytes": 33549,
+      "sha256": "3cc3d744bf85ee4adde62873823500f59bd94d660524a10399045350646103f6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-font-addons-91879fe097c75eac/src/ligature_host.js",
+      "bytes": 1906,
+      "sha256": "d8a30e72fe77d954821e9e7f2c61761e4ea8ea3e7d2c481e7d99af1ff0a60b73"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline0.js",
+      "bytes": 1216,
+      "sha256": "de4e485e930f7cda8a9ce550cfe26c807e3dd1d1e80c434413532b2a5b420e9d"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline1.js",
+      "bytes": 57,
+      "sha256": "292f2511fdb63c2b7487433bbba6acaa69019ed839f7039b21697a1bc1e74de1"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline2.js",
+      "bytes": 82,
+      "sha256": "a851e7d53c20c29b062e7a256c7f6325913b746516250a2045843e15fdb4836e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline3.js",
+      "bytes": 399,
+      "sha256": "7321456f6ef5529bca9fbe7a91f83ddf66ffbbbca23931c63fd9cb619f01b09c"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline4.js",
+      "bytes": 499,
+      "sha256": "fe784870f96bd48e28e139b6f89b699553b8ae68f875b2a55ebe2ba98375dd8a"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline5.js",
+      "bytes": 828,
+      "sha256": "1e6f58ef7f27ae6d54ae9140abf399bf7462854321b8ad056cd525cfdbd1f48b"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline6.js",
+      "bytes": 394,
+      "sha256": "783fe571663c89ee3df67788d86e602ab4761de28d4d2c3418be3c8825543c8e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline7.js",
+      "bytes": 417,
+      "sha256": "c1cac729b3fbfc98a3c821c904322ac04b0bd794f98fb67204978bb7b30955ad"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/addon_bridge.js",
+      "bytes": 1149,
+      "sha256": "79f1ac60404844cd2f78eb16f423626d5fd2661fa9b46025becf1ab96c2c72f7"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/buffer_shape.js",
+      "bytes": 1063,
+      "sha256": "ac1672867d2a205dd4abc8b8658f662f87c11a22a799977ec9826a36d1600cd2"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/parser_identifier_bridge.js",
+      "bytes": 510,
+      "sha256": "5f56e4b5db6defea5127807a4b082e3e872a10bfb3d6d572013800e8f8e949e1"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline0.js",
+      "bytes": 71,
+      "sha256": "0ba7d921b939d5a18bc449a0cec939e2590ca6a9dd163adf542e8e04fe4c5562"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline1.js",
+      "bytes": 521,
+      "sha256": "94c67eee5a651c25dca0cf974988909e66da2e98d506cdb2231dc296c98e899a"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline10.js",
+      "bytes": 94,
+      "sha256": "35c279b9bff235e2ed3ba1f2d394742e9dbdf0d43555e47f9b109a7a39bc57a6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline11.js",
+      "bytes": 998,
+      "sha256": "6efca513626782a77cc0c389058532dba8fd46060c7cfa9bbb71f91e886f86c2"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline12.js",
+      "bytes": 1306,
+      "sha256": "8e67f4883a133bb0ad73aff16827e047e1b680c4b382b6a3d019515c024ff4ea"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline13.js",
+      "bytes": 831,
+      "sha256": "1ae28c409e9fbd1efcec43107f9e9c035eb5c8596864bae5210d1091ddbb8969"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline14.js",
+      "bytes": 532,
+      "sha256": "be9dce800be895a21a694375dd02be83bad94925262f13682c556a70fdcdaa94"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline15.js",
+      "bytes": 168,
+      "sha256": "327d7ca797597761a7d523a26885b19246f32f8c50e0ad34f04fa15278d13ae6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline16.js",
+      "bytes": 72,
+      "sha256": "fe635785ec693cd38a0381847742c8729d33422c5cf697e35ec288d7ae53460f"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline17.js",
+      "bytes": 67,
+      "sha256": "ae0cfd92121cf0c213940294f05902a331cfaeb9d9f4059dd1b17cd118696475"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline18.js",
+      "bytes": 107,
+      "sha256": "33f7531024d02d43aaac103ec354c83fca79bb2cb719f9b013afc8364b981a1a"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline19.js",
+      "bytes": 1577,
+      "sha256": "9b0cfaa56c08f3fe2ab57fa088057464cdf0ce8cce21c8eeaf71c4bf78e016c2"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline2.js",
+      "bytes": 187,
+      "sha256": "1799e450fa81c463910c6b8b7a6b7e00d844b7469c734739136efc8666dc37c3"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline20.js",
+      "bytes": 152,
+      "sha256": "d2e79943768fa04ec055ed1eef1c0afeb034cf42b0d8ef86a6b7f2f2c9e7e76b"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline21.js",
+      "bytes": 346,
+      "sha256": "7208a28a755c8609b1b2f9294937f2418f9f3c0dee9b11fa1c0d4feabb4a7783"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline22.js",
+      "bytes": 567,
+      "sha256": "d21c66fcc0b26a3ef78feefeb4f859cf4d4f7fb2566eb356975937c0f84f8c66"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline23.js",
+      "bytes": 268,
+      "sha256": "fec399e64c20a5c1e46f28365149e4b1eb42ea9864deda03dae6c8e4e9c422b5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline24.js",
+      "bytes": 375,
+      "sha256": "3052e1ade55765d0445e8710812f59948f6501f701ebea675dfd9d74286a9af5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline25.js",
+      "bytes": 323,
+      "sha256": "88429dc7ddaae7677a9961758af357b9926c79e4dc14cf654f3e267e6b1bc098"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline26.js",
+      "bytes": 598,
+      "sha256": "4e0dc49d3f5e4be4ed3fb22bdd2b7151d5eec123914fb420dbbfe8763e7e1420"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline27.js",
+      "bytes": 79,
+      "sha256": "67320b545da1470a62b712601387375f05accf3b425b2f6098a93a05a8728fdb"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline28.js",
+      "bytes": 619,
+      "sha256": "35e8802a3bd6a9cdd8c3c6b60faa1e5c76d4add8bed3a0376de597fe0eb8bd27"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline29.js",
+      "bytes": 461,
+      "sha256": "6687384caa57150cf1218a599da0e21e55b3d994ecbb13cf3a800a20bd9ad9ff"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline3.js",
+      "bytes": 241,
+      "sha256": "99cc3e102135da2cfd62aca8a21991f1f4846ac8724f25c5bb178ed008bf10e4"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline30.js",
+      "bytes": 66,
+      "sha256": "dabcdb0445c8e13da9d4283bea4e0722a26a38c9e3b2598813fdf1696d0e8389"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline31.js",
+      "bytes": 509,
+      "sha256": "ebaf5bda1a55fb73f6defad9cc1d02ef7826fe97f388a6bfc364795061f01453"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline32.js",
+      "bytes": 894,
+      "sha256": "ac254d40273711a7fcec0fa07079497d683e3ec8da051b4bd2cae49e94de5d0e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline33.js",
+      "bytes": 490,
+      "sha256": "9b28981ca17185a29b7f528e383826e3a2445b65a209bdff44a37a7f6aa18861"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline34.js",
+      "bytes": 455,
+      "sha256": "9b8c8fe8feba2f025d4db4ca7c0ac0b6f6f6317481a4e5faf1c0c41e0e37d1d6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline4.js",
+      "bytes": 301,
+      "sha256": "77805109d24d2fc4e296b8cc30efa71d05cd583a7bdd7597defa3c5ed9f5c7e5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline5.js",
+      "bytes": 98,
+      "sha256": "449f50af26e6eec23a2c5e5f8224d47c313f685bc4125f81228658949a9aa9ca"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline6.js",
+      "bytes": 70,
+      "sha256": "2c5c80b866a8d79713943c15d29cd1cdf6261348167b99f1207b2e9fe77bb462"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline7.js",
+      "bytes": 159,
+      "sha256": "0977c94f33af4592a2a2df5a4f38c6faddac5690439f12c3490c0069589b2bec"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline8.js",
+      "bytes": 72,
+      "sha256": "5b81a8324247fffc6281813a7cb4ebc708b474d0f1c1d51bbf2fbe79e05829a8"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline9.js",
+      "bytes": 58,
+      "sha256": "d14f9f4659878d63aa506a3406eb9f18425e175ff507f674db10b1072f170eb4"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/core_browser_microtask.js",
+      "bytes": 609,
+      "sha256": "0e48b1666f9e7e4c2255ed049870c41689986eebf8b81d1b3564fef3e008eef0"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/handlers.js",
+      "bytes": 2701,
+      "sha256": "5a4451b4152871b90e65ae627ecac5cd31594f677641bd5da14796dc8bfcfb99"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/inspection.js",
+      "bytes": 1526,
+      "sha256": "fdd0e49565d38ab62c3fb3a2974001cc5741460a7d83801260947a3a5dbbc5cf"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/option_inspection.js",
+      "bytes": 701,
+      "sha256": "41899ae76de4d356a95e7b08aba42c766fde86c3f359cc7f61b56ac6162af585"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/kitty_host.js",
+      "bytes": 900,
+      "sha256": "00006bee1ae83a53203da0518eb10491f71a21c6dfaca73c5e27a2309a336768"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/placeholder.js",
+      "bytes": 420,
+      "sha256": "770aecedfcce7344771dd73bc9b3335f1978125eb3b81a2daa6c1b764ccf6586"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/sixel_errors.js",
+      "bytes": 1842,
+      "sha256": "ecb97f6854ce8c36b0762b7e0b7294c51df369500ecb580f60d87b334c7b56d5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/kitty_tables.js",
+      "bytes": 2187,
+      "sha256": "00cbbbf0e3a4378cc9c3b2f73d5bf1190427bc9dcddf1ded2cfe1f973469f07e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/win32_tables.js",
+      "bytes": 5038,
+      "sha256": "91e6c09c1e5255223495f79e3aa3852bd169736f4083aa687bbeca9f9b485caf"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_link_bridge.js",
+      "bytes": 1146,
+      "sha256": "e58ba4566734cfcab5b0b5dad658bb4b82c4e61009fab5d41110d179e18a42c6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_osc_bridge.js",
+      "bytes": 633,
+      "sha256": "884bdde884899ad68fe08e893387482414ada15dda474a23422d8fc2f6e89114"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/renderer/decoration_microtask.js",
+      "bytes": 511,
+      "sha256": "2bdd2dc09d8b2934dcf603f97571148a998c0286ae00966a3039ab733bb04fb5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/task_queue_bridge.js",
+      "bytes": 773,
+      "sha256": "cda54ac02301bf8034ac688ae102e47e198123f29c025cabb35344c999aa8b1f"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/terminal/internal_render.js",
+      "bytes": 690,
+      "sha256": "a76cee2c9eae4ddc1998e5b4783d2e52b8b358288c1f0babd74834aa82b68ee1"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/utility_addons/raw_link_bridge.js",
+      "bytes": 588,
+      "sha256": "8917d70ef9ab11951ee7d41935e5bfcbe6d40366394e91b7bb68fa32156a075b"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/atlas_baseline.js",
+      "bytes": 533,
+      "sha256": "bbefd924bb5e709999c0b04c70cb8c14f9893d7191f4cd12392590bc181eba6f"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/custom_glyphs/patterns.js",
+      "bytes": 1372,
+      "sha256": "cb26ee8116b931ce37a9ae320058065efbaa67044dba71b4d15efa309483d36f"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/write_scheduler_bridge.js",
+      "bytes": 386,
+      "sha256": "bb75408c713f7a671c5e02be5afe7b313e040a037a879f7f23d0af5f258bf7f7"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/suite.d.ts",
+      "bytes": 51547,
+      "sha256": "10303c70dea9b1a907606aff7a6891583bbe1effa48d82b9320fccee38158dca"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/suite.js",
+      "bytes": 248031,
+      "sha256": "b77636215de00468c5fa9479e9795a7165b748b0fe66a0120388fa0b8245c5d9"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/suite_bg.wasm",
+      "bytes": 16676387,
+      "sha256": "3469be068a06e452c9b9b3369fb68382d844bff3d18b13a58fd15bd1ea89e613"
+    },
+    {
+      "path": "results/browser-host/wasm_link_live_cols/2026-11-05T21-32-27-788Z-9cfc44e0-352b-494b-800f-2e5c9debf832/artifacts/suite_bg.wasm.d.ts",
+      "bytes": 33549,
+      "sha256": "bfa45defe0fa76d403c6e4fc3214cea08e46cba7d2ddeee02dddcb66ae0560b5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-font-addons-91879fe097c75eac/src/ligature_host.js",
+      "bytes": 1906,
+      "sha256": "d8a30e72fe77d954821e9e7f2c61761e4ea8ea3e7d2c481e7d99af1ff0a60b73"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline0.js",
+      "bytes": 1216,
+      "sha256": "de4e485e930f7cda8a9ce550cfe26c807e3dd1d1e80c434413532b2a5b420e9d"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline1.js",
+      "bytes": 57,
+      "sha256": "292f2511fdb63c2b7487433bbba6acaa69019ed839f7039b21697a1bc1e74de1"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline2.js",
+      "bytes": 82,
+      "sha256": "a851e7d53c20c29b062e7a256c7f6325913b746516250a2045843e15fdb4836e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline3.js",
+      "bytes": 399,
+      "sha256": "7321456f6ef5529bca9fbe7a91f83ddf66ffbbbca23931c63fd9cb619f01b09c"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline4.js",
+      "bytes": 499,
+      "sha256": "fe784870f96bd48e28e139b6f89b699553b8ae68f875b2a55ebe2ba98375dd8a"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline5.js",
+      "bytes": 828,
+      "sha256": "1e6f58ef7f27ae6d54ae9140abf399bf7462854321b8ad056cd525cfdbd1f48b"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline6.js",
+      "bytes": 394,
+      "sha256": "783fe571663c89ee3df67788d86e602ab4761de28d4d2c3418be3c8825543c8e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline7.js",
+      "bytes": 417,
+      "sha256": "c1cac729b3fbfc98a3c821c904322ac04b0bd794f98fb67204978bb7b30955ad"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/addon_bridge.js",
+      "bytes": 1149,
+      "sha256": "79f1ac60404844cd2f78eb16f423626d5fd2661fa9b46025becf1ab96c2c72f7"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/buffer_shape.js",
+      "bytes": 1063,
+      "sha256": "ac1672867d2a205dd4abc8b8658f662f87c11a22a799977ec9826a36d1600cd2"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/parser_identifier_bridge.js",
+      "bytes": 510,
+      "sha256": "5f56e4b5db6defea5127807a4b082e3e872a10bfb3d6d572013800e8f8e949e1"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline0.js",
+      "bytes": 71,
+      "sha256": "0ba7d921b939d5a18bc449a0cec939e2590ca6a9dd163adf542e8e04fe4c5562"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline1.js",
+      "bytes": 521,
+      "sha256": "94c67eee5a651c25dca0cf974988909e66da2e98d506cdb2231dc296c98e899a"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline10.js",
+      "bytes": 94,
+      "sha256": "35c279b9bff235e2ed3ba1f2d394742e9dbdf0d43555e47f9b109a7a39bc57a6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline11.js",
+      "bytes": 998,
+      "sha256": "6efca513626782a77cc0c389058532dba8fd46060c7cfa9bbb71f91e886f86c2"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline12.js",
+      "bytes": 1306,
+      "sha256": "8e67f4883a133bb0ad73aff16827e047e1b680c4b382b6a3d019515c024ff4ea"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline13.js",
+      "bytes": 831,
+      "sha256": "1ae28c409e9fbd1efcec43107f9e9c035eb5c8596864bae5210d1091ddbb8969"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline14.js",
+      "bytes": 532,
+      "sha256": "be9dce800be895a21a694375dd02be83bad94925262f13682c556a70fdcdaa94"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline15.js",
+      "bytes": 168,
+      "sha256": "327d7ca797597761a7d523a26885b19246f32f8c50e0ad34f04fa15278d13ae6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline16.js",
+      "bytes": 72,
+      "sha256": "fe635785ec693cd38a0381847742c8729d33422c5cf697e35ec288d7ae53460f"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline17.js",
+      "bytes": 67,
+      "sha256": "ae0cfd92121cf0c213940294f05902a331cfaeb9d9f4059dd1b17cd118696475"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline18.js",
+      "bytes": 107,
+      "sha256": "33f7531024d02d43aaac103ec354c83fca79bb2cb719f9b013afc8364b981a1a"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline19.js",
+      "bytes": 1577,
+      "sha256": "9b0cfaa56c08f3fe2ab57fa088057464cdf0ce8cce21c8eeaf71c4bf78e016c2"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline2.js",
+      "bytes": 187,
+      "sha256": "1799e450fa81c463910c6b8b7a6b7e00d844b7469c734739136efc8666dc37c3"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline20.js",
+      "bytes": 152,
+      "sha256": "d2e79943768fa04ec055ed1eef1c0afeb034cf42b0d8ef86a6b7f2f2c9e7e76b"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline21.js",
+      "bytes": 346,
+      "sha256": "7208a28a755c8609b1b2f9294937f2418f9f3c0dee9b11fa1c0d4feabb4a7783"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline22.js",
+      "bytes": 567,
+      "sha256": "d21c66fcc0b26a3ef78feefeb4f859cf4d4f7fb2566eb356975937c0f84f8c66"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline23.js",
+      "bytes": 268,
+      "sha256": "fec399e64c20a5c1e46f28365149e4b1eb42ea9864deda03dae6c8e4e9c422b5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline24.js",
+      "bytes": 375,
+      "sha256": "3052e1ade55765d0445e8710812f59948f6501f701ebea675dfd9d74286a9af5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline25.js",
+      "bytes": 323,
+      "sha256": "88429dc7ddaae7677a9961758af357b9926c79e4dc14cf654f3e267e6b1bc098"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline26.js",
+      "bytes": 598,
+      "sha256": "4e0dc49d3f5e4be4ed3fb22bdd2b7151d5eec123914fb420dbbfe8763e7e1420"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline27.js",
+      "bytes": 79,
+      "sha256": "67320b545da1470a62b712601387375f05accf3b425b2f6098a93a05a8728fdb"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline28.js",
+      "bytes": 619,
+      "sha256": "35e8802a3bd6a9cdd8c3c6b60faa1e5c76d4add8bed3a0376de597fe0eb8bd27"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline29.js",
+      "bytes": 461,
+      "sha256": "6687384caa57150cf1218a599da0e21e55b3d994ecbb13cf3a800a20bd9ad9ff"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline3.js",
+      "bytes": 241,
+      "sha256": "99cc3e102135da2cfd62aca8a21991f1f4846ac8724f25c5bb178ed008bf10e4"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline30.js",
+      "bytes": 66,
+      "sha256": "dabcdb0445c8e13da9d4283bea4e0722a26a38c9e3b2598813fdf1696d0e8389"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline31.js",
+      "bytes": 509,
+      "sha256": "ebaf5bda1a55fb73f6defad9cc1d02ef7826fe97f388a6bfc364795061f01453"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline32.js",
+      "bytes": 894,
+      "sha256": "ac254d40273711a7fcec0fa07079497d683e3ec8da051b4bd2cae49e94de5d0e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline33.js",
+      "bytes": 490,
+      "sha256": "9b28981ca17185a29b7f528e383826e3a2445b65a209bdff44a37a7f6aa18861"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline34.js",
+      "bytes": 455,
+      "sha256": "9b8c8fe8feba2f025d4db4ca7c0ac0b6f6f6317481a4e5faf1c0c41e0e37d1d6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline4.js",
+      "bytes": 301,
+      "sha256": "77805109d24d2fc4e296b8cc30efa71d05cd583a7bdd7597defa3c5ed9f5c7e5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline5.js",
+      "bytes": 98,
+      "sha256": "449f50af26e6eec23a2c5e5f8224d47c313f685bc4125f81228658949a9aa9ca"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline6.js",
+      "bytes": 70,
+      "sha256": "2c5c80b866a8d79713943c15d29cd1cdf6261348167b99f1207b2e9fe77bb462"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline7.js",
+      "bytes": 159,
+      "sha256": "0977c94f33af4592a2a2df5a4f38c6faddac5690439f12c3490c0069589b2bec"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline8.js",
+      "bytes": 72,
+      "sha256": "5b81a8324247fffc6281813a7cb4ebc708b474d0f1c1d51bbf2fbe79e05829a8"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline9.js",
+      "bytes": 58,
+      "sha256": "d14f9f4659878d63aa506a3406eb9f18425e175ff507f674db10b1072f170eb4"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/core_browser_microtask.js",
+      "bytes": 609,
+      "sha256": "0e48b1666f9e7e4c2255ed049870c41689986eebf8b81d1b3564fef3e008eef0"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/handlers.js",
+      "bytes": 2701,
+      "sha256": "5a4451b4152871b90e65ae627ecac5cd31594f677641bd5da14796dc8bfcfb99"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/inspection.js",
+      "bytes": 1526,
+      "sha256": "fdd0e49565d38ab62c3fb3a2974001cc5741460a7d83801260947a3a5dbbc5cf"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/option_inspection.js",
+      "bytes": 701,
+      "sha256": "41899ae76de4d356a95e7b08aba42c766fde86c3f359cc7f61b56ac6162af585"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/kitty_host.js",
+      "bytes": 900,
+      "sha256": "00006bee1ae83a53203da0518eb10491f71a21c6dfaca73c5e27a2309a336768"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/placeholder.js",
+      "bytes": 420,
+      "sha256": "770aecedfcce7344771dd73bc9b3335f1978125eb3b81a2daa6c1b764ccf6586"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/sixel_errors.js",
+      "bytes": 1842,
+      "sha256": "ecb97f6854ce8c36b0762b7e0b7294c51df369500ecb580f60d87b334c7b56d5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/kitty_tables.js",
+      "bytes": 2187,
+      "sha256": "00cbbbf0e3a4378cc9c3b2f73d5bf1190427bc9dcddf1ded2cfe1f973469f07e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/win32_tables.js",
+      "bytes": 5038,
+      "sha256": "91e6c09c1e5255223495f79e3aa3852bd169736f4083aa687bbeca9f9b485caf"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_link_bridge.js",
+      "bytes": 1146,
+      "sha256": "e58ba4566734cfcab5b0b5dad658bb4b82c4e61009fab5d41110d179e18a42c6"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_osc_bridge.js",
+      "bytes": 633,
+      "sha256": "884bdde884899ad68fe08e893387482414ada15dda474a23422d8fc2f6e89114"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/renderer/decoration_microtask.js",
+      "bytes": 511,
+      "sha256": "2bdd2dc09d8b2934dcf603f97571148a998c0286ae00966a3039ab733bb04fb5"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/task_queue_bridge.js",
+      "bytes": 773,
+      "sha256": "cda54ac02301bf8034ac688ae102e47e198123f29c025cabb35344c999aa8b1f"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/terminal/internal_render.js",
+      "bytes": 690,
+      "sha256": "a76cee2c9eae4ddc1998e5b4783d2e52b8b358288c1f0babd74834aa82b68ee1"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/utility_addons/raw_link_bridge.js",
+      "bytes": 588,
+      "sha256": "8917d70ef9ab11951ee7d41935e5bfcbe6d40366394e91b7bb68fa32156a075b"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/atlas_baseline.js",
+      "bytes": 533,
+      "sha256": "bbefd924bb5e709999c0b04c70cb8c14f9893d7191f4cd12392590bc181eba6f"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/custom_glyphs/patterns.js",
+      "bytes": 1372,
+      "sha256": "cb26ee8116b931ce37a9ae320058065efbaa67044dba71b4d15efa309483d36f"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/write_scheduler_bridge.js",
+      "bytes": 386,
+      "sha256": "bb75408c713f7a671c5e02be5afe7b313e040a037a879f7f23d0af5f258bf7f7"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/suite.d.ts",
+      "bytes": 51560,
+      "sha256": "611606999e9306ca2c6a93c10a36621f0c61ced54b1e1dfbd468c3ce5d532c9e"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/suite.js",
+      "bytes": 248031,
+      "sha256": "b77636215de00468c5fa9479e9795a7165b748b0fe66a0120388fa0b8245c5d9"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/suite_bg.wasm",
+      "bytes": 16676518,
+      "sha256": "3217a2f4ac8546c124adfe8ee705bd51106aa2882feb8dcf99a0c2db0b0b2738"
+    },
+    {
+      "path": "results/browser-host/wasm_link_provider_reentry/2026-11-05T21-33-38-869Z-6111f35e-8507-4e62-bc62-27db8090fd3a/artifacts/suite_bg.wasm.d.ts",
+      "bytes": 33562,
+      "sha256": "2a7a72dcf7d60c8585b1d26e153c7a9bf5b6b49dbb0fbf3b78a1e50d1706a31f"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-font-addons-91879fe097c75eac/src/ligature_host.js",
+      "bytes": 1906,
+      "sha256": "d8a30e72fe77d954821e9e7f2c61761e4ea8ea3e7d2c481e7d99af1ff0a60b73"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline0.js",
+      "bytes": 1216,
+      "sha256": "de4e485e930f7cda8a9ce550cfe26c807e3dd1d1e80c434413532b2a5b420e9d"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline1.js",
+      "bytes": 57,
+      "sha256": "292f2511fdb63c2b7487433bbba6acaa69019ed839f7039b21697a1bc1e74de1"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline2.js",
+      "bytes": 82,
+      "sha256": "a851e7d53c20c29b062e7a256c7f6325913b746516250a2045843e15fdb4836e"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline3.js",
+      "bytes": 399,
+      "sha256": "7321456f6ef5529bca9fbe7a91f83ddf66ffbbbca23931c63fd9cb619f01b09c"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline4.js",
+      "bytes": 499,
+      "sha256": "fe784870f96bd48e28e139b6f89b699553b8ae68f875b2a55ebe2ba98375dd8a"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline5.js",
+      "bytes": 828,
+      "sha256": "1e6f58ef7f27ae6d54ae9140abf399bf7462854321b8ad056cd525cfdbd1f48b"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline6.js",
+      "bytes": 394,
+      "sha256": "783fe571663c89ee3df67788d86e602ab4761de28d4d2c3418be3c8825543c8e"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline7.js",
+      "bytes": 417,
+      "sha256": "c1cac729b3fbfc98a3c821c904322ac04b0bd794f98fb67204978bb7b30955ad"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/addon_bridge.js",
+      "bytes": 1149,
+      "sha256": "79f1ac60404844cd2f78eb16f423626d5fd2661fa9b46025becf1ab96c2c72f7"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/buffer_shape.js",
+      "bytes": 1063,
+      "sha256": "ac1672867d2a205dd4abc8b8658f662f87c11a22a799977ec9826a36d1600cd2"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/parser_identifier_bridge.js",
+      "bytes": 510,
+      "sha256": "5f56e4b5db6defea5127807a4b082e3e872a10bfb3d6d572013800e8f8e949e1"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline0.js",
+      "bytes": 71,
+      "sha256": "0ba7d921b939d5a18bc449a0cec939e2590ca6a9dd163adf542e8e04fe4c5562"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline1.js",
+      "bytes": 521,
+      "sha256": "94c67eee5a651c25dca0cf974988909e66da2e98d506cdb2231dc296c98e899a"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline10.js",
+      "bytes": 94,
+      "sha256": "35c279b9bff235e2ed3ba1f2d394742e9dbdf0d43555e47f9b109a7a39bc57a6"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline11.js",
+      "bytes": 998,
+      "sha256": "6efca513626782a77cc0c389058532dba8fd46060c7cfa9bbb71f91e886f86c2"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline12.js",
+      "bytes": 1306,
+      "sha256": "8e67f4883a133bb0ad73aff16827e047e1b680c4b382b6a3d019515c024ff4ea"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline13.js",
+      "bytes": 831,
+      "sha256": "1ae28c409e9fbd1efcec43107f9e9c035eb5c8596864bae5210d1091ddbb8969"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline14.js",
+      "bytes": 532,
+      "sha256": "be9dce800be895a21a694375dd02be83bad94925262f13682c556a70fdcdaa94"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline15.js",
+      "bytes": 168,
+      "sha256": "327d7ca797597761a7d523a26885b19246f32f8c50e0ad34f04fa15278d13ae6"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline16.js",
+      "bytes": 72,
+      "sha256": "fe635785ec693cd38a0381847742c8729d33422c5cf697e35ec288d7ae53460f"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline17.js",
+      "bytes": 67,
+      "sha256": "ae0cfd92121cf0c213940294f05902a331cfaeb9d9f4059dd1b17cd118696475"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline18.js",
+      "bytes": 107,
+      "sha256": "33f7531024d02d43aaac103ec354c83fca79bb2cb719f9b013afc8364b981a1a"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline19.js",
+      "bytes": 1577,
+      "sha256": "9b0cfaa56c08f3fe2ab57fa088057464cdf0ce8cce21c8eeaf71c4bf78e016c2"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline2.js",
+      "bytes": 187,
+      "sha256": "1799e450fa81c463910c6b8b7a6b7e00d844b7469c734739136efc8666dc37c3"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline20.js",
+      "bytes": 152,
+      "sha256": "d2e79943768fa04ec055ed1eef1c0afeb034cf42b0d8ef86a6b7f2f2c9e7e76b"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline21.js",
+      "bytes": 346,
+      "sha256": "7208a28a755c8609b1b2f9294937f2418f9f3c0dee9b11fa1c0d4feabb4a7783"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline22.js",
+      "bytes": 567,
+      "sha256": "d21c66fcc0b26a3ef78feefeb4f859cf4d4f7fb2566eb356975937c0f84f8c66"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline23.js",
+      "bytes": 268,
+      "sha256": "fec399e64c20a5c1e46f28365149e4b1eb42ea9864deda03dae6c8e4e9c422b5"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline24.js",
+      "bytes": 375,
+      "sha256": "3052e1ade55765d0445e8710812f59948f6501f701ebea675dfd9d74286a9af5"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline25.js",
+      "bytes": 323,
+      "sha256": "88429dc7ddaae7677a9961758af357b9926c79e4dc14cf654f3e267e6b1bc098"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline26.js",
+      "bytes": 598,
+      "sha256": "4e0dc49d3f5e4be4ed3fb22bdd2b7151d5eec123914fb420dbbfe8763e7e1420"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline27.js",
+      "bytes": 79,
+      "sha256": "67320b545da1470a62b712601387375f05accf3b425b2f6098a93a05a8728fdb"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline28.js",
+      "bytes": 619,
+      "sha256": "35e8802a3bd6a9cdd8c3c6b60faa1e5c76d4add8bed3a0376de597fe0eb8bd27"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline29.js",
+      "bytes": 461,
+      "sha256": "6687384caa57150cf1218a599da0e21e55b3d994ecbb13cf3a800a20bd9ad9ff"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline3.js",
+      "bytes": 241,
+      "sha256": "99cc3e102135da2cfd62aca8a21991f1f4846ac8724f25c5bb178ed008bf10e4"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline30.js",
+      "bytes": 66,
+      "sha256": "dabcdb0445c8e13da9d4283bea4e0722a26a38c9e3b2598813fdf1696d0e8389"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline31.js",
+      "bytes": 509,
+      "sha256": "ebaf5bda1a55fb73f6defad9cc1d02ef7826fe97f388a6bfc364795061f01453"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline32.js",
+      "bytes": 894,
+      "sha256": "ac254d40273711a7fcec0fa07079497d683e3ec8da051b4bd2cae49e94de5d0e"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline33.js",
+      "bytes": 490,
+      "sha256": "9b28981ca17185a29b7f528e383826e3a2445b65a209bdff44a37a7f6aa18861"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline34.js",
+      "bytes": 455,
+      "sha256": "9b8c8fe8feba2f025d4db4ca7c0ac0b6f6f6317481a4e5faf1c0c41e0e37d1d6"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline4.js",
+      "bytes": 301,
+      "sha256": "77805109d24d2fc4e296b8cc30efa71d05cd583a7bdd7597defa3c5ed9f5c7e5"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline5.js",
+      "bytes": 98,
+      "sha256": "449f50af26e6eec23a2c5e5f8224d47c313f685bc4125f81228658949a9aa9ca"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline6.js",
+      "bytes": 70,
+      "sha256": "2c5c80b866a8d79713943c15d29cd1cdf6261348167b99f1207b2e9fe77bb462"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline7.js",
+      "bytes": 159,
+      "sha256": "0977c94f33af4592a2a2df5a4f38c6faddac5690439f12c3490c0069589b2bec"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline8.js",
+      "bytes": 72,
+      "sha256": "5b81a8324247fffc6281813a7cb4ebc708b474d0f1c1d51bbf2fbe79e05829a8"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline9.js",
+      "bytes": 58,
+      "sha256": "d14f9f4659878d63aa506a3406eb9f18425e175ff507f674db10b1072f170eb4"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/core_browser_microtask.js",
+      "bytes": 609,
+      "sha256": "0e48b1666f9e7e4c2255ed049870c41689986eebf8b81d1b3564fef3e008eef0"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/handlers.js",
+      "bytes": 2701,
+      "sha256": "5a4451b4152871b90e65ae627ecac5cd31594f677641bd5da14796dc8bfcfb99"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/inspection.js",
+      "bytes": 1526,
+      "sha256": "fdd0e49565d38ab62c3fb3a2974001cc5741460a7d83801260947a3a5dbbc5cf"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/option_inspection.js",
+      "bytes": 701,
+      "sha256": "41899ae76de4d356a95e7b08aba42c766fde86c3f359cc7f61b56ac6162af585"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/kitty_host.js",
+      "bytes": 900,
+      "sha256": "00006bee1ae83a53203da0518eb10491f71a21c6dfaca73c5e27a2309a336768"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/placeholder.js",
+      "bytes": 420,
+      "sha256": "770aecedfcce7344771dd73bc9b3335f1978125eb3b81a2daa6c1b764ccf6586"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/sixel_errors.js",
+      "bytes": 1842,
+      "sha256": "ecb97f6854ce8c36b0762b7e0b7294c51df369500ecb580f60d87b334c7b56d5"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/kitty_tables.js",
+      "bytes": 2187,
+      "sha256": "00cbbbf0e3a4378cc9c3b2f73d5bf1190427bc9dcddf1ded2cfe1f973469f07e"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/win32_tables.js",
+      "bytes": 5038,
+      "sha256": "91e6c09c1e5255223495f79e3aa3852bd169736f4083aa687bbeca9f9b485caf"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_link_bridge.js",
+      "bytes": 1146,
+      "sha256": "e58ba4566734cfcab5b0b5dad658bb4b82c4e61009fab5d41110d179e18a42c6"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_osc_bridge.js",
+      "bytes": 633,
+      "sha256": "884bdde884899ad68fe08e893387482414ada15dda474a23422d8fc2f6e89114"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/renderer/decoration_microtask.js",
+      "bytes": 511,
+      "sha256": "2bdd2dc09d8b2934dcf603f97571148a998c0286ae00966a3039ab733bb04fb5"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/task_queue_bridge.js",
+      "bytes": 773,
+      "sha256": "cda54ac02301bf8034ac688ae102e47e198123f29c025cabb35344c999aa8b1f"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/terminal/internal_render.js",
+      "bytes": 690,
+      "sha256": "a76cee2c9eae4ddc1998e5b4783d2e52b8b358288c1f0babd74834aa82b68ee1"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/utility_addons/raw_link_bridge.js",
+      "bytes": 588,
+      "sha256": "8917d70ef9ab11951ee7d41935e5bfcbe6d40366394e91b7bb68fa32156a075b"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/atlas_baseline.js",
+      "bytes": 533,
+      "sha256": "bbefd924bb5e709999c0b04c70cb8c14f9893d7191f4cd12392590bc181eba6f"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/custom_glyphs/patterns.js",
+      "bytes": 1372,
+      "sha256": "cb26ee8116b931ce37a9ae320058065efbaa67044dba71b4d15efa309483d36f"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/write_scheduler_bridge.js",
+      "bytes": 386,
+      "sha256": "bb75408c713f7a671c5e02be5afe7b313e040a037a879f7f23d0af5f258bf7f7"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/suite.d.ts",
+      "bytes": 52269,
+      "sha256": "2acddc74f54c2b47a7c63bd8e23c3be6a5059bbf638d73ed4f113009bce2bddf"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/suite.js",
+      "bytes": 247660,
+      "sha256": "73f49667558827e99a82e2df8cfd30babc4490e699bf3b008eb40f96f834e833"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/suite_bg.wasm",
+      "bytes": 16496048,
+      "sha256": "92087b417580f40f7b303737e0abb44e39f4414137010e51741143382756ca9e"
+    },
+    {
+      "path": "results/browser-host/wasm_linkifier/2026-11-05T21-34-16-841Z-bb391de1-4fe9-40ed-90b9-c3b3b80f4bbb/artifacts/suite_bg.wasm.d.ts",
+      "bytes": 34283,
+      "sha256": "7c11859baca07c893d60bff2f2bb4ee758cdc99b0571a3092125c786dc1d5261"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-font-addons-91879fe097c75eac/src/ligature_host.js",
+      "bytes": 1906,
+      "sha256": "d8a30e72fe77d954821e9e7f2c61761e4ea8ea3e7d2c481e7d99af1ff0a60b73"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline0.js",
+      "bytes": 1216,
+      "sha256": "de4e485e930f7cda8a9ce550cfe26c807e3dd1d1e80c434413532b2a5b420e9d"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline1.js",
+      "bytes": 57,
+      "sha256": "292f2511fdb63c2b7487433bbba6acaa69019ed839f7039b21697a1bc1e74de1"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline2.js",
+      "bytes": 82,
+      "sha256": "a851e7d53c20c29b062e7a256c7f6325913b746516250a2045843e15fdb4836e"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline3.js",
+      "bytes": 399,
+      "sha256": "7321456f6ef5529bca9fbe7a91f83ddf66ffbbbca23931c63fd9cb619f01b09c"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline4.js",
+      "bytes": 499,
+      "sha256": "fe784870f96bd48e28e139b6f89b699553b8ae68f875b2a55ebe2ba98375dd8a"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline5.js",
+      "bytes": 828,
+      "sha256": "1e6f58ef7f27ae6d54ae9140abf399bf7462854321b8ad056cd525cfdbd1f48b"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline6.js",
+      "bytes": 394,
+      "sha256": "783fe571663c89ee3df67788d86e602ab4761de28d4d2c3418be3c8825543c8e"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline7.js",
+      "bytes": 417,
+      "sha256": "c1cac729b3fbfc98a3c821c904322ac04b0bd794f98fb67204978bb7b30955ad"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/addon_bridge.js",
+      "bytes": 1149,
+      "sha256": "79f1ac60404844cd2f78eb16f423626d5fd2661fa9b46025becf1ab96c2c72f7"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/buffer_shape.js",
+      "bytes": 1063,
+      "sha256": "ac1672867d2a205dd4abc8b8658f662f87c11a22a799977ec9826a36d1600cd2"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/parser_identifier_bridge.js",
+      "bytes": 510,
+      "sha256": "5f56e4b5db6defea5127807a4b082e3e872a10bfb3d6d572013800e8f8e949e1"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline0.js",
+      "bytes": 71,
+      "sha256": "0ba7d921b939d5a18bc449a0cec939e2590ca6a9dd163adf542e8e04fe4c5562"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline1.js",
+      "bytes": 521,
+      "sha256": "94c67eee5a651c25dca0cf974988909e66da2e98d506cdb2231dc296c98e899a"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline10.js",
+      "bytes": 94,
+      "sha256": "35c279b9bff235e2ed3ba1f2d394742e9dbdf0d43555e47f9b109a7a39bc57a6"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline11.js",
+      "bytes": 998,
+      "sha256": "6efca513626782a77cc0c389058532dba8fd46060c7cfa9bbb71f91e886f86c2"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline12.js",
+      "bytes": 1306,
+      "sha256": "8e67f4883a133bb0ad73aff16827e047e1b680c4b382b6a3d019515c024ff4ea"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline13.js",
+      "bytes": 831,
+      "sha256": "1ae28c409e9fbd1efcec43107f9e9c035eb5c8596864bae5210d1091ddbb8969"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline14.js",
+      "bytes": 532,
+      "sha256": "be9dce800be895a21a694375dd02be83bad94925262f13682c556a70fdcdaa94"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline15.js",
+      "bytes": 168,
+      "sha256": "327d7ca797597761a7d523a26885b19246f32f8c50e0ad34f04fa15278d13ae6"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline16.js",
+      "bytes": 72,
+      "sha256": "fe635785ec693cd38a0381847742c8729d33422c5cf697e35ec288d7ae53460f"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline17.js",
+      "bytes": 67,
+      "sha256": "ae0cfd92121cf0c213940294f05902a331cfaeb9d9f4059dd1b17cd118696475"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline18.js",
+      "bytes": 107,
+      "sha256": "33f7531024d02d43aaac103ec354c83fca79bb2cb719f9b013afc8364b981a1a"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline19.js",
+      "bytes": 1577,
+      "sha256": "9b0cfaa56c08f3fe2ab57fa088057464cdf0ce8cce21c8eeaf71c4bf78e016c2"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline2.js",
+      "bytes": 187,
+      "sha256": "1799e450fa81c463910c6b8b7a6b7e00d844b7469c734739136efc8666dc37c3"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline20.js",
+      "bytes": 152,
+      "sha256": "d2e79943768fa04ec055ed1eef1c0afeb034cf42b0d8ef86a6b7f2f2c9e7e76b"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline21.js",
+      "bytes": 346,
+      "sha256": "7208a28a755c8609b1b2f9294937f2418f9f3c0dee9b11fa1c0d4feabb4a7783"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline22.js",
+      "bytes": 567,
+      "sha256": "d21c66fcc0b26a3ef78feefeb4f859cf4d4f7fb2566eb356975937c0f84f8c66"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline23.js",
+      "bytes": 268,
+      "sha256": "fec399e64c20a5c1e46f28365149e4b1eb42ea9864deda03dae6c8e4e9c422b5"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline24.js",
+      "bytes": 375,
+      "sha256": "3052e1ade55765d0445e8710812f59948f6501f701ebea675dfd9d74286a9af5"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline25.js",
+      "bytes": 323,
+      "sha256": "88429dc7ddaae7677a9961758af357b9926c79e4dc14cf654f3e267e6b1bc098"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline26.js",
+      "bytes": 598,
+      "sha256": "4e0dc49d3f5e4be4ed3fb22bdd2b7151d5eec123914fb420dbbfe8763e7e1420"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline27.js",
+      "bytes": 79,
+      "sha256": "67320b545da1470a62b712601387375f05accf3b425b2f6098a93a05a8728fdb"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline28.js",
+      "bytes": 619,
+      "sha256": "35e8802a3bd6a9cdd8c3c6b60faa1e5c76d4add8bed3a0376de597fe0eb8bd27"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline29.js",
+      "bytes": 461,
+      "sha256": "6687384caa57150cf1218a599da0e21e55b3d994ecbb13cf3a800a20bd9ad9ff"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline3.js",
+      "bytes": 241,
+      "sha256": "99cc3e102135da2cfd62aca8a21991f1f4846ac8724f25c5bb178ed008bf10e4"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline30.js",
+      "bytes": 66,
+      "sha256": "dabcdb0445c8e13da9d4283bea4e0722a26a38c9e3b2598813fdf1696d0e8389"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline31.js",
+      "bytes": 509,
+      "sha256": "ebaf5bda1a55fb73f6defad9cc1d02ef7826fe97f388a6bfc364795061f01453"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline32.js",
+      "bytes": 894,
+      "sha256": "ac254d40273711a7fcec0fa07079497d683e3ec8da051b4bd2cae49e94de5d0e"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline33.js",
+      "bytes": 490,
+      "sha256": "9b28981ca17185a29b7f528e383826e3a2445b65a209bdff44a37a7f6aa18861"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline34.js",
+      "bytes": 455,
+      "sha256": "9b8c8fe8feba2f025d4db4ca7c0ac0b6f6f6317481a4e5faf1c0c41e0e37d1d6"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline4.js",
+      "bytes": 301,
+      "sha256": "77805109d24d2fc4e296b8cc30efa71d05cd583a7bdd7597defa3c5ed9f5c7e5"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline5.js",
+      "bytes": 98,
+      "sha256": "449f50af26e6eec23a2c5e5f8224d47c313f685bc4125f81228658949a9aa9ca"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline6.js",
+      "bytes": 70,
+      "sha256": "2c5c80b866a8d79713943c15d29cd1cdf6261348167b99f1207b2e9fe77bb462"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline7.js",
+      "bytes": 159,
+      "sha256": "0977c94f33af4592a2a2df5a4f38c6faddac5690439f12c3490c0069589b2bec"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline8.js",
+      "bytes": 72,
+      "sha256": "5b81a8324247fffc6281813a7cb4ebc708b474d0f1c1d51bbf2fbe79e05829a8"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline9.js",
+      "bytes": 58,
+      "sha256": "d14f9f4659878d63aa506a3406eb9f18425e175ff507f674db10b1072f170eb4"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/core_browser_microtask.js",
+      "bytes": 609,
+      "sha256": "0e48b1666f9e7e4c2255ed049870c41689986eebf8b81d1b3564fef3e008eef0"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/handlers.js",
+      "bytes": 2701,
+      "sha256": "5a4451b4152871b90e65ae627ecac5cd31594f677641bd5da14796dc8bfcfb99"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/inspection.js",
+      "bytes": 1526,
+      "sha256": "fdd0e49565d38ab62c3fb3a2974001cc5741460a7d83801260947a3a5dbbc5cf"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/option_inspection.js",
+      "bytes": 701,
+      "sha256": "41899ae76de4d356a95e7b08aba42c766fde86c3f359cc7f61b56ac6162af585"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/kitty_host.js",
+      "bytes": 900,
+      "sha256": "00006bee1ae83a53203da0518eb10491f71a21c6dfaca73c5e27a2309a336768"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/placeholder.js",
+      "bytes": 420,
+      "sha256": "770aecedfcce7344771dd73bc9b3335f1978125eb3b81a2daa6c1b764ccf6586"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/sixel_errors.js",
+      "bytes": 1842,
+      "sha256": "ecb97f6854ce8c36b0762b7e0b7294c51df369500ecb580f60d87b334c7b56d5"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/kitty_tables.js",
+      "bytes": 2187,
+      "sha256": "00cbbbf0e3a4378cc9c3b2f73d5bf1190427bc9dcddf1ded2cfe1f973469f07e"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/win32_tables.js",
+      "bytes": 5038,
+      "sha256": "91e6c09c1e5255223495f79e3aa3852bd169736f4083aa687bbeca9f9b485caf"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_link_bridge.js",
+      "bytes": 1146,
+      "sha256": "e58ba4566734cfcab5b0b5dad658bb4b82c4e61009fab5d41110d179e18a42c6"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_osc_bridge.js",
+      "bytes": 633,
+      "sha256": "884bdde884899ad68fe08e893387482414ada15dda474a23422d8fc2f6e89114"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/renderer/decoration_microtask.js",
+      "bytes": 511,
+      "sha256": "2bdd2dc09d8b2934dcf603f97571148a998c0286ae00966a3039ab733bb04fb5"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/task_queue_bridge.js",
+      "bytes": 773,
+      "sha256": "cda54ac02301bf8034ac688ae102e47e198123f29c025cabb35344c999aa8b1f"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/terminal/internal_render.js",
+      "bytes": 690,
+      "sha256": "a76cee2c9eae4ddc1998e5b4783d2e52b8b358288c1f0babd74834aa82b68ee1"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/utility_addons/raw_link_bridge.js",
+      "bytes": 588,
+      "sha256": "8917d70ef9ab11951ee7d41935e5bfcbe6d40366394e91b7bb68fa32156a075b"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/atlas_baseline.js",
+      "bytes": 533,
+      "sha256": "bbefd924bb5e709999c0b04c70cb8c14f9893d7191f4cd12392590bc181eba6f"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/custom_glyphs/patterns.js",
+      "bytes": 1372,
+      "sha256": "cb26ee8116b931ce37a9ae320058065efbaa67044dba71b4d15efa309483d36f"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/write_scheduler_bridge.js",
+      "bytes": 386,
+      "sha256": "bb75408c713f7a671c5e02be5afe7b313e040a037a879f7f23d0af5f258bf7f7"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/suite.d.ts",
+      "bytes": 51560,
+      "sha256": "520c4222a123d311d02884672ec6c2ce48a408361dcee867013d273887013d54"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/suite.js",
+      "bytes": 248031,
+      "sha256": "b77636215de00468c5fa9479e9795a7165b748b0fe66a0120388fa0b8245c5d9"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/suite_bg.wasm",
+      "bytes": 16683173,
+      "sha256": "1bff09f317f8c454562ec5f96b0bdae9b8881605fea5110152ae8c5e14402322"
+    },
+    {
+      "path": "results/browser-host/wasm_public_link_provider/2026-11-05T21-33-05-844Z-b6486b7b-f749-4b45-812f-2d67688972bb/artifacts/suite_bg.wasm.d.ts",
+      "bytes": 33562,
+      "sha256": "c3d27e8ea971cd7af701f75213a67586dfae1b3173ee5a0f5484baa8618a99da"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-font-addons-91879fe097c75eac/src/ligature_host.js",
+      "bytes": 1906,
+      "sha256": "d8a30e72fe77d954821e9e7f2c61761e4ea8ea3e7d2c481e7d99af1ff0a60b73"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline0.js",
+      "bytes": 1216,
+      "sha256": "de4e485e930f7cda8a9ce550cfe26c807e3dd1d1e80c434413532b2a5b420e9d"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline1.js",
+      "bytes": 57,
+      "sha256": "292f2511fdb63c2b7487433bbba6acaa69019ed839f7039b21697a1bc1e74de1"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline2.js",
+      "bytes": 82,
+      "sha256": "a851e7d53c20c29b062e7a256c7f6325913b746516250a2045843e15fdb4836e"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline3.js",
+      "bytes": 399,
+      "sha256": "7321456f6ef5529bca9fbe7a91f83ddf66ffbbbca23931c63fd9cb619f01b09c"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline4.js",
+      "bytes": 499,
+      "sha256": "fe784870f96bd48e28e139b6f89b699553b8ae68f875b2a55ebe2ba98375dd8a"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline5.js",
+      "bytes": 828,
+      "sha256": "1e6f58ef7f27ae6d54ae9140abf399bf7462854321b8ad056cd525cfdbd1f48b"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline6.js",
+      "bytes": 394,
+      "sha256": "783fe571663c89ee3df67788d86e602ab4761de28d4d2c3418be3c8825543c8e"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline7.js",
+      "bytes": 417,
+      "sha256": "c1cac729b3fbfc98a3c821c904322ac04b0bd794f98fb67204978bb7b30955ad"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/addon_bridge.js",
+      "bytes": 1149,
+      "sha256": "79f1ac60404844cd2f78eb16f423626d5fd2661fa9b46025becf1ab96c2c72f7"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/buffer_shape.js",
+      "bytes": 1063,
+      "sha256": "ac1672867d2a205dd4abc8b8658f662f87c11a22a799977ec9826a36d1600cd2"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/parser_identifier_bridge.js",
+      "bytes": 510,
+      "sha256": "5f56e4b5db6defea5127807a4b082e3e872a10bfb3d6d572013800e8f8e949e1"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline0.js",
+      "bytes": 71,
+      "sha256": "0ba7d921b939d5a18bc449a0cec939e2590ca6a9dd163adf542e8e04fe4c5562"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline1.js",
+      "bytes": 521,
+      "sha256": "94c67eee5a651c25dca0cf974988909e66da2e98d506cdb2231dc296c98e899a"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline10.js",
+      "bytes": 94,
+      "sha256": "35c279b9bff235e2ed3ba1f2d394742e9dbdf0d43555e47f9b109a7a39bc57a6"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline11.js",
+      "bytes": 998,
+      "sha256": "6efca513626782a77cc0c389058532dba8fd46060c7cfa9bbb71f91e886f86c2"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline12.js",
+      "bytes": 1306,
+      "sha256": "8e67f4883a133bb0ad73aff16827e047e1b680c4b382b6a3d019515c024ff4ea"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline13.js",
+      "bytes": 831,
+      "sha256": "1ae28c409e9fbd1efcec43107f9e9c035eb5c8596864bae5210d1091ddbb8969"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline14.js",
+      "bytes": 532,
+      "sha256": "be9dce800be895a21a694375dd02be83bad94925262f13682c556a70fdcdaa94"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline15.js",
+      "bytes": 168,
+      "sha256": "327d7ca797597761a7d523a26885b19246f32f8c50e0ad34f04fa15278d13ae6"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline16.js",
+      "bytes": 72,
+      "sha256": "fe635785ec693cd38a0381847742c8729d33422c5cf697e35ec288d7ae53460f"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline17.js",
+      "bytes": 67,
+      "sha256": "ae0cfd92121cf0c213940294f05902a331cfaeb9d9f4059dd1b17cd118696475"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline18.js",
+      "bytes": 107,
+      "sha256": "33f7531024d02d43aaac103ec354c83fca79bb2cb719f9b013afc8364b981a1a"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline19.js",
+      "bytes": 1577,
+      "sha256": "9b0cfaa56c08f3fe2ab57fa088057464cdf0ce8cce21c8eeaf71c4bf78e016c2"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline2.js",
+      "bytes": 187,
+      "sha256": "1799e450fa81c463910c6b8b7a6b7e00d844b7469c734739136efc8666dc37c3"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline20.js",
+      "bytes": 152,
+      "sha256": "d2e79943768fa04ec055ed1eef1c0afeb034cf42b0d8ef86a6b7f2f2c9e7e76b"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline21.js",
+      "bytes": 346,
+      "sha256": "7208a28a755c8609b1b2f9294937f2418f9f3c0dee9b11fa1c0d4feabb4a7783"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline22.js",
+      "bytes": 567,
+      "sha256": "d21c66fcc0b26a3ef78feefeb4f859cf4d4f7fb2566eb356975937c0f84f8c66"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline23.js",
+      "bytes": 268,
+      "sha256": "fec399e64c20a5c1e46f28365149e4b1eb42ea9864deda03dae6c8e4e9c422b5"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline24.js",
+      "bytes": 375,
+      "sha256": "3052e1ade55765d0445e8710812f59948f6501f701ebea675dfd9d74286a9af5"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline25.js",
+      "bytes": 323,
+      "sha256": "88429dc7ddaae7677a9961758af357b9926c79e4dc14cf654f3e267e6b1bc098"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline26.js",
+      "bytes": 598,
+      "sha256": "4e0dc49d3f5e4be4ed3fb22bdd2b7151d5eec123914fb420dbbfe8763e7e1420"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline27.js",
+      "bytes": 79,
+      "sha256": "67320b545da1470a62b712601387375f05accf3b425b2f6098a93a05a8728fdb"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline28.js",
+      "bytes": 619,
+      "sha256": "35e8802a3bd6a9cdd8c3c6b60faa1e5c76d4add8bed3a0376de597fe0eb8bd27"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline29.js",
+      "bytes": 461,
+      "sha256": "6687384caa57150cf1218a599da0e21e55b3d994ecbb13cf3a800a20bd9ad9ff"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline3.js",
+      "bytes": 241,
+      "sha256": "99cc3e102135da2cfd62aca8a21991f1f4846ac8724f25c5bb178ed008bf10e4"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline30.js",
+      "bytes": 66,
+      "sha256": "dabcdb0445c8e13da9d4283bea4e0722a26a38c9e3b2598813fdf1696d0e8389"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline31.js",
+      "bytes": 509,
+      "sha256": "ebaf5bda1a55fb73f6defad9cc1d02ef7826fe97f388a6bfc364795061f01453"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline32.js",
+      "bytes": 894,
+      "sha256": "ac254d40273711a7fcec0fa07079497d683e3ec8da051b4bd2cae49e94de5d0e"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline33.js",
+      "bytes": 490,
+      "sha256": "9b28981ca17185a29b7f528e383826e3a2445b65a209bdff44a37a7f6aa18861"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline34.js",
+      "bytes": 455,
+      "sha256": "9b8c8fe8feba2f025d4db4ca7c0ac0b6f6f6317481a4e5faf1c0c41e0e37d1d6"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline4.js",
+      "bytes": 301,
+      "sha256": "77805109d24d2fc4e296b8cc30efa71d05cd583a7bdd7597defa3c5ed9f5c7e5"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline5.js",
+      "bytes": 98,
+      "sha256": "449f50af26e6eec23a2c5e5f8224d47c313f685bc4125f81228658949a9aa9ca"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline6.js",
+      "bytes": 70,
+      "sha256": "2c5c80b866a8d79713943c15d29cd1cdf6261348167b99f1207b2e9fe77bb462"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline7.js",
+      "bytes": 159,
+      "sha256": "0977c94f33af4592a2a2df5a4f38c6faddac5690439f12c3490c0069589b2bec"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline8.js",
+      "bytes": 72,
+      "sha256": "5b81a8324247fffc6281813a7cb4ebc708b474d0f1c1d51bbf2fbe79e05829a8"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline9.js",
+      "bytes": 58,
+      "sha256": "d14f9f4659878d63aa506a3406eb9f18425e175ff507f674db10b1072f170eb4"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/core_browser_microtask.js",
+      "bytes": 609,
+      "sha256": "0e48b1666f9e7e4c2255ed049870c41689986eebf8b81d1b3564fef3e008eef0"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/handlers.js",
+      "bytes": 2701,
+      "sha256": "5a4451b4152871b90e65ae627ecac5cd31594f677641bd5da14796dc8bfcfb99"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/inspection.js",
+      "bytes": 1526,
+      "sha256": "fdd0e49565d38ab62c3fb3a2974001cc5741460a7d83801260947a3a5dbbc5cf"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/option_inspection.js",
+      "bytes": 701,
+      "sha256": "41899ae76de4d356a95e7b08aba42c766fde86c3f359cc7f61b56ac6162af585"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/kitty_host.js",
+      "bytes": 900,
+      "sha256": "00006bee1ae83a53203da0518eb10491f71a21c6dfaca73c5e27a2309a336768"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/placeholder.js",
+      "bytes": 420,
+      "sha256": "770aecedfcce7344771dd73bc9b3335f1978125eb3b81a2daa6c1b764ccf6586"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/sixel_errors.js",
+      "bytes": 1842,
+      "sha256": "ecb97f6854ce8c36b0762b7e0b7294c51df369500ecb580f60d87b334c7b56d5"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/kitty_tables.js",
+      "bytes": 2187,
+      "sha256": "00cbbbf0e3a4378cc9c3b2f73d5bf1190427bc9dcddf1ded2cfe1f973469f07e"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/win32_tables.js",
+      "bytes": 5038,
+      "sha256": "91e6c09c1e5255223495f79e3aa3852bd169736f4083aa687bbeca9f9b485caf"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_link_bridge.js",
+      "bytes": 1146,
+      "sha256": "e58ba4566734cfcab5b0b5dad658bb4b82c4e61009fab5d41110d179e18a42c6"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_osc_bridge.js",
+      "bytes": 633,
+      "sha256": "884bdde884899ad68fe08e893387482414ada15dda474a23422d8fc2f6e89114"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/renderer/decoration_microtask.js",
+      "bytes": 511,
+      "sha256": "2bdd2dc09d8b2934dcf603f97571148a998c0286ae00966a3039ab733bb04fb5"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/task_queue_bridge.js",
+      "bytes": 773,
+      "sha256": "cda54ac02301bf8034ac688ae102e47e198123f29c025cabb35344c999aa8b1f"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/terminal/internal_render.js",
+      "bytes": 690,
+      "sha256": "a76cee2c9eae4ddc1998e5b4783d2e52b8b358288c1f0babd74834aa82b68ee1"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/utility_addons/raw_link_bridge.js",
+      "bytes": 588,
+      "sha256": "8917d70ef9ab11951ee7d41935e5bfcbe6d40366394e91b7bb68fa32156a075b"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/atlas_baseline.js",
+      "bytes": 533,
+      "sha256": "bbefd924bb5e709999c0b04c70cb8c14f9893d7191f4cd12392590bc181eba6f"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/custom_glyphs/patterns.js",
+      "bytes": 1372,
+      "sha256": "cb26ee8116b931ce37a9ae320058065efbaa67044dba71b4d15efa309483d36f"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/write_scheduler_bridge.js",
+      "bytes": 386,
+      "sha256": "bb75408c713f7a671c5e02be5afe7b313e040a037a879f7f23d0af5f258bf7f7"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/suite.d.ts",
+      "bytes": 52076,
+      "sha256": "820d01edfdd2c0e2e735ed67feeb044785ba972f88768bdc3dd4102c15441ca0"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/suite.js",
+      "bytes": 249562,
+      "sha256": "44f5d4445beb2047eac60fab11a6f6fe1881e934f0dd999210723f3e1b9024b2"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/suite_bg.wasm",
+      "bytes": 16796603,
+      "sha256": "afa8559c836d732054b980ae76152db4337f215455419ef6d44ad2a423449d5d"
+    },
+    {
+      "path": "results/browser-host/wasm_terminal_links/2026-11-05T21-34-44-477Z-95cb9ee7-4ab3-4f2c-8632-641f989507e0/artifacts/suite_bg.wasm.d.ts",
+      "bytes": 34086,
+      "sha256": "9ced573697196fb5607b3bcf3853290d729d518ebdf8cf8e87b3c1c340c1f667"
+    },
+    {
+      "path": "target/debug/deps/link_provider_transactions-f125b44534c9ba3e.exe",
+      "bytes": 912896,
+      "sha256": "7b7da6a76b914967193200bdffca9e99da29e2af04c1be090bfe6a2b21219284"
+    },
+    {
+      "path": "target/debug/deps/link_replies_differential-62ff681c5f08f047.exe",
+      "bytes": 1758720,
+      "sha256": "131746d353551e495298e23cd99f7198365fcfaee8a33c48390094f8419011da"
+    },
+    {
+      "path": "target/debug/deps/link_replies_live-75fb658abf377730.exe",
+      "bytes": 952320,
+      "sha256": "9ed6883ec8dfc3884c078ff090689f6e607b3b332a05c1294d41e27cf0426570"
+    }
+  ],
+  "native": {
+    "passed": 397,
+    "failed": 0,
+    "ignored": 0,
+    "summaries": 164
+  },
+  "quality": {
+    "nativeClippy": "all-targets/all-features warning-denied PASS",
+    "wasmClippy": "all-targets/all-features warning-denied PASS",
+    "memberFmt": "all five packages PASS",
+    "exactWorkspaceFmt": "FAIL Windows OS206, raw log retained"
+  },
+  "cleanup": "No owned jobs/grants. Temporary artifacts retained for independent review, then remove owned worktree only after source/receipt preservation."
+}
