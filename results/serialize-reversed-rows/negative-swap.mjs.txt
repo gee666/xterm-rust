@@ -1,0 +1,36 @@
+// Owned temporary runner. Swap only verified baseline inputs and restore fixed bytes.
+import assert from 'node:assert/strict';
+import {readFile, writeFile, rename, cp, rm, mkdir} from 'node:fs/promises';
+import {sourceIdentity, verifyBuiltPackage} from '../../scripts/e2e/build-identity.mjs';
+import {runCommand} from '../../scripts/quality-process.mjs';
+const root = process.cwd();
+const scratch = 'tmp/eadric';
+const file = 'crates/xterm-web/src/serialize_addon/html.rs';
+const fixedSource = await readFile(file);
+const fixedLatest = await readFile('results/demos/build/latest.json');
+const expectedFixed = '55b0246711036f9bcd428c3af0f7575e9851351d8bde9766269a8487239590f3';
+const expectedBaseline = '25c812cd72b3a747b4d784567d7350348b915535b549b465a93db6a56ce885f9';
+assert.equal((await sourceIdentity(root)).sha256, expectedFixed);
+await verifyBuiltPackage(root, await sourceIdentity(root));
+await mkdir('results/serialize-reversed-rows/baseline', {recursive:true});
+let moved = false;
+try {
+  await rename('browser/pkg', `${scratch}/fixed-pkg`); moved = true;
+  await cp(`${scratch}/baseline/pkg`, 'browser/pkg', {recursive:true});
+  await writeFile(file, await readFile(`${scratch}/baseline/html.rs`));
+  await writeFile('results/demos/build/latest.json', await readFile(`${scratch}/baseline/latest.json`));
+  assert.equal((await sourceIdentity(root)).sha256, expectedBaseline);
+  await verifyBuiltPackage(root, await sourceIdentity(root));
+  const result = await runCommand(process.execPath, ['scripts/serialize-browser-check.mjs'], {
+    cwd:root, env:process.env, log:'results/serialize-reversed-rows/baseline-run.log', timeoutMs:210000
+  });
+  await cp('results/serialize-browser', 'results/serialize-reversed-rows/baseline', {recursive:true});
+  console.log(JSON.stringify(result));
+} finally {
+  await writeFile(file, fixedSource);
+  await writeFile('results/demos/build/latest.json', fixedLatest);
+  if (moved) { await rm('browser/pkg', {recursive:true, force:true}); await rename(`${scratch}/fixed-pkg`, 'browser/pkg'); }
+  assert.equal((await sourceIdentity(root)).sha256, expectedFixed);
+  await verifyBuiltPackage(root, await sourceIdentity(root));
+  console.log('Restored and verified fixed source/pkg/latest');
+}

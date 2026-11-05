@@ -1,0 +1,15 @@
+# Scoped verification
+
+Full equivalence is NOT PROVEN. The browser command intentionally exits1 for the raw numeric mismatch retained under task346.
+
+Final `verification.json` records 48 executed shared operation/restoration cases per engine. Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4 each match47 cases and fail the raw numeric boundary case. There are16 directed cases and32 seeded traces of12 operations, seed0x05e21a11. The source infinite equal-bound loop is recorded as unrun, not executed as a hang. These case counts are not assertion counts.
+
+The unchanged original SerializeAddon Playwright suite discovers/executes/passes120 source cases and120 Rust cases, with0 failed/skipped/unrun in each engine group. This is40 cases per browser. Source assertion files are unchanged. Final actual browser export, fixture and declaration hashes are recorded. Screenshots assert visible content after serializing, resetting and restoring a real Rust terminal.
+
+`native.log` has48 passing Rust test functions across11 serialize targets, including the3350-output fixture comparison. `cell-native.log` has28 passing functions across5 cell/diagnostic targets. Their76 functions are distinct across these two logs. `diagnostics.log` is an earlier separate repeat of2 of those diagnostic tests, not2 extra unique tests. `shape-node.log` has4 passing JS reflection tests. Final full cargo fmt, scoped native warning-denied Clippy and WASM lib warning-denied Clippy pass. These are Windows/MSRV1.85.1 scoped results, not a complete workspace/release/feature or native three-OS matrix.
+
+Before-state evidence remains in `before-cell-shape/` and `before-line-shape/`:12 unchanged Rust suite failures from opaque BufferLine pointer JSON. The initial diagnosis named cells, but inspection showed the unchanged helper stringifies the actual raw BufferLine. Cell enumeration was independently defective and repaired too. `before-direct-row/` preserves a new probe's source TypeError from incorrectly assuming a wrapper._line; that probe setup was corrected to the original raw BufferLine fields. Its original assertion was not weakened and the original upstream suite was never edited.
+
+Current row accessors capture actual packed words/sparse strings/extended handles and omit transient Rust/source string-cache implementation details. They do not implement mutable source typed-array aliases, full descriptors or arbitrary raw field coercion. Those obligations remain family315. Raw numeric traversal/late marker coercion, host replacement, reentrant palette array mutation, warning reentry and actual GC/WeakRef evidence remain task346/family322.
+
+All final compiler/browser commands set TEMP first, then TMP and TMPDIR separately to the owned O:C/tmp/runtime path. Earlier receipts used one export command, so TMP expanded the inherited old TEMP despite TEMP itself being O:. Compiler temporaries normally clean themselves; no known outside-O owned path remains, but this report does not claim a C: temporary-directory scan. Owned worktree/build/generated paths are cleaned only after reviewed integration.
