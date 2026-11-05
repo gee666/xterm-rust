@@ -27,6 +27,8 @@ Both original and physical reference-copy manifests passed all 776 hashes before
 
 Full workspace Clippy/tests, original complete SearchAddon suites, seeded corpus, release, demo, GC and native Linux/macOS were not run for 508. Scoped passes do not establish full SearchAddon or full-port parity. Temporary native/WASM binaries are retained only until independent review and safe cleanup.
 
+Isolated review accepted frozen `59eb1cf3` with no defects. The reviewer independently reran the hash-pinned native executable, 64 passes, and verified all 55 then-current evidence pins, both compiler/WASM/binding sets, exact fixture embedding, actual rebuilds, distinct hashes, source restores, all 54 immutable prerequisite pins and both 776-file manifests. It inspected but did not rerun Cargo or browser matrices. The later review receipt adds a 56th pin. Actual cleanup is separate from that verdict.
+
 ## Reproduce
 
 Use Rust/Cargo 1.85.1, Node 24.15.0, wasm-bindgen CLI 0.2.100 and installed Chromium/Firefox/WebKit. Use an owned private O: target and O: TEMP/TMP; point SOURCE_DEPENDENCIES and PLAYWRIGHT_MODULE at the installed reference dependency tree.
