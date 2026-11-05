@@ -211,7 +211,9 @@ impl BrowserLinkifier {
             .set_geometry(self.state.cols.get(), scroll_offset);
     }
     pub fn on_render(&self, start: f64, end: f64) -> Result<(), JsValue> {
-        let current = self.current_link();
+        if self.current_link().is_none() {
+            return Ok(());
+        }
         let (_, offset) = self.state.hover.borrow().geometry();
         let start = if start == 0.0 {
             0.0
@@ -219,12 +221,8 @@ impl BrowserLinkifier {
             start + 1.0 + offset as f64
         };
         let end = offset as f64 + 1.0 + end;
-        let invalidated = match current {
-            Some(link) => link.invalidated(start, end)?,
-            None => false,
-        };
-        if invalidated {
-            self.state.clear_current()?;
+        if self.state.current_within_rows(start, end)? {
+            self.state.clear_current_with_rows(Some((start, end)))?;
             let event = self.state.last_event.borrow().clone();
             let position = match event.as_ref() {
                 Some(event) => (self.state.coordinates)(event)?,

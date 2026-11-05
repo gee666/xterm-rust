@@ -97,12 +97,39 @@ impl State {
         }
         Ok(())
     }
+    fn current_for_rows(&self) -> Result<Rc<CachedBrowserLink>, JsValue> {
+        self.hover.borrow().current().cloned().ok_or_else(|| {
+            js_sys::TypeError::new("Cannot read properties of undefined (reading 'link')").into()
+        })
+    }
+    pub(super) fn current_within_rows(&self, start: f64, end: f64) -> Result<bool, JsValue> {
+        // Each endpoint expression reads currentLink again after user getters.
+        Ok(self.current_for_rows()?.starts_at_or_after(start)?
+            && self.current_for_rows()?.ends_at_or_before(end)?)
+    }
     pub(super) fn clear_current(&self) -> Result<(), JsValue> {
-        let current = self.hover.borrow().current().cloned();
-        let event = self.last_event.borrow().clone();
-        let (Some(link), Some(event)) = (current, event) else {
+        self.clear_current_with_rows(None)
+    }
+    pub(super) fn clear_current_with_rows(&self, rows: Option<(f64, f64)>) -> Result<(), JsValue> {
+        if self.hover.borrow().current().is_none() || self.last_event.borrow().is_none() {
             return Ok(());
-        };
+        }
+        if let Some((start, end)) = rows {
+            // Source skips the second range check when either bound is falsey.
+            if JsValue::from_f64(start).is_truthy()
+                && JsValue::from_f64(end).is_truthy()
+                && !self.current_within_rows(start, end)?
+            {
+                return Ok(());
+            }
+        }
+        let link = self.current_for_rows()?;
+        let event = self
+            .last_event
+            .borrow()
+            .clone()
+            .map(JsValue::from)
+            .unwrap_or(JsValue::UNDEFINED);
         let values = link.decoration_values.borrow().clone();
         if let Some(values) = values {
             link.hovered.set(false);

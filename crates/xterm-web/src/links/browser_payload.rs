@@ -208,9 +208,11 @@ impl BrowserLink {
         }
         Ok(true)
     }
-    pub(super) fn invalidated(&self, start: f64, end: f64) -> Result<bool, JsValue> {
-        Ok(less_equal(&start.into(), &self.endpoint("start", "y")?)?
-            && less_equal(&self.endpoint("end", "y")?, &end.into())?)
+    pub(super) fn starts_at_or_after(&self, row: f64) -> Result<bool, JsValue> {
+        less_equal(&row.into(), &self.endpoint("start", "y")?)
+    }
+    pub(super) fn ends_at_or_before(&self, row: f64) -> Result<bool, JsValue> {
+        less_equal(&self.endpoint("end", "y")?, &row.into())
     }
     pub(super) fn underline_event(
         &self,
