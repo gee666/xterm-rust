@@ -69,8 +69,10 @@ pub(super) fn bind(bindings: &mut InputBindings) -> Result<(), JsValue> {
         "compositionend",
         false,
         |state, _| {
-            let action = state.composition.borrow_mut().end();
+            // DOM removal may throw or synchronously start another composition.
+            // Capture the live range and commit flags only after it succeeds.
             state.overlay.class_list().remove_1("active")?;
+            let action = state.composition.borrow_mut().end();
             schedule(state, action)
         },
     )?;

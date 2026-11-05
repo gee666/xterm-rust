@@ -1,4 +1,6 @@
 #![cfg(target_arch = "wasm32")]
+#[path = "input_cases/composition_end.rs"]
+mod composition_end;
 #[path = "support/input_dom.rs"]
 mod support;
 use std::{cell::Cell, rc::Rc};

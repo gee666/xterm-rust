@@ -1,0 +1,129 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_composition_end",
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T15:16:21.396Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_composition_end",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 33803.023199999996,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 9.314899999997579,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Angel319\\results\\acceptance-artifacts\\8e5f993d492fcdf8a08ad6be6cdc1b79ec09e03e1943c46dff7b0f6b2570369d\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Angel319\\results\\browser-host\\wasm_composition_end\\2026-11-05T15-16-21-394Z-de5e0f94-f137-4c28-b35d-1d74b462baba\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 951.4320000000007,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_composition_end::compositionend_captures_new_range_after_reentrant_dom_removal",
+        "__wbgt__wasm_composition_end::compositionend_observes_composing_until_dom_removal_succeeds"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_composition_end.rs:59:35:\ncalled `Result::unwrap()` on an `Err` value: JsValue(Error: plain: source=[[\"started\",[true,[],true]],[\"remove\",[true,[],true]],[\"ended\",[false,[],false],false],[\"deferred\",[false,[[\"new\",true]],false]]] Rust=[[\"started\",[true,[],true]],[\"remove\",[false,[],true]],[\"ended\",[false,[],false],false],[\"deferred\",[false,[[\"new\",true]],false]]]\nError: plain: source=[[\"started\",[true,[],true]],[\"remove\",[true,[],true]],[\"ended\",[false,[],false],false],[\"deferred\",[false,[[\"new\",true]],false]]] Rust=[[\"started\",[true,[],true]],[\"remove\",[false,[],true]],[\"ended\",[false,[],false],false],[\"deferred\",[false,[[\"new\",true]],false]]]\n    at compareCompositionEnd (http://127.0.0.1:56435/snippets/xterm-web-f147851b6cb0c0ef/tests/fixtures/composition-end-cases.js:74:11))\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:56435/suite.js:4907:21)\n    at wasm_composition_end-6b845c6530374f7c.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[36691]:0xa63f62)\n    at wasm_composition_end-6b845c6530374f7c.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[23725]:0x9c7f0f)\n    at wasm_composition_end-6b845c6530374f7c.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[7982]:0x745386)\n    at wasm_composition_end-6b845c6530374f7c.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[23726]:0x9c7f93)\n    at wasm_composition_end-6b845c6530374f7c.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[12566]:0x854994)\n    at wasm_composition_end-6b845c6530374f7c.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[15949]:0x8e2764)\n    at wasm_composition_end-6b845c6530374f7c.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[44314]:0xa7b53c)\n    at wasm_composition_end-6b845c6530374f7c.wasm.rust_begin_unwind (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[30335]:0xa35885)\n    at wasm_composition_end-6b845c6530374f7c.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[30336]:0xa358b2)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_composition_end.rs:59:35:\ncalled `Result::unwrap()` on an `Err` value: JsValue(Error: nested-start: source=[[\"started\",[true,[],true]],[\"remove\",[true,[],true]],[\"nested-start\",[true,[],true]],[\"ended\",[false,[],false],false],[\"deferred\",[false,[[\"B\",true]],false]]] Rust=[[\"started\",[true,[],true]],[\"remove\",[false,[],true]],[\"nested-start\",[true,[],true]],[\"ended\",[true,[],false],false],[\"deferred\",[true,[[\"a\",true]],false]]]\nError: nested-start: source=[[\"started\",[true,[],true]],[\"remove\",[true,[],true]],[\"nested-start\",[true,[],true]],[\"ended\",[false,[],false],false],[\"deferred\",[false,[[\"B\",true]],false]]] Rust=[[\"started\",[true,[],true]],[\"remove\",[false,[],true]],[\"nested-start\",[true,[],true]],[\"ended\",[true,[],false],false],[\"deferred\",[true,[[\"a\",true]],false]]]\n    at compareCompositionEnd (http://127.0.0.1:56435/snippets/xterm-web-f147851b6cb0c0ef/tests/fixtures/composition-end-cases.js:74:11))\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:56435/suite.js:4907:21)\n    at wasm_composition_end-6b845c6530374f7c.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[36691]:0xa63f62)\n    at wasm_composition_end-6b845c6530374f7c.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[23725]:0x9c7f0f)\n    at wasm_composition_end-6b845c6530374f7c.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[7982]:0x745386)\n    at wasm_composition_end-6b845c6530374f7c.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[23726]:0x9c7f93)\n    at wasm_composition_end-6b845c6530374f7c.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[12566]:0x854994)\n    at wasm_composition_end-6b845c6530374f7c.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[15949]:0x8e2764)\n    at wasm_composition_end-6b845c6530374f7c.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[44314]:0xa7b53c)\n    at wasm_composition_end-6b845c6530374f7c.wasm.rust_begin_unwind (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[30335]:0xa35885)\n    at wasm_composition_end-6b845c6530374f7c.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[30336]:0xa358b2)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 2 tests\ntest compositionend_observes_composing_until_dom_removal_succeeds ... FAIL\ntest compositionend_captures_new_range_after_reentrant_dom_removal ... FAIL\n\nfailures:\n\n---- compositionend_observes_composing_until_dom_removal_succeeds output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_composition_end-6b845c6530374f7c.wasm.__rust_start_panic (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[44819]:0xa7c1c7)\n            at wasm_composition_end-6b845c6530374f7c.wasm.rust_panic (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[40107]:0xa71012)\n            at wasm_composition_end-6b845c6530374f7c.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[12566]:0x8549bf)\n            at wasm_composition_end-6b845c6530374f7c.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[15949]:0x8e2764)\n            at wasm_composition_end-6b845c6530374f7c.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[44314]:0xa7b53c)\n            at wasm_composition_end-6b845c6530374f7c.wasm.rust_begin_unwind (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[30335]:0xa35885)\n            at wasm_composition_end-6b845c6530374f7c.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[30336]:0xa358b2)\n            at wasm_composition_end-6b845c6530374f7c.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[18934]:0x94adc0)\n            at wasm_composition_end-6b845c6530374f7c.wasm.wasm_composition_end::check::{{closure}}::h2fefa8f933f6598c (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[1702]:0x417fd1)\n            at wasm_composition_end-6b845c6530374f7c.wasm.wasm_composition_end::compositionend_observes_composing_until_dom_removal_succeeds::{{closure}}::hc5de04247f552ac6 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[1864]:0x448a89)\n\n---- compositionend_captures_new_range_after_reentrant_dom_removal output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_composition_end-6b845c6530374f7c.wasm.__rust_start_panic (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[44819]:0xa7c1c7)\n            at wasm_composition_end-6b845c6530374f7c.wasm.rust_panic (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[40107]:0xa71012)\n            at wasm_composition_end-6b845c6530374f7c.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[12566]:0x8549bf)\n            at wasm_composition_end-6b845c6530374f7c.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[15949]:0x8e2764)\n            at wasm_composition_end-6b845c6530374f7c.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[44314]:0xa7b53c)\n            at wasm_composition_end-6b845c6530374f7c.wasm.rust_begin_unwind (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[30335]:0xa35885)\n            at wasm_composition_end-6b845c6530374f7c.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[30336]:0xa358b2)\n            at wasm_composition_end-6b845c6530374f7c.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[18934]:0x94adc0)\n            at wasm_composition_end-6b845c6530374f7c.wasm.wasm_composition_end::check::{{closure}}::h2fefa8f933f6598c (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[1702]:0x417fd1)\n            at wasm_composition_end-6b845c6530374f7c.wasm.wasm_composition_end::compositionend_captures_new_range_after_reentrant_dom_removal::{{closure}}::h5f7b5fb254c0c5b0 (http://127.0.0.1:56435/suite_bg.wasm:wasm-function[1865]:0x448f05)\n\nfailures:\n\n    compositionend_observes_composing_until_dom_removal_succeeds\n    compositionend_captures_new_range_after_reentrant_dom_removal\n\ntest result: FAILED. 0 passed; 2 failed; 0 ignored; 0 filtered out; finished in 0.03s\n\n",
+      "counts": {
+        "passed": 0,
+        "failed": 2,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/8e5f993d492fcdf8a08ad6be6cdc1b79ec09e03e1943c46dff7b0f6b2570369d/artifact.wasm",
+      "sha256": "8e5f993d492fcdf8a08ad6be6cdc1b79ec09e03e1943c46dff7b0f6b2570369d",
+      "bytes": 18938702,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Angel319\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_composition_end-6b845c6530374f7c.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Angel319\\results\\browser-host\\wasm_composition_end\\2026-11-05T15-16-21-394Z-de5e0f94-f137-4c28-b35d-1d74b462baba\\artifacts\\suite_bg.wasm",
+      "bytes": 15887484,
+      "sha256": "a1c40e902dff86de2a2c15642cfbbfcc4639dd10892e9befaf880bf350f45505"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Angel319\\results\\browser-host\\wasm_composition_end\\2026-11-05T15-16-21-394Z-de5e0f94-f137-4c28-b35d-1d74b462baba\\artifacts\\suite.js",
+      "bytes": 211722,
+      "sha256": "114cbc676cdd3ac845497d5ba15f42f5ba24610c9a36dcfac8bce9cd124ecc6b"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "b178ca2654cbf70f54ab67adf6d9307e5db0ed30bc098e2a30336c3ce2b46e0a"
+  },
+  "finishedAt": "2026-11-05T15:16:56.958Z"
+}

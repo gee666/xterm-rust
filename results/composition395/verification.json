@@ -1,0 +1,40 @@
+{
+  "task": 395,
+  "base": "e7cea61d6e11fab4b614b3905cff0489cb64be80",
+  "platform": "Windows x86_64",
+  "rustc": "1.85.1",
+  "node": "v24.15.0",
+  "wasmBindgen": "0.2.100",
+  "hashes": {
+    "crates/xterm-web/src/input/dom/composition.rs": "5fe052fdc8a843a93f62b27385af3cd39aa92206c06e2db38816059fbf70a735",
+    "crates/xterm-web/tests/wasm_input_callbacks.rs": "e2cf756c6a413daff024df9a092b154b978daa8ccd495d1a43a0ff6caee9c4a5",
+    "crates/xterm-web/tests/input_cases/composition_end.rs": "085bdde91098113e076711d7a2f16cd51338863c524238e26582bcf7d6c4668f",
+    "crates/xterm-web/tests/fixtures/composition-end-cases.js": "532424fedff2e9cbbd8c2db57782f8fc520304c79e7ca6cb1b5011748ac78076",
+    "scripts/composition-source-fixture.test.mjs": "d4590a4e9d5fe0b62bec806dfcc42e664110d2c8761af4b5f0f4103685def6a8",
+    "crates/xterm-web/tests/fixtures/composition-start-body.js": "3e5c8789460c2404d53dc33b1675cd9dadd5fcf6d121be60a81a4ca8522e6341",
+    "crates/xterm-web/tests/fixtures/composition-end-body.js": "2fe439111e60a7b62fdcb800de17c06eed64cd9e75f21072cc81c00dabdf28a9",
+    "crates/xterm-web/tests/fixtures/composition-finalize-body.js": "47d2438077da3cd9a49c0f81a00a57c1eb40052c386281ab2b34efb09955d6ee"
+  },
+  "beforeFix": {
+    "tests": 2,
+    "failed": 2,
+    "browser": "chromium",
+    "scope": "Initial standalone wasm_composition_end target, moved unchanged into wasm_input_callbacks to reuse its existing DOM helpers without dead-code warnings"
+  },
+  "afterFix": {
+    "newScenarios": 4,
+    "newTestFunctions": 2,
+    "callbackTargetFunctions": 5,
+    "browsers": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "nativeFunctions": 27,
+    "inputOracleComparisons": 252412,
+    "inputOracleOriginalCases": 11,
+    "inputOracleOriginalAssertions": 16,
+    "accessibilitySnapshots": 32871
+  },
+  "scope": "Component IME state/mutation ordering only; full original Terminal browser suites, native Linux/macOS and every decorated DOM value remain outside this proof. Equivalence NOT PROVEN."
+}
