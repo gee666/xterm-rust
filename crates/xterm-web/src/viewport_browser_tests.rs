@@ -137,8 +137,7 @@ fn constructor_uses_actual_scroll_element_source_getter_order_and_theme_css() {
     let viewport = fixture.viewport();
     let element = viewport.host.element().unwrap();
     let node = element.get_dom_node().unwrap();
-    // Full Terminal also checks overview creation and reads its canvas width
-    // twice. The isolated option-literal test above retains the four-read trace.
+    // Full Terminal also sizes its ruler. The separate test preserves Viewport's four reads.
     assert_eq!(
         fixture
             .reads

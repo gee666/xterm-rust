@@ -1,0 +1,18 @@
+error[E0308]: mismatched types
+   --> crates\xterm-web\src\viewport_browser_tests.rs:117:29
+    |
+117 |     super::options::initial(&terminal.shared.native.options()).unwrap();
+    |     ----------------------- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&OptionsService`, found `&&PublicOptions`
+    |     |
+    |     arguments to this function are incorrect
+    |
+    = note: expected reference `&xterm_core::options::OptionsService`
+               found reference `&&PublicOptions`
+note: function defined here
+   --> crates\xterm-web\src\viewport_options.rs:66:15
+    |
+66  | pub(super) fn initial(options: &OptionsService) -> Result<JsValue, JsValue> {
+    |               ^^^^^^^ ------------------------
+
+
+For more information about this error, try `rustc --explain E0308`.
