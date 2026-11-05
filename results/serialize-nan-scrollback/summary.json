@@ -1,0 +1,479 @@
+{
+  "scope": "Numeric primitive NaN HTML scrollback, not full serialization equivalence",
+  "baseline": [
+    {
+      "name": "chromium",
+      "version": "148.0.7778.96",
+      "passed": 70,
+      "executed": 72,
+      "mismatches": [
+        "html-nan-scrollback-header-effects",
+        "html-nan-scrollback-header-throw"
+      ]
+    },
+    {
+      "name": "firefox",
+      "version": "150.0.2",
+      "passed": 70,
+      "executed": 72,
+      "mismatches": [
+        "html-nan-scrollback-header-effects",
+        "html-nan-scrollback-header-throw"
+      ]
+    },
+    {
+      "name": "webkit",
+      "version": "26.4",
+      "passed": 70,
+      "executed": 72,
+      "mismatches": [
+        "html-nan-scrollback-header-effects",
+        "html-nan-scrollback-header-throw"
+      ]
+    }
+  ],
+  "fixed": [
+    {
+      "name": "chromium",
+      "version": "148.0.7778.96",
+      "passed": 72,
+      "executed": 72,
+      "mismatches": []
+    },
+    {
+      "name": "firefox",
+      "version": "150.0.2",
+      "passed": 72,
+      "executed": 72,
+      "mismatches": []
+    },
+    {
+      "name": "webkit",
+      "version": "26.4",
+      "passed": 72,
+      "executed": 72,
+      "mismatches": []
+    }
+  ],
+  "suites": {
+    "baseline": [
+      {
+        "engine": "source",
+        "discovered": 120,
+        "executed": 120,
+        "passed": 120,
+        "failed": 0,
+        "skipped": 0,
+        "unrun": 0
+      },
+      {
+        "engine": "rust",
+        "discovered": 120,
+        "executed": 120,
+        "passed": 120,
+        "failed": 0,
+        "skipped": 0,
+        "unrun": 0
+      }
+    ],
+    "fixed": [
+      {
+        "engine": "source",
+        "discovered": 120,
+        "executed": 120,
+        "passed": 120,
+        "failed": 0,
+        "skipped": 0,
+        "unrun": 0
+      },
+      {
+        "engine": "rust",
+        "discovered": 120,
+        "executed": 120,
+        "passed": 120,
+        "failed": 0,
+        "skipped": 0,
+        "unrun": 0
+      }
+    ]
+  },
+  "native": {
+    "executables": 16,
+    "passed": 69
+  },
+  "source": {
+    "revision": "ac5db73c1fea38967a042b4e1456602aa272a23f",
+    "sha256": "bbe0503468ef723897da58c447bc316f70ffbf3bf020adb7e4c8f09db26f09cc",
+    "files": 1714
+  },
+  "build": {
+    "report": "results/demos/build/2026-11-05T20-44-36-939Z/report.json",
+    "source": {
+      "revision": "ac5db73c1fea38967a042b4e1456602aa272a23f",
+      "sha256": "bbe0503468ef723897da58c447bc316f70ffbf3bf020adb7e4c8f09db26f09cc",
+      "files": 1714
+    },
+    "artifacts": [
+      {
+        "path": "browser/pkg/xterm_web.js",
+        "bytes": 234640,
+        "sha256": "75853e7f01b154f5364a8a463f0d35cd97584e8d717de256e4a5187675afd674"
+      },
+      {
+        "path": "browser/pkg/xterm_web_bg.wasm",
+        "bytes": 15838432,
+        "sha256": "7987daa08f5b558099e6fd6aa25ae016c941d1f3a8ee05d32c27bf0625df326d"
+      }
+    ]
+  },
+  "reference": {
+    "files": 776,
+    "mismatches": []
+  },
+  "sourcePins": [
+    {
+      "path": "crates/xterm-web/src/serialize_addon/html.rs",
+      "bytes": 7047,
+      "sha256": "87b5ec3d634f9827675a193d69d57a79163616df2e7d9674847de79f2583cc79"
+    },
+    {
+      "path": "crates/xterm-web/src/serialize_addon/options.rs",
+      "bytes": 3039,
+      "sha256": "c6f762e145a57458b40829648edccf39dee543bfe150ea25543eeaae464a6a63"
+    },
+    {
+      "path": "crates/xterm-core/src/serialize/html.rs",
+      "bytes": 8707,
+      "sha256": "ae09de65bc33de55d96723ad6ed9d00d86409c919cfe0b217656927b0da44a71"
+    },
+    {
+      "path": "crates/xterm-core/src/serialize/html_rows.rs",
+      "bytes": 4014,
+      "sha256": "97fde388a156f76edac0cd6d6275ba9d20e589e799e2dbaf2595ae20a16d0e14"
+    },
+    {
+      "path": "scripts/serialize-browser-cases.mjs",
+      "bytes": 29079,
+      "sha256": "f43db82024784318ee802826f64a6d19ced87801dfa0e7be30e31029b36fe53b"
+    },
+    {
+      "path": "scripts/serialize-browser-check.mjs",
+      "bytes": 10731,
+      "sha256": "20e806b6af1dd68046ba13a78f37ff35e131864748bdb585b600596f50b887a2"
+    }
+  ],
+  "binaryPins": [
+    {
+      "path": "target/debug/deps/serialize_ansi-54e6102c33391d92.exe",
+      "bytes": 998400,
+      "sha256": "73d5e8ce8757d4f5cddc61e88a6e629bd205a0f1fef79ee657363ee4db1a6054"
+    },
+    {
+      "path": "target/debug/deps/serialize_ansi_numeric_row-47bf2c3a89019d9c.exe",
+      "bytes": 1409536,
+      "sha256": "7d4c1548f9edb9d73a12063e68b1dba73ef3f3b0662343fb64d70f20023b2bfe"
+    },
+    {
+      "path": "target/debug/deps/serialize_diagnostics-29422262678a62da.exe",
+      "bytes": 982016,
+      "sha256": "ac621ff4328eebf15bff9c870bd02bb3c990de9a306a12d0cd7f75322e73e11c"
+    },
+    {
+      "path": "target/debug/deps/serialize_differential-5df0a00e4edcf564.exe",
+      "bytes": 16513024,
+      "sha256": "1d9887c7c61804cc4e3b7987ddd448ffe7b17d0e55fea092a1bc5aff233f7585"
+    },
+    {
+      "path": "target/debug/deps/serialize_header_order-4fc61612bebcfe02.exe",
+      "bytes": 3096064,
+      "sha256": "8e73f82d49ce6079882ff4432957a49a261f38d4ede416d789d86a9e3cfaef82"
+    },
+    {
+      "path": "target/debug/deps/serialize_html-cba7fc5a971e9871.exe",
+      "bytes": 979968,
+      "sha256": "65ed4399e3ec301934749ab56e5399d6d22c7b906469a20cdbd5c7df2eef321e"
+    },
+    {
+      "path": "target/debug/deps/serialize_html_edges-4b039b23ad3e0c44.exe",
+      "bytes": 1010176,
+      "sha256": "0c7161a6a5ee9297ef33b253016f2802e285e6adcec2ed9930f99ebfb35aa8e3"
+    },
+    {
+      "path": "target/debug/deps/serialize_html_numeric_rows-086db687da8bbee6.exe",
+      "bytes": 1424896,
+      "sha256": "50ff6c537582abbf84b27832df742d2f57968bd061255eed9418b983ebd79e4e"
+    },
+    {
+      "path": "target/debug/deps/serialize_line_identity-eb11207aee5f0759.exe",
+      "bytes": 998400,
+      "sha256": "9d9589389ef1246224f76ae9098d57351bb288d84b6f54ecb45058b2281cf5f5"
+    },
+    {
+      "path": "target/debug/deps/serialize_live-371fd040e1ac809a.exe",
+      "bytes": 3526144,
+      "sha256": "0ab087076a9d59f77f60d61c98ab3348cdc3786c97ce5d0ea2a57ff989243199"
+    },
+    {
+      "path": "target/debug/deps/serialize_live_callbacks-db59f2efc156c5a5.exe",
+      "bytes": 3224064,
+      "sha256": "9167c01e836ebf8d4c796ca06eb6f16a3af1bc65584cb700b81979c3eee1ce51"
+    },
+    {
+      "path": "target/debug/deps/serialize_live_reentrancy-f65d8d1f9a36516f.exe",
+      "bytes": 3378176,
+      "sha256": "a6d32ca879ae6764f2370e9d43452c71300c78b209e4d0e6e6d6d5892e0b5b51"
+    },
+    {
+      "path": "target/debug/deps/serialize_live_reset-33398ec6b388d6f3.exe",
+      "bytes": 3203072,
+      "sha256": "16455d7766251e39e55984910e21558c98ded2b7d6eb2d750b627e56198745d5"
+    },
+    {
+      "path": "target/debug/deps/serialize_native-9a9acbba8762e4e6.exe",
+      "bytes": 1389056,
+      "sha256": "89cfdd941ef4f6e91867d01e095a19aa20477c916b1a538a5227227dbde1f8ac"
+    },
+    {
+      "path": "target/debug/deps/serialize_ownership-78ebcf0811062379.exe",
+      "bytes": 3181568,
+      "sha256": "fabd4b42a4ef0ef866dd803e95f4cfff0fcf23395b9569d9169bc7bbd434c658"
+    },
+    {
+      "path": "target/debug/deps/serialize_reentry-17e1186e073ef695.exe",
+      "bytes": 908288,
+      "sha256": "a39fc753fdb27e2789315797b98071fd548770da2b7c66b8836ebd52ad1d2293"
+    }
+  ],
+  "artifactPins": [
+    {
+      "path": "results/serialize-nan-scrollback/baseline/browser.log",
+      "bytes": 70,
+      "sha256": "a56905361111483665f3b46aadeed324d64944210fdb927b67cc25059034d44a"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/baseline/browser/chromium-rust.json",
+      "bytes": 300309,
+      "sha256": "14bb1c38dbadfd427c68f86ffef5867a5ae89b37cc487068ced4daae939d9b1c"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/baseline/browser/chromium-source.json",
+      "bytes": 297844,
+      "sha256": "22108a378a7ee6c421657ef1d44b9a9eb5de5bd5da168427eebfb348d03c0c94"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/baseline/browser/chromium-terminal.png",
+      "bytes": 5617,
+      "sha256": "88974323cd03583b449948d98297d273b7fc41c0f84f5af95e7f926a9c8526b9"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/baseline/browser/firefox-rust.json",
+      "bytes": 300309,
+      "sha256": "a8d31e677ca4e5edfcb502b6a28889c8a36df6ca8b4a75c4dce89de26fc78ddd"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/baseline/browser/firefox-source.json",
+      "bytes": 297844,
+      "sha256": "4e79f989d9192eabdc22283ad79d5a05299f36f91bfa4c46f5976b1532ae700b"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/baseline/browser/firefox-terminal.png",
+      "bytes": 20229,
+      "sha256": "a8130b92f81e7909b014dffceca173e2efbf46f6f739d20585a53fb47faacb0f"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/baseline/browser/rust-suite/configuration.cjs.txt",
+      "bytes": 485,
+      "sha256": "5f94690c592e693ed3210f846ea9745bcb92a6c9735a59b62b0193d4c647135f"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/baseline/browser/rust-suite/playwright.json",
+      "bytes": 148427,
+      "sha256": "093d5e34f2cfd343dd6671d687b171c967bff79fc8c3cadfc495a2ec5b6f101a"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/baseline/browser/rust-suite/playwright.log",
+      "bytes": 297,
+      "sha256": "276364e7e77f4b9d66753f46cb4db94efafd3f66c277f4a874439c4a074a1fa8"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/baseline/browser/source-suite/configuration.cjs.txt",
+      "bytes": 485,
+      "sha256": "4abfae7fdba4cd931d1c090cdabea6c1a98f11fabc7dc37a3cf80a89d3932685"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/baseline/browser/source-suite/playwright.json",
+      "bytes": 148431,
+      "sha256": "7065a8387318db3fbf0124d3cced1dbd939f33ad3f5c12d6d522d8045f710749"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/baseline/browser/source-suite/playwright.log",
+      "bytes": 297,
+      "sha256": "ff1a00b1eb9b7f28a88ac79c3c15007cbdb3b438c50f5ddd205f44edcf93f84a"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/baseline/browser/verification.json",
+      "bytes": 95155,
+      "sha256": "16e7e810396e5c6925ece4715b064ae1ceed67d051c4b9543e240580a0fe5f05"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/baseline/browser/webkit-rust.json",
+      "bytes": 300879,
+      "sha256": "1ed76f3dc474b9ec681f57d3dbab82572dc1110446b9c1ccd08794544c975113"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/baseline/browser/webkit-source.json",
+      "bytes": 298414,
+      "sha256": "23667df93b5945af7201e8a2fb1a41390dee9726aade57d4bc9cbde70fd97b99"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/baseline/browser/webkit-terminal.png",
+      "bytes": 7773,
+      "sha256": "041a4d167a8a10db96adb28eb15467009943d3bf9ee1d66651e6b14b8e4c96da"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/baseline/build-pointer.json",
+      "bytes": 97,
+      "sha256": "7033b9b1626f4aa12fc1a36fa85c87b67138206177fd58014f40900b052d5d5f"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/baseline/build-report.json",
+      "bytes": 4991,
+      "sha256": "e1e900c7313d9b055d00914ec4af02464db386047a6988f2e3cee5a425595ab7"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/baseline/build.log",
+      "bytes": 4991,
+      "sha256": "e1e900c7313d9b055d00914ec4af02464db386047a6988f2e3cee5a425595ab7"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/commands.json",
+      "bytes": 3317,
+      "sha256": "b05a35bfb88fcafb4e4034ea644c58ca2ef3b4d799abf271649c4e2ac7850be8"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fixed/browser.log",
+      "bytes": 70,
+      "sha256": "e5e2b00bd34cbf085916a8903740ee648f97e126e8f934d3882e909619ad91e9"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fixed/browser/chromium-rust.json",
+      "bytes": 297844,
+      "sha256": "22108a378a7ee6c421657ef1d44b9a9eb5de5bd5da168427eebfb348d03c0c94"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fixed/browser/chromium-source.json",
+      "bytes": 297844,
+      "sha256": "22108a378a7ee6c421657ef1d44b9a9eb5de5bd5da168427eebfb348d03c0c94"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fixed/browser/chromium-terminal.png",
+      "bytes": 5617,
+      "sha256": "88974323cd03583b449948d98297d273b7fc41c0f84f5af95e7f926a9c8526b9"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fixed/browser/firefox-rust.json",
+      "bytes": 297844,
+      "sha256": "4e79f989d9192eabdc22283ad79d5a05299f36f91bfa4c46f5976b1532ae700b"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fixed/browser/firefox-source.json",
+      "bytes": 297844,
+      "sha256": "4e79f989d9192eabdc22283ad79d5a05299f36f91bfa4c46f5976b1532ae700b"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fixed/browser/firefox-terminal.png",
+      "bytes": 20229,
+      "sha256": "a8130b92f81e7909b014dffceca173e2efbf46f6f739d20585a53fb47faacb0f"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fixed/browser/rust-suite/configuration.cjs.txt",
+      "bytes": 485,
+      "sha256": "51c62454c7c0d8ab73df3799a345f740f14c60ef3a094ab0b54d7a8ad461b14b"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fixed/browser/rust-suite/playwright.json",
+      "bytes": 148426,
+      "sha256": "0bb81d3704471f3b681e7803c26c05ec45ee590ce41487425172f47d135bf6d9"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fixed/browser/rust-suite/playwright.log",
+      "bytes": 297,
+      "sha256": "4ce97cc743de807341953623b58cbf4062ba18377d4f7863aa1597956bcb98cb"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fixed/browser/source-suite/configuration.cjs.txt",
+      "bytes": 485,
+      "sha256": "25e38a1ba5f31e3275f60bdc84e47e06ce967c2884b240219dd883b24c48db3a"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fixed/browser/source-suite/playwright.json",
+      "bytes": 148433,
+      "sha256": "0b90fc29b0851dac9fc9c23d6cb130c5a4b00ec38986da6ffa7db82a4fd084b9"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fixed/browser/source-suite/playwright.log",
+      "bytes": 297,
+      "sha256": "98d7b3ec7baf8f9f230c9ddb3f8169336843b6aa5cadd0373a4992db972b5f28"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fixed/browser/verification.json",
+      "bytes": 11392,
+      "sha256": "e53563060206a7be475df50e8b95ca522e735f4201dd77dff20ea03e619ea888"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fixed/browser/webkit-rust.json",
+      "bytes": 298414,
+      "sha256": "23667df93b5945af7201e8a2fb1a41390dee9726aade57d4bc9cbde70fd97b99"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fixed/browser/webkit-source.json",
+      "bytes": 298414,
+      "sha256": "23667df93b5945af7201e8a2fb1a41390dee9726aade57d4bc9cbde70fd97b99"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fixed/browser/webkit-terminal.png",
+      "bytes": 7773,
+      "sha256": "041a4d167a8a10db96adb28eb15467009943d3bf9ee1d66651e6b14b8e4c96da"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fixed/build-pointer.json",
+      "bytes": 97,
+      "sha256": "e1d946fa04503afedb99fd92adc33ea23f4e13be597fbb85089d7db3096232ee"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fixed/build-report.json",
+      "bytes": 5000,
+      "sha256": "1f47cac174761e8a4a674eaf57db3a97c02a00d16ca629ccae8e8a4fdb507175"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fixed/build.log",
+      "bytes": 5000,
+      "sha256": "1f47cac174761e8a4a674eaf57db3a97c02a00d16ca629ccae8e8a4fdb507175"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fmt-all.log",
+      "bytes": 817,
+      "sha256": "a3c64adc493a218a5a8332dfc60b9e9fd0cf455d8215931a5888f9bc84a29c70"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/fmt-web.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/native-clippy.log",
+      "bytes": 385,
+      "sha256": "83bf4060f5287deed939a57c1d1495a14a620f519b9aec49f0eb14607026edff"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/native.log",
+      "bytes": 8644,
+      "sha256": "8bd9d9b3d34e7b0222fd39eaac65f9b436ac1da4c358283fd09a9ffa71ed801a"
+    },
+    {
+      "path": "results/serialize-nan-scrollback/wasm-clippy.log",
+      "bytes": 1124,
+      "sha256": "91d8f7f54ccbf30bef9e9c6b879a1270a1a8cba6af43182ff3b0b5457ef3697a"
+    }
+  ]
+}
