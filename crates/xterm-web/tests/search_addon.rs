@@ -30,6 +30,8 @@ mod ranges;
 mod raw_marker;
 #[path = "search_cases/refresh.rs"]
 mod refresh;
+#[path = "search_cases/refresh_undefined.rs"]
+mod refresh_undefined;
 #[path = "search_cases/scroll_options.rs"]
 mod scroll_options;
 #[path = "search_cases/tracker.rs"]

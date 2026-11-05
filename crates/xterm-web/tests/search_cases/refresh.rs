@@ -3,9 +3,9 @@ use super::*;
 use xterm_addons::search::{SearchDecorationOptionsHandle, SearchOptionsSource};
 
 type Refresh = dyn Fn() -> Result<SearchOptionsHandle, SearchAddonError>;
-struct Request {
-    options: SearchOptions,
-    refresh: Rc<Refresh>,
+pub(super) struct Request {
+    pub(super) options: SearchOptions,
+    pub(super) refresh: Rc<Refresh>,
 }
 impl SearchOptionsSource for Request {
     fn read(&self) -> Result<SearchOptions, SearchAddonError> {

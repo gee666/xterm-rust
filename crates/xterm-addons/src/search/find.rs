@@ -27,7 +27,7 @@ impl SearchAddon {
         no_scroll: impl FnOnce() -> Result<bool, SearchAddonError>,
     ) -> Result<bool, SearchAddonError> {
         self.find_term_with_scroll(
-            Rc::new(super::super::term::Utf16Term(term.to_vec())),
+            Rc::new(super::super::term::NativeTerm::Text(term.to_vec())),
             options,
             false,
             no_scroll,
@@ -48,7 +48,7 @@ impl SearchAddon {
         no_scroll: impl FnOnce() -> Result<bool, SearchAddonError>,
     ) -> Result<bool, SearchAddonError> {
         self.find_term_with_scroll(
-            Rc::new(super::super::term::Utf16Term(term.to_vec())),
+            Rc::new(super::super::term::NativeTerm::Text(term.to_vec())),
             options,
             true,
             no_scroll,

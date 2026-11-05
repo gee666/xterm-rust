@@ -278,7 +278,7 @@ impl SearchAddon {
                             .cached_term
                             .borrow()
                             .clone()
-                            .unwrap_or_else(|| Rc::new(super::term::Utf16Term(Vec::new())));
+                            .unwrap_or_else(|| Rc::new(super::term::NativeTerm::Undefined));
                         // Source clears the cache before spreading options. A
                         // getter may reenter or throw while copying the request.
                         addon.inner.cached_term.borrow_mut().take();

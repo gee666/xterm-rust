@@ -76,6 +76,15 @@ async fn null_matching_options_fail_after_selection_clear_and_keep_short_circuit
 }
 
 #[wasm_bindgen_test]
+async fn delayed_refresh_retains_undefined_after_cache_clear_and_copy_reentry() {
+    let body = format!(
+        "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),38);",
+        include_str!("fixtures/search-refresh-undefined.js")
+    );
+    run(&body, true, DEFAULTS).await;
+}
+
+#[wasm_bindgen_test]
 async fn empty_search_skips_matching_getters_and_retains_source_phases() {
     let body = format!(
         "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),54);",

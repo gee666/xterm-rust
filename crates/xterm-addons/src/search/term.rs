@@ -14,28 +14,43 @@ pub trait SearchTermSource {
         false
     }
     fn equals(&self, other: &dyn SearchTermSource) -> bool;
+    /// Matching text for a validated term. Invalid terms must not reach matching.
     fn text(&self) -> Result<Cow<'_, [u16]>, SearchAddonError>;
 }
 pub type SearchTermHandle = Rc<dyn SearchTermSource>;
 
-pub(super) struct Utf16Term(pub Vec<u16>);
-impl SearchTermSource for Utf16Term {
+/// Native text and the cache's absence sentinel have different identities even
+/// though neither absence nor an empty string is a valid matching term.
+pub(super) enum NativeTerm {
+    Text(Vec<u16>),
+    Undefined,
+}
+impl SearchTermSource for NativeTerm {
     fn as_any(&self) -> &dyn Any {
         self
     }
     fn is_valid(&self) -> Result<bool, SearchAddonError> {
-        Ok(!self.0.is_empty())
+        Ok(self.is_truthy())
     }
     fn is_truthy(&self) -> bool {
-        !self.0.is_empty()
+        matches!(self, Self::Text(text) if !text.is_empty())
+    }
+    fn is_undefined(&self) -> bool {
+        matches!(self, Self::Undefined)
     }
     fn equals(&self, other: &dyn SearchTermSource) -> bool {
-        other
-            .as_any()
-            .downcast_ref::<Self>()
-            .is_some_and(|other| self.0 == other.0)
+        match self {
+            Self::Undefined => other.is_undefined(),
+            Self::Text(text) => other
+                .as_any()
+                .downcast_ref::<Self>()
+                .is_some_and(|other| matches!(other, Self::Text(other) if text == other)),
+        }
     }
     fn text(&self) -> Result<Cow<'_, [u16]>, SearchAddonError> {
-        Ok(Cow::Borrowed(&self.0))
+        Ok(Cow::Borrowed(match self {
+            Self::Text(text) => text,
+            Self::Undefined => &[],
+        }))
     }
 }
