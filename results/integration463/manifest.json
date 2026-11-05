@@ -1,6 +1,6 @@
 {
   "base": "32bf954467fe3389e9cfe42fdd8c34d425975b62",
-  "assembly": "f675aa6b78cc8a45c586ab5bad462154a1f9359e",
+  "assembly": "bea9b4960fd1c1369450ccb14e1defa5a31a79a4",
   "batches": [
     {
       "task": 448,
@@ -164,6 +164,18 @@
         "24b3ded7197b849c8f3091348de8a0a93b696840"
       ],
       "paths": 50
+    },
+    {
+      "task": 457,
+      "chain": [
+        "1a08d4b480ea3c69e78ea453451342c79e4857ec",
+        "7e2eef2458cb633fe2ec5c29bf45c66e9de0f38c",
+        "3b8b54773e19d951e347da186e821a61afb2f31d",
+        "f9a29280bc5bdc42ab4ad9bd1ae055f0c3fdf711",
+        "20c110729f36646d520b478a6f5e1cab01daf83e",
+        "c75d716ad85b1ead498ff27a6246d18ff653a59b"
+      ],
+      "paths": 76
     }
   ],
   "sourcePins": [
@@ -921,33 +933,35 @@
       ]
     },
     {
-      "task": 453,
+      "task": 457,
       "path": "crates/xterm-addons/src/ligatures/font.rs",
-      "producerSha256": "d291e239da42ea682f5eab065c67867bab978bb7abc1edf0accf9a1c995d2375",
-      "expectedSha256": "5fa4135a33dee12779943e12cf06727dee866b51b96a17482c43d9cbbd84c8b9",
-      "headSha256": "5fa4135a33dee12779943e12cf06727dee866b51b96a17482c43d9cbbd84c8b9",
+      "producerSha256": "a2664949fac80a2fba0ae8ce8278e5f865a017c048806ba9f9823a84ba2243d4",
+      "expectedSha256": "f3121812da1836adf4112955b8ada68f904614cfdfdcc68c241bd95e7eadf2c9",
+      "headSha256": "f3121812da1836adf4112955b8ada68f904614cfdfdcc68c241bd95e7eadf2c9",
       "composed": true,
       "matches": true,
       "checkoutEolOnly": false,
       "owners": [
         442,
         447,
-        453
+        453,
+        457
       ]
     },
     {
-      "task": 453,
+      "task": 457,
       "path": "crates/xterm-addons/src/ligatures/font_bytes.rs",
-      "producerSha256": "291433363209e760f4cd6d5acefebe669fd41f84a08b69bad7b378b47168d378",
-      "expectedSha256": "81bf2e9f3479469a56b70761fb7d66c11efff908f1d6a6e4d04063dc6c2e752f",
-      "headSha256": "81bf2e9f3479469a56b70761fb7d66c11efff908f1d6a6e4d04063dc6c2e752f",
+      "producerSha256": "c3cbf60dc83ef61f2f82741be78ea9454124d7c0c5f9814dd8f6a43555688558",
+      "expectedSha256": "223f8154913d0868a0e4a488c0bd5642e55f72984560d8dd0843bef0b527b32b",
+      "headSha256": "223f8154913d0868a0e4a488c0bd5642e55f72984560d8dd0843bef0b527b32b",
       "composed": true,
       "matches": true,
       "checkoutEolOnly": false,
       "owners": [
         442,
         447,
-        453
+        453,
+        457
       ]
     },
     {
@@ -1521,6 +1535,185 @@
       "owners": [
         458
       ]
+    },
+    {
+      "task": 457,
+      "path": "crates/xterm-addons/src/ligatures/font_cff_header.rs",
+      "producerSha256": "e96e9121d2671b5039246043be77d34a7eb67d3d7b5b7bf56ff9e17359cf8e79",
+      "expectedSha256": "e96e9121d2671b5039246043be77d34a7eb67d3d7b5b7bf56ff9e17359cf8e79",
+      "headSha256": "e96e9121d2671b5039246043be77d34a7eb67d3d7b5b7bf56ff9e17359cf8e79",
+      "composed": false,
+      "matches": true,
+      "checkoutEolOnly": false,
+      "owners": [
+        457
+      ]
+    },
+    {
+      "task": 457,
+      "path": "crates/xterm-addons/tests/fixtures/font-cff-header.json",
+      "producerSha256": "f25e6c8478cea00a82e274c626443a68cbd3a69033683c3380ede6c7833098a2",
+      "expectedSha256": "f25e6c8478cea00a82e274c626443a68cbd3a69033683c3380ede6c7833098a2",
+      "headSha256": "f25e6c8478cea00a82e274c626443a68cbd3a69033683c3380ede6c7833098a2",
+      "composed": false,
+      "matches": true,
+      "checkoutEolOnly": false,
+      "owners": [
+        457
+      ]
+    },
+    {
+      "task": 457,
+      "path": "crates/xterm-addons/tests/font_cff_header.rs",
+      "producerSha256": "d7a1cc7b736b7eecb675b81cb7fd1bf72237c3a70db7a209dddbd40703c24a14",
+      "expectedSha256": "d7a1cc7b736b7eecb675b81cb7fd1bf72237c3a70db7a209dddbd40703c24a14",
+      "headSha256": "d7a1cc7b736b7eecb675b81cb7fd1bf72237c3a70db7a209dddbd40703c24a14",
+      "composed": false,
+      "matches": true,
+      "checkoutEolOnly": false,
+      "owners": [
+        457
+      ]
+    },
+    {
+      "task": 457,
+      "path": "crates/xterm-addons/tests/support/font_cff_header_assertions.rs",
+      "producerSha256": "685ae543158b37f837fece48add2c0b4be420d32a6d5200abf4933f26923f9d6",
+      "expectedSha256": "685ae543158b37f837fece48add2c0b4be420d32a6d5200abf4933f26923f9d6",
+      "headSha256": "685ae543158b37f837fece48add2c0b4be420d32a6d5200abf4933f26923f9d6",
+      "composed": false,
+      "matches": true,
+      "checkoutEolOnly": false,
+      "owners": [
+        457
+      ]
+    },
+    {
+      "task": 457,
+      "path": "crates/xterm-font-addons/tests/fixtures/font-cff-header-addon.json",
+      "producerSha256": "940396a0445ccbd9df2ca088bcbf8c33090c332264508cd5af2398fbf568ec6e",
+      "expectedSha256": "940396a0445ccbd9df2ca088bcbf8c33090c332264508cd5af2398fbf568ec6e",
+      "headSha256": "940396a0445ccbd9df2ca088bcbf8c33090c332264508cd5af2398fbf568ec6e",
+      "composed": false,
+      "matches": true,
+      "checkoutEolOnly": false,
+      "owners": [
+        457
+      ]
+    },
+    {
+      "task": 457,
+      "path": "crates/xterm-font-addons/tests/font_cff_header_browser.rs",
+      "producerSha256": "755ce8b4bca1f9f9ff18d456e860b0a66a89908f8efa20e1076f745cbb70019c",
+      "expectedSha256": "755ce8b4bca1f9f9ff18d456e860b0a66a89908f8efa20e1076f745cbb70019c",
+      "headSha256": "755ce8b4bca1f9f9ff18d456e860b0a66a89908f8efa20e1076f745cbb70019c",
+      "composed": false,
+      "matches": true,
+      "checkoutEolOnly": false,
+      "owners": [
+        457
+      ]
+    },
+    {
+      "task": 457,
+      "path": "crates/xterm-font-addons/tests/support/font_cff_header_addon.mjs",
+      "producerSha256": "f1b9e14b2d58baf045762baaabd155777f15a24d5d6ae041060e86de08e2535a",
+      "expectedSha256": "f1b9e14b2d58baf045762baaabd155777f15a24d5d6ae041060e86de08e2535a",
+      "headSha256": "f1b9e14b2d58baf045762baaabd155777f15a24d5d6ae041060e86de08e2535a",
+      "composed": false,
+      "matches": true,
+      "checkoutEolOnly": false,
+      "owners": [
+        457
+      ]
+    },
+    {
+      "task": 457,
+      "path": "crates/xterm-font-addons/tests/support/font_cff_header_input.mjs",
+      "producerSha256": "e8f5ca2cb3b307a6d60d6b892441a0c505edd1ccc3412416f81e3ee9568ae0ce",
+      "expectedSha256": "e8f5ca2cb3b307a6d60d6b892441a0c505edd1ccc3412416f81e3ee9568ae0ce",
+      "headSha256": "e8f5ca2cb3b307a6d60d6b892441a0c505edd1ccc3412416f81e3ee9568ae0ce",
+      "composed": false,
+      "matches": true,
+      "checkoutEolOnly": false,
+      "owners": [
+        457
+      ]
+    },
+    {
+      "task": 457,
+      "path": "scripts/font-cff-header-addon-oracle.mjs",
+      "producerSha256": "b03abf1a0d9aad788d20403794f5574fc550f52f46406fb64839d8190978619f",
+      "expectedSha256": "b03abf1a0d9aad788d20403794f5574fc550f52f46406fb64839d8190978619f",
+      "headSha256": "b03abf1a0d9aad788d20403794f5574fc550f52f46406fb64839d8190978619f",
+      "composed": false,
+      "matches": true,
+      "checkoutEolOnly": false,
+      "owners": [
+        457
+      ]
+    },
+    {
+      "task": 457,
+      "path": "scripts/font-cff-header-oracle.mjs",
+      "producerSha256": "0f54868edd9bdfd1f77a6ad63c39ecc0a965c41b9a39041d9820d9476b95c239",
+      "expectedSha256": "0f54868edd9bdfd1f77a6ad63c39ecc0a965c41b9a39041d9820d9476b95c239",
+      "headSha256": "0f54868edd9bdfd1f77a6ad63c39ecc0a965c41b9a39041d9820d9476b95c239",
+      "composed": false,
+      "matches": true,
+      "checkoutEolOnly": false,
+      "owners": [
+        457
+      ]
+    },
+    {
+      "task": 457,
+      "path": "crates/xterm-addons/src/ligatures/font_hint_bytes.rs",
+      "producerSha256": "501068041c0641dcdec2d8d044a89d4eb81d7e404e059aa243458a1ec2f4734f",
+      "expectedSha256": "501068041c0641dcdec2d8d044a89d4eb81d7e404e059aa243458a1ec2f4734f",
+      "headSha256": "501068041c0641dcdec2d8d044a89d4eb81d7e404e059aa243458a1ec2f4734f",
+      "composed": false,
+      "matches": true,
+      "checkoutEolOnly": false,
+      "owners": [
+        457
+      ]
+    },
+    {
+      "task": 457,
+      "path": "crates/xterm-addons/src/ligatures/font_hint_deflate.rs",
+      "producerSha256": "2799d200f36c1dd4760eb7c0279edb08f13006b6f37fb5dc0ef7b8c524175280",
+      "expectedSha256": "2799d200f36c1dd4760eb7c0279edb08f13006b6f37fb5dc0ef7b8c524175280",
+      "headSha256": "2799d200f36c1dd4760eb7c0279edb08f13006b6f37fb5dc0ef7b8c524175280",
+      "composed": false,
+      "matches": true,
+      "checkoutEolOnly": false,
+      "owners": [
+        457
+      ]
+    },
+    {
+      "task": 457,
+      "path": "scripts/font-cff-header-browser-source.mjs",
+      "producerSha256": "35edd98e1246607057f362d85cffdf529fa93129a2c47cc4a6e9a22f08f8612e",
+      "expectedSha256": "35edd98e1246607057f362d85cffdf529fa93129a2c47cc4a6e9a22f08f8612e",
+      "headSha256": "35edd98e1246607057f362d85cffdf529fa93129a2c47cc4a6e9a22f08f8612e",
+      "composed": false,
+      "matches": true,
+      "checkoutEolOnly": false,
+      "owners": [
+        457
+      ]
+    },
+    {
+      "task": 463,
+      "path": "crates/xterm-addons/src/ligatures/font_error.rs",
+      "producerSha256": "7f1978bfa1577ae725eadb211eeee9029ddd5039012865ead6f0acc46ca3c136",
+      "expectedSha256": "7f1978bfa1577ae725eadb211eeee9029ddd5039012865ead6f0acc46ca3c136",
+      "headSha256": "7f1978bfa1577ae725eadb211eeee9029ddd5039012865ead6f0acc46ca3c136",
+      "composed": true,
+      "matches": true,
+      "checkoutEolOnly": false
     }
   ],
   "receiptPins": [
@@ -6199,6 +6392,528 @@
       "matches": true
     },
     {
+      "task": 457,
+      "path": "results/font-cff-header/addon-oracle.json",
+      "producerSha256": "e1fe7d8131dcde985372bd71a643c8c16a55284db204ca46a004ca3ab36538c5",
+      "expectedSha256": "e1fe7d8131dcde985372bd71a643c8c16a55284db204ca46a004ca3ab36538c5",
+      "headSha256": "e1fe7d8131dcde985372bd71a643c8c16a55284db204ca46a004ca3ab36538c5",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/addon-oracle.log",
+      "producerSha256": "40bf7581fee0d091a31cb2ed7fcaffd414bdf8caba6a2e69d509fcb62914a306",
+      "expectedSha256": "40bf7581fee0d091a31cb2ed7fcaffd414bdf8caba6a2e69d509fcb62914a306",
+      "headSha256": "40bf7581fee0d091a31cb2ed7fcaffd414bdf8caba6a2e69d509fcb62914a306",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/generate.log",
+      "producerSha256": "6328a480a512c16612efcc1dc3ea620ded21ec80f17a5badcb86bb1bb18d04a6",
+      "expectedSha256": "6328a480a512c16612efcc1dc3ea620ded21ec80f17a5badcb86bb1bb18d04a6",
+      "headSha256": "6328a480a512c16612efcc1dc3ea620ded21ec80f17a5badcb86bb1bb18d04a6",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/oracle.json",
+      "producerSha256": "feafa54b6ce911fb926355a112f88e3d7ec30dc97550374af53e0684da97d1a5",
+      "expectedSha256": "feafa54b6ce911fb926355a112f88e3d7ec30dc97550374af53e0684da97d1a5",
+      "headSha256": "feafa54b6ce911fb926355a112f88e3d7ec30dc97550374af53e0684da97d1a5",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/oracle.log",
+      "producerSha256": "9fbe11a8de1fb554aad52453cd67c3c85bb31ea039c586d134763b2469072136",
+      "expectedSha256": "9fbe11a8de1fb554aad52453cd67c3c85bb31ea039c586d134763b2469072136",
+      "headSha256": "9fbe11a8de1fb554aad52453cd67c3c85bb31ea039c586d134763b2469072136",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/clippy-native.log",
+      "producerSha256": "fdb61706d2bacf9e7ca4a7b64ec405a99940ffc8d07cbe49775a5a70da34e93f",
+      "expectedSha256": "fdb61706d2bacf9e7ca4a7b64ec405a99940ffc8d07cbe49775a5a70da34e93f",
+      "headSha256": "fdb61706d2bacf9e7ca4a7b64ec405a99940ffc8d07cbe49775a5a70da34e93f",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/clippy-wasm.log",
+      "producerSha256": "86a9500b7b505ba0fce68ab9a0d51a6a82f73259f933771ced9090deeae701c3",
+      "expectedSha256": "86a9500b7b505ba0fce68ab9a0d51a6a82f73259f933771ced9090deeae701c3",
+      "headSha256": "86a9500b7b505ba0fce68ab9a0d51a6a82f73259f933771ced9090deeae701c3",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/generate-prefix.log",
+      "producerSha256": "0159e7ff1755c3c9fd289a0c0afc16731a823bf6785eb4cf1db9ead3ac3f1f1e",
+      "expectedSha256": "0159e7ff1755c3c9fd289a0c0afc16731a823bf6785eb4cf1db9ead3ac3f1f1e",
+      "headSha256": "0159e7ff1755c3c9fd289a0c0afc16731a823bf6785eb4cf1db9ead3ac3f1f1e",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/native-initial.log",
+      "producerSha256": "e1c4e670a8839c23a45fb78bae79972f0ddb0a6889659e521b2fc8eb917b8ec1",
+      "expectedSha256": "e1c4e670a8839c23a45fb78bae79972f0ddb0a6889659e521b2fc8eb917b8ec1",
+      "headSha256": "e1c4e670a8839c23a45fb78bae79972f0ddb0a6889659e521b2fc8eb917b8ec1",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/native-prefix.log",
+      "producerSha256": "633cba020396ff47bf96adafacd6d93882fcf8a345be023a1859d8f20683d512",
+      "expectedSha256": "633cba020396ff47bf96adafacd6d93882fcf8a345be023a1859d8f20683d512",
+      "headSha256": "633cba020396ff47bf96adafacd6d93882fcf8a345be023a1859d8f20683d512",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/wasm-build.log",
+      "producerSha256": "4196f9ee1aacd32671326978631170e5f2ec2c561663d3c9135a9af8838f326a",
+      "expectedSha256": "4196f9ee1aacd32671326978631170e5f2ec2c561663d3c9135a9af8838f326a",
+      "headSha256": "4196f9ee1aacd32671326978631170e5f2ec2c561663d3c9135a9af8838f326a",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/clippy-native-final.log",
+      "producerSha256": "a8c1d3e6c795bfaa9e76f347f53fba699e1b32c8ab1b3f819739320d6a043406",
+      "expectedSha256": "a8c1d3e6c795bfaa9e76f347f53fba699e1b32c8ab1b3f819739320d6a043406",
+      "headSha256": "a8c1d3e6c795bfaa9e76f347f53fba699e1b32c8ab1b3f819739320d6a043406",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/clippy-wasm-final.log",
+      "producerSha256": "e16bae1ce72970704646dd15a974c93f3127bea1f3be98058a6dd19efca70769",
+      "expectedSha256": "e16bae1ce72970704646dd15a974c93f3127bea1f3be98058a6dd19efca70769",
+      "headSha256": "e16bae1ce72970704646dd15a974c93f3127bea1f3be98058a6dd19efca70769",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/fmt-all.log",
+      "producerSha256": "a3c64adc493a218a5a8332dfc60b9e9fd0cf455d8215931a5888f9bc84a29c70",
+      "expectedSha256": "a3c64adc493a218a5a8332dfc60b9e9fd0cf455d8215931a5888f9bc84a29c70",
+      "headSha256": "a3c64adc493a218a5a8332dfc60b9e9fd0cf455d8215931a5888f9bc84a29c70",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/fmt-xterm-addons.log",
+      "producerSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expectedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "headSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/fmt-xterm-core.log",
+      "producerSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expectedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "headSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/fmt-xterm-font-addons.log",
+      "producerSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expectedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "headSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/fmt-xterm-wasm-support.log",
+      "producerSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expectedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "headSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/fmt-xterm-web.log",
+      "producerSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expectedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "headSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/merge453-commit.log",
+      "producerSha256": "cfc8527d16e6debf05b0e12b035d2dc25a4af4111a3896519cbaa03b083f9a6e",
+      "expectedSha256": "cfc8527d16e6debf05b0e12b035d2dc25a4af4111a3896519cbaa03b083f9a6e",
+      "headSha256": "cfc8527d16e6debf05b0e12b035d2dc25a4af4111a3896519cbaa03b083f9a6e",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/merge453.log",
+      "producerSha256": "ed8f42d9bf375accbe9605bcfe96d2a722902b39170027bc88e4c3d2255e640f",
+      "expectedSha256": "ed8f42d9bf375accbe9605bcfe96d2a722902b39170027bc88e4c3d2255e640f",
+      "headSha256": "ed8f42d9bf375accbe9605bcfe96d2a722902b39170027bc88e4c3d2255e640f",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/native-union.log",
+      "producerSha256": "f9a91ee4eefe6f1effc02d9fdf4b7f22f3095f658345a00a378dea6bf5ff1f1a",
+      "expectedSha256": "f9a91ee4eefe6f1effc02d9fdf4b7f22f3095f658345a00a378dea6bf5ff1f1a",
+      "headSha256": "f9a91ee4eefe6f1effc02d9fdf4b7f22f3095f658345a00a378dea6bf5ff1f1a",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/negative-strict-output.log",
+      "producerSha256": "45a8c22b8dcb0d814826183f4bd64cbb80ede69aa35fa2f5b2cea7dcf64d5eac",
+      "expectedSha256": "45a8c22b8dcb0d814826183f4bd64cbb80ede69aa35fa2f5b2cea7dcf64d5eac",
+      "headSha256": "45a8c22b8dcb0d814826183f4bd64cbb80ede69aa35fa2f5b2cea7dcf64d5eac",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/negative.json",
+      "producerSha256": "9f058e811fc19fa7c5d3d9715ee4a98407b4ea1ffd8d4cdb49e2e296130ff91f",
+      "expectedSha256": "9f058e811fc19fa7c5d3d9715ee4a98407b4ea1ffd8d4cdb49e2e296130ff91f",
+      "headSha256": "9f058e811fc19fa7c5d3d9715ee4a98407b4ea1ffd8d4cdb49e2e296130ff91f",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/negative.mjs",
+      "producerSha256": "9db7dcd233f9fc715a0edb4acfc73471d1890fd09c88feed1f252d4c9e76ac6e",
+      "expectedSha256": "9db7dcd233f9fc715a0edb4acfc73471d1890fd09c88feed1f252d4c9e76ac6e",
+      "headSha256": "9db7dcd233f9fc715a0edb4acfc73471d1890fd09c88feed1f252d4c9e76ac6e",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/preflight-artifacts.json",
+      "producerSha256": "9a2a05873d494847c63ed708786486a739cacecbb726e030be2f8a64003e8e98",
+      "expectedSha256": "9a2a05873d494847c63ed708786486a739cacecbb726e030be2f8a64003e8e98",
+      "headSha256": "9a2a05873d494847c63ed708786486a739cacecbb726e030be2f8a64003e8e98",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/producer-hashes.json",
+      "producerSha256": "c4b87f3326a151b372bf603fb312040c22a11c095a64d5af342af4f387ef193e",
+      "expectedSha256": "c4b87f3326a151b372bf603fb312040c22a11c095a64d5af342af4f387ef193e",
+      "headSha256": "c4b87f3326a151b372bf603fb312040c22a11c095a64d5af342af4f387ef193e",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/reference-integrity.json",
+      "producerSha256": "fec41aee7a55528f852f8c9b227122eb300589e6618c0a69a2007e614c66e9ad",
+      "expectedSha256": "fec41aee7a55528f852f8c9b227122eb300589e6618c0a69a2007e614c66e9ad",
+      "headSha256": "fec41aee7a55528f852f8c9b227122eb300589e6618c0a69a2007e614c66e9ad",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/restored-prefix.log",
+      "producerSha256": "c6209a8714581a3f1cb3161b366b1ed03edaa4b8bb77b64f5ad358f1c300f42a",
+      "expectedSha256": "c6209a8714581a3f1cb3161b366b1ed03edaa4b8bb77b64f5ad358f1c300f42a",
+      "headSha256": "c6209a8714581a3f1cb3161b366b1ed03edaa4b8bb77b64f5ad358f1c300f42a",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/source-review.md",
+      "producerSha256": "fc7ba3d8f361ae1bb7f48a5fa34ab033ff49bd633f739304df98ab2bedad642b",
+      "expectedSha256": "fc7ba3d8f361ae1bb7f48a5fa34ab033ff49bd633f739304df98ab2bedad642b",
+      "headSha256": "fc7ba3d8f361ae1bb7f48a5fa34ab033ff49bd633f739304df98ab2bedad642b",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/wasm-final.log",
+      "producerSha256": "9593a466466c7360d0bdd8f3fdab39377b72871162d352cca756dbfe4858e0ce",
+      "expectedSha256": "9593a466466c7360d0bdd8f3fdab39377b72871162d352cca756dbfe4858e0ce",
+      "headSha256": "9593a466466c7360d0bdd8f3fdab39377b72871162d352cca756dbfe4858e0ce",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/checks.json",
+      "producerSha256": "d015afd3970db5433b732b9eeebd5d2df062a3bc9b5e276c6ddd9d8ad0e8fb8b",
+      "expectedSha256": "d015afd3970db5433b732b9eeebd5d2df062a3bc9b5e276c6ddd9d8ad0e8fb8b",
+      "headSha256": "d015afd3970db5433b732b9eeebd5d2df062a3bc9b5e276c6ddd9d8ad0e8fb8b",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/final-artifacts.json",
+      "producerSha256": "af5fd85ecfb85e6641316c5d956c445fa66e67d4dbaebf456bc2f48dd0ba326e",
+      "expectedSha256": "af5fd85ecfb85e6641316c5d956c445fa66e67d4dbaebf456bc2f48dd0ba326e",
+      "headSha256": "af5fd85ecfb85e6641316c5d956c445fa66e67d4dbaebf456bc2f48dd0ba326e",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/hint-browser.json",
+      "producerSha256": "31888925b87acff5ff8031a66ca82517ef987009b7f29edadae5baedbfcc295f",
+      "expectedSha256": "31888925b87acff5ff8031a66ca82517ef987009b7f29edadae5baedbfcc295f",
+      "headSha256": "31888925b87acff5ff8031a66ca82517ef987009b7f29edadae5baedbfcc295f",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/hint-browser.log",
+      "producerSha256": "b50cc98bde9c9124b3f1a0d78c2f99a819317a24da8ab3673174af53ce4418eb",
+      "expectedSha256": "b50cc98bde9c9124b3f1a0d78c2f99a819317a24da8ab3673174af53ce4418eb",
+      "headSha256": "b50cc98bde9c9124b3f1a0d78c2f99a819317a24da8ab3673174af53ce4418eb",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/hint-commands.json",
+      "producerSha256": "fa575832445ca5537b339c53c6bfe773c2fdaa18dad1014ccbf7a7f6815cbd64",
+      "expectedSha256": "fa575832445ca5537b339c53c6bfe773c2fdaa18dad1014ccbf7a7f6815cbd64",
+      "headSha256": "fa575832445ca5537b339c53c6bfe773c2fdaa18dad1014ccbf7a7f6815cbd64",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/hint-font_hint_tables_browser-bindgen-version.log",
+      "producerSha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7",
+      "expectedSha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7",
+      "headSha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/hint-font_hint_tables_browser-bindgen.log",
+      "producerSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expectedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "headSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/hint-font_hint_tables_browser-build.log",
+      "producerSha256": "ba9aed3733543ffa4d1286763f72899c67c85ace26c931f4600438b5f043824e",
+      "expectedSha256": "ba9aed3733543ffa4d1286763f72899c67c85ace26c931f4600438b5f043824e",
+      "headSha256": "ba9aed3733543ffa4d1286763f72899c67c85ace26c931f4600438b5f043824e",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/hint-font_hint_tables_browser-chromium.log",
+      "producerSha256": "9fb9b510e3f89ebd8865ff8e2aff1b1f38896af56f3a51f2f5e5ac8bbeca58c0",
+      "expectedSha256": "9fb9b510e3f89ebd8865ff8e2aff1b1f38896af56f3a51f2f5e5ac8bbeca58c0",
+      "headSha256": "9fb9b510e3f89ebd8865ff8e2aff1b1f38896af56f3a51f2f5e5ac8bbeca58c0",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/hint-font_hint_tables_browser-firefox.log",
+      "producerSha256": "7593a3847f913357eb2c8b74feaecbec441574f296a3b24824990c4e5774c29c",
+      "expectedSha256": "7593a3847f913357eb2c8b74feaecbec441574f296a3b24824990c4e5774c29c",
+      "headSha256": "7593a3847f913357eb2c8b74feaecbec441574f296a3b24824990c4e5774c29c",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/hint-font_hint_tables_browser-webkit.log",
+      "producerSha256": "9bf7eb1120432061df95fd2a2812d68ece31b2c41138c9e4286d69b07aa0ccbf",
+      "expectedSha256": "9bf7eb1120432061df95fd2a2812d68ece31b2c41138c9e4286d69b07aa0ccbf",
+      "headSha256": "9bf7eb1120432061df95fd2a2812d68ece31b2c41138c9e4286d69b07aa0ccbf",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/reference-final.json",
+      "producerSha256": "fec41aee7a55528f852f8c9b227122eb300589e6618c0a69a2007e614c66e9ad",
+      "expectedSha256": "fec41aee7a55528f852f8c9b227122eb300589e6618c0a69a2007e614c66e9ad",
+      "headSha256": "fec41aee7a55528f852f8c9b227122eb300589e6618c0a69a2007e614c66e9ad",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/rust-browser.json",
+      "producerSha256": "83faf50455cb578777d8a2ab8a3fa68c7610439a7e1a12dab16ce7900fd80896",
+      "expectedSha256": "83faf50455cb578777d8a2ab8a3fa68c7610439a7e1a12dab16ce7900fd80896",
+      "headSha256": "83faf50455cb578777d8a2ab8a3fa68c7610439a7e1a12dab16ce7900fd80896",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/rust-browser.log",
+      "producerSha256": "b50cc98bde9c9124b3f1a0d78c2f99a819317a24da8ab3673174af53ce4418eb",
+      "expectedSha256": "b50cc98bde9c9124b3f1a0d78c2f99a819317a24da8ab3673174af53ce4418eb",
+      "headSha256": "b50cc98bde9c9124b3f1a0d78c2f99a819317a24da8ab3673174af53ce4418eb",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/rust-commands.json",
+      "producerSha256": "fc471802957aef91741df62c31b8b9bb99a8ced90e7b42cc7914ced26c898999",
+      "expectedSha256": "fc471802957aef91741df62c31b8b9bb99a8ced90e7b42cc7914ced26c898999",
+      "headSha256": "fc471802957aef91741df62c31b8b9bb99a8ced90e7b42cc7914ced26c898999",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/rust-font_cff_header_browser-bindgen-version.log",
+      "producerSha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7",
+      "expectedSha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7",
+      "headSha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/rust-font_cff_header_browser-bindgen.log",
+      "producerSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expectedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "headSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/rust-font_cff_header_browser-build.log",
+      "producerSha256": "f08f32eaf67f4d0aa011ed0e95673c6468d3bce7d94f8a361775b1f8e8ef5c9e",
+      "expectedSha256": "f08f32eaf67f4d0aa011ed0e95673c6468d3bce7d94f8a361775b1f8e8ef5c9e",
+      "headSha256": "f08f32eaf67f4d0aa011ed0e95673c6468d3bce7d94f8a361775b1f8e8ef5c9e",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/rust-font_cff_header_browser-chromium.log",
+      "producerSha256": "b9dd71c1fe30ab3fdb572a1ecfeca454b61fcd60dd50b120ee624865cf8055b2",
+      "expectedSha256": "b9dd71c1fe30ab3fdb572a1ecfeca454b61fcd60dd50b120ee624865cf8055b2",
+      "headSha256": "b9dd71c1fe30ab3fdb572a1ecfeca454b61fcd60dd50b120ee624865cf8055b2",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/rust-font_cff_header_browser-firefox.log",
+      "producerSha256": "9df49f3a462a25d7b4869f0d3a4d5a82a37128a1a6b0ec93f57224c7b0e2b7a2",
+      "expectedSha256": "9df49f3a462a25d7b4869f0d3a4d5a82a37128a1a6b0ec93f57224c7b0e2b7a2",
+      "headSha256": "9df49f3a462a25d7b4869f0d3a4d5a82a37128a1a6b0ec93f57224c7b0e2b7a2",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/rust-font_cff_header_browser-webkit.log",
+      "producerSha256": "cd3328ac6d9fc511188df1ea7df873e5bd1c6e7a7df08174e226f70f9534a4bd",
+      "expectedSha256": "cd3328ac6d9fc511188df1ea7df873e5bd1c6e7a7df08174e226f70f9534a4bd",
+      "headSha256": "cd3328ac6d9fc511188df1ea7df873e5bd1c6e7a7df08174e226f70f9534a4bd",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/source-browser.json",
+      "producerSha256": "bfe705ebed70e2c3ac97c2adaddfb7abee2b21a2713bfd0cfe9091bd1df8e9f1",
+      "expectedSha256": "bfe705ebed70e2c3ac97c2adaddfb7abee2b21a2713bfd0cfe9091bd1df8e9f1",
+      "headSha256": "bfe705ebed70e2c3ac97c2adaddfb7abee2b21a2713bfd0cfe9091bd1df8e9f1",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/source-browser.log",
+      "producerSha256": "a357fd2c918dea0c44407b2cd12a0648703c12a197ca399efe545511536bf66a",
+      "expectedSha256": "a357fd2c918dea0c44407b2cd12a0648703c12a197ca399efe545511536bf66a",
+      "headSha256": "a357fd2c918dea0c44407b2cd12a0648703c12a197ca399efe545511536bf66a",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/independent-review.md",
+      "producerSha256": "c377228f8144a70a5884cb534f260cd578e0174da9de7b26987a69e3fa77fd90",
+      "expectedSha256": "c377228f8144a70a5884cb534f260cd578e0174da9de7b26987a69e3fa77fd90",
+      "headSha256": "c377228f8144a70a5884cb534f260cd578e0174da9de7b26987a69e3fa77fd90",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/pickup.json",
+      "producerSha256": "c144ebc8420b0250dd653ade9cb3057e5e6dde988ec8f685d9312fe30330eea0",
+      "expectedSha256": "c144ebc8420b0250dd653ade9cb3057e5e6dde988ec8f685d9312fe30330eea0",
+      "headSha256": "c144ebc8420b0250dd653ade9cb3057e5e6dde988ec8f685d9312fe30330eea0",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/cleanup-preflight.json",
+      "producerSha256": "2b9ec906f14e30d908ec94cf950d923a8b3dee69c94e16aa17ffbdcf73420d11",
+      "expectedSha256": "2b9ec906f14e30d908ec94cf950d923a8b3dee69c94e16aa17ffbdcf73420d11",
+      "headSha256": "2b9ec906f14e30d908ec94cf950d923a8b3dee69c94e16aa17ffbdcf73420d11",
+      "composed": false,
+      "matches": true
+    },
+    {
+      "task": 457,
+      "path": "results/font-cff-header/cleanup-preflight.mjs",
+      "producerSha256": "8a97535029ed9f60a9a8dfd1086898d4964d085632561e5b01ffd69641a42ca9",
+      "expectedSha256": "8a97535029ed9f60a9a8dfd1086898d4964d085632561e5b01ffd69641a42ca9",
+      "headSha256": "8a97535029ed9f60a9a8dfd1086898d4964d085632561e5b01ffd69641a42ca9",
+      "composed": false,
+      "matches": true
+    },
+    {
       "path": "results/demos/build/latest.json",
       "preservedMainPointer": true,
       "matches": true
@@ -6207,16 +6922,16 @@
   "preservedBasePins": [
     {
       "path": "crates/xterm-addons/src/ligatures/font_bytes.rs",
-      "updated": 453,
-      "expectedSha256": "81bf2e9f3479469a56b70761fb7d66c11efff908f1d6a6e4d04063dc6c2e752f",
-      "headSha256": "81bf2e9f3479469a56b70761fb7d66c11efff908f1d6a6e4d04063dc6c2e752f",
+      "updated": 457,
+      "expectedSha256": "223f8154913d0868a0e4a488c0bd5642e55f72984560d8dd0843bef0b527b32b",
+      "headSha256": "223f8154913d0868a0e4a488c0bd5642e55f72984560d8dd0843bef0b527b32b",
       "matches": true
     },
     {
       "path": "crates/xterm-addons/src/ligatures/font_hint_bytes.rs",
-      "updated": null,
-      "expectedSha256": "8abe30b4b60acb728b196e3e76b8bb3e923950739271cc350fa624181f19c641",
-      "headSha256": "8abe30b4b60acb728b196e3e76b8bb3e923950739271cc350fa624181f19c641",
+      "updated": 457,
+      "expectedSha256": "501068041c0641dcdec2d8d044a89d4eb81d7e404e059aa243458a1ec2f4734f",
+      "headSha256": "501068041c0641dcdec2d8d044a89d4eb81d7e404e059aa243458a1ec2f4734f",
       "matches": true
     },
     {
@@ -6284,9 +6999,9 @@
     },
     {
       "path": "crates/xterm-addons/src/ligatures/font_hint_deflate.rs",
-      "updated": null,
-      "expectedSha256": "372ab8b2026490d6af6ee42e55c7744f5e097aee9e79383cdd9774f358c674e3",
-      "headSha256": "372ab8b2026490d6af6ee42e55c7744f5e097aee9e79383cdd9774f358c674e3",
+      "updated": 457,
+      "expectedSha256": "2799d200f36c1dd4760eb7c0279edb08f13006b6f37fb5dc0ef7b8c524175280",
+      "headSha256": "2799d200f36c1dd4760eb7c0279edb08f13006b6f37fb5dc0ef7b8c524175280",
       "matches": true
     },
     {
@@ -6900,16 +7615,16 @@
     },
     {
       "path": "crates/xterm-addons/src/ligatures/font.rs",
-      "updated": 453,
-      "expectedSha256": "5fa4135a33dee12779943e12cf06727dee866b51b96a17482c43d9cbbd84c8b9",
-      "headSha256": "5fa4135a33dee12779943e12cf06727dee866b51b96a17482c43d9cbbd84c8b9",
+      "updated": 457,
+      "expectedSha256": "f3121812da1836adf4112955b8ada68f904614cfdfdcc68c241bd95e7eadf2c9",
+      "headSha256": "f3121812da1836adf4112955b8ada68f904614cfdfdcc68c241bd95e7eadf2c9",
       "matches": true
     },
     {
       "path": "crates/xterm-addons/src/ligatures/font_bytes.rs",
-      "updated": 453,
-      "expectedSha256": "81bf2e9f3479469a56b70761fb7d66c11efff908f1d6a6e4d04063dc6c2e752f",
-      "headSha256": "81bf2e9f3479469a56b70761fb7d66c11efff908f1d6a6e4d04063dc6c2e752f",
+      "updated": 457,
+      "expectedSha256": "223f8154913d0868a0e4a488c0bd5642e55f72984560d8dd0843bef0b527b32b",
+      "headSha256": "223f8154913d0868a0e4a488c0bd5642e55f72984560d8dd0843bef0b527b32b",
       "matches": true
     },
     {
@@ -7075,9 +7790,9 @@
     },
     {
       "path": "crates/xterm-addons/src/ligatures/font.rs",
-      "updated": 453,
-      "expectedSha256": "5fa4135a33dee12779943e12cf06727dee866b51b96a17482c43d9cbbd84c8b9",
-      "headSha256": "5fa4135a33dee12779943e12cf06727dee866b51b96a17482c43d9cbbd84c8b9",
+      "updated": 457,
+      "expectedSha256": "f3121812da1836adf4112955b8ada68f904614cfdfdcc68c241bd95e7eadf2c9",
+      "headSha256": "f3121812da1836adf4112955b8ada68f904614cfdfdcc68c241bd95e7eadf2c9",
       "matches": true
     },
     {
@@ -7089,9 +7804,9 @@
     },
     {
       "path": "crates/xterm-addons/src/ligatures/font_bytes.rs",
-      "updated": 453,
-      "expectedSha256": "81bf2e9f3479469a56b70761fb7d66c11efff908f1d6a6e4d04063dc6c2e752f",
-      "headSha256": "81bf2e9f3479469a56b70761fb7d66c11efff908f1d6a6e4d04063dc6c2e752f",
+      "updated": 457,
+      "expectedSha256": "223f8154913d0868a0e4a488c0bd5642e55f72984560d8dd0843bef0b527b32b",
+      "headSha256": "223f8154913d0868a0e4a488c0bd5642e55f72984560d8dd0843bef0b527b32b",
       "matches": true
     },
     {
