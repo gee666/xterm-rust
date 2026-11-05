@@ -23,17 +23,15 @@ pub(super) fn validate(
             .ok_or(FontError::Bounds)?;
         // Source allocates a zeroed table, ignores output overflow and validates
         // the whole compressed stream before inspecting its first header byte.
-        // INDEX offsets can address any inflated byte, including backwards
-        // ranges. Unlike header-only validation this phase needs the source's
-        // whole zeroed destination. Propagate reservation failure, not a panic.
-        let size = record.offset32(12)?;
-        let mut bytes = Vec::new();
-        bytes.try_reserve_exact(size)?;
-        bytes.resize(size, 0);
-        font_deflate::prefix(reader.bytes(input, length)?, &mut bytes)?;
-        let reader = Reader::new(&bytes);
-        header(reader)?;
-        index::validate(reader, 0)
+        // Cache one DEFLATE window. Later INDEX reads can replay with bounded
+        // history to retain a requested range, without allocating origLength.
+        let limit = record.offset32(12)?;
+        let mut prefix = [0; font_deflate::WINDOW];
+        let size = limit.min(prefix.len());
+        let input = reader.bytes(input, length)?;
+        font_deflate::prefix(input, &mut prefix[..size])?;
+        header(Reader::new(&prefix[..size]))?;
+        index::compressed(input, limit, &prefix[..size])
     } else {
         header(reader.at(offset)?)?;
         index::validate(reader, offset)

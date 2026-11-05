@@ -22,6 +22,8 @@ pub fn construct(case: &Value, fixture: &Value) -> Vec<u8> {
             .iter()
             .map(|v| u8::try_from(v.as_u64().unwrap()).unwrap())
             .collect()
+    } else if let Some(length) = case["fillLength"].as_u64() {
+        vec![255; usize::try_from(length).unwrap()]
     } else {
         base[offset(at + 8)..offset(at + 8) + offset(at + 12)].to_vec()
     };

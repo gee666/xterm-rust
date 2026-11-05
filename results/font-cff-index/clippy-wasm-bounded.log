@@ -1,0 +1,39 @@
+    Checking xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\HippolytaCff\crates\xterm-addons)
+error[E0364]: `WINDOW` is private, and cannot be re-exported
+ --> crates\xterm-addons\src\ligatures\font_hint_deflate.rs:9:16
+  |
+9 | pub(super) use output::WINDOW;
+  |                ^^^^^^^^^^^^^^
+  |
+note: consider marking `WINDOW` as `pub` in the imported module
+ --> crates\xterm-addons\src\ligatures\font_hint_deflate.rs:9:16
+  |
+9 | pub(super) use output::WINDOW;
+  |                ^^^^^^^^^^^^^^
+
+error[E0603]: constant import `WINDOW` is private
+  --> crates\xterm-addons\src\ligatures\font_cff_header.rs:29:44
+   |
+29 |         let mut prefix = [0; font_deflate::WINDOW];
+   |                                            ^^^^^^ private constant import
+   |
+note: the constant import `WINDOW` is defined here...
+  --> crates\xterm-addons\src\ligatures\font_hint_deflate.rs:9:16
+   |
+9  | pub(super) use output::WINDOW;
+   |                ^^^^^^^^^^^^^^
+note: ...and refers to the constant `WINDOW` which is defined here
+  --> crates\xterm-addons\src\ligatures\font_deflate_output.rs:3:1
+   |
+3  | pub(super) const WINDOW: usize = 32_768;
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0599]: no method named `remaining` found for mutable reference `&mut impl Output` in the current scope
+  --> crates\xterm-addons\src\ligatures\font_hint_deflate.rs:96:43
+   |
+96 |         for index in 0..length.min(output.remaining()) {
+   |                                           ^^^^^^^^^ method not found in `&mut impl Output`
+
+Some errors have detailed explanations: E0364, E0599, E0603.
+For more information about an error, try `rustc --explain E0364`.
+error: could not compile `xterm-addons` (lib) due to 3 previous errors

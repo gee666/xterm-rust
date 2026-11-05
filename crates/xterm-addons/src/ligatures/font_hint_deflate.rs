@@ -4,6 +4,13 @@
 // This source-derived adaptation discards hints. A caller may retain only a
 // bounded metadata prefix, without allocating the source's whole output table.
 use super::FontError;
+#[path = "font_deflate_output.rs"]
+mod output;
+pub(super) use output::WINDOW;
+use output::{Output, Prefix, Range};
+#[cfg(test)]
+#[path = "font_deflate_output_tests.rs"]
+mod tests;
 
 const CODE_LENGTH_ORDER: [usize; 19] = [
     16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15,
@@ -62,7 +69,7 @@ impl Bits<'_> {
         self.index >= self.bytes.len()
             && (self.index - self.bytes.len()).saturating_mul(8) >= usize::from(self.bits)
     }
-    fn stored(&mut self, output: &mut Prefix<'_>) -> Result<(), FontError> {
+    fn stored(&mut self, output: &mut impl Output) -> Result<(), FontError> {
         // Preserve the actual source rewind, not canonical byte alignment.
         // In particular, an exact8-bit remainder stays prefetched and skipped.
         while self.bits > 8 {
@@ -92,32 +99,6 @@ impl Bits<'_> {
         self.index = self.index.checked_add(length).ok_or(FontError::Bounds)?;
         self.bits = 0;
         Ok(())
-    }
-}
-struct Prefix<'a> {
-    bytes: &'a mut [u8],
-    written: usize,
-}
-impl Prefix<'_> {
-    fn remaining(&self) -> usize {
-        self.bytes.len() - self.written
-    }
-    fn push(&mut self, value: u8) {
-        if let Some(slot) = self.bytes.get_mut(self.written) {
-            *slot = value;
-            self.written += 1;
-        }
-    }
-    fn copy(&mut self, count: usize, distance: usize) {
-        for _ in 0..count.min(self.remaining()) {
-            let value = self
-                .written
-                .checked_sub(distance)
-                .and_then(|index| self.bytes.get(index))
-                .copied()
-                .unwrap_or(0);
-            self.push(value);
-        }
     }
 }
 struct Tree {
@@ -235,7 +216,7 @@ fn data(
     input: &mut Bits<'_>,
     literals: &Tree,
     distances: &Tree,
-    output: &mut Prefix<'_>,
+    output: &mut impl Output,
 ) -> Result<(), FontError> {
     loop {
         let exhausted = input.exhausted();
@@ -275,6 +256,25 @@ pub(super) fn prefix(bytes: &[u8], prefix: &mut [u8]) -> Result<(), FontError> {
         bytes: prefix,
         written: 0,
     };
+    inflate(bytes, &mut output)
+}
+pub(super) fn range(
+    bytes: &[u8],
+    limit: usize,
+    start: usize,
+    result: &mut [u8],
+) -> Result<(), FontError> {
+    result.fill(0);
+    let mut output = Range {
+        bytes: result,
+        start,
+        limit,
+        written: 0,
+        history: [0; WINDOW],
+    };
+    inflate(bytes, &mut output)
+}
+fn inflate(bytes: &[u8], output: &mut impl Output) -> Result<(), FontError> {
     let mut input = Bits {
         bytes,
         index: 0,
@@ -292,11 +292,11 @@ pub(super) fn prefix(bytes: &[u8], prefix: &mut [u8]) -> Result<(), FontError> {
     loop {
         let final_block = input.bit()? != 0;
         match input.read(2)? {
-            0 => input.stored(&mut output)?,
-            1 => data(&mut input, &fixed_literals, &fixed_distances, &mut output)?,
+            0 => input.stored(output)?,
+            1 => data(&mut input, &fixed_literals, &fixed_distances, output)?,
             2 => {
                 dynamic(&mut input, &mut literals, &mut distances, &mut codes)?;
-                data(&mut input, &literals, &distances, &mut output)?;
+                data(&mut input, &literals, &distances, output)?;
             }
             _ => return Err(FontError::Compression),
         }

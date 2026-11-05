@@ -4,7 +4,7 @@ export function cffIndexCase(base,c) {
   const view=new DataView(base.buffer,base.byteOffset,base.byteLength);
   const at=Array.from({length:view.getUint16(4)},(_,i)=>12+i*16).find(at=>String.fromCharCode(...base.slice(at,at+4))==='CFF ');
   const original=base.slice(view.getUint32(at+8),view.getUint32(at+8)+view.getUint32(at+12));
-  let data=c.data?Uint8Array.from(c.data):original;
+  let data=c.data?Uint8Array.from(c.data):c.fillLength?new Uint8Array(c.fillLength).fill(255):original;
   for(const patch of c.patches??[])data.set(patch.bytes,patch.at);
   if(c.truncate!==undefined)data=data.slice(0,c.truncate);
   return {...c,data:[...data]};
@@ -36,6 +36,12 @@ export function cffIndexCases() {
       const data=[2,0,size,length>>>8,length&255,0,0,0,1];
       add({tag,woff,data});
     }
+  }
+  // Large compressible CFF2 tables force retained reads beyond the cached
+  //32KiB prefix. All terminate in a genuine initial INDEX offset-table bound.
+  for(const start of [32765,32768,40000,65520])for(const tag of ['CFF ','CFF2']) {
+    const length=start-255;
+    add({tag,woff:true,fillLength:start+6,patches:[{at:0,bytes:[2,0,255,length>>>8,length&255]},{at:start,bytes:[255,255,255,255,255]}]});
   }
   let seed=0x472cff01;
   for(let i=0;i<96;i++){seed=(Math.imul(seed,1664525)+1013904223)>>>0;add({woff:!!(seed&1),truncate:4+(seed%15345),seed});}
