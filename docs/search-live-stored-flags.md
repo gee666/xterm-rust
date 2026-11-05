@@ -30,7 +30,7 @@ Raw results, bounded command records, source/fixture/artifact hashes and concise
 
 ## Independent review
 
-Pending isolated review. No acceptance is claimed yet.
+Task436 was accepted at796b4601 against dcde3e9c. The isolated reviewer independently reran native46, scoped native warning-denied Clippy and formatting for every changed Rust file. It verified all65 then-pinned hashes, fixed/final/negative WASM compiler and binding artifacts, the original-suite distribution hashes and all776 reference-manifest entries. It inspected the retained shared-fixture, three-engine runtime, original E2E and negative-control receipts without rerunning browsers, per the resource grant. No source edits, scratch or concrete findings. The retained review transcription is added as a66th pin after review. Cleanup of the owned verification worktree follows preservation of these receipts.
 
 ## Reproduction
 
