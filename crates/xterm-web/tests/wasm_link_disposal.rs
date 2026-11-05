@@ -7,7 +7,9 @@ use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_test::*;
 use web_sys::{HtmlElement, MouseEvent};
 use xterm_web::links::{
-    browser_linkifier::{BrowserLink, BrowserLinkProvider, BrowserLinkifier, LinkReply, NativeBrowserLink},
+    browser_linkifier::{
+        BrowserLink, BrowserLinkProvider, BrowserLinkifier, LinkReply, NativeBrowserLink,
+    },
     Link, Position, Range, RangePosition,
 };
 wasm_bindgen_test_configure!(run_in_browser);

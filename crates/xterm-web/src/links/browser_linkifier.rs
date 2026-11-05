@@ -11,10 +11,10 @@ use std::{
 use wasm_bindgen::{JsCast, JsValue};
 use web_sys::{HtmlElement, MouseEvent};
 
-#[path = "browser_linkifier_events.rs"]
-mod events;
 #[path = "browser_linkifier_decorations.rs"]
 mod decorations;
+#[path = "browser_linkifier_events.rs"]
+mod events;
 pub use super::browser_payload::{BrowserLink, NativeBrowserLink};
 
 pub type LinkCallback = Rc<dyn Fn(&MouseEvent, &Link) -> Result<(), JsValue>>;
@@ -28,9 +28,12 @@ pub type UnderlineCallback = Rc<dyn Fn(bool, UnderlineEvent) -> Result<(), JsVal
 
 pub trait BrowserLinkProvider {
     fn provide_links(&self, y: usize, callback: LinkReply) -> Result<(), JsValue>;
-    /// Ignore replies after mouse-out/disposal before touching a raw reply's map.
+    /// Let the controller check mouse-out before touching a raw reply's map.
     fn provide_links_lazy(&self, y: usize, callback: LazyLinkReply) -> Result<(), JsValue> {
-        self.provide_links(y, Box::new(move |links| callback(Box::new(move || Ok(links)))))
+        self.provide_links(
+            y,
+            Box::new(move |links| callback(Box::new(move || Ok(links)))),
+        )
     }
     fn javascript_identity(&self) -> Option<&JsValue> {
         None
@@ -38,18 +41,38 @@ pub trait BrowserLinkProvider {
 }
 pub type BrowserProviders = Rc<LinkProviderService<dyn BrowserLinkProvider>>;
 
+pub(super) struct CachedBrowserLink {
+    payload: Rc<BrowserLink>,
+    decoration_values: RefCell<Option<(JsValue, JsValue)>>,
+    hovered: Cell<bool>,
+}
+impl CachedBrowserLink {
+    fn new(payload: BrowserLink) -> Self {
+        Self {
+            payload: Rc::new(payload),
+            decoration_values: RefCell::new(None),
+            hovered: Cell::new(false),
+        }
+    }
+}
+impl std::ops::Deref for CachedBrowserLink {
+    type Target = BrowserLink;
+    fn deref(&self) -> &Self::Target {
+        &self.payload
+    }
+}
+
 pub(super) struct State {
     element: HtmlElement,
     providers: BrowserProviders,
-    replies: RefCell<Rc<ProviderReplies<BrowserLink>>>,
-    hover: RefCell<HoverState<BrowserLink>>,
-    decoration_values: RefCell<(JsValue, JsValue)>,
+    replies: RefCell<Rc<ProviderReplies<CachedBrowserLink>>>,
+    hover: RefCell<HoverState<CachedBrowserLink>>,
     coordinates: FallibleMouseCoordinates,
     underline: UnderlineCallback,
     last_event: RefCell<Option<MouseEvent>>,
     last_cell: Cell<Option<Position>>,
     active_line: Cell<Option<usize>>,
-    mouse_out: Cell<bool>,
+    mouse_out: Rc<Cell<bool>>,
     resized: Cell<bool>,
     disposed: Cell<bool>,
     cols: Cell<usize>,
@@ -112,13 +135,12 @@ impl BrowserLinkifier {
             providers,
             replies: RefCell::new(Rc::new(ProviderReplies::default())),
             hover: RefCell::new(HoverState::new(cols, scroll_offset)),
-            decoration_values: RefCell::new((JsValue::TRUE, JsValue::TRUE)),
             coordinates,
             underline,
             last_event: RefCell::new(None),
             last_cell: Cell::new(None),
             active_line: Cell::new(None),
-            mouse_out: Cell::new(true),
+            mouse_out: Rc::new(Cell::new(true)),
             resized: Cell::new(false),
             disposed: Cell::new(false),
             cols: Cell::new(cols),
@@ -166,7 +188,11 @@ impl BrowserLinkifier {
         self.state.providers.register(provider)
     }
     pub fn current_link(&self) -> Option<Rc<BrowserLink>> {
-        self.state.hover.borrow().current().cloned()
+        self.state
+            .hover
+            .borrow()
+            .current()
+            .map(|link| link.payload.clone())
     }
     pub fn resize(&self, cols: usize, scroll_offset: usize) -> Result<(), JsValue> {
         self.state.cols.set(cols);
@@ -187,9 +213,16 @@ impl BrowserLinkifier {
     pub fn on_render(&self, start: f64, end: f64) -> Result<(), JsValue> {
         let current = self.current_link();
         let (_, offset) = self.state.hover.borrow().geometry();
-        let start = if start == 0.0 { 0.0 } else { start + 1.0 + offset as f64 };
+        let start = if start == 0.0 {
+            0.0
+        } else {
+            start + 1.0 + offset as f64
+        };
         let end = offset as f64 + 1.0 + end;
-        let invalidated = match current { Some(link) => link.invalidated(start, end)?, None => false }; 
+        let invalidated = match current {
+            Some(link) => link.invalidated(start, end)?,
+            None => false,
+        };
         if invalidated {
             self.state.clear_current()?;
             let event = self.state.last_event.borrow().clone();

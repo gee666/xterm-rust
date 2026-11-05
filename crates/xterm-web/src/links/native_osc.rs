@@ -1,7 +1,9 @@
 // Copyright (c) 2022-2026 The xterm.js authors. All rights reserved. MIT license.
 use super::{
     browser::{default_activate, is_http_url},
-    browser_linkifier::{BrowserLink, BrowserLinkProvider, LinkCallback, LinkReply, NativeBrowserLink},
+    browser_linkifier::{
+        BrowserLink, BrowserLinkProvider, LinkCallback, LinkReply, NativeBrowserLink,
+    },
     osc::{try_osc_links_with_policy, OscBuffer},
 };
 use crate::js_error::to_js_error;

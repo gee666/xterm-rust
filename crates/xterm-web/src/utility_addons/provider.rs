@@ -1,7 +1,9 @@
 // Copyright (c) 2019 The xterm.js authors. All rights reserved.
 // Licensed under MIT. Rust web-links addon to browser linkifier bridge.
 use crate::links::{
-    browser_linkifier::{BrowserLink, BrowserLinkProvider, BrowserProviders, LinkReply, NativeBrowserLink},
+    browser_linkifier::{
+        BrowserLink, BrowserLinkProvider, BrowserProviders, LinkReply, NativeBrowserLink,
+    },
     Link, Range, RangePosition,
 };
 use std::rc::Rc;

@@ -58,18 +58,17 @@ impl SelectionHost for WeakBrowserServices {
         let Some(link) = linkifier.and_then(|linkifier| linkifier.current_link()) else {
             return Ok(None);
         };
-        let link = link.snapshot()?;
-        let start_x = i64::try_from(link.range.start.x)
+        let range = link.range()?;
+        let start_x = i64::try_from(range.start.x)
             .map_err(|error| js_sys::Error::new(&error.to_string()))?
             - 1;
-        let start_y = i64::try_from(link.range.start.y)
+        let start_y = i64::try_from(range.start.y)
             .map_err(|error| js_sys::Error::new(&error.to_string()))?
             - 1;
-        let end_x = i64::try_from(link.range.end.x)
-            .map_err(|error| js_sys::Error::new(&error.to_string()))?;
-        let end_y = i64::try_from(link.range.end.y)
-            .map_err(|error| js_sys::Error::new(&error.to_string()))?
-            - 1;
+        let end_x =
+            i64::try_from(range.end.x).map_err(|error| js_sys::Error::new(&error.to_string()))?;
+        let end_y =
+            i64::try_from(range.end.y).map_err(|error| js_sys::Error::new(&error.to_string()))? - 1;
         let columns = services
             .native
             .cols()

@@ -146,7 +146,8 @@ async fn exported_terminal_writes_rust_osc8_renders_hovers_clicks_and_disposes()
             .unwrap()
             .current_link()
             .unwrap()
-            .snapshot().unwrap()
+            .snapshot()
+            .unwrap()
             .text,
         "https://example.com/rust"
             .encode_utf16()

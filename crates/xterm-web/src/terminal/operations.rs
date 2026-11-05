@@ -9,7 +9,10 @@ use js_sys::{Function, JsString};
 use std::rc::Rc;
 use wasm_bindgen::{prelude::*, JsCast};
 use web_sys::FocusOptions;
-use xterm_core::{input::write_buffer::{WriteCallback, WriteData, WriteError}, lifecycle::Disposable};
+use xterm_core::{
+    input::write_buffer::{WriteCallback, WriteData, WriteError},
+    lifecycle::Disposable,
+};
 
 fn data(value: JsValue) -> Result<WriteData, JsValue> {
     if value.is_string() {

@@ -32,7 +32,9 @@ fn probe(handler: JsValue, uri: String, actions: Array) -> Result<JsValue, JsVal
     let links = result.borrow_mut().take().unwrap();
     let event = web_sys::MouseEvent::new("mousemove")?;
     for link in &links {
-        let xterm_web::links::browser_linkifier::BrowserLink::Native(link) = link else { panic!("OSC produces a native link") };
+        let xterm_web::links::browser_linkifier::BrowserLink::Native(link) = link else {
+            panic!("OSC produces a native link")
+        };
         for action in actions.iter() {
             let callback = match action.as_string().unwrap().as_str() {
                 "activate" => Some(&link.activate),

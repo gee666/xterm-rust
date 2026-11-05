@@ -8,7 +8,9 @@ use wasm_bindgen_test::*;
 use web_sys::{HtmlElement, MouseEvent};
 use xterm_web::links::native_osc::{NativeOscLinkProvider, OscLinkHandler};
 use xterm_web::links::{
-    browser_linkifier::{BrowserLink, BrowserLinkProvider, BrowserLinkifier, LinkReply, NativeBrowserLink},
+    browser_linkifier::{
+        BrowserLink, BrowserLinkProvider, BrowserLinkifier, LinkReply, NativeBrowserLink,
+    },
     Link, Position, Range, RangePosition,
 };
 wasm_bindgen_test_configure!(run_in_browser);
@@ -296,7 +298,9 @@ fn throwing_leave_preserves_current_until_successful_callback_completion() {
     let marker: JsValue = js_sys::Object::new().into();
     let thrown = marker.clone();
     let mut provided = link(Rc::new(RefCell::new(Vec::new())));
-    let BrowserLink::Native(native) = &mut provided else { panic!("test constructs a native link") };
+    let BrowserLink::Native(native) = &mut provided else {
+        panic!("test constructs a native link")
+    };
     native.leave = Some(Rc::new(move |_, _| {
         assert!(weak
             .borrow()

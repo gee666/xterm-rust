@@ -1,5 +1,5 @@
 // Copyright (c) 2019-2026 The xterm.js authors. All rights reserved. MIT license.
-use super::{BrowserLink, State};
+use super::{BrowserLink, CachedBrowserLink, State};
 use crate::links::{Position, ProviderRequest};
 use js_sys::Set;
 use std::rc::Rc;
@@ -9,21 +9,34 @@ use web_sys::{Element, Event, MouseEvent};
 impl State {
     pub(super) fn mouse_move(self: &Rc<Self>, event: MouseEvent) -> Result<(), JsValue> {
         *self.last_event.borrow_mut() = Some(event.clone());
-        let Some(position) = (self.coordinates)(&event)? else { return Ok(()) };
+        let Some(position) = (self.coordinates)(&event)? else {
+            return Ok(());
+        };
         self.mouse_out.set(false);
         for target in event.composed_path().iter() {
-            let Some(element) = target.dyn_ref::<Element>() else { continue };
-            if element.class_list().contains("xterm") { break; }
-            if element.class_list().contains("xterm-hover") { return Ok(()); }
+            let Some(element) = target.dyn_ref::<Element>() else {
+                continue;
+            };
+            if element.class_list().contains("xterm") {
+                break;
+            }
+            if element.class_list().contains("xterm-hover") {
+                return Ok(());
+            }
         }
-        if self.last_cell.get() == Some(position) { return Ok(()); }
+        if self.last_cell.get() == Some(position) {
+            return Ok(());
+        }
         if self.active_line.get() != Some(position.y) || self.resized.get() {
             self.clear_current()?;
             self.ask(position, false)?;
             self.resized.set(false);
         } else {
             let current = self.hover.borrow().current().cloned();
-            let contains = match current { Some(link) => link.contains(position, self.cols.get())?, None => false };
+            let contains = match current {
+                Some(link) => link.contains(position, self.cols.get())?,
+                None => false,
+            };
             if !contains {
                 self.clear_current()?;
                 self.ask(position, true)?;
@@ -34,17 +47,31 @@ impl State {
     }
     pub(super) fn mouse_up(&self, event: Event) -> Result<(), JsValue> {
         // Keep the source's no-current-link return before event/geometry reads.
-        if self.hover.borrow().current().is_none() { return Ok(()); }
-        let event = event.dyn_into::<MouseEvent>().map_err(|_| JsValue::from_str("mouseup was not a MouseEvent"))?;
-        let Some(position) = (self.coordinates)(&event)? else { return Ok(()) };
+        if self.hover.borrow().current().is_none() {
+            return Ok(());
+        }
+        let event = event
+            .dyn_into::<MouseEvent>()
+            .map_err(|_| JsValue::from_str("mouseup was not a MouseEvent"))?;
+        let Some(position) = (self.coordinates)(&event)? else {
+            return Ok(());
+        };
         let down = self.hover.borrow().mouse_down_link();
         if let Some(down) = down {
             // A geometry getter can reenter and clear the current link.
-            let current = self.hover.borrow().current().cloned().ok_or_else(|| js_sys::TypeError::new("Cannot read properties of undefined (reading 'link')"))?;
+            let current = self.hover.borrow().current().cloned().ok_or_else(|| {
+                js_sys::TypeError::new("Cannot read properties of undefined (reading 'link')")
+            })?;
             if down.equals(&current)? {
-                let current = self.hover.borrow().current().cloned().ok_or_else(|| js_sys::TypeError::new("Cannot read properties of undefined (reading 'link')"))?;
+                let current = self.hover.borrow().current().cloned().ok_or_else(|| {
+                    js_sys::TypeError::new("Cannot read properties of undefined (reading 'link')")
+                })?;
                 if current.contains(position, self.cols.get())? {
-                    let current = self.hover.borrow().current().cloned().ok_or_else(|| js_sys::TypeError::new("Cannot read properties of undefined (reading 'link')"))?;
+                    let current = self.hover.borrow().current().cloned().ok_or_else(|| {
+                        js_sys::TypeError::new(
+                            "Cannot read properties of undefined (reading 'link')",
+                        )
+                    })?;
                     current.invoke("activate", &event)?;
                 }
             }
@@ -54,11 +81,18 @@ impl State {
     pub(super) fn clear_current(&self) -> Result<(), JsValue> {
         let current = self.hover.borrow().current().cloned();
         let event = self.last_event.borrow().clone();
-        let (Some(link), Some(event)) = (current, event) else { return Ok(()) };
-        self.hover.borrow_mut().begin_leave();
-        if self.decoration_values.borrow().0.is_truthy() { self.fire_underline(&link, false)?; }
-        if self.current_pointer()? {
-            self.element.class_list().remove_1("xterm-cursor-pointer")?;
+        let (Some(link), Some(event)) = (current, event) else {
+            return Ok(());
+        };
+        let values = link.decoration_values.borrow().clone();
+        if let Some(values) = values {
+            link.hovered.set(false);
+            if values.0.is_truthy() {
+                self.fire_underline(&link, false)?;
+            }
+            if self.current_pointer()? {
+                self.element.class_list().remove_1("xterm-cursor-pointer")?;
+            }
         }
         link.invoke("leave", &event)?;
         self.hover.borrow_mut().clear_current();
@@ -74,7 +108,9 @@ impl State {
                     let length = group.borrow().len();
                     for index in 0..length {
                         let link = group.borrow().get(index).cloned();
-                        if let Some(link) = link { link.dispose()?; }
+                        if let Some(link) = link {
+                            link.dispose()?;
+                        }
                     }
                 }
                 ordinal += 1;
@@ -87,53 +123,113 @@ impl State {
         while let Some(provider) = self.providers.get(index) {
             if use_cache {
                 let replies = self.replies.borrow().clone();
-                let selected = replies.try_cached_index(index, &request, self.providers.len(), |link| Self::probe(link, position, self.cols.get()))?;
-                if let Some(selected) = selected { self.select(selected)?; }
+                let selected =
+                    replies.try_cached_index(index, &request, self.providers.len(), |link| {
+                        Self::probe(link, position, self.cols.get())
+                    })?;
+                if let Some(selected) = selected {
+                    self.select(selected)?;
+                }
             } else {
                 let weak = Rc::downgrade(self);
+                let mouse_out = self.mouse_out.clone();
                 let request = request.clone();
-                provider.provide_links_lazy(position.y, Box::new(move |resolve| {
-                    let Some(state) = weak.upgrade().filter(|s| !s.disposed.get() && !s.mouse_out.get()) else { return Ok(()) };
-                    let data = resolve()?.map(|links| links.into_iter().map(Rc::new).collect());
-                    let replies = state.replies.borrow().clone();
-                    let selected = replies.try_receive_unfiltered(index, data, &request, state.providers.len(), |link| Self::probe(link, request.position, state.cols.get()))?;
-                    if let Some(selected) = selected { state.select(selected)?; }
-                    // Selection callbacks can replace the active reply map.
-                    let replies = state.replies.borrow().clone();
-                    let occupied = Set::new(&JsValue::UNDEFINED);
-                    replies.try_filter_complete(state.providers.len(), |link| link.keep_nonintersecting(request.position.y, state.cols.get(), &occupied))?;
-                    Ok(())
-                }))?;
+                provider.provide_links_lazy(
+                    position.y,
+                    Box::new(move |resolve| {
+                        if mouse_out.get() {
+                            return Ok(());
+                        }
+                        // Disposal clears the last event, not the source's mouse-out
+                        // flag. A late raw reply still observes map and its errors.
+                        let data = resolve()?.map(|links| {
+                            links
+                                .into_iter()
+                                .map(|link| Rc::new(CachedBrowserLink::new(link)))
+                                .collect()
+                        });
+                        let Some(state) = weak.upgrade().filter(|s| !s.disposed.get()) else {
+                            return Ok(());
+                        };
+                        let replies = state.replies.borrow().clone();
+                        let selected = replies.try_receive_unfiltered(
+                            index,
+                            data,
+                            &request,
+                            state.providers.len(),
+                            |link| Self::probe(link, request.position, state.cols.get()),
+                        )?;
+                        if let Some(selected) = selected {
+                            state.select(selected)?;
+                        }
+                        // Selection callbacks can replace the active reply map.
+                        let replies = state.replies.borrow().clone();
+                        let occupied = Set::new(&JsValue::UNDEFINED);
+                        replies.try_filter_complete(state.providers.len(), |link| {
+                            link.keep_nonintersecting(
+                                request.position.y,
+                                state.cols.get(),
+                                &occupied,
+                            )
+                        })?;
+                        Ok(())
+                    }),
+                )?;
             }
             index += 1;
         }
         Ok(())
     }
-    fn probe(link: Option<&Rc<BrowserLink>>, position: Position, cols: usize) -> Result<bool, JsValue> {
-        link.ok_or_else(|| js_sys::TypeError::new("Cannot read properties of undefined (reading 'link')"))?.contains(position, cols)
+    fn probe(
+        link: Option<&Rc<CachedBrowserLink>>,
+        position: Position,
+        cols: usize,
+    ) -> Result<bool, JsValue> {
+        link.ok_or_else(|| {
+            js_sys::TypeError::new("Cannot read properties of undefined (reading 'link')")
+        })?
+        .contains(position, cols)
     }
-    fn select(self: &Rc<Self>, link: Rc<BrowserLink>) -> Result<(), JsValue> {
+    fn select(self: &Rc<Self>, link: Rc<CachedBrowserLink>) -> Result<(), JsValue> {
         let event = self.last_event.borrow().clone();
         let Some(event) = event else { return Ok(()) };
-        let Some(position) = (self.coordinates)(&event)? else { return Ok(()) };
+        let Some(position) = (self.coordinates)(&event)? else {
+            return Ok(());
+        };
         if link.contains(position, self.cols.get())? {
             // Assign current before invoking decorations getters, just as source.
-            self.hover.borrow_mut().begin_enter(link.clone(), Default::default());
+            self.hover
+                .borrow_mut()
+                .begin_enter(link.clone(), Default::default());
             let values = link.decorations()?;
-            self.hover.borrow_mut().update_decorations(super::super::Decorations { underline: values.0.is_truthy(), pointer_cursor: values.1.is_truthy() });
-            *self.decoration_values.borrow_mut() = values;
-            if self.decoration_values.borrow().0.is_truthy() { self.fire_underline(&link, true)?; }
-            if self.current_pointer()? { self.element.class_list().add_1("xterm-cursor-pointer")?; }
+            let underline = values.0.is_truthy();
+            *link.decoration_values.borrow_mut() = Some(values);
+            link.hovered.set(true);
+            if underline {
+                self.fire_underline(&link, true)?;
+            }
+            if self.current_pointer()? {
+                self.element.class_list().add_1("xterm-cursor-pointer")?;
+            }
             link.invoke("hover", &event)?;
             self.install_decorations(&link)?;
         }
         Ok(())
     }
     fn current_pointer(&self) -> Result<bool, JsValue> {
-        if self.hover.borrow().current().is_none() {
-            return Err(js_sys::TypeError::new("Cannot read properties of undefined (reading 'state')").into());
-        }
-        Ok(self.decoration_values.borrow().1.is_truthy())
+        let current = self.hover.borrow().current().cloned().ok_or_else(|| {
+            js_sys::TypeError::new("Cannot read properties of undefined (reading 'state')")
+        })?;
+        let values = current.decoration_values.borrow();
+        Ok(values
+            .as_ref()
+            .ok_or_else(|| {
+                js_sys::TypeError::new(
+                    "Cannot read properties of undefined (reading 'decorations')",
+                )
+            })?
+            .1
+            .is_truthy())
     }
     pub(super) fn fire_underline(&self, link: &BrowserLink, show: bool) -> Result<(), JsValue> {
         let (cols, offset) = self.hover.borrow().geometry();

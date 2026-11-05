@@ -58,9 +58,6 @@ impl<T> HoverState<T> {
     pub fn mouse_down_link(&self) -> Option<Rc<T>> {
         self.mouse_down.clone()
     }
-    pub fn is_hovered(&self) -> bool {
-        self.hovered
-    }
     pub fn geometry(&self) -> (usize, usize) {
         (self.cols, self.scroll_offset)
     }
@@ -70,12 +67,6 @@ impl<T> HoverState<T> {
         self.current = Some(link);
         self.decorations = decorations;
         self.hovered = true;
-    }
-    pub fn begin_leave(&mut self) {
-        self.hovered = false;
-    }
-    pub fn update_decorations(&mut self, decorations: Decorations) {
-        self.decorations = decorations;
     }
     /// A throwing leave callback keeps the current link, as upstream does.
     pub fn clear_current(&mut self) {
