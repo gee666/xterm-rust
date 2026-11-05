@@ -24,6 +24,19 @@ Use a private O: worktree and target with an explicit compiler grant. The source
 
 The runner selects all eight unchanged original InputHandler DECRQM tests. These retain the source's assertions and cover ordinary ANSI status, private set/reset, quirks and permanent-mode statuses. They are counted separately from the added differential corpus, not reported as eight new Rust tests.
 
+The unchanged DECRQM cases map to the existing Rust assertions in `crates/xterm-core/tests/terminal_modes.rs`:
+
+| Source test | Rust test |
+| --- | --- |
+| ANSI 2 | source_ansi_keyboard_action_permanently_reset |
+| ANSI 4 | source_ansi_insert_mode |
+| ANSI 12 | source_ansi_send_receive_permanently_set |
+| ANSI 20 | source_ansi_newline_mode |
+| ANSI unknown | source_ansi_unknown_mode |
+| DEC privates with set/reset semantic | source_dec_private_set_reset_semantics |
+| DEC privates quirks | source_dec_cursor_blink_quirk_gate |
+| DEC privates perma modes | source_dec_permanent_modes |
+
 The added corpus has 432 cases, replayed by one Rust test function:
 
 - ANSI 20 and DEC 12, each followed by ignored additional main parameters and then an independent mode query and printable suffix.
