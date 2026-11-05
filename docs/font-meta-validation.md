@@ -47,3 +47,9 @@ cargo fmt --all -- --check
 On Windows OS206, run `cargo fmt -p PACKAGE -- --check` once for each of xterm-core, xterm-addons, xterm-web, xterm-wasm-support and xterm-font-addons. Preserve the failed exact command separately. Shell assignments above use POSIX syntax; PowerShell uses `$env:`.
 
 New scratch was owned under `O:/xterm-rust-swarm-16/tmp/A407`, safely moved to shorter `O:/xterm-rust-swarm-16/tmp/A` before final checks. Explicit output and TEMP/TMP/TMPDIR remained in that owned O: tree. Browser runners close their servers and child browsers in finally. Compiled WASM/bindings and private Cargo outputs are disposable; source, regression cases and concise evidence are retained before cleanup. No native Linux/macOS run, final workspace release/quality union or full font equivalence is established here.
+
+## Canonical integration
+
+The unmodified canonical helper integrated accepted406,407 and408 source and their receipts into main `013bf319c86e1860b12d225b075362c46800d55d`, based on `3d755b9d`. It also retained the accepted glyph integration's receipt-only commits, without replaying its source. The14 reviewed407 source/test/fixture hashes remained unchanged after rebasing onto the newer render/search union. `rebase-identity.json` records that audit.
+
+`canonical-merge.log` and `canonical-summary.json` record173 passing default-feature native test functions across41 summaries, with zero failures or ignored tests. The gate built/tested the changed addons/font crates, checked affected native all-target dependents and the workspace, and checked applicable WASM libraries. It removed the private Cargo target afterward. These are not1830 test functions, a complete all-feature workspace matrix, or fresh original browser/demo/platform evidence. Full equivalence remains NOT PROVEN.
