@@ -55,6 +55,7 @@ pub use font_bytes::FontError;
 use font_bytes::FontTables;
 use font_cache::{Cache, Cached};
 pub use font_cache::{GlyphArray, LigatureData, LigatureResult, RangeArray};
+use font_cmap::Cmap;
 pub use font_tables::{Glyph, GlyphValue};
 use font_tables::{Gsub, Lookup};
 use font_tree::{Arena, TreeId};
@@ -70,7 +71,7 @@ struct Group {
     forward: bool,
 }
 pub struct Font {
-    cmap: font_cmap::Cmap,
+    cmap: Cmap,
     arena: Arena,
     groups: Vec<Group>,
     glyph_lookups: HashMap<Glyph, Vec<usize>>,
@@ -108,7 +109,7 @@ impl Font {
     /// during a warning callback. Return `Some` with the current whole buffer to
     /// refresh subsequent payload reads, or `None` to retain the prior snapshot.
     /// Already parsed metadata and directory descriptors are not reparsed.
-    /// An already inflated kern table is independent of external buffer writes.
+    /// Already inflated tables are independent of external buffer writes.
     /// Callback errors abort construction without inspecting refreshed bytes.
     pub fn load_buffer_with_refresh<E>(
         bytes: &[u8],
@@ -196,11 +197,7 @@ impl Font {
         Self::from_gsub(gsub, cmap, options).map_err(FontLoadError::Font)
     }
 
-    fn from_gsub(
-        gsub: Option<Gsub>,
-        cmap: font_cmap::Cmap,
-        options: FontOptions,
-    ) -> Result<Self, FontError> {
+    fn from_gsub(gsub: Option<Gsub>, cmap: Cmap, options: FontOptions) -> Result<Self, FontError> {
         let mut arena = Arena::default();
         let mut groups = Vec::new();
         if let Some(gsub) = gsub {

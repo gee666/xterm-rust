@@ -1,0 +1,34 @@
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\Cao442\crates\xterm-addons)
+warning: unused variable: `deflate`
+   --> crates\xterm-addons\src\ligatures\font_bytes.rs:330:17
+    |
+330 |             let deflate = input.get(2..).ok_or(FontError::Bounds)?;
+    |                 ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_deflate`
+    |
+    = note: `#[warn(unused_variables)]` on by default
+
+warning: `xterm-addons` (lib) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 2.63s
+     Running tests\font_color_constructor.rs (target\debug\deps\font_color_constructor-ab2ac81bb6bef0a2.exe)
+
+running 1 test
+test eager_color_tables_match_unchanged_source_reads_warnings_and_mutations ... FAILED
+
+failures:
+
+---- eager_color_tables_match_unchanged_source_reads_warnings_and_mutations stdout ----
+
+thread 'eager_color_tables_match_unchanged_source_reads_warnings_and_mutations' panicked at crates\xterm-addons\tests\support\font_color_assertions.rs:144:5:
+"CPAL early WOFF callback changes cmap cmap": expected None ["Only CPALv0 is currently fully supported."], got Some(Font(Compression)) ["Only CPALv0 is currently fully supported."]
+"CPAL early WOFF callback changes cmap checksum": expected None ["Only CPALv0 is currently fully supported."], got Some(Font(Compression)) ["Only CPALv0 is currently fully supported."]
+"COLR early WOFF callback changes cmap cmap": expected None ["Only COLRv0 is currently fully supported. A subset of color glyphs might be available in this font if provided in the v0 format."], got Some(Font(Compression)) ["Only COLRv0 is currently fully supported. A subset of color glyphs might be available in this font if provided in the v0 format."]
+"COLR early WOFF callback changes cmap checksum": expected None ["Only COLRv0 is currently fully supported. A subset of color glyphs might be available in this font if provided in the v0 format."], got Some(Font(Compression)) ["Only COLRv0 is currently fully supported. A subset of color glyphs might be available in this font if provided in the v0 format."]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    eager_color_tables_match_unchanged_source_reads_warnings_and_mutations
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.05s
+
+error: test failed, to rerun pass `-p xterm-addons --test font_color_constructor`

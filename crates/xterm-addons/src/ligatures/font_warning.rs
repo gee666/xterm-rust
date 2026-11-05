@@ -13,7 +13,9 @@ pub enum FontWarning {
     AvarMissingFvar,
     /// Unsupported major versions still parse after the diagnostic.
     AvarVersion { major: u16, minor: u16 },
+    /// Nonzero CPAL versions continue after the diagnostic.
     UnsupportedCpalVersion,
+    /// Nonzero COLR versions read only the version-zero record layout.
     UnsupportedColrVersion,
 }
 impl FontWarning {

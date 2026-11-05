@@ -52,7 +52,10 @@ fn mutate(bytes: &mut [u8], case: &Value) {
         bytes[record + field..record + field + 4].copy_from_slice(&0xfffffff0_u32.to_be_bytes());
     } else {
         let at = offset(bytes, record + field);
-        if action == "head" {
+        if action == "checksum" {
+            let last = at + offset(bytes, record + 8) - 1;
+            bytes[last] ^= 255;
+        } else if action == "head" {
             bytes[at + 12..at + 16].fill(0);
         } else {
             let at = at
@@ -112,14 +115,15 @@ pub fn assert_corpus() {
         let actual =
             Font::load_buffer_with_refresh(&bytes.clone(), FontOptions::default(), |diagnostic| {
                 warnings.push(diagnostic.message().to_string());
-                if case["mutation"].is_string() && !mutated {
+                let refresh = case["mutation"].is_string() && !mutated;
+                if refresh {
                     mutated = true;
                     mutate(&mut bytes, case);
                 }
                 if case["throws"].is_string() {
                     Err(())
                 } else {
-                    Ok(Some(bytes.clone()))
+                    Ok(refresh.then(|| bytes.clone()))
                 }
             })
             .err();

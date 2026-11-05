@@ -40,6 +40,7 @@ export function colorCases() {
     add(tag,'early callback invalidates later head',{version:1},{frontTags:[tag],mutation:'head',mutationTag:tag});
     add(tag,'early descriptor mutation does not redirect later head',{version:1},{frontTags:[tag],mutation:'headDescriptor',mutationTag:tag});
     add(tag,'earlier cmap remains parsed after mutation',{version:1},{mutation:'cmap',mutationTag:tag});
+    for(const mutation of ['cmap','checksum'])add(tag,`early WOFF callback changes cmap ${mutation}`,{version:1},{woff:true,frontTags:[tag],mutation,mutationTag:tag});
   }
   cases.push({name:'CPAL palette bounds precede negative color array',tag:'CPAL',data:[...colorPayload('CPAL',{palettes:2,colors:65535,length:12})]});
   for(const order of [['CPAL','COLR'],['COLR','CPAL']])cases.push({name:`warning order ${order.join('-')}`,extraTables:order.map(tag=>({tag,data:[...colorPayload(tag,{version:1})]}))});
@@ -61,7 +62,8 @@ export function mutateColor(bytes,change) {
     if(change.mutation==='descriptor'||change.mutation==='headDescriptor')v.setUint32(at+(woff?4:8),0xfffffff0);
     else {
       const offset=v.getUint32(at+(woff?4:8));
-      if(change.mutation==='payload')v.setUint16(offset+(target==='CPAL'?4:2),65535);
+      if(change.mutation==='checksum'){bytes[offset+v.getUint32(at+8)-1]^=255;}
+      else if(change.mutation==='payload')v.setUint16(offset+(target==='CPAL'?4:2),65535);
       else if(change.mutation==='repairCmap')v.setUint16(offset,0);
       else if(change.mutation==='head')v.setUint32(offset+12,0);
       else v.setUint16(offset,65535);

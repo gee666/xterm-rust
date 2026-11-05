@@ -106,7 +106,7 @@ pub struct DeferredTable<'a> {
     record: Reader<'a>,
     woff: bool,
 }
-impl<'a> DeferredTable<'a> {
+impl DeferredTable<'_> {
     pub fn offset(&self) -> Result<usize, FontError> {
         self.record.offset32(if self.woff { 4 } else { 8 })
     }
@@ -331,7 +331,10 @@ fn table_data<'a>(
         let compressed = record.offset32(8)?;
         if compressed < length {
             let input = reader.bytes(offset, compressed)?;
-            let inflated = miniz_oxide::inflate::decompress_to_vec_zlib_with_limit(input, length)
+            // opentype skips the two-byte zlib wrapper and ignores its Adler32
+            // trailer. Buffer aliases can change those bytes before this load.
+            let deflate = input.get(2..).ok_or(FontError::Bounds)?;
+            let inflated = miniz_oxide::inflate::decompress_to_vec_with_limit(deflate, length)
                 .map_err(|_| FontError::Compression)?;
             if inflated.len() != length {
                 return Err(FontError::Compression);
