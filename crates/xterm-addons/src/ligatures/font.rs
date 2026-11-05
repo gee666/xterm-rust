@@ -1,6 +1,8 @@
 // Copyright (c) 2018 The xterm.js authors. All rights reserved. MIT license.
 //! Contextual ligature lookup over raw font bytes. Full equivalence remains
 //! unproven until the source differential and browser integration gates pass.
+#[path = "font_avar.rs"]
+mod font_avar;
 #[path = "font_build.rs"]
 mod font_build;
 #[path = "font_build_helpers.rs"]
@@ -146,11 +148,41 @@ impl Font {
             .gsub
             .map(|table| font_gsub::parse(&table.load_from(current)?))
             .transpose()?;
-        if let Some(table) = tables.fvar {
-            font_fvar::validate(&table.load_from(current)?)?;
+        let axes = tables
+            .fvar
+            .map(|table| font_fvar::validate(&table.load_from(current)?))
+            .transpose()?;
+        if let Some(table) = tables.avar {
+            if axes.is_none() {
+                if let Some(bytes) =
+                    warning(FontWarning::AvarMissingFvar).map_err(FontLoadError::Warning)?
+                {
+                    refreshed = Some(bytes);
+                }
+            }
+            let loaded = table.load_from(refreshed.as_deref().unwrap_or(bytes))?;
+            let header = font_avar::Header::read(&loaded)?;
+            if let Some(diagnostic) = header.warning() {
+                let next = warning(diagnostic).map_err(FontLoadError::Warning)?;
+                // A compressed table owns an independent inflated buffer.
+                // A borrowed table reads callback mutations without reparsing
+                // the already consumed version or the copied descriptor.
+                if let Some(next) = next {
+                    if matches!(&loaded, std::borrow::Cow::Borrowed(_)) {
+                        header.finish(&table.load_from(&next)?, axes)?;
+                    } else {
+                        header.finish(&loaded, axes)?;
+                    }
+                    refreshed = Some(next);
+                } else {
+                    header.finish(&loaded, axes)?;
+                }
+            } else {
+                header.finish(&loaded, axes)?;
+            }
         }
         if let Some(table) = tables.meta {
-            font_metadata::meta(&table.load_from(current)?)?;
+            font_metadata::meta(&table.load_from(refreshed.as_deref().unwrap_or(bytes))?)?;
         }
         // FontImpl builds lookup trees only after opentype finishes all
         // constructor tables. A tree error must not hide a later meta error.

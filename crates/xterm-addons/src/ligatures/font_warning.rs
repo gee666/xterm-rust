@@ -9,6 +9,10 @@ pub enum FontWarning {
     MultipleKernSubtables,
     /// The parser warns and retains an otherwise unsupported ClassDef value.
     InvalidClassDefinition { offset: usize, format: u16 },
+    /// An avar table was supplied without the required parsed fvar axes.
+    AvarMissingFvar,
+    /// Unsupported major versions still parse after the diagnostic.
+    AvarVersion { major: u16, minor: u16 },
 }
 impl FontWarning {
     pub fn message(self) -> Cow<'static, str> {
@@ -17,6 +21,8 @@ impl FontWarning {
             Self::InvalidClassDefinition { offset, format } => format!(
                 "0x{offset:x}: This font file uses an invalid ClassDef format of {format}. It might be corrupted and should be reacquired if it doesn't display as intended."
             ).into(),
+            Self::AvarMissingFvar => "This font provides an avar table, but no fvar table, which is required for variable fonts.".into(),
+            Self::AvarVersion { major, minor } => format!("Unsupported avar table version {major}.{minor}").into(),
         }
     }
 }

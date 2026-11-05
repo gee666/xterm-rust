@@ -9,6 +9,7 @@ import {deflateSync} from 'node:zlib';
 import {mutationCases, mutationInput, mutate, bufferMutationScenarios} from '../crates/xterm-font-addons/tests/support/font_buffer_mutations.mjs';
 import {kernWarningScenarios} from '../crates/xterm-font-addons/tests/support/font_kern_warning_scenarios.mjs';
 import {svgLoadingScenario} from '../crates/xterm-font-addons/tests/support/font_svg_scenarios.mjs';
+import {avarAddonScenarios} from '../crates/xterm-font-addons/tests/support/font_avar_scenarios.mjs';
 import {fvarAddonScenarios} from '../crates/xterm-font-addons/tests/support/font_fvar_scenarios.mjs';
 import {metadataRejectionScenarios, withKern} from '../crates/xterm-font-addons/tests/support/font_metadata_scenarios.mjs';
 import { lifecycleScenarios, loadingScenarios } from '../crates/xterm-font-addons/tests/support/ligature_scenarios.mjs';
@@ -40,12 +41,13 @@ for (const [name, binding] of [['opentype.js', 'parse'], ['lru-cache', 'LRUCache
   await fs.writeFile(path.join(temporary, name + '.js'), `import {createRequire} from 'node:module'; const require=createRequire(${JSON.stringify(require.resolve(name))}); export const ${binding}=require(${JSON.stringify(name)}).${binding};\n`);
 }
 const { LigaturesAddon } = await import(pathToFileURL(path.join(temporary, 'LigaturesAddon.js')));
+const avar = process.argv.includes('--avar');
 const fvar = process.argv.includes('--fvar');
 const bufferMutations = process.argv.includes('--buffer-mutations');
 const svg = process.argv.includes('--svg');
 const metadata = process.argv.includes('--metadata');
 const kernWarnings = process.argv.includes('--kern-warnings');
-const bytes = new Uint8Array(await fs.readFile(path.join(root, 'crates/xterm-addons/tests/fixtures/ligature-fonts', metadata || kernWarnings || svg || fvar ? 'UbuntuMono-Regular.ttf' : 'FiraCode-Regular.otf')));
+const bytes = new Uint8Array(await fs.readFile(path.join(root, 'crates/xterm-addons/tests/fixtures/ligature-fonts', metadata || kernWarnings || svg || fvar || avar ? 'UbuntuMono-Regular.ttf' : 'FiraCode-Regular.otf')));
 const create = options => new LigaturesAddon(options);
 async function mutationResults() {
   const {loadBuffer} = await import(pathToFileURL(path.join(temporary, 'fontLigatures/index.js')));
@@ -62,10 +64,22 @@ async function mutationResults() {
   } finally {if (descriptor) Object.defineProperty(console, 'warn', descriptor); else delete console.warn;}
   return {constructors, addon: await bufferMutationScenarios(create, inputs)};
 }
-const result = fvar ? await fvarAddonScenarios(create, bytes, withKern) : bufferMutations ? await mutationResults() : svg ? await svgLoadingScenario(create, bytes) : kernWarnings ? await kernWarningScenarios(create, bytes) : metadata ? await metadataRejectionScenarios(create, bytes) : { lifecycle: lifecycleScenarios(create), loading: await loadingScenarios(create, bytes) };
+const result = avar ? await avarAddonScenarios(create, bytes, withKern) : fvar ? await fvarAddonScenarios(create, bytes, withKern) : bufferMutations ? await mutationResults() : svg ? await svgLoadingScenario(create, bytes) : kernWarnings ? await kernWarningScenarios(create, bytes) : metadata ? await metadataRejectionScenarios(create, bytes) : { lifecycle: lifecycleScenarios(create), loading: await loadingScenarios(create, bytes) };
 // Guard the dependency adapter: a broken OpenType import must not silently
 // turn every expected native result into an error/fallback trace.
-if (fvar) {
+if (avar) {
+  assert.deepEqual(result.rejected.ranges, [[0, 3]]);
+  assert.equal(result.cached.reads, 1);
+  assert.equal(result.accepted.refreshes, 1);
+  assert.deepEqual(result.accepted.ranges, []);
+  assert.equal(result.warned.refreshes, 2);
+  assert.equal(result.thrown.refreshes, 2);
+  assert.equal(result.afterThrown.refreshes, 2);
+  assert.equal(result.previousIdentity, true);
+  assert.equal(result.mutated.refreshes, 2);
+  assert.equal(result.descriptor.refreshes, 3);
+  assert.deepEqual(result.descriptor.ranges, []);
+} else if (fvar) {
   assert.deepEqual(result.rejected.ranges, [[0, 3]]);
   assert.equal(result.cached.reads, 1);
   assert.equal(result.accepted.refreshes, 1);
@@ -103,10 +117,10 @@ if (fvar) {
   assert.deepEqual(result.loading.foundTrace, [['register', 0], ['refresh', 0, 4]]);
 }
 const content = JSON.stringify(result, null, 2) + '\n';
-const fixture = path.join(root, `crates/xterm-font-addons/tests/fixtures/${fvar ? 'font-fvar-addon' : bufferMutations ? 'font-buffer-mutations' : svg ? 'font-svg-addon' : kernWarnings ? 'font-kern-warning-addon' : metadata ? 'font-metadata-addon' : 'ligature-addon'}.json`);
+const fixture = path.join(root, `crates/xterm-font-addons/tests/fixtures/${avar ? 'font-avar-addon' : fvar ? 'font-fvar-addon' : bufferMutations ? 'font-buffer-mutations' : svg ? 'font-svg-addon' : kernWarnings ? 'font-kern-warning-addon' : metadata ? 'font-metadata-addon' : 'ligature-addon'}.json`);
 if (process.argv.includes('--generate')) await fs.writeFile(fixture, content);
 else assert.equal(await fs.readFile(fixture, 'utf8'), content, 'Ligature addon source fixture drift');
 const directory = path.join(root, 'results/font-addons'); await fs.mkdir(directory, { recursive: true });
-const report = { node: process.version, scope: 'Source addon lifecycle/load boundary, not real Terminal renderer evidence', sourceHashes: hashes, ...(bufferMutations ? {dependencyHashes: Object.fromEntries(await Promise.all(['opentype.js', 'lru-cache'].map(async name => [name, hash(await fs.readFile(require.resolve(name)))])))} : {}), fixtureSha256: hash(content), fontSha256: hash(bytes), comparedOperationFields: fvar ? Object.keys(result).length : bufferMutations ? result.constructors.length + Object.keys(result.addon).length : metadata || kernWarnings || svg ? Object.values(result).reduce((sum, item) => sum + Object.keys(item).length, 0) : Object.keys(result.lifecycle).length + Object.keys(result.loading).length };
-await fs.writeFile(path.join(directory, fvar ? 'font-fvar-addon-oracle.json' : bufferMutations ? 'font-buffer-mutation-oracle.json' : svg ? 'font-svg-addon-oracle.json' : kernWarnings ? 'font-kern-warning-addon-oracle.json' : metadata ? 'font-metadata-addon-oracle.json' : 'ligature-addon-oracle.json'), JSON.stringify(report, null, 2) + '\n');
+const report = { node: process.version, scope: 'Source addon lifecycle/load boundary, not real Terminal renderer evidence', sourceHashes: hashes, ...(bufferMutations ? {dependencyHashes: Object.fromEntries(await Promise.all(['opentype.js', 'lru-cache'].map(async name => [name, hash(await fs.readFile(require.resolve(name)))])))} : {}), fixtureSha256: hash(content), fontSha256: hash(bytes), comparedOperationFields: avar || fvar ? Object.keys(result).length : bufferMutations ? result.constructors.length + Object.keys(result.addon).length : metadata || kernWarnings || svg ? Object.values(result).reduce((sum, item) => sum + Object.keys(item).length, 0) : Object.keys(result.lifecycle).length + Object.keys(result.loading).length };
+await fs.writeFile(path.join(directory, avar ? 'font-avar-addon-oracle.json' : fvar ? 'font-fvar-addon-oracle.json' : bufferMutations ? 'font-buffer-mutation-oracle.json' : svg ? 'font-svg-addon-oracle.json' : kernWarnings ? 'font-kern-warning-addon-oracle.json' : metadata ? 'font-metadata-addon-oracle.json' : 'ligature-addon-oracle.json'), JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify(report));

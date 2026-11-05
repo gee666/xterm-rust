@@ -4,14 +4,15 @@ use super::font_bytes::{FontError, Reader};
 
 const FVAR_VERSION: u32 = 0x0001_0000;
 
-pub fn validate(bytes: &[u8]) -> Result<(), FontError> {
+pub fn validate(bytes: &[u8]) -> Result<u16, FontError> {
     let reader = Reader::new(bytes);
     if reader.u32(0)? != FVAR_VERSION {
         return Err(FontError::Invalid("Unsupported fvar table version."));
     }
     let offset = usize::from(reader.u16(4)?);
     // countSizePairs and flags are skipped, not read or validated by the source.
-    let axis_count = usize::from(reader.u16(8)?);
+    let axes = reader.u16(8)?;
+    let axis_count = usize::from(axes);
     let axis_size = usize::from(reader.u16(10)?);
     let instance_count = usize::from(reader.u16(12)?);
     let instance_size = usize::from(reader.u16(14)?);
@@ -40,5 +41,5 @@ pub fn validate(bytes: &[u8]) -> Result<(), FontError> {
             reader.u16(postscript)?;
         }
     }
-    Ok(())
+    Ok(axes)
 }
