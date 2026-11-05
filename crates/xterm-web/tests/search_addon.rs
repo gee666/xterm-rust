@@ -22,6 +22,8 @@ mod clocks;
 mod decorations;
 #[path = "search_cases/empty.rs"]
 mod empty;
+#[path = "search_cases/engine_cache.rs"]
+mod engine_cache;
 #[path = "search_cases/engine_guard.rs"]
 mod engine_guard;
 #[path = "search_cases/engine_receiver.rs"]

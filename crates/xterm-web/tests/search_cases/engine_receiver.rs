@@ -23,8 +23,11 @@ impl SearchTermSource for RawTerm {
     fn is_truthy(&self) -> bool {
         true
     }
-    fn equals(&self, _: &dyn SearchTermSource) -> bool {
-        false
+    fn equals(&self, other: &dyn SearchTermSource) -> bool {
+        other
+            .as_any()
+            .downcast_ref::<Self>()
+            .is_some_and(|other| std::ptr::eq(self, other))
     }
     fn text(&self) -> Result<Cow<'_, [u16]>, SearchAddonError> {
         (self.text)()?;

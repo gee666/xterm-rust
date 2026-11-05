@@ -90,6 +90,9 @@ const DEFAULT_HIGHLIGHT_LIMIT: f64 = 1000.0;
 const REFRESH_DELAY_MS: u64 = 200;
 
 pub(super) struct Inner {
+    // Source updates the addon terminal before replacing its engine. Reentrant
+    // disposal may leave those receivers different, so neither derives from the other.
+    host: RefCell<Option<Rc<dyn SearchHost>>>,
     engine: RefCell<Option<Rc<EngineContext>>>,
     manager: RefCell<Option<Rc<DecorationManager>>>,
     cached_term: RefCell<Option<SearchTermHandle>>,
@@ -136,6 +139,7 @@ impl SearchAddon {
     pub fn with_limit(highlight_limit: Rc<dyn SearchHighlightLimit>) -> Self {
         Self {
             inner: Rc::new(Inner {
+                host: RefCell::new(None),
                 engine: RefCell::new(None),
                 manager: RefCell::new(None),
                 cached_term: RefCell::new(None),
@@ -151,14 +155,16 @@ impl SearchAddon {
         }
     }
     pub fn activate(&self, host: Rc<dyn SearchHost>) -> Result<(), SearchAddonError> {
+        *self.inner.host.borrow_mut() = Some(Rc::clone(&host));
+        let previous = self.inner.engine.borrow().clone();
+        if let Some(previous) = previous {
+            previous.dispose();
+        }
         let engine = EngineContext::new(Rc::clone(&host));
         if self.inner.disposed.get() {
             engine.dispose();
         }
-        let previous = self.inner.engine.replace(Some(engine));
-        if let Some(previous) = previous {
-            previous.dispose();
-        }
+        *self.inner.engine.borrow_mut() = Some(engine);
         *self.inner.manager.borrow_mut() = Some(Rc::new(DecorationManager::new(Rc::clone(&host))));
         let weak = Rc::downgrade(&self.inner);
         let listener = host.terminal().on_event().try_subscribe(move |event| {
@@ -211,7 +217,8 @@ impl SearchAddon {
             return Ok(());
         }
         Self::cancel(&self.inner.highlight_timeout);
-        if let Some(engine) = self.inner.engine.borrow().as_ref() {
+        let engine = self.inner.engine.borrow().clone();
+        if let Some(engine) = engine {
             engine.dispose();
         }
         let listeners = self.inner.listeners.take();
@@ -224,7 +231,11 @@ impl SearchAddon {
         self.clear_decorations(false)
     }
     fn host(&self) -> Result<Rc<dyn SearchHost>, SearchAddonError> {
-        Ok(Rc::clone(&self.engine()?.host))
+        self.inner
+            .host
+            .borrow()
+            .clone()
+            .ok_or(SearchAddonError::NotLoaded)
     }
     fn engine(&self) -> Result<Rc<EngineContext>, SearchAddonError> {
         self.inner
