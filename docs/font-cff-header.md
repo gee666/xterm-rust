@@ -16,7 +16,7 @@ The source-hashed corpus has520 constructor cases,66 accepted,446 ordinary error
 
 Native520 plus unchanged hint792, outline612 and color676 corpora pass four test functions. The old strict miniz output-size guard fails the retained short/overflow/missing-stored-payload cases; `negative.mjs` restores exact producer bytes in finally and the full520 corpus passes again. Strict scoped native and WASM Clippy pass. Both actual WASM test targets compile. Full workspace fmt hits Windows OS206; member checks are recorded separately. This is not a workspace, native Linux/macOS or full upstream suite pass.
 
-Final source and actual Rust Chromium/Firefox/WebKit execution is pending a resource grant. Earlier compiled targets and source Node results must not be called browser evidence. `results/font-cff-header/` separates these stages. The isolated review must remain pending until current browser receipts are present.
+Final source520 constructor cases and four actual-addon loads pass in Chromium148, Firefox150 and WebKit26.4. Current Rust passes two test functions per engine, including all520 constructors, independent JS/Rust byte equality and the same four actual-addon loads. The shared-inflater hint regression passes two functions per engine covering792 constructors, actual-addon loads and the separate safe termination guard. No test was skipped or filtered. `source-browser.json`, `rust-browser.json` and `hint-browser.json` pin their executed artifacts and retain per-engine logs. The source preflight found no defects; final acceptance review checks these new receipts. These scoped passes do not close342 or prove overall equivalence.
 
 ## Reproduction
 
