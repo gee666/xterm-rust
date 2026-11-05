@@ -33,7 +33,7 @@ The same `fixtures/search-empty-options.js` assertions run against unchanged sou
 | Fixed Rust WASM functions, three engines | 24 | 24 | 0 | 0 |
 | Shared empty-term cases inside fixed WASM functions | 162 | 162 | 0 | 0 |
 
-The last row is contained in the24-function count, not an additional162 test functions. The eight WASM functions per engine also retain the earlier81-case callable-argument fixture. Browser versions were Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4. Scoped native and WASM warning-denied Clippy and exact full workspace formatting passed.
+The last row is contained in the24-function count, not an additional162 test functions. The eight WASM functions per engine also retain the earlier81-case callable-argument fixture. Browser versions were Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4. Scoped native and WASM warning-denied Clippy and exact full workspace formatting passed. A later lightweight run of `node --test scripts/browser-artifact-server.test.mjs scripts/upstream-baseline.test.mjs` passed7/7 runner helper tests. It does not add terminal behavior coverage.
 
 The baseline uses unchanged producer files from main4a38b522 with only the new WASM regression fixture/test added. It fails the new function on the first poisoned matching getter, preserving the thrown `emptySearchGetterFailure` object. Eight functions were discovered, but the runtime abort prevents a summary. The other seven outcomes are unreported and are not counted as passes. Fixed production files were restored in a `finally` block before the passing run. The original source manifest verifies all776 entries both before and after the source run.
 
