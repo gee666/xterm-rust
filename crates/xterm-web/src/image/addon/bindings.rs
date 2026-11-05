@@ -38,6 +38,7 @@ impl ImageAddon {
             placeholder,
             storage_limit,
             sixel_size_limit,
+            kitty_size_limit,
         } = options::read(&options)?;
         let options = Rc::new(Cell::new(current));
         let placeholder_value = Rc::new(RefCell::new(placeholder));
@@ -47,6 +48,7 @@ impl ImageAddon {
             placeholder_value.clone(),
             storage_limit.clone(),
             sixel_size_limit.clone(),
+            kitty_size_limit.clone(),
         ))?;
         let added = Emitter::new();
         let event = callable(added.event(), empty);
@@ -60,6 +62,7 @@ impl ImageAddon {
                 placeholder: Rc::new(Cell::new(current.show_placeholder)),
                 placeholder_value,
                 sixel_size_limit,
+                kitty_size_limit,
                 terminal: RefCell::new(Weak::new()),
                 renderer: RefCell::new(None),
                 storage: RefCell::new(None),
@@ -93,8 +96,8 @@ impl ImageAddon {
     pub fn handler_inspection(&self) -> JsValue {
         self.handlers.clone()
     }
-    /// Live read-only options. Placeholder, storage and SIXEL size-limit values
-    /// retain JavaScript identity; other fields remain typed projections.
+    /// Live read-only options. Placeholder, storage, SIXEL and Kitty size-limit
+    /// values retain JavaScript identity; other fields remain typed projections.
     #[wasm_bindgen(getter, js_name = _opts)]
     pub fn option_inspection(&self) -> JsValue {
         self.options.clone()

@@ -63,6 +63,9 @@ impl State {
             self.cleanups.borrow_mut().push(token(protocol.register()?));
         }
         if self.options.get().kitty_support {
+            // Source first coerces this raw value in the enabled handler's
+            // constructor. Keep state borrows released across user conversion.
+            let size_limit = super::options::kitty_size_number(&self.kitty_size_limit)?;
             let options = self.options.get();
             let protocol = BrowserKittyProtocol::new(
                 terminal,
@@ -70,7 +73,7 @@ impl State {
                 storage,
                 KittyOptions {
                     pixel_limit: options.pixel_limit,
-                    size_limit: options.kitty_size_limit,
+                    size_limit,
                 },
             );
             self.add_handler(Protocol::Kitty(protocol.clone()))?;

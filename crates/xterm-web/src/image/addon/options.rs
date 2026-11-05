@@ -13,12 +13,16 @@ export function imageAddonOptions(options) {
   }, options);
 }
 export function imageOptionNumber(value) { return +value; }
+// Multiplication requests a number primitive and rejects mixed BigInt operands.
+export function imageKittySizeNumber(value) { return value * 1; }
 ")]
 extern "C" {
     #[wasm_bindgen(catch, js_name = imageAddonOptions)]
     fn clone_options(options: &JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch, js_name = imageOptionNumber)]
     fn number(value: &JsValue) -> Result<f64, JsValue>;
+    #[wasm_bindgen(catch, js_name = imageKittySizeNumber)]
+    pub(super) fn kitty_size_number(value: &JsValue) -> Result<f64, JsValue>;
 }
 pub(super) struct ConstructorOptions {
     pub current: ImageOptions,
@@ -26,6 +30,7 @@ pub(super) struct ConstructorOptions {
     pub placeholder: JsValue,
     pub storage_limit: JsValue,
     pub sixel_size_limit: JsValue,
+    pub kitty_size_limit: JsValue,
 }
 pub(super) fn read(options: &JsValue) -> Result<ConstructorOptions, JsValue> {
     // Keep source's two Object.assign passes contiguous. A failure in the
@@ -35,6 +40,7 @@ pub(super) fn read(options: &JsValue) -> Result<ConstructorOptions, JsValue> {
     Ok(ConstructorOptions {
         placeholder: js::get(&current, "showPlaceholder")?,
         sixel_size_limit: js::get(&current, "sixelSizeLimit")?,
+        kitty_size_limit: js::get(&current, "kittySizeLimit")?,
         current: typed(&current)?,
         defaults: typed(&defaults)?,
         storage_limit: js::get(&current, "storageLimit")?,
@@ -56,6 +62,6 @@ fn typed(options: &JsValue) -> Result<ImageOptions, JsValue> {
         iip_support: boolean("iipSupport")?,
         iip_size_limit: numeric("iipSizeLimit")?,
         kitty_support: boolean("kittySupport")?,
-        kitty_size_limit: numeric("kittySizeLimit")?,
+        kitty_size_limit: ImageOptions::default().kitty_size_limit,
     })
 }

@@ -1,6 +1,6 @@
 // Copyright (c) 2020 The xterm.js authors. All rights reserved. MIT license.
-//! Read-only diagnostics, not a writable JS option bag. Placeholder, storage
-//! and SIXEL size limits retain raw values; other options remain typed.
+//! Read-only diagnostics, not a writable JS option bag. Placeholder, storage,
+//! SIXEL and Kitty size limits retain raw values; other options remain typed.
 use std::{
     cell::{Cell, RefCell},
     rc::Rc,
@@ -20,6 +20,7 @@ pub struct ImageOptionsReader {
     placeholder: Rc<RefCell<JsValue>>,
     storage_limit: Rc<RefCell<JsValue>>,
     sixel_size_limit: JsValue,
+    kitty_size_limit: JsValue,
 }
 impl ImageOptionsReader {
     pub(super) fn new(
@@ -27,12 +28,14 @@ impl ImageOptionsReader {
         placeholder: Rc<RefCell<JsValue>>,
         storage_limit: Rc<RefCell<JsValue>>,
         sixel_size_limit: JsValue,
+        kitty_size_limit: JsValue,
     ) -> Self {
         Self {
             options,
             placeholder,
             storage_limit,
             sixel_size_limit,
+            kitty_size_limit,
         }
     }
 }
@@ -52,7 +55,7 @@ impl ImageOptionsReader {
             "iipSupport" => options.iip_support.into(),
             "iipSizeLimit" => options.iip_size_limit.into(),
             "kittySupport" => options.kitty_support.into(),
-            "kittySizeLimit" => options.kitty_size_limit.into(),
+            "kittySizeLimit" => self.kitty_size_limit.clone(),
             _ => JsValue::UNDEFINED,
         }
     }
