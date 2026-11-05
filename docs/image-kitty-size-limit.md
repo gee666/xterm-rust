@@ -10,6 +10,8 @@ A small JavaScript expression evaluates the source's encoded-limit arithmetic, i
 
 This does not complete source's writable private `_opts` ABI, other raw options, arbitrary numeric decoder settings, full core `_inputHandler` access, garbage-collection proof, original639-family assertions or img01..48. Invalid numeric decoder settings and source hangs retain their existing separate safety/compatibility obligations. They are not relabeled as equivalent by this boundary repair.
 
+Independent review accepted465 at `342ea3ef`. It checked the pinned inputs and original hashes and independently reran both native functions. It audited the retained browser matrices without launching builds or browsers. See `results/image-kitty-size-limit/review.md`.
+
 ## Verification
 
 The new six-function browser regression file covers20 raw constructor values, two copy identities, disabled activation, repeated enabled activation, six nonfinite or nonnumeric activation-only forms, exact conversion errors, prior IIP registration after failure, reset/dispose reentry and14 numeric forms through real streamed Kitty payloads and pixels. Existing42 addon functions remain unchanged.
