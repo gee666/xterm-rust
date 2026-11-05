@@ -1,0 +1,454 @@
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\AirlanggaModeQuery\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 6.78s
+     Running tests\mode_query_option.rs (target\debug\deps\mode_query_option-b4785de7f9b0a971.exe)
+
+running 1 test
+test decrqm_raw_option_getters_match_source_reentry_reply_and_error_phases ... FAILED
+
+failures:
+
+---- decrqm_raw_option_getters_match_source_reentry_reply_and_error_phases stdout ----
+
+thread 'decrqm_raw_option_getters_match_source_reentry_reply_and_error_phases' panicked at crates\xterm-core\tests\mode_query_option.rs:245:5:
+432 mismatching cases:
+case 0 convertEol alt=0 undefined inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 1 convertEol alt=0 undefined reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 2 convertEol alt=0 undefined alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 3 convertEol alt=0 undefined normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 4 convertEol alt=0 undefined resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 5 convertEol alt=0 undefined cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 6 convertEol alt=0 undefined modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 7 convertEol alt=0 undefined disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 8 convertEol alt=0 undefined error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 9 convertEol alt=0 undefined mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 10 convertEol alt=0 undefined reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 11 convertEol alt=0 undefined reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79"
+case 12 convertEol alt=0 null inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 13 convertEol alt=0 null reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 14 convertEol alt=0 null alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 15 convertEol alt=0 null normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 16 convertEol alt=0 null resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 17 convertEol alt=0 null cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 18 convertEol alt=0 null modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 19 convertEol alt=0 null disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 20 convertEol alt=0 null error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 21 convertEol alt=0 null mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 22 convertEol alt=0 null reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 23 convertEol alt=0 null reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79"
+case 24 convertEol alt=0 false inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 25 convertEol alt=0 false reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 26 convertEol alt=0 false alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 27 convertEol alt=0 false normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 28 convertEol alt=0 false resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 29 convertEol alt=0 false cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 30 convertEol alt=0 false modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 31 convertEol alt=0 false disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 32 convertEol alt=0 false error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 33 convertEol alt=0 false mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 34 convertEol alt=0 false reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 35 convertEol alt=0 false reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79"
+case 36 convertEol alt=0 true inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 37 convertEol alt=0 true reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 38 convertEol alt=0 true alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 39 convertEol alt=0 true normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 40 convertEol alt=0 true resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 41 convertEol alt=0 true cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 42 convertEol alt=0 true modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 43 convertEol alt=0 true disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 44 convertEol alt=0 true error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 45 convertEol alt=0 true mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 46 convertEol alt=0 true reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 47 convertEol alt=0 true reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79"
+case 48 convertEol alt=0 zero inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 49 convertEol alt=0 zero reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 50 convertEol alt=0 zero alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 51 convertEol alt=0 zero normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 52 convertEol alt=0 zero resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 53 convertEol alt=0 zero cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 54 convertEol alt=0 zero modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 55 convertEol alt=0 zero disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 56 convertEol alt=0 zero error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 57 convertEol alt=0 zero mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 58 convertEol alt=0 zero reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 59 convertEol alt=0 zero reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79"
+case 60 convertEol alt=0 nan inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 61 convertEol alt=0 nan reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 62 convertEol alt=0 nan alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 63 convertEol alt=0 nan normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 64 convertEol alt=0 nan resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 65 convertEol alt=0 nan cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 66 convertEol alt=0 nan modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 67 convertEol alt=0 nan disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 68 convertEol alt=0 nan error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 69 convertEol alt=0 nan mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 70 convertEol alt=0 nan reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 71 convertEol alt=0 nan reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79"
+case 72 convertEol alt=0 empty inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 73 convertEol alt=0 empty reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 74 convertEol alt=0 empty alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 75 convertEol alt=0 empty normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 76 convertEol alt=0 empty resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 77 convertEol alt=0 empty cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 78 convertEol alt=0 empty modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 79 convertEol alt=0 empty disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 80 convertEol alt=0 empty error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 81 convertEol alt=0 empty mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 82 convertEol alt=0 empty reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 83 convertEol alt=0 empty reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79"
+case 84 convertEol alt=0 text inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 85 convertEol alt=0 text reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 86 convertEol alt=0 text alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 87 convertEol alt=0 text normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 88 convertEol alt=0 text resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 89 convertEol alt=0 text cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 90 convertEol alt=0 text modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 91 convertEol alt=0 text disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 92 convertEol alt=0 text error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 93 convertEol alt=0 text mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 94 convertEol alt=0 text reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 95 convertEol alt=0 text reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79"
+case 96 convertEol alt=0 object inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 97 convertEol alt=0 object reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 98 convertEol alt=0 object alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 99 convertEol alt=0 object normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 100 convertEol alt=0 object resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 101 convertEol alt=0 object cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 102 convertEol alt=0 object modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 103 convertEol alt=0 object disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 104 convertEol alt=0 object error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 105 convertEol alt=0 object mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 106 convertEol alt=0 object reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 107 convertEol alt=0 object reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79"
+case 108 convertEol alt=1 undefined inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 109 convertEol alt=1 undefined reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 110 convertEol alt=1 undefined alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 111 convertEol alt=1 undefined normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 112 convertEol alt=1 undefined resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 113 convertEol alt=1 undefined cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 114 convertEol alt=1 undefined modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 115 convertEol alt=1 undefined disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 116 convertEol alt=1 undefined error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 117 convertEol alt=1 undefined mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 118 convertEol alt=1 undefined reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 119 convertEol alt=1 undefined reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79"
+case 120 convertEol alt=1 null inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 121 convertEol alt=1 null reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 122 convertEol alt=1 null alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 123 convertEol alt=1 null normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 124 convertEol alt=1 null resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 125 convertEol alt=1 null cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 126 convertEol alt=1 null modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 127 convertEol alt=1 null disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 128 convertEol alt=1 null error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 129 convertEol alt=1 null mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 130 convertEol alt=1 null reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 131 convertEol alt=1 null reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79"
+case 132 convertEol alt=1 false inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 133 convertEol alt=1 false reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 134 convertEol alt=1 false alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 135 convertEol alt=1 false normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 136 convertEol alt=1 false resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 137 convertEol alt=1 false cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 138 convertEol alt=1 false modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 139 convertEol alt=1 false disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 140 convertEol alt=1 false error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 141 convertEol alt=1 false mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 142 convertEol alt=1 false reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 143 convertEol alt=1 false reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79"
+case 144 convertEol alt=1 true inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 145 convertEol alt=1 true reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 146 convertEol alt=1 true alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 147 convertEol alt=1 true normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 148 convertEol alt=1 true resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 149 convertEol alt=1 true cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 150 convertEol alt=1 true modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 151 convertEol alt=1 true disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 152 convertEol alt=1 true error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 153 convertEol alt=1 true mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 154 convertEol alt=1 true reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 155 convertEol alt=1 true reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79"
+case 156 convertEol alt=1 zero inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 157 convertEol alt=1 zero reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 158 convertEol alt=1 zero alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 159 convertEol alt=1 zero normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 160 convertEol alt=1 zero resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 161 convertEol alt=1 zero cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 162 convertEol alt=1 zero modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 163 convertEol alt=1 zero disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 164 convertEol alt=1 zero error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 165 convertEol alt=1 zero mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 166 convertEol alt=1 zero reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 167 convertEol alt=1 zero reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79"
+case 168 convertEol alt=1 nan inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 169 convertEol alt=1 nan reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 170 convertEol alt=1 nan alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 171 convertEol alt=1 nan normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 172 convertEol alt=1 nan resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 173 convertEol alt=1 nan cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 174 convertEol alt=1 nan modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 175 convertEol alt=1 nan disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 176 convertEol alt=1 nan error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 177 convertEol alt=1 nan mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 178 convertEol alt=1 nan reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 179 convertEol alt=1 nan reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79"
+case 180 convertEol alt=1 empty inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 181 convertEol alt=1 empty reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 182 convertEol alt=1 empty alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 183 convertEol alt=1 empty normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 184 convertEol alt=1 empty resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 185 convertEol alt=1 empty cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 186 convertEol alt=1 empty modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 187 convertEol alt=1 empty disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 188 convertEol alt=1 empty error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 189 convertEol alt=1 empty mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 190 convertEol alt=1 empty reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 191 convertEol alt=1 empty reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,32,30,3b,32,24,79"
+case 192 convertEol alt=1 text inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 193 convertEol alt=1 text reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 194 convertEol alt=1 text alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 195 convertEol alt=1 text normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 196 convertEol alt=1 text resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 197 convertEol alt=1 text cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 198 convertEol alt=1 text modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 199 convertEol alt=1 text disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 200 convertEol alt=1 text error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 201 convertEol alt=1 text mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 202 convertEol alt=1 text reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 203 convertEol alt=1 text reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79"
+case 204 convertEol alt=1 object inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 205 convertEol alt=1 object reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 206 convertEol alt=1 object alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 207 convertEol alt=1 object normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 208 convertEol alt=1 object resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 209 convertEol alt=1 object cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 210 convertEol alt=1 object modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 211 convertEol alt=1 object disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 212 convertEol alt=1 object error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 213 convertEol alt=1 object mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 214 convertEol alt=1 object reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 215 convertEol alt=1 object reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,32,30,3b,31,24,79"
+case 216 cursorBlink alt=0 undefined inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 217 cursorBlink alt=0 undefined reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 218 cursorBlink alt=0 undefined alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 219 cursorBlink alt=0 undefined normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 220 cursorBlink alt=0 undefined resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 221 cursorBlink alt=0 undefined cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 222 cursorBlink alt=0 undefined modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 223 cursorBlink alt=0 undefined disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 224 cursorBlink alt=0 undefined error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 225 cursorBlink alt=0 undefined mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 226 cursorBlink alt=0 undefined reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 227 cursorBlink alt=0 undefined reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79"
+case 228 cursorBlink alt=0 null inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 229 cursorBlink alt=0 null reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 230 cursorBlink alt=0 null alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 231 cursorBlink alt=0 null normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 232 cursorBlink alt=0 null resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 233 cursorBlink alt=0 null cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 234 cursorBlink alt=0 null modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 235 cursorBlink alt=0 null disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 236 cursorBlink alt=0 null error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 237 cursorBlink alt=0 null mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 238 cursorBlink alt=0 null reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 239 cursorBlink alt=0 null reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79"
+case 240 cursorBlink alt=0 false inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 241 cursorBlink alt=0 false reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 242 cursorBlink alt=0 false alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 243 cursorBlink alt=0 false normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 244 cursorBlink alt=0 false resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 245 cursorBlink alt=0 false cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 246 cursorBlink alt=0 false modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 247 cursorBlink alt=0 false disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 248 cursorBlink alt=0 false error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 249 cursorBlink alt=0 false mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 250 cursorBlink alt=0 false reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 251 cursorBlink alt=0 false reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79"
+case 252 cursorBlink alt=0 true inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 253 cursorBlink alt=0 true reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 254 cursorBlink alt=0 true alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 255 cursorBlink alt=0 true normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 256 cursorBlink alt=0 true resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 257 cursorBlink alt=0 true cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 258 cursorBlink alt=0 true modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 259 cursorBlink alt=0 true disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 260 cursorBlink alt=0 true error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 261 cursorBlink alt=0 true mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 262 cursorBlink alt=0 true reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 263 cursorBlink alt=0 true reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79"
+case 264 cursorBlink alt=0 zero inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 265 cursorBlink alt=0 zero reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 266 cursorBlink alt=0 zero alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 267 cursorBlink alt=0 zero normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 268 cursorBlink alt=0 zero resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 269 cursorBlink alt=0 zero cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 270 cursorBlink alt=0 zero modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 271 cursorBlink alt=0 zero disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 272 cursorBlink alt=0 zero error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 273 cursorBlink alt=0 zero mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 274 cursorBlink alt=0 zero reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 275 cursorBlink alt=0 zero reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79"
+case 276 cursorBlink alt=0 nan inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 277 cursorBlink alt=0 nan reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 278 cursorBlink alt=0 nan alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 279 cursorBlink alt=0 nan normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 280 cursorBlink alt=0 nan resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 281 cursorBlink alt=0 nan cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 282 cursorBlink alt=0 nan modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 283 cursorBlink alt=0 nan disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 284 cursorBlink alt=0 nan error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 285 cursorBlink alt=0 nan mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 286 cursorBlink alt=0 nan reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 287 cursorBlink alt=0 nan reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79"
+case 288 cursorBlink alt=0 empty inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 289 cursorBlink alt=0 empty reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 290 cursorBlink alt=0 empty alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 291 cursorBlink alt=0 empty normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 292 cursorBlink alt=0 empty resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 293 cursorBlink alt=0 empty cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 294 cursorBlink alt=0 empty modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 295 cursorBlink alt=0 empty disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 296 cursorBlink alt=0 empty error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 297 cursorBlink alt=0 empty mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 298 cursorBlink alt=0 empty reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 299 cursorBlink alt=0 empty reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79"
+case 300 cursorBlink alt=0 text inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 301 cursorBlink alt=0 text reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 302 cursorBlink alt=0 text alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 303 cursorBlink alt=0 text normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 304 cursorBlink alt=0 text resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 305 cursorBlink alt=0 text cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 306 cursorBlink alt=0 text modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 307 cursorBlink alt=0 text disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 308 cursorBlink alt=0 text error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 309 cursorBlink alt=0 text mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 310 cursorBlink alt=0 text reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 311 cursorBlink alt=0 text reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79"
+case 312 cursorBlink alt=0 object inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 313 cursorBlink alt=0 object reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 314 cursorBlink alt=0 object alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 315 cursorBlink alt=0 object normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 316 cursorBlink alt=0 object resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 317 cursorBlink alt=0 object cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 318 cursorBlink alt=0 object modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 319 cursorBlink alt=0 object disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 320 cursorBlink alt=0 object error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 321 cursorBlink alt=0 object mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 322 cursorBlink alt=0 object reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 323 cursorBlink alt=0 object reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79"
+case 324 cursorBlink alt=1 undefined inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 325 cursorBlink alt=1 undefined reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 326 cursorBlink alt=1 undefined alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 327 cursorBlink alt=1 undefined normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 328 cursorBlink alt=1 undefined resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 329 cursorBlink alt=1 undefined cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 330 cursorBlink alt=1 undefined modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 331 cursorBlink alt=1 undefined disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 332 cursorBlink alt=1 undefined error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 333 cursorBlink alt=1 undefined mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 334 cursorBlink alt=1 undefined reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 335 cursorBlink alt=1 undefined reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79"
+case 336 cursorBlink alt=1 null inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 337 cursorBlink alt=1 null reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 338 cursorBlink alt=1 null alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 339 cursorBlink alt=1 null normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 340 cursorBlink alt=1 null resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 341 cursorBlink alt=1 null cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 342 cursorBlink alt=1 null modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 343 cursorBlink alt=1 null disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 344 cursorBlink alt=1 null error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 345 cursorBlink alt=1 null mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 346 cursorBlink alt=1 null reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 347 cursorBlink alt=1 null reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79"
+case 348 cursorBlink alt=1 false inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 349 cursorBlink alt=1 false reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 350 cursorBlink alt=1 false alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 351 cursorBlink alt=1 false normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 352 cursorBlink alt=1 false resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 353 cursorBlink alt=1 false cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 354 cursorBlink alt=1 false modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 355 cursorBlink alt=1 false disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 356 cursorBlink alt=1 false error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 357 cursorBlink alt=1 false mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 358 cursorBlink alt=1 false reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 359 cursorBlink alt=1 false reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79"
+case 360 cursorBlink alt=1 true inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 361 cursorBlink alt=1 true reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 362 cursorBlink alt=1 true alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 363 cursorBlink alt=1 true normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 364 cursorBlink alt=1 true resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 365 cursorBlink alt=1 true cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 366 cursorBlink alt=1 true modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 367 cursorBlink alt=1 true disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 368 cursorBlink alt=1 true error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 369 cursorBlink alt=1 true mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 370 cursorBlink alt=1 true reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 371 cursorBlink alt=1 true reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79"
+case 372 cursorBlink alt=1 zero inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 373 cursorBlink alt=1 zero reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 374 cursorBlink alt=1 zero alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 375 cursorBlink alt=1 zero normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 376 cursorBlink alt=1 zero resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 377 cursorBlink alt=1 zero cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 378 cursorBlink alt=1 zero modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 379 cursorBlink alt=1 zero disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 380 cursorBlink alt=1 zero error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 381 cursorBlink alt=1 zero mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 382 cursorBlink alt=1 zero reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 383 cursorBlink alt=1 zero reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79"
+case 384 cursorBlink alt=1 nan inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 385 cursorBlink alt=1 nan reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 386 cursorBlink alt=1 nan alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 387 cursorBlink alt=1 nan normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 388 cursorBlink alt=1 nan resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 389 cursorBlink alt=1 nan cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 390 cursorBlink alt=1 nan modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 391 cursorBlink alt=1 nan disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 392 cursorBlink alt=1 nan error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 393 cursorBlink alt=1 nan mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 394 cursorBlink alt=1 nan reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 395 cursorBlink alt=1 nan reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79"
+case 396 cursorBlink alt=1 empty inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 397 cursorBlink alt=1 empty reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 398 cursorBlink alt=1 empty alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 399 cursorBlink alt=1 empty normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 400 cursorBlink alt=1 empty resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 401 cursorBlink alt=1 empty cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 402 cursorBlink alt=1 empty modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 403 cursorBlink alt=1 empty disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 404 cursorBlink alt=1 empty error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 405 cursorBlink alt=1 empty mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 406 cursorBlink alt=1 empty reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 407 cursorBlink alt=1 empty reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,32,24,79"
+case 408 cursorBlink alt=1 text inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 409 cursorBlink alt=1 text reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 410 cursorBlink alt=1 text alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 411 cursorBlink alt=1 text normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 412 cursorBlink alt=1 text resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 413 cursorBlink alt=1 text cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 414 cursorBlink alt=1 text modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 415 cursorBlink alt=1 text disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 416 cursorBlink alt=1 text error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 417 cursorBlink alt=1 text mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 418 cursorBlink alt=1 text reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 419 cursorBlink alt=1 text reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79"
+case 420 cursorBlink alt=1 object inspect: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 421 cursorBlink alt=1 object reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 422 cursorBlink alt=1 object alt: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 423 cursorBlink alt=1 object normal: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="S0/D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 424 cursorBlink alt=1 object resize: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="Z7:5/D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R2:2"
+case 425 cursorBlink alt=1 object cursor: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,32,24,79/C/R0:2"
+case 426 cursorBlink alt=1 object modes: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/D1b,5b,3f,31,3b,31,24,79/C/R2:2"
+case 427 cursorBlink alt=1 object disable: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="C/R2:2"
+case 428 cursorBlink alt=1 object error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states
+case 429 cursorBlink alt=1 object mutate-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state
+case 430 cursorBlink alt=1 object reply-reset: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, final state, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79/S0/D1b,5b,3f,31,3b,32,24,79/C/R0:3"
+case 431 cursorBlink alt=1 object reply-error: result=Err(Option(Dispatch(Callback(Borrowed)))), callback states, ordered events actual="-" expected="D1b,5b,3f,31,32,3b,31,24,79"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    decrqm_raw_option_getters_match_source_reentry_reply_and_error_phases
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
+
+error: test failed, to rerun pass `-p xterm-core --test mode_query_option`

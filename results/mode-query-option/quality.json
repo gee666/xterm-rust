@@ -1,0 +1,412 @@
+{
+  "started": "2026-11-05T23:28:03.357Z",
+  "scope": "Native Windows and WASM compile/lint only. Browser and other native platforms unrun.",
+  "steps": [
+    {
+      "name": "initial-fixed",
+      "headroom": {
+        "availableRamBytes": 29505830912,
+        "availableDiskBytes": 2680168857600
+      },
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "test",
+        "--locked",
+        "-j2",
+        "-p",
+        "xterm-core",
+        "--test",
+        "mode_query_option"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 13923.2582,
+      "status": "passed"
+    },
+    {
+      "name": "old-production",
+      "headroom": {
+        "availableRamBytes": 29160468480,
+        "availableDiskBytes": 2683543117824
+      },
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "test",
+        "--locked",
+        "-j2",
+        "-p",
+        "xterm-core",
+        "--test",
+        "mode_query_option"
+      ],
+      "exitCode": 101,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 7245.931500000001,
+      "status": "failed"
+    },
+    {
+      "name": "restored-fixed",
+      "headroom": {
+        "availableRamBytes": 30078652416,
+        "availableDiskBytes": 2683406925824
+      },
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "test",
+        "--locked",
+        "-j2",
+        "-p",
+        "xterm-core",
+        "--test",
+        "mode_query_option"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 6289.551000000003,
+      "status": "passed"
+    },
+    {
+      "name": "native-workspace-tests",
+      "headroom": {
+        "availableRamBytes": 29871177728,
+        "availableDiskBytes": 2683283836928
+      },
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "test",
+        "--locked",
+        "-j2",
+        "--workspace",
+        "--all-targets",
+        "--all-features"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 372896.8925,
+      "status": "passed"
+    },
+    {
+      "name": "native-workspace-docs",
+      "headroom": {
+        "availableRamBytes": 31205019648,
+        "availableDiskBytes": 2682955096064
+      },
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "test",
+        "--locked",
+        "-j2",
+        "--workspace",
+        "--all-features",
+        "--doc"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1242.4394999999786,
+      "status": "passed"
+    },
+    {
+      "name": "native-workspace-clippy",
+      "headroom": {
+        "availableRamBytes": 31215095808,
+        "availableDiskBytes": 2682954305536
+      },
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "clippy",
+        "--locked",
+        "-j2",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 30181.41930000001,
+      "status": "passed"
+    },
+    {
+      "name": "wasm-workspace-check",
+      "headroom": {
+        "availableRamBytes": 31323418624,
+        "availableDiskBytes": 2682859896832
+      },
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "check",
+        "--locked",
+        "-j2",
+        "--workspace",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--all-features",
+        "--lib"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 30679.982099999965,
+      "status": "passed"
+    },
+    {
+      "name": "wasm-workspace-clippy",
+      "headroom": {
+        "availableRamBytes": 31418986496,
+        "availableDiskBytes": 2682826014720
+      },
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "clippy",
+        "--locked",
+        "-j2",
+        "--workspace",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--all-features",
+        "--lib",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 14636.595499999996,
+      "status": "passed"
+    },
+    {
+      "name": "exact-full-fmt",
+      "headroom": {
+        "availableRamBytes": 31611236352,
+        "availableDiskBytes": 2682809724928
+      },
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 124.23060000000987,
+      "status": "failed"
+    },
+    {
+      "name": "fmt-xterm-core",
+      "headroom": {
+        "availableRamBytes": 31717519360,
+        "availableDiskBytes": 2682809720832
+      },
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "fmt",
+        "-p",
+        "xterm-core",
+        "--",
+        "--check"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 915.725299999991,
+      "status": "passed"
+    },
+    {
+      "name": "fmt-xterm-addons",
+      "headroom": {
+        "availableRamBytes": 31604998144,
+        "availableDiskBytes": 2682809716736
+      },
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "fmt",
+        "-p",
+        "xterm-addons",
+        "--",
+        "--check"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 424.423700000043,
+      "status": "passed"
+    },
+    {
+      "name": "fmt-xterm-web",
+      "headroom": {
+        "availableRamBytes": 31731306496,
+        "availableDiskBytes": 2682809716736
+      },
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "fmt",
+        "-p",
+        "xterm-web",
+        "--",
+        "--check"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1783.903099999996,
+      "status": "passed"
+    },
+    {
+      "name": "fmt-xterm-font-addons",
+      "headroom": {
+        "availableRamBytes": 31823310848,
+        "availableDiskBytes": 2682809716736
+      },
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "fmt",
+        "-p",
+        "xterm-font-addons",
+        "--",
+        "--check"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 226.1895000000368,
+      "status": "passed"
+    },
+    {
+      "name": "fmt-xterm-wasm-support",
+      "headroom": {
+        "availableRamBytes": 31809843200,
+        "availableDiskBytes": 2682809716736
+      },
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "fmt",
+        "-p",
+        "xterm-wasm-support",
+        "--",
+        "--check"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 181.34740000002785,
+      "status": "passed"
+    }
+  ],
+  "sourceIdentity": {
+    "crates/xterm-core/src/terminal/mode_handlers.rs": "e13791c45ad6cf9b4161705a6b07b0235bc68f8fd79ab374d2e46a976d91a01c",
+    "crates/xterm-core/src/terminal/mode_query.rs": "dc27e55a89fa0cbef9f4b4de038db1838385316132136785d0ae591aa7ab5b7a",
+    "crates/xterm-core/tests/mode_query_option.rs": "973bbe9c245f588c8f3ecc29a35fa7378f16447ae088d4a8f0606ee7e0298f04",
+    "crates/xterm-core/tests/fixtures/mode-query-option.tsv": "0415dda2fec179b33c0b41c3bc282158d9900464692c9da0af4cbf3fa23f6771",
+    "Cargo.toml": "79a82e4044bf9c45040dbcb3fdd411c0789b5e6f9f8a8f5e22c43d73cb60424f",
+    "Cargo.lock": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    ".cargo/config.toml": "096a7c635c6976ce9add7f36059c0551935fd1655b208dee9691a352be3f0c5c"
+  },
+  "environment": {
+    "node": "v24.15.0",
+    "platform": "win32",
+    "arch": "x64",
+    "jobs": 2,
+    "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+    "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)\nbinary: rustc\ncommit-hash: 4eb161250e340c8f48f66e2b929ef4a5bed7c181\ncommit-date: 2025-03-15\nhost: x86_64-pc-windows-msvc\nrelease: 1.85.1\nLLVM version: 19.1.7",
+    "head": "3f5622770c3e4c949c8a6f5b324f3ea7e72e7962"
+  },
+  "negative": {
+    "baseline": "1106d480",
+    "files": [
+      {
+        "file": "crates/xterm-core/src/terminal/mode_handlers.rs",
+        "fixedSha256": "e13791c45ad6cf9b4161705a6b07b0235bc68f8fd79ab374d2e46a976d91a01c",
+        "baselineSha256": "9c5a192c12468f12ac04bf9a5c25ffea730f1e23c9bfd320652f2e5a51aaaf91"
+      },
+      {
+        "file": "crates/xterm-core/src/terminal/mode_query.rs",
+        "fixedSha256": "dc27e55a89fa0cbef9f4b4de038db1838385316132136785d0ae591aa7ab5b7a",
+        "baselineSha256": "bbfe24413d8a907a2197c6fb4421a16221962dcbbb3c5357cd85ec031e9646fc"
+      }
+    ],
+    "exactFixedBytesRestored": true
+  },
+  "finished": "2026-11-05T23:36:04.659Z",
+  "status": "Scoped tests and native/WASM strict checks passed. See exact fmt result separately. Not full equivalence."
+}

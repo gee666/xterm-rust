@@ -46,4 +46,26 @@ The added corpus has 432 cases, replayed by one Rust test function:
 
 Comparisons include all cells and packed attributes, UTF-16 strings, both buffers, cursor/scrollbase/margins, projected modes, callback-time snapshots, getter counts and ordered replies/events. Error cases require identity with the original thrown error, not merely any failure. Successful replies execute after the getter and before the following parsed operation. Native callbacks use weak terminal references to avoid ownership cycles.
 
-`results/mode-query-option/source.json` records the source run and exact fixture hash. Native quality, old-production controls and independent review receipts are added after actual execution. No browser runtime, native Linux/macOS, CI, release or performance result is implied by these source-derived cases.
+## Observed producer verification
+
+The producer was tested on native Windows x86_64 with Rust/Cargo 1.85.1 and Node 24.15.0. Its base is main1106, with only this task's production changes. This is not an integrated-main or browser result.
+
+| Check | Observed result |
+| --- | --- |
+| Unchanged source DECRQM baseline | 8 passed, 0 failed/pending/skipped/unrun within the selected suite |
+| Added source corpus, generation and replay | 432 passed each run, all 776 reference hashes verified before and after |
+| Native new regression | One test function replayed all 432 cases successfully |
+| Real old-production control | Both original main1106 mode files produced 432 mismatching cases and exit 101 |
+| Exact restoration and rerun | Both fixed byte buffers/SHA-256 restored in finally, then 432 passed |
+| Native workspace all-target/all-feature tests | 2,189 passed across 498 summaries, 0 failed/ignored/measured/filtered |
+| Workspace all-feature doctests | 2 passed across 5 summaries, 0 failed/ignored/measured/filtered |
+| Native workspace all-target/all-feature Clippy | Passed with warnings denied |
+| WASM workspace all-feature library check and Clippy | Both passed, Clippy warnings denied |
+| Exact cargo fmt --all -- --check | Failed with Windows OS206 argument length |
+| Five complete member formatting checks | Each passed |
+
+`results/mode-query-option/quality.json` retains commands, toolchain, times, headroom, code hashes and the two-file control/restoration metadata. Corresponding logs retain every test result and the aggregate fmt failure. Redundant EOF newlines in five logs are preserved reversibly in `raw-log-format.json`, with the exact removed byte suffix and original/retained SHA-256. No result text was changed. `source.json` records the source run and fixture hash. `corpus-summary.json` separately counts 828 getter snapshots, 612 reply snapshots and 108 original-error cases. `source-pins.json` and `native-binary-pins.json` retain 1,401 source inputs and five live mode-suite EXEs for independent inspection.
+
+Workspace tests refreshed three pre-existing generated reports. Their actual deltas and old/new hashes are preserved under `generated-reports*`; all three historical files were restored byte-for-byte rather than replacing prior failures. Retention bookkeeping initially hit a 16 MiB child-output limit on the 18 MB HTML report and an incorrect expectation of six binary variants. Both partial effects were inspected before proceeding. Metadata in `generated-reports.json` and `counts.json` records those corrections. Neither changed application code, test assertions, or results.
+
+Independent review and cleanup follow these receipts. EXE pins become historical metadata after owned target/worktree removal, not a promise that the files remain available. No browser runtime, native Linux/macOS, CI, release, Miri or performance result is implied. No unsafe code was added.
