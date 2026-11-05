@@ -1,0 +1,95 @@
+// Reuses task467's bounded source/package swap. Only this owned worktree changes.
+import assert from 'node:assert/strict';
+import {readFile,writeFile,mkdir,copyFile,cp,rm,stat} from 'node:fs/promises';
+import {dirname,join} from 'node:path';
+import {sourceIdentity,verifyBuiltPackage} from '../scripts/e2e/build-identity.mjs';
+import {runCommand} from '../scripts/quality-process.mjs';
+const root=process.cwd(), base='results/serialize-fractional-scrollback', scratch='tmp/fraction';
+const source='crates/xterm-web/src/serialize_addon/html.rs', pointer='results/demos/build/latest.json';
+const mode=process.argv[2]; assert.ok(['build','browser'].includes(mode));
+async function copy(file,target){
+  await mkdir(dirname(target),{recursive:true});
+  // Windows copyFile preserves an older source mtime. Rewrite Rust input so
+  // Cargo cannot reuse a previously compiled source variant as fresh.
+  if(target===source)await writeFile(target,await readFile(file));
+  else await copyFile(file,target);
+}
+async function snapshot(phase){
+  for(const file of [source,pointer])await copy(file,join(scratch,phase,file));
+  await cp('browser/pkg',join(scratch,phase,'browser/pkg'),{recursive:true});
+  const dest=join(base,phase);await mkdir(dest,{recursive:true});
+  await copy(pointer,join(dest,'build-pointer.json'));
+  const link=JSON.parse(await readFile(pointer)); await copy(link.report,join(dest,'build-report.json'));
+}
+async function restore(phase){
+  for(const file of [source,pointer])await copy(join(scratch,phase,file),file);
+  await rm('browser/pkg',{recursive:true}); await cp(join(scratch,phase,'browser/pkg'),'browser/pkg',{recursive:true});
+}
+async function build(phase){
+  const dest=join(base,phase);await mkdir(dest,{recursive:true});
+  const result=await runCommand(process.execPath,['scripts/build-demo.mjs','--debug'],{cwd:root,env:process.env,log:join(dest,'build.log'),timeoutMs:300000});
+  assert.equal(result.status,'passed');await verifyBuiltPackage(root,await sourceIdentity(root));
+  const link=JSON.parse(await readFile(pointer)),report=JSON.parse(await readFile(link.report));
+  const command=report.commands.find(entry=>entry.command[0]==='cargo'&&entry.command[1]==='build');
+  const cargoLog=await readFile(command.log,'utf8');
+  const messages=cargoLog.split(/\r?\n/).filter(line=>line.startsWith('{')).map(line=>JSON.parse(line));
+  assert.equal(messages.find(message=>message.reason==='compiler-artifact'&&message.target.name==='xterm_web').fresh,false,'Source variant must recompile');
+  await writeFile(join(dest,'cargo-wasm.log'),cargoLog);await snapshot(phase);
+}
+async function capture(phase){
+  const dest=join(base,phase,'browser');await mkdir(dest,{recursive:true});
+  const identity=await sourceIdentity(root);await verifyBuiltPackage(root,identity);
+  const result=await runCommand(process.execPath,['scripts/serialize-browser-check.mjs','--suite'],{cwd:root,env:process.env,log:join(dest,'runner.log'),timeoutMs:360000});
+  await writeFile(join(dest,'runner-result.json'),JSON.stringify(result,null,2)+'\n');
+  const outputs=['verification.json',...['chromium','firefox','webkit'].flatMap(browser=>[`${browser}-source.json`,`${browser}-rust.json`,`${browser}-terminal.png`])];
+  for(const engine of ['source','rust'])for(const file of ['playwright.json','playwright.log','configuration.cjs.txt'])outputs.push(`${engine}-suite/${file}`);
+  for(const file of outputs)await copy(join('results/serialize-browser',file),join(dest,file));
+  const report=JSON.parse(await readFile(join(dest,'verification.json')));
+  console.log(phase,JSON.stringify({identity,browsers:report.browsers.map(b=>({name:b.name,passed:b.passed,executed:b.executed,mismatches:b.mismatches.map(m=>m.name),error:b.error})),suites:report.suites.map(s=>({engine:s.engine,counts:s.counts}))}));
+  return report;
+}
+await mkdir(base,{recursive:true});
+if(mode==='build'){
+  const entryIdentity=await sourceIdentity(root);
+  await copy(source,join(scratch,'fixed-source.rs'));
+  let entryBuilt=false, complete=false;
+  try{await stat('browser/pkg');entryBuilt=true;}catch(error){if(error.code!=='ENOENT')throw error;}
+  if(entryBuilt){await verifyBuiltPackage(root,entryIdentity);await snapshot('entry');}
+  else{
+    // A fresh worktree has no package, but inherits a historical tracked pointer.
+    // Archive it before clearing it; it must not advertise a nonexistent build.
+    try{await copy(pointer,join(scratch,'entry-pointer.json'));await rm(pointer);}catch(error){if(error.code!=='ENOENT')throw error;}
+  }
+  try{
+    try{await copy(join(scratch,'baseline',source),source);await build('baseline');}
+    finally{await copy(join(scratch,'fixed-source.rs'),source);}
+    await build('fixed');
+    const reports=await Promise.all(['baseline','fixed'].map(async phase=>JSON.parse(await readFile(join(base,phase,'build-report.json')))));
+    assert.notEqual(reports[0].artifacts.find(file=>file.path==='browser/pkg/xterm_web_bg.wasm').sha256,
+      reports[1].artifacts.find(file=>file.path==='browser/pkg/xterm_web_bg.wasm').sha256,'Changed serializer must produce distinct WASM');
+    complete=true;
+  }finally{
+    if(!complete){
+      if(entryBuilt){await restore('entry');await verifyBuiltPackage(root,entryIdentity);}
+      else{
+        await copy(join(scratch,'fixed-source.rs'),source);
+        await rm('browser/pkg',{recursive:true,force:true});await rm(pointer,{force:true});
+        for(const file of ['browser/pkg',pointer])await assert.rejects(stat(file),{code:'ENOENT'});
+      }
+      assert.equal((await sourceIdentity(root)).sha256,entryIdentity.sha256);
+    }
+  }
+}else{
+  const fixedIdentity=await sourceIdentity(root);await verifyBuiltPackage(root,fixedIdentity);
+  try{
+    await restore('baseline'); const baseline=await capture('baseline');
+    assert.equal(baseline.status,'failed');assert.equal(baseline.browsers.length,3);
+    for(const b of baseline.browsers){assert.equal(b.executed,78);assert.deepEqual(b.mismatches.map(m=>m.name).sort(),[
+      'html-fractional-scrollback-clamps','html-fractional-scrollback-header-reentry','html-fractional-scrollback-header-throws','html-fractional-scrollback-ring-warning-reentry']);}
+    assert.equal(baseline.suites.length,2);for(const s of baseline.suites){assert.equal(s.counts.passed,120);assert.equal(s.counts.failed,0);}
+  }finally{await restore('fixed');assert.equal((await sourceIdentity(root)).sha256,fixedIdentity.sha256);await verifyBuiltPackage(root,fixedIdentity);}
+  const fixed=await capture('fixed');assert.equal(fixed.status,'passed');assert.equal(fixed.browsers.length,3);
+  for(const b of fixed.browsers){assert.equal(b.executed,78);assert.equal(b.passed,78);assert.equal(b.mismatches.length,0);}
+  assert.equal(fixed.suites.length,2);for(const s of fixed.suites){assert.equal(s.counts.passed,120);assert.equal(s.counts.failed,0);}
+  assert.equal((await sourceIdentity(root)).sha256,fixedIdentity.sha256);await verifyBuiltPackage(root,fixedIdentity);
+}

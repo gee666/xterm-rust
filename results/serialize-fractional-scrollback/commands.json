@@ -1,0 +1,68 @@
+{
+  "cwd": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SrikandiHtmlFraction",
+  "env": {
+    "TEMP": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SrikandiHtmlFraction\\tmp\\runtime",
+    "TMP": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SrikandiHtmlFraction\\tmp\\runtime",
+    "TMPDIR": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SrikandiHtmlFraction\\tmp\\runtime",
+    "CARGO_TARGET_DIR": "O:/xterm-rust-swarm-16/tmp/worktrees/SrikandiHtmlFraction/target",
+    "CARGO_BUILD_JOBS": "2",
+    "SOURCE_ROOT": "P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo",
+    "WASM_BINDGEN": "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe"
+  },
+  "versions": {
+    "node": "v24.15.0",
+    "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+    "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+    "bindgen": "wasm-bindgen 0.2.100"
+  },
+  "platform": "win32",
+  "grants": {
+    "initialCompiler": "3452/3490, released3502",
+    "correctedCompiler": "3527/3534",
+    "browser": "3528/3541, allreleased3562"
+  },
+  "commands": [
+    [
+      "node",
+      "tmp/fraction-proof.mjs",
+      "build"
+    ],
+    [
+      "node",
+      "tmp/fraction-quality.mjs"
+    ],
+    [
+      "cargo",
+      "clippy",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-web",
+      "--lib",
+      "--target",
+      "wasm32-unknown-unknown",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    [
+      "node",
+      "tmp/fraction-proof.mjs",
+      "browser"
+    ],
+    [
+      "node",
+      "tmp/fraction-audit.mjs"
+    ]
+  ],
+  "browserExit": "Raw runner and original helper exit1: unchanged ANSI error text in clamp probe remains346. All scoped HTML fields match. Audit verifies raw differences without modifying or filtering the original runner.",
+  "formatting": {
+    "web": "PASS",
+    "exactWorkspace": "FAIL OS206"
+  },
+  "unrun": [
+    "Full workspace all-feature/release/native Linux/macOS matrix",
+    "Full346/322 and complete addon/demo matrices",
+    "Additional raw object/string coordinate and GC closure"
+  ]
+}

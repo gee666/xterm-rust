@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {readdir,readFile,writeFile,mkdir} from 'node:fs/promises';
+import {runCommand} from '../scripts/quality-process.mjs';
+const root=process.cwd(),dest='results/serialize-fractional-scrollback';await mkdir(dest,{recursive:true});
+const tests=(await readdir('crates/xterm-core/tests')).filter(file=>file.startsWith('serialize')&&file.endsWith('.rs')).sort().flatMap(file=>['--test',file.slice(0,-3)]);
+const commands=[['native',['test','--locked','-j2','-p','xterm-core',...tests]],['native-clippy',['clippy','--locked','-j2','-p','xterm-core','--lib',...tests,'--','-D','warnings']],['wasm-clippy',['clippy','--locked','-j2','-p','xterm-web','--lib','--target','wasm32-unknown-unknown','--','-D','warnings']]];
+const report={scope:'Focused serialization native tests and warning-denied core/tests plus WASM library Clippy; not full workspace',env:Object.fromEntries(['TEMP','TMP','TMPDIR','CARGO_BUILD_JOBS','SOURCE_ROOT','WASM_BINDGEN'].map(key=>[key,process.env[key]])),commands:[]};
+for(const [name,args]of commands){
+  const result=await runCommand('cargo',args,{cwd:root,env:process.env,log:`${dest}/${name}.log`,timeoutMs:300000});
+  report.commands.push({name,command:['cargo',...args],result});await writeFile(`${dest}/quality.json`,JSON.stringify(report,null,2)+'\n');assert.equal(result.status,'passed',name);
+}
+const log=await readFile(`${dest}/native.log`,'utf8');report.nativeSummaries=[...log.matchAll(/test result: ok\. (\d+) passed; (\d+) failed; (\d+) ignored; (\d+) measured; (\d+) filtered out/g)].map(match=>({passed:+match[1],failed:+match[2],ignored:+match[3],measured:+match[4],filtered:+match[5]}));
+assert.equal(report.nativeSummaries.length,tests.length/2);assert.equal(report.nativeSummaries.reduce((sum,item)=>sum+item.failed+item.ignored+item.filtered,0),0);
+await writeFile(`${dest}/quality.json`,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));

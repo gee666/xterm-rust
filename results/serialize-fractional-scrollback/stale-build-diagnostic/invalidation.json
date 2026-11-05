@@ -1,0 +1,49 @@
+{
+  "status": "INVALID fixed package; caught before browser run",
+  "reason": "Source copy restored old mtime, Cargo reported fresh=true. Different input hashes but identical package hashes. No fixed runtime proof claimed from this build.",
+  "sourceMtime": "2026-11-05T21:17:35.076Z",
+  "wasmMtime": "2026-11-05T21:19:34.973Z",
+  "builds": [
+    {
+      "phase": "baseline",
+      "source": {
+        "revision": "8606bdc82ca217e289229cbcc0671e910d77468e",
+        "sha256": "523e620267926f788aa824e7a9dc6dbf2fa085ca4a8675ebe582c01cd6684b26",
+        "files": 1750
+      },
+      "package": [
+        {
+          "path": "browser/pkg/xterm_web.js",
+          "bytes": 237595,
+          "sha256": "9e80dd1f2bcdb0ed9c07041576a645e00d180c568b00192f591d6908e4750583"
+        },
+        {
+          "path": "browser/pkg/xterm_web_bg.wasm",
+          "bytes": 15889957,
+          "sha256": "77d52e43586b9e773f70e4e04bcef8adb5ca1897dd4b55e63f4127c261450f8d"
+        }
+      ]
+    },
+    {
+      "phase": "fixed",
+      "source": {
+        "revision": "8606bdc82ca217e289229cbcc0671e910d77468e",
+        "sha256": "9f7386434a0dfa2af780b3d28a64d39e136a555ec92d8dc53d09b074c03cb49b",
+        "files": 1750
+      },
+      "package": [
+        {
+          "path": "browser/pkg/xterm_web.js",
+          "bytes": 237595,
+          "sha256": "9e80dd1f2bcdb0ed9c07041576a645e00d180c568b00192f591d6908e4750583"
+        },
+        {
+          "path": "browser/pkg/xterm_web_bg.wasm",
+          "bytes": 15889957,
+          "sha256": "77d52e43586b9e773f70e4e04bcef8adb5ca1897dd4b55e63f4127c261450f8d"
+        }
+      ]
+    }
+  ],
+  "repair": "Rewrite source with writeFile during swap, then rebuild both variants and require different WASM hashes"
+}

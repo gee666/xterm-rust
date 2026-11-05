@@ -1,0 +1,20 @@
+baseline {"identity":{"revision":"8606bdc82ca217e289229cbcc0671e910d77468e","sha256":"523e620267926f788aa824e7a9dc6dbf2fa085ca4a8675ebe582c01cd6684b26","files":1750},"browsers":[{"name":"chromium","passed":74,"executed":78,"mismatches":["html-fractional-scrollback-clamps","html-fractional-scrollback-header-reentry","html-fractional-scrollback-header-throws","html-fractional-scrollback-ring-warning-reentry"]},{"name":"firefox","passed":74,"executed":78,"mismatches":["html-fractional-scrollback-clamps","html-fractional-scrollback-header-reentry","html-fractional-scrollback-header-throws","html-fractional-scrollback-ring-warning-reentry"]},{"name":"webkit","passed":74,"executed":78,"mismatches":["html-fractional-scrollback-clamps","html-fractional-scrollback-header-reentry","html-fractional-scrollback-header-throws","html-fractional-scrollback-ring-warning-reentry"]}],"suites":[{"engine":"source","counts":{"discovered":120,"executed":120,"passed":120,"failed":0,"skipped":0,"unrun":0}},{"engine":"rust","counts":{"discovered":120,"executed":120,"passed":120,"failed":0,"skipped":0,"unrun":0}}]}
+fixed {"identity":{"revision":"8606bdc82ca217e289229cbcc0671e910d77468e","sha256":"9f7386434a0dfa2af780b3d28a64d39e136a555ec92d8dc53d09b074c03cb49b","files":1750},"browsers":[{"name":"chromium","passed":77,"executed":78,"mismatches":["html-fractional-scrollback-clamps"]},{"name":"firefox","passed":77,"executed":78,"mismatches":["html-fractional-scrollback-clamps"]},{"name":"webkit","passed":77,"executed":78,"mismatches":["html-fractional-scrollback-clamps"]}],"suites":[{"engine":"source","counts":{"discovered":120,"executed":120,"passed":120,"failed":0,"skipped":0,"unrun":0}},{"engine":"rust","counts":{"discovered":120,"executed":120,"passed":120,"failed":0,"skipped":0,"unrun":0}}]}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+'failed' !== 'passed'
+
+    at file:///O:/xterm-rust-swarm-16/tmp/worktrees/SrikandiHtmlFraction/tmp/fraction-proof.mjs:91:45 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'failed',
+  expected: 'passed',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.15.0

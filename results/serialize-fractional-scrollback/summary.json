@@ -1,0 +1,840 @@
+{
+  "scope": "Task487 finite fractional primitive HTML scrollback only; full346/322 and equivalence NOT PROVEN",
+  "status": "scoped HTML matched; complete corpus still fails on unchanged ANSI error text",
+  "seed": "0x05e21a11",
+  "base": "735e114a",
+  "sourceRevision": "8606bdc82ca217e289229cbcc0671e910d77468e",
+  "browsers": [
+    {
+      "phase": "baseline",
+      "name": "chromium",
+      "version": "148.0.7778.96",
+      "executed": 78,
+      "passed": 74,
+      "failed": 4,
+      "mismatches": [
+        "html-fractional-scrollback-clamps",
+        "html-fractional-scrollback-header-reentry",
+        "html-fractional-scrollback-header-throws",
+        "html-fractional-scrollback-ring-warning-reentry"
+      ]
+    },
+    {
+      "phase": "baseline",
+      "name": "firefox",
+      "version": "150.0.2",
+      "executed": 78,
+      "passed": 74,
+      "failed": 4,
+      "mismatches": [
+        "html-fractional-scrollback-clamps",
+        "html-fractional-scrollback-header-reentry",
+        "html-fractional-scrollback-header-throws",
+        "html-fractional-scrollback-ring-warning-reentry"
+      ]
+    },
+    {
+      "phase": "baseline",
+      "name": "webkit",
+      "version": "26.4",
+      "executed": 78,
+      "passed": 74,
+      "failed": 4,
+      "mismatches": [
+        "html-fractional-scrollback-clamps",
+        "html-fractional-scrollback-header-reentry",
+        "html-fractional-scrollback-header-throws",
+        "html-fractional-scrollback-ring-warning-reentry"
+      ]
+    },
+    {
+      "phase": "fixed",
+      "name": "chromium",
+      "version": "148.0.7778.96",
+      "executed": 78,
+      "passed": 77,
+      "failed": 1,
+      "mismatches": [
+        "html-fractional-scrollback-clamps"
+      ]
+    },
+    {
+      "phase": "fixed",
+      "name": "firefox",
+      "version": "150.0.2",
+      "executed": 78,
+      "passed": 77,
+      "failed": 1,
+      "mismatches": [
+        "html-fractional-scrollback-clamps"
+      ]
+    },
+    {
+      "phase": "fixed",
+      "name": "webkit",
+      "version": "26.4",
+      "executed": 78,
+      "passed": 77,
+      "failed": 1,
+      "mismatches": [
+        "html-fractional-scrollback-clamps"
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "phase": "baseline",
+      "engine": "source",
+      "counts": {
+        "discovered": 120,
+        "executed": 120,
+        "passed": 120,
+        "failed": 0,
+        "skipped": 0,
+        "unrun": 0
+      }
+    },
+    {
+      "phase": "baseline",
+      "engine": "rust",
+      "counts": {
+        "discovered": 120,
+        "executed": 120,
+        "passed": 120,
+        "failed": 0,
+        "skipped": 0,
+        "unrun": 0
+      }
+    },
+    {
+      "phase": "fixed",
+      "engine": "source",
+      "counts": {
+        "discovered": 120,
+        "executed": 120,
+        "passed": 120,
+        "failed": 0,
+        "skipped": 0,
+        "unrun": 0
+      }
+    },
+    {
+      "phase": "fixed",
+      "engine": "rust",
+      "counts": {
+        "discovered": 120,
+        "executed": 120,
+        "passed": 120,
+        "failed": 0,
+        "skipped": 0,
+        "unrun": 0
+      }
+    }
+  ],
+  "knownAnsiDifferences": [
+    {
+      "browser": "chromium",
+      "scrollback": "-3.75",
+      "source": {
+        "error": "RangeError",
+        "message": "Invalid array length"
+      },
+      "rust": {
+        "error": "RangeError",
+        "message": "Serialization coordinate is outside the native integral range"
+      }
+    },
+    {
+      "browser": "chromium",
+      "scrollback": "-0.5",
+      "source": {
+        "error": "RangeError",
+        "message": "Invalid array length"
+      },
+      "rust": {
+        "error": "RangeError",
+        "message": "Serialization coordinate is outside the native integral range"
+      }
+    },
+    {
+      "browser": "chromium",
+      "scrollback": "0.5",
+      "source": {
+        "error": "RangeError",
+        "message": "Invalid array length"
+      },
+      "rust": {
+        "error": "RangeError",
+        "message": "Serialization coordinate is outside the native integral range"
+      }
+    },
+    {
+      "browser": "chromium",
+      "scrollback": "1.25",
+      "source": {
+        "error": "RangeError",
+        "message": "Invalid array length"
+      },
+      "rust": {
+        "error": "RangeError",
+        "message": "Serialization coordinate is outside the native integral range"
+      }
+    },
+    {
+      "browser": "firefox",
+      "scrollback": "-100.5",
+      "source": {
+        "error": "RangeError",
+        "message": "invalid array length"
+      },
+      "rust": {
+        "error": "RangeError",
+        "message": "Invalid array length"
+      }
+    },
+    {
+      "browser": "firefox",
+      "scrollback": "-4.5",
+      "source": {
+        "error": "RangeError",
+        "message": "invalid array length"
+      },
+      "rust": {
+        "error": "RangeError",
+        "message": "Invalid array length"
+      }
+    },
+    {
+      "browser": "firefox",
+      "scrollback": "-3.75",
+      "source": {
+        "error": "RangeError",
+        "message": "invalid array length"
+      },
+      "rust": {
+        "error": "RangeError",
+        "message": "Serialization coordinate is outside the native integral range"
+      }
+    },
+    {
+      "browser": "firefox",
+      "scrollback": "-0.5",
+      "source": {
+        "error": "RangeError",
+        "message": "invalid array length"
+      },
+      "rust": {
+        "error": "RangeError",
+        "message": "Serialization coordinate is outside the native integral range"
+      }
+    },
+    {
+      "browser": "firefox",
+      "scrollback": "0.5",
+      "source": {
+        "error": "RangeError",
+        "message": "invalid array length"
+      },
+      "rust": {
+        "error": "RangeError",
+        "message": "Serialization coordinate is outside the native integral range"
+      }
+    },
+    {
+      "browser": "firefox",
+      "scrollback": "1.25",
+      "source": {
+        "error": "RangeError",
+        "message": "invalid array length"
+      },
+      "rust": {
+        "error": "RangeError",
+        "message": "Serialization coordinate is outside the native integral range"
+      }
+    },
+    {
+      "browser": "webkit",
+      "scrollback": "-100.5",
+      "source": {
+        "error": "RangeError",
+        "message": "Array length must be a positive integer of safe magnitude."
+      },
+      "rust": {
+        "error": "RangeError",
+        "message": "Invalid array length"
+      }
+    },
+    {
+      "browser": "webkit",
+      "scrollback": "-4.5",
+      "source": {
+        "error": "RangeError",
+        "message": "Array length must be a positive integer of safe magnitude."
+      },
+      "rust": {
+        "error": "RangeError",
+        "message": "Invalid array length"
+      }
+    },
+    {
+      "browser": "webkit",
+      "scrollback": "-3.75",
+      "source": {
+        "error": "RangeError",
+        "message": "Array length must be a positive integer of safe magnitude."
+      },
+      "rust": {
+        "error": "RangeError",
+        "message": "Serialization coordinate is outside the native integral range"
+      }
+    },
+    {
+      "browser": "webkit",
+      "scrollback": "-0.5",
+      "source": {
+        "error": "RangeError",
+        "message": "Array length must be a positive integer of safe magnitude."
+      },
+      "rust": {
+        "error": "RangeError",
+        "message": "Serialization coordinate is outside the native integral range"
+      }
+    },
+    {
+      "browser": "webkit",
+      "scrollback": "0.5",
+      "source": {
+        "error": "RangeError",
+        "message": "Array length must be a positive integer of safe magnitude."
+      },
+      "rust": {
+        "error": "RangeError",
+        "message": "Serialization coordinate is outside the native integral range"
+      }
+    },
+    {
+      "browser": "webkit",
+      "scrollback": "1.25",
+      "source": {
+        "error": "RangeError",
+        "message": "Array length must be a positive integer of safe magnitude."
+      },
+      "rust": {
+        "error": "RangeError",
+        "message": "Serialization coordinate is outside the native integral range"
+      }
+    }
+  ],
+  "baselineBuild": {
+    "source": {
+      "revision": "8606bdc82ca217e289229cbcc0671e910d77468e",
+      "sha256": "523e620267926f788aa824e7a9dc6dbf2fa085ca4a8675ebe582c01cd6684b26",
+      "files": 1750
+    },
+    "artifacts": [
+      {
+        "path": "browser/pkg/xterm_web.js",
+        "bytes": 237595,
+        "sha256": "9e80dd1f2bcdb0ed9c07041576a645e00d180c568b00192f591d6908e4750583"
+      },
+      {
+        "path": "browser/pkg/xterm_web_bg.wasm",
+        "bytes": 15889957,
+        "sha256": "77d52e43586b9e773f70e4e04bcef8adb5ca1897dd4b55e63f4127c261450f8d"
+      }
+    ],
+    "actualWebRecompiled": true
+  },
+  "fixedBuild": {
+    "source": {
+      "revision": "8606bdc82ca217e289229cbcc0671e910d77468e",
+      "sha256": "9f7386434a0dfa2af780b3d28a64d39e136a555ec92d8dc53d09b074c03cb49b",
+      "files": 1750
+    },
+    "artifacts": [
+      {
+        "path": "browser/pkg/xterm_web.js",
+        "bytes": 237538,
+        "sha256": "51abe00e7082a5c0b2a29bf2826e40fd91f67abd1e75338df7916d8c54b57d03"
+      },
+      {
+        "path": "browser/pkg/xterm_web_bg.wasm",
+        "bytes": 15891415,
+        "sha256": "fca80a54f3365624ed67e7f6460ddd95615fce59a5ae3f7467e0a7ce5a16d55e"
+      }
+    ],
+    "actualWebRecompiled": true
+  },
+  "native": {
+    "executables": 16,
+    "passed": 69
+  },
+  "referenceAfter": [
+    {
+      "path": "P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo",
+      "files": 776,
+      "mismatches": []
+    },
+    {
+      "path": "source_repo",
+      "files": 776,
+      "mismatches": []
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": "crates/xterm-web/src/serialize_addon/html.rs",
+      "bytes": 7758,
+      "sha256": "07326d00ce8fbf87ac3f1196266b85710b122f783da91786ae616e0076c3ee3c"
+    },
+    {
+      "path": "crates/xterm-web/src/serialize_addon/options.rs",
+      "bytes": 3039,
+      "sha256": "c6f762e145a57458b40829648edccf39dee543bfe150ea25543eeaae464a6a63"
+    },
+    {
+      "path": "crates/xterm-web/src/serialize_addon/view.rs",
+      "bytes": 5040,
+      "sha256": "eef15013cdb55b7525dba7a20baa68eb9c34dcd188a20bcb64128f0491ea94c8"
+    },
+    {
+      "path": "crates/xterm-core/src/serialize/html.rs",
+      "bytes": 8707,
+      "sha256": "ae09de65bc33de55d96723ad6ed9d00d86409c919cfe0b217656927b0da44a71"
+    },
+    {
+      "path": "crates/xterm-core/src/serialize/html_rows.rs",
+      "bytes": 4014,
+      "sha256": "97fde388a156f76edac0cd6d6275ba9d20e589e799e2dbaf2595ae20a16d0e14"
+    },
+    {
+      "path": "scripts/serialize-browser-cases.mjs",
+      "bytes": 34405,
+      "sha256": "7c38df1d3c045861ca6a90702a93cf3beef0a6f66f85e559e81fde9fb9d00a35"
+    },
+    {
+      "path": "scripts/serialize-browser-check.mjs",
+      "bytes": 10731,
+      "sha256": "f2fe3c85f6c2d69f96224e2f8a19b28b232796a3800f001c4bb0fb949dc82275"
+    },
+    {
+      "path": "docs/baseline/reference-manifest.json",
+      "bytes": 128515,
+      "sha256": "fad438d8ae8c48870f454646a1fbbc0bba8e6c87526bd3ae0b56be28b02a71f2"
+    }
+  ],
+  "nativePins": [
+    {
+      "path": "target/debug/deps/serialize_ansi-54e6102c33391d92.exe",
+      "bytes": 998912,
+      "sha256": "1b4aafdc937c63638c84309a78ab8539ad9df7c71a2ef589655b6597f71620c1"
+    },
+    {
+      "path": "target/debug/deps/serialize_ansi_numeric_row-47bf2c3a89019d9c.exe",
+      "bytes": 1410048,
+      "sha256": "2185a5aaa71c875eaf4fff0387962f2bd254333f7f3a1e51f7074a04b88a20b1"
+    },
+    {
+      "path": "target/debug/deps/serialize_diagnostics-29422262678a62da.exe",
+      "bytes": 982016,
+      "sha256": "b1689d80f297bb9bb9729fc090faec077093918be8fe9c1a3d95abcb2d519139"
+    },
+    {
+      "path": "target/debug/deps/serialize_differential-5df0a00e4edcf564.exe",
+      "bytes": 16513024,
+      "sha256": "a1eced43d2bc60864f6487aeead15d7a1fdf32e2341ef0e1bf6da5687266e887"
+    },
+    {
+      "path": "target/debug/deps/serialize_header_order-4fc61612bebcfe02.exe",
+      "bytes": 3097600,
+      "sha256": "b990ed57e637c132d88dae4efb63b33d35c20a22f201c38f644574d3ce1d4329"
+    },
+    {
+      "path": "target/debug/deps/serialize_html-cba7fc5a971e9871.exe",
+      "bytes": 980480,
+      "sha256": "6a7b47f39941a396c11eb3913e1f7d9b004dc44eedf55d6bb2d2b79e1b8136ab"
+    },
+    {
+      "path": "target/debug/deps/serialize_html_edges-4b039b23ad3e0c44.exe",
+      "bytes": 1010688,
+      "sha256": "37651e87025c0aba98aa09b25c441dc92cac22eecf9b4146dda653dec2c6852b"
+    },
+    {
+      "path": "target/debug/deps/serialize_html_numeric_rows-086db687da8bbee6.exe",
+      "bytes": 1425408,
+      "sha256": "bbaafa030cc9c81eee398b865646a279e8c1440ff277db2c588d77f0caea5241"
+    },
+    {
+      "path": "target/debug/deps/serialize_line_identity-eb11207aee5f0759.exe",
+      "bytes": 998912,
+      "sha256": "b65cfe1cfa1725690547c30ae16ff0722857d206000fb1e8f6aacf532d691ed1"
+    },
+    {
+      "path": "target/debug/deps/serialize_live-371fd040e1ac809a.exe",
+      "bytes": 3528192,
+      "sha256": "7316d1dc7f8f881e4cf495afdefd13f468a01a16b53666df3d0d800688ebd5a9"
+    },
+    {
+      "path": "target/debug/deps/serialize_live_callbacks-db59f2efc156c5a5.exe",
+      "bytes": 3226624,
+      "sha256": "bcca319c44aacac284bf37e44d7b23252457c3275bff7829c9ad95c32ee3a853"
+    },
+    {
+      "path": "target/debug/deps/serialize_live_reentrancy-f65d8d1f9a36516f.exe",
+      "bytes": 3380736,
+      "sha256": "f06b754591739dffbd3c6eae89572f66184a726cd5dbd7b4f864d31f38c3f1d6"
+    },
+    {
+      "path": "target/debug/deps/serialize_live_reset-33398ec6b388d6f3.exe",
+      "bytes": 3205632,
+      "sha256": "d2fa5798213d676412f24920f69b36b3d1e989ae638d93f9e60f6151506d63c7"
+    },
+    {
+      "path": "target/debug/deps/serialize_native-9a9acbba8762e4e6.exe",
+      "bytes": 1389568,
+      "sha256": "2e030deb0d38e4aad40abe86cd715301ce0b57dd9a4996510e935a9dd5da332a"
+    },
+    {
+      "path": "target/debug/deps/serialize_ownership-78ebcf0811062379.exe",
+      "bytes": 3183616,
+      "sha256": "b25de3689ffc1cb4e3848464b18e7c58f066924f386aa4d021acce9dc044593b"
+    },
+    {
+      "path": "target/debug/deps/serialize_reentry-17e1186e073ef695.exe",
+      "bytes": 908800,
+      "sha256": "be25ba7651fb29fccd2d00ddcbf5cb15417d8deb9ba27ad3e00891e59d39797a"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "results/serialize-fractional-scrollback/audit.mjs.txt",
+      "bytes": 6348,
+      "sha256": "3e954b17bc7d68315c20f649010ee52df0649d24d666050fbd701fb069039f1f"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/browser/chromium-rust.json",
+      "bytes": 363247,
+      "sha256": "114654437601f0a0061cdc3e30e3f099da5db470513368e255a2c1d379c21653"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/browser/chromium-source.json",
+      "bytes": 357677,
+      "sha256": "2e99dc42225da529ee670f958aec711b6cba7168e906a81d43cde2637a318d90"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/browser/chromium-terminal.png",
+      "bytes": 5617,
+      "sha256": "88974323cd03583b449948d98297d273b7fc41c0f84f5af95e7f926a9c8526b9"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/browser/firefox-rust.json",
+      "bytes": 363247,
+      "sha256": "0e044d030190ee8ea2bb067d45b5ae8749eb5cb4031bbf9fb8f7f40a12296184"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/browser/firefox-source.json",
+      "bytes": 357677,
+      "sha256": "f2b73d0ad62a700cce89c61a903a67f6ed8a035cddec4711fc3b21d80321e0b9"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/browser/firefox-terminal.png",
+      "bytes": 20229,
+      "sha256": "a8130b92f81e7909b014dffceca173e2efbf46f6f739d20585a53fb47faacb0f"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/browser/runner-result.json",
+      "bytes": 332,
+      "sha256": "a4572e94e08ca05fe2bd012eb01b176b951aa21a053b8e9746da7f49dbb890d9"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/browser/runner.log",
+      "bytes": 70,
+      "sha256": "fe4685bdfde7cf1e29aadfcca81b204ec9bde420dec988e60b07d8299a897228"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/browser/rust-suite/configuration.cjs.txt",
+      "bytes": 485,
+      "sha256": "2de86d1a5b8e3d2bc1c040a8b947c8f1a2108c14e98553111bd6118faa0c40f1"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/browser/rust-suite/playwright.json",
+      "bytes": 148406,
+      "sha256": "c57ed97c412574c1524936ccf652b2e0793a394c79dfdad1372c1d0d84c1a542"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/browser/rust-suite/playwright.log",
+      "bytes": 298,
+      "sha256": "9cfc7862322c3066437bd5609a046f8092a4afd9bbd3480e4a15b44ecec2bf0d"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/browser/source-suite/configuration.cjs.txt",
+      "bytes": 485,
+      "sha256": "00ba55025ce471de8a8a6126fa5221ff3a5672bd19fc823130bf7f5fad1cce36"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/browser/source-suite/playwright.json",
+      "bytes": 148408,
+      "sha256": "c533bf224d03f0615e0cbe8f3afe7e84d9dea4c2abde60e933a4f8dae6491aa1"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/browser/source-suite/playwright.log",
+      "bytes": 298,
+      "sha256": "93cf003b5cc82aca70e1bb6cd8d263dab8ea34d13b8536afff761ed2b01b3aac"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/browser/verification.json",
+      "bytes": 299498,
+      "sha256": "ad5418eabbba11b9937fb657a269e36d3173f48c4fe42fbc4df6c9026c0a83e5"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/browser/webkit-rust.json",
+      "bytes": 363817,
+      "sha256": "3a78d78abc86ddc594a229d1921b492067ccdad7033e290ed6520e84ad4363f4"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/browser/webkit-source.json",
+      "bytes": 358475,
+      "sha256": "4b8dbc89bc0e3d25d9940661385ee6e94b9543a62940d7b42a1f104c9b85b78a"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/browser/webkit-terminal.png",
+      "bytes": 7773,
+      "sha256": "041a4d167a8a10db96adb28eb15467009943d3bf9ee1d66651e6b14b8e4c96da"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/build-pointer.json",
+      "bytes": 97,
+      "sha256": "0efb1e0880c6b97397caad25d5eecf9d18acaf742b78b080b5a545c774e430a8"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/build-report.json",
+      "bytes": 4987,
+      "sha256": "ae3fa86c4815197979aaf8893e4319da96e3c2c0545eb3acbe7efa6ed0a0152c"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/build.log",
+      "bytes": 4987,
+      "sha256": "ae3fa86c4815197979aaf8893e4319da96e3c2c0545eb3acbe7efa6ed0a0152c"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/baseline/cargo-wasm.log",
+      "bytes": 36970,
+      "sha256": "1f5be17ea3eb04e1e90f6e5d0b8b505e51295790223f2758e51ba30e38a526e4"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/browser-proof.log",
+      "bytes": 2243,
+      "sha256": "17ae51a153f4103a065ec7d88efe5cbd5631d763ffaea262df9936f3d4838d48"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/builds.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/commands.json",
+      "bytes": 2073,
+      "sha256": "1ee2d27ba3e7f1ecbe5f70349f6008f53d2589c5a7d48c5d6528152bbfac8f57"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/browser/chromium-rust.json",
+      "bytes": 357841,
+      "sha256": "eb86b85eba7079734f7ddf08e38a8072669a581f943fc1e05a392545c996d205"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/browser/chromium-source.json",
+      "bytes": 357677,
+      "sha256": "2e99dc42225da529ee670f958aec711b6cba7168e906a81d43cde2637a318d90"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/browser/chromium-terminal.png",
+      "bytes": 5617,
+      "sha256": "88974323cd03583b449948d98297d273b7fc41c0f84f5af95e7f926a9c8526b9"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/browser/firefox-rust.json",
+      "bytes": 357841,
+      "sha256": "2a84d9e297716bf7f60789e66abb6c48baa96617d92665094b07ce59b08539ff"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/browser/firefox-source.json",
+      "bytes": 357677,
+      "sha256": "f2b73d0ad62a700cce89c61a903a67f6ed8a035cddec4711fc3b21d80321e0b9"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/browser/firefox-terminal.png",
+      "bytes": 20229,
+      "sha256": "a8130b92f81e7909b014dffceca173e2efbf46f6f739d20585a53fb47faacb0f"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/browser/runner-result.json",
+      "bytes": 339,
+      "sha256": "1bb23932e15a96b67ef13545b038dad376d5ad3a4cef0fe8347e917c762ca167"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/browser/runner.log",
+      "bytes": 70,
+      "sha256": "349bcd88889e0835e269d67ab18d338e4709c50f897d3b2b05be579b57728d82"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/browser/rust-suite/configuration.cjs.txt",
+      "bytes": 485,
+      "sha256": "292780da0993f1a6c8fa600c0f4779a4c3e32f2f6a1c1f3ce99a8a38995dbcd7"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/browser/rust-suite/playwright.json",
+      "bytes": 148407,
+      "sha256": "49ecebbac3fac3c614a2f6c780da335c60e714c48327b7c26659e8dd6b3d19de"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/browser/rust-suite/playwright.log",
+      "bytes": 298,
+      "sha256": "f790e1c82a819ee273030769b1d9636f9012fbf2d4703c38482720037ff58f2e"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/browser/source-suite/configuration.cjs.txt",
+      "bytes": 485,
+      "sha256": "adc6c283d30fdb2248f032fb5c766a396ef467556b9f9d976c5bcd1634184e1d"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/browser/source-suite/playwright.json",
+      "bytes": 148412,
+      "sha256": "01c54badaef6ac26fd63dafb110852f3d797fc2d28ff37df84ad748e736b24c9"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/browser/source-suite/playwright.log",
+      "bytes": 298,
+      "sha256": "df134f32a7e704803d56ca04a929aef088e9c62417edc0eca215abe0b48897f2"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/browser/verification.json",
+      "bytes": 19876,
+      "sha256": "4d333c6d8afe1b49a418785dd78bfdb790d400f69a8be2b049898c4382887cb5"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/browser/webkit-rust.json",
+      "bytes": 358411,
+      "sha256": "a601a6a5bfde3ab280fd1a2c168b65376587459e7d5359dba28625a4cf0f989c"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/browser/webkit-source.json",
+      "bytes": 358475,
+      "sha256": "4b8dbc89bc0e3d25d9940661385ee6e94b9543a62940d7b42a1f104c9b85b78a"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/browser/webkit-terminal.png",
+      "bytes": 7773,
+      "sha256": "041a4d167a8a10db96adb28eb15467009943d3bf9ee1d66651e6b14b8e4c96da"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/build-pointer.json",
+      "bytes": 97,
+      "sha256": "0af222d05ef3b027bf8510cbbb1f5223dcfd7a782546c5062f232dee8e1652b0"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/build-report.json",
+      "bytes": 4983,
+      "sha256": "b1d96bb0001892220021cee09dcc25403ccceb12d0261c94deeaf4fa06922e4a"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/build.log",
+      "bytes": 4983,
+      "sha256": "b1d96bb0001892220021cee09dcc25403ccceb12d0261c94deeaf4fa06922e4a"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fixed/cargo-wasm.log",
+      "bytes": 36970,
+      "sha256": "3d9fdb1d718319d2ee9c379a9ab116e987b26381b1286a3eea4fa4c345b3b1bf"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fmt-all.log",
+      "bytes": 817,
+      "sha256": "a3c64adc493a218a5a8332dfc60b9e9fd0cf455d8215931a5888f9bc84a29c70"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/fmt-web.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/helper-failure/build.log",
+      "bytes": 1532,
+      "sha256": "b17499e01811082f5e5ab2dd755e8fcf2f1f58a44b654afd78970f46fd3742a9"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/helper-failure/receipt.json",
+      "bytes": 574,
+      "sha256": "9d305124cfb13f4590dcd5e94511eb9a088d191394f1607a960129b734e86eee"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/helper-failure/runner.log",
+      "bytes": 646,
+      "sha256": "6eacd9e5b2c3b6b03a3f0b2e68ffb7a7fd807a8ad5258313c15167f760c12148"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/native-clippy.log",
+      "bytes": 379,
+      "sha256": "98890c176b83dcbd165abaca2140ef9cf4c52ac61d00ef579bb445d8d5077a9d"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/native.log",
+      "bytes": 8639,
+      "sha256": "0928db4130dcb9e817b7d7e539be79f16e46c64c14fb565c202fd1c9ae9d16c4"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/proof.mjs.txt",
+      "bytes": 6948,
+      "sha256": "544e60e4b1f5ffd2b8622cf03f9e5a415f0093ceea7eab4dba3c3fc108f051e8"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/quality-runner.log",
+      "bytes": 8120,
+      "sha256": "0cd64f8de8cba04c8e1e1b23c988791046403ee1fcce2d85d149e311d06ab25a"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/quality.json",
+      "bytes": 8174,
+      "sha256": "fa76db6e43365550f925683e4bbb86c001e27965cdeb68bbf73f671deea8a345"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/quality.mjs.txt",
+      "bytes": 1952,
+      "sha256": "fe3e138f32436a172065a1cef32700e172ed920355d36ae1281458b86e1780a1"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/source-integrity-before.json",
+      "bytes": 200,
+      "sha256": "6526d59ceaee82aaef4136d7a821a3a9bd0b0215959972e7e1dba4204e5fa1d6"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/stale-build-diagnostic/fixed-build-report.json",
+      "bytes": 4975,
+      "sha256": "fede2757ea6fda148a05c0c61e268a9284c47ab1ec74055e528823e7b615d47e"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/stale-build-diagnostic/fixed-build.log",
+      "bytes": 4975,
+      "sha256": "fede2757ea6fda148a05c0c61e268a9284c47ab1ec74055e528823e7b615d47e"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/stale-build-diagnostic/fixed-cargo-wasm.log",
+      "bytes": 36862,
+      "sha256": "bacdc5115d316c853eddeb0daf95195b2a187acf9dee2bf0b6cfb63873fbe588"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/stale-build-diagnostic/initial-wasm-clippy.log",
+      "bytes": 1099,
+      "sha256": "95b5ddc27d7ff844a5d125d9cddadb3fd2e2ff7bf2f14819a01af205543f3053"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/stale-build-diagnostic/invalidation.json",
+      "bytes": 1732,
+      "sha256": "939954c0fb7c4b1000d24e6997c1987281ce83352a1c472db02e0fa7f446bf2e"
+    },
+    {
+      "path": "results/serialize-fractional-scrollback/wasm-clippy.log",
+      "bytes": 60,
+      "sha256": "a11a1de8037a032bda7e33f88e31dc898d0129cfe94956add639cd289d2ce985"
+    }
+  ]
+}

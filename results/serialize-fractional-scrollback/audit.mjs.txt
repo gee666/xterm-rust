@@ -1,0 +1,51 @@
+// Audit retained raw results. This does not rerun or normalize the failing corpus.
+import assert from 'node:assert/strict';
+import {readFile,writeFile,readdir,copyFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {referenceIntegrity} from '../scripts/upstream-baseline-utils.mjs';
+const root=process.cwd(),base='results/serialize-fractional-scrollback';
+const json=async path=>JSON.parse(await readFile(path,'utf8'));
+const summary={scope:'Task487 finite fractional primitive HTML scrollback only; full346/322 and equivalence NOT PROVEN',status:'scoped HTML matched; complete corpus still fails on unchanged ANSI error text',seed:'0x05e21a11',base:'735e114a',sourceRevision:'8606bdc82ca217e289229cbcc0671e910d77468e',browsers:[],suites:[],knownAnsiDifferences:[]};
+const names=['html-fractional-scrollback-clamps','html-fractional-scrollback-header-reentry','html-fractional-scrollback-header-throws','html-fractional-scrollback-ring-warning-reentry'];
+for(const phase of ['baseline','fixed']){
+  const report=await json(`${base}/${phase}/browser/verification.json`);
+  assert.equal(report.status,'failed');assert.equal(report.browsers.length,3);
+  for(const b of report.browsers){
+    assert.equal(b.executed,78);assert.deepEqual(b.mismatches.map(m=>m.name).sort(),phase==='baseline'?names:[names[0]]);
+    const traces=await Promise.all(['source','rust'].map(engine=>json(`${base}/${phase}/browser/${b.name}-${engine}.json`)));
+    assert.equal(traces[0].length,78);assert.equal(traces[0].filter(t=>t.name.startsWith('seeded-')).length,32);
+    summary.browsers.push({phase,name:b.name,version:b.version,executed:b.executed,passed:b.passed,failed:b.failed,mismatches:b.mismatches.map(m=>m.name)});
+    if(phase==='fixed'){
+      const clamp=traces.map(trace=>trace.find(t=>t.name===names[0]));
+      assert.deepEqual(clamp[0].warnings,clamp[1].warnings);
+      const baseline=await Promise.all(['source','rust'].map(engine=>json(`${base}/baseline/browser/${b.name}-${engine}.json`)));
+      for(let i=0;i<clamp[0].result.length;i++){
+        const {ansi:sourceAnsi,...sourceHtml}=clamp[0].result[i],{ansi:rustAnsi,...rustHtml}=clamp[1].result[i];
+        assert.deepEqual(rustHtml,sourceHtml,'Every HTML clamp/output/getter field must match');
+        for(let engine=0;engine<2;engine++)assert.deepEqual(baseline[engine].find(t=>t.name===names[0]).result[i].ansi,clamp[engine].result[i].ansi,'HTML repair must not alter ANSI observations');
+        if(JSON.stringify(sourceAnsi)!==JSON.stringify(rustAnsi))summary.knownAnsiDifferences.push({browser:b.name,scrollback:sourceHtml.scrollback,source:sourceAnsi,rust:rustAnsi});
+      }
+      for(const name of names.slice(1))assert.deepEqual(traces[1].find(t=>t.name===name),traces[0].find(t=>t.name===name));
+      const ring=traces[0].find(t=>t.name===names[3]).result;
+      assert.equal(ring[0].count,6);assert.equal(ring[1].count,1);assert.equal(ring[1].same,true);
+      assert.deepEqual(traces[0].find(t=>t.name===names[2]).result.map(value=>value.same),[true,true,true]);
+    }
+  }
+  for(const suite of report.suites){assert.deepEqual(suite.counts,{discovered:120,executed:120,passed:120,failed:0,skipped:0,unrun:0});summary.suites.push({phase,engine:suite.engine,counts:suite.counts});}
+  assert.equal(report.referenceBefore.files,776);assert.equal(report.referenceBefore.mismatches.length,0);assert.equal(report.referenceAfter.mismatches.length,0);
+  const build=await json(`${base}/${phase}/build-report.json`);
+  const messages=(await readFile(`${base}/${phase}/cargo-wasm.log`,'utf8')).split(/\r?\n/).filter(line=>line.startsWith('{')).map(line=>JSON.parse(line));
+  assert.equal(messages.find(m=>m.reason==='compiler-artifact'&&m.target.name==='xterm_web').fresh,false);
+  summary[`${phase}Build`]={source:build.source,artifacts:build.artifacts.slice(0,2),actualWebRecompiled:true};
+}
+assert.notEqual(summary.baselineBuild.artifacts[1].sha256,summary.fixedBuild.artifacts[1].sha256);
+const quality=await json(`${base}/quality.json`);summary.native={executables:quality.nativeSummaries.length,passed:quality.nativeSummaries.reduce((sum,item)=>sum+item.passed,0)};
+assert.deepEqual(summary.native,{executables:16,passed:69});assert.ok(quality.commands.every(c=>c.result.status==='passed'));
+const manifest=await json('docs/baseline/reference-manifest.json');summary.referenceAfter=['P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo','source_repo'].map(path=>({path,...referenceIntegrity(path,manifest)}));for(const item of summary.referenceAfter)assert.equal(item.mismatches.length,0);
+async function pin(path){const bytes=await readFile(path);return{path,bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')};}
+summary.sourcePins=await Promise.all(['crates/xterm-web/src/serialize_addon/html.rs','crates/xterm-web/src/serialize_addon/options.rs','crates/xterm-web/src/serialize_addon/view.rs','crates/xterm-core/src/serialize/html.rs','crates/xterm-core/src/serialize/html_rows.rs','scripts/serialize-browser-cases.mjs','scripts/serialize-browser-check.mjs','docs/baseline/reference-manifest.json'].map(pin));
+const log=await readFile(`${base}/native.log`,'utf8');summary.nativePins=await Promise.all([...log.matchAll(/Running tests[^\r\n]+\(([^)]+\.exe)\)/g)].map(match=>pin(match[1].replaceAll('\\','/'))));assert.equal(summary.nativePins.length,16);
+for(const [input,output]of [['tmp/fraction-proof.mjs','proof.mjs.txt'],['tmp/fraction-quality.mjs','quality.mjs.txt'],['tmp/fraction-audit.mjs','audit.mjs.txt']])await copyFile(input,`${base}/${output}`);
+const paths=[];async function walk(path){for(const entry of await readdir(path,{withFileTypes:true})){const file=`${path}/${entry.name}`;assert.equal(entry.isSymbolicLink(),false);if(entry.isDirectory())await walk(file);else if(entry.isFile()&&!['summary.json','review.md','cleanup-preflight.json'].includes(entry.name))paths.push(file);}}
+await walk(base);summary.artifacts=await Promise.all(paths.sort().map(pin));
+await writeFile(`${base}/summary.json`,JSON.stringify(summary,null,2)+'\n');console.log(JSON.stringify({status:summary.status,native:summary.native,artifacts:summary.artifacts.length,sourcePins:summary.sourcePins.length,nativePins:summary.nativePins.length,knownAnsiDifferences:summary.knownAnsiDifferences.length,browsers:summary.browsers},null,2));
