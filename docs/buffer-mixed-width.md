@@ -35,4 +35,8 @@ cargo clippy --locked -j2 -p xterm-core --test buffer_resize_differential -- -D 
 cargo fmt --all -- --check
 ```
 
+## Independent review
+
+The isolated task372 reviewer accepted commit `9b68fcc` with no findings or tracked edits. It independently checked preservation of all1111 prior case blocks, valid wide-placeholder layout and matching attributes in all512 new before-states, and exact coverage counts. It reran the uninstrumented61-case source baseline, the61-case instrumented oracle with exact fixture equality, all52 focused debug functions, the release differential, scoped warning-denied Clippy and full workspace formatting. Review logs are retained beside the implementation logs under `results/buffer-mixed-width/review-*.log`.
+
 Each native transition hydrates its before-state independently. This comparison does not prove preceding native parser operations, shared extended-object aliasing, browser callbacks or host scheduling. It supplies no new browser or native Linux/macOS result, and it is not the complete final workspace feature/platform matrix. Full family314 and original-suite327 remain open.
