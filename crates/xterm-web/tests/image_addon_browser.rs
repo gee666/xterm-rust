@@ -17,6 +17,8 @@ mod raw_storage_limit;
 mod render_dimensions;
 #[path = "image_addon_support/mod.rs"]
 mod support;
+#[path = "image_addon_support/visibility.rs"]
+mod visibility;
 use support::*;
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_test::*;

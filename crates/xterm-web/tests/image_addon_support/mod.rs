@@ -57,6 +57,11 @@ impl Pair {
         .unwrap();
         let doc = web_sys::window().unwrap().document().unwrap();
         let parent = doc.create_element("div").unwrap();
+        // Harness output must not push just one terminal below the viewport.
+        // Both renderers need the same visible state for image-cache assertions.
+        parent
+            .set_attribute("style", "position:fixed;top:0;left:0")
+            .unwrap();
         doc.body().unwrap().append_child(&parent).unwrap();
         if open {
             terminal.open(parent.clone().into()).unwrap();
@@ -80,6 +85,7 @@ impl Pair {
         let source = js_sys::Function::new_with_args("open,options", r#"
           const terminal = new SourceTerminal({cols:20,rows:10,fontSize:14,allowProposedApi:true,logLevel:'off'});
           const parent = document.body.appendChild(document.createElement('div'));
+          parent.style.cssText='position:fixed;top:0;left:50%';
           if(open) terminal.open(parent);
           const addon = new SourceImageAddon(options), replies=[];
           let count=0;
