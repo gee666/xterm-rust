@@ -1,0 +1,9 @@
+# Howard398 continuation
+
+Task398 is independently accepted. Canonical mainfe972aeb integrates its source a1d37ca6, accepted391 source17f5e887/receipt48a2b9a4, and reaccepted isolated379 source83dd5bf1/receiptfe972aeb. No306 WIP or unaccepted392 source was picked. The helper refreshed onto main5cd689c1 and ran every normal gate without bypass.
+
+Docs/font-kern-warning.md and results/font-kern-warning contain192 new constructor cases, ten async source/Rust scenarios, mutation negative control, retained1471 corpus, full native2064/414 receipt, new and retained2-function three-browser binaries, original development failures, independent review and canonical515/169 native pass plus affected/workspace/WASM checks. All15 font hashes,14 atlas files and776 original reference files verified. Source archive/Howard398-reviewed preserves8f0ffe1b; original391/379 reviewed refs remain untouched.
+
+Task342 remains open for complex optional metadata, broader exact errors and mutable source-ArrayBuffer aliasing. Source warn callbacks can mutate a retained DataView buffer while Rust currently owns an immutable snapshot. Full interactive Terminal/addon/original/demo parity and final native OS matrix remain NOT PROVEN. Continue actual missing functionality, not another review of398 or391.
+
+Owned scratch is O:/xterm-rust-swarm-16/tmp/H on swarm/Howard398. Earlier temporary Howard398/H398 paths were moved here and no longer exist. An initial old swarm/H checkout was inspected, its failed local pick aborted, branch preserved, and checkout removed before this unique branch moved to H. Generated browser paths were removed only after durable receipts were saved. Canonical helper removed the private target. Receipt-only integration and final zero-link/process cleanup are reported in swarm post507 after this handoff commit.

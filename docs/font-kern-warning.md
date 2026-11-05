@@ -88,6 +88,16 @@ cargo test --locked -j2 --workspace --all-targets --all-features
 Only `--generate` deliberately rewrites source-generated expectations. Inspect
 differences rather than regenerating fixtures to clear a failure.
 
+## Integration
+
+The canonical helper integrated accepted391+398 and isolated reaccepted379 into
+mainfe972aeb. All reviewed font hashes and atlas files stayed exact. Three
+changed crates built and passed515 native tests across169 summaries, then the
+affected native all-target, workspace and applicable WASM-library checks passed.
+The private target was removed. This canonical default-feature union is separate
+from the earlier full native all-feature workspace receipt. Exact output is
+`results/font-kern-warning/integration.log`.
+
 ## Remaining gaps
 
 Task342 still owns complex metadata, exact broader font error mappings and
