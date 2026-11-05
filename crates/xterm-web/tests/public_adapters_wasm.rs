@@ -4,9 +4,18 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen_test::*;
 wasm_bindgen_test_configure!(run_in_browser);
 
-#[wasm_bindgen(inline_js = "export function domProbe(terminal, log) {return {activate(t) {log.push(t===terminal);},dispose() {log.push(terminal.element.isConnected);}};}")]
-extern "C" { #[wasm_bindgen(js_name = domProbe)] fn dom_probe(terminal: &JsValue, log: &Array) -> JsValue; }
-fn dispose(object: &JsValue) -> Result<JsValue, JsValue> { Reflect::get(object, &"dispose".into())?.dyn_into::<Function>()?.call0(object) }
+#[wasm_bindgen(
+    inline_js = "export function domProbe(terminal, log) {return {activate(t) {log.push(t===terminal);},dispose() {log.push(terminal.element.isConnected);}};}"
+)]
+extern "C" {
+    #[wasm_bindgen(js_name = domProbe)]
+    fn dom_probe(terminal: &JsValue, log: &Array) -> JsValue;
+}
+fn dispose(object: &JsValue) -> Result<JsValue, JsValue> {
+    Reflect::get(object, &"dispose".into())?
+        .dyn_into::<Function>()?
+        .call0(object)
+}
 
 #[wasm_bindgen_test]
 fn actual_terminal_identity_and_core_dom_cleanup_precede_addon_disposal() {

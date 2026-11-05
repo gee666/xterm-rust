@@ -14,11 +14,7 @@ fn document() -> Document {
 }
 
 fn face(name: &str) -> FontFace {
-    FontFace::new_with_u8_array(
-        name,
-        include_bytes!("fixtures/kongtext.regular.ttf"),
-    )
-    .unwrap()
+    FontFace::new_with_u8_array(name, include_bytes!("fixtures/kongtext.regular.ttf")).unwrap()
 }
 
 fn requests(values: &[JsValue]) -> Array {

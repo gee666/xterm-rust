@@ -195,7 +195,7 @@ impl SmallerPlan {
         // A prior observer may have installed a sparse list. The source keeps
         // those undefined slots through layout and dispatches before later cell
         // access fails, so rejecting a hole here would change partial state.
-        let original:Vec<_> = (0..lines.len()).map(|index|lines.get(index)).collect();
+        let original: Vec<_> = (0..lines.len()).map(|index| lines.get(index)).collect();
         let original_length = original.len();
         let expanded = original_length
             .checked_add(count)

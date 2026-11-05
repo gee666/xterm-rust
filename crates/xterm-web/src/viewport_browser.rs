@@ -7,14 +7,14 @@ mod options;
 #[cfg(test)]
 #[path = "viewport_state_browser_tests.rs"]
 mod state_tests;
-#[cfg(test)]
-#[path = "viewport_touch_browser_tests.rs"]
-mod touch_tests;
 #[path = "viewport_styles.rs"]
 mod styles;
 #[cfg(test)]
 #[path = "viewport_browser_tests.rs"]
 mod tests;
+#[cfg(test)]
+#[path = "viewport_touch_browser_tests.rs"]
+mod touch_tests;
 
 use super::{SyncCallback, ViewportController, ViewportError, ViewportHost};
 use crate::{

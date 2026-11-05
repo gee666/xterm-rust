@@ -6,18 +6,18 @@ use super::{
 };
 use std::{cell::RefCell, collections::BTreeMap};
 
-#[path = "line_edit.rs"]
-mod edit;
-#[cfg(test)]
-#[path = "line_storage_tests.rs"]
-mod storage_tests;
 #[cfg(test)]
 #[path = "line_buffer_cleanup_tests.rs"]
 mod buffer_cleanup_tests;
-#[path = "line_text.rs"]
-mod text;
+#[path = "line_edit.rs"]
+mod edit;
 #[path = "line_numeric.rs"]
 mod numeric;
+#[cfg(test)]
+#[path = "line_storage_tests.rs"]
+mod storage_tests;
+#[path = "line_text.rs"]
+mod text;
 
 /// One terminal row with sparse combined strings and extended attributes.
 /// Out-of-range cell access returns `None`; mutations outside the row are ignored,

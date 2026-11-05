@@ -128,11 +128,11 @@ fn public_numeric_setter_matches_javascript_and_event_lifecycle() {
     assert_eq!(addon.progress(), s(1.5, 50.5));
     // API setters accept these values even though OSC remove/indeterminate
     // reports respectively reset or preserve the previous value.
-    assert!(addon.set_progress(s(0.,15.)).unwrap());
-    assert_eq!(addon.progress(),s(0.,15.));
-    assert!(addon.set_progress(s(3.,8.)).unwrap());
-    assert_eq!(addon.progress(),s(3.,8.));
-    assert!(addon.set_progress(s(1.,-0.0)).unwrap());
+    assert!(addon.set_progress(s(0., 15.)).unwrap());
+    assert_eq!(addon.progress(), s(0., 15.));
+    assert!(addon.set_progress(s(3., 8.)).unwrap());
+    assert_eq!(addon.progress(), s(3., 8.));
+    assert!(addon.set_progress(s(1., -0.0)).unwrap());
     assert!(!addon.progress().value.is_sign_negative());
     let terminal = Rc::new(FixtureTerminal::default());
     addon.activate(terminal);

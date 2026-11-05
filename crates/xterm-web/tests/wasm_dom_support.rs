@@ -173,7 +173,12 @@ async fn interval_cancels_reentrantly_and_rejects_reuse_after_dispose() {
         .cancel_and_set(|| Ok(()), 0.0, Some(&window))
         .unwrap_err();
     assert_eq!(
-        error.dyn_into::<js_sys::Error>().unwrap().message().as_string().unwrap(),
+        error
+            .dyn_into::<js_sys::Error>()
+            .unwrap()
+            .message()
+            .as_string()
+            .unwrap(),
         "Calling cancelAndSet on a disposed IntervalTimer"
     );
 }
