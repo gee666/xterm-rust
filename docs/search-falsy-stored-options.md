@@ -38,6 +38,10 @@ The negative controls replace only find.rs with its exact main785a7781 bytes whi
 
 Raw reports, compiler and binding hashes, source fixture hashes, bounded command records and concise logs are retained in results/search-falsy-stored-options. The build/compiler/binding binaries named in reports are temporary verification artifacts, not delivered distribution artifacts. The scoped reports do not establish final integrated workspace quality or native Linux/macOS runtime evidence. Exact cargo fmt --all -- --check fails with Windows OS206 and its raw diagnostic is retained, not relabeled as a full formatting pass.
 
+## Independent review
+
+Task430 was accepted at sourcef6cc79de plus evidence4af9d7b6 against785a7781. The isolated reviewer independently reran native44, scoped warning-denied native Clippy and affected-file formatting, all passing. It validated all46 then-pinned hashes, old/fixed compiler and binding artifacts, original-suite build artifacts, and776 reference-manifest entries. It inspected raw browser, original-suite and negative-control receipts without launching browsers. No files changed and no concrete findings were raised. The retained review transcription adds the47th final pin after review.
+
 ## Remaining work
 
 Full347 and322 stay open. Truthy option replacement during each individual comparison getter, matching-phase repeated flags and short circuits, valid boxed/overridden search terms, mutable term lengths/methods, complete source-unit mapping and seeded raw traces still need implementation and proof. No current full-workspace, native Linux/macOS or complete demo matrix is claimed. Full equivalence is NOT PROVEN.
