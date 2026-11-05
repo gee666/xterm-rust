@@ -38,6 +38,10 @@ At this task367 checkpoint, an additional unchanged browser regression suite was
 
 The isolated task367 reviewer accepted8dabe05 against main e165104 with no findings or tracked edits. It independently reran all38 focused native tests, the source32-case oracle and the Rust/WASM32-case replay in all three browsers, full workspace formatting, native core/web all-target/all-feature Clippy and scoped WASM Clippy. All passed. It verified every source and fixture hash in `repair-verification.json` and inspected the identical retained baseline/repair alternate-buffer failure. That separate failure remains task371.
 
+## Canonical integration
+
+The canonical helper fast-forwarded main to2f1be3b980494d9618a9049fd1a7440534ff6444 after changed core/web all-target builds and tests, affected native all-target checks, the default workspace check and applicable WASM library checks. It recorded1872 passing tests across354 result summaries, with no failures, and removed the private target. `canonical-merge.log` and `canonical-summary.json` retain this gate. The branch also picked Melanie's inspected docs-only425984e receipt as1a0481c. Herbert's19d3072 receipt was already patch-equivalent on main and was not duplicated. No post-gate browser rerun or native Linux/macOS run for this new change is claimed.
+
 ## Reproduction
 
 Run in an isolated worktree with an installed WASM target, matching wasm-bindgen0.2.100 CLI and existing Playwright installation. Set `XT_SOURCE_ROOT`, `PLAYWRIGHT_MODULE` and `WASM_BINDGEN` when using an external read-only reference or tool installation. Set `CARGO_BUILD_JOBS=2` and keep temporary output on the run-owned volume.
