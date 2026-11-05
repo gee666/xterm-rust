@@ -1,0 +1,15 @@
+# Native quality continuation
+
+Overall equivalence remains NOT PROVEN. Task 304 requires the full native Windows, Linux and macOS matrix on MSRV and current stable after integration stabilizes, with exact command results, source identity, feature coverage, release builds, doctests and WASM checks. A workflow edit, focused pass or older matrix does not satisfy that requirement.
+
+Saadia resumes the existing task graph, not a new port. Before edits, I read the brief, controlling handoff, requirements, repository instructions, current intent, continuation notes and native-quality/worktree skills. Actual main was `dcde3e9c`, with only retained untracked `swarm/` content. The legacy P: launch checkout has unrelated modified files and was left untouched.
+
+The predecessor's task 433 is accepted. Its source/review/cleanup chain `982e272e` then `4dfbb989` then `a5aacf3c` remains on `swarm/X304` and `archive/Ximena433-reviewed`. I inspected its Windows path-budget document and cleanup receipt and confirmed `O:/xterm-rust-swarm-16/tmp/X304` is absent. The repair is not yet an ancestor of the inspected main. It must be integrated through the unchanged canonical gates, not replayed over a moving main without the integration owner's coordination.
+
+New owned temporary work is limited to `O:/xterm-rust-swarm-16/tmp/S304`, including its regular private target and tmp directories. No compiler, browser, background service or main-ref operation has started. Compiler work remains Cargo -j2 under the coordinator's team allocation. Any remote CI snapshot must be immutable and explicitly recorded, and it cannot be called final while required producers remain unintegrated.
+
+Read-only authenticated `node scripts/github-quality.mjs runs` succeeded. Its latest observed run is historical `42046682640`, source `e7cea61d6e11fab4b614b3905cff0489cb64be80`, completed successfully. It does not cover current main or the Windows path repair. Authentication was used through the existing helper without printing or copying credentials.
+
+The coordinator confirmed that 304 must wait for the next accepted-source batch before freezing and launching CI. No full CI or compiler run is authorized yet. A private preflight combines `dcde3e9c` with the accepted 433 chain, producing `f8bd5fa6`; main was not changed. The seven Node verifier suites pass all 55 tests with zero failures or skips. All 39 retained checksum entries were verified. Direct relative-path rustfmt passes on both installed toolchains for all 438 current target roots. Complete arguments, root hashes and command receipts are in `results/quality/saadia304-preflight/`. These direct checks are not successful exact cargo-fmt or full native matrix results.
+
+Pending coordinator decisions are the accepted 433 pickup, exact frozen integrated source and resource authorization for a full quality/CI attempt. Local exact cargo-fmt OS206 at the predecessor's allowed O: path remains a failure, not a passed gate. Its direct complete-root and package checks remain separately scoped historical evidence.
