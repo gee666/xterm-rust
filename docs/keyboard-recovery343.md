@@ -58,7 +58,7 @@ Fresh checks so far:
 | Added portable raw Kitty contracts | 4 tests pass,84 native core tests across the two commands |
 | WASM library and live keyboard test compilation | Pass |
 | Scoped core and WASM warning-denied Clippy | Final reruns pass including added native Kitty tests |
-| Exact full workspace rustfmt | Pass after shortening the owned worktree path |
+| Exact full workspace rustfmt | Passed before rebase;8ab2dd3 inherited marker-module ordering fails, separate fix559daa9 pending integration |
 | Node/WASM raw realm | 2 tests pass,10224 Kitty and592 Win32 comparisons |
 | Chromium/Firefox/WebKit raw realm | Both raw tests pass in every engine with the same10224+592 comparisons |
 | Complete WASM library in every browser | 24 pass,1 viewport test fails,0 ignored/filtered |
@@ -69,7 +69,7 @@ Source-only negative controls detect missing prototypes in4440 cases, wrong stri
 
 The raw realm matrix compares10224 Kitty cases and592 Win32 cases per host, including own/inherited entries, receiver and persistent mutation, falsy values, native intrinsics, BigInt/Symbol/boxed/proxy values, throwing lookup/conversion, strict special-key equality and reentry. It preserves the retained560 Win32 cases and adds32 changing-key-to-empty getter traces. The hypothesis that these should emit undefined was disproved by the unchanged source's explicit `codePointAt(0) || 0`; no production codepoint change was made. Real textarea tests cover the production listener's callback mutation, conversion-error identity, persistent tables, mode switching, nested dispatch and disposal.
 
-The first exact workspace rustfmt attempt failed with Windows OS206 at the long private path. A safe Git worktree move to `O:/xterm-rust-swarm-16/tmp/H` allowed the unchanged exact command to pass, without a junction or partial-format substitute. The failed log is retained.
+The first exact workspace rustfmt attempt failed with Windows OS206 at the long private path. A safe Git worktree move to `O:/xterm-rust-swarm-16/tmp/H` allowed the unchanged exact command to pass, without a junction or partial-format substitute. Both logs are retained. A subsequent clean rebase onto main8ab2dd3 left all23 recorded implementation/fixture hashes unchanged, but introduced that main revision's existing terminal/mod.rs marker_api declaration-order formatting failure. Its separate reviewed fix559daa9 is owned by Milica and queued for canonical integration. `fmt-after-rebase.log` retains the current failure; the earlier pass is not claimed as a current full quality gate.
 
 ## Retained failure and remaining scope
 
