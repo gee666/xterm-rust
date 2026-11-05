@@ -43,3 +43,5 @@ WASM_TEST=wasm_search_addon node scripts/browser-host-check.mjs
 ```
 
 Control programs, exact commands, raw logs, restorations, source hashes and count summaries are under `results/search-highlight-guard/`. Source grant409/3642 triggered after497 actualrelease3714. Native compiler and source/browser grants were released after the corresponding commands ended. Main and the independent original reference remain untouched.
+
+Isolated review accepted frozen59ea6155 with no defects. The reviewer independently hash-checked and reran the native executable,62 passes, and verified all53 then-current pins, all43 inherited480 pins, both776-file manifests, both compiler/WASM/binding sets, exact embedded fixture, fresh=false, distinct hashes and exact restores. It inspected retained browser/Clippy/fmt evidence but did not rerun heavy jobs. The later review receipt adds one pin. Actual cleanup is separate from that verdict.
