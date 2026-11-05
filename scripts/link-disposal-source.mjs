@@ -63,11 +63,11 @@ try {
               move(1);
               const firstReply = replies[0].shift();
               const laterReply = replies[1].shift();
-              if (replace) laterReply([link(10, () => log.push('old'))]);
               firstReply([link(3, () => {
                 log.push('first');
                 laterReply([link(20, () => log.push('new'))]);
               })]);
+              if (replace) laterReply([link(10, () => log.push('old'))]);
               move(2);
               traces.push({ replace, log });
             } finally { terminal.dispose(); }

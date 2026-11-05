@@ -74,14 +74,7 @@ fn run(replace_later_reply: bool) {
     let first_reply = first.0.borrow_mut().remove(0);
     let later_reply = Rc::new(later.0.borrow_mut().remove(0));
     let log = Rc::new(RefCell::new(Vec::new()));
-    if replace_later_reply {
-        let log = log.clone();
-        later_reply(Some(vec![link(10, move || {
-            log.borrow_mut().push("old");
-            Ok(())
-        })]))
-        .unwrap();
-    }
+    let replacement_reply = later_reply.clone();
     let disposal_log = log.clone();
     first_reply(Some(vec![link(3, move || {
         disposal_log.borrow_mut().push("first");
@@ -92,6 +85,14 @@ fn run(replace_later_reply: bool) {
         })]))
     })]))
     .unwrap();
+    if replace_later_reply {
+        let log = log.clone();
+        replacement_reply(Some(vec![link(10, move || {
+            log.borrow_mut().push("old");
+            Ok(())
+        })]))
+        .unwrap();
+    }
     move_to(&root, 3, 2);
     assert_eq!(
         *log.borrow(),
