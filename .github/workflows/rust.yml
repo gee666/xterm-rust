@@ -80,7 +80,8 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
-      - name: Check workspace libraries for the browser target
+          components: clippy
+      - name: Check and lint all workspace targets for the browser target
         shell: bash
         run: |
           set -euo pipefail
@@ -90,7 +91,8 @@ jobs:
             rustc -vV
             cargo --version
             rustup target list --installed
-            cargo check --workspace --locked --lib --all-features --target wasm32-unknown-unknown
+            cargo check --workspace --locked --all-targets --all-features --target wasm32-unknown-unknown
+            cargo clippy --workspace --locked --all-targets --all-features --target wasm32-unknown-unknown -- -D warnings
           } 2>&1 | tee results/quality/wasm-compile/compile.log
       - name: Preserve compilation result, not browser runtime evidence
         if: always()

@@ -80,7 +80,7 @@ fn seeded_live_font_layer_replacement_and_placeholder_pixels_match_source() {
                     "dimensions",
                     &live.terminal.dimensions().unwrap(),
                 );
-                if old != JsValue::from(size) {
+                if old != size {
                     call(&terminal, "change", &["fontSize".into()]);
                 }
             }

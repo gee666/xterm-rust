@@ -168,7 +168,7 @@ fn change_callbacks_observe_committed_utf16_state_and_can_reenter() {
         let view = weak_view.upgrade().unwrap();
         let current = view.active_version();
         observed.borrow_mut().push(current.clone());
-        if current == js_sys::JsString::from("11") {
+        if current == "11" {
             view.set_active_version("6".into()).unwrap();
         }
     });

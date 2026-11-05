@@ -1,0 +1,54 @@
+   Compiling wasm-bindgen-test-macro v0.3.50
+    Checking xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\Q\crates\xterm-addons)
+    Checking wasm-bindgen-test v0.3.50
+    Checking xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\Q\crates\xterm-web)
+    Checking xterm-wasm-support v0.1.0 (O:\xterm-rust-swarm-16\tmp\Q\crates\xterm-wasm-support)
+    Checking xterm-font-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\Q\crates\xterm-font-addons)
+warning: unused import: `JsValue`
+  --> crates\xterm-web\tests\wasm_scrollbars.rs:10:28
+   |
+10 | use wasm_bindgen::{JsCast, JsValue};
+   |                            ^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` on by default
+
+warning: unused import: `Disposable`
+  --> crates\xterm-web\tests\wasm_scrollbars.rs:14:17
+   |
+14 |     lifecycle::{Disposable, DisposableHandle},
+   |                 ^^^^^^^^^^
+
+warning: `xterm-web` (test "wasm_scrollbars") generated 2 warnings (run `cargo fix --test "wasm_scrollbars"` to apply 1 suggestion)
+error: failed to read file `O:\xterm-rust-swarm-16\tmp\Q\crates\xterm-web\../../tmp/core-browser-source/reference.mjs`: The system cannot find the path specified. (os error 3)
+  --> crates\xterm-web\tests\core_browser_service_wasm.rs:42:25
+   |
+42 | #[wasm_bindgen(module = "/../../tmp/core-browser-source/reference.mjs")]
+   |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0433]: failed to resolve: use of undeclared type `SourceCore`
+   --> crates\xterm-web\tests\core_browser_service_wasm.rs:105:18
+    |
+105 |     let source = SourceCore::new(&s.0.textarea(), &s.0.window(), &sd.0.document()).unwrap();
+    |                  ^^^^^^^^^^ use of undeclared type `SourceCore`
+
+error[E0433]: failed to resolve: use of undeclared type `SourceCore`
+  --> crates\xterm-web\tests\core_browser_service_wasm.rs:85:18
+   |
+85 |     let source = SourceCore::new(&p.textarea(), &p.window(), &p.document()).unwrap();
+   |                  ^^^^^^^^^^ use of undeclared type `SourceCore`
+
+error[E0433]: failed to resolve: use of undeclared type `SourceCore`
+   --> crates\xterm-web\tests\core_browser_service_wasm.rs:140:18
+    |
+140 |     let source = SourceCore::new(&s.0.textarea(), &s.0.window(), &s.0.document()).unwrap();
+    |                  ^^^^^^^^^^ use of undeclared type `SourceCore`
+
+error[E0433]: failed to resolve: use of undeclared type `SourceCore`
+   --> crates\xterm-web\tests\core_browser_service_wasm.rs:184:18
+    |
+184 |     let source = SourceCore::new(&s.0.textarea(), &s.0.window(), &s.0.document()).unwrap();
+    |                  ^^^^^^^^^^ use of undeclared type `SourceCore`
+
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `xterm-web` (test "core_browser_service_wasm") due to 5 previous errors
+warning: build failed, waiting for other jobs to finish...

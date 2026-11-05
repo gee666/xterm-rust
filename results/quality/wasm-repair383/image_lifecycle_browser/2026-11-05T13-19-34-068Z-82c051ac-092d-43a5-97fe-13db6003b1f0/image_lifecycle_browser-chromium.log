@@ -1,0 +1,97 @@
+running 13 tests
+test source_lifecycle_traces_match_font_filter_and_replacement_failure_order ... FAIL
+test replacement_removes_snapshot_in_insertion_order_before_backend_and_preserves_throw ... ok
+test placeholder_toggle_requests_real_terminal_renders_and_drop_unhooks ... ok
+test newest_interceptor_runs_first_and_errors_stop_older_wrappers ... ok
+test lazy_open_failure_then_success_and_same_storage_renderer_identity ... ok
+test differential::seeded_live_font_layer_replacement_and_placeholder_pixels_match_source ... FAIL
+test differential::reentrancy::failed_disposal_then_owner_drop_cannot_leave_a_dead_renderer_wrapper ... FAIL
+test differential::reentrancy::failed_disposal_keeps_saved_delegate_and_is_not_silently_retried ... ok
+test differential::reentrancy::disposal_final_map_clear_forgets_layer_reinserted_by_bottom_removal ... FAIL
+test differential::reentrancy::disposal_during_layer_removal_clears_saved_delegate_before_backend_call ... FAIL
+test differential::font_rescale_throw_retains_identity_and_committed_option ... ok
+test differential::dropping_before_open_detaches_and_live_terminal_does_not_retain_owner ... ok
+test attach_after_open_font_size_rescales_actual_canvases_only_while_owned ... ok
+
+failures:
+
+---- source_lifecycle_traces_match_font_filter_and_replacement_failure_order output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.__rust_start_panic (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[40940]:0x9633f7)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.rust_panic (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[36572]:0x958f25)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[11329]:0x76c253)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[14347]:0x7eaa57)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[40457]:0x9627cd)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.rust_begin_unwind (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[27589]:0x922800)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[27590]:0x92282d)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[17117]:0x84b6f7)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.image_lifecycle_browser::eval::hf03ec7b68806bf85 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[12539]:0x7a238d)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.image_lifecycle_browser::source_lifecycle_traces_match_font_filter_and_replacement_failure_order::h8069b5afd138cc9d (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[3190]:0x4f487c)
+
+---- differential::seeded_live_font_layer_replacement_and_placeholder_pixels_match_source output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.__rust_start_panic (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[40940]:0x9633f7)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.rust_panic (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[36572]:0x958f25)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[11329]:0x76c253)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[14347]:0x7eaa57)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[40457]:0x9627cd)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.rust_begin_unwind (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[27589]:0x922800)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[27590]:0x92282d)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[17117]:0x84b6f7)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.image_lifecycle_browser::eval::hf03ec7b68806bf85 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[12539]:0x7a238d)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.image_lifecycle_browser::differential::seeded_live_font_layer_replacement_and_placeholder_pixels_match_source::h2e50a3d02324b79f (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[566]:0xd1177)
+
+---- differential::reentrancy::failed_disposal_then_owner_drop_cannot_leave_a_dead_renderer_wrapper output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.__rust_start_panic (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[40940]:0x9633f7)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.rust_panic (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[36572]:0x958f25)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[11329]:0x76c253)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[14347]:0x7eaa57)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[40457]:0x9627cd)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.rust_begin_unwind (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[27589]:0x922800)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[27590]:0x92282d)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[17117]:0x84b6f7)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.image_lifecycle_browser::eval::hf03ec7b68806bf85 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[12539]:0x7a238d)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.image_lifecycle_browser::differential::reentrancy::failed_disposal_then_owner_drop_cannot_leave_a_dead_renderer_wrapper::h5eec7da4f72a5163 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[961]:0x291daa)
+
+---- differential::reentrancy::disposal_final_map_clear_forgets_layer_reinserted_by_bottom_removal output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.__rust_start_panic (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[40940]:0x9633f7)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.rust_panic (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[36572]:0x958f25)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[11329]:0x76c253)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[14347]:0x7eaa57)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[40457]:0x9627cd)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.rust_begin_unwind (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[27589]:0x922800)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[27590]:0x92282d)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[17117]:0x84b6f7)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.image_lifecycle_browser::eval::hf03ec7b68806bf85 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[12539]:0x7a238d)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.image_lifecycle_browser::differential::reentrancy::disposal_final_map_clear_forgets_layer_reinserted_by_bottom_removal::hebe80650e1ca2e19 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[972]:0x299626)
+
+---- differential::reentrancy::disposal_during_layer_removal_clears_saved_delegate_before_backend_call output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.__rust_start_panic (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[40940]:0x9633f7)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.rust_panic (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[36572]:0x958f25)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[11329]:0x76c253)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[14347]:0x7eaa57)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[40457]:0x9627cd)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.rust_begin_unwind (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[27589]:0x922800)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[27590]:0x92282d)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.core::result::unwrap_failed::ha18832984acbf380 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[17117]:0x84b6f7)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.image_lifecycle_browser::eval::hf03ec7b68806bf85 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[12539]:0x7a238d)
+            at image_lifecycle_browser-db4c180ee0c69840.wasm.image_lifecycle_browser::differential::reentrancy::disposal_during_layer_removal_clears_saved_delegate_before_backend_call::h22df66cd21ffab96 (http://127.0.0.1:50557/suite_bg.wasm:wasm-function[909]:0x26b7dc)
+
+failures:
+
+    source_lifecycle_traces_match_font_filter_and_replacement_failure_order
+    differential::seeded_live_font_layer_replacement_and_placeholder_pixels_match_source
+    differential::reentrancy::failed_disposal_then_owner_drop_cannot_leave_a_dead_renderer_wrapper
+    differential::reentrancy::disposal_final_map_clear_forgets_layer_reinserted_by_bottom_removal
+    differential::reentrancy::disposal_during_layer_removal_clears_saved_delegate_before_backend_call
+
+test result: FAILED. 8 passed; 5 failed; 0 ignored; 0 filtered out; finished in 0.28s
+

@@ -7,13 +7,10 @@ use std::{
     ops::Deref,
     rc::Rc,
 };
-use wasm_bindgen::{JsCast, JsValue};
+use wasm_bindgen::JsCast;
 use wasm_bindgen_test::*;
 use web_sys::{EventTarget, HtmlElement, PointerEvent, PointerEventInit};
-use xterm_core::{
-    lifecycle::{Disposable, DisposableHandle},
-    options::OptionValue as V,
-};
+use xterm_core::{lifecycle::DisposableHandle, options::OptionValue as V};
 use xterm_web::{
     links::animation_queue::WindowAnimationQueues,
     scroll::{
@@ -44,14 +41,15 @@ impl<B: Deref<Target = Scrollbar>> Drop for Fixture<B> {
         self.parent.remove();
     }
 }
-fn parts() -> (
+type ScrollbarParts = (
     BrowserScrollable,
     SharedOptions,
     ScrollbarHost,
     Rc<Cell<usize>>,
     Rc<Cell<usize>>,
     HtmlElement,
-) {
+);
+fn parts() -> ScrollbarParts {
     let window = web_sys::window().unwrap();
     let mut queues = WindowAnimationQueues::default();
     let model = new_scrollable(queues.for_window(&window), false, 0.0);

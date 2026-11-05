@@ -1,0 +1,46 @@
+    Checking xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\Q\crates\xterm-addons)
+    Checking xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\Q\crates\xterm-web)
+error: this creates an owned instance just for comparison
+  --> crates\xterm-web\tests\image_lifecycle_support\mod.rs:83:27
+   |
+83 |                 if old != JsValue::from(size) {
+   |                           ^^^^^^^^^^^^^^^^^^^ help: try: `size`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#cmp_owned
+   = note: `-D clippy::cmp-owned` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::cmp_owned)]`
+
+error: could not compile `xterm-web` (test "image_lifecycle_browser") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: very complex type used. Consider factoring parts into `type` definitions
+  --> crates\xterm-web\tests\wasm_scrollbars.rs:44:15
+   |
+44 |   fn parts() -> (
+   |  _______________^
+45 | |     BrowserScrollable,
+46 | |     SharedOptions,
+47 | |     ScrollbarHost,
+...  |
+50 | |     HtmlElement,
+51 | | ) {
+   | |_^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#type_complexity
+   = note: `-D clippy::type-complexity` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::type_complexity)]`
+
+error: could not compile `xterm-web` (test "wasm_scrollbars") due to 1 previous error
+error: this creates an owned instance just for comparison
+   --> crates\xterm-web\tests\unicode_public_api.rs:171:23
+    |
+171 |         if current == js_sys::JsString::from("11") {
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `*"11"`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#cmp_owned
+    = note: `-D clippy::cmp-owned` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::cmp_owned)]`
+
+error: could not compile `xterm-web` (test "unicode_public_api") due to 1 previous error
+    Checking xterm-font-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\Q\crates\xterm-font-addons)
+    Checking xterm-wasm-support v0.1.0 (O:\xterm-rust-swarm-16\tmp\Q\crates\xterm-wasm-support)
+    Checking xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\Q\crates\xterm-core)
