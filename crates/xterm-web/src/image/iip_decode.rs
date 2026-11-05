@@ -1,6 +1,7 @@
 // Copyright (c) 2023 The xterm.js authors. MIT license.
 //! IIP image decoding at the browser boundary. Protocol decisions stay in Rust.
 use super::{
+    iip_memory::QoiMemory,
     js::{call, construct, context, function, get, set},
     primitives::create_canvas,
     BrowserImageSurface,
@@ -39,17 +40,57 @@ impl PendingImageBitmap {
 /// This consumes actual IIP display requests, never a JavaScript protocol engine.
 pub struct IipImageDecoder {
     qoi: RefCell<QoiDecoder>,
+    memory: QoiMemory,
+}
+struct QoiSnapshot {
+    range: Result<std::ops::Range<usize>, QoiError>,
+    memory: Vec<u8>,
+    width: i32,
+    height: i32,
 }
 impl Default for IipImageDecoder {
     fn default() -> Self {
         Self {
             qoi: RefCell::new(QoiDecoder::new(DECODER_KEEP_BYTES as f64)),
+            memory: QoiMemory::default(),
         }
     }
 }
 impl IipImageDecoder {
     pub fn reset(&self) {
-        self.qoi.borrow_mut().release();
+        self.release();
+    }
+    fn release(&self) -> (i32, i32) {
+        let (initialized, width, height) = {
+            let mut qoi = self.qoi.borrow_mut();
+            qoi.release();
+            (qoi.is_initialized(), qoi.width, qoi.height)
+        };
+        if !initialized {
+            self.memory.clear();
+        }
+        (width, height)
+    }
+    fn decode_qoi(&self, input: &[u8], previous: Option<Vec<u8>>) -> Result<QoiSnapshot, QoiError> {
+        let mut qoi = self.qoi.borrow_mut();
+        if let Some(previous) = previous {
+            if previous.len() != qoi.memory_usage() {
+                return Err(QoiError::InputOffset);
+            }
+            qoi.memory_mut().copy_from_slice(&previous);
+        }
+        let range = qoi.decode_in_place(input);
+        // Snapshot before browser calls, without unsafe WASM memory views or
+        // retained RefCell borrows. The browser mirror itself remains shared.
+        let mut memory = Vec::new();
+        memory.try_reserve_exact(qoi.memory_usage())?;
+        memory.extend_from_slice(qoi.memory());
+        Ok(QoiSnapshot {
+            range,
+            memory,
+            width: qoi.width,
+            height: qoi.height,
+        })
     }
 
     /// Prepare synchronously so QOI/ImageData/Blob and createImageBitmap call
@@ -57,27 +98,23 @@ impl IipImageDecoder {
     /// handler already validates metrics and target dimensions before this call.
     pub fn prepare(&self, request: &DisplayRequest) -> Result<IipDecodedImage, JsValue> {
         let image = if request.source.mime == ImageType::Qoi {
-            // Native decode has no foreign callbacks. End its borrow before even
-            // constructing a JS error, so reset/transfer reentry stays possible.
-            let result = self.qoi.borrow_mut().decode(&request.bytes);
-            let decoded = result.map_err(qoi_error)?;
-            let bytes = Uint8Array::from(decoded.pixels.as_slice());
+            let previous = self.memory.snapshot()?;
+            let snapshot = self
+                .decode_qoi(&request.bytes, previous)
+                .map_err(qoi_error)?;
+            let buffer = self.memory.update(&snapshot.memory)?;
+            let range = snapshot.range.map_err(qoi_error)?;
             let clamped = construct(
                 "Uint8ClampedArray",
-                &[bytes.buffer().into(), 0.into(), bytes.length().into()],
+                &[buffer, range.start.into(), range.len().into()],
             )?;
             let image = construct(
                 "ImageData",
-                &[clamped, decoded.width.into(), decoded.height.into()],
+                &[clamped, snapshot.width.into(), snapshot.height.into()],
             )?;
-            // ImageData must succeed before release, including for malformed QOI.
-            let (width, height) = {
-                let mut qoi = self.qoi.borrow_mut();
-                qoi.release();
-                // Reentrant ImageData construction may have changed the decoder.
-                // Source checks its live dimensions after that callback returns.
-                (qoi.width, qoi.height)
-            };
+            // ImageData can synchronously decode again into the same memory.
+            // Preserve that aliasing, then read live dimensions after release.
+            let (width, height) = self.release();
             if request.target.width == f64::from(width)
                 && request.target.height == f64::from(height)
             {

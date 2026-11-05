@@ -75,6 +75,19 @@ fn source_palette_qoi_decodes_to_the_original_rgba_bytes() {
     assert_eq!((raster.width(), raster.height()), (640, 80));
 }
 #[test]
+fn in_place_views_allow_host_mutations_without_changing_memory_size() {
+    let mut decoder = QoiDecoder::new(4_194_304.0);
+    let range = decoder
+        .decode_in_place(&image(2, 1, &[255, 255, 0, 0, 255, 192]))
+        .unwrap();
+    let expected = [0, 255, 0, 255, 0, 255, 0, 255];
+    decoder.memory_mut()[range.clone()].copy_from_slice(&expected);
+    assert_eq!(&decoder.memory()[range], expected);
+    assert_eq!(decoder.decode(&image(2, 1, &[])).unwrap().pixels, expected);
+    assert_eq!(decoder.memory_usage(), 65_536);
+}
+
+#[test]
 fn release_keeps_source_page_boundary_and_signed_dimensions() {
     let encoded = image(2, 1, &[255, 255, 0, 0, 255, 192]);
     let mut kept = QoiDecoder::new(65536.0);

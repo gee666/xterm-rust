@@ -111,7 +111,19 @@ impl QoiDecoder {
             self.initialized = false;
         }
     }
-    pub fn decode(&mut self, input: &[u8]) -> Result<QoiImage, QoiError> {
+    /// Decoder memory includes retained output and input scratch. Browser hosts
+    /// mirror it to preserve views that survive subsequent decoding operations.
+    pub fn memory(&self) -> &[u8] {
+        &self.memory
+    }
+    /// Copy back host-visible view mutations before another decode. The slice
+    /// cannot change the allocation size or decoder metadata.
+    pub fn memory_mut(&mut self) -> &mut [u8] {
+        &mut self.memory
+    }
+    /// Decode without allocating a pixel snapshot. The returned range remains
+    /// valid until the next decode or release, just like the source typed view.
+    pub fn decode_in_place(&mut self, input: &[u8]) -> Result<std::ops::Range<usize>, QoiError> {
         self.width = dimension(input, 4);
         self.height = dimension(input, 8);
         let pixels = f64::from(self.width) * f64::from(self.height);
@@ -145,11 +157,11 @@ impl QoiDecoder {
         }
         .min(self.memory.len() as f64) as usize;
         let start = OUTPUT_OFFSET.min(self.memory.len());
-        let data = if end > start {
-            &self.memory[start..end]
-        } else {
-            &[]
-        };
+        Ok(start..end.max(start))
+    }
+    pub fn decode(&mut self, input: &[u8]) -> Result<QoiImage, QoiError> {
+        let range = self.decode_in_place(input)?;
+        let data = &self.memory[range];
         let mut result = Vec::new();
         result.try_reserve_exact(data.len())?;
         result.extend_from_slice(data);

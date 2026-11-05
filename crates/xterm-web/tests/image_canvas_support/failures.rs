@@ -9,13 +9,13 @@ use xterm_addons::image::{
 };
 use xterm_web::image::{primitives, BrowserImageSurface, IipDecodedImage, IipImageDecoder};
 
-struct Patch {
+pub(super) struct Patch {
     target: JsValue,
     key: String,
     descriptor: JsValue,
 }
 impl Patch {
-    fn new(target: JsValue, key: &str, value: JsValue) -> Self {
+    pub(super) fn new(target: JsValue, key: &str, value: JsValue) -> Self {
         let object = js_sys::Object::from(target.clone());
         let descriptor =
             js_sys::Reflect::get_own_property_descriptor(&object, &key.into()).unwrap();

@@ -3,6 +3,7 @@
 //! binds these operations to the Rust terminal's open/options/renderer lifecycle.
 mod drawing;
 mod iip_decode;
+mod iip_memory;
 mod js;
 mod layers;
 mod lifecycle;
