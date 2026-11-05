@@ -1,0 +1,7 @@
+# Independent task386 review
+
+The isolated swarm reviewer accepted task386 at459b325, sourceb2c2297 on mainaa3f792. It compared the coordinator against unchanged ImageAddon.ts and found no concrete problems in the scoped prerequisite. It inspected shared storage, registration/disposal order, activation-specific protocols versus current-field callbacks, reset, public APIs, throwing disposal and JavaScript bootstrap ownership without JS-engine delegation.
+
+The reviewer independently reran12 coordinator browser tests in each of Chromium, Firefox and WebKit, all passing with zero ignored tests or unexpected page errors. `reviewer-browser-host.json` preserves its actual browser receipt. It also reported44 passing native IIP/policy/storage/helper tests, a passing exact workspace formatting check and scoped warning-denied WASM Clippy. It did not rerun the full native workspace; the2061-test final workspace result is the implementer's separate receipt, not independent execution.
+
+The original browser receipt was results/browser-host/image_addon_browser/2026-11-05T14-01-34-979Z-04b75050-172c-4bf7-ab3b-d63267dd03ff/image_addon_browser-results.json. Temporary compiler/browser binary paths in that receipt are not retained distributions. Task311/324 still cover the full unchanged original suites, img01..48 and arbitrary raw-JS coercion. Acceptance of386 does not declare full image-addon or project equivalence.
