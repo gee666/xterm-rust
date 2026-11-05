@@ -98,7 +98,8 @@ impl State {
         Ok(())
     }
     fn current_for_rows(&self) -> Result<Rc<CachedBrowserLink>, JsValue> {
-        self.hover.borrow().current().cloned().ok_or_else(|| {
+        let current = self.hover.borrow().current().cloned();
+        current.ok_or_else(|| {
             js_sys::TypeError::new("Cannot read properties of undefined (reading 'link')").into()
         })
     }
