@@ -11,7 +11,7 @@ import {gdefLoadingScenario} from '../crates/xterm-font-addons/tests/support/fon
 const baseline=spawnSync(process.execPath,['scripts/ligature-addon-oracle.mjs'],{encoding:'utf8',timeout:120000,env:process.env});
 if(baseline.error||baseline.status!==0)throw new Error(baseline.error?.message??baseline.stderr);
 const {LigaturesAddon}=await import(pathToFileURL(path.resolve('tmp/ligature-addon-oracle/LigaturesAddon.js')));
-const names={Warnings:'GDEF two class warnings SFNT',Throw:'GDEF two class warnings SFNT',GetterThrow:'GDEF two class warnings SFNT',Reenter:'GDEF two class warnings SFNT',Mutate:'GDEF class warning skips next pointer SFNT',Reject:'GDEF invalid version SFNT',Compressed:'GDEF large classes warning mutation compressed',LaterMeta:'GDEF warning breaks later META SFNT'};
+const names={Warnings:'GDEF two class warnings SFNT',Throw:'GDEF two class warnings SFNT',GetterThrow:'GDEF two class warnings SFNT',Reenter:'GDEF two class warnings SFNT',Mutate:'GDEF class warning skips next pointer SFNT',Reject:'GDEF invalid version SFNT',Compressed:'GDEF large classes warning mutation compressed',LaterMeta:'GDEF warning breaks later META SFNT',LaterFvar:'GDEF warning breaks later fvar SFNT'};
 const inputs=Object.fromEntries(Object.entries(names).map(([mode,name])=>[mode,new Uint8Array(construct(cases.find(c=>c.name===name)))]));
 const result=await gdefLoadingScenario(options=>new LigaturesAddon(options),inputs,new Uint8Array(base));
 for(const [mode,value]of Object.entries(result)){

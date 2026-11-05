@@ -44,6 +44,7 @@ async fn real_addon_preserves_gdef_warnings_alias_mutations_and_rejection_cache(
             "GDEF large classes warning mutation compressed",
         ),
         ("LaterMeta", "GDEF warning breaks later META SFNT"),
+        ("LaterFvar", "GDEF warning breaks later fvar SFNT"),
     ] {
         let case = fixture["cases"]
             .as_array()

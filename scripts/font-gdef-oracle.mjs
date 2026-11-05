@@ -90,6 +90,11 @@ for(const woff of [false,true]) {
   const data=tag==='kern'?words([2,0]):tag==='meta'?words([0,2]):words([0,0]);
   add(`GDEF versus invalid ${tag}${suffix}`,[0],{woff,remove:[tag],extraTables:[{tag,data}]});
  }
+ const fvar=[0,1,0,0,255,255,171,205,0,0,7,8,0,0,9,10];
+ add('GDEF precedes invalid fvar'+suffix,[0],{woff,remove:['fvar'],extraTables:[{tag:'fvar',data:[0,2,0,0]}]});
+ add('valid GDEF reaches invalid fvar'+suffix,empty,{woff,remove:['fvar'],extraTables:[{tag:'fvar',data:[0,2,0,0]}]});
+ add('GDEF warning breaks later fvar'+suffix,classes,{woff,remove:['fvar'],extraTables:[{tag:'fvar',data:fvar}],warningMutation:{tag:'fvar',at:0,value:2}});
+ add('GDEF warning fixes later fvar'+suffix,classes,{woff,remove:['fvar'],extraTables:[{tag:'fvar',data:fvar.map((v,i)=>i===0?0:i===1?2:v)}],warningMutation:{tag:'fvar',at:0,value:1}});
  const kern=Buffer.from(words([1,0,0,2,0,0,1,0,0]));
  add('kern warning fixes GDEF'+suffix,words([2,0,0,0,0,0]),{woff,remove:['kern'],extraTables:[{tag:'kern',data:[...kern]}],warningMutation:{tag:'GDEF',at:0,value:1}});
  add('GDEF warning breaks later META'+suffix,classes,{woff,remove:['meta'],extraTables:[{tag:'meta',data:Array(16).fill(0).map((v,i)=>i===3?1:v)}],warningMutation:{tag:'meta',at:2,value:2}});

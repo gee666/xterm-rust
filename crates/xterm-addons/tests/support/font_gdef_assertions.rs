@@ -58,6 +58,9 @@ fn error(case: &Value) -> Option<FontLoadError<()>> {
             let message = case["outcome"]["message"].as_str().unwrap();
             let error = match message {
                 "Data error" => FontError::Compression,
+                "Unsupported fvar table version." => {
+                    FontError::Invalid("Unsupported fvar table version.")
+                }
                 "Unsupported GDEF table version." => {
                     FontError::Invalid("Unsupported GDEF table version.")
                 }

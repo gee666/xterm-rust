@@ -6,7 +6,7 @@ export async function gdefLoadingScenario(create, inputs, good) {
     .map(([object,key])=>[object,key,Object.getOwnPropertyDescriptor(object,key)]);
   if(!globalThis.window)Object.defineProperty(globalThis,'window',{configurable:true,value:owner});
   Object.defineProperty(globalThis,'navigator',{configurable:true,value:{}});
-  const modes=['Warnings','Throw','GetterThrow','Reenter','Mutate','Reject','Compressed','LaterMeta'];
+  const modes=['Warnings','Throw','GetterThrow','Reenter','Mutate','Reject','Compressed','LaterMeta','LaterFvar'];
   let active;
   Object.defineProperty(owner,'queryLocalFonts',{configurable:true,value:async()=>modes.flatMap(mode=>
     [mode,mode+'Again',mode+'Good'].map(family=>({family,async blob(){return {async arrayBuffer(){
@@ -36,6 +36,7 @@ export async function gdefLoadingScenario(create, inputs, good) {
         if(mode==='Mutate'&&reads===1)patch('GDEF',10,0);
         if(mode==='Compressed'&&reads===1)patch('GDEF',10,0);
         if(mode==='LaterMeta'&&reads===1)patch('meta',2,2);
+        if(mode==='LaterFvar'&&reads===1)patch('fvar',0,2);
       };}});
       Object.defineProperty(console,'debug',{configurable:true,value(previous){previousIdentity=previous===thrown;}});
       const addon=create({fallbackLigatures:['===']});
