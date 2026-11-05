@@ -102,7 +102,8 @@ impl RangeStorage for RawRanges {
     fn append(&mut self, other: Self) -> Result<(), JsValue> {
         let mut index = 0.0;
         while less(&index.into(), &length(&other.0)?)? {
-            push(&self.0, &at(&other.0, index)?)?;
+            // Resolve push before the source-index getter can replace it.
+            push_from(&self.0, &other.0, index)?;
             index += 1.0;
         }
         Ok(())

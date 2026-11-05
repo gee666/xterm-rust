@@ -14,6 +14,7 @@ export function joinerSubtractOne(a) { return a-1; }
 export function joinerInsert(v,i,x) { v.splice(i,0,x); }
 export function joinerRemove(v,i) { v.splice(i,1); }
 export function joinerPush(v,x) { v.push(x); }
+export function joinerPushFrom(target,source,index) { target.push(source[index]); }
 export function joinerReport(e) { console.error(e); }
 export function joinerCall(record,text) { return record.handler(text); }
 export function joinerRecord(id,handler) { return {id,handler}; }
@@ -43,6 +44,8 @@ extern "C" {
     pub fn insert(v: &JsValue, i: f64, x: &JsValue) -> Result<(), JsValue>;
     #[wasm_bindgen(catch, js_name = joinerRemove)]
     pub fn remove(v: &JsValue, i: f64) -> Result<(), JsValue>;
+    #[wasm_bindgen(catch, js_name = joinerPushFrom)]
+    pub fn push_from(target: &JsValue, source: &JsValue, index: f64) -> Result<(), JsValue>;
     #[wasm_bindgen(catch, js_name = joinerPush)]
     pub fn push(v: &JsValue, x: &JsValue) -> Result<(), JsValue>;
 }

@@ -165,6 +165,22 @@ export function joinerRawScenarios(create) {
     try { service.get(); return { threw: false }; }
     catch (error) { return { threw: true, name: error.name, logged: errors.length }; }
   });
+  save('pushLookupOrder', service => {
+    const previous = Array.prototype.push;
+    const marker = {};
+    const range = [0, 1];
+    let reads = 0;
+    service.register(() => ({
+      get 0() {
+        if (++reads === 2) Array.prototype.push = function() { throw marker; };
+        return range;
+      },
+      length: 1
+    }));
+    try { return {out:service.get(), reads}; }
+    catch (error) { return {threw:true, identity:error === marker, reads}; }
+    finally { Array.prototype.push = previous; }
+  });
   save('mathLookupOrder', service => {
     const previous = Math.min;
     const trace = [];

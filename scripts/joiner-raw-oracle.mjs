@@ -48,7 +48,7 @@ for (const file of Object.keys(build.metafile.inputs).filter(file => !file.start
 }
 const report = {node:process.version, platform:process.platform, esbuild:esbuild.version,
   originalSuite:{source:originalTest, sha256:createHash('sha256').update(await fs.readFile(originalTest)).digest('hex'), ...suite},
-  scenarios:Object.keys(JSON.parse(actual)).length, directed:36, randomized:256, seed:'0x335C0DE', sourceHashes:hashes,
+  scenarios:Object.keys(JSON.parse(actual)).length, directed:37, randomized:256, seed:'0x335C0DE', sourceHashes:hashes,
   fixtureSha256:createHash('sha256').update(actual+'\n').digest('hex'),
   scope:'Shared raw operation inputs against unchanged source. Not full renderer or terminal equivalence.'};
 await fs.mkdir('results/joiner-raw',{recursive:true});
