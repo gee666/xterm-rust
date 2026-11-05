@@ -41,13 +41,16 @@ pub(super) fn register(
     ] {
         let shared = Rc::clone(state);
         parser.set_execute_handler_checked(code, move |_| {
-            if matches!(code, 0x0a..=0x0c) {
-                return super::line_feed_state(&shared)
-                    .map(|()| true)
-                    .map_err(|error| {
-                        shared.borrow_mut().error = Some(error);
-                        ParseError::HandlerAborted
-                    });
+            if matches!(code, 0x0a..=0x0c | 0x84 | 0x85) {
+                let result = if matches!(code, 0x84 | 0x85) {
+                    super::controls::index_state(&shared, code == 0x85)
+                } else {
+                    super::line_feed_state(&shared)
+                };
+                return result.map(|()| true).map_err(|error| {
+                    shared.borrow_mut().error = Some(error);
+                    ParseError::HandlerAborted
+                });
             }
             let mut state = shared
                 .try_borrow_mut()
@@ -69,7 +72,16 @@ pub(super) fn register(
             })
         });
     }
-    for final_byte in ["7", "8", "D", "E", "H", "M", "n", "o", "|", "}", "~"] {
+    for final_byte in ["D", "E"] {
+        parser.register_esc_handler(
+            FunctionIdentifier::new(final_byte),
+            shared_command(
+                move |shared, _| super::controls::index_state(shared, final_byte == "E"),
+                Rc::clone(state),
+            ),
+        )?;
+    }
+    for final_byte in ["7", "8", "H", "M", "n", "o", "|", "}", "~"] {
         let shared = Rc::clone(state);
         parser.register_esc_handler(
             FunctionIdentifier::new(final_byte),

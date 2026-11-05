@@ -74,6 +74,47 @@ pub(super) fn scroll_state(
     Ok(())
 }
 
+/// IND and NEL reload the active buffer after synchronous scroll observers.
+/// In particular, a marker or scroll listener may reset the terminal in scroll.
+/// Keep both TerminalState and Buffer borrows out of that callback boundary.
+pub(super) fn index_state(
+    shared: &Rc<RefCell<TerminalState>>,
+    next_line: bool,
+) -> Result<(), TerminalError> {
+    let scroll = {
+        let mut state = shared
+            .try_borrow_mut()
+            .map_err(|_| TerminalError::Borrowed)?;
+        let max_col = state.cols() - 1;
+        if next_line {
+            state
+                .active_buffer()
+                .try_borrow_mut()
+                .map_err(|_| TerminalError::Borrowed)?
+                .x = 0;
+        }
+        state.restrict_csi_cursor(max_col)?;
+        let active = state.active_buffer();
+        let mut buffer = active
+            .try_borrow_mut()
+            .map_err(|_| TerminalError::Borrowed)?;
+        buffer.y += 1;
+        let scroll = buffer.y == buffer.scroll_bottom + 1;
+        if scroll || buffer.y >= state.rows() {
+            buffer.y -= 1;
+        }
+        scroll
+    };
+    if scroll {
+        scroll_state(shared, false)?;
+    }
+    let mut state = shared
+        .try_borrow_mut()
+        .map_err(|_| TerminalError::Borrowed)?;
+    let max_col = state.cols() - 1;
+    state.restrict_csi_cursor(max_col)
+}
+
 impl TerminalState {
     pub(crate) fn execute(&mut self, code: u32) -> Result<(), TerminalError> {
         match code {
@@ -83,11 +124,6 @@ impl TerminalState {
             0x09 => self.tab()?,
             0x0e => self.charset.set_g_level(1),
             0x0f => self.charset.set_g_level(0),
-            0x84 => self.index()?,
-            0x85 => {
-                self.active_buffer().borrow_mut().x = 0;
-                self.index()?;
-            }
             0x88 => {
                 let b = self.active_buffer();
                 let mut b = b.borrow_mut();
@@ -96,37 +132,6 @@ impl TerminalState {
             }
             _ => {}
         }
-        Ok(())
-    }
-    pub(crate) fn index(&mut self) -> Result<(), TerminalError> {
-        let active = self.active_buffer();
-        let scroll = {
-            let mut b = active.borrow_mut();
-            if b.x > self.cols() - 1 {
-                b.x = self.cols() - 1;
-            }
-            b.y += 1;
-            let scroll = b.y == b.scroll_bottom + 1;
-            if scroll || b.y >= self.rows() {
-                b.y -= 1;
-            }
-            scroll
-        };
-        if scroll {
-            self.scroll(false)?;
-        }
-        self.dirty_row(active.borrow().y);
-        Ok(())
-    }
-    pub(crate) fn scroll(&mut self, wrapped: bool) -> Result<(), TerminalError> {
-        let attrs = self.erase_attributes();
-        self.buffer_service
-            .scroll(&attrs, wrapped)
-            .map_err(TerminalError::from)?;
-        let active = self.active_buffer();
-        let b = active.borrow();
-        self.dirty_row(b.scroll_top);
-        self.dirty_row(b.scroll_bottom);
         Ok(())
     }
     fn tab(&mut self) -> Result<(), TerminalError> {

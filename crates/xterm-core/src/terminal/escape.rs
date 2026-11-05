@@ -5,11 +5,6 @@ impl TerminalState {
         match final_byte {
             "7" => self.save_cursor()?,
             "8" => self.restore_cursor()?,
-            "D" => self.index()?,
-            "E" => {
-                self.active_buffer().borrow_mut().x = 0;
-                self.index()?;
-            }
             "H" => self.execute(0x88)?,
             "M" => self.reverse_index()?,
             "=" | ">" => {
