@@ -1,6 +1,6 @@
 # Hippolyta task472 pickup
 
-Task472 implements initial CFF INDEX reads only. Full342 and overall equivalence remain NOT PROVEN. `docs/font-cff-index.md` records the contract, commands and remaining gaps. Existing browser Bounds RangeError wording is deliberately retained as a known gap, with raw source and Rust receipts, not claimed equal.
+Task472 is ACCEPTED at152d2725 after resumed independent review. It implements initial CFF INDEX reads only. Full342 and overall equivalence remain NOT PROVEN. `docs/font-cff-index.md` records the contract, commands and remaining gaps. Existing browser Bounds RangeError wording is deliberately retained as a known gap, with raw source and Rust receipts, not claimed equal.
 
 ## Exact source ownership
 
@@ -12,7 +12,7 @@ The production changes are `font_cff_header.rs`, new `font_cff_index.rs`, `font_
 
 Read the latest `results/font-cff-index/checks.json`, not old logs labelled initial or bounded without final. Source476 full constructors have56 accepts and420 bounds errors, seed0x472cff01. Native all-target/all-feature xterm-addons has187 passing test functions over40 test harnesses, no failed/ignored cases. The focused constructor run also replays520header,792hint,612outline and1571GPOS cases. Shared-window unit checks patterned70k stored/fixed/dynamic output across seven declared limits and five captured ranges. Negative bypass gives420 failures, exact bytes restore and the positive corpus passes again. Scoped native/WASM strict lint/build pass. Fullfmt OS206 remains distinct from five passing packagefmt checks.
 
-Initial independent source/light review found no code defect, reran476 source cases and existing native executables, and verified23 pins. It requested final browser execution and rebuilding the final import-wiring bytes. Do not call the task accepted until the resumed review says so. Browser receipt status and final source commit are recorded in checks.json. Original and physical copy776-file hashes are checked by preflight.
+Initial independent source/light review found no code defect, reran476 source cases and existing native executables, and verified23 pins. The resumed review accepted the final runtime evidence, verified all seven artifact pins and reran native tests. Final source57b3fe52 and receipt152d2725 retain source476+4addon loads and actual2WASM functions per Chromium/Firefox/WebKit. Both180s Firefox timeouts remain alongside measured finite phases and a final284.14s pass under a360s bound. Assertions were unchanged. checks.json records the final source and runtime status. Original and physical copy776-file hashes were verified after the final runs.
 
 ## Temporary ownership
 
