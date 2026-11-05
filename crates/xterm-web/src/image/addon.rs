@@ -4,8 +4,10 @@
 mod activation;
 mod bindings;
 mod controls;
+mod handlers;
 mod hooks;
 mod inspection;
+mod kitty_inspection;
 mod options;
 mod protocols;
 use super::{
@@ -54,7 +56,7 @@ struct State {
     storage: RefCell<Option<ImageStorage>>,
     inspection: RefCell<Option<JsValue>>,
     cleanups: RefCell<Vec<Cleanup>>,
-    handlers: RefCell<Vec<Protocol>>,
+    handlers: Rc<RefCell<handlers::Handlers>>,
     added: Emitter<()>,
 }
 impl State {
@@ -64,18 +66,10 @@ impl State {
     fn renderer(&self) -> Option<Rc<ImageRendererLifecycle>> {
         self.renderer.borrow().clone()
     }
-    fn add_handler(&self, protocol: Protocol) {
-        let mut handlers = self.handlers.borrow_mut();
-        if let Some(slot) = handlers.iter_mut().find(|p| p.key() == protocol.key()) {
-            *slot = protocol;
-        } else {
-            handlers.push(protocol);
-        }
-    }
     fn reset_handlers(&self) -> Result<(), JsValue> {
         let mut index = 0;
         loop {
-            let handler = self.handlers.borrow().get(index).cloned();
+            let handler = self.handlers.borrow().at(index);
             let Some(handler) = handler else {
                 return Ok(());
             };
@@ -92,7 +86,7 @@ impl State {
             index += 1;
         }
         let cleanups = self.cleanups.take();
-        let handlers = self.handlers.take();
+        let handlers = self.handlers.borrow_mut().clear();
         drop((cleanups, handlers));
         self.added.dispose();
         Ok(())

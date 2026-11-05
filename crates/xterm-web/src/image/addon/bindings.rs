@@ -1,5 +1,8 @@
 // Copyright (c) 2020 The xterm.js authors. All rights reserved. MIT license.
-use super::{options, State};
+use super::{
+    handlers::{self, Handlers, ImageHandlersReader},
+    options, State,
+};
 use crate::{
     image::BrowserImageSurface,
     js_error::to_js_error,
@@ -21,6 +24,7 @@ use xterm_core::event::Emitter;
 pub struct ImageAddon {
     state: Rc<State>,
     event: js_sys::Function,
+    handlers: JsValue,
 }
 #[wasm_bindgen]
 impl ImageAddon {
@@ -30,6 +34,8 @@ impl ImageAddon {
         let defaults = options::read(&options)?;
         let added = Emitter::new();
         let event = callable(added.event(), empty);
+        let handlers = Rc::new(RefCell::new(Handlers::default()));
+        let inspection = handlers::inspection(ImageHandlersReader::new(handlers.clone()))?;
         Ok(Self {
             state: Rc::new(State {
                 options: Rc::new(Cell::new(current)),
@@ -40,10 +46,11 @@ impl ImageAddon {
                 storage: RefCell::new(None),
                 inspection: RefCell::new(None),
                 cleanups: RefCell::new(Vec::new()),
-                handlers: RefCell::new(Vec::new()),
+                handlers,
                 added,
             }),
             event,
+            handlers: inspection,
         })
     }
     pub fn activate(&self, terminal: &Terminal) -> Result<(), JsValue> {
@@ -60,6 +67,11 @@ impl ImageAddon {
     #[wasm_bindgen(getter, js_name = _storage)]
     pub fn storage_inspection(&self) -> JsValue {
         self.state.inspection()
+    }
+    /// Read-only native handler inspection, not a writable private Map.
+    #[wasm_bindgen(getter, js_name = _handlers)]
+    pub fn handler_inspection(&self) -> JsValue {
+        self.handlers.clone()
     }
     #[wasm_bindgen(getter, js_name = onImageAdded)]
     pub fn on_image_added(&self) -> js_sys::Function {

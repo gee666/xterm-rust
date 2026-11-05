@@ -10,10 +10,15 @@ use xterm_addons::image::{
 };
 
 pub(super) struct BlobFactory;
-struct BlobSource {
+pub(super) struct BlobSource {
     blob: JsValue,
     length: usize,
     mime: String,
+}
+impl BlobSource {
+    pub(super) fn value(&self) -> JsValue {
+        self.blob.clone()
+    }
 }
 impl EncodedSourceFactory for BlobFactory {
     fn capture_owned(&self, data: Vec<u8>, mime: &str) -> Result<EncodedBytes, StorageError> {

@@ -44,7 +44,7 @@ impl State {
                 loading.complete_loading(decoder);
                 Ok(JsValue::UNDEFINED)
             });
-            self.add_handler(Protocol::Sixel(protocol.clone()));
+            self.add_handler(Protocol::Sixel(protocol.clone()))?;
             self.cleanups.borrow_mut().push(token(protocol.register()?));
         }
         if self.options.get().iip_support {
@@ -58,7 +58,7 @@ impl State {
                     size_limit: options.iip_size_limit,
                 },
             )?;
-            self.add_handler(Protocol::Iip(protocol.clone()));
+            self.add_handler(Protocol::Iip(protocol.clone()))?;
             self.cleanups.borrow_mut().push(token(protocol.register()?));
         }
         if self.options.get().kitty_support {
@@ -72,7 +72,7 @@ impl State {
                     size_limit: options.kitty_size_limit,
                 },
             );
-            self.add_handler(Protocol::Kitty(protocol.clone()));
+            self.add_handler(Protocol::Kitty(protocol.clone()))?;
             let cleanup: Cleanup = Rc::new({
                 let protocol = protocol.clone();
                 move || protocol.dispose()
