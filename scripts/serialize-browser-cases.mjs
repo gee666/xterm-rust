@@ -89,6 +89,29 @@ export async function serializationCases() {
       return { ansi: addon.serialize({ range, excludeAltBuffer: true, excludeModes: true }), nested };
     } finally { console.warn = previous; }
   });
+  for (const format of ['ansi', 'html']) {
+    await run(`${format}-warning-keeps-replaced-line`, async (term, addon) => {
+      await write(term, 'ABCDEFGHIJKL');
+      let count = 0;
+      const previous = console.warn;
+      console.warn = (...args) => {
+        previous(...args);
+        if (++count === 1) { term.reset(); term.resize(12, 4); }
+      };
+      try {
+        let serialized;
+        if (format === 'ansi') {
+          const range = { start: 0, get end() { term.resize(6, 4); return 0; } };
+          serialized = addon.serialize({ range, excludeAltBuffer: true, excludeModes: true });
+        } else {
+          Object.defineProperty(term.options, 'fontFamily', { configurable: true,
+            get() { term.resize(6, 4); return 'monospace'; } });
+          serialized = addon.serializeAsHTML({ range: { startLine: 0, endLine: 0, startCol: 0 } });
+        }
+        return { serialized, count };
+      } finally { console.warn = previous; }
+    });
+  }
   await run('ansi-warning-exception-identity', async (term, addon) => {
     await write(term, '\x1b[31mABC');
     const sentinel = {}, previous = console.warn; let same = false;

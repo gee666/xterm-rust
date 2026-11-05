@@ -81,7 +81,7 @@ try {
         }
         await page.close();
       }
-      assert.equal(traces.source.length, 51, 'Expected19 directed and32 seeded cases');
+      assert.equal(traces.source.length, 53, 'Expected21 directed and32 seeded cases');
       assert.equal(traces.source.filter(entry => entry.name.startsWith('seeded-')).length, 32);
       assert.equal(traces.source.length, traces.rust.length);
       entry.discovered = traces.source.length; entry.executed = traces.rust.length;

@@ -26,6 +26,15 @@ pub trait BufferAccess {
     }
     fn line_len(&self, row: usize) -> Result<Option<usize>, SerializeError>;
     fn cell(&self, row: usize, col: usize) -> Result<Option<CellData>, SerializeError>;
+    /// Capture one traversal row. Source keeps this line through host warnings;
+    /// lookahead and style reads continue to use the ordinary live methods.
+    fn capture_line(&self, row: usize) -> Result<Option<usize>, SerializeError> {
+        self.line_len(row)
+    }
+    /// Read from the row most recently captured for this traversal.
+    fn captured_cell(&self, row: usize, col: usize) -> Result<Option<CellData>, SerializeError> {
+        self.cell(row, col)
+    }
     fn is_wrapped(&self, row: usize) -> Result<bool, SerializeError>;
     fn cursor_x(&self) -> usize;
     fn cursor_y(&self) -> usize;

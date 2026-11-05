@@ -58,7 +58,7 @@ pub fn serialize_html(
         let mut previous = CellData::default();
         for row in range.start.y..=range.end.y {
             append(&mut output, "<div><span>");
-            if let Some(length) = buffer.line_len(row)? {
+            if let Some(length) = buffer.capture_line(row)? {
                 let start = if row == range.start.y {
                     range.start.x
                 } else {
@@ -70,7 +70,7 @@ pub fn serialize_html(
                     length
                 };
                 for col in start..end {
-                    if let Some(cell) = buffer.cell(row, col)? {
+                    if let Some(cell) = buffer.captured_cell(row, col)? {
                         emit_cell(&mut output, &cell, &previous, palette);
                         // BaseSerializeHandler advances oldCell even for placeholders.
                         previous = cell;

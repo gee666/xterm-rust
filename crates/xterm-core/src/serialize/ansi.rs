@@ -38,7 +38,7 @@ pub(super) fn serialize(
         content_cursor: (range.start.y, 0),
     };
     for row in range.start.y..=range.end.y {
-        if let Some(len) = buffer.line_len(row)? {
+        if let Some(len) = buffer.capture_line(row)? {
             let start = if row == range.start.y {
                 range.start.x
             } else {
@@ -46,7 +46,7 @@ pub(super) fn serialize(
             };
             let end = if row == range.end.y { range.end.x } else { len };
             for col in start..end {
-                if let Some(cell) = buffer.cell(row, col)? {
+                if let Some(cell) = buffer.captured_cell(row, col)? {
                     h.next(&cell, row, col);
                 } else {
                     buffer.missing_cell(row, col)?;

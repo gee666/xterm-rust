@@ -1,0 +1,286 @@
+{
+  "status": "failed",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "seed": "0x05e21a11",
+  "seededCases": 32,
+  "scope": "Callable SerializeAddon, directed host behavior and seeded full public-cell restoration. Not full equivalence.",
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "mismatches": [
+        {
+          "name": "ansi-warning-keeps-replaced-line",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    name: 'ansi-warning-keeps-replaced-line',\n    result: {\n+     count: 1,\n-     count: 6,\n      serialized: 'ABCDEF'\n    },\n    warnings: [\n      \"Can't get cell at row=0, col=6\",\n-     \"Can't get cell at row=0, col=7\",\n-     \"Can't get cell at row=0, col=8\",\n-     \"Can't get cell at row=0, col=9\",\n-     \"Can't get cell at row=0, col=10\",\n-     \"Can't get cell at row=0, col=11\"\n    ]\n  }\n"
+        },
+        {
+          "name": "html-warning-keeps-replaced-line",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    name: 'html-warning-keeps-replaced-line',\n    result: {\n+     count: 1,\n+     serialized: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span>ABCDEF     </span></div></div></pre><!--EndFragment--></body></html>\"\n-     count: 6,\n-     serialized: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span>ABCDEF</span></div></div></pre><!--EndFragment--></body></html>\"\n    },\n    warnings: [\n      \"Can't get cell at row=0, col=6\",\n-     \"Can't get cell at row=0, col=7\",\n-     \"Can't get cell at row=0, col=8\",\n-     \"Can't get cell at row=0, col=9\",\n-     \"Can't get cell at row=0, col=10\",\n-     \"Can't get cell at row=0, col=11\"\n    ]\n  }\n"
+        },
+        {
+          "name": "raw-numeric-boundaries",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    name: 'raw-numeric-boundaries',\n    result: [\n      {\n        ansi: {\n...\n        ansi: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: ''\n        },\n        equalInfiniteBounds: 'not applicable',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span></span></div></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: '-1'\n      },\n      {\n        ansi: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: ''\n        },\n        equalInfiniteBounds: 'not applicable',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span></span></div></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: '0.5'\n      },\n      {\n        ansi: {\n          error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         message: 'Invalid array length'\n        },\n        equalInfiniteBounds: 'not applicable',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: 'NaN'\n      },\n      {\n        ansi: {\n          error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         message: 'Invalid array length'\n        },\n        equalInfiniteBounds: 'unrun: source loop does not advance',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: 'Infinity'\n      },\n      {\n        ansi: {\n          error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         message: 'Invalid array length'\n        },\n        equalInfiniteBounds: 'unrun: source loop does not advance',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: '-Infinity'\n      },\n      {\n        ansi: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: ''\n        },\n        equalInfiniteBounds: 'not applicable',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span></span></div></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: '4294967296'\n      },\n      {\n        ansi: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: ''\n        },\n        equalInfiniteBounds: 'not applicable',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span></span></div></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: '9007199254740991'\n      }\n    ],\n    warnings: []\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "discovered": 53,
+      "executed": 53,
+      "passed": 50,
+      "failed": 3
+    },
+    {
+      "name": "firefox",
+      "status": "failed",
+      "mismatches": [
+        {
+          "name": "ansi-warning-keeps-replaced-line",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    name: 'ansi-warning-keeps-replaced-line',\n    result: {\n+     count: 1,\n-     count: 6,\n      serialized: 'ABCDEF'\n    },\n    warnings: [\n      \"Can't get cell at row=0, col=6\",\n-     \"Can't get cell at row=0, col=7\",\n-     \"Can't get cell at row=0, col=8\",\n-     \"Can't get cell at row=0, col=9\",\n-     \"Can't get cell at row=0, col=10\",\n-     \"Can't get cell at row=0, col=11\"\n    ]\n  }\n"
+        },
+        {
+          "name": "html-warning-keeps-replaced-line",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    name: 'html-warning-keeps-replaced-line',\n    result: {\n+     count: 1,\n+     serialized: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span>ABCDEF     </span></div></div></pre><!--EndFragment--></body></html>\"\n-     count: 6,\n-     serialized: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span>ABCDEF</span></div></div></pre><!--EndFragment--></body></html>\"\n    },\n    warnings: [\n      \"Can't get cell at row=0, col=6\",\n-     \"Can't get cell at row=0, col=7\",\n-     \"Can't get cell at row=0, col=8\",\n-     \"Can't get cell at row=0, col=9\",\n-     \"Can't get cell at row=0, col=10\",\n-     \"Can't get cell at row=0, col=11\"\n    ]\n  }\n"
+        },
+        {
+          "name": "raw-numeric-boundaries",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    name: 'raw-numeric-boundaries',\n    result: [\n      {\n        ansi: {\n...\n        ansi: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: ''\n        },\n        equalInfiniteBounds: 'not applicable',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span></span></div></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: '-1'\n      },\n      {\n        ansi: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: ''\n        },\n        equalInfiniteBounds: 'not applicable',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span></span></div></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: '0.5'\n      },\n      {\n        ansi: {\n          error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         message: 'invalid array length'\n        },\n        equalInfiniteBounds: 'not applicable',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: 'NaN'\n      },\n      {\n        ansi: {\n          error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         message: 'invalid array length'\n        },\n        equalInfiniteBounds: 'unrun: source loop does not advance',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: 'Infinity'\n      },\n      {\n        ansi: {\n          error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         message: 'invalid array length'\n        },\n        equalInfiniteBounds: 'unrun: source loop does not advance',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: '-Infinity'\n      },\n      {\n        ansi: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: ''\n        },\n        equalInfiniteBounds: 'not applicable',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span></span></div></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: '4294967296'\n      },\n      {\n        ansi: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: ''\n        },\n        equalInfiniteBounds: 'not applicable',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span></span></div></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: '9007199254740991'\n      }\n    ],\n    warnings: []\n"
+        }
+      ],
+      "version": "150.0.2",
+      "discovered": 53,
+      "executed": 53,
+      "passed": 50,
+      "failed": 3
+    },
+    {
+      "name": "webkit",
+      "status": "failed",
+      "mismatches": [
+        {
+          "name": "ansi-warning-keeps-replaced-line",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    name: 'ansi-warning-keeps-replaced-line',\n    result: {\n+     count: 1,\n-     count: 6,\n      serialized: 'ABCDEF'\n    },\n    warnings: [\n      \"Can't get cell at row=0, col=6\",\n-     \"Can't get cell at row=0, col=7\",\n-     \"Can't get cell at row=0, col=8\",\n-     \"Can't get cell at row=0, col=9\",\n-     \"Can't get cell at row=0, col=10\",\n-     \"Can't get cell at row=0, col=11\"\n    ]\n  }\n"
+        },
+        {
+          "name": "html-warning-keeps-replaced-line",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    name: 'html-warning-keeps-replaced-line',\n    result: {\n+     count: 1,\n+     serialized: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span>ABCDEF     </span></div></div></pre><!--EndFragment--></body></html>\"\n-     count: 6,\n-     serialized: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span>ABCDEF</span></div></div></pre><!--EndFragment--></body></html>\"\n    },\n    warnings: [\n      \"Can't get cell at row=0, col=6\",\n-     \"Can't get cell at row=0, col=7\",\n-     \"Can't get cell at row=0, col=8\",\n-     \"Can't get cell at row=0, col=9\",\n-     \"Can't get cell at row=0, col=10\",\n-     \"Can't get cell at row=0, col=11\"\n    ]\n  }\n"
+        },
+        {
+          "name": "raw-numeric-boundaries",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    name: 'raw-numeric-boundaries',\n    result: [\n      {\n        ansi: {\n...\n        ansi: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: ''\n        },\n        equalInfiniteBounds: 'not applicable',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span></span></div></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: '-1'\n      },\n      {\n        ansi: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: ''\n        },\n        equalInfiniteBounds: 'not applicable',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span></span></div></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: '0.5'\n      },\n      {\n        ansi: {\n          error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         message: 'Array length must be a positive integer of safe magnitude.'\n        },\n        equalInfiniteBounds: 'not applicable',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: 'NaN'\n      },\n      {\n        ansi: {\n          error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         message: 'Array length must be a positive integer of safe magnitude.'\n        },\n        equalInfiniteBounds: 'unrun: source loop does not advance',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: 'Infinity'\n      },\n      {\n        ansi: {\n          error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         message: 'Array length must be a positive integer of safe magnitude.'\n        },\n        equalInfiniteBounds: 'unrun: source loop does not advance',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: '-Infinity'\n      },\n      {\n        ansi: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: ''\n        },\n        equalInfiniteBounds: 'not applicable',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span></span></div></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: '4294967296'\n      },\n      {\n        ansi: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: ''\n        },\n        equalInfiniteBounds: 'not applicable',\n        html: {\n+         error: 'RangeError',\n+         message: 'Serialization coordinate is outside the native integral range'\n-         value: \"<html><body><!--StartFragment--><pre><div style='color: #000000; background-color: #ffffff; font-family: monospace; font-size: 15px;'><div><span></span></div></div></pre><!--EndFragment--></body></html>\"\n        },\n        number: '9007199254740991'\n      }\n    ],\n    warnings: []\n"
+        }
+      ],
+      "version": "26.4",
+      "discovered": 53,
+      "executed": 53,
+      "passed": 50,
+      "failed": 3
+    }
+  ],
+  "suites": [],
+  "referenceBefore": {
+    "files": 776,
+    "mismatches": []
+  },
+  "source": {
+    "revision": "ff0bec8b5f9d82c0a3df64a541a9dbc2ae407524",
+    "sha256": "4c400301afe758b9225c0e599b7277ab192c284f0ecf105273161252a83ce53c",
+    "files": 1439
+  },
+  "build": {
+    "report": "results/demos/build/2026-11-05T13-02-49-187Z/report.json",
+    "source": {
+      "revision": "ff0bec8b5f9d82c0a3df64a541a9dbc2ae407524",
+      "sha256": "4c400301afe758b9225c0e599b7277ab192c284f0ecf105273161252a83ce53c",
+      "files": 1439
+    },
+    "artifacts": [
+      {
+        "path": "browser/pkg/xterm_web.js",
+        "bytes": 181370,
+        "sha256": "a1e4e9b2bc63066efd25eb2e5a255e40093bffa0d4206084bc9edc2a763f14fc"
+      },
+      {
+        "path": "browser/pkg/xterm_web_bg.wasm",
+        "bytes": 13591008,
+        "sha256": "2b4ea05a1dc53d316ca623f66638a6b3b63162df6e73467f1c33871bb1ea564f"
+      }
+    ]
+  },
+  "runner": [
+    {
+      "path": "scripts/serialize-browser-check.mjs",
+      "bytes": 10145,
+      "sha256": "2688ab08425dfb0b394975ad6853a366a829fae886b2aecb0d9bc6a946590b65"
+    },
+    {
+      "path": "scripts/serialize-browser-cases.mjs",
+      "bytes": 14188,
+      "sha256": "051a416a2cebdb486f4e91632e505a9302e0d6d6962f12ac7089cc6c4e8ff7e3"
+    },
+    {
+      "path": "browser/xterm.mjs",
+      "bytes": 1119,
+      "sha256": "3c6937bc590937d8678cf8d507b5b44448071d81bd0a4e4ecac8a2e0f0319c30"
+    },
+    {
+      "path": "scripts/e2e/build-bootstrap.mjs",
+      "bytes": 905,
+      "sha256": "487154862b39623222d248d465c66aa06ee08467631b6dacdbe5c43f3a51f801"
+    },
+    {
+      "path": "scripts/e2e/fixture-server.mjs",
+      "bytes": 7410,
+      "sha256": "4790325527ed20905ecbaf0ceba34272325ccdecdd36060c9cf6bf5ec7a0b2ef"
+    },
+    {
+      "path": "scripts/e2e/test-page.mjs",
+      "bytes": 1867,
+      "sha256": "58a7f3ff1c587dff8b78d8c5775b9b7a3ac72b144f800d893d80bd8e98d20b28"
+    }
+  ],
+  "declarations": [
+    {
+      "path": "browser/pkg/xterm_web.d.ts",
+      "bytes": 34030,
+      "sha256": "8ae2762166a58ed69383926a63c2941516dd6066ce53d2ce64a778effe183129"
+    }
+  ],
+  "reference": [
+    {
+      "path": "demo/test.html",
+      "bytes": 545,
+      "sha256": "35f81ad165aee291f49ac3ffea10068bf164207aad8d5fe4e5a558ada0e5ceed"
+    },
+    {
+      "path": "css/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    {
+      "path": "demo/dist/client-bundle.js",
+      "bytes": 2196837,
+      "sha256": "d01c661ea2b96ae26c1b1f20e1e11c213b7b811707baa37b2ba8dbd4c5b995b4"
+    },
+    {
+      "path": "addons/addon-serialize/src/SerializeAddon.ts",
+      "bytes": 31152,
+      "sha256": "b1d55be06175129a76ebe9045a3c5d088ee9211ba264e5b2885f71c02078eca6"
+    },
+    {
+      "path": "addons/addon-serialize/test/SerializeAddon.test.ts",
+      "bytes": 26541,
+      "sha256": "d67eef5179a58c42261abcc6f9eb093effa05b237e1a56e8ac88644875295bc3"
+    }
+  ],
+  "referenceAfter": {
+    "files": 776,
+    "mismatches": []
+  },
+  "cleanupErrors": [],
+  "requests": [
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=7a656682-7239-4b71-9c1a-0ab20a7901f4",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=7a656682-7239-4b71-9c1a-0ab20a7901f4&missing=ImageAddon%2CWebglAddon",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=708550e5-609b-42b7-92de-4e8d034e7b43",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=708550e5-609b-42b7-92de-4e8d034e7b43&missing=ImageAddon%2CWebglAddon",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": "/favicon.ico",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=bd39780e-9ee6-4c44-99e8-364b4feed326",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=bd39780e-9ee6-4c44-99e8-364b4feed326&missing=ImageAddon%2CWebglAddon",
+      "status": 204
+    }
+  ],
+  "runtimes": [
+    {
+      "state": "ready",
+      "missingBindings": [
+        "ImageAddon",
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "ImageAddon",
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "ImageAddon",
+        "WebglAddon"
+      ]
+    }
+  ],
+  "serverErrors": []
+}

@@ -20,7 +20,7 @@ Full serialization equivalence is NOT PROVEN. Task346 and family322 retain SB01-
 - Marker getters and custom coordinate coercions need their exact late source evaluation points. Numeric coercion currently happens earlier than source traversal.
 - Public Terminal/buffer method or descriptor replacement is not fully honored. The serializer uses the actual native public namespace rather than calling arbitrary replaced methods.
 - Theme palette array replacement and element mutation during header reentry need array-identity modeling. Normal live theme/OSC changes between calls are covered; a copied list of color handles does not prove arbitrary reentrant palette mutation.
-- ANSI warning callbacks now have fallible late reads for rows, buffer length, cursor and current attributes. Traversal still reacquires a line for each cell rather than pinning the source row's line object. Reset or reflow during an earlier warning therefore still needs source/Rust line-identity checks.
+- ANSI warning callbacks have fallible late reads for rows, buffer length, cursor and current attributes. Task377 also retains each ANSI/HTML traversal row through reset from a warning. Arbitrary replacement methods, source work-cell aliases and broader host/palette mutation still need full346 checks.
 - GC/WeakRef tests, every malformed UTF-16/number case, source/restored full internal margins/events and complete demo matrices remain unrun here.
 - Equal infinite start/end bounds make the source row++ loop non-progressing. The numeric probe records that case as unrun rather than hanging a browser. No source-hang compatibility approval is claimed.
 
@@ -49,6 +49,10 @@ Three new source/Rust probes cover reset from a last-column warning, nested seri
 The unchanged original SerializeAddon suite passes120/120 cases against source and120/120 against Rust across the three engines. All13 native serialization test binaries pass55 test functions, including5 new late-state regressions; the new tests also cover cursor exclusion and propagation of each late-read failure. Native focused and WASM library warning-denied Clippy and exact `cargo fmt --all -- --check` pass. These are scoped Windows Rust1.85.1 results, not a full workspace or native OS matrix.
 
 Reproduce using the commands above plus `cargo test --locked -j2 -p xterm-core --test serialize_reentry`. `results/serialize-reentry/` retains native/build/lint logs, the baseline report and its three warning probes. `results/serialize-browser/` retains the final complete browser traces and original-suite reports. The first run's stale48-case runner guard is retained separately; it was corrected to51 after adding the three probes, without changing source assertions. Browser proof is on the focused branch before final integration. Overall equivalence remains NOT PROVEN.
+
+## Traversal row identity
+
+Task377 retains the source row object through missing-cell warnings in both ANSI and HTML traversal. A warning can reset the public buffer view to a different buffer, but subsequent cells in that row must still come from the captured line. Wrapping/style lookahead remains live. See `docs/serialize-line-identity.md` for the two three-browser negative controls, native tests and exact scope. The current browser corpus has53 cases,52 matching per engine; raw-numeric-boundaries remains the sole known corpus mismatch, and full346/322 remain open.
 
 ## Public cell enumeration repair
 

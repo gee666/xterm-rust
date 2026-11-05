@@ -3,10 +3,10 @@ use crate::{
     js_error::{to_js_error, JsCallbackError},
     terminal::Shared,
 };
-use std::{error::Error, rc::Rc};
+use std::{cell::RefCell, error::Error, rc::Rc};
 use wasm_bindgen::prelude::*;
 use xterm_core::{
-    buffer::{AttributeData, BufferError, CellData},
+    buffer::{AttributeData, BufferError, CellData, LineRef},
     event::EmitError,
     public_api::BufferApiView,
     serialize::{BufferAccess, Position, PublicBufferView, SerializeError},
@@ -44,6 +44,7 @@ pub(super) struct BrowserView<'a> {
     captured: PublicBufferView,
     view: Rc<BufferApiView>,
     host: &'a Shared,
+    traversal_line: RefCell<Option<LineRef>>,
 }
 impl<'a> BrowserView<'a> {
     pub(super) fn new(view: Rc<BufferApiView>, host: &'a Shared) -> Result<Self, JsValue> {
@@ -52,6 +53,7 @@ impl<'a> BrowserView<'a> {
             captured,
             view,
             host,
+            traversal_line: RefCell::default(),
         })
     }
 }
@@ -64,6 +66,29 @@ impl BufferAccess for BrowserView<'_> {
     }
     fn cell(&self, row: usize, col: usize) -> Result<Option<CellData>, SerializeError> {
         self.captured.cell(row, col)
+    }
+    fn capture_line(&self, row: usize) -> Result<Option<usize>, SerializeError> {
+        let line = self.view.get_line(row)?;
+        let length = line
+            .as_ref()
+            .map(|line| {
+                line.try_borrow()
+                    .map(|line| line.len())
+                    .map_err(|_| SerializeError::BorrowedLine)
+            })
+            .transpose()?;
+        *self.traversal_line.borrow_mut() = line;
+        Ok(length)
+    }
+    fn captured_cell(&self, _: usize, col: usize) -> Result<Option<CellData>, SerializeError> {
+        let line = self.traversal_line.borrow();
+        let Some(line) = line.as_ref() else {
+            return Ok(None);
+        };
+        let line = line
+            .try_borrow()
+            .map_err(|_| SerializeError::BorrowedLine)?;
+        Ok(line.get_cell(col))
     }
     fn is_wrapped(&self, row: usize) -> Result<bool, SerializeError> {
         self.captured.is_wrapped(row)
