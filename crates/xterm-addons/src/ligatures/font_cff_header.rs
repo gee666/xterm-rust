@@ -4,8 +4,11 @@ use super::{
     font_deflate,
 };
 
-/// Only the constructor header phase is validated here. CFF index, dictionary
-/// and charstring interpretation remain separate, unfinished port work.
+#[path = "font_cff_index.rs"]
+mod index;
+
+/// Validate the eager header and initial INDEX reads. Dictionary and charstring
+/// interpretation remain separate port work.
 pub(super) fn validate(
     reader: Reader<'_>,
     record: Reader<'_>,
@@ -20,14 +23,20 @@ pub(super) fn validate(
             .ok_or(FontError::Bounds)?;
         // Source allocates a zeroed table, ignores output overflow and validates
         // the whole compressed stream before inspecting its first header byte.
-        // Keep only the five possible header bytes; do not allocate a font-sized
-        // buffer for metadata whose remaining interpretation is not ported yet.
-        let mut prefix = [0; 5];
-        let size = record.offset32(12)?.min(prefix.len());
-        font_deflate::prefix(reader.bytes(input, length)?, &mut prefix[..size])?;
-        header(Reader::new(&prefix[..size]))
+        // INDEX offsets can address any inflated byte, including backwards
+        // ranges. Unlike header-only validation this phase needs the source's
+        // whole zeroed destination. Propagate reservation failure, not a panic.
+        let size = record.offset32(12)?;
+        let mut bytes = Vec::new();
+        bytes.try_reserve_exact(size)?;
+        bytes.resize(size, 0);
+        font_deflate::prefix(reader.bytes(input, length)?, &mut bytes)?;
+        let reader = Reader::new(&bytes);
+        header(reader)?;
+        index::validate(reader, 0)
     } else {
-        header(reader.at(offset)?)
+        header(reader.at(offset)?)?;
+        index::validate(reader, offset)
     }
 }
 fn header(reader: Reader<'_>) -> Result<(), FontError> {
