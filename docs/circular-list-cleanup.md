@@ -16,7 +16,7 @@ The fix covers removed values from successful mutations and ownership of a rejec
 
 ## Verification
 
-Checks ran on Windows with Rust/Cargo1.85.1 and Node24.15.0 from an isolated O: worktree based on main5ca9f593. Logs, exact source hashes and raw oracle results are in `results/circular-list-drop/`.
+Checks ran on Windows with Rust/Cargo1.85.1 and Node24.15.0 from an isolated O: worktree based on main5ca9f593. After rebasing onto mainbb6eada, all53 focused tests, both Clippy commands and full-workspace formatting passed again. The implementation/test hashes match the original oracle run. Logs, exact source hashes and raw oracle results are in `results/circular-list-drop/`.
 
 - Negative control against copies of the unchanged base utility modules: all five new tests failed from storage borrow panics. `baseline.log` retains the failures. The baseline was built as a standalone utility rlib, not as a workspace test.
 - Fixed normal Cargo run:53 tests passed, zero failed or ignored. This includes five new regression functions and48 existing CircularList tests.

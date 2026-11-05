@@ -1,0 +1,85 @@
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\Y16\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 5.99s
+     Running tests\circular_list.rs (target\debug\deps\circular_list-1f374461cb5efd6b.exe)
+
+running 24 tests
+test callbacks_can_mutate_same_list_without_borrow_conflicts ... ok
+test max_length_getter ... ok
+test length_growth_clears_physical_slots_and_capacity_shrink_retains_length ... ok
+test shift_count_zero_does_not_mutate ... ok
+test emits_delete_insert_trim_in_order ... ok
+test shift_forward_expands_list ... ok
+test pop_keeps_slot_and_boundary_validation_is_explicit ... ok
+test push_discards_old_values_at_max_length ... ok
+test splice_deletes_then_inserts_items ... ok
+test splice_inserts_items ... ok
+test length_capped_at_maximum ... ok
+test shift_elements_backwards ... ok
+test shift_elements_forward ... ok
+test max_length_increases_size ... ok
+test shift_forward_wraps_list ... ok
+test shift_invalid_arguments_match_upstream_errors ... ok
+test shift_one_element_forward ... ok
+test splice_deletes_items ... ok
+test push_values_onto_array ... ok
+test recycle_retains_shared_identity_and_requires_full_buffer ... ok
+test splice_wraps_when_more_inserted_than_deleted ... ok
+test trim_removes_all_when_count_exceeds_length ... ok
+test trim_removes_from_beginning ... ok
+test shift_one_element_backwards ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\circular_list_drop.rs (target\debug\deps\circular_list_drop-2a38cc6fe8fea5d2.exe)
+
+running 5 tests
+test capacity_change_publishes_copied_slots_before_cleanup ... ok
+test replacing_and_removing_slots_allows_cleanup_to_read_and_write ... ok
+test expanding_length_publishes_all_removals_before_cleanup ... ok
+test push_releases_overwritten_value_before_trim_event ... ok
+test cleanup_panic_keeps_committed_storage_reusable ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\circular_list_edges.rs (target\debug\deps\circular_list_edges-cb7fe8e2e6f63732.exe)
+
+running 17 tests
+test arithmetic_errors_precede_storage_mutation ... ok
+test multi_trim_reports_each_partial_state_and_zero_count_skips_validation ... ok
+test delete_observer_length_reset_precedes_insert ... ok
+test event_error_interrupts_delete_insert_and_trim_at_source_statements ... ok
+test sparse_source_maximum_capacity_and_length_do_not_allocate_all_holes ... ok
+test impossible_sparse_resize_reports_reserve_failure_atomically ... ok
+test insert_observer_trim_changes_outer_length_adjustment ... ok
+test capacity_growing_after_shrink_repeats_cyclic_values_and_preserves_holes ... ok
+test reentrant_push_observer_can_resize_without_storage_borrow ... ok
+test reentrant_recycle_reads_after_observer_length_change ... ok
+test shared_list_releases_owner_borrow_before_observers_and_shares_disposal ... ok
+test shift_overflow_observer_can_shorten_before_next_trim ... ok
+test signed_slots_preserve_js_remainder_and_unwrapped_trim_start ... ok
+test sharing_does_not_clone_elements ... ok
+test callback_error_chain_retains_concrete_cause_for_bindings ... ok
+test stored_snapshot_includes_stale_and_negative_slots_without_capacity_scan ... ok
+test number_indexing_matches_js_rounding_and_undefined_nonintegral_slots ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\circular_list_numbers.rs (target\debug\deps\circular_list_numbers-2722f84ee5813042.exe)
+
+running 3 tests
+test raw_length_preserves_named_properties_but_capacity_rebuild_discards_them ... ok
+test fraction_and_subnormal_properties_survive_ring_advances ... ok
+test nan_and_either_infinity_use_the_same_array_property ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\circular_list_splice.rs (target\debug\deps\circular_list_splice-67548c7b5ea45763.exe)
+
+running 4 tests
+test callback_reset_leaves_cached_start_sparse_like_terminal_insert_lines ... ok
+test deletion_count_is_not_clamped_to_the_remaining_tail ... ok
+test delete_beyond_tail_then_insert_uses_source_length_and_event_order ... ok
+test start_beyond_length_writes_sparse_slot_without_extending_to_start ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
