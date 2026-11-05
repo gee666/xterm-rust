@@ -27,7 +27,12 @@ Observed native Windows results:
 - Scoped native and WASM Clippy with `-D warnings` passed.
 - Exact `cargo fmt --all -- --check` failed with Windows OS206. This is not a full formatting pass.
 
-Source and actual Rust/WASM browser runs are pending at this checkpoint. Full workspace Clippy/tests, unchanged original Search E2E, seeded corpus, demo, native Linux/macOS and GC were not run for this task.
+- The shared92 cases passed against unchanged original source in Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4,276 total.
+- Actual Rust/WASM negative control replaced only `search/find.rs` with accepted469 bytes. Chromium passed17 functions and failed the new guard function. A `finally` restored the exact fixed bytes.
+- The final actual Rust/WASM suite passed18 functions in each of the three engines,54 total, with no failed, ignored or filtered tests. The92 shared cases are inside one function per engine, not92 extra functions. Both compiler artifacts contain the exact shared fixture bytes; their compiler/WASM/binding hashes were verified before cleanup.
+- Changed Rust formatting passed. Node24.15.0 and Rust/Cargo1.85.1 were used on native Windows; wasm-bindgen CLI0.2.100 matched the locked runtime.
+
+Independent review is pending at this checkpoint. Full workspace Clippy/tests, unchanged original Search E2E, seeded corpus, demo, native Linux/macOS and GC were not run for this task.
 
 Reproduce with prepared external tools and a private O: target:
 

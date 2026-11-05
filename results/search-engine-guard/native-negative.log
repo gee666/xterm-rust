@@ -1,0 +1,52 @@
+   Compiling memchr v2.8.3
+   Compiling allocator-api2 v0.2.21
+   Compiling foldhash v0.1.5
+   Compiling equivalent v1.0.3
+   Compiling hashbrown v0.15.5
+   Compiling ryu-js v1.0.3
+   Compiling zmij v1.0.23
+   Compiling regress v0.10.4
+   Compiling adler2 v2.0.1
+   Compiling serde_core v1.0.229
+   Compiling miniz_oxide v0.8.9
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\R480\crates\xterm-core)
+   Compiling serde_json v1.0.154
+   Compiling itoa v1.0.18
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\R480\crates\xterm-addons)
+   Compiling xterm-wasm-support v0.1.0 (O:\xterm-rust-swarm-16\tmp\R480\crates\xterm-wasm-support)
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\R480\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 15.50s
+     Running tests\search_addon.rs (target\debug\deps\search_addon-4de7d175adac3b45.exe)
+
+running 3 tests
+test engine_guard::nonempty_guard_reads_text_only_after_selection_clear_cache_and_options ... FAILED
+test engine_guard::empty_engine_guard_keeps_highlights_skips_matching_and_runs_selection_arguments ... FAILED
+test engine_guard::engine_guard_error_precedes_selection_clear_and_all_later_arguments ... FAILED
+
+failures:
+
+---- engine_guard::nonempty_guard_reads_text_only_after_selection_clear_cache_and_options stdout ----
+
+thread 'engine_guard::nonempty_guard_reads_text_only_after_selection_clear_cache_and_options' panicked at crates\xterm-web\tests\search_cases\engine_guard.rs:181:17:
+assertion failed: host.terminal.selection_position()?.is_none()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- engine_guard::empty_engine_guard_keeps_highlights_skips_matching_and_runs_selection_arguments stdout ----
+
+thread 'engine_guard::empty_engine_guard_keeps_highlights_skips_matching_and_runs_selection_arguments' panicked at crates\xterm-web\tests\search_cases\engine_guard.rs:60:16:
+empty or throwing engine guard must not read matching text
+
+---- engine_guard::engine_guard_error_precedes_selection_clear_and_all_later_arguments stdout ----
+
+thread 'engine_guard::engine_guard_error_precedes_selection_clear_and_all_later_arguments' panicked at crates\xterm-web\tests\search_cases\engine_guard.rs:60:16:
+empty or throwing engine guard must not read matching text
+
+
+failures:
+    engine_guard::empty_engine_guard_keeps_highlights_skips_matching_and_runs_selection_arguments
+    engine_guard::engine_guard_error_precedes_selection_clear_and_all_later_arguments
+    engine_guard::nonempty_guard_reads_text_only_after_selection_clear_cache_and_options
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 56 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-web --test search_addon`
