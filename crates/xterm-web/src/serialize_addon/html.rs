@@ -61,6 +61,19 @@ pub(super) fn serialize(addon: &SerializeAddon, raw: JsValue) -> Result<Vec<u16>
             // NaN survives the source clamp and makes row <= end false. Do not
             // reuse ANSI's invalid-array-length error or skip header callbacks.
             empty_rows(columns(&host)?)
+        } else if let Some(scrollback) = scrollback
+            .as_f64()
+            .filter(|value| value.is_finite() && value.fract() != 0.0)
+        {
+            // HTML does not allocate ANSI's integral row array. Preserve the
+            // clamped fractional key through CircularList lookup and row++.
+            let retained = (scrollback + rows as f64).clamp(0.0, max as f64);
+            Range::Numeric(HtmlNumericRange {
+                start_line: max as f64 - retained,
+                end_line: max.saturating_sub(1) as f64,
+                start_col: 0,
+                end_col: columns(&host)?,
+            })
         } else {
             let start = options::scrollback_start(max, rows, scrollback)?;
             Range::Integral(CellRange {
