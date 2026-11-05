@@ -44,6 +44,12 @@ WASM_TEST=image_lifecycle_browser CARGO_BUILD_JOBS=2 node scripts/image-canvas-c
 
 For dependencies outside the checkout set `SOURCE_REPO`, `REFERENCE_NODE_MODULES`, `PLAYWRIGHT_MODULE` and `WASM_BINDGEN` as described in `docs/image-canvas.md`. The runner records original source inputs, Rust inputs, compiler/WASM/bindings/CSS hashes and browser counts. Concise logs, hash reports and the negative-control receipt are retained under `results/image-iip-terminal`. Generated binaries and temporary test copies are disposable and can be rebuilt with these commands.
 
+## Integration checkpoint
+
+The canonical merge helper integrated this producer and its review at main `50514541e1d57b0d8aedaa692b556df95297fa68`, based on `6b8f80c2`. The producer source, tests and runner had an empty diff against the reviewed archive after rebase. A fresh union run passed12 IIP tests in each browser before integration. Changed web builds/all-target tests, affected native all-target checks, workspace checks and applicable WASM library checks passed without bypass. The gate counted330 passing tests across117 summaries and removed the private target. This default-feature canonical count is separate from the328-test pre-integration all-feature run.
+
+The batch also included Herbert's confirmed receipt-only `19d3072` as `5051454`, not additional unreviewed source. `canonical-merge.json`, `canonical-merge.log` and `union-*-browsers.json` under this producer's result directory retain the exact checkpoint. Final-ref and compiler grants were released immediately afterward.
+
 ## Independent review
 
 Task365 was accepted at `0caae14`. The isolated reviewer inspected the implementation, source comparator and evidence, and independently reran all12 IIP,23 canvas and13 lifecycle tests in each browser, with zero failures, ignored tests or unexpected page errors. It also reran328 native web tests across115 summaries, warning-denied native/scoped-WASM Clippy and full workspace formatting. No findings or source changes remained. Its browser reports are retained here as `results/image-iip-terminal/reviewer-*-browsers.json`.
