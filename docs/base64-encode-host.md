@@ -6,11 +6,11 @@ Overall utility/status equivalence is NOT PROVEN. Task394 repairs one observable
 
 `Base64.encodeText` previously called the portable Rust codec directly and returned a typed JS string. The reference first UTF-8 encodes the input, checks `bytes.toBase64`, then invokes that method if it is defined. Otherwise it creates a binary string and calls `btoa`. These host calls are observable. The old binding ignored getter effects, overridden returns and thrown values.
 
-The repaired browser binding retains Rust's UTF-16 replacement and UTF-8 conversion, then uses the browser-owned Uint8Array. It checks the capability once and reads it again for invocation, matching source receiver and ordering. If absent, fallback reads the same array after the getter, so byte mutations affect its binary string. A small FFI adapter invokes the standard host `btoa`, as the decoder already invokes `atob`. This is not a terminal-engine fallback. Portable native encoding is unchanged. No dependency or unsafe code was added.
+Task394 retained Rust's UTF-16 replacement and UTF-8 conversion, then used the browser-owned Uint8Array. It checks the capability once and reads it again for invocation, matching source receiver and ordering. If absent, fallback reads the same array after the getter, so byte mutations affect its binary string. A small FFI adapter invokes the standard host `btoa`, as the decoder already invokes `atob`. This is not a terminal-engine fallback. Portable native encoding is unchanged. No dependency or unsafe code was added.
 
 The Rust browser method returns `Result<JsValue, JsValue>` rather than `Result<JsString, JsValue>`. Normal host methods still return strings. Overridden methods may return objects, numbers, null or undefined, which source returns without coercion. The clipboard handler interpolates this raw value later, preserving its existing activation and coercion order. JS errors retain their original identity.
 
-The focused contract does not establish arbitrary TextEncoder constructor replacement, every mutable host intrinsic, full clipboard permission behavior, or complete original-suite equivalence.
+Task418 subsequently preserves TextEncoder construction/encode and fallback host calls, with separate [encoder host evidence](base64-encoder-host.md). Neither scoped repair establishes every mutable host intrinsic, full clipboard permission behavior, or complete original-suite equivalence.
 
 ## Assertions and evidence
 

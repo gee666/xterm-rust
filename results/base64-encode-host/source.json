@@ -1,0 +1,246 @@
+{
+  "status": "passed",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "scope": "Original Base64.encodeText, encode-host shared host-method traces, not a full original terminal suite.",
+  "before": {
+    "files": 776,
+    "mismatches": []
+  },
+  "cases": [
+    {
+      "name": "constructor and encode receiver precede capability",
+      "log": [
+        {
+          "constructor": true,
+          "args": 0
+        },
+        "encode getter",
+        {
+          "receiver": true,
+          "data": "input"
+        },
+        "capability",
+        "capability",
+        {
+          "receiver": true,
+          "args": 0
+        }
+      ],
+      "result": {
+        "marker": true
+      }
+    },
+    {
+      "name": "constructor throws original value",
+      "log": [],
+      "result": {
+        "marker": true,
+        "type": "marker"
+      }
+    },
+    {
+      "name": "nonconstructible encoder",
+      "log": [],
+      "result": {
+        "marker": false,
+        "type": "TypeError"
+      }
+    },
+    {
+      "name": "null encoder constructor",
+      "log": [],
+      "result": {
+        "marker": false,
+        "type": "TypeError"
+      }
+    },
+    {
+      "name": "encode getter throws original value",
+      "log": [],
+      "result": {
+        "marker": true,
+        "type": "marker"
+      }
+    },
+    {
+      "name": "noncallable encode method",
+      "log": [],
+      "result": {
+        "marker": false,
+        "type": "TypeError"
+      }
+    },
+    {
+      "name": "encode method throws original value",
+      "log": [],
+      "result": {
+        "marker": true,
+        "type": "marker"
+      }
+    },
+    {
+      "name": "encode sees unconverted Symbol input",
+      "log": [
+        "symbol"
+      ],
+      "result": {
+        "type": "string",
+        "value": "symbol accepted by custom encoder"
+      }
+    },
+    {
+      "name": "encode sees undefined input",
+      "log": [
+        {
+          "args": 1,
+          "type": "undefined"
+        }
+      ],
+      "result": {
+        "type": "string",
+        "value": "undefined"
+      }
+    },
+    {
+      "name": "null byte result throws",
+      "log": [],
+      "result": {
+        "marker": false,
+        "type": "TypeError"
+      }
+    },
+    {
+      "name": "raw numeric byte result boxes for fallback",
+      "log": [],
+      "result": {
+        "type": "string",
+        "value": ""
+      }
+    },
+    {
+      "name": "changing capability getter on raw result",
+      "log": [
+        1,
+        2
+      ],
+      "result": {
+        "marker": false,
+        "type": "TypeError"
+      }
+    },
+    {
+      "name": "fallback mutable length and index order",
+      "log": [
+        "capability",
+        "length",
+        "index0",
+        "length",
+        "index1",
+        "length",
+        [
+          65,
+          8364
+        ]
+      ],
+      "result": {
+        "type": "string",
+        "value": "fallback"
+      }
+    },
+    {
+      "name": "fallback calls mutable String.fromCharCode per byte",
+      "log": [
+        {
+          "receiver": true,
+          "args": [
+            65
+          ]
+        },
+        "default",
+        {
+          "receiver": true,
+          "args": [
+            66
+          ]
+        },
+        "default"
+      ],
+      "result": {
+        "type": "string",
+        "value": "XX"
+      }
+    },
+    {
+      "name": "fallback char method changes between bytes",
+      "log": [
+        65,
+        66
+      ],
+      "result": {
+        "type": "string",
+        "value": "XY"
+      }
+    },
+    {
+      "name": "fallback char conversion throws original value",
+      "log": [],
+      "result": {
+        "marker": true,
+        "type": "marker"
+      }
+    },
+    {
+      "name": "fallback byte coercion uses standard host conversion",
+      "log": [
+        "number"
+      ],
+      "result": {
+        "type": "string",
+        "value": "A"
+      }
+    },
+    {
+      "name": "fallback length coercion throws original value",
+      "log": [],
+      "result": {
+        "marker": true,
+        "type": "marker"
+      }
+    },
+    {
+      "name": "fallback bigint length accepts numeric index comparison",
+      "log": [],
+      "result": {
+        "type": "string",
+        "value": "A"
+      }
+    },
+    {
+      "name": "fallback zero length never reads char method",
+      "log": [],
+      "result": {
+        "type": "string",
+        "value": ""
+      }
+    }
+  ],
+  "counts": {
+    "discovered": 20,
+    "executed": 20,
+    "passed": 20,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0
+  },
+  "fixtureSha256": "e8e8077b13727c44aceae96016c5063b3a6bf251a613062d2b1e855c85ccb07b",
+  "traceSha256": "9afd8983a5f2bfa6a7a66eaf6abb416d57e35fe4422d1f7e544ebdfcda45fae9",
+  "source": {
+    "path": "addons/addon-clipboard/src/ClipboardAddon.ts",
+    "sha256": "fecc80248d701a46d3c427e60b41def404151496942be9cc0aa875a5242cf121"
+  },
+  "after": {
+    "files": 776,
+    "mismatches": []
+  }
+}

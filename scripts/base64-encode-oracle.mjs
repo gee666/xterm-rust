@@ -8,17 +8,20 @@ import { referenceIntegrity } from './upstream-baseline-utils.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const source = resolve(process.env.SOURCE_ROOT ?? join(root, 'source_repo'));
-const kind = process.argv.includes('--fallback') ? 'decode-fallback' :
+const kind = process.argv.includes('--encode-host') ? 'encode-host' :
+  process.argv.includes('--fallback') ? 'decode-fallback' :
   process.argv.includes('--decode') ? 'decode' : 'encode';
-const traceName = kind === 'decode-fallback' ? 'base64DecodeFallbackCases' :
+const traceName = kind === 'encode-host' ? 'base64EncodeHostCases' :
+  kind === 'decode-fallback' ? 'base64DecodeFallbackCases' :
   kind === 'decode' ? 'base64DecodeCases' : 'base64EncodeCases';
+const method = kind.startsWith('decode') ? 'decodeText' : 'encodeText';
 const scratch = join(root, `tmp/base64-${kind}`);
 const output = join(root, `results/base64-${kind}`);
 const sourcePath = 'addons/addon-clipboard/src/ClipboardAddon.ts';
 const fixture = join(root, `crates/xterm-web/tests/fixtures/base64-${kind}.json`);
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const report = { status: 'failed', node: process.version, platform: process.platform,
-  scope: `Original Base64 ${kind}Text with shared host-method traces, not a full original terminal suite.` };
+  scope: `Original Base64.${method}, ${kind} shared host-method traces, not a full original terminal suite.` };
 await mkdir(output, { recursive: true });
 await mkdir(scratch, { recursive: true });
 try {
@@ -49,4 +52,4 @@ try {
   await rm(scratch, { recursive: true, force: true });
   await writeFile(join(output, 'source.json'), `${JSON.stringify(report, null, 2)}\n`);
 }
-console.log(`Base64.${kind}Text source trace ${report.status}, ${report.counts?.executed ?? 0} cases`);
+console.log(`Base64.${method} ${kind} source trace ${report.status}, ${report.counts?.executed ?? 0} cases`);

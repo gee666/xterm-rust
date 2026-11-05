@@ -7,7 +7,7 @@ use crate::{
     terminal::Terminal,
     utf16::{from_js_string, to_js_string},
 };
-use js_sys::{Function, JsString, Reflect, Uint8Array};
+use js_sys::{Function, JsString, Reflect};
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::{prelude::*, JsCast};
 use xterm_addons::clipboard::{parse_request, query_reply, ClipboardRequest};
@@ -25,7 +25,8 @@ export function clipboardWrite(provider, selection, text) {
 export function clipboardEncode(codec, value) { return codec.encodeText(value); }
 export function clipboardDecode(codec, value) { return codec.decodeText(value); }
 export function clipboardString(value) { return `${value}`; }
-export function clipboardEncoderInput(value) { return value === undefined ? '' : `${value}`; }
+export function clipboardEncodeBytes(value) { return new TextEncoder().encode(value); }
+export function clipboardAppendByte(bin, bytes, index) { return bin + String.fromCharCode(bytes[index]); }
 export function clipboardDecodeModern(value) { return new TextDecoder().decode(Uint8Array.fromBase64(value)); }
 export function clipboardDecodeBytes(bytes) { return new TextDecoder().decode(bytes); }
 export function clipboardAtob(value) { return atob(value); }
@@ -48,8 +49,10 @@ extern "C" {
     fn decode(codec: &JsValue, value: &JsString) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch,js_name=clipboardString)]
     fn abstract_string(value: &JsValue) -> Result<JsString, JsValue>;
-    #[wasm_bindgen(catch,js_name=clipboardEncoderInput)]
-    pub fn encoder_input(value: &JsValue) -> Result<JsString, JsValue>;
+    #[wasm_bindgen(catch,js_name=clipboardEncodeBytes)]
+    fn encode_bytes(value: &JsValue) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch,js_name=clipboardAppendByte)]
+    fn append_byte(bin: &JsString, bytes: &JsValue, index: f64) -> Result<JsString, JsValue>;
     #[wasm_bindgen(catch,js_name=clipboardDecodeModern)]
     fn decode_modern(value: &JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch,js_name=clipboardDecodeBytes)]
@@ -72,22 +75,23 @@ extern "C" {
     fn write_then(value: &JsValue) -> Result<JsValue, JsValue>;
 }
 pub fn encode_default(value: &JsValue) -> Result<JsValue, JsValue> {
-    let text = encoder_input(value)?;
-    let text = String::from_utf16_lossy(&from_js_string(&text));
-    let bytes = Uint8Array::from(text.as_bytes());
+    // Construction, encode lookup and argument conversion belong to the host.
+    // Keep the result raw: a replaced encoder can return any JS value.
+    let bytes = encode_bytes(value)?;
     // Source reads the capability once, then reads it again for invocation.
     // Keep the raw result: an overridden host method may return any JS value.
     if !super::js_property::get(bytes.as_ref(), "toBase64")?.is_undefined() {
         return super::js_property::call(bytes.as_ref(), "toBase64", &js_sys::Array::new());
     }
-    // The capability getter can mutate the byte array before choosing fallback.
-    let mut binary = Vec::new();
-    let mut index = 0;
-    while index < bytes.length() {
-        binary.push(u16::from(bytes.get_index(index)));
-        index += 1;
+    // Rust owns the loop; each host expression preserves length/index getters,
+    // mutable String.fromCharCode and its ToPrimitive/concatenation semantics.
+    let mut binary = JsString::from("");
+    let mut index = 0.0;
+    while has_byte(&bytes, index)? {
+        binary = append_byte(&binary, &bytes, index)?;
+        index += 1.0;
     }
-    btoa(&to_js_string(&binary))
+    btoa(&binary)
 }
 
 pub fn decode_default(value: &JsValue) -> Result<JsValue, JsValue> {
