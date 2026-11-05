@@ -55,6 +55,13 @@ for(const woff of [false,true]) {
  for(const [label,data] of [['attach',attach],['caret',caret],['mark sets',marks]]) {
   for(let size=0;size<=data.length;size++)add(`GDEF ${label} EOF ${size}${suffix}`,data.slice(0,size),{woff});
  }
+ for(const [label,data] of [
+  ['class format2',words([1,0,12,0,0,0,2,1,2,5,6])],
+  ['coverage format2',words([1,0,0,12,0,0,6,0,0,2,1,2,5,0])],
+  ['null attachment children',words([1,0,0,12,0,0,0,2,0,0])],
+  ['null caret children',words([1,0,0,0,12,0,0,1,6,0,2,0,0])],
+  ['null mark children',words([1,2,0,0,0,0,14,99,2,0,0])],
+ ])for(let size=0;size<=data.length;size++)add(`GDEF ${label} EOF ${size}${suffix}`,data.slice(0,size),{woff});
  for(const field of [4,6,8,10,12])for(const pointer of [0,1,2,12,13,14,15,16,17,65535]) {
   const data=Buffer.from(words([1,3,0,0,0,0,0],32));data.writeUInt16BE(pointer,field);
   add(`GDEF root pointer ${field}/${pointer}${suffix}`,[...data],{woff});
@@ -87,6 +94,8 @@ for(const woff of [false,true]) {
  add('kern warning fixes GDEF'+suffix,words([2,0,0,0,0,0]),{woff,remove:['kern'],extraTables:[{tag:'kern',data:[...kern]}],warningMutation:{tag:'GDEF',at:0,value:1}});
  add('GDEF warning breaks later META'+suffix,classes,{woff,remove:['meta'],extraTables:[{tag:'meta',data:Array(16).fill(0).map((v,i)=>i===3?1:v)}],warningMutation:{tag:'meta',at:2,value:2}});
 }
+add('GDEF null attachment count skips unused pointer',words([1,0,0,12,0,0,0,0]));
+add('GDEF caret3 ignores missing device offset',words([1,0,0,0,12,0,0,1,6,1,4,3,7]));
 add('GDEF ignored nominal directory length',empty,{directoryLength:0});
 for(const woff of [false,true]) {
  add(`GDEF large classes warning mutation ${woff?'compressed':'plain'}`,words([1,0,14,0,0,16,0,3,4],1024),{woff,warningMutation:{tag:'GDEF',at:10,value:0}});

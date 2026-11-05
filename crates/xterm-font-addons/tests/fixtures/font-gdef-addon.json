@@ -80,6 +80,91 @@
       "refreshes": 1
     }
   },
+  "GetterThrow": {
+    "first": {
+      "loading": [
+        [
+          0,
+          3
+        ]
+      ],
+      "ranges": [
+        [
+          0,
+          3
+        ]
+      ],
+      "refreshes": 0,
+      "trace": [
+        "get"
+      ]
+    },
+    "cached": {
+      "reads": 0,
+      "refreshes": 0
+    },
+    "retainedIdentity": true,
+    "retry": [
+      [
+        0,
+        3
+      ]
+    ],
+    "accepted": {
+      "ranges": [],
+      "refreshes": 1
+    }
+  },
+  "Reenter": {
+    "first": {
+      "loading": [
+        [
+          0,
+          3
+        ]
+      ],
+      "ranges": [],
+      "refreshes": 1,
+      "trace": [
+        "get",
+        [
+          "call",
+          true,
+          "0x323c6: This font file uses an invalid ClassDef format of 3. It might be corrupted and should be reacquired if it doesn't display as intended."
+        ],
+        [
+          "reenter",
+          [
+            [
+              0,
+              3
+            ]
+          ]
+        ],
+        "get",
+        [
+          "call",
+          true,
+          "0x323c8: This font file uses an invalid ClassDef format of 4. It might be corrupted and should be reacquired if it doesn't display as intended."
+        ]
+      ]
+    },
+    "cached": {
+      "reads": 0,
+      "refreshes": 1
+    },
+    "retainedIdentity": false,
+    "retry": [
+      [
+        0,
+        3
+      ]
+    ],
+    "accepted": {
+      "ranges": [],
+      "refreshes": 2
+    }
+  },
   "Mutate": {
     "first": {
       "loading": [

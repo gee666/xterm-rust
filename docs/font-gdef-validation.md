@@ -4,7 +4,7 @@ Task428 closes the GDEF constructor path of task342. Full font and full port equ
 
 ## Contract
 
-The Rust reader selects the final GDEF directory descriptor without loading earlier duplicates. It validates that descriptor after kern and before GSUB, retaining the source constructor order. Accepted META and later fvar work must retain their later phases. Deferred reads use the original copied directory descriptor and current font bytes, including writes made during a warning callback.
+The Rust reader selects the final GDEF directory descriptor without loading earlier duplicates. It validates that descriptor after kern and before GSUB, retaining the source constructor order. Accepted fvar and META validation retain their later phases. Deferred reads use the original copied directory descriptor and current font bytes, including writes made during a warning callback.
 
 GDEF parsing reads the version, class definitions, attachment lists and coverage, ligature caret lists and mark glyph sets. Zero pointers skip children. The source accepts versions computed as `major + minor / 10` equal to1,1.2 or1.3, including unusual major0 encodings. It ignores the version1.3 variation-store offset and format3 caret device offset. Its mark-set parser consumes16-bit pointers, not the specification's32-bit records. Rust follows those actual reads rather than adding stricter OpenType validation.
 
@@ -14,11 +14,11 @@ Malformed data uses typed native errors. GDEF and CaretValue version errors reta
 
 ## Inputs and scope
 
-`scripts/font-gdef-oracle.mjs` executes the installed unchanged opentype.js parser. Its SHA256 is `737212d8aae53d1996ef10b315e4369a1542ebb9b94c13c5f99793914745d484`. The deterministic corpus has1073 cases:219 accepted,846 malformed-data rejections and8 warning-callback failures. Seed `0x6DEF428` supplies256 malformed cases. Directed cases cover truncation, pointer/count/format boundaries, duplicate descriptors, ignored lengths/fields, SFNT/WOFF compression, phase precedence and warning mutations.
+`scripts/font-gdef-oracle.mjs` executes the installed unchanged opentype.js parser. Its SHA256 is `737212d8aae53d1996ef10b315e4369a1542ebb9b94c13c5f99793914745d484`. The deterministic corpus has1321 cases:243 accepted,1070 malformed-data rejections and8 warning-callback failures. Seed `0x6DEF428` supplies256 malformed cases. Directed cases cover truncation, pointer/count/format boundaries, duplicate descriptors, ignored lengths/fields, SFNT/WOFF compression, phase precedence and warning mutations.
 
 The source and Rust rebuild descriptors independently. Compressed WOFF payloads are shared fixture inputs so compressor choices cannot shift absolute warning addresses. Each reconstructed input must match its retained FNV32 byte check; source generation also retains SHA256 for every complete input. These input checks do not replace outcome and warning comparisons. The common metadata builder's optional extra tables and encoded payload support leave all existing corpus descriptors unchanged.
 
-The second source runner reuses the existing reviewed addon transpilation adapter and runs its baseline guards before six GDEF loading scenarios. `font_gdef_browser` runs the real Rust font reader and addon through a boundary terminal host. It covers two warnings, live alias mutation skipping the second pointer, inflated table independence, rejected versions, a warning invalidating later META, exact Symbol throw identity retained for later debug logging, rejection caching, fallback ranges, later successful loading and refresh. This is component evidence, not a complete Terminal renderer, original browser suite or demo pass.
+The second source runner reuses the existing reviewed addon transpilation adapter and runs its baseline guards before eight GDEF loading scenarios. `font_gdef_browser` runs the real Rust font reader and addon through a boundary terminal host. It covers two warnings, live alias mutation skipping the second pointer, inflated table independence, rejected versions, a warning invalidating later META, console getter and call Symbol throw identity retained for later debug logging, reentry during loading, rejection caching, fallback ranges, later successful loading and refresh. This is component evidence, not a complete Terminal renderer, original browser suite or demo pass.
 
 ## Reproduction
 
@@ -40,4 +40,4 @@ The source addon runner writes only owned `tmp/ligature-addon-oracle` scratch an
 
 ## Evidence
 
-Source corpus and six source addon scenarios pass. Native, WASM, browser, formatting/Clippy and canonical integration results are pending. No Linux/macOS execution or complete quality matrix is claimed.
+Source corpus and eight source addon scenarios pass. The first source reentry probe resolved its completion signal inside the warning's nested join call, before the source load continuation ran. The retained failure is a test completion bug, not a Rust result. The helper now guards nested warning reentry exactly like the existing kern warning probe, without changing the source or the asserted behavior. Native, WASM, browser, formatting/Clippy and canonical integration results are pending. No Linux/macOS execution or complete quality matrix is claimed.

@@ -6,7 +6,7 @@ export async function gdefLoadingScenario(create, inputs, good) {
     .map(([object,key])=>[object,key,Object.getOwnPropertyDescriptor(object,key)]);
   if(!globalThis.window)Object.defineProperty(globalThis,'window',{configurable:true,value:owner});
   Object.defineProperty(globalThis,'navigator',{configurable:true,value:{}});
-  const modes=['Warnings','Throw','Mutate','Reject','Compressed','LaterMeta'];
+  const modes=['Warnings','Throw','GetterThrow','Reenter','Mutate','Reject','Compressed','LaterMeta'];
   let active;
   Object.defineProperty(owner,'queryLocalFonts',{configurable:true,value:async()=>modes.flatMap(mode=>
     [mode,mode+'Again',mode+'Good'].map(family=>({family,async blob(){return {async arrayBuffer(){
@@ -24,14 +24,15 @@ export async function gdefLoadingScenario(create, inputs, good) {
   const results={};
   try {
     for(const mode of modes){
-      let join,completed,family=mode,refreshes=0,reads=0,previousIdentity=false;
+      let join,completed,family=mode,refreshes=0,reads=0,previousIdentity=false,inWarning=false;
       const trace=[],thrown=Symbol('GDEF warning sentinel');
       const terminal={rows:5,element:{style:{}},options:{logLevel:'debug',get fontFamily(){
-        if(completed){const done=completed;completed=undefined;done();}return family;
+        if(completed&&!inWarning){const done=completed;completed=undefined;done();}return family;
       }},registerCharacterJoiner(callback){join=callback;return 0;},deregisterCharacterJoiner(){},refresh(){refreshes++;}};
-      Object.defineProperty(console,'warn',{configurable:true,get(){trace.push('get');return function(message){
+      Object.defineProperty(console,'warn',{configurable:true,get(){trace.push('get');if(mode==='GetterThrow')throw thrown;return function(message){
         reads++;trace.push(['call',this===console,message]);
         if(mode==='Throw')throw thrown;
+        if(mode==='Reenter'&&reads===1){inWarning=true;try{trace.push(['reenter',join('===')]);}finally{inWarning=false;}}
         if(mode==='Mutate'&&reads===1)patch('GDEF',10,0);
         if(mode==='Compressed'&&reads===1)patch('GDEF',10,0);
         if(mode==='LaterMeta'&&reads===1)patch('meta',2,2);
@@ -44,7 +45,7 @@ export async function gdefLoadingScenario(create, inputs, good) {
         const first={loading,ranges:join('==='),refreshes,trace:trace.slice()};
         const before=reads;join('===');join('===');
         const cached={reads:reads-before,refreshes};
-        if(mode==='Throw'){
+        if(mode==='Throw'||mode==='GetterThrow'){
           family=mode+'Again';join('===');await new Promise(resolve=>{completed=resolve;});
         }
         const retainedIdentity=previousIdentity;

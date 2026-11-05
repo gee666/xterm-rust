@@ -35,6 +35,8 @@ async fn real_addon_preserves_gdef_warnings_alias_mutations_and_rejection_cache(
     for (mode, name) in [
         ("Warnings", "GDEF two class warnings SFNT"),
         ("Throw", "GDEF two class warnings SFNT"),
+        ("GetterThrow", "GDEF two class warnings SFNT"),
+        ("Reenter", "GDEF two class warnings SFNT"),
         ("Mutate", "GDEF class warning skips next pointer SFNT"),
         ("Reject", "GDEF invalid version SFNT"),
         (

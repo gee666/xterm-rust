@@ -1,0 +1,30 @@
+{"node":"v24.15.0","scope":"GDEF constructor reads and callbacks only, not full font parity","sourceSha256":"737212d8aae53d1996ef10b315e4369a1542ebb9b94c13c5f99793914745d484","fontSha256":"b35dd9d2131d5d83a9b87fe9ad22c6288fa3d17688d43302c14da29812417d63","fixtureSha256":"e94626661c34a47c0958597f10281033d40cbc21092966a281842f0a1f0b83e3","cases":1321,"accepted":243,"rejected":1070,"warningFailures":8}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  {
++   ranges: [
++     [
++       0,
++       3
++     ]
++   ],
++   refreshes: 0
+-   ranges: [],
+-   refreshes: 2
+  }
+
+    at file:///O:/xterm-rust-swarm-16/tmp/M427/scripts/font-gdef-addon-oracle.mjs:19:9 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: { ranges: [ [ 0, 3 ] ], refreshes: 0 },
+  expected: { ranges: [], refreshes: 2 },
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.15.0
