@@ -214,6 +214,19 @@ impl<'a> ParserApi<'a> {
     ) -> Result<DisposableHandle, RegistrarError> {
         self.register_osc_handler(ident, callback)
     }
+    /// Register an addon streaming APC handler without whole-payload buffering.
+    /// APC identifiers ignore prefixes, matching the public APC contract.
+    pub fn register_streaming_apc_handler(
+        &mut self,
+        mut id: FunctionIdentifier<'_>,
+        handler: crate::parser::apc::HandlerHandle,
+    ) -> Result<DisposableHandle, RegistrarError> {
+        id.prefix = None;
+        self.registrations
+            .apc
+            .register_handler(id.packed(true)?, handler)
+            .ok_or(RegistrarError::ParserDropped)
+    }
     pub fn register_apc_handler(
         &mut self,
         mut id: FunctionIdentifier<'_>,

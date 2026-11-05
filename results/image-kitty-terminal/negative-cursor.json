@@ -1,0 +1,181 @@
+{
+  "package": "xterm-web",
+  "testName": "image_kitty_terminal_browser",
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-05T12:51:54.837Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "image_kitty_terminal_browser",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 8165.8955,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 10.626500000000306,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\H16\\results\\acceptance-artifacts\\045d5d1746293b1b737a3a6bac054648863d144d3f31e00a2cc192f51ecf8f8a\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\H16\\results\\browser-host\\image_kitty_terminal_browser\\2026-11-05T12-51-54-835Z-35af1562-db67-460f-9fdf-cfc24ba0aca4\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 939.2083999999995,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__image_kitty_terminal_browser::async_cases::bitmap_promise_can_finish_after_storage_reset_disposal",
+        "__wbgt__image_kitty_terminal_browser::async_cases::pending_command_remains_live_across_real_blob_read",
+        "__wbgt__image_kitty_terminal_browser::async_cases::png_image_event_fallback_uses_actual_pixels_without_bitmap_at_entry",
+        "__wbgt__image_kitty_terminal_browser::async_cases::rejected_scale_closes_current_bitmap_but_not_storage_owned_image",
+        "__wbgt__image_kitty_terminal_browser::crop_scale_offsets_bottom_layer_and_cursor_restore_match_source",
+        "__wbgt__image_kitty_terminal_browser::failures::bitmap_rejections_and_host_constructor_throws_send_render_failure",
+        "__wbgt__image_kitty_terminal_browser::failures::blob_throw_is_synchronous_and_preserves_exception_identity",
+        "__wbgt__image_kitty_terminal_browser::failures::reentrant_reset_from_image_data_preserves_late_placement_like_source",
+        "__wbgt__image_kitty_terminal_browser::failures::response_callback_throw_rejects_pending_handler_with_original_value",
+        "__wbgt__image_kitty_terminal_browser::failures::throwing_storage_callback_closes_bitmap_and_preserves_partial_cells",
+        "__wbgt__image_kitty_terminal_browser::lifetime::pending_display_keeps_terminal_until_commit_without_parser_cycle",
+        "__wbgt__image_kitty_terminal_browser::lifetime::synchronous_blob_read_throw_is_pending_render_failure_not_parser_exception",
+        "__wbgt__image_kitty_terminal_browser::lifetime::throwing_bitmap_close_has_source_repeated_cleanup_order",
+        "__wbgt__image_kitty_terminal_browser::multipart_upload_seeded_chunks_transmit_place_replace_and_delete_match_source",
+        "__wbgt__image_kitty_terminal_browser::pending_blob_read_is_eager_and_late_image_survives_reset_and_disposal",
+        "__wbgt__image_kitty_terminal_browser::protocol_queries_quiet_errors_invalid_images_and_limits_match_source",
+        "__wbgt__image_kitty_terminal_browser::registration_cancellation_and_actual_browser_queue_match_source",
+        "__wbgt__image_kitty_terminal_browser::rgba_rgb_unknown_formats_png_and_real_rendered_pixels_match_source",
+        "__wbgt__image_kitty_terminal_browser::zlib_and_constructor_fallback_to_raw_deflate_match_source"
+      ],
+      "errors": [
+        "TypeError: Cannot read properties of null (reading 'remove')\n    at imports.wbg.__wbg_remove_e2d2659f3128c045 (http://127.0.0.1:54825/suite.js:4572:14)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.__wbg_remove_e2d2659f3128c045 externref shim (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[42839]:0xa42a1f)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.web_sys::features::gen_Element::Element::remove::h255660b27263f765 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[33649]:0xa22476)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.<image_kitty_terminal_browser::support::common::Live<P> as core::ops::drop::Drop>::drop::h221ed03cd82c07f8 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[3480]:0x589a1d)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.core::ptr::drop_in_place<image_kitty_terminal_browser::support::common::Live<xterm_web::image::kitty_protocol::BrowserKittyProtocol>>::h32ae5befa0efd160 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[15663]:0x8c1b1d)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.core::ptr::drop_in_place<image_kitty_terminal_browser::crop_scale_offsets_bottom_layer_and_cursor_restore_match_source::{{closure}}>::h2d96878575cb3375 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[13579]:0x86f22e)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.core::ptr::drop_in_place<wasm_bindgen_test::__rt::Context::execute_async<image_kitty_terminal_browser::crop_scale_offsets_bottom_layer_and_cursor_restore_match_source::{{closure}},image_kitty_terminal_browser::crop_scale_offsets_bottom_layer_and_cursor_restore_match_source>::{{closure}}>::ha97f77554ca44a2b (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29027]:0x9fc272)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.core::ptr::drop_in_place<wasm_bindgen_test::__rt::TestFuture<wasm_bindgen_test::__rt::Context::execute_async<image_kitty_terminal_browser::crop_scale_offsets_bottom_layer_and_cursor_restore_match_source::{{closure}},image_kitty_terminal_browser::crop_scale_offsets_bottom_layer_and_cursor_restore_match_source>::{{closure}}>>::hda1c27893c488616 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[31508]:0xa13e6a)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.core::ptr::drop_in_place<alloc::boxed::Box<dyn core::future::future::Future+Output = core::result::Result<(),wasm_bindgen::JsValue>>>::hcf6ecd120ca8055b (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[26231]:0x9d4c44)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.core::ptr::drop_in_place<core::pin::Pin<alloc::boxed::Box<dyn core::future::future::Future+Output = core::result::Result<(),wasm_bindgen::JsValue>>>>::h92d53d1539a37a1d (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[42711]:0xa42539)"
+      ],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\image_kitty_terminal_support\\..\\image_terminal_support\\mod.rs:259:9:\nassertion `left == right` failed: cursor/scroll field 0\n  left: JsValue(2)\n right: JsValue(1)\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:54825/suite.js:4308:21)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[35437]:0xa2bfab)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23413]:0x9a02d2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[7900]:0x7348f9)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23414]:0x9a0356)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[12184]:0x830df2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[15424]:0x8b8a95)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[42785]:0xa42817)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.rust_begin_unwind (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29336]:0x9ff8af)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29337]:0x9ff8dc)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\image_kitty_terminal_support\\..\\image_terminal_support\\mod.rs:259:9:\nassertion `left == right` failed: cursor/scroll field 0\n  left: JsValue(9)\n right: JsValue(8)\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:54825/suite.js:4308:21)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[35437]:0xa2bfab)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23413]:0x9a02d2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[7900]:0x7348f9)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23414]:0x9a0356)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[12184]:0x830df2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[15424]:0x8b8a95)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[42785]:0xa42817)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.rust_begin_unwind (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29336]:0x9ff8af)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29337]:0x9ff8dc)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\image_kitty_terminal_support\\..\\image_terminal_support\\mod.rs:259:9:\nassertion `left == right` failed: cursor/scroll field 0\n  left: JsValue(4)\n right: JsValue(3)\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:54825/suite.js:4308:21)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[35437]:0xa2bfab)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23413]:0x9a02d2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[7900]:0x7348f9)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23414]:0x9a0356)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[12184]:0x830df2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[15424]:0x8b8a95)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[42785]:0xa42817)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.rust_begin_unwind (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29336]:0x9ff8af)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29337]:0x9ff8dc)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\image_kitty_terminal_support\\..\\image_terminal_support\\mod.rs:259:9:\nassertion `left == right` failed: cursor/scroll field 0\n  left: JsValue(2)\n right: JsValue(1)\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:54825/suite.js:4308:21)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[35437]:0xa2bfab)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23413]:0x9a02d2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[7900]:0x7348f9)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23414]:0x9a0356)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[12184]:0x830df2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[15424]:0x8b8a95)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[42785]:0xa42817)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.rust_begin_unwind (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29336]:0x9ff8af)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29337]:0x9ff8dc)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\image_kitty_terminal_support\\..\\image_terminal_support\\mod.rs:259:9:\nassertion `left == right` failed: cursor/scroll field 0\n  left: JsValue(3)\n right: JsValue(2)\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:54825/suite.js:4308:21)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[35437]:0xa2bfab)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23413]:0x9a02d2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[7900]:0x7348f9)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23414]:0x9a0356)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[12184]:0x830df2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[15424]:0x8b8a95)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[42785]:0xa42817)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.rust_begin_unwind (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29336]:0x9ff8af)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29337]:0x9ff8dc)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\image_kitty_terminal_support\\..\\image_terminal_support\\mod.rs:259:9:\nassertion `left == right` failed: cursor/scroll field 0\n  left: JsValue(2)\n right: JsValue(1)\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:54825/suite.js:4308:21)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[35437]:0xa2bfab)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23413]:0x9a02d2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[7900]:0x7348f9)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23414]:0x9a0356)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[12184]:0x830df2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[15424]:0x8b8a95)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[42785]:0xa42817)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.rust_begin_unwind (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29336]:0x9ff8af)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29337]:0x9ff8dc)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\image_kitty_terminal_support\\..\\image_terminal_support\\mod.rs:259:9:\nassertion `left == right` failed: cursor/scroll field 0\n  left: JsValue(2)\n right: JsValue(1)\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:54825/suite.js:4308:21)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[35437]:0xa2bfab)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23413]:0x9a02d2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[7900]:0x7348f9)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23414]:0x9a0356)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[12184]:0x830df2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[15424]:0x8b8a95)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[42785]:0xa42817)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.rust_begin_unwind (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29336]:0x9ff8af)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29337]:0x9ff8dc)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\image_kitty_terminal_support\\..\\image_terminal_support\\mod.rs:259:9:\nassertion `left == right` failed: cursor/scroll field 0\n  left: JsValue(5)\n right: JsValue(4)\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:54825/suite.js:4308:21)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[35437]:0xa2bfab)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23413]:0x9a02d2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[7900]:0x7348f9)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23414]:0x9a0356)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[12184]:0x830df2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[15424]:0x8b8a95)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[42785]:0xa42817)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.rust_begin_unwind (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29336]:0x9ff8af)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29337]:0x9ff8dc)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\image_kitty_terminal_support\\..\\image_terminal_support\\mod.rs:259:9:\nassertion `left == right` failed: cursor/scroll field 0\n  left: JsValue(3)\n right: JsValue(2)\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:54825/suite.js:4308:21)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[35437]:0xa2bfab)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23413]:0x9a02d2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[7900]:0x7348f9)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23414]:0x9a0356)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[12184]:0x830df2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[15424]:0x8b8a95)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[42785]:0xa42817)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.rust_begin_unwind (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29336]:0x9ff8af)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29337]:0x9ff8dc)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\image_kitty_terminal_support\\..\\image_terminal_support\\mod.rs:259:9:\nassertion `left == right` failed: cursor/scroll field 0\n  left: JsValue(11)\n right: JsValue(10)\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:54825/suite.js:4308:21)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[35437]:0xa2bfab)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23413]:0x9a02d2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[7900]:0x7348f9)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23414]:0x9a0356)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[12184]:0x830df2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[15424]:0x8b8a95)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[42785]:0xa42817)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.rust_begin_unwind (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29336]:0x9ff8af)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29337]:0x9ff8dc)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\image_kitty_terminal_support\\..\\image_terminal_support\\mod.rs:259:9:\nassertion `left == right` failed: cursor/scroll field 0\n  left: JsValue(1)\n right: JsValue(0)\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:54825/suite.js:4308:21)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[35437]:0xa2bfab)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23413]:0x9a02d2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[7900]:0x7348f9)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23414]:0x9a0356)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[12184]:0x830df2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[15424]:0x8b8a95)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[42785]:0xa42817)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.rust_begin_unwind (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29336]:0x9ff8af)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29337]:0x9ff8dc)\n\n"
+        },
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\image_kitty_terminal_support\\..\\image_terminal_support\\mod.rs:259:9:\nassertion `left == right` failed: cursor/scroll field 0\n  left: JsValue(2)\n right: JsValue(1)\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:54825/suite.js:4308:21)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[35437]:0xa2bfab)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23413]:0x9a02d2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[7900]:0x7348f9)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[23414]:0x9a0356)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[12184]:0x830df2)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[15424]:0x8b8a95)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[42785]:0xa42817)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.rust_begin_unwind (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29336]:0x9ff8af)\n    at image_kitty_terminal_browser-37c3219acfe8c7b3.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:54825/suite_bg.wasm:wasm-function[29337]:0x9ff8dc)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96"
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/045d5d1746293b1b737a3a6bac054648863d144d3f31e00a2cc192f51ecf8f8a/artifact.wasm",
+      "sha256": "045d5d1746293b1b737a3a6bac054648863d144d3f31e00a2cc192f51ecf8f8a",
+      "bytes": 18519762,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\H16\\target\\wasm32-unknown-unknown\\debug\\deps\\image_kitty_terminal_browser-37c3219acfe8c7b3.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\H16\\results\\browser-host\\image_kitty_terminal_browser\\2026-11-05T12-51-54-835Z-35af1562-db67-460f-9fdf-cfc24ba0aca4\\artifacts\\suite_bg.wasm",
+      "bytes": 15529557,
+      "sha256": "a6493cf5b0d1714aaf704522cce9f74c9140f2754010dfbebeb94345c3faea53"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\H16\\results\\browser-host\\image_kitty_terminal_browser\\2026-11-05T12-51-54-835Z-35af1562-db67-460f-9fdf-cfc24ba0aca4\\artifacts\\suite.js",
+      "bytes": 194342,
+      "sha256": "471f81503e0c336d4b634c4cf0c1a5a926a5f23984d1ac6944b31d3980f8ae87"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "881fc404e6547d9e18179d08b588751922c4d668c023248cb4da9af9f86d59a9",
+    "testSourceSha256": "d451d874f077660a855b95fa999711079844725ea2f2039268a83a2542ad9303"
+  },
+  "finishedAt": "2026-11-05T12:52:05.468Z"
+}
