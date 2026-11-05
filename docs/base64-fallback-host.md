@@ -34,6 +34,10 @@ Node24.15.0, Rust/cargo1.85.1 and wasm-bindgen0.2.100 were used on native Window
 
 The isolated task400 reviewer accepted b3a93e33 with no findings and no tracked edits. It independently reran all25 new fallback,25 existing decode and16 encode source cases; all42 browser test executions; ten native utility tests; full-workspace formatting and focused warning-denied WASM Clippy. The baseline and passing reports remain scoped evidence, not full utility or port equivalence.
 
+## Integration refresh
+
+After rebasing onto actual main d8ac6a04, all42 browser executions, ten native tests and focused WASM Clippy passed again. The `union-*` reports retain these fresh results. The exact full-workspace fmt command then hit Windows OS206 as the upstream union gained more test targets. A temporary short subst alias did not avoid Cargo's physical-path canonicalization and was removed. `union-fmt.log` and `union-fmt-short.log` preserve the failures. Formatting every workspace package separately passed, as `union-fmt-packages.log` records, but is not represented as a new exact full-command pass. The earlier exact command and independent-review passes apply to the pre-rebase checkpoint.
+
 ## Reproduce
 
 Use existing source-only Node dependencies, Playwright engines and wasm-bindgen0.2.100 through SOURCE_ROOT, PLAYWRIGHT_MODULE and WASM_BINDGEN. Keep new builds and scratch on O: under current team resource limits.
