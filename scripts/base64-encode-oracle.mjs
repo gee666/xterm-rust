@@ -8,7 +8,10 @@ import { referenceIntegrity } from './upstream-baseline-utils.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const source = resolve(process.env.SOURCE_ROOT ?? join(root, 'source_repo'));
-const kind = process.argv.includes('--decode') ? 'decode' : 'encode';
+const kind = process.argv.includes('--fallback') ? 'decode-fallback' :
+  process.argv.includes('--decode') ? 'decode' : 'encode';
+const traceName = kind === 'decode-fallback' ? 'base64DecodeFallbackCases' :
+  kind === 'decode' ? 'base64DecodeCases' : 'base64EncodeCases';
 const scratch = join(root, `tmp/base64-${kind}`);
 const output = join(root, `results/base64-${kind}`);
 const sourcePath = 'addons/addon-clipboard/src/ClipboardAddon.ts';
@@ -27,7 +30,7 @@ try {
   await esbuild.build({ entryPoints: [join(source, sourcePath)], bundle: true, platform: 'node', format: 'esm', outfile: bundle });
   const { Base64 } = await import(pathToFileURL(bundle));
   const traceSource = await readFile(join(root, `crates/xterm-web/tests/fixtures/base64-${kind}.js`), 'utf8');
-  const trace = Function(`${traceSource};return base64${kind === 'decode' ? 'Decode' : 'Encode'}Cases;`)();
+  const trace = Function(`${traceSource};return ${traceName};`)();
   const rows = trace(() => new Base64());
   if (process.argv.includes('--generate')) await writeFile(fixture, `${JSON.stringify(rows, null, 2)}\n`);
   else assert.deepEqual(rows, JSON.parse(await readFile(fixture, 'utf8')), 'Reference trace changed');

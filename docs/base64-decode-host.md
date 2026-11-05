@@ -10,7 +10,7 @@ Rust still owns the capability branch, source catch boundary, OSC52 parsing, pro
 
 The browser `Base64.decodeText` Rust binding now returns `Result<JsValue, JsValue>`, rather than `Result<JsString, JsValue>`. Standard decoder calls still return strings. An overridden decoder may return objects, undefined, null or numbers without coercion. Portable native UTF-8/base64 code is unchanged.
 
-This focused repair does not establish arbitrary replacement of every intrinsic. In particular, the fallback still expects atob to return a JS string and constructs its byte array through js-sys. Non-string atob replacements and arbitrary Uint8Array constructor replacements need separate closure. The full clipboard permission/lifecycle and original-suite gates are not implied by these tests.
+This focused repair did not establish arbitrary replacement of every intrinsic. Its remaining non-string atob and replaced Uint8Array fallback-constructor gaps are repaired and tested separately in [Base64 fallback host compatibility](base64-fallback-host.md), task400. The full clipboard permission/lifecycle and original-suite gates are not implied by either scoped repair.
 
 ## Assertions and observed results
 

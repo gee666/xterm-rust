@@ -29,6 +29,9 @@ export function clipboardEncoderInput(value) { return value === undefined ? '' :
 export function clipboardDecodeModern(value) { return new TextDecoder().decode(Uint8Array.fromBase64(value)); }
 export function clipboardDecodeBytes(bytes) { return new TextDecoder().decode(bytes); }
 export function clipboardAtob(value) { return atob(value); }
+export function clipboardFallbackBytes(bin) { return new Uint8Array(bin.length); }
+export function clipboardHasByte(bin, index) { return index < bin.length; }
+export function clipboardCopyByte(bytes, bin, index) { bytes[index] = bin.charCodeAt(index); }
 export function clipboardBtoa(value) { return btoa(value); }
 export function clipboardPromise(value) { return value instanceof Promise; }
 export function clipboardReadThen(promise, invoke) { return promise.then(data => invoke(data)); }
@@ -50,9 +53,15 @@ extern "C" {
     #[wasm_bindgen(catch,js_name=clipboardDecodeModern)]
     fn decode_modern(value: &JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch,js_name=clipboardDecodeBytes)]
-    fn decode_bytes(value: &Uint8Array) -> Result<JsValue, JsValue>;
+    fn decode_bytes(value: &JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch,js_name=clipboardAtob)]
-    fn atob(value: &JsValue) -> Result<JsString, JsValue>;
+    fn atob(value: &JsValue) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch,js_name=clipboardFallbackBytes)]
+    fn fallback_bytes(bin: &JsValue) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch,js_name=clipboardHasByte)]
+    fn has_byte(bin: &JsValue, index: f64) -> Result<bool, JsValue>;
+    #[wasm_bindgen(catch,js_name=clipboardCopyByte)]
+    fn copy_byte(bytes: &JsValue, bin: &JsValue, index: f64) -> Result<(), JsValue>;
     #[wasm_bindgen(catch,js_name=clipboardBtoa)]
     fn btoa(value: &JsString) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch,js_name=clipboardPromise)]
@@ -86,13 +95,7 @@ pub fn decode_default(value: &JsValue) -> Result<JsValue, JsValue> {
     let constructor = Reflect::get(&js_sys::global(), &"Uint8Array".into())?;
     let modern = super::js_property::get(&constructor, "fromBase64")?;
     let decoded = if modern.is_undefined() {
-        atob(value).and_then(|text| {
-            let bytes: Vec<u8> = from_js_string(&text)
-                .into_iter()
-                .map(|unit| unit as u8)
-                .collect();
-            decode_bytes(&Uint8Array::from(bytes.as_slice()))
-        })
+        decode_fallback(value)
     } else {
         // The host expression constructs the decoder and reads decode before
         // evaluating fromBase64. Do not downcast its raw BufferSource result:
@@ -101,6 +104,19 @@ pub fn decode_default(value: &JsValue) -> Result<JsValue, JsValue> {
     };
     // The source catches decoder/conversion failures, but not raw return values.
     Ok(decoded.unwrap_or_else(|_| JsValue::from_str("")))
+}
+fn decode_fallback(value: &JsValue) -> Result<JsValue, JsValue> {
+    let bin = atob(value)?;
+    // Keep bin, constructor results and assigned values raw. The source permits
+    // mutable length/charCodeAt getters and replacement constructor setters.
+    // Each FFI expression is one host operation; Rust controls the source loop.
+    let bytes = fallback_bytes(&bin)?;
+    let mut index = 0.0;
+    while has_byte(&bin, index)? {
+        copy_byte(&bytes, &bin, index)?;
+        index += 1.0;
+    }
+    decode_bytes(&bytes)
 }
 #[wasm_bindgen(js_name=BrowserClipboardProvider)]
 #[derive(Default)]

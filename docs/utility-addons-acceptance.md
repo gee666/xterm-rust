@@ -22,7 +22,7 @@ Reference `source_repo/addons/addon-clipboard/src/ClipboardAddon.ts`, typings an
 - Queries call readText before returning. Synchronous providers reply synchronously; asynchronous providers reply only after resolution. Replies are exactly ESC ] 52 ; selection ; UTF-8-base64 BEL and use terminal.input with wasUserInput=false, not write. Rejected read/write and encode errors propagate. Decode exceptions alone are converted to clearing, as explicitly required by the source.
 - Encoding uses TextEncoder-compatible UTF-16 replacement for lone surrogates, astral characters and NUL. Decoding uses forgiving base64 padding/ASCII-whitespace rules, accepts nonzero unused bits as atob does, rejects other whitespace/nonalphabet/padding errors, replaces malformed UTF-8 by maximal subparts and consumes one leading BOM as TextDecoder does. Cover empty input and every byte value.
 - BrowserClipboardProvider forwards all selections to navigator.clipboard, with observed permission success and rejection. Preserve all ten original browser assertions for read/write, p/c/default selection, invalid/empty values, clear and non-ASCII. Record upstream WebKit skip separately; do not claim a Rust pass for it.
-- Native custom codec/provider tests and JavaScript differential traces supplement, not replace, browser permission and lifecycle tests.
+- Native custom codec/provider tests and JavaScript differential traces supplement, not replace, browser permission and lifecycle tests. Scoped host-boundary evidence is in [Base64 decoding](base64-decode-host.md) and [raw fallback conversion](base64-fallback-host.md); neither closes the full addon gate.
 
 ## Fit
 

@@ -1,0 +1,341 @@
+{
+  "status": "passed",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "scope": "Original Base64 decode-fallbackText with shared host-method traces, not a full original terminal suite.",
+  "before": {
+    "files": 776,
+    "mismatches": []
+  },
+  "cases": [
+    {
+      "name": "atob raw number",
+      "log": [],
+      "result": {
+        "type": "string",
+        "value": ""
+      }
+    },
+    {
+      "name": "atob raw boolean",
+      "log": [],
+      "result": {
+        "type": "string",
+        "value": ""
+      }
+    },
+    {
+      "name": "atob raw symbol",
+      "log": [],
+      "result": {
+        "type": "string",
+        "value": ""
+      }
+    },
+    {
+      "name": "atob raw null",
+      "log": [],
+      "result": {
+        "type": "string",
+        "value": ""
+      }
+    },
+    {
+      "name": "atob raw undefined",
+      "log": [],
+      "result": {
+        "type": "string",
+        "value": ""
+      }
+    },
+    {
+      "name": "atob raw boxed string",
+      "log": [],
+      "result": {
+        "type": "string",
+        "value": "A"
+      }
+    },
+    {
+      "name": "raw object property call and byte coercion",
+      "log": [
+        {
+          "receiver": false,
+          "args": [
+            "QQ=="
+          ]
+        },
+        "length",
+        "length",
+        "charCodeAt get",
+        {
+          "receiver": true,
+          "args": [
+            0
+          ]
+        },
+        "byte valueOf",
+        "length",
+        "charCodeAt get",
+        {
+          "receiver": true,
+          "args": [
+            1
+          ]
+        },
+        "byte valueOf",
+        "length"
+      ],
+      "result": {
+        "type": "string",
+        "value": "AB"
+      }
+    },
+    {
+      "name": "length reentry changes loop bound",
+      "log": [
+        1,
+        2,
+        [
+          "charCodeAt",
+          0
+        ],
+        3
+      ],
+      "result": {
+        "type": "string",
+        "value": "A\u0000\u0000"
+      }
+    },
+    {
+      "name": "length value conversion order",
+      "log": [
+        "length",
+        "length",
+        "length valueOf",
+        0,
+        "length",
+        "length valueOf"
+      ],
+      "result": {
+        "type": "string",
+        "value": ""
+      }
+    },
+    {
+      "name": "length getter exception caught",
+      "log": [
+        "length"
+      ],
+      "result": {
+        "type": "string",
+        "value": ""
+      }
+    },
+    {
+      "name": "charCodeAt getter exception caught",
+      "log": [
+        "charCodeAt"
+      ],
+      "result": {
+        "type": "string",
+        "value": ""
+      }
+    },
+    {
+      "name": "charCodeAt noncallable caught",
+      "log": [],
+      "result": {
+        "type": "string",
+        "value": ""
+      }
+    },
+    {
+      "name": "charCodeAt raw Symbol conversion caught",
+      "log": [],
+      "result": {
+        "type": "string",
+        "value": ""
+      }
+    },
+    {
+      "name": "charCodeAt raw BigInt conversion caught",
+      "log": [],
+      "result": {
+        "type": "string",
+        "value": ""
+      }
+    },
+    {
+      "name": "atob exception caught",
+      "log": [],
+      "result": {
+        "type": "string",
+        "value": ""
+      }
+    },
+    {
+      "name": "replaced bytes constructor length and decoder order",
+      "log": [
+        [
+          "atob",
+          "QQ=="
+        ],
+        "length",
+        {
+          "construct": true,
+          "args": [
+            1
+          ]
+        },
+        "length",
+        [
+          "charCodeAt",
+          0
+        ],
+        [
+          "set 0",
+          321
+        ],
+        "length",
+        {
+          "decoder": true,
+          "args": []
+        },
+        "decode get",
+        {
+          "bytesIdentity": true,
+          "args": 1
+        }
+      ],
+      "result": {
+        "type": "string",
+        "value": "host"
+      }
+    },
+    {
+      "name": "constructor receives raw length before loop coercion",
+      "log": [
+        "length",
+        {
+          "rawLength": true
+        },
+        "length",
+        "valueOf"
+      ],
+      "result": {
+        "type": "string",
+        "value": "host"
+      }
+    },
+    {
+      "name": "constructor changed inside length getter uses selected reference",
+      "log": [
+        "length",
+        [
+          "selected",
+          1
+        ],
+        "length",
+        "length"
+      ],
+      "result": {
+        "type": "string",
+        "value": "A"
+      }
+    },
+    {
+      "name": "constructor selected after atob mutation",
+      "log": [
+        [
+          "new constructor",
+          1
+        ]
+      ],
+      "result": {
+        "type": "string",
+        "value": "A"
+      }
+    },
+    {
+      "name": "constructor exception caught",
+      "log": [
+        "construct"
+      ],
+      "result": {
+        "type": "string",
+        "value": ""
+      }
+    },
+    {
+      "name": "index setter observes raw charCodeAt return",
+      "log": [
+        {
+          "raw": true
+        }
+      ],
+      "result": {
+        "type": "string",
+        "value": "host"
+      }
+    },
+    {
+      "name": "index setter exception prevents decoder",
+      "log": [
+        [
+          "set",
+          65
+        ]
+      ],
+      "result": {
+        "type": "string",
+        "value": ""
+      }
+    },
+    {
+      "name": "frozen constructor return assignment caught in strict mode",
+      "log": [],
+      "result": {
+        "type": "string",
+        "value": ""
+      }
+    },
+    {
+      "name": "global constructor getter read timing",
+      "log": [
+        "Uint8Array get",
+        "Uint8Array get"
+      ],
+      "result": {
+        "type": "string",
+        "value": "A"
+      }
+    },
+    {
+      "name": "constructor capability getter exception remains outside catch",
+      "log": [],
+      "result": {
+        "thrownMarker": true,
+        "type": "marker"
+      }
+    }
+  ],
+  "counts": {
+    "discovered": 25,
+    "executed": 25,
+    "passed": 25,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0
+  },
+  "fixtureSha256": "9a3d8e0ffe3a55d7ed5371c95a9834d56107f00b688c82358f5a2037298e2ea6",
+  "traceSha256": "365ef7def00c57854bfc712cb3c79245cc3018b27e8c5cce79d7f0c0f81b3649",
+  "source": {
+    "path": "addons/addon-clipboard/src/ClipboardAddon.ts",
+    "sha256": "fecc80248d701a46d3c427e60b41def404151496942be9cc0aa875a5242cf121"
+  },
+  "after": {
+    "files": 776,
+    "mismatches": []
+  }
+}
