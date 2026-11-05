@@ -222,6 +222,26 @@ impl KeyboardDispatch {
         event: &impl TextInputEventSource<H::Error>,
         host: &H,
     ) -> Result<bool, H::Error> {
+        self.input_source_with(event, host, || {
+            let key = event.data()?;
+            host.perform(
+                None,
+                KeyboardAction::Data {
+                    key: &key,
+                    user_input: true,
+                },
+            )
+        })
+    }
+
+    /// Browser adapters supply raw delivery without converting the second data
+    /// read. Native text callers use the same admission and dead-key policy.
+    pub fn input_source_with<H: KeyboardHost>(
+        &self,
+        event: &impl InputEventSource<H::Error>,
+        host: &H,
+        deliver: impl FnOnce() -> Result<(), H::Error>,
+    ) -> Result<bool, H::Error> {
         if !event.has_data()?
             || !event.insert_text()?
             || (event.composed()? && self.key_down_seen.get())
@@ -231,14 +251,7 @@ impl KeyboardDispatch {
             return Ok(false);
         }
         self.unprocessed_dead_key.set(false);
-        let key = event.data()?;
-        host.perform(
-            None,
-            KeyboardAction::Data {
-                key: &key,
-                user_input: true,
-            },
-        )?;
+        deliver()?;
         Ok(true)
     }
 }

@@ -5,10 +5,9 @@ use super::{composition, listen, set_value, InputBindings, State};
 #[path = "key_event.rs"]
 mod key_event;
 use crate::input::keyboard_dispatch::{
-    KeyEventKind, KeyEventSource, KeyboardAction, KeyboardHost, KeyboardReadHost, KeyboardSnapshot,
-    TextInputEventSource,
+    InputEventSource, KeyEventKind, KeyEventSource, KeyboardAction, KeyboardHost, KeyboardReadHost,
+    KeyboardSnapshot,
 };
-use crate::utf16::from_js_string;
 use key_event::LiveKeyEvent;
 use std::rc::Rc;
 use wasm_bindgen::{JsCast, JsValue};
@@ -47,9 +46,12 @@ pub(super) fn bind(bindings: &mut InputBindings) -> Result<(), JsValue> {
     listen(bindings, area.as_ref(), "input", true, |state, event| {
         // Input events can also originate in a different same-origin realm.
         let event: InputEvent = event.unchecked_into();
+        let source = LiveTextInputEvent(&event);
         state
             .keyboard
-            .input_source(&LiveTextInputEvent(&event), &Adapter { state, event: None })?;
+            .input_source_with(&source, &Adapter { state, event: None }, || {
+                state.host.data_value(&source.get("data")?, true)
+            })?;
         Ok(())
     })?;
     Ok(())
@@ -61,7 +63,7 @@ impl LiveTextInputEvent<'_> {
         js_sys::Reflect::get(self.0.as_ref(), &JsValue::from_str(name))
     }
 }
-impl TextInputEventSource<JsValue> for LiveTextInputEvent<'_> {
+impl InputEventSource<JsValue> for LiveTextInputEvent<'_> {
     fn has_data(&self) -> Result<bool, JsValue> {
         Ok(self.get("data")?.is_truthy())
     }
@@ -70,10 +72,6 @@ impl TextInputEventSource<JsValue> for LiveTextInputEvent<'_> {
     }
     fn composed(&self) -> Result<bool, JsValue> {
         Ok(self.get("composed")?.is_truthy())
-    }
-    fn data(&self) -> Result<std::borrow::Cow<'_, [u16]>, JsValue> {
-        let text = self.get("data")?.dyn_into::<js_sys::JsString>()?;
-        Ok(std::borrow::Cow::Owned(from_js_string(&text)))
     }
 }
 

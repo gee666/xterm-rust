@@ -164,6 +164,13 @@ impl BrowserInputServices for WeakBrowserServices {
             None => Ok(true),
         }
     }
+    fn on_data_value(&self, data: &JsValue) -> Result<(), JsValue> {
+        self.upgrade()?
+            .events
+            .data
+            .fire(data)
+            .map_err(|error| to_js_error(&error))
+    }
     fn on_key(&self, key: &[u16], event: &KeyboardEvent) -> Result<(), JsValue> {
         let services = self.upgrade()?;
         let payload = super::events::key_event(&to_js_string(key), event)?;

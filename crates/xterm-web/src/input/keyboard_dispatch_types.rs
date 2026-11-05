@@ -136,12 +136,15 @@ pub trait KeyboardHost: KeyboardReadHost {
     ) -> Result<(), Self::Error>;
 }
 
-/// Lazy input-event reads. The truthiness guard does not convert data to text;
-/// data is read again after admission. Text payloads retain UTF-16 code units.
-pub trait TextInputEventSource<E> {
+/// Lazy admission reads shared by typed and raw browser input payloads.
+pub trait InputEventSource<E> {
     fn has_data(&self) -> Result<bool, E>;
     fn insert_text(&self) -> Result<bool, E>;
     fn composed(&self) -> Result<bool, E>;
+}
+
+/// The second data read occurs after admission, retaining UTF-16 code units.
+pub trait TextInputEventSource<E>: InputEventSource<E> {
     fn data(&self) -> Result<Cow<'_, [u16]>, E>;
 }
 
@@ -153,7 +156,7 @@ pub struct TextInputEvent<'a> {
     pub composed: bool,
 }
 
-impl<E> TextInputEventSource<E> for TextInputEvent<'_> {
+impl<E> InputEventSource<E> for TextInputEvent<'_> {
     fn has_data(&self) -> Result<bool, E> {
         Ok(self.data.is_some_and(|data| !data.is_empty()))
     }
@@ -163,6 +166,9 @@ impl<E> TextInputEventSource<E> for TextInputEvent<'_> {
     fn composed(&self) -> Result<bool, E> {
         Ok(self.composed)
     }
+}
+
+impl<E> TextInputEventSource<E> for TextInputEvent<'_> {
     fn data(&self) -> Result<Cow<'_, [u16]>, E> {
         // Immutable absent data never passes has_data; no property is reread.
         Ok(Cow::Borrowed(self.data.unwrap_or_default()))

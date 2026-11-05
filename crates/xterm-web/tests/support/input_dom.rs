@@ -24,6 +24,7 @@ pub struct Host {
     pub keyboard: Cell<KeyboardSnapshot>,
     pub data: RefCell<Vec<(Vec<u16>, bool)>>,
     pub effects: RefCell<Vec<String>>,
+    pub raw_data: RefCell<Vec<(JsValue, bool)>>,
     pub selection: RefCell<Vec<u16>>,
     pub veto: Cell<bool>,
     pub custom_key: RefCell<Option<CustomKeyCallback>>,
@@ -101,6 +102,21 @@ impl InputHost for Host {
         }
         if !self.disabled.get() {
             self.data.borrow_mut().push((data.to_vec(), user_input));
+        }
+        Ok(())
+    }
+    fn data_value(&self, data: &JsValue, user_input: bool) -> Result<(), JsValue> {
+        if data.is_string() {
+            return self.data(
+                &xterm_web::utf16::from_js_string(&js_sys::JsString::from(data.clone())),
+                user_input,
+            );
+        }
+        if let Some(error) = self.data_error.borrow().clone() {
+            return Err(error);
+        }
+        if !self.disabled.get() {
+            self.raw_data.borrow_mut().push((data.clone(), user_input));
         }
         Ok(())
     }

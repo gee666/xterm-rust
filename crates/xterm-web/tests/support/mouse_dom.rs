@@ -256,6 +256,9 @@ impl InputHost for Host {
     fn data(&self, data: &[u16], user_input: bool) -> Result<(), JsValue> {
         self.input.data(data, user_input)
     }
+    fn data_value(&self, data: &JsValue, user_input: bool) -> Result<(), JsValue> {
+        self.input.data_value(data, user_input)
+    }
     fn has_selection(&self) -> Result<bool, JsValue> {
         self.input.has_selection()
     }

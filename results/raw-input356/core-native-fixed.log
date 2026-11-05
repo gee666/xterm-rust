@@ -1,0 +1,40 @@
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\A\crates\xterm-core)
+warning: field `logger` is never read
+  --> crates\xterm-core\tests\service_support\mod.rs:22:9
+   |
+20 | pub struct Harness {
+   |            ------- field in this struct
+21 |     pub options: Rc<OptionsService>,
+22 |     pub logger: Rc<LogService>,
+   |         ^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `xterm-core` (test "core_data_delivery") generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 0.61s
+     Running tests\core_data_delivery.rs (target\debug\deps\core_data_delivery-13c27294ff9a3691.exe)
+
+running 3 tests
+test effect_and_delivery_errors_stop_at_the_source_boundary ... ok
+test admitted_delivery_survives_option_changes_and_reenters_without_borrow ... ok
+test host_delivery_obeys_all_admission_and_scroll_branches ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\core_service.rs (target\debug\deps\core_service-ec1c98d2f065c8cf.exe)
+
+running 11 tests
+test callback_failure_retains_original_typed_cause ... ok
+test upstream_reset_preserves_cursor_initialized_both_values ... ok
+test defaults_reset_all_modes_and_independent_instances ... ok
+test failures_stop_later_events_and_disposal_clears_all_emitters ... ok
+test upstream_cursor_initialization_defaults_and_option ... ok
+test option_truthiness_matches_js_conditions ... ok
+test disposing_owner_during_event_and_dropping_owner_clears_listeners ... ok
+test strings_and_lazy_code_units_are_exact_utf16 ... ok
+test reentrant_send_and_option_changes_preserve_entry_check ... ok
+test cursor_initialization_uses_nullish_fallback_without_losing_raw_identity ... ok
+test all_disable_user_scroll_viewport_branches_and_live_updates ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

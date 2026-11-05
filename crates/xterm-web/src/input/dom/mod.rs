@@ -61,6 +61,9 @@ pub trait InputHost: mouse::MouseHost + KeyboardReadHost<Error = JsValue> {
     ) -> Result<(), JsValue>;
     fn overlay_layout(&self) -> Result<OverlayLayout, JsValue>;
     fn data(&self, data: &[u16], user_input: bool) -> Result<(), JsValue>;
+    /// Admitted InputEvent.data is reread and passed unchanged, even when a
+    /// decorated DOM getter returns a value outside the declared string type.
+    fn data_value(&self, data: &JsValue, user_input: bool) -> Result<(), JsValue>;
     fn has_selection(&self) -> Result<bool, JsValue>;
     fn selection_text(&self) -> Result<Vec<u16>, JsValue>;
     fn sync_textarea(&self) -> Result<(), JsValue>;

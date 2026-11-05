@@ -25,7 +25,7 @@ impl EventFunctions {
             bell: callable(native.on_bell(), empty),
             binary: callable(native.on_binary(), |value| text(value)),
             cursor: callable(native.on_cursor_move(), empty),
-            data: callable(native.on_data(), |value| text(value)),
+            data: callable(browser.data.event(), |value| Ok(value.clone())),
             line_feed: callable(native.on_line_feed(), empty),
             resize: callable(native.on_resize(), |value| {
                 pair(("cols", value.cols), ("rows", value.rows))

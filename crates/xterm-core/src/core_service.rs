@@ -204,6 +204,21 @@ impl CoreService {
     }
 
     pub fn trigger_data_event(&self, data: &[u16], was_user_input: bool) -> Result<(), CoreError> {
+        self.trigger_data_event_with(was_user_input, |_| {
+            self.log_send(data, false)?;
+            self.data.fire(&data.to_vec())?;
+            Ok(())
+        })
+    }
+
+    /// Share admission and user-input effects with host payloads that cannot be
+    /// represented as UTF-16. Delivery performs logging and emission in order,
+    /// after these effects, with no service borrow held across callbacks.
+    pub fn trigger_data_event_with(
+        &self,
+        was_user_input: bool,
+        deliver: impl FnOnce(&LogService) -> Result<(), CoreError>,
+    ) -> Result<(), CoreError> {
         if self.options.get("disableStdin")?.is_truthy() {
             return Ok(());
         }
@@ -217,9 +232,7 @@ impl CoreService {
         if was_user_input {
             self.user_input.fire(&())?;
         }
-        self.log_send(data, false)?;
-        self.data.fire(&data.to_vec())?;
-        Ok(())
+        deliver(&self.logger)
     }
 
     pub fn trigger_binary_event(&self, data: &[u16]) -> Result<(), CoreError> {

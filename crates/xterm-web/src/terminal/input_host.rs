@@ -49,6 +49,7 @@ pub trait BrowserInputServices {
     fn custom_key(&self, event: &KeyboardEvent) -> Result<bool, JsValue>;
     fn custom_wheel(&self, event: &web_sys::WheelEvent) -> Result<bool, JsValue>;
     fn on_key(&self, key: &[u16], event: &KeyboardEvent) -> Result<(), JsValue>;
+    fn on_data_value(&self, data: &JsValue) -> Result<(), JsValue>;
     fn update_cursor_style(&self, event: &KeyboardEvent) -> Result<(), JsValue>;
     fn refresh_cursor(&self) -> Result<(), JsValue>;
     fn touch_scroll(&self, translation_y: f64) -> Result<(), JsValue>;
@@ -211,6 +212,14 @@ impl InputHost for EngineInputHost {
 
     fn data(&self, data: &[u16], user_input: bool) -> Result<(), JsValue> {
         self.terminal.input(data, user_input).map_err(error)
+    }
+    fn data_value(&self, data: &JsValue, user_input: bool) -> Result<(), JsValue> {
+        if let Some(text) = super::input_data::text(data) {
+            return self.data(&text, user_input);
+        }
+        super::input_data::send(&self.core, data, user_input, |value| {
+            self.services.on_data_value(value)
+        })
     }
     fn has_selection(&self) -> Result<bool, JsValue> {
         self.services.has_selection()

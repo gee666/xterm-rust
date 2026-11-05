@@ -24,7 +24,7 @@ impl Default for Input<'_> {
         }
     }
 }
-impl TextInputEventSource<&'static str> for Input<'_> {
+impl InputEventSource<&'static str> for Input<'_> {
     fn has_data(&self) -> Result<bool, &'static str> {
         self.reads.borrow_mut().push("data guard");
         Ok(self.truthy)
@@ -37,6 +37,8 @@ impl TextInputEventSource<&'static str> for Input<'_> {
         self.reads.borrow_mut().push("composed");
         (self.composed)()
     }
+}
+impl TextInputEventSource<&'static str> for Input<'_> {
     fn data(&self) -> Result<Cow<'_, [u16]>, &'static str> {
         self.reads.borrow_mut().push("data payload");
         (self.data)().map(Cow::Owned)

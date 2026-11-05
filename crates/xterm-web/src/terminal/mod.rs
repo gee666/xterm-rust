@@ -17,6 +17,7 @@ pub mod buffer_cell;
 mod decoration_services;
 mod event_functions;
 pub(crate) mod events;
+mod input_data;
 pub mod input_host;
 mod input_services;
 mod internal_api;
@@ -132,6 +133,7 @@ impl Terminal {
             },
         );
         let browser_events = Rc::new(browser_services::BrowserEvents::default());
+        let [data_forward, data_disposal] = input_data::bind(&native, &browser_events.data);
         let events = EventFunctions::new(&native, &browser_events);
         let input_writer = writer.downgrade();
         let core = native
@@ -198,7 +200,14 @@ impl Terminal {
                 marker_handles: Rc::new(marker_api::MarkerHandles::default()),
                 marker_lists: marker_api::MarkerLists::default(),
                 addons: addon_manager::BrowserAddonManager::new(),
-                listeners: vec![disposal, parsed, user_input, decoration_microtasks],
+                listeners: vec![
+                    disposal,
+                    parsed,
+                    user_input,
+                    decoration_microtasks,
+                    data_forward,
+                    data_disposal,
+                ],
                 custom_key: Rc::new(RefCell::new(None)),
                 custom_wheel: Rc::new(RefCell::new(None)),
                 public_disposed: Cell::new(false),

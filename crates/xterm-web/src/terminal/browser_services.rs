@@ -34,6 +34,7 @@ use xterm_core::{
 
 #[derive(Default)]
 pub struct BrowserEvents {
+    pub data: Rc<Emitter<JsValue>>,
     pub key: Emitter<JsValue>,
     pub render: Rc<Emitter<RenderRange>>,
     pub rendered_viewport: Rc<Emitter<RenderRange>>,

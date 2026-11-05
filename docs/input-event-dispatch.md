@@ -4,11 +4,15 @@ The browser InputEvent listener now evaluates observable properties in the order
 
 `KeyboardDispatch::input_source` shares this policy with native callers. `TextInputEvent` remains the immutable UTF-16 representation for callers without getters. The DOM adapter uses fallible Reflect reads, so thrown values retain their identity and getters can synchronously dispatch more keyboard/input events without a held model borrow. A second empty string is sent as empty text rather than replaced by the first value. Lone UTF-16 surrogates are retained.
 
-## Scope and remaining gap
+## Raw payload delivery
 
-This fixes typed text delivery and the raw first-read guard, including null, undefined, empty text, false, zero, NaN, objects and booleans. It does not establish full keyboard, IME, focus or accessibility parity.
+Task356 closes the admitted second-read boundary. A decorated InputEvent may return null, undefined, a number, object or another non-string after its first truthy data read. The DOM listener now delivers that value unchanged through InputHost::data_value. Native text input still uses UTF-16. Neither path converts a raw payload into empty text.
 
-An admitted decorated event whose **second** data getter returns null, undefined or another non-string still cannot be delivered faithfully by the typed CoreService `&[u16]` data contract. Upstream can pass that raw value to onData, whereas the current DOM adapter rejects it. Do not convert it to an empty string or claim this raw-payload behavior is supported. Closing this gap needs raw browser event plumbing with source-faithful disableStdin, scroll, user-input, log and callback ordering. Full input/accessibility closure task319 retains this requirement.
+CoreService::trigger_data_event_with shares disableStdin admission, the captured buffer position, scroll request and user-input effects with native input. The raw browser adapter then performs eager String-hint template conversion, Debug logging, lazy Trace split/map/charCodeAt calls and onData delivery. Logging errors and callback throws stop later effects without losing the thrown value. String conversion runs even when logging is disabled; trace callbacks run only when Trace is admitted.
+
+One browser data emitter receives native strings and raw values in subscription order. It supports nested text/raw input and follows native disposal. The browser value is not emitted on the native UTF-16-only data API. This is an explicit language representation boundary, not a conversion of the raw value. Minimal JS glue performs dynamic property access only; Rust owns admission, logging order and dynamic method calls.
+
+InputEventSource supplies lazy admission guards. TextInputEventSource extends it with a UTF-16 payload read for native callers; input_source_with lets the DOM adapter supply raw delivery after the same guards and dead-key update. See docs/raw-input-data.md for the exact evidence and limitations. Full keyboard, IME, focus and accessibility parity remains task319.
 
 ## Verification
 
