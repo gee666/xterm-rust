@@ -212,17 +212,19 @@ impl BrowserLink {
     }
     pub(super) fn underline_event(
         &self,
-        cols: usize,
-        offset: usize,
+        cols: impl Fn() -> usize,
+        offset: impl Fn() -> usize,
     ) -> Result<UnderlineEvent, JsValue> {
         match self {
-            Self::Native(link) => Ok(link.data.underline_event(cols, offset)),
+            Self::Native(link) => Ok(link.data.underline_event(cols(), offset())),
             Self::JavaScript(link) => {
                 // _fireUnderlineEvent holds the range, not the individual endpoints.
                 let range = property(link, "range")?;
                 let point = |end, axis| property(&property(&range, end)?, axis);
                 let one = JsValue::from_f64(1.0);
-                let offset = JsValue::from_f64(offset as f64);
+                // Source snapshots ydisp after range, but reads columns only
+                // after all endpoint getters and arithmetic have completed.
+                let offset = JsValue::from_f64(offset() as f64);
                 Ok(UnderlineEvent {
                     x1: coordinate(&subtract(&point("start", "x")?, &one)?)? as i64,
                     y1: coordinate(&subtract(&subtract(&point("start", "y")?, &offset)?, &one)?)?
@@ -230,7 +232,7 @@ impl BrowserLink {
                     x2: coordinate(&point("end", "x")?)? as u64,
                     y2: coordinate(&subtract(&subtract(&point("end", "y")?, &offset)?, &one)?)?
                         as i64,
-                    cols,
+                    cols: cols(),
                 })
             }
         }

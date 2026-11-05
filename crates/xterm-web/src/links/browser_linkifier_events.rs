@@ -239,7 +239,8 @@ impl State {
             .is_truthy())
     }
     pub(super) fn fire_underline(&self, link: &BrowserLink, show: bool) -> Result<(), JsValue> {
-        let (cols, offset) = self.hover.borrow().geometry();
-        (self.underline)(show, link.underline_event(cols, offset)?)
+        let event =
+            link.underline_event(|| self.cols.get(), || self.hover.borrow().geometry().1)?;
+        (self.underline)(show, event)
     }
 }
