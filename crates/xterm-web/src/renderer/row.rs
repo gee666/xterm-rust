@@ -55,6 +55,7 @@ impl RowFactory {
             length = length.max(options.cursor_x.saturating_add(1));
         }
         let mut x = 0.0;
+        let mut cursor_x = options.cursor_x as f64;
         let mut old = None::<MergeState>;
         let mut mergeable = false;
         let mut classes = Vec::<String>::new();
@@ -68,11 +69,11 @@ impl RowFactory {
                 continue;
             }
             let mut valid_join = source.valid(x)?;
-            let joined_end = source.join(x, &mut cell, &mut valid_join, options)?;
+            let joined_end = source.join(x, &mut cell, &mut valid_join, options, cursor_x)?;
             let joined = joined_end.is_some();
             let last_x = joined_end.unwrap_or(x);
             let selected = source.selected(x, options.row);
-            let cursor = options.cursor_row && x == options.cursor_x as f64;
+            let cursor = options.cursor_row && x == cursor_x;
             let link = options
                 .link_range
                 .is_some_and(|range| x >= range[0] as f64 && x <= range[1] as f64);
@@ -133,6 +134,11 @@ impl RowFactory {
                 spacing,
             });
             let mut span = RowSpan::default();
+            // Endpoint getters can change the span after cursor validation. The
+            // source moves its local cursor even if a later range revisits cells.
+            if joined && cursor_x >= x && cursor_x <= last_x {
+                cursor_x = x;
+            }
             glyph_classes(&mut classes, &cell, options, cursor);
             span.text = if cell.attrs.is_invisible() != 0 || cell.chars.is_empty() {
                 vec![32]

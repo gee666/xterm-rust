@@ -58,6 +58,10 @@ export function joinerRowScenarios(create) {
       return '1';
     },1:4}];
   });
+  run('cursorMutationRevisit', () => {
+    let reads=0;
+    return [{0:1,get 1() {return ++reads===4 ? 2 : 4;}},[4,1]];
+  }, {cursor:true,x:3});
   let seed=0x348C0DE;
   for(let i=0;i<256;i++) {
     seed=(Math.imul(seed,1664525)+1013904223)>>>0;

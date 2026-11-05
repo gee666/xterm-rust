@@ -66,8 +66,9 @@ impl RowSource for RawRow<'_> {
         cell: &mut RenderCell,
         valid: &mut bool,
         options: &RowOptions,
+        cursor_x: f64,
     ) -> Result<Option<f64>, RowError<E>> {
-        self.join_inner(x, cell, valid, options)
+        self.join_inner(x, cell, valid, options, cursor_x)
             .map_err(RowError::Browser)
     }
 }
@@ -117,6 +118,7 @@ impl RawRow<'_> {
         cell: &mut RenderCell,
         valid: &mut bool,
         options: &RowOptions,
+        cursor_x: f64,
     ) -> Result<Option<f64>, JsValue> {
         // The start getter runs even when the skip guard is false.
         if !less(&0.into(), &get(&self.ranges.0, &"length".into())?)?
@@ -153,8 +155,8 @@ impl RawRow<'_> {
             i = next;
         }
         if *valid && options.cursor_row {
-            *valid = less(&(options.cursor_x as f64).into(), &at(&range, 0.0)?)?
-                || le(&at(&range, 1.0)?, &(options.cursor_x as f64).into())?;
+            *valid = less(&cursor_x.into(), &at(&range, 0.0)?)?
+                || le(&at(&range, 1.0)?, &cursor_x.into())?;
         }
         if !*valid {
             self.skip = at(&range, 1.0)?;

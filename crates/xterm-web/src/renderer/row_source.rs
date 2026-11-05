@@ -14,6 +14,7 @@ pub(super) trait RowSource {
         cell: &mut RenderCell,
         valid: &mut bool,
         options: &RowOptions,
+        cursor_x: f64,
     ) -> Result<Option<f64>, RowError<E>>;
 }
 pub(super) struct TypedRow<'a> {
@@ -41,6 +42,7 @@ impl RowSource for TypedRow<'_> {
         cell: &mut RenderCell,
         valid: &mut bool,
         options: &RowOptions,
+        cursor_x: f64,
     ) -> Result<Option<f64>, RowError<E>> {
         let Some(range) = self
             .ranges
@@ -57,8 +59,7 @@ impl RowSource for TypedRow<'_> {
         let selected = self.selected(range[0] as f64, options.row);
         *valid =
             (range[0] + 1..range[1]).all(|col| self.selected(col as f64, options.row) == selected);
-        *valid &=
-            !options.cursor_row || options.cursor_x < range[0] || options.cursor_x >= range[1];
+        *valid &= !options.cursor_row || cursor_x < range[0] as f64 || cursor_x >= range[1] as f64;
         if !*valid {
             self.skip = range[1] as f64;
             return Ok(None);

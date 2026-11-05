@@ -1,0 +1,10 @@
+{
+  "foundBy": "isolated task348 reviewer",
+  "scope": "Finite changing endpoint and reversed second range with cursor column 3",
+  "input": "let reads=0; const ranges=[{0:1,get 1(){return ++reads===4 ? 2 : 4;}},[4,1]]; options={cursor:true,x:3};",
+  "sourceObservation": "The source mutates its local cursor column to 1, then applies xterm-cursor to the revisited wide character 中.",
+  "preFixRustObservation": "Rust retained cursor column 3 and applied xterm-cursor to b.",
+  "fix": "Preserve a mutable local f64 cursor column in the shared planner. Apply mutation at the source point after span measurement and before cursor classes; use it for subsequent range validation and cursor-cell matching.",
+  "retainedCase": "cursorMutationRevisit in tests/support/joiner_row.mjs",
+  "seed": "0x348C0DE"
+}
