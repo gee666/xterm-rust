@@ -176,6 +176,19 @@ fn raw_kitty_limit_activation_converts_first_copy_once_per_activation() {
         trial.addon.reset().unwrap();
         call(&get(&trial.source, "addon"), "reset", &[]);
     }
+    // Kitty stores these computed numbers without creating a decoder yet.
+    // Do not send payload through invalid settings or reproduce source hangs.
+    for expression in ["undefined", "NaN", "Infinity", "-Infinity", "'no'", "{}"] {
+        let trial = Activation::new(&format!("({{sixelSupport:false,iipSupport:false,showPlaceholder:false,kittySizeLimit:{expression}}})"));
+        let (actual, expected) = trial.activate();
+        actual.unwrap();
+        expected.unwrap();
+        trial.compare_membership();
+        assert_eq!(
+            get(&trial.addon.handler_inspection(), "size"),
+            JsValue::from(1)
+        );
+    }
 }
 
 #[wasm_bindgen_test]
