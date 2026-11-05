@@ -181,7 +181,8 @@ impl<'a> FontTables<'a> {
         let mut name = None;
         let mut tags = None;
         let mut glyph_count = None;
-        let (mut glyf, mut loca, mut cff) = (false, false, false);
+        let (mut glyf, mut loca, mut cff) = (None, None, false);
+        let mut short_loca = false;
         let mut hmtx = None;
         // Missing hhea leaves the source metric count undefined. Its numeric
         // comparison then reads no metrics, the same boundary as zero here.
@@ -194,8 +195,8 @@ impl<'a> FontTables<'a> {
                     hints::validate(reader, record, woff, tag == b"cvt ")?;
                     continue;
                 }
-                b"glyf" => glyf = true,
-                b"loca" => loca = true,
+                b"glyf" => glyf = Some(record),
+                b"loca" => loca = Some(record),
                 b"CFF " | b"CFF2" => cff = true,
                 b"name" | b"GSUB" | b"GDEF" | b"GPOS" | b"hmtx" | b"kern" | b"meta" | b"fvar"
                 | b"avar" => {
@@ -259,6 +260,10 @@ impl<'a> FontTables<'a> {
                     super::font_color::finish(tag, &table)?;
                 }
                 b"SVG " => super::font_svg::validate(&table)?,
+                b"head" => {
+                    super::font_metadata::immediate(tag, &table)?;
+                    short_loca = Reader::new(&table).i16(50)? == 0;
+                }
                 b"hhea" => {
                     super::font_metadata::immediate(tag, &table)?;
                     metric_count = Reader::new(&table).u16(34)?;
@@ -284,14 +289,18 @@ impl<'a> FontTables<'a> {
             true,
         )?;
         super::font_metadata::name(&name, tags)?;
-        if !(glyf && loca || cff) {
+        let truetype = glyf.zip(loca);
+        if truetype.is_none() && !cff {
             return Err(FontError::Invalid(
                 "Font doesn\'t contain TrueType, CFF or CFF2 outlines.",
             )
             .into());
         }
+        if let Some((glyf, loca)) = truetype {
+            super::font_outline::validate(payload, glyf, loca, woff, glyph_count, short_loca)?;
+        }
         let hmtx = hmtx.ok_or(FontError::MissingTable("hmtx"))?;
-        if glyf && loca {
+        if truetype.is_some() {
             validate_hmtx(payload, hmtx, woff, glyph_count.unwrap_or(0), metric_count)?;
         }
         let deferred = |record| DeferredTable { record, woff };
@@ -305,7 +314,7 @@ impl<'a> FontTables<'a> {
                 meta: meta.map(deferred),
                 fvar: fvar.map(deferred),
                 avar: avar.map(deferred),
-                glyph_count: if glyf && loca {
+                glyph_count: if truetype.is_some() {
                     Some(glyph_count.unwrap_or(0))
                 } else {
                     None
@@ -338,7 +347,7 @@ fn validate_hmtx(
     Ok(())
 }
 
-fn table_data<'a>(
+pub(super) fn table_data<'a>(
     reader: Reader<'a>,
     record: Reader<'_>,
     woff: bool,
