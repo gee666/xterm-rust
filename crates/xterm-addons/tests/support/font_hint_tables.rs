@@ -140,4 +140,11 @@ pub fn assert_corpus() {
         let actual = Font::load_buffer(&bytes, FontOptions::default());
         assert_eq!(actual.err(), expected, "{}", case["name"]);
     }
+    // Kept separate from finite source outcomes: the unchanged source loops
+    // on empty dynamic Huffman trees, while Rust must terminate safely.
+    let nontermination = construct(&fixture["nontermination"]);
+    assert_eq!(
+        Font::load_buffer(&nontermination, FontOptions::default()).err(),
+        Some(FontError::Compression)
+    );
 }

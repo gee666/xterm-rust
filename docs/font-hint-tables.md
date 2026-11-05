@@ -6,41 +6,50 @@ The supplied opentype.js visits these tables eagerly in directory order. `fpgm` 
 
 Rust validates these reads without retaining unused hint arrays. `FontError::ArrayLength` distinguishes the odd-length failure, and the browser boundary maps it to RangeError. No JavaScript font parser, unsafe code or dependency was added.
 
-WOFF decompression runs before list allocation. Unlike the shared strict WOFF table loader, the source hint reader skips the zlib header and ignores its checksum and decompressed length. Short output stays zero-filled and overflow disappears into out-of-bounds typed-array writes. The hint validator uses the existing miniz raw streaming decoder and discards output in fixed-size chunks. It does not allocate storage proportional to the recorded list length. Each decoder iteration must consume input, emit output or finish. Failure and no progress return a typed compression error.
+## WOFF behavior and review corrections
 
-The source reads missing stored-block payload as undefined, which its typed-array writes convert to zero. The validator supplies a finite virtual-zero tail after the actual compressed bytes. Its limit is the protocol's maximum 16-bit stored payload plus the four-byte stored header, enough to finish that final block or reject a later all-zero header. It does not follow the source into unbounded virtual input. This distinction is local to discarded hint data, not a change to all other font tables.
+Decompression precedes list allocation. The source skips the zlib header, ignores its checksum and does not enforce the decompressed output length. Short output stays zero-filled and overflow disappears into out-of-bounds typed-array writes. A standards-strict decoder therefore rejects finite inputs that the source accepts.
+
+Independent review exposed two such failures. A final stored block with a complete header and missing payload is accepted by the source. A partially missing inverse-length header uses JavaScript arithmetic, not simple zero padding. For example, `256 * undefined + 1` is NaN, and `~NaN & 65535` is 65535. A stored length of 65535 therefore passes the source's comparison even when the present inverse low byte is1. In both cases, a cvt directory length of65 must reach ArrayLength after decompression rather than fail earlier as Compression.
+
+The initial strict miniz validator and the subsequent virtual-zero patch are retained as negative controls. The final hint-only helper in `font_hint_deflate.rs` walks stored, fixed and dynamic deflate syntax using the source's semantics. It retains no decompressed output, allocates no hint-sized storage and does not require valid backreference history. Stored header arithmetic distinguishes missing words from zero words. Bitwise reads alone turn missing bytes into zero. Source-reserved fixed symbols retain their original read phases.
+
+This is separate from the existing strict loader for tables whose data is used. The source-derived helper carries the tiny-inflate MIT attribution in `licenses/tiny-inflate-MIT.txt`, obtained from `https://unpkg.com/tiny-inflate@1.0.3/LICENSE`, and the existing opentype.js notice. No new package is used.
 
 ## Inputs and checks
 
-`crates/xterm-addons/tests/fixtures/font-hint-tables.json` is an intentionally single-line generated fixture. It retains 594 constructor outcomes, input hashes and 594 asynchronous addon records, with 282 accepted and 312 rejected. Cases cover SFNT/raw WOFF bounds, odd lengths, empty lists, invalid offsets, duplicates, eager head-error precedence, reads into later bytes, malformed compressed input, ignored wrapper bytes, short output, overflow, missing stored-block bytes and source loading-cache behavior. JavaScript and Rust reconstruct inputs independently. The WASM test compares every reconstructed byte.
+`crates/xterm-addons/tests/fixtures/font-hint-tables.json` is an intentionally single-line generated fixture. It retains 696 finite constructor outcomes, input hashes and 696 asynchronous addon records, with337 accepted and359 rejected. Cases cover SFNT/raw WOFF bounds, odd lengths, empty lists, invalid offsets, duplicates, eager head-error precedence, later-byte reads, malformed compressed input, ignored wrapper bytes, short output, overflow, stored-header truncation, NaN inverse headers, mixed stored/fixed prefixes, invalid history, reserved symbols and loading-cache behavior. Dynamic Huffman inputs use seed `0x420d3f1a`. A separate multi-stored-block input tests block transitions.
 
-The Node oracle uses the existing in-memory TypeScript loader, with directory-index resolution added for the unchanged addon's `import '.'`. Production source and original assertions are not rewritten. Browser baseline bundling also uses unchanged source. The Rust browser binary invokes the actual LigaturesAddon with a recorded terminal boundary. This is not a full interactive Terminal rendering test.
+JavaScript and Rust reconstruct inputs independently, and the WASM test compares every reconstructed byte. The Node oracle uses the existing in-memory TypeScript loader, with directory-index resolution for the unchanged addon's `import '.'`. Production source and original assertions are not rewritten. Browser baseline bundling also uses unchanged source. The Rust browser binary invokes the actual LigaturesAddon with a recorded terminal boundary, not a full interactive Terminal rendering test.
 
-The final source baseline passes all 594 constructor outcomes and 594 addon records in Node and each of Chromium 148.0.7778.96, Firefox 150.0.2 and WebKit 26.4. The actual Rust browser binary passes two test functions per engine. They replay all 594 constructors, compare both input builders byte-for-byte and check all 594 real addon load/cache records.
+The final source Node corpus passes. Native696 plus the separate safety guard pass; all-target/all-feature addon tests pass174 tests across32 summaries, and scoped native/WASM warning-denied Clippy and both web/font dependent WASM library checks pass. Final696-case browser matrices are pending. Earlier528/594-case matrices and2078-test workspace receipts belong to earlier decoder revisions, not the final syntax helper.
 
-On base main926d8355, which includes accepted406/407/408, the final repaired workspace passes 2078 tests across 433 summaries, with zero failures or ignored tests. Native workspace and focused WASM Clippy pass with warnings denied. The aggregate fmt command fails with Windows OS206, while each of all five package checks passes. Both original and copied reference manifests match all 776 hashes. These are scoped Windows checkpoints, not final stable-union or native Linux/macOS evidence.
+Raw evidence is under `results/font-hint-tables/`. Initial receipts cover the528-case corpus and2072-test checkpoint. `union-` receipts and `pre-review/` cover the first rebased528-case version. `repair-` receipts cover the594-case padding version. `syntax-` receipts cover the current source walker. Browser reports retain compiled artifact hashes; disposable local binaries are not distribution artifacts and are removed during owned cleanup. Compilation is not counted as a browser pass.
 
-Independent review found that the first strict decoder rejected finite missing stored-block payloads accepted by the source, and replaced odd cvt's ArrayLength error with Compression. The fixture adds 66 exact header/payload truncation and maximum-length cases, including both reported 64/65-length examples. The exact original decoder fails the retained `cvt  WOFF stored truncated5 length64` case. Restoration of the bounded virtual-zero repair passes all 594. A separate negative control removes only the eager hook and fails at `cvt  SFNT bytes0 length1`, then restores the source in finally.
+## Separate source nontermination case
 
-Read `results/font-hint-tables/` for raw logs, browser reports and producer hashes. Initial receipts cover the earlier 528-case corpus and 2072-test checkpoint. `union-` receipts and `pre-review/` browser records cover the first rebased 528-case version. `repair-` receipts and current browser reports cover the final 594-case version. Browser reports retain exact compiled artifact hashes, but disposable local binaries are not distribution artifacts and are removed during owned cleanup. Compilation is not counted as a browser pass.
+The fixture's `nontermination` input has empty dynamic Huffman trees. The original source repeatedly consumes virtual zero bits without reaching an end symbol. `font-hint-nontermination.mjs` records a separate two-second observation after the worker announces parser entry, then terminates and awaits that owned worker. The timeout alone is not a mathematical proof; the source loop is also inspected.
+
+Rust detects the repeated zero-input symbol state and returns `FontError::Compression` instead of hanging. The native and WASM corpus test this guard separately from the696 finite source outcomes. This safety divergence is explicit, not an equivalence pass. Malformed dynamic-code cache reuse across separate source parses and arbitrary hostile streams remain broader342 work.
 
 ## Reproduce
 
-Use a private O: worktree, its regular target and owned `tmp/`. Set `SOURCE_PACKAGE_JSON` and `PLAYWRIGHT_MODULE` to existing read-only dependency installations, and `WASM_BINDGEN` to the installed CLI matching 0.2.100. Observe the four-heavy/two-browser cap and Cargo jobs2.
+Use a private O: worktree, its regular target and owned `tmp/`. Set `SOURCE_PACKAGE_JSON` and `PLAYWRIGHT_MODULE` to existing read-only dependency installations, and `WASM_BINDGEN` to the installed CLI matching0.2.100. Observe the four-heavy/two-browser cap and Cargo jobs2.
 
 ```sh
 node scripts/font-hint-tables-oracle.mjs
+node scripts/font-hint-nontermination.mjs
 node scripts/font-hint-tables-browser-source.mjs
 cargo test --locked -j2 -p xterm-addons --test font_hint_tables --test font_metadata_constructor
 WASM_PACKAGE=xterm-font-addons WASM_TEST=font_hint_tables_browser WASM_TEST_TIMEOUT_MS=180000 node scripts/browser-host-check.mjs
-cargo clippy --locked -j2 --workspace --all-targets --all-features -- -D warnings
+cargo clippy --locked -j2 -p xterm-addons --all-targets --all-features -- -D warnings
 cargo clippy --locked -j2 -p xterm-font-addons --target wasm32-unknown-unknown --test font_hint_tables_browser -- -D warnings
-cargo test --locked -j2 --workspace --all-targets --all-features
+cargo test --locked -j2 -p xterm-addons --all-targets --all-features
 cargo fmt --all -- --check
 ```
 
-`--generate` deliberately regenerates the Node source fixture. It is not used to conceal a Rust failure. The browser baseline runner closes its browser/server and removes its owned source bundle in finally blocks. Temporary build artifacts remain owned under `O:/xterm-rust-swarm-16/tmp/G420` until review/integration pickup and verified cleanup.
+The aggregate fmt command has failed with Windows OS206, while individual checks for all five workspace packages pass. These are scoped Windows results, not final stable-union or native Linux/macOS evidence. Both original and copied reference manifests matched all776 hashes before the syntax repair and are rechecked before cleanup.
 
-## Remaining scope
+`--generate` deliberately regenerates the Node source fixture. It is not used to conceal a Rust failure. Browser baseline execution closes its browser/server and removes the owned source bundle in finally blocks. Temporary artifacts remain owned under `O:/xterm-rust-swarm-16/tmp/G420` until review/integration pickup and verified cleanup.
 
-Task342 retains CFF/CFF2, GDEF/GPOS, color tables, variation families and broader malformed/error behavior. Arbitrary hostile deflate streams and their source nontermination cases are not proven equivalent by this corpus. The decoder remains safe and progress-checked. No source hang is deliberately reproduced. Full original addon/Terminal/demo acceptance, stable quality gates, supported feature combinations, native OS evidence and required comparisons remain unfinished. Overall equivalence remains NOT PROVEN.
+Task342 retains CFF/CFF2, GDEF/GPOS, color tables, variation families and broader malformed/error behavior. Full original addon/Terminal/demo acceptance, stable quality gates, supported feature combinations, native OS evidence and required comparisons remain unfinished. Overall equivalence remains NOT PROVEN.
