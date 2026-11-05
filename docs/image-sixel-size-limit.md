@@ -38,4 +38,8 @@ cargo fmt --all -- --check
 
 Use the tool/dependency environment in `docs/image-canvas.md`. The exact workspace formatting failure is retained as `fmt-all.log`; the five successful member checks have separate logs. Full workspace, native OS and complete original suite verification remain separate project work, not inferred from these checks.
 
+## Independent review
+
+Task451 was independently accepted at `ed8446ef`. The reviewer reran the hash-verified11-test native SIXEL executable, checked all104 Rust/test/script pins,128 comparator pins,121 original comparator files,776 original manifest entries and seven restored files. It inspected the retained42-function three-engine and five-failure control receipts, and requested no source changes. Review used no compiler, browser or server jobs. `results/image-sixel-size-limit/review.md` records that distinction. A separate optional typed-constructor browser refresh was not run; the queue request was withdrawn after scoped acceptance. The typed fallback was reviewed and the native numeric path was rerun, without claiming another browser matrix.
+
 This branch starts from the committed448 assembly at `fe9dcd9e`, which already contains the accepted431/439 raw placeholder/storage union. It privately adopts455 source `73fa8f06` as `997771c1`, keeping both455 and451 test input pins. Only451 changes should be picked for later integration, not that private455 copy or any448 prerequisites. No main ref operation is owned by451.
