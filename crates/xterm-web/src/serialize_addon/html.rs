@@ -57,25 +57,20 @@ pub(super) fn serialize(addon: &SerializeAddon, raw: JsValue) -> Result<Vec<u16>
         let max = active.len().map_err(|error| to_js_error(&error))?;
         let scrollback = options::property(&raw, "scrollback")?;
         let rows = host.native.rows().map_err(|error| to_js_error(&error))?;
-        if scrollback.as_f64().is_some_and(f64::is_nan) {
-            // NaN survives the source clamp and makes row <= end false. Do not
-            // reuse ANSI's invalid-array-length error or skip header callbacks.
+        let start = options::scrollback_row(max, rows, scrollback)?;
+        if start.is_nan() {
+            // The comparison is false even when NaN came from object/string
+            // coercion. Header callbacks still run; ANSI's array error does not.
             empty_rows(columns(&host)?)
-        } else if let Some(scrollback) = scrollback
-            .as_f64()
-            .filter(|value| value.is_finite() && value.fract() != 0.0)
-        {
-            // HTML does not allocate ANSI's integral row array. Preserve the
-            // clamped fractional key through CircularList lookup and row++.
-            let retained = (scrollback + rows as f64).clamp(0.0, max as f64);
+        } else if start.fract() != 0.0 {
             Range::Numeric(HtmlNumericRange {
-                start_line: max as f64 - retained,
+                start_line: start,
                 end_line: max.saturating_sub(1) as f64,
                 start_col: 0,
                 end_col: columns(&host)?,
             })
         } else {
-            let start = options::scrollback_start(max, rows, scrollback)?;
+            let start = options::index(JsValue::from_f64(start))?;
             Range::Integral(CellRange {
                 start: Position { x: 0, y: start },
                 end: Position {
