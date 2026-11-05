@@ -108,11 +108,37 @@ impl Drop for Fixture {
 }
 
 #[wasm_bindgen_test]
+fn viewport_option_literal_preserves_its_four_source_getter_reads() {
+    let options = browser_options();
+    let reads: Array = Reflect::get(&options, &"reads".into())
+        .unwrap()
+        .unchecked_into();
+    let terminal = Terminal::new(Reflect::get(&options, &"options".into()).unwrap()).unwrap();
+    let service = terminal
+        .shared
+        .native
+        .with_state(|state| Rc::clone(&state.options))
+        .unwrap();
+    super::options::initial(&service).unwrap();
+    assert_eq!(
+        reads
+            .to_vec()
+            .into_iter()
+            .map(|value| value.as_string().unwrap())
+            .collect::<Vec<_>>(),
+        ["showArrows", "showScrollbar", "showArrows", "width"]
+    );
+    terminal.dispose().unwrap();
+}
+
+#[wasm_bindgen_test]
 fn constructor_uses_actual_scroll_element_source_getter_order_and_theme_css() {
     let fixture = Fixture::new();
     let viewport = fixture.viewport();
     let element = viewport.host.element().unwrap();
     let node = element.get_dom_node().unwrap();
+    // Full Terminal also checks overview creation and reads its canvas width
+    // twice. The isolated option-literal test above retains the four-read trace.
     assert_eq!(
         fixture
             .reads
@@ -120,7 +146,18 @@ fn constructor_uses_actual_scroll_element_source_getter_order_and_theme_css() {
             .into_iter()
             .map(|value| value.as_string().unwrap())
             .collect::<Vec<_>>(),
-        ["showArrows", "showScrollbar", "showArrows", "width"]
+        [
+            "showArrows",
+            "showScrollbar",
+            "showArrows",
+            "width",
+            "showScrollbar",
+            "width",
+            "showScrollbar",
+            "width",
+            "showScrollbar",
+            "width"
+        ]
     );
     assert_eq!(
         fixture
