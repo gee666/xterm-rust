@@ -54,8 +54,8 @@ export function runSyncHandleProgram(make, program) {
       const record = records[index];
       if (!record) throw new Error('Missing retained timer');
       log.push(`deliver:${index}:${record.cleared}`);
-      record.fn();
-      host.frame();
+      try { record.fn(); host.frame(); }
+      finally { log.push(...dispatch({ op: 'drain' })); }
     }
     function hook(phase) {
       if (fired || !action.startsWith(phase + '-')) return;
