@@ -52,6 +52,8 @@ impl Protocol {
 struct State {
     options: Rc<Cell<ImageOptions>>,
     defaults: ImageOptions,
+    flags: Rc<options::Flags>,
+    default_scrolling: JsValue,
     storage_limit: Rc<RefCell<JsValue>>,
     placeholder: Rc<Cell<bool>>,
     // Raw public value is authoritative; the bool above is its storage policy.

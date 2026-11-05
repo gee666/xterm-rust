@@ -16,6 +16,7 @@ use xterm_core::parser::{
     params::ParamValue,
 };
 
+const DEC_SIXEL_DISPLAY: f64 = 80.0;
 const GRAPHICS_SIXEL_GEOMETRY: f64 = 2.0;
 const GRAPHICS_READ: f64 = 1.0;
 
@@ -75,6 +76,21 @@ impl State {
             }
             Control::SoftReset => policy.reset(),
         };
+        // These assignments precede storage/handler callbacks, just as source
+        // mutates _opts before reset can reenter the addon.
+        match control {
+            Control::SoftReset => {
+                self.flags.scrolling.replace(self.default_scrolling.clone());
+            }
+            Control::Set | Control::Reset
+                if parameters.contains(&ImageParameter::Number(DEC_SIXEL_DISPLAY)) =>
+            {
+                self.flags
+                    .scrolling
+                    .replace(matches!(control, Control::Reset).into());
+            }
+            _ => {}
+        }
         self.options.set(policy.options);
         self.execute(action)
     }

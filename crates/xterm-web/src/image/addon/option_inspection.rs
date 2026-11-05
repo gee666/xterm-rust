@@ -1,6 +1,7 @@
 // Copyright (c) 2020 The xterm.js authors. All rights reserved. MIT license.
 //! Read-only diagnostics, not a writable JS option bag. Placeholder, storage,
-//! SIXEL, IIP and Kitty size limits retain raw values; other options remain typed.
+//! SIXEL, IIP and Kitty size limits and boolean flags retain raw values.
+//! Pixel and palette limits remain typed.
 use std::{
     cell::{Cell, RefCell},
     rc::Rc,
@@ -22,6 +23,7 @@ pub struct ImageOptionsReader {
     sixel_size_limit: JsValue,
     kitty_size_limit: JsValue,
     iip_size_limit: JsValue,
+    flags: Rc<super::options::Flags>,
 }
 impl ImageOptionsReader {
     pub(super) fn new(
@@ -31,6 +33,7 @@ impl ImageOptionsReader {
         sixel_size_limit: JsValue,
         kitty_size_limit: JsValue,
         iip_size_limit: JsValue,
+        flags: Rc<super::options::Flags>,
     ) -> Self {
         Self {
             options,
@@ -39,25 +42,24 @@ impl ImageOptionsReader {
             sixel_size_limit,
             kitty_size_limit,
             iip_size_limit,
+            flags,
         }
     }
 }
 #[wasm_bindgen]
 impl ImageOptionsReader {
     pub fn get(&self, key: &str) -> JsValue {
+        if let Some(value) = self.flags.get(key) {
+            return value;
+        }
         let options = self.options.get();
         match key {
-            "enableSizeReports" => options.enable_size_reports.into(),
             "pixelLimit" => options.pixel_limit.into(),
-            "sixelSupport" => options.sixel_support.into(),
-            "sixelScrolling" => options.sixel_scrolling.into(),
             "sixelPaletteLimit" => options.sixel_palette_limit.into(),
             "sixelSizeLimit" => self.sixel_size_limit.clone(),
             "storageLimit" => self.storage_limit.borrow().clone(),
             "showPlaceholder" => self.placeholder.borrow().clone(),
-            "iipSupport" => options.iip_support.into(),
             "iipSizeLimit" => self.iip_size_limit.clone(),
-            "kittySupport" => options.kitty_support.into(),
             "kittySizeLimit" => self.kitty_size_limit.clone(),
             _ => JsValue::UNDEFINED,
         }

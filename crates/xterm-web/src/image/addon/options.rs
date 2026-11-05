@@ -46,6 +46,39 @@ pub(super) struct ConstructorOptions {
     pub sixel_size_limit: JsValue,
     pub kitty_size_limit: JsValue,
     pub iip_size_limit: JsValue,
+    pub flags: Flags,
+    pub default_scrolling: JsValue,
+}
+
+// Truthiness is a native policy projection, not the original option value.
+// Keep raw flags separate so a symbol or object never undergoes conversion.
+pub(super) struct Flags {
+    enable_size_reports: JsValue,
+    sixel_support: JsValue,
+    pub scrolling: std::cell::RefCell<JsValue>,
+    iip_support: JsValue,
+    kitty_support: JsValue,
+}
+impl Flags {
+    fn read(options: &JsValue) -> Result<Self, JsValue> {
+        Ok(Self {
+            enable_size_reports: js::get(options, "enableSizeReports")?,
+            sixel_support: js::get(options, "sixelSupport")?,
+            scrolling: std::cell::RefCell::new(js::get(options, "sixelScrolling")?),
+            iip_support: js::get(options, "iipSupport")?,
+            kitty_support: js::get(options, "kittySupport")?,
+        })
+    }
+    pub fn get(&self, key: &str) -> Option<JsValue> {
+        Some(match key {
+            "enableSizeReports" => self.enable_size_reports.clone(),
+            "sixelSupport" => self.sixel_support.clone(),
+            "sixelScrolling" => self.scrolling.borrow().clone(),
+            "iipSupport" => self.iip_support.clone(),
+            "kittySupport" => self.kitty_support.clone(),
+            _ => return None,
+        })
+    }
 }
 pub(super) fn read(options: &JsValue) -> Result<ConstructorOptions, JsValue> {
     // Keep source's two Object.assign passes contiguous. A failure in the
@@ -60,6 +93,8 @@ pub(super) fn read(options: &JsValue) -> Result<ConstructorOptions, JsValue> {
         current: typed(&current)?,
         defaults: typed(&defaults)?,
         storage_limit: js::get(&current, "storageLimit")?,
+        flags: Flags::read(&current)?,
+        default_scrolling: js::get(&defaults, "sixelScrolling")?,
     })
 }
 fn typed(options: &JsValue) -> Result<ImageOptions, JsValue> {

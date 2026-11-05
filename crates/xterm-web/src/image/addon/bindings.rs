@@ -40,8 +40,11 @@ impl ImageAddon {
             sixel_size_limit,
             kitty_size_limit,
             iip_size_limit,
+            flags,
+            default_scrolling,
         } = options::read(&options)?;
         let options = Rc::new(Cell::new(current));
+        let flags = Rc::new(flags);
         let placeholder_value = Rc::new(RefCell::new(placeholder));
         let storage_limit = Rc::new(RefCell::new(storage_limit));
         let option_view = option_inspection::inspection(ImageOptionsReader::new(
@@ -51,6 +54,7 @@ impl ImageAddon {
             sixel_size_limit.clone(),
             kitty_size_limit.clone(),
             iip_size_limit.clone(),
+            flags.clone(),
         ))?;
         let added = Emitter::new();
         let event = callable(added.event(), empty);
@@ -60,6 +64,8 @@ impl ImageAddon {
             state: Rc::new(State {
                 options,
                 defaults,
+                flags,
+                default_scrolling,
                 storage_limit,
                 placeholder: Rc::new(Cell::new(current.show_placeholder)),
                 placeholder_value,
@@ -100,7 +106,8 @@ impl ImageAddon {
         self.handlers.clone()
     }
     /// Live read-only options. Placeholder, storage, SIXEL, IIP and Kitty size-limit
-    /// values retain JavaScript identity; other fields remain typed projections.
+    /// values and boolean flags retain JavaScript identity. Pixel and palette
+    /// limits remain typed projections; this is not a writable private option bag.
     #[wasm_bindgen(getter, js_name = _opts)]
     pub fn option_inspection(&self) -> JsValue {
         self.options.clone()
