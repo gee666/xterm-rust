@@ -93,8 +93,8 @@ impl ImageAddon {
     pub fn handler_inspection(&self) -> JsValue {
         self.handlers.clone()
     }
-    /// Live read-only options. Placeholder and storage-limit values retain their
-    /// JavaScript identity; other fields remain typed projections.
+    /// Live read-only options. Placeholder, storage and SIXEL size-limit values
+    /// retain JavaScript identity; other fields remain typed projections.
     #[wasm_bindgen(getter, js_name = _opts)]
     pub fn option_inspection(&self) -> JsValue {
         self.options.clone()

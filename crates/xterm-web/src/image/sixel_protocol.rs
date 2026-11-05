@@ -34,7 +34,9 @@ extern "C" {
     #[wasm_bindgen(catch, js_name = sixelTrapText)]
     fn sixel_trap_text(kind: &str) -> Result<String, JsValue>;
 }
-#[wasm_bindgen(inline_js = "export function sixelSizeExceeded(size, limit) { return size > limit; }")]
+#[wasm_bindgen(
+    inline_js = "export function sixelSizeExceeded(size, limit) { return size > limit; }"
+)]
 extern "C" {
     #[wasm_bindgen(catch, js_name = sixelSizeExceeded)]
     fn size_exceeded(size: f64, limit: &JsValue) -> Result<bool, JsValue>;

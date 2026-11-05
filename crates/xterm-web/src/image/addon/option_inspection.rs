@@ -1,6 +1,6 @@
 // Copyright (c) 2020 The xterm.js authors. All rights reserved. MIT license.
-//! Read-only diagnostics, not a writable JS option bag. Placeholder and storage
-//! limit inspection retain their raw public values; other options remain typed.
+//! Read-only diagnostics, not a writable JS option bag. Placeholder, storage
+//! and SIXEL size limits retain raw values; other options remain typed.
 use std::{
     cell::{Cell, RefCell},
     rc::Rc,

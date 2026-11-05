@@ -11,6 +11,8 @@ mod inspection_activation;
 mod options;
 #[path = "image_addon_support/raw_placeholder.rs"]
 mod raw_placeholder;
+#[path = "image_addon_support/raw_sixel_limit.rs"]
+mod raw_sixel_limit;
 #[path = "image_addon_support/raw_storage_limit.rs"]
 mod raw_storage_limit;
 #[path = "image_addon_support/render_dimensions.rs"]

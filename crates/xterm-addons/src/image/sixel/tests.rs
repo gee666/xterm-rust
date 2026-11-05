@@ -190,7 +190,13 @@ fn staged_put_commits_size_before_host_failure_and_uses_live_decoder() {
     handler.hook(&params, 4096.0, || Ok::<_, ()>(0)).unwrap();
     assert_eq!(handler.size(), 0.0);
     assert_eq!(handler.decode_put(&packet), SixelPut::Continue);
-    assert_eq!(handler.end_plan(true), SixelEndPlan::Image { width: 1, height: 6 });
+    assert_eq!(
+        handler.end_plan(true),
+        SixelEndPlan::Image {
+            width: 1,
+            height: 6
+        }
+    );
     handler.finish_abort();
     assert_eq!(handler.begin_put(1), None);
     assert_eq!(handler.size(), 0.0);

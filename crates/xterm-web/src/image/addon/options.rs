@@ -49,8 +49,9 @@ fn typed(options: &JsValue) -> Result<ImageOptions, JsValue> {
         sixel_support: boolean("sixelSupport")?,
         sixel_scrolling: boolean("sixelScrolling")?,
         sixel_palette_limit: numeric("sixelPaletteLimit")?,
-            "sixelSizeLimit" => self.sixel_size_limit.clone(),
-            "storageLimit" => self.storage_limit.borrow().clone(),
+        // Streaming and storage own delayed raw-value conversions.
+        sixel_size_limit: ImageOptions::default().sixel_size_limit,
+        storage_limit: ImageOptions::default().storage_limit,
         show_placeholder: boolean("showPlaceholder")?,
         iip_support: boolean("iipSupport")?,
         iip_size_limit: numeric("iipSizeLimit")?,
