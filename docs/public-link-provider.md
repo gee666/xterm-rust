@@ -2,7 +2,7 @@
 
 Task 415 adds the missing `Terminal.registerLinkProvider` binding over the existing Rust provider registry and DOM controller. It is available before `open` and is not proposed-API gated, matching the source. The returned ordinary JavaScript disposal token removes the first registration of the original provider identity on every invocation. Ignoring the token does not unregister it.
 
-The browser controller now retains `BrowserLink::JavaScript` payloads rather than copying public provider text, ranges or callbacks. `BrowserLink::Native` retains the existing typed OSC and utility-addon path. Rust callers construct `NativeBrowserLink` and wrap it in the native variant. `current_link` returns the retained payload, `range` reads a fresh selection range, and `snapshot` is a fallible diagnostic read, never the controller's hit-test authority.
+The browser controller now retains `BrowserLink::JavaScript` payloads rather than copying public provider text, ranges or callbacks. `BrowserLink::Native` retains the typed native and utility-addon paths. The browser OSC registry now uses live payloads too, as documented in [osc-live-ranges.md](osc-live-ranges.md). Rust callers construct `NativeBrowserLink` and wrap it in the native variant. `current_link` returns the retained payload, `range` reads a fresh selection range, and `snapshot` is a fallible diagnostic read, never the controller's hit-test authority.
 
 Provider priority, cache traversal, overlap removal, current/mousedown state, hover, activation and invalidation remain Rust code. They use the existing generic `ProviderReplies` algorithm and the shared `HoverState` tracker. No new dependency, unsafe code or JavaScript terminal implementation is used. Small host helpers read properties, call functions with their original receiver, define descriptors and preserve JavaScript primitive operator coercions.
 
@@ -40,7 +40,7 @@ After the correction, unchanged public cases pass18/18. The full addon replay re
 
 This scoped API repair does not close tasks 315 or 321 or establish full equivalence.
 
-- Typed native OSC and web-links callback range objects still need live mutation parity with subsequent controller queries. Stable callback object identity alone does not supply it.
+- Utility web-links callback range objects still need live mutation parity with subsequent controller queries. Task440 repairs browser OSC ranges through the shared live payload; typed native callbacks remain immutable Rust references.
 - Complete raw array/subclass/custom `map`, sparse arrays, malformed payload and prototype/Proxy behavior is not proven. The public adapter currently materializes the mapped reply as retained payloads, rather than preserving arbitrary custom map return containers.
 - Drawing and selection adapters still require finite 32-bit integral coordinates. The raw hit-test operators preserve JavaScript arithmetic, but out-of-domain drawing values produce an explicit RangeError rather than proving arbitrary-number equivalence.
 - Full descriptor/GC/lifecycle retention, all reentrant getter phases, scroll/reflow selection interactions and randomized live-object traces need the broader family audit. Weak descriptor state does not claim source lifetime equivalence after the controller is dropped.

@@ -1,0 +1,512 @@
+{
+  "platform": "win32",
+  "node": "v24.15.0",
+  "hashes": {
+    "lib/xterm.mjs": "f183e161977e03ff2323bb083be91808a99746e9830f32b3124486b19b77b0f4",
+    "lib/xterm.mjs.map": "b26357be48e74340106d9b217f5fb68e0f0c07eb90a981fc5b2f4f4c47761070",
+    "src/browser/Linkifier.ts": "7acc535eafc218032d0c480158e6f97dd5d7c8e8bae102b035b96622e4bbd2a6",
+    "src/browser/services/LinkProviderService.ts": "f46e5e2cfdee8794fe21006139a378a5d12a6edc97943ccebbc285f34969d1bd",
+    "src/browser/public/Terminal.ts": "f5c1c0d79c1c3484d305b8ec3ab201066958f056adb9878d27f5a1a0dd264011",
+    "src/browser/OscLinkProvider.ts": "5be35edf6dc8f15527999909587de8c373e2c2c3581be19f0f8deb40e6613b93",
+    "src/browser/services/SelectionService.ts": "a989bc70f29c187a626b2eba0a20a1fa272d2bdb19c01f2c6040eeaf704acfc4"
+  },
+  "traceSha256": "f35aa2025c6e53abcc352f6f933caf3ce02638a056b5d8c718fafef925afb3ce",
+  "scope": "Directed osc-live-range trace, not full link equivalence.",
+  "browsers": [
+    {
+      "name": "chromium",
+      "version": "148.0.7778.96",
+      "status": "passed",
+      "errors": [],
+      "trace": [
+        {
+          "name": "hover mutates callback range",
+          "pointer": true,
+          "calls": [
+            [
+              "hover",
+              true,
+              "custom:resource",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "same cell ignores mutation",
+          "pointer": true,
+          "calls": [],
+          "errors": []
+        },
+        {
+          "name": "next cell leaves mutated range",
+          "pointer": false,
+          "calls": [
+            [
+              "leave",
+              true,
+              "custom:resource",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "cached mutated range reenters",
+          "pointer": true,
+          "calls": [
+            [
+              "hover",
+              true,
+              "custom:resource",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "mousedown and current observe same mutation",
+          "pointer": true,
+          "calls": [
+            [
+              "activate",
+              true,
+              "custom:resource",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "double click selects current mutated range",
+          "selection": "lmn"
+        },
+        {
+          "name": "replacement endpoints stay live",
+          "pointer": true,
+          "calls": [],
+          "errors": []
+        },
+        {
+          "name": "same cell avoids proxy getters",
+          "reads": []
+        },
+        {
+          "name": "hit test reads live proxy coordinates",
+          "reads": [
+            "start.y",
+            "start.x",
+            "end.y",
+            "end.x"
+          ]
+        },
+        {
+          "name": "hit test preserves thrown identity",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "marker"
+          ]
+        },
+        {
+          "name": "replaced handler callback remains live",
+          "pointer": false,
+          "calls": [
+            [
+              "new leave",
+              true,
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "wrapped link with scrollback",
+          "pointer": true,
+          "calls": [
+            [
+              "wrapped hover",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "wrapped coordinates",
+          "scrollback": true,
+          "start": {
+            "x": 1,
+            "y": 3
+          },
+          "end": {
+            "x": 7,
+            "y": 4
+          }
+        },
+        {
+          "name": "wrapped mutation leaves prior row",
+          "pointer": false,
+          "calls": [
+            [
+              "new leave",
+              true,
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "wrapped mutation reenters new row",
+          "pointer": true,
+          "calls": [
+            [
+              "wrapped hover",
+              false
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "wrapped selection samples mutation",
+          "selection": "opq"
+        },
+        {
+          "name": "disposed terminal has no pointer listeners",
+          "pointer": true,
+          "calls": [],
+          "errors": []
+        }
+      ]
+    },
+    {
+      "name": "firefox",
+      "version": "150.0.2",
+      "status": "passed",
+      "errors": [],
+      "trace": [
+        {
+          "name": "hover mutates callback range",
+          "pointer": true,
+          "calls": [
+            [
+              "hover",
+              true,
+              "custom:resource",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "same cell ignores mutation",
+          "pointer": true,
+          "calls": [],
+          "errors": []
+        },
+        {
+          "name": "next cell leaves mutated range",
+          "pointer": false,
+          "calls": [
+            [
+              "leave",
+              true,
+              "custom:resource",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "cached mutated range reenters",
+          "pointer": true,
+          "calls": [
+            [
+              "hover",
+              true,
+              "custom:resource",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "mousedown and current observe same mutation",
+          "pointer": true,
+          "calls": [
+            [
+              "activate",
+              true,
+              "custom:resource",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "double click selects current mutated range",
+          "selection": "lmn"
+        },
+        {
+          "name": "replacement endpoints stay live",
+          "pointer": true,
+          "calls": [],
+          "errors": []
+        },
+        {
+          "name": "same cell avoids proxy getters",
+          "reads": []
+        },
+        {
+          "name": "hit test reads live proxy coordinates",
+          "reads": [
+            "start.y",
+            "start.x",
+            "end.y",
+            "end.x"
+          ]
+        },
+        {
+          "name": "hit test preserves thrown identity",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "marker"
+          ]
+        },
+        {
+          "name": "replaced handler callback remains live",
+          "pointer": false,
+          "calls": [
+            [
+              "new leave",
+              true,
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "wrapped link with scrollback",
+          "pointer": true,
+          "calls": [
+            [
+              "wrapped hover",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "wrapped coordinates",
+          "scrollback": true,
+          "start": {
+            "x": 1,
+            "y": 3
+          },
+          "end": {
+            "x": 7,
+            "y": 4
+          }
+        },
+        {
+          "name": "wrapped mutation leaves prior row",
+          "pointer": false,
+          "calls": [
+            [
+              "new leave",
+              true,
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "wrapped mutation reenters new row",
+          "pointer": true,
+          "calls": [
+            [
+              "wrapped hover",
+              false
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "wrapped selection samples mutation",
+          "selection": "opq"
+        },
+        {
+          "name": "disposed terminal has no pointer listeners",
+          "pointer": true,
+          "calls": [],
+          "errors": []
+        }
+      ]
+    },
+    {
+      "name": "webkit",
+      "version": "26.4",
+      "status": "passed",
+      "errors": [],
+      "trace": [
+        {
+          "name": "hover mutates callback range",
+          "pointer": true,
+          "calls": [
+            [
+              "hover",
+              true,
+              "custom:resource",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "same cell ignores mutation",
+          "pointer": true,
+          "calls": [],
+          "errors": []
+        },
+        {
+          "name": "next cell leaves mutated range",
+          "pointer": false,
+          "calls": [
+            [
+              "leave",
+              true,
+              "custom:resource",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "cached mutated range reenters",
+          "pointer": true,
+          "calls": [
+            [
+              "hover",
+              true,
+              "custom:resource",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "mousedown and current observe same mutation",
+          "pointer": true,
+          "calls": [
+            [
+              "activate",
+              true,
+              "custom:resource",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "double click selects current mutated range",
+          "selection": "lmn"
+        },
+        {
+          "name": "replacement endpoints stay live",
+          "pointer": true,
+          "calls": [],
+          "errors": []
+        },
+        {
+          "name": "same cell avoids proxy getters",
+          "reads": []
+        },
+        {
+          "name": "hit test reads live proxy coordinates",
+          "reads": [
+            "start.y",
+            "start.x",
+            "end.y",
+            "end.x"
+          ]
+        },
+        {
+          "name": "hit test preserves thrown identity",
+          "pointer": true,
+          "calls": [],
+          "errors": [
+            "marker"
+          ]
+        },
+        {
+          "name": "replaced handler callback remains live",
+          "pointer": false,
+          "calls": [
+            [
+              "new leave",
+              true,
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "wrapped link with scrollback",
+          "pointer": true,
+          "calls": [
+            [
+              "wrapped hover",
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "wrapped coordinates",
+          "scrollback": true,
+          "start": {
+            "x": 1,
+            "y": 3
+          },
+          "end": {
+            "x": 7,
+            "y": 4
+          }
+        },
+        {
+          "name": "wrapped mutation leaves prior row",
+          "pointer": false,
+          "calls": [
+            [
+              "new leave",
+              true,
+              true
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "wrapped mutation reenters new row",
+          "pointer": true,
+          "calls": [
+            [
+              "wrapped hover",
+              false
+            ]
+          ],
+          "errors": []
+        },
+        {
+          "name": "wrapped selection samples mutation",
+          "selection": "opq"
+        },
+        {
+          "name": "disposed terminal has no pointer listeners",
+          "pointer": true,
+          "calls": [],
+          "errors": []
+        }
+      ]
+    }
+  ]
+}

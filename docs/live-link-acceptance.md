@@ -6,7 +6,7 @@ This is unfinished implementation work, not an external blocker. It controls the
 
 Read `source_repo/src/browser/Linkifier.ts`, `browser/Types.d.ts` or its actual Types declaration file, `browser/services/Services.ts`, the public ILink/ILinkProvider/IBufferRange declarations in `source_repo/typings/xterm.d.ts`, and `source_repo/addons/addon-web-links/src/WebLinksAddon.ts`. Preserve the actual declarations and assertions; do not infer immutability from Rust's current types.
 
-The public provider path now retains original JavaScript links, with directed source/browser proof in [public-link-provider.md](public-link-provider.md). Native OSC and utility links still store immutable `Rc<Link>` text/range snapshots. Holding one stable JavaScript range object in callbacks fixes identity but does not fix subsequent hit-testing when that object changes. A one-time copy, or copying only when hover/activate fires, is insufficient.
+The public provider path retains original JavaScript links, with directed source/browser proof in [public-link-provider.md](public-link-provider.md). Browser OSC links now use the same live payload, documented in [osc-live-ranges.md](osc-live-ranges.md). Typed native providers and utility web-links still store immutable `Rc<Link>` text/range snapshots. Utility callback range identity alone does not fix subsequent hit-testing when that object changes. A one-time copy, or copying only when hover/activate fires, is insufficient.
 
 ## Required behavior
 

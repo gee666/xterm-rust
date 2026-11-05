@@ -1,0 +1,144 @@
+{
+  "base": "dcde3e9ca10e21ebdfd5babddb5dbeccbb259dcb",
+  "fixed": {
+    "crates/xterm-web/src/links/mod.rs": "93b475aa15205c3b120ffb0e4bbdacd835bb6d7dc705cff79a781f140be80ebb",
+    "crates/xterm-web/src/links/native_osc.rs": "25f998474bc7b26804777dfba25318bbc9c29648f1102ea20e159ea5107940e8",
+    "crates/xterm-web/src/terminal/link_services.rs": "b0c93f673dabb41d3a420b38288e12ccec3112776ec94dc72662414afd3dfc9b"
+  },
+  "baseline": {
+    "crates/xterm-web/src/links/mod.rs": "3ac302ccaba3f861da62f023f2b5c69e9022ab28bd460d698c6be55ca3f93374",
+    "crates/xterm-web/src/links/native_osc.rs": "06bcece1e408a66afe9a8c1fa14441c359ab6bcb8c7f59b75a1a4557be38147f",
+    "crates/xterm-web/src/terminal/link_services.rs": "d19af27381747d32ac399a27797a9f6b534813340eb75964f0f25185e18c936c"
+  },
+  "restored": {
+    "crates/xterm-web/src/links/mod.rs": "93b475aa15205c3b120ffb0e4bbdacd835bb6d7dc705cff79a781f140be80ebb",
+    "crates/xterm-web/src/links/native_osc.rs": "25f998474bc7b26804777dfba25318bbc9c29648f1102ea20e159ea5107940e8",
+    "crates/xterm-web/src/terminal/link_services.rs": "b0c93f673dabb41d3a420b38288e12ccec3112776ec94dc72662414afd3dfc9b"
+  },
+  "exitCode": 1,
+  "result": {
+    "package": "xterm-web",
+    "testName": "wasm_osc_live_range",
+    "testTimeoutMs": 60000,
+    "features": [],
+    "platform": "win32",
+    "node": "v24.15.0",
+    "date": "2026-11-05T18:47:11.042Z",
+    "componentOnly": true,
+    "status": "failed",
+    "commands": [
+      {
+        "command": [
+          "cargo",
+          "test",
+          "-p",
+          "xterm-web",
+          "--target",
+          "wasm32-unknown-unknown",
+          "--test",
+          "wasm_osc_live_range",
+          "--no-run",
+          "--message-format=json"
+        ],
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "aborted": false,
+        "abortError": null,
+        "timedOut": false,
+        "terminationError": null,
+        "resourceError": null,
+        "elapsedMs": 36521.0671,
+        "status": "passed"
+      },
+      {
+        "command": [
+          "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+          "--version"
+        ],
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "aborted": false,
+        "abortError": null,
+        "timedOut": false,
+        "terminationError": null,
+        "resourceError": null,
+        "elapsedMs": 11.741000000001804,
+        "status": "passed"
+      },
+      {
+        "command": [
+          "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+          "O:\\xterm-rust-swarm-16\\tmp\\TomislavLinks\\results\\acceptance-artifacts\\ceba55ec59812cd40e233ed629984a548006cb5cc96a0fd4ce7d24a0f96f544e\\artifact.wasm",
+          "--target",
+          "web",
+          "--out-dir",
+          "O:\\xterm-rust-swarm-16\\tmp\\TomislavLinks\\results\\browser-host\\wasm_osc_live_range\\2026-11-05T18-47-11-041Z-245451c8-70c0-4a1e-974a-38379a19059b\\artifacts",
+          "--out-name",
+          "suite"
+        ],
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "aborted": false,
+        "abortError": null,
+        "timedOut": false,
+        "terminationError": null,
+        "resourceError": null,
+        "elapsedMs": 1019.4556000000011,
+        "status": "passed"
+      }
+    ],
+    "browsers": [
+      {
+        "name": "chromium",
+        "status": "failed",
+        "tests": [
+          "__wbgt__wasm_osc_live_range::osc_callback_ranges_drive_later_pointer_equality_and_selection"
+        ],
+        "errors": [],
+        "console": [
+          {
+            "type": "error",
+            "text": "panicked at crates\\xterm-web\\tests\\wasm_osc_live_range.rs:34:5:\nassertion `left == right` failed\n  left: Array [Object {\"calls\": Array [Array [String(\"hover\"), Bool(true), String(\"custom:resource\"), Bool(true)]], \"errors\": Array [], \"name\": String(\"hover mutates callback range\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"same cell ignores mutation\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"next cell leaves mutated range\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [Array [String(\"leave\"), Bool(true), String(\"custom:resource\"), Bool(true)]], \"errors\": Array [], \"name\": String(\"cached mutated range reenters\"), \"pointer\": Bool(false)}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"mousedown and current observe same mutation\"), \"pointer\": Bool(false)}, Object {\"name\": String(\"double click selects current mutated range\"), \"selection\": String(\"abcdefghijklmnopqrs!\")}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"replacement endpoints stay live\"), \"pointer\": Bool(false)}, Object {\"name\": String(\"same cell avoids proxy getters\"), \"reads\": Array []}, Object {\"name\": String(\"hit test reads live proxy coordinates\"), \"reads\": Array []}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"hit test preserves thrown identity\"), \"pointer\": Bool(false)}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"replaced handler callback remains live\"), \"pointer\": Bool(false)}, Object {\"calls\": Array [Array [String(\"wrapped hover\"), Bool(true)]], \"errors\": Array [], \"name\": String(\"wrapped link with scrollback\"), \"pointer\": Bool(true)}, Object {\"end\": Object {\"x\": Number(7), \"y\": Number(4)}, \"name\": String(\"wrapped coordinates\"), \"scrollback\": Bool(true), \"start\": Object {\"x\": Number(1), \"y\": Number(3)}}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"wrapped mutation leaves prior row\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [Array [String(\"new leave\"), Bool(true), Bool(true)], Array [String(\"wrapped hover\"), Bool(false)]], \"errors\": Array [], \"name\": String(\"wrapped mutation reenters new row\"), \"pointer\": Bool(true)}, Object {\"name\": String(\"wrapped selection samples mutation\"), \"selection\": String(\"abcdefghijklmnopq\")}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"disposed terminal has no pointer listeners\"), \"pointer\": Bool(true)}]\n right: Array [Object {\"calls\": Array [Array [String(\"hover\"), Bool(true), String(\"custom:resource\"), Bool(true)]], \"errors\": Array [], \"name\": String(\"hover mutates callback range\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"same cell ignores mutation\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [Array [String(\"leave\"), Bool(true), String(\"custom:resource\"), Bool(true)]], \"errors\": Array [], \"name\": String(\"next cell leaves mutated range\"), \"pointer\": Bool(false)}, Object {\"calls\": Array [Array [String(\"hover\"), Bool(true), String(\"custom:resource\"), Bool(true)]], \"errors\": Array [], \"name\": String(\"cached mutated range reenters\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [Array [String(\"activate\"), Bool(true), String(\"custom:resource\"), Bool(true)]], \"errors\": Array [], \"name\": String(\"mousedown and current observe same mutation\"), \"pointer\": Bool(true)}, Object {\"name\": String(\"double click selects current mutated range\"), \"selection\": String(\"lmn\")}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"replacement endpoints stay live\"), \"pointer\": Bool(true)}, Object {\"name\": String(\"same cell avoids proxy getters\"), \"reads\": Array []}, Object {\"name\": String(\"hit test reads live proxy coordinates\"), \"reads\": Array [String(\"start.y\"), String(\"start.x\"), String(\"end.y\"), String(\"end.x\")]}, Object {\"calls\": Array [], \"errors\": Array [String(\"marker\")], \"name\": String(\"hit test preserves thrown identity\"), \"pointer\": Bool(true)}, Object {\"calls\": Array [Array [String(\"new leave\"), Bool(true), Bool(true)]], \"errors\": Array [], \"name\": String(\"replaced handler callback remains live\"), \"pointer\": Bool(false)}, Object {\"calls\": Array [Array [String(\"wrapped hover\"), Bool(true)]], \"errors\": Array [], \"name\": String(\"wrapped link with scrollback\"), \"pointer\": Bool(true)}, Object {\"end\": Object {\"x\": Number(7), \"y\": Number(4)}, \"name\": String(\"wrapped coordinates\"), \"scrollback\": Bool(true), \"start\": Object {\"x\": Number(1), \"y\": Number(3)}}, Object {\"calls\": Array [Array [String(\"new leave\"), Bool(true), Bool(true)]], \"errors\": Array [], \"name\": String(\"wrapped mutation leaves prior row\"), \"pointer\": Bool(false)}, Object {\"calls\": Array [Array [String(\"wrapped hover\"), Bool(false)]], \"errors\": Array [], \"name\": String(\"wrapped mutation reenters new row\"), \"pointer\": Bool(true)}, Object {\"name\": String(\"wrapped selection samples mutation\"), \"selection\": String(\"opq\")}, Object {\"calls\": Array [], \"errors\": Array [], \"name\": String(\"disposed terminal has no pointer listeners\"), \"pointer\": Bool(true)}]\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:50980/suite.js:5868:21)\n    at wasm_osc_live_range-ee85373000d4c2b9.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:50980/suite_bg.wasm:wasm-function[38104]:0xab7084)\n    at wasm_osc_live_range-ee85373000d4c2b9.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:50980/suite_bg.wasm:wasm-function[25106]:0xa207a1)\n    at wasm_osc_live_range-ee85373000d4c2b9.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:50980/suite_bg.wasm:wasm-function[8365]:0x784333)\n    at wasm_osc_live_range-ee85373000d4c2b9.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:50980/suite_bg.wasm:wasm-function[25107]:0xa20825)\n    at wasm_osc_live_range-ee85373000d4c2b9.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:50980/suite_bg.wasm:wasm-function[12975]:0x893f34)\n    at wasm_osc_live_range-ee85373000d4c2b9.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:50980/suite_bg.wasm:wasm-function[16429]:0x924c32)\n    at wasm_osc_live_range-ee85373000d4c2b9.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:50980/suite_bg.wasm:wasm-function[45957]:0xacf18f)\n    at wasm_osc_live_range-ee85373000d4c2b9.wasm.rust_begin_unwind (http://127.0.0.1:50980/suite_bg.wasm:wasm-function[31393]:0xa86150)\n    at wasm_osc_live_range-ee85373000d4c2b9.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:50980/suite_bg.wasm:wasm-function[31394]:0xa8617d)\n\n"
+          }
+        ],
+        "version": "148.0.7778.96",
+        "output": "running 1 test\ntest osc_callback_ranges_drive_later_pointer_equality_and_selection ... FAIL\n\nfailures:\n\n---- osc_callback_ranges_drive_later_pointer_equality_and_selection output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_osc_live_range-ee85373000d4c2b9.wasm.__rust_start_panic (http://127.0.0.1:50980/suite_bg.wasm:wasm-function[46483]:0xacfe94)\n            at wasm_osc_live_range-ee85373000d4c2b9.wasm.rust_panic (http://127.0.0.1:50980/suite_bg.wasm:wasm-function[41608]:0xac4680)\n            at wasm_osc_live_range-ee85373000d4c2b9.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:50980/suite_bg.wasm:wasm-function[12975]:0x893f5f)\n            at wasm_osc_live_range-ee85373000d4c2b9.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:50980/suite_bg.wasm:wasm-function[16429]:0x924c32)\n            at wasm_osc_live_range-ee85373000d4c2b9.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:50980/suite_bg.wasm:wasm-function[45957]:0xacf18f)\n            at wasm_osc_live_range-ee85373000d4c2b9.wasm.rust_begin_unwind (http://127.0.0.1:50980/suite_bg.wasm:wasm-function[31393]:0xa86150)\n            at wasm_osc_live_range-ee85373000d4c2b9.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:50980/suite_bg.wasm:wasm-function[31394]:0xa8617d)\n            at wasm_osc_live_range-ee85373000d4c2b9.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:50980/suite_bg.wasm:wasm-function[5841]:0x6b6f49)\n            at wasm_osc_live_range-ee85373000d4c2b9.wasm.core::panicking::assert_failed::hcd4afc005d8acbcd (http://127.0.0.1:50980/suite_bg.wasm:wasm-function[23563]:0x9fea37)\n            at wasm_osc_live_range-ee85373000d4c2b9.wasm.wasm_osc_live_range::osc_callback_ranges_drive_later_pointer_equality_and_selection::{{closure}}::h59b6d9545cd1f21e (http://127.0.0.1:50980/suite_bg.wasm:wasm-function[960]:0x2935c5)\n\nfailures:\n\n    osc_callback_ranges_drive_later_pointer_equality_and_selection\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.14s\n\n",
+        "counts": {
+          "passed": 0,
+          "failed": 1,
+          "ignored": 0,
+          "filtered": 0
+        }
+      }
+    ],
+    "artifacts": {
+      "compiler": {
+        "path": "results/acceptance-artifacts/ceba55ec59812cd40e233ed629984a548006cb5cc96a0fd4ce7d24a0f96f544e/artifact.wasm",
+        "sha256": "ceba55ec59812cd40e233ed629984a548006cb5cc96a0fd4ce7d24a0f96f544e",
+        "bytes": 19558008,
+        "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\TomislavLinks\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_osc_live_range-ee85373000d4c2b9.wasm"
+      },
+      "wasm": {
+        "path": "O:\\xterm-rust-swarm-16\\tmp\\TomislavLinks\\results\\browser-host\\wasm_osc_live_range\\2026-11-05T18-47-11-041Z-245451c8-70c0-4a1e-974a-38379a19059b\\artifacts\\suite_bg.wasm",
+        "bytes": 16413243,
+        "sha256": "20109619999ae32a0e7ffb8f05192dfb58b529330af0df6503e7e4f647cc69e2"
+      },
+      "bindings": {
+        "path": "O:\\xterm-rust-swarm-16\\tmp\\TomislavLinks\\results\\browser-host\\wasm_osc_live_range\\2026-11-05T18-47-11-041Z-245451c8-70c0-4a1e-974a-38379a19059b\\artifacts\\suite.js",
+        "bytes": 242976,
+        "sha256": "4d3c8444f0e3baed18204b63a7b77f51478a22a97ff8f9fb701648c67f1de8e0"
+      },
+      "css": {
+        "path": "crates/xterm-web/assets/xterm.css",
+        "bytes": 8154,
+        "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+      },
+      "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+      "testSourceSha256": "a0ff4c7b633b954c5cd65a6ae08dde40762f65b66ce4b90101f0dec157befd51"
+    },
+    "finishedAt": "2026-11-05T18:47:49.507Z"
+  }
+}
