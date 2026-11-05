@@ -1,50 +1,149 @@
-// CFF dictionary operand reads follow opentype.js. See licenses/opentype-js-MIT.txt.
+// CFF dictionary reads follow opentype.js. See licenses/opentype-js-MIT.txt.
 use super::FontError;
 
-/// The source completes all operand reads before entriesToObject interprets
-/// values or detects duplicate keys. Keep that lexical phase separate so an
-/// earlier duplicate cannot mask a later truncated or invalid operand.
+const ESCAPED_OPERATOR: u16 = 1200;
+const KEY_COUNT: usize = ESCAPED_OPERATOR as usize + 256;
+
+/// Operand reads finish before entriesToObject can report a duplicate key.
+/// Retain the first duplicate, but let every later lexical error win over it.
 pub(super) fn validate(bytes: &[u8]) -> Result<(), FontError> {
     let mut position = 0;
+    let mut operands = Vec::new();
+    // Each operand needs at least one byte. This bound also covers blend reuse.
+    operands.try_reserve_exact(bytes.len())?;
+    let mut keys = [None; KEY_COUNT];
+    let mut duplicate = None;
+    let mut negative_blend = false;
     while position < bytes.len() {
         let byte = read(bytes, &mut position)?;
         match byte {
-            12 => {
-                read(bytes, &mut position)?;
+            23 => {
+                let count = operands.pop().unwrap_or(f64::NAN);
+                // Source loops forever once a negative count empties the stack.
+                // Reject that input instead of reproducing an unbounded loop.
+                if count < 0.0 {
+                    negative_blend = true;
+                    operands.clear();
+                } else {
+                    while operands.len() as f64 > count {
+                        operands.pop();
+                    }
+                }
             }
-            0..=11 | 13..=27 | 32..=246 => {}
+            0..=27 => {
+                let key = if byte == 12 {
+                    ESCAPED_OPERATOR + u16::from(read(bytes, &mut position)?)
+                } else {
+                    u16::from(byte)
+                };
+                let previous = &mut keys[usize::from(key)];
+                if *previous == Some(true) && duplicate.is_none() {
+                    duplicate = Some(key);
+                }
+                // isNaN([]) is false, isNaN([n]) follows n, and arrays with
+                // multiple numeric elements stringify with commas, yielding NaN.
+                *previous = Some(match operands.as_slice() {
+                    [] => true,
+                    [value] => !value.is_nan(),
+                    _ => false,
+                });
+                operands.clear();
+            }
             28 => {
-                take(bytes, &mut position, 2)?;
+                let bytes = take(bytes, &mut position, 2)?;
+                operands.push(f64::from(u16::from_be_bytes([bytes[0], bytes[1]])));
             }
             29 => {
-                take(bytes, &mut position, 4)?;
+                let bytes = take(bytes, &mut position, 4)?;
+                operands.push(f64::from(i32::from_be_bytes([
+                    bytes[0], bytes[1], bytes[2], bytes[3],
+                ])));
             }
-            30 => loop {
-                let byte = read(bytes, &mut position)?;
-                if byte >> 4 == 15 || byte & 15 == 15 {
-                    break;
-                }
-            },
+            30 => operands.push(real(bytes, &mut position)?),
+            32..=246 => operands.push(f64::from(byte) - 139.0),
             247..=254 => {
-                read(bytes, &mut position)?;
+                let next = f64::from(read(bytes, &mut position)?);
+                let value = if byte <= 250 {
+                    f64::from(byte - 247) * 256.0 + next + 108.0
+                } else {
+                    -f64::from(byte - 251) * 256.0 - next - 108.0
+                };
+                operands.push(value);
             }
             31 | 255 => return Err(FontError::CffOperand(byte)),
         }
     }
-    Ok(())
+    if negative_blend {
+        return Err(FontError::Invalid("CFF2 blend count cannot be negative"));
+    }
+    duplicate.map_or(Ok(()), |key| Err(FontError::CffDuplicate(key)))
 }
 fn read(bytes: &[u8], position: &mut usize) -> Result<u8, FontError> {
     let byte = *bytes.get(*position).ok_or(FontError::Bounds)?;
     *position += 1;
     Ok(byte)
 }
-fn take(bytes: &[u8], position: &mut usize, length: usize) -> Result<(), FontError> {
-    // Operand sizes are protocol constants and position never exceeds len.
-    bytes
+fn take<'a>(bytes: &'a [u8], position: &mut usize, length: usize) -> Result<&'a [u8], FontError> {
+    let value = bytes
         .get(*position..*position + length)
         .ok_or(FontError::Bounds)?;
     *position += length;
-    Ok(())
+    Ok(value)
+}
+fn real(bytes: &[u8], position: &mut usize) -> Result<f64, FontError> {
+    const NIBBLES: [&str; 15] = [
+        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "E", "E-", "null", "-",
+    ];
+    let mut text = String::new();
+    loop {
+        let byte = read(bytes, position)?;
+        for nibble in [byte >> 4, byte & 15] {
+            if nibble == 15 {
+                return float_prefix(&text);
+            }
+            let part = NIBBLES[usize::from(nibble)];
+            text.try_reserve(part.len())?;
+            text.push_str(part);
+        }
+    }
+}
+fn float_prefix(text: &str) -> Result<f64, FontError> {
+    // JS parseFloat accepts a numeric prefix, including incomplete exponents.
+    // The CFF nibble alphabet contains no whitespace, plus sign or Infinity.
+    let bytes = text.as_bytes();
+    let mut end = usize::from(bytes.first() == Some(&b'-'));
+    let mut digits = 0;
+    while bytes.get(end).is_some_and(u8::is_ascii_digit) {
+        digits += 1;
+        end += 1;
+    }
+    if bytes.get(end) == Some(&b'.') {
+        end += 1;
+        while bytes.get(end).is_some_and(u8::is_ascii_digit) {
+            digits += 1;
+            end += 1;
+        }
+    }
+    if digits == 0 {
+        return Ok(f64::NAN);
+    }
+    let mut exponent = end;
+    if bytes.get(end) == Some(&b'E') {
+        exponent += 1;
+        if bytes.get(exponent) == Some(&b'-') {
+            exponent += 1;
+        }
+        let start = exponent;
+        while bytes.get(exponent).is_some_and(u8::is_ascii_digit) {
+            exponent += 1;
+        }
+        if exponent > start {
+            end = exponent;
+        }
+    }
+    text[..end]
+        .parse()
+        .map_err(|_| FontError::Invalid("Invalid CFF real numeric prefix"))
 }
 
 #[cfg(test)]
@@ -75,5 +174,37 @@ mod tests {
             Err(FontError::CffOperand(255))
         );
         assert_eq!(validate(&[28, 31, 255, 29, 31, 255, 31, 255]), Ok(()));
+    }
+    #[test]
+    fn duplicate_coercion_and_deferred_lexical_errors() {
+        assert_eq!(validate(&[0, 0]), Err(FontError::CffDuplicate(0)));
+        assert_eq!(validate(&[139, 140, 0, 0]), Ok(()));
+        assert_eq!(validate(&[30, 0xff, 0, 0]), Ok(()));
+        assert_eq!(validate(&[0, 0, 31]), Err(FontError::CffOperand(31)));
+        assert_eq!(validate(&[0, 0, 28]), Err(FontError::Bounds));
+        assert_eq!(
+            validate(&[139, 140, 140, 23, 0, 0]),
+            Err(FontError::CffDuplicate(0))
+        );
+        assert_eq!(
+            validate(&[138, 23]),
+            Err(FontError::Invalid("CFF2 blend count cannot be negative"))
+        );
+    }
+    #[test]
+    fn real_numeric_prefixes() {
+        for text in ["", "null", ".", "-", "E1", "-null", "..1"] {
+            assert!(float_prefix(text).unwrap().is_nan(), "{text}");
+        }
+        for (text, value) in [
+            ("1null", 1.0),
+            ("1E", 1.0),
+            ("1E-", 1.0),
+            (".1E2", 10.0),
+            ("-1E-2-", -0.01),
+        ] {
+            assert_eq!(float_prefix(text), Ok(value));
+        }
+        assert_eq!(float_prefix("1E9999"), Ok(f64::INFINITY));
     }
 }
