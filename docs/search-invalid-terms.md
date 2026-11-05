@@ -41,6 +41,10 @@ The negative control restores all six old producer files from mainbb6eada with o
 
 Raw source, baseline, final WASM and unchanged-suite reports, logs and hash-pinned summary are in that directory. Compiler/WASM/binding binaries referenced by receipts are temporary verification outputs, not delivered distribution artifacts. They remain only through independent review and are then removed with owned temporary work.
 
+## Independent review
+
+Task363 accepted source91f8106 and evidenceba4705b/b910edf against basea2a1252. The isolated reviewer independently reran native32/32, scoped warning-denied Clippy and exact full formatting. It verified53 hashes across implementation, evidence, baseline producers, reference files, runners and retained browser artifacts. It inspected the720-case source/Rust receipts and unchanged81/81 suite without launching browsers. No files changed during review and no concrete problems were found.
+
 ## Remaining work
 
 This is a bounded repair under347, not completion of347 or full-family322. Valid boxed strings and objects with overridden string methods still need source matching semantics. Their length can be valid while matching text is not a primitive JS string. Null matching options, per-line repeated flag reads, flag-getter reentry replacing stored options, raw term mutation between matching phases and refresh object-spread enumeration remain open. Source matching and navigation read raw lengths again after addon validity; this repair does not replace those engine phases. Complete source-unit mapping, randomized raw-option traces and cross-platform proof also remain. Overall equivalence is NOT PROVEN.
