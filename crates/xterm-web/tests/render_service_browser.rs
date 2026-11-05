@@ -1,3 +1,5 @@
+// Kept as one cohesive source-order trace and shared fixture, slightly over350
+// lines, so source event ordering remains directly reviewable without fragments.
 #![cfg(target_arch = "wasm32")]
 use std::{
     cell::{Cell, RefCell},
@@ -21,6 +23,8 @@ use xterm_web::{
     theme::ThemeService,
 };
 wasm_bindgen_test_configure!(run_in_browser);
+#[path = "support/render_sync.rs"]
+mod synchronized;
 #[wasm_bindgen(module = "/tests/support/render_service_host.mjs")]
 extern "C" {
     #[wasm_bindgen(catch,js_name=withRenderHarness)]
@@ -194,9 +198,8 @@ impl VisibilityRenderer for Backend {
         Ok(())
     }
 }
-fn run_trace(host: JsValue) -> Result<JsValue, JsValue> {
-    let log: Log = Rc::default();
-    let owner = js_sys::Reflect::get(&host, &"window".into())?.unchecked_into();
+fn create_service(host: &JsValue) -> Result<(Rc<RenderService>, Rc<Terminal>), JsValue> {
+    let owner = js_sys::Reflect::get(host, &"window".into())?.unchecked_into();
     let browser = Rc::new(Browser {
         window: owner,
         dpr: Emitter::new(),
@@ -230,6 +233,11 @@ fn run_trace(host: JsValue) -> Result<JsValue, JsValue> {
         metrics,
         decorations,
     )?;
+    Ok((service, terminal))
+}
+fn run_trace(host: JsValue) -> Result<JsValue, JsValue> {
+    let log: Log = Rc::default();
+    let (service, terminal) = create_service(&host)?;
     let viewport = log.clone();
     let _viewport = service.on_rendered_viewport_change().subscribe(move |e| {
         viewport

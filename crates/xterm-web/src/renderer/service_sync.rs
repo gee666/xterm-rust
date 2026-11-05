@@ -1,10 +1,7 @@
 // Copyright (c) 2026 The xterm.js authors. All rights reserved. MIT license.
 use super::{js_max, js_min};
 use crate::links::debounce::RenderRange;
-use std::{
-    cell::{Cell, RefCell},
-    rc::Rc,
-};
+use std::{cell::Cell, rc::Rc};
 use wasm_bindgen::{closure::Closure, JsCast, JsValue};
 use web_sys::Window;
 use xterm_core::core_service::CoreService;
@@ -16,20 +13,28 @@ struct State {
     range: Cell<RenderRange>,
     buffering: Cell<bool>,
     timeout: Cell<Option<i32>>,
-    callback: RefCell<Option<Callback>>,
     on_timeout: Rc<dyn Fn() -> Result<(), JsValue>>,
 }
 impl State {
-    fn cancel_timer(&self) {
-        if let Some(handle) = self.timeout.take() {
-            (self.window)().clear_timeout_with_handle(handle);
+    fn cancel_timer(&self) -> Result<(), JsValue> {
+        if self.timeout.get().is_some() {
+            let window = (self.window)();
+            let cancel = js_sys::Reflect::get(window.as_ref(), &"clearTimeout".into())?
+                .unchecked_into::<js_sys::Function>();
+            // The method getter can flush or replace the pending timer. Source
+            // reads its argument after that getter and clears only on success.
+            let handle = self.timeout.get().map_or(JsValue::UNDEFINED, JsValue::from);
+            js_sys::Reflect::apply(&cancel, window.as_ref(), &[handle].into_iter().collect())?;
+            self.timeout.set(None);
         }
-        self.callback.borrow_mut().take();
+        Ok(())
     }
 }
 impl Drop for State {
     fn drop(&mut self) {
-        self.cancel_timer();
+        if let Err(error) = self.cancel_timer() {
+            web_sys::console::error_1(&error);
+        }
     }
 }
 #[derive(Clone)]
@@ -49,7 +54,6 @@ impl SynchronizedOutput {
             }),
             buffering: Cell::new(false),
             timeout: Cell::new(None),
-            callback: RefCell::new(None),
             on_timeout: Rc::new(on_timeout),
         }))
     }
@@ -78,25 +82,29 @@ impl SynchronizedOutput {
                 }
                 Ok(())
             }));
+            // Reentrant clearTimeout can leave an earlier registration queued
+            // after the source has overwritten its handle. Follow TaskQueue's
+            // JS-owned closure pattern so that callback remains callable, even
+            // when a shim retains it then throws. ES2021 GC reclaims it.
+            let callback = callback.into_js_value();
             let window = (self.0.window)();
             let handle = window.set_timeout_with_callback_and_timeout_and_arguments_0(
-                callback.as_ref().unchecked_ref(),
+                callback.unchecked_ref(),
                 SYNCHRONIZED_OUTPUT_TIMEOUT_MS,
             )?;
-            *self.0.callback.borrow_mut() = Some(callback);
             self.0.timeout.set(Some(handle));
         }
         Ok(())
     }
-    pub fn flush(&self) -> Option<RenderRange> {
-        self.0.cancel_timer();
-        if self.0.buffering.replace(false) {
+    pub fn flush(&self) -> Result<Option<RenderRange>, JsValue> {
+        self.0.cancel_timer()?;
+        Ok(if self.0.buffering.replace(false) {
             Some(self.0.range.get())
         } else {
             None
-        }
+        })
     }
-    pub fn dispose(&self) {
-        self.0.cancel_timer();
+    pub fn dispose(&self) -> Result<(), JsValue> {
+        self.0.cancel_timer()
     }
 }

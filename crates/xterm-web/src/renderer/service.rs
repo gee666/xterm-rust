@@ -114,7 +114,7 @@ impl RenderService {
         if self.core.dec_private_modes.borrow().synchronized_output {
             return synchronized.buffer_rows(start, end);
         }
-        if let Some(buffered) = synchronized.flush() {
+        if let Some(buffered) = synchronized.flush()? {
             start = js_min(start, buffered.start);
             end = js_max(end, buffered.end);
         }

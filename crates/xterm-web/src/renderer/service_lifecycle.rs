@@ -20,7 +20,7 @@ impl RenderService {
             debouncer.dispose()?;
         }
         if let Some(synchronized) = self.synchronized.borrow().clone() {
-            synchronized.dispose();
+            synchronized.dispose()?;
         }
         self.listeners.dispose();
         Ok(())
@@ -41,7 +41,9 @@ impl Drop for RenderService {
             }
         }
         if let Some(synchronized) = self.synchronized.get_mut().take() {
-            synchronized.dispose();
+            if let Err(error) = synchronized.dispose() {
+                web_sys::console::error_1(&error);
+            }
         }
     }
 }
