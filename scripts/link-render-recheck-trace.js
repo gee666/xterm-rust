@@ -17,7 +17,7 @@ return (async () => {
     const timer = setTimeout(() => {
       subscription.dispose(); window.removeEventListener('error', failed); reject(new Error('render deadline'));
     }, 10000);
-    const subscription = terminal.onRender(finish);
+    const subscription = terminal.onRender(event => { if (!marker) finish(event); });
     window.addEventListener('error', failed);
     terminal.refresh(start, end);
   });
@@ -70,7 +70,7 @@ return (async () => {
       assert(events.join() === (['plain', 'zero start'].includes(mode) ? 'leave' : ''), `${mode}: leave phase`);
       assert(Boolean(pending) === ['plain', 'zero start', 'second start outside', 'second end outside'].includes(mode), `${mode}: provider refresh phase`);
       assert(caughtMarker === mode.startsWith('throw'), `${mode}: thrown identity`);
-      trace.push({ mode, reads, events, requested: Boolean(pending), caughtMarker,
+      trace.push({ mode, reads: [...reads], events: [...events], requested: Boolean(pending), caughtMarker,
         rendered: { start: rendered.start, end: rendered.end } });
     }
     return trace;
