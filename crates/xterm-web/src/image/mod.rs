@@ -2,6 +2,7 @@
 //! Browser canvas operations for shared image storage. ImageRendererLifecycle
 //! binds these operations to the Rust terminal's open/options/renderer lifecycle.
 mod drawing;
+mod iip_decode;
 mod js;
 mod layers;
 mod lifecycle;
@@ -11,6 +12,7 @@ mod resource;
 mod storage;
 mod terminal_host;
 
+pub use iip_decode::{IipDecodedImage, IipImageDecoder, PendingImageBitmap};
 use js::{get, set};
 pub use lifecycle::ImageRendererLifecycle;
 pub use resource::BrowserImageSurface;

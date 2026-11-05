@@ -25,14 +25,19 @@ const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 try {
   const esbuild = require('esbuild');
   const oracle = resolve(work, 'source-renderer.js');
+  const entry = resolve(work, 'image-comparators.ts');
+  await writeFile(entry, ['ImageRenderer', 'IIPHandler'].map(name =>
+    `export { ${name} } from ${JSON.stringify(resolve(reference, `addons/addon-image/src/${name}.ts`))};`
+  ).join('\n'));
   const build = await esbuild.build({
-    entryPoints: [resolve(reference, 'addons/addon-image/src/ImageRenderer.ts')],
+    entryPoints: [entry],
     bundle: true, write: false, platform: 'browser', format: 'iife',
     globalName: 'SourceImageRendererBundle',
-    alias: { common: resolve(reference, 'src/common') },
+    alias: { common: resolve(reference, 'src/common'),
+      'xterm-wasm-parts': resolve(dependencies, 'xterm-wasm-parts') },
     nodePaths: [dependencies], metafile: true
   });
-  await writeFile(oracle, build.outputFiles[0].text + '\nglobalThis.SourceImageRenderer = SourceImageRendererBundle.ImageRenderer;\n');
+  await writeFile(oracle, build.outputFiles[0].text + '\nglobalThis.SourceImageRenderer = SourceImageRendererBundle.ImageRenderer;\nglobalThis.SourceIIPHandler = SourceImageRendererBundle.IIPHandler;\n');
   const sourceInputs = [];
   for (const name of Object.keys(build.metafile.inputs)) {
     const path = resolve(name);
@@ -48,7 +53,7 @@ try {
   const browserReport = `results/browser-host/${test}-results.json`;
   const browsers = JSON.parse(await readFile(resolve(root, browserReport), 'utf8'));
   const rustInputs = [];
-  for (const directory of ['crates/xterm-web/src/image', 'crates/xterm-web/tests/image_canvas_support', 'crates/xterm-web/tests/image_lifecycle_support']) {
+  for (const directory of ['crates/xterm-web/src/image', 'crates/xterm-web/tests/image_canvas_support', 'crates/xterm-web/tests/image_lifecycle_support', 'crates/xterm-addons/src/image/qoi', 'crates/xterm-addons/src/image/iip']) {
     for (const file of await readdir(resolve(root, directory))) {
       const path = `${directory}/${file}`;
       rustInputs.push({ path, sha256: sha256(await readFile(resolve(root, path))) });
@@ -64,7 +69,7 @@ try {
     isolatedComponent: false, browserReport, rustInputs, sourceInputs,
     seed: test === 'image_canvas_browser' ? '0x272389' : null,
     seededDrawAndExtractPairsPerBrowser: test === 'image_canvas_browser' ? 128 : 0,
-    remaining: ['38 complete addon/parser/browser integration', '277 QOI integration', 'native OS and full workspace gates']
+    remaining: ['complete ImageAddon/parser/browser integration and original image suites', 'native OS and full workspace gates']
   });
   if (!passed) process.exitCode = 1;
 } catch (error) {

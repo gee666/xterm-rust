@@ -3,7 +3,11 @@ use super::image_canvas_support::*;
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_test::*;
 use xterm_addons::image::storage::{AddImageOptions, ImageLayer, ImageResource, StorageRenderer};
-use xterm_web::image::{primitives, BrowserImageSurface};
+use xterm_addons::image::{
+    iip::{geometry::CellSize, types::DisplayRequest},
+    metrics::{ImageMetrics, ImageType},
+};
+use xterm_web::image::{primitives, BrowserImageSurface, IipDecodedImage, IipImageDecoder};
 
 struct Patch {
     target: JsValue,
@@ -196,4 +200,82 @@ async fn pending_placeholder_bitmap_uses_source_late_assignment_and_close_order(
     assert_eq!(eval("globalThis.imageBitmapClosed").as_f64(), Some(1.0));
     drop(patch);
     eval("delete globalThis.resolveImageBitmap; delete globalThis.lateBitmap; delete globalThis.imageBitmapClosed");
+}
+
+fn png_request() -> DisplayRequest {
+    DisplayRequest {
+        bytes: vec![0; 32],
+        source: ImageMetrics {
+            mime: ImageType::Png,
+            width: 2,
+            height: 1,
+        },
+        target: CellSize {
+            width: 2.0,
+            height: 1.0,
+        },
+    }
+}
+
+#[wasm_bindgen_test(async)]
+async fn iip_separates_synchronous_bitmap_throws_from_promise_rejection() {
+    let sentinel = eval("({iipFailure:true})");
+    let thrower = js_sys::Function::new_with_args("error", "return function(){throw error}")
+        .call1(&JsValue::UNDEFINED, &sentinel)
+        .unwrap();
+    let mut decoder = IipImageDecoder::default();
+    let patch = Patch::new(js_sys::global().into(), "createImageBitmap", thrower);
+    let Err(error) = decoder.prepare(&png_request()) else {
+        panic!("expected synchronous error")
+    };
+    assert!(error == sentinel);
+    drop(patch);
+    let rejecter =
+        js_sys::Function::new_with_args("error", "return function(){return Promise.reject(error)}")
+            .call1(&JsValue::UNDEFINED, &sentinel)
+            .unwrap();
+    let patch = Patch::new(js_sys::global().into(), "createImageBitmap", rejecter);
+    let IipDecodedImage::Pending(pending) = decoder.prepare(&png_request()).unwrap() else {
+        panic!("rejection must remain asynchronous")
+    };
+    let Err(error) = pending.resolve().await else {
+        panic!("expected rejected bitmap")
+    };
+    assert!(error == sentinel);
+    drop(patch);
+}
+
+#[wasm_bindgen_test]
+fn iip_qoi_imagedata_failure_is_synchronous_without_fabricated_canvas() {
+    let mut request = png_request();
+    request.source.mime = ImageType::Qoi;
+    request.bytes = include_bytes!("../../../xterm-addons/tests/fixtures/qoi/palette.qoi").to_vec();
+    request.target = CellSize {
+        width: 640.0,
+        height: 80.0,
+    };
+    let sentinel = eval("({imageDataFailure:true})");
+    let constructor = js_sys::Function::new_with_args("error", "return function(){throw error}")
+        .call1(&JsValue::UNDEFINED, &sentinel)
+        .unwrap();
+    let patch = Patch::new(js_sys::global().into(), "ImageData", constructor);
+    let mut decoder = IipImageDecoder::default();
+    let Err(error) = decoder.prepare(&request) else {
+        panic!("expected ImageData error")
+    };
+    assert!(error == sentinel);
+    drop(patch);
+    assert!(matches!(
+        decoder.prepare(&request).unwrap(),
+        IipDecodedImage::Immediate(_)
+    ));
+}
+
+#[wasm_bindgen_test(async)]
+async fn iip_corrupt_png_rejects_real_platform_decode() {
+    let mut decoder = IipImageDecoder::default();
+    let IipDecodedImage::Pending(pending) = decoder.prepare(&png_request()).unwrap() else {
+        panic!("PNG must use asynchronous platform decoding")
+    };
+    assert!(pending.resolve().await.is_err());
 }
