@@ -13,7 +13,7 @@ pub struct AtlasPage {
 }
 
 /// The rasterizer owns its canvases/cache. The GPU renderer keeps the atlas alive
-/// until replacement or disposal; no callbacks execute while it borrows geometry.
+/// until replacement or disposal. Rasterization precedes per-cell vertex mutation.
 /// This is the GlyphRenderer dependency contract, not a TextureAtlas implementation.
 pub trait GlyphAtlas {
     fn page_layout_version(&self) -> u64;

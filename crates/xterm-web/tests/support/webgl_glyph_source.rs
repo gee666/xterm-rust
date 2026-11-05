@@ -60,7 +60,7 @@ fn unchanged_source_gpu_upload_bits_frames_and_atlas_calls() {
         serde_json::from_str(include_str!("../fixtures/webgl-glyphs.json")).unwrap();
     let (_canvas, gl) = context();
     let cases = fixture["cases"].as_array().unwrap();
-    assert_eq!(cases.len(), 146);
+    assert_eq!(cases.len(), 147);
     for c in cases {
         let name = c["name"].as_str().unwrap();
         let mut r = GlyphRenderer::new(
@@ -96,8 +96,12 @@ fn unchanged_source_gpu_upload_bits_frames_and_atlas_calls() {
         assert_eq!(json!(frames), c["frames"], "{name} frames");
         for update in c["updates"].as_array().unwrap() {
             *atlas.glyph.borrow_mut() = fixture::glyph(&update["glyph"]);
-            r.update_cell(fixture::cell(update), c["rescale"].as_bool().unwrap())
-                .unwrap();
+            let chars = fixture::chars(update);
+            r.update_cell(
+                fixture::cell(update, &chars),
+                c["rescale"].as_bool().unwrap(),
+            )
+            .unwrap();
         }
         if let Some(resize) = c["resize"].as_array() {
             r.handle_resize(

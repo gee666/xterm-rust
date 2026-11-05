@@ -257,23 +257,21 @@ impl GlyphRenderer {
         let glyph = if cell.code.is_some_and(|code| code != 0) {
             self.atlas
                 .as_ref()
-                .map(|atlas| {
-                    atlas.rasterize(
-                        cell,
-                        cell.chars.encode_utf16().count() > 1,
-                        self.element.as_ref(),
-                    )
-                })
+                .map(|atlas| atlas.rasterize(cell, cell.chars.len() > 1, self.element.as_ref()))
                 .transpose()?
         } else {
             None
         };
         let page_width = if let (Some(atlas), Some(glyph)) = (&self.atlas, &glyph) {
-            atlas
-                .page(glyph.texture_page)
-                .ok_or_else(|| error("Glyph references a missing atlas page"))?
-                .canvas
-                .width() as f64
+            if self.geometry.clipped_pixels(cell, glyph).is_some() {
+                atlas
+                    .page(glyph.texture_page)
+                    .ok_or_else(|| error("Glyph references a missing atlas page"))?
+                    .canvas
+                    .width() as f64
+            } else {
+                0.0
+            }
         } else {
             0.0
         };

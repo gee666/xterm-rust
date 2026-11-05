@@ -11,7 +11,7 @@ use fixture::{bits, dimensions, expected};
 fn unchanged_source_vertex_and_compaction_bits() {
     let fixture: Value = serde_json::from_str(include_str!("fixtures/webgl-glyphs.json")).unwrap();
     let cases = fixture["cases"].as_array().unwrap();
-    assert_eq!(cases.len(), 146);
+    assert_eq!(cases.len(), 147);
     for case in cases {
         let name = case["name"].as_str().unwrap();
         let cols = case["cols"].as_u64().unwrap() as usize;
@@ -19,7 +19,8 @@ fn unchanged_source_vertex_and_compaction_bits() {
         let mut geometry = GlyphGeometry::new(cols, rows, dimensions(&case["dimensions"])).unwrap();
         for (step, c) in case["updates"].as_array().unwrap().iter().enumerate() {
             let glyph = fixture::glyph(&c["glyph"]);
-            let cell = fixture::cell(c);
+            let chars = fixture::chars(c);
+            let cell = fixture::cell(c, &chars);
             geometry
                 .update_cell(
                     cell,
@@ -83,7 +84,7 @@ fn invalid_inputs_fail_without_losing_existing_geometry() {
         bg: 0,
         fg: 0,
         ext: 0,
-        chars: "A",
+        chars: &[65],
         width: 1.0,
         last_bg: 0,
     };
@@ -111,7 +112,7 @@ fn dimension_changes_do_not_clear_vertices_until_resize() {
         bg: 0,
         fg: 0,
         ext: 0,
-        chars: "A",
+        chars: &[65],
         width: 1.0,
         last_bg: 0,
     };

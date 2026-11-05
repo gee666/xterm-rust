@@ -37,7 +37,15 @@ pub fn glyph(v: &Value) -> RasterizedGlyph {
         texture_size: pair(&v["sizeClipSpace"]),
     }
 }
-pub fn cell(c: &Value) -> GlyphCell<'_> {
+pub fn chars(c: &Value) -> Vec<u16> {
+    c["chars"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|unit| u16::try_from(unit.as_u64().unwrap()).unwrap())
+        .collect()
+}
+pub fn cell<'a>(c: &Value, chars: &'a [u16]) -> GlyphCell<'a> {
     GlyphCell {
         x: c["x"].as_u64().unwrap() as usize,
         y: c["y"].as_u64().unwrap() as usize,
@@ -45,7 +53,7 @@ pub fn cell(c: &Value) -> GlyphCell<'_> {
         bg: c["bg"].as_u64().unwrap() as u32,
         fg: c["fg"].as_u64().unwrap() as u32,
         ext: c["ext"].as_u64().unwrap() as u32,
-        chars: c["chars"].as_str().unwrap(),
+        chars,
         width: number(&c["width"]),
         last_bg: c["lastBg"].as_u64().unwrap() as u32,
     }

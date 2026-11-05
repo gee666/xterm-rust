@@ -1,6 +1,6 @@
 # WebGL rectangle renderer
 
-This is component coverage, not a working WebglAddon. Glyph rasterization, atlas packing/upload, glyph drawing, render layers, root renderer replacement and public addon bindings remain unfinished. Swarm task 306 tracks that work. The demo must still report WebGL unavailable until the actual addon exists.
+This is component coverage, not a working WebglAddon. GlyphRenderer drawing/upload is implemented as a separate component in docs/webgl-glyphs.md. Glyph rasterization, atlas packing, render layers, root renderer replacement and public addon bindings remain unfinished. Swarm task 306 tracks that work. The demo must still report WebGL unavailable until the actual addon exists.
 
 ## Source and Rust contracts
 
@@ -10,7 +10,7 @@ This is component coverage, not a working WebglAddon. Glyph rasterization, atlas
 - `crates/xterm-web/src/webgl/rectangle_gpu.rs`, actual WebGL2 instanced drawing and theme event subscription.
 - `crates/xterm-web/src/webgl/gpu_resources.rs`, private shader/program/buffer/vertex-array ownership.
 
-`RectangleGeometry` accepts existing `RenderModel`, `RenderDimensions` and shared `ThemeService` colors. Each rectangle contains eight f32 values, normalized x/y/width/height followed by RGBA. Background runs preserve the source's packed attribute comparisons, including inverse foreground transitions and non-color flag transitions. The viewport retains theme alpha. Non-default runs force alpha to one. Palette colors remain live; viewport and cursor colors are cached until a theme event. Cursor support includes bar, underline and outline. Block glyphs belong to the missing glyph renderer, so block and absent cursors correctly produce no rectangle instances.
+`RectangleGeometry` accepts existing `RenderModel`, `RenderDimensions` and shared `ThemeService` colors. Each rectangle contains eight f32 values, normalized x/y/width/height followed by RGBA. Background runs preserve the source's packed attribute comparisons, including inverse foreground transitions and non-color flag transitions. The viewport retains theme alpha. Non-default runs force alpha to one. Palette colors remain live; viewport and cursor colors are cached until a theme event. Cursor support includes bar, underline and outline. Block glyphs require glyph rasterization and renderer integration, so block and absent cursors correctly produce no rectangle instances.
 
 `set_dimensions` only replaces geometry. `handle_resize` updates the viewport rectangle. A theme event updates cached colors and the viewport without silently recomputing old background runs or cursor vertices. Call `update_backgrounds` and `update_cursor` before drawing new model state. Direct portable users must forward color changes through `colors_changed`; the browser renderer subscribes automatically.
 

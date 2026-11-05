@@ -83,6 +83,7 @@ pub fn paint(canvas: &HtmlCanvasElement, color: &str) {
         .unwrap()
         .dyn_into()
         .unwrap();
+    ctx.clear_rect(0.0, 0.0, canvas.width() as f64, canvas.height() as f64);
     ctx.set_fill_style_str(color);
     ctx.fill_rect(0.0, 0.0, canvas.width() as f64, canvas.height() as f64);
 }
@@ -146,7 +147,7 @@ pub fn cell(x: usize, code: i64, page: u32) -> GlyphCell<'static> {
         bg: 0,
         fg: 17,
         ext: page,
-        chars: "A",
+        chars: &[65],
         width: 1.0,
         last_bg: 0,
     }
@@ -161,7 +162,7 @@ pub fn model(lengths: &[u32]) -> RenderModel {
 pub struct Call {
     pub combined: bool,
     pub code: Option<i64>,
-    pub chars: String,
+    pub chars: Vec<u16>,
     pub bg: u32,
     pub fg: u32,
     pub ext: u32,
@@ -225,7 +226,7 @@ impl GlyphAtlas for TestAtlas {
         self.calls.borrow_mut().push(Call {
             combined,
             code: cell.code,
-            chars: cell.chars.to_string(),
+            chars: cell.chars.to_vec(),
             bg: cell.bg,
             fg: cell.fg,
             ext: cell.ext,

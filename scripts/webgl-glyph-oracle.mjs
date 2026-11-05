@@ -34,6 +34,7 @@ function recorder() {
     'activeTexture','bindTexture','texParameteri','texImage2D','enable','blendFunc']) gl[name]=()=>{};
   return gl;
 }
+const utf16 = text => Array.from({length:text.length}, (_,i) => text.charCodeAt(i));
 const bits = values => [...new Uint32Array(new Float32Array(values).buffer)];
 const cases=[];
 const glyph=(size=[21,12], offset=[5,3], page=0) => ({offset:{x:offset[0],y:offset[1]},size:{x:size[0],y:size[1]},texturePage:page,
@@ -66,12 +67,14 @@ function run(name,cols,rows,updates,rescale=true,installed=true,lineLengths=Arra
   renderer.clear();
   const cleared=bits(renderer._vertices.attributes);
   renderer.dispose();
-  cases.push({name,cols,rows,dimensions:d,updates,rescale,installed,lineLengths,resize,frames,snapshots,attributes,upload,count,cleared,calls});
+  cases.push({name,cols,rows,dimensions:d,updates:updates.map(c=>({...c,chars:utf16(c.chars)})),rescale,installed,lineLengths,resize,frames,snapshots,attributes,upload,count,cleared,
+    calls:calls.map(c=>c[0]==='combined'?[c[0],utf16(c[1]),...c.slice(2)]:c)});
 }
 run('null-keeps-texture-height',2,1,[cell(),cell(0),cell(null)]);
 run('different-background-clips',2,1,[cell(256,{bg:8,chars:'Ā'})]);
 run('no-atlas-null-clears',2,1,[cell(),cell(0)],true,false);
 run('utf16-routing',4,1,[cell(0x1f680,{chars:'🚀'}),cell(-2147483583,{x:1,chars:'Á'}),cell(65,{x:2,chars:''}),cell(65,{x:3})]);
+run('ucs2-surrogates',3,1,[cell(0xd800,{chars:'\ud800'}),cell(0xdc00,{x:1,chars:'\udc00'}),cell(-2147428288,{x:2,chars:'\ud800A'})]);
 run('compact-prefixes',3,2,[cell(65,{x:2}),cell(65,{x:1,y:1})],false,true,[1,2]);
 run('reshape-equal-count',3,2,[cell()],true,true,[2,2,2],[2,3]);
 run('resize-different-count',3,2,[cell()],true,true,[1],[1,1]);

@@ -16,8 +16,8 @@ pub struct RasterizedGlyph {
     pub texture_size: [f64; 2],
 }
 
-/// A missing code denotes the right half of a wide character. Combined strings
-/// use JavaScript UTF-16 length when choosing the atlas lookup method.
+/// A missing code denotes the right half of a wide character. UTF-16 units retain
+/// lone surrogates and select combined lookup by JavaScript string length.
 #[derive(Clone, Copy, Debug)]
 pub struct GlyphCell<'a> {
     pub x: usize,
@@ -26,7 +26,7 @@ pub struct GlyphCell<'a> {
     pub bg: u32,
     pub fg: u32,
     pub ext: u32,
-    pub chars: &'a str,
+    pub chars: &'a [u16],
     pub width: f64,
     pub last_bg: u32,
 }
@@ -145,7 +145,6 @@ impl GlyphGeometry {
             return Ok(());
         };
         let d = self.dimensions.device;
-        let padding = ((d.cell.width - d.character.width) / 2.0).floor();
         let mut values = [
             -glyph.offset[0] + d.character.left,
             -glyph.offset[1] + d.character.top,
@@ -157,8 +156,7 @@ impl GlyphGeometry {
             glyph.texture_size[0],
             glyph.texture_size[1],
         ];
-        if cell.bg != cell.last_bg && glyph.offset[0] > padding {
-            let clipped = glyph.offset[0] - padding;
+        if let Some(clipped) = self.clipped_pixels(cell, glyph) {
             values[0] = -(glyph.offset[0] - clipped) + d.character.left;
             values[2] = (glyph.size[0] - clipped) / d.canvas.width;
             values[5] = glyph.texture_position[0] + clipped / page_width;
@@ -173,6 +171,15 @@ impl GlyphGeometry {
             self.attributes[i + 2] = ((d.cell.width - 1.0) / d.canvas.width) as f32;
         }
         Ok(())
+    }
+    pub(super) fn clipped_pixels(
+        &self,
+        cell: GlyphCell<'_>,
+        glyph: &RasterizedGlyph,
+    ) -> Option<f64> {
+        let d = self.dimensions.device;
+        let padding = ((d.cell.width - d.character.width) / 2.0).floor();
+        (cell.bg != cell.last_bg && glyph.offset[0] > padding).then_some(glyph.offset[0] - padding)
     }
     /// Return only live line prefixes, alternating backing storage each frame.
     pub fn compact(&mut self, line_lengths: &[u32]) -> Result<&[f32], GlyphError> {

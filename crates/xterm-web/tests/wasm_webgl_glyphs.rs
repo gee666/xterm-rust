@@ -35,6 +35,13 @@ fn real_gpu_draws_multiple_pages_and_compacts_line_prefixes() {
     clear(&gl);
     renderer.render(&model(&[3, 2])).unwrap();
     assert_eq!(pixel(&gl, 2, 2), [0, 0, 0, 0]);
+    paint(&atlas.pages.borrow()[0].canvas, "rgba(255,0,0,0.5)");
+    renderer.invalidate_atlas_textures();
+    renderer.update_cell(cell(0, 65, 0), false).unwrap();
+    clear(&gl);
+    renderer.render(&model(&[1])).unwrap();
+    // Source uses SRC_ALPHA for alpha too, so 0.5 squared becomes 0.25.
+    assert_eq!(pixel(&gl, 2, 2), [128, 0, 0, 64]);
 }
 
 #[wasm_bindgen_test]
@@ -92,13 +99,13 @@ fn frame_epochs_utf16_routing_null_cells_and_rasterizer_errors() {
     r.set_atlas(atlas.clone());
     assert!(r.begin_frame());
     let mut c = cell(0, 0x1f680, 0);
-    c.chars = "🚀";
+    c.chars = &[0xd83d, 0xde80];
     r.update_cell(c, false).unwrap();
     c = cell(1, -2147483583, 0);
-    c.chars = "Á";
+    c.chars = &[65, 0x301];
     r.update_cell(c, false).unwrap();
     c = cell(2, 65, 0);
-    c.chars = "";
+    c.chars = &[];
     r.update_cell(c, false).unwrap();
     assert_eq!(
         atlas
