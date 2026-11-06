@@ -1,0 +1,62 @@
+import assert from 'node:assert/strict';
+import {spawnSync} from 'node:child_process';
+import {readFileSync,writeFileSync,mkdirSync,copyFileSync,readdirSync,realpathSync,lstatSync,statfsSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import path from 'node:path';
+const root='O:/xterm-rust-swarm-16/tmp/worktrees/BradleyProgress551',output=root+'/results/progress-math';
+const git='C:/Program Files/Git/cmd/git.exe',base='224d1b33';
+const files=['crates/xterm-web/src/status_addons/coercion.rs','crates/xterm-web/src/status_addons/progress.rs'];
+const hash=b=>createHash('sha256').update(b).digest('hex');
+const originals=files.map(file=>({file,bytes:readFileSync(root+'/'+file)}));
+const report={base,started:new Date().toISOString(),fixed:originals.map(({file,bytes})=>({file,sha256:hash(bytes)})),phases:[]};
+const temporary=root+'/tmp/browser';mkdirSync(temporary,{recursive:true});
+const env={...process.env,CARGO_BUILD_JOBS:'2',CARGO_TARGET_DIR:root+'/target',CARGO:'C:/Users/user/.cargo/bin/cargo.exe',
+ WASM_BINDGEN:'P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe',
+ PLAYWRIGHT_MODULE:'P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/node_modules/playwright/index.mjs',
+ CARGO_FEATURES:'acceptance-hooks',TEMP:temporary,TMP:temporary,TMPDIR:temporary};
+function persist(){writeFileSync(output+'/browser-phases.json',JSON.stringify(report,null,2)+'\n');}
+function runGit(args){const r=spawnSync(git,args,{cwd:root,timeout:30000,maxBuffer:32*1024**2});if(r.status!==0||r.error)throw Error('git failed');return r.stdout;}
+assert.equal(path.resolve(realpathSync(root)).toLowerCase(),path.resolve(root).toLowerCase());
+assert(lstatSync(root+'/.git').isFile());
+assert.equal(String(runGit(['branch','--show-current'])).trim(),'swarm/BradleyProgress551');
+assert.equal(String(runGit(['rev-parse',base])).trim(),'224d1b339a43eddf899c2944d9dad734d8c44234');
+function probe(){const r=spawnSync('C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe',['-NoProfile','-Command','(Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory*1024'],{encoding:'utf8',timeout:30000});
+ const ram=Number(r.stdout.trim()),disk=statfsSync('O:/',{bigint:true}),free=disk.bavail*disk.bsize;
+ if(r.status!==0||!Number.isFinite(ram)||ram<8*1024**3||free<10n*1024n**3n)throw Error('resource floor failed');return {ramBytes:ram,diskFreeBytes:free.toString()};}
+function suite(label,test,browsers='chromium,firefox,webkit',negative=false){
+ const resources=probe(),start=Date.now();
+ const result=spawnSync(process.execPath,['scripts/browser-host-check.mjs'],{cwd:root,env:{...env,WASM_TEST:test,BROWSERS:browsers},encoding:'utf8',timeout:240000,maxBuffer:32*1024**2,windowsHide:true});
+ const destination=output+'/'+label;mkdirSync(destination,{recursive:true});
+ writeFileSync(destination+'/driver.log',(result.stdout??'')+(result.stderr??''));
+ const raw=JSON.parse(readFileSync(root+'/results/browser-host/'+test+'-results.json'));
+ const source=path.dirname(raw.artifacts.wasm.path);
+ const runRoot=path.dirname(source);
+ for(const entry of readdirSync(runRoot,{withFileTypes:true}))if(entry.isFile())copyFileSync(runRoot+'/'+entry.name,destination+'/'+entry.name);
+ const step={label,test,browsers,negative,exit:result.status,error:result.error?.message,elapsedMs:Date.now()-start,...resources,
+  compiler:raw.artifacts.compiler,wasm:raw.artifacts.wasm,source:files.map(file=>({file,sha256:hash(readFileSync(root+'/'+file))})),
+  fixture:hash(readFileSync(root+'/crates/xterm-web/tests/fixtures/progress-math.js')),testSource:hash(readFileSync(root+'/crates/xterm-web/tests/'+test+'.rs')),
+  counts:raw.browsers.map(b=>({name:b.name,status:b.status,counts:b.counts,errors:b.errors}))};
+ report.phases.push(step);persist();console.log(JSON.stringify(step));
+ assert(!result.error,'runner timeout/error');assert.equal(raw.browsers.length,browsers.split(',').length);
+ for(const b of raw.browsers){assert.equal(b.counts?.ignored,0);assert.equal(b.counts?.filtered,0);assert.equal(b.errors.length,0);}
+ if(negative){assert.equal(result.status,1);assert.equal(raw.status,'failed');assert.equal(raw.browsers[0].counts.passed,0);assert.equal(raw.browsers[0].counts.failed,1);assert.match(raw.browsers[0].output,/observable evaluation order/);}
+ else {assert.equal(result.status,0);assert.equal(raw.status,'passed');for(const b of raw.browsers){assert.equal(b.counts.failed,0);assert(b.counts.passed>0);}}
+ return step;
+}
+try {
+ const initial=suite('initial','wasm_progress_math');
+ try {
+  report.old=files.map(file=>{const bytes=runGit(['show',base+':'+file]);writeFileSync(root+'/'+file,bytes);return {file,sha256:hash(bytes)};});persist();
+  const negative=suite('old-control','wasm_progress_math','chromium',true);
+  assert.notEqual(initial.wasm.sha256,negative.wasm.sha256);
+ } finally {
+  for(const {file,bytes} of originals)writeFileSync(root+'/'+file,bytes);
+  report.restored=originals.every(({file,bytes})=>hash(readFileSync(root+'/'+file))===hash(bytes));persist();assert(report.restored);
+ }
+ const final=suite('final','wasm_progress_math');assert.equal(initial.wasm.sha256,final.wasm.sha256);
+ suite('retained-coercion','wasm_status_coercion');
+ suite('retained-status','wasm_status_addons');
+ suite('retained-clear','wasm_status_clear');
+ report.status='passed';
+}catch(error){report.status='failed';report.error=String(error.stack??error);process.exitCode=1;}
+finally {report.finished=new Date().toISOString();persist();}

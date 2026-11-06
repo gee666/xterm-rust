@@ -1,0 +1,117 @@
+{
+  "root": "O:/xterm-rust-swarm-16/tmp/worktrees/BradleyProgress551",
+  "started": "2026-11-06T02:00:33.312Z",
+  "steps": [
+    {
+      "name": "native-progress-status",
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "test",
+        "-p",
+        "xterm-addons",
+        "--all-features",
+        "--test",
+        "progress_upstream",
+        "--test",
+        "status_live_terminal",
+        "-j2"
+      ],
+      "ramBytes": 32473890816,
+      "diskFreeBytes": "2683143618560",
+      "exit": 0,
+      "elapsedMs": 11184
+    },
+    {
+      "name": "native-web-lib",
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "test",
+        "-p",
+        "xterm-web",
+        "--lib",
+        "--all-features",
+        "-j2"
+      ],
+      "ramBytes": 32019279872,
+      "diskFreeBytes": "2683046400000",
+      "exit": 0,
+      "elapsedMs": 4860
+    },
+    {
+      "name": "native-web-clippy",
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "clippy",
+        "-p",
+        "xterm-web",
+        "--lib",
+        "--all-features",
+        "-j2",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "ramBytes": 32393392128,
+      "diskFreeBytes": "2683014295552",
+      "exit": 0,
+      "elapsedMs": 8828
+    },
+    {
+      "name": "wasm-clippy",
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "clippy",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--all-features",
+        "--lib",
+        "--test",
+        "wasm_progress_math",
+        "--test",
+        "wasm_status_coercion",
+        "--test",
+        "wasm_status_addons",
+        "--test",
+        "wasm_status_clear",
+        "-j2",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "ramBytes": 31903465472,
+      "diskFreeBytes": "2682997817344",
+      "exit": 0,
+      "elapsedMs": 33349
+    },
+    {
+      "name": "wasm-no-run",
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--all-features",
+        "--test",
+        "wasm_progress_math",
+        "--test",
+        "wasm_status_coercion",
+        "--test",
+        "wasm_status_addons",
+        "--test",
+        "wasm_status_clear",
+        "-j2",
+        "--no-run"
+      ],
+      "ramBytes": 32268197888,
+      "diskFreeBytes": "2682906587136",
+      "exit": 0,
+      "elapsedMs": 34883
+    }
+  ],
+  "status": "passed",
+  "finished": "2026-11-06T02:02:08.825Z"
+}

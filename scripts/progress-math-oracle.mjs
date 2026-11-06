@@ -24,10 +24,12 @@ try {
   report.before = referenceIntegrity(source, manifest);
   assert.equal(report.before.mismatches.length, 0, 'Reference modified');
   const esbuild = await import(pathToFileURL(join(modules, 'esbuild/lib/main.js')));
+  report.esbuild = esbuild.version;
   const bundle = join(scratch, 'original.mjs');
   const exports = `export {ProgressAddon} from ${JSON.stringify(join(source, sourceFiles[0]))};\nexport {Emitter} from ${JSON.stringify(join(source, sourceFiles[1]))};`;
   await esbuild.build({ stdin: { contents: exports, resolveDir: source, loader: 'ts' },
     bundle: true, platform: 'node', format: 'esm', alias: { common: join(source, 'src/common') }, outfile: bundle });
+  report.bundleSha256 = hash(await readFile(bundle));
   const { ProgressAddon, Emitter } = await import(pathToFileURL(bundle));
   const traceSource = await readFile(tracePath, 'utf8');
   const trace = Function(`${traceSource};return progressMathCases;`)();

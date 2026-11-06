@@ -1,0 +1,413 @@
+{
+  "base": "224d1b339a43eddf899c2944d9dad734d8c44234",
+  "production": "c7007809",
+  "status": "passed-in-scoped-public-setter-only",
+  "inputCount": 1910,
+  "runtimeCount": 476,
+  "nativeCount": 3,
+  "evidenceCount": 73,
+  "sourcePins": [
+    {
+      "path": "crates/xterm-web/src/status_addons/coercion.rs",
+      "bytes": 1178,
+      "sha256": "a5415c23af52b3c6d93c8853ac935986a85f8d8ea9070fc17578675e6c1b2d11"
+    },
+    {
+      "path": "crates/xterm-web/src/status_addons/progress.rs",
+      "bytes": 5558,
+      "sha256": "ddfda7ac8a740ff3da291ab13d91943f8cdfecaa90378258d87c8612401358bd"
+    },
+    {
+      "path": "crates/xterm-web/tests/wasm_progress_math.rs",
+      "bytes": 1708,
+      "sha256": "87d7d748b907ec793bbd97e8d4606ad5b631dabb266809024eb9253ba564d8d9"
+    },
+    {
+      "path": "crates/xterm-web/tests/fixtures/progress-math.js",
+      "bytes": 7325,
+      "sha256": "c79bf3c26b325ae482e51e6dd3a323cc29e9f0518f5584d03d788e472fc61ca6"
+    },
+    {
+      "path": "crates/xterm-web/tests/fixtures/progress-math.json",
+      "bytes": 1855,
+      "sha256": "49ebdbfb2519b44e8c80d5dbf5c8097126a35f5362ad44cacbde337d40e9a1f1"
+    },
+    {
+      "path": "scripts/progress-math-oracle.mjs",
+      "bytes": 3824,
+      "sha256": "c56ed079a6e72f8a3ae4e16bc91ff15b42fae558f170095f0a4b6d75c678ab16"
+    },
+    {
+      "path": "docs/progress-math.md",
+      "bytes": 7060,
+      "sha256": "1a9767dc10240fb1855d09cbe8041408939bea64da3791f7317142d9ccf30a19"
+    }
+  ],
+  "evidencePins": [
+    {
+      "path": "results/progress-math/browser-driver.txt",
+      "bytes": 5520,
+      "sha256": "8ea9a6451932138505cf66d28875ded926d867d77a06a4f3430610535d2394c7"
+    },
+    {
+      "path": "results/progress-math/browser-phases.json",
+      "bytes": 14418,
+      "sha256": "32b1f9c71181326ba363fe65442379f43e0dbcf0825ebdad12b2671c7e42be58"
+    },
+    {
+      "path": "results/progress-math/compiler-driver.txt",
+      "bytes": 2607,
+      "sha256": "5b0e75b75f40c75a8137eb46125a1758d3faba6f69909eb7848dad02820998f5"
+    },
+    {
+      "path": "results/progress-math/compiler.json",
+      "bytes": 2577,
+      "sha256": "6f62c061dbe6e258b60dbce721a15b2ae249cf83bbccbbbd605d49450601d781"
+    },
+    {
+      "path": "results/progress-math/final/commands.json",
+      "bytes": 1835,
+      "sha256": "1cc06edbefb7d0ee0bb1984755c8319d3d49a0da15c1ad670656767444ef8881"
+    },
+    {
+      "path": "results/progress-math/final/driver.log",
+      "bytes": 132,
+      "sha256": "20a197141b480f3511fb3c4cf980067d1fc0931f302cf440331b2c47adaceb05"
+    },
+    {
+      "path": "results/progress-math/final/wasm_progress_math-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/progress-math/final/wasm_progress_math-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/progress-math/final/wasm_progress_math-build.log",
+      "bytes": 47427,
+      "sha256": "e6292a8f999ea1ec0e71d90ad20ac1dc694142c23002f810156b4b77f52fff22"
+    },
+    {
+      "path": "results/progress-math/final/wasm_progress_math-chromium.log",
+      "bytes": 157,
+      "sha256": "b2809cf38485db194e7fef3d0b7276ee59d83c6c3e66353e58ae2727b14a55ca"
+    },
+    {
+      "path": "results/progress-math/final/wasm_progress_math-firefox.log",
+      "bytes": 157,
+      "sha256": "daeb2fc3503f05406bcbd9cf8f45e7107c937f6fcfd6e0d1f4890b3bd5dc342e"
+    },
+    {
+      "path": "results/progress-math/final/wasm_progress_math-results.json",
+      "bytes": 5754,
+      "sha256": "f46aa9c45927eab590754dfda0875d6cd96025d94b34f6f7c7d0aef61e69ff17"
+    },
+    {
+      "path": "results/progress-math/final/wasm_progress_math-webkit.log",
+      "bytes": 157,
+      "sha256": "34f070897d906e58189e28b12f346f9e30360fbe040c4fe68407d68bf2acdd13"
+    },
+    {
+      "path": "results/progress-math/fmt-xterm-addons.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/progress-math/fmt-xterm-core.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/progress-math/fmt-xterm-font-addons.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/progress-math/fmt-xterm-wasm-support.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/progress-math/fmt-xterm-web.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/progress-math/full-fmt.log",
+      "bytes": 817,
+      "sha256": "a3c64adc493a218a5a8332dfc60b9e9fd0cf455d8215931a5888f9bc84a29c70"
+    },
+    {
+      "path": "results/progress-math/initial/commands.json",
+      "bytes": 1834,
+      "sha256": "33750995d88c301a265ae1789722a9a3ce144bd77e86d6d688729f41fc30fbb9"
+    },
+    {
+      "path": "results/progress-math/initial/driver.log",
+      "bytes": 132,
+      "sha256": "20a197141b480f3511fb3c4cf980067d1fc0931f302cf440331b2c47adaceb05"
+    },
+    {
+      "path": "results/progress-math/initial/wasm_progress_math-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/progress-math/initial/wasm_progress_math-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/progress-math/initial/wasm_progress_math-build.log",
+      "bytes": 47319,
+      "sha256": "3eebadef332b427f66c082803d981c1823f221bf67b3edf201926c852fc2e7ee"
+    },
+    {
+      "path": "results/progress-math/initial/wasm_progress_math-chromium.log",
+      "bytes": 157,
+      "sha256": "714c6d7347da36ec97a389ae9f78e151c6912453a4b151babe1c7ba0dcd5cea4"
+    },
+    {
+      "path": "results/progress-math/initial/wasm_progress_math-firefox.log",
+      "bytes": 157,
+      "sha256": "e2c6d07a384e30f49608e2b673e7aee5f9c36f2dae6cc70918378abcac225fdc"
+    },
+    {
+      "path": "results/progress-math/initial/wasm_progress_math-results.json",
+      "bytes": 5753,
+      "sha256": "e016f8cb44a9d5f7e0f4a220de6501d2cf7033353b0af0f814397f2b1e544dff"
+    },
+    {
+      "path": "results/progress-math/initial/wasm_progress_math-webkit.log",
+      "bytes": 157,
+      "sha256": "0b82b3a94973ba447bd59369df8906c35ee37b74384b18b9c52754f81eedc604"
+    },
+    {
+      "path": "results/progress-math/input-manifest.json",
+      "bytes": 330656,
+      "sha256": "247149be0a063c44b04f05f7254186aefe2be0d6c4d8a1ceb40d5520074e464f"
+    },
+    {
+      "path": "results/progress-math/native-progress-status.log",
+      "bytes": 2452,
+      "sha256": "9c2922235dee1f63e67d18dd97192b0b2f4fd657252843d4bb3de49ca9b32d59"
+    },
+    {
+      "path": "results/progress-math/native-runtime.json",
+      "bytes": 549,
+      "sha256": "963bd030abc893551c26b0b25d264807784cb58d29c8293816b400befdb6670a"
+    },
+    {
+      "path": "results/progress-math/native-web-clippy.log",
+      "bytes": 893,
+      "sha256": "04c14338d19d2e5dfd2c4136fad5ce908970e8516d6d78c692f3f8c64640e4d1"
+    },
+    {
+      "path": "results/progress-math/native-web-lib.log",
+      "bytes": 5572,
+      "sha256": "1c75b74b5373dc953a34f2ce29523ece19a77dd61c86d791325173aac0602451"
+    },
+    {
+      "path": "results/progress-math/old-control/commands.json",
+      "bytes": 1835,
+      "sha256": "43088b5b3a135b845637239d3de86d38b15b523c09367e85531019c6292c87b8"
+    },
+    {
+      "path": "results/progress-math/old-control/driver.log",
+      "bytes": 50,
+      "sha256": "f97441ef0f903c16143647b5f45d4b3ba50b7ca5b1d77b4518403f4881651c0f"
+    },
+    {
+      "path": "results/progress-math/old-control/wasm_progress_math-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/progress-math/old-control/wasm_progress_math-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/progress-math/old-control/wasm_progress_math-build.log",
+      "bytes": 47427,
+      "sha256": "306f7734b25fee663bc438473d33056608e7121a1f61ccbf5ce106c021df7b9f"
+    },
+    {
+      "path": "results/progress-math/old-control/wasm_progress_math-chromium.log",
+      "bytes": 2982,
+      "sha256": "e04c2f3fc7418260bb6a7de2fc761560d772ff877f84bcf210a9a3a02733cedb"
+    },
+    {
+      "path": "results/progress-math/old-control/wasm_progress_math-results.json",
+      "bytes": 7181,
+      "sha256": "2b54a5b78c4265134fbd95505d15ba1efb8a68a8d3bdc6e94548e832cbe77a7a"
+    },
+    {
+      "path": "results/progress-math/retained-clear/commands.json",
+      "bytes": 1832,
+      "sha256": "13c1f745cd4b84def41a841cb40a66b452a93945fc894d0cbe854e96d8c85b92"
+    },
+    {
+      "path": "results/progress-math/retained-clear/driver.log",
+      "bytes": 132,
+      "sha256": "20a197141b480f3511fb3c4cf980067d1fc0931f302cf440331b2c47adaceb05"
+    },
+    {
+      "path": "results/progress-math/retained-clear/wasm_status_clear-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/progress-math/retained-clear/wasm_status_clear-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/progress-math/retained-clear/wasm_status_clear-build.log",
+      "bytes": 47421,
+      "sha256": "cb002d7d4766735c8948cfa28c5ed75fb702f92c2b84708154ca245c56675305"
+    },
+    {
+      "path": "results/progress-math/retained-clear/wasm_status_clear-chromium.log",
+      "bytes": 151,
+      "sha256": "56baebae4131d8ce8efc55d0f7b4d7796d1612d2dc4ed8d23e146db644e42574"
+    },
+    {
+      "path": "results/progress-math/retained-clear/wasm_status_clear-firefox.log",
+      "bytes": 151,
+      "sha256": "393390d3375112350af977f4b416bef0585987243778e177decd5ac018a46169"
+    },
+    {
+      "path": "results/progress-math/retained-clear/wasm_status_clear-results.json",
+      "bytes": 5354,
+      "sha256": "4101a59c788aa43f87c668b41d565e659814e79de3baa086d11c2194713a0b0e"
+    },
+    {
+      "path": "results/progress-math/retained-clear/wasm_status_clear-webkit.log",
+      "bytes": 151,
+      "sha256": "526e1e538633494b864763f121e6b5273288f5c600cd6e085da06b64b2b84f3e"
+    },
+    {
+      "path": "results/progress-math/retained-coercion/commands.json",
+      "bytes": 1846,
+      "sha256": "53971988780ea3107c4ac0f11d9992fed346a88872af1735fb0a8ae87c10ee96"
+    },
+    {
+      "path": "results/progress-math/retained-coercion/driver.log",
+      "bytes": 132,
+      "sha256": "3932465dce0b03b7ae06e1c2268cab1eb8633599b832999e8010c719f92e65a1"
+    },
+    {
+      "path": "results/progress-math/retained-coercion/wasm_status_coercion-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/progress-math/retained-coercion/wasm_status_coercion-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/progress-math/retained-coercion/wasm_status_coercion-build.log",
+      "bytes": 47433,
+      "sha256": "9e4561078e51e2b28c080de6923efd93006e1b89428d45f29261c62905760ffd"
+    },
+    {
+      "path": "results/progress-math/retained-coercion/wasm_status_coercion-chromium.log",
+      "bytes": 589,
+      "sha256": "b72afd32bcfca7c69687e8fa828b6fb0cde33acebe3edc98ad8269ff8227e91f"
+    },
+    {
+      "path": "results/progress-math/retained-coercion/wasm_status_coercion-firefox.log",
+      "bytes": 589,
+      "sha256": "34a189d459b3de8f64ecb34e5c55d2110d48b6486ce40ba921b2fe662d4b21c3"
+    },
+    {
+      "path": "results/progress-math/retained-coercion/wasm_status_coercion-results.json",
+      "bytes": 8908,
+      "sha256": "1c915cc07f5b6ef99d7a73c9c8d3b226ec19cd64405538b5b7fe075535641032"
+    },
+    {
+      "path": "results/progress-math/retained-coercion/wasm_status_coercion-webkit.log",
+      "bytes": 589,
+      "sha256": "90d2685df3b0a191f6d10b4e30782b05773cc1db7f267993d483d2908640a3d2"
+    },
+    {
+      "path": "results/progress-math/retained-status/commands.json",
+      "bytes": 1842,
+      "sha256": "9b1c1e858cd87ade24a591e76df14f34c48784c4725bc6f3e1b46993f5aff924"
+    },
+    {
+      "path": "results/progress-math/retained-status/driver.log",
+      "bytes": 135,
+      "sha256": "89b084538390ab112d405e4a456e22f925d2e1d14590144477a4e469c88bafc1"
+    },
+    {
+      "path": "results/progress-math/retained-status/wasm_status_addons-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/progress-math/retained-status/wasm_status_addons-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/progress-math/retained-status/wasm_status_addons-build.log",
+      "bytes": 47425,
+      "sha256": "773dda662883cbd43c5e4f193a6bb87fd12ba88a19f00359c6204faa938d0f40"
+    },
+    {
+      "path": "results/progress-math/retained-status/wasm_status_addons-chromium.log",
+      "bytes": 1052,
+      "sha256": "57ceb51165be69da314cee702949b0652ad01ff02830405328077f8aa1f396bd"
+    },
+    {
+      "path": "results/progress-math/retained-status/wasm_status_addons-firefox.log",
+      "bytes": 1052,
+      "sha256": "5ad2b807a27b19054b83675753a254a397f6a074d16aa37c81631cdd019f023b"
+    },
+    {
+      "path": "results/progress-math/retained-status/wasm_status_addons-results.json",
+      "bytes": 12283,
+      "sha256": "1bdd0d622cb2d79a3926406110e72362ef95e05b17d12ff7c37712e74e36c3d6"
+    },
+    {
+      "path": "results/progress-math/retained-status/wasm_status_addons-webkit.log",
+      "bytes": 1052,
+      "sha256": "7e420db10fe2b8699dd02964b0bdda1c8f393ee6105b7bb01aaac86deadb9712"
+    },
+    {
+      "path": "results/progress-math/runtime-manifest.json",
+      "bytes": 136753,
+      "sha256": "05e9fb5a857e16dda4e3b4bda747dd6e91756febd373ecd540490961ba5d8948"
+    },
+    {
+      "path": "results/progress-math/source-original.json",
+      "bytes": 3257,
+      "sha256": "a9a078e0796450d42ede1d03cc9e54c612f6fbd7f84c017f2d22f2e3f77e7c5b"
+    },
+    {
+      "path": "results/progress-math/source-physical-copy.json",
+      "bytes": 3257,
+      "sha256": "df882c62105211ab7cc4d952a2eb9175602d6727bc3c5f5ede1693d3eab47830"
+    },
+    {
+      "path": "results/progress-math/source.json",
+      "bytes": 3257,
+      "sha256": "df882c62105211ab7cc4d952a2eb9175602d6727bc3c5f5ede1693d3eab47830"
+    },
+    {
+      "path": "results/progress-math/wasm-clippy.log",
+      "bytes": 1675,
+      "sha256": "041fcf71113b6938e6795f182d5ffb544686fa1f7c2529bd5e0ad4e812db5334"
+    },
+    {
+      "path": "results/progress-math/wasm-no-run.log",
+      "bytes": 1749,
+      "sha256": "166e4ffd35d0956b4000cb45b126b6dc04ee8fca534bdc8fdcd5ded941ec69fa"
+    }
+  ]
+}
