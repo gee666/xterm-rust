@@ -5,9 +5,10 @@ import { failureText } from './quality-failure.mjs';
 export { startManagedProcess } from './quality-managed.mjs';
 export { stopProcessTree } from './quality-tree.mjs';
 import { performance } from 'node:perf_hooks';
+import { ownedCommand } from './owned-command.mjs';
 
 /** Run without a shell, retaining failures and bounding lifetime and disk growth. */
-export async function runCommand(command, args, { cwd, env, log, timeoutMs, resourceCheck, monitorMs = 1000, signal: abortSignal }) {
+export async function runCommand(command, args, { cwd, env, log, timeoutMs, resourceCheck, monitorMs = 1000, signal: abortSignal, containDescendants = false }) {
   const fd = openSync(log, 'w');
   const started = performance.now();
   if (abortSignal?.aborted) {
@@ -16,8 +17,9 @@ export async function runCommand(command, args, { cwd, env, log, timeoutMs, reso
       aborted: true, abortError: failureText(abortSignal.reason),
       timedOut: false, terminationError: null, resourceError: null, elapsedMs: 0, status: 'failed' };
   }
-  const child = spawn(command, args, {
-    cwd, env, windowsHide: true, detached: process.platform !== 'win32',
+  const launch = ownedCommand(command, args, { cwd, env, containDescendants });
+  const child = spawn(launch.command, launch.args, {
+    cwd, env: launch.env, windowsHide: true, detached: process.platform !== 'win32',
     stdio: ['ignore', fd, fd]
   });
   let error = null;

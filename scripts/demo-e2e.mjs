@@ -43,7 +43,9 @@ async function resources() {
 }
 try {
   report.source = await sourceIdentity(root);
-  const fixtureFiles = ['scripts/demo-e2e.mjs', 'scripts/serve-demo.mjs', 'scripts/demo-e2e/support.cjs',
+  const fixtureFiles = ['scripts/demo-e2e.mjs', 'scripts/serve-demo.mjs', 'scripts/quality-process.mjs',
+    'scripts/quality-tree.mjs', 'scripts/owned-command.mjs', 'scripts/windows-owned-job.ps1',
+    'scripts/windows-owned-job.cs', 'scripts/demo-e2e/support.cjs',
     'scripts/demo-e2e/addon-probes.cjs', `scripts/demo-e2e/${options.case}.spec.cjs`,
     'browser/demo/index.html', 'browser/demo/app.mjs', 'browser/demo/controls.mjs', 'browser/demo/addons.mjs',
     'browser/demo/themes.mjs', 'browser/demo/demo.css'];
@@ -78,7 +80,7 @@ module.exports = { ...original, testDir: ${JSON.stringify(join(root, 'scripts/de
   report.command = [process.execPath, ...command];
   const result = await runCommand(process.execPath, command, { cwd: root,
     env: { ...env, PLAYWRIGHT_JSON_OUTPUT_FILE: rawFile }, log: join(output, 'playwright.log'),
-    timeoutMs: options.timeout, resourceCheck: resources, signal: controller.signal });
+    timeoutMs: options.timeout, resourceCheck: resources, signal: controller.signal, containDescendants: true });
   report.commands.push({ stage: 'playwright', ...result, log: 'playwright.log' });
   const raw = JSON.parse(await readFile(rawFile, 'utf8'));
   report.counts = testCounts(raw); report.errors = raw.errors ?? []; report.stats = raw.stats;

@@ -53,7 +53,9 @@ process.once('SIGINT', interrupt); process.once('SIGTERM', interrupt);
 try {
   report.source = await sourceIdentity(root);
   report.reference = await artifactIdentity(reference, ['demo/test.html', configuration]);
-  const fixtureFiles = ['scripts/e2e-upstream.mjs', 'scripts/e2e/fixture-server.mjs', 'scripts/e2e/test-page.mjs',
+  const fixtureFiles = ['scripts/e2e-upstream.mjs', 'scripts/quality-process.mjs', 'scripts/quality-tree.mjs',
+    'scripts/owned-command.mjs', 'scripts/windows-owned-job.ps1', 'scripts/windows-owned-job.cs',
+    'scripts/e2e/fixture-server.mjs', 'scripts/e2e/test-page.mjs',
     'scripts/e2e/build-bootstrap.mjs', 'scripts/e2e/upstream-config.mjs', 'crates/xterm-web/assets/xterm.css'];
   report.fixture = await artifactIdentity(root, fixtureFiles);
   if (!options.list && options.build) {
@@ -81,7 +83,8 @@ try {
   report.command = [process.execPath, ...command];
   const result = await runCommand(process.execPath, command, { cwd: reference,
     env: { ...environment, CI: '1', FORCE_COLOR: '0', PLAYWRIGHT_JSON_OUTPUT_FILE: rawFile },
-    log: join(output, 'playwright.log'), timeoutMs: options.timeout, resourceCheck: diskCheck, signal: controller.signal });
+    log: join(output, 'playwright.log'), timeoutMs: options.timeout, resourceCheck: diskCheck, signal: controller.signal,
+    containDescendants: true });
   report.commands.push({ stage: 'playwright', ...result, log: 'playwright.log' });
   const raw = JSON.parse(await readFile(rawFile, 'utf8'));
   report.counts = testCounts(raw);
