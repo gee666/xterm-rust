@@ -10,4 +10,6 @@ Owned temporary root is `O:/xterm-rust-swarm-16/tmp/worktrees/ParkerPrint579`, s
 
 Task 579 is accepted without findings. The independent reviewer verified 18 input hashes, 16 receipt hashes, six cached executable hashes, 51 source dependency hashes and all 776 reference entries, then ran the six cached executables. All 21 integration and five print unit tests passed. No compiler or source bundle was launched in review.
 
-Cleanup is pending. Preserve the branch and evidence before removing only this owned worktree. Inspect all paths, reparse points and live workers, use normal git removal, then verify the original 776 reference hashes and absence/unregistration. A later receipt must record actual removal. Do not replay cleanup from this preparation note.
+## Cleanup completed
+
+Normal git worktree removal returned exit 0. The owned O: root is absent and unregistered. Preflight found 4,645 regular files and 429 directories, zero links, redirects or live workers. All 18 input, 16 receipt and six executable pins passed before removal. All 776 original reference hashes passed afterward. See `results/print-negative-target579/cleanup.json`. Cached executable paths are now historical. No jobs, grants, services, browsers or owned temporary paths remain. No main or other-owner refs were changed. Preserve this archive and do not replay cleanup.
