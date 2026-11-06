@@ -1,0 +1,99 @@
+[swarm/Mackenzie554 3396ef79] Retain live image constructor contexts after raw pixel reactivation
+ Date: Thu Nov 5 18:35:18 2026 -0700
+ 7 files changed, 161 insertions(+), 25 deletions(-)
+ create mode 100644 crates/xterm-web/tests/image_addon_support/raw_pixel_reactivation.rs
+[swarm/Mackenzie554 d31331c1] Retain three-engine raw pixel matrices controls and immutable proof
+ Date: Thu Nov 5 18:49:49 2026 -0700
+ 82 files changed, 210897 insertions(+), 165 deletions(-)
+ create mode 100644 docs/handoffs/bryan539.md
+ create mode 100644 results/image-pixel-limit/checkpoint-clippy-native.log
+ create mode 100644 results/image-pixel-limit/checkpoint-clippy-wasm.log
+ create mode 100644 results/image-pixel-limit/checkpoint-input-pins.json
+ create mode 100644 results/image-pixel-limit/checkpoint-native-addons.log
+ create mode 100644 results/image-pixel-limit/checkpoint-native-commands.json
+ create mode 100644 results/image-pixel-limit/checkpoint-native-phases.log
+ create mode 100644 results/image-pixel-limit/context-control-bindgen-version.log
+ create mode 100644 results/image-pixel-limit/context-control-browser.json
+ create mode 100644 results/image-pixel-limit/context-control-build.log
+ create mode 100644 results/image-pixel-limit/context-control-comparators.ts
+ create mode 100644 results/image-pixel-limit/context-control-restore.json
+ create mode 100644 results/image-pixel-limit/context-control-source-renderer.js
+ create mode 100644 results/image-pixel-limit/context-control-verification.json
+ create mode 100644 results/image-pixel-limit/context-control.log
+ create mode 100644 results/image-pixel-limit/control-bindgen-version.log
+ create mode 100644 results/image-pixel-limit/control-browser.json
+ create mode 100644 results/image-pixel-limit/control-build.log
+ create mode 100644 results/image-pixel-limit/control-comparators.ts
+ create mode 100644 results/image-pixel-limit/control-restore.json
+ create mode 100644 results/image-pixel-limit/control-source-renderer.js
+ create mode 100644 results/image-pixel-limit/control-verification.json
+ create mode 100644 results/image-pixel-limit/control.log
+ create mode 100644 results/image-pixel-limit/final-bindgen-version.log
+ create mode 100644 results/image-pixel-limit/final-browser.json
+ create mode 100644 results/image-pixel-limit/final-build.log
+ create mode 100644 results/image-pixel-limit/final-commands.json
+ create mode 100644 results/image-pixel-limit/final-comparators.ts
+ create mode 100644 results/image-pixel-limit/final-producers-clippy.log
+ create mode 100644 results/image-pixel-limit/final-source-renderer.js
+ create mode 100644 results/image-pixel-limit/final-verification.json
+ create mode 100644 results/image-pixel-limit/final.log
+ create mode 100644 results/image-pixel-limit/gate-summary.json
+ create mode 100644 results/image-pixel-limit/generated-restoration.json
+ create mode 100644 results/image-pixel-limit/identity-audit.json
+ create mode 100644 results/image-pixel-limit/iip-bindgen-version.log
+ create mode 100644 results/image-pixel-limit/iip-browser.json
+ create mode 100644 results/image-pixel-limit/iip-build.log
+ create mode 100644 results/image-pixel-limit/iip-commands.json
+ create mode 100644 results/image-pixel-limit/iip-comparators.ts
+ create mode 100644 results/image-pixel-limit/iip-source-renderer.js
+ create mode 100644 results/image-pixel-limit/iip-verification.json
+ create mode 100644 results/image-pixel-limit/iip.log
+ create mode 100644 results/image-pixel-limit/image-addon-source-inputs.json
+ create mode 100644 results/image-pixel-limit/image-iip-terminal-source-inputs.json
+ create mode 100644 results/image-pixel-limit/image-kitty-terminal-source-inputs.json
+ create mode 100644 results/image-pixel-limit/image-sixel-terminal-source-inputs.json
+ create mode 100644 results/image-pixel-limit/initial-bindgen-version.log
+ create mode 100644 results/image-pixel-limit/initial-browser.json
+ create mode 100644 results/image-pixel-limit/initial-build.log
+ create mode 100644 results/image-pixel-limit/initial-commands.json
+ create mode 100644 results/image-pixel-limit/initial-comparators.ts
+ create mode 100644 results/image-pixel-limit/initial-input-pins.json
+ create mode 100644 results/image-pixel-limit/initial-source-renderer.js
+ create mode 100644 results/image-pixel-limit/initial-verification.json
+ create mode 100644 results/image-pixel-limit/initial.log
+ create mode 100644 results/image-pixel-limit/input-pins.json
+ create mode 100644 results/image-pixel-limit/kitty-bindgen-version.log
+ create mode 100644 results/image-pixel-limit/kitty-browser.json
+ create mode 100644 results/image-pixel-limit/kitty-build.log
+ create mode 100644 results/image-pixel-limit/kitty-commands.json
+ create mode 100644 results/image-pixel-limit/kitty-comparators.ts
+ create mode 100644 results/image-pixel-limit/kitty-source-renderer.js
+ create mode 100644 results/image-pixel-limit/kitty-verification.json
+ create mode 100644 results/image-pixel-limit/kitty.log
+ create mode 100644 results/image-pixel-limit/retained-input-records.json
+ create mode 100644 results/image-pixel-limit/sixel-bindgen-version.log
+ create mode 100644 results/image-pixel-limit/sixel-browser.json
+ create mode 100644 results/image-pixel-limit/sixel-build.log
+ create mode 100644 results/image-pixel-limit/sixel-commands.json
+ create mode 100644 results/image-pixel-limit/sixel-comparators.ts
+ create mode 100644 results/image-pixel-limit/sixel-source-renderer.js
+ create mode 100644 results/image-pixel-limit/sixel-verification.json
+ create mode 100644 results/image-pixel-limit/sixel.log
+[swarm/Mackenzie554 04ab4a83] Record independent pixel review and owned cleanup preflight
+ Date: Thu Nov 5 18:56:57 2026 -0700
+ 4 files changed, 2417 insertions(+), 2 deletions(-)
+ create mode 100644 results/image-pixel-limit/cleanup-preflight.json
+ create mode 100644 results/image-pixel-limit/review.json
+[swarm/Mackenzie554 d9e65670] Confirm owned pixel cleanup and post-removal reference integrity
+ Date: Thu Nov 5 19:00:19 2026 -0700
+ 3 files changed, 38 insertions(+), 2 deletions(-)
+ create mode 100644 results/image-pixel-limit/cleanup-complete.json
+Auto-merging crates/xterm-web/src/webgl/mod.rs
+CONFLICT (content): Merge conflict in crates/xterm-web/src/webgl/mod.rs
+error: could not apply 821d6050... Port actual WebGL canvas context and lifecycle with scoped browser proof
+hint: After resolving the conflicts, mark them with
+hint: "git add/rm <pathspec>", then run
+hint: "git cherry-pick --continue".
+hint: You can instead skip this commit with "git cherry-pick --skip".
+hint: To abort and get back to the state before "git cherry-pick",
+hint: run "git cherry-pick --abort".

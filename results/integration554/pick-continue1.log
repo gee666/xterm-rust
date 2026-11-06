@@ -1,0 +1,86 @@
+[swarm/Mackenzie554 10335c4e] Preserve missing GSUB noncontext coverage through referenced substitutions
+ Date: Thu Nov 5 17:39:58 2026 -0700
+ 28 files changed, 955 insertions(+), 10 deletions(-)
+ create mode 100644 crates/xterm-addons/tests/fixtures/font-gsub-noncontext.json
+ create mode 100644 crates/xterm-addons/tests/font_gsub_noncontext.rs
+ create mode 100644 crates/xterm-font-addons/tests/fixtures/font-gsub-noncontext-addon.json
+ create mode 100644 crates/xterm-font-addons/tests/font_gsub_noncontext_browser.rs
+ create mode 100644 docs/font-gsub-noncontext.md
+ create mode 100644 results/font-gsub-noncontext/fmt-xterm-addons.log
+ create mode 100644 results/font-gsub-noncontext/fmt-xterm-core.log
+ create mode 100644 results/font-gsub-noncontext/fmt-xterm-font-addons.log
+ create mode 100644 results/font-gsub-noncontext/fmt-xterm-wasm-support.log
+ create mode 100644 results/font-gsub-noncontext/fmt-xterm-web.log
+ create mode 100644 results/font-gsub-noncontext/fmt.log
+ create mode 100644 results/font-gsub-noncontext/native-after.log
+ create mode 100644 results/font-gsub-noncontext/native-before.log
+ create mode 100644 results/font-gsub-noncontext/native-clippy.log
+ create mode 100644 results/font-gsub-noncontext/oracle-replay.log
+ create mode 100644 results/font-gsub-noncontext/oracle.json
+ create mode 100644 results/font-gsub-noncontext/proof-counts.json
+ create mode 100644 results/font-gsub-noncontext/reference-integrity.json
+ create mode 100644 results/font-gsub-noncontext/wasm-clippy.log
+ create mode 100644 results/font-gsub-noncontext/wasm-dependents.log
+ create mode 100644 results/font-gsub-noncontext/wholepackages-fmt.log
+ create mode 100644 results/font-gsub-noncontext/workspace-fmt.log
+ create mode 100644 scripts/font-gsub-noncontext-recipes.mjs
+[swarm/Mackenzie554 6bb444a5] Document compiler TMP routing finding and explicit O volume setup
+ Date: Thu Nov 5 17:42:05 2026 -0700
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+[swarm/Mackenzie554 874be604] Verify final native GSUB corpus and pin prepared WASM artifacts
+ Date: Thu Nov 5 18:00:14 2026 -0700
+ 11 files changed, 747 insertions(+), 1 deletion(-)
+ create mode 100644 results/font-gsub-noncontext/native-final-all.log
+ create mode 100644 results/font-gsub-noncontext/native-final-clippy.log
+ create mode 100644 results/font-gsub-noncontext/native-final-counts.json
+ create mode 100644 results/font-gsub-noncontext/native-final-focused.log
+ create mode 100644 results/font-gsub-noncontext/prewarm-artifacts.json
+ create mode 100644 results/font-gsub-noncontext/producer-pins.json
+ create mode 100644 results/font-gsub-noncontext/raw-final-diff-check.log
+ create mode 100644 results/font-gsub-noncontext/wasm-final-build.log
+ create mode 100644 results/font-gsub-noncontext/wasm-final-clippy.log
+ create mode 100644 results/font-gsub-noncontext/wasm-prewarm-bindgen.log
+[swarm/Mackenzie554 55900a55] Retain three-engine Rust and source GSUB noncontext proof
+ Date: Thu Nov 5 18:22:19 2026 -0700
+ 17 files changed, 598 insertions(+), 2 deletions(-)
+ create mode 100644 results/font-gsub-noncontext/browser-raw-diff-check.log
+ create mode 100644 results/font-gsub-noncontext/browser/commands.json
+ create mode 100644 results/font-gsub-noncontext/browser/font_gsub_noncontext_browser-bindgen-version.log
+ create mode 100644 results/font-gsub-noncontext/browser/font_gsub_noncontext_browser-bindgen.log
+ create mode 100644 results/font-gsub-noncontext/browser/font_gsub_noncontext_browser-build.log
+ create mode 100644 results/font-gsub-noncontext/browser/font_gsub_noncontext_browser-chromium.log
+ create mode 100644 results/font-gsub-noncontext/browser/font_gsub_noncontext_browser-firefox.log
+ create mode 100644 results/font-gsub-noncontext/browser/font_gsub_noncontext_browser-results.json
+ create mode 100644 results/font-gsub-noncontext/browser/font_gsub_noncontext_browser-webkit.log
+ create mode 100644 results/font-gsub-noncontext/proof-check.json
+ create mode 100644 results/font-gsub-noncontext/runtime-pins.json
+ create mode 100644 results/font-gsub-noncontext/rust-browser-command.json
+ create mode 100644 results/font-gsub-noncontext/rust-browser-runner.log
+ create mode 100644 results/font-gsub-noncontext/source-browser-command.json
+ create mode 100644 results/font-gsub-noncontext/source-browser-runner.log
+ create mode 100644 results/font-gsub-noncontext/source-browser.json
+[swarm/Mackenzie554 da189be4] Record accepted GSUB null coverage review and integration handoff
+ Date: Thu Nov 5 18:26:19 2026 -0700
+ 3 files changed, 49 insertions(+), 1 deletion(-)
+ create mode 100644 docs/handoffs/evelyn538.md
+ create mode 100644 results/font-gsub-noncontext/review.json
+Auto-merging crates/xterm-web/src/image/addon.rs
+CONFLICT (content): Merge conflict in crates/xterm-web/src/image/addon.rs
+Auto-merging crates/xterm-web/src/image/addon/bindings.rs
+CONFLICT (content): Merge conflict in crates/xterm-web/src/image/addon/bindings.rs
+Auto-merging crates/xterm-web/src/image/addon/controls.rs
+CONFLICT (content): Merge conflict in crates/xterm-web/src/image/addon/controls.rs
+Auto-merging crates/xterm-web/src/image/addon/option_inspection.rs
+CONFLICT (content): Merge conflict in crates/xterm-web/src/image/addon/option_inspection.rs
+Auto-merging crates/xterm-web/src/image/addon/options.rs
+Auto-merging crates/xterm-web/src/image/addon/protocols.rs
+CONFLICT (content): Merge conflict in crates/xterm-web/src/image/addon/protocols.rs
+Auto-merging crates/xterm-web/tests/image_addon_browser.rs
+CONFLICT (content): Merge conflict in crates/xterm-web/tests/image_addon_browser.rs
+error: could not apply 5bfbb229... Evaluate raw image pixel limits at protocol consumption phases
+hint: After resolving the conflicts, mark them with
+hint: "git add/rm <pathspec>", then run
+hint: "git cherry-pick --continue".
+hint: You can instead skip this commit with "git cherry-pick --skip".
+hint: To abort and get back to the state before "git cherry-pick",
+hint: run "git cherry-pick --abort".

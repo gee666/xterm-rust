@@ -1,0 +1,301 @@
+[swarm/Mackenzie554 275f31d0] Stage public decoration API with live native property reads and lifecycle bindings
+ Date: Thu Nov 5 17:48:13 2026 -0700
+ 43 files changed, 1573 insertions(+), 192 deletions(-)
+ create mode 100644 crates/xterm-core/src/decoration_properties.rs
+ create mode 100644 crates/xterm-core/tests/decoration_properties.rs
+ create mode 100644 crates/xterm-web/src/terminal/decoration_api.rs
+ create mode 100644 crates/xterm-web/src/terminal/decoration_bridge.js
+ create mode 100644 crates/xterm-web/tests/wasm_public_decoration.rs
+ create mode 100644 docs/public-decoration.md
+ create mode 100644 results/public-decoration/development/compile4413-env.json
+ create mode 100644 results/public-decoration/development/core-first.log
+ create mode 100644 results/public-decoration/development/core-format.log
+ create mode 100644 results/public-decoration/development/core-host-first.log
+ create mode 100644 results/public-decoration/development/core-second.log
+ create mode 100644 results/public-decoration/development/format-before.log
+ create mode 100644 results/public-decoration/development/native-first-clippy.log
+ create mode 100644 results/public-decoration/development/native-second-clippy.log
+ create mode 100644 results/public-decoration/development/public-first-build.log
+ create mode 100644 results/public-decoration/development/wasm-first-clippy.log
+ create mode 100644 results/public-decoration/development/wasm-first.log
+ create mode 100644 results/public-decoration/development/wasm-second-clippy.log
+ create mode 100644 results/public-decoration/development/web-first.log
+ create mode 100644 results/public-decoration/development/web-format.log
+ create mode 100644 scripts/public-decoration-source.mjs
+ create mode 100644 scripts/public-decoration-trace.js
+[swarm/Mackenzie554 306861bd] Initialize host handles before fallible decoration cache registration
+ Date: Thu Nov 5 17:53:28 2026 -0700
+ 4 files changed, 1159 insertions(+), 16 deletions(-)
+ create mode 100644 results/public-decoration/dependency-copy.json
+[swarm/Mackenzie554 85c1f10c] Prove public decoration behavior against original browsers and old production control
+ Date: Thu Nov 5 18:30:13 2026 -0700
+ 5 files changed, 234 insertions(+), 23 deletions(-)
+ create mode 100644 crates/xterm-web/tests/fixtures/public-decoration.json
+ create mode 100644 scripts/public-decoration-control.mjs
+[swarm/Mackenzie554 2cb32c76] Retain scoped public decoration browser original-suite and native quality evidence
+ Date: Thu Nov 5 18:33:18 2026 -0700
+ 136 files changed, 30634 insertions(+)
+ create mode 100644 results/browser-host/overview_ruler_browser-results.json
+ create mode 100644 results/browser-host/overview_ruler_browser/2026-11-06T01-03-28-770Z-12203a9b-efad-4395-ab2a-0186c37d0bd7/commands.json
+ create mode 100644 results/browser-host/overview_ruler_browser/2026-11-06T01-03-28-770Z-12203a9b-efad-4395-ab2a-0186c37d0bd7/overview_ruler_browser-bindgen-version.log
+ create mode 100644 results/browser-host/overview_ruler_browser/2026-11-06T01-03-28-770Z-12203a9b-efad-4395-ab2a-0186c37d0bd7/overview_ruler_browser-bindgen.log
+ create mode 100644 results/browser-host/overview_ruler_browser/2026-11-06T01-03-28-770Z-12203a9b-efad-4395-ab2a-0186c37d0bd7/overview_ruler_browser-build.log
+ create mode 100644 results/browser-host/overview_ruler_browser/2026-11-06T01-03-28-770Z-12203a9b-efad-4395-ab2a-0186c37d0bd7/overview_ruler_browser-chromium.log
+ create mode 100644 results/browser-host/overview_ruler_browser/2026-11-06T01-03-28-770Z-12203a9b-efad-4395-ab2a-0186c37d0bd7/overview_ruler_browser-firefox.log
+ create mode 100644 results/browser-host/overview_ruler_browser/2026-11-06T01-03-28-770Z-12203a9b-efad-4395-ab2a-0186c37d0bd7/overview_ruler_browser-results.json
+ create mode 100644 results/browser-host/overview_ruler_browser/2026-11-06T01-03-28-770Z-12203a9b-efad-4395-ab2a-0186c37d0bd7/overview_ruler_browser-webkit.log
+ create mode 100644 results/browser-host/overview_terminal_browser-results.json
+ create mode 100644 results/browser-host/overview_terminal_browser/2026-11-06T01-03-39-042Z-0afe8fda-71bf-4cc7-80c0-9c1713c133e4/commands.json
+ create mode 100644 results/browser-host/overview_terminal_browser/2026-11-06T01-03-39-042Z-0afe8fda-71bf-4cc7-80c0-9c1713c133e4/overview_terminal_browser-bindgen-version.log
+ create mode 100644 results/browser-host/overview_terminal_browser/2026-11-06T01-03-39-042Z-0afe8fda-71bf-4cc7-80c0-9c1713c133e4/overview_terminal_browser-bindgen.log
+ create mode 100644 results/browser-host/overview_terminal_browser/2026-11-06T01-03-39-042Z-0afe8fda-71bf-4cc7-80c0-9c1713c133e4/overview_terminal_browser-build.log
+ create mode 100644 results/browser-host/overview_terminal_browser/2026-11-06T01-03-39-042Z-0afe8fda-71bf-4cc7-80c0-9c1713c133e4/overview_terminal_browser-chromium.log
+ create mode 100644 results/browser-host/overview_terminal_browser/2026-11-06T01-03-39-042Z-0afe8fda-71bf-4cc7-80c0-9c1713c133e4/overview_terminal_browser-firefox.log
+ create mode 100644 results/browser-host/overview_terminal_browser/2026-11-06T01-03-39-042Z-0afe8fda-71bf-4cc7-80c0-9c1713c133e4/overview_terminal_browser-results.json
+ create mode 100644 results/browser-host/overview_terminal_browser/2026-11-06T01-03-39-042Z-0afe8fda-71bf-4cc7-80c0-9c1713c133e4/overview_terminal_browser-webkit.log
+ create mode 100644 results/browser-host/row_factory_browser-results.json
+ create mode 100644 results/browser-host/row_factory_browser/2026-11-06T01-03-50-172Z-0e1de7d9-04dc-4ab3-92c3-7b9535bf9768/commands.json
+ create mode 100644 results/browser-host/row_factory_browser/2026-11-06T01-03-50-172Z-0e1de7d9-04dc-4ab3-92c3-7b9535bf9768/row_factory_browser-bindgen-version.log
+ create mode 100644 results/browser-host/row_factory_browser/2026-11-06T01-03-50-172Z-0e1de7d9-04dc-4ab3-92c3-7b9535bf9768/row_factory_browser-bindgen.log
+ create mode 100644 results/browser-host/row_factory_browser/2026-11-06T01-03-50-172Z-0e1de7d9-04dc-4ab3-92c3-7b9535bf9768/row_factory_browser-build.log
+ create mode 100644 results/browser-host/row_factory_browser/2026-11-06T01-03-50-172Z-0e1de7d9-04dc-4ab3-92c3-7b9535bf9768/row_factory_browser-chromium.log
+ create mode 100644 results/browser-host/row_factory_browser/2026-11-06T01-03-50-172Z-0e1de7d9-04dc-4ab3-92c3-7b9535bf9768/row_factory_browser-firefox.log
+ create mode 100644 results/browser-host/row_factory_browser/2026-11-06T01-03-50-172Z-0e1de7d9-04dc-4ab3-92c3-7b9535bf9768/row_factory_browser-results.json
+ create mode 100644 results/browser-host/row_factory_browser/2026-11-06T01-03-50-172Z-0e1de7d9-04dc-4ab3-92c3-7b9535bf9768/row_factory_browser-webkit.log
+ create mode 100644 results/browser-host/wasm_buffer_decoration-results.json
+ create mode 100644 results/browser-host/wasm_buffer_decoration/2026-11-06T01-02-54-816Z-8514b3e3-6e4e-4d34-bf31-9ad6a0c720ad/commands.json
+ create mode 100644 results/browser-host/wasm_buffer_decoration/2026-11-06T01-02-54-816Z-8514b3e3-6e4e-4d34-bf31-9ad6a0c720ad/wasm_buffer_decoration-bindgen-version.log
+ create mode 100644 results/browser-host/wasm_buffer_decoration/2026-11-06T01-02-54-816Z-8514b3e3-6e4e-4d34-bf31-9ad6a0c720ad/wasm_buffer_decoration-bindgen.log
+ create mode 100644 results/browser-host/wasm_buffer_decoration/2026-11-06T01-02-54-816Z-8514b3e3-6e4e-4d34-bf31-9ad6a0c720ad/wasm_buffer_decoration-build.log
+ create mode 100644 results/browser-host/wasm_buffer_decoration/2026-11-06T01-02-54-816Z-8514b3e3-6e4e-4d34-bf31-9ad6a0c720ad/wasm_buffer_decoration-chromium.log
+ create mode 100644 results/browser-host/wasm_buffer_decoration/2026-11-06T01-02-54-816Z-8514b3e3-6e4e-4d34-bf31-9ad6a0c720ad/wasm_buffer_decoration-firefox.log
+ create mode 100644 results/browser-host/wasm_buffer_decoration/2026-11-06T01-02-54-816Z-8514b3e3-6e4e-4d34-bf31-9ad6a0c720ad/wasm_buffer_decoration-results.json
+ create mode 100644 results/browser-host/wasm_buffer_decoration/2026-11-06T01-02-54-816Z-8514b3e3-6e4e-4d34-bf31-9ad6a0c720ad/wasm_buffer_decoration-webkit.log
+ create mode 100644 results/browser-host/wasm_public_decoration-results.json
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T00-57-28-872Z-59de48dd-6fb3-4a00-b61c-6aacd7ddfee3/commands.json
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T00-57-28-872Z-59de48dd-6fb3-4a00-b61c-6aacd7ddfee3/wasm_public_decoration-bindgen-version.log
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T00-57-28-872Z-59de48dd-6fb3-4a00-b61c-6aacd7ddfee3/wasm_public_decoration-bindgen.log
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T00-57-28-872Z-59de48dd-6fb3-4a00-b61c-6aacd7ddfee3/wasm_public_decoration-build.log
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T00-57-28-872Z-59de48dd-6fb3-4a00-b61c-6aacd7ddfee3/wasm_public_decoration-chromium.log
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T00-57-28-872Z-59de48dd-6fb3-4a00-b61c-6aacd7ddfee3/wasm_public_decoration-firefox.log
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T00-57-28-872Z-59de48dd-6fb3-4a00-b61c-6aacd7ddfee3/wasm_public_decoration-results.json
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T00-57-28-872Z-59de48dd-6fb3-4a00-b61c-6aacd7ddfee3/wasm_public_decoration-webkit.log
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T01-00-00-893Z-3c77b1cc-7f43-444a-8441-8fc1676bc77b/commands.json
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T01-00-00-893Z-3c77b1cc-7f43-444a-8441-8fc1676bc77b/wasm_public_decoration-bindgen-version.log
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T01-00-00-893Z-3c77b1cc-7f43-444a-8441-8fc1676bc77b/wasm_public_decoration-bindgen.log
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T01-00-00-893Z-3c77b1cc-7f43-444a-8441-8fc1676bc77b/wasm_public_decoration-build.log
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T01-00-00-893Z-3c77b1cc-7f43-444a-8441-8fc1676bc77b/wasm_public_decoration-chromium.log
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T01-00-00-893Z-3c77b1cc-7f43-444a-8441-8fc1676bc77b/wasm_public_decoration-results.json
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T01-01-27-735Z-87673dbe-0ce9-4756-8efb-9f1fc7981290/commands.json
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T01-01-27-735Z-87673dbe-0ce9-4756-8efb-9f1fc7981290/wasm_public_decoration-bindgen-version.log
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T01-01-27-735Z-87673dbe-0ce9-4756-8efb-9f1fc7981290/wasm_public_decoration-bindgen.log
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T01-01-27-735Z-87673dbe-0ce9-4756-8efb-9f1fc7981290/wasm_public_decoration-build.log
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T01-01-27-735Z-87673dbe-0ce9-4756-8efb-9f1fc7981290/wasm_public_decoration-chromium.log
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T01-01-27-735Z-87673dbe-0ce9-4756-8efb-9f1fc7981290/wasm_public_decoration-firefox.log
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T01-01-27-735Z-87673dbe-0ce9-4756-8efb-9f1fc7981290/wasm_public_decoration-results.json
+ create mode 100644 results/browser-host/wasm_public_decoration/2026-11-06T01-01-27-735Z-87673dbe-0ce9-4756-8efb-9f1fc7981290/wasm_public_decoration-webkit.log
+ create mode 100644 results/browser-host/wasm_terminal_decoration-results.json
+ create mode 100644 results/browser-host/wasm_terminal_decoration/2026-11-06T01-03-06-560Z-c1ae1369-3d9a-4046-9e13-c499b6b4563d/commands.json
+ create mode 100644 results/browser-host/wasm_terminal_decoration/2026-11-06T01-03-06-560Z-c1ae1369-3d9a-4046-9e13-c499b6b4563d/wasm_terminal_decoration-bindgen-version.log
+ create mode 100644 results/browser-host/wasm_terminal_decoration/2026-11-06T01-03-06-560Z-c1ae1369-3d9a-4046-9e13-c499b6b4563d/wasm_terminal_decoration-bindgen.log
+ create mode 100644 results/browser-host/wasm_terminal_decoration/2026-11-06T01-03-06-560Z-c1ae1369-3d9a-4046-9e13-c499b6b4563d/wasm_terminal_decoration-build.log
+ create mode 100644 results/browser-host/wasm_terminal_decoration/2026-11-06T01-03-06-560Z-c1ae1369-3d9a-4046-9e13-c499b6b4563d/wasm_terminal_decoration-chromium.log
+ create mode 100644 results/browser-host/wasm_terminal_decoration/2026-11-06T01-03-06-560Z-c1ae1369-3d9a-4046-9e13-c499b6b4563d/wasm_terminal_decoration-firefox.log
+ create mode 100644 results/browser-host/wasm_terminal_decoration/2026-11-06T01-03-06-560Z-c1ae1369-3d9a-4046-9e13-c499b6b4563d/wasm_terminal_decoration-results.json
+ create mode 100644 results/browser-host/wasm_terminal_decoration/2026-11-06T01-03-06-560Z-c1ae1369-3d9a-4046-9e13-c499b6b4563d/wasm_terminal_decoration-webkit.log
+ create mode 100644 results/browser-host/wasm_terminal_markers-results.json
+ create mode 100644 results/browser-host/wasm_terminal_markers/2026-11-06T01-03-18-229Z-34b61625-5bb2-426c-aa63-9323708a82ec/commands.json
+ create mode 100644 results/browser-host/wasm_terminal_markers/2026-11-06T01-03-18-229Z-34b61625-5bb2-426c-aa63-9323708a82ec/wasm_terminal_markers-bindgen-version.log
+ create mode 100644 results/browser-host/wasm_terminal_markers/2026-11-06T01-03-18-229Z-34b61625-5bb2-426c-aa63-9323708a82ec/wasm_terminal_markers-bindgen.log
+ create mode 100644 results/browser-host/wasm_terminal_markers/2026-11-06T01-03-18-229Z-34b61625-5bb2-426c-aa63-9323708a82ec/wasm_terminal_markers-build.log
+ create mode 100644 results/browser-host/wasm_terminal_markers/2026-11-06T01-03-18-229Z-34b61625-5bb2-426c-aa63-9323708a82ec/wasm_terminal_markers-chromium.log
+ create mode 100644 results/browser-host/wasm_terminal_markers/2026-11-06T01-03-18-229Z-34b61625-5bb2-426c-aa63-9323708a82ec/wasm_terminal_markers-firefox.log
+ create mode 100644 results/browser-host/wasm_terminal_markers/2026-11-06T01-03-18-229Z-34b61625-5bb2-426c-aa63-9323708a82ec/wasm_terminal_markers-results.json
+ create mode 100644 results/browser-host/wasm_terminal_markers/2026-11-06T01-03-18-229Z-34b61625-5bb2-426c-aa63-9323708a82ec/wasm_terminal_markers-webkit.log
+ create mode 100644 results/demos/build/2026-11-06T01-05-12-184Z/bindgen-version.log
+ create mode 100644 results/demos/build/2026-11-06T01-05-12-184Z/bindgen.log
+ create mode 100644 results/demos/build/2026-11-06T01-05-12-184Z/cargo-version.log
+ create mode 100644 results/demos/build/2026-11-06T01-05-12-184Z/debug-wasm.log
+ create mode 100644 results/demos/build/2026-11-06T01-05-12-184Z/report.json
+ create mode 100644 results/demos/build/2026-11-06T01-05-12-184Z/rustc-version.log
+ create mode 100644 results/e2e/upstream/2026-11-06T01-05-14-810Z-86ca4fe2-1418-434c-a0aa-69a92fd72d95/playwright.json
+ create mode 100644 results/e2e/upstream/2026-11-06T01-05-14-810Z-86ca4fe2-1418-434c-a0aa-69a92fd72d95/playwright.log
+ create mode 100644 results/e2e/upstream/2026-11-06T01-05-14-810Z-86ca4fe2-1418-434c-a0aa-69a92fd72d95/summary.json
+ create mode 100644 results/e2e/upstream/2026-11-06T01-05-48-537Z-6f3b266b-e85b-487e-8a35-718079efa2e8/playwright.json
+ create mode 100644 results/e2e/upstream/2026-11-06T01-05-48-537Z-6f3b266b-e85b-487e-8a35-718079efa2e8/playwright.log
+ create mode 100644 results/e2e/upstream/2026-11-06T01-05-48-537Z-6f3b266b-e85b-487e-8a35-718079efa2e8/summary.json
+ create mode 100644 results/public-decoration/control/control.json
+ create mode 100644 results/public-decoration/control/final.json
+ create mode 100644 results/public-decoration/control/final.log
+ create mode 100644 results/public-decoration/control/negative.json
+ create mode 100644 results/public-decoration/control/negative.log
+ create mode 100644 results/public-decoration/dependency-copy-png.json
+ create mode 100644 results/public-decoration/development/control-first-driver.log
+ create mode 100644 results/public-decoration/development/control-first-driver.mjs
+ create mode 100644 results/public-decoration/development/control-first.json
+ create mode 100644 results/public-decoration/development/source-first-trace.js
+ create mode 100644 results/public-decoration/development/source-first.json
+ create mode 100644 results/public-decoration/development/source-geometry-diagnostic-trace.js
+ create mode 100644 results/public-decoration/development/source-geometry-diagnostic.json
+ create mode 100644 results/public-decoration/generated-native/buffer-rust-failures.txt
+ create mode 100644 results/public-decoration/generated-native/buffer-rust-summary.json
+ create mode 100644 results/public-decoration/generated-native/serialize-html-differential.tsv
+ create mode 100644 results/public-decoration/index.json
+ create mode 100644 results/public-decoration/logs/control-resume.log
+ create mode 100644 results/public-decoration/logs/format-xterm-addons-final.log
+ create mode 100644 results/public-decoration/logs/format-xterm-core-final.log
+ create mode 100644 results/public-decoration/logs/format-xterm-font-addons-final.log
+ create mode 100644 results/public-decoration/logs/format-xterm-wasm-support-final.log
+ create mode 100644 results/public-decoration/logs/format-xterm-web-final.log
+ create mode 100644 results/public-decoration/logs/native-core-final.log
+ create mode 100644 results/public-decoration/logs/native-doc-final.log
+ create mode 100644 results/public-decoration/logs/native-workspace-final-clippy.log
+ create mode 100644 results/public-decoration/logs/native-workspace-final.log
+ create mode 100644 results/public-decoration/logs/original-decoration-fixed-deps.log
+ create mode 100644 results/public-decoration/logs/original-decoration.log
+ create mode 100644 results/public-decoration/logs/production-build.log
+ create mode 100644 results/public-decoration/logs/public-first-runtime.log
+ create mode 100644 results/public-decoration/logs/retained-overview_ruler_browser.log
+ create mode 100644 results/public-decoration/logs/retained-overview_terminal_browser.log
+ create mode 100644 results/public-decoration/logs/retained-row_factory_browser.log
+ create mode 100644 results/public-decoration/logs/retained-wasm_buffer_decoration.log
+ create mode 100644 results/public-decoration/logs/retained-wasm_terminal_decoration.log
+ create mode 100644 results/public-decoration/logs/retained-wasm_terminal_markers.log
+ create mode 100644 results/public-decoration/logs/source-corrected.log
+ create mode 100644 results/public-decoration/logs/source-first.log
+ create mode 100644 results/public-decoration/logs/source-geometry-diagnostic.log
+ create mode 100644 results/public-decoration/logs/wasm-public-final-clippy.log
+ create mode 100644 results/public-decoration/logs/wasm-workspace-final-clippy.log
+ create mode 100644 results/public-decoration/logs/workspace-format-final.log
+ create mode 100644 results/public-decoration/native-summary.json
+ create mode 100644 results/public-decoration/production-build-pointer.json
+ create mode 100644 results/public-decoration/reference-after.json
+ create mode 100644 results/public-decoration/source.json
+[swarm/Mackenzie554 b93b7020] Record accepted public decoration review and continuation handoff
+ Date: Thu Nov 5 18:46:27 2026 -0700
+ 4 files changed, 54 insertions(+), 5 deletions(-)
+ create mode 100644 docs/handoffs/sarah537.md
+ create mode 100644 results/public-decoration/review.json
+[swarm/Mackenzie554 cc294a2a] Preserve accepted decoration cleanup preflight and reference integrity
+ Date: Thu Nov 5 18:52:27 2026 -0700
+ 1 file changed, 37 insertions(+)
+ create mode 100644 results/public-decoration/cleanup-preflight.json
+[swarm/Mackenzie554 7ef28398] Document accepted FDArray INDEX pickup and owned cleanup preflight
+ Date: Thu Nov 5 17:58:24 2026 -0700
+ 14 files changed, 319 insertions(+)
+ create mode 100644 docs/handoffs/lukeni533.md
+ create mode 100644 results/font-cff2-index/cleanup-preflight.json
+ create mode 100644 results/font-cff2-index/cleanup-preflight.mjs
+ create mode 100644 results/font-cff2-index/pickup.json
+ create mode 100644 results/font-cff2-index/review.json
+ create mode 100644 results/font-cff2-index/runtime-unlink.json
+ create mode 100644 results/font-cff2-index/wasm-runtime-bindgen-version.log
+ create mode 100644 results/font-cff2-index/wasm-runtime-bindgen.log
+ create mode 100644 results/font-cff2-index/wasm-runtime-build.log
+ create mode 100644 results/font-cff2-index/wasm-runtime-chromium.log
+ create mode 100644 results/font-cff2-index/wasm-runtime-commands.json
+ create mode 100644 results/font-cff2-index/wasm-runtime-firefox.log
+ create mode 100644 results/font-cff2-index/wasm-runtime-webkit.log
+[swarm/Mackenzie554 f22ca3fc] Retain successful canonical main integration and exact scoped verification
+ Date: Thu Nov 5 18:54:57 2026 -0700
+ 5 files changed, 5401 insertions(+), 2 deletions(-)
+ create mode 100644 results/integration543/canonical-commands.json
+ create mode 100644 results/integration543/canonical-driver.log
+ create mode 100644 results/integration543/canonical-merge.log
+ create mode 100644 results/integration543/canonical-summary.json
+[swarm/Mackenzie554 393af7d4] Retain independent integration review and exact owned cleanup preflight
+ Date: Thu Nov 5 19:01:48 2026 -0700
+ 5 files changed, 3500 insertions(+), 1 deletion(-)
+ create mode 100644 results/integration543/cleanup-preflight.json
+ create mode 100644 results/integration543/cleanup-preflight.mjs
+ create mode 100644 results/integration543/independent-review.md
+ create mode 100644 results/integration543/runtime-cleanup.json
+[swarm/Mackenzie554 1e14a6b4] Preserve fallible repeated Attach socket removal and listener lifetime
+ Date: Thu Nov 5 17:58:57 2026 -0700
+ 16 files changed, 1665 insertions(+), 30 deletions(-)
+ create mode 100644 .pi/swarm/skills/attach-removal-check/SKILL.md
+ create mode 100644 crates/xterm-addons/tests/attach_removal.rs
+ create mode 100644 crates/xterm-web/tests/fixtures/attach-removal.js
+ create mode 100644 crates/xterm-web/tests/fixtures/attach-removal.json
+ create mode 100644 crates/xterm-web/tests/wasm_attach_listener_lifetime.rs
+ create mode 100644 crates/xterm-web/tests/wasm_attach_removal.rs
+ create mode 100644 docs/attach-removal.md
+ create mode 100644 results/attach-removal/retained-utility-source.json
+ create mode 100644 results/attach-removal/source-original.json
+ create mode 100644 results/attach-removal/source.json
+ create mode 100644 scripts/attach-removal-oracle.mjs
+[swarm/Mackenzie554 4bc6e48d] Keep literal socket method calls and cover non-callable hosts
+ Date: Thu Nov 5 18:00:48 2026 -0700
+ 9 files changed, 50 insertions(+), 30 deletions(-)
+[swarm/Mackenzie554 29c1e267] Retain Attach fallible disposal native controls and warning-denied checks
+ Date: Thu Nov 5 18:14:27 2026 -0700
+ 19 files changed, 13383 insertions(+), 1 deletion(-)
+ create mode 100644 results/attach-removal/aggregate-fmt.log
+ create mode 100644 results/attach-removal/fmt-xterm-addons.log
+ create mode 100644 results/attach-removal/fmt-xterm-core.log
+ create mode 100644 results/attach-removal/fmt-xterm-font-addons.log
+ create mode 100644 results/attach-removal/fmt-xterm-wasm-support.log
+ create mode 100644 results/attach-removal/fmt-xterm-web.log
+ create mode 100644 results/attach-removal/input-pins.json
+ create mode 100644 results/attach-removal/native-binary-pins.json
+ create mode 100644 results/attach-removal/native-clippy.log
+ create mode 100644 results/attach-removal/native-commands.json
+ create mode 100644 results/attach-removal/native-driver.txt
+ create mode 100644 results/attach-removal/native-final.log
+ create mode 100644 results/attach-removal/native-negative-control.log
+ create mode 100644 results/attach-removal/native.log
+ create mode 100644 results/attach-removal/raw-pins.json
+ create mode 100644 results/attach-removal/toolchain.json
+ create mode 100644 results/attach-removal/wasm-clippy.log
+ create mode 100644 results/attach-removal/wasm-tests-no-run.log
+[swarm/Mackenzie554 26417f67] Return WASM test errors and discriminate repeated removal before panic paths
+ Date: Thu Nov 5 18:26:19 2026 -0700
+ 7 files changed, 37 insertions(+), 15 deletions(-)
+[swarm/Mackenzie554 66d0a848] Retain actual three-browser Attach lifetime and exact old control proof
+ Date: Thu Nov 5 18:31:57 2026 -0700
+ 30 files changed, 4825 insertions(+), 11 deletions(-)
+ create mode 100644 results/attach-removal/browser-commands.json
+ create mode 100644 results/attach-removal/browser-driver.txt
+ create mode 100644 results/attach-removal/browser-exact-old-control-build.log
+ create mode 100644 results/attach-removal/browser-exact-old-control.json
+ create mode 100644 results/attach-removal/browser-exact-old-control.log
+ create mode 100644 results/attach-removal/browser-final-build.log
+ create mode 100644 results/attach-removal/browser-final.json
+ create mode 100644 results/attach-removal/browser-final.log
+ create mode 100644 results/attach-removal/browser-initial-build.log
+ create mode 100644 results/attach-removal/browser-initial.json
+ create mode 100644 results/attach-removal/browser-initial.log
+ create mode 100644 results/attach-removal/compiler-records.json
+ create mode 100644 results/attach-removal/lifetime-final-build.log
+ create mode 100644 results/attach-removal/lifetime-final.json
+ create mode 100644 results/attach-removal/lifetime-final.log
+ create mode 100644 results/attach-removal/lifetime-initial-build.log
+ create mode 100644 results/attach-removal/lifetime-initial.json
+ create mode 100644 results/attach-removal/lifetime-initial.log
+ create mode 100644 results/attach-removal/retained404-build.log
+ create mode 100644 results/attach-removal/retained404.json
+ create mode 100644 results/attach-removal/retained404.log
+ create mode 100644 results/attach-removal/retained535-build.log
+ create mode 100644 results/attach-removal/retained535.json
+ create mode 100644 results/attach-removal/retained535.log
+ create mode 100644 results/attach-removal/runtime-pins.json
+ create mode 100644 results/attach-removal/wasm-clippy-current.log
+[swarm/Mackenzie554 ce2f54fd] Record accepted Attach lifetime review and safe owned cleanup handoff
+ Date: Thu Nov 5 18:36:49 2026 -0700
+ 3 files changed, 33 insertions(+), 1 deletion(-)
+ create mode 100644 docs/handoffs/lopamudra536.md
+ create mode 100644 docs/reviews/lopamudra536.md
+Auto-merging crates/xterm-addons/src/ligatures/font_gsub_other.rs
+Auto-merging crates/xterm-addons/tests/support/font_gsub_lookup_assertions.rs
+Auto-merging scripts/font-gsub-header-browser-source.mjs
+CONFLICT (content): Merge conflict in scripts/font-gsub-header-browser-source.mjs
+Auto-merging scripts/font-gsub-lookup-oracle.mjs
+CONFLICT (content): Merge conflict in scripts/font-gsub-lookup-oracle.mjs
+
+error: could not apply cee7075a... Preserve missing GSUB noncontext coverage through referenced substitutions
+hint: After resolving the conflicts, mark them with
+hint: "git add/rm <pathspec>", then run
+hint: "git cherry-pick --continue".
+hint: You can instead skip this commit with "git cherry-pick --skip".
+hint: To abort and get back to the state before "git cherry-pick",
+hint: run "git cherry-pick --abort".

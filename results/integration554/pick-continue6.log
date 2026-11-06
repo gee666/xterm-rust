@@ -1,0 +1,60 @@
+[swarm/Mackenzie554 80a54da4] Retain search cache until its scheduled expiry callback runs
+ Date: Thu Nov 5 18:53:52 2026 -0700
+ 8 files changed, 193 insertions(+), 2 deletions(-)
+ create mode 100644 crates/xterm-web/tests/fixtures/search-delayed-expiry.js
+ create mode 100644 crates/xterm-web/tests/search_cases/delayed_expiry.rs
+ create mode 100644 crates/xterm-web/tests/wasm_search_delayed_expiry.rs
+[swarm/Mackenzie554 7eb9a95f] Document host-driven search cache expiry and pending regression gates
+ Date: Thu Nov 5 18:58:23 2026 -0700
+ 2 files changed, 35 insertions(+), 2 deletions(-)
+ create mode 100644 docs/search-delayed-expiry.md
+[swarm/Mackenzie554 6cfd03d7] Verify delayed cache expiry against source and real WASM with old-code controls
+ Date: Thu Nov 5 19:09:36 2026 -0700
+ 48 files changed, 11122 insertions(+), 2 deletions(-)
+ create mode 100644 results/search-delayed-expiry/browser-probe.json
+ create mode 100644 results/search-delayed-expiry/cargo-version.log
+ create mode 100644 results/search-delayed-expiry/fmt-full.log
+ create mode 100644 results/search-delayed-expiry/fmt-xterm-addons.log
+ create mode 100644 results/search-delayed-expiry/fmt-xterm-core.log
+ create mode 100644 results/search-delayed-expiry/fmt-xterm-font-addons.log
+ create mode 100644 results/search-delayed-expiry/fmt-xterm-wasm-support.log
+ create mode 100644 results/search-delayed-expiry/fmt-xterm-web.log
+ create mode 100644 results/search-delayed-expiry/input-manifest.json
+ create mode 100644 results/search-delayed-expiry/native-addon.log
+ create mode 100644 results/search-delayed-expiry/native-clippy.log
+ create mode 100644 results/search-delayed-expiry/native-commands.json
+ create mode 100644 results/search-delayed-expiry/native-core.log
+ create mode 100644 results/search-delayed-expiry/native-old-addon.log
+ create mode 100644 results/search-delayed-expiry/native-old-cache.log
+ create mode 100644 results/search-delayed-expiry/native-probe.json
+ create mode 100644 results/search-delayed-expiry/native-restore.json
+ create mode 100644 results/search-delayed-expiry/node-version.log
+ create mode 100644 results/search-delayed-expiry/references-after.json
+ create mode 100644 results/search-delayed-expiry/references-before.json
+ create mode 100644 results/search-delayed-expiry/runtime-manifest.json
+ create mode 100644 results/search-delayed-expiry/runtime-native.json
+ create mode 100644 results/search-delayed-expiry/rustc-version.log
+ create mode 100644 results/search-delayed-expiry/source-commands.json
+ create mode 100644 results/search-delayed-expiry/source.json
+ create mode 100644 results/search-delayed-expiry/source.log
+ create mode 100644 results/search-delayed-expiry/summary.json
+ create mode 100644 results/search-delayed-expiry/wasm-clippy.log
+ create mode 100644 results/search-delayed-expiry/wasm-final-bindgen-version.log
+ create mode 100644 results/search-delayed-expiry/wasm-final-bindgen.log
+ create mode 100644 results/search-delayed-expiry/wasm-final-build.log
+ create mode 100644 results/search-delayed-expiry/wasm-final-chromium.log
+ create mode 100644 results/search-delayed-expiry/wasm-final-commands.json
+ create mode 100644 results/search-delayed-expiry/wasm-final-firefox.log
+ create mode 100644 results/search-delayed-expiry/wasm-final-identity.json
+ create mode 100644 results/search-delayed-expiry/wasm-final-webkit.log
+ create mode 100644 results/search-delayed-expiry/wasm-final.json
+ create mode 100644 results/search-delayed-expiry/wasm-final.log
+ create mode 100644 results/search-delayed-expiry/wasm-old-bindgen-version.log
+ create mode 100644 results/search-delayed-expiry/wasm-old-bindgen.log
+ create mode 100644 results/search-delayed-expiry/wasm-old-build.log
+ create mode 100644 results/search-delayed-expiry/wasm-old-chromium.log
+ create mode 100644 results/search-delayed-expiry/wasm-old-commands.json
+ create mode 100644 results/search-delayed-expiry/wasm-old-identity.json
+ create mode 100644 results/search-delayed-expiry/wasm-old-restore.json
+ create mode 100644 results/search-delayed-expiry/wasm-old.json
+ create mode 100644 results/search-delayed-expiry/wasm-old.log
