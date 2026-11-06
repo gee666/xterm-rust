@@ -7,7 +7,7 @@ Each consumer evaluates its own source expression.
 - Graphics READ compares the captured canvas area with the raw limit. If rejected, it evaluates `Math.floor(Math.sqrt(limit))`, converting again. READ_MAX evaluates only the square expression. Other controls do not read the limit.
 - Enabled SIXEL evaluates `limit * 4` synchronously during handler construction, before async decoder loading and registration. The resulting memory number is captured once. A throwing multiplication leaves prior parent registrations intact and skips SIXEL, IIP and Kitty registration. Disabled SIXEL does not convert the value.
 - IIP compares original dimensions only after successful BASE64 finalization and supported-image metadata with nonzero dimensions. It evaluates the raw limit again after resize and flooring, only for nonzero output dimensions. First-check rejection warns before releasing the live payload. Second-check rejection releases without a warning. A thrown comparison is not a caught bitmap error and retains the payload.
-- Kitty checks placement dimensions after bitmap decode/crop and geometry. If an offset bitmap is created, its actual dimensions are checked again after replacement and old-bitmap cleanup. Relational exceptions use the source's caught display-failure path. Current bitmap ownership and cleanup remain unchanged.
+- Kitty checks placement dimensions after bitmap decode/crop and geometry. It samples the current command's layer after that comparison and saved-cursor reads, before resize awaits. If an offset bitmap is created, its actual dimensions are checked again after replacement and old-bitmap cleanup. Relational exceptions use the source's caught display-failure path. Current bitmap ownership and cleanup remain unchanged.
 
 Relational comparisons intentionally support BigInt. SIXEL multiplication and graphics square conversion intentionally reject BigInt. A NaN limit rejects IIP's less-than checks but accepts Kitty's greater-than checks. No single numeric projection can preserve these contracts.
 
@@ -17,7 +17,7 @@ The source producer is based directly on main `0442e357`, without private prereq
 
 ## Current verification
 
-Native phase16 tests pass, including three new ownership/reentry tests, eleven retained IIP tests and two Kitty geometry tests. Full native addon execution passes213 functions in51 result summaries. Native addon all-target/all-feature Clippy and actual WASM library/image-addon-test Clippy pass with warnings denied.
+The first native checkpoint passes16 phase tests, including three new ownership/reentry tests, eleven retained IIP tests and two Kitty geometry tests. Full native addon execution passes213 functions in51 result summaries. Native addon all-target/all-feature Clippy and actual WASM library/image-addon-test Clippy pass with warnings denied at that checkpoint. Later source review added late Kitty layer sampling after the raw comparison and a native mutation test. That update and the final shipped-protocol browser test await a current compile and runtime gate.
 
 The first native compile failed for a missing import after splitting the cohesive end module. The next execution caught an incorrect new-test assumption about nested BASE64 payload visibility. An experiment with the unchanged dependency confirmed `data8` is empty until that nested decoder calls `end`. The test now checks that the outer continuation does not finalize the nested transfer. Both failures and the source observation are retained.
 

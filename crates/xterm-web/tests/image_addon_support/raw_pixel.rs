@@ -110,6 +110,37 @@ async fn raw_pixel_geometry_repeats_comparison_and_sqrt_at_source_phases() {
     let closed = Pair::new(false, "({sixelSupport:false,pixelLimit:'100'})");
     closed.write("\x1b[?2;1S\x1b[?2;4S").await;
     closed.compare();
+    for dispose in [false, true] {
+        let pair = Rc::new(pixel_pair("({sixelSupport:false,pixelLimit:{callback:null,log:[],n:0,[Symbol.toPrimitive](h){this.log.push(h);this.callback();return ++this.n===1?0:100}}})"));
+        let weak = Rc::downgrade(&pair);
+        let callback = Closure::<dyn Fn()>::new(move || {
+            let pair = weak.upgrade().unwrap();
+            if dispose {
+                pair.addon.dispose().unwrap();
+            } else {
+                pair.addon.reset().unwrap();
+            }
+        });
+        set(&limit(&pair, true), "callback", callback.as_ref());
+        let source_callback =
+            js_sys::Function::new_with_args("a,d", "return ()=>d?a.dispose():a.reset()")
+                .call2(
+                    &JsValue::UNDEFINED,
+                    &get(&pair.source, "addon"),
+                    &dispose.into(),
+                )
+                .unwrap();
+        set(&limit(&pair, false), "callback", &source_callback);
+        let (actual, expected) = parse(&pair, "\x1b[?2;1S");
+        actual.unwrap();
+        expected.unwrap();
+        pair.compare();
+        same_log(&pair, "[\"number\",\"number\"]");
+        assert_eq!(pair.replies.borrow().len(), 1);
+        for rust in [false, true] {
+            set(&limit(&pair, rust), "callback", &JsValue::NULL);
+        }
+    }
 }
 
 #[wasm_bindgen_test(async)]

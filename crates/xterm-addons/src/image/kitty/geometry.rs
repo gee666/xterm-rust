@@ -196,11 +196,17 @@ pub fn prepare_layout(size: BitmapSize, measured: CellSize, command: &KittyComma
         rows,
         width: target_width,
         height: target_height,
-        layer: if command.z_index.is_some_and(|z| z < 0.0) {
-            ImageLayer::Bottom
-        } else {
-            ImageLayer::Top
-        },
+        layer: layer(command),
+    }
+}
+
+/// Browser callers select the layer after the fallible raw-limit comparison,
+/// before resize awaits. Numeric callers have no callback between these stages.
+pub fn layer(command: &KittyCommand) -> ImageLayer {
+    if command.z_index.is_some_and(|z| z < 0.0) {
+        ImageLayer::Bottom
+    } else {
+        ImageLayer::Top
     }
 }
 

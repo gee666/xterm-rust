@@ -121,3 +121,29 @@ fn layer_is_captured_before_await_but_z_index_is_read_at_insertion() {
     assert_eq!(options.layer, ImageLayer::Bottom);
     assert_eq!(options.z_index, 5.0);
 }
+
+#[test]
+fn raw_limit_callback_can_change_layer_without_changing_captured_dimensions() {
+    let mut command = parse_command(&"c=1,z=-1".encode_utf16().collect::<Vec<_>>());
+    let mut plan = prepare_layout(
+        BitmapSize {
+            width: 7,
+            height: 14,
+        },
+        CellSize {
+            width: 7.0,
+            height: 14.0,
+        },
+        &command,
+    );
+    // The browser's raw comparison can reenter before source chooses a layer.
+    command.z_index = Some(5.0);
+    command.columns = Some(9.0);
+    plan.layer = layer(&command);
+    assert_eq!(plan.layer, ImageLayer::Top);
+    assert_eq!((plan.width, plan.height, plan.columns), (7.0, 14.0, 1.0));
+    command.z_index = Some(-2.0);
+    let options = placement_options(plan, &command);
+    assert_eq!(options.layer, ImageLayer::Top);
+    assert_eq!(options.z_index, -2.0);
+}

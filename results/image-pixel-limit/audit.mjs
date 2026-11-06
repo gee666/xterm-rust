@@ -1,5 +1,5 @@
 // Use when checking scoped source/reference/runtime identities without rebuilding.
-import {readFile,writeFile} from 'node:fs/promises';
+import {readFile,writeFile,readdir} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {resolve,extname} from 'node:path';
@@ -17,12 +17,20 @@ for(const base of ['source_repo','P:/workshop/Windows_Worshop/oira666/xterm-rust
  for(const entry of manifest){if(hash(await readFile(resolve(base,entry.path)))!==entry.sha256)throw Error('Reference changed '+base+'/'+entry.path);}
  references.push({base,files:manifest.length,passed:true});
 }
+const native=[];
+for(const file of await readdir('target/debug/deps')){
+ if(/^(image_iip_pixel_phases|image_iip|kitty_geometry)-.*\.exe$/.test(file)){
+  const path='target/debug/deps/'+file;native.push({path,sha256:hash(await readFile(path))});
+ }
+}
+if(native.length!==3)throw Error('Expected three retained focused native executables');
 const path=resolve(out,'input-pins.json');
 if(process.argv[2]==='--write'){
- await writeFile(path,JSON.stringify({head:git('rev-parse','HEAD').toString().trim(),sources:pins,references},null,2)+'\n');
+ await writeFile(path,JSON.stringify({head:git('rev-parse','HEAD').toString().trim(),sources:pins,references,native},null,2)+'\n');
 }else{
  const before=JSON.parse(await readFile(path,'utf8'));
  if(JSON.stringify(before.sources)!==JSON.stringify(pins))throw Error('Source inputs changed since pin');
+ if(JSON.stringify(before.native)!==JSON.stringify(native))throw Error('Native executable identities changed since pin');
 }
 const browsers=[];
 for(const name of ['initial','final','control','iip','sixel','kitty']){

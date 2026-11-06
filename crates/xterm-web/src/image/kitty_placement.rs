@@ -124,6 +124,9 @@ async fn place(
         let b = buffer.borrow();
         (b.x as f64, b.y as f64, b.ybase as f64)
     };
+    // A raw-limit callback can change retained command state. Source chooses
+    // its layer after that callback and saved cursor reads, before any await.
+    layout.layer = geometry::layer(&command(request));
     if layout.width != f64::from(actual.width) || layout.height != f64::from(actual.height) {
         let options = js_sys::Object::new();
         js::set(&options, "resizeWidth", &layout.width.into())?;

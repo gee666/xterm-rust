@@ -29,6 +29,8 @@ try{
  record=await runCommand('node',['scripts/image-canvas-check.mjs'],{cwd:root,env,log:resolve(out,'control.log'),timeoutMs:600000});
  await copyFile('results/browser-host/image_addon_browser-results.json',resolve(out,'control-browser.json'));
  await copyFile('results/image-addon/verification.json',resolve(out,'control-verification.json'));
+ await copyFile('tmp/image-canvas/image-comparators.ts',resolve(out,'control-comparators.ts'));
+ await copyFile('tmp/image-canvas/source-renderer.js',resolve(out,'control-source-renderer.js'));
  report=JSON.parse(await readFile(resolve(out,'control-browser.json'),'utf8'));
  if(record.status==='passed'||report.browsers.length!==1)throw Error('Control unexpectedly passed or lacked browser evidence');
  const counts=report.browsers[0].counts;

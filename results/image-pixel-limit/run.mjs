@@ -1,5 +1,5 @@
 // Use when rerunning task539's bounded native, lint and browser checks.
-import {mkdir,writeFile,copyFile,readFile,statfs} from 'node:fs/promises';
+import {mkdir,writeFile,copyFile,statfs} from 'node:fs/promises';
 import {freemem} from 'node:os';
 import {resolve} from 'node:path';
 import {runCommand} from '../../scripts/quality-process.mjs';
@@ -36,5 +36,7 @@ if(mode==='native'){
  await copyFile('results/browser-host/'+test+'-results.json',resolve(out,mode+'-browser.json'));
  const label=test==='image_addon_browser'?'image-addon':'image-'+mode+'-terminal';
  await copyFile('results/'+label+'/verification.json',resolve(out,mode+'-verification.json'));
+ await copyFile('tmp/image-canvas/image-comparators.ts',resolve(out,mode+'-comparators.ts'));
+ await copyFile('tmp/image-canvas/source-renderer.js',resolve(out,mode+'-source-renderer.js'));
  if(r.status!=='passed')throw Error(mode+' browser run failed');
 }else throw Error('Expected native, format, initial, final, iip, sixel, kitty');

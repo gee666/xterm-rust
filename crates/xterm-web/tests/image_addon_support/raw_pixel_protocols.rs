@@ -68,6 +68,18 @@ async fn raw_pixel_iip_rechecks_after_resize_and_skips_nonimage_paths() {
     pair.compare();
     same_log(&pair, "[\"number\"]");
     assert_eq!(get(&pair.events, "count"), JsValue::from(0));
+    // Metadata-only malformed QOI inputs exit before any host decode. Zero
+    // original height skips both comparisons; a 2x1 image resized to 1x0
+    // skips just the second. No upstream fixture or assertion is changed.
+    for (height, log) in [(0, "[]"), (1, "[\"number\"]")] {
+        let sequence = js_sys::Function::new_with_args("text,height", "const bytes=Uint8Array.from(atob(text.split(':')[1].slice(0,-1)),c=>c.charCodeAt(0));bytes[11]=height;return '\\x1b]1337;File=inline=1;width=1px;preserveAspectRatio=1:'+btoa(String.fromCharCode(...bytes))+'\\x07'")
+            .call2(&JsValue::UNDEFINED, &iip().into(), &height.into()).unwrap().as_string().unwrap();
+        let pair = pixel_pair("({sixelSupport:false,showPlaceholder:false,pixelLimit:{log:[],[Symbol.toPrimitive](h){this.log.push(h);return 1000}}})");
+        pair.write(&sequence).await;
+        pair.compare();
+        same_log(&pair, log);
+        assert_eq!(get(&pair.events, "count"), JsValue::from(0));
+    }
 }
 
 #[wasm_bindgen_test(async)]
@@ -110,9 +122,11 @@ async fn raw_pixel_kitty_rechecks_actual_offset_bitmap_and_catches_limit_errors(
 
 #[wasm_bindgen_test(async)]
 async fn raw_pixel_comparisons_can_reset_or_dispose_at_live_protocol_boundaries() {
-    for text in [iip(), kitty()] {
+    let offset = "\x1b_Ga=T,f=32,s=1,v=1,i=42,X=1,Y=1;AQID/w==\x1b\\";
+    for (text, comparison) in [(iip(), 1), (kitty(), 1), (iip(), 2), (offset, 2)] {
         for dispose in [false, true] {
-            let pair=Rc::new(pixel_pair("({sixelSupport:false,showPlaceholder:false,pixelLimit:{callback:null,log:[],[Symbol.toPrimitive](h){this.log.push(h);this.callback();return 0}}})"));
+            let options = format!("({{sixelSupport:false,showPlaceholder:false,pixelLimit:{{n:0,callback:null,log:[],[Symbol.toPrimitive](h){{this.log.push(h);if(++this.n==={comparison}){{this.callback();return 0}}return 1000}}}}}})");
+            let pair = Rc::new(pixel_pair(&options));
             let weak = Rc::downgrade(&pair);
             let callback = Closure::<dyn Fn()>::new(move || {
                 let pair = weak.upgrade().unwrap();
@@ -134,7 +148,14 @@ async fn raw_pixel_comparisons_can_reset_or_dispose_at_live_protocol_boundaries(
             set(&limit(&pair, false), "callback", &callback_source);
             pair.write(text).await;
             pair.compare();
-            same_log(&pair, "[\"number\"]");
+            same_log(
+                &pair,
+                if comparison == 1 {
+                    "[\"number\"]"
+                } else {
+                    "[\"number\",\"number\"]"
+                },
+            );
             assert_eq!(get(&pair.events, "count"), JsValue::from(0));
             for rust in [false, true] {
                 set(&limit(&pair, rust), "callback", &JsValue::NULL);
