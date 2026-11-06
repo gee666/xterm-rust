@@ -159,18 +159,27 @@ async fn raw_palette_async_initialization_validates_then_converts_in_all_binding
             const value=eval(expression), addon=new api.ImageAddon({
               showPlaceholder:false,sixelPaletteLimit:value,iipSupport:false,kittySupport:false});
             const terminal=new api.Terminal({cols:20,rows:10,allowProposedApi:true,logLevel:'off'});
-            let rejected=false,reason;
-            const listener=event=>{rejected=true;reason=event.reason;event.preventDefault()};
-            addEventListener('unhandledrejection',listener);
+            const NativePromise=globalThis.Promise,then=NativePromise.prototype.then,reasons=[];
+            // Observe the exact created promises before they can be unhandled.
+            // Firefox still reports prevented unhandledrejection events to CDP.
+            const observe=p=>{then.call(p,undefined,error=>{reasons.push(error)});return p};
+            const WrappedPromise=new Proxy(NativePromise,{construct(target,args){
+              return observe(Reflect.construct(target,args,target));
+            }});
             try{
-              addon.activate(terminal);
-              for(let frame=0;!rejected;frame++){
+              NativePromise.prototype.then=function(...args){return observe(then.apply(this,args))};
+              globalThis.Promise=WrappedPromise;
+              try{addon.activate(terminal)}
+              finally{globalThis.Promise=NativePromise;NativePromise.prototype.then=then}
+              for(let frame=0;!reasons.length;frame++){
                 if(frame===120)throw Error('missing decoder rejection');
-                await new Promise(requestAnimationFrame);
+                await new NativePromise(requestAnimationFrame);
               }
+              const reason=reasons[0];
+              if(reasons.some(value=>value!==reason))throw Error('unexpected rejection');
               row.push({identity:reason===token,name:reason?.name,message:reason?.message,log});
             }finally{
-              removeEventListener('unhandledrejection',listener);
+              globalThis.Promise=NativePromise;NativePromise.prototype.then=then;
               addon.dispose();terminal.dispose();addon.free?.();terminal.free?.();
             }
           }

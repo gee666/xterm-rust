@@ -158,7 +158,7 @@ impl Pair {
             .replies
             .borrow()
             .iter()
-            .map(|text| JsValue::from(String::from_utf16(text).unwrap()))
+            .map(|text| JsValue::from(js_sys::JsString::from_char_code(text)))
             .collect();
         assert_eq!(json(&replies), json(&get(&self.source, "replies")));
         assert_eq!(get(&self.events, "count"), get(&self.source, "count"));
