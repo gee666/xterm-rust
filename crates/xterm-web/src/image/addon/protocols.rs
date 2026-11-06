@@ -24,12 +24,15 @@ impl State {
     ) -> Result<(), JsValue> {
         let options = self.options.get();
         if options.sixel_support {
-            let protocol = BrowserSixelProtocol::new_with_size_limit(
+            let palette = self.palette.get();
+            let current_palette = self.palette.clone();
+            let protocol = BrowserSixelProtocol::new_with_raw_options(
                 terminal,
                 renderer.renderer(),
                 storage.clone(),
                 Rc::clone(&self.options),
                 self.sixel_size_limit.clone(),
+                Rc::new(move || current_palette.get()),
             );
             // Native decoder initialization still crosses a promise boundary.
             // Data arriving before completion is discarded, never replayed.
@@ -39,7 +42,7 @@ impl State {
                     .await?;
                 let decoder = SixelDecoder::new(SixelHandler::decoder_options(
                     options.pixel_limit,
-                    options.sixel_palette_limit,
+                    super::palette::initial(&palette)?,
                 ))
                 .map_err(|e| to_js_error(&e))?;
                 loading.complete_loading(decoder);

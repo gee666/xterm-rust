@@ -17,6 +17,14 @@ mod raw_flags;
 mod raw_iip_limit;
 #[path = "image_addon_support/raw_kitty_limit.rs"]
 mod raw_kitty_limit;
+#[path = "image_addon_support/raw_palette.rs"]
+mod raw_palette;
+#[path = "image_addon_support/raw_palette_failures.rs"]
+mod raw_palette_failures;
+#[path = "image_addon_support/raw_palette_primitives.rs"]
+mod raw_palette_primitives;
+#[path = "image_addon_support/raw_palette_release.rs"]
+mod raw_palette_release;
 #[path = "image_addon_support/raw_placeholder.rs"]
 mod raw_placeholder;
 #[path = "image_addon_support/raw_sixel_limit.rs"]

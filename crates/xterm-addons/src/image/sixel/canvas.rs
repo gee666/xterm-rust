@@ -28,7 +28,7 @@ impl SixelDecoder {
             .memory_limit
             .is_some_and(|limit| limit != 0.0 && bytes > limit)
         {
-            self.release();
+            self.memory_limit_release();
             return Err(DecodeError::MemoryLimit);
         }
         Ok(())

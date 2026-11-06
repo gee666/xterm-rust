@@ -46,6 +46,11 @@ impl State {
                 }
             })
             .collect();
+        if matches!(control, Control::Graphics) {
+            if let Some(result) = self.palette_control(&parameters) {
+                return result;
+            }
+        }
         let mut policy = ImageControlPolicy::new(self.defaults);
         policy.options = self.options.get();
         let action = match control {
@@ -81,6 +86,7 @@ impl State {
         match control {
             Control::SoftReset => {
                 self.flags.scrolling.replace(self.default_scrolling.clone());
+                self.palette.reset();
             }
             Control::Set | Control::Reset
                 if parameters.contains(&ImageParameter::Number(DEC_SIXEL_DISPLAY)) =>
@@ -94,7 +100,7 @@ impl State {
         self.options.set(policy.options);
         self.execute(action)
     }
-    fn execute(&self, action: ImageControlAction) -> Result<bool, JsValue> {
+    pub(super) fn execute(&self, action: ImageControlAction) -> Result<bool, JsValue> {
         for effect in action.effects {
             match effect {
                 ImageControlEffect::Reply(data) => {

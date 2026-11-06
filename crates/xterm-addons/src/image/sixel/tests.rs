@@ -206,6 +206,73 @@ fn staged_put_commits_size_before_host_failure_and_uses_live_decoder() {
 }
 
 #[test]
+fn staged_hook_commits_prologue_but_not_init_before_host_failure() {
+    let mut handler = SixelHandler::pending();
+    assert!(!handler.begin_hook());
+    assert!(!handler.begin_reset());
+    handler.complete_loading(
+        SixelDecoder::new(SixelHandler::decoder_options(16_777_216.0, 256.0)).unwrap(),
+    );
+    handler.finish_hook(0xff00_0000, 32.0);
+    assert_eq!(handler.begin_put(7), Some(7.0));
+    handler.finish_abort();
+    assert_eq!(handler.palette().unwrap().len(), 256);
+    assert_eq!(handler.properties().unwrap().unwrap().fill_color, 0);
+    assert!(handler.begin_hook());
+    assert_eq!(handler.size(), 0.0);
+    assert!(!handler.aborted());
+    // Abort release already restored constructor defaults. The hook prologue
+    // must not initialize again before a successful host conversion.
+    assert_eq!(handler.palette().unwrap().len(), 256);
+    assert_eq!(handler.properties().unwrap().unwrap().fill_color, 0);
+    // Reentrant init changes state, then the outer continuation wins without
+    // repeating begin_hook or rolling back packet data committed by reentry.
+    handler.finish_hook(0x1234_5678, 16.0);
+    assert_eq!(handler.begin_put(2), Some(2.0));
+    handler.finish_hook(0, 8.0);
+    assert_eq!(handler.size(), 2.0);
+    assert_eq!(handler.palette().unwrap().len(), 8);
+    assert_eq!(handler.properties().unwrap().unwrap().fill_color, 0);
+}
+
+#[test]
+fn staged_reset_clears_palette_before_host_conversion_and_restores_after() {
+    let mut handler = SixelHandler::ready(16_777_216.0, 4096.0).unwrap();
+    handler.finish_hook(0, 4096.0);
+    assert_eq!(handler.decode_put(&[b'~' as u32]), SixelPut::Continue);
+    assert!(handler.begin_reset());
+    assert!(handler.palette().unwrap().iter().all(|value| *value == 0));
+    // A throwing host conversion skips finish_reset. Reentry can run a hook
+    // before the outer reset restores the original palette.
+    handler.finish_hook(0xff00_0000, 16.0);
+    assert!(handler.palette().unwrap().iter().all(|value| *value == 0));
+    handler.finish_reset(256.0);
+    assert_eq!(handler.palette().unwrap(), &ADDON_PALETTE);
+    assert_eq!(handler.properties().unwrap().unwrap().fill_color, 0);
+}
+
+#[test]
+fn deferred_memory_release_preserves_pre_init_state_for_host_conversion() {
+    let mut decoder = SixelDecoder::new(SixelHandler::decoder_options(1.0, 256.0)).unwrap();
+    decoder.defer_memory_release();
+    decoder.init(0xff00_0000, None, 32.0, true);
+    assert_eq!(
+        decoder.decode(&b"\"1;1;2;1~"[..]),
+        Err(DecodeError::MemoryLimit)
+    );
+    assert!(decoder.take_pending_release());
+    assert!(!decoder.take_pending_release());
+    // Memory storage has been freed, but an unsuccessful argument conversion
+    // must not yet reset the source WASM raster/mode/palette states.
+    assert_eq!(decoder.mode(), SixelMode::Truncated);
+    assert_eq!(decoder.palette().len(), 32);
+    decoder.finish_release(16.0);
+    assert_eq!(decoder.mode(), SixelMode::Undecided);
+    assert_eq!(decoder.palette().len(), 16);
+    assert_eq!(decoder.properties().unwrap().fill_color, 0);
+}
+
+#[test]
 fn active_inverse_background_and_missing_theme() {
     let ansi = [0x1020_3040, 0x5060_7080];
     let colors = ActiveColors {

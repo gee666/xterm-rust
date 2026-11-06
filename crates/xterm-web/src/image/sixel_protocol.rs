@@ -1,5 +1,6 @@
 // Copyright (c) 2020, 2023 The xterm.js authors. MIT license.
 //! Streaming SIXEL execution on the real browser terminal and shared store.
+mod palette;
 use super::{js, primitives::create_canvas, BrowserImageRenderer, BrowserImageSurface};
 use crate::{
     js_error::{callback_error, to_js_error},
@@ -64,7 +65,12 @@ struct State {
     options: Rc<Cell<ImageOptions>>,
     // None keeps the native typed constructor's live option contract.
     size_limit: Option<JsValue>,
+    palette: Option<RawPalette>,
     handler: RefCell<SixelHandler>,
+}
+struct RawPalette {
+    current: Rc<dyn Fn() -> JsValue>,
+    initial: JsValue,
 }
 fn dispatch(error: JsValue) -> DispatchError {
     DispatchError::Callback(callback_error(error))
@@ -123,10 +129,9 @@ impl State {
                     let put_image_data = js::get(&context, "putImageData")?;
                     let image_data = js::get(&js_sys::global(), "ImageData")?;
                     let clamped_array = js::get(&js_sys::global(), "Uint8ClampedArray")?;
-                    let pixels = self
-                        .handler
-                        .borrow_mut()
-                        .snapshot_image()
+                    let pixels = self.handler.borrow_mut().snapshot_image();
+                    self.finish_pending_release()?;
+                    let pixels = pixels
                         .map_err(|e| to_js_error(&e))?
                         .ok_or_else(|| js_sys::Error::new("SIXEL decoder was removed"))?;
                     let bytes = js_sys::Uint8Array::from(pixels.pixels());
@@ -155,10 +160,14 @@ impl State {
                 }
                 // No decoder borrow crosses a canvas constructor, ImageData,
                 // putImageData or storage callback. Reentry resets live state.
-                self.handler
-                    .borrow_mut()
-                    .after_image_copy()
+                let release = self
+                    .handler
+                    .borrow()
+                    .needs_release_after_copy()
                     .map_err(|e| to_js_error(&e))?;
+                if release {
+                    self.release()?;
+                }
                 add_sixel_image(
                     &self.storage,
                     ImageResource::new(BrowserImageSurface::canvas(canvas)),
@@ -172,13 +181,17 @@ impl State {
 struct StreamingHandler(Rc<State>);
 impl DcsHandlerTrait for StreamingHandler {
     fn hook(&mut self, params: &Params) -> Result<(), DispatchError> {
-        self.0
-            .handler
-            .borrow_mut()
-            .hook(params, self.0.options.get().sixel_palette_limit, || {
-                self.0.background()
-            })
-            .map_err(dispatch)
+        let ready = self.0.handler.borrow_mut().begin_hook();
+        if ready {
+            let fill = if params.stored_value(1) == Some(1) {
+                0
+            } else {
+                self.0.background().map_err(dispatch)?
+            };
+            let limit = self.0.palette_limit().map_err(dispatch)?;
+            self.0.handler.borrow_mut().finish_hook(fill, limit);
+        }
+        Ok(())
     }
     fn put(&mut self, data: &[u32]) -> Result<(), DispatchError> {
         let size = self.0.handler.borrow_mut().begin_put(data.len());
@@ -195,14 +208,19 @@ impl DcsHandlerTrait for StreamingHandler {
             self.0.handler.borrow_mut().decode_put(data)
         };
         if let SixelPut::Warning(warning) = result {
+            let release_error = self.0.finish_pending_release().err();
             let console = js::get(&js_sys::global(), "console").map_err(dispatch)?;
             let warn = js::get(&console, "warn").map_err(dispatch)?;
-            let text = warning_text(warning).map_err(dispatch)?;
+            let text: JsValue = match release_error {
+                Some(error) => palette::release_warning(&error).map_err(dispatch)?.into(),
+                None => warning_text(warning).map_err(dispatch)?.into(),
+            };
             js::function(warn, "console.warn")
                 .map_err(dispatch)?
-                .call1(&console, &text.into())
+                .call1(&console, &text)
                 .map_err(dispatch)?;
-            self.0.handler.borrow_mut().finish_abort();
+            self.0.handler.borrow_mut().mark_aborted();
+            self.0.release().map_err(dispatch)?;
         }
         Ok(())
     }
@@ -227,7 +245,7 @@ impl BrowserSixelProtocol {
         storage: ImageStorage,
         options: Rc<Cell<ImageOptions>>,
     ) -> Self {
-        Self::create(terminal, renderer, storage, options, None)
+        Self::create(terminal, renderer, storage, options, None, None)
     }
     /// Browser addon path. Preserve raw values until each ready packet's
     /// relational comparison, including BigInts and exact thrown values.
@@ -238,7 +256,28 @@ impl BrowserSixelProtocol {
         options: Rc<Cell<ImageOptions>>,
         size_limit: JsValue,
     ) -> Self {
-        Self::create(terminal, renderer, storage, options, Some(size_limit))
+        Self::create(terminal, renderer, storage, options, Some(size_limit), None)
+    }
+    pub(super) fn new_with_raw_options(
+        terminal: &Terminal,
+        renderer: Rc<BrowserImageRenderer>,
+        storage: ImageStorage,
+        options: Rc<Cell<ImageOptions>>,
+        size_limit: JsValue,
+        palette: Rc<dyn Fn() -> JsValue>,
+    ) -> Self {
+        let initial = palette();
+        Self::create(
+            terminal,
+            renderer,
+            storage,
+            options,
+            Some(size_limit),
+            Some(RawPalette {
+                current: palette,
+                initial,
+            }),
+        )
     }
     fn create(
         terminal: &Terminal,
@@ -246,6 +285,7 @@ impl BrowserSixelProtocol {
         storage: ImageStorage,
         options: Rc<Cell<ImageOptions>>,
         size_limit: Option<JsValue>,
+        palette: Option<RawPalette>,
     ) -> Self {
         Self(Rc::new(State {
             terminal: Rc::downgrade(&terminal.shared),
@@ -253,10 +293,14 @@ impl BrowserSixelProtocol {
             storage,
             options,
             size_limit,
+            palette,
             handler: RefCell::new(SixelHandler::pending()),
         }))
     }
-    pub fn complete_loading(&self, decoder: SixelDecoder) {
+    pub fn complete_loading(&self, mut decoder: SixelDecoder) {
+        if self.0.palette.is_some() {
+            decoder.defer_memory_release();
+        }
         self.0.handler.borrow_mut().complete_loading(decoder);
     }
     pub fn register(&self) -> Result<DisposableHandle, JsValue> {
@@ -276,10 +320,14 @@ impl BrowserSixelProtocol {
             .map_err(|e| to_js_error(&e))?
             .map_err(|e| to_js_error(&e))
     }
+    /// Reset the typed producer using its live native palette option.
     pub fn reset(&self) {
         self.0
             .handler
             .borrow_mut()
             .reset(self.0.options.get().sixel_palette_limit);
+    }
+    pub(super) fn reset_raw(&self) -> Result<(), JsValue> {
+        self.0.reset_palette()
     }
 }

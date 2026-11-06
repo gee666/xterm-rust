@@ -32,7 +32,7 @@ extern "C" {
     #[wasm_bindgen(catch, js_name = imageAddonOptions)]
     fn clone_options(options: &JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch, js_name = imageOptionNumber)]
-    pub(super) fn number(value: &JsValue) -> Result<f64, JsValue>;
+    pub(in crate::image) fn number(value: &JsValue) -> Result<f64, JsValue>;
     #[wasm_bindgen(catch, js_name = imageKittyEncodedLimit)]
     pub(super) fn kitty_encoded_limit(value: &JsValue) -> Result<f64, JsValue>;
     #[wasm_bindgen(catch, js_name = imageIipEncodedLimit)]
@@ -48,6 +48,7 @@ pub(super) struct ConstructorOptions {
     pub iip_size_limit: JsValue,
     pub flags: Flags,
     pub default_scrolling: JsValue,
+    pub palette: super::palette::Palette,
 }
 
 // Truthiness is a native policy projection, not the original option value.
@@ -90,6 +91,7 @@ pub(super) fn read(options: &JsValue) -> Result<ConstructorOptions, JsValue> {
         sixel_size_limit: js::get(&current, "sixelSizeLimit")?,
         kitty_size_limit: js::get(&current, "kittySizeLimit")?,
         iip_size_limit: js::get(&current, "iipSizeLimit")?,
+        palette: super::palette::Palette::read(&current, &defaults)?,
         current: typed(&current)?,
         defaults: typed(&defaults)?,
         storage_limit: js::get(&current, "storageLimit")?,
@@ -105,7 +107,7 @@ fn typed(options: &JsValue) -> Result<ImageOptions, JsValue> {
         pixel_limit: numeric("pixelLimit")?,
         sixel_support: boolean("sixelSupport")?,
         sixel_scrolling: boolean("sixelScrolling")?,
-        sixel_palette_limit: numeric("sixelPaletteLimit")?,
+        sixel_palette_limit: ImageOptions::default().sixel_palette_limit,
         // Streaming and storage own delayed raw-value conversions.
         sixel_size_limit: ImageOptions::default().sixel_size_limit,
         storage_limit: ImageOptions::default().storage_limit,

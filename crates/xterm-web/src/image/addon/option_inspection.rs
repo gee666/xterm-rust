@@ -1,7 +1,7 @@
 // Copyright (c) 2020 The xterm.js authors. All rights reserved. MIT license.
 //! Read-only diagnostics, not a writable JS option bag. Placeholder, storage,
-//! SIXEL, IIP and Kitty size limits and boolean flags retain raw values.
-//! Pixel and palette limits remain typed.
+//! SIXEL, IIP and Kitty size limits, palette limits and boolean flags retain raw
+//! values. Pixel limits remain typed.
 use std::{
     cell::{Cell, RefCell},
     rc::Rc,
@@ -17,34 +17,14 @@ extern "C" {
 
 #[wasm_bindgen]
 pub struct ImageOptionsReader {
-    options: Rc<Cell<ImageOptions>>,
-    placeholder: Rc<RefCell<JsValue>>,
-    storage_limit: Rc<RefCell<JsValue>>,
-    sixel_size_limit: JsValue,
-    kitty_size_limit: JsValue,
-    iip_size_limit: JsValue,
-    flags: Rc<super::options::Flags>,
-}
-impl ImageOptionsReader {
-    pub(super) fn new(
-        options: Rc<Cell<ImageOptions>>,
-        placeholder: Rc<RefCell<JsValue>>,
-        storage_limit: Rc<RefCell<JsValue>>,
-        sixel_size_limit: JsValue,
-        kitty_size_limit: JsValue,
-        iip_size_limit: JsValue,
-        flags: Rc<super::options::Flags>,
-    ) -> Self {
-        Self {
-            options,
-            placeholder,
-            storage_limit,
-            sixel_size_limit,
-            kitty_size_limit,
-            iip_size_limit,
-            flags,
-        }
-    }
+    pub(super) options: Rc<Cell<ImageOptions>>,
+    pub(super) placeholder: Rc<RefCell<JsValue>>,
+    pub(super) storage_limit: Rc<RefCell<JsValue>>,
+    pub(super) sixel_size_limit: JsValue,
+    pub(super) kitty_size_limit: JsValue,
+    pub(super) iip_size_limit: JsValue,
+    pub(super) flags: Rc<super::options::Flags>,
+    pub(super) palette: Rc<super::palette::Palette>,
 }
 #[wasm_bindgen]
 impl ImageOptionsReader {
@@ -55,7 +35,7 @@ impl ImageOptionsReader {
         let options = self.options.get();
         match key {
             "pixelLimit" => options.pixel_limit.into(),
-            "sixelPaletteLimit" => options.sixel_palette_limit.into(),
+            "sixelPaletteLimit" => self.palette.get(),
             "sixelSizeLimit" => self.sixel_size_limit.clone(),
             "storageLimit" => self.storage_limit.borrow().clone(),
             "showPlaceholder" => self.placeholder.borrow().clone(),

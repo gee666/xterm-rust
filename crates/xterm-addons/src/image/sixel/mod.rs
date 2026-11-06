@@ -72,6 +72,8 @@ pub struct SixelDecoder {
     real_width: Cell<i32>,
     cleared_width: usize,
     band_bits: u8,
+    defer_memory_release: bool,
+    pending_release: bool,
 }
 
 impl SixelDecoder {
@@ -109,6 +111,8 @@ impl SixelDecoder {
             real_width: Cell::new(4),
             cleared_width: 4,
             band_bits: 0,
+            defer_memory_release: false,
+            pending_release: false,
         })
     }
 
@@ -153,11 +157,39 @@ impl SixelDecoder {
     }
 
     pub fn release(&mut self) {
+        self.begin_release();
+        self.finish_release(self.options.palette_limit);
+    }
+
+    /// Browser hosts may need fallible argument conversion between freeing the
+    /// JS-side pixel storage and resetting the decoder's WASM-side state.
+    pub fn begin_release(&mut self) {
         self.canvas = Vec::new();
         self.band_widths.clear();
         self.max_width = 0;
         self.min_width = MAX_WIDTH;
-        self.init_state(u32::MAX, 0, self.options.palette_limit, false);
+    }
+
+    pub fn finish_release(&mut self, palette_limit: f64) {
+        self.pending_release = false;
+        self.init_state(u32::MAX, 0, palette_limit, false);
+    }
+
+    /// Defer only the release inside a failed memory-limit check. The host must
+    /// consume the request before propagating or reporting the decode error.
+    pub fn defer_memory_release(&mut self) {
+        self.defer_memory_release = true;
+    }
+    pub fn take_pending_release(&mut self) -> bool {
+        std::mem::take(&mut self.pending_release)
+    }
+    fn memory_limit_release(&mut self) {
+        if self.defer_memory_release {
+            self.begin_release();
+            self.pending_release = true;
+        } else {
+            self.release();
+        }
     }
 
     pub fn clear_palette(&mut self) {

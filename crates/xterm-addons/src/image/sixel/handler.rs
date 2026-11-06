@@ -95,9 +95,26 @@ impl SixelHandler {
     }
 
     pub fn reset(&mut self, palette_limit: f64) {
+        if self.begin_reset() {
+            self.finish_reset(palette_limit);
+        }
+    }
+
+    /// Release pixels and clear the palette before a host's fallible init
+    /// argument conversion. Pending handlers never evaluate that argument.
+    pub fn begin_reset(&mut self) -> bool {
+        let Some(decoder) = &mut self.decoder else {
+            return false;
+        };
+        decoder.release();
+        decoder.clear_palette();
+        true
+    }
+
+    /// Complete a started reset after releasing the borrow over user code.
+    /// Reentry may have changed this decoder's state before init continues.
+    pub fn finish_reset(&mut self, palette_limit: f64) {
         if let Some(decoder) = &mut self.decoder {
-            decoder.release();
-            decoder.clear_palette();
             let truncate = decoder.options.truncate;
             decoder.init(0, Some(&ADDON_PALETTE), palette_limit, truncate);
         }
@@ -110,9 +127,7 @@ impl SixelHandler {
         palette_limit: f64,
         background: impl FnOnce() -> Result<u32, E>,
     ) -> Result<(), E> {
-        self.size = 0.0;
-        self.aborted = false;
-        if let Some(decoder) = &mut self.decoder {
+        if self.begin_hook() {
             // The source reads the allocated backing slot, not active length.
             // A previous sequence's P2 may therefore survive a Params reset.
             let fill = if params.stored_value(1) == Some(1) {
@@ -120,10 +135,24 @@ impl SixelHandler {
             } else {
                 background()?
             };
+            self.finish_hook(fill, palette_limit);
+        }
+        Ok(())
+    }
+
+    /// Commit size/abort changes before background lookup and palette coercion.
+    pub fn begin_hook(&mut self) -> bool {
+        self.size = 0.0;
+        self.aborted = false;
+        self.is_ready()
+    }
+
+    /// Initialize after host callbacks, without repeating the hook prologue.
+    pub fn finish_hook(&mut self, fill: u32, palette_limit: f64) {
+        if let Some(decoder) = &mut self.decoder {
             let truncate = decoder.options.truncate;
             decoder.init(fill, None, palette_limit, truncate);
         }
-        Ok(())
     }
 
     /// A warning is emitted by the host before `finish_abort` is called. This
@@ -163,11 +192,50 @@ impl SixelHandler {
         }
     }
 
-    pub fn finish_abort(&mut self) {
+    pub fn mark_aborted(&mut self) {
         self.aborted = true;
+    }
+
+    pub fn release(&mut self) {
         if let Some(decoder) = &mut self.decoder {
             decoder.release();
         }
+    }
+
+    pub fn begin_release(&mut self) -> bool {
+        if let Some(decoder) = &mut self.decoder {
+            decoder.begin_release();
+            true
+        } else {
+            false
+        }
+    }
+    pub fn finish_release(&mut self, palette_limit: f64) {
+        if let Some(decoder) = &mut self.decoder {
+            decoder.finish_release(palette_limit);
+        }
+    }
+    pub fn take_pending_release(&mut self) -> bool {
+        self.decoder
+            .as_mut()
+            .is_some_and(SixelDecoder::take_pending_release)
+    }
+    pub fn clear_palette(&mut self) {
+        if let Some(decoder) = &mut self.decoder {
+            decoder.clear_palette();
+        }
+    }
+    pub fn needs_release_after_copy(&self) -> Result<bool, DecodeError> {
+        self.decoder.as_ref().map_or(Ok(false), |decoder| {
+            decoder
+                .memory_usage()
+                .map(|usage| usage > PERMANENT_MEMORY_LIMIT)
+        })
+    }
+
+    pub fn finish_abort(&mut self) {
+        self.mark_aborted();
+        self.release();
     }
 
     pub fn end_plan(&self, success: bool) -> SixelEndPlan {

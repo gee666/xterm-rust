@@ -10,7 +10,8 @@ mod hooks;
 mod inspection;
 mod kitty_inspection;
 mod option_inspection;
-mod options;
+pub(super) mod options;
+mod palette;
 mod protocols;
 mod storage_limit;
 use super::{
@@ -36,7 +37,7 @@ enum Protocol {
 impl Protocol {
     fn reset(&self) -> Result<(), JsValue> {
         match self {
-            Self::Sixel(protocol) => protocol.reset(),
+            Self::Sixel(protocol) => return protocol.reset_raw(),
             Self::Iip(protocol) => protocol.reset(),
             Self::Kitty(protocol) => return protocol.reset(),
         }
@@ -55,6 +56,7 @@ struct State {
     defaults: ImageOptions,
     flags: Rc<options::Flags>,
     default_scrolling: JsValue,
+    palette: Rc<palette::Palette>,
     storage_limit: Rc<RefCell<JsValue>>,
     placeholder: Rc<Cell<bool>>,
     // Raw public value is authoritative; the bool above is its storage policy.

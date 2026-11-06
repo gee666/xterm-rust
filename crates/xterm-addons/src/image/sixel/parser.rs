@@ -28,7 +28,7 @@ impl SixelDecoder {
         let mut stored_cursor = self.cursor;
         let result = self.decode_data(data, &mut stored_cursor);
         if let Err(error) = result {
-            if error != DecodeError::MemoryLimit {
+            if error != DecodeError::MemoryLimit || self.pending_release {
                 // C commits local state/color only at a normal chunk return.
                 // Params and painted memory remain changed after a WASM trap.
                 self.state = previous_state;

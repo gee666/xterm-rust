@@ -36,7 +36,7 @@ fn source_parse(pair: &Pair, text: &str) -> Result<JsValue, JsValue> {
         &text.into(),
     )
 }
-fn parse(pair: &Pair, text: &str) -> (Result<(), JsValue>, Result<JsValue, JsValue>) {
+pub(super) fn parse(pair: &Pair, text: &str) -> (Result<(), JsValue>, Result<JsValue, JsValue>) {
     let actual = pair
         .terminal
         .shared_native()
