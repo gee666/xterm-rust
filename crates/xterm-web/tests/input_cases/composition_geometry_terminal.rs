@@ -26,7 +26,7 @@ impl Drop for Opened {
 }
 
 #[wasm_bindgen_test(async)]
-async fn actual_terminal_ime_overlay_bounds_match_unchanged_source() {
+async fn actual_terminal_ime_overlay_bounds_match_unchanged_source() -> Result<(), JsValue> {
     for name in CASES {
         let setup = Opened::new();
         let overlay: web_sys::HtmlElement = setup
@@ -40,8 +40,8 @@ async fn actual_terminal_ime_overlay_bounds_match_unchanged_source() {
             &overlay,
             include_str!("../fixtures/composition-geometry-body.js"),
             name,
-        )
-        .unwrap();
-        JsFuture::from(pending).await.unwrap();
+        )?;
+        JsFuture::from(pending).await?;
     }
+    Ok(())
 }

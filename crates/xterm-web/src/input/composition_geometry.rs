@@ -1,6 +1,8 @@
 // Copyright (c) 2016 The xterm.js authors. All rights reserved.
 // Licensed under MIT. Adapted from browser/input/CompositionHelper.ts.
 
+use crate::links::debounce::js_max;
+
 #[derive(Clone, Copy, Debug)]
 pub struct CursorGeometry {
     pub in_viewport: bool,
@@ -34,8 +36,10 @@ pub fn composition_geometry(cursor: CursorGeometry) -> Option<CompositionGeometr
         top: cursor.y as f64 * cursor.cell_height,
         height: cursor.cell_height,
         max_width: cursor.cols as f64 * cursor.cell_width - left,
-        textarea_width: cursor.overlay_width.max(1.0),
-        textarea_height: cursor.overlay_height.max(1.0),
+        // Math.max must preserve NaN so CSS rejects an invalid measurement
+        // instead of replacing a previously valid IME anchor size with 1px.
+        textarea_width: js_max(cursor.overlay_width, 1.0),
+        textarea_height: js_max(cursor.overlay_height, 1.0),
         textarea_line_height: cursor.overlay_height,
     })
 }

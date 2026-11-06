@@ -32,7 +32,7 @@ const CASES: [&str; 7] = [
 ];
 
 #[wasm_bindgen_test(async)]
-async fn overlay_bounds_preserve_source_css_for_nan_and_finite_controls() {
+async fn overlay_bounds_preserve_source_css_for_nan_and_finite_controls() -> Result<(), JsValue> {
     for name in CASES {
         let setup = support::Setup::new();
         let pending = compare(
@@ -40,8 +40,20 @@ async fn overlay_bounds_preserve_source_css_for_nan_and_finite_controls() {
             &setup.dom.composition,
             include_str!("fixtures/composition-geometry-body.js"),
             name,
-        )
-        .unwrap();
-        JsFuture::from(pending).await.unwrap();
+        )?;
+        JsFuture::from(pending).await?;
+        // Invalid measurements must not prevent the composed text from being sent.
+        setup.dom.textarea.set_value("中");
+        setup.dom.textarea.dispatch_event(&support::event(
+            "CompositionEvent",
+            "compositionend",
+            &[],
+        ))?;
+        support::next_turn().await;
+        assert_eq!(
+            *setup.host.data.borrow(),
+            vec![(support::units("中"), true)]
+        );
     }
+    Ok(())
 }
