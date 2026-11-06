@@ -1,0 +1,486 @@
+{
+  "task": 544,
+  "status": "scoped proof complete; resumed independent review pending; full equivalence NOT PROVEN",
+  "mainReadOnly": "0442e3578a7f57d35c2ae6ff20d7186820983065",
+  "sourceFrozen": "2004287f",
+  "nativeFunctions": 72,
+  "newNativeFunctions": 2,
+  "newNativeScenarios": 25,
+  "nativeControl": {
+    "passed": 0,
+    "failed": 1,
+    "filtered": 71,
+    "source": "exact518engine"
+  },
+  "sourceCasesPerEngine": 56,
+  "sourceEngines": 3,
+  "wasmFunctionsPerEngine": 22,
+  "wasmEngines": 3,
+  "sharedCasesInsideOneWasmFunctionPerEngine": 56,
+  "oldWasmControl": {
+    "passed": 21,
+    "failed": 1,
+    "ignored": 0,
+    "filtered": 0
+  },
+  "initialOldWasmHarness": {
+    "discovered": 22,
+    "completedSummary": false,
+    "intendedIdentityFailure": true,
+    "secondaryScopedTlsPanic": true
+  },
+  "compiler": "cc35b89d5ece2a4e2873e95094ad6d6055895a9b46daf2198c3a8f6cfef8ba79",
+  "features": [
+    "acceptance-hooks"
+  ],
+  "inputFiles": 1872,
+  "runtimePins": 10,
+  "referenceFilesPerRoot": 776,
+  "full527347322": "OPEN; orphan listener/timer liveness NOT approved or proven",
+  "quality": {
+    "scopedNativeClippy": "PASS",
+    "currentWasmClippy": "PASS",
+    "fiveWholeMemberFmt": "PASS",
+    "fullWorkspace": "UNRUN for544"
+  },
+  "unrun": [
+    "full original Search suites",
+    "seeded corpus",
+    "demo/GC",
+    "full workspace quality/release",
+    "native Linux/macOS",
+    "source orphan liveness527"
+  ],
+  "files": [
+    {
+      "path": "crates/xterm-addons/src/search/addon.rs",
+      "bytes": 11308,
+      "sha256": "265c342b4f65bb7abadf7a38651d1240cace9ddb11b8228296bc30b9a4786652"
+    },
+    {
+      "path": "crates/xterm-addons/src/search/engine.rs",
+      "bytes": 3444,
+      "sha256": "5a339178f46531bca472b319339b4d757fbc8cad8ef63e2c626b7d3e04cb9952"
+    },
+    {
+      "path": "crates/xterm-addons/src/search/find.rs",
+      "bytes": 11653,
+      "sha256": "043619e60ae094ae14bbb6c8cc5c34740b06f550f695b140cc3702fd28452823"
+    },
+    {
+      "path": "crates/xterm-web/tests/search_addon.rs",
+      "bytes": 11092,
+      "sha256": "7c9c65ab8839a4951a2543864ab632e1f856ef286d5c1929398f25fdf0b793a3"
+    },
+    {
+      "path": "crates/xterm-web/tests/search_cases/retired_timeout.rs",
+      "bytes": 9480,
+      "sha256": "e6f51453086de550cb0438323491d3dc4c0cc43b880231604700e90f1f3160c7"
+    },
+    {
+      "path": "crates/xterm-web/tests/wasm_search_addon.rs",
+      "bytes": 13173,
+      "sha256": "e6dca7d68a706b43e2b8e6c54cfa97b13b6dd2d019d7b013114b0bbcd2b27f7f"
+    },
+    {
+      "path": "crates/xterm-web/tests/fixtures/search-retired-timeout.js",
+      "bytes": 3496,
+      "sha256": "78c8d19276affdcb145e2c0eb54d84be0a45de65257a35affdb32987067980b7"
+    },
+    {
+      "path": "scripts/search-call-args-source.mjs",
+      "bytes": 6696,
+      "sha256": "11dd163a4445fd3ce1fc5ab792cebcfe3362c3c94571fbc64c7699561f3f26b6"
+    },
+    {
+      "path": "docs/search-retired-timeout.md",
+      "bytes": 7432,
+      "sha256": "6aaab1a5fac8ec52781ab528c4233e7aa5015e1a9a69d51361d8143aee2e4ae3"
+    },
+    {
+      "path": "docs/search-engine-receiver.md",
+      "bytes": 12003,
+      "sha256": "4d7047e15af5f77777a0f874d429f25d2c1f1e5fe4fd1be41c21635c61e4b89d"
+    },
+    {
+      "path": "results/search-retired-timeout/browser-commands.json",
+      "bytes": 761,
+      "sha256": "70b9c7c2071acfbf90a544dbedd1a9c69a756319735492e1ce5d7d4c8abce22d"
+    },
+    {
+      "path": "results/search-retired-timeout/browser-final.json",
+      "bytes": 16868,
+      "sha256": "cd07fbe6188ad125f2caf5fe3daa1c371e37ca80cc5e33c46bc160cfa55935e5"
+    },
+    {
+      "path": "results/search-retired-timeout/browser-final.log",
+      "bytes": 135,
+      "sha256": "605802ecfd9092788d674cd61da17770baee4e2677bdd90e6b69389d64e5eef3"
+    },
+    {
+      "path": "results/search-retired-timeout/browser-negative.json",
+      "bytes": 10734,
+      "sha256": "2b0ab75f9acc8ea5d63a87c00798cd31fdfe1dcb0889ed593b8ab966e04fa2c6"
+    },
+    {
+      "path": "results/search-retired-timeout/browser-negative.log",
+      "bytes": 51,
+      "sha256": "833fcaece24a1747b700b9fd13dd30c09927f1a2801e0d232592cca093c93690"
+    },
+    {
+      "path": "results/search-retired-timeout/browser-restore.json",
+      "bytes": 194,
+      "sha256": "2d4140dab90ed6504bb8e897f0ad3e367170d5e84003d598a6e860b516859150"
+    },
+    {
+      "path": "results/search-retired-timeout/cargo-version.log",
+      "bytes": 36,
+      "sha256": "c8cd2e547fb0745a8738926a5c1318d17af1507f07b382d13dc704cc38684566"
+    },
+    {
+      "path": "results/search-retired-timeout/compile-identity.json",
+      "bytes": 1062,
+      "sha256": "45a0f70404924cbf24ca44850a3eef9bdc7a2042e797a3571e54a9cdac5978d6"
+    },
+    {
+      "path": "results/search-retired-timeout/final-commands.json",
+      "bytes": 1812,
+      "sha256": "a3213fd54b1dbbf7693710d05850089340ccaea04347d92d5d4773d0ea452c46"
+    },
+    {
+      "path": "results/search-retired-timeout/final-lint-commands.json",
+      "bytes": 960,
+      "sha256": "1116c06e7a5d8df5e6ab7e5f7aee619d82be011111c7c145d5f10095ca51b16b"
+    },
+    {
+      "path": "results/search-retired-timeout/final-wasm-clippy.log",
+      "bytes": 365,
+      "sha256": "14f1a2f8ff0546bfc7a112b8c28a32246db608b93c219b1b6584c7af9cc78694"
+    },
+    {
+      "path": "results/search-retired-timeout/final-wasm_search_addon-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/search-retired-timeout/final-wasm_search_addon-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-retired-timeout/final-wasm_search_addon-build.log",
+      "bytes": 46260,
+      "sha256": "604f6a4614b925c378e93d40b3e5c9ac7cb2f457e76aeb9fcd6c2be9ea54b4e1"
+    },
+    {
+      "path": "results/search-retired-timeout/final-wasm_search_addon-chromium.log",
+      "bytes": 1796,
+      "sha256": "105e1b6b2b734bdd537a2589c4b969754cc1d11f590f211c4eebb7166eba204e"
+    },
+    {
+      "path": "results/search-retired-timeout/final-wasm_search_addon-firefox.log",
+      "bytes": 1797,
+      "sha256": "8a17d4f6541f70bddd9feb4bbae6812f7d23a8fba7a45075950aee779aa93fd7"
+    },
+    {
+      "path": "results/search-retired-timeout/final-wasm_search_addon-results.json",
+      "bytes": 16868,
+      "sha256": "cd07fbe6188ad125f2caf5fe3daa1c371e37ca80cc5e33c46bc160cfa55935e5"
+    },
+    {
+      "path": "results/search-retired-timeout/final-wasm_search_addon-webkit.log",
+      "bytes": 1797,
+      "sha256": "5c10d9365f93e2ac6ff0c78392a80a66a8e401586265b1d18469db88fd785a35"
+    },
+    {
+      "path": "results/search-retired-timeout/final-web-fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-retired-timeout/fmt-xterm-addons.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-retired-timeout/fmt-xterm-core.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-retired-timeout/fmt-xterm-font-addons.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-retired-timeout/fmt-xterm-wasm-support.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-retired-timeout/fmt-xterm-web.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-retired-timeout/initial-harness-browser-commands.json",
+      "bytes": 751,
+      "sha256": "93c3066a53944cec4415cbe069b86e53eb7b5f1c5c720189abe8933244f3d24a"
+    },
+    {
+      "path": "results/search-retired-timeout/initial-harness-browser-negative.json",
+      "bytes": 10442,
+      "sha256": "9dfc0e99d0d26a71e8b25955c531c7cf86b5a628de36292e5e68a44a485d5631"
+    },
+    {
+      "path": "results/search-retired-timeout/initial-harness-browser-negative.log",
+      "bytes": 51,
+      "sha256": "833fcaece24a1747b700b9fd13dd30c09927f1a2801e0d232592cca093c93690"
+    },
+    {
+      "path": "results/search-retired-timeout/initial-harness-browser-restore.json",
+      "bytes": 194,
+      "sha256": "2d4140dab90ed6504bb8e897f0ad3e367170d5e84003d598a6e860b516859150"
+    },
+    {
+      "path": "results/search-retired-timeout/initial-harness-negative-commands.json",
+      "bytes": 1812,
+      "sha256": "a941fc677bd0639bd4d02e9852d02324b036390a4b295e186a0ceff9f891fcc3"
+    },
+    {
+      "path": "results/search-retired-timeout/initial-harness-negative-wasm_search_addon-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/search-retired-timeout/initial-harness-negative-wasm_search_addon-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-retired-timeout/initial-harness-negative-wasm_search_addon-build.log",
+      "bytes": 46260,
+      "sha256": "20d3a437630180e19afae3db09701b11019231acc27454722a24de02f1f21109"
+    },
+    {
+      "path": "results/search-retired-timeout/initial-harness-negative-wasm_search_addon-chromium.log",
+      "bytes": 4016,
+      "sha256": "551a2c7b16dce803c3223cf640420659d5449406577e075c9571831737b2391f"
+    },
+    {
+      "path": "results/search-retired-timeout/initial-harness-negative-wasm_search_addon-results.json",
+      "bytes": 10442,
+      "sha256": "9dfc0e99d0d26a71e8b25955c531c7cf86b5a628de36292e5e68a44a485d5631"
+    },
+    {
+      "path": "results/search-retired-timeout/input-manifest.json",
+      "bytes": 323911,
+      "sha256": "50b366bdc4959ce685bd8bcd1df1d4a3337b34f449c15de0606f4574d9e68cf9"
+    },
+    {
+      "path": "results/search-retired-timeout/native-clippy.log",
+      "bytes": 850,
+      "sha256": "52876164d4e65141f387aeaaf7bbdace071f76d0d9ca1dd612eaa9df77d4dc80"
+    },
+    {
+      "path": "results/search-retired-timeout/native-commands.json",
+      "bytes": 5751,
+      "sha256": "620c7e54c1407361562a8f1a657596e8abd9cbc4313ca26099fdd10badc6058e"
+    },
+    {
+      "path": "results/search-retired-timeout/native-final.log",
+      "bytes": 6933,
+      "sha256": "ef2bb74812d1329373f8df6b57ea8a2c30bb385f4a3b15eaf45f4fa7421e0d2f"
+    },
+    {
+      "path": "results/search-retired-timeout/native-initial-corrected.log",
+      "bytes": 6833,
+      "sha256": "4ec4c312298e18db691eea7207a0a4a030e5d71de392309175976bc71b83a298"
+    },
+    {
+      "path": "results/search-retired-timeout/native-initial-failed-commands.json",
+      "bytes": 841,
+      "sha256": "123ba6ce17e413def3222bd5a524f21b6372cf0469e5d169a8483ce4f28c8170"
+    },
+    {
+      "path": "results/search-retired-timeout/native-initial.log",
+      "bytes": 8155,
+      "sha256": "6d1091fbf0ba5558a59444f9f334d36ec09823bbbe87287e1607a02d5eef9086"
+    },
+    {
+      "path": "results/search-retired-timeout/native-negative.log",
+      "bytes": 1242,
+      "sha256": "f4271a037703029a820201acb821decf3823641e3fa166fccab35c549dc65c62"
+    },
+    {
+      "path": "results/search-retired-timeout/native-restore.json",
+      "bytes": 194,
+      "sha256": "2d4140dab90ed6504bb8e897f0ad3e367170d5e84003d598a6e860b516859150"
+    },
+    {
+      "path": "results/search-retired-timeout/negative-commands.json",
+      "bytes": 1812,
+      "sha256": "bed43858634b417e7f839587879bbe5eed5399e8e5b2d31d6e69b6375ad717d4"
+    },
+    {
+      "path": "results/search-retired-timeout/negative-wasm_search_addon-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/search-retired-timeout/negative-wasm_search_addon-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-retired-timeout/negative-wasm_search_addon-build.log",
+      "bytes": 46260,
+      "sha256": "e7b90063c336fbba86ee9bfcef3c2f002481289c1d309440728cbd658f47e5be"
+    },
+    {
+      "path": "results/search-retired-timeout/negative-wasm_search_addon-chromium.log",
+      "bytes": 4363,
+      "sha256": "62b459411a5ce86d69eeea3cf1dc5809236d5ae4d9d057e296972c2e7f4655e0"
+    },
+    {
+      "path": "results/search-retired-timeout/negative-wasm_search_addon-results.json",
+      "bytes": 10734,
+      "sha256": "2b0ab75f9acc8ea5d63a87c00798cd31fdfe1dcb0889ed593b8ab966e04fa2c6"
+    },
+    {
+      "path": "results/search-retired-timeout/pre-host-helper-compile-identity.json",
+      "bytes": 437,
+      "sha256": "d841597a725fa6603f6f881fc9481b6c802d02839f1bb02d1909ef41ce940ab7"
+    },
+    {
+      "path": "results/search-retired-timeout/pre-host-helper-runtime-native.json",
+      "bytes": 1177,
+      "sha256": "7a74d22348b2b78eeda40f1f80796ba3ec2db0d52986462b4e1a842f66b84c2a"
+    },
+    {
+      "path": "results/search-retired-timeout/pre-review-compile-identity.json",
+      "bytes": 372,
+      "sha256": "56487bf9a0fedb348e6443a32ad55616afb356c97b3c2d7679d012b3c8d99a04"
+    },
+    {
+      "path": "results/search-retired-timeout/pre-review-input-manifest.json",
+      "bytes": 323911,
+      "sha256": "c85bf9b70eb45c912997801bbd8ccdf5637a694eb0e2014ac95320aafb8417c9"
+    },
+    {
+      "path": "results/search-retired-timeout/pre-review-runtime-native.json",
+      "bytes": 1177,
+      "sha256": "1a15e3ce45cd23d0940a38b1aab491ae4075cdcea127b690a878b26f9d90216d"
+    },
+    {
+      "path": "results/search-retired-timeout/prerequisite.json",
+      "bytes": 249,
+      "sha256": "b3649cba43434c07a14f56a09ef1e730545f11d17f15a507c26b88e4628b6711"
+    },
+    {
+      "path": "results/search-retired-timeout/reference-after.json",
+      "bytes": 74,
+      "sha256": "6a3da578e90934a8af7304ea944bedcf97d70334db87ad48f657861acfed7807"
+    },
+    {
+      "path": "results/search-retired-timeout/review-first.txt",
+      "bytes": 1010,
+      "sha256": "0a296e9432b0ce4f0be3a8e6bab60af3accde26ec5dfc0c0e869847060599569"
+    },
+    {
+      "path": "results/search-retired-timeout/review-fmt-xterm-addons.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-retired-timeout/review-fmt-xterm-core.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-retired-timeout/review-fmt-xterm-font-addons.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-retired-timeout/review-fmt-xterm-wasm-support.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-retired-timeout/review-fmt-xterm-web.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-retired-timeout/review-native-clippy.log",
+      "bytes": 254,
+      "sha256": "47922bc805f9cb5e9eb731e16fad60e7ce19f20e6a021e000272249223bbb36b"
+    },
+    {
+      "path": "results/search-retired-timeout/review-native-commands.json",
+      "bytes": 5907,
+      "sha256": "24441a48ee6aa7d43c6fb6eda6084340d8df29e7fdaf930a8c48ab460d06337c"
+    },
+    {
+      "path": "results/search-retired-timeout/review-native-final.log",
+      "bytes": 7036,
+      "sha256": "9baa3717d0cbf377d1dd140331affaa7c93e27c588bcc989fbf535727c81b171"
+    },
+    {
+      "path": "results/search-retired-timeout/review-native-initial.log",
+      "bytes": 6936,
+      "sha256": "dd7eb12d1f669705aa25b08d5ba76466abf19f1f36eacdf9a0940fc1480a6575"
+    },
+    {
+      "path": "results/search-retired-timeout/review-native-negative.log",
+      "bytes": 1242,
+      "sha256": "d42d6ac1c313f3871b5ab9dee629d55d0142ca768a9501a9d4433f19ea667564"
+    },
+    {
+      "path": "results/search-retired-timeout/review-native-restore.json",
+      "bytes": 194,
+      "sha256": "2d4140dab90ed6504bb8e897f0ad3e367170d5e84003d598a6e860b516859150"
+    },
+    {
+      "path": "results/search-retired-timeout/review-wasm-clippy.log",
+      "bytes": 365,
+      "sha256": "4b06af6a73f5bff7abc108f24c6bc0711f80305b6cdc2374f1da9e33978456f5"
+    },
+    {
+      "path": "results/search-retired-timeout/review-wasm-compile.log",
+      "bytes": 46260,
+      "sha256": "95e67f149489ede78c450bc35e519f1abb9284bf757116e3508ddcefbb2c8852"
+    },
+    {
+      "path": "results/search-retired-timeout/runtime-manifest.json",
+      "bytes": 3380,
+      "sha256": "88d3f934f2ce9262d32598983a0e5b08580c97bd39eb1f5cd2cc3ecdab2969a3"
+    },
+    {
+      "path": "results/search-retired-timeout/runtime-native.json",
+      "bytes": 1177,
+      "sha256": "a2a3cca82a9d396daf6c98e1748d7bb7f7a0a2e1bd2deaa0a5858687e037b57e"
+    },
+    {
+      "path": "results/search-retired-timeout/source.json",
+      "bytes": 2410,
+      "sha256": "0702c3caf70948b28990f2dbe4a6613482ab86276cc79e96db6f2a48b000038d"
+    },
+    {
+      "path": "results/search-retired-timeout/source.log",
+      "bytes": 76,
+      "sha256": "49b4da78140821eb2c71c422e11007dd43ffb7b128768e87a4198bd0513ffb31"
+    },
+    {
+      "path": "results/search-retired-timeout/wasm-clippy.log",
+      "bytes": 1620,
+      "sha256": "12beb17941dfb4cded2687473f76fa2383628678dcf468507f661cec4c25571a"
+    },
+    {
+      "path": "results/search-retired-timeout/wasm-compile.log",
+      "bytes": 47108,
+      "sha256": "6c7d53d074ba1ca6da9f6008b1567bef6ee8ba294dd81acba2fe2649d90c4c8e"
+    }
+  ]
+}
