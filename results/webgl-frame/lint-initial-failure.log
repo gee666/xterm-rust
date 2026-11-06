@@ -1,0 +1,140 @@
+{"headroom":{"ram":30842957824,"disk":2676748177408},"env":{"TMP":"O:\\xterm-rust-swarm-16\\tmp\\worktrees\\RebeccaWebgl\\tmp","TEMP":"O:\\xterm-rust-swarm-16\\tmp\\worktrees\\RebeccaWebgl\\tmp","TMPDIR":"O:\\xterm-rust-swarm-16\\tmp\\worktrees\\RebeccaWebgl\\tmp"},"command":["cargo","clippy","--locked","-p","xterm-web","--target","wasm32-unknown-unknown","--lib","--all-features","--","-D","warnings"],"status":101}
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.27
+   Compiling quote v1.0.47
+   Compiling wasm-bindgen-shared v0.2.100
+   Compiling syn v2.0.119
+   Compiling log v0.4.34
+   Compiling bumpalo v3.20.3
+   Compiling rustversion v1.0.23
+   Compiling wasm-bindgen v0.2.100
+   Compiling wasm-bindgen-backend v0.2.100
+    Checking equivalent v1.0.3
+    Checking foldhash v0.1.5
+    Checking cfg-if v1.0.5
+    Checking memchr v2.8.3
+   Compiling wasm-bindgen-macro-support v0.2.100
+    Checking once_cell v1.21.4
+    Checking allocator-api2 v0.2.21
+    Checking hashbrown v0.15.5
+   Compiling wasm-bindgen-macro v0.2.100
+    Checking regress v0.10.4
+    Checking js-sys v0.3.77
+    Checking ryu-js v1.0.3
+    Checking xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\RebeccaWebgl\crates\xterm-core)
+    Checking adler2 v2.0.1
+   Compiling zmij v1.0.23
+   Compiling serde_core v1.0.229
+    Checking miniz_oxide v0.8.9
+    Checking wasm-bindgen-futures v0.4.50
+   Compiling serde_json v1.0.154
+    Checking xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\RebeccaWebgl\crates\xterm-addons)
+    Checking xterm-wasm-support v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\RebeccaWebgl\crates\xterm-wasm-support)
+    Checking web-sys v0.3.77
+    Checking itoa v1.0.18
+    Checking xterm-font-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\RebeccaWebgl\crates\xterm-font-addons)
+    Checking xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\RebeccaWebgl\crates\xterm-web)
+error[E0624]: method `initialize_gpu` is private
+  --> crates\xterm-web\src\webgl\browser_frame.rs:94:14
+   |
+94 |         this.initialize_gpu()?;
+   |              ^^^^^^^^^^^^^^ private method
+   |
+  ::: crates\xterm-web\src\webgl\browser_frame_lifecycle.rs:11:5
+   |
+11 |     fn initialize_gpu(&mut self) -> Result<(), JsValue> {
+   |     --------------------------------------------------- private method defined here
+
+error[E0624]: method `request_redraw` is private
+   --> crates\xterm-web\src\webgl\browser_frame.rs:124:14
+    |
+124 |         self.request_redraw(false)
+    |              ^^^^^^^^^^^^^^ private method
+    |
+   ::: crates\xterm-web\src\webgl\browser_frame_lifecycle.rs:160:5
+    |
+160 |     fn request_redraw(&self, sync: bool) -> Result<(), JsValue> {
+    |     ----------------------------------------------------------- private method defined here
+
+error[E0624]: method `refresh_atlas` is private
+   --> crates\xterm-web\src\webgl\browser_frame.rs:162:18
+    |
+162 |             self.refresh_atlas()?;
+    |                  ^^^^^^^^^^^^^ private method
+    |
+   ::: crates\xterm-web\src\webgl\browser_frame_lifecycle.rs:81:5
+    |
+81  |     fn refresh_atlas(&mut self) -> Result<(), JsValue> {
+    |     -------------------------------------------------- private method defined here
+
+error[E0599]: `webgl::renderer_types::UpdateError<wasm_bindgen::JsValue>` doesn't implement `std::fmt::Display`
+   --> crates\xterm-web\src\webgl\browser_frame.rs:178:52
+    |
+178 |                 error => js_sys::Error::new(&error.to_string()).into(),
+    |                                                    ^^^^^^^^^ `webgl::renderer_types::UpdateError<wasm_bindgen::JsValue>` cannot be formatted with the default formatter
+    |
+   ::: crates\xterm-web\src\webgl\renderer_types.rs:82:1
+    |
+82  | pub enum UpdateError<E> {
+    | ----------------------- method `to_string` not found for this enum because it doesn't satisfy `_: Display` or `_: ToString`
+    |
+    = note: the following trait bounds were not satisfied:
+            `webgl::renderer_types::UpdateError<wasm_bindgen::JsValue>: std::fmt::Display`
+            which is required by `webgl::renderer_types::UpdateError<wasm_bindgen::JsValue>: std::string::ToString`
+    = note: in format strings you may be able to use `{:?}` (or {:#?} for pretty-print) instead
+note: the trait `std::fmt::Display` must be implemented
+   --> C:\Users\user\.rustup\toolchains\1.85.1-x86_64-pc-windows-msvc\lib/rustlib/src/rust\library/core/src/fmt/mod.rs:978:1
+    |
+978 | pub trait Display {
+    | ^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following trait defines an item `to_string`, perhaps you need to implement it:
+            candidate #1: `std::string::ToString`
+
+error[E0624]: method `refresh_atlas` is private
+   --> crates\xterm-web\src\webgl\browser_frame.rs:233:14
+    |
+233 |         self.refresh_atlas()?;
+    |              ^^^^^^^^^^^^^ private method
+    |
+   ::: crates\xterm-web\src\webgl\browser_frame_lifecycle.rs:81:5
+    |
+81  |     fn refresh_atlas(&mut self) -> Result<(), JsValue> {
+    |     -------------------------------------------------- private method defined here
+
+error[E0624]: method `request_redraw` is private
+   --> crates\xterm-web\src\webgl\browser_frame.rs:235:14
+    |
+235 |         self.request_redraw(true)
+    |              ^^^^^^^^^^^^^^ private method
+    |
+   ::: crates\xterm-web\src\webgl\browser_frame_lifecycle.rs:160:5
+    |
+160 |     fn request_redraw(&self, sync: bool) -> Result<(), JsValue> {
+    |     ----------------------------------------------------------- private method defined here
+
+error[E0624]: method `request_redraw` is private
+   --> crates\xterm-web\src\webgl\browser_frame.rs:256:14
+    |
+256 |         self.request_redraw(false)
+    |              ^^^^^^^^^^^^^^ private method
+    |
+   ::: crates\xterm-web\src\webgl\browser_frame_lifecycle.rs:160:5
+    |
+160 |     fn request_redraw(&self, sync: bool) -> Result<(), JsValue> {
+    |     ----------------------------------------------------------- private method defined here
+
+error[E0624]: method `refresh_atlas` is private
+   --> crates\xterm-web\src\webgl\browser_frame.rs:260:14
+    |
+260 |         self.refresh_atlas()?;
+    |              ^^^^^^^^^^^^^ private method
+    |
+   ::: crates\xterm-web\src\webgl\browser_frame_lifecycle.rs:81:5
+    |
+81  |     fn refresh_atlas(&mut self) -> Result<(), JsValue> {
+    |     -------------------------------------------------- private method defined here
+
+Some errors have detailed explanations: E0599, E0624.
+For more information about an error, try `rustc --explain E0599`.
+error: could not compile `xterm-web` (lib) due to 8 previous errors

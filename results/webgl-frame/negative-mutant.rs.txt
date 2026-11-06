@@ -1,0 +1,127 @@
+// Copyright (c) 2018-2026 The xterm.js authors. All rights reserved. MIT license.
+use super::GpuRenderers;
+use crate::webgl::{
+    cell_colors::CellColorResolver,
+    glyphs::{GlyphCell, GlyphColorNumbers},
+    model::RenderModel,
+    renderer_frame::FrameHost,
+    renderer_types::{ModelCell, UpdateHost},
+};
+use wasm_bindgen::JsValue;
+use xterm_core::buffer::CellData;
+
+/// Terminal services consumed at their update call sites. This contract exposes
+/// no fake glyph/rectangle methods: all model-to-GPU mutations stay inside Rust's
+/// real frame owner. Color resolution receives the source's persistent resolver.
+/// Implementations may mutate the terminal in callbacks, but may not recursively
+/// borrow the same BrowserFrame while its exclusive render call is in progress.
+pub trait CellSource {
+    fn has_line(&mut self, row: usize) -> Result<bool, JsValue>;
+    fn joined_characters(&mut self, row: usize) -> Result<Vec<[usize; 2]>, JsValue>;
+    fn load_cell(&mut self, row: usize, x: usize, cell: &mut CellData) -> Result<(), JsValue>;
+    fn joined_text(&mut self, row: usize, range: [usize; 2]) -> Result<Vec<u16>, JsValue>;
+    fn resolve_colors(
+        &mut self,
+        cell: &ModelCell,
+        x: usize,
+        row: usize,
+        selected: bool,
+        resolver: &mut CellColorResolver,
+    ) -> Result<(), JsValue>;
+    fn cursor_colors(&mut self) -> Result<[u32; 2], JsValue>;
+    fn rescale_overlapping_glyphs(&mut self) -> Result<bool, JsValue>;
+    fn needs_text_blink(&mut self, needed: bool) -> Result<(), JsValue>;
+    fn cursor_visible(&self) -> bool;
+}
+pub(super) struct GpuHost<'a, S> {
+    pub(super) gpu: &'a mut GpuRenderers,
+    pub(super) source: &'a mut S,
+    pub(super) has_atlas: bool,
+}
+impl<S: CellSource> UpdateHost for GpuHost<'_, S> {
+    type Error = JsValue;
+    fn has_line(&mut self, row: usize) -> Result<bool, JsValue> {
+        self.source.has_line(row)
+    }
+    fn joined_characters(&mut self, row: usize) -> Result<Vec<[usize; 2]>, JsValue> {
+        self.source.joined_characters(row)
+    }
+    fn load_cell(&mut self, row: usize, x: usize, cell: &mut CellData) -> Result<(), JsValue> {
+        self.source.load_cell(row, x, cell)
+    }
+    fn joined_text(&mut self, row: usize, range: [usize; 2]) -> Result<Vec<u16>, JsValue> {
+        self.source.joined_text(row, range)
+    }
+    fn resolve_colors(
+        &mut self,
+        cell: &ModelCell,
+        x: usize,
+        row: usize,
+        selected: bool,
+        resolver: &mut CellColorResolver,
+    ) -> Result<(), JsValue> {
+        self.source.resolve_colors(cell, x, row, selected, resolver)
+    }
+    fn cursor_colors(&mut self) -> Result<[u32; 2], JsValue> {
+        self.source.cursor_colors()
+    }
+    fn update_glyph(
+        &mut self,
+        cell: GlyphCell<'_>,
+        numbers: GlyphColorNumbers,
+    ) -> Result<(), JsValue> {
+        let rescale = self.source.rescale_overlapping_glyphs()?;
+        self.gpu
+            .glyphs
+            .update_cell_with_colors(cell, numbers, rescale)
+    }
+    fn update_backgrounds(&mut self, model: &RenderModel) -> Result<(), JsValue> {
+        self.gpu.rectangles.update_backgrounds(model)
+    }
+    fn update_cursor(&mut self, model: &RenderModel) -> Result<(), JsValue> {
+        self.gpu.rectangles.update_cursor(model);
+        Ok(())
+    }
+    fn needs_text_blink(&mut self, needed: bool) -> Result<(), JsValue> {
+        self.source.needs_text_blink(needed)
+    }
+}
+impl<S: CellSource> FrameHost for GpuHost<'_, S> {
+    // The owner checks attachment and owns both GPU resources before constructing
+    // this short-lived host. LinkRenderLayer has no handleGridChanged override.
+    fn ensure_attached(&mut self) -> Result<bool, JsValue> {
+        Ok(true)
+    }
+    fn grid_changed(&mut self, _start: i64, _end: i64) -> Result<(), JsValue> {
+        Ok(())
+    }
+    fn renderers_ready(&self) -> bool {
+        true
+    }
+    fn begin_frame(&mut self) -> Result<bool, JsValue> {
+        Ok(self.gpu.glyphs.begin_frame())
+    }
+    fn has_atlas(&self) -> bool {
+        self.has_atlas
+    }
+    fn clear_glyphs(&mut self) -> Result<(), JsValue> {
+        self.gpu.glyphs.clear();
+        Ok(())
+    }
+    fn invalidate_atlas_textures(&mut self) -> Result<(), JsValue> {
+        self.gpu.glyphs.invalidate_atlas_textures();
+        Ok(())
+    }
+    fn render_backgrounds(&mut self) -> Result<(), JsValue> {
+        self.gpu.rectangles.render_backgrounds()
+    }
+    fn render_glyphs(&mut self, model: &RenderModel) -> Result<(), JsValue> {
+        { self.gpu.glyphs.clear(); self.gpu.glyphs.render(model) }
+    }
+    fn cursor_visible(&self) -> bool {
+        self.source.cursor_visible()
+    }
+    fn render_cursor(&mut self) -> Result<(), JsValue> {
+        self.gpu.rectangles.render_cursor()
+    }
+}

@@ -1,0 +1,52 @@
+{"headroom":{"ram":31783243776,"disk":2676509806592},"env":{"TMP":"O:\\xterm-rust-swarm-16\\tmp\\worktrees\\RebeccaWebgl\\tmp","TEMP":"O:\\xterm-rust-swarm-16\\tmp\\worktrees\\RebeccaWebgl\\tmp","TMPDIR":"O:\\xterm-rust-swarm-16\\tmp\\worktrees\\RebeccaWebgl\\tmp"},"command":["cargo","clippy","--locked","-p","xterm-web","--target","wasm32-unknown-unknown","--test","wasm_webgl_frame","--all-features","--","-D","warnings"],"status":101}
+   Compiling serde_json v1.0.154
+   Compiling wasm-bindgen-test-macro v0.3.50
+    Checking xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\RebeccaWebgl\crates\xterm-web)
+    Checking wasm-bindgen-test v0.3.50
+error[E0597]: `c` does not live long enough
+   --> crates\xterm-web\tests\support\webgl_frame.rs:192:17
+    |
+191 |         let c = self.services.theme.colors();
+    |             - binding `c` declared here
+192 |         let c = c.borrow();
+    |                 ^ borrowed value does not live long enough
+193 |         Ok([c.cursor_accent.borrow().rgba, c.cursor.borrow().rgba])
+    |             ------------------------ a temporary with access to the borrow is created here ...
+194 |     }
+    |     -
+    |     |
+    |     `c` dropped here while still borrowed
+    |     ... and the borrow might be used here, when that temporary is dropped and runs the destructor for type `std::cell::Ref<'_, xterm_core::color::Color>`
+    |
+    = note: the temporary is part of an expression at the end of a block;
+            consider forcing this temporary to be dropped sooner, before the block's local variables are dropped
+help: for example, you could save the expression's value in a new local variable `x` and then make `x` be the expression at the end of the block
+    |
+193 |         let x = Ok([c.cursor_accent.borrow().rgba, c.cursor.borrow().rgba]); x
+    |         +++++++                                                            +++
+
+error[E0597]: `c` does not live long enough
+   --> crates\xterm-web\tests\support\webgl_frame.rs:193:13
+    |
+192 |         let c = c.borrow();
+    |             - binding `c` declared here
+193 |         Ok([c.cursor_accent.borrow().rgba, c.cursor.borrow().rgba])
+    |             ^-----------------------
+    |             |
+    |             borrowed value does not live long enough
+    |             a temporary with access to the borrow is created here ...
+194 |     }
+    |     -
+    |     |
+    |     `c` dropped here while still borrowed
+    |     ... and the borrow might be used here, when that temporary is dropped and runs the destructor for type `std::cell::Ref<'_, xterm_core::color::Color>`
+    |
+    = note: the temporary is part of an expression at the end of a block;
+            consider forcing this temporary to be dropped sooner, before the block's local variables are dropped
+help: for example, you could save the expression's value in a new local variable `x` and then make `x` be the expression at the end of the block
+    |
+193 |         let x = Ok([c.cursor_accent.borrow().rgba, c.cursor.borrow().rgba]); x
+    |         +++++++                                                            +++
+
+For more information about this error, try `rustc --explain E0597`.
+error: could not compile `xterm-web` (test "wasm_webgl_frame") due to 2 previous errors

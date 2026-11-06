@@ -1,0 +1,63 @@
+// Copyright (c) 2018-2026 The xterm.js authors. All rights reserved. MIT license.
+// The original full renderer supplies the oracle. Only character measurements
+// are injected, matching the typed frame's externally supplied dimensions.
+import { Terminal } from 'browser/public/Terminal';
+import { WebglRenderer } from 'source-webgl/WebglRenderer';
+const scenarios: Record<string, string[]> = {
+  ascii: ['ABCD\r\nxyz', '\x1b[1;1HZ'],
+  colors: ['\x1b[31;44mAB\x1b[0mCD\r\n\x1b[38;2;60;200;90mEF'],
+  unicode: ['界a\u0301😀', '\x1b[2;1Hfi=>'],
+  blocks: ['█▓▒░▀▄▌▐\r\n┌─┬─┐'],
+  cursor: ['ABC\x1b[2D', '\x1b[?25l', '\x1b[?25h'],
+  blink: ['\x1b[5mAB\x1b[0mC'],
+  clear: ['ABC', '\x1b[2J\x1b[H'],
+  restore: ['ABC', '\x1b[2;1HXYZ'],
+  resize: ['ABC', '\x1b[2;1HXYZ'],
+};
+export function frameInputs(name: string): string[] { return scenarios[name]; }
+export async function sourceFrame(name: string): Promise<string> {
+  const terminal = new Terminal({ cols: 8, rows: 4, cursorBlink: false, fontFamily: 'monospace',
+    fontSize: 14, fontWeight: 400, fontWeightBold: 700, blinkIntervalDuration: 0, logLevel: 'off' });
+  const parent = document.createElement('div');
+  document.body.appendChild(parent);
+  terminal.open(parent);
+  const core = (terminal as any)._core;
+  const r: any = new WebglRenderer(terminal, core._characterJoinerService,
+    {width: 8, height: 16}, core._coreBrowserService, core.coreService,
+    core._decorationService, core._logService, core.optionsService, core._themeService, true, true);
+  const gl: WebGL2RenderingContext = r._gl;
+  const results: any[] = [];
+  const redraw: any[] = [];
+  r.onRequestRedraw((e: any) => redraw.push([e.start,e.end,e.sync??false]));
+  try {
+    for (const [index, input] of scenarios[name].entries()) {
+      await new Promise<void>(resolve => terminal.write(input, resolve));
+      if(name==='restore' && index===1) {
+        // Exercise the exact cache-release/GPU-reinitialize phases. Actual
+        // WEBGL_lose_context dispatch is separately tested by context540.
+        r._canvas.dispatchEvent(new Event('webglcontextrestored'));
+      }
+      let resizeReused: boolean|null=null;
+      if(name==='resize' && index===1) {
+        const old=r._charAtlas; r.handleResize(terminal.cols,terminal.rows);
+        resizeReused=old===r._charAtlas;
+        if(resizeReused)throw Error('Expected source link2048/rendererGL atlas configuration churn');
+      }
+      r.renderRows(index===1?1:0, index===1?1:3);
+      gl.finish();
+      const pixels = new Uint8Array(r._canvas.width*r._canvas.height*4);
+      gl.readPixels(0,0,r._canvas.width,r._canvas.height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+      let hash=2166136261, nonzero=0;
+      for(let i=0;i<pixels.length;i++) {hash=Math.imul(hash^pixels[i],16777619)>>>0;if(pixels[i])nonzero++;}
+      results.push({cells:[...r._model.cells],lengths:[...r._model.lineLengths],hash,nonzero,
+        cursor:r._model.cursor??null, pages:r._charAtlas.pages.length,resizeReused});
+    }
+    return JSON.stringify({results,redraw});
+  } finally {
+    r.dispose(); terminal.dispose(); parent.remove();
+    const ext=gl.getExtension('WEBGL_lose_context');
+    if(!ext)throw Error('WEBGL_lose_context required for deterministic test cleanup');
+    await new Promise<void>(resolve=>{gl.canvas.addEventListener('webglcontextlost',()=>resolve(),{once:true});ext.loseContext();});
+    await new Promise<void>(resolve=>requestAnimationFrame(()=>resolve()));
+  }
+}

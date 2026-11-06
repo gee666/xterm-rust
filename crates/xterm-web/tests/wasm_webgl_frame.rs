@@ -1,0 +1,278 @@
+// Copyright (c) 2018-2026 The xterm.js authors. All rights reserved. MIT license.
+#![cfg(target_arch = "wasm32")]
+#[path = "support/webgl_frame.rs"]
+mod support;
+use std::{cell::RefCell, rc::Rc};
+use support::*;
+use wasm_bindgen::JsValue;
+use wasm_bindgen_test::*;
+use xterm_web::{
+    api::Size,
+    terminal::runtime::RuntimeContext,
+    webgl::{
+        browser_frame::BrowserFrame,
+        context_lifecycle::{ContextCallbacks, ContextLifecycle},
+    },
+};
+wasm_bindgen_test_configure!(run_in_browser);
+
+async fn compare(name: &str) {
+    let source = source_frame(name).await.unwrap().as_string().unwrap();
+    let expected: serde_json::Value = serde_json::from_str(&source).unwrap();
+    let runtime = RuntimeContext::default();
+    let h = Harness::new(&runtime, true);
+    let f = Rc::new(RefCell::new(
+        BrowserFrame::new(
+            h.services.clone(),
+            h.screen.clone(),
+            dimensions(),
+            true,
+            Some(true),
+        )
+        .unwrap(),
+    ));
+    let mut cells = Source {
+        services: h.services.clone(),
+        blinking: false,
+        fail: None,
+    };
+    let redraw = Rc::new(RefCell::new(Vec::new()));
+    let log = redraw.clone();
+    let _subscription = f.borrow().on_request_redraw().subscribe(move |e| {
+        log.borrow_mut()
+            .push(serde_json::json!([e.start, e.end, e.sync]))
+    });
+    let weak = Rc::downgrade(&f);
+    let terminal = h.services.terminal.clone();
+    let context = f.borrow().context().clone();
+    let lifecycle = ContextLifecycle::new(
+        context.clone(),
+        h.services.browser.as_ref(),
+        ContextCallbacks {
+            rows: Rc::new(move || {
+                terminal
+                    .rows()
+                    .map(|r| r as f64)
+                    .map_err(|e| xterm_web::js_error::to_js_error(&e))
+            }),
+            log: Rc::new(|_| Ok(())),
+            restore: Rc::new(move || {
+                if let Some(frame) = weak.upgrade() {
+                    frame.borrow_mut().restore()?;
+                }
+                Ok(())
+            }),
+            restart_cursor: Rc::new(|| Ok(())),
+        },
+    )
+    .unwrap();
+    let log = redraw.clone();
+    let _context_subscription = lifecycle.on_request_redraw().subscribe(move |e| {
+        log.borrow_mut()
+            .push(serde_json::json!([e.start, e.end, e.sync]));
+    });
+    let inputs: Vec<String> = serde_json::from_str(&inputs(name)).unwrap();
+    for (i, input) in inputs.iter().enumerate() {
+        h.services.terminal.write(input).unwrap();
+        if name == "restore" && i == 1 {
+            context
+                .canvas()
+                .dispatch_event(&web_sys::Event::new("webglcontextrestored").unwrap())
+                .unwrap();
+        }
+        let mut resize_reused = serde_json::Value::Null;
+        if name == "resize" && i == 1 {
+            let old = f.borrow().atlas().unwrap();
+            f.borrow_mut().resize(dimensions()).unwrap();
+            resize_reused = serde_json::json!(Rc::ptr_eq(&old, &f.borrow().atlas().unwrap()));
+        }
+        f.borrow_mut()
+            .render_rows(
+                if i == 1 { 1 } else { 0 },
+                if i == 1 { 1 } else { 3 },
+                h.context(),
+                Size {
+                    width: 8.0,
+                    height: 16.0,
+                },
+                &mut cells,
+            )
+            .unwrap();
+        let mut got = snapshot(&f.borrow());
+        got["resizeReused"] = resize_reused;
+        let mut want = expected["results"][i].clone();
+        // JSON encodes source integers and Rust f64 differently; compare their
+        // mathematical values for the two scalar cursor metrics only.
+        for value in [&mut got, &mut want] {
+            if !value["cursor"].is_null() {
+                for k in ["cursorWidth", "devicePixelRatio"] {
+                    value["cursor"][k] = serde_json::json!(value["cursor"][k].as_f64().unwrap());
+                }
+            }
+        }
+        assert_eq!(got, want, "{name} step{i}");
+    }
+    let actual: Vec<(f64, f64, bool)> =
+        serde_json::from_value(serde_json::json!(*redraw.borrow())).unwrap();
+    let expected_redraw: Vec<(f64, f64, bool)> =
+        serde_json::from_value(expected["redraw"].clone()).unwrap();
+    assert_eq!(actual, expected_redraw, "{name} redraw");
+    lifecycle.dispose().unwrap();
+    let gl = f.borrow().context().gl().clone();
+    f.borrow_mut().dispose().unwrap();
+    release(&gl).await;
+    assert_eq!(h.screen.child_element_count(), 0);
+}
+#[wasm_bindgen_test]
+async fn actual_ascii_incremental_frame() {
+    compare("ascii").await;
+}
+#[wasm_bindgen_test]
+async fn actual_ansi_background_and_foreground() {
+    compare("colors").await;
+}
+#[wasm_bindgen_test]
+async fn actual_utf16_wide_and_combined_glyphs() {
+    compare("unicode").await;
+}
+#[wasm_bindgen_test]
+async fn actual_custom_block_and_box_glyphs() {
+    compare("blocks").await;
+}
+#[wasm_bindgen_test]
+async fn actual_outline_and_hidden_cursor() {
+    compare("cursor").await;
+}
+#[wasm_bindgen_test]
+async fn actual_blinking_cell_model() {
+    compare("blink").await;
+}
+#[wasm_bindgen_test]
+async fn actual_cleared_rows() {
+    compare("clear").await;
+}
+#[wasm_bindgen_test]
+async fn actual_restore_reacquires_atlas_and_gpu() {
+    compare("restore").await;
+}
+
+#[wasm_bindgen_test]
+async fn actual_resize_config_churn() {
+    compare("resize").await;
+}
+
+#[wasm_bindgen_test]
+async fn detached_attachment_error_identity_and_disposal() {
+    let h = Harness::new(&RuntimeContext::default(), false);
+    let mut f = BrowserFrame::new(
+        h.services.clone(),
+        h.screen.clone(),
+        dimensions(),
+        true,
+        Some(true),
+    )
+    .unwrap();
+    let mut source = Source {
+        services: h.services.clone(),
+        blinking: false,
+        fail: None,
+    };
+    h.services.terminal.write("A").unwrap();
+    let original = f.model().cells.clone();
+    let measured = Size {
+        width: 8.0,
+        height: 16.0,
+    };
+    f.render_rows(0, 3, h.context(), measured, &mut source)
+        .unwrap();
+    assert_eq!(f.model().cells, original);
+    web_sys::window()
+        .unwrap()
+        .document()
+        .unwrap()
+        .body()
+        .unwrap()
+        .append_child(&h.screen)
+        .unwrap();
+    f.render_rows(0, 3, h.context(), Size::default(), &mut source)
+        .unwrap();
+    assert_eq!(f.model().cells, original);
+    let failure: JsValue = js_sys::Object::new().into();
+    source.fail = Some(failure.clone());
+    assert_eq!(
+        f.render_rows(0, 3, h.context(), measured, &mut source)
+            .unwrap_err(),
+        failure
+    );
+    f.render_rows(0, 3, h.context(), measured, &mut source)
+        .unwrap();
+    assert_ne!(f.model().cells, original);
+    let old = f.atlas().unwrap();
+    f.clear_texture_atlas().unwrap();
+    assert!(f.model().cells.iter().all(|word| *word == 0));
+    f.render_rows(0, 3, h.context(), measured, &mut source)
+        .unwrap();
+    f.resize(dimensions()).unwrap();
+    // The unchanged full source resize scenario asserts this same identity
+    // change: link-layer max2048 and GPU max-texture configs differ.
+    assert!(!Rc::ptr_eq(&old, &f.atlas().unwrap()));
+    f.clear().unwrap();
+    let gl = f.context().gl().clone();
+    f.dispose().unwrap();
+    f.dispose().unwrap();
+    assert!(f
+        .render_rows(0, 3, h.context(), measured, &mut source)
+        .is_err());
+    release(&gl).await;
+}
+#[wasm_bindgen_test]
+async fn two_terminals_share_actual_atlas_until_last_release() {
+    let runtime = RuntimeContext::default();
+    let a = Harness::new(&runtime, true);
+    let b = Harness::new(&runtime, true);
+    let mut first = BrowserFrame::new(
+        a.services.clone(),
+        a.screen.clone(),
+        dimensions(),
+        true,
+        Some(true),
+    )
+    .unwrap();
+    let mut second = BrowserFrame::new(
+        b.services.clone(),
+        b.screen.clone(),
+        dimensions(),
+        true,
+        Some(true),
+    )
+    .unwrap();
+    assert!(Rc::ptr_eq(
+        &first.atlas().unwrap(),
+        &second.atlas().unwrap()
+    ));
+    let gl = first.context().gl().clone();
+    first.dispose().unwrap();
+    release(&gl).await;
+    b.services.terminal.write("B").unwrap();
+    let mut source = Source {
+        services: b.services.clone(),
+        blinking: false,
+        fail: None,
+    };
+    second
+        .render_rows(
+            0,
+            3,
+            b.context(),
+            Size {
+                width: 8.0,
+                height: 16.0,
+            },
+            &mut source,
+        )
+        .unwrap();
+    assert!(snapshot(&second)["nonzero"].as_u64().unwrap() > 0);
+    let gl = second.context().gl().clone();
+    second.dispose().unwrap();
+    release(&gl).await;
+}

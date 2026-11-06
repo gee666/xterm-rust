@@ -23,6 +23,8 @@ mod atlas_store;
 mod atlas_styles;
 #[cfg(target_arch = "wasm32")]
 pub mod browser_cache;
+#[cfg(target_arch = "wasm32")]
+pub mod browser_frame;
 pub mod cache;
 #[cfg(target_arch = "wasm32")]
 pub mod canvas_context;
