@@ -1,0 +1,49 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import { importOriginal } from '../scripts/matched-benchmark-import.mjs';
+import { sha256 } from '../scripts/matched-benchmark-adapter.mjs';
+const root = path.resolve(import.meta.dirname, '..');
+const owned = fs.mkdtempSync(path.join(root, 'tmp/import-controls-'));
+const report = [];
+try {
+  const source = path.join(owned, 'source'); fs.mkdirSync(source);
+  const entries = JSON.parse(fs.readFileSync(path.join(root, 'docs/baseline/reference-manifest.json')));
+  for (const entry of entries) {
+    const file = path.join(source, entry.path); fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.copyFileSync(path.join(root, 'source_repo', entry.path), file);
+    assert.equal(sha256(file), entry.sha256);
+  }
+  for (const name of ['headless', 'unicode11', 'unicode-graphemes', 'serialize']) {
+    const filename = name === 'headless' ? 'xterm-headless.mjs' : `addon-${name}.mjs`;
+    const destination = path.join(source, name === 'headless' ? 'headless/lib-headless' : `addons/addon-${name}/lib`, filename);
+    fs.mkdirSync(path.dirname(destination), { recursive: true });
+    fs.copyFileSync(path.join(root, 'tmp/production-js', filename), destination);
+  }
+  const output = path.join(owned, 'provenance.json');
+  const args = { source, report: path.join(root, 'results/matched-performance329/producer-original-sizes.json'),
+    artifacts: path.join(owned, 'good'), output };
+  const imported = importOriginal(args);
+  assert.equal(Object.keys(imported.artifacts).length, 4);
+  report.push({ id: 'actual-production-import', status: 'passed', sourcePins: imported.sources.length, artifacts: imported.artifacts });
+  assert.throws(() => importOriginal(args), /already exists/);
+  assert.equal(JSON.parse(fs.readFileSync(output)).status, 'invalidated until import succeeds');
+  report.push({ id: 'no-destination-overwrite', status: 'passed' });
+  assert.throws(() => importOriginal({ ...args, artifacts: path.join(owned, 'bad-output'), output: path.join(source, 'bad.json') }), /outside source/);
+  report.push({ id: 'reference-output-guard', status: 'passed' });
+  assert.throws(() => importOriginal({ ...args, artifacts: path.join(root, 'results/not-temporary') }), /owned repository tmp/);
+  report.push({ id: 'temporary-root-guard', status: 'passed' });
+  fs.appendFileSync(path.join(source, 'headless/lib-headless/xterm-headless.mjs'), '\n// altered fixture only');
+  const failed = path.join(owned, 'bad-bundle');
+  assert.throws(() => importOriginal({ ...args, artifacts: failed }), /Production bundle changed/);
+  assert.ok(!fs.existsSync(failed));
+  assert.equal(JSON.parse(fs.readFileSync(output)).status, 'invalidated until import succeeds');
+  report.push({ id: 'bundle-drift-fails-and-cleans', status: 'passed' });
+  fs.appendFileSync(path.join(source, entries[0].path), '\n');
+  assert.throws(() => importOriginal({ ...args, artifacts: path.join(owned, 'bad-reference') }), /Reference source changed/);
+  report.push({ id: 'reference-drift-fails', status: 'passed' });
+} finally {
+  fs.writeFileSync(path.join(root, 'results/matched-performance329/import-controls.json'), JSON.stringify(report, null, 2));
+  fs.rmSync(owned, { recursive: true });
+}
+console.log(`${report.length} importer controls passed; owned temporary reference/artifacts removed`);

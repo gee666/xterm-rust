@@ -1,0 +1,483 @@
+{
+  "schemaVersion": 1,
+  "tool": "distribution-size.mjs v1",
+  "node": "v24.15.0",
+  "codecs": {
+    "zlib": "1.3.1-e00f703",
+    "brotli": "1.2.0"
+  },
+  "compression": {
+    "gzip": {
+      "level": 9
+    },
+    "brotli": {
+      "quality": 11,
+      "mode": "generic",
+      "lgwin": 22
+    }
+  },
+  "method": "Unique normalized file paths per distribution; sum independently compressed files, not archive bytes. Native raw bytes are not JS download bytes.",
+  "status": "Measured declared artifacts only. Manifest provenance is caller-supplied; neither equivalent functionality nor matched-feature coverage is established by sizes.",
+  "distributions": [
+    {
+      "id": "original-headless-core-esm",
+      "directory": "headless",
+      "kind": "headless-js",
+      "profile": "release",
+      "scope": "Core-only original ESM distribution, all fourteen optional addons excluded",
+      "addons": [],
+      "files": [
+        {
+          "path": "LICENSE",
+          "role": "license",
+          "sha256": "883674266227c392ea9abeaa8f69148fa7516d106caf1e34bfc2bcd5cb1e803b",
+          "raw": 1282,
+          "gzip": 770,
+          "brotli": 545
+        },
+        {
+          "path": "xterm-headless.mjs",
+          "role": "production ESM bundle",
+          "sha256": "7b814befec422dd3696df2a0d039fbfa96c0d0bb3ed0506ad4bcc164f4815b5c",
+          "raw": 139103,
+          "gzip": 33827,
+          "brotli": 28853
+        }
+      ],
+      "build": {
+        "commands": [
+          "node bin/esbuild.mjs --prod",
+          "node bin/esbuild.mjs --prod --headless",
+          "node bin/esbuild.mjs --prod --addon=attach",
+          "node bin/esbuild.mjs --prod --addon=clipboard",
+          "node bin/esbuild.mjs --prod --addon=fit",
+          "node bin/esbuild.mjs --prod --addon=image",
+          "node bin/esbuild.mjs --prod --addon=ligatures",
+          "node bin/esbuild.mjs --prod --addon=program-status",
+          "node bin/esbuild.mjs --prod --addon=progress",
+          "node bin/esbuild.mjs --prod --addon=search",
+          "node bin/esbuild.mjs --prod --addon=serialize",
+          "node bin/esbuild.mjs --prod --addon=unicode-graphemes",
+          "node bin/esbuild.mjs --prod --addon=unicode11",
+          "node bin/esbuild.mjs --prod --addon=web-fonts",
+          "node bin/esbuild.mjs --prod --addon=web-links",
+          "node bin/esbuild.mjs --prod --addon=webgl"
+        ],
+        "sourceSha256": "319645846cc7e05738b9283d15a6497ec88bd2c9cb723e25c6986122ca533ece",
+        "toolchain": "Node v24.15.0; esbuild 0.28.1; lock SHA256 1d4fe6fb8f91e404df5608b4421008116ac9d5d37b038c9b16d261246d5d5e0e",
+        "flags": "Unchanged bin/esbuild.mjs --prod: minify=true, treeShaking=true, target=es2021, legalComments=none; emitted sourcemaps excluded from download totals; no native LTO/strip flags apply"
+      },
+      "excluded": [],
+      "totals": {
+        "raw": 140385,
+        "gzip": 34597,
+        "brotli": 29398
+      }
+    },
+    {
+      "id": "original-web-all-addons-esm",
+      "directory": "web-all-addons",
+      "kind": "web",
+      "profile": "release",
+      "addons": [
+        "attach",
+        "clipboard",
+        "fit",
+        "image",
+        "ligatures",
+        "program-status",
+        "progress",
+        "search",
+        "serialize",
+        "unicode-graphemes",
+        "unicode11",
+        "web-fonts",
+        "web-links",
+        "webgl"
+      ],
+      "files": [
+        {
+          "path": "LICENSE",
+          "role": "core license",
+          "sha256": "883674266227c392ea9abeaa8f69148fa7516d106caf1e34bfc2bcd5cb1e803b",
+          "raw": 1282,
+          "gzip": 770,
+          "brotli": 545
+        },
+        {
+          "path": "addons/addon-attach.mjs",
+          "role": "production addon ESM bundle",
+          "sha256": "f4926d0aaaaf84064ec6a4cbbe8d2d5625d65daf7dbd3a16c1a83f9838cbd265",
+          "raw": 2069,
+          "gzip": 896,
+          "brotli": 737
+        },
+        {
+          "path": "addons/addon-clipboard.mjs",
+          "role": "production addon ESM bundle",
+          "sha256": "6224b9c4aafc8ce869d7c757bece85bb9d85dc800617609a6397e3dba3588087",
+          "raw": 2076,
+          "gzip": 929,
+          "brotli": 788
+        },
+        {
+          "path": "addons/addon-fit.mjs",
+          "role": "production addon ESM bundle",
+          "sha256": "4db5d9110939897723dfc6260e2e463ed242e5d3e0e28c8d70dddccb13ae0b0a",
+          "raw": 2012,
+          "gzip": 814,
+          "brotli": 672
+        },
+        {
+          "path": "addons/addon-image.mjs",
+          "role": "production addon ESM bundle",
+          "sha256": "7554d8b79aa7361d3f91609fcceff06362964c6c68eb3a95e5c90541e9d85c55",
+          "raw": 81414,
+          "gzip": 25408,
+          "brotli": 22065
+        },
+        {
+          "path": "addons/addon-ligatures.mjs",
+          "role": "production addon ESM bundle",
+          "sha256": "ef936161062c55f7843c90ebb5bf0d71bd68ced9d9931cb01a983a1a393c1102",
+          "raw": 286755,
+          "gzip": 80336,
+          "brotli": 67670
+        },
+        {
+          "path": "addons/addon-program-status.mjs",
+          "role": "production addon ESM bundle",
+          "sha256": "61dc6214a6f13d8ab03a01d8ca4df5d3baf82e1699cbbd43b866854a8bb0114f",
+          "raw": 7061,
+          "gzip": 2738,
+          "brotli": 2455
+        },
+        {
+          "path": "addons/addon-progress.mjs",
+          "role": "production addon ESM bundle",
+          "sha256": "e2f1745e0cd9f99b66ca8eed1bb5d956662ef72e61c423aa656af2b6b787e7e7",
+          "raw": 1814,
+          "gzip": 823,
+          "brotli": 683
+        },
+        {
+          "path": "addons/addon-search.mjs",
+          "role": "production addon ESM bundle",
+          "sha256": "a6615ce9ab05eab0c77aece6a1eb848258a34cb38a62cd593bf0c75490a482c7",
+          "raw": 15827,
+          "gzip": 4549,
+          "brotli": 4076
+        },
+        {
+          "path": "addons/addon-serialize.mjs",
+          "role": "production addon ESM bundle",
+          "sha256": "d687a5ad1ac5e4aa521bb8e59f85ac9b300ef8bfb2426dfe898735367b002b37",
+          "raw": 17737,
+          "gzip": 5678,
+          "brotli": 5071
+        },
+        {
+          "path": "addons/addon-unicode-graphemes.mjs",
+          "role": "production addon ESM bundle",
+          "sha256": "da970e981b0bfc6ee6bc46cd2940782694946971de2d1c7d5042b51570398423",
+          "raw": 13080,
+          "gzip": 6978,
+          "brotli": 6288
+        },
+        {
+          "path": "addons/addon-unicode11.mjs",
+          "role": "production addon ESM bundle",
+          "sha256": "e2caa0203dfc357d9b665a928188bb8a2a910a546d64ad6e5a2c3b05a58a73f0",
+          "raw": 10320,
+          "gzip": 4318,
+          "brotli": 3069
+        },
+        {
+          "path": "addons/addon-web-fonts.mjs",
+          "role": "production addon ESM bundle",
+          "sha256": "777153ac0e58bab7b532782a8f76b9fcdcacdb74e987e345b8c4b7bde12a6698",
+          "raw": 2308,
+          "gzip": 1085,
+          "brotli": 926
+        },
+        {
+          "path": "addons/addon-web-links.mjs",
+          "role": "production addon ESM bundle",
+          "sha256": "810724729ea47cbdca2a5b99cd6667f381f6e030350df637644dc1069513611c",
+          "raw": 3173,
+          "gzip": 1495,
+          "brotli": 1290
+        },
+        {
+          "path": "addons/addon-webgl.mjs",
+          "role": "production addon ESM bundle",
+          "sha256": "bcbea8f9e922ec1a42b1c4ea3c9345825d6afa8cc314e270d79dd83c9d0334c7",
+          "raw": 254899,
+          "gzip": 68360,
+          "brotli": 52920
+        },
+        {
+          "path": "licenses/addon-attach.txt",
+          "role": "addon license",
+          "sha256": "be00a2cbd06428ca2f9ba40f110db276174371ccd72f7111315913e0c378abbe",
+          "raw": 1122,
+          "gzip": 694,
+          "brotli": 500
+        },
+        {
+          "path": "licenses/addon-clipboard.txt",
+          "role": "addon license",
+          "sha256": "009ed1b414890166dcfd1b55c2c40dea22ccaf9c212906d74af4d5cd9025246e",
+          "raw": 1122,
+          "gzip": 693,
+          "brotli": 500
+        },
+        {
+          "path": "licenses/addon-fit.txt",
+          "role": "addon license",
+          "sha256": "89d68aaa57fea28c5fb79d58ccd44e9d5ce71220abdf3362e1c1586bc8355d6d",
+          "raw": 1122,
+          "gzip": 693,
+          "brotli": 500
+        },
+        {
+          "path": "licenses/addon-image.txt",
+          "role": "addon license",
+          "sha256": "ab1a22ca6743cd221c6b9293bdc475f872cad3d850476361adcd9ba03add6b25",
+          "raw": 1145,
+          "gzip": 705,
+          "brotli": 504
+        },
+        {
+          "path": "licenses/addon-ligatures.txt",
+          "role": "addon license",
+          "sha256": "6d66f55687e5578496df706010eebfe80a7558612f142dd244c72156f5ad1c42",
+          "raw": 2343,
+          "gzip": 800,
+          "brotli": 576
+        },
+        {
+          "path": "licenses/addon-program-status.txt",
+          "role": "addon license",
+          "sha256": "fbd9d0f7435cf41847cf2e9e588ca56e9031f22f424cb1e3c466792be60996d2",
+          "raw": 1122,
+          "gzip": 694,
+          "brotli": 500
+        },
+        {
+          "path": "licenses/addon-progress.txt",
+          "role": "addon license",
+          "sha256": "85d4476d0ca6bbf970c361c12cb94be89b504c06af7042022c67d781a6233def",
+          "raw": 1122,
+          "gzip": 693,
+          "brotli": 500
+        },
+        {
+          "path": "licenses/addon-search.txt",
+          "role": "addon license",
+          "sha256": "be00a2cbd06428ca2f9ba40f110db276174371ccd72f7111315913e0c378abbe",
+          "raw": 1122,
+          "gzip": 694,
+          "brotli": 500
+        },
+        {
+          "path": "licenses/addon-serialize.txt",
+          "role": "addon license",
+          "sha256": "883674266227c392ea9abeaa8f69148fa7516d106caf1e34bfc2bcd5cb1e803b",
+          "raw": 1282,
+          "gzip": 770,
+          "brotli": 545
+        },
+        {
+          "path": "licenses/addon-unicode-graphemes.txt",
+          "role": "addon license",
+          "sha256": "009ed1b414890166dcfd1b55c2c40dea22ccaf9c212906d74af4d5cd9025246e",
+          "raw": 1122,
+          "gzip": 693,
+          "brotli": 500
+        },
+        {
+          "path": "licenses/addon-unicode11.txt",
+          "role": "addon license",
+          "sha256": "89d68aaa57fea28c5fb79d58ccd44e9d5ce71220abdf3362e1c1586bc8355d6d",
+          "raw": 1122,
+          "gzip": 693,
+          "brotli": 500
+        },
+        {
+          "path": "licenses/addon-web-fonts.txt",
+          "role": "addon license",
+          "sha256": "85d4476d0ca6bbf970c361c12cb94be89b504c06af7042022c67d781a6233def",
+          "raw": 1122,
+          "gzip": 693,
+          "brotli": 500
+        },
+        {
+          "path": "licenses/addon-web-links.txt",
+          "role": "addon license",
+          "sha256": "be00a2cbd06428ca2f9ba40f110db276174371ccd72f7111315913e0c378abbe",
+          "raw": 1122,
+          "gzip": 694,
+          "brotli": 500
+        },
+        {
+          "path": "licenses/addon-webgl.txt",
+          "role": "addon license",
+          "sha256": "7d9c4dfdb2d3ebe9cf9e9f33251f21f84ed545abde5cbdc75676c01dc15dccc2",
+          "raw": 1122,
+          "gzip": 694,
+          "brotli": 500
+        },
+        {
+          "path": "licenses/dependencies/inwasm-runtime/LICENSE",
+          "role": "supplemental MIT notice for bundled runtime",
+          "sha256": "f12c25bc9d50006f78cd83bc53fe82f121c07474dd9de71dfe924bd01f268fe0",
+          "raw": 1065,
+          "gzip": 653,
+          "brotli": 470
+        },
+        {
+          "path": "licenses/dependencies/lru-cache/LICENSE.md",
+          "role": "bundled dependency license or notice",
+          "sha256": "8a1af140fdfbf5afd3df27f7e662f989c5b963a300020dfafce42033cae9e004",
+          "raw": 1552,
+          "gzip": 735,
+          "brotli": 561
+        },
+        {
+          "path": "licenses/dependencies/opentype.js/LICENSE",
+          "role": "bundled dependency license or notice",
+          "sha256": "a5b87c9bc191e7f9c06b07bd7cbbed3ed846dfdb50e859484b2c245aa1ab2e61",
+          "raw": 1085,
+          "gzip": 666,
+          "brotli": 482
+        },
+        {
+          "path": "licenses/dependencies/sixel/LICENSE",
+          "role": "bundled dependency license or notice",
+          "sha256": "4889ab0b3317d79adcec7e94be30107f422893379866b9a0af3839421239ae09",
+          "raw": 1060,
+          "gzip": 651,
+          "brotli": 468
+        },
+        {
+          "path": "licenses/dependencies/xterm-wasm-parts/LICENSE",
+          "role": "bundled dependency license or notice",
+          "sha256": "5aba2950119f7ba8104c51197e1fd2ae5308eb53fdfdbad4a0f03797a4352534",
+          "raw": 1108,
+          "gzip": 685,
+          "brotli": 493
+        },
+        {
+          "path": "xterm.css",
+          "role": "required CSS",
+          "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d",
+          "raw": 8154,
+          "gzip": 2725,
+          "brotli": 2124
+        },
+        {
+          "path": "xterm.mjs",
+          "role": "production core ESM bundle",
+          "sha256": "581ce4bb989b7981b9640097eb4ebf091ada2b2f9d1e084b813245e5ac90aad0",
+          "raw": 344533,
+          "gzip": 83989,
+          "brotli": 70579
+        }
+      ],
+      "scope": "Core plus all original addon production ESM bundles and bundled dependency notices. Ligatures uses the unchanged upstream node-platform build; web runtime compatibility is not established by this size total.",
+      "build": {
+        "commands": [
+          "node bin/esbuild.mjs --prod",
+          "node bin/esbuild.mjs --prod --headless",
+          "node bin/esbuild.mjs --prod --addon=attach",
+          "node bin/esbuild.mjs --prod --addon=clipboard",
+          "node bin/esbuild.mjs --prod --addon=fit",
+          "node bin/esbuild.mjs --prod --addon=image",
+          "node bin/esbuild.mjs --prod --addon=ligatures",
+          "node bin/esbuild.mjs --prod --addon=program-status",
+          "node bin/esbuild.mjs --prod --addon=progress",
+          "node bin/esbuild.mjs --prod --addon=search",
+          "node bin/esbuild.mjs --prod --addon=serialize",
+          "node bin/esbuild.mjs --prod --addon=unicode-graphemes",
+          "node bin/esbuild.mjs --prod --addon=unicode11",
+          "node bin/esbuild.mjs --prod --addon=web-fonts",
+          "node bin/esbuild.mjs --prod --addon=web-links",
+          "node bin/esbuild.mjs --prod --addon=webgl"
+        ],
+        "sourceSha256": "319645846cc7e05738b9283d15a6497ec88bd2c9cb723e25c6986122ca533ece",
+        "toolchain": "Node v24.15.0; esbuild 0.28.1; lock SHA256 1d4fe6fb8f91e404df5608b4421008116ac9d5d37b038c9b16d261246d5d5e0e",
+        "flags": "Unchanged bin/esbuild.mjs --prod: minify=true, treeShaking=true, target=es2021, legalComments=none; emitted sourcemaps excluded from download totals; no native LTO/strip flags apply"
+      },
+      "excluded": [],
+      "totals": {
+        "raw": 1077496,
+        "gzip": 305184,
+        "brotli": 251557
+      }
+    },
+    {
+      "id": "original-web-core-esm",
+      "directory": "web",
+      "kind": "web",
+      "profile": "release",
+      "scope": "Core-only original ESM distribution, all fourteen optional addons excluded",
+      "addons": [],
+      "files": [
+        {
+          "path": "LICENSE",
+          "role": "license",
+          "sha256": "883674266227c392ea9abeaa8f69148fa7516d106caf1e34bfc2bcd5cb1e803b",
+          "raw": 1282,
+          "gzip": 770,
+          "brotli": 545
+        },
+        {
+          "path": "xterm.css",
+          "role": "required CSS",
+          "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d",
+          "raw": 8154,
+          "gzip": 2725,
+          "brotli": 2124
+        },
+        {
+          "path": "xterm.mjs",
+          "role": "production ESM bundle",
+          "sha256": "581ce4bb989b7981b9640097eb4ebf091ada2b2f9d1e084b813245e5ac90aad0",
+          "raw": 344533,
+          "gzip": 83989,
+          "brotli": 70579
+        }
+      ],
+      "build": {
+        "commands": [
+          "node bin/esbuild.mjs --prod",
+          "node bin/esbuild.mjs --prod --headless",
+          "node bin/esbuild.mjs --prod --addon=attach",
+          "node bin/esbuild.mjs --prod --addon=clipboard",
+          "node bin/esbuild.mjs --prod --addon=fit",
+          "node bin/esbuild.mjs --prod --addon=image",
+          "node bin/esbuild.mjs --prod --addon=ligatures",
+          "node bin/esbuild.mjs --prod --addon=program-status",
+          "node bin/esbuild.mjs --prod --addon=progress",
+          "node bin/esbuild.mjs --prod --addon=search",
+          "node bin/esbuild.mjs --prod --addon=serialize",
+          "node bin/esbuild.mjs --prod --addon=unicode-graphemes",
+          "node bin/esbuild.mjs --prod --addon=unicode11",
+          "node bin/esbuild.mjs --prod --addon=web-fonts",
+          "node bin/esbuild.mjs --prod --addon=web-links",
+          "node bin/esbuild.mjs --prod --addon=webgl"
+        ],
+        "sourceSha256": "319645846cc7e05738b9283d15a6497ec88bd2c9cb723e25c6986122ca533ece",
+        "toolchain": "Node v24.15.0; esbuild 0.28.1; lock SHA256 1d4fe6fb8f91e404df5608b4421008116ac9d5d37b038c9b16d261246d5d5e0e",
+        "flags": "Unchanged bin/esbuild.mjs --prod: minify=true, treeShaking=true, target=es2021, legalComments=none; emitted sourcemaps excluded from download totals; no native LTO/strip flags apply"
+      },
+      "excluded": [],
+      "totals": {
+        "raw": 353969,
+        "gzip": 87484,
+        "brotli": 73248
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { runtimePins, verify } from '../scripts/matched-benchmark-adapter.mjs';
+import { jsonHash } from '../scripts/benchmark-contract.mjs';
+const root = path.resolve(import.meta.dirname, '..');
+const file = path.join(root, 'results/matched-performance329/javascript-provenance.json');
+const provenance = JSON.parse(fs.readFileSync(file));
+provenance.runtime = runtimePins(root);
+provenance.build.flags = provenance.build.flags.split('; adapter-runtime-sha256=')[0] +
+  `; adapter-runtime-sha256=${jsonHash(provenance.runtime.map(({ name, sha256 }) => ({ name, sha256 })))}`;
+verify(provenance);
+fs.writeFileSync(file, JSON.stringify(provenance, null, 2));
+console.log(`Verified ${provenance.sources.length} source / ${Object.keys(provenance.artifacts).length} bundle / ${provenance.runtime.length} adapter runtime pins`);

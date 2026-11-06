@@ -55,8 +55,8 @@ export async function adapt({ engine, provenance, manifest, pairedReceipt, worke
     raw = [];
     for (const row of manifest.cases) {
       const operations = prepare(row), warmup = [], measurements = [];
-      for (let i = 0; i < manifest.warmup; i++) warmup.push(await sample(row, implementation, operations));
-      for (let i = 0; i < manifest.repetitions; i++) measurements.push(await sample(row, implementation, operations));
+      for (let i = 0; i < manifest.warmup; i++) warmup.push(await sample(row, implementation, operations, manifest.environment.writeMode));
+      for (let i = 0; i < manifest.repetitions; i++) measurements.push(await sample(row, implementation, operations, manifest.environment.writeMode));
       raw.push({ id: row.id, warmup, measurements });
     }
   } else {

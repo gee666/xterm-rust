@@ -41,7 +41,8 @@ export async function loadEngine(artifacts) {
   } finally { probe.dispose(); }
   return { Terminal, Unicode11Addon, UnicodeGraphemesAddon, SerializeAddon, charsets };
 }
-export async function sample(row, engine, operations = prepare(row)) {
+export async function sample(row, engine, operations = prepare(row), writeMode = 'public-callback') {
+  assert.ok(['public-callback', 'synchronous-core'].includes(writeMode), 'Unsupported write timing mode');
   const { unicode, settings, ...size } = row.options;
   const terminal = new engine.Terminal({ ...size, ...settings });
   const events = [], outputs = [];
@@ -57,13 +58,16 @@ export async function sample(row, engine, operations = prepare(row)) {
     observers(terminal, events);
     const start = process.hrtime.bigint();
     for (const operation of operations) {
-      if (operation.kind === 'write') await new Promise(done => terminal.write(operation.input, done));
-      else if (operation.kind === 'resize') terminal.resize(operation.cols, operation.rows);
+      if (operation.kind === 'write') {
+        if (writeMode === 'public-callback') await new Promise(done => terminal.write(operation.input, done));
+        else terminal._core.writeSync(operation.input);
+      } else if (operation.kind === 'resize') terminal.resize(operation.cols, operation.rows);
       else outputs.push(serializer.serialize());
     }
     const durationMs = Number(process.hrtime.bigint() - start) / 1e6;
-    // Public write callbacks have completed the parser and its synchronous event
-    // dispatch. This is headless work, with no browser frame/GPU completion claim.
+    // These workloads use only builtin synchronous handlers. The optional
+    // deprecated production writeSync path is explicitly an internal-core
+    // comparison, never a public API or async-handler completion claim.
     assert.equal(terminal._core._writeBuffer._pendingData, 0, 'Queued writes remain');
     return { durationMs, completion: 'completed', pendingOperations: 0,
       output: { terminalTrace: `${richSnapshot(terminal, engine.charsets)}\t${events.join('/')}\n`,

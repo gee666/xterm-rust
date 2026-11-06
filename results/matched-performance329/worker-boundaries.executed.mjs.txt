@@ -1,0 +1,42 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+import { prepared, verify } from '../scripts/matched-benchmark-adapter.mjs';
+const root = path.resolve(import.meta.dirname, '..'), directory = path.join(root, 'results/matched-performance329');
+const provenance = JSON.parse(fs.readFileSync(path.join(directory, 'rust-provenance.json')));
+verify(provenance);
+const manifest = JSON.parse(fs.readFileSync(path.join(directory, 'manifest.json')));
+const original = prepared(manifest);
+const changes = [
+  ['negative-dimension', input => { input.cases[0].options.cols = -1; }],
+  ['fractional-dimension', input => { input.cases[0].options.cols = 2.5; }],
+  ['unsupported-option', input => { input.cases[0].options.settings.foo = true; }],
+  ['unsupported-provider', input => { input.cases[0].options.unicode.provider = 'fake'; }],
+  ['unknown-operation', input => { input.cases[0].operations[0].kind = 'fake'; }],
+  ['unsupported-addon', input => { input.cases[0].operations = [{kind:'addon',addon:'search',method:'findNext',arguments:[]}]; }],
+  ['invalid-hex', input => { input.cases[0].operations[0].units = '1,,2'; }],
+  ['invalid-byte', input => { input.cases[0].operations[0] = {kind:'write',encoding:'utf8-bytes',units:'100'}; }],
+  ['insufficient-repetitions', input => { input.repetitions = 9; }]
+];
+const scratch = fs.mkdtempSync(path.join(root, 'tmp/worker-boundaries-')), report = [];
+try {
+  for (const [id, change] of changes) {
+    const input = structuredClone(original); change(input);
+    const inputPath = path.join(scratch, 'input.json'), outputPath = path.join(scratch, 'output.json');
+    fs.writeFileSync(inputPath, JSON.stringify(input));
+    const command = spawnSync(provenance.artifacts.native.path, [inputPath, outputPath],
+      { cwd: root, encoding: 'utf8', timeout: 10000, windowsHide: true });
+    const row = { id, status: command.status, signal: command.signal, error: command.error?.message ?? null,
+      stdout: command.stdout, stderr: command.stderr, input };
+    report.push(row);
+    assert.equal(command.error, undefined); assert.notEqual(command.status, 0);
+    assert.ok(!command.stderr.includes('panicked at'), 'Untrusted worker input must not panic');
+    assert.ok(!fs.existsSync(outputPath), 'Rejected worker must not emit a successful result');
+  }
+  verify(provenance);
+} finally {
+  fs.writeFileSync(path.join(directory, 'worker-boundaries.json'), JSON.stringify(report, null, 2));
+  fs.rmSync(scratch, { recursive: true });
+}
+console.log(`${report.length} actual release worker rejection controls passed`);

@@ -1,0 +1,42 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import { sha256, verify } from '../scripts/matched-benchmark-adapter.mjs';
+import { jsonHash } from '../scripts/benchmark-contract.mjs';
+const root = path.resolve(import.meta.dirname, '..');
+const donor = 'O:/xterm-rust-swarm-16/tmp/worktrees/Dale333';
+const receipt = path.join(donor, 'results/distribution333/original/original-sizes.json');
+const report = JSON.parse(fs.readFileSync(receipt));
+const headless = report.distributions.find(row => row.id === 'original-headless-core-esm');
+const all = report.distributions.find(row => row.id === 'original-web-all-addons-esm');
+const out = path.join(root, 'results/matched-performance329'); fs.mkdirSync(out, { recursive: true });
+fs.copyFileSync(receipt, path.join(out, 'producer-original-sizes.json'));
+const dir = path.join(root, 'tmp/production-js'); fs.mkdirSync(dir, { recursive: true });
+const artifacts = {};
+for (const name of ['headless', 'unicode11', 'unicode-graphemes', 'serialize']) {
+  const filename = name === 'headless' ? 'xterm-headless.mjs' : `addon-${name}.mjs`;
+  const expected = (name === 'headless' ? headless : all).files.find(row => row.path.endsWith(filename));
+  assert.ok(expected);
+  const input = path.join(donor, 'source_repo', name === 'headless' ? 'headless/lib-headless' : `addons/addon-${name}/lib`, filename);
+  assert.equal(sha256(input), expected.sha256);
+  const destination = path.join(dir, filename);
+  fs.copyFileSync(input, destination); assert.equal(sha256(destination), expected.sha256);
+  artifacts[name] = { path: destination, sha256: expected.sha256 };
+}
+const manifestPath = path.join(root, 'docs/baseline/reference-manifest.json');
+const manifest = JSON.parse(fs.readFileSync(manifestPath));
+const sources = [];
+for (const pin of manifest) {
+  for (const sourceRoot of [root, 'P:/workshop/Windows_Worshop/oira666/xterm-rust'])
+    assert.equal(sha256(path.join(sourceRoot, 'source_repo', pin.path)), pin.sha256, `Reference mismatch ${pin.path}`);
+  sources.push({ name: `source_repo/${pin.path}`, path: path.join(root, 'source_repo', pin.path), sha256: pin.sha256 });
+}
+sources.push({ name: 'docs/baseline/reference-manifest.json', path: manifestPath, sha256: sha256(manifestPath) });
+const build = { ...headless.build,
+  sourceSha256: jsonHash(sources.map(({ name, sha256 }) => ({ name, sha256 }))),
+  artifactSha256: jsonHash(Object.entries(artifacts).map(([name, pin]) => ({ name, sha256: pin.sha256 }))),
+  flags: `${headless.build.flags}; reused verified task333 artifacts; producer source digest ${headless.build.sourceSha256}; independent reference pins ${manifest.length}; runtime ${process.version}` };
+const provenance = { sources, artifacts, build };
+verify(provenance);
+fs.writeFileSync(path.join(out, 'javascript-provenance.json'), JSON.stringify(provenance, null, 2));
+console.log(JSON.stringify({ copied: artifacts, independentReferencePins: manifest.length, build }, null, 2));

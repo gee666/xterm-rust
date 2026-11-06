@@ -1,0 +1,16 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { sha256 } from '../scripts/matched-benchmark-adapter.mjs';
+const root = path.resolve(import.meta.dirname, '..');
+const dir = path.join(root, 'results/matched-performance329');
+const phase = path.join(dir, 'public-callback');
+fs.mkdirSync(phase);
+const names = fs.readdirSync(dir).filter(name => fs.lstatSync(path.join(dir, name)).isFile());
+const pins = names.map(name => ({ name, sha256: sha256(path.join(dir, name)) }));
+for (const pin of pins) {
+  const destination = path.join(phase, pin.name);
+  fs.copyFileSync(path.join(dir, pin.name), destination);
+  if (sha256(destination) !== pin.sha256) throw new Error(`Archive mismatch ${pin.name}`);
+}
+fs.writeFileSync(path.join(phase, 'archive.json'), JSON.stringify({ sourceCommit: 'f837222df414cd9eac23ff9d01ad955d71856aa2', pins }, null, 2));
+console.log(`Verified public-callback archive ${pins.length} files`);

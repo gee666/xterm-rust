@@ -36,7 +36,7 @@ export async function capture(provenance, environment) {
     for (const op of row.operations.filter(op => op.kind === 'write')) {
       const bytes = Buffer.from(op.data, 'base64'); inputBytes += bytes.length; input.update(bytes);
     }
-    const expectedOutput = (await sample(row, engine)).output;
+    const expectedOutput = (await sample(row, engine, undefined, environment.writeMode)).output;
     cases.push({ ...row, inputBytes, inputSha256: input.digest('hex'), operationCount: row.operations.length,
       expectedOutput, expectedOutputSha256: outputHash(expectedOutput) });
   }
@@ -46,7 +46,8 @@ export async function capture(provenance, environment) {
   return manifest;
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  if (process.argv.length !== 5) throw new Error('Usage: matched-benchmark-workloads.mjs JS_PROVENANCE.json RUST_PROVENANCE.json MANIFEST.json');
+  const synchronous = process.argv.length === 6 && process.argv[5] === '--synchronous-core';
+  if (process.argv.length !== 5 && !synchronous) throw new Error('Usage: matched-benchmark-workloads.mjs JS_PROVENANCE.json RUST_PROVENANCE.json MANIFEST.json [--synchronous-core]');
   const provenance = JSON.parse(readFileSync(process.argv[2], 'utf8'));
   const rust = JSON.parse(readFileSync(process.argv[3], 'utf8'));
   verify(rust);
@@ -74,6 +75,8 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
       method: 'minimum positive consecutive delta across 10000 reads outside measurements; observed granularity, not a clock accuracy claim' },
     concurrency: 'one measured engine at a time; inspect retained resource receipt for other machine activity',
     order: 'all JavaScript cases then all Rust cases; 2 fresh-terminal warmups then 10 fresh-terminal measurements per case',
-    scope: 'headless public JS callback versus native synchronous Rust engine, not browser rendering or startup' });
+    writeMode: synchronous ? 'synchronous-core' : 'public-callback',
+    scope: synchronous ? 'deprecated internal production JS CoreTerminal.writeSync versus native synchronous CoreTerminal, builtin synchronous handlers only; no public API/async/browser/startup claim' :
+      'headless public JS callback versus native synchronous Rust engine, not browser rendering or startup' });
   writeFileSync(process.argv[4], JSON.stringify(manifest));
 }

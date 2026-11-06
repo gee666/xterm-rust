@@ -31,7 +31,7 @@ try {
   const mismatches = [];
   for (let i = 0; i < manifest.cases.length; i++) {
     const expected = manifest.cases[i], native = captured[i];
-    const original = (await sample(expected, engine)).output;
+    const original = (await sample(expected, engine, undefined, manifest.environment.writeMode)).output;
     const row = { id: expected.id, expected: expected.expectedOutput, javascript: original, rust: native.output };
     receipt.cases.push(row);
     assert.equal(native.id, expected.id);

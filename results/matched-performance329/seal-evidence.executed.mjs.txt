@@ -1,0 +1,78 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { validateManifest, validateResult } from '../scripts/benchmark-contract.mjs';
+import { sha256, verify } from '../scripts/matched-benchmark-adapter.mjs';
+const root = path.resolve(import.meta.dirname, '..'), dir = path.join(root, 'results/matched-performance329');
+const read = file => JSON.parse(fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, ''));
+const frozenDiff = spawnSync(process.env.GIT ?? 'git', ['diff', '--quiet', '14139449', '6cfd03d7', '--', 'crates'],
+  { cwd: root, timeout: 30000 });
+assert.equal(frozenDiff.status, 0, 'Integrated crates differ from agreed333 production freeze');
+const modes = [];
+for (const phase of ['public-callback', 'synchronous-core']) {
+  const base = phase === 'public-callback' ? path.join(dir, phase) : dir;
+  const receipt = read(path.join(base, 'measurements.json'));
+  assert.equal(receipt.status, 'passed');
+  assert.equal(read(path.join(base, 'paired.json')).status, 'passed');
+  assert.equal(validateManifest(receipt.manifest), receipt.manifestSha256);
+  for (const engine of ['javascript', 'rust']) {
+    const provenance = read(path.join(base, `${engine}-provenance.json`));
+    verify(phase === 'public-callback' ? { ...provenance, runtime: [] } : provenance);
+    if (phase === 'public-callback') for (const pin of provenance.runtime) {
+      const command = spawnSync(process.env.GIT ?? 'git', ['show', `f837222df414cd9eac23ff9d01ad955d71856aa2:${pin.name}`],
+        { cwd: root, timeout: 30000, maxBuffer: 16 * 1024 * 1024 });
+      assert.equal(command.status, 0);
+      assert.equal(createHash('sha256').update(command.stdout).digest('hex'), pin.sha256, `Historical runtime pin: ${pin.name}`);
+    }
+    const actual = JSON.parse(receipt.results[engine].raw);
+    const statistics = validateResult(receipt.manifest, actual, engine);
+    assert.deepEqual(statistics, receipt.summary.map(row => row[engine]));
+  }
+  const cases = receipt.manifest.cases.length;
+  modes.push({ phase, status: receipt.status, manifestSha256: receipt.manifestSha256, cases,
+    warmupsPerEngine: cases * receipt.manifest.warmup, measurementsPerEngine: cases * receipt.manifest.repetitions,
+    summary: receipt.summary });
+}
+const publicManifest = read(path.join(dir, 'public-callback/manifest.json'));
+const syncManifest = read(path.join(dir, 'manifest.json'));
+assert.deepEqual(publicManifest.cases.map(row => [row.id, row.options, row.operations, row.inputSha256, row.expectedOutputSha256]),
+  syncManifest.cases.map(row => [row.id, row.options, row.operations, row.inputSha256, row.expectedOutputSha256]));
+const archive = read(path.join(dir, 'public-callback/archive.json'));
+for (const pin of archive.pins) assert.equal(sha256(path.join(dir, 'public-callback', pin.name)), pin.sha256);
+const baseline = read(path.join(root, 'docs/baseline/reference-manifest.json'));
+for (const pin of baseline) for (const base of [path.join(root, 'source_repo'), 'P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo'])
+  assert.equal(sha256(path.join(base, pin.path)), pin.sha256);
+const worker = read(path.join(dir, 'worker-boundaries.json'));
+assert.equal(worker.length, 9);
+for (const row of worker) { assert.notEqual(row.status, 0); assert.equal(row.error, null); assert.ok(!row.stderr.includes('panicked at')); }
+const imports = read(path.join(dir, 'import-controls.json')); assert.equal(imports.length, 6); imports.forEach(row => assert.equal(row.status, 'passed'));
+const log = fs.readFileSync(path.join(dir, 'addons-native-tests.log'), 'utf8');
+const summaries = [...log.matchAll(/test result: ok\. (\d+) passed; (\d+) failed; (\d+) ignored; (\d+) measured; (\d+) filtered out/g)];
+const totals = summaries.reduce((sum, row) => sum.map((n, i) => n + Number(row[i + 1])), [0, 0, 0, 0, 0]);
+assert.deepEqual(totals, [234, 0, 0, 0, 0]); assert.equal(summaries.length, 58);
+const summary = { task: 577, finalTask329: 'OPEN', equivalence: 'NOT PROVEN', sourceBase: '14139449bae2792afb019f42e8438b074938cfe7',
+  nativeProductionCratesEqual333Freeze: '6cfd03d7', modes, bothModesExactInputsAndExpectedOutputs: true,
+  independentReferencePinsPerCopy: baseline.length, verifiedPublicArchiveFiles: archive.pins.length,
+  nativeTests: { summaries: summaries.length, passed: totals[0], failed: 0, ignored: 0, filtered: 0 },
+  workerRejectionControls: worker.length, importerControls: imports.length,
+  limitations: ['Windows checkpoint only', 'Other coordinated machine jobs may be active', 'Fixed JS then Rust order, two warmups and ten measurements',
+    'Public JS queue vs synchronous Rust latency is not an engine speedup', 'Deprecated source writeSync applies only to builtin synchronous handlers',
+    'No browser-rendering or full-functionality/final-source claim', 'Exact aggregate fmt remains OS206; member formatting does not replace it'] };
+fs.writeFileSync(path.join(dir, 'summary.json'), JSON.stringify(summary, null, 2));
+for (const name of ['prepare-js', 'seal-js', 'seal-runtime', 'archive-public', 'run-measurements', 'worker-boundaries', 'import-controls', 'seal-evidence'])
+  fs.copyFileSync(path.join(root, 'tmp', `${name}.mjs`), path.join(dir, `${name}.executed.mjs.txt`));
+const pins = [];
+function walk(relative = '') {
+  for (const entry of fs.readdirSync(path.join(dir, relative), { withFileTypes: true })) {
+    assert.ok(!entry.isSymbolicLink(), 'Evidence link');
+    const name = path.join(relative, entry.name).replaceAll('\\', '/');
+    if (entry.isDirectory()) walk(name);
+    else if (!['proof-pins.json'].includes(name)) pins.push({ name, sha256: sha256(path.join(dir, name)) });
+  }
+}
+walk();
+fs.writeFileSync(path.join(dir, 'proof-pins.json'), JSON.stringify(pins, null, 2));
+console.log(JSON.stringify({ modes: modes.map(({ summary, ...rest }) => rest), nativeTests: summary.nativeTests,
+  originalReferencePins: baseline.length, frozenEvidenceFiles: pins.length }, null, 2));

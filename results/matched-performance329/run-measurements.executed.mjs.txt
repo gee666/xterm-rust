@@ -1,0 +1,27 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import os from 'node:os';
+import assert from 'node:assert/strict';
+import { runBenchmarks } from '../scripts/benchmark-runner.mjs';
+const root = path.resolve(import.meta.dirname, '..');
+const results = path.join(root, 'results/matched-performance329');
+function resources() {
+  const disk = fs.statfsSync(path.join(root, 'tmp'));
+  const row = { at: new Date().toISOString(), availableMemory: os.freemem(), diskFree: disk.bavail * disk.bsize,
+    conditions: '5033 allocated329,566,559,569. Other browser/compiler lanes may be active; no idle-machine or CPU-isolation claim.' };
+  assert.ok(row.availableMemory >= 8 * 1024 ** 3 && row.diskFree >= 10 * 1024 ** 3, 'Resource guard');
+  return row;
+}
+const before = resources();
+const manifest = JSON.parse(fs.readFileSync(path.join(results, 'manifest.json')));
+const adapters = {};
+for (const engine of ['javascript', 'rust']) adapters[engine] = { program: process.execPath, cwd: root,
+  args: [path.join(root, 'scripts/matched-benchmark-adapter.mjs'), '--engine', engine, '--provenance',
+    path.join(results, `${engine}-provenance.json`), '--paired-receipt', path.join(results, 'paired.json')] };
+const config = { manifest, adapters, scratchRoot: path.join(root, 'tmp'),
+  output: path.join(results, 'measurements.json'), timeoutMs: 120000 };
+fs.writeFileSync(path.join(results, 'config.json'), JSON.stringify(config));
+const receipt = await runBenchmarks(config);
+fs.writeFileSync(path.join(results, 'measurement-resources.json'), JSON.stringify({ before, after: resources() }, null, 2));
+console.log(JSON.stringify({ status: receipt.status, summary: receipt.summary, error: receipt.error }, null, 2));
+if (receipt.status !== 'passed') process.exitCode = 1;
