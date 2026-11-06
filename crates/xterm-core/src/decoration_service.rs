@@ -81,16 +81,20 @@ impl DecorationService {
         &self,
         options: Rc<RefCell<DecorationOptions>>,
     ) -> Result<Option<Decoration>, DecorationError> {
-        self.register(options, None, None)
+        if options.borrow().marker.is_disposed() {
+            return Ok(None);
+        }
+        self.register(options, None, None).map(Some)
     }
     /// Register live host properties while retaining the same native marker,
-    /// cache, render events and disposal authority as typed decorations.
+    /// cache, render events and disposal authority as typed decorations. The
+    /// host checks its disposed marker before running constructor getters.
     pub fn register_decoration_source(
         &self,
         options: Rc<RefCell<DecorationOptions>>,
         source: crate::options::OptionValue,
         initialize: Option<DecorationInitializer<'_>>,
-    ) -> Result<Option<Decoration>, DecorationError> {
+    ) -> Result<Decoration, DecorationError> {
         self.register(options, Some(source), initialize)
     }
     fn register(
@@ -98,12 +102,7 @@ impl DecorationService {
         options: Rc<RefCell<DecorationOptions>>,
         source: Option<crate::options::OptionValue>,
         initialize: Option<DecorationInitializer<'_>>,
-    ) -> Result<Option<Decoration>, DecorationError> {
-        // The host public wrapper already checked its live marker before the
-        // constructor's getters. A getter may dispose it after that guard.
-        if source.is_none() && options.borrow().marker.is_disposed() {
-            return Ok(None);
-        }
+    ) -> Result<Decoration, DecorationError> {
         let decoration = Decoration::new(options, source);
         if decoration.state.source.is_none() {
             // Native precision errors are detected before inserting state. Host
@@ -163,7 +162,7 @@ impl DecorationService {
             .insert(decoration.clone())?;
         self.state.cache.add(decoration.clone())?;
         self.state.registered.fire(&decoration)?;
-        Ok(Some(decoration))
+        Ok(decoration)
     }
     pub fn reset(&self) -> Result<(), DecorationError> {
         let snapshot = self.decorations()?;

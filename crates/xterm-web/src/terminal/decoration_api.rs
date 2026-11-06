@@ -133,8 +133,7 @@ impl Terminal {
         self.shared
             .decorations
             .register_decoration_source(options, source(weak.clone()), Some(&initialize))
-            .map_err(|e| to_js_error(&e))?
-            .ok_or_else(|| js_sys::Error::new("Validated decoration marker was rejected"))?;
+            .map_err(|e| to_js_error(&e))?;
         Ok(record)
     }
 }

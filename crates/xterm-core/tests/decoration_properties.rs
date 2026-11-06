@@ -34,7 +34,6 @@ fn source_fields_are_live_and_never_require_a_native_options_borrow() {
     ));
     let decoration = service
         .register_decoration_source(native, source, None)
-        .unwrap()
         .unwrap();
     let lookup = |x| {
         service
@@ -54,7 +53,6 @@ fn captured_string_height_uses_addition_not_numeric_projection() {
     let source = V::property_map([("height", "2".into())]);
     service
         .register_decoration_source(options(Marker::new(1)), source, None)
-        .unwrap()
         .unwrap();
     // Source 1 + '2' is '12', so numeric post-increment indexes through 11.
     assert_eq!(service.get_decorations_at_cell(0.0, 11, None).count(), 1);
@@ -72,7 +70,6 @@ fn height_conversion_is_repeated_at_each_loop_comparison() {
     let source = V::property_map([("height", height)]);
     service
         .register_decoration_source(options(Marker::new(0)), source, None)
-        .unwrap()
         .unwrap();
     assert_eq!(conversions.get(), 3);
 }
@@ -91,7 +88,6 @@ fn throwing_lookup_is_fallible_and_exhausts_like_a_generator() {
     ));
     service
         .register_decoration_source(options(Marker::new(0)), source, None)
-        .unwrap()
         .unwrap();
     let mut values = service.get_decorations_at_cell(0.0, 0, None);
     assert_eq!(
