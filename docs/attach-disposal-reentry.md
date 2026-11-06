@@ -40,3 +40,7 @@ Task536 explicitly retains the existing BrowserSocket one-shot removal and panic
 The inspection also found that ProgressAddon binding hardcodes clamping after unary numeric conversion, whereas source resolves Math.min and Math.max before the value getter and can retain arbitrary replacement-method returns. That broader raw-host contract remains full323. No partial Progress repair is included.
 
 Full original addon suites, native Linux/macOS, complete browser/demo behavior, final coverage/comparison deliverables and stable whole-workspace quality gates remain outside this scoped repair. Function counts and expanded scenario counts are different measures and must not be added together.
+
+## Review and cleanup
+
+Task535 was independently accepted at283f5a28 with no findings. The reviewer reran seven pinned native functions and the source oracle on both reference roots, verified37 raw pins/1855 inputs/328 runtime pins and inspected the actual browser/control receipts without rerunning heavy jobs. See `docs/reviews/theodelinda535.md` and `docs/handoffs/theodelinda535.md`. Owned generated artifacts stayed available through review. Subsequent cleanup receipts describe exact unlink/removal phases; recorded runtime paths are historical once removal completes.

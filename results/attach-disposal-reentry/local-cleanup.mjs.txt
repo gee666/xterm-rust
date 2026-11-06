@@ -1,0 +1,71 @@
+// Local owned cleanup preflight/receipt snapshot. Never cleans another root.
+import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+import { readFile, writeFile, readdir, lstat, realpath, unlink } from 'node:fs/promises';
+import { resolve, join } from 'node:path';
+import { createHash } from 'node:crypto';
+import { referenceIntegrity } from '../scripts/upstream-baseline-utils.mjs';
+const root = resolve('.');
+assert.equal(root.toLowerCase(), 'o:\\xterm-rust-swarm-16\\tmp\\worktrees\\theodelindaattachdispose');
+assert.equal((await realpath(root)).toLowerCase(), root.toLowerCase());
+const hash = bytes => createHash('sha256').update(bytes).digest('hex');
+function git(args) {
+  const r = spawnSync('git', args, { cwd: root, timeout: 30000, maxBuffer: 16 * 1024 ** 2 });
+  if (r.status !== 0 || r.error) throw Error('git failed ' + args.join(' '));
+  return r.stdout;
+}
+const ps = `$all=@(Get-CimInstance Win32_Process);$exclude=@{};$p=[int]$PID;while($p -gt 0 -and !$exclude.ContainsKey($p)){$exclude[$p]=$true;$row=$all|Where-Object ProcessId -eq $p|Select-Object -First 1;if(!$row){break};$p=[int]$row.ParentProcessId};$workers=@($all|Where-Object{!$exclude.ContainsKey([int]$_.ProcessId) -and $_.CommandLine -like '*TheodelindaAttachDispose*'}|Select-Object ProcessId,ParentProcessId,Name,CommandLine);ConvertTo-Json -Compress -InputObject $workers`;
+const probe = spawnSync('C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe', ['-NoProfile', '-Command', ps], { cwd: root, encoding: 'utf8', timeout: 30000 });
+assert.equal(probe.status, 0, probe.stderr);
+const workers = JSON.parse(probe.stdout.trim()); assert.deepEqual(workers, []);
+const counts = { files: 0, directories: 0, links: 0, redirects: 0 };
+async function scan(path) {
+  for (const name of await readdir(path)) {
+    const file = join(path, name), info = await lstat(file);
+    if (info.isSymbolicLink()) { counts.links++; continue; }
+    if (info.isDirectory()) {
+      counts.directories++;
+      if ((await realpath(file)).toLowerCase() !== file.toLowerCase()) { counts.redirects++; continue; }
+      await scan(file);
+    } else if (info.isFile()) counts.files++;
+    else throw Error('unexpected filesystem entry ' + file);
+  }
+}
+await scan(root); assert.equal(counts.links, 0); assert.equal(counts.redirects, 0);
+const manifest = JSON.parse(await readFile('docs/baseline/reference-manifest.json', 'utf8'));
+const physical = referenceIntegrity(resolve('source_repo'), manifest);
+const original = referenceIntegrity('P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo', manifest);
+assert.equal(physical.files, 776); assert.deepEqual(physical.mismatches, []);
+assert.equal(original.files, 776); assert.deepEqual(original.mismatches, []);
+const raw = JSON.parse(await readFile('results/attach-disposal-reentry/evidence-pins.json', 'utf8'));
+for (const pin of raw) {
+  assert.equal(hash(await readFile(pin.path)), pin.sha256, pin.path);
+  assert.equal(hash(git(['show', 'HEAD:' + pin.path])), pin.sha256, 'immutable ' + pin.path);
+}
+const runtime = JSON.parse(await readFile('results/attach-disposal-reentry/runtime-pins.json', 'utf8'));
+const allowed = new Map(runtime.map(pin => [pin.path, pin.sha256]));
+const untracked = git(['ls-files', '--others', '--exclude-standard', '-z']).toString().split('\0').filter(Boolean);
+const generated = untracked.filter(path => path.startsWith('results/browser-host/wasm_attach_disposal_reentry') || path.startsWith('results/browser-host/wasm_attach_reentry'));
+const unexpected = untracked.filter(path => !generated.includes(path) && !path.startsWith('docs/reviews/theodelinda535') && !path.startsWith('docs/handoffs/theodelinda535') && !path.startsWith('results/attach-disposal-reentry/'));
+assert.deepEqual(unexpected, []);
+for (const path of generated) {
+  assert((await lstat(path)).isFile());
+  const bytes = await readFile(path);
+  if (allowed.has(path)) assert.equal(hash(bytes), allowed.get(path), path);
+  else {
+    assert(path.endsWith('-results.json'));
+    const report = JSON.parse(bytes);
+    const local = join(resolve(report.artifacts.wasm.path, '..', '..'), report.testName + '-results.json');
+    assert(bytes.equals(await readFile(local)), 'unpreserved latest report ' + path);
+  }
+}
+const mode = process.argv[2];
+const report = { mode, counts, workers, physical, original, immutableEvidencePins: raw.length, generatedFiles: generated.length,
+  generatedListSha256: hash(JSON.stringify(generated)), removedFiles: 0 };
+if (mode === 'unlink') {
+  assert.deepEqual(untracked.filter(path => !generated.includes(path)), [], 'commit owned receipts before unlink');
+  for (const path of generated) { await unlink(path); report.removedFiles++; }
+  assert.equal(git(['status', '--porcelain']).toString(), '');
+} else assert.equal(mode, 'preflight');
+await writeFile('results/attach-disposal-reentry/cleanup-' + mode + '.json', JSON.stringify(report, null, 2) + '\n');
+console.log(report);
