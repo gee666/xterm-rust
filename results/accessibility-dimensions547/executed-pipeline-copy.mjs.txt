@@ -1,0 +1,26 @@
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {resolve,dirname,relative} from 'node:path';
+const root=resolve(import.meta.dirname,'..'),out=resolve(root,'results/accessibility-dimensions547');
+const hash=b=>createHash('sha256').update(b).digest('hex');
+const entries=[];
+for(const phase of ['initial','old','final','import-failure']) {
+ for(const name of ['wasm_accessibility','wasm_accessibility_terminal']) {
+  if(phase==='import-failure'&&name.endsWith('_terminal'))continue;
+  const reportPath=phase==='import-failure'?resolve(out,`import-failure/initial-${name}.json`):resolve(out,`${phase}-${name}.json`);
+  const report=JSON.parse(await readFile(reportPath,'utf8'));
+  const run=dirname(dirname(report.artifacts.wasm.path));
+  if(relative(root,run).startsWith('..'))throw new Error('Pipeline path outside owned root');
+  const target=resolve(out,'pipeline',phase,name);await mkdir(target,{recursive:true});
+  for(const file of ['commands.json',`${name}-build.log`,`${name}-bindgen-version.log`,`${name}-bindgen.log`]) {
+   const from=resolve(run,file),to=resolve(target,file),bytes=await readFile(from);
+   await writeFile(to,bytes);
+   if(hash(await readFile(to))!==hash(bytes))throw new Error('Pipeline copy differs '+file);
+   entries.push({from,to:relative(out,to).replaceAll('\\','/'),bytes:bytes.length,sha256:hash(bytes)});
+  }
+ }
+}
+const helper=await readFile(new URL(import.meta.url));
+await writeFile(resolve(out,'executed-pipeline-copy.mjs.txt'),helper);
+await writeFile(resolve(out,'pipeline-pins.json'),JSON.stringify({files:entries,helperSha256:hash(helper)},null,2)+'\n');
+console.log(JSON.stringify({copied:entries.length,bytes:entries.reduce((sum,p)=>sum+p.bytes,0)}));
