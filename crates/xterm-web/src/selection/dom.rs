@@ -19,7 +19,7 @@ use std::{
     rc::Rc,
 };
 use wasm_bindgen::{closure::Closure, JsCast, JsValue};
-use web_sys::{Document, HtmlElement, MouseEvent, Window};
+use web_sys::{HtmlElement, MouseEvent, Window};
 use xterm_core::{buffer::BufferService, event::Event, lifecycle::DisposableHandle};
 
 type FrameCallback = Closure<dyn FnMut(f64)>;
@@ -58,7 +58,6 @@ pub trait SelectionHost {
 struct State {
     element: HtmlElement,
     screen: HtmlElement,
-    document: Document,
     window: Window,
     buffers: Rc<BufferService>,
     selection: Rc<SelectionService>,
@@ -67,7 +66,7 @@ struct State {
     subscriptions: RefCell<Vec<DisposableHandle>>,
     trim_subscription: RefCell<Option<DisposableHandle>>,
     listeners: RefCell<Vec<DomListener>>,
-    drag_listeners: RefCell<Vec<DomListener>>,
+    drag_callbacks: [js_sys::Function; 2],
     raf_callback: RefCell<Option<FrameCallback>>,
     raf_id: Cell<Option<i32>>,
     drag_callback: RefCell<Option<Closure<dyn FnMut()>>>,
@@ -92,10 +91,9 @@ impl SelectionDom {
             .default_view()
             .ok_or_else(|| js_sys::Error::new("Selection requires a document window"))?;
         let component = Self {
-            state: Rc::new(State {
+            state: Rc::new_cyclic(|weak| State {
                 element: dom.element.clone(),
                 screen: dom.screen.clone(),
-                document: dom.document.clone(),
                 window,
                 buffers,
                 selection,
@@ -104,7 +102,7 @@ impl SelectionDom {
                 subscriptions: RefCell::new(Vec::new()),
                 trim_subscription: RefCell::new(None),
                 listeners: RefCell::new(Vec::new()),
-                drag_listeners: RefCell::new(Vec::new()),
+                drag_callbacks: schedule::drag_callbacks(weak),
                 raf_callback: RefCell::new(None),
                 raf_id: Cell::new(None),
                 drag_callback: RefCell::new(None),
@@ -191,16 +189,7 @@ impl State {
         Ok(Some(Position::new(i64::from(column), row)))
     }
     fn stop_drag(&self) -> Result<(), JsValue> {
-        if let Some(timer) = self.drag_id.take() {
-            self.window.clear_interval_with_handle(timer);
-        }
-        let listeners = std::mem::take(&mut *self.drag_listeners.borrow_mut());
-        for mut listener in listeners {
-            listener.dispose()?;
-        }
-        // Keep the interval closure until a later turn/disposal; mouseup may be
-        // raised synchronously from a scroll callback while it is executing.
-        Ok(())
+        schedule::stop_drag(self)
     }
     fn dispose(&self) -> Result<(), JsValue> {
         if self.disposed.replace(true) {

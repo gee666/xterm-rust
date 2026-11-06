@@ -1,6 +1,15 @@
 // Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
 use super::*;
 
+#[wasm_bindgen::prelude::wasm_bindgen]
+extern "C" {
+    type DragWindow;
+    // web-sys's clearInterval import cannot catch a host exception. Preserve
+    // the original thrown value and timer slot when the host call fails.
+    #[wasm_bindgen::prelude::wasm_bindgen(catch, method, js_name = clearInterval)]
+    fn clear_drag_interval(this: &DragWindow, timer: JsValue) -> Result<(), JsValue>;
+}
+
 pub(super) fn frame(state: &Rc<State>) -> Result<(), JsValue> {
     if state.disposed.get() || state.raf_id.get().is_some() {
         return Ok(());
@@ -34,34 +43,64 @@ pub(super) fn frame(state: &Rc<State>) -> Result<(), JsValue> {
     ));
     Ok(())
 }
+pub(super) fn drag_callbacks(weak: &std::rc::Weak<State>) -> [js_sys::Function; 2] {
+    [true, false].map(|move_event| {
+        let weak = weak.clone();
+        let callback = Closure::wrap(Box::new(move |event: web_sys::Event| {
+            if let Some(state) = weak.upgrade() {
+                if state.disposed.get() {
+                    return;
+                }
+                match event.dyn_into::<MouseEvent>() {
+                    Ok(event) => {
+                        let result = if move_event {
+                            events::mouse_move(&state, &event)
+                        } else {
+                            events::mouse_up(&state, &event)
+                        };
+                        if let Err(error) = result {
+                            state.host.report_error(error);
+                        }
+                    }
+                    Err(_) => state
+                        .host
+                        .report_error(error("selection requires MouseEvent")),
+                }
+            }
+        }) as Box<dyn Fn(web_sys::Event)>);
+        // The document may retain a callback after a failed removal. Transfer
+        // ownership to JS and capture only Weak<State>, as DomListener does.
+        callback.into_js_value().unchecked_into()
+    })
+}
+pub(super) fn stop_drag(state: &State) -> Result<(), JsValue> {
+    // Stable callbacks survive successful removal, failure and recursive calls.
+    // Clone before entering the host, and do not clear the timer until it returns.
+    let callbacks = state.drag_callbacks.clone();
+    if let Some(document) = state.screen.owner_document() {
+        for (event_type, callback) in ["mousemove", "mouseup"].into_iter().zip(callbacks) {
+            document.remove_event_listener_with_callback(event_type, &callback)?;
+        }
+    }
+    let timer = state
+        .drag_id
+        .get()
+        .map_or(JsValue::UNDEFINED, JsValue::from);
+    state
+        .window
+        .unchecked_ref::<DragWindow>()
+        .clear_drag_interval(timer)?;
+    state.drag_id.set(None);
+    // Keep the interval closure alive: teardown may be called from its callback.
+    Ok(())
+}
 pub(super) fn drag(state: &Rc<State>) -> Result<(), JsValue> {
     state.stop_drag()?;
-    for (event_type, move_event) in [("mousemove", true), ("mouseup", false)] {
-        let weak = Rc::downgrade(state);
-        let listener =
-            DomListener::new_reentrant(state.document.as_ref(), event_type, false, move |event| {
-                if let Some(state) = weak.upgrade() {
-                    if state.disposed.get() {
-                        return;
-                    }
-                    match event.dyn_into::<MouseEvent>() {
-                        Ok(event) => {
-                            let result = if move_event {
-                                events::mouse_move(&state, &event)
-                            } else {
-                                events::mouse_up(&state, &event)
-                            };
-                            if let Err(error) = result {
-                                state.host.report_error(error);
-                            }
-                        }
-                        Err(_) => state
-                            .host
-                            .report_error(error("selection requires MouseEvent")),
-                    }
-                }
-            })?;
-        state.drag_listeners.borrow_mut().push(listener);
+    let callbacks = state.drag_callbacks.clone();
+    if let Some(document) = state.screen.owner_document() {
+        for (event_type, callback) in ["mousemove", "mouseup"].into_iter().zip(callbacks) {
+            document.add_event_listener_with_callback(event_type, &callback)?;
+        }
     }
     if state.drag_callback.borrow().is_none() {
         let weak = Rc::downgrade(state);
