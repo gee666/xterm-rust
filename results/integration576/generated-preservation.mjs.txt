@@ -1,0 +1,17 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {execFileSync} from 'node:child_process';
+const git=(...args)=>execFileSync('git',args,{timeout:30000,maxBuffer:64*1024*1024});
+const paths=git('diff','--name-only','-z').toString().split('\0').filter(Boolean);
+if(!paths.length||paths.some(p=>p!=='results/demos/build/latest.json'&&!p.startsWith('results/serialize-browser/')))throw Error('Unexpected generated changes '+JSON.stringify(paths));
+const out='results/integration576/generated-after-originals';await fs.mkdir(out,{recursive:true});
+await fs.writeFile(`${out}/reserved`,'',{flag:'wx'});const pins=[];
+for(const file of paths){const bytes=await fs.readFile(file),copy=path.join(out,file);await fs.mkdir(path.dirname(copy),{recursive:true});await fs.writeFile(copy,bytes,{flag:'wx'});const actual=await fs.readFile(copy);if(!actual.equals(bytes))throw Error('Copy mismatch');pins.push({path:file,copy:copy.replaceAll('\\','/'),bytes:bytes.length,sha256:crypto.createHash('sha256').update(bytes).digest('hex')});}
+await fs.writeFile(`${out}/outputs.patch`,git('diff','--binary','--',...paths),{flag:'wx'});
+await fs.writeFile(`${out}/pins.json`,JSON.stringify(pins,null,2)+'\n',{flag:'wx'});
+for(const pin of pins){const bytes=await fs.readFile(pin.path);if(crypto.createHash('sha256').update(bytes).digest('hex')!==pin.sha256)throw Error('Generated input changed before restore '+pin.path);}
+git('restore','--worktree','--',...paths);
+for(const pin of pins){const head=git('show',`HEAD:${pin.path}`);const actual=await fs.readFile(pin.path);if(!head.equals(actual))throw Error('Restore differs from exact HEAD '+pin.path);pin.restoredHeadSha256=crypto.createHash('sha256').update(actual).digest('hex');}
+await fs.writeFile(`${out}/restored.json`,JSON.stringify({paths:pins,trackedStatus:git('status','--short','-uno').toString()},null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({preserved:pins.length,restoredExactHead:true,trackedStatus:git('status','--short','-uno').toString()}));

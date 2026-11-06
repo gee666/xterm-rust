@@ -1,0 +1,102 @@
+{
+  "scope": "Frozen88 combined source, bounded local Windows command. Other platforms/browser/runtime not implied.",
+  "id": "check-wasm-all",
+  "attempt": "check-wasm-all",
+  "before": {
+    "sha256": "11acdbd444bfec407cef74f078ff9a127237d7c36d5a85a56bbf6ddea8cbb34c",
+    "files": 2526,
+    "unsafeCandidates": [
+      {
+        "path": "crates/xterm-addons/src/image/iip/decoder.rs",
+        "line": 13,
+        "text": "// negative limits. Their unsafe memory/decoder paths are not emulated."
+      },
+      {
+        "path": "crates/xterm-core/src/instantiation.rs",
+        "line": 3,
+        "text": "//! Shared service values and constructor argument resolution without unsafe code."
+      },
+      {
+        "path": "crates/xterm-web/src/image/iip_decode.rs",
+        "line": 86,
+        "text": "// Snapshot before browser calls, without unsafe WASM memory views or"
+      },
+      {
+        "path": "crates/xterm-web/src/status_addons/coercion.rs",
+        "line": 6,
+        "text": "//! Static wasm-bindgen snippets avoid requiring eval or unsafe-eval CSP rules."
+      },
+      {
+        "path": "crates/xterm-web/src/terminal/internal_lines.rs",
+        "line": 56,
+        "text": "/// An owned packed snapshot, not an unsafe view into reallocating WASM memory."
+      },
+      {
+        "path": "crates/xterm-web/src/webgl/rectangle_gpu.rs",
+        "line": 79,
+        "text": "// Copy, rather than unsafe views into WASM memory. WebGL owns its upload."
+      }
+    ]
+  },
+  "after": {
+    "sha256": "11acdbd444bfec407cef74f078ff9a127237d7c36d5a85a56bbf6ddea8cbb34c",
+    "files": 2526,
+    "unsafeCandidates": [
+      {
+        "path": "crates/xterm-addons/src/image/iip/decoder.rs",
+        "line": 13,
+        "text": "// negative limits. Their unsafe memory/decoder paths are not emulated."
+      },
+      {
+        "path": "crates/xterm-core/src/instantiation.rs",
+        "line": 3,
+        "text": "//! Shared service values and constructor argument resolution without unsafe code."
+      },
+      {
+        "path": "crates/xterm-web/src/image/iip_decode.rs",
+        "line": 86,
+        "text": "// Snapshot before browser calls, without unsafe WASM memory views or"
+      },
+      {
+        "path": "crates/xterm-web/src/status_addons/coercion.rs",
+        "line": 6,
+        "text": "//! Static wasm-bindgen snippets avoid requiring eval or unsafe-eval CSP rules."
+      },
+      {
+        "path": "crates/xterm-web/src/terminal/internal_lines.rs",
+        "line": 56,
+        "text": "/// An owned packed snapshot, not an unsafe view into reallocating WASM memory."
+      },
+      {
+        "path": "crates/xterm-web/src/webgl/rectangle_gpu.rs",
+        "line": 79,
+        "text": "// Copy, rather than unsafe views into WASM memory. WebGL owns its upload."
+      }
+    ]
+  },
+  "sourceStable": true,
+  "result": {
+    "command": [
+      "cargo",
+      "check",
+      "--locked",
+      "--workspace",
+      "--all-targets",
+      "--all-features",
+      "--target",
+      "wasm32-unknown-unknown",
+      "-j2"
+    ],
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 51717.7111,
+    "status": "passed"
+  },
+  "counts": []
+}

@@ -1,0 +1,41 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {runCommand} from '../scripts/quality-process.mjs';
+import {sourceIdentity,verifyBuiltPackage,artifactIdentity} from '../scripts/e2e/build-identity.mjs';
+import {referenceIntegrity} from '../scripts/upstream-baseline-utils.mjs';
+const kind=process.argv[2];
+if(!['core','serialize'].includes(kind))throw Error('Expected core or serialize');
+const root=process.cwd(),out=`results/integration576/original-${kind}`;
+await fs.mkdir(out,{recursive:true});
+await fs.writeFile(`${out}/reserved`,'',{flag:'wx'});
+const manifest=JSON.parse(await fs.readFile('docs/baseline/reference-manifest.json'));
+const reference=()=>({original:referenceIntegrity('P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo',manifest),physical:referenceIntegrity(path.join(root,'source_repo'),manifest)});
+const report={scope:'Frozen88 integration checkpoint. Unchanged original assertions, two workers, zero retries. Not complete equivalence.',sourceBefore:await sourceIdentity(root),referenceBefore:reference(),result:null};
+report.build=await verifyBuiltPackage(root,report.sourceBefore);
+if(Object.values(report.referenceBefore).some(r=>r.mismatches.length))throw Error('Reference mismatch before originals');
+const old=new Set(await fs.readdir('results/e2e/upstream'));
+const args=kind==='core'?['scripts/e2e-upstream.mjs','--suite','core','--no-build']:['scripts/serialize-browser-check.mjs','--suite'];
+report.command=[process.execPath,...args];
+await fs.writeFile(`${out}/summary.json`,JSON.stringify(report,null,2)+'\n',{flag:'wx'});
+report.result=await runCommand(process.execPath,args,{cwd:root,env:process.env,log:`${out}/driver.log`,timeoutMs:kind==='core'?360000:600000,containDescendants:true});
+if(kind==='core'){
+ const fresh=(await fs.readdir('results/e2e/upstream')).filter(p=>!old.has(p));
+ if(fresh.length!==1)throw Error('Cannot identify exact original core report '+JSON.stringify(fresh));
+ report.rawDirectory=`results/e2e/upstream/${fresh[0]}`;
+ for(const file of ['summary.json','playwright.json','playwright.log']){
+  const bytes=await fs.readFile(`${report.rawDirectory}/${file}`);
+  await fs.writeFile(`${out}/original-${file}`,bytes,{flag:'wx'});
+ }
+ report.raw=JSON.parse(await fs.readFile(`${out}/original-summary.json`));
+}else{
+ report.rawDirectory='results/serialize-browser';
+ report.raw=JSON.parse(await fs.readFile(`${report.rawDirectory}/verification.json`));
+ const files=await fs.readdir(report.rawDirectory,{recursive:true,withFileTypes:true});
+ for(const entry of files){if(!entry.isFile())continue;const source=path.join(entry.parentPath,entry.name);const relative=path.relative(report.rawDirectory,source);const dest=path.join(out,'raw',relative);await fs.mkdir(path.dirname(dest),{recursive:true});await fs.copyFile(source,dest,fs.constants.COPYFILE_EXCL);}
+}
+report.sourceAfter=await sourceIdentity(root);report.sourceStable=report.sourceBefore.sha256===report.sourceAfter.sha256;
+report.referenceAfter=reference();report.referenceStable=Object.values(report.referenceAfter).every(r=>!r.mismatches.length);
+report.driverPin=await artifactIdentity(root,[`${out}/driver.log`]);
+await fs.writeFile(`${out}/summary.json`,JSON.stringify(report,null,2)+'\n');
+console.log(JSON.stringify({kind,result:report.result.status,raw:report.raw.status,counts:report.raw.counts,browsers:report.raw.browsers?.map(b=>({name:b.name,status:b.status,passed:b.passed,failed:b.failed})),suites:report.raw.suites?.map(s=>({engine:s.engine,counts:s.counts})),sourceStable:report.sourceStable,referenceStable:report.referenceStable}));
+if(!report.sourceStable||!report.referenceStable||report.result.status!=='passed')process.exitCode=1;

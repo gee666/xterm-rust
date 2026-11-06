@@ -1,0 +1,4533 @@
+{
+  "scope": "Frozen88 combined source, bounded local Windows command. Other platforms/browser/runtime not implied.",
+  "id": "tests-native",
+  "attempt": "tests-native",
+  "before": {
+    "sha256": "11acdbd444bfec407cef74f078ff9a127237d7c36d5a85a56bbf6ddea8cbb34c",
+    "files": 2526,
+    "unsafeCandidates": [
+      {
+        "path": "crates/xterm-addons/src/image/iip/decoder.rs",
+        "line": 13,
+        "text": "// negative limits. Their unsafe memory/decoder paths are not emulated."
+      },
+      {
+        "path": "crates/xterm-core/src/instantiation.rs",
+        "line": 3,
+        "text": "//! Shared service values and constructor argument resolution without unsafe code."
+      },
+      {
+        "path": "crates/xterm-web/src/image/iip_decode.rs",
+        "line": 86,
+        "text": "// Snapshot before browser calls, without unsafe WASM memory views or"
+      },
+      {
+        "path": "crates/xterm-web/src/status_addons/coercion.rs",
+        "line": 6,
+        "text": "//! Static wasm-bindgen snippets avoid requiring eval or unsafe-eval CSP rules."
+      },
+      {
+        "path": "crates/xterm-web/src/terminal/internal_lines.rs",
+        "line": 56,
+        "text": "/// An owned packed snapshot, not an unsafe view into reallocating WASM memory."
+      },
+      {
+        "path": "crates/xterm-web/src/webgl/rectangle_gpu.rs",
+        "line": 79,
+        "text": "// Copy, rather than unsafe views into WASM memory. WebGL owns its upload."
+      }
+    ]
+  },
+  "after": {
+    "sha256": "11acdbd444bfec407cef74f078ff9a127237d7c36d5a85a56bbf6ddea8cbb34c",
+    "files": 2526,
+    "unsafeCandidates": [
+      {
+        "path": "crates/xterm-addons/src/image/iip/decoder.rs",
+        "line": 13,
+        "text": "// negative limits. Their unsafe memory/decoder paths are not emulated."
+      },
+      {
+        "path": "crates/xterm-core/src/instantiation.rs",
+        "line": 3,
+        "text": "//! Shared service values and constructor argument resolution without unsafe code."
+      },
+      {
+        "path": "crates/xterm-web/src/image/iip_decode.rs",
+        "line": 86,
+        "text": "// Snapshot before browser calls, without unsafe WASM memory views or"
+      },
+      {
+        "path": "crates/xterm-web/src/status_addons/coercion.rs",
+        "line": 6,
+        "text": "//! Static wasm-bindgen snippets avoid requiring eval or unsafe-eval CSP rules."
+      },
+      {
+        "path": "crates/xterm-web/src/terminal/internal_lines.rs",
+        "line": 56,
+        "text": "/// An owned packed snapshot, not an unsafe view into reallocating WASM memory."
+      },
+      {
+        "path": "crates/xterm-web/src/webgl/rectangle_gpu.rs",
+        "line": 79,
+        "text": "// Copy, rather than unsafe views into WASM memory. WebGL owns its upload."
+      }
+    ]
+  },
+  "sourceStable": true,
+  "result": {
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--workspace",
+      "--all-targets",
+      "--all-features",
+      "-j2"
+    ],
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 443144.484,
+    "status": "passed"
+  },
+  "counts": [
+    {
+      "suite": "unittests src\\lib.rs (target\\debug\\deps\\xterm_addons-c1acbcdeab0faffc.exe)",
+      "passed": 42,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\attach_disposal_reentry.rs (target\\debug\\deps\\attach_disposal_reentry-39f9813faba66f6c.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\attach_removal.rs (target\\debug\\deps\\attach_removal-4547d9ec02de02a0.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_addons.rs (target\\debug\\deps\\font_addons-6016679a98cc248f.exe)",
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_avar_constructor.rs (target\\debug\\deps\\font_avar_constructor-c6eef3598111560a.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_buffer_mutations.rs (target\\debug\\deps\\font_buffer_mutations-be190326ef45ad21.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_cff2_dict.rs (target\\debug\\deps\\font_cff2_dict-38e8bcb9ec82757a.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_cff2_entries.rs (target\\debug\\deps\\font_cff2_entries-49ce90759222b1c6.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_cff2_fdarray.rs (target\\debug\\deps\\font_cff2_fdarray-4e0f610cfd9c85b6.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_cff2_fonts.rs (target\\debug\\deps\\font_cff2_fonts-558fa783e21cbb01.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_cff2_index.rs (target\\debug\\deps\\font_cff2_index-904ea570b76ea455.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_cff_fdselect.rs (target\\debug\\deps\\font_cff_fdselect-e9f7dedc1f4b34a1.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_cff_header.rs (target\\debug\\deps\\font_cff_header-4e4b4fe5a9b49497.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_cff_index.rs (target\\debug\\deps\\font_cff_index-32dabd5d8cb0527c.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_color_constructor.rs (target\\debug\\deps\\font_color_constructor-bb899e0d0bbf48f2.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_fvar_constructor.rs (target\\debug\\deps\\font_fvar_constructor-a2dfa5045c610b07.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_gdef_constructor.rs (target\\debug\\deps\\font_gdef_constructor-e086357218d781ee.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_gpos_constructor.rs (target\\debug\\deps\\font_gpos_constructor-6742225dfcff0a21.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_gsub_header.rs (target\\debug\\deps\\font_gsub_header-bcf961fbc5136446.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_gsub_lookup.rs (target\\debug\\deps\\font_gsub_lookup-73d2417b6e29d10c.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_gsub_noncontext.rs (target\\debug\\deps\\font_gsub_noncontext-89b3571c635473c3.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_gsub_null.rs (target\\debug\\deps\\font_gsub_null-7e0e5721b8283c07.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_gsub_refs.rs (target\\debug\\deps\\font_gsub_refs-013072ac4cd022b3.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_gsub_single.rs (target\\debug\\deps\\font_gsub_single-dd48e71b124be97e.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_gsub_subtables.rs (target\\debug\\deps\\font_gsub_subtables-414bb9d328774ea3.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_gsub_type9.rs (target\\debug\\deps\\font_gsub_type9-e09601a53fbdff81.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_hint_tables.rs (target\\debug\\deps\\font_hint_tables-a31162402247772e.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_metadata_constructor.rs (target\\debug\\deps\\font_metadata_constructor-471707b95072a7bb.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_outline.rs (target\\debug\\deps\\font_outline-1a37ed5ce813bd2e.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_svg_constructor.rs (target\\debug\\deps\\font_svg_constructor-e2ac9d4df959ecf9.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\iip_payload.rs (target\\debug\\deps\\iip_payload-d96fe48a7b0156d7.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\iip_warning.rs (target\\debug\\deps\\iip_warning-0966ead79d3fa28d.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\image_helper_edges.rs (target\\debug\\deps\\image_helper_edges-18a9186abbc6e632.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\image_helpers_upstream.rs (target\\debug\\deps\\image_helpers_upstream-76a8b31f8fdaf05b.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\image_iip.rs (target\\debug\\deps\\image_iip-6c701ef1f830d103.exe)",
+      "passed": 11,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\image_iip_pixel_phases.rs (target\\debug\\deps\\image_iip_pixel_phases-310d482aece661de.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\image_iip_raw_limit.rs (target\\debug\\deps\\image_iip_raw_limit-36e403602d6f6f45.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\image_policy.rs (target\\debug\\deps\\image_policy-9089c59586e9c44b.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\image_storage.rs (target\\debug\\deps\\image_storage-d3c563cb1c05cc7c.exe)",
+      "passed": 23,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\kitty_geometry.rs (target\\debug\\deps\\kitty_geometry-0bcebd2e1a808d7f.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\kitty_pixels.rs (target\\debug\\deps\\kitty_pixels-1c1303ed334320a6.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\kitty_protocol.rs (target\\debug\\deps\\kitty_protocol-a97c3194a074b096.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\kitty_storage.rs (target\\debug\\deps\\kitty_storage-e771dc2995d5c831.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\program_status_addon.rs (target\\debug\\deps\\program_status_addon-a9d5732dc25bcdc2.exe)",
+      "passed": 12,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\program_status_store.rs (target\\debug\\deps\\program_status_store-afa8b3522bbaa2cd.exe)",
+      "passed": 12,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\progress_upstream.rs (target\\debug\\deps\\progress_upstream-06eaaae23e86e393.exe)",
+      "passed": 12,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\qoi.rs (target\\debug\\deps\\qoi-3213055eade243d7.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\status_addons_differential.rs (target\\debug\\deps\\status_addons_differential-3b666f50d38d8e52.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\status_live_terminal.rs (target\\debug\\deps\\status_live_terminal-31bd1b058a373b56.exe)",
+      "passed": 12,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\utility_attach.rs (target\\debug\\deps\\utility_attach-e69ed4150eb0f048.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\utility_clipboard.rs (target\\debug\\deps\\utility_clipboard-8bf872792d3f91d2.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\utility_link_callbacks.rs (target\\debug\\deps\\utility_link_callbacks-54f4891bd77d4603.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\utility_live_terminal.rs (target\\debug\\deps\\utility_live_terminal-3137cdc3d4c79ea4.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\utility_oracle.rs (target\\debug\\deps\\utility_oracle-04a5625eefb8b14b.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\image_helpers_trace.rs (target\\debug\\examples\\image_helpers_trace-b4c14cef355dc081.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\image_iip_trace.rs (target\\debug\\examples\\image_iip_trace-56b121c2fff6c13b.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\image_policy_trace.rs (target\\debug\\examples\\image_policy_trace-eaef937f0a175c27.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\matched_benchmark.rs (target\\debug\\examples\\matched_benchmark-f08431ba352a48e5.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\qoi_trace.rs (target\\debug\\examples\\qoi_trace-58a9502589f8117e.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests src\\lib.rs (target\\debug\\deps\\xterm_core-71fa172dc17bbd8d.exe)",
+      "passed": 70,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\a11y_utf16.rs (target\\debug\\deps\\a11y_utf16-e8d1ede5c8b5f133.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\apc.rs (target\\debug\\deps\\apc-6a8deed1348ed6e3.exe)",
+      "passed": 11,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\apc_differential.rs (target\\debug\\deps\\apc_differential-c91aa40510a307b0.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\apc_edges.rs (target\\debug\\deps\\apc_edges-327dd31ce4754d14.exe)",
+      "passed": 10,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\apc_escape.rs (target\\debug\\deps\\apc_escape-43aba38f6f18e837.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\apc_registration.rs (target\\debug\\deps\\apc_registration-79f3005cb1ec27b9.exe)",
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\backspace_sparse.rs (target\\debug\\deps\\backspace_sparse-e1be21d62cf8f3e1.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_capacity.rs (target\\debug\\deps\\buffer_capacity-b82efe8f890afca5.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_cleanup_injection.rs (target\\debug\\deps\\buffer_cleanup_injection-62fff2031e6734bf.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_cleanup_resize.rs (target\\debug\\deps\\buffer_cleanup_resize-68db47a45a449bea.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_contracts.rs (target\\debug\\deps\\buffer_contracts-11423298b6a0f041.exe)",
+      "passed": 11,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_line_differential.rs (target\\debug\\deps\\buffer_line_differential-824cde1fd45d4d10.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_line_extended.rs (target\\debug\\deps\\buffer_line_extended-82d84d1543a3341e.exe)",
+      "passed": 10,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_line_translation.rs (target\\debug\\deps\\buffer_line_translation-4b69ccdcb80174fc.exe)",
+      "passed": 13,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_line_upstream.rs (target\\debug\\deps\\buffer_line_upstream-b5ee0af21de190d5.exe)",
+      "passed": 21,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_range_marker.rs (target\\debug\\deps\\buffer_range_marker-c0df4e0a547474b0.exe)",
+      "passed": 15,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_reflow_differential.rs (target\\debug\\deps\\buffer_reflow_differential-b61717fa270bef22.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_reflow_edges.rs (target\\debug\\deps\\buffer_reflow_edges-92165830e4a859ba.exe)",
+      "passed": 11,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_reflow_upstream.rs (target\\debug\\deps\\buffer_reflow_upstream-ef535e950a092ef8.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_resize_differential.rs (target\\debug\\deps\\buffer_resize_differential-fa76f5f51983df6b.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_resize_reentry.rs (target\\debug\\deps\\buffer_resize_reentry-5e7d3c3e8815ac13.exe)",
+      "passed": 11,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_screen_edges.rs (target\\debug\\deps\\buffer_screen_edges-c7d04200ab5aec1b.exe)",
+      "passed": 10,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_screen_upstream.rs (target\\debug\\deps\\buffer_screen_upstream-e95013a26fc2f4f6.exe)",
+      "passed": 22,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_service_differential.rs (target\\debug\\deps\\buffer_service_differential-18becbe52add033c.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_service_edges.rs (target\\debug\\deps\\buffer_service_edges-52af3b1f1687d859.exe)",
+      "passed": 10,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_service_host_reentrant.rs (target\\debug\\deps\\buffer_service_host_reentrant-0906afb950242253.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_service_reentrant.rs (target\\debug\\deps\\buffer_service_reentrant-1b9cc4620267bb1e.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_service_upstream.rs (target\\debug\\deps\\buffer_service_upstream-82a94b2a6d4c1c26.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_set_owner_reentrant.rs (target\\debug\\deps\\buffer_set_owner_reentrant-4384acec46587ebc.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_set_upstream.rs (target\\debug\\deps\\buffer_set_upstream-7ee041438446de7f.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_terminal_differential.rs (target\\debug\\deps\\buffer_terminal_differential-6fdfbe691e7406b8.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_windows_options.rs (target\\debug\\deps\\buffer_windows_options-de6443c4f5a15073.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\cell_branches.rs (target\\debug\\deps\\cell_branches-9a91ecc3525e0b03.exe)",
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\cell_differential.rs (target\\debug\\deps\\cell_differential-d8a0192252719661.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\cell_extended.rs (target\\debug\\deps\\cell_extended-fa45e2cbc956f842.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\cell_upstream.rs (target\\debug\\deps\\cell_upstream-b86ca6ec185fb1f4.exe)",
+      "passed": 12,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\cell_url.rs (target\\debug\\deps\\cell_url-08769ea01aa30f86.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\charset.rs (target\\debug\\deps\\charset-ca06f9b41d8a87ff.exe)",
+      "passed": 10,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\charset_edges.rs (target\\debug\\deps\\charset_edges-fb00eb25c88def38.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\charset_mutation.rs (target\\debug\\deps\\charset_mutation-fff44cc9d439125b.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\charset_terminal.rs (target\\debug\\deps\\charset_terminal-0c4a9c0ae6c84340.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\circular_list.rs (target\\debug\\deps\\circular_list-1f374461cb5efd6b.exe)",
+      "passed": 24,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\circular_list_drop.rs (target\\debug\\deps\\circular_list_drop-2a38cc6fe8fea5d2.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\circular_list_edges.rs (target\\debug\\deps\\circular_list_edges-cb7fe8e2e6f63732.exe)",
+      "passed": 17,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\circular_list_numbers.rs (target\\debug\\deps\\circular_list_numbers-2722f84ee5813042.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\circular_list_phased_reads.rs (target\\debug\\deps\\circular_list_phased_reads-9aec123123b86a65.exe)",
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\circular_list_splice.rs (target\\debug\\deps\\circular_list_splice-67548c7b5ea45763.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\cleanup_factory.rs (target\\debug\\deps\\cleanup_factory-1bcf1736dbffedda.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\cleanup_factory_reentrant.rs (target\\debug\\deps\\cleanup_factory_reentrant-63a3f408c3fba009.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\clear_sparse.rs (target\\debug\\deps\\clear_sparse-50adf33939af9590.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\collections_dynamic_keys.rs (target\\debug\\deps\\collections_dynamic_keys-65bc1732449c68f3.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\collections_dynamic_oracle.rs (target\\debug\\deps\\collections_dynamic_oracle-2004add719f562f9.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\collections_iteration.rs (target\\debug\\deps\\collections_iteration-b777916a81c45f69.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\collections_map_keys.rs (target\\debug\\deps\\collections_map_keys-2daf44d243e3eb97.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\collections_regression.rs (target\\debug\\deps\\collections_regression-7826374378f5151c.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\collections_upstream.rs (target\\debug\\deps\\collections_upstream-f1b053a77fc28423.exe)",
+      "passed": 14,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\color_edges.rs (target\\debug\\deps\\color_edges-4a6b65f0c5c3b80a.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\color_upstream.rs (target\\debug\\deps\\color_upstream-ce61378d0c992a52.exe)",
+      "passed": 28,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\control_margins.rs (target\\debug\\deps\\control_margins-3e6cbd626805c9dc.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\core_data_delivery.rs (target\\debug\\deps\\core_data_delivery-13c27294ff9a3691.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\core_service.rs (target\\debug\\deps\\core_service-ec1c98d2f065c8cf.exe)",
+      "passed": 11,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\core_services_integration.rs (target\\debug\\deps\\core_services_integration-47d36332f7106566.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\csi_erase_cases.rs (target\\debug\\deps\\csi_erase_cases-138f53b089005d36.exe)",
+      "passed": 9,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\csi_erase_differential.rs (target\\debug\\deps\\csi_erase_differential-28bd26feea43bb37.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\csi_erase_edges.rs (target\\debug\\deps\\csi_erase_edges-8b2487425fd0a646.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\csi_erase_playwright_assertions.rs (target\\debug\\deps\\csi_erase_playwright_assertions-b1adb43c38871f71.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\csi_erase_upstream.rs (target\\debug\\deps\\csi_erase_upstream-4943f634cae8c56b.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\csi_erase_vt.rs (target\\debug\\deps\\csi_erase_vt-cf9b718e0e977325.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\dcs.rs (target\\debug\\deps\\dcs-0b6087eba557f729.exe)",
+      "passed": 41,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\dcs_fallback.rs (target\\debug\\deps\\dcs_fallback-c1430d82f7b8f130.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\decoration_differential.rs (target\\debug\\deps\\decoration_differential-c3d20b660513be9b.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\decoration_edges.rs (target\\debug\\deps\\decoration_edges-8a381073f21d0c70.exe)",
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\decoration_precision.rs (target\\debug\\deps\\decoration_precision-d55ce7dc5bdcbe3d.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\decoration_properties.rs (target\\debug\\deps\\decoration_properties-ed2de925e6f0233f.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\decoration_raw.rs (target\\debug\\deps\\decoration_raw-ec85d135e78126fb.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\decoration_review_edges.rs (target\\debug\\deps\\decoration_review_edges-7fded97d28e2368c.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\decoration_upstream.rs (target\\debug\\deps\\decoration_upstream-02e946f98dd399a5.exe)",
+      "passed": 10,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\dsr_option.rs (target\\debug\\deps\\dsr_option-578a40d11568aafb.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\erase_option.rs (target\\debug\\deps\\erase_option-e24a7d063bdff37c.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\escape_async.rs (target\\debug\\deps\\escape_async-69ed69c6931e9d4f.exe)",
+      "passed": 9,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\escape_dcs.rs (target\\debug\\deps\\escape_dcs-dbe6198d27af649b.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\escape_differential.rs (target\\debug\\deps\\escape_differential-74573765f8dcb52e.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\escape_edges.rs (target\\debug\\deps\\escape_edges-258529f716e667f3.exe)",
+      "passed": 9,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\escape_failures.rs (target\\debug\\deps\\escape_failures-b43e38a807a0e46b.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\escape_osc.rs (target\\debug\\deps\\escape_osc-cb6f5d0a16c264ab.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\escape_raw_errors.rs (target\\debug\\deps\\escape_raw_errors-384d196d5e076636.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\escape_sequence_constants.rs (target\\debug\\deps\\escape_sequence_constants-a30d51f08cf08c52.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\escape_upstream.rs (target\\debug\\deps\\escape_upstream-ba522daa48f93a45.exe)",
+      "passed": 43,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\event.rs (target\\debug\\deps\\event-9cbca3ee8667d04e.exe)",
+      "passed": 16,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\event_context.rs (target\\debug\\deps\\event_context-195b594bc85f8ce2.exe)",
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\event_edges.rs (target\\debug\\deps\\event_edges-9c30c877ebdb6d03.exe)",
+      "passed": 12,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\event_errors.rs (target\\debug\\deps\\event_errors-60c0184be05c8d9a.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\event_late_collection.rs (target\\debug\\deps\\event_late_collection-ad94a5d305312d07.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\handler_registry.rs (target\\debug\\deps\\handler_registry-695cbaebf6056b1f.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\headless_async_resize.rs (target\\debug\\deps\\headless_async_resize-c41f89087bdde09f.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\headless_contract.rs (target\\debug\\deps\\headless_contract-9b44617f0effe45e.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\headless_disposal_contract.rs (target\\debug\\deps\\headless_disposal_contract-adee46eac7be1baa.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\headless_modes.rs (target\\debug\\deps\\headless_modes-1a9b3bc6651844b8.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\headless_native_timer.rs (target\\debug\\deps\\headless_native_timer-0146ffb95f16facf.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\headless_options.rs (target\\debug\\deps\\headless_options-efd0d98f00fbc584.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\headless_queue.rs (target\\debug\\deps\\headless_queue-3722f15556953f21.exe)",
+      "passed": 10,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\headless_queue_edges.rs (target\\debug\\deps\\headless_queue_edges-c41d9af672b6ce79.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\headless_queue_priority.rs (target\\debug\\deps\\headless_queue_priority-8ee3502578c7ce73.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\headless_recursive_fixture.rs (target\\debug\\deps\\headless_recursive_fixture-0c15693a9dfcefe9.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\headless_reentry.rs (target\\debug\\deps\\headless_reentry-7b3848d5ea6c393a.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\headless_reset_host.rs (target\\debug\\deps\\headless_reset_host-700f90da76cb938c.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\headless_upstream.rs (target\\debug\\deps\\headless_upstream-7ebebc6dfe41ba16.exe)",
+      "passed": 45,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\index_callbacks.rs (target\\debug\\deps\\index_callbacks-778a0bb68cbe0722.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\input_diagnostics.rs (target\\debug\\deps\\input_diagnostics-9558dcce2ee4cb72.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\input_handler_async.rs (target\\debug\\deps\\input_handler_async-3dd33aa3d606cde6.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\input_handler_async_lifecycle.rs (target\\debug\\deps\\input_handler_async_lifecycle-56ffb592c3a84f88.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\input_handler_async_streaming.rs (target\\debug\\deps\\input_handler_async_streaming-247fb89f8bc2732b.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\input_handler_async_traces.rs (target\\debug\\deps\\input_handler_async_traces-b235ce9f0e094f34.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\input_handler_bounded.rs (target\\debug\\deps\\input_handler_bounded-cafbeddf76abff11.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\input_handler_core_backspace.rs (target\\debug\\deps\\input_handler_core_backspace-952f0e37454bd8a3.exe)",
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\input_handler_core_differential.rs (target\\debug\\deps\\input_handler_core_differential-7e9691a9aff56eb8.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\input_handler_core_print.rs (target\\debug\\deps\\input_handler_core_print-13a4087b98ed2ca5.exe)",
+      "passed": 16,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\internal_attribute_view.rs (target\\debug\\deps\\internal_attribute_view-d00f966a19d0ef98.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\keyboard_edges.rs (target\\debug\\deps\\keyboard_edges-06d620784c3c0082.exe)",
+      "passed": 9,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\keyboard_live.rs (target\\debug\\deps\\keyboard_live-37b34d13f02c81b1.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\keyboard_upstream.rs (target\\debug\\deps\\keyboard_upstream-80c4c6988cca996a.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\kitty_edges.rs (target\\debug\\deps\\kitty_edges-b3137068d4f7f5ee.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\kitty_lookup.rs (target\\debug\\deps\\kitty_lookup-f821ee2956df7208.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\kitty_upstream.rs (target\\debug\\deps\\kitty_upstream-fab219a2db3f8de8.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\lifecycle.rs (target\\debug\\deps\\lifecycle-55ce622d843a2ea3.exe)",
+      "passed": 9,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\lifecycle_edges.rs (target\\debug\\deps\\lifecycle_edges-5d984a271760f7ba.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\lifecycle_explicit.rs (target\\debug\\deps\\lifecycle_explicit-4377329b48467da6.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\line_feed_option.rs (target\\debug\\deps\\line_feed_option-a020d4076412607c.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\log_dynamic_binding.rs (target\\debug\\deps\\log_dynamic_binding-1f90aee41c44c68b.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\log_service.rs (target\\debug\\deps\\log_service-47e0c0cb025bb8a5.exe)",
+      "passed": 9,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\marker_line.rs (target\\debug\\deps\\marker_line-c39d8d27769eae3e.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\marker_raw.rs (target\\debug\\deps\\marker_raw-d7cef9d4f30fe215.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\marker_resources.rs (target\\debug\\deps\\marker_resources-f446ac556fc0bc48.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\mode_query_option.rs (target\\debug\\deps\\mode_query_option-b4785de7f9b0a971.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\mouse_action_numeric.rs (target\\debug\\deps\\mouse_action_numeric-ae2ca4c32506d0a8.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\mouse_button_numeric.rs (target\\debug\\deps\\mouse_button_numeric-cd2de1c644a6621e.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\mouse_callbacks.rs (target\\debug\\deps\\mouse_callbacks-9c1b450e0905592e.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\mouse_custom.rs (target\\debug\\deps\\mouse_custom-a8c88673084ac3ea.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\mouse_differential.rs (target\\debug\\deps\\mouse_differential-69b422072130db17.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\mouse_registry_names.rs (target\\debug\\deps\\mouse_registry_names-610eed23aeb1e002.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\mouse_state.rs (target\\debug\\deps\\mouse_state-41ec60162692ac4f.exe)",
+      "passed": 14,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\move_to_cell.rs (target\\debug\\deps\\move_to_cell-0dd88909034df292.exe)",
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\native_queue_differential.rs (target\\debug\\deps\\native_queue_differential-6ba32305dde0326d.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\options_boundary.rs (target\\debug\\deps\\options_boundary-5fe90a75e4ba6e70.exe)",
+      "passed": 12,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\options_host_store.rs (target\\debug\\deps\\options_host_store-bf3ceb3dfb81d85c.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\options_service.rs (target\\debug\\deps\\options_service-b98e1536c1a68c34.exe)",
+      "passed": 19,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\osc.rs (target\\debug\\deps\\osc-5776e1d61b21962c.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\osc_differential.rs (target\\debug\\deps\\osc_differential-3b590c1ed1244995.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\osc_disposal.rs (target\\debug\\deps\\osc_disposal-f669f5b460f576a7.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\osc_edges.rs (target\\debug\\deps\\osc_edges-ba86f489f2c2bd1c.exe)",
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\osc_failures.rs (target\\debug\\deps\\osc_failures-316ef9cda815d683.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\osc_fallback_errors.rs (target\\debug\\deps\\osc_fallback_errors-4d3ee8acef9bbc5e.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\osc_link_service.rs (target\\debug\\deps\\osc_link_service-7f4271f588742b27.exe)",
+      "passed": 13,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\osc_raw_errors.rs (target\\debug\\deps\\osc_raw_errors-f772e9e0ef154803.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\osc_registry.rs (target\\debug\\deps\\osc_registry-9a87ac9b8e82db81.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\params.rs (target\\debug\\deps\\params-6dc9cb03a5430ec8.exe)",
+      "passed": 21,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\params_differential.rs (target\\debug\\deps\\params_differential-cf525d91b837e9f5.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\params_edges.rs (target\\debug\\deps\\params_edges-080815160deb87e0.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\params_stored.rs (target\\debug\\deps\\params_stored-36c44ab06cfd7daf.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\parser_dispose.rs (target\\debug\\deps\\parser_dispose-1e5bc233e852b04b.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\parser_table.rs (target\\debug\\deps\\parser_table-8d684d63a2beabec.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\platform_windows.rs (target\\debug\\deps\\platform_windows-c048ff291ea83a6b.exe)",
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\print_negative_target.rs (target\\debug\\deps\\print_negative_target-57515cad9a657a0f.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\print_option.rs (target\\debug\\deps\\print_option-8fd23e80e0b76a69.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\protocol_live.rs (target\\debug\\deps\\protocol_live-76201ec2b7e37973.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\public_adapter_terminal.rs (target\\debug\\deps\\public_adapter_terminal-60c1b5b59aaa1174.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\public_addon_manager.rs (target\\debug\\deps\\public_addon_manager-edd501874bee5f4e.exe)",
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\public_addon_reentrancy.rs (target\\debug\\deps\\public_addon_reentrancy-c0a85d78db845154.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\public_api_differential.rs (target\\debug\\deps\\public_api_differential-51096b702f3277ac.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\public_api_integration.rs (target\\debug\\deps\\public_api_integration-e5af1e6e5e2bbddb.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\public_api_validation.rs (target\\debug\\deps\\public_api_validation-482314946262be60.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\public_buffer_api.rs (target\\debug\\deps\\public_buffer_api-4bff8c99adbb5805.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\public_cell_numbers.rs (target\\debug\\deps\\public_cell_numbers-1c2691b0042c7f07.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\public_cell_numbers_differential.rs (target\\debug\\deps\\public_cell_numbers_differential-0a320619ec4114a6.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\public_parser_api.rs (target\\debug\\deps\\public_parser_api-19dc5ba159942cf9.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\public_parser_guard.rs (target\\debug\\deps\\public_parser_guard-c97fe0ac4d2c39e6.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\public_parser_reentrant.rs (target\\debug\\deps\\public_parser_reentrant-8ed97b611157bb65.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\public_streaming_apc.rs (target\\debug\\deps\\public_streaming_apc-2ccae305b5e8ee6e.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\public_streaming_dcs.rs (target\\debug\\deps\\public_streaming_dcs-03bebce7e7769e52.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\reverse_index_render.rs (target\\debug\\deps\\reverse_index_render-8fca5b3453889099.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\search_cache.rs (target\\debug\\deps\\search_cache-fe2796b0eff856ab.exe)",
+      "passed": 19,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\search_differential.rs (target\\debug\\deps\\search_differential-4be1d2ed7c64a388.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\search_integration.rs (target\\debug\\deps\\search_integration-f52fbef70ae1ad6a.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\search_ring.rs (target\\debug\\deps\\search_ring-31d3605bfd333367.exe)",
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\serialize_ansi.rs (target\\debug\\deps\\serialize_ansi-54e6102c33391d92.exe)",
+      "passed": 14,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\serialize_ansi_numeric_row.rs (target\\debug\\deps\\serialize_ansi_numeric_row-47bf2c3a89019d9c.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\serialize_diagnostics.rs (target\\debug\\deps\\serialize_diagnostics-29422262678a62da.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\serialize_differential.rs (target\\debug\\deps\\serialize_differential-5df0a00e4edcf564.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\serialize_header_order.rs (target\\debug\\deps\\serialize_header_order-4fc61612bebcfe02.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\serialize_html.rs (target\\debug\\deps\\serialize_html-cba7fc5a971e9871.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\serialize_html_edges.rs (target\\debug\\deps\\serialize_html_edges-4b039b23ad3e0c44.exe)",
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\serialize_html_numeric_rows.rs (target\\debug\\deps\\serialize_html_numeric_rows-086db687da8bbee6.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\serialize_line_identity.rs (target\\debug\\deps\\serialize_line_identity-eb11207aee5f0759.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\serialize_live.rs (target\\debug\\deps\\serialize_live-371fd040e1ac809a.exe)",
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\serialize_live_callbacks.rs (target\\debug\\deps\\serialize_live_callbacks-db59f2efc156c5a5.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\serialize_live_reentrancy.rs (target\\debug\\deps\\serialize_live_reentrancy-f65d8d1f9a36516f.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\serialize_live_reset.rs (target\\debug\\deps\\serialize_live_reset-33398ec6b388d6f3.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\serialize_native.rs (target\\debug\\deps\\serialize_native-9a9acbba8762e4e6.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\serialize_ownership.rs (target\\debug\\deps\\serialize_ownership-78ebcf0811062379.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\serialize_reentry.rs (target\\debug\\deps\\serialize_reentry-17e1186e073ef695.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\service_dependency_views.rs (target\\debug\\deps\\service_dependency_views-20d20998a9cb2392.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\service_identity.rs (target\\debug\\deps\\service_identity-00c1f3eeff827a72.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\service_injection.rs (target\\debug\\deps\\service_injection-5e7428ab12d39f03.exe)",
+      "passed": 9,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\sgr.rs (target\\debug\\deps\\sgr-bc31ac11eff89014.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\sgr_callbacks.rs (target\\debug\\deps\\sgr_callbacks-ebf5ec75567d619a.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\sorted_typed_keys.rs (target\\debug\\deps\\sorted_typed_keys-171f58236beb0d06.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\string_builder_differential.rs (target\\debug\\deps\\string_builder_differential-a071170267b34dfd.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\string_builder_edges.rs (target\\debug\\deps\\string_builder_edges-c8a77a47b224e928.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\string_builder_upstream.rs (target\\debug\\deps\\string_builder_upstream-c3202224b3358114.exe)",
+      "passed": 17,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\tab_option.rs (target\\debug\\deps\\tab_option-a1187e14b5d1afe1.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\task_queue.rs (target\\debug\\deps\\task_queue-3c4b70f0c5268b11.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\task_queue_clock.rs (target\\debug\\deps\\task_queue_clock-199bee0e07ce7402.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\task_queue_drop.rs (target\\debug\\deps\\task_queue_drop-a5c6742c12eba308.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\task_queue_edges.rs (target\\debug\\deps\\task_queue_edges-28b936aab62fff19.exe)",
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\terminal_alt_modes.rs (target\\debug\\deps\\terminal_alt_modes-7f1a7ac39d846aa3.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\terminal_csi_cursor.rs (target\\debug\\deps\\terminal_csi_cursor-796676ba0395eb86.exe)",
+      "passed": 16,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\terminal_csi_differential.rs (target\\debug\\deps\\terminal_csi_differential-70ea564ce48a174c.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\terminal_csi_editing.rs (target\\debug\\deps\\terminal_csi_editing-763154df94479496.exe)",
+      "passed": 15,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\terminal_csi_events.rs (target\\debug\\deps\\terminal_csi_events-c931c1586296f0bc.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\terminal_engine.rs (target\\debug\\deps\\terminal_engine-33ce983da1ada8f2.exe)",
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\terminal_engine_differential.rs (target\\debug\\deps\\terminal_engine_differential-17f2d661c644af63.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\terminal_marker_reentry.rs (target\\debug\\deps\\terminal_marker_reentry-1a4b82bcb1afe254.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\terminal_mode_callbacks.rs (target\\debug\\deps\\terminal_mode_callbacks-a3d460b81abe8e4a.exe)",
+      "passed": 9,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\terminal_modes.rs (target\\debug\\deps\\terminal_modes-a8819a5b649035e8.exe)",
+      "passed": 17,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\terminal_modes_differential.rs (target\\debug\\deps\\terminal_modes_differential-478859f4b4d6357d.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\terminal_osc_cells.rs (target\\debug\\deps\\terminal_osc_cells-b58f54d9ae8f4eb3.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\terminal_osc_differential.rs (target\\debug\\deps\\terminal_osc_differential-1fb9c3c50bc30112.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\terminal_osc_edges.rs (target\\debug\\deps\\terminal_osc_edges-fccfc9fffb22852d.exe)",
+      "passed": 9,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\terminal_osc_payload.rs (target\\debug\\deps\\terminal_osc_payload-8d6cb6f6d0287341.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\terminal_osc_upstream.rs (target\\debug\\deps\\terminal_osc_upstream-1351ec1bf03af0ab.exe)",
+      "passed": 12,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\terminal_review.rs (target\\debug\\deps\\terminal_review-89e62e735275a9cb.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\text_decoder.rs (target\\debug\\deps\\text_decoder-9389bba9cd9c53dd.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\text_decoder_fixed.rs (target\\debug\\deps\\text_decoder_fixed-33ca96997c09143d.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\unicode_addon_drop.rs (target\\debug\\deps\\unicode_addon_drop-f063d3df8d234ca2.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\unicode_addon_manager.rs (target\\debug\\deps\\unicode_addon_manager-22c1e83a791989b8.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\unicode_addons.rs (target\\debug\\deps\\unicode_addons-4c1a6f8351f4a8b3.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\unicode_service.rs (target\\debug\\deps\\unicode_service-92e43e7dab249ed1.exe)",
+      "passed": 15,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\unicode_service_differential.rs (target\\debug\\deps\\unicode_service_differential-978e29c608c1d4fb.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\unicode_v6.rs (target\\debug\\deps\\unicode_v6-4057ca0227b9695c.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\win32_lookup.rs (target\\debug\\deps\\win32_lookup-4bcaf700ed445e88.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\windows_terminal.rs (target\\debug\\deps\\windows_terminal-500026fd8150736a.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\windows_wrapping_order.rs (target\\debug\\deps\\windows_wrapping_order-70079629ffe9d9f3.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\write_buffer.rs (target\\debug\\deps\\write_buffer-a8f8096467c32498.exe)",
+      "passed": 48,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\xparse_color.rs (target\\debug\\deps\\xparse_color-15ddcb2ddc6e6d13.exe)",
+      "passed": 9,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\circular_list_trace.rs (target\\debug\\examples\\circular_list_trace-835190a2d1f88650.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\collections_trace.rs (target\\debug\\examples\\collections_trace-56f1f6c74a3f54c7.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\color_oracle.rs (target\\debug\\examples\\color_oracle-bb13e1925b35b8eb.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\core_service_oracle.rs (target\\debug\\examples\\core_service_oracle-5e251fbb96de7919.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\event_trace.rs (target\\debug\\examples\\event_trace-0de16d8d00a112c2.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\full_trace.rs (target\\debug\\examples\\full_trace-b08a11173c5e2fca.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\input_handler_core_trace.rs (target\\debug\\examples\\input_handler_core_trace-ee0a41b1924d119f.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\kitty_oracle.rs (target\\debug\\examples\\kitty_oracle-bbca236c367607aa.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\native.rs (target\\debug\\examples\\native-f12e6d67b17d9f7b.exe)",
+      "passed": 10,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\options_oracle.rs (target\\debug\\examples\\options_oracle-fafa226c97812418.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\osc_link_oracle.rs (target\\debug\\examples\\osc_link_oracle-8a6a9edbabe0f243.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\service_injection_trace.rs (target\\debug\\examples\\service_injection_trace-a8992501b94cc0b3.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\task_platform_trace.rs (target\\debug\\examples\\task_platform_trace-7c75d84acc12b282.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\terminal_osc_oracle.rs (target\\debug\\examples\\terminal_osc_oracle-38086f18b109450d.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\xparse_color_oracle.rs (target\\debug\\examples\\xparse_color_oracle-a3ff481e99325944.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests src\\lib.rs (target\\debug\\deps\\xterm_font_addons-f56c7a0800e1854c.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_avar_browser.rs (target\\debug\\deps\\font_avar_browser-eef0e8c325a98a6a.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_buffer_mutations_browser.rs (target\\debug\\deps\\font_buffer_mutations_browser-9ff781840de712d2.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_cff2_dict_browser.rs (target\\debug\\deps\\font_cff2_dict_browser-3b0fe7f169a6ad5f.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_cff2_entries_browser.rs (target\\debug\\deps\\font_cff2_entries_browser-6ed8445b8e9e3968.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_cff2_fdarray_browser.rs (target\\debug\\deps\\font_cff2_fdarray_browser-4194bd6e93e19a36.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_cff2_fonts_browser.rs (target\\debug\\deps\\font_cff2_fonts_browser-324a4ff585499fad.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_cff2_index_browser.rs (target\\debug\\deps\\font_cff2_index_browser-6f766d78315c657a.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_cff_fdselect_browser.rs (target\\debug\\deps\\font_cff_fdselect_browser-21594a068d368aa1.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_cff_header_browser.rs (target\\debug\\deps\\font_cff_header_browser-e09b6326708b21a0.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_cff_index_browser.rs (target\\debug\\deps\\font_cff_index_browser-022212b77e8626b5.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_color_browser.rs (target\\debug\\deps\\font_color_browser-4dec63df99635024.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_fvar_browser.rs (target\\debug\\deps\\font_fvar_browser-669286c3f37c40b3.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_gdef_browser.rs (target\\debug\\deps\\font_gdef_browser-5b5b95c980b4338c.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_gpos_browser.rs (target\\debug\\deps\\font_gpos_browser-43b19877c56f1ac4.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_gsub_header_browser.rs (target\\debug\\deps\\font_gsub_header_browser-8bc5fa67152b3040.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_gsub_lookup_browser.rs (target\\debug\\deps\\font_gsub_lookup_browser-58044f1c20682683.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_gsub_noncontext_browser.rs (target\\debug\\deps\\font_gsub_noncontext_browser-699063c884137dec.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_gsub_null_browser.rs (target\\debug\\deps\\font_gsub_null_browser-483ea57e4185a649.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_gsub_refs_browser.rs (target\\debug\\deps\\font_gsub_refs_browser-bc9780ed4c8cf80b.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_gsub_single_browser.rs (target\\debug\\deps\\font_gsub_single_browser-49d498b22ce81246.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_gsub_subtables_browser.rs (target\\debug\\deps\\font_gsub_subtables_browser-982bf7f6533e501d.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_gsub_type9_browser.rs (target\\debug\\deps\\font_gsub_type9_browser-a1503df3fbfa6fb4.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_hint_tables_browser.rs (target\\debug\\deps\\font_hint_tables_browser-bbfa119266850014.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_kern_warning_browser.rs (target\\debug\\deps\\font_kern_warning_browser-0fe5fd6463653a0e.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_metadata_browser.rs (target\\debug\\deps\\font_metadata_browser-bf2799df880f8196.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_outline_browser.rs (target\\debug\\deps\\font_outline_browser-c25fff0eb3937941.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_svg_browser.rs (target\\debug\\deps\\font_svg_browser-11eec03de4faa387.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\ligatures_browser.rs (target\\debug\\deps\\ligatures_browser-6fdfbfd4ce3abe04.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\local_fonts_browser.rs (target\\debug\\deps\\local_fonts_browser-7d2857e9ea438608.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\web_fonts_async_browser.rs (target\\debug\\deps\\web_fonts_async_browser-b0a93dcce40a6d74.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\web_fonts_browser.rs (target\\debug\\deps\\web_fonts_browser-509ed26f06dc0372.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\web_fonts_ready_browser.rs (target\\debug\\deps\\web_fonts_ready_browser-4756f9a653b57874.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests src\\lib.rs (target\\debug\\deps\\xterm_wasm_support-c3749e08a635ad80.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\font_cache.rs (target\\debug\\deps\\font_cache-270beb6fcab7b2c3.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\public_adapters_wasm.rs (target\\debug\\deps\\public_adapters_wasm-fedbedc7b9c5e4d6.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_marker_reentry.rs (target\\debug\\deps\\wasm_marker_reentry-42bfe00374de12aa.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_mouse_fields.rs (target\\debug\\deps\\wasm_mouse_fields-540d2a1b4852d0fa.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_options.rs (target\\debug\\deps\\wasm_options-8c5237aa32241178.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests src\\lib.rs (target\\debug\\deps\\xterm_web-51174c681ad2b5aa.exe)",
+      "passed": 57,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\accessibility_differential.rs (target\\debug\\deps\\accessibility_differential-3544229f923565a8.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\accessibility_state.rs (target\\debug\\deps\\accessibility_state-f300012b1eb42b1f.exe)",
+      "passed": 9,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\api.rs (target\\debug\\deps\\api-43c34a09ea89aa24.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\browser_scroll_scheduler.rs (target\\debug\\deps\\browser_scroll_scheduler-6344183d374c9d28.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\buffer_capacity_wasm.rs (target\\debug\\deps\\buffer_capacity_wasm-389df12b017599ea.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\canvas_css_browser.rs (target\\debug\\deps\\canvas_css_browser-6f3bc071c70cef23.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\character_joiner_upstream.rs (target\\debug\\deps\\character_joiner_upstream-cc1f10e1c32bad91.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\color_zone_differential.rs (target\\debug\\deps\\color_zone_differential-54071b9763789491.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\color_zone_store.rs (target\\debug\\deps\\color_zone_store-4f56ebf5e635382f.exe)",
+      "passed": 10,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\core_browser_service_wasm.rs (target\\debug\\deps\\core_browser_service_wasm-5f1a1e9e4a014fdf.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\custom_glyphs.rs (target\\debug\\deps\\custom_glyphs-e99135310d12b56d.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\debounce.rs (target\\debug\\deps\\debounce-89241a903c72fbc5.exe)",
+      "passed": 9,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\debounce_differential.rs (target\\debug\\deps\\debounce_differential-f761338f2d602992.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\debounce_errors.rs (target\\debug\\deps\\debounce_errors-709a6caeb7ccdfd1.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\dom_font_browser.rs (target\\debug\\deps\\dom_font_browser-e0eed37b3d63116d.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\image_addon_browser.rs (target\\debug\\deps\\image_addon_browser-14ddd83ff0bd561d.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\image_canvas_browser.rs (target\\debug\\deps\\image_canvas_browser-c2491524f3fc1eee.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\image_iip_terminal_browser.rs (target\\debug\\deps\\image_iip_terminal_browser-5d7ceb702ba2cf33.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\image_kitty_terminal_browser.rs (target\\debug\\deps\\image_kitty_terminal_browser-43e99f4e79cc4071.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\image_lifecycle_browser.rs (target\\debug\\deps\\image_lifecycle_browser-ce374e4245713af5.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\image_sixel_terminal_browser.rs (target\\debug\\deps\\image_sixel_terminal_browser-85c141e217efe3c7.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\input_event_getters.rs (target\\debug\\deps\\input_event_getters-4b96b13aeeb84bce.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\input_upstream.rs (target\\debug\\deps\\input_upstream-e999da84935de630.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\keyboard_dispatch.rs (target\\debug\\deps\\keyboard_dispatch-982af661db8f3e03.exe)",
+      "passed": 9,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\keyboard_dispatch_callbacks.rs (target\\debug\\deps\\keyboard_dispatch_callbacks-97d187075fd978c6.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\keyboard_dispatch_getters.rs (target\\debug\\deps\\keyboard_dispatch_getters-9679fc95a9edd0c7.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\keypress_raw_values.rs (target\\debug\\deps\\keypress_raw_values-efc956ecfedf92b5.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\link_provider_transactions.rs (target\\debug\\deps\\link_provider_transactions-f125b44534c9ba3e.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\link_replies_differential.rs (target\\debug\\deps\\link_replies_differential-62ff681c5f08f047.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\link_replies_live.rs (target\\debug\\deps\\link_replies_live-75fb658abf377730.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\link_state.rs (target\\debug\\deps\\link_state-9b4320435e4c8e74.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\links.rs (target\\debug\\deps\\links-d61796635d4a32a2.exe)",
+      "passed": 12,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\mouse_action_numeric.rs (target\\debug\\deps\\mouse_action_numeric-dff2f39ab2140311.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\mouse_coordinate_zero.rs (target\\debug\\deps\\mouse_coordinate_zero-27973fbf9d40e450.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\mouse_failures.rs (target\\debug\\deps\\mouse_failures-4229a8202626b9e1.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\mouse_policy.rs (target\\debug\\deps\\mouse_policy-eeed83f37a3b0cc6.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\mouse_routing.rs (target\\debug\\deps\\mouse_routing-95070b5327665de6.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\osc_links_differential.rs (target\\debug\\deps\\osc_links_differential-48bdb4b6d78448d0.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\osc_links_live.rs (target\\debug\\deps\\osc_links_live-b48d1ddf6d76b104.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\osc_links_policy.rs (target\\debug\\deps\\osc_links_policy-9800abc2cfefe610.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\overview_ruler_browser.rs (target\\debug\\deps\\overview_ruler_browser-d240f3acf5efd9ad.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\overview_terminal_browser.rs (target\\debug\\deps\\overview_terminal_browser-7df5f6170ca0fabe.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\public_adapters_wasm.rs (target\\debug\\deps\\public_adapters_wasm-b6e6fd5c0cd34b13.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\public_buffer_numbers_wasm.rs (target\\debug\\deps\\public_buffer_numbers_wasm-119ce2e133b10492.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\raw_scroll_animation_browser.rs (target\\debug\\deps\\raw_scroll_animation_browser-636831c43835e499.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\raw_scroll_state_browser.rs (target\\debug\\deps\\raw_scroll_state_browser-ebb8ea254c1c97bb.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\raw_scrollable_browser.rs (target\\debug\\deps\\raw_scrollable_browser-8bf42ae535d79d7a.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\render_callback_iteration.rs (target\\debug\\deps\\render_callback_iteration-90db53e05f51aebc.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\render_scheduler.rs (target\\debug\\deps\\render_scheduler-f208525c823402cd.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\render_scheduler_browser.rs (target\\debug\\deps\\render_scheduler_browser-b6d9fca356e16411.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\render_service_browser.rs (target\\debug\\deps\\render_service_browser-8765a0f6bb30ac39.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\row_factory_browser.rs (target\\debug\\deps\\row_factory_browser-98a85b18918b3a3b.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\scroll_clock.rs (target\\debug\\deps\\scroll_clock-ee9fc407156fcca0.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\scroll_scheduler.rs (target\\debug\\deps\\scroll_scheduler-dfff7761a659d475.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\scrollable.rs (target\\debug\\deps\\scrollable-b5416e41163dd09f.exe)",
+      "passed": 9,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\scrollbar_construction_browser.rs (target\\debug\\deps\\scrollbar_construction_browser-83ff289fc77ae35e.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\scrollbar_helpers_browser.rs (target\\debug\\deps\\scrollbar_helpers_browser-62c4b3e07a6bb901.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\scrollbar_state_differential.rs (target\\debug\\deps\\scrollbar_state_differential-37ad6e5ddbcb4162.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\scrollbar_visibility.rs (target\\debug\\deps\\scrollbar_visibility-e748c941829aa3fd.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\search_addon.rs (target\\debug\\deps\\search_addon-a9ec83e89c96f449.exe)",
+      "passed": 74,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\selection_live_geometry.rs (target\\debug\\deps\\selection_live_geometry-6230f02322b0ce68.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\selection_model.rs (target\\debug\\deps\\selection_model-8a1914c8b91711f0.exe)",
+      "passed": 23,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\selection_service.rs (target\\debug\\deps\\selection_service-3208d4d9479991e8.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\selection_service_differential.rs (target\\debug\\deps\\selection_service_differential-3c7a7758710a89c2.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\selection_teardown.rs (target\\debug\\deps\\selection_teardown-613765e709a1add4.exe)",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\theme_css.rs (target\\debug\\deps\\theme_css-a988e3719bcc353a.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\theme_css_raw.rs (target\\debug\\deps\\theme_css_raw-d9d2a0b214c98d7d.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\theme_edges.rs (target\\debug\\deps\\theme_edges-8784418a6e2f9a3e.exe)",
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\theme_upstream.rs (target\\debug\\deps\\theme_upstream-e8421a8809a13448.exe)",
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\timer_scheduler.rs (target\\debug\\deps\\timer_scheduler-1edc13d3d015c835.exe)",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\timer_scheduler_browser.rs (target\\debug\\deps\\timer_scheduler_browser-9aed45728f385b16.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\touch_histories.rs (target\\debug\\deps\\touch_histories-01289c91434069eb.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\touch_policy.rs (target\\debug\\deps\\touch_policy-baf678c43fd5c8d8.exe)",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\unicode_addon_bindings.rs (target\\debug\\deps\\unicode_addon_bindings-047b5b98273d4df5.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\unicode_addons.rs (target\\debug\\deps\\unicode_addons-2872be36950f6537.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\unicode_glyph_number.rs (target\\debug\\deps\\unicode_glyph_number-cf9811edc3165d16.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\unicode_internal_service.rs (target\\debug\\deps\\unicode_internal_service-21c7d290a98a6e2e.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\unicode_public_api.rs (target\\debug\\deps\\unicode_public_api-a2ccc85b85a84bbf.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\viewport_controller.rs (target\\debug\\deps\\viewport_controller-de880546728c3a28.exe)",
+      "passed": 11,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_accessibility.rs (target\\debug\\deps\\wasm_accessibility-6faabd94c44de271.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_accessibility_terminal.rs (target\\debug\\deps\\wasm_accessibility_terminal-a2ec14ffef8671d2.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_attach_disposal_reentry.rs (target\\debug\\deps\\wasm_attach_disposal_reentry-074b8bb1680aa998.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_attach_listener_lifetime.rs (target\\debug\\deps\\wasm_attach_listener_lifetime-272358393ee4ff59.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_attach_reentry.rs (target\\debug\\deps\\wasm_attach_reentry-5843398e8b81ce52.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_attach_removal.rs (target\\debug\\deps\\wasm_attach_removal-6e537b391cf79795.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_base64_decode.rs (target\\debug\\deps\\wasm_base64_decode-44fce2f450fa6337.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_base64_encode.rs (target\\debug\\deps\\wasm_base64_encode-16b489d88693ed76.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_base64_encoder_host.rs (target\\debug\\deps\\wasm_base64_encoder_host-a88518669d935574.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_base64_fallback.rs (target\\debug\\deps\\wasm_base64_fallback-78c4ac53be18dc8b.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_buffer_cleanup.rs (target\\debug\\deps\\wasm_buffer_cleanup-ceec87d02b8ab3ed.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_buffer_decoration.rs (target\\debug\\deps\\wasm_buffer_decoration-7a5c9fa0ec9b1508.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_clipboard_values.rs (target\\debug\\deps\\wasm_clipboard_values-c25fa3e1fa281e63.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_composition_geometry.rs (target\\debug\\deps\\wasm_composition_geometry-9232ea703f35309e.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_core_views.rs (target\\debug\\deps\\wasm_core_views-7eb3b6f10c69aef1.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_cursor_blink.rs (target\\debug\\deps\\wasm_cursor_blink-a1a0c7a522d9a1fc.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_custom_glyph_pattern_host.rs (target\\debug\\deps\\wasm_custom_glyph_pattern_host-f0cd613e5bfe2c6a.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_custom_glyphs.rs (target\\debug\\deps\\wasm_custom_glyphs-ce45c0f9649f7b23.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_device_pixel_observer.rs (target\\debug\\deps\\wasm_device_pixel_observer-947dba57ec3a22c6.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_dom_support.rs (target\\debug\\deps\\wasm_dom_support-127de46666c3488e.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_fast_dom_differential.rs (target\\debug\\deps\\wasm_fast_dom_differential-e5584b2ba96850cf.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_fit_reactivation.rs (target\\debug\\deps\\wasm_fit_reactivation-174b4a082369e2a7.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_font_shaping.rs (target\\debug\\deps\\wasm_font_shaping-b6bf9374b833a627.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_font_terminal.rs (target\\debug\\deps\\wasm_font_terminal-6c9b5a9493952982.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_host.rs (target\\debug\\deps\\wasm_host-a6a9a341bd259f21.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_image_core.rs (target\\debug\\deps\\wasm_image_core-fae69810ad3fca99.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_input.rs (target\\debug\\deps\\wasm_input-2befa4da8d4ce916.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_input_callbacks.rs (target\\debug\\deps\\wasm_input_callbacks-fddaa5f0bb890aa2.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_input_event.rs (target\\debug\\deps\\wasm_input_event-35dc861538df8467.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_input_raw.rs (target\\debug\\deps\\wasm_input_raw-9974e276ebdf1972.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_joiner_raw.rs (target\\debug\\deps\\wasm_joiner_raw-75e35304c50d8dbf.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_joiner_row.rs (target\\debug\\deps\\wasm_joiner_row-c508c1bcde80dcbb.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_joiner_row_live.rs (target\\debug\\deps\\wasm_joiner_row_live-fd11f3caa1dda0bf.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_keyboard_live.rs (target\\debug\\deps\\wasm_keyboard_live-2b399ea4ac1efd1a.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_keypress_raw.rs (target\\debug\\deps\\wasm_keypress_raw-25dda42810683b8c.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_link_disposal.rs (target\\debug\\deps\\wasm_link_disposal-cd1359fbc2a6fba9.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_link_hover_event.rs (target\\debug\\deps\\wasm_link_hover_event-e8410dc325045a87.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_link_live_cols.rs (target\\debug\\deps\\wasm_link_live_cols-857d836f7622c490.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_link_mouse_path.rs (target\\debug\\deps\\wasm_link_mouse_path-be9f733476b0c43d.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_link_provider_reentry.rs (target\\debug\\deps\\wasm_link_provider_reentry-4c107d95f5269fac.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_link_render_recheck.rs (target\\debug\\deps\\wasm_link_render_recheck-7a5d1f270364264d.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_link_underline_geometry.rs (target\\debug\\deps\\wasm_link_underline_geometry-a185cac42174cecd.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_linkifier.rs (target\\debug\\deps\\wasm_linkifier-59ada1417714b133.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_links.rs (target\\debug\\deps\\wasm_links-54954679604964ee.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_logger.rs (target\\debug\\deps\\wasm_logger-74042066ac1fb985.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_mouse.rs (target\\debug\\deps\\wasm_mouse-bd073110dc43ee09.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_osc_handler.rs (target\\debug\\deps\\wasm_osc_handler-9b28da19894b6463.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_osc_live_range.rs (target\\debug\\deps\\wasm_osc_live_range-e2970c130e2306c3.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_osc_policy.rs (target\\debug\\deps\\wasm_osc_policy-7bafac4dff6fb116.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_pointer_monitor.rs (target\\debug\\deps\\wasm_pointer_monitor-b311e5c7916011a4.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_progress_math.rs (target\\debug\\deps\\wasm_progress_math-4cb1cc0005530d9e.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_public_decoration.rs (target\\debug\\deps\\wasm_public_decoration-f847406cbcb9771b.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_public_link_provider.rs (target\\debug\\deps\\wasm_public_link_provider-e72a8e0413e6130e.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_raw_font_terminal.rs (target\\debug\\deps\\wasm_raw_font_terminal-51005076870cb5c0.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_scheduler.rs (target\\debug\\deps\\wasm_scheduler-e91b62c4c2bf5024.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_scroll_element.rs (target\\debug\\deps\\wasm_scroll_element-3554c18b749efde7.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_scrollbar_arrow.rs (target\\debug\\deps\\wasm_scrollbar_arrow-c579c4da16f78467.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_scrollbars.rs (target\\debug\\deps\\wasm_scrollbars-10f2896162fdbad7.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_search_addon.rs (target\\debug\\deps\\wasm_search_addon-bd40de1de17899e4.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_search_delayed_expiry.rs (target\\debug\\deps\\wasm_search_delayed_expiry-876fc882f66b98f4.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_selection.rs (target\\debug\\deps\\wasm_selection-5863ef8a41d9d7c9.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_selection_drag_teardown.rs (target\\debug\\deps\\wasm_selection_drag_teardown-df450a68f485cc18.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_selection_lazy_separator.rs (target\\debug\\deps\\wasm_selection_lazy_separator-64de85a6a35ad142.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_selection_live_geometry.rs (target\\debug\\deps\\wasm_selection_live_geometry-f4d053ca42268dcd.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_selection_separator_host.rs (target\\debug\\deps\\wasm_selection_separator_host-4dc87541aea3753f.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_selection_teardown.rs (target\\debug\\deps\\wasm_selection_teardown-404f4211f11a836c.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_socket_view.rs (target\\debug\\deps\\wasm_socket_view-bbcefb47477dd0f3.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_status_addons.rs (target\\debug\\deps\\wasm_status_addons-af4a8e850f9611ed.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_status_clear.rs (target\\debug\\deps\\wasm_status_clear-abb738e7c73b42de.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_status_coercion.rs (target\\debug\\deps\\wasm_status_coercion-f2d7ad5922e830bb.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_task_queue_clock.rs (target\\debug\\deps\\wasm_task_queue_clock-cf6017e1ef6a493a.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_task_queue_errors.rs (target\\debug\\deps\\wasm_task_queue_errors-71305ee4fee11a59.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_terminal_decoration.rs (target\\debug\\deps\\wasm_terminal_decoration-94cca1699bff6d23.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_terminal_disposal.rs (target\\debug\\deps\\wasm_terminal_disposal-88435342a28c5629.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_terminal_links.rs (target\\debug\\deps\\wasm_terminal_links-c1dd58e40692ddd0.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_terminal_markers.rs (target\\debug\\deps\\wasm_terminal_markers-d0288cb2c1af43a4.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_terminal_mouse_builtins.rs (target\\debug\\deps\\wasm_terminal_mouse_builtins-015f78fad1d54d66.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_terminal_mouse_disposal.rs (target\\debug\\deps\\wasm_terminal_mouse_disposal-5815514c60b84252.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_terminal_mouse_errors.rs (target\\debug\\deps\\wasm_terminal_mouse_errors-bb7f61965cfc8346.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_terminal_mouse_modes.rs (target\\debug\\deps\\wasm_terminal_mouse_modes-14aa04722c8322a2.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_terminal_mouse_names.rs (target\\debug\\deps\\wasm_terminal_mouse_names-491a7467b0a368bb.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_terminal_mouse_wheel_methods.rs (target\\debug\\deps\\wasm_terminal_mouse_wheel_methods-c4b2f559b6988ffa.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_terminal_selection.rs (target\\debug\\deps\\wasm_terminal_selection-76d9192e08a7586c.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_terminal_wheel.rs (target\\debug\\deps\\wasm_terminal_wheel-3139a128eedc8056.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_terminal_wheel_receiver.rs (target\\debug\\deps\\wasm_terminal_wheel_receiver-33420e221eab0570.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_terminal_writer.rs (target\\debug\\deps\\wasm_terminal_writer-83043aec510706a8.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_touch.rs (target\\debug\\deps\\wasm_touch-dbd195fde4457d18.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_touch_live.rs (target\\debug\\deps\\wasm_touch_live-a6aaf3f9a170db6f.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_unicode_glyph_number.rs (target\\debug\\deps\\wasm_unicode_glyph_number-88fa41272acf07dd.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_utility_addons.rs (target\\debug\\deps\\wasm_utility_addons-70a009449db9184a.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_utility_bindings.rs (target\\debug\\deps\\wasm_utility_bindings-f575c1a4510d9470.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_utility_links.rs (target\\debug\\deps\\wasm_utility_links-9ceea2c3522a55e1.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_visibility_differential.rs (target\\debug\\deps\\wasm_visibility_differential-4046aa143dc10ee4.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_web_links_live_range.rs (target\\debug\\deps\\wasm_web_links_live_range-e4d558d4d38a9be8.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_web_regex.rs (target\\debug\\deps\\wasm_web_regex-50600725a4fcf67f.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_webgl_atlas_page.rs (target\\debug\\deps\\wasm_webgl_atlas_page-8380df7cb77d408b.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_webgl_atlas_pixels.rs (target\\debug\\deps\\wasm_webgl_atlas_pixels-7a1995c3bb44bc22.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_webgl_browser_cache.rs (target\\debug\\deps\\wasm_webgl_browser_cache-2c26ed7ce3f696d9.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_webgl_canvas_layer.rs (target\\debug\\deps\\wasm_webgl_canvas_layer-188de4e6ef5ee21b.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_webgl_context.rs (target\\debug\\deps\\wasm_webgl_context-45eded5515727041.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_webgl_frame.rs (target\\debug\\deps\\wasm_webgl_frame-f0702bf34e022082.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_webgl_glyphs.rs (target\\debug\\deps\\wasm_webgl_glyphs-8493639f40598287.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_webgl_rectangles.rs (target\\debug\\deps\\wasm_webgl_rectangles-81a021bad425e727.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_webgl_texture_atlas.rs (target\\debug\\deps\\wasm_webgl_texture_atlas-5ac9c031c9ca17d2.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\wasm_widget_differential.rs (target\\debug\\deps\\wasm_widget_differential-1e6527b4dc1fae21.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\webgl.rs (target\\debug\\deps\\webgl-b6d9faa1c5848554.exe)",
+      "passed": 46,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\webgl_atlas_colors.rs (target\\debug\\deps\\webgl_atlas_colors-4070d73f9cba27ef.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\webgl_atlas_pixels.rs (target\\debug\\deps\\webgl_atlas_pixels-e2d550909a107d18.exe)",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\webgl_cell_colors.rs (target\\debug\\deps\\webgl_cell_colors-269f483353637f2e.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\webgl_glyph_backgrounds.rs (target\\debug\\deps\\webgl_glyph_backgrounds-0492ff6dde1f66a3.exe)",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\webgl_glyphs.rs (target\\debug\\deps\\webgl_glyphs-222467fe68ce7435.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\webgl_rectangles.rs (target\\debug\\deps\\webgl_rectangles-f635cfd5faced8de.exe)",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "tests\\webgl_renderer.rs (target\\debug\\deps\\webgl_renderer-aaf11449b74a4388.exe)",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\input_trace.rs (target\\debug\\examples\\input_trace-e04258a6d9a29dd2.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\keyboard_dispatch_oracle.rs (target\\debug\\examples\\keyboard_dispatch_oracle-582d680545aaed48.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    },
+    {
+      "suite": "unittests examples\\selection_oracle.rs (target\\debug\\examples\\selection_oracle-51bb1d6a93093b4b.exe)",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0
+    }
+  ]
+}
