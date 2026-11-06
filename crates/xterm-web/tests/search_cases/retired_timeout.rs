@@ -65,8 +65,11 @@ impl SearchTermSource for Guard {
     fn is_truthy(&self) -> bool {
         true
     }
-    fn equals(&self, _other: &dyn SearchTermSource) -> bool {
-        false
+    fn equals(&self, other: &dyn SearchTermSource) -> bool {
+        other
+            .as_any()
+            .downcast_ref::<Self>()
+            .is_some_and(|other| std::ptr::eq(self, other))
     }
     fn text(&self) -> Result<Cow<'_, [u16]>, SearchAddonError> {
         panic!("matching failure must precede raw term conversion")

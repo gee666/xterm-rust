@@ -56,7 +56,7 @@ async function checkSearchCallArgs(term, addon, write, equal) {
               }
               cases++;
             } catch (error) {
-              throw Error(JSON.stringify({reverse, warm, dispose, mode}) + ': ' + error.message);
+              throw Error(JSON.stringify({reverse, warm, dispose, mode, trace}) + ': ' + error.message);
             } finally {
               window.setTimeout = original;
               for (const id of ids) Reflect.apply(clear, window, [id]);

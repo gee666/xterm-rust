@@ -34,7 +34,7 @@ impl EngineContext {
         self.cache.borrow_mut().init(now);
         // A captured call still evaluates timeout creation after disposal.
         // Propagate setup failures before matching, then cancel a returned job
-        // because Rust must retain an owner. Orphan job liveness remains 527.
+        // because Rust must retain an owner. Orphan job liveness is still a gap.
         if self.disposed.get() {
             return self.schedule_timeout();
         }
