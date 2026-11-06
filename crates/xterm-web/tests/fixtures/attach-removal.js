@@ -75,6 +75,25 @@ async function attachRemovalCases(create) {
   return rows;
 }
 
+async function attachRepeatedSuccess(create) {
+  const trace = [], listeners = [];
+  const socket = { readyState: 1, send() {},
+    addEventListener(kind, callback) { listeners.push({ kind, callback }); },
+    removeEventListener(kind, callback) {
+      if (this !== socket || arguments.length !== 2 ||
+          !listeners.some(item => item.kind === kind && item.callback === callback)) throw Error('repeat tuple');
+      trace.push(kind);
+    }
+  };
+  const api = create(socket, false);
+  try {
+    api.activate(); api.dispose(); api.dispose();
+    if (trace.join(',') !== 'message,close,error,message,close,error') {
+      throw Error('repeated removal calls differ: ' + trace.join(','));
+    }
+  } finally { api.dispose(); api.free?.(); }
+}
+
 async function attachNonCallableMethods(create) {
   let count = 0;
   for (const value of [undefined, null, false, 17, Symbol('method'), {}]) {

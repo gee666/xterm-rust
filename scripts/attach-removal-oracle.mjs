@@ -21,7 +21,7 @@ try {
   const original = await readFile(join(source, 'addons/addon-attach/src/AttachAddon.ts'), 'utf8');
   const { AttachAddon } = await import(`data:text/javascript;base64,${Buffer.from(stripTypeScriptTypes(original)).toString('base64')}`);
   const shared = await readFile(fixture + '.js', 'utf8');
-  const run = Function(`${shared};return async create => ({rows:await attachRemovalCases(create),registration:await attachRetainedRegistration(create),rawErrors:await attachRawRemovalErrors(create),literalArguments:await attachLiteralArguments(create),nonCallable:await attachNonCallableMethods(create)});`)();
+  const run = Function(`${shared};return async create => { await attachRepeatedSuccess(create); return {rows:await attachRemovalCases(create),registration:await attachRetainedRegistration(create),rawErrors:await attachRawRemovalErrors(create),literalArguments:await attachLiteralArguments(create),nonCallable:await attachNonCallableMethods(create)}; };`)();
   const actual = await run((socket, bidirectional) => {
     const writes = [], data = [], binary = [];
     const subscribe = entries => callback => {
@@ -46,7 +46,7 @@ try {
   }
   if (process.argv.includes('--generate')) await writeFile(fixture + '.json', JSON.stringify(actual, null, 2) + '\n');
   else assert.deepEqual(actual, JSON.parse(await readFile(fixture + '.json', 'utf8')));
-  report.counts = { discovered: 92, executed: 92, passed: 92, failed: 0, skipped: 0, unrun: 0 };
+  report.counts = { discovered: 93, executed: 93, passed: 93, failed: 0, skipped: 0, unrun: 0 };
   report.sourceSha256 = hash(original);
   report.fixtureSha256 = hash(await readFile(fixture + '.json'));
   report.sharedSha256 = hash(shared);

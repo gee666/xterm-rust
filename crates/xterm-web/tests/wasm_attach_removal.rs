@@ -9,7 +9,8 @@ use xterm_web::{terminal::Terminal, utility_addons::bindings::AttachAddon};
 wasm_bindgen_test_configure!(run_in_browser);
 
 #[wasm_bindgen_test]
-async fn socket_removal_errors_repeat_calls_and_retained_callbacks_match_source() {
+async fn socket_removal_errors_repeat_calls_and_retained_callbacks_match_source(
+) -> Result<(), JsValue> {
     let terminal: JsValue = Terminal::new(JsValue::UNDEFINED).unwrap().into();
     let addon: JsValue = AttachAddon::new(Object::new().unchecked_into(), JsValue::UNDEFINED)
         .unwrap()
@@ -31,6 +32,7 @@ return (async()=>{{
       free:()=>{{term.dispose();addon.free();term.free();}}
     }};
   }};
+  await attachRepeatedSuccess(create);
   const actual={{rows:await attachRemovalCases(create),registration:await attachRetainedRegistration(create),rawErrors:await attachRawRemovalErrors(create),literalArguments:await attachLiteralArguments(create),nonCallable:await attachNonCallableMethods(create)}};
   const expected={};
   if(JSON.stringify(actual)!==JSON.stringify(expected)){{
@@ -57,5 +59,6 @@ return (async()=>{{
     if let Err(error) = &result {
         web_sys::console::error_1(error);
     }
-    assert!(result.is_ok());
+    // Return host failures through the harness without a second Rust panic.
+    result.map(|_| ())
 }
