@@ -74,7 +74,9 @@ impl SelectionService {
             model.selection_start_length = length;
         }
         self.refresh(buffer, dimensions, false)?;
-        self.fire_if_changed(dimensions)
+        // Teardown and refresh callbacks can resize or activate a buffer. The
+        // source model reads that live geometry when caching event endpoints.
+        self.fire_if_changed(buffer_dimensions(buffer)?)
     }
     pub fn handle_trim(
         &self,
