@@ -1,0 +1,75 @@
+import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
+import { mkdir, readFile, writeFile, copyFile, readdir, rm, statfs } from 'node:fs/promises';
+import { freemem } from 'node:os';
+import { join, resolve } from 'node:path';
+import { runCommand } from '../scripts/quality-process.mjs';
+import { sourceIdentity, verifyBuiltPackage } from '../scripts/e2e/build-identity.mjs';
+const root = resolve(import.meta.dirname, '..');
+const stage = process.argv[2]; assert(['before', 'after'].includes(stage));
+const dir = join(root, 'results/serialize-html-difference', stage); await mkdir(dir, { recursive: true });
+const html = join(root, 'crates/xterm-web/src/serialize_addon/html.rs');
+const fixed = await readFile(html);
+const steps = [];
+const record = { stage, status: 'failed', steps, resources: [] };
+async function resources() {
+  const disk = await statfs(root); const free = Number(disk.bavail) * Number(disk.bsize);
+  const ram = freemem(); record.resources.push({ time: new Date().toISOString(), freeRam: ram, freeDisk: free });
+  if (ram < 8 * 1024 ** 3 || free < 10 * 1024 ** 3) throw Error('Resource reserve below team limit');
+}
+async function run(name, command, args, expected = 0) {
+  await resources(); const result = await runCommand(command, args, { cwd: root, env: process.env,
+    log: join(dir, `${name}.log`), timeoutMs: 300000, resourceCheck: resources, monitorMs: 5000 });
+  steps.push({ name, ...result });
+  await writeFile(join(dir, 'stage.json'), JSON.stringify(record, null, 2) + '\n');
+  assert.equal(result.exitCode, expected, `${name} unexpected exit`);
+  assert.equal(result.timedOut, false); assert.equal(result.error, null); assert.equal(result.resourceError, null);
+}
+async function copyTree(source, destination) {
+  await mkdir(destination, { recursive: true });
+  for (const entry of await readdir(source, { withFileTypes: true })) {
+    assert(!entry.isSymbolicLink()); const from = join(source, entry.name), to = join(destination, entry.name);
+    if (entry.isDirectory()) await copyTree(from, to); else await copyFile(from, to);
+  }
+}
+try {
+  if (stage === 'before') {
+    const old = execFileSync('git', ['show', 'd5bb5892:crates/xterm-web/src/serialize_addon/html.rs'], { cwd: root, timeout: 30000 });
+    await writeFile(html, old);
+  }
+  record.source = await sourceIdentity(root);
+  if (stage === 'after') {
+    for (const [name, args] of [
+      ['native-web-tests', ['test', '--locked', '-j2', '-p', 'xterm-web', '--lib', '--all-features']],
+      ['native-web-clippy', ['clippy', '--locked', '-j2', '-p', 'xterm-web', '--lib', '--all-features', '--', '-D', 'warnings']],
+      ['wasm-web-clippy', ['clippy', '--locked', '-j2', '-p', 'xterm-web', '--lib', '--target', 'wasm32-unknown-unknown', '--', '-D', 'warnings']]
+    ]) await run(name, process.env.CARGO, args);
+  }
+  // Only this fresh worktree's generated package, never a reference/dependency link.
+  await rm(join(root, 'browser/pkg'), { recursive: true, force: true });
+  await run('build-demo', process.execPath, ['scripts/build-demo.mjs', '--debug']);
+  record.build = await verifyBuiltPackage(root, record.source);
+  await copyTree(join(root, record.build.report, '..'), join(dir, 'build'));
+  await run('browser', process.execPath, ['scripts/serialize-browser-check.mjs', ...(stage === 'after' ? ['--suite'] : [])], stage === 'before' ? 1 : 0);
+  const output = join(root, 'results/serialize-browser');
+  const report = JSON.parse(await readFile(join(output, 'verification.json')));
+  for (const entry of report.browsers) {
+    assert.equal(entry.executed, 96); assert.equal(entry.failed, stage === 'before' ? 3 : 0);
+    assert.equal(entry.error, undefined);
+    if (stage === 'before') assert.deepEqual(entry.mismatches.map(x => x.name), [
+      'html-raw-row-subtraction-throws', 'html-raw-row-subtraction-native-errors', 'html-raw-row-subtraction-reentry']);
+    for (const engine of ['source', 'rust']) await copyFile(join(output, `${entry.name}-${engine}.json`), join(dir, `${entry.name}-${engine}.json`));
+    await copyFile(join(output, `${entry.name}-terminal.png`), join(dir, `${entry.name}-terminal.png`));
+  }
+  if (stage === 'after') for (const suite of report.suites) {
+    assert.deepEqual(suite.counts, { discovered: 120, executed: 120, passed: 120, failed: 0, skipped: 0, unrun: 0 });
+    await copyTree(join(output, `${suite.engine}-suite`), join(dir, `${suite.engine}-suite`));
+  }
+  await copyFile(join(output, 'verification.json'), join(dir, 'verification.json'));
+  assert.equal((await sourceIdentity(root)).sha256, record.source.sha256);
+  record.status = 'passed';
+} finally {
+  if (stage === 'before') await writeFile(html, fixed);
+  await writeFile(join(dir, 'stage.json'), JSON.stringify(record, null, 2) + '\n');
+}
+console.log(`${stage} expected outcome PASS`);

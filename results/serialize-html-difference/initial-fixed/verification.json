@@ -1,0 +1,450 @@
+{
+  "status": "failed",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "seed": "0x05e21a11",
+  "seededCases": 32,
+  "scope": "Callable SerializeAddon, directed host behavior and seeded full public-cell restoration. Not full equivalence.",
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "passed",
+      "mismatches": [],
+      "version": "148.0.7778.96",
+      "discovered": 96,
+      "executed": 96,
+      "passed": 96,
+      "failed": 0
+    },
+    {
+      "name": "firefox",
+      "status": "failed",
+      "mismatches": [
+        {
+          "name": "html-raw-row-subtraction-native-errors",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    name: 'html-raw-row-subtraction-native-errors',\n    result: {\n      state: {\n        active: 'normal',\n...\n          result: {\n+           message: \"can't convert endRow to number: its [Symbol.toPrimitive] method returned an object\",\n-           message: \"can't convert ({[Symbol.toPrimitive]() { return {}; }}) to number: its [Symbol.toPrimitive] method returned an object\",\n            name: 'TypeError',\n            same: false\n          }\n        },\n        {\n...\n          result: {\n+           message: \"can't convert startRow to number: its [Symbol.toPrimitive] method returned an object\",\n-           message: \"can't convert ({[Symbol.toPrimitive]() { return {}; }}) to number: its [Symbol.toPrimitive] method returned an object\",\n            name: 'TypeError',\n            same: false\n          }\n        },\n        {\n"
+        }
+      ],
+      "version": "150.0.2",
+      "discovered": 96,
+      "executed": 96,
+      "passed": 95,
+      "failed": 1
+    },
+    {
+      "name": "webkit",
+      "status": "passed",
+      "mismatches": [],
+      "version": "26.4",
+      "discovered": 96,
+      "executed": 96,
+      "passed": 96,
+      "failed": 0
+    }
+  ],
+  "suites": [
+    {
+      "engine": "source",
+      "counts": {
+        "discovered": 120,
+        "executed": 120,
+        "passed": 120,
+        "failed": 0,
+        "skipped": 0,
+        "unrun": 0
+      },
+      "errors": [],
+      "result": {
+        "command": [
+          "C:\\nvm4w\\nodejs\\node.exe",
+          "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\@playwright\\test\\cli.js",
+          "test",
+          "--config=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\BardiyaHtml556\\tmp\\serialize-browser\\source-playwright.cjs",
+          "--reporter=json",
+          "--workers=2",
+          "--retries=0",
+          "--global-timeout=120000",
+          "--output=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\BardiyaHtml556\\tmp\\serialize-browser\\source-artifacts"
+        ],
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "aborted": false,
+        "abortError": null,
+        "timedOut": false,
+        "terminationError": null,
+        "resourceError": null,
+        "elapsedMs": 7572.368799999997,
+        "status": "passed"
+      },
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\@playwright\\test\\cli.js",
+        "test",
+        "--config=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\BardiyaHtml556\\tmp\\serialize-browser\\source-playwright.cjs",
+        "--reporter=json",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=120000",
+        "--output=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\BardiyaHtml556\\tmp\\serialize-browser\\source-artifacts"
+      ]
+    },
+    {
+      "engine": "rust",
+      "counts": {
+        "discovered": 120,
+        "executed": 120,
+        "passed": 120,
+        "failed": 0,
+        "skipped": 0,
+        "unrun": 0
+      },
+      "errors": [],
+      "result": {
+        "command": [
+          "C:\\nvm4w\\nodejs\\node.exe",
+          "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\@playwright\\test\\cli.js",
+          "test",
+          "--config=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\BardiyaHtml556\\tmp\\serialize-browser\\rust-playwright.cjs",
+          "--reporter=json",
+          "--workers=2",
+          "--retries=0",
+          "--global-timeout=120000",
+          "--output=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\BardiyaHtml556\\tmp\\serialize-browser\\rust-artifacts"
+        ],
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "aborted": false,
+        "abortError": null,
+        "timedOut": false,
+        "terminationError": null,
+        "resourceError": null,
+        "elapsedMs": 7424.2088,
+        "status": "passed"
+      },
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "P:\\workshop\\Windows_Worshop\\oira666\\xterm-rust\\source_repo\\node_modules\\@playwright\\test\\cli.js",
+        "test",
+        "--config=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\BardiyaHtml556\\tmp\\serialize-browser\\rust-playwright.cjs",
+        "--reporter=json",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=120000",
+        "--output=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\BardiyaHtml556\\tmp\\serialize-browser\\rust-artifacts"
+      ]
+    }
+  ],
+  "referenceBefore": {
+    "files": 776,
+    "mismatches": []
+  },
+  "source": {
+    "revision": "3772d40fa37d905bf00fc520bd3423eb91a91a24",
+    "sha256": "77ed22c23c87e7d2ff980745651a7a01e81f231167b2b37cea430fba48ba31dc",
+    "files": 1907
+  },
+  "build": {
+    "report": "results/demos/build/2026-11-06T02-38-32-187Z/report.json",
+    "source": {
+      "revision": "3772d40fa37d905bf00fc520bd3423eb91a91a24",
+      "sha256": "77ed22c23c87e7d2ff980745651a7a01e81f231167b2b37cea430fba48ba31dc",
+      "files": 1907
+    },
+    "artifacts": [
+      {
+        "path": "browser/pkg/xterm_web.js",
+        "bytes": 241240,
+        "sha256": "8d2d05c5a4d75a80ad55edef75206c44e188f1162009541fc2fecd14866f6250"
+      },
+      {
+        "path": "browser/pkg/xterm_web_bg.wasm",
+        "bytes": 16111338,
+        "sha256": "ac2c02e25a31e19de11e80746eb110e59bde34623bb028cf9a8ad15bb22bbd48"
+      }
+    ]
+  },
+  "runner": [
+    {
+      "path": "scripts/serialize-browser-check.mjs",
+      "bytes": 10953,
+      "sha256": "fc89688408be003e998b7eaf7995d22a4fa562142bd8e57a9bbaed9934da1fe6"
+    },
+    {
+      "path": "scripts/serialize-browser-cases.mjs",
+      "bytes": 51993,
+      "sha256": "51bc68fe226bb981c396b15a33f1e6d9016b1950ec4e195fb7e3bef33bec3814"
+    },
+    {
+      "path": "scripts/serialize-html-difference-cases.mjs",
+      "bytes": 4928,
+      "sha256": "e700693b982df769cd3216fe4ee27ccffa162902414589c7f843c18d7c9e0dd4"
+    },
+    {
+      "path": "scripts/serialize-browser-gc.mjs",
+      "bytes": 4436,
+      "sha256": "af8353e568600f11a2e31397f635bc6c33272a3e03ebb81fe0fdb50c30d867be"
+    },
+    {
+      "path": "browser/xterm.mjs",
+      "bytes": 1817,
+      "sha256": "1171d2d1d5287d95252976d6d5e1795850936e170dcb37172aea69bf8fe1efc0"
+    },
+    {
+      "path": "scripts/e2e/build-bootstrap.mjs",
+      "bytes": 905,
+      "sha256": "487154862b39623222d248d465c66aa06ee08467631b6dacdbe5c43f3a51f801"
+    },
+    {
+      "path": "scripts/e2e/fixture-server.mjs",
+      "bytes": 7410,
+      "sha256": "4790325527ed20905ecbaf0ceba34272325ccdecdd36060c9cf6bf5ec7a0b2ef"
+    },
+    {
+      "path": "scripts/e2e/test-page.mjs",
+      "bytes": 1867,
+      "sha256": "58a7f3ff1c587dff8b78d8c5775b9b7a3ac72b144f800d893d80bd8e98d20b28"
+    }
+  ],
+  "declarations": [
+    {
+      "path": "browser/pkg/xterm_web.d.ts",
+      "bytes": 48817,
+      "sha256": "84c44715dc64780f9ebabb4e85280b086307cb63c9397cb182aaa1d4fa820959"
+    }
+  ],
+  "reference": [
+    {
+      "path": "demo/test.html",
+      "bytes": 545,
+      "sha256": "35f81ad165aee291f49ac3ffea10068bf164207aad8d5fe4e5a558ada0e5ceed"
+    },
+    {
+      "path": "css/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    {
+      "path": "demo/dist/client-bundle.js",
+      "bytes": 2196837,
+      "sha256": "d01c661ea2b96ae26c1b1f20e1e11c213b7b811707baa37b2ba8dbd4c5b995b4"
+    },
+    {
+      "path": "addons/addon-serialize/src/SerializeAddon.ts",
+      "bytes": 31152,
+      "sha256": "b1d55be06175129a76ebe9045a3c5d088ee9211ba264e5b2885f71c02078eca6"
+    },
+    {
+      "path": "addons/addon-serialize/test/SerializeAddon.test.ts",
+      "bytes": 26541,
+      "sha256": "d67eef5179a58c42261abcc6f9eb093effa05b237e1a56e8ac88644875295bc3"
+    }
+  ],
+  "referenceAfter": {
+    "files": 776,
+    "mismatches": []
+  },
+  "cleanupErrors": [],
+  "requests": [
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=7195ba68-c67a-4808-a80b-52ab9aea6c57",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=7195ba68-c67a-4808-a80b-52ab9aea6c57&missing=WebglAddon",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=bcb7e6ac-a798-4c0b-ad6b-f847feb2008f",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/favicon.ico",
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=bcb7e6ac-a798-4c0b-ad6b-f847feb2008f&missing=WebglAddon",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=05815d7c-13d3-4b3f-a191-868e635e952c",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=05815d7c-13d3-4b3f-a191-868e635e952c&missing=WebglAddon",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=53c823a7-24fe-4e74-9cd4-7416b587d11a",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=53c823a7-24fe-4e74-9cd4-7416b587d11a&missing=WebglAddon",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/test",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=bd5161cd-e649-4be9-ba51-8dcf2d6c98c2",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-ready?token=4f5311f3-8f2a-4dbf-a64d-15824816b829",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/xterm.css",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "/rust-test-page.js",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=bd5161cd-e649-4be9-ba51-8dcf2d6c98c2&missing=WebglAddon",
+      "status": 204
+    },
+    {
+      "method": "POST",
+      "url": "/rust-ready?token=4f5311f3-8f2a-4dbf-a64d-15824816b829&missing=WebglAddon",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": "/favicon.ico",
+      "status": 404
+    }
+  ],
+  "runtimes": [
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    },
+    {
+      "state": "ready",
+      "missingBindings": [
+        "WebglAddon"
+      ]
+    }
+  ],
+  "serverErrors": []
+}

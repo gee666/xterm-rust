@@ -1,0 +1,41 @@
+import assert from 'node:assert/strict';
+import { createRequire } from 'node:module';
+import { createHash } from 'node:crypto';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
+import { htmlRowDifferenceCases } from '../scripts/serialize-html-difference-cases.mjs';
+import { referenceIntegrity } from '../scripts/upstream-baseline-utils.mjs';
+const root = resolve(import.meta.dirname, '..');
+const reference = process.env.SOURCE_ROOT;
+const require = createRequire(join(reference, 'package.json'));
+const { build } = require('esbuild');
+const dir = join(root, 'results/serialize-html-difference'); await mkdir(dir, { recursive: true });
+const manifest = JSON.parse(await readFile(join(root, 'docs/baseline/reference-manifest.json')));
+const before = referenceIntegrity(reference, manifest); assert.equal(before.mismatches.length, 0);
+const ownBefore = referenceIntegrity(join(root, 'source_repo'), manifest); assert.equal(ownBefore.mismatches.length, 0);
+const bundle = join(root, 'tmp/source-difference.cjs');
+const built = await build({ stdin: { resolveDir: reference, contents: [
+  "export { Terminal } from './src/browser/public/Terminal.ts';",
+  "export { SerializeAddon } from './addons/addon-serialize/src/SerializeAddon.ts';"
+].join('\n'), loader: 'ts' }, bundle: true, platform: 'node', format: 'cjs', target: 'node24',
+  tsconfig: join(reference, 'src/browser/tsconfig.json'),
+  alias: { common: join(reference, 'src/common'), browser: join(reference, 'src/browser') },
+  outfile: bundle, metafile: true, logLevel: 'silent' });
+const hashes = [];
+for (const file of Object.keys(built.metafile.inputs).filter(file => file !== '<stdin>')) {
+  const bytes = await readFile(resolve(file));
+  hashes.push({ path: file, sha256: createHash('sha256').update(bytes).digest('hex') });
+}
+const { Terminal, SerializeAddon } = require(bundle); globalThis.Terminal = Terminal; globalThis.SerializeAddon = SerializeAddon;
+const traces = await htmlRowDifferenceCases(); assert.equal(traces.length, 3);
+assert.deepEqual(traces.map(x => Array.isArray(x.result) ? x.result.length : x.result.values.length), [8, 8, 4]);
+for (const [i, entry] of traces.entries()) for (const value of Array.isArray(entry.result) ? entry.result : entry.result.values) {
+  assert.equal(value.result.same, i !== 1); if (i === 1) assert.equal(value.result.name, 'TypeError');
+  assert.deepEqual(value.log.slice(0, 7), ['onlySelection', 'range', 'startCol', 'startLine', 'startLine', 'endLine', 'endLine']);
+  assert(!value.log.some(x => x === 'header' || x.startsWith('column:')));
+}
+const after = referenceIntegrity(reference, manifest); assert.equal(after.mismatches.length, 0);
+const ownAfter = referenceIntegrity(join(root, 'source_repo'), manifest); assert.equal(ownAfter.mismatches.length, 0);
+await writeFile(join(dir, 'source-node.json'), JSON.stringify({ scope: 'Original unopened BrowserTerminal under Node only, not browser/Rust proof', node: process.version,
+  sourceHashes: hashes, bundleSha256: createHash('sha256').update(await readFile(bundle)).digest('hex'), before, after, ownBefore, ownAfter, traces }, null, 2) + '\n');
+console.log('Original BrowserTerminal shared20 source subcases PASS; reference776 original+own before/after PASS');

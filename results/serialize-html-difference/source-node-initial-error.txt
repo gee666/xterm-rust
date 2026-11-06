@@ -1,0 +1,15 @@
+Observed first tmp/run-source.mjs exit1 before any compiler/browser stage. Tool output retained below. The source fixture completed its3 groups, but the harness counted Array.prototype.values.length as0 instead of reading the4 array entries. No original or production source changed. Fix uses Array.isArray before selecting object.values. Native/browser execution had not started.
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  [
+    8,
+    8,
++   0
+-   4
+  ]
+
+    at file:///O:/xterm-rust-swarm-16/tmp/worktrees/BardiyaHtml556/tmp/run-source.mjs:31:8
+actual: [ 8, 8, 0 ], expected: [ 8, 8, 4 ]
+Node.js v24.15.0

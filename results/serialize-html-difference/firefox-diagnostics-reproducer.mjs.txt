@@ -1,0 +1,55 @@
+import { createRequire } from 'node:module';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { createServer } from 'node:http';
+import { join } from 'node:path';
+import { serializationCases } from '../scripts/serialize-browser-cases.mjs';
+import { htmlRowDifferenceCases } from '../scripts/serialize-html-difference-cases.mjs';
+const reference = process.env.SOURCE_ROOT, root = join(import.meta.dirname, '..');
+const { firefox } = createRequire(join(reference, 'package.json'))('playwright');
+const assets = new Map([['/test', 'demo/test.html'], ['/xterm.css', 'css/xterm.css'], ['/dist/client-bundle.js', 'demo/dist/client-bundle.js']]);
+const server = createServer(async (req, res) => { try {
+  const file = assets.get(req.url); if (!file) return res.writeHead(404).end();
+  res.setHeader('Content-Type', file.endsWith('.js') ? 'text/javascript' : file.endsWith('.css') ? 'text/css' : 'text/html');
+  res.end(await readFile(join(reference, file)));
+} catch (error) { res.writeHead(500).end(String(error)); } });
+let browser;
+try {
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  browser = await firefox.launch({ headless: true, timeout: 30000 });
+  const page = await browser.newPage(); page.setDefaultTimeout(45000);
+  await page.goto(`http://127.0.0.1:${server.address().port}/test`);
+  const simple = async () => page.evaluate(() => {
+    const results = [], create = () => ({ [Symbol.toPrimitive]() { return {}; } });
+    const checks = {
+      named: function(endRow, startRow) { return endRow - startRow; },
+      short: function(a, b) { return a - b; },
+      arguments: function() { return arguments[0] - arguments[1]; },
+      array: function(...args) { return args[0] - args[1]; },
+      local: function(end, start) { const endRow = end, startRow = start; return endRow - startRow; },
+      callback: function(endRow, startRow) { return [endRow].map(value => value - startRow); },
+      number: function(value) { return Number(value); },
+      typed: function(value) { return Float64Array.of(value); },
+      header: function(endRow, startRow) { function before(rows, start, end) { return ''; }
+        return before(endRow - startRow, startRow, endRow); },
+      method: { serialize(range) { const startRow = range.start.y, endRow = range.end.y;
+        this.before(endRow - startRow, startRow, endRow); }, before() {} }
+    };
+    for (const [name, fn] of Object.entries(checks)) {
+      try { if (name === 'method') fn.serialize({ start: { y: 0 }, end: { y: create() } }); else fn(create(), 0); }
+      catch (error) { results.push({ name, error: error.name, message: error.message }); }
+    }
+    const term = new Terminal({ cols: 12, rows: 4 }), addon = new SerializeAddon(); term.loadAddon(addon);
+    try { addon.serializeAsHTML({ range: { startLine: 0, endLine: create(), startCol: 0 } }); }
+    catch (error) { results.push({ name: 'source-html', error: error.name, message: error.message }); }
+    term.dispose(); return results;
+  });
+  const cold = await simple();
+  const corpus = await page.evaluate(serializationCases);
+  const fixture = await page.evaluate(htmlRowDifferenceCases);
+  const warm = await simple();
+  await writeFile(join(root, 'results/serialize-html-difference/firefox-diagnostics.json'), JSON.stringify({ version: browser.version(), cold, priorCases: corpus.length, fixture, warm }, null, 2) + '\n');
+  console.log(JSON.stringify({ cold, warm }, null, 2));
+} finally {
+  if (browser) await browser.close(); server.closeAllConnections();
+  await new Promise(resolve => server.close(resolve));
+}
