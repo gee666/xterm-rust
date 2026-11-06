@@ -1,0 +1,5 @@
+First isolated review of frozen b2d546a0 against416ddf96 requested changes.
+
+Reviewer independently reran pinned native executable:70passed,0failed/ignored/filtered. Verified107summarypins,1817inputpins,21runtimepins andboth776-file manifests. Confirmed sharedfixtureembedding andfresh=false forfinal/control WASM, inspected three-browserpasses/intendednegative. No Cargo or browser launch.
+
+P2finding: assigning through inner.engine.borrow_mut dropsreplaced Rc<EngineContext> before releasingRefMut. DisposingA whileactivatingB can activateC andrun nestedsearch, installingCcachetimer. WhenB resumesassignment,Cdrop cancels timer whose disposalcallback can reenteractivation/search andpanic onborrowedengine slot. Move replacedcontext out anddrop after releasingborrow. Extend engine_cache regression withnestedsearch andcancellationcallbackreentry. This Rust panic is separate fromexplicit527sourcepost-disposal registration/scheduling gap.

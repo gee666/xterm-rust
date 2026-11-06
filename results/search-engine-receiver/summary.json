@@ -27,7 +27,7 @@
   "wasmFunctionsPerEngine": 21,
   "wasmEngines": 3,
   "sharedCasesInsideOneWasmFunctionPerEngine": 118,
-  "nativeOldControls": [
+  "historicalPreReviewNative416Controls": [
     {
       "filter": "engine_receiver::",
       "passed": 1,
@@ -47,8 +47,20 @@
     "ignored": 0,
     "filtered": 0
   },
-  "formattedArtifactMatchesActualFinal": true,
-  "finalCompilerSha256": "c3b83786b7e0f80355e754bd247b66b2986caa6393d44d0904e84409fa4da984",
+  "postReviewArtifactMatchesActualFinal": true,
+  "reviewFix": {
+    "oldSource": "b2d546a0",
+    "nativeControl": {
+      "passed": 0,
+      "failed": 1,
+      "filtered": 69,
+      "intended": "RefCell already mutably borrowed"
+    },
+    "fixed": "replace engine slot then drop returned Rc outside RefMut; nested search installs C timer and C cancellation reenters",
+    "independentFirstReview": "native70/107summary/1817inputs/21runtime/776x2 independently verified; requestedP2fix",
+    "resumedReview": "pending"
+  },
+  "finalCompilerSha256": "4a75e7a67c1a6eeddc6beaa17b1a55417646bec0d74ea62ab324bb81f5b522a3",
   "quality": {
     "finalScopedNativeClippy": "passed",
     "finalScopedWasmClippy": "passed",
@@ -63,7 +75,7 @@
     "wasmBindgen": "0.2.100"
   },
   "inputManifestFiles": 1817,
-  "runtimePins": 21,
+  "runtimePins": 24,
   "referenceFilesPerRoot": 776,
   "sourcePostDisposalRegistrationParity": "OPEN task527; native timer ownership controls assert Rust RAII safety, not source leak equivalence",
   "initialFailures": {
@@ -84,8 +96,8 @@
   "files": [
     {
       "path": "crates/xterm-addons/src/search/addon.rs",
-      "bytes": 11200,
-      "sha256": "c5a9e4df4c3e67ba0c457004263535743bd1a7dd636eb334b3c5a664a129f3d2"
+      "bytes": 11308,
+      "sha256": "265c342b4f65bb7abadf7a38651d1240cace9ddb11b8228296bc30b9a4786652"
     },
     {
       "path": "crates/xterm-addons/src/search/engine.rs",
@@ -109,8 +121,8 @@
     },
     {
       "path": "crates/xterm-web/tests/search_cases/engine_cache.rs",
-      "bytes": 6247,
-      "sha256": "89a4df9481d9bb9c549063b3e1c12ea5d78b304f738728cd35148d553ba8a874"
+      "bytes": 7011,
+      "sha256": "29a057c05cc84d1395179d97e30ee391e9a368d1030d45aaef89569f49038985"
     },
     {
       "path": "crates/xterm-web/tests/search_cases/engine_receiver.rs",
@@ -124,8 +136,8 @@
     },
     {
       "path": "docs/search-engine-receiver.md",
-      "bytes": 9082,
-      "sha256": "7cc914f0335d19d149c4a7f674fcf1b7f7264d290d84e133de383b2720b41bb0"
+      "bytes": 10867,
+      "sha256": "37fa7dae05b61a493fcc26918355cf3f95e554aca5833a1b98bc4451851581e9"
     },
     {
       "path": "results/search-engine-receiver/browser-commands.json",
@@ -145,27 +157,27 @@
     {
       "path": "results/search-engine-receiver/browser-final-wasm_search_addon-build.log",
       "bytes": 47873,
-      "sha256": "1b2374dd31d722f91de58704f2541136cd1d12e692f0bfe000f41a6f0b530bfd"
+      "sha256": "78e8131591cb6543fbac8769661fe20fd195160dbaee3d444b88f12e93cb0954"
     },
     {
       "path": "results/search-engine-receiver/browser-final-wasm_search_addon-chromium.log",
       "bytes": 1723,
-      "sha256": "5cd0297608b6c1925d003530a9b1173e5f5248096512d0faad04e0dfc152e18f"
+      "sha256": "907e57071ed837d66ad3a9d0ae56fd3d3c5014dfd43137a952a881c9de099dd5"
     },
     {
       "path": "results/search-engine-receiver/browser-final-wasm_search_addon-firefox.log",
       "bytes": 1724,
-      "sha256": "88d88300e613a95f0540bb10b2808fbfa4d4e9feae9e6700dba1af01d853d63a"
+      "sha256": "fe880ef140c064bdd2655e8e0413f8c3f5411da4312727007b90b098a8ea3c3d"
     },
     {
       "path": "results/search-engine-receiver/browser-final-wasm_search_addon-webkit.log",
       "bytes": 1724,
-      "sha256": "23d6fee1722e2e41bd4b8a55fa77bfb6af8851f76c2317b4e0970d0cd74f533d"
+      "sha256": "1123f47c12d5d416a39f7749f81cdce771222ff593d33aea509c56cf8579072b"
     },
     {
       "path": "results/search-engine-receiver/browser-final.json",
-      "bytes": 16337,
-      "sha256": "b61136da2007fa455524a84b83d51ee30017e4199721b5a2902b53adc42f2445"
+      "bytes": 16338,
+      "sha256": "54ca394c3239d982defb0743d43f00916236b9b12a3c15d20e16edbf50b7ec87"
     },
     {
       "path": "results/search-engine-receiver/browser-final.log",
@@ -288,6 +300,11 @@
       "sha256": "41a0967e46e3b89dee50b7a5f94bada0402521f7d02d205c1ecc3daaacda1bb3"
     },
     {
+      "path": "results/search-engine-receiver/browser-review-final.log",
+      "bytes": 135,
+      "sha256": "94e0df1f5af280e114904cf9833e720d48be86ca20038474dc8db3b69d6a51e4"
+    },
+    {
       "path": "results/search-engine-receiver/cargo-version.log",
       "bytes": 36,
       "sha256": "c8cd2e547fb0745a8738926a5c1318d17af1507f07b382d13dc704cc38684566"
@@ -388,6 +405,16 @@
       "sha256": "9c5e85617d41bd17a2da734e83f76b91e5e16d9b6b1b96799dec0bb9991a011d"
     },
     {
+      "path": "results/search-engine-receiver/headroom-review-browser.json",
+      "bytes": 49,
+      "sha256": "96fc140ae2d0afe47034319a4c205f612b0f436fe8c7b52d2dd67cb5c92ff6a1"
+    },
+    {
+      "path": "results/search-engine-receiver/headroom-review-fix.json",
+      "bytes": 49,
+      "sha256": "7c821384deac1852d2f41d944721696559fad794ba98afe5b740fe2f6547d6a1"
+    },
+    {
       "path": "results/search-engine-receiver/inheritance.json",
       "bytes": 248,
       "sha256": "04d144608385bbaa3bd121d27b6f48936e4e19ee8cfe23bb1033df19e2db22c7"
@@ -400,12 +427,12 @@
     {
       "path": "results/search-engine-receiver/input-manifest.json",
       "bytes": 314106,
-      "sha256": "75e7ad0342a5e16658f4f2df7f02e9fb14b6a449c5f3204793b01426eaff5a26"
+      "sha256": "e5b16fc8cf66c6a1035e1024b7d9ec23bd5af19bffac973ac98a478ecc84a16f"
     },
     {
       "path": "results/search-engine-receiver/native-artifact.json",
       "bytes": 248,
-      "sha256": "0f5bec8c8d2019212780dcc973e97043a67163525a36bcce41674a2b6766e4a2"
+      "sha256": "99d52f6b9ea70bab5673186c189753df7f6971f1dc5c1271d56541681555f5dc"
     },
     {
       "path": "results/search-engine-receiver/native-clippy.log",
@@ -471,6 +498,56 @@
       "path": "results/search-engine-receiver/native-second-restore.json",
       "bytes": 335,
       "sha256": "41a0967e46e3b89dee50b7a5f94bada0402521f7d02d205c1ecc3daaacda1bb3"
+    },
+    {
+      "path": "results/search-engine-receiver/pre-review-browser-final-wasm_search_addon-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/search-engine-receiver/pre-review-browser-final-wasm_search_addon-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-engine-receiver/pre-review-browser-final-wasm_search_addon-build.log",
+      "bytes": 47873,
+      "sha256": "1b2374dd31d722f91de58704f2541136cd1d12e692f0bfe000f41a6f0b530bfd"
+    },
+    {
+      "path": "results/search-engine-receiver/pre-review-browser-final-wasm_search_addon-chromium.log",
+      "bytes": 1723,
+      "sha256": "5cd0297608b6c1925d003530a9b1173e5f5248096512d0faad04e0dfc152e18f"
+    },
+    {
+      "path": "results/search-engine-receiver/pre-review-browser-final-wasm_search_addon-firefox.log",
+      "bytes": 1724,
+      "sha256": "88d88300e613a95f0540bb10b2808fbfa4d4e9feae9e6700dba1af01d853d63a"
+    },
+    {
+      "path": "results/search-engine-receiver/pre-review-browser-final-wasm_search_addon-webkit.log",
+      "bytes": 1724,
+      "sha256": "23d6fee1722e2e41bd4b8a55fa77bfb6af8851f76c2317b4e0970d0cd74f533d"
+    },
+    {
+      "path": "results/search-engine-receiver/pre-review-browser-final.json",
+      "bytes": 16337,
+      "sha256": "b61136da2007fa455524a84b83d51ee30017e4199721b5a2902b53adc42f2445"
+    },
+    {
+      "path": "results/search-engine-receiver/pre-review-browser-final.log",
+      "bytes": 135,
+      "sha256": "94e0df1f5af280e114904cf9833e720d48be86ca20038474dc8db3b69d6a51e4"
+    },
+    {
+      "path": "results/search-engine-receiver/pre-review-native-artifact.json",
+      "bytes": 163,
+      "sha256": "91d1c545e4296c874db3969837cd022055b1dcd10a019bb9f326cb1be3b4806f"
+    },
+    {
+      "path": "results/search-engine-receiver/pre-review-runtime-manifest.json",
+      "bytes": 6109,
+      "sha256": "a22ef46f96a55387769c0995d227a9df831f78f55ed2423b0051e685aca386d2"
     },
     {
       "path": "results/search-engine-receiver/preformat-browser-commands.json",
@@ -568,9 +645,54 @@
       "sha256": "96327ec82d69d6bb0678df0c8f2642b4ff45ae74165a650dc427d025139b4666"
     },
     {
+      "path": "results/search-engine-receiver/review-browser-command.json",
+      "bytes": 109,
+      "sha256": "0eec96b0c0bfafc563034f60bb45294345fdb5875c12ead3eac97ad18f2aa1fa"
+    },
+    {
+      "path": "results/search-engine-receiver/review-final-identity.json",
+      "bytes": 1373,
+      "sha256": "1e5eea074552d4849ab85895d42160a537e7aefde40250c567e8ab2d99ee3014"
+    },
+    {
+      "path": "results/search-engine-receiver/review-first.txt",
+      "bytes": 943,
+      "sha256": "f52e0a747c179345d964b22ec11e84d754da3c5d22e5d145bb8f71a6227a6b7a"
+    },
+    {
+      "path": "results/search-engine-receiver/review-fix-commands.json",
+      "bytes": 1245,
+      "sha256": "3881651a24dd73d83af6e4c845bb66fcf1e29620f78b03e0c60884601fd364ef"
+    },
+    {
+      "path": "results/search-engine-receiver/review-native-clippy.log",
+      "bytes": 280,
+      "sha256": "1b73a04950afcf0d0b1a8d9dd7df7b6d707f32065afd71a900a9b3c690f7e941"
+    },
+    {
+      "path": "results/search-engine-receiver/review-native-final.log",
+      "bytes": 26971,
+      "sha256": "c4cec8acb0d44de597239285998b6065ad58d033c8e321a48fcdae5bc5038d35"
+    },
+    {
+      "path": "results/search-engine-receiver/review-negative.log",
+      "bytes": 1155,
+      "sha256": "4cd6684d2cda13737c5683d04ffbf96827d5ec673b4e959e500e21f6ce97e2a9"
+    },
+    {
+      "path": "results/search-engine-receiver/review-restore.json",
+      "bytes": 156,
+      "sha256": "aebeb277c70c6ecd76fd8e02eb34f59cd70563d591cfd6358054ee40bd54c0d8"
+    },
+    {
+      "path": "results/search-engine-receiver/review-wasm-clippy.log",
+      "bytes": 404,
+      "sha256": "33c6ee1a87571bec145f7b53d96b28fd2be15e844894f166054eba781b0cad11"
+    },
+    {
       "path": "results/search-engine-receiver/runtime-manifest.json",
-      "bytes": 6106,
-      "sha256": "386398e4e54f4ca93c05f6fb6b7bee0075196070fdab273cdbf6c522161088fa"
+      "bytes": 7976,
+      "sha256": "e0715eb8467515a0b2d2830a4ac5794bcadc734964d45193102ce8fc7df1fc52"
     },
     {
       "path": "results/search-engine-receiver/rustc-version.log",

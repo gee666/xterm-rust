@@ -1,0 +1,23 @@
+
+running 1 test
+test engine_cache::reentrant_activation_disposal_keeps_addon_host_distinct_from_outer_engine ... FAILED
+
+failures:
+
+---- engine_cache::reentrant_activation_disposal_keeps_addon_host_distinct_from_outer_engine stdout ----
+
+thread 'engine_cache::reentrant_activation_disposal_keeps_addon_host_distinct_from_outer_engine' panicked at crates\xterm-addons\src\search\addon.rs:243:14:
+already mutably borrowed: BorrowError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    engine_cache::reentrant_activation_disposal_keeps_addon_host_distinct_from_outer_engine
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 69 filtered out; finished in 0.00s
+
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\DanielleSearchEngine\crates\xterm-addons)
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\DanielleSearchEngine\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 7.99s
+     Running tests\search_addon.rs (target\debug\deps\search_addon-a9ec83e89c96f449.exe)
+error: test failed, to rerun pass `-p xterm-web --test search_addon`

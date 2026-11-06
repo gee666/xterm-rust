@@ -157,12 +157,36 @@ fn reentrant_activation_disposal_keeps_addon_host_distinct_from_outer_engine() {
     });
     old.addon.activate(host.clone()).unwrap();
     assert!(old.addon.find_next(&term("a"), None).unwrap());
+    let nested_host = Rc::new(TimerHost {
+        base: nested.host.clone(),
+        installing: RefCell::new(None),
+        cancelling: Rc::new(RefCell::new(None)),
+    });
+    let cancelled = Rc::new(Cell::new(false));
+    *nested_host.cancelling.borrow_mut() = Some(Rc::new({
+        let weak = old.addon.downgrade();
+        let cancelled = cancelled.clone();
+        move || {
+            cancelled.set(true);
+            assert!(weak.upgrade().unwrap().find_next(&term("a"), None)?);
+            Ok(())
+        }
+    }));
     *host.cancelling.borrow_mut() = Some(Rc::new({
         let weak = old.addon.downgrade();
-        let host = nested.host.clone();
-        move || weak.upgrade().unwrap().activate(host.clone())
+        let host = nested_host.clone();
+        move || {
+            let addon = weak.upgrade().unwrap();
+            addon.activate(host.clone())?;
+            assert!(addon.find_next(&term("a"), None)?);
+            Ok(())
+        }
     }));
     old.addon.activate(outer.host.clone()).unwrap();
+    assert!(
+        cancelled.get(),
+        "replaced nested engine cancelled its live timer"
+    );
     assert!(old.addon.find_next(&term("a"), None).unwrap());
     assert!(
         outer.selection().is_none(),

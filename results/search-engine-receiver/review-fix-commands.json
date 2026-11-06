@@ -1,0 +1,72 @@
+[
+  {
+    "command": [
+      "C:/Users/user/.cargo/bin/cargo.exe",
+      "test",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-web",
+      "--test",
+      "search_addon",
+      "--all-features",
+      "reentrant_activation_disposal_keeps_addon_host_distinct_from_outer_engine"
+    ],
+    "status": 101
+  },
+  {
+    "command": [
+      "C:/Users/user/.cargo/bin/cargo.exe",
+      "test",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-web",
+      "--test",
+      "search_addon",
+      "--all-features",
+      "--message-format=json"
+    ],
+    "status": 0
+  },
+  {
+    "command": [
+      "C:/Users/user/.cargo/bin/cargo.exe",
+      "clippy",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-addons",
+      "-p",
+      "xterm-web",
+      "--lib",
+      "--test",
+      "search_addon",
+      "--all-features",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "status": 0
+  },
+  {
+    "command": [
+      "C:/Users/user/.cargo/bin/cargo.exe",
+      "clippy",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-web",
+      "--target",
+      "wasm32-unknown-unknown",
+      "--lib",
+      "--test",
+      "wasm_search_addon",
+      "--all-features",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "status": 0
+  }
+]

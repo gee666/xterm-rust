@@ -164,7 +164,9 @@ impl SearchAddon {
         if self.inner.disposed.get() {
             engine.dispose();
         }
-        *self.inner.engine.borrow_mut() = Some(engine);
+        // Dropping a replaced context can cancel a host timer and reenter.
+        let replaced = self.inner.engine.replace(Some(engine));
+        drop(replaced);
         *self.inner.manager.borrow_mut() = Some(Rc::new(DecorationManager::new(Rc::clone(&host))));
         let weak = Rc::downgrade(&self.inner);
         let listener = host.terminal().on_event().try_subscribe(move |event| {
