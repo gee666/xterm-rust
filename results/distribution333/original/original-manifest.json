@@ -1,0 +1,283 @@
+{
+  "schemaVersion": 1,
+  "distributions": [
+    {
+      "id": "original-web-core-esm",
+      "directory": "web",
+      "kind": "web",
+      "profile": "release",
+      "scope": "Core-only original ESM distribution, all fourteen optional addons excluded",
+      "addons": [],
+      "files": [
+        {
+          "path": "xterm.mjs",
+          "role": "production ESM bundle"
+        },
+        {
+          "path": "LICENSE",
+          "role": "license"
+        },
+        {
+          "path": "xterm.css",
+          "role": "required CSS"
+        }
+      ],
+      "build": {
+        "commands": [
+          "node bin/esbuild.mjs --prod",
+          "node bin/esbuild.mjs --prod --headless",
+          "node bin/esbuild.mjs --prod --addon=attach",
+          "node bin/esbuild.mjs --prod --addon=clipboard",
+          "node bin/esbuild.mjs --prod --addon=fit",
+          "node bin/esbuild.mjs --prod --addon=image",
+          "node bin/esbuild.mjs --prod --addon=ligatures",
+          "node bin/esbuild.mjs --prod --addon=program-status",
+          "node bin/esbuild.mjs --prod --addon=progress",
+          "node bin/esbuild.mjs --prod --addon=search",
+          "node bin/esbuild.mjs --prod --addon=serialize",
+          "node bin/esbuild.mjs --prod --addon=unicode-graphemes",
+          "node bin/esbuild.mjs --prod --addon=unicode11",
+          "node bin/esbuild.mjs --prod --addon=web-fonts",
+          "node bin/esbuild.mjs --prod --addon=web-links",
+          "node bin/esbuild.mjs --prod --addon=webgl"
+        ],
+        "sourceSha256": "319645846cc7e05738b9283d15a6497ec88bd2c9cb723e25c6986122ca533ece",
+        "toolchain": "Node v24.15.0; esbuild 0.28.1; lock SHA256 1d4fe6fb8f91e404df5608b4421008116ac9d5d37b038c9b16d261246d5d5e0e",
+        "flags": "Unchanged bin/esbuild.mjs --prod: minify=true, treeShaking=true, target=es2021, legalComments=none; emitted sourcemaps excluded from download totals; no native LTO/strip flags apply"
+      }
+    },
+    {
+      "id": "original-headless-core-esm",
+      "directory": "headless",
+      "kind": "headless-js",
+      "profile": "release",
+      "scope": "Core-only original ESM distribution, all fourteen optional addons excluded",
+      "addons": [],
+      "files": [
+        {
+          "path": "xterm-headless.mjs",
+          "role": "production ESM bundle"
+        },
+        {
+          "path": "LICENSE",
+          "role": "license"
+        }
+      ],
+      "build": {
+        "commands": [
+          "node bin/esbuild.mjs --prod",
+          "node bin/esbuild.mjs --prod --headless",
+          "node bin/esbuild.mjs --prod --addon=attach",
+          "node bin/esbuild.mjs --prod --addon=clipboard",
+          "node bin/esbuild.mjs --prod --addon=fit",
+          "node bin/esbuild.mjs --prod --addon=image",
+          "node bin/esbuild.mjs --prod --addon=ligatures",
+          "node bin/esbuild.mjs --prod --addon=program-status",
+          "node bin/esbuild.mjs --prod --addon=progress",
+          "node bin/esbuild.mjs --prod --addon=search",
+          "node bin/esbuild.mjs --prod --addon=serialize",
+          "node bin/esbuild.mjs --prod --addon=unicode-graphemes",
+          "node bin/esbuild.mjs --prod --addon=unicode11",
+          "node bin/esbuild.mjs --prod --addon=web-fonts",
+          "node bin/esbuild.mjs --prod --addon=web-links",
+          "node bin/esbuild.mjs --prod --addon=webgl"
+        ],
+        "sourceSha256": "319645846cc7e05738b9283d15a6497ec88bd2c9cb723e25c6986122ca533ece",
+        "toolchain": "Node v24.15.0; esbuild 0.28.1; lock SHA256 1d4fe6fb8f91e404df5608b4421008116ac9d5d37b038c9b16d261246d5d5e0e",
+        "flags": "Unchanged bin/esbuild.mjs --prod: minify=true, treeShaking=true, target=es2021, legalComments=none; emitted sourcemaps excluded from download totals; no native LTO/strip flags apply"
+      }
+    },
+    {
+      "id": "original-web-all-addons-esm",
+      "directory": "web-all-addons",
+      "kind": "web",
+      "profile": "release",
+      "addons": [
+        "attach",
+        "clipboard",
+        "fit",
+        "image",
+        "ligatures",
+        "program-status",
+        "progress",
+        "search",
+        "serialize",
+        "unicode-graphemes",
+        "unicode11",
+        "web-fonts",
+        "web-links",
+        "webgl"
+      ],
+      "files": [
+        {
+          "path": "xterm.mjs",
+          "role": "production core ESM bundle"
+        },
+        {
+          "path": "xterm.css",
+          "role": "required CSS"
+        },
+        {
+          "path": "LICENSE",
+          "role": "core license"
+        },
+        {
+          "path": "addons/addon-attach.mjs",
+          "role": "production addon ESM bundle"
+        },
+        {
+          "path": "licenses/addon-attach.txt",
+          "role": "addon license"
+        },
+        {
+          "path": "addons/addon-clipboard.mjs",
+          "role": "production addon ESM bundle"
+        },
+        {
+          "path": "licenses/addon-clipboard.txt",
+          "role": "addon license"
+        },
+        {
+          "path": "addons/addon-fit.mjs",
+          "role": "production addon ESM bundle"
+        },
+        {
+          "path": "licenses/addon-fit.txt",
+          "role": "addon license"
+        },
+        {
+          "path": "addons/addon-image.mjs",
+          "role": "production addon ESM bundle"
+        },
+        {
+          "path": "licenses/addon-image.txt",
+          "role": "addon license"
+        },
+        {
+          "path": "addons/addon-ligatures.mjs",
+          "role": "production addon ESM bundle"
+        },
+        {
+          "path": "licenses/addon-ligatures.txt",
+          "role": "addon license"
+        },
+        {
+          "path": "addons/addon-program-status.mjs",
+          "role": "production addon ESM bundle"
+        },
+        {
+          "path": "licenses/addon-program-status.txt",
+          "role": "addon license"
+        },
+        {
+          "path": "addons/addon-progress.mjs",
+          "role": "production addon ESM bundle"
+        },
+        {
+          "path": "licenses/addon-progress.txt",
+          "role": "addon license"
+        },
+        {
+          "path": "addons/addon-search.mjs",
+          "role": "production addon ESM bundle"
+        },
+        {
+          "path": "licenses/addon-search.txt",
+          "role": "addon license"
+        },
+        {
+          "path": "addons/addon-serialize.mjs",
+          "role": "production addon ESM bundle"
+        },
+        {
+          "path": "licenses/addon-serialize.txt",
+          "role": "addon license"
+        },
+        {
+          "path": "addons/addon-unicode-graphemes.mjs",
+          "role": "production addon ESM bundle"
+        },
+        {
+          "path": "licenses/addon-unicode-graphemes.txt",
+          "role": "addon license"
+        },
+        {
+          "path": "addons/addon-unicode11.mjs",
+          "role": "production addon ESM bundle"
+        },
+        {
+          "path": "licenses/addon-unicode11.txt",
+          "role": "addon license"
+        },
+        {
+          "path": "addons/addon-web-fonts.mjs",
+          "role": "production addon ESM bundle"
+        },
+        {
+          "path": "licenses/addon-web-fonts.txt",
+          "role": "addon license"
+        },
+        {
+          "path": "addons/addon-web-links.mjs",
+          "role": "production addon ESM bundle"
+        },
+        {
+          "path": "licenses/addon-web-links.txt",
+          "role": "addon license"
+        },
+        {
+          "path": "addons/addon-webgl.mjs",
+          "role": "production addon ESM bundle"
+        },
+        {
+          "path": "licenses/addon-webgl.txt",
+          "role": "addon license"
+        },
+        {
+          "path": "licenses/dependencies/sixel/LICENSE",
+          "role": "bundled dependency license or notice"
+        },
+        {
+          "path": "licenses/dependencies/inwasm-runtime/LICENSE",
+          "role": "supplemental MIT notice for bundled runtime"
+        },
+        {
+          "path": "licenses/dependencies/xterm-wasm-parts/LICENSE",
+          "role": "bundled dependency license or notice"
+        },
+        {
+          "path": "licenses/dependencies/opentype.js/LICENSE",
+          "role": "bundled dependency license or notice"
+        },
+        {
+          "path": "licenses/dependencies/lru-cache/LICENSE.md",
+          "role": "bundled dependency license or notice"
+        }
+      ],
+      "scope": "Core plus all original addon production ESM bundles and bundled dependency notices. Ligatures uses the unchanged upstream node-platform build; web runtime compatibility is not established by this size total.",
+      "build": {
+        "commands": [
+          "node bin/esbuild.mjs --prod",
+          "node bin/esbuild.mjs --prod --headless",
+          "node bin/esbuild.mjs --prod --addon=attach",
+          "node bin/esbuild.mjs --prod --addon=clipboard",
+          "node bin/esbuild.mjs --prod --addon=fit",
+          "node bin/esbuild.mjs --prod --addon=image",
+          "node bin/esbuild.mjs --prod --addon=ligatures",
+          "node bin/esbuild.mjs --prod --addon=program-status",
+          "node bin/esbuild.mjs --prod --addon=progress",
+          "node bin/esbuild.mjs --prod --addon=search",
+          "node bin/esbuild.mjs --prod --addon=serialize",
+          "node bin/esbuild.mjs --prod --addon=unicode-graphemes",
+          "node bin/esbuild.mjs --prod --addon=unicode11",
+          "node bin/esbuild.mjs --prod --addon=web-fonts",
+          "node bin/esbuild.mjs --prod --addon=web-links",
+          "node bin/esbuild.mjs --prod --addon=webgl"
+        ],
+        "sourceSha256": "319645846cc7e05738b9283d15a6497ec88bd2c9cb723e25c6986122ca533ece",
+        "toolchain": "Node v24.15.0; esbuild 0.28.1; lock SHA256 1d4fe6fb8f91e404df5608b4421008116ac9d5d37b038c9b16d261246d5d5e0e",
+        "flags": "Unchanged bin/esbuild.mjs --prod: minify=true, treeShaking=true, target=es2021, legalComments=none; emitted sourcemaps excluded from download totals; no native LTO/strip flags apply"
+      }
+    }
+  ]
+}

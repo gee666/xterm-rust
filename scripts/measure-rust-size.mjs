@@ -97,10 +97,8 @@ export async function main(args = process.argv.slice(2)) {
   }
   if (Object.keys(options).length !== 2) throw new Error('Usage: --staging NEW-DIR --output DIR');
   const staging = options['--staging'], output = options['--output'];
-  if (existsSync(staging) || staging === output || within(staging, output) || within(output, staging) || staging === project || within(staging, project)) throw new Error('Staging must be a new owned directory, disjoint from results and source root');
-  for (const key of Object.keys(process.env)) {
-    if (/RUSTFLAGS|^CARGO_PROFILE_RELEASE_|^CARGO_TARGET_DIR$|^CARGO_BUILD_TARGET$/.test(key) && process.env[key]) throw new Error(`Remove build override before measuring: ${key}`);
-  }
+  if (existsSync(staging) || staging === output || within(staging, output) || within(output, staging) || staging === project || within(staging, project) || (within(project, staging) && !within(join(project, 'tmp'), staging))) throw new Error('Staging must be a new owned scratch directory, disjoint from results and sources');
+  if (!within(join(project, 'results'), output)) throw new Error('Durable output must be a child of this checkout results directory');
   mkdirSync(output, { recursive: true });
   for (const name of ['rust-manifest.json', 'rust-sizes.json']) rmSync(join(output, name), { force: true });
   const env = { ...process.env, ...releaseProfile };
@@ -120,6 +118,9 @@ export async function main(args = process.argv.slice(2)) {
     return readFileSync(log, 'utf8');
   }
   try {
+    for (const key of Object.keys(process.env)) {
+      if (/RUSTFLAGS|^CARGO_PROFILE_RELEASE_|^CARGO_TARGET_DIR$|^CARGO_BUILD_TARGET$/.test(key) && process.env[key]) throw new Error(`Remove build override before measuring: ${key}`);
+    }
     const pkg = join(project, 'browser/pkg');
     if (existsSync(pkg)) throw new Error('Use a fresh owned checkout without browser/pkg; prior generated snippets must not inflate a new distribution');
     report.source = await sourceIdentity(project);

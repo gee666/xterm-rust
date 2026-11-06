@@ -1,0 +1,128 @@
+✔ physical lines count final unterminated lines and avoid phantom trailing lines (1.1121ms)
+✔ roles separate tests, bindings, addons, native demos and oracle tools (0.7223ms)
+✔ inventory includes generated sources and configuration but excludes output and dependencies (13.1857ms)
+✔ structured fixture data takes precedence over configuration and lockfile names (3.4432ms)
+✔ mandatory browser generated glue is counted separately from demo and binary assets (10.3118ms)
+✔ inline Rust test annotations separate mixed files rather than claiming pure demo logic (6.639ms)
+✔ generated CSS copies count canonical source once and cannot hide changed code (3.9297ms)
+✔ UTF-8 BOM bytes do not erase a physical source line (1.715ms)
+✔ unknown production extensions cannot silently pass classification review (1.9707ms)
+✔ invalid UTF-8 source fails but binary fixtures are listed as assets (2.2761ms)
+✔ mixed source/data files are reported without pretending all lines are generated data (8.4999ms)
+✔ symlinks require review instead of following outside the tree (1.0646ms)
+✔ production text data is counted and generator strings are not generated-file markers (8.6694ms)
+✔ CLI custom roots exclude their own output and reject baseline mismatches (166.6497ms)
+✔ selected root junction and ordinary file are refused before traversal (1.2423ms)
+✔ reserved port target junction is excluded but ordinary and reference links stay forbidden (2.1593ms)
+✔ named protocol string data is separated in both trees without calling authored source generated (14.712ms)
+✔ CLI rejects unknown or missing arguments (0.4115ms)
+{
+  "schemaVersion": 1,
+  "tool": "distribution-size.mjs v1",
+  "node": "v24.15.0",
+  "codecs": {
+    "zlib": "1.3.1-e00f703",
+    "brotli": "1.2.0"
+  },
+  "compression": {
+    "gzip": {
+      "level": 9
+    },
+    "brotli": {
+      "quality": 11,
+      "mode": "generic",
+      "lgwin": 22
+    }
+  },
+  "method": "Unique normalized file paths per distribution; sum independently compressed files, not archive bytes. Native raw bytes are not JS download bytes.",
+  "status": "Measured declared artifacts only. Manifest provenance is caller-supplied; neither equivalent functionality nor matched-feature coverage is established by sizes.",
+  "distributions": [
+    {
+      "id": "rust-web",
+      "directory": ".",
+      "kind": "web",
+      "scope": "fixture only",
+      "profile": "release",
+      "addons": [],
+      "build": {
+        "commands": [
+          "cargo build --release"
+        ],
+        "toolchain": "fixture rustc",
+        "flags": "fixture flags",
+        "sourceSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "files": [
+        {
+          "path": "core.js",
+          "role": "binding",
+          "sha256": "97f58841deaeb69002930dba902ad6ff0149aed32f5a43afb5024081a2818ac9",
+          "raw": 31,
+          "gzip": 51,
+          "brotli": 35
+        },
+        {
+          "path": "core.wasm",
+          "role": "wasm",
+          "sha256": "93a44bbb96c751218e4c00d479e4c14358122a389acca16205b1e4d0dc5f9476",
+          "raw": 8,
+          "gzip": 28,
+          "brotli": 12
+        },
+        {
+          "path": "empty.css",
+          "role": "css",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "raw": 0,
+          "gzip": 20,
+          "brotli": 1
+        }
+      ],
+      "excluded": [],
+      "totals": {
+        "raw": 39,
+        "gzip": 99,
+        "brotli": 48
+      }
+    }
+  ],
+  "manifestSha256": "e724aa9811bd28becac1e8308a9d15f49e242f586c3d2c111bdc664120b30c4d",
+  "invocation": {
+    "manifest": "O:/xterm-rust-swarm-16/tmp/worktrees/Dale333/tmp/distribution-size-DdXxbN/manifest.json",
+    "root": "O:/xterm-rust-swarm-16/tmp/worktrees/Dale333/tmp/distribution-size-DdXxbN/ship"
+  }
+}
+✔ counts each path once, includes empty files and reconciles all compression totals (8.3688ms)
+✔ gzip and Brotli round trips admit WASM, Unicode, CRLF and empty bytes (1.0024ms)
+✔ recount is byte/hash stable and independent of manifest file order (11.8035ms)
+✔ native files have raw sizes only, not download comparisons (2.4065ms)
+✔ rejects missing files and undeclared mandatory supporting assets (2.5104ms)
+✔ excluded nonruntime files need reasons and must exist (3.6385ms)
+✔ rejects traversal, absolute, Windows drive and nonnormalized paths (1.8348ms)
+✔ rejects junction roots and nested junction entries without following them (3.4385ms)
+✔ rejects directory file entries and conflicting declarations (2.3324ms)
+✔ rejects absent release provenance, addons and duplicate ids (4.452ms)
+✔ CLI writes a machine-readable receipt and rejects outputs inside inputs (16.7965ms)
+✔ CLI exits nonzero for missing assets, malformed JSON and unknown flags (155.0648ms)
+✔ unchanged-source fixture builds produce sizes, preserve sources and clean owned links/staging (329.3002ms)
+✔ failed build propagates, cleans its link and invalidates old sizes (242.0735ms)
+✔ reference mutation fails instead of yielding a size comparison (135.837ms)
+✔ all addon production bundles include dependency licenses and unchanged core-only totals (243.4907ms)
+✔ missing bundled dependency license fails and removes prior sizes and owned scratch (321.5616ms)
+✔ invalid addon policy fails rather than silently selecting core-only (52.6996ms)
+✔ existing staging content and dependencies are not replaced or deleted (158.3746ms)
+✔ runtime closure includes WASM, bootstrap, CSS, every generated snippet and shipped notices (12.9632ms)
+✔ missing mandatory WASM and unreviewed generated assets fail closed (4.8769ms)
+✔ linked generated folders and source ancestors cannot be copied as artifacts (4.587ms)
+✔ staging rejects artifact traversal and preserves unrelated outside files (3.5877ms)
+✔ native selection uses actual release compiler outputs, not guessed filenames (4.9613ms)
+✔ duplicate, absent, wrong-profile and escaped native artifacts fail (4.8025ms)
+✔ linked private targets cannot masquerade as owned release artifacts (5.4984ms)
+ℹ tests 44
+ℹ suites 0
+ℹ pass 44
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1591.1235

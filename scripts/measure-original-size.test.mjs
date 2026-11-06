@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, lstatSync, rmSync, rmdirSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { spawnSync } from 'node:child_process';
 const project = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 function fixture(run) {
@@ -67,7 +67,7 @@ test('all addon production bundles include dependency licenses and unchanged cor
     if(addon){const base='addons/addon-'+addon+'/lib/addon-'+addon+'.mjs';
     fs.mkdirSync('addons/addon-'+addon+'/lib',{recursive:true});
     fs.writeFileSync(base,'export const addon=true;');
-    fs.writeFileSync(base+'.map',JSON.stringify({sources:['../../../node_modules/bundled/dist/index.js']}));}`);
+    fs.writeFileSync(base+'.map',JSON.stringify({sources:['../../../node_modules/bundled/dist/index.js',${JSON.stringify(pathToFileURL(join(deps, 'bundled/src/not-shipped.ts')).href)}]}));}`);
   const result = invoke([...args, '--addons', 'all']);
   assert.equal(result.status, 0, result.stderr + result.stdout);
   const report = JSON.parse(readFileSync(join(output, 'original-build.json')));
@@ -96,6 +96,28 @@ test('missing bundled dependency license fails and removes prior sizes and owned
   assert.match(JSON.parse(readFileSync(join(output, 'original-build.json'))).error, /No license found/);
   assert.equal(existsSync(join(output, 'original-sizes.json')), false);
   assert.equal(existsSync(staging), false);
+}));
+test('supplemental MIT notice is limited to the exact runtime version and source attribution', () => fixture(({ source, deps, output, invoke, args, script }) => {
+  mkdirSync(join(source, 'addons/addon-alpha'), { recursive: true });
+  mkdirSync(join(deps, 'inwasm-runtime/lib'), { recursive: true });
+  writeFileSync(join(deps, 'inwasm-runtime/package.json'), '{"name":"inwasm-runtime","version":"0.1.2","license":"MIT"}');
+  const runtime = join(deps, 'inwasm-runtime/lib/index.cjs');
+  writeFileSync(runtime, '/**\n * Copyright (c) 2022, 2026 Joerg Breitbart\n * @license MIT\n */');
+  writeFileSync(join(source, 'bin/esbuild.mjs'), script + `
+    if(process.argv.some(arg=>arg.startsWith('--addon='))){const base='addons/addon-alpha/lib/addon-alpha.mjs';
+    fs.mkdirSync('addons/addon-alpha/lib',{recursive:true});fs.writeFileSync(base,'export const addon=true;');
+    fs.writeFileSync(base+'.map',JSON.stringify({sources:['../../../node_modules/inwasm-runtime/lib/index.cjs']}));}`);
+  const values = [...args, '--addons', 'all'];
+  const first = invoke(values);
+  assert.equal(first.status, 0, first.stderr + first.stdout);
+  const report = JSON.parse(readFileSync(join(output, 'original-build.json')));
+  assert.match(report.bundledDependencies[0].supplementalNotice.noticeSha256, /^[a-f0-9]{64}$/);
+  const sizes = JSON.parse(readFileSync(join(output, 'original-sizes.json')));
+  assert.ok(sizes.distributions.find(row => row.id === 'original-web-all-addons-esm').files.some(row => row.path === 'licenses/dependencies/inwasm-runtime/LICENSE'));
+  writeFileSync(runtime, '/** Copyright changed; do not guess a new license. */');
+  assert.equal(invoke(values).status, 1);
+  assert.match(JSON.parse(readFileSync(join(output, 'original-build.json'))).error, /requires review/);
+  assert.equal(existsSync(join(output, 'original-sizes.json')), false);
 }));
 test('invalid addon policy fails rather than silently selecting core-only', () => fixture(({ invoke, args }) => {
   assert.notEqual(invoke([...args, '--addons', 'partial']).status, 0);

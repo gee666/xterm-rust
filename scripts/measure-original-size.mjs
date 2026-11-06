@@ -106,9 +106,11 @@ try {
       const license = existsSync(join(base, 'LICENSE')) ? join(base, 'LICENSE') : join(source, 'LICENSE');
       stage(license, `licenses/addon-${addon}.txt`, 'addon license');
       for (const name of map.sources) {
-        const logical = resolve(dirname(mapFile), name);
+        // esbuild follows dependency maps, which can name original TypeScript
+        // that is not shipped by npm. Locate the owning package, not that file.
+        const logical = name.startsWith('file:') ? fileURLToPath(name) : resolve(dirname(mapFile), name);
         const linkRoot = join(source, 'node_modules');
-        const resolved = realpathSync(within(linkRoot, logical) ? join(dependencyRoot, relative(linkRoot, logical)) : logical);
+        const resolved = within(linkRoot, logical) ? join(dependencyRoot, relative(linkRoot, logical)) : logical;
         if (!within(dependencyRoot, resolved)) continue;
         let folder = dirname(resolved), packageFile;
         while (within(dependencyRoot, folder) && folder !== dependencyRoot) {
@@ -132,7 +134,18 @@ try {
     report.bundledDependencies = [];
     for (const [folder, metadata] of dependencies) {
       const notices = readdirSync(folder).filter(name => /^(?:licen[cs]e|copying|notice)(?:[.-].*)?$/i.test(name)).sort();
-      if (!notices.length) throw new Error(`No license found for bundled dependency: ${metadata.name}`);
+      if (!notices.length) {
+        // This supplied package omits LICENSE but identifies MIT in both its
+        // metadata and source banner. Retain that exact attribution with the
+        // standard MIT permission text, never substitute a generic copyright.
+        if (metadata.name !== 'inwasm-runtime' || metadata.version !== '0.1.2' || metadata.license !== 'MIT') throw new Error(`No license found for bundled dependency: ${metadata.name}`);
+        const banner = readFileSync(join(folder, 'lib/index.cjs'));
+        if (!/Copyright \(c\) 2022, 2026 Joerg Breitbart\r?\n \* @license MIT/.test(banner.toString())) throw new Error('Supplemental inwasm notice requires review of changed attribution');
+        const notice = join(project, 'licenses/inwasm-runtime-MIT.txt');
+        stage(notice, 'licenses/dependencies/inwasm-runtime/LICENSE', 'supplemental MIT notice for bundled runtime');
+        metadata.supplementalNotice = { reason: 'Installed package omits LICENSE; package SPDX MIT and exact source copyright retained with standard MIT permission text',
+          sourceSha256: createHash('sha256').update(banner).digest('hex'), noticeSha256: createHash('sha256').update(readFileSync(notice)).digest('hex') };
+      }
       for (const name of notices) stage(join(folder, name), `licenses/dependencies/${metadata.name}/${name}`, 'bundled dependency license or notice');
       report.bundledDependencies.push(metadata);
     }
