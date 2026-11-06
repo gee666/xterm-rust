@@ -1,0 +1,22 @@
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\TheodelindaAttachDispose\crates\xterm-addons)
+    Finished `test` profile [unoptimized] target(s) in 3.26s
+     Running tests\attach_disposal_reentry.rs (target\debug\deps\attach_disposal_reentry-52fa7b5ab60083d9.exe)
+
+running 1 test
+test disposal_visits_socket_and_terminal_handles_appended_by_reactivation ... FAILED
+
+failures:
+
+---- disposal_visits_socket_and_terminal_handles_appended_by_reactivation stdout ----
+
+thread 'disposal_visits_socket_and_terminal_handles_appended_by_reactivation' panicked at crates\xterm-addons\tests\attach_disposal_reentry.rs:108:21:
+live socket handles after None/Message/1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    disposal_visits_socket_and_terminal_handles_appended_by_reactivation
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-addons --test attach_disposal_reentry`

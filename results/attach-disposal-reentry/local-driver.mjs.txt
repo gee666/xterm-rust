@@ -1,0 +1,121 @@
+// Local bounded verification driver snapshot, not portable project automation.
+import { spawnSync } from 'node:child_process';
+import assert from 'node:assert/strict';
+import { readFile, writeFile, mkdir, statfs } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { freemem } from 'node:os';
+import { resolve, dirname, join } from 'node:path';
+import { runCommand } from '../scripts/quality-process.mjs';
+const root = process.cwd(), out = resolve('results/attach-disposal-reentry');
+const env = { ...process.env, CARGO_BUILD_JOBS: '2', CARGO_TARGET_DIR: resolve('target'),
+  TEMP: resolve('tmp/env'), TMP: resolve('tmp/env'), TMPDIR: resolve('tmp/env'),
+  PLAYWRIGHT_MODULE: 'P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/node_modules/playwright/index.mjs',
+  WASM_BINDGEN: 'P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe',
+  WASM_TEST: 'wasm_attach_disposal_reentry', WASM_PACKAGE: 'xterm-web',
+  BROWSERS: 'chromium,firefox,webkit', CARGO_FEATURES: '' };
+await mkdir(out, { recursive: true }); await mkdir(env.TEMP, { recursive: true });
+const hash = bytes => createHash('sha256').update(bytes).digest('hex');
+const file = resolve('crates/xterm-addons/src/attach.rs');
+const fixed = await readFile(file), phase = process.argv[2];
+const report = { phase, commands: [], environment: { TEMP: env.TEMP, TMP: env.TMP, target: env.CARGO_TARGET_DIR } };
+const abort = new AbortController();
+process.once('SIGINT', () => abort.abort(new Error('SIGINT')));
+process.once('SIGTERM', () => abort.abort(new Error('SIGTERM')));
+async function command(name, executable, args, expected = 0, extraEnv = {}) {
+  const disk = await statfs(root); const ram = freemem();
+  if (ram < 8 * 1024 ** 3 || disk.bavail * disk.bsize < 10 * 1024 ** 3) throw Error('insufficient measured headroom');
+  const start = Date.now();
+  const result = await runCommand(executable, args, { cwd: root, env: { ...env, ...extraEnv },
+    timeoutMs: 300000, signal: abort.signal, log: resolve(out, name + '.log'), resourceCheck: async () => {
+      const disk = await statfs(root);
+      if (freemem() < 8 * 1024 ** 3 || disk.bavail * disk.bsize < 10 * 1024 ** 3) throw Error('headroom dropped');
+    } });
+  const output = await readFile(resolve(out, name + '.log'), 'utf8');
+  report.commands.push({ name, executable, args, ramBytes: ram, diskBytes: disk.bavail * disk.bsize,
+    ...result, status: result.exitCode, durationMs: Date.now() - start,
+    logSha256: hash(output), summaries: [...output.matchAll(/test result: (?:ok|FAILED)\. (\d+) passed; (\d+) failed; (\d+) ignored; (\d+) measured; (\d+) filtered out/g)].map(m => m.slice(1).map(Number)) });
+  await writeFile(resolve(out, phase + '.json'), JSON.stringify(report, null, 2) + '\n');
+  console.log(name, result.exitCode, result.error ?? '');
+  if (result.error || result.signal || result.timedOut || result.resourceError || result.terminationError || result.exitCode !== expected) throw Error(name + ': unexpected outcome');
+}
+const old = () => {
+  const result = spawnSync('git', ['show', '11ad71a8:crates/xterm-addons/src/attach.rs'], { cwd: root, timeout: 30000, maxBuffer: 1024 ** 2 });
+  if (result.status !== 0) throw Error('cannot read immutable old source');
+  return result.stdout;
+};
+async function captureBrowser(label, testName = env.WASM_TEST) {
+  const entry = JSON.parse(await readFile('results/browser-host/' + testName + '-results.json', 'utf8'));
+  const compiler = await readFile(entry.artifacts.compiler.originalPath);
+  await mkdir(resolve('tmp/runtime'), { recursive: true });
+  const snapshot = resolve('tmp/runtime', label + '-compiler.wasm');
+  await writeFile(snapshot, compiler);
+  entry.compilerSnapshot = { path: snapshot, bytes: compiler.length, sha256: hash(compiler) };
+  assert.equal(entry.compilerSnapshot.sha256, entry.artifacts.compiler.sha256);
+  entry.productionSourceSha256 = hash(await readFile(file));
+  await writeFile(resolve(out, label + '.json'), JSON.stringify(entry, null, 2) + '\n');
+}
+report.fixedSourceSha256 = hash(fixed);
+try {
+  if (phase === 'format') {
+    await command('aggregate-format', 'cargo', ['fmt', '--all', '--', '--check'], 1);
+    assert.match(await readFile(resolve(out, 'aggregate-format.log'), 'utf8'), /os error 206/);
+    for (const member of ['xterm-core', 'xterm-addons', 'xterm-web', 'xterm-wasm-support', 'xterm-font-addons']) {
+      await command(member + '-format', 'cargo', ['fmt', '-p', member, '--', '--check']);
+    }
+    await command('owned-format', 'rustfmt', ['--edition', '2021', '--check', 'crates/xterm-addons/src/attach.rs', 'crates/xterm-addons/tests/attach_disposal_reentry.rs', 'crates/xterm-web/tests/wasm_attach_disposal_reentry.rs']);
+  } else if (phase === 'native') {
+    await command('native-fixed-initial', 'cargo', ['test', '--locked', '-j2', '-p', 'xterm-addons', '--all-targets', '--all-features']);
+    await command('native-clippy', 'cargo', ['clippy', '--locked', '-j2', '-p', 'xterm-addons', '--all-targets', '--all-features', '--', '-D', 'warnings']);
+    const original = old(); report.negativeSourceSha256 = hash(original);
+    await writeFile(file, original);
+    try {
+      await command('native-old-control', 'cargo', ['test', '--locked', '-j2', '-p', 'xterm-addons', '--test', 'attach_disposal_reentry'], 101);
+      assert.match(await readFile(resolve(out, 'native-old-control.log'), 'utf8'), /live socket handles after/);
+    } finally { await writeFile(file, fixed); }
+    await command('native-fixed-final', 'cargo', ['test', '--locked', '-j2', '-p', 'xterm-addons', '--all-targets', '--all-features']);
+    await command('wasm-clippy', 'cargo', ['clippy', '--locked', '-j2', '-p', 'xterm-web', '--target', 'wasm32-unknown-unknown', '--lib', '--test', 'wasm_attach_disposal_reentry', '--', '-D', 'warnings']);
+  } else if (phase === 'browser') {
+    await command('browser-fixed-initial', 'node', ['scripts/browser-host-check.mjs']);
+    await captureBrowser('browser-fixed-initial');
+    const original = old(); report.negativeSourceSha256 = hash(original);
+    await writeFile(file, original);
+    try {
+      await command('browser-old-control', 'node', ['scripts/browser-host-check.mjs'], 1, { BROWSERS: 'chromium' });
+      await captureBrowser('browser-old-control');
+    } finally { await writeFile(file, fixed); }
+    await command('browser-fixed-final', 'node', ['scripts/browser-host-check.mjs']);
+    await captureBrowser('browser-fixed-final');
+    const reports = {};
+    for (const label of ['browser-fixed-initial', 'browser-old-control', 'browser-fixed-final']) {
+      const entry = JSON.parse(await readFile(resolve(out, label + '.json'), 'utf8'));
+      reports[label] = entry;
+      assert.equal(entry.browsers.length, label === 'browser-old-control' ? 1 : 3);
+      for (const browser of entry.browsers) {
+        assert.deepEqual(browser.counts, { passed: label === 'browser-old-control' ? 0 : 1,
+          failed: label === 'browser-old-control' ? 1 : 0, ignored: 0, filtered: 0 });
+      }
+      const build = await readFile(join(dirname(dirname(entry.artifacts.wasm.path)), env.WASM_TEST + '-build.log'), 'utf8');
+      const messages = build.split('\n').filter(line => line.startsWith('{')).map(line => JSON.parse(line));
+      const artifact = messages.find(message => message.reason === 'compiler-artifact' && message.target.name === env.WASM_TEST && message.profile.test);
+      assert.equal(artifact.fresh, false);
+      const compiler = entry.compilerSnapshot.path;
+      assert((await readFile(compiler)).includes(await readFile('crates/xterm-web/tests/fixtures/attach-disposal-reentry.js')));
+    }
+    assert.notEqual(reports['browser-old-control'].artifacts.wasm.sha256, reports['browser-fixed-final'].artifacts.wasm.sha256);
+    assert.equal(reports['browser-fixed-initial'].artifacts.wasm.sha256, reports['browser-fixed-final'].artifacts.wasm.sha256);
+    await command('browser-retained-attach', 'node', ['scripts/utility-addon-browser-check.mjs'], 0, {
+      WASM_TEST: 'wasm_attach_reentry', NODE_PATH: 'P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/node_modules'
+    });
+    await captureBrowser('browser-retained-attach', 'wasm_attach_reentry');
+    const retained = JSON.parse(await readFile(resolve(out, 'browser-retained-attach.json'), 'utf8'));
+    assert.equal(retained.browsers.length, 3);
+    for (const browser of retained.browsers) assert.deepEqual(browser.counts, { passed: 2, failed: 0, ignored: 0, filtered: 0 });
+  } else throw Error('unknown phase');
+  report.status = 'passed';
+} catch (error) { report.status = 'failed'; report.error = String(error.stack ?? error); process.exitCode = 1; }
+finally {
+  await writeFile(file, fixed);
+  report.restoredSourceSha256 = hash(await readFile(file));
+  if (report.restoredSourceSha256 !== report.fixedSourceSha256) throw Error('restore mismatch');
+  await writeFile(resolve(out, phase + '.json'), JSON.stringify(report, null, 2) + '\n');
+}

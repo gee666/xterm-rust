@@ -1,0 +1,43 @@
+// Local pin-index builder; evidence snapshot, not portable verification tooling.
+import { readFile, writeFile, readdir, lstat } from 'node:fs/promises';
+import { resolve, dirname, join, relative } from 'node:path';
+import { createHash } from 'node:crypto';
+import { spawnSync } from 'node:child_process';
+const root = process.cwd(), output = resolve('results/attach-disposal-reentry');
+const hash = bytes => createHash('sha256').update(bytes).digest('hex');
+async function pin(path) { const bytes = await readFile(path); return { path: relative(root, path).replaceAll('\\', '/'), bytes: bytes.length, sha256: hash(bytes) }; }
+async function tree(path) {
+  const result = [];
+  for (const name of await readdir(path)) {
+    const file = join(path, name), info = await lstat(file);
+    if (info.isSymbolicLink()) throw Error('unexpected link ' + file);
+    if (info.isDirectory()) result.push(...await tree(file)); else if (info.isFile()) result.push(await pin(file));
+  }
+  return result;
+}
+const list = spawnSync('git', ['ls-files', '-z', '--', 'crates', 'browser', '.cargo', 'Cargo.toml', 'Cargo.lock'], { encoding: 'utf8', timeout: 30000 });
+if (list.status !== 0) throw Error('git ls-files failed');
+const inputs = [];
+for (const file of list.stdout.split('\0').filter(Boolean).sort()) inputs.push(await pin(resolve(file)));
+for (const file of ['scripts/browser-host-check.mjs', 'scripts/utility-addon-browser-check.mjs', 'scripts/quality-process.mjs', 'scripts/quality-tree.mjs', 'scripts/browser-artifact-server.mjs', 'scripts/acceptance-artifacts.mjs', 'scripts/attach-disposal-reentry-oracle.mjs']) inputs.push(await pin(resolve(file)));
+await writeFile(join(output, 'inputs.json'), JSON.stringify({ sourceCommit: '9ccf5eaf', pins: inputs }, null, 2) + '\n');
+const runtime = [];
+for (const label of ['browser-fixed-initial', 'browser-old-control', 'browser-fixed-final', 'browser-retained-attach']) {
+  const report = JSON.parse(await readFile(join(output, label + '.json'), 'utf8'));
+  const runRoot = dirname(dirname(report.artifacts.wasm.path));
+  runtime.push(...await tree(runRoot), await pin(report.compilerSnapshot.path));
+  const build = await readFile(join(runRoot, report.testName + '-build.log'), 'utf8');
+  await writeFile(join(output, label + '-build.log'), build);
+  const artifact = build.split('\n').filter(line => line.startsWith('{')).map(line => JSON.parse(line))
+    .find(message => message.reason === 'compiler-artifact' && message.target.name === report.testName && message.profile.test);
+  if (artifact.fresh !== false) throw Error('compiler artifact not rebuilt');
+}
+for (const binary of JSON.parse(await readFile(join(output, 'native-binaries.json'), 'utf8'))) runtime.push(await pin(binary.path));
+await writeFile(join(output, 'runtime-pins.json'), JSON.stringify(runtime, null, 2) + '\n');
+const evidence = [];
+for (const name of (await readdir(output)).sort()) {
+  if (['evidence-pins.json', 'review.json', 'cleanup.json', 'handoff.json'].includes(name)) continue;
+  const file = join(output, name); if ((await lstat(file)).isFile()) evidence.push(await pin(file));
+}
+await writeFile(join(output, 'evidence-pins.json'), JSON.stringify(evidence, null, 2) + '\n');
+console.log({ inputs: inputs.length, runtime: runtime.length, evidence: evidence.length });
