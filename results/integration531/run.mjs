@@ -117,6 +117,12 @@ if (mode === 'components') {
     const file = join(root,'results/browser-host',entry.test+'-results.json');
     const report = await json(file);
     await cp(file,join(out,entry.test+'-results.json'));
+    if (entry.test === 'image_addon_browser') {
+      await cp(join(root,'results/image-addon/verification.json'),join(out,'image-addon-verification.json'));
+      await cp(join(root,'results/image-addon/source-inputs.json'),join(out,'image-addon-source-inputs.json'));
+    }
+    if (entry.test === 'wasm_link_mouse_path') await cp(join(root,'results/link-mouse-path/source.json'),join(out,'link-mouse-path-source.json'));
+    if (entry.test === 'wasm_webgl_browser_cache') await cp(join(root,'tmp/browser-atlas-cache/source.js.json'),join(out,'atlas-source-inputs.json'));
     assert.equal(report.status,'passed');
     assert.equal(report.browsers.length,3);
     for (const browser of report.browsers) {
