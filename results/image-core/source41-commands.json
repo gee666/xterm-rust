@@ -1,0 +1,116 @@
+[
+  {
+    "label": "clippy-native-41",
+    "command": [
+      "C:/Users/user/.cargo/bin/cargo.exe",
+      "clippy",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-core",
+      "--all-targets",
+      "--all-features",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 412.7122,
+    "status": "passed"
+  },
+  {
+    "label": "clippy-wasm-41",
+    "command": [
+      "C:/Users/user/.cargo/bin/cargo.exe",
+      "clippy",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-web",
+      "--target",
+      "wasm32-unknown-unknown",
+      "--lib",
+      "--test",
+      "wasm_image_core",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 9813.2628,
+    "status": "passed"
+  },
+  {
+    "label": "wasm-fixed-41",
+    "command": [
+      "C:\\nvm4w\\nodejs\\node.exe",
+      "scripts/browser-host-check.mjs"
+    ],
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 20402.297599999998,
+    "status": "passed"
+  },
+  {
+    "label": "production-debug-41",
+    "command": [
+      "C:\\nvm4w\\nodejs\\node.exe",
+      "scripts/build-demo.mjs",
+      "--debug"
+    ],
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 1872.2104,
+    "status": "passed"
+  },
+  {
+    "label": "original-accessors-41",
+    "command": [
+      "C:\\nvm4w\\nodejs\\node.exe",
+      "scripts/e2e-upstream.mjs",
+      "--suite",
+      "addon-image",
+      "--grep",
+      "test for private accessors",
+      "--no-build",
+      "--timeout-ms",
+      "120000"
+    ],
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 8850.053999999996,
+    "status": "passed"
+  }
+]

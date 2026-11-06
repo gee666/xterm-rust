@@ -26,11 +26,13 @@ Raw JavaScript number/operator semantics for dirty-row indices, direct mutation/
 
 The shared `scripts/image-core-trace.js` runs through real original and Rust Terminals. It checks19 complete snapshots covering live/retained attributes and rows, nonempty underline/hyperlink maps, LF/events, numeric dirty ranges, theme mutation, browser ownership, streaming DCS LIFO/async cleanup, OSC/APC/CSI, reset listener disposal and normal/alternate buffers. The generated fixture exceeds350 lines because it preserves complete source snapshots, including packed rows.
 
-The unchanged original ImageAddon accessor test runs separately through the actual production WASM package. The raw initial transport-name failures are retained, not normalized. Scoped results, source/input/artifact pins, exact commands and remaining unrun gates are recorded in `results/image-core/summary.json`.
+The unchanged original ImageAddon accessor test runs separately through the actual production WASM package. The raw initial transport-name failures are retained, not normalized. The final shared19-snapshot fixture also ran against the exact old224d wiring and failed at the missing input handler, then restored every fixed source byte in finally. That old0-pass/1-fail result is a negative control, not a passing old implementation. Scoped results, source/input/artifact pins, exact commands and remaining unrun gates are recorded in `results/image-core/summary.json`.
 
 ```sh
 CORE_VIEW_CASES=image-core node scripts/core-views-source.mjs
 WASM_TEST=wasm_image_core node scripts/browser-host-check.mjs
+# Optional control, only in a clean owned swarm worktree, allow240s externally:
+node results/image-core/negative-control.mjs
 node scripts/build-demo.mjs --debug
 node scripts/e2e-upstream.mjs --suite addon-image --grep 'test for private accessors' --no-build --timeout-ms 120000
 node --test scripts/e2e/build-bootstrap.test.mjs

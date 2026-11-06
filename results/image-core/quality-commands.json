@@ -1,0 +1,80 @@
+[
+  {
+    "label": "clippy-native",
+    "command": [
+      "C:/Users/user/.cargo/bin/cargo.exe",
+      "clippy",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-core",
+      "--all-targets",
+      "--all-features",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 32802.3364,
+    "status": "passed"
+  },
+  {
+    "label": "clippy-wasm",
+    "command": [
+      "C:/Users/user/.cargo/bin/cargo.exe",
+      "clippy",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-web",
+      "--target",
+      "wasm32-unknown-unknown",
+      "--lib",
+      "--test",
+      "wasm_image_core",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 15066.768900000003,
+    "status": "passed"
+  },
+  {
+    "label": "test-core",
+    "command": [
+      "C:/Users/user/.cargo/bin/cargo.exe",
+      "test",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-core",
+      "--all-targets",
+      "--all-features"
+    ],
+    "exitCode": 1,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": true,
+    "terminationError": "ERROR: The process with PID 48800 (child process of PID 51432) could not be terminated.\r\nReason: The operation attempted is not supported.\r\r\n",
+    "resourceError": null,
+    "elapsedMs": 180215.5296,
+    "status": "failed"
+  }
+]

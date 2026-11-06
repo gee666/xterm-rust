@@ -1,0 +1,71 @@
+
+Running 3 tests using 2 workers
+FFF
+
+  1) [Chromium] › addons\addon-image\test\ImageAddon.test.ts:101:7 › ImageAddon › test for private accessors 
+
+    AssertionError: Expected values to be strictly equal:
+    [32mactual[39m [31mexpected[39m
+
+    [39m'[39m[39m_[39m[32m_[39m[39mA[39m[39mt[39m[39mt[39m[39mr[39m[39mi[39m[39mb[39m[39mu[39m[39mt[39m[39me[39m[39mD[39m[39ma[39m[39mt[39m[39ma[39m[39m'[39m
+
+
+      121 |     strictEqual(await ctx.page.evaluate('window.term._core.buffer.lines.get(0)._extendedAttrs instanceof Object'), true);
+      122 |     // inputhandler privates
+    > 123 |     strictEqual(await ctx.page.evaluate('window.term._core._inputHandler._curAttrData.constructor.name'), '_AttributeData');
+          |                ^
+      124 |     strictEqual(await ctx.page.evaluate('window.term._core._inputHandler._parser.constructor.name'), 'EscapeSequenceParser');
+      125 |   });
+      126 |
+        at O:\xterm-rust-swarm-16\tmp\worktrees\GavrilaImage569\source_repo\addons\addon-image\test\ImageAddon.test.ts:123:16
+
+    Error Context: ..\results\e2e\upstream\2026-11-06T03-32-24-663Z-dc2d17db-8b21-4782-a625-87ee528449c5\artifacts\ImageAddon-ImageAddon-test-for-private-accessors-Chromium\error-context.md
+
+    Error Context: ..\results\e2e\upstream\2026-11-06T03-32-24-663Z-dc2d17db-8b21-4782-a625-87ee528449c5\artifacts\ImageAddon-ImageAddon-test-for-private-accessors-Chromium\error-context.md
+
+  2) [FirefoxStable] › addons\addon-image\test\ImageAddon.test.ts:101:7 › ImageAddon › test for private accessors 
+
+    AssertionError: Expected values to be strictly equal:
+    [32mactual[39m [31mexpected[39m
+
+    [39m'[39m[39m_[39m[32m_[39m[39mA[39m[39mt[39m[39mt[39m[39mr[39m[39mi[39m[39mb[39m[39mu[39m[39mt[39m[39me[39m[39mD[39m[39ma[39m[39mt[39m[39ma[39m[39m'[39m
+
+
+      121 |     strictEqual(await ctx.page.evaluate('window.term._core.buffer.lines.get(0)._extendedAttrs instanceof Object'), true);
+      122 |     // inputhandler privates
+    > 123 |     strictEqual(await ctx.page.evaluate('window.term._core._inputHandler._curAttrData.constructor.name'), '_AttributeData');
+          |                ^
+      124 |     strictEqual(await ctx.page.evaluate('window.term._core._inputHandler._parser.constructor.name'), 'EscapeSequenceParser');
+      125 |   });
+      126 |
+        at O:\xterm-rust-swarm-16\tmp\worktrees\GavrilaImage569\source_repo\addons\addon-image\test\ImageAddon.test.ts:123:16
+
+    Error Context: ..\results\e2e\upstream\2026-11-06T03-32-24-663Z-dc2d17db-8b21-4782-a625-87ee528449c5\artifacts\ImageAddon-ImageAddon-test-for-private-accessors-FirefoxStable\error-context.md
+
+    Error Context: ..\results\e2e\upstream\2026-11-06T03-32-24-663Z-dc2d17db-8b21-4782-a625-87ee528449c5\artifacts\ImageAddon-ImageAddon-test-for-private-accessors-FirefoxStable\error-context.md
+
+  3) [WebKit] › addons\addon-image\test\ImageAddon.test.ts:101:7 › ImageAddon › test for private accessors 
+
+    AssertionError: Expected values to be strictly equal:
+    [32mactual[39m [31mexpected[39m
+
+    [39m'[39m[39m_[39m[32m_[39m[39mA[39m[39mt[39m[39mt[39m[39mr[39m[39mi[39m[39mb[39m[39mu[39m[39mt[39m[39me[39m[39mD[39m[39ma[39m[39mt[39m[39ma[39m[39m'[39m
+
+
+      121 |     strictEqual(await ctx.page.evaluate('window.term._core.buffer.lines.get(0)._extendedAttrs instanceof Object'), true);
+      122 |     // inputhandler privates
+    > 123 |     strictEqual(await ctx.page.evaluate('window.term._core._inputHandler._curAttrData.constructor.name'), '_AttributeData');
+          |                ^
+      124 |     strictEqual(await ctx.page.evaluate('window.term._core._inputHandler._parser.constructor.name'), 'EscapeSequenceParser');
+      125 |   });
+      126 |
+        at O:\xterm-rust-swarm-16\tmp\worktrees\GavrilaImage569\source_repo\addons\addon-image\test\ImageAddon.test.ts:123:16
+
+    Error Context: ..\results\e2e\upstream\2026-11-06T03-32-24-663Z-dc2d17db-8b21-4782-a625-87ee528449c5\artifacts\ImageAddon-ImageAddon-test-for-private-accessors-WebKit\error-context.md
+
+    Error Context: ..\results\e2e\upstream\2026-11-06T03-32-24-663Z-dc2d17db-8b21-4782-a625-87ee528449c5\artifacts\ImageAddon-ImageAddon-test-for-private-accessors-WebKit\error-context.md
+
+  3 failed
+    [Chromium] › addons\addon-image\test\ImageAddon.test.ts:101:7 › ImageAddon › test for private accessors 
+    [FirefoxStable] › addons\addon-image\test\ImageAddon.test.ts:101:7 › ImageAddon › test for private accessors 
+    [WebKit] › addons\addon-image\test\ImageAddon.test.ts:101:7 › ImageAddon › test for private accessors 
