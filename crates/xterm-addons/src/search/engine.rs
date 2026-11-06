@@ -32,11 +32,11 @@ impl EngineContext {
     pub fn init(self: &Rc<Self>) -> Result<(), SearchAddonError> {
         let now = self.host.now_ms();
         self.cache.borrow_mut().init(now);
-        // A captured call may continue after replacement. Retired contexts
-        // must not install jobs whose handles would have no live owner. Source
-        // post-disposal registration behavior remains a documented parity gap.
+        // A captured call still evaluates timeout creation after disposal.
+        // Propagate setup failures before matching, then cancel a returned job
+        // because Rust must retain an owner. Orphan job liveness remains 527.
         if self.disposed.get() {
-            return Ok(());
+            return self.schedule_timeout();
         }
         if self.listener.borrow().is_none() {
             let weak = Rc::downgrade(self);

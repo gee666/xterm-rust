@@ -50,6 +50,8 @@ mod raw_marker;
 mod refresh;
 #[path = "search_cases/refresh_undefined.rs"]
 mod refresh_undefined;
+#[path = "search_cases/retired_timeout.rs"]
+mod retired_timeout;
 #[path = "search_cases/scroll_options.rs"]
 mod scroll_options;
 #[path = "search_cases/selection_options.rs"]
