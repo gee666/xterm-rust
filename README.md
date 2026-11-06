@@ -111,7 +111,7 @@ node scripts/browser-host-check.mjs
 
 The host checker is a Rust WASM component suite, not a full demo or terminal equivalence test. Demo cases require `scripts/demo-e2e.mjs` with real Chromium/Firefox/WebKit state/render assertions. That runner and full demo receipts remain work in progress; no missing case is counted as passed. The browser requirements include input, selection, clipboard, resizing, links, accessibility, cleanup and every applicable addon.
 
-The full speed/artifact-size comparison runner is not yet delivered. [Comparison requirements](docs/acceptance/comparison.md) require identical validated workloads, release settings, warmup and at least10 measured repetitions with median/p95 and raw results. No speedup or size advantage is claimed. [Current comparison documentation](docs/comparison.md) distinguishes partial source counts from completed performance/size evidence.
+The [matched timing protocol and fail-closed runner](docs/benchmark-protocol.md) are available, but final output-validated performance measurements remain open. The [frozen release artifact checkpoint](docs/release-distribution-checkpoint.md) records actual native/JS/WASM bytes, dependency notices and generated-glue LoC. It is not a matched-feature result: Rust still lacks a WebGL constructor export and a core-only browser build, while the original declared ligatures bundle includes a node-only import. [Comparison requirements](docs/acceptance/comparison.md) still require identical validated workloads, release settings, warmup and at least10 measured repetitions with median/p95 and raw results. No speedup or size advantage is claimed.
 
 ## Architecture and licenses
 

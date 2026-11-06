@@ -1,6 +1,6 @@
 # Original and Rust comparisons
 
-Overall equivalence is **NOT PROVEN**. The measurements below are scoped source counts and original core-only production ESM artifact sizes. They are not a matched-functionality comparison, a Rust size reduction, or a speedup claim.
+Overall equivalence is **NOT PROVEN**. The historical task303 measurements below cover source counts and original core-only production ESM artifact sizes. A newer [frozen release checkpoint](release-distribution-checkpoint.md) measures actual native/Rust-WASM artifacts, all14 original addon bundles, dependency notices and generated-glue LoC. It explicitly retains the missing Rust WebGL export, unavailable core-only WASM build and original ligatures browser-packaging gap. Neither snapshot is a matched-functionality comparison, a Rust size reduction or a speedup claim.
 
 ## Source lines
 
@@ -15,7 +15,7 @@ node scripts/count-loc.mjs --check-baseline
 
 The task 303 snapshot starts from main `3ee576a9b01c774d2305936ec9e44993df7f0b5d`, with the current intent and comparison-tool changes. It is not a final stable integration snapshot. The source legacy subtotal still matches all four original baseline values: 396 files, 96,130 physical lines, 87,026 nonblank lines and 3,962,777 bytes. The broader classified original scan has 635 counted files and 102,971 physical lines. Extra configuration and textual fixtures explain the broader total.
 
-The port includes substantial retained textual regression fixtures, generated tables, tests, tooling, browser glue and mixed production/test files. Do not compare its grand total against only the original production TypeScript. The current port has no generated `browser/pkg` distribution, so the source count does not yet include final generated WASM-binding JS or snippets. Refresh after all production features and runtime glue are integrated. Missing generated files are not evidence that glue costs zero lines.
+The port includes substantial retained textual regression fixtures, generated tables, tests, tooling, browser glue and mixed production/test files. Do not compare its grand total against only the original production TypeScript. That task303 snapshot had no generated `browser/pkg` distribution, so those historical counts omit generated WASM-binding JS and snippets. The newer frozen checkpoint includes them. Refresh after all production features and runtime glue are integrated. Missing generated files are not evidence that glue costs zero lines.
 
 `headless/lib-headless` is excluded as generated original build output, matching the unchanged upstream production build script. A regression test checks that this output cannot inflate source counts.
 
@@ -73,12 +73,11 @@ node --test scripts/distribution-size.test.mjs scripts/measure-original-size.tes
 
 All 34 tests pass on Windows Node 24. [tests.txt](../results/comparison/tests.txt) preserves the output. Coverage includes binary/Unicode/CRLF/empty compression round trips, deterministic recounts, duplicate references, missing/undeclared files, exclusions, traversal, junction refusal, native/web distinction, CLI failure statuses, source mutation detection, build failure propagation, stale-size invalidation and owned link/staging cleanup. The first test run had 33 passes and 1 failure in empty-directory fixture cleanup. It is retained in `tests-first-failure.txt`; the fixture was corrected and its abandoned owned temporary directory was removed. No source assertion was changed.
 
-Still unmeasured, not zero and not an external blocker:
+Still required for final acceptance, not zero and not an external blocker:
 
-- Current Rust release native library/example artifact sizes with actual strip/LTO/codegen/panic/optimization flags.
-- Current Rust production browser WASM, generated JS/snippets, bootstrap, CSS and mandatory assets.
-- Original and Rust matched-feature distributions covering every addon and required dependencies.
-- Final stable integrated LoC including generated runtime glue.
+- A final stable integrated refresh of the frozen Rust native and browser/WASM artifact measurements, with actual strip/LTO/codegen/panic/optimization flags and all mandatory assets.
+- Genuine core-only and matched-feature browser distributions. The current Rust package lacks WebglAddon and a supported core-only build; original all-addon declared bundles also include a node-platform ligatures import that browsers cannot resolve.
+- Final stable integrated LoC including generated runtime glue. The frozen checkpoint now includes generated binding JS, snippets and declarations, but later implementation changes require recounting.
 - Output-validated matched release timing workloads, warmup and at least ten measured repetitions, median/p95 and raw samples. No speed ratio is available.
 
-Task 333 owns final release distribution and LoC refresh using these tools. Task 326 supplies the [matched benchmark protocol and fail-closed runner](benchmark-protocol.md), with shared input/state validation and tested median/p95 aggregation. Its synthetic negative tests are not performance measurements. Task 329 still needs actual production/release adapters, source-derived workload manifests and final timing measurements. [acceptance/comparison.md](acceptance/comparison.md) remains the complete comparison contract. Partial green inventory tests do not satisfy it by themselves.
+Task 568 retains the [frozen release checkpoint](release-distribution-checkpoint.md), including actual bytes, per-file hashes, failures and reproduction commands. Task 333 remains open for final release distribution and LoC refresh using these tools. Task 326 supplies the [matched benchmark protocol and fail-closed runner](benchmark-protocol.md), with shared input/state validation and tested median/p95 aggregation. Its synthetic negative tests are not performance measurements. Task 329 still needs actual production/release adapters, source-derived workload manifests and final timing measurements. [acceptance/comparison.md](acceptance/comparison.md) remains the complete comparison contract. Partial green inventory tests do not satisfy it by themselves.

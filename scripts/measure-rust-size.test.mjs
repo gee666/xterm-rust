@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync, unlinkSync, existsSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { runtimeFiles, stageFiles, nativeArtifacts, releaseProfile } from './measure-rust-size.mjs';
+import { runtimeFiles, stageFiles, nativeArtifacts, releaseProfile, addonExposure } from './measure-rust-size.mjs';
 
 const project = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 function fixture(run) {
@@ -21,6 +21,14 @@ function messages(root, patch = {}) {
     { reason: 'compiler-artifact', profile, target: { name: 'xterm_core', kind: ['lib'] }, filenames: [join(root, 'target/release/libxterm_core.rlib')] }
   ];
 }
+test('addon labels follow generated constructor exports, not requested feature names', () => {
+  const exposure = addonExposure('export class Terminal {\n}\nexport class FitAddon {\n}\n// export class WebglAddon {\n');
+  assert.equal(exposure.requested.length, 14);
+  assert.deepEqual(exposure.present, ['fit']);
+  assert.ok(exposure.missing.includes('webgl'));
+  assert.equal(exposure.missing.length, 13);
+  assert.match(exposure.meaning, /NOT functioning/);
+});
 test('runtime closure includes WASM, bootstrap, CSS, every generated snippet and shipped notices', () => fixture(({ root }) => {
   const selected = runtimeFiles(root);
   assert.equal(selected.files.length, 7);

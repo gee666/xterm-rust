@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "architecture": "x64",
+  "profile": {
+    "CARGO_BUILD_JOBS": "2",
+    "CARGO_PROFILE_RELEASE_OPT_LEVEL": "3",
+    "CARGO_PROFILE_RELEASE_LTO": "false",
+    "CARGO_PROFILE_RELEASE_CODEGEN_UNITS": "16",
+    "CARGO_PROFILE_RELEASE_DEBUG": "0",
+    "CARGO_PROFILE_RELEASE_STRIP": "none",
+    "CARGO_PROFILE_RELEASE_PANIC": "unwind",
+    "CARGO_PROFILE_RELEASE_INCREMENTAL": "false",
+    "CARGO_PROFILE_RELEASE_OVERFLOW_CHECKS": "false",
+    "CARGO_PROFILE_RELEASE_DEBUG_ASSERTIONS": "false"
+  },
+  "commands": [
+    {
+      "id": "rustc",
+      "program": "rustc",
+      "args": [
+        "-vV"
+      ],
+      "command": [
+        "rustc",
+        "-vV"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 49.963700000000244,
+      "status": "passed",
+      "log": "results/distribution333/rust/rustc.log"
+    },
+    {
+      "id": "cargo",
+      "program": "cargo",
+      "args": [
+        "--version"
+      ],
+      "command": [
+        "cargo",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 52.767799999999625,
+      "status": "passed",
+      "log": "results/distribution333/rust/cargo.log"
+    },
+    {
+      "id": "wasm-build",
+      "program": "C:\\nvm4w\\nodejs\\node.exe",
+      "args": [
+        "scripts/build-demo.mjs"
+      ],
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/build-demo.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 79311.2712,
+      "status": "passed",
+      "log": "results/distribution333/rust/wasm-build.log"
+    },
+    {
+      "id": "native-build",
+      "program": "cargo",
+      "args": [
+        "build",
+        "--locked",
+        "--release",
+        "-p",
+        "xterm-core",
+        "--lib",
+        "--example",
+        "native",
+        "--message-format=json",
+        "-j2"
+      ],
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "-p",
+        "xterm-core",
+        "--lib",
+        "--example",
+        "native",
+        "--message-format=json",
+        "-j2"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 26178.649900000004,
+      "status": "passed",
+      "log": "results/distribution333/rust/native-build.log"
+    },
+    {
+      "id": "native-script",
+      "program": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Dale333\\target\\release\\examples\\native.exe",
+      "args": [
+        "--plain",
+        "--script",
+        "crates/xterm-core/tests/fixtures/native-demo.txt"
+      ],
+      "command": [
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Dale333\\target\\release\\examples\\native.exe",
+        "--plain",
+        "--script",
+        "crates/xterm-core/tests/fixtures/native-demo.txt"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 67.77180000000226,
+      "status": "passed",
+      "log": "results/distribution333/rust/native-script.log"
+    }
+  ],
+  "scope": "Actual optimized artifacts only. Not final parity, whole-workspace quality or native Linux/macOS runtime evidence.",
+  "source": {
+    "revision": "800b9e26e525f09d6f4e245f914745b3923d3d0a",
+    "sha256": "19ffb731fe479eb0630bf8b01c74464c7be91ae039ab4641ab11e56d18b7cf95",
+    "files": 1965
+  },
+  "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)\nbinary: rustc\ncommit-hash: 4eb161250e340c8f48f66e2b929ef4a5bed7c181\ncommit-date: 2025-03-15\nhost: x86_64-pc-windows-msvc\nrelease: 1.85.1\nLLVM version: 19.1.7",
+  "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+  "wasmBuild": {
+    "report": "results/demos/build/2026-11-06T02-51-43-449Z/report.json",
+    "sha256": "ec7b5d349129497ec76e7986c276f51caf03d21e032c8cf21954140d9f496ed0",
+    "bindgen": "wasm-bindgen 0.2.100"
+  },
+  "nativeAssertions": 21,
+  "notShipped": [
+    {
+      "path": "browser/pkg/xterm_web.d.ts",
+      "reason": "Type declarations are development metadata, not runtime downloads"
+    },
+    {
+      "path": "browser/pkg/xterm_web_bg.wasm.d.ts",
+      "reason": "Type declarations are development metadata, not runtime downloads"
+    }
+  ],
+  "stagingRemoved": true,
+  "addonExposure": {
+    "requested": [
+      "attach",
+      "clipboard",
+      "fit",
+      "image",
+      "ligatures",
+      "program-status",
+      "progress",
+      "search",
+      "serialize",
+      "unicode-graphemes",
+      "unicode11",
+      "web-fonts",
+      "web-links",
+      "webgl"
+    ],
+    "present": [
+      "attach",
+      "clipboard",
+      "fit",
+      "image",
+      "ligatures",
+      "program-status",
+      "progress",
+      "search",
+      "serialize",
+      "unicode-graphemes",
+      "unicode11",
+      "web-fonts",
+      "web-links"
+    ],
+    "missing": [
+      "webgl"
+    ],
+    "meaning": "Generated constructor exports only, NOT functioning or source-equivalent addons"
+  }
+}

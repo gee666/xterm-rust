@@ -63,6 +63,15 @@ export function runtimeFiles(root) {
   }
   return { files, excluded };
 }
+export function addonExposure(javascript) {
+  const constructors = { attach: 'AttachAddon', clipboard: 'ClipboardAddon', fit: 'FitAddon', image: 'ImageAddon', ligatures: 'LigaturesAddon',
+    'program-status': 'ProgramStatusAddon', progress: 'ProgressAddon', search: 'SearchAddon', serialize: 'SerializeAddon',
+    'unicode-graphemes': 'UnicodeGraphemesAddon', unicode11: 'Unicode11Addon', 'web-fonts': 'WebFontsAddon', 'web-links': 'WebLinksAddon', webgl: 'WebglAddon' };
+  const exported = new Set([...javascript.matchAll(/^export class ([A-Za-z0-9_]+) \{/gm)].map(match => match[1]));
+  return { requested: Object.keys(constructors), present: Object.keys(constructors).filter(name => exported.has(constructors[name])),
+    missing: Object.keys(constructors).filter(name => !exported.has(constructors[name])),
+    meaning: 'Generated constructor exports only, NOT functioning or source-equivalent addons' };
+}
 export function stageFiles(root, destination, files) {
   for (const file of files) {
     const input = resolve(root, file.path), output = resolve(destination, file.path);
@@ -134,6 +143,7 @@ export async function main(args = process.argv.slice(2)) {
     report.wasmBuild = { report: pointer.report, sha256: hash(readFileSync(join(project, pointer.report))), bindgen: build.bindgen };
     const nativeLog = await run('native-build', process.env.CARGO ?? 'cargo', ['build', '--locked', '--release', '-p', 'xterm-core', '--lib', '--example', 'native', '--message-format=json', '-j2']);
     const native = nativeArtifacts(project, nativeLog), web = runtimeFiles(project);
+    report.addonExposure = addonExposure(readFileSync(join(project, 'browser/pkg/xterm_web.js'), 'utf8'));
     for (const artifact of build.artifacts) {
       if (hash(readFileSync(join(project, artifact.path))) !== artifact.sha256) throw new Error(`WASM build artifact changed: ${artifact.path}`);
     }
@@ -151,8 +161,8 @@ export async function main(args = process.argv.slice(2)) {
       sourceSha256: report.source.sha256, toolchain: `${report.rustc}; ${report.cargo}; ${build.bindgen}`,
       flags: JSON.stringify(releaseProfile) + '; locked default features, acceptance-hooks excluded; wasm-bindgen --target web; no wasm-opt or post-link stripping' };
     const distributions = [{ id: 'rust-web-monolithic', directory: 'rust-web', kind: 'web', profile: 'release',
-      scope: 'Default monolithic browser engine with all14 addon bindings; not a core-only web build and not proven fully equivalent to those addons.',
-      addons: ['attach', 'clipboard', 'fit', 'image', 'ligatures', 'program-status', 'progress', 'search', 'serialize', 'unicode-graphemes', 'unicode11', 'web-fonts', 'web-links', 'webgl'],
+      scope: `Default incomplete monolithic browser distribution; ${report.addonExposure.present.length} addon constructor exports, missing: ${report.addonExposure.missing.join(', ') || 'none'}. Export presence does not prove functioning addons. No core-only web build.`,
+      addons: report.addonExposure.present, requestedAddons: report.addonExposure.requested, missingAddonExports: report.addonExposure.missing,
       files: web.files, build: metadata }];
     for (const artifact of native) {
       const id = artifact.path.endsWith('.rlib') ? 'rust-native-core-rlib' : 'rust-native-core-example';
