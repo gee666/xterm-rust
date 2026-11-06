@@ -42,6 +42,10 @@ Activation now moves the replaced `Rc` out with `RefCell::replace` and drops it 
 
 The post-review production change was rebuilt and all 21 WASM functions passed in each of Chromium, Firefox and WebKit, zero failures, ignored or filtered functions. Cargo reported `fresh=false`; compiler `4a75e7a67c1a6eeddc6beaa17b1a55417646bec0d74ea62ab324bb81f5b522a3` embeds the exact shared fixture, and both served WASM/binding hashes were checked. The earlier `c3b83786` browser runs remain historical. The retained 416 receiver control uses the identical WASM harness and shared fixture; the new P2 panic was reproduced separately with exact pre-review addon bytes in native execution. No source or shared JavaScript assertions changed for the review correction.
 
+The same isolated reviewer accepted frozen `b82a71c2` after the correction. It independently reran the current hash-pinned executable, all 70 passes, and checked all 129 then-current summary pins, 1,817 input pins, 24 runtime pins, both reference manifests and all 56 prerequisite pins. It inspected current WASM/Clippy evidence without compiling or launching browsers. The later receipt and cleanup preflight add metadata only. Temporary native/WASM binaries are verification artifacts, not deliverables, and are removed only after this review and source/evidence preservation.
+
+Accepted source/test/proof commits are `9afc453b`, `05f59d87`, `3b6eb6a5`, `8cf831f1`, `b2d546a0` and `b82a71c2`, followed by a review/cleanup metadata-only tail. `archive/Danielle518-complete` preserves the complete own chain. None of the four private 508 copies belongs in the pickup. Do not append 518 to the already-frozen 531 batch.
+
 Full workspace Clippy/tests/release, complete original SearchAddon suites, seeded search corpus, demo, GC and native Linux/macOS were not run for 518. Successful raw-object matching and per-line getter/mutation phases remain 347/322; disposed registration/scheduling behavior remains 527. Scoped passes do not establish full SearchAddon or full-port equivalence.
 
 ## Reproduce
