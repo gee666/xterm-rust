@@ -46,7 +46,13 @@ for(const [i,c] of recipes.entries()) {
   const bytes=cff2IndexInput(base,c,{...templates,...encoded});
   const child=spawnSync(process.execPath,['--max-old-space-size=128',import.meta.filename,'--worker',String(i)],{encoding:'utf8',timeout:3000,maxBuffer:1024*1024,windowsHide:true});
   const raw=Object.assign({},...child.stdout.trim().split('\n').filter(Boolean).map(line=>JSON.parse(line)));
-  const resourceFailure=child.status===0?undefined:{status:'resourceFailure',kind:child.error?.code==='ETIMEDOUT'?'deadline':'heapLimit'};
+  const deadline=child.error?.code==='ETIMEDOUT',heap=/FATAL ERROR: (?:Reached heap limit|Ineffective mark-compacts near heap limit)/.test(child.stderr??'');
+  if(child.status!==0&&!deadline&&!heap){
+    await fs.mkdir('results/font-cff2-index',{recursive:true});
+    await fs.writeFile('results/font-cff2-index/unexpected-worker.json',JSON.stringify({name:c.name,inputSha256:hash(bytes),exitCode:child.status,error:child.error?.code,stdout:child.stdout,stderr:child.stderr},null,2)+'\n');
+    throw Error('Unexpected source worker failure '+c.name);
+  }
+  const resourceFailure=child.status===0?undefined:{status:'resourceFailure',kind:deadline?'deadline':'heapLimit'};
   if(resourceFailure)resources.push({name:c.name,inputSha256:hash(bytes),exitCode:child.status,signal:child.signal,error:child.error?.code,stderrBase64:Buffer.from(child.stderr??'').toString('base64'),stderrSha256:hash(child.stderr??''),stdout:child.stdout});
   const outcome=raw.outcome??resourceFailure,warnings=raw.warnings??[];
   cases.push({...c,encoded,inputSha256:hash(bytes),inputFnv32:bytes.reduce((h,b)=>Math.imul(h^b,16777619)>>>0,2166136261),warnings,outcome,phaseWhole:raw.phaseWhole,phaseTable:raw.phaseTable,resourceFailure});
